@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18235 2010-11-23 22:41:05Z drbyte $
@@ -68,14 +68,6 @@ if ($is_upgrade) {
   if (!isset($_POST['enable_ssl'])) $_POST['enable_ssl']=$enable_ssl;
   if (!isset($_POST['enable_ssl_admin'])) $_POST['enable_ssl_admin']=$enable_ssl_admin;
 
-
-  setInputValue($_POST['physical_path'], 'PHYSICAL_PATH_VALUE', $dir_fs_www_root);
-  setInputValue($_POST['virtual_http_path'], 'VIRTUAL_HTTP_PATH_VALUE', 'http://' . $virtual_path);
-  setInputValue($_POST['virtual_https_path'], 'VIRTUAL_HTTPS_PATH_VALUE', 'https://' . $virtual_https_path);
-  setInputValue($_POST['virtual_https_server'], 'VIRTUAL_HTTPS_SERVER_VALUE', 'https://' . $virtual_https_server);
-  setRadioChecked($_POST['enable_ssl'], 'ENABLE_SSL', $enable_ssl);
-  setRadioChecked($_POST['enable_ssl_admin'], 'ENABLE_SSL_ADMIN', $enable_ssl_admin);
-
   if (isset($_POST['submit'])) {
     $zc_install->isEmpty($_POST['physical_path'], ERROR_TEXT_PHYSICAL_PATH_ISEMPTY, ERROR_CODE_PHYSICAL_PATH_ISEMPTY);
     $zc_install->fileExists($zc_install->trimTrailingSlash($_POST['physical_path']) . '/index.php', ERROR_TEXT_PHYSICAL_PATH_INCORRECT, ERROR_CODE_PHYSICAL_PATH_INCORRECT);
@@ -97,3 +89,21 @@ if ($is_upgrade) {
     exit;
     }
   }
+
+  // quick sanitization
+  foreach($_POST as $key=>$val) {
+    if(is_array($val)){
+      foreach($val as $key2 => $val2){
+        $_POST[$key][$key2] = htmlspecialchars($val2);
+      }
+    } else {
+      $_POST[$key] = htmlspecialchars($val);
+    }
+  }
+
+  setInputValue($_POST['physical_path'], 'PHYSICAL_PATH_VALUE', $dir_fs_www_root);
+  setInputValue($_POST['virtual_http_path'], 'VIRTUAL_HTTP_PATH_VALUE', 'http://' . $virtual_path);
+  setInputValue($_POST['virtual_https_path'], 'VIRTUAL_HTTPS_PATH_VALUE', 'https://' . $virtual_https_path);
+  setInputValue($_POST['virtual_https_server'], 'VIRTUAL_HTTPS_SERVER_VALUE', 'https://' . $virtual_https_server);
+  setRadioChecked($_POST['enable_ssl'], 'ENABLE_SSL', $enable_ssl);
+  setRadioChecked($_POST['enable_ssl_admin'], 'ENABLE_SSL_ADMIN', $enable_ssl_admin);

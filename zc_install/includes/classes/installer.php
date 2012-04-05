@@ -4,7 +4,7 @@
  * This class is used during the installation and upgrade processes
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: installer.php 19690 2011-10-04 16:41:45Z drbyte $
@@ -21,6 +21,7 @@
 
     function installer() {
       $this->php_version = PHP_VERSION;
+      $this->santitize_inputs();
       $this->user_agent = $_SERVER['HTTP_USER_AGENT'];
       $this->configKeys = (isset($_SESSION['installerConfigKeys'])) ? $_SESSION['installerConfigKeys'] : array();
       if (isset($_POST['zcinst'])) $this->readConfigKeysFromPost();
@@ -808,6 +809,89 @@
         } //end foreach array to update configure.php files
         if ($configure_files_updated <2) $this->setError(ERROR_TEXT_TABLE_RENAME_CONFIGUREPHP_FAILED, ERROR_CODE_TABLE_RENAME_CONFIGUREPHP_FAILED, false);
       } //endif $tables_updated count sufficient
+    }
+
+    function santitize_inputs() {
+      if (isset($_GET['main_page'])) $_GET['main_page'] = preg_replace('/[^a-zA-Z_]/', '', $_GET['main_page']);
+      if (isset($_GET['language'])) $_GET['language'] = preg_replace('/[^a-zA-Z_]/', '', $_GET['language']);
+      if (isset($_GET['debug'])) $_GET['debug'] = preg_replace('/[^0-9]/', '', $_GET['debug']);
+      if (isset($_GET['debug2'])) $_GET['debug2'] = preg_replace('/[^0-9]/', '', $_GET['debug2']);
+      if (isset($_GET['debug3'])) $_GET['debug3'] = preg_replace('/[^0-9]/', '', $_GET['debug3']);
+      if (isset($_GET['configfile'])) $_GET['configfile'] = preg_replace('/[^0-9]/', '', $_GET['configfile']);
+      if (isset($_GET['nogrants'])) $_GET['nogrants'] = preg_replace('/[^0-9]/', '', $_GET['nogrants']);
+
+      /**
+       * process all $_GET terms
+       */
+      $strictReplace = '[<>\']';
+      $unStrictReplace = '[<>]';
+      if (isset($_GET) && count($_GET) > 0) {
+        foreach($_GET as $key=>$value){
+          if(is_array($value)){
+            foreach($value as $key2 => $val2){
+              if ($key2 == 'keyword') {
+                $_GET[$key][$key2] = preg_replace('/'.$unStrictReplace.'/', '', $val2);
+              } else {
+                $_GET[$key][$key2] = preg_replace('/'.$strictReplace.'/', '', $val2);
+              }
+              unset($GLOBALS[$key]);
+            }
+          } else {
+            if ($key == 'keyword') {
+              $_GET[$key] = preg_replace('/'.$unStrictReplace.'/', '', $value);
+            } else {
+              $_GET[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
+            }
+            unset($GLOBALS[$key]);
+          }
+        }
+      }
+      /**
+       * process all $_POST terms
+       */
+      if (isset($_POST) && count($_POST) > 0) {
+        foreach($_POST as $key=>$value){
+          if(is_array($value)){
+            foreach($value as $key2 => $val2){
+              unset($GLOBALS[$key]);
+            }
+          } else {
+            unset($GLOBALS[$key]);
+          }
+        }
+      }
+      /**
+       * process all $_COOKIE terms
+       */
+      if (isset($_COOKIE) && count($_COOKIE) > 0) {
+        foreach($_COOKIE as $key=>$value){
+          if(is_array($value)){
+            foreach($value as $key2 => $val2){
+              unset($GLOBALS[$key]);
+            }
+          } else {
+            unset($GLOBALS[$key]);
+          }
+        }
+      }
+      /**
+       * process all $_SESSION terms
+       */
+      if (isset($_SESSION) && count($_SESSION) > 0) {
+        foreach($_SESSION as $key=>$value){
+          if(is_array($value)){
+            foreach($value as $key2 => $val2){
+              unset($GLOBALS[$key]);
+            }
+          } else {
+            unset($GLOBALS[$key]);
+          }
+        }
+      }
+      /**
+       * sanitize $_SERVER vars
+       */
+      $_SERVER['REMOTE_ADDR'] = preg_replace('/[^0-9.%:]/', '', $_SERVER['REMOTE_ADDR']);
     }
 
 

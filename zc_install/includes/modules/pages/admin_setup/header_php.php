@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18235 2010-11-23 22:41:05Z drbyte $
@@ -41,6 +41,17 @@
       $zc_install->resetConfigInfo();
       header('location: index.php?main_page=finished' . zcInstallAddSID() );
       exit;
+    }
+  }
+
+  // quick sanitization
+  foreach($_POST as $key=>$val) {
+    if(is_array($val)){
+      foreach($val as $key2 => $val2){
+        $_POST[$key][$key2] = htmlspecialchars($val2);
+      }
+    } else {
+      $_POST[$key] = htmlspecialchars($val);
     }
   }
 

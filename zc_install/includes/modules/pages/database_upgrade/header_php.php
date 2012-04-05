@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -233,7 +233,7 @@ if (ZC_UPG_DEBUG2==true) {
     $sniffer_version = '';
     $nothing_to_process = false;
     if (is_array($_POST['version'])) {
-      if (ZC_UPG_DEBUG2==true) foreach($_POST['version'] as $value) { echo 'Selected: ' . $value.'<br />';}
+      if (ZC_UPG_DEBUG2==true) foreach($_POST['version'] as $value) { echo 'Selected: ' . htmlspecialchars($value).'<br />';}
       reset($_POST['version']);
       if (sizeof($_POST['version'])) $zc_install->updateAdminIpList();
       while (list(, $value) = each($_POST['version'])) {
@@ -496,5 +496,16 @@ echo 'CAUTION: '.$value.'<br />';
    header('location: index.php?main_page=database_upgrade' . zcInstallAddSID() );
    exit;
  }
+
+  // quick sanitization
+  foreach($_POST as $key=>$val) {
+    if(is_array($val)){
+      foreach($val as $key2 => $val2){
+        $_POST[$key][$key2] = htmlspecialchars($val2);
+      }
+    } else {
+      $_POST[$key] = htmlspecialchars($val);
+    }
+  }
 
   $adminName = (isset($_POST['adminid'])) ? $_POST['adminid'] : '';
