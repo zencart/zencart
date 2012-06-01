@@ -508,39 +508,35 @@ class order extends base {
       /*********************************************
        * Calculate taxes for this product
        *********************************************/
-      $shown_price = zen_round(zen_add_tax($this->products[$index]['final_price'], $this->products[$index]['tax']) ,$decimals) * $this->products[$index]['qty'];
-      $shown_price +=  zen_round(zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']), $decimals);
-
+      $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
+      + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
+      $this->info['subtotal'] += $shown_price;
       $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
       // find product's tax rate and description
       $products_tax = $this->products[$index]['tax'];
       $products_tax_description = $this->products[$index]['tax_description'];
-      $this->info['subtotal'] += $shown_price;
-      $totalTaxAdd = 0;
+
+      if (DISPLAY_PRICE_WITH_TAX == 'true') {
+        // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
+        $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
+      } else {
+        // calculate the amount of tax for this product (assuming tax is NOT included in the price)
+//        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
+        $tax_add = ($products_tax/100) * $shown_price;
+      }
+      $this->info['tax'] += $tax_add;
       foreach ($taxRates as $taxDescription=>$taxRate)
       {
-        $taxAdd = 0;
-        if ($taxDescription == $products_tax_description)
+        $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
+                +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
+        if (isset($this->info['tax_groups'][$taxDescription]))
         {
-          if (DISPLAY_PRICE_WITH_TAX == 'true')
-          {
-            $taxAdd = zen_round($shown_price / (100 + $this->products[$index]['tax']) * $this->products[$index]['tax'], $decimals);
-          } else
-          {
-              $taxAdd = zen_calculate_tax($this->products[$index]['final_price'], $this->products[$index]['tax']) * $this->products[$index]['qty'];
-                      +  zen_round(zen_calculate_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']), $decimals);
-          }
-          if (isset($this->info['tax_groups'][$taxDescription]))
-          {
-            $this->info['tax_groups'][$taxDescription] += $taxAdd;
-          } else
-          {
-            $this->info['tax_groups'][$taxDescription] = $taxAdd;
-          }
+          $this->info['tax_groups'][$taxDescription] += $taxAdd;
+        } else
+        {
+          $this->info['tax_groups'][$taxDescription] = $taxAdd;
         }
-        $totalTaxAdd += $taxAdd;
       }
-      $this->info['tax'] += $totalTaxAdd;
       /*********************************************
        * END: Calculate taxes for this product
        *********************************************/
