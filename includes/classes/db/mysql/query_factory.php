@@ -24,6 +24,24 @@ class queryFactory extends base {
     $this->total_query_time = 0;
   }
 
+  function query($query, $link) {
+      global $queryLog;
+      global $queryCache;
+
+      $this->total_queries++;
+      if( isset($queryCache) && $queryCache->inCache($query) ) {
+            $cached_value = $queryCache->getFromCache($query);
+            $this->count_queries--;
+            return($cached_value);
+      }
+      
+      if(isset($queryLog)) $queryLog->start($query);
+      $result = mysql_query($query, $link);
+      if(isset($queryLog)) $queryLog->stop($query, $result);
+      if(isset($queryCache)) $queryCache->cache($query, $result);
+      return($result);
+  }
+
   function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $zp_real = false) {
     $this->database = $zf_database;
     $this->user = $zf_user;
@@ -148,7 +166,7 @@ class queryFactory extends base {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED);
       }
-      $zp_db_resource = @mysql_query($zf_sql, $this->link);
+      $zp_db_resource = @$this->query($zf_sql, $this->link);
       if (!$zp_db_resource) $this->set_error(@mysql_errno(),@mysql_error());
       if(!is_resource($zp_db_resource)){
         $obj = null;
@@ -197,7 +215,7 @@ class queryFactory extends base {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED);
       }
-      $zp_db_resource = @mysql_query($zf_sql, $this->link);
+      $zp_db_resource = @$this->query($zf_sql, $this->link);
       if (!$zp_db_resource) {
         if (@mysql_errno($this->link) == 2006) {
           $this->link = FALSE;
@@ -249,7 +267,7 @@ class queryFactory extends base {
       if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
       $this->set_error('0', DB_ERROR_NOT_CONNECTED);
     }
-    $zp_db_resource = @mysql_query($zf_sql, $this->link);
+    $zp_db_resource = @$this->query($zf_sql, $this->link);
     if (!$zp_db_resource) $this->set_error(mysql_errno(),mysql_error());
     if(!is_resource($zp_db_resource)){
       $obj = null;

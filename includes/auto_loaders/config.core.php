@@ -70,6 +70,15 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=>'message_stack.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'breadcrumb.php');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'query_cache.php');
+
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                               'className'=>'QueryCache',
+                               'objectName'=>'queryCache',
+                               'checkInstantiated'=>true);
+                                
+                                
 /**
  * Breakpoint 10.
  *
