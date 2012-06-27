@@ -33,7 +33,6 @@ function check_page($page, $params) {
           WHERE admin_id = :adminId:";
   $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
   $result = $db->Execute($sql);
-
   $retVal = FALSE;
   while (!$result->EOF) {
     if (constant($result->fields['main_page']) == $page && $result->fields['page_params'] == $page_params) {
@@ -41,7 +40,20 @@ function check_page($page, $params) {
     }
     $result->MoveNext();
   }
-
+  if (!$retVal)
+  {
+    $sql = "SELECT *
+            FROM " . TABLE_ADMIN . " a
+            LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
+            WHERE admin_id = :adminId:";
+    $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
+    $result = $db->Execute($sql);
+    while (!$result->EOF) {
+      $adjustedPageKey = preg_replace('/_productTypes_/', '', $result->fields['page_key']);
+      if ($adjustedPageKey == $page) $retVal = TRUE;
+      $result->MoveNext();
+    }
+  }
   return $retVal;
 }
 
@@ -596,6 +608,13 @@ function zen_get_admin_pages($menu_only)
   /**
    * First we'll get all the pages
    */
+  $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES . " WHERE type_handler != 'product'";
+  $result = $db->Execute($sql);
+  while (!$result->EOF)
+  {
+    $productTypes['_productTypes_'.$result->fields['type_handler']] = array('name'=>$result->fields['type_name'], 'file'=>$result->fields['type_handler'], 'params'=>''); 
+    $result->MoveNext();
+  }   
   $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as page_name
           FROM " . TABLE_ADMIN_PAGES . " ap
           LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key ";
@@ -608,10 +627,17 @@ function zen_get_admin_pages($menu_only)
       $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array('name' => constant($result->fields['page_name']),
                                                                                 'file' => constant($result->fields['main_page']),
                                                                                 'params' => $result->fields['page_params']);
+                                                                                
     }
     $result->MoveNext();
   }
-
+  foreach ($productTypes as $pageName => $productType)
+  {
+    if (!isset($retVal['_productTypes']['_productTypes_'.$pageName]))
+    {
+      $retVal['_productTypes'][$pageName] = $productType;
+    }
+  }
   /**
    * Then we'll deal with the exceptions
    */

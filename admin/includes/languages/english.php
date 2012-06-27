@@ -718,6 +718,7 @@ define('TEXT_HIDE', 'Hide');
 define('TEXT_EMAIL', 'Email');
 define('TEXT_NOEMAIL', 'No Email');
 
+define('BOX_HEADING_PRODUCT_TYPES', 'Product Types');
 
 ///////////////////////////////////////////////////////////
 // include additional files:

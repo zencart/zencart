@@ -196,7 +196,7 @@ switch ($action) {
 
   <h1><?php echo sprintf(HEADING_TITLE_INDIVIDUAL_PROFILE, $profileName) ?></h1>
 
-  <form id="profileBoxes" name="profileBoxes" action="<?php echo zen_href_link(FILENAME_PROFILES) ?>" method="post">
+    <?php echo zen_draw_form('profilesBoxes', FILENAME_PROFILES) ?>
     <input type="hidden" name="action" value="update"/>
     <input type="hidden" name="profile" value="<?php echo $profile ?>"/>
     <div class="formButtons">
