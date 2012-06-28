@@ -81,8 +81,17 @@ switch ($action) {
     zen_redirect(zen_href_link(FILENAME_PROFILES));
     break;
   case 'update_name':
-    zen_update_profile_name($profile, $_POST['profile-name']);
-    $messageStack->add_session(SUCCESS_PROFILE_NAME_UPDATED, 'success');
+    $profileName = $_POST['profile-name'];
+    $_POST['profile-name'] = trim($_POST['profile-name']);
+//    $_POST['profile-name'] = preg_replace('/[^a-zA-Z0-9_-]/', '', $_POST['profile-name']);
+    if ($_POST['profile-name'] != '' && $_POST['profile-name'] == $profileName)
+    {
+      zen_update_profile_name($profile, $_POST['profile-name']);
+      $messageStack->add_session(SUCCESS_PROFILE_NAME_UPDATED, 'success');
+    } else 
+    {
+      $messageStack->add_session(ERROR_INVALID_PROFILE_NAME, 'error');      
+    }
     zen_redirect(zen_href_link(FILENAME_PROFILES));
     break;
   case 'rename':
