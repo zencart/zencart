@@ -855,8 +855,11 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
   function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
     global $db;
     zen_create_exceptions_table();
-    $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,'". $sql_file."','".$reason."', now(), '".addslashes($line)."')";
-     if (ZC_UPG_DEBUG3==true) echo '<br />sql='.$sql.'<br />';
+    $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,:file:, :reason:, now(), :line:)";
+    $sql = $db->bindVars($sql, ':file:', $sql_file, 'string');
+    $sql = $db->bindVars($sql, ':reason:', $reason, 'string');
+    $sql = $db->bindVars($sql, ':line:', $line, 'string');
+    if (ZC_UPG_DEBUG3==true) echo '<br />sql='.$sql.'<br />';
     $result = $db->Execute($sql);
     return $result;
   }
