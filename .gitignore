@@ -1,0 +1,6 @@
+myDEBUG-*.log
+cache/*.sql
+cache/sess_*
+cache/*.log
+logs/*.log
+local/configure.php
