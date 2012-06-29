@@ -3,7 +3,7 @@
  *  product_info main_template_vars.php
  *
  * @package productTypes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: main_template_vars.php 19690 2011-10-04 16:41:45Z drbyte $
@@ -36,12 +36,7 @@
 
     $tpl_page_body = '/tpl_product_info_display.php';
 
-    $sql = "update " . TABLE_PRODUCTS_DESCRIPTION . "
-            set        products_viewed = products_viewed+1
-            where      products_id = '" . (int)$_GET['products_id'] . "'
-            and        language_id = '" . (int)$_SESSION['languages_id'] . "'";
-
-    $res = $db->Execute($sql);
+    $zco_notifier->notify('NOTIFY_PRODUCT_VIEWS_HIT_INCREMENTOR', (int)$_GET['products_id']);
 
     $sql = "select p.products_id, pd.products_name,
                   pd.products_description, p.products_model,
