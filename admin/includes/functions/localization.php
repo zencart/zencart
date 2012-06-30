@@ -41,92 +41,27 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 
 function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 {
+  if ($currencyCode == $base) return 1;
   static $CSVContent;
   $requested = $currencyCode;
-  $url = 'http://www.bankofcanada.ca/en/markets/csv/exchange_eng.csv';
+  $url = 'http://www.bankofcanada.ca/stats/assets/csv/fx-seven-day.csv';
   $currencyArray = array();
   $currencyArray['CAD'] = 1;
   if (!isset($CSVContent) || $CSVContent == '') {
-    $CSVContent = @file($url);
+    $CSVContent = file($url);
     if (! is_object($CSVContent) && function_exists('curl_init')) {
-      $CSVContent = doCurlCurrencyRequest('POST', $url, '');
+      $CSVContent = doCurlCurrencyRequest('GET', $url);
       $CSVContent = explode("\n", $CSVContent);
     }
   }
-
-  $bocList = array();
-  $bocList['U.S. Dollar (Noon)'] = 'USD';
-  $bocList['Argentina Peso (Floating Rate)'] = 'aaa';
-  $bocList['Australian Dollar'] = 'AUD';
-  $bocList['Bahamian Dollar'] = 'aaa';
-  $bocList['Brazilian Real'] = 'aaa';
-  $bocList['Chilean Peso'] = 'aaa';
-  $bocList['Chinese Renminbi'] = 'aaa';
-  $bocList['Colombian Peso'] = 'aaa';
-  $bocList['Croatian Kuna'] = 'aaa';
-  $bocList['Czech Republic Koruna'] = 'aaa';
-  $bocList['Danish Krone'] = 'aaa';
-  $bocList['East Caribbean Dollar'] = 'aaa';
-  $bocList['European Euro'] = 'aaa';
-  $bocList['Fiji Dollar'] = 'aaa';
-  $bocList['CFA Franc (African Financial Community)'] = 'aaa';
-  $bocList['CFP Franc (Pacific Financial Community)'] = 'aaa';
-  $bocList['Ghanaian Cedi (new)'] = 'aaa';
-  $bocList['Guatemalan Quetzal'] = 'aaa';
-  $bocList['Honduran Lempira'] = 'aaa';
-  $bocList['Hong Kong Dollar'] = 'aaa';
-  $bocList['Hungarian Forint'] = 'aaa';
-  $bocList['Icelandic Krona'] = 'aaa';
-  $bocList['Indian Rupee'] = 'aaa';
-  $bocList['Indonesian Rupiah'] = 'aaa';
-  $bocList['Israeli New Shekel'] = 'aaa';
-  $bocList['Jamaican Dollar'] = 'aaa';
-  $bocList['Japanese Yen'] = 'aaa';
-  $bocList['Malaysian Ringgit'] = 'aaa';
-  $bocList['Mexican Peso'] = 'aaa';
-  $bocList['Moroccan dirham'] = 'aaa';
-  $bocList['Myanmar (Burma) Kyat'] = 'aaa';
-  $bocList['Neth. Antilles Guilder'] = 'aaa';
-  $bocList['New Zealand Dollar'] = 'aaa';
-  $bocList['Norwegian Krone'] = 'aaa';
-  $bocList['Pakistan rupee'] = 'aaa';
-  $bocList['Panamanian Balboa'] = 'aaa';
-  $bocList['Peruvian New Sol'] = 'aaa';
-  $bocList['Philippine Peso'] = 'aaa';
-  $bocList['Polish Zloty'] = 'aaa';
-  $bocList['Romanian New Leu'] = 'aaa';
-  $bocList['Russian Rouble'] = 'aaa';
-  $bocList['Serbian Dinar'] = 'aaa';
-  $bocList['Singapore Dollar'] = 'aaa';
-  $bocList['South African Rand'] = 'aaa';
-  $bocList['South Korean Won'] = 'aaa';
-  $bocList['Sri Lanka Rupee'] = 'aaa';
-  $bocList['Swedish Krona'] = 'aaa';
-  $bocList['Swiss Franc'] = 'aaa';
-  $bocList['Taiwanese New Dollar'] = 'aaa';
-  $bocList['Thai Baht'] = 'aaa';
-  $bocList['Trinidad & Tobago Dollar'] = 'aaa';
-  $bocList['Tunisian Dinar'] = 'aaa';
-  $bocList['New Turkish Lira'] = 'aaa';
-  $bocList['UAE Dirham'] = 'aaa';
-  $bocList['U.K. Pound Sterling'] = 'GBP';
-  $bocList['Venezuelan Bolivar Fuerte'] = 'aaa';
-  $bocList['Vietnamese Dong'] = 'aaa';
-
   foreach ($CSVContent as $line) {
-    if (substr($line, 0, 1) == '#' || substr($line, 0, 4) == 'Date') continue;
+    if (substr($line, 0, 1) == '#' || substr($line, 0, 4) == 'Date' || trim($line) == '') continue;
     $data = explode(',', $line);
-    $curName = $data[0];
+    $curName = $data[1];
     $curRate = $data[sizeof($data)-1];
-    if ($currencyCode == $bocList[$curName]) {
-      $currencyArray[$currencyCode] = (float)$curRate;
-    }
+    $currencyArray[trim($curName)] = (float)$curRate;
   }
-  if ($requested == $base) {
-    $rate = 1;
-  } else {
-    $rate = (string)((float)$currencyArray[$requested] / $currencyArray[DEFAULT_CURRENCY]);
-  }
+  $rate = (string)($currencyArray[DEFAULT_CURRENCY]/(float)$currencyArray[$requested]);
   return $rate;
 }
 
