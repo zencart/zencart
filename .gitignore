@@ -8,3 +8,4 @@ local/configure.php
 *.bak
 *.old
 devtools.php
+Thumbs.db
