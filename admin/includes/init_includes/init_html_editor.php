@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_html_editor.php 18710 2011-05-09 08:39:04Z drbyte $
  */
-if (!defined('DIR_WS_EDITORS')) define('DIR_WS_EDITORS', 'editors');
+if (!defined('DIR_WS_EDITORS')) define('DIR_WS_EDITORS', 'editors/');
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
