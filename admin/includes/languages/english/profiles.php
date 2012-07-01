@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: profiles.php 19366 2011-08-28 20:21:09Z wilt $
@@ -13,7 +13,7 @@ define('HEADING_TITLE_NEW_PROFILE', 'New Profile for ');
 
 define('ERROR_NO_PROFILE_DEFINED', 'The option that you requested cannot be undertaken without specifying a profile');
 define('ERROR_NO_PROFILE_NAME', 'Please enter a name for the new profile');
-define('ERROR_INVALID_PROFILE_NAME', 'Please enter a valid name for the new profile');
+define('ERROR_INVALID_PROFILE_NAME', 'Please enter a valid name for the profile');
 define('ERROR_DUPLICATE_PROFILE_NAME', 'A profile with that name already exists. Please choose a different name or edit the existing profile');
 define('ERROR_NO_PAGES_IN_PROFILE', 'A profile cannot be empty, please select some pages');
 define('ERROR_UNABLE_TO_CREATE_PROFILE', 'Unable to create profile');
