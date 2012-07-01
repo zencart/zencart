@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Admin Access Management
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: admin_access.php 20008 2011-11-22 19:25:27Z drbyte $
