@@ -1,0 +1,16 @@
+/*
+for css based versions extend the li
+below the menu so that the mouse will
+stay over the li and keep the hover active
+*/
+
+ul.nde-menu-system li.submenu:hover
+{
+  padding-bottom: 30em;
+}
+
+ul.nde-menu-system li.submenu:hover ul 
+{
+  left: 0;
+  visibility: visible;
+}

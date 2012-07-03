@@ -1,0 +1,5 @@
+# replace /yourstorefolder/ with the name of the folder your store is located in, if any.
+# be sure to add any extra paths required to locate the index.php
+# then relocate this file to the root of your store's folders, and rename it as .htaccess
+
+ErrorDocument 404 /yourstorefolder/index.php?main_page=page_not_found

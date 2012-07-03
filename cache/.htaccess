@@ -1,0 +1,33 @@
+#
+# @copyright Copyright 2003-2010 Zen Cart Development Team
+# @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+# @version $Id: .htaccess 16111 2010-04-29 22:39:02Z drbyte $
+#
+# This is used with Apache WebServers
+#
+# The following blocks direct HTTP requests to all filetypes in this directory recursively, except certain approved exceptions
+# It also prevents the ability of any scripts to run. No type of script, be it PHP, PERL or whatever, can normally be executed if ExecCGI is disabled.
+# Will also prevent people from seeing what is in the dir. and any sub-directories
+#
+# For this to work, you must include either 'All' or at least: 'Limit' and 'Indexes' parameters to the AllowOverride configuration in your apache/conf/httpd.conf file.
+# Example:
+#<Directory "/usr/local/apache/htdocs">
+#  AllowOverride Limit Indexes
+#</Directory>
+###############################
+
+<Limit GET POST PUT>
+  Order Allow,Deny
+  Deny from All
+</Limit>
+
+#NOBODY SHOULD BE SNOOPING HERE
+
+# deny *everything*
+<FilesMatch ".*">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+IndexIgnore */*
+

@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=$CHARSET" /> 
+<base href="$BASE_HREF" />
+
+<style type="text/css">
+.body {background-color:#ffffff; color:#000000; font-family:Verdana, Arial, Helvetica, sans-serif;}
+a:link {color:#0066cc;}
+a:hover {background-color:#eeeecc; color:#0066cc;}
+a:visited {color:#0066cc;}
+.holder { background-color: #f9f9f9; border: 1px #9a9a9a solid; font-size: 9px; text-align: left; width:550px;}
+.header {font-size:10px; padding:0px; width:550px;}
+.content {font-size:10px; padding:5px; width:550px;}
+.content-line {padding:5px;}
+.coupon-block { padding: 5px; border: 1px #cccccc solid; background-color: #FFFF99; }
+.coupon-code {font-weight:bold;}
+.gv-block { padding: 5px; border: 1px #cccccc solid; background-color: #99FF99; }
+.gv-code {font-weight:bold;}
+.footer { border-top: 1px #9a9a9a solid; font-size: 9px; margin-top: 10px; text-align: center; width: 550px; }
+.extra-info { background-color: #cccc99; border: 1px #9a9a9a solid; font-size: 10px; margin-top: 10px; padding: 5px; width: 550px; }
+.extra-info-bold {font-weight:bold;}
+.disclaimer { background-color: #f9f9f9; border: 1px #cccccc solid; font-size: 10px; margin-top: 10px; padding: 5px; width: 550px; }
+.disclaimer1 {color:#666666; padding:5px;}
+.disclaimer1 a:link {color:#666666;}
+.disclaimer1 a:visited {color:#666666;}
+.disclaimer2 { color: #666666; padding: 5px; }
+.copyright { border-bottom: 0px #9a9a9a solid; padding: 5px; }
+</style>
+
+</head>
+
+<body class="body">
+<div class="holder">
+
+  <!-- Header Section -->
+  <div class="header">
+  <img src="email/header.jpg" alt="logo" />
+  </div>
+
+
+  <!-- Content Section -->
+  <div class="content">
+    <div class="content-line">$EMAIL_GREETING</div>
+    <div class="content-line">$EMAIL_WELCOME</div>
+<!--The following only get populated if they're enabled! -->
+$COUPON_BLOCK
+$GV_BLOCK
+<!-- end gv/coupon section -->
+    <div class="content-line">$EMAIL_MESSAGE_HTML</div>
+    <div class="content-line">$EMAIL_CONTACT_OWNER<br />$EMAIL_CLOSURE</div>
+  </div> 
+</div>
+ 
+  <!-- Footer Section -->
+  <div class="footer">
+    <div class="copyright">$EMAIL_FOOTER_COPYRIGHT</div>
+  </div>
+
+<div class="disclaimer">
+  <div class="disclaimer1">$EMAIL_DISCLAIMER</div>
+  <div class="disclaimer2">$EMAIL_SPAM_DISCLAIMER</div>
+</div>
+$EXTRA_INFO
+</body>
+</html>

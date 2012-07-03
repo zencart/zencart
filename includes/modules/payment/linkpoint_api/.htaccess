@@ -1,0 +1,6 @@
+# Prevent unauthorized access to your private .PEM file
+
+<Files ~ "\.(pem)$">
+Order allow,deny
+Deny from all
+</Files>  

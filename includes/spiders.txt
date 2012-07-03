@@ -1,0 +1,480 @@
+$Id: spiders.txt 18695 2011-05-04 05:24:19Z drbyte $
+bot
+robot
+crawl
+scrape
+seek.
+seeker
+slurp
+spider
+msnbot
+abcdatos
+acme
+accoona
+acoon
+adressendeutschland
+ahoy
+alkaline
+almaden
+amfibibot
+amishbot
+ananzi
+answerbus
+anthill
+appie
+arachnophilia
+arale
+araneo
+araybot
+architext
+aretha
+argus
+ariadne
+arks
+ask jeeves
+aspider
+aspseek
+asterias
+atlocal
+atomz
+augurfind
+auresys
+avantgo
+backrub
+baiduspider
+bannana_bot
+bbot
+bdcindexer
+bdfetch
+becomebot
+big brother
+bjaaland
+blackwidow
+blo.
+blog
+bloodhound
+boitho
+bonecho
+booch
+bordermanager
+borg-bot
+botlink
+boxseabot
+bruinbot
+bspider
+cactvs chemistry spider
+cassandra
+ccubee
+cfetch
+charlotte
+checkbot
+check_http
+cherrypicker
+christcrawler
+churl
+cienciaficcion.net
+clushbot
+collective
+comagent
+combine
+computingsite robi/1.0
+confuzzledbot
+converacrawler
+coolbot
+csci
+curl
+cyberspyder
+cydralspider
+dataparksearch
+depspid
+dienstspider
+digger
+digimarc
+digital integrity robot
+direct hit grabber
+ditto
+dmoz
+dnabot
+download express
+dragonbot
+dtaagent
+dumbot
+ebin
+ecollector
+eit link verifier robot
+elfinbot
+ejupiter
+emailcollector
+emailsiphon
+esculapio
+exabot
+extractor
+e-societyrobot
+falcon
+facebook
+fast enterprise crawler
+fastbug
+fastcrawler
+fast-webcrawler
+feedfetcher
+fetchrover
+filangy
+findlinks
+fish search
+fluffy the spider
+fluid dynamics search engine robot
+focusedcrawler
+fouineur
+freecrawl
+frooglebot
+funnelweb
+fusionbot
+fyberspider
+gaisbot
+gammaspider
+gazz
+gcreep
+genie
+geobot
+geonabot
+getbot
+getterroboplus
+gigabot
+girafabot
+goldfire server
+golem
+google
+gralon
+grapnel
+greywyvern
+griffon
+gromit
+grub
+gulliver
+gulperbot
+h￤m￤h￤kki
+hämähäkki
+hamahakki
+hambot
+harvest
+helix
+heritrix
+holmes
+homer
+htdig
+henrythemiragorobot
+htmlgobble
+httpget
+httrack
+hyper-decontextualizer
+ia_archiver
+iajabot
+ibm_planetwide
+ichiro
+iconsurf
+iltrovatore-setaccio
+imagelock
+incywincy
+indexer
+inelabot
+informant
+infoseek
+infospiders
+ingrid
+inktomi slurp
+inktomisearch
+inspectorbot
+intelliagentbot
+internet cruiser robot
+internet shinchakubin
+internetlinkagent
+irlbot
+irobot
+iron33
+israeli-search
+istarthere
+ivia
+jakarta
+javabee
+jbot java web robot
+jcrawler
+jeeves
+jobo
+jobot
+joebot
+jubii indexing robot
+jumpstation
+katipo
+kilroy
+kit-fireball
+knowledge
+ko_yappo_robot
+kretrieve
+labelgrabber
+lachesis
+larbin
+libwww-mget
+libwww-perl
+limebot
+link validator
+linklint-checkonly
+linknzbot
+linkscan
+linkwalker
+lnspiderguy
+lockon
+lwp
+lycos_spider
+magpie
+mantraagent
+mapoftheinternet
+mattiebot
+mediafox
+mediapartners
+mercator
+merzscope
+metacarta
+metagerbot
+url control
+mindcrawler
+minirank
+miva
+mj12bot
+mnogosearch
+moget
+momspider
+monsterbot
+msiecrawler
+msproxy
+muncher bot
+muninn
+muscatferret
+mysterybot
+myweb
+nationaldirectory
+nameprotect
+nazilla
+ncsa
+naverbot
+naverbot_dloader
+naverrobot
+ndspider
+nec-meshexplorer
+nederland.zoek
+neomo
+netcarta webmap engine
+netmechanic
+netnosecrawler
+netresearchserver
+netscoop
+newscan-online
+nextgensearchbot
+ng-search
+northstar
+noyona
+npbot
+nusearch spider
+nutch
+nwi robot
+nzexplorer
+objectssearch
+obot
+occam
+ocelli
+omni
+online link
+ontospider
+openbot
+openfind data gatherer
+orb search
+orca
+osis-project
+pack rat
+pageboy
+pagebull
+panscient
+parasite
+patric
+patwebbot
+peerbot
+pegasus
+peregrinator
+perlcrawler 1.0
+phantom
+phpdig
+pico
+piltdownman
+pimptrain
+pipeliner
+plumtreewebaccessor
+polybot
+pompos
+poppelsdorf
+psycheclone
+publisher
+python
+poodle predictor 1.0
+poppi
+popular iconoclast
+portal juice spider
+portal manager
+portalb spider
+psbot
+python robot
+quepasacreep
+rambler
+raven search
+rbse spider
+resume robot
+rixbot
+road runner
+roadhouse crawling system
+robbie the robot
+robocrawl spider
+robofox
+robopal
+robot
+robot francoroute
+robozilla
+roverbot
+rpt-httpclient
+safaribookmarkchecker
+safetynet robot
+salty
+sbider
+scooter
+scout
+scrubby
+search agent
+search.aus-au.com
+searchprocess
+senrigan
+sensis
+seosearch
+seventwentyfour
+shagseeker
+shai'hulud
+shopwiki
+sidewinder
+sift
+simmany robot ver1.0
+sitetech-rover
+skymob.com
+slcrawler
+sleek
+smart spider
+snappy
+snooper
+sohu
+suntek search engine
+solbot
+speedfind
+speedy
+sphider
+spinner
+spry wizard robot
+spurlbot
+spyder
+sqworm
+steeler
+suke
+suntek
+surf
+sven
+sygol
+szukacz
+tach black widow
+tarantula
+tarspider
+techbot
+templeton
+teoma
+theophrastus
+thesubot
+thumbshots-de-bot
+t-h-u-n-d-e-r-s-t-o-n-e
+titan
+titin
+tlspider
+tulipchain
+turnitinbot
+tutorgigbot
+twiceler
+twisted
+ucsd crawl
+udmsearch
+ultraseek
+unchaos_crawler
+uptimebot
+usyd-nlp-spider
+vagabondo
+valkyrie
+verticrawl
+vision-search
+void-bot
+voilabot
+volcano
+voyager
+vspider
+vwbot
+walhello appie
+wallpaper
+wauuu
+webbandit
+webcatcher
+webcopy
+webcore / roots
+webfetcher
+webfoot
+web hoper
+web hopper
+webinator
+webinator-indexer
+weblayers
+weblinker
+weblog
+webmirror
+webmoose
+webquest
+webrace
+webreaper
+websauger
+websearch
+websnarf
+webspider
+webstolperer
+webvac
+webwalk
+webwalker
+webwatch
+wombat
+webyield robot
+webzinger
+wget
+whatuseek
+whizbang
+whowhere
+wild
+wildferret
+wisenut
+worio
+worldlight
+xenu
+xget
+xift
+xirq
+xyleme
+yacybot
+yahoo! slurp
+yahoo-mmcrawler
+yahooseeker
+yandex
+yeti
+yodao
+yottacars_bot
+zao/0
+zao-crawler
+zermelo
+zipppbot
+zoomspider
+zyborg

@@ -1,0 +1,258 @@
+/**
+ * @package Installer
+ * @access private
+ * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: stylesheet.css 17018 2010-07-27 07:25:41Z drbyte $
+ */
+
+body {
+background-color: #EEE;
+margin: 0px;
+padding: 0px;
+font: 12px Tahoma, Verdana, Arial, sans-serif;
+text-align: center;
+}
+
+/*  Column Structure
+--------------------------------- */
+#wrap {
+background-color: #FFF;
+border-right: 1px solid #678;
+border-bottom: 1px solid #678;
+border-left: 1px solid #678;
+padding: 0px;
+margin: 0px auto;
+position: relative;
+text-align: left;
+width: 760px !important;
+width /**/: 752px;
+}
+#main {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+#content {
+float: right;
+width: 578px;
+margin: 0px 20px 5px 0px;
+padding: 0px;
+}
+#popup_content {
+text-align: left;
+margin: 0px 20px 5px 0px;
+padding: 10px;
+}
+#navigation {
+margin: 11px 0px 0px -7px;
+padding: 0;
+background: transparent;
+width: 120px !important;
+width /**/: 135px;
+}
+
+
+/*  Header
+--------------------------------- */
+#header {
+height: 120px;
+width: 760px;
+margin: 0;
+padding: 0;
+text-align: right;
+}
+
+#header div#language {
+  position: absolute;
+  top: 47px;
+  right: 30px;
+}
+#header div#language h4 { padding: 0 0 3px; margin: 0; color: #fff; }
+
+/*  Navigation
+--------------------------------- */
+#navigation ul, #navigation li {
+margin: 0;
+padding: 0;
+list-style: none;
+}
+#navigation li {
+border: 1px solid #666;
+margin-bottom: 3px;
+}
+#navigation li {
+padding: 3px 0 3px 9px;
+width: 124px;
+display: block;
+text-decoration: none;
+color: #333;
+background: #fff;
+}
+
+
+body#license li#welcome,
+
+body#inspect li#welcome,
+body#inspect li#licenseaccept,
+
+body#databasesetup li#welcome,
+body#databasesetup li#licenseaccept,
+body#databasesetup li#inpection,
+
+body#databaseupgrade li#welcome,
+body#databaseupgrade li#licenseaccept,
+body#databaseupgrade li#inpection,
+body#databaseupgrade li#system,
+
+body#systemsetup li#welcome,
+body#systemsetup li#licenseaccept,
+body#systemsetup li#inpection,
+body#systemsetup li#system,
+body#systemsetup li#database,
+
+body#storesetup li#welcome,
+body#storesetup li#licenseaccept,
+body#storesetup li#inpection,
+body#storesetup li#system,
+body#storesetup li#database,
+body#storesetup li#databaseupg,
+
+body#adminsetup li#welcome,
+body#adminsetup li#licenseaccept,
+body#adminsetup li#inpection,
+body#adminsetup li#system,
+body#adminsetup li#database,
+body#adminsetup li#databaseupg,
+body#adminsetup li#store,
+
+body#finished li#welcome,
+body#finished li#licenseaccept,
+body#finished li#inpection,
+body#finished li#system,
+body#finished li#database,
+body#finished li#databaseupg,
+body#finished li#store,
+body#finished li#admin {color: grey;}
+
+body#index li#welcome,
+body#license li#licenseaccept,
+body#inspect li#inspection,
+body#systemsetup li#system,
+body#databasesetup li#database,
+body#databaseupgrade li#databaseupg,
+body#configcheckup li#cfgcheck,
+body#storesetup li#store,
+body#adminsetup li#admin,
+body#finished li#finish {
+	font-weight: bold;  background-color: #ceddf0;
+}
+
+/*  Footer
+--------------------------------- */
+#footer { clear: both; text-align: center; margin: 10px 0 0 5px;}
+
+/*  Headings
+--------------------------------- */
+h1 {
+   color: #ffffff;
+   border:1px solid #aca893;
+   background-color: #c96e29;
+   background-image: url(../images/tile_back.jpg);
+   font-size: 16px;
+   padding: 4px;
+}
+h2 {
+	color: #c96e29;
+	font-size: 16px;
+}
+
+.extralarge {
+  font-size: 2em;
+	}
+
+/* Links
+--------------------------------- */
+a:link, a:visited, a:active { color:#0033FF; font-weight: bold; font-size: 1.1em; text-decoration:none; }
+a:hover { color:#c96e29;}
+a.button { padding: 3px 15px; color: #000; border: 3px outset #666; margin: 0px 5px; background-color: #ceddf0; }
+a.button:hover {background-color: #ceddf0; }
+
+/*  Forms
+--------------------------------- */
+form { margin: 0; padding: 0; }
+fieldset { margin: 0; padding: 10px; border: 1px solid #666; }
+legend { margin: 0; padding: 0 4px; color: #e80; font-weight: bold;}
+.attention { color: red; }
+input, select, textarea { margin: 10px 5px 0; padding: 0; }
+label, span.label { margin: 0; padding: 0; font-weight: bold; }
+
+div.section { margin: 0; padding: 0; clear: both; }
+div.section input, div.section select, div.section div.input, div.section textarea { float: right; }
+div.section div.input input { float: none; }
+div#language input, div#language select { margin: 0; padding: 0; }
+
+div.section ul.inspect-list li  { list-style-type: none; }
+div.section ul.inspect-list li.OK { list-style-image: url(../images/greencheck.gif); color:#009933; }
+div.section ul.inspect-list li.FAIL { list-style-image: url(../images/redx.gif); color:#FF0000; }
+div.section ul.inspect-list li.WARN { list-style-image: url(../images/yellowcaution.gif); color:#FF9900; }
+div#error ul li.FAIL  { list-style-image: url(../images/redx.gif); color:#FF0000; }
+div#error ul li.WARN { list-style-image: url(../images/yellowcaution.gif); color:#FF9900; }
+div.section ul.inspect-list li.NA { list-style-type: none;  }
+
+div.progress {color:#CC6600;}
+
+/*  Frames
+--------------------------------- */
+iframe { width: 576px; height: 250px; border: 1px solid #666; }
+
+/* Miscellaneous
+--------------------------------- */
+p {
+line-height: 1.5em;
+margin: 0px 0px 1em;
+padding: 0px;
+}
+.center { text-align: center; }
+.errors {  color: #FF0000;}
+SPAN.emphasis {  color:#c96e29;}
+a.nowrap {	white-space: nowrap; }
+
+/* message box */
+
+.messageBox{
+}
+.messageStackCaution{
+background-color:#ffff00;
+}
+.messageStackError,.messageStackWarning{
+background-color:#ffb3b5;
+}
+.messageStackSuccess{
+background-color:#d4ffbd;
+}
+
+
+
+
+
+#errorInformation{
+  display: inline;
+  white-space: nowrap;
+  margin: 0;
+  padding:  0.5em 0em;
+  list-style-type: none;
+}
+
+#error {
+	}
+
+#stopsign {
+  float: left;
+  width: 140px;
+	}
+
+.cfgfilecontent {
+	font-size:11px;
+	}

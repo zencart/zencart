@@ -1,0 +1,217 @@
+body {background: white; color: black; font: 12px Verdana, sans-serif;
+  margin: 0; padding: 0.5em; border-width: 0;
+  min-width: 55em !important; position: relative;}
+* {font-size: 1em;}
+a:link, #textbar a:link {color: #00C;}
+a:visited, #textbar a:visited {color: #909;}
+
+#main #rsspanel {text-align: right;
+  position: absolute; top: 0.33em; right: 0.5em; width: 3em; z-index: 1000;}
+#main #rsspanel a {font: bold 10px Verdana, sans-serif; text-decoration: none;
+  padding: 0 0.5em; border: 1px solid;
+  background: #F60; color: #FFF; border-color: #FFC8A4 #7D3302 #3F1A01 #FF9A57;}
+
+#skipper {display: none !important;}
+#obsolete {margin: 0 1em 3em; padding: 1em; border: 3px double;
+  text-align: center; font-size: 105%;
+  background: rgb(100%,98%,10%); color: rgb(66%,0%,0%);}
+
+#masthead {border: 1px solid;
+  font-family: Arial, sans-serif;
+  padding: 0; margin: 0;}
+#masthead h1 {font-weight: normal; font-size: 300%;
+  letter-spacing: 0.42em; text-transform: lowercase;
+  position: relative; z-index: 10;
+  margin: 0 12em -0.1em 0; padding: 0.5em 0.25em 0;}
+#masthead h1 a {text-decoration: none;}
+#masthead h1 span {position: absolute; top: 0.5em; left: 1.75em;
+  font-size: 50%; letter-spacing: 0.4em;}
+
+#srch {position: absolute; top: 0.5em; right: 0.5em; z-index: 11;
+  width: 12em; height: 4.66em;
+  border: 1px solid; border-left: 3px double; padding: 0; margin: 0;}
+#srch h4 {font-size: 1em; margin: 0 0 0.5em; padding: 0.5em 0.25em 0;
+  border-bottom: 1px solid;}
+#srch div {margin: 0.125em 0 0 0.33em;}
+#srch input.text {width: 75%;}
+#srch input[type="submit"] {padding: 0; margin-left: 2px;}
+
+#main {position: relative; z-index: 20; width: 100%; border-top: 1px solid;
+  background: white;}
+
+pre, code, tt {font: 100% "Courier New", Courier, "Andale Mono", monospace;}
+sup {vertical-align: baseline; position: relative; top: -0.33em;}
+
+#content {margin: 4.25em 12em 0 10em; padding: 0 2.5em 5em;
+  border-left: 1px solid; font: 1em/1.25em Verdana, sans-serif;}
+#content h1, #content h2, #content h3, #content h4 {margin: 0.5em 0 0;
+   font-family: Arial, Helvetica, sans-serif; clear: left;
+   line-height: 1.05;}
+#content h1 {margin: 0; font-size: 225%;}
+#content h2 {font-size: 175%;}
+#content h3 {font-size: 150%;}
+#content h4 {margin: 1.25em 0 0; font-size: 125%;}
+#content p {padding-left: 0.66em; margin: 0.25em 0 1.5em; font-size: 0.95em;}
+#content ul, #content ol {margin: 0.25em 0.5em 1em 2.5em; padding: 0;
+  font-size: 0.95em;}
+body #content a[name] {color: inherit;}
+
+#content table {font-size: 0.95em;}
+#content table tr, #content table td {font-size: 1em;}
+
+.sidebar {position: absolute; top: 1.75em; font: 1em Verdana, sans-serif;}
+.sidebar h4 {font-size: 1em;
+  border-width: 1px; border-style: solid none;
+  padding: 6px 0.1em 1px 0.33em; margin: 0;
+  word-spacing: 1px;}
+.sidebar ul {padding: 0.25em 0; margin: 0; list-style: none;
+  font-size: 0.95em;}
+
+#textbar {left: 0; margin-top: 2.5em; width: 10em;}
+#textbar h4 {border-left-style: solid;}
+#textbar p {font-size: 0.85em; margin: 1em 0.5em;}
+#textbar li {list-style: inside square;}
+
+#linkbar {right: 0; width: 12em; padding-top: 2.5em;
+  border: 1px solid; border-top: none; border-left: 3px double;}
+#linkbar h4 {text-align: center;}
+#linkbar ul {border-right-width: 1px;}
+#linkbar li {text-indent: -0.75em; margin: 0.33em 0.5em 0.25em 1.5em;}
+#linkbar #nde-centrals a {float: left; width: 45%;
+  padding: 0.4em 2% 0.1em; text-align: center;}
+#linkbar #nde-centrals b {display: none;}
+#linkbar #nde-centrals hr {visibility: hidden; clear: both; height: 0; margin: 0; border-width: 0;}
+
+#navbar {position: absolute; z-index: 100; top: 0; font: 1em Verdana, sans-serif;
+  left: 0; right: 0; top: 0; margin: -1px 0 0 0; padding: 0.33em 0;
+  width: 100%; line-height: 1em;
+  border: 1px solid; border-width: 1px;}
+html>body #navbar {width: auto;}
+
+#nde-config {position: absolute; z-index: 50; top: 1.75em; right: 0;
+  width: 12.1em; height: 2.66em;
+  padding: 0.66em 0 0; margin: -1px 0 0;
+  border: 1px solid; border-width: 1px 0;
+  text-align: center;
+  voice-family: "\"}\""; voice-family:inherit;
+  height: 1.75em;}
+
+#nde-config .ui {border: 1px solid; font-size: 90%;
+  color: black; padding: 0 0.2em; margin: 0 0 0 2px;
+  text-decoration: none;}
+#nde-config #nde-themelink {padding: 1px 0.3em; margin: 0;}
+#nde-config ul.nde-menu-system {display: inline; margin-right: 0.5em;}
+#nde-config ul.nde-menu-system ul a {text-align: left;}
+
+#nde-config li.submenu ul {border-top: 1px solid black;
+  top: 2.1em !important; left: -8em !important; width: 14.25em !important;}
+#nde-config li.submenu ul li {border: 1px solid black; border-top: none;}
+
+#nde-blue {background: rgb(62%,64%,87%);
+  color: rgb(17%,20%,50%) !important;}
+#nde-tan {background: rgb(92%,80%,58%);
+  color: rgb(37%,23%,8%) !important;}
+#nde-gray {background: rgb(75%,75%,75%);
+  color: rgb(33%,33%,33%) !important;}
+#nde-classic {background: rgb(26%,54%,61%);
+  color: white !important;}
+#nde-config ul a:hover {color: black !important;
+  background: rgb(100%,98%,70%);}
+
+#nde-footer {border-top: 1px solid; padding: 0.25em 0.1em 0.5em; margin: 0;
+  font: 0.75em Verdana, sans-serif; text-align: left; clear: both;}
+#nde-footer #totop {float: right; width: 12em; text-align: right;}
+
+/* ---------------------------------------------------------------- */
+/* home-specific rules */
+
+.home #content h2:first-child, .home #content .nde-nn4 + h2 {margin-top: 0; font-size: 175%;}
+.home #content h2 {font-size: 133%; margin: 1.5em 0 0;}
+.home #content h2 + * {margin-top: 0.125em !important;}
+
+.home #content h3 {font-size: 115%;
+    margin: 1.25em 0 0; padding: 0.75em 0 0;
+    border: 1px solid; border-width: 0 0 1px 0;}
+.home #content h3 a {text-decoration: none; font-weight: bold;}
+.home #content h3 + p {margin-top: 0.25em;}
+
+.home #content p + ul {margin-top: -0.8em;}
+.home #content h3 + ul {margin-left: 1.25em; margin-top: 0.5em;
+  list-style-type: square;}
+.home #content h3 + ul li {margin-top: 0.2em;}
+
+/* ---------------------------------------------------------------- */
+/* article-specific rules */
+
+.article #content {margin: 3em 12em 0 2em; padding: 0.5em 1.5em 2em 2em;
+  border-style: none;}
+.article #content h1 {font-size: 200%; line-height: 0.95em; margin: 0;
+  border-bottom: 1px solid gray; line-height: 1.15em;}
+.article #content h2, .article #content h3 {line-height: 1.2em;}
+.article #content h2 {font-size: 150%; margin: 2.5em 0 0.5em;}
+.article #content h3 {font-size: 133%; margin: 1.5em 0 0.5em;}
+.article #content p {padding-left: 0;}
+.article #content ul {list-style-type: disc; font-size: 95%;
+  margin: 1em 0; padding-left: 2.5em;}
+.article #content ul li {margin-bottom: 0.5em; line-height: 1.15em;}
+.article #content pre {width: 100%;}
+.article #content img {max-width: 100%;}
+
+.article #content ul.nde-metadata {padding: 0 0.125em;
+  list-style: none; font-size: 1.1em; color: #333;}
+.article #content ul.nde-metadata li {margin: 0.125em 0;}
+.article #content ul#nde-author {margin: 0.33em 0 0;}
+.article #content ul#nde-pubmod {margin: 0 0 2em;}
+
+.article #linkbar #toc {margin: 0 1px 0 -3px;
+  border-left: 3px double silver; border-right: 1px solid silver;
+  background: white; color: #AAA;}
+.article #linkbar #toc li {text-indent: -0.33em;
+  list-style-type: square;}
+
+.article div.figure {margin: 0 0 0.66em 0;
+  font-weight: bold; font-size: 90%; line-height: 1;
+  color: #555;}
+.article div.figure img {display: block; position: static; float: none;
+  margin: 2px 0.5em 1px 0; border: 3px double silver;}
+.article div.figure span {padding: 0 0.5em 1px;
+  border: 1px solid silver; border-left: 3px solid silver;
+  background-color: rgb(95%,95%,95%);}
+
+/* ---------------------------------------------------------------- */
+/* central-specific rules */
+
+.central #content h1 {margin: 0 0 0.5em; letter-spacing: 1px;
+      font-weight: 900; font-size: 250%;}
+
+.central #content h2 {font-size: 160%; margin: 1.5em 0 0.125em; padding-bottom: 0.125em;}
+.central #content h2 + * {margin-top: 0.25em !important;}
+
+.central #content h3 {font-size: 110%;
+    margin: 1.25em 0 0.125em; padding: 0.75em 0 0;
+    border-bottom: 1px solid;}
+.central #content h3 a {text-decoration: none; font-weight: bold;}
+.central #content h3 + p {margin-top: 0.33em;}
+
+.central #content span.nde-tail {font-size: 85%; white-space: nowrap;}
+.central #content div.nde-metadata + p {margin: 0.125em 1em 0 0.66em;}
+
+.central #content .nde-blurb h3 {margin-bottom: 0;}
+.central #content .nde-blurb .nde-metadata {margin: 1px 0 0 0.5em; padding: 1px 0.5em 0;
+     text-align: right; font: 0.92em Arial, sans-serif;
+     border: 1px solid; border-top: none; width: 10em; float: right;}
+.central #content .nde-blurb span.nde-tail a {padding: 0 0.25em; font-weight: bold;}
+
+.central #textbar li {font-size: 0.9em; margin: 0.5em; font-weight: normal;}
+
+/* ---------------------------------------------------------------- */
+/* NN4.x-specific rules */
+
+.nde-nn4 {background: yellow; color: red; font-weight: bold; font-size: 125%;
+  border: 1px solid white; padding: 0.25em;}
+
+/* ---------------------------------------------------------------- */
+/* The following styles will be ignored by NN4.x */
+/*/*/
+
+*.nde-nn4 {display: none;}

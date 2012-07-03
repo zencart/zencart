@@ -1,0 +1,1 @@
+if(document.login) document.login.email_address.focus();

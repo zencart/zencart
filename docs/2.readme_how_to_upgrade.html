@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: 2.readme_how_to_upgrade.html 20044 2011-12-06 23:09:52Z drbyte $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE ; border-color:#5778ce; font-size:10px; }
+.plainbox, div.callout {border: 1px dashed; border-color: #C96E29; margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:10px ;}
+.error {color:#FF0000; }
+.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color: #c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29; font-size: 18px;}
+h3 { color: #5778ce; font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29; font-size: 14px;}
+.center {text-align: center}
+.style2 {color: #FF0000; font-weight: bold; }
+-->
+</style>
+<title>Upgrading Zen Cart(R) in 3 Easy Steps!</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro center">Welcome to Zen Cart&reg;</h1>
+<p>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+</p>
+<p class="small center">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.
+</p>
+</fieldset>
+<br>
+<fieldset>
+<h1>BEFORE YOU UPGRADE!</h1>
+<p>Have you checked whether your webserver meets the technical requirements?</p>
+<h1>Zen Cart&reg; Server Requirements:</h1>
+<h2><strong>Minimum</strong> Server Requirements:</h2>
+<ul>
+<li>* PHP 5.2.14 or higher, Apache 2.0 or higher, and MySQL 4.1.3 or higher.</li>
+<li>* Apache must be configured with AllowOverride set to either 'All' or at least both 'Limit' and 'Indexes' parameters, and preferably the 'Options' parameter as well.</li>
+<li>* PHP must be configured to support CURL with OpenSSL</li>
+</ul>
+<h2><strong>RECOMMENDED</strong> server capabilities:</h2>
+<ul>
+<li>PHP 5.3.5 or higher</li>
+<li>Apache 2.0 or higher</li>
+<li>MySQL 5.0.90 or higher</li>
+<li>and the Apache/PHP configuration settings mentioned above.</li>
+</ul>
+<p>While Zen Cart&reg; can run on Windows/IIS servers, <strong>Linux/Apache servers are recommended for best results</strong>.</p>
+</fieldset>
+<br>
+<fieldset>
+<h1 class="intro">ONLINE DOCUMENTATION</h1>
+You can find updated upgrade instructions AND alternate ways of looking at upgrading, by visiting: <a href="http://www.zen-cart.com/upgrade">www.zen-cart.com/upgrade</a>.
+<p>&nbsp;</p>
+<br>
+<h1 class="intro center">3 EASY STEPS TO UPGRADE ZEN CART&reg;</h1>
+<div>
+<h1>NOTICE: Re: Payment AND Shipping Modules </h1>
+<p class="error">You will need to re-install all your active payment and shipping modules as part of your upgrade:</p>
+<ul>
+<li>BEFORE UPGRADING, Take note of the login IDs, transaction keys, email addresses and other settings already configured in EACH of your Payment AND Shipping modules (You'll need this info so you can re-enter it after Installing the modules again).
+<li>Remove each module by clicking the "Remove" button for each one.
+<li>AFTER UPGRADING, Install each module (that you're using) in Admin-&gt;Modules-&gt;Payment and Admin-&gt;Modules-&gt;Shipping in order to take advantage of the bugfixes and feature improvements in each module. (you do NOT need to do this with modules you're NOT using. If you're no longer using a certain module anymore and it doesn't have a red dot next to it, click the "Remove" button to save on processing performance.)
+<li>Re-enter all your configuration settings for each module as you go along. BE SURE TO TEST each one before you take your store live again, to make sure you've got all your settings entered correctly.</li>
+</ul>
+</div>
+<h1>Getting Started ... </h1>
+This is a basic guide to upgrading Zen Cart&reg;.  If you have not yet installed Zen Cart, please see the <a href="./1.readme_installation.html">1.readme_installation.html </a>file for installation instructions. <br>
+<br>
+To upgrade Zen Cart&reg;, you'll need the same basic tools you used to install and customize it in the first place:  An FTP program, a text editor friendly to HTML/PHP code, phpMyAdmin or equivalent access to your MySQL database, and your Control Panel for managing your webspace.<br>
+<br>
+Additionally, you will find a file-comparison tool like <a href="http://winmerge.sf.net" target="_blank">WinMerge</a>,  <a href="http://www.scootersoftware.com/" target="_blank">Beyond Compare</a> or ExamDiff (Linux) to be very helpful.
+(There's also <a href="http://www.barebones.com" target="_blank">BBedit</a> for the Mac.)<br>
+<br>
+Upgrading follows 3 easy steps. We suggest you take your time going through each stage carefully and methodically. Don't rush the process. And as always, be sure you keep good backups first. <br>
+<br>
+We highly recommend you pay special attention to getting familiar with the demo data in the new version, so that you can become comfortable with the many new features contained in the new release.
+<div>
+<h1>1. Preparation</h1>
+Unzip a copy of the new version of Zen Cart&reg;, upload it to your webserver into a "<span class="filename">demo</span>" folder, and install the new version into a separate database, and include the Demo products.
+This is just for a place for you to play with the new version and get used to its new features.  These can be deleted after conversion is complete.<br>
+<br>
+Study the new features, and the documented changes to the template structures, as well as the "changelog".  Use the demo products in the demo shop as examples. See also the supporting documentation provided with the new release.<br>
+<br>
+<br>
+Make a full backup of your database (dump to SQL file). Store this file on your PC for later reference. <br>
+<br>
+Make a full backup of your site files (ftp to your PC and zip it up for safe-keeping).<br>
+Keep the backup on your PC to use in next steps. Perhaps call this folder &quot;<span class="filename">\zen_backup</span>&quot;.<br>
+<br>
+<br>
+Now let's find out the differences/customizations details between your site and the original Zen Cart files.<br>
+<br>
+Unzip a copy of the original Zen Cart&reg; files for the version you <em>originally installed</em> or last upgraded from (ie:&nbsp;perhaps v1.2.7 or even 1.3.6).  This should be placed in a separate working folder on your PC (perhaps &quot;<span class="filename">\zen_orig</span>&quot;).<br>
+<br>
+Make a list of any add-ons you have installed, for later reference.<br>
+<br>
+Run a tool like <a href="http://winmerge.sf.net" target="_blank">WinMerge</a> to compare the "Original" Zen Cart&reg; files in &quot;<span class="filename">\zen_orig</span>&quot; against your working backup files in &quot;<span class="filename">\zen_backup</span>&quot;.<br>
+Note all the files that are "different". In WinMerge, double-click on each file and note what the differences are.  <br>
+If the differences are just language defines for display text, those will be simple to carry forward.<br>
+If the differences are actual programming/code differences, you will need to make detailed notes in order to carry over those changes to the new new new version.<br>
+Any mods/add-ons you've installed will likely contain many programming changes, and may not be fully compatible with the newer Zen Cart&reg; release.<br>
+<br>
+Your list of add-on's may help you narrow down the source of any differences you're finding between versions.  You may have to download the add-on again to take a look at the readme or code contained  in it.  You may have to contact the author to ask for an updated version.<br>
+<br>
+<br>
+As you make your list of changed files, etc, at this stage, you may want to move things into the Zen Cart&reg; template-override structure, if you haven't already done so. See the <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg; site</a> for FAQ's on the template system. <br>
+</div>
+<div><h1>2. Execution</h1>
+Download and unzip the latest Zen Cart&reg; version to your PC.  This will be in a 3rd directory (perhaps &quot;<span class="filename">\zen_new</span>&quot;), separate from the other two folders compared above.<br>
+<br>
+Using the list of files you made earlier, go through each "changed" file, and make your changes from the old version into the new version.<br>
+Simple language edits will be just a matter of copy-and-paste.<br>
+Programming changes to core components will be more difficult and require significant testing.<br>
+You may find WinMerge handy at this stage to apply edits as well. However, you will see many extra differences that may not be related to your own customizations, or that may conflict. Be careful making changes to program code. <br>
+<br>
+Note that there will be several changes you will have to make to files that you have overridden using the template overrides system. Thus, you'll want to compare files from <span class="filename">/includes/templates/MYTEMPLATE/*</span> to <span class="filename">/includes/template/template_default/*</span> ... and the same with language file overrides, sideboxes, etc.<br>
+</div>
+<div>
+<h1><strong>3. Testing</strong></h1>
+<p>Make a NEW database to install the new version of Zen Cart&reg; into. Use your hosting control panel to do this. <br>
+    <br>
+  If the last backup you made of your data is older than the last order that might have been processed or customer registration, make a fresh database backup.<br>
+  Restore your database from the backup in step #1 earlier into your NEW database just created.<br>
+  <br>
+  If your <span class="filename">/zen_new</span> folder doesn't have "<span class="filename">/includes/configure.php</span>" and "<span class="filename">/admin/includes/configure.php</span>" files, copy them from your old store folder.<br>
+  <br>
+  EDIT your "<span class="filename">/zen_new/includes/configure.php</span>" file and ensure that your DATABASE_NAME matches your NEW database. Also verify database username and password in case that information has changed.  Save this file, and be sure to upload it as part of the next step. Repeat for the <span class="filename">/admin/includes/configure.php</span> file as well:<br>
+  <br>
+  Upload the files from your modified "new version" (created in step 2) to your server, into an alternate folder, perhaps called "<span class="filename">/store_new</span>".<br>
+  <br>
+  Ensure that you have uploaded the "<span class="filename">/zen_new/zc_install</span>" folder to your server. </p>
+<p>Using your browser, surf to  <span class="filename">/zc_install/index.php</span> and choose "<em>Database Upgrade</em>" when prompted.  (Don't select "Install", or you will overwrite your database.) (If &quot;Upgrade&quot; is not offered, then the installer was unable to connect to your database to confirm what version its structure is at. Check your configure.php settings.)<br>
+  <br>
+  Test your customizations.  Edit as needed.  Compare with the test/demo install performed earlier, as needed.<br>
+  <br>
+  When satisfied that all is OK, go live.<br>
+  If significant time has passed since you did your last backup, you may want to repeat the steps in this &quot;Testing&quot; section again, using a fresh backup from your live shop. You don't need to re-upload files again ... simply do the database restore, and run the installer to do the database upgrade again. <br>
+  <br>
+  To go live, put your shop into &quot;Down for Maintenance&quot; mode in the admin area. Be sure to add your IP address to the list of allowed addresses to get into the site for previewing. <br>
+  This can be done easiest by renaming "<span class="filename">store_new</span>" to "<span class="filename">store</span>". (You'll have to rename &quot;store&quot; to something else first.) <br>
+  Test it to be sure that things are operating as desired. If you have small problems to repair, turn &quot;Down for maintenance&quot; on and off again as necessary.<br>
+  <br>
+</p>
+</div>
+<div>
+<h1>Help and Support</h1>
+For additional help and support issues, check out our <strong><a href="http://tutorials.zen-cart.com" target="_blank">FAQs</a></strong> and visit our <strong>Support Forums</strong> on the web at: <a href="http://www.zen-cart.com" target="_blank">www.zen-cart.com</a><br>
+<br>
+<em>Good Luck with your upgrade.  We're glad you're enjoying the Zen Cart&reg; Experience!</em> <br>
+<br><br><hr />
+
+</div>
+</fieldset>
+<br><br>
+<p class="center"><em>Copyright 2003 - 2011 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+</body>
+</html>

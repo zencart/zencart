@@ -1,0 +1,1 @@
+update_zone(document.checkout_address);
