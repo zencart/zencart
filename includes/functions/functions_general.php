@@ -4,7 +4,7 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: functions_general.php 19726 2011-10-07 19:05:18Z drbyte $
@@ -140,22 +140,17 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @param mixed either a single or array of parameter names to be excluded from output
 */
-// Return all HTTP GET variables, except those passed as a parameter
   function zen_get_all_get_params($exclude_array = '', $search_engine_safe = true) {
 
     if (!is_array($exclude_array)) $exclude_array = array();
-
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'main_page', 'error', 'x', 'y'));
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
       while (list($key, $value) = each($_GET)) {
-        if ( (!in_array($key, $exclude_array)) && (strlen($value) > 0) && ($key != 'main_page') && ($key != zen_session_name()) && ($key != 'error') && ($key != 'x') && ($key != 'y') ) {
-          if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-//    die ('here');
-            $get_url .= $key . '/' . rawurlencode(stripslashes($value)) . '/';
-          } else {
-            $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
-          }
+        if (is_array($value) || in_array($key, $exclude_array)) continue;
+        if (strlen($value) > 0) {
+          $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
         }
       }
     }
@@ -164,7 +159,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     return $get_url;
   }
-
 
 ////
 // Returns the clients browser
