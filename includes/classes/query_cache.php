@@ -1,16 +1,19 @@
 <?php
-
 /**
- * QueryCache ver 1.9
- * Created by Data-Diggers.com
- * Website:             http://www.data-diggers.com/
- * Copyright notice: This is free software. GNU license.
- * This code is provided as is. We don't take any responsibility for damage
- * done by use of this software.
- * Feel free to change and redistribute this code, but leave reference to our
- * website.
+ * Temporary cache for sql
+ * 
+ * @package classes
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Created by Data-Diggers.com http://www.data-diggers.com/
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: 
+ *  
  */
-class QueryCache {
+/**
+ * QueryCache
+ *
+ */
+ class QueryCache {
 
     function QueryCache() {
         $this->queries = array();

@@ -4,8 +4,9 @@
  * Class used for database abstraction to MySQL
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
+ * @copyright http://www.data-diggers.com/ 
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: query_factory.php 18994 2011-06-30 20:04:18Z wilt $
  */
