@@ -181,7 +181,9 @@ if (!isset($downloadFilesize) || ($downloadFilesize < 1)) {
     header("Content-Type: application/force-download");
 
     header('Content-Disposition: attachment; filename="' . urlencode($browser_filename) . '"');
-    if ((int)$downloadFilesize > 0) header("Content-Length: " . (string) $downloadFilesize);
+
+//     relocated below
+//     if ((int)$downloadFilesize > 0) header("Content-Length: " . (string) $downloadFilesize);
 
     header("Expires: Mon, 22 Jan 2002 00:00:00 GMT");
     header("Last-Modified: " . gmdate("D,d M Y H:i:s") . " GMT");
@@ -230,6 +232,9 @@ if (DOWNLOAD_BY_REDIRECT == 'true') {
 if (DOWNLOAD_BY_REDIRECT != 'true' or $link_create_status==false ) {
   // not downloading by redirect; instead, we stream it to the browser.
   // This happens if the symlink couldn't happen, or if set as default in Admin
+
+  if ((int)$downloadFilesize > 0) header("Content-Length: " . (string) $downloadFilesize);
+
   $disabled_funcs = @ini_get("disable_functions");
   if (DOWNLOAD_IN_CHUNKS != 'true' && !strstr($disabled_funcs,'readfile')) {
     $zco_notifier->notify('NOTIFY_DOWNLOAD_WITHOUT_REDIRECT___COMPLETED', $origin_filename);
