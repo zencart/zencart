@@ -88,9 +88,9 @@ switch ($action) {
     {
       zen_update_profile_name($profile, $_POST['profile-name']);
       $messageStack->add_session(SUCCESS_PROFILE_NAME_UPDATED, 'success');
-    } else 
+    } else
     {
-      $messageStack->add_session(ERROR_INVALID_PROFILE_NAME, 'error');      
+      $messageStack->add_session(ERROR_INVALID_PROFILE_NAME, 'error');
     }
     zen_redirect(zen_href_link(FILENAME_PROFILES));
     break;
@@ -151,7 +151,7 @@ switch ($action) {
         <th class="users"><?php echo TEXT_USERS ?></th>
         <th class="actions">&nbsp;</th>
       </tr>
-    </head>
+    </thead>
 
 <?php if ($action != 'rename') { ?>
     <tfoot>
