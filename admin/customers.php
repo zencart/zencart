@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: customers.php 19775 2011-10-11 15:51:52Z kuroi $
@@ -14,6 +14,7 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $customers_id = zen_db_prepare_input($_GET['cID']);
+  if (isset($_POST['cID'])) $customers_id = zen_db_prepare_input($_POST['cID']);
 
   $error = false;
   $processed = false;
@@ -75,7 +76,7 @@
             $custinfo = $db->Execute("select customers_email_address, customers_firstname, customers_lastname
                                       from " . TABLE_CUSTOMERS . "
                                       where customers_id = '" . (int)$customers_id . "'");
-            if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_GET['current'] > 0 && $custinfo->RecordCount() > 0) {
+            if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current'] > 0 && $custinfo->RecordCount() > 0) {
               $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
               $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE ;
               zen_mail($custinfo->fields['customers_firstname'] . ' ' . $custinfo->fields['customers_lastname'], $custinfo->fields['customers_email_address'], EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
