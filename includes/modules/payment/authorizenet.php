@@ -3,7 +3,7 @@
  * authorize.net SIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: authorizenet.php 19511 2011-09-14 18:45:01Z drbyte $
@@ -365,6 +365,15 @@ class authorizenet extends base {
       'x_allow_partial_Auth' => 'FALSE', // unable to accept partial authorizations at this time
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
     );
+
+    // force conversion to USD
+    if ($_SESSION['currency'] != 'USD') {
+      global $currencies;
+      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value('USD'), 2);
+      $submit_data_core['x_currency_code'] = 'USD';
+      unset($submit_data_core['x_tax'], $submit_data_core['x_freight']);
+    }
+
 
     $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, number_format($order->info['total'], 2), $sequence);
 
