@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_file_db_names.php 12769 2009-03-27 16:56:43Z drbyte $
@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * load the filename/database table names and he compatiblity functions
  *
  * @package admin
- * @copyright Copyright 2003-2009 zen-cart Development Team
+ * @copyright Copyright 2003-2012 zen-cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
 **/
 // set the type of request (secure or not)
@@ -41,7 +41,7 @@ $extra_datafiles_dir = DIR_WS_INCLUDES . 'extra_datafiles/';
 if ($dir = @dir($extra_datafiles_dir)) {
   while ($file = $dir->read()) {
     if (!is_dir($extra_datafiles_dir . $file)) {
-      if (preg_match('/\.php$/', $file) > 0) {
+      if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
         require($extra_datafiles_dir . $file);
       }
     }

@@ -502,7 +502,7 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
 
 //    if (!$onlyMainFile && $za_dir = @dir('../includes/' . 'extra_configures')) {
 //      while ($zv_file = $za_dir->read()) {
-//        if (preg_match('/\.php$/', $zv_file) > 0) {
+//        if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
 //          //echo $zv_file.'<br>';
 //          $files_array[] = $zv_file;
 //        }

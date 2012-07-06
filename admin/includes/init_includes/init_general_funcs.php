@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_general_funcs.php 18736 2011-05-18 04:56:45Z drbyte $
@@ -41,7 +41,7 @@ require(DIR_WS_FUNCTIONS . 'functions_metatags.php');
 // include the list of extra functions
   if ($za_dir = @dir(DIR_WS_FUNCTIONS . 'extra_functions')) {
     while ($zv_file = $za_dir->read()) {
-      if (preg_match('/\.php$/', $zv_file) > 0) {
+      if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
         require(DIR_WS_FUNCTIONS . 'extra_functions/' . $zv_file);
       }
     }

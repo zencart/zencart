@@ -142,7 +142,7 @@
   if ($dir = @dir($extras_dir)) {
     while ($file = $dir->read()) {
       if (!is_dir($extras_dir . '/' . $file)) {
-        if (preg_match('/\.php$/', $file) > 0) {
+        if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
           $directory_array[] = '/' . $file;
         }
       }

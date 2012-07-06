@@ -4,7 +4,7 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: extra_definitions.php 3012 2006-02-11 16:34:02Z wilt $
@@ -29,7 +29,7 @@ $directory_array = array();
 if ($dir = @dir($languages_extra_definitions_directory_template)) {
   while ($file = $dir->read()) {
     if (!is_dir($languages_extra_definitions_directory_template . $file)) {
-      if (preg_match('/\.php$/', $file) > 0) {
+      if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
         $directory_array[] = $file;
       }
     }
@@ -46,7 +46,7 @@ $dir_check = $directory_array;
 if ($dir = @dir($languages_extra_definitions_directory)) {
   while ($file = $dir->read()) {
     if (!is_dir($languages_extra_definitions_directory . $file)) {
-      if (preg_match('/\.php$/', $file) > 0) {
+      if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
         if (in_array($file, $dir_check, TRUE)) {
           // skip name exists
         } else {
@@ -74,4 +74,3 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
     //      echo 'LOADING: ' . $ws_languages_extra_definitions_directory . $file . ' ' . $file_cnt . '<br />';
   }
 }
-?>
