@@ -23,7 +23,7 @@ if (isset($_POST['login']))
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 // Slam prevention:
-if ($_SESSION['login_attempt'] > 6) {
+if ($_SESSION['login_attempt'] > 9) {
   header('HTTP/1.1 406 Not Acceptable');
   exit(0);
 }
@@ -46,16 +46,15 @@ if (isset($_POST['submit']))
     $email_message = MESSAGE_PASSWORD_SENT;
   }
   // BEGIN SLAM PREVENTION
-  if ($error == TRUE && $_POST['admin_email'] != '')
+  if ($_POST['admin_email'] != '')
   {
     if (! isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
     $_SESSION['login_attempt'] ++;
-    sleep(3 * $_SESSION['login_attempt']);
   } // END SLAM PREVENTION
 
   if ($error == false)
   {
-    $new_password = zen_create_random_value((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH);
+    $new_password = zen_create_PADSS_password((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH);
     $resetToken = (time() + ADMIN_PWD_TOKEN_DURATION) . '}' . zen_encrypt_password($new_password);
     $sql = "update " . TABLE_ADMIN . " set reset_token = :token: where admin_id = :admID: ";
     $sql = $db->bindVars($sql, ':token:', $resetToken, 'string');

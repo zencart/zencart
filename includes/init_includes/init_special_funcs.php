@@ -18,10 +18,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 require(DIR_WS_FUNCTIONS . 'whos_online.php');
 zen_update_whos_online();
 /**
- * require the password crypto functions
- */
-require(DIR_WS_FUNCTIONS . 'password_funcs.php');
-/**
  * require the banner functions, auto-activate and auto-expire
  */
 require(DIR_WS_FUNCTIONS . 'banner.php');

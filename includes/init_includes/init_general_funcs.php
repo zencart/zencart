@@ -29,6 +29,10 @@ require(DIR_WS_FUNCTIONS . 'functions_email.php');
  */
 require(DIR_WS_FUNCTIONS . 'functions_ezpages.php');
 /**
+ * require the password crypto functions
+ */
+require(DIR_WS_FUNCTIONS . 'password_funcs.php');
+/**
  * User Defined Functions
  */
 include(DIR_WS_MODULES . 'extra_functions.php');
