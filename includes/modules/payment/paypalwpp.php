@@ -1659,6 +1659,7 @@ class paypalwpp extends base {
     $error = $this->_errorHandler($response, 'GetExpressCheckoutDetails');
 
     // Check for blank address -- if address received from PayPal is blank, ask the customer to register in the store first and then resume checkout
+  if ($_SESSION['cart']->get_content_type() != 'virtual')
     if ($response['SHIPTONAME'] . $response['SHIPTOSTREET'] . $response['SHIPTOSTREET2'] . $response['SHIPTOCITY'] . $response['SHIPTOSTATE'] . $response['SHIPTOZIP'] . $response['SHIPTOCOUNTRYCODE'] == '') {
       $this->terminateEC(MODULES_PAYMENT_PAYPALWPP_TEXT_BLANK_ADDRESS, true, FILENAME_CREATE_ACCOUNT);
     }
