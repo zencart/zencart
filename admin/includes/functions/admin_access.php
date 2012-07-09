@@ -631,11 +631,14 @@ function zen_get_admin_pages($menu_only)
     }
     $result->MoveNext();
   }
-  foreach ($productTypes as $pageName => $productType)
+  if (!$menu_only)
   {
-    if (!isset($retVal['_productTypes']['_productTypes_'.$pageName]))
+    foreach ($productTypes as $pageName => $productType)
     {
-      $retVal['_productTypes'][$pageName] = $productType;
+      if (!isset($retVal['_productTypes']['_productTypes_'.$pageName]))
+      {
+        $retVal['_productTypes'][$pageName] = $productType;
+      }
     }
   }
   /**
@@ -813,6 +816,7 @@ function zen_get_menu_titles()
     $retVal[$result->fields['menu_key']] = constant($result->fields['language_key']);
     $result->MoveNext();
   }
+  $retVal['_productTypes'] = BOX_HEADING_PRODUCT_TYPES;
   return $retVal;
 }
 
