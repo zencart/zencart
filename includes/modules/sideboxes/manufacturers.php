@@ -3,7 +3,7 @@
  * manufacturers sidebox - displays a list of manufacturers so customer can choose to filter on their products only
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: manufacturers.php 18922 2011-06-13 03:23:35Z drbyte $
@@ -50,7 +50,7 @@ if ($show_manufacturers) {
     }
 
     while (!$manufacturer_sidebox->EOF) {
-      $manufacturer_sidebox_name = ((strlen($manufacturer_sidebox->fields['manufacturers_name']) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturer_sidebox->fields['manufacturers_name'], 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturer_sidebox->fields['manufacturers_name']);
+      $manufacturer_sidebox_name = zen_output_string(((strlen($manufacturer_sidebox->fields['manufacturers_name']) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturer_sidebox->fields['manufacturers_name'], 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturer_sidebox->fields['manufacturers_name']), false, true);
       $manufacturer_sidebox_array[] = array('id' => $manufacturer_sidebox->fields['manufacturers_id'],
                                        'text' => $manufacturer_sidebox_name);
 
