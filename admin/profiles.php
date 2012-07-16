@@ -169,16 +169,16 @@ switch ($action) {
 <?php if ($action == 'rename' && $_GET['profile'] == $profileDetails['id']) { ?>
         <td colspan="3">
           <?php echo zen_draw_form('profileNameForm', FILENAME_PROFILES, '', 'post', 'id="profile-update"') ?>
-            <input type="hidden" name="action" value="update_name"/>
-            <input type="hidden" name="profile" value ="<?php echo $profileDetails['id'] ?>"/>
-            <input type="text" name="profile-name" value="<?php echo $profileDetails['name'] ?>"/>
+            <?php echo zen_draw_hidden_field('action', 'update_name'); ?>
+            <?php echo zen_draw_hidden_field('profile', $profileDetails['id']); ?>
+            <?php echo zen_draw_input_field('profile-name', htmlspecialchars($profileDetails['name'], ENT_COMPAT, CHARSET, TRUE)); ?>
             <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
             <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
           </form>
         </td>
 <?php } else { ?>
-        <td class="name"><?php echo $profileDetails['name'] ?></td>
-        <td class="users"><?php echo $profileDetails['users'] ?></td>
+        <td class="name"><?php echo zen_output_string($profileDetails['name'], FALSE, TRUE); ?></td>
+        <td class="users"><?php echo zen_output_string($profileDetails['users'], FALSE, TRUE) ?></td>
 <?php if ($profileDetails['id'] != SUPERUSER_PROFILE) { ?>
         <td class="actions">
           <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=edit&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
@@ -206,8 +206,8 @@ switch ($action) {
   <h1><?php echo sprintf(HEADING_TITLE_INDIVIDUAL_PROFILE, $profileName) ?></h1>
 
     <?php echo zen_draw_form('profilesBoxes', FILENAME_PROFILES) ?>
-    <input type="hidden" name="action" value="update"/>
-    <input type="hidden" name="profile" value="<?php echo $profile ?>"/>
+    <?php echo zen_draw_hidden_field('action', 'update'); ?>
+    <?php echo zen_draw_hidden_field('profile', $profile); ?>
     <div class="formButtons">
       <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
       <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
@@ -216,12 +216,11 @@ switch ($action) {
     <dl>
       <dt>
         <strong class="checkLabel"><?php echo $menuTitles[$menuKey] ?></strong>
-        <input class="checkButton" type="button" value="check All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
+        <input class="checkButton" type="button" value="Check All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
         <input class="checkButton" type="button" value="Uncheck All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
 <?php foreach ($pageList as $pageKey => $page) { ?>
-<?php $checked = in_array($pageKey,$permittedPages) ? 'checked="checked"' : '' ?>
-      <dd><label><input name="p[]" class="<?php echo $menuKey ?>" type="checkbox" value="<?php echo $pageKey ?>" <?php echo $checked ?>><?php echo $page['name'] ?></label></dd>
+      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), in_array($pageKey,$permittedPages), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
 <?php } ?>
     </dl>
 <?php } ?>
@@ -236,7 +235,7 @@ switch ($action) {
   <h1><?php echo HEADING_TITLE_NEW_PROFILE ?></h1>
     <?php echo zen_draw_form('profiles', FILENAME_PROFILES, 'action=insert') ?>
     <?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', false, 'text', true) ?>
-    <input type="hidden" name="action" value="insert"/>
+    <?php echo zen_draw_hidden_field('action', 'insert'); ?>
     <div class="formButtons">
       <?php echo zen_image_submit('button_save.gif', IMAGE_SAVE) ?>
       <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
@@ -245,12 +244,11 @@ switch ($action) {
     <dl>
       <dt>
         <strong><?php echo $menuTitles[$menuKey] ?></strong>
-        <input class="checkButton" type="button" value="check All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
+        <input class="checkButton" type="button" value="Check All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
         <input class="checkButton" type="button" value="Uncheck All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
-<?php foreach ($pageList as $pageKey => $page) {
-        $checked = isset($_POST['p']) && in_array($pageKey, $_POST['p']) ? ' checked="checked"' : '' ?>
-      <dd><label><input name="p[]" class="<?php echo $menuKey ?>" type="checkbox" value="<?php echo $pageKey ?>"<?php echo $checked ?>><?php echo $page['name'] ?></label></dd>
+<?php foreach ($pageList as $pageKey => $page) { ?>
+      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
 <?php } ?>
     </dl>
 <?php } ?>
