@@ -1,12 +1,13 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: attributes_controller.php 18695 2011-05-04 05:24:19Z drbyte $
  */
   require('includes/application_top.php');
+
   // troubleshooting/debug of option name/value IDs:
   $show_name_numbers = true;
   $show_value_numbers = true;
@@ -16,7 +17,7 @@
     $messageStack->add_session(ERROR_DEFINE_OPTION_NAMES, 'caution');
     zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER));
   }
-  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id='" . (int)$_SESSION['languages_id'] . "' limit 1");
+  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id='" . (int)$_SESSION['languages_id'] . "' and products_options_values_id != " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . " limit 1");
   if ($chk_option_values->RecordCount() < 1) {
     $messageStack->add_session(ERROR_DEFINE_OPTION_VALUES, 'caution');
     zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
@@ -26,11 +27,22 @@
     $messageStack->add_session(ERROR_DEFINE_PRODUCTS, 'caution');
     zen_redirect(zen_href_link(FILENAME_CATEGORIES));
   }
+  // check for damaged database, caused by users indiscriminately deleting table data
+  $ary = array();
+  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_name = 'TEXT' and products_options_values_id=" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
+  while (!$chk_option_values->EOF) {
+    $ary[] = $chk_option_values->fields['language_id'];
+    $chk_option_values->MoveNext();
+  }
+  $languages = zen_get_languages();
+  for ($i=0, $n=sizeof($languages); $i<$n; $i ++) {
+    if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
+      $db->Execute("INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name) VALUES ((int)PRODUCTS_OPTIONS_VALUES_TEXT_ID, " . (int)$languages[$i]['id'] . ", 'TEXT')");
+    }
+  }
 
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
-
-  $languages = zen_get_languages();
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -2080,7 +2092,7 @@ $off_overwrite = false;
 <script type="text/javascript">
 function divertClick(href)
 {
-   document.getElementById('divertClickProto').action = href;   
+   document.getElementById('divertClickProto').action = href;
    document.getElementById('divertClickProto').submit();
    return false;
 }

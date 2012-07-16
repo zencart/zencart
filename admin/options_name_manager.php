@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: options_name_manager.php 18924 2011-06-13 04:34:20Z drbyte $
@@ -12,6 +12,19 @@
 
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
+
+  // check for damaged database, caused by users indiscriminately deleting table data
+  $ary = array();
+  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_name = 'TEXT' and products_options_values_id=" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
+  while (!$chk_option_values->EOF) {
+    $ary[] = $chk_option_values->fields['language_id'];
+    $chk_option_values->MoveNext();
+  }
+  for ($i=0, $n=sizeof($languages); $i<$n; $i ++) {
+    if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
+      $db->Execute("INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name) VALUES ((int)PRODUCTS_OPTIONS_VALUES_TEXT_ID, " . (int)$languages[$i]['id'] . ", 'TEXT')");
+    }
+  }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
