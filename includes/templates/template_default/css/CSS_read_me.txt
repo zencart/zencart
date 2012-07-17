@@ -3,10 +3,12 @@ The CSS files are sent to the browser in this order: (and alphabetically within 
 
              style*.css   // are always loaded and at least ONE should contain site-wide properties.
 language_stylesheet.css   // changes to ALL pages, when that language is used
-          page_name.css   // changes to one page 
+         index_home.css   // specifically affects the home page only
+          page_name.css   // changes to one page, ie: index.php?main_page=page_name
  language_page_name.css   // changes to one page, when that language is used
             c_??_??.css   // changes to all info pages in a category
    language_c_??_??.css   // changes to all info pages in a category, when that language is used
+   c_??_??_children.css   // changes for all children of the specified parent. Also supports a language prefix.
                m_??.css   // changes to a manufacturer's listing page
       language_m_??.css   // changes to a manufacturer's listing page, when that language is used
                p_??.css   // changes to a product's info page
@@ -22,9 +24,11 @@ If someone went to any of the other pages, that page's CSS file would be loaded.
 
 Possibly you created a NEW tag and did a <span class="newtag"> in your Privacy Statement. It is defined in only one CSS file, 'german_privacy.css' as '.newtag { text-transform: uppercase }' Because, in Germany, that phrase must be in all CAPS, but not in other countries.
 
-Use your CSS files and the standard tags as much as possible, just change their properties when needed. If possible, DON'T HACK the core code. Use your CSS files to do the work for you. When the style coding has been removed from the ZenCart code and people have to decide if they want to go without the upgrade ~or~ undo all their hacks and finally learn about CSS... your site will still be up and running. 
+Use your CSS files and the standard tags as much as possible, just change their properties when needed. If possible, DON'T HACK the core code. Use your CSS files to do the work for you. When the style coding has been removed from the ZenCart code and people have to decide if they want to go without the upgrade ~or~ undo all their hacks and finally learn about CSS... your site will still be up and running.
 
-Additional information is contained in the 'read_me' file in the common folder.
+Additional information is contained in the Zen Cart wiki.
 
+
+Adapted from ideas presented by
 Juxi Zoza
 03/15/05

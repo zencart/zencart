@@ -73,6 +73,20 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
   }
 
 /**
+ *  custom category handling for a parent and all its children ... works for any c_XX_XX_children.css  where XX_XX is any parent category
+ */
+  $tmp_cats = explode('_', $cPath);
+  $value = '';
+  foreach($tmp_cats as $val) {
+    $value .= $val;
+    $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/c_' . $value . '_children.css';
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $_SESSION['language'] . '_c_' . $value . '_children.css';
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    $value .= '_';
+  }
+
+/**
  * load printer-friendly stylesheets -- named like "print*.css", alphabetically
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
