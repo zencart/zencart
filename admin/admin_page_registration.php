@@ -131,22 +131,22 @@ foreach ($menu_titles as $id => $title) {
   <?php echo zen_draw_form('admin_page_registration_form', FILENAME_ADMIN_PAGE_REGISTRATION, 'action=insert', 'post', 'id="adminPageRegistrationForm"'); ?>
     <div>
       <label for="pageKey"><?php echo TEXT_PAGE_KEY ?></label>
-      <?php echo zen_draw_input_field('page_key', $page_key, ' id="pageKey');?>
+      <?php echo zen_draw_input_field('page_key', $page_key, ' id="pageKey"');?>
       <span><?php echo TEXT_EXAMPLE_PAGE_KEY ?></span>
     </div>
     <div>
       <label for="languageKey"><?php echo TEXT_LANGUAGE_KEY ?></label>
-      <?php echo zen_draw_input_field('language_key', $language_key, ' id="languageKey');?>
+      <?php echo zen_draw_input_field('language_key', $language_key, ' id="languageKey"');?>
       <span><?php echo TEXT_EXAMPLE_LANGUAGE_KEY ?></span>
     </div>
     <div>
       <label for="mainPage"><?php echo TEXT_MAIN_PAGE ?></label>
-      <?php echo zen_draw_input_field('main_page', $main_page, ' id="mainPage');?>
+      <?php echo zen_draw_input_field('main_page', $main_page, ' id="mainPage"');?>
       <span><?php echo TEXT_EXAMPLE_MAIN_PAGE ?></span>
     </div>
     <div>
       <label for="pageParams"><?php echo TEXT_PAGE_PARAMS ?></label>
-      <?php echo zen_draw_input_field('page_params', $page_$page_paramskey, ' id="pageParams');?>
+      <?php echo zen_draw_input_field('page_params', $page_params, ' id="pageParams"');?>
       <span><?php echo TEXT_EXAMPLE_PAGE_PARAMS ?></span>
     </div>
     <div>
@@ -159,7 +159,7 @@ foreach ($menu_titles as $id => $title) {
     </div>
     <div>
       <label for="sortOrder"><?php echo TEXT_SORT_ORDER ?></label>
-      <?php echo zen_draw_input_field('sort_order', $sort_order, ' id="sortOrder');?>
+      <?php echo zen_draw_input_field('sort_order', $sort_order, ' id="sortOrder"');?>
     </div>
     <div>
       <?php echo zen_image_submit('button_insert.gif', IMAGE_INSERT, 'id="button"') ?>
