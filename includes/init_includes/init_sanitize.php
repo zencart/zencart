@@ -27,7 +27,7 @@
     {
       if ((! isset ( $_SESSION ['securityToken'] ) || ! isset ( $_POST ['securityToken'] )) || ($_SESSION ['securityToken'] !== $_POST ['securityToken']))
       {
-        zen_redirect ( zen_href_link ( FILENAME_PAGE_NOT_FOUND, '', $request_type ) );
+        zen_redirect ( zen_href_link ( FILENAME_TIME_OUT, '', $request_type ) );
       }
     }
   }
