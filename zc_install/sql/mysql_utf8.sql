@@ -2,7 +2,7 @@
 # * Country/Zones Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2011 Zen Cart Development Team
+# * @copyright Copyright 2003-2012 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version $Id: mysql_utf8.sql 19514 2011-09-14 20:59:16Z wilt $
@@ -340,7 +340,7 @@ INSERT INTO zones VALUES (78,38,'YT','Yukon Territory');
 
 # Germany
 INSERT INTO zones VALUES (79,81,'NDS','Niedersachsen');
-INSERT INTO zones VALUES (80,81,'BAW','Baden Württemberg');
+INSERT INTO zones VALUES (80,81,'BAW','Baden-Württemberg');
 INSERT INTO zones VALUES (81,81,'BAY','Bayern');
 INSERT INTO zones VALUES (82,81,'BER','Berlin');
 INSERT INTO zones VALUES (83,81,'BRG','Brandenburg');

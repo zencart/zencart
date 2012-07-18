@@ -2,7 +2,7 @@
 # * Country/Zones Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2011 Zen Cart Development Team
+# * @copyright Copyright 2003-2012 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version $Id: mysql_latin1.sql 19300 2011-07-28 20:09:18Z drbyte $
@@ -337,7 +337,7 @@ INSERT INTO zones VALUES (78,38,'YT','Yukon Territory');
 
 # Germany
 INSERT INTO zones VALUES (79,81,'NDS','Niedersachsen');
-INSERT INTO zones VALUES (80,81,'BAW','Baden Wurtemberg');
+INSERT INTO zones VALUES (80,81,'BAW','Baden-Wurttemberg');
 INSERT INTO zones VALUES (81,81,'BAY','Bayern');
 INSERT INTO zones VALUES (82,81,'BER','Berlin');
 INSERT INTO zones VALUES (83,81,'BRG','Brandenburg');
@@ -393,7 +393,7 @@ INSERT INTO zones VALUES (128,204,'ZG','Zug');
 INSERT INTO zones VALUES (129,204,'ZH','Zurich');
 
 # Spain
-INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'A Corua','A Corua');
+INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'A Coruna','A Coruna');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'Alava','Alava');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'Albacete','Albacete');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'Alicante','Alicante');
