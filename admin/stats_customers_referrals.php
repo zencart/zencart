@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stats_customers_referrals.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -148,8 +148,8 @@
           </tr>
           <tr>
             <td class="main" align="left"><?php echo zen_date_long($customers_orders->fields['date_purchased']); ?></td>
-            <td class="main" align="left">Order #<?php echo $customers_orders->fields['orders_id']; ?></td>
-            <td class="main" align="left">Discount Coupon ID# <?php echo $customers_orders->fields['coupon_code']; ?></td>
+            <td class="main" align="left"><?php echo TEXT_ORDER_NUMBER; ?> <?php echo $customers_orders->fields['orders_id']; ?></td>
+            <td class="main" align="left"><?php echo TEXT_COUPON_ID; ?> <?php echo $customers_orders->fields['coupon_code']; ?></td>
             <td class="main" align="left"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $customers_orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>'; ?></td>
           </tr>
           <tr>
