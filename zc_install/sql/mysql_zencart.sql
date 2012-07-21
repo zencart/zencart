@@ -2,7 +2,7 @@
 # * Main Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2011 Zen Cart Development Team
+# * @copyright Copyright 2003-2012 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version $Id: mysql_zencart.sql 20043 2011-12-06 23:07:06Z drbyte $
@@ -118,11 +118,11 @@ CREATE TABLE admin_activity_log (
   access_date datetime NOT NULL default '0001-01-01 00:00:00',
   admin_id int(11) NOT NULL default '0',
   page_accessed varchar(80) NOT NULL default '',
-  page_parameters text default '',
-  ip_address varchar(20) NOT NULL default '',
+  page_parameters text,
+  ip_address varchar(40) NOT NULL default '',
   flagged tinyint NOT NULL default '0',
   attention varchar(255) NOT NULL default '',
-  gzpost mediumblob NOT NULL default '',
+  gzpost mediumblob,
   PRIMARY KEY  (log_id),
   KEY idx_page_accessed_zen (page_accessed),
   KEY idx_access_date_zen (access_date),
