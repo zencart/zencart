@@ -892,7 +892,7 @@ class linkpoint_api {
       $myorder["oid"] = $query->fields['lp_trans_num'];
       if ($_POST['trans_id'] != '') $myorder["tdate"] = $_POST['trans_id'];
       $myorder["chargetotal"] = number_format($refundAmt, 2, '.', '');
-      $myorder["comments"]  = htmlentities($refundNote);
+      $myorder["comments"]  = htmlentities($refundNote, ENT_QUOTES, 'UTF-8');
 
       $result = $this->_sendRequest($myorder);
       $response_alert = $result['r_approved'] . ' ' . $result['r_error'] . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
@@ -953,7 +953,7 @@ class linkpoint_api {
       $myorder["ordertype"] = 'POSTAUTH';
       $myorder["oid"] = $query->fields['lp_trans_num'];
       $myorder["chargetotal"] = number_format($captureAmt, 2, '.', '');
-      $myorder["comments"]  = htmlentities($captureNote);
+      $myorder["comments"]  = htmlentities($captureNote, ENT_QUOTES, 'UTF-8');
 
       $result = $this->_sendRequest($myorder);
       $response_alert = $result['r_approved'] . ' ' . $result['r_error'] . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
@@ -1004,7 +1004,7 @@ class linkpoint_api {
       $myorder["ordertype"] = 'VOID';
       $myorder["oid"] = $query->fields['lp_trans_num'];
       if ($voidAuthID != '') $myorder["tdate"] = $voidAuthID;
-      $myorder["comments"]  = htmlentities($voidNote);
+      $myorder["comments"]  = htmlentities($voidNote, ENT_QUOTES, 'UTF-8');
 
       $result = $this->_sendRequest($myorder);
       $response_alert = $result['r_approved'] . ' ' . $result['r_error'] . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
