@@ -4,7 +4,7 @@
  *
  * @package Configuration Settings
  * @package Admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: dist-configure.php 19644 2011-09-29 16:04:04Z wilt $
@@ -12,7 +12,7 @@
  */
 /**
  * WE RECOMMEND THAT YOU USE SSL PROTECTION FOR YOUR ENTIRE ADMIN:
- * To do that, make sure you use a "https:" URL for all 4 of the following, including the HTTP_ entries:
+ * To do that, make sure you use a "https:" URL for BOTH the HTTP_SERVER and HTTPS_SERVER entries:
  */
   define('HTTP_SERVER', 'http://localhost');
   define('HTTPS_SERVER', 'https://localhost');
@@ -61,6 +61,7 @@
 // define our database connection
   define('DB_TYPE', 'mysql');
   define('DB_PREFIX', '');
+  define('DB_CHARSET', 'utf8');
   define('DB_SERVER', 'localhost');
   define('DB_SERVER_USERNAME', '');
   define('DB_SERVER_PASSWORD', '');
@@ -81,7 +82,7 @@
 // HTTP_CATALOG_SERVER is your Main webserver: eg-http://www.yourdomain.com
 // HTTPS_CATALOG_SERVER is your Secure webserver: eg-https://www.yourdomain.com
 /*
- * URL's for your site will be built via:
+ * URLs for your site will be built via:
  *     HTTP_SERVER plus DIR_WS_ADMIN or
  *     HTTPS_SERVER plus DIR_WS_HTTPS_ADMIN or
  *     HTTP_SERVER plus DIR_WS_CATALOG or
