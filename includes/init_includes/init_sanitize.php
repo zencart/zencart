@@ -139,7 +139,7 @@
       $_GET['main_page'] = 'index';
     } elseif (MISSING_PAGE_CHECK == 'Page Not Found') {
       header('HTTP/1.1 404 Not Found');
-      $_GET['main_page'] = 'page_not_found';
+      $_GET['main_page'] = FILENAME_PAGE_NOT_FOUND;
     }
   }
   $current_page = $_GET['main_page'];
