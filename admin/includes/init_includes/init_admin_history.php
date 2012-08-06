@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_admin_history.php 18962 2011-06-21 20:40:48Z drbyte $
@@ -19,6 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
                                'page_accessed' =>  'Log found to be empty. Logging started.',
                                'page_parameters' => '',
+                               'gzpost' => '',
                                'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,15)
                                );
       zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
@@ -29,6 +30,15 @@ if (!defined('IS_ADMIN_FLAG')) {
       $postdata = $_POST;
       foreach ($postdata as $key=>$nul) {
         if (in_array($key, array('x','y','secur'.'ityTo'.'ken','admi'.'n_p'.'ass','pass'.'word','confirm', 'newpwd-'.$_SESSION['securityToken'],'oldpwd-'.$_SESSION['securityToken'],'confpwd-'.$_SESSION['securityToken']))) unset($postdata[$key]);
+        if (strtolower(CHARSET) != 'utf-8') {
+          if (is_string($nul)) $postdata[$key] = utf8_encode($nul);
+          if (is_array($nul)) {
+            foreach ($nul as $key2=>$val) {
+              if (is_string($val)) $postdata[$key][$key2] = utf8_encode($val);
+              if (is_array($val)) $postdata[$key][$key2] = utf8_encode(print_r($val, TRUE));
+            }
+          }
+        }
       }
       $notes = zen_parse_for_rogue_post(print_r($postdata, true));
       $postdata = json_encode($postdata);
