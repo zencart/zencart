@@ -6,7 +6,7 @@
  * Displays previous orders and options to change various Customer Account settings
  *
  * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_account_default.php 4086 2006-08-07 02:06:18Z ajeh $
@@ -63,12 +63,12 @@
 
 
 <?php
-  if (SHOW_NEWSLETTER_UNSUBSCRIBE_LINK !='false' or CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS !='0') {
+  if ((int)ACCOUNT_NEWSLETTER_STATUS > 0 or CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS !='0') {
 ?>
 <h2><?php echo EMAIL_NOTIFICATIONS_TITLE; ?></h2>
 <ul id="myAccountNotify" class="list">
 <?php
-  if (SHOW_NEWSLETTER_UNSUBSCRIBE_LINK=='true') {
+  if ((int)ACCOUNT_NEWSLETTER_STATUS > 0) {
 ?>
 <li><?php echo ' <a href="' . zen_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL') . '">' . EMAIL_NOTIFICATIONS_NEWSLETTERS . '</a>'; ?></li>
 <?php } //endif newsletter unsubscribe ?>
