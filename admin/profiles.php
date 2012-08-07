@@ -171,7 +171,7 @@ switch ($action) {
           <?php echo zen_draw_form('profileNameForm', FILENAME_PROFILES, '', 'post', 'id="profile-update"') ?>
             <?php echo zen_draw_hidden_field('action', 'update_name'); ?>
             <?php echo zen_draw_hidden_field('profile', $profileDetails['id']); ?>
-            <?php echo zen_draw_input_field('profile-name', htmlspecialchars($profileDetails['name'], ENT_COMPAT, CHARSET, TRUE)); ?>
+            <?php echo zen_draw_input_field('profile-name', htmlspecialchars($profileDetails['name'], ENT_COMPAT, CHARSET, FALSE)); ?>
             <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
             <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
           </form>
@@ -220,7 +220,7 @@ switch ($action) {
         <input class="checkButton" type="button" value="Uncheck All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
 <?php foreach ($pageList as $pageKey => $page) { ?>
-      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), in_array($pageKey,$permittedPages), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
+      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, FALSE), in_array($pageKey,$permittedPages), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
 <?php } ?>
     </dl>
 <?php } ?>
@@ -248,7 +248,7 @@ switch ($action) {
         <input class="checkButton" type="button" value="Uncheck All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
 <?php foreach ($pageList as $pageKey => $page) { ?>
-      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
+      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, FALSE), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
 <?php } ?>
     </dl>
 <?php } ?>

@@ -94,10 +94,10 @@ if ($is_upgrade) {
   foreach($_POST as $key=>$val) {
     if(is_array($val)){
       foreach($val as $key2 => $val2){
-        $_POST[$key][$key2] = htmlspecialchars($val2);
+        $_POST[$key][$key2] = htmlspecialchars($val2, ENT_COMPAT, CHARSET, FALSE);
       }
     } else {
-      $_POST[$key] = htmlspecialchars($val);
+      $_POST[$key] = htmlspecialchars($val, ENT_COMPAT, CHARSET, FALSE);
     }
   }
 

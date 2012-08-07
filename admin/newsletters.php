@@ -242,18 +242,18 @@ check_select('audience_selected','',"<?php echo ERROR_PLEASE_SELECT_AUDIENCE; ?>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_NEWSLETTER_TITLE; ?></td>
-            <td class="main"><?php echo zen_draw_input_field('title', htmlspecialchars($nInfo->title, ENT_COMPAT, CHARSET, TRUE), 'size="50"', true); ?></td>
+            <td class="main"><?php echo zen_draw_input_field('title', htmlspecialchars($nInfo->title, ENT_COMPAT, CHARSET, FALSE), 'size="50"', true); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_NEWSLETTER_CONTENT_HTML; ?></td>
-            <td class="main"><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '30', htmlspecialchars($nInfo->content_html, ENT_COMPAT, CHARSET, TRUE),'id="message_html" class="editorHook"'); ?></td>
+            <td class="main"><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '30', htmlspecialchars($nInfo->content_html, ENT_COMPAT, CHARSET, FALSE),'id="message_html" class="editorHook"'); ?></td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_NEWSLETTER_CONTENT; ?></td>
-            <td class="main"><?php echo zen_draw_textarea_field('content', 'soft', '100%', '20', htmlspecialchars($nInfo->content, ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
+            <td class="main"><?php echo zen_draw_textarea_field('content', 'soft', '100%', '20', htmlspecialchars($nInfo->content, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor"'); ?></td>
           </tr>
         </table></td>
       </tr>

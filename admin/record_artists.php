@@ -263,7 +263,7 @@
 
       $contents = array('form' => zen_draw_form('artists', FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $aInfo->artists_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_RECORD_ARTIST_NAME . '<br>' . zen_draw_input_field('artists_name', htmlspecialchars($aInfo->artists_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_RECORD_ARTISTS, 'artists_name')));
+      $contents[] = array('text' => '<br />' . TEXT_RECORD_ARTIST_NAME . '<br>' . zen_draw_input_field('artists_name', htmlspecialchars($aInfo->artists_name, ENT_COMPAT, CHARSET, FALSE), zen_set_field_length(TABLE_RECORD_ARTISTS, 'artists_name')));
       $contents[] = array('text' => '<br />' . TEXT_RECORD_ARTIST_IMAGE . '<br>' . zen_draw_file_field('artists_image') . '<br />' . $aInfo->artists_image);
       $dir = @dir(DIR_FS_CATALOG_IMAGES);
       $dir_info[] = array('id' => '', 'text' => "Main Directory");

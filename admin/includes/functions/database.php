@@ -58,7 +58,7 @@
   }
 
   function zen_db_output($string) {
-    return htmlspecialchars($string);
+    return htmlspecialchars($string, ENT_COMPAT, CHARSET, FALSE);
   }
 
   function zen_db_input($string) {

@@ -238,7 +238,7 @@ if (ZC_UPG_DEBUG2==true) {
     $sniffer_version = '';
     $nothing_to_process = false;
     if (is_array($_POST['version'])) {
-      if (ZC_UPG_DEBUG2==true) foreach($_POST['version'] as $value) { echo 'Selected: ' . htmlspecialchars($value).'<br />';}
+      if (ZC_UPG_DEBUG2==true) foreach($_POST['version'] as $value) { echo 'Selected: ' . htmlspecialchars($value, ENT_COMPAT, CHARSET, FALSE).'<br />';}
       reset($_POST['version']);
       if (sizeof($_POST['version'])) $zc_install->updateAdminIpList();
       while (list(, $value) = each($_POST['version'])) {
@@ -512,10 +512,10 @@ echo 'CAUTION: '.$value.'<br />';
   foreach($_POST as $key=>$val) {
     if(is_array($val)){
       foreach($val as $key2 => $val2){
-        $_POST[$key][$key2] = htmlspecialchars($val2);
+        $_POST[$key][$key2] = htmlspecialchars($val2, ENT_COMPAT, CHARSET, FALSE);
       }
     } else {
-      $_POST[$key] = htmlspecialchars($val);
+      $_POST[$key] = htmlspecialchars($val, ENT_COMPAT, CHARSET, FALSE);
     }
   }
 
