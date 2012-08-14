@@ -3,7 +3,7 @@
  * functions_customers
  *
  * @package functions
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: functions_customers.php 4793 2006-10-20 05:25:20Z ajeh $
@@ -201,14 +201,15 @@
 // validate customer matches session
   function zen_get_customer_validate_session($customer_id) {
     global $db, $messageStack;
-    $zc_check_customer = $db->Execute("SELECT customers_id from " . TABLE_CUSTOMERS . " WHERE customers_id=" . (int)$customer_id);
-    if ($zc_check_customer->RecordCount() <= 0) {
+    $zc_check_customer = $db->Execute("SELECT customers_id, customers_authorization from " . TABLE_CUSTOMERS . " WHERE customers_id=" . (int)$customer_id);
+    $bannedStatus = $zc_check_customer->fields['customers_authorization'] == 4; // BANNED STATUS is 4
+    if ($zc_check_customer->RecordCount() <= 0 || $bannedStatus) {
       $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $customer_id);
       $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $customer_id);
+      $_SESSION['cart']->reset(TRUE);
       unset($_SESSION['customer_id']);
-      $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
+      if (!$bannedStatus) $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
       return false;
     }
     return true;
   }
-?>
