@@ -61,7 +61,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_parse_for_rogue_post($string) {
     $matches = '';
     if (preg_match_all('~(file://|<iframe|<frame|<embed|<script|<meta)~i', $string, $matches)) {
-      return htmlspecialchars(WARNING_REVIEW_ROGUE_ACTIVITY . "\n" . implode(' and ', $matches[1]), ENT_COMPAT, CHARSET, FALSE);
+      return htmlspecialchars(WARNING_REVIEW_ROGUE_ACTIVITY . "\n" . implode(' and ', $matches[1]), ENT_COMPAT, CHARSET, TRUE);
     } else {
       return FALSE;
     }
