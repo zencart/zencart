@@ -302,7 +302,7 @@ function cssjsmenu(menuid)
   // check for downlevel browsers
   // Opera 6, IE 5/Mac are not supported
 
-  var version;
+  var version = '';
   var offset;
 
   offset = navigator.userAgent.indexOf('Opera');
@@ -313,6 +313,9 @@ function cssjsmenu(menuid)
     {
       return true;
     }
+    offset = navigator.userAgent.indexOf('Version/');
+    version = parseInt('0' + navigator.userAgent.substr(offset + 8), 10);
+    if (version >= 12 && navigator.userAgent.indexOf('Windows') != -1) version = 'Opera12win';
   }
 
   offset = navigator.userAgent.indexOf('MSIE');
@@ -352,7 +355,7 @@ function cssjsmenu(menuid)
         ul_gt_li[ul_gt_li.length] = child;
         child.style.display = 'inline';
         child.style.listStyle = 'none';
-        child.style.position = 'static';
+        if (version != 'Opera12win') child.style.position = 'static';
       }
     }
   }
@@ -370,7 +373,7 @@ function cssjsmenu(menuid)
       {
         ul_gt_li_gt_ul[ul_gt_li_gt_ul.length] = child;
         child.style.position = 'absolute';
-        child.style.left = '-13em';
+        if (version != 'Opera12win') child.style.left = '-13em';
         child.style.visibility = 'hidden';
 
         // attach hover to parent li
@@ -390,7 +393,7 @@ function cssjsmenu(menuid)
             if (child.nodeName.toUpperCase() == 'UL')
             {
               point = getPageXY(this);
-              setPageXY(child, point.x, point.y + this.offsetHeight);
+              if (version != 'Opera12win') setPageXY(child, point.x, point.y + this.offsetHeight);
               child.style.visibility = 'visible';
             }
           }
