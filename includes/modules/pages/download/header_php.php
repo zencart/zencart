@@ -29,7 +29,7 @@ if ((isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']
 
 // Check that order_id, customer_id and filename match
 $sql = "SELECT date_format(o.date_purchased, '%Y-%m-%d')
-          AS date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename
+          AS date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename, o.*
           FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
           WHERE o.customers_id = customersID
           AND o.orders_id = ordersID
@@ -149,9 +149,9 @@ if (!isset($downloadFilesize) || ($downloadFilesize < 1)) {
 
 
     /**
-     * set notifier point ... we are ready to begin the actual download
+     * set notifier point ... we are ready to begin the actual download. An observer class could hook this notifier point and do something completely different, such as stamping PDFs etc.
      */
-    $zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $origin_filename, $browser_filename, $downloadFilesize, $_SESSION['customers_host_address']);
+    $zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', array($origin_filename, $browser_filename, $downloadFilesize, $_SESSION['customers_host_address'], $downloads->fields));
 
 
     /**
@@ -213,7 +213,8 @@ if (!isset($downloadFilesize) || ($downloadFilesize < 1)) {
     header("Content-Transfer-Encoding: binary");
 
 
-// Redirect usually will work only on Unix/Linux hosts since Windows hosts can't do symlinking in PHP versions older than 5.3.0
+// NOTE: Redirect usually will work only on Unix/Linux hosts since Windows hosts can't do symlinking in PHP versions older than 5.3.0
+
 if (DOWNLOAD_BY_REDIRECT == 'true') {
   zen_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
   $tempdir = zen_random_name() . '-' . time();;
