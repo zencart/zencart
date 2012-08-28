@@ -49,7 +49,6 @@ ALTER TABLE coupon_redeem_track CHANGE COLUMN redeem_ip redeem_ip varchar(45) NO
 ALTER TABLE coupon_gv_queue CHANGE COLUMN ipaddr ipaddr varchar(45) NOT NULL default '';
 
 
-
 #############
 
 #### VERSION UPDATE STATEMENTS
