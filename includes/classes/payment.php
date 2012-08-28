@@ -3,7 +3,7 @@
  * Payment Class.
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: payment.php 18697 2011-05-04 14:35:20Z wilt $
@@ -258,5 +258,16 @@ class payment extends base {
         return $GLOBALS[$this->selected_module]->get_error();
       }
     }
+  }
+
+  function get_checkout_confirm_form_replacement() {
+    if (is_array($this->modules)) {
+      if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+        if (method_exists($GLOBALS[$this->selected_module], 'get_checkout_confirm_form_replacement')) {
+          return $GLOBALS[$this->selected_module]->get_checkout_confirm_form_replacement();
+        }
+      }
+    }
+    return array(false, '');
   }
 }

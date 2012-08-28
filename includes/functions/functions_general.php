@@ -1508,6 +1508,32 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $string;
   }
 
+  // Helper function to check whether the current instance is using SSL or not.
+  // Returns SSL or NONSSL
+  function getConnectionType() {
+    global $request_type;
+    return $request_type;
+  }
+
+  // debug utility only
+  function utilDumpRequest($mode='p', $out = 'log') {
+    if ($mode =='p') {
+      $val = '<pre>DEBUG request: ' . print_r($_REQUEST, TRUE);
+    } else {
+      @ob_start();
+      var_dump('DEBUG request: ', $_REQUEST);
+      $val = @ob_get_contents();
+      @ob_end_clean();
+    }
+    if ($out == 'log' || $out == 'l') {
+      error_log($val);
+    } else if ($out == 'die' || $out == 'd') {
+      die($val);
+    } else if ($out == 'echo' || $out == 'e') {
+      echo $val;
+    }
+  }
+
 /////////////////////////////////////////////
 ////
 // call additional function files

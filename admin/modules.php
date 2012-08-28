@@ -1,13 +1,14 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: modules.php 19330 2011-08-07 06:32:56Z drbyte $
  */
 
   require('includes/application_top.php');
+  if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) require_once(DIR_FS_CATALOG . 'includes/classes/dbencdata.php');
 
   $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set'] : ''));
 
@@ -62,6 +63,10 @@
             $value = implode( ", ", $value);
             $value = preg_replace ("/, --none--/", "", $value);
           }
+          if (function_exists('dbenc_encrypt') && function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
+            $value = dbenc_encrypt($value);
+          }
+
           $db->Execute("update " . TABLE_CONFIGURATION . "
                         set configuration_value = '" . zen_db_input($value) . "'
                         where configuration_key = '" . zen_db_input($key) . "'");
