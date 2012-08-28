@@ -3,7 +3,7 @@
  * Admin Activity Log Viewer/Archiver
  *
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: admin_activity.php 19538 2011-09-20 17:27:38Z drbyte $
@@ -262,7 +262,7 @@ if ($action != '')
                                  'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
                                  'page_accessed' =>  'Log reset by ' . $admname . '.',
                                  'page_parameters' => '',
-                                 'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,15)
+                                 'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45)
                                  );
         zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
         $messageStack->add_session(SUCCESS_CLEAN_ADMIN_ACTIVITY_LOG, 'success');

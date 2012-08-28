@@ -736,6 +736,14 @@ if (!defined('IS_ADMIN_FLAG')) {
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
       } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
         $ip = $_SERVER['HTTP_CLIENT_IP'];
+      } elseif (isset($_SERVER['HTTP_X_FORWARDED'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED'];
+      } elseif (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+      } elseif (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+      } elseif (isset($_SERVER['HTTP_FORWARDED'])) {
+        $ip = $_SERVER['HTTP_FORWARDED'];
       } else {
         $ip = $_SERVER['REMOTE_ADDR'];
       }
@@ -752,14 +760,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $ip;
   }
 
-
-// nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
   function zen_convert_linefeeds($from, $to, $string) {
-    if ((PHP_VERSION < "4.0.5") && is_array($from)) {
-      return preg_replace('/(' . implode('|', $from) . ')/', $to, $string);
-    } else {
-      return str_replace($from, $to, $string);
-    }
+    return str_replace($from, $to, $string);
   }
 
 

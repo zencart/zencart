@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                'page_accessed' =>  'Log found to be empty. Logging started.',
                                'page_parameters' => '',
                                'gzpost' => '',
-                               'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,15)
+                               'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45)
                                );
       zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
     }
@@ -49,7 +49,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                              'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
                              'page_accessed' =>  basename($PHP_SELF) . (!isset($_SESSION['admin_id']) || (int)$_SESSION['admin_id'] == 0 ? ' ' . (isset($_POST['admin_name']) ? $_POST['admin_name'] : (isset($_POST['admin_email']) ? $_POST['admin_email'] : '') ) : ''),
                              'page_parameters' => zen_get_all_get_params(),
-                             'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,15),
+                             'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
                              'gzpost' => $gzpostdata,
                              'flagged' => (int)$flagged,
                              'attention' => ($notes === FALSE ? '' : $notes),
