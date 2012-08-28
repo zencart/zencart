@@ -5,7 +5,7 @@
  * This class is used during the installation and upgrade processes
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: class.installer_version_manager.php 18736 2011-05-18 04:56:45Z drbyte $
@@ -29,7 +29,7 @@
       /**
        * The version that this edition of the installer is designed to support
        */
-      $this->latest_version = '1.5.0';
+      $this->latest_version = '1.5.1';
 
       /**
        * Check to see if the configuration table can be found...thus validating the installation, in part.
@@ -77,6 +77,7 @@
       $this->version138 = $this->check_version_138();
       $this->version139 = $this->check_version_139();
       $this->version150 = $this->check_version_150();
+      $this->version151 = $this->check_version_151();
 
         if ($this->version110 == true)  $retVal = '1.1.0';
         if ($this->version111 == true)  $retVal = '1.1.1';
@@ -100,6 +101,7 @@
         if ($this->version138 == true) $retVal = '1.3.8';
         if ($this->version139 == true) $retVal = '1.3.9';
         if ($this->version150 == true) $retVal = '1.5.0';
+        if ($this->version151 == true) $retVal = '1.5.1';
 
       return $retVal;
     }
@@ -721,7 +723,7 @@
       // evaluate all 1.3.9 checks
       if ($got_v1_3_9a && $got_v1_3_9b ) {
         $got_v1_3_9 = true;
-        if (ZC_UPG_DEBUG==true) echo '<br>Got 1.3.9<br>';
+        if (ZC_UPG_DEBUG==true) echo '<br>Got 1.3.9<br><br>';
       }
       return $got_v1_3_9;
     } //end of 1.3.9 check
@@ -761,10 +763,27 @@
       // evaluate all 1.5.0 checks
       if ($got_v1_5_0a && $got_v1_5_0b ) {
         $got_v1_5_0 = true;
-        if (ZC_UPG_DEBUG==true) echo '<br>Got 1.5.0<br>';
+        if (ZC_UPG_DEBUG==true) echo 'Got 1.5.0<br><br>';
       }
       return $got_v1_5_0;
     } //end of 1.5.0 check
+
+
+    function check_version_151() {
+      global $db_test;
+      $got_v1_5_1 = false;
+      $sql = "show fields from " . DB_PREFIX . "admin_activity_log";
+      $result = $db_test->Execute($sql);
+      while (!$result->EOF && !$got_v1_5_1) {
+        if (ZC_UPG_DEBUG==true) echo "151-fields-'ip_address TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . '<br>';
+        if  ($result->fields['Field'] == 'ip_address' && strtoupper($result->fields['Type']) == 'VARCHAR(45)') {
+          $got_v1_5_1 = true;
+          if (ZC_UPG_DEBUG==true) echo 'Got 1.5.1<br><br>';
+        }
+        $result->MoveNext();
+      }
+      return $got_v1_5_1;
+    } //end of 1.5.1 check
 
 
 

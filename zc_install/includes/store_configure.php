@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: store_configure.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -11,8 +11,8 @@
 $file_contents =
 '<'.'?php' . "\n" .
 '/**' . "\n" .
-' * @package Configuration Settings circa 1.5.0' . "\n" .
-' * @copyright Copyright 2003-2011 Zen Cart Development Team' . "\n" .
+' * @package Configuration Settings circa 1.5.1' . "\n" .
+' * @copyright Copyright 2003-2012 Zen Cart Development Team' . "\n" .
 ' * @copyright Portions Copyright 2003 osCommerce' . "\n" .
 ' * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0' . "\n" .
 ' * File Built by zc_install on ' . date('Y-m-d h:i:s') . "\n" .
@@ -46,6 +46,8 @@ $file_contents =
 '// * DIR_FS_* = Filesystem directories (local/physical)' . "\n" .
 '  //the following path is a COMPLETE path to your Zen Cart files. eg: /var/www/vhost/accountname/public_html/store/' . "\n" .
 '  define(\'DIR_FS_CATALOG\', \'' . $this->getConfigKey('DIR_FS_CATALOG') . '/\');' . "\n\n" .
+'  //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash' . "\n" .
+'  define(\'DIR_FS_LOGS\', \'' . $this->getConfigKey('DIR_FS_CATALOG') . '/logs\');' . "\n\n" .
 '  define(\'DIR_FS_DOWNLOAD\', DIR_FS_CATALOG . \'download/\');' . "\n" .
 '  define(\'DIR_FS_DOWNLOAD_PUBLIC\', DIR_FS_CATALOG . \'pub/\');' . "\n" .
 '  define(\'DIR_WS_UPLOADS\', DIR_WS_IMAGES . \'uploads/\');' . "\n" .

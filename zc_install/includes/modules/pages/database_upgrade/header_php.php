@@ -27,7 +27,7 @@
 /////////////////////////////////////////////////////////////////////
 //this is the latest database-version-level that this script knows how to inspect and upgrade to.
 //it is used to determine whether to stay on the upgrade page when done, or continue to the finished page
-$latest_version = '1.5.0';
+$latest_version = '1.5.1';
 
 ///////////////////////////////////
 $is_upgrade = true; //that's what this page is all about!
@@ -82,6 +82,11 @@ $sniffer_text = '';
 
 //display options based on what was found -- THESE SHOULD BE PROCESSED IN REVERSE ORDER, NEWEST VERSION FIRST... !
 //that way only the "earliest-required" upgrade is suggested first.
+    $needs_v1_5_1=false;
+    if (!$dbinfo->version151) {
+      $sniffer_text =  ' upgrade v1.5.0 to v1.5.1';
+      $needs_v1_5_1=true;
+    }
     $needs_v1_5_0=false;
     if (!$dbinfo->version150) {
       $sniffer_text =  ' upgrade v1.3.9 to v1.5.0';
@@ -392,6 +397,12 @@ if (ZC_UPG_DEBUG2==true) {
             if (ZC_UPG_DEBUG2==true) echo $sniffer_file.'<br>';
             $got_v1_5_0 = true; //after processing this step, this will be the new version-level
             $db_upgraded_to_version='1.5.0';
+            break;
+       case '1.5.0':  // upgrading from v1.5.0 TO 1.5.1
+            $sniffer_file = '_upgrade_zencart_150_to_151.sql';
+            if (ZC_UPG_DEBUG2==true) echo $sniffer_file.'<br>';
+            $got_v1_5_1 = true; //after processing this step, this will be the new version-level
+            $db_upgraded_to_version='1.5.1';
             break;
           default:
             $nothing_to_process=true;

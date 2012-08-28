@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: database_upgrade_default.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -79,6 +79,10 @@
       <div class="input">
       <input <?php if ($needs_v1_5_0) {echo "checked";} ?> name="version[]" type="checkbox" id="checkbox22" value="1.3.9" tabindex="22" />
       <label for="checkbox22">Upgrade DB from 1.3.9 to 1.5.0</label>
+    </div>
+    <div class="input">
+      <input <?php if ($needs_v1_5_1) {echo "checked";} ?> name="version[]" type="checkbox" id="checkbox23" value="1.5.0" tabindex="23" />
+      <label for="checkbox22">Upgrade DB from 1.5.0 to 1.5.1</label>
     </div>
     </fieldset>
     <br />
