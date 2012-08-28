@@ -5,7 +5,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  *
- * Designed for v1.5.0
+ * Designed for v1.5.1
  */
 
 class products_viewed_counter extends base {

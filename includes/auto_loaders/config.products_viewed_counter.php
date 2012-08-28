@@ -7,7 +7,7 @@
  * @version $Id$
  */
 /**
- * Designed for v1.5.0
+ * Designed for v1.5.1
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
