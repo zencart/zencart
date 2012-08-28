@@ -7,25 +7,35 @@
  * Using this method, the debug details are stored at: /cache/myDEBUG-999999-00000000.log
  *
  * @package debug
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: enable_error_logging.php 19328 2011-08-06 22:53:47Z drbyte $
  */
+
+if (!defined('DIR_FS_LOGS')) {
+  $val = realpath(dirname(DIR_FS_SQL_CACHE . '/') . '/logs');
+  if (is_dir($val) && is_writable($val)) {
+    define('DIR_FS_LOGS', $val);
+  }
+  else {
+    define('DIR_FS_LOGS', DIR_FS_SQL_CACHE);
+  }
+}
 /**
  * Specify the pages you wish to enable debugging for (ie: main_page=xxxxxxxx)
  * Using '*' will cause all pages to be enabled
  */
   $pages_to_debug[] = '*';
-  $pages_to_debug[] = '';
-  $pages_to_debug[] = '';
-  $pages_to_debug[] = '';
+//   $pages_to_debug[] = '';
+//   $pages_to_debug[] = '';
 
 /**
  * The path where the debug log file will be located
- * Default value is: DIR_FS_SQL_CACHE . '/myDEBUG-999999-00000000.log'
- * ... which puts it in the /cache/ folder:   /cache/myDEBUG-999999-00000000.log  (where 999999 is a random number, and 00000000 is the server's timestamp)
+ * Default value is: DIR_FS_LOGS . '/myDEBUG-999999-00000000.log'
+ * ... which puts it in the /logs/ folder:   /logs/myDEBUG-999999-00000000.log  (where 999999 is a random number, and 00000000 is the server's timestamp)
+ *    (or if you don't have a /logs/ folder, it will use the /cache/ folder instead)
  */
-  $debug_logfile_path = DIR_FS_SQL_CACHE . '/myDEBUG-' . time() . '-' . mt_rand(1000,999999) . '.log';
+  $debug_logfile_path = DIR_FS_LOGS . '/myDEBUG-' . time() . '-' . mt_rand(1000,999999) . '.log';
 
 /**
  * Error reporting level to log

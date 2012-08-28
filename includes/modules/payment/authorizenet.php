@@ -88,7 +88,7 @@ class authorizenet extends base {
 
     $this->gateway_mode = MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE;
 
-    $this->_logDir = DIR_FS_SQL_CACHE;
+    $this->_logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
 
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();

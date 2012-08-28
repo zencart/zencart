@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: store_manager.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -132,19 +132,21 @@
 
 // clean out old DEBUG logfiles
     case 'clean_debug_files':
-      $purgeFolder = rtrim(DIR_FS_SQL_CACHE, '/');
-      $dir = dir($purgeFolder);
-      while ($file = $dir->read()) {
-        if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
-          if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall).*\.log$/', $file)) {
-            if (is_writeable($purgeFolder . '/' . $file)) {
-              zen_remove($purgeFolder . '/' . $file);
+      foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs') as $purgeFolder) {
+        $purgeFolder = rtrim($purgeFolder, '/');
+        $dir = dir($purgeFolder);
+        while ($file = $dir->read()) {
+          if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
+            if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall).*\.log$/', $file)) {
+              if (is_writeable($purgeFolder . '/' . $file)) {
+                zen_remove($purgeFolder . '/' . $file);
+              }
             }
           }
         }
+        $dir->close();
+        unset($dir);
       }
-      $dir->close();
-      unset($dir);
       $messageStack->add_session(SUCCESS_CLEAN_DEBUG_FILES, 'success');
       zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;

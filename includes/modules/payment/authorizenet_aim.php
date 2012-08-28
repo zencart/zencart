@@ -3,7 +3,7 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: authorizenet_aim.php 19180 2011-07-21 15:33:19Z drbyte $
@@ -100,7 +100,7 @@ class authorizenet_aim extends base {
     // Reset order status to pending if capture pending:
     if (MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize') $this->order_status = 1;
 
-    $this->_logDir = DIR_FS_SQL_CACHE;
+    $this->_logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
 
     if (is_object($order)) $this->update_status();
 

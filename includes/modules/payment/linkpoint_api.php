@@ -3,7 +3,7 @@
  * FirstData/Linkpoint/Yourpay API Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -55,7 +55,7 @@ class linkpoint_api {
       }
     }
 
-    $this->_logDir = DIR_FS_SQL_CACHE;
+    $this->_logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
   }
 
 

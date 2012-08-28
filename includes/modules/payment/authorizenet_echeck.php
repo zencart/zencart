@@ -98,7 +98,7 @@ class authorizenet_echeck extends base {
       $this->order_status = (int)MODULE_PAYMENT_AUTHORIZENET_ECHECK_ORDER_STATUS_ID;
     }
 
-    $this->_logDir = DIR_FS_SQL_CACHE;
+    $this->_logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
 
     if (is_object($order)) $this->update_status();
 

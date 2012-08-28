@@ -3,7 +3,7 @@
  * ipn_main_handler.php callback handler for PayPal IPN notifications
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ipn_main_handler.php 19328 2011-08-06 22:53:47Z drbyte $
@@ -119,7 +119,8 @@ Processing...
       ($_REQUEST['ppdebug'] == 'on' && strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) || $extraDebug  ) {
     $show_all_errors = true;
     $debug_logfile_path = ipn_debug_email('Breakpoint: 0 - Initializing debugging.');
-    if ($debug_logfile_path == '') $debug_logfile_path = 'includes/modules/payment/paypal/logs/ipn_debug_php_errors-'.time().'.log';
+    $logdir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : 'includes/modules/payment/paypal/logs';
+    if ($debug_logfile_path == '') $debug_logfile_path = $logdir . '/ipn_debug_php_errors-'.time().'.log';
     @ini_set('log_errors', 1);
     @ini_set('log_errors_max_len', 0);
     @ini_set('display_errors', 0); // do not output errors to screen/browser/client (only to log file)
