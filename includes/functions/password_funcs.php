@@ -148,7 +148,7 @@ function zen_pwd_rand($min = 0, $max = 10)
 {
   static $seed;
   if (!isset($seed))
-    $seed = zen_get_entropy(microtime);
+    $seed = zen_get_entropy(microtime());
   $random = zen_get_entropy($seed);
   $random .= zen_get_entropy($random);
   $random = sha1($random);
