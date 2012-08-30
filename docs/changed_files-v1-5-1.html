@@ -83,8 +83,16 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 
 <h1>DELETED Files (since release of v1.5.0)</h1><ul>
 <li>/admin/includes/functions/password_funcs.php   (replaced with updated /includes/functions/password_funcs.php which is now shared with both admin and non-admin)</li>
+<li>/includes/templates/classic/css/CSS_read_me.txt (see the template_default one instead)</li>
 </ul>
-<h1>NEW Files ADDED (since release of v1.5.0)</h1><ul>
+<h1>NEW Files ADDED (since release of v1.5.0)</h1>
+<ul>
+<li>/logs/  -- NEW FOLDER!</li>
+<li>/logs/.htaccess</li>
+<li>/logs/index.html</li>
+<li>/logs/index.php</li>
+</ul>and:
+<ul>
 <li>/admin/includes/classes/split_page_results_new.php</li>
 <li>/includes/auto_loaders/config.products_viewed_counter.php</li>
 <li>/includes/classes/observers/class.products_viewed_counter.php</li>
@@ -96,6 +104,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 </ul>
 <h1>CHANGED Files (since release of v1.5.0)</h1>
 <ul>
+<li>/admin/admin_activity.php</li>
 <li>/admin/admin_page_registration.php</li>
 <li>/admin/attributes_controller.php</li>
 <li>/admin/categories.php</li>
@@ -107,7 +116,13 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/profiles.php</li>
 <li>/admin/sqlpatch.php</li>
 <li>/admin/stats_customers_referrals.php</li>
+<li>/admin/store_manager.php</li>
 <li>/admin/users.php</li>
+<li>/admin/includes/.htaccess</li>
+<li>/admin/includes/application_top.php</li>
+<li>/admin/includes/dist-configure.php (this is ONLY a basic example file, and is not used by a live store, so doesn't need upgrading on a live site)</li>
+<li>/admin/includes/initsystem.php</li>
+<li>/admin/includes/menu.js</li>
 <li>/admin/includes/extra_configures/enable_error_logging.php</li>
 <li>/admin/includes/functions/admin_access.php</li>
 <li>/admin/includes/functions/general.php</li>
@@ -123,14 +138,8 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/includes/languages/english/profiles.php</li>
 <li>/admin/includes/languages/english/stats_customers_referrals.php</li>
 <li>/admin/includes/languages/english.php</li>
-<li>/admin/includes/.htaccess</li>
-<li>/admin/includes/application_top.php</li>
-<li>/admin/includes/dist-configure.php (this is ONLY a basic example file, and is not used by a live store, so doesn't need upgrading on a live site)</li>
-<li>/admin/includes/initsystem.php</li>
-<li>/admin/includes/menu.js</li>
 <br>
 <li>/docs/ &lt;VARIOUS FILES HERE&gt;</li>
-<br>
 <br>
 <li>/ipn_main_handler.php</li>
 <br>
@@ -174,7 +183,9 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/modules/payment/authorizenet.php</li>
 <li>/includes/modules/payment/authorizenet_aim.php</li>
 <li>/includes/modules/payment/authorizenet_echeck.php</li>
+<li>/includes/modules/payment/linkpoint_api.php</li>
 <li>/includes/modules/payment/paypal/paypal_curl.php</li>
+<li>/includes/modules/payment/paypal/paypal_functions.php</li>
 <li>/includes/modules/payment/paypal.php</li>
 <li>/includes/modules/payment/paypaldp.php</li>
 <li>/includes/modules/payment/paypalwpp.php</li>
