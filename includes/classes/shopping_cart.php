@@ -3,7 +3,7 @@
  * Class for managing the Shopping Cart
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: shopping_cart.php 19350 2011-08-19 03:04:57Z ajeh $
@@ -777,7 +777,7 @@ class shoppingCart extends base {
             //// one time charges
             // attributes_price_onetime
             if ($attribute_price->fields['attributes_price_onetime'] > 0) {
-              $totalOnetimeCharge = $attribute_price->fields['attributes_price_onetime'];
+              $totalOnetimeCharge += $attribute_price->fields['attributes_price_onetime'];
             }
             // attributes_price_factor_onetime
             $added_charge = 0;
