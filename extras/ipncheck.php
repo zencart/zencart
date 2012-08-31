@@ -218,7 +218,7 @@ echo '<br><br>Script finished.';
     $errors = ($commErrNo != 0 ? "\n(" . $commErrNo . ') ' . $commError : '');
 
     if (($response == '' || $errors != '') && ($web['scheme'] != 'http')) {
-      if ($verboseMode) echo nl2br("\n\n" . 'VERBOSE output:' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, CHARSET, TRUE) . "</pre>\n--------------\n");
+      if ($verboseMode) echo nl2br("\n\n" . 'VERBOSE output:' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, 'UTF-8', TRUE) . "</pre>\n--------------\n");
       echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'Trying direct HTTP on port 80 instead ...' . "\n");
       $web['scheme'] = 'http';
       $web['port'] = '80';
@@ -232,7 +232,7 @@ echo '<br><br>Script finished.';
     //$commInfo = @curl_getinfo($ch);
     curl_close($ch);
     //die("\n\n".'data:'.$response);
-    if ($verboseMode) echo nl2br("\n\n" . 'VERBOSE output: ' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, CHARSET, TRUE) . "</pre>\n--------------\n");
+    if ($verboseMode) echo nl2br("\n\n" . 'VERBOSE output: ' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, 'UTF-8', TRUE) . "</pre>\n--------------\n");
     $errors = ($commErrNo != 0 ? "\n(" . $commErrNo . ') ' . $commError : '');
     if ($errors != '') {
       echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'ABORTING CURL METHOD ...' . "\n\n");
