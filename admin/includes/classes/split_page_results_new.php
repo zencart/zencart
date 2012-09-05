@@ -3,7 +3,7 @@
  * split_page_results Class.
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: split_page_results.php 18925 2011-06-13 04:35:37Z drbyte $
@@ -19,11 +19,11 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package classes
  */
-class splitPageResults extends base {
+class splitPageResultsNew{
   var $sql_query, $number_of_rows, $current_page_number, $number_of_pages, $number_of_rows_per_page, $page_name;
 
   /* class constructor */
-  function splitPageResults($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
+  function splitPageResultsNew($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
     global $db;
     $max_rows = ($max_rows == '' || $max_rows == 0) ? 20 : $max_rows;
 
