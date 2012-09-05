@@ -1444,7 +1444,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
   function replace_accents($s) {
     $skipPreg = (defined('OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES') && OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES == 'TRUE') ? TRUE : FALSE;
-    $s = htmlentities($s, ENT_COMPAT | ENT_HTML401, CHARSET);
+    $s = htmlentities($s, ENT_COMPAT, CHARSET);
     if ($skipPreg == FALSE) {
       $s = preg_replace ('/&([a-zA-Z])(uml|acute|elig|grave|circ|tilde|cedil|ring|quest|slash|caron);/', '$1', $s);
     }
