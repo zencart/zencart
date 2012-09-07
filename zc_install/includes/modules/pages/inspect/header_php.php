@@ -376,8 +376,8 @@ if (version_compare(PHP_VERSION, 5.4, '<')) {
   $status_check2[] = array('Importance' => 'Optional', 'Title' => LABEL_GZIP, 'Status' => $php_buffer, 'Class' => ($php_buffer==ON)?'OK':'WARN', 'HelpURL' =>'', 'HelpLabel'=>'');
 
   //Check PostgreSQL availability
-  $pg_support = (function_exists( 'pg_connect' )) ? ON : OFF;
-  // turn off display of Postgres status until we support it again
+// turn off display of Postgres status until we support it again
+  // $pg_support = (function_exists( 'pg_connect' )) ? ON : OFF;
   //$status_check2[] = array('Importance' => 'Optional', 'Title' => LABEL_POSTGRES_AVAILABLE, 'Status' => $pg_support, 'Class' => ($pg_support==ON) ? 'OK' : 'WARN', 'HelpURL' =>ERROR_CODE_DB_NOTSUPPORTED, 'HelpLabel'=>ERROR_TEXT_DB_NOTSUPPORTED);
 
 
@@ -471,6 +471,7 @@ if (version_compare(PHP_VERSION, 5.4, '<')) {
   foreach (array('cache'=>'777 read/write/execute',
                  'images'=>'777 read/write/execute (INCLUDE SUBDIRECTORIES TOO)',
                  'includes/languages/english/html_includes'=>'777 read/write (INCLUDE SUBDIRECTORIES TOO)',
+                 'logs'=>'777 read/write/execute',
                  'media'=>'777 read/write/execute',
                  'pub'=>'777 read/write/execute',
                  'admin/backups'=>'777 read/write',
