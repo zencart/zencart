@@ -3,7 +3,7 @@
  * ipncheck.php diagnostic tool
  *
  * @package utility
- * @copyright Copyright 2007-2010 Zen Cart Development Team
+ * @copyright Copyright 2007-2012 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ipncheck.php 15777 2010-04-02 01:59:22Z drbyte $
  *
