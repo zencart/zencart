@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: dist-configure.php 19644 2011-09-29 16:04:04Z wilt $
+ * @version GIT: $Id: Author: DrByte  Tue Jul 31 17:24:25 2012 -0400 Modified in v1.5.1 $
  * @private
  */
 /**

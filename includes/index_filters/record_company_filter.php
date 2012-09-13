@@ -10,7 +10,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: record_company_filter.php 15628 2010-03-07 01:21:55Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Mon Jul 16 12:08:58 2012 -0400 Modified in v1.5.1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

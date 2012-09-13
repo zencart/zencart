@@ -9,7 +9,7 @@
  * @package debug
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: enable_error_logging.php 19328 2011-08-06 22:53:47Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
  */
 
 if (!defined('DIR_FS_LOGS')) {

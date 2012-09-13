@@ -5,7 +5,7 @@
  * @package paymentMethod
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypal_curl.php 19559 2011-09-21 19:38:45Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.5.1 $
  */
 
 /**

@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypaldp.php 19782 2011-10-11 17:54:15Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.5.1 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: manufacturers.php 18922 2011-06-13 03:23:35Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Thu Jul 12 12:27:04 2012 -0400 Modified in v1.5.1 $
  */
 
 // test if manufacturers sidebox should show

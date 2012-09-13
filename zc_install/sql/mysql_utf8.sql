@@ -5,7 +5,7 @@
 # * @copyright Copyright 2003-2012 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: mysql_utf8.sql 19514 2011-09-14 20:59:16Z wilt $
+# * @version GIT: $Id: Author: DrByte  Wed Jul 18 16:51:48 2012 -0400 Modified in v1.5.1 $
 #
 # NOTE: UTF8 files need to be saved with encoding format set to UTF8-without-BOM.
 #

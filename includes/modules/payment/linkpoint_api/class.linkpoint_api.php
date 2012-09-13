@@ -3,7 +3,7 @@
  * @package paymentMethod
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Copyright 2003 LinkPoint International, Inc. All Rights Reserved.
- * @version (within Zen Cart SVN) $Id: class.linkpoint_api.php 18942 2011-06-13 23:26:41Z wilt $
+ * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
  */
 /* lphp.php  LINKPOINT PHP MODULE */
 
