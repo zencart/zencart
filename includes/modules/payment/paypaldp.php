@@ -1142,7 +1142,7 @@ class paypaldp extends base {
                                         'version' => '61.0',
                                         'server' => MODULE_PAYMENT_PAYPALDP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
-                                    'sandbox' => 'https://api.sandbox.paypal.com/nvp');
+                                    'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
     }
 
     // set logging options

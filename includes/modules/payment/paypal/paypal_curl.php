@@ -46,7 +46,7 @@ class paypal_curl extends base {
    * URL endpoints -- defaults here are for three-token NVP implementation
    */
   var $_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
-                          'sandbox' => 'https://api.sandbox.paypal.com/nvp');
+                          'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
   /**
    * Options for cURL. Defaults to preferred (constant) options.
    */
