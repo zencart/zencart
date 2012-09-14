@@ -102,6 +102,7 @@ Added:
 <li>CHANGE-207 - Add bypass to bandage the performance/caching problem with products_viewed counter on busy sites, inspired by an idea from data-diggers. This step simply splits the logic out into an observer class, and adds a switch to turn it on or off. Doesn't change any schema or any reports. But of course if the switch is set to something other than 'on', then the reports will be useless too unless alternate custom data tracking code is added to the observer class.</li>
 <li>CHANGE-208 - Implement data-diggers querycache</li>
 <li>CHANGE-220 - Add optional constant 'DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT' to overcome rare problem on some servers which won't allow use of dot-prefixed temporary files.    Usage: define('DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT', TRUE); in /includes/extra_configures/ folder.</li>
+<li>CHANGE-238 - php 5.4 Updates, mainly for htmlentities() calls</li>
 <li>CHANGE-240 - Add form auto-focus on advanced-search results and admin category lookups</li>
 <li>CHANGE-265 - Add children support to category-specific stylesheet overrides -- ie: c_XX_XX_children.css</li>
 <li>CHANGE-273 - Add css-driven antispam support to contact-us, create-account, and product reviews</li>
@@ -156,7 +157,10 @@ Fixes:
 <li>CHANGE-281 - Fix incorrect database constant used in tpl_account_default.php</li>
 <li>CHANGE-294 - Fix issue where a customer who is banned after login could still checkout</li>
 <li>CHANGE-296 - Update outdated Admin error message text for secure usernames</li>
+<li>CHANGE-299 - update to change-230</li>
 <li>CHANGE-199 - Fix various vulnerabilities in zc_install</li>
+<li>CHANGE-325 - Admin Configuration does not correctly encode html entities in text boxes</li>
+<li>CHANGE-327 - Update PayPal sandbox endpoints</li>
 </ul>
 
 </fieldset>
