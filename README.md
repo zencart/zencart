@@ -11,9 +11,8 @@ Installation
 
 Installation is simple:
 
-1. [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files) or [From Github](https://github.com/zencart/zc-v15/zipball/master)
+1. [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files)
 2. Ensure you check that the md5/sha1 hash of the Zip matches those publically posted.
-  * The md5/sha1 values for Github are displayed in the projects [description](https://github.com/zencart/zc-v15)
   * The md5/sha1 values for the zip files hosted at sourceforge are displayed on at the Zen Cart&reg; [website](http://www.zen-cart.com/)
 3. Unzip the downloaded zip file 
 4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your public_html or www or html folder (the folder will already exist on your webserver)
@@ -28,8 +27,7 @@ For a MUCH more detailed set of installation instructions, see the [/docs/1.read
 
 PCI Compliance
 --------------
-Currently only the v1.5.0 release is PA-DSS ceritified. On Github this is currenlty represented by the master and v150-release branches, and only when you download those branches as Zip files.
-Other branches are not PA-DSS Certified unless otherwise stated.
+Currently only the v1.5.0 release is PA-DSS ceritified, and only when downloaded from [Zen Cart&reg;](http://sourceforge.net/projects/zencart/files).
  
 __The [/docs/implementation-guide.pdf](http://www.zen-cart.net/docs/index.html) should be followed for PCI Compliant implementation.__
 
