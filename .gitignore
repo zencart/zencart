@@ -1,8 +1,7 @@
 myDEBUG-*.log
 cache/*.sql
 cache/sess_*
-cache/*.log
-includes/modules/payment/paypal/logs/*.log
+logs/*.log
 local/configure.php
 *.php1
 *.bak
