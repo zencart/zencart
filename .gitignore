@@ -12,5 +12,3 @@ admin/includes/configure.php
 includes/configure.php
 testFramework/webtests/config/*
 !testFramework/webtests/config/localconfig_EXAMPLE.php
-
-
