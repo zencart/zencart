@@ -43,7 +43,7 @@ $_POST['ipn_mode'] = 'communication_test';
 if ($testSandbox) $_POST['test_ipn'] = 1;
 define('ENABLE_SSL','true');
 
-echo 'IPNCHECK.PHP - Version 1.3.9';
+echo 'IPNCHECK.PHP - Version 1.6.0';
 echo '<br /><br /><pre>';
     $defaultMethod = $altMethod = '';
     $info = '';
