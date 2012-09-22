@@ -7,7 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Fri Aug 31 11:51:59 2012 +0100 Modified in v1.5.1 $
  *
- * This utility is intended to be used to check whether a Zen Cart store is able to connect TO PayPal in order to RESPOND to an incoming IPN notification.
+ * This utility is intended to be used to check whether this webserver is able to connect TO PayPal in order to RESPOND to an incoming IPN notification.
  * Unfortunately it cannot test whether PayPal's servers can successfully post an IPN *to* your store.  To do that one should test a live transaction.
  *
  * USAGE INSTRUCTIONS:
@@ -42,8 +42,6 @@ if (isset($_REQUEST)) unset($_REQUEST);
 $_POST['ipn_mode'] = 'communication_test';
 if ($testSandbox) $_POST['test_ipn'] = 1;
 define('ENABLE_SSL','true');
-define('MODULE_PAYMENT_PAYPAL_HANDLER', 'www.paypal.com/cgi-bin/webscr');
-
 
 echo 'IPNCHECK.PHP - Version 1.3.9';
 echo '<br /><br /><pre>';
@@ -72,7 +70,7 @@ echo '<br /><br /><pre>';
     // send received data back to PayPal for validation
       $scheme = 'https://';
       //Parse url
-      $web = parse_url($scheme . MODULE_PAYMENT_PAYPAL_HANDLER);
+      $web = parse_url($scheme . 'www.paypal.com/cgi-bin/webscr');
       if ($checkNoChex == TRUE) $web = parse_url('https://www.nochex.com/nochex.dll/apc/apc');
       if (isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) {
         $web = parse_url($scheme . 'www.sandbox.paypal.com/cgi-bin/webscr');
