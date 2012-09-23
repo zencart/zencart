@@ -44,7 +44,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*39.99*');
     //net price
     $this->assertTextPresent('glob:*-$4.00*');
@@ -66,7 +66,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*39.99*');
     //net price
     $this->assertTextPresent('glob:*-$4.00*');
@@ -91,7 +91,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*42.79*');
     //net price
     $this->assertTextPresent('glob:*-$4.28*');
@@ -113,7 +113,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*42.79*');
     //net price
     $this->assertTextPresent('glob:*-$4.28*');
@@ -137,7 +137,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*42.79*');
     //net price
     $this->assertTextPresent('glob:*$5.95*');
@@ -163,7 +163,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*42.79*');
     //net price
     $this->assertTextPresent('glob:*$5.95*');

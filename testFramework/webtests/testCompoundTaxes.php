@@ -37,7 +37,7 @@ class testCompoundTaxes extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*');
     //net price
     $this->assertTextPresent('glob:*5.00*');
@@ -77,7 +77,7 @@ class testCompoundTaxes extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*');
     //net price
     $this->assertTextPresent('glob:*5.00*');
@@ -115,7 +115,7 @@ class testCompoundTaxes extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*');
     //net price
     $this->assertTextPresent('glob:*5.00*');
@@ -153,7 +153,7 @@ class testCompoundTaxes extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*');
     //net price
     $this->assertTextPresent('glob:*5.00*');

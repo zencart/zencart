@@ -5,6 +5,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: index.php 19537 2011-09-20 17:14:44Z drbyte $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
   $version_check_index=true;
   require('includes/application_top.php');
@@ -48,8 +49,9 @@
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
  <?php
-
-  $customers = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS);
+// COWOA+
+  $customers = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS . " WHERE COWOA_account = '0'");
+// COWOA+
 
   $products = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = '1'");
 
@@ -116,15 +118,43 @@
   </div>
 </div>
 <div id="coltwo">
+ <!-- COWOA+ -->
+ <div class="reportBox">
+ <div class="header"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, '', 'NONSSL') . '">' . BOX_TITLE_CUSTOMERS . '</a>'; ?> </div>
+ <?php
+ // get total number of customers flagged as COWOA
+    $COWOAcustomers = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS . " WHERE COWOA_account = '1'");
+
+    $customersTotal = $customers->fields['count'] + $COWOAcustomers->fields['count'];
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_TOTAL . '</span><span class="rigth"> ' . $customersTotal . '</span></div>';	
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_NORMAL . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';	
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_COWOA . '</span><span class="rigth"> ' . $COWOAcustomers->fields['count'] . '</span></div>';
+
+ // get distinct number of customers flagged as COWOA - by email address
+    $DistinctCOWOAcustomers = $db->Execute("select count(DISTINCT customers_email_address) as count from " . TABLE_CUSTOMERS . " WHERE COWOA_account = '1';");
+    $customersTotal = $customers->fields['count'] + $DistinctCOWOAcustomers->fields['count'];   
+    echo '<br /><div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_TOTAL_DISTINCT . '</span><span class="rigth"> ' . $customersTotal . '</span></div>';	
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_NORMAL . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';	
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_COWOA_DISTINCT . '</span><span class="rigth"> ' . $DistinctCOWOAcustomers->fields['count'] . '</span></div>';
+?>
+	</div>
+ <!-- COWOA+ -->
 <div class="reportBox">
 <div class="header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
-  <?php  $customers = $db->Execute("select c.customers_id as customers_id, c.customers_firstname as customers_firstname, c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address, a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id order by a.customers_info_date_account_created DESC limit 5");
+  <?php 
 
+  //COWOA+
+  $customers = $db->Execute("select c.customers_id as customers_id, c.customers_firstname as customers_firstname, c.customers_lastname as customers_lastname, a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id, c.COWOA_account from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id order by a.customers_info_date_account_created DESC limit 5");
+  //COWOA+
   while (!$customers->EOF) {
     $customers->fields['customers_firstname'] = zen_output_string_protected($customers->fields['customers_firstname']);
     $customers->fields['customers_lastname'] = zen_output_string_protected($customers->fields['customers_lastname']);
-    echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customers->fields['customers_email_address'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink">'. $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a></span><span class="rigth">' . "\n";
+    echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customers->fields['customers_lastname'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink">'. $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a></span><span class="rigth">' . "\n";
     echo zen_date_short($customers->fields['customers_info_date_account_created']);
+    // COWOA+
+    if ($customers->fields['COWOA_account'])
+      echo "<br>" . COWOA_WITHOUT_ACCOUNT;
+    // COWOA+
     echo '              </span></div>' . "\n";
     $customers->MoveNext();
   }
@@ -155,8 +185,15 @@
   <?php  $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') order by orders_id DESC limit 5");
 
   while (!$orders->EOF) {
-    echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink"> ' . $orders->fields['customers_name'] . '</a></span><span class="center">' . $orders->fields['order_total'] . '</span><span class="rigth">' . "\n";
+  	// COWOA+ check for full account status
+  $COWOA_query  = "select COWOA_account from " . TABLE_CUSTOMERS . " WHERE customers_id = " . $orders->fields['customers_id'] . " limit 1;";
+  $COWOA_result = $db->Execute($COWOA_query);
+  	echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink"> ' . $orders->fields['customers_name'] . '</a></span><span class="center">' . $orders->fields['order_total'] . '</span><span class="rigth">' . "\n";
     echo zen_date_short($orders->fields['date_purchased']);
+    // COWOA+
+    if ($COWOA_result->fields['COWOA_account'])
+      echo "<br>" . COWOA_WITHOUT_ACCOUNT;
+    // COWOA+
     echo '              </span></div>' . "\n";
     $orders->MoveNext();
   }

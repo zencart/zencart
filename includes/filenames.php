@@ -8,6 +8,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: filenames.php 19690 2011-10-04 16:41:45Z drbyte $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  * @private
  */
 /**
@@ -99,10 +100,12 @@ define('FILENAME_MAIN_PRODUCT_IMAGE', 'main_product_image');
 define('FILENAME_MANUFACTURERS', 'manufacturers');
 define('FILENAME_MODULES', 'modules');
 define('FILENAME_NEWSLETTERS', 'newsletters');
+define('FILENAME_NO_ACCOUNT', 'no_account');
 define('FILENAME_ORDERS', 'orders');
 define('FILENAME_ORDERS_INVOICE', 'invoice');
 define('FILENAME_ORDERS_PACKINGSLIP', 'packingslip');
 define('FILENAME_ORDERS_STATUS', 'orders_status');
+define('FILENAME_ORDER_STATUS', 'order_status');
 define('FILENAME_OPTIONS_NAME_MANAGER', 'options_name_manager');
 define('FILENAME_OPTIONS_VALUES_MANAGER', 'options_values_manager');
 define('FILENAME_PAGE_NOT_FOUND', 'page_not_found');
@@ -189,4 +192,3 @@ define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
 
 define('FILENAME_BB_INDEX', 'index.php'); // phpBB main index filename
-

@@ -5,11 +5,16 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: checkout_shipping.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
+if($_SESSION['COWOA']) $COWOA=TRUE;
 
 define('NAVBAR_TITLE_1', 'Checkout');
 define('NAVBAR_TITLE_2', 'Shipping Method');
 
+if($COWOA)
+define('HEADING_TITLE', 'Step 2 of 5 - Delivery Information');
+else
 define('HEADING_TITLE', 'Step 1 of 3 - Delivery Information');
 
 define('TABLE_HEADING_SHIPPING_ADDRESS', 'Shipping Address');
@@ -25,6 +30,9 @@ define('TEXT_NO_SHIPPING_AVAILABLE','<span class="alert">Sorry, we are not shipp
 
 define('TABLE_HEADING_COMMENTS', 'Special Instructions or Comments About Your Order');
 
+if($COWOA)
+define('TITLE_CONTINUE_CHECKOUT_PROCEDURE', 'Continue to Step 3');
+else
 define('TITLE_CONTINUE_CHECKOUT_PROCEDURE', 'Continue to Step 2');
 define('TEXT_CONTINUE_CHECKOUT_PROCEDURE', '- choose your payment method.');
 

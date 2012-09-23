@@ -17,8 +17,7 @@
 // | to obtain it through the world-wide-web, please send a note to       |
 // | license@zen-cart.com so we can mail you a copy immediately.          |
 // +----------------------------------------------------------------------+
-// $Id: checkout_process.php 1969 2005-09-13 06:57:21Z drbyte $
-// @version $Id: Integrated COWOA v2.2 - 2007 - 2012
+// $Id: checkout_process.php 1969 2005-09-13 06:57:21Z drbyte $ Integrated COWOA v2.2 - 2007 - 2012
 //
 
 define('EMAIL_TEXT_SUBJECT', 'Order Confirmation');
@@ -27,6 +26,7 @@ define('EMAIL_TEXT_FROM',' from ');  //added to the EMAIL_TEXT_HEADER, above on 
 define('EMAIL_THANKS_FOR_SHOPPING','Thanks for shopping with us today!');
 define('EMAIL_DETAILS_FOLLOW','The following are the details of your order.');
 define('EMAIL_TEXT_ORDER_NUMBER', 'Order Number:');
+
 //IF COWOA ACCOUNT CHANGE TO ORDER STATUS
 if($_SESSION['COWOA']) $COWOA=TRUE;
 if($COWOA)
@@ -38,6 +38,7 @@ define('EMAIL_TEXT_INVOICE_URL_CLICK', 'Click here to check the status of your o
 else
 define('EMAIL_TEXT_INVOICE_URL_CLICK', 'Click here for a Detailed Invoice');
 // END IF COWOA ACCOUNT
+
 define('EMAIL_TEXT_DATE_ORDERED', 'Date Ordered:');
 define('EMAIL_TEXT_PRODUCTS', 'Products');
 define('EMAIL_TEXT_SUBTOTAL', 'Sub-Total:');

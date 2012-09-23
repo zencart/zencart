@@ -118,7 +118,7 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*534.99*'); //net price
     $this->assertTextPresent('glob:*5.95*'); //shipping
     $this->assertTextPresent('glob:*35.00'); //tax

@@ -33,7 +33,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*-$50.00*'); //coupon discount
     $this->assertTextPresent('glob:*31.50*'); //tax
@@ -53,7 +53,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*-$499.99*'); //coupon discount
     $this->assertTextPresent('glob:*$200.00*'); //total
@@ -71,7 +71,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*-$10.00*'); //coupon discount
     $this->assertTextPresent('glob:*$34.30*'); //tax
@@ -94,7 +94,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*579.97*'); //net price
     $this->assertTextPresent('glob:*-$8.00*'); //coupon discount
     $this->assertTextPresent('glob:*40.04*'); //tax
@@ -123,7 +123,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*534.99*'); //net price
     $this->assertTextPresent('glob:*-$53.50*'); //coupon discount
     $this->assertTextPresent('glob:*31.50*'); //tax
@@ -140,7 +140,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*534.99*'); //net price
     $this->assertTextPresent('glob:*-$534.99*'); //coupon discount
     $this->assertTextPresent('glob:*$200.00*'); //total
@@ -156,7 +156,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*534.99*'); //net price
     $this->assertTextPresent('glob:*-$10.65*'); //coupon discount
     $this->assertTextPresent('glob:*$34.35*'); //tax
@@ -177,7 +177,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*620.57*'); //net price
     $this->assertTextPresent('glob:*-$8.56*'); //coupon discount
     $this->assertTextPresent('glob:*40.04*'); //tax
@@ -204,7 +204,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*100.00*'); //shipping
     $this->assertTextPresent('glob:*-$50.00*'); //coupon discount
@@ -222,7 +222,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*-$499.99*'); //coupon discount
     $this->assertTextPresent('glob:*100.00*'); //shipping
@@ -240,7 +240,7 @@ class testUseCoupons extends zcCommonTestResources
    $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*-$10.00*'); //coupon discount
     $this->assertTextPresent('glob:*$41.30*'); //tax
@@ -307,7 +307,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*534.99*'); //net price
     $this->assertTextPresent('glob:*107.00*'); //shipping
     $this->assertTextPresent('glob:*-$53.50*'); //coupon discount
@@ -326,7 +326,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*42.79*'); //net price
     $this->assertTextPresent('glob:*-$42.79*'); //coupon discount
     $this->assertTextPresent('glob:*107.00*'); //shipping
@@ -345,7 +345,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*534.99*'); //net price
     $this->assertTextPresent('glob:*-$10.65*'); //coupon discount
     $this->assertTextPresent('glob:*$41.35*'); //tax
@@ -375,7 +375,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*100.00*'); //shipping
     $this->assertTextPresent('glob:*-$100.00*'); //coupon discount
@@ -397,7 +397,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Order Confirmation*');
+    $this->assertTextPresent('glob:*Confirmation*');
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*100.00*'); //shipping
     $this->assertTextPresent('glob:*-$100.00*'); //coupon discount

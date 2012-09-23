@@ -5,6 +5,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: orders.php 19530 2011-09-19 13:52:37Z ajeh $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 
   require('includes/application_top.php');
@@ -60,7 +61,7 @@
         if ($_GET['download_reset_on'] > 0) {
           // adjust download_maxdays based on current date
           $check_status = $db->Execute("select customers_name, customers_email_address, orders_status,
-                                      date_purchased from " . TABLE_ORDERS . "
+                                      date_purchased, COWOA_order from " . TABLE_ORDERS . "
                                       where orders_id = '" . $_GET['oID'] . "'");
 
           // check for existing product attribute download days and max
@@ -116,7 +117,7 @@
 
         $order_updated = false;
         $check_status = $db->Execute("select customers_name, customers_email_address, orders_status,
-                                      date_purchased from " . TABLE_ORDERS . "
+                                      date_purchased, COWOA_order from " . TABLE_ORDERS . "
                                       where orders_id = '" . (int)$oID . "'");
 
         if ( ($check_status->fields['orders_status'] != $status) || zen_not_null($comments)) {
@@ -132,6 +133,60 @@
               $notify_comments = EMAIL_TEXT_COMMENTS_UPDATE . $comments . "\n\n";
             }
             //send emails
+// BOF COWOA SEND ORDER_STATUS EMAIL
+if (COWOA_ORDER_STATUS == 'true') {
+    if ($check_status->fields['COWOA_order'] == 1)  {
+  
+            $message =
+            EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n\n" .
+            EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $oID, 'SSL') . "\n\n" .
+            EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']) . "\n\n" .
+      strip_tags($notify_comments) .
+      EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status] ) .
+      EMAIL_TEXT_STATUS_PLEASE_REPLY;
+
+          $html_msg['EMAIL_CUSTOMERS_NAME']    = $check_status->fields['customers_name'];
+          $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID;
+          $html_msg['EMAIL_TEXT_INVOICE_URL']  = '<a href="' . zen_catalog_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $oID, 'SSL') .'">'.str_replace(':','','Click here to check the status of your order:').'</a>';
+          $html_msg['EMAIL_TEXT_DATE_ORDERED'] = EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']);
+          $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($notify_comments);
+          $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace('\n','', EMAIL_TEXT_STATUS_UPDATED);
+          $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace('\n','', sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status] ));
+          $html_msg['EMAIL_TEXT_NEW_STATUS'] = $orders_status_array[$status];
+          $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace('\n','', EMAIL_TEXT_STATUS_PLEASE_REPLY);
+
+            zen_mail($check_status->fields['customers_name'], $check_status->fields['customers_email_address'], EMAIL_TEXT_SUBJECT . ' #' . $oID, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
+            $customer_notified = '1';
+          }
+    } 
+if (COWOA_ORDER_STATUS == 'false') {
+      if ($check_status->fields['COWOA_order'] == 1)  {
+
+          $htmlInvoiceURL='';
+          $htmlInvoiceValue='';
+          $message =
+          EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n\n" .
+          EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']) . "\n\n" .
+          strip_tags($notify_comments) .
+          EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status] ) .
+          EMAIL_TEXT_STATUS_PLEASE_REPLY;
+          $html_msg['EMAIL_CUSTOMERS_NAME']    = $check_status->fields['customers_name'];
+          $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID;
+          $html_msg['INTRO_URL_TEXT']        = '';
+          $html_msg['INTRO_URL_VALUE']       = '';
+          $html_msg['EMAIL_TEXT_DATE_ORDERED'] = EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']);
+          $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($notify_comments);
+          $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace('\n','', EMAIL_TEXT_STATUS_UPDATED);
+          $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace('\n','', sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status] ));
+          $html_msg['EMAIL_TEXT_NEW_STATUS'] = $orders_status_array[$status];
+          $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace('\n','', EMAIL_TEXT_STATUS_PLEASE_REPLY);
+
+            zen_mail($check_status->fields['customers_name'], $check_status->fields['customers_email_address'], EMAIL_TEXT_SUBJECT . ' #' . $oID, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
+            $customer_notified = '1';
+          }    
+    }
+// EOF COWOA SEND ORDER_STATUS EMAIL    
+    if ($check_status->fields['COWOA_order'] != 1)  {
             $message =
             EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n\n" .
             EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . "\n\n" .
@@ -153,6 +208,7 @@
 
             zen_mail($check_status->fields['customers_name'], $check_status->fields['customers_email_address'], EMAIL_TEXT_SUBJECT . ' #' . $oID, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
             $customer_notified = '1';
+			}
 
             // PayPal Trans ID, if any
             $sql = "select txn_id, parent_txn_id from " . TABLE_PAYPAL . " where order_id = :orderID order by last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC ";
@@ -605,7 +661,6 @@ function couponpopupWindow(url) {
           </tr>
         </table></td>
       </tr>
-
 <?php
   // show downloads
   require(DIR_WS_MODULES . 'orders_download.php');
