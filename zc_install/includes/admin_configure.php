@@ -11,7 +11,7 @@
 $file_contents =
 '<'.'?php' . "\n" .
 '/**' . "\n" .
-' * @package Configuration Settings circa 1.5.1' . "\n" .
+' * @package Configuration Settings circa 1.6.0' . "\n" .
 ' * @copyright Copyright 2003-2012 Zen Cart Development Team' . "\n" .
 ' * @copyright Portions Copyright 2003 osCommerce' . "\n" .
 ' * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0' . "\n" .
