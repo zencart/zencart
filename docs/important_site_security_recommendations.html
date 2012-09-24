@@ -167,7 +167,7 @@ Thus, once your site is built and your images have been created/loaded, you shou
 <p>The folders for which installation suggests read-write access for  setup are these. If your site supports .htaccess protection, then you should use it for these folders. (The .htaccess files included with v1.3.9 and newer should already cover the basics.) </p>
 <ul>
   <li><span class="filename">/cache</span><br>
-    This is used to cache session and database  information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting  in configure.php files as well as Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
+    This is used to cache database information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting  in configure.php files as well as Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
   <li><span class="filename">/images</span><br>
     This is discussed earlier in this article. </li>
   <li><span class="filename">/includes/languages/english/html_includes</span><br>
