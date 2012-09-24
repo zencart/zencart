@@ -224,7 +224,7 @@ if (DOWNLOAD_BY_REDIRECT == 'true') {
   $link_create_status = @symlink(DIR_FS_DOWNLOAD . $origin_filename, DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $download_link);
 
   if ($link_create_status==true) {
-    $zco_notifier->notify('NOTIFY_DOWNLOAD_VIA_SYMLINK___BEGINS', $download_link, $origin_filename, $tempdir);
+    $zco_notifier->notify('NOTIFY_DOWNLOAD_VIA_SYMLINK___BEGINS', array($download_link, $origin_filename, $tempdir));
     header("HTTP/1.1 303 See Other");
     zen_redirect(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $download_link, 303);
   }
