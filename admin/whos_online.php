@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: whos_online.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -272,7 +272,7 @@ function zen_check_minutes($the_time_last_click) {
                 <?php echo TEXT_WHOS_ONLINE_FILTER_SPIDERS; ?>
                 <a class="optionClick<?php echo ($_SESSION['wo_exclude_spiders'])  ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>ns=1"><?php echo TEXT_YES; ?></a>&nbsp;
                 <a class="optionClick<?php echo (!$_SESSION['wo_exclude_spiders']) ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>ns=0"><?php echo TEXT_NO; ?></a>&nbsp;
-                &nbsp;&nbsp&nbsp;
+                &nbsp;&nbsp;&nbsp;
                 <?php echo TEXT_WHOS_ONLINE_FILTER_ADMINS; ?>
                 <a class="optionClick<?php echo ($_SESSION['wo_exclude_admins'])  ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>na=1"><?php echo TEXT_YES; ?></a>&nbsp;
                 <a class="optionClick<?php echo (!$_SESSION['wo_exclude_admins']) ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>na=0"><?php echo TEXT_NO; ?></a>&nbsp;
