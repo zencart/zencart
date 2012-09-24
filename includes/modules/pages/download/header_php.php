@@ -29,7 +29,7 @@ if ((isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']
 
 // Check that order_id, customer_id and filename match
 $sql = "SELECT date_format(o.date_purchased, '%Y-%m-%d')
-          AS date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename, o.*
+          AS date_purchased_day, opd.download_maxdays, opd.download_count, opd.orders_products_filename, o.*
           FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
           WHERE o.customers_id = customersID
           AND o.orders_id = ordersID
