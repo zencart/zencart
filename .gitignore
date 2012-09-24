@@ -9,3 +9,6 @@ local/configure.php
 *.old
 devtools.php
 Thumbs.db
+admin/includes/configure.php
+includes/configure.php
+testFramework/config
