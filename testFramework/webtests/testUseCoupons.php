@@ -38,7 +38,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->assertTextPresent('glob:*-$50.00*'); //coupon discount
     $this->assertTextPresent('glob:*31.50*'); //tax
     $this->assertTextPresent('glob:*681.49*'); //total
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testNonInclusiveCoupons.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testNonInclusiveCoupons.png');
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
     
@@ -109,7 +109,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->open('http://' . BASE_URL . 'index.php?main_page=login');
     $this->waitForPageToLoad(10000);
     $this->type('email_address', WEBTEST_DEFAULT_CUSTOMER_EMAIL);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testInclusiveCoupons.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testInclusiveCoupons.png');
     $this->type('password', WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
     $this->submit('login');
     $this->waitForPageToLoad(10000);
@@ -271,7 +271,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testMinimumOrderRestrictedCoupon1.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testMinimumOrderRestrictedCoupon1.png');
     $this->assertTextPresent('You must spend at least*');
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=3_10&products_id=3&action=buy_now');
     $this->waitForPageToLoad(10000);
@@ -282,7 +282,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testMinimumOrderRestrictedCoupon2.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testMinimumOrderRestrictedCoupon2.png');
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
   }

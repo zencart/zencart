@@ -38,7 +38,7 @@ class testInstall extends zcCommonTestResources
     $this->type('db_pass', DB_PASS);
     $this->type('db_name', DB_DBNAME);
     $this->type('db_prefix', DB_PREFIX);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testInstallDo1.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testInstallDo1.png');
     $this->click('submit');
     $this->waitForPageToLoad(50000);
     $this->assertTextPresent('glob:*System Setup*');
@@ -50,7 +50,7 @@ class testInstall extends zcCommonTestResources
     $this->type('store_owner_email', WEBTEST_STORE_OWNER_EMAIL);
     $this->select('store_zone', 'value=18');
     $this->click('demo_install_yes');
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testInstallDo2.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testInstallDo2.png');
     $this->clickAndWait('submit');
     $this->assertTextPresent('glob:*Administrator Account Setup*');
     $this->type('admin_username', WEBTEST_ADMIN_NAME_INSTALL);
@@ -216,10 +216,10 @@ class testInstall extends zcCommonTestResources
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
     $this->clickAndWait("submit");
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testPreAddPostage.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testPreAddPostage.png');
     $this->open('http://' . BASE_URL . 'admin/tax_classes.php?page=1&action=new');
     $this->waitForPageToLoad(10000);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testAddPostage.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testAddPostage.png');
     $this->type("tax_class_title", "Taxable Postage");
     $this->type("tax_class_description", "Taxable Postage");
     $this->clickAndWait("//input[@type='image']");

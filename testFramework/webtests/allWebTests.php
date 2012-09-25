@@ -13,21 +13,24 @@
 /**
  * Load localised test config settings
  */
-if (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('config/localconfig_' . $_SERVER['USER'] . '.php'))
+ echo getcwd();
+if (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php'))
 {
   require_once ('config/localconfig_' . $_SERVER['USER'] . '.php');
-} elseif (file_exists('config/localconfig_main.php'))
+} elseif (file_exists('testFramework/config/localconfig_main.php'))
 {
-  require_once ('config/localconfig_main.php');
-} elseif (file_exists('../../not_for_release/config/localconfig_main.php'))
+  require_once ('testFramework/config/localconfig_main.php');
+} elseif (file_exists('not_for_release/config/localconfig_main.php'))
 {
-  require_once ('../../not_for_release/config/localconfig_main.php');
+  require_once ('not_for_release/config/localconfig_main.php');
+} else 
+{
+  die('COULD NOT FIND CONFIG FILE');
 }
 /**
  * Load class files for test suites
  */
 require_once 'zcCommonTestResources.php';
-require_once 'zcPayPalTestLibrary.php';
 require_once 'testInstall.php';
 require_once 'testCreateAccount.php';
 require_once 'testCreateCoupons.php';
@@ -48,7 +51,7 @@ class allTests
 {
   public static function suite()
   {
-    $suite = new PHPUnit_Framework_TestSuite('Zen Cart v1.5 Web Tests');
+    $suite = new PHPUnit_Framework_TestSuite('Zen Cart v1.6 Web Tests');
     $suite->addTestSuite('testInstall');
     $suite->addTestSuite('testCreateAccount');
     $suite->addTestSuite('testCreateCoupons');

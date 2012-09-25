@@ -34,7 +34,7 @@ class testCreateAccount extends zcCommonTestResources
     $this->type("document.forms[3].elements['email_address']", WEBTEST_DEFAULT_CUSTOMER_EMAIL);
     $this->type("document.forms[3].elements['password']", WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
     $this->type('confirmation', WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountDo.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountDo.png');
     $this->submit("document.forms[3]");
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Your Account Has Been Created*');
@@ -60,7 +60,7 @@ class testCreateAccount extends zcCommonTestResources
     $this->type("document.forms[3].elements['email_address']", WEBTEST_UK_CUSTOMER_EMAIL);
     $this->type("document.forms[3].elements['password']", WEBTEST_UK_CUSTOMER_PASSWORD);
     $this->type('confirmation', WEBTEST_UK_CUSTOMER_PASSWORD);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountUKDo.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountUKDo.png');
     $this->submit("document.forms[3]");
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Your Account Has Been Created*');
@@ -110,7 +110,7 @@ class testCreateAccount extends zcCommonTestResources
     $this->type('dob', '05/21/1970');
     $this->type("document.forms[3].elements['email_address']", WEBTEST_DEFAULT_CUSTOMER_EMAIL);
     $this->type("document.forms[3].elements['password']", WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountFailDo.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountFailDo.png');
     $this->type('confirmation', WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
     $this->submit("document.forms[3]");
     $this->waitForPageToLoad(10000);
@@ -134,7 +134,7 @@ class testCreateAccount extends zcCommonTestResources
     $this->type("document.forms[3].elements['email_address']", WEBTEST_DEFAULT_CUSTOMER_EMAIL);
     $this->type("document.forms[3].elements['password']", WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
     $this->type('confirmation', WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
-    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountDoAlert.png');
+//    $this->captureEntirePageScreenshot(SCREENSHOT_PATH . 'testCreateAccountDoAlert.png');
     $this->submit("document.forms[3]");
     $this->assertAlert();
   }

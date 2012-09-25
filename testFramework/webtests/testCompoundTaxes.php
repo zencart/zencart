@@ -17,6 +17,7 @@ class testCompoundTaxes extends zcCommonTestResources
   {
     $this->setupCompoundTaxes();
     $this->setTaxPriorityDifferent();
+    $this->switchToTaxNonInclusive();
     $this->switchSplitTaxMode('on');
     $this->switchFlatShippingTax('off');
     $this->open('http://' . BASE_URL . 'index.php?main_page=login');

@@ -9,6 +9,8 @@ define('DB_DBNAME', 'zencart');
 define('DIR_FS_ADMIN', '~/public_html/v15/admin/');
 define('DIR_FS_CATALOG', '~/public_html/v15/');
 define('SELENIUM_BROWSER', '*chrome /Applications/Firefox3.app/Contents/MacOS/firefox-bin');
+define('DO_SCREENSHOT', FALSE);
+define('SCREENSHOT_PATH', '/');
 
 define('WEBTEST_STORE_NAME', 'Selenium Test Store on ' . BASE_URL);
 define('WEBTEST_STORE_OWNER', 'Selenium Test ' . BASE_URL);
@@ -33,10 +35,6 @@ define('WEBTEST_EMAIL_SMTPAUTH_MAIL_SERVER', '');
 define('WEBTEST_EMAIL_SMTPAUTH_PASSWORD', '');
 define('WEBTEST_EMAIL_SMTPAUTH_MAIL_SERVER_PORT', '');
 define('WEBTEST_EMAIL_LINEFEED', 'CRLF');
-
-//define('SCREENSHOT_PATH', realpath(dirname(__FILE__)) . '/');
-
-
 
 $file_contents = file_get_contents(realpath(dirname(__FILE__)) . '/../../../includes/dist-configure.php');
 chmod(realpath(dirname(__FILE__)) . '/../../../admin/includes/configure.php', 0777);
