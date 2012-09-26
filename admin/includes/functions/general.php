@@ -122,7 +122,8 @@
 
     reset($_GET);
     while (list($key, $value) = each($_GET)) {
-      if (($key != zen_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+      if (($key != zen_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) 
+        $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
     }
 
     return $get_url;
