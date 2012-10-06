@@ -73,6 +73,10 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
   {
     $this->doDbQuery("UPDATE " . DB_PREFIX . "configuration SET configuration_value = '" . ($mode == 'on' ? 'true' : 'false') . "' where configuration_key = 'SHOW_SPLIT_TAX_CHECKOUT'");
   }
+  function switchAddToCartRedirect($mode = 'true')
+  {
+    $this->doDbQuery("UPDATE " . DB_PREFIX . "configuration SET configuration_value = '" . $mode . "' where configuration_key = 'DISPLAY_CART'");
+  }
   public function createAdminSSLOverride()
   {
     $fp = fopen(DIR_FS_ADMIN . 'includes/local/configure.php', 'w');

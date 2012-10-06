@@ -130,5 +130,16 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->switchSplitTaxMode('off');
   }
 
-
+  public function testAddToCartMusicTypeWithoutRedirect()
+  {
+    $this->switchAddToCartRedirect('false');
+    $this->open('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
+    $this->waitForPageToLoad(10000);
+    $this->open('http://' . BASE_URL . 'index.php?main_page=product_music_info&cPath=62&products_id=166');
+    $this->type('css=input[name=cart_quantity]', '1');
+    $this->clickAndWait('css=input[type=image]');
+    $this->assertTextPresent('glob:*RTBHUNTER*');
+    $this->open('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
+    $this->switchAddToCartRedirect('true');
+  }
 }
