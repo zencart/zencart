@@ -153,10 +153,10 @@ class queryFactory extends base {
         while (list($key, $value) = each($zp_result_array[0])) {
           $obj->fields[$key] = $value;
         }
-        return $obj;
       } else {
         $obj->EOF = true;
       }
+      return $obj;    
     } elseif ($zf_cache) {
       $zc_cache->sql_cache_expire_now($zf_sql);
       $time_start = explode(' ', microtime());
@@ -175,7 +175,6 @@ class queryFactory extends base {
       }
       $obj->resource = $zp_db_resource;
       $obj->cursor = 0;
-      $obj->is_cached = true;
       if ($obj->RecordCount() > 0) {
         $obj->EOF = false;
         $zp_ii = 0;
@@ -203,6 +202,7 @@ class queryFactory extends base {
         $obj->EOF = true;
       }
       $zc_cache->sql_cache_store($zf_sql, $obj->result);
+       $obj->is_cached = true;
       $time_end = explode (' ', microtime());
       $query_time = $time_end[1]+$time_end[0]-$time_start[1]-$time_start[0];
       $this->total_query_time += $query_time;
@@ -507,16 +507,29 @@ class queryFactoryResult {
   }
 
   function RecordCount() {
+    if ($this->is_cached) return sizeof($this->result);
     return @mysql_num_rows($this->resource);
   }
 
   function Move($zp_row) {
     global $db;
-    if (@mysql_data_seek($this->resource, $zp_row)) {
-      $zp_result_array = @mysql_fetch_array($this->resource);
-        while (list($key, $value) = each($zp_result_array)) {
+    if ($this->is_cached) {
+      if($zp_row >= sizeof($this->result)) {
+        $this->cursor = sizeof($this->result);
+        $this->EOF = true;
+      } else {
+        $this->cursor = $zp_row;
+        while(list($key, $value) = each($this->result[$this->cursor])) {
           $this->fields[$key] = $value;
         }
+        $this->EOF = false;
+      }
+    }
+    else if (@mysql_data_seek($this->resource, $zp_row)) {
+      $zp_result_array = @mysql_fetch_array($this->resource);
+      while (list($key, $value) = each($zp_result_array)) {
+        $this->fields[$key] = $value;
+      }
       @mysql_data_seek($this->resource, $zp_row);
       $this->EOF = false;
       return;
