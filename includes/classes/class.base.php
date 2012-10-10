@@ -3,7 +3,7 @@
  * File contains just the base class
  *
  * @package classes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: class.base.php 14535 2009-10-07 22:16:19Z wilt $
  */
@@ -49,13 +49,17 @@ class base {
    * @param string The event ID to notify for
    * @param array paramters to pass to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
    */
-  function notify($eventID, $paramArray = array()) {
+  function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
     $observers = & base::getStaticObserver();
     if (!is_null($observers))
     {
       foreach($observers as $key=>$obs) {
         if ($obs['eventID'] == $eventID) {
-          $obs['obs']->update($this, $eventID, $paramArray);
+         $method = 'update';
+         $testMethod = $method . self::camelize(strtolower($eventID), TRUE);
+         if (method_exists($obs['obs'], $testMethod))
+           $method = $testMethod;
+         $obs['obs']->{$method}($this, $eventID, $param1,$param2,$param3,$param4,$param5,$param6,$param7);
         }
       }
     }
@@ -77,5 +81,15 @@ class base {
   {
     $observer =  & base::getStaticObserver();
     unset($observer[$element]);
+  }
+  public static function camelize($rawName, $camelFirst = FALSE)
+  {
+    if ($rawName == "")
+      return $rawName;
+    if ($camelFirst)
+    {
+      $rawName[0] = strtoupper($rawName[0]);
+    }
+    return preg_replace('/_([0-9,a-z])/e', "strtoupper('\\1')", $rawName);
   }
 }
