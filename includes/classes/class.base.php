@@ -51,7 +51,7 @@ class base {
    */
   function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
-    if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != 0 && NOTIFIER_TRACE != FALSE && NOTIFIER_TRACE != 'false') {
+    if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 0 && NOTIFIER_TRACE != FALSE && NOTIFIER_TRACE != 'false') {
       $file = DIR_FS_LOGS . '/notifier_trace.log';
       $paramArray = array_merge($param1,$param2,$param3,$param4,$param5,$param6,$param7);
       if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
