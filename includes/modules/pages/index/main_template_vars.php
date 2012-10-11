@@ -215,7 +215,6 @@ if ($categories_description_lookup->RecordCount() > 0) {
 }
 
 $zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body);
-echo $tpl_page_body;
 
 require($template->get_template_dir($tpl_page_body, DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . $tpl_page_body);
 
