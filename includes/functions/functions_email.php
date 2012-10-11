@@ -415,6 +415,7 @@
 **/
   function zen_build_html_email_from_template($module='default', $content='') {
     global $messageStack, $current_page_base;
+    if (NULL == $current_page_base) $current_page_base = $module;
     $block = array();
     if (is_array($content)) {
       $block = $content;
