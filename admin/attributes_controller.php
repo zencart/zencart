@@ -37,7 +37,7 @@
   $languages = zen_get_languages();
   for ($i=0, $n=sizeof($languages); $i<$n; $i ++) {
     if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
-      $db->Execute("INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name) VALUES ((int)PRODUCTS_OPTIONS_VALUES_TEXT_ID, " . (int)$languages[$i]['id'] . ", 'TEXT')");
+      $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name) VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
     }
   }
 
