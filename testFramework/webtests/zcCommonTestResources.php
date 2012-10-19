@@ -25,7 +25,6 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
   {
     $this->setBrowser(SELENIUM_BROWSER);
     $this->setBrowserUrl('http://' . BASE_URL);
-    $this->generalSqlInstallStuff();
   }
   /**
    * This is just a quick handy tool for running a quick DB query
@@ -47,20 +46,6 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
     $result = mysql_query($sql, $this->dbLink);
     //mysql_close($this->dbLink);
     return $result;
-  }
-  public function generalSqlInstallStuff()
-  {
-    $sql = "INSERT INTO currencies VALUES ('','Swedish Krona','SEK','SEK','',',','','2','1', now());";
-    $this->doDbQuery($sql);
-  }
-  public function switchConfigurationValue($configKey, $configValue)
-  {
-    $sql = "SELECT configuration_value FROM " . DB_PREFIX . "configuration WHERE configuration_key = '" . $configKey . "'";
-    $q = $this->doDbQuery($sql);
-    $result = mysql_fetch_assoc($q);
-    $original = $result['configuration_value'];
-    $this->doDbQuery("UPDATE " . DB_PREFIX . "configuration SET configuration_value = '" . $configValue . "' where configuration_key = '" . $configKey . "'");
-    return $original;    
   }
   /**
    * Enable tax-included pricing (mainly for VAT sites)
@@ -150,12 +135,5 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
   public function setTaxPriorityDifferent()
   {
     $this->doDbQuery("UPDATE " . DB_PREFIX . "tax_rates set tax_priority = 2 WHERE tax_description = 'CAD Compound 2'");
-  }
-  public function doScreenshot($imageName)
-  {
-    if (defined('DO_SCREENSHOT') && DO_SCREENSHOT == TRUE)
-    {
-      $this->captureEntirePageScreenshot(SCREENSHOT_PATH . $imageName);
-    }
   }
 }

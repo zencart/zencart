@@ -7,7 +7,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: testInstall.php 19690 2011-10-04 16:41:45Z drbyte $
  */
-require_once 'zcCommonTestResources.php';
 /**
  *
  * @package tests

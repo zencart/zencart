@@ -3,7 +3,7 @@
  * currencies Class.
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2010 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: currencies.php 15880 2010-04-11 16:24:30Z wilt $
@@ -92,15 +92,7 @@ class currencies extends base {
 
     return $currency_value;
   }
-  function normalizeValue($valueIn, $currencyType = NULL)
-  {
-//    echo $valueIn;
-    if (!isset($currencyType)) $currencyType = $_SESSION['currency'];
-//    print_r($this->currencies[$currencyType]);
-//    $value = str_replace($this->currencies[$currencyType]['thousands_point'], '', $valueIn);
-    $value = str_replace($this->currencies[$currencyType]['decimal_point'], '.', $valueIn);
-    return $value;
-  }
+
   function is_set($code) {
     if (isset($this->currencies[$code]) && zen_not_null($this->currencies[$code])) {
       return true;
