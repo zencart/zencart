@@ -73,6 +73,7 @@ if (isset($_POST['submit']))
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
+<meta name="robot" content="noindex, nofollow" />
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
 <form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
