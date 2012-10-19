@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: index.php 19537 2011-09-20 17:14:44Z drbyte $
@@ -101,6 +101,8 @@
 
 ?>
  </div>
+ <?php if (zen_is_superuser() || check_page(FILENAME_ORDERS, array())) { ?>
+
  <div class="reportBox">
    <div class="header"><?php echo BOX_TITLE_ORDERS; ?> </div>
   <?php   $orders_contents = '';
@@ -116,8 +118,11 @@
   echo $orders_contents;
 ?>
   </div>
+<?php } ?>
 </div>
 <div id="coltwo">
+
+<?php if (zen_is_superuser() || check_page(FILENAME_CUSTOMERS, array())) { ?>
  <!-- COWOA+ -->
  <div class="reportBox">
  <div class="header"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, '', 'NONSSL') . '">' . BOX_TITLE_CUSTOMERS . '</a>'; ?> </div>
@@ -160,7 +165,7 @@
   }
 ?>
 </div>
-
+<?php } ?>
  <div class="reportBox">
 <?php
   $counter_query = "select startdate, counter, session_counter from " . TABLE_COUNTER_HISTORY . " order by startdate DESC limit 10";
@@ -180,6 +185,7 @@
 </div>
 </div>
 <div id="colthree">
+<?php if (zen_is_superuser() || check_page(FILENAME_ORDERS, array())) { ?>
 <div class="reportBox">
 <div class="header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
   <?php  $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') order by orders_id DESC limit 5");
@@ -199,6 +205,7 @@
   }
 ?>
 </div>
+<?php } ?>
 </div>
 <!-- The following copyright announcement is in compliance
 to section 2c of the GNU General Public License, and
