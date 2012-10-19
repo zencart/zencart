@@ -81,23 +81,23 @@
 <div class="reportBox">
 <div class="header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
 <?php
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER_DATE . '</span><span class="rigth"> ' . $counter_startdate_formatted . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER . '</span><span class="rigth"> ' . $counter->fields['counter'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS . ' </span><span class="rigth">' . $products->fields['count'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS_OFF . ' </span><span class="rigth">' . $products_off->fields['count'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_REVIEWS . '</span><span class="rigth">' . $reviews->fields['count']. '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER_DATE . '</span><span class="right"> ' . $counter_startdate_formatted . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER . '</span><span class="right"> ' . $counter->fields['counter'] . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS . '</span><span class="right"> ' . $customers->fields['count'] . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS . ' </span><span class="right">' . $products->fields['count'] . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS_OFF . ' </span><span class="right">' . $products_off->fields['count'] . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_REVIEWS . '</span><span class="right">' . $reviews->fields['count']. '</span></div>';
     if (REVIEWS_APPROVAL=='1') {
-	  echo '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_REVIEWS, 'status=1', 'NONSSL') . '">' . BOX_ENTRY_REVIEWS_PENDING . '</a></span><span class="rigth">' . $reviews_pending->fields['count']. '</span></div>';
+	  echo '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_REVIEWS, 'status=1', 'NONSSL') . '">' . BOX_ENTRY_REVIEWS_PENDING . '</a></span><span class="right">' . $reviews_pending->fields['count']. '</span></div>';
     }
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_NEWSLETTERS . '</span><span class="rigth"> ' . $newsletters->fields['count']. '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_NEWSLETTERS . '</span><span class="right"> ' . $newsletters->fields['count']. '</span></div>';
 
-	echo '<br /><div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_EXPIRED . '</span><span class="rigth"> ' . $specials->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_ACTIVE . '</span><span class="rigth"> ' . $specials_act->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_EXPIRED . '</span><span class="rigth"> ' . $featured->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_ACTIVE . '</span><span class="rigth"> ' . $featured_act->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_EXPIRED . '</span><span class="rigth"> ' . $salemaker->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_ACTIVE . '</span><span class="rigth"> ' . $salemaker_act->fields['count']. '</span></div>';
+	echo '<br /><div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_EXPIRED . '</span><span class="right"> ' . $specials->fields['count']. '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_ACTIVE . '</span><span class="right"> ' . $specials_act->fields['count']. '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_EXPIRED . '</span><span class="right"> ' . $featured->fields['count']. '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_ACTIVE . '</span><span class="right"> ' . $featured_act->fields['count']. '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_EXPIRED . '</span><span class="right"> ' . $salemaker->fields['count']. '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_ACTIVE . '</span><span class="right"> ' . $salemaker_act->fields['count']. '</span></div>';
 
 ?>
  </div>
@@ -111,7 +111,7 @@
   while (!$orders_status->EOF) {
     $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . $orders_status->fields['orders_status_id'] . "'");
 
-    $orders_contents .= '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $orders_status->fields['orders_status_id'], 'NONSSL') . '">' . $orders_status->fields['orders_status_name'] . '</a>:</span><span class="rigth"> ' . $orders_pending->fields['count'] . '</span>   </div>';
+    $orders_contents .= '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $orders_status->fields['orders_status_id'], 'NONSSL') . '">' . $orders_status->fields['orders_status_name'] . '</a>:</span><span class="right"> ' . $orders_pending->fields['count'] . '</span>   </div>';
     $orders_status->MoveNext();
   }
 
@@ -131,22 +131,22 @@
     $COWOAcustomers = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS . " WHERE COWOA_account = '1'");
 
     $customersTotal = $customers->fields['count'] + $COWOAcustomers->fields['count'];
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_TOTAL . '</span><span class="rigth"> ' . $customersTotal . '</span></div>';	
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_NORMAL . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';	
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_COWOA . '</span><span class="rigth"> ' . $COWOAcustomers->fields['count'] . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_TOTAL . '</span><span class="right"> ' . $customersTotal . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_NORMAL . '</span><span class="right"> ' . $customers->fields['count'] . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_COWOA . '</span><span class="right"> ' . $COWOAcustomers->fields['count'] . '</span></div>';
 
  // get distinct number of customers flagged as COWOA - by email address
     $DistinctCOWOAcustomers = $db->Execute("select count(DISTINCT customers_email_address) as count from " . TABLE_CUSTOMERS . " WHERE COWOA_account = '1';");
-    $customersTotal = $customers->fields['count'] + $DistinctCOWOAcustomers->fields['count'];   
-    echo '<br /><div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_TOTAL_DISTINCT . '</span><span class="rigth"> ' . $customersTotal . '</span></div>';	
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_NORMAL . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';	
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_COWOA_DISTINCT . '</span><span class="rigth"> ' . $DistinctCOWOAcustomers->fields['count'] . '</span></div>';
+    $customersTotal = $customers->fields['count'] + $DistinctCOWOAcustomers->fields['count'];
+    echo '<br /><div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_TOTAL_DISTINCT . '</span><span class="right"> ' . $customersTotal . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_NORMAL . '</span><span class="right"> ' . $customers->fields['count'] . '</span></div>';
+	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS_COWOA_DISTINCT . '</span><span class="right"> ' . $DistinctCOWOAcustomers->fields['count'] . '</span></div>';
 ?>
 	</div>
  <!-- COWOA+ -->
 <div class="reportBox">
 <div class="header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
-  <?php 
+  <?php
 
   //COWOA+
   $customers = $db->Execute("select c.customers_id as customers_id, c.customers_firstname as customers_firstname, c.customers_lastname as customers_lastname, a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id, c.COWOA_account from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id order by a.customers_info_date_account_created DESC limit 5");
@@ -154,7 +154,7 @@
   while (!$customers->EOF) {
     $customers->fields['customers_firstname'] = zen_output_string_protected($customers->fields['customers_firstname']);
     $customers->fields['customers_lastname'] = zen_output_string_protected($customers->fields['customers_lastname']);
-    echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customers->fields['customers_lastname'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink">'. $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a></span><span class="rigth">' . "\n";
+    echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customers->fields['customers_lastname'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink">'. $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a></span><span class="right">' . "\n";
     echo zen_date_short($customers->fields['customers_info_date_account_created']);
     // COWOA+
     if ($customers->fields['COWOA_account'])
@@ -171,13 +171,13 @@
   $counter_query = "select startdate, counter, session_counter from " . TABLE_COUNTER_HISTORY . " order by startdate DESC limit 10";
   $counter = $db->Execute($counter_query);
 ?>
-   <div class="header"><?php echo sprintf(LAST_10_DAYS, $counter->RecordCount()); ?><?php echo '<span class="rigth"> &nbsp;&nbsp;&nbsp;' . SESSION . ' - ' . TOTAL . '</span>'; ?></div>
+   <div class="header"><?php echo sprintf(LAST_10_DAYS, $counter->RecordCount()); ?><?php echo '<span class="right"> &nbsp;&nbsp;&nbsp;' . SESSION . ' - ' . TOTAL . '</span>'; ?></div>
   <?php
 
   while (!$counter->EOF) {
     $counter_startdate = $counter->fields['startdate'];
     $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
-    echo '              <div class="row"><span class="left">' . $counter_startdate_formatted . '</span><span class="rigth"> ' . $counter->fields['session_counter'] . ' - ' . $counter->fields['counter'] . '</span>   </div>' . "\n";
+    echo '              <div class="row"><span class="left">' . $counter_startdate_formatted . '</span><span class="right"> ' . $counter->fields['session_counter'] . ' - ' . $counter->fields['counter'] . '</span>   </div>' . "\n";
     $counter->MoveNext();
   }
 ?>
@@ -194,7 +194,7 @@
   	// COWOA+ check for full account status
   $COWOA_query  = "select COWOA_account from " . TABLE_CUSTOMERS . " WHERE customers_id = " . $orders->fields['customers_id'] . " limit 1;";
   $COWOA_result = $db->Execute($COWOA_query);
-  	echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink"> ' . $orders->fields['customers_name'] . '</a></span><span class="center">' . $orders->fields['order_total'] . '</span><span class="rigth">' . "\n";
+  	echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink"> ' . $orders->fields['customers_name'] . '</a></span><span class="center">' . $orders->fields['order_total'] . '</span><span class="right">' . "\n";
     echo zen_date_short($orders->fields['date_purchased']);
     // COWOA+
     if ($COWOA_result->fields['COWOA_account'])
