@@ -22,6 +22,7 @@ class testTwoFactorAuthenticationHooks extends zcCommonTestResources
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_SSL);
     $this->clickAndWait("submit");    
     $this->assertTextPresent('Hit Counter Started:');
+    $this->removeTwoFactorAuthenticationOverride();
   }
   public function testTwoFactorAuthenticationFalse()
   {
@@ -32,5 +33,6 @@ class testTwoFactorAuthenticationHooks extends zcCommonTestResources
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_SSL);
     $this->clickAndWait("submit");    
     $this->assertTextPresent('You entered the wrong username or password.');
+    $this->removeTwoFactorAuthenticationOverride();
   }
 }

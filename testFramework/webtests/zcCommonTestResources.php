@@ -131,6 +131,10 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
     fputs($fp, 'DEFINE("TWO_FACTOR_AUTHENTICATION_RESULT", "false");' . PHP_EOL);
     fclose($fp);
   }
+  public function removeTwoFactorAuthenticationOverride()
+  {
+    unlink(DIR_FS_ADMIN . 'includes/extra_configures/not_for_release1.php');
+  }
   public function setupCompoundTaxes()
   {
     if (!self::$compoundDone)
