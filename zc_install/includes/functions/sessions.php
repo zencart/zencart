@@ -3,7 +3,7 @@
  * session-related functions used by installer *
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: sessions.php 7405 2007-11-11 04:20:58Z drbyte $
@@ -130,10 +130,13 @@
     return session_destroy();
   }
 
-  function zen_session_save_path($path = '') {
-    if (!empty($path)) {
+  function zen_session_save_path($path = '') 
+  {
+    if (!empty($path) && @ini_get('session.save_handler') != 'memcache') 
+    {
       return session_save_path($path);
-    } else {
+    } else 
+    {
       return session_save_path();
     }
   }
@@ -165,4 +168,3 @@
     register_shutdown_function('session_write_close');
     return true;
   }
-?>
