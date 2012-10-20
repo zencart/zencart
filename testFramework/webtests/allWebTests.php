@@ -32,6 +32,7 @@ if (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramew
  */
 require_once 'zcCommonTestResources.php';
 require_once 'testInstall.php';
+require_once 'testGiftVouchers.php';
 require_once 'testCreateAccount.php';
 require_once 'testCreateCoupons.php';
 require_once 'testUseCoupons.php';
