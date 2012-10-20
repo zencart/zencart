@@ -519,7 +519,7 @@ function check_form() {
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
-<?php 
+<?php
 // COWOA add new frameset here to display account status when looking at a customer detail record
 ?>
       <tr>
@@ -535,10 +535,10 @@ function check_form() {
       </tr>
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>      
-<?php 
-// END OF COWOA new frameset 
-?>      
+      </tr>
+<?php
+// END OF COWOA new frameset
+?>
       <tr><?php echo zen_draw_form('customers', FILENAME_CUSTOMERS, zen_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form(customers);"', true) . zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
            echo zen_hide_session_id(); ?>
         <td class="formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></td>
@@ -1176,17 +1176,17 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
                 <td class="dataTableContent" align="right"><?php echo $currencies->format($customers->fields['amount']); ?></td>
 <?php } ?>
                 <td class="dataTableContent" align="center">
-		<?php if ($customers->fields['customers_authorization'] == 4 ? zen_image(DIR_WS_IMAGES .
-		'icon_red_off.gif', IMAGE_ICON_STATUS_OFF) : ($customers->fields['customers_authorization'] == 0 ? 
+		<?php echo ($customers->fields['customers_authorization'] == 4 ? zen_image(DIR_WS_IMAGES .
+		'icon_red_off.gif', IMAGE_ICON_STATUS_OFF) : ($customers->fields['customers_authorization'] == 0 ?
 		'<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=status&current=' . $customers->fields
-		['customers_authorization'] . '&cID=' . $customers->fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', 
-		IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 
+		['customers_authorization'] . '&cID=' . $customers->fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif',
+		IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_CUSTOMERS,
 		'action=status&current=' . $customers->fields['customers_authorization'] . '&cID=' . $customers->
-		fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . 
+		fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' .
 		zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>')); ?>&nbsp;</td>
-<?php if ($customers->fields['COWOA_account'] == 1) { ?>               
+<?php if ($customers->fields['COWOA_account'] == 1) { ?>
                 <td class="dataTableContent" align="center"><?php echo 'COWOA'; ?>&nbsp;</td>
-<?php }else{ ?> 
+<?php }else{ ?>
                 <td class="dataTableContent" align="center"><?php echo 'STANDARD';} ?>&nbsp;</td>
                 <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers->fields['customers_id'] == $cInfo->customers_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID')) . 'cID=' . $customers->fields['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
