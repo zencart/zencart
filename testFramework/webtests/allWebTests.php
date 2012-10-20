@@ -32,7 +32,6 @@ if (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramew
  */
 require_once 'zcCommonTestResources.php';
 require_once 'testInstall.php';
-require_once 'testGiftVouchers.php';
 require_once 'testCreateAccount.php';
 require_once 'testCreateCoupons.php';
 require_once 'testUseCoupons.php';
@@ -43,6 +42,7 @@ require_once 'testSundryCartOrders.php';
 require_once 'testAdminSSLMode.php';
 require_once 'testTwoFactorAuthenticationHooks.php';
 require_once 'testCompoundTaxes.php';
+require_once 'testGiftVouchers.php';
 
 /**
  * Set up test suite
@@ -54,16 +54,16 @@ class allTests
   {
     $suite = new PHPUnit_Framework_TestSuite('Zen Cart v1.6 Web Tests');
     $suite->addTestSuite('testInstall');
-     $suite->addTestSuite('testCreateAccount');
-     $suite->addTestSuite('testGiftVouchers');
-//    $suite->addTestSuite('testCreateCoupons');
-//    $suite->addTestSuite('testUseCoupons');
-//    $suite->addTestSuite('testGroupDiscount');
-//    $suite->addTestSuite('testCouponOrders');
-//    $suite->addTestSuite('testSundryCartOrders');
-//    $suite->addTestSuite('testAdminSSLMode');
-//    $suite->addTestSuite('testTwoFactorAuthenticationHooks');
-//    $suite->addTestSuite('testCompoundTaxes');
+    $suite->addTestSuite('testCreateAccount');
+    $suite->addTestSuite('testCreateCoupons');
+    $suite->addTestSuite('testUseCoupons');
+    $suite->addTestSuite('testGroupDiscount');
+    $suite->addTestSuite('testCouponOrders');
+    $suite->addTestSuite('testSundryCartOrders');
+    $suite->addTestSuite('testGiftVouchers');
+    $suite->addTestSuite('testAdminSSLMode');
+    $suite->addTestSuite('testTwoFactorAuthenticationHooks');
+    $suite->addTestSuite('testCompoundTaxes');
     return $suite;
   }
 
