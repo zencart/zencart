@@ -18,7 +18,7 @@
 
   // check for damaged database, caused by users indiscriminately deleting table data
   $ary = array();
-  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_name = 'TEXT' and products_options_values_id=" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
+  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id=" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
   while (!$chk_option_values->EOF) {
     $ary[] = $chk_option_values->fields['language_id'];
     $chk_option_values->MoveNext();
