@@ -106,18 +106,16 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         // eof: not require part of contents merge notice
 
         // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
-              $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
-              zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
-            }
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+        if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
+          if (SHOW_SHOPPING_CART_COMBINED == 2) {
+            // warning only do not send to cart
+            $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+          }
+          if (SHOW_SHOPPING_CART_COMBINED == 1) {
+            // show warning and send to shopping cart for review
+            $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
+            zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
           }
         }
         // eof: contents merge notice
