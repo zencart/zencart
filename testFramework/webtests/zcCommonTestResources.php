@@ -96,7 +96,6 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
   {
     $fp = fopen(DIR_FS_ADMIN . 'includes/local/configure.php', 'w');
     fputs($fp, '<?php' . PHP_EOL);
-    fputs($fp, 'DEFINE("ENABLE_SSL_ADMIN", "true");' . PHP_EOL);
     fputs($fp, 'DEFINE("HTTP_SERVER", "https://' . SERVER_NAME . '");' . PHP_EOL);
     fclose($fp);
   }
@@ -111,7 +110,6 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
   {
     $fp = fopen(DIR_FS_ADMIN . 'includes/local/configure.php', 'w');
     fputs($fp, '<?php' . PHP_EOL);
-    fputs($fp, 'DEFINE("ENABLE_SSL_ADMIN", "false");' . PHP_EOL);
     fputs($fp, 'DEFINE("HTTP_SERVER", "http://' . SERVER_NAME . '");' . PHP_EOL);
     fclose($fp);
   }
