@@ -939,7 +939,7 @@ example: Copy Color Red to products with Size Small
                   </td>
                   <td class="dataTableHeadingContent">
                   <?php echo
-                  TEXT_SELECT_OPTION_TO . '<br />' . $option_to_dropdown . '&nbsp<br />' .
+                  TEXT_SELECT_OPTION_TO . '<br />' . $option_to_dropdown . '&nbsp;<br />' .
                   TEXT_SELECT_OPTION_VALUES_TO . '<br />' . $option_values_to_dropdown;?>&nbsp;
                   </td>
                   <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?>&nbsp;</td>

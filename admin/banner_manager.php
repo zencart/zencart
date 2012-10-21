@@ -273,7 +273,7 @@ function popupImageWindow(url) {
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND; ?></td>
-            <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '&nbsp' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
+            <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_BANNER_ON_SSL . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_blue_on.gif', IMAGE_ICON_BANNER_ON_SSL_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_blue_off.gif', IMAGE_ICON_BANNER_ON_SSL_OFF); ?></td>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_BANNER_OPEN_NEW_WINDOWS . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_orange_on.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_orange_off.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF); ?></td>
           </tr>

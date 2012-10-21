@@ -315,7 +315,7 @@ function check_form(form_name) {
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td class="smallText"><b><?php echo TEXT_AMOUNT; ?></b><br /><?php echo nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, TRUE)) . ($_POST['amount'] <= 0 ? '&nbsp<span class="alert">' . ERROR_GV_AMOUNT . '</span>' : ''); ?></td>
+                <td class="smallText"><b><?php echo TEXT_AMOUNT; ?></b><br /><?php echo nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, TRUE)) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_GV_AMOUNT . '</span>' : ''); ?></td>
               </tr>
               <tr>
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
