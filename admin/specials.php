@@ -173,7 +173,6 @@
         break;
     }
   }
-?>
 require('includes/admin_html_head.php');
 ?>
 <?php
