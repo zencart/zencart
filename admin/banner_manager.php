@@ -220,7 +220,6 @@
       $messageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
     }
   }
-?>
 require('includes/admin_html_head.php');
 ?>
 <script language="javascript"><!--
