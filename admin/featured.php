@@ -125,16 +125,7 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<?php
-  if ( ($action == 'new') || ($action == 'edit') ) {
-?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script language="JavaScript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
-<?php
-  }
-?>
 <body>
-<div id="spiffycalendar" class="text"></div>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -222,11 +213,6 @@ require('includes/admin_html_head.php');
       }
     }
 ?>
-<script language="javascript">
-var StartDate = new ctlSpiffyCalendarBox("StartDate", "new_featured", "start", "btnDate1","<?php echo (($fInfo->featured_date_available == '0001-01-01') ? '' : zen_date_short($fInfo->featured_date_available)); ?>",scBTNMODE_CUSTOMBLUE);
-var EndDate = new ctlSpiffyCalendarBox("EndDate", "new_featured", "end", "btnDate2","<?php echo (($fInfo->expires_date == '0001-01-01') ? '' : zen_date_short($fInfo->expires_date)); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
-
       <tr>
       <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(array('action', 'info', 'fID')) . 'action=' . $form_action . '&go_back=' . $_GET['go_back']); ?><?php if ($form_action == 'update') echo zen_draw_hidden_field('featured_id', $_GET['fID']); ?>
         <td><br><table border="0" cellspacing="0" cellpadding="2">
@@ -236,11 +222,11 @@ var EndDate = new ctlSpiffyCalendarBox("EndDate", "new_featured", "end", "btnDat
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_FEATURED_AVAILABLE_DATE; ?>&nbsp;</td>
-            <td class="main"><script language="javascript">StartDate.writeControl(); StartDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo zen_draw_input_field('start', (($fInfo->featured_date_available == '0001-01-01') ? '' : zen_date_short($fInfo->featured_date_available)), 'class="datepicker"');  ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_FEATURED_EXPIRES_DATE; ?>&nbsp;</td>
-            <td class="main"><script language="javascript">EndDate.writeControl(); EndDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo zen_draw_input_field('end', (($fInfo->expires_date == '0001-01-01') ? '' : zen_date_short($fInfo->expires_date)), 'class="datepicker"'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -440,6 +426,15 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['fID'] != '') {
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
+    <script>
+    $(function() {
+        $( ".datepicker" ).datepicker({
+         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+         changeMonth: true,
+         changeYear: true
+        });
+    });
+    </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

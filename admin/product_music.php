@@ -99,7 +99,6 @@ require('includes/admin_html_head.php');
 </script>
 <?php if ($action != 'new_product_meta_tags' && $editor_handler != '') include ($editor_handler); ?>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-<div id="spiffycalendar" class="text"></div>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -336,6 +335,15 @@ if ($products_query_numrows > 0) {
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
 <br />
+    <script>
+    $(function() {
+        $( ".datepicker" ).datepicker({
+         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+         changeMonth: true,
+         changeYear: true
+        });
+    });
+    </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

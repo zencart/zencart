@@ -228,7 +228,6 @@ function popupImageWindow(url) {
 }
 //--></script>
 <body>
-<div id="spiffycalendar" class="text"></div>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -321,12 +320,6 @@ function popupImageWindow(url) {
       $groups->MoveNext();
     }
 ?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script language="JavaScript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
-<script language="javascript">
-  var dateExpires = new ctlSpiffyCalendarBox("dateExpires", "new_banner", "expires_date","btnDate1","<?php echo zen_date_short($bInfo->expires_date); ?>",scBTNMODE_CUSTOMBLUE);
-  var dateScheduled = new ctlSpiffyCalendarBox("dateScheduled", "new_banner", "date_scheduled","btnDate2","<?php echo zen_date_short($bInfo->date_scheduled); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
@@ -401,14 +394,14 @@ function popupImageWindow(url) {
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?></td>
-            <td valign="top" class="main"><script language="javascript">dateScheduled.writeControl();dateScheduled.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td valign="top" class="main"><?php echo zen_draw_input_field('date_scheduled', zen_date_short($bInfo->date_scheduled), 'class="datepicker"');  ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_BANNERS_EXPIRES_ON; ?></td>
-            <td class="main"><script language="javascript">dateExpires.writeControl();dateExpires.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script><?php echo TEXT_BANNERS_OR_AT . '<br>' . zen_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?></td>
+            <td class="main"><?php echo zen_draw_input_field('expires_date', zen_date_short($bInfo->expires_date), 'class="datepicker"');  ?><?php echo TEXT_BANNERS_OR_AT . '<br>' . zen_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?></td>
           </tr>
         </table></td>
       </tr>
@@ -605,6 +598,15 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
 <br>
+    <script>
+    $(function() {
+        $( ".datepicker" ).datepicker({
+         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+         changeMonth: true,
+         changeYear: true
+        });
+    });
+    </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

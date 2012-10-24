@@ -148,8 +148,6 @@ require('includes/admin_html_head.php');
 
   if ( ($action == 'new') || ($action == 'edit') ) {
 ?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script language="JavaScript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
 <script language="JavaScript">
 function session_win() {
   window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
@@ -225,7 +223,6 @@ function SetCategories() {
 
 </script>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetCategories();SetFocus();">
-<div id="spiffycalendar" class="text"></div>
 <?php
   } else {
 ?>
@@ -264,10 +261,6 @@ function SetCategories() {
       $sInfo = new objectInfo(array());
     }
 ?>
-<script language="javascript">
-var StartDate = new ctlSpiffyCalendarBox("StartDate", "sale_form", "start", "btnDate1","<?php echo (($sInfo->sale_date_start == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_start)); ?>",scBTNMODE_CUSTOMBLUE);
-var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2","<?php echo (($sInfo->sale_date_end == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_end)); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
       <tr><?php echo zen_draw_form("sale_form", FILENAME_SALEMAKER, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action); ?><?php if ($form_action == 'update') echo zen_draw_hidden_field('sID', $_GET['sID']); ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
@@ -296,11 +289,11 @@ var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2"
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SALEMAKER_DATE_START; ?>&nbsp;</td>
-            <td class="main"><script language="javascript">StartDate.writeControl(); StartDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo zen_draw_input_field('start', (($sInfo->sale_date_start == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_start)), 'class="datepicker"'); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SALEMAKER_DATE_END; ?>&nbsp;</td>
-            <td class="main"><script language="javascript">EndDate.writeControl(); EndDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo zen_draw_input_field('end', (($sInfo->sale_date_end == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_end)), 'class="datepicker"'); ?></td>
           </tr>
         </table>
       </tr>
@@ -538,6 +531,15 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
+    <script>
+    $(function() {
+        $( ".datepicker" ).datepicker({
+         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+         changeMonth: true,
+         changeYear: true
+        });
+    });
+    </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
