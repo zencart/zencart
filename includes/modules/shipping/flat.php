@@ -13,7 +13,6 @@
 
 // class constructor
     function __construct() {
-      global $order, $db;
 
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
@@ -32,6 +31,7 @@
 // class methods
     function check_enabled_for_zone()
     {
+      global $order, $db;
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) ) {
         $check_flag = false;
         $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
