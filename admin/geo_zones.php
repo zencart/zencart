@@ -153,6 +153,7 @@ function update_zone(theForm) {
 <?php
   }
 ?>
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

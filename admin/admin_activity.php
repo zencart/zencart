@@ -278,6 +278,7 @@ if ($action != '')
 
 require('includes/admin_html_head.php');
 ?>
+</head>
 <body>
 <!-- header //-->
 <?php

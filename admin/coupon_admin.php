@@ -356,6 +356,7 @@ function check_form(form_name) {
 }
 //--></script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

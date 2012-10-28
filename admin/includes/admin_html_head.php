@@ -5,13 +5,12 @@
 <title><?php echo TITLE; ?></title>
 <?php
 if (!defined('SKIP_CORE_JQUERY_LOADER') || SKIP_CORE_JQUERY_LOADER == FALSE) { ?>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>  
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <?php } ?>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<link rel="stylesheet" type="text/css" href="includes/admin_access.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -26,4 +25,3 @@ if (!defined('SKIP_CORE_JQUERY_LOADER') || SKIP_CORE_JQUERY_LOADER == FALSE) { ?
   });
   // -->
 </script>
-</head>

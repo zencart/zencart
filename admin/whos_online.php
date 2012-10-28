@@ -213,6 +213,7 @@ require('includes/admin_html_head.php');
 #wo-filters .chosen {background-color: #003D00;}
 -->
 </style>
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

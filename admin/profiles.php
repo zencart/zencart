@@ -113,6 +113,7 @@ require('includes/admin_html_head.php');
   }
   // -->
 </script>
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

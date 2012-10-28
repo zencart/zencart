@@ -13,6 +13,7 @@
   $currencies = new currencies();
 require('includes/admin_html_head.php');
 ?>
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

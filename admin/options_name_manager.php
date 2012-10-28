@@ -379,6 +379,7 @@ function go_option() {
   }
 }
 //--></script>
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

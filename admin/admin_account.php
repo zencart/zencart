@@ -81,6 +81,8 @@ $userDetails = $userList[0];
 
 require('includes/admin_html_head.php');
 ?>
+<link rel="stylesheet" type="text/css" href="includes/admin_access.css" />
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

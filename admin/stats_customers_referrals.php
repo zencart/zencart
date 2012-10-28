@@ -18,6 +18,7 @@
   include(DIR_WS_CLASSES . 'order.php');
 require('includes/admin_html_head.php');
 ?>
+</head>
 <body>
 <!-- header //-->
 <?php

@@ -15,6 +15,7 @@
   $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GET['products_filter_name_model'] : $products_filter_name_model);
 require('includes/admin_html_head.php');
 ?>
+</head>
 <body>
 <!-- header //-->
 <div class="header-area">

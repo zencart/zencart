@@ -471,6 +471,7 @@ function check_form() {
 <?php
   }
 ?>
+</head>
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
