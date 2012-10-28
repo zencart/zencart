@@ -4,7 +4,7 @@
  * Session functions
  *
  * @package functions
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: sessions.php 18697 2011-05-04 14:35:20Z wilt $
@@ -115,18 +115,6 @@ if (!defined('IS_ADMIN_FLAG')) {
       $_SESSION['securityToken'] = md5(uniqid(rand(), true));
     }
     return $temp;
-  }
-
-  function zen_session_register($variable) {
-    die('This function has been deprecated. Please use Register Globals Off compatible code');
-  }
-
-  function zen_session_is_registered($variable) {
-    die('This function has been deprecated. Please use Register Globals Off compatible code');
-  }
-
-  function zen_session_unregister($variable) {
-    die('This function has been deprecated. Please use Register Globals Off compatible code');
   }
 
   function zen_session_id($sessid = '') {
