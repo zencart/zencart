@@ -18,7 +18,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class queryFactory extends base {
-  var $link, $count_queries, $total_query_time;
+  var $link, $count_queries, $total_query_time, $dieOnErrors;
 
   function queryFactory() {
     $this->count_queries = 0;
@@ -43,13 +43,13 @@ class queryFactory extends base {
       return($result);
   }
 
-  function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $zp_real = false) {
+  function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $dieOnErrors = false) {
     $this->database = $zf_database;
     $this->user = $zf_user;
     $this->host = $zf_host;
     $this->password = $zf_password;
     $this->pConnect = $zf_pconnect;
-    $this->real = $zp_real;
+    $this->dieOnErrors = $dieOnErrors;
     if (!function_exists('mysql_connect')) die ('Call to undefined function: mysql_connect().  Please install the MySQL Connector for PHP');
     $connectionRetry = 10;
     while (!isset($this->link) || ($this->link == FALSE && $connectionRetry !=0) )
@@ -71,11 +71,11 @@ class queryFactory extends base {
         if (getenv('TZ') && !defined('DISABLE_MYSQL_TZ_SET')) @mysql_query("SET time_zone = '" . substr_replace(date("O"),":",-2,0) . "'", $this->link);
         return true;
       } else {
-        $this->set_error(mysql_errno(),mysql_error(), $zp_real);
+        $this->set_error(mysql_errno(),mysql_error(), $dieOnErrors);
         return false;
       }
     } else {
-      $this->set_error(mysql_errno(),mysql_error(), $zp_real);
+      $this->set_error(mysql_errno(),mysql_error(), $dieOnErrors);
       return false;
     }
   }
@@ -98,10 +98,10 @@ class queryFactory extends base {
     @mysql_close($this->link);
   }
 
-  function set_error($zp_err_num, $zp_err_text, $zp_fatal = true) {
+  function set_error($zp_err_num, $zp_err_text, $dieOnErrors = true) {
     $this->error_number = $zp_err_num;
     $this->error_text = $zp_err_text;
-    if ($zp_fatal && $zp_err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
+    if ($dieOnErrors && $zp_err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
       $this->show_error();
       die();
     }
@@ -165,10 +165,10 @@ class queryFactory extends base {
       if (!$this->db_connected)
       {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-        $this->set_error('0', DB_ERROR_NOT_CONNECTED);
+        $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
       $zp_db_resource = @$this->query($zf_sql, $this->link);
-      if (!$zp_db_resource) $this->set_error(@mysql_errno(),@mysql_error());
+      if (!$zp_db_resource) $this->set_error(@mysql_errno(),@mysql_error(), $this->dieOnErrors);
       if(!is_resource($zp_db_resource)){
         $obj = null;
         return true;
@@ -214,7 +214,7 @@ class queryFactory extends base {
       if (!$this->db_connected)
       {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-        $this->set_error('0', DB_ERROR_NOT_CONNECTED);
+        $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
       $zp_db_resource = @$this->query($zf_sql, $this->link);
       if (!$zp_db_resource) {
@@ -224,7 +224,7 @@ class queryFactory extends base {
           $zp_db_resource = @mysql_query($zf_sql, $this->link);
         }
         if (!$zp_db_resource) {
-          $this->set_error(@mysql_errno($this->link),@mysql_error($this->link));
+          $this->set_error(@mysql_errno($this->link),@mysql_error($this->link), $this->dieOnErrors);
         }
       }
       if(!is_resource($zp_db_resource)){
@@ -266,10 +266,10 @@ class queryFactory extends base {
     if (!$this->db_connected)
     {
       if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-      $this->set_error('0', DB_ERROR_NOT_CONNECTED);
+      $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
     }
     $zp_db_resource = @$this->query($zf_sql, $this->link);
-    if (!$zp_db_resource) $this->set_error(mysql_errno(),mysql_error());
+    if (!$zp_db_resource) $this->set_error(mysql_errno(),mysql_error(), $this->dieOnErrors);
     if(!is_resource($zp_db_resource)){
       $obj = null;
       return true;
@@ -535,7 +535,7 @@ class queryFactoryResult {
       return;
     } else {
       $this->EOF = true;
-      $db->set_error(mysql_errno(),mysql_error());
+      $db->set_error(mysql_errno(),mysql_error(), $this->dieOnErrors);
     }
   }
 }
