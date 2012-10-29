@@ -43,13 +43,15 @@ class queryFactory extends base {
       return($result);
   }
 
-  function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $dieOnErrors = false) {
+  function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $dieOnErrors = false, $options = array()) {
     $this->database = $zf_database;
     $this->user = $zf_user;
     $this->host = $zf_host;
     $this->password = $zf_password;
     $this->pConnect = $zf_pconnect;
     $this->dieOnErrors = $dieOnErrors;
+    if (defined('DB_CHARSET')) $dbCharset = DB_CHARSET;
+    if (isset($options['dbCharset'])) $dbCharset = $options['dbCharset'];
     if (!function_exists('mysql_connect')) die ('Call to undefined function: mysql_connect().  Please install the MySQL Connector for PHP');
     $connectionRetry = 10;
     while (!isset($this->link) || ($this->link == FALSE && $connectionRetry !=0) )
@@ -59,7 +61,7 @@ class queryFactory extends base {
     }
     if ($this->link) {
       if (@mysql_select_db($zf_database, $this->link)) {
-        if (defined('DB_CHARSET') && version_compare(@mysql_get_server_info(), '4.1.0', '>=')) {
+        if (isset($dbCharset) && version_compare(@mysql_get_server_info(), '4.1.0', '>=')) {
           @mysql_query("SET NAMES '" . DB_CHARSET . "'", $this->link);
           if (function_exists('mysql_set_charset')) {
             @mysql_set_charset(DB_CHARSET, $this->link);
