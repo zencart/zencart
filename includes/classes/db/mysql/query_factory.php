@@ -62,11 +62,11 @@ class queryFactory extends base {
     if ($this->link) {
       if (@mysql_select_db($zf_database, $this->link)) {
         if (isset($dbCharset) && version_compare(@mysql_get_server_info(), '4.1.0', '>=')) {
-          @mysql_query("SET NAMES '" . DB_CHARSET . "'", $this->link);
+          @mysql_query("SET NAMES '" . $dbCharset . "'", $this->link);
           if (function_exists('mysql_set_charset')) {
-            @mysql_set_charset(DB_CHARSET, $this->link);
+            @mysql_set_charset($dbCharset, $this->link);
           } else {
-            @mysql_query("SET CHARACTER SET '" . DB_CHARSET . "'", $this->link);
+            @mysql_query("SET CHARACTER SET '" . $dbCharset . "'", $this->link);
           }
         }
         $this->db_connected = true;
