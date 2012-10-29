@@ -1,15 +1,15 @@
 /*
- * Bazillyo's Spiffy DHTML Popup Calendar v. 1.0 © 2000 S. Ousta
+ * Bazillyo's Spiffy DHTML Popup Calendar v. 1.0 Â© 2000 S. Ousta
  *   - freeware with this comment
- *   - for download size, you can strip all spaces & comments except the © notices
+ *   - for download size, you can strip all spaces & comments except the Â© notices
  *   - Thanks to Chris for the domlay() function
  *   - this requires calendarcode.js, calendar.css, and calendarTest.htm
  *   - works in IE4.x, IE5.x, NS4.75 possibly 4.x, NS6 (with slight cosmetic issues)
  *   - Netscape does display some controls overtop of the layer so layout is important
  *
  */
- 
-// initialiZe variables... 
+
+// initialiZe variables...
 var ppcIE=((navigator.appName == "Microsoft Internet Explorer") || ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion)==5)));
 var ppcNN6=((navigator.appName == "Netscape") && (parseInt(navigator.appVersion)==5));
 //var ppcIE=(navigator.appName == "Microsoft Internet Explorer");
@@ -21,8 +21,8 @@ var IsCalendarVisible;
 var calfrmName;
 var maxYearList;
 var minYearList;
-var todayDate = new Date; 
-var curDate = new Date; 
+var todayDate = new Date;
+var curDate = new Date;
 var curImg;
 var curDateBox;
 var minDate = new Date;
@@ -85,7 +85,7 @@ function showCalendar(frmName, dteBox,btnImg, hideDrops, MnDt, MnMo, MnYr, MxDt,
     else {
         if (document.images['calbtn1']!=null ) document.images['calbtn1'].src=img_del.src;
         if (document.images['calbtn2']!=null ) document.images['calbtn2'].src=img_close.src;
-        
+
         if (hideDropDowns) {toggleDropDowns('hidden');}
         if ((MnDt!=null) && (MnMo!=null) && (MnYr!=null) && (MxDt!=null) && (MxMo!=null) && (MxYr!=null)) {
             IsUsingMinMax = true;
@@ -99,7 +99,7 @@ function showCalendar(frmName, dteBox,btnImg, hideDrops, MnDt, MnMo, MnYr, MxDt,
         else {
             IsUsingMinMax = false;
         }
-        
+
         curImg = btnImg;
         curDateBox = dteBox;
         if ( ppcIE ) {
@@ -107,11 +107,11 @@ function showCalendar(frmName, dteBox,btnImg, hideDrops, MnDt, MnMo, MnYr, MxDt,
             ppcY = getOffsetTop(document.images[btnImg]) + document.images[btnImg].height;
         }
         else if (ppcNN){
-            ppcX = document.images[btnImg].x + 90; 
+            ppcX = document.images[btnImg].x + 90;
             ppcY = document.images[btnImg].y - 45;
         }
 
-        domlay('popupcalendar',1,ppcX,ppcY,Calendar(todayDate.getMonth(),todayDate.getFullYear()));       
+        domlay('popupcalendar',1,ppcX,ppcY,Calendar(todayDate.getMonth(),todayDate.getFullYear()));
 
         //domlay('popupcalendar',1,ppcX,ppcY,Calendar(curDate.getMonth(),curDate.getFullYear()));
 
@@ -133,7 +133,7 @@ function toggleDropDowns(showHow){
 
 function hideCalendar(){
     domlay('popupcalendar',0,ppcX,ppcY);
-    calSwapImg(curImg, 'img_Date_UP');    
+    calSwapImg(curImg, 'img_Date_UP');
     IsCalendarVisible = false;
     if (hideDropDowns) {toggleDropDowns('visible');}
 }
@@ -158,15 +158,15 @@ function domlay(id,trigger,lax,lay,content) {
     if (trigger=="1"){
         if (document.layers) document.layers[''+id+''].visibility = "show"
         else if (document.all) document.all[''+id+''].style.visibility = "visible"
-        else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "visible"                
+        else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "visible"
         }
     // Layer hidden
     else if (trigger=="0"){
         if (document.layers) document.layers[''+id+''].visibility = "hide"
         else if (document.all) document.all[''+id+''].style.visibility = "hidden"
-        else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "hidden"             
+        else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "hidden"
         }
-    // Set horizontal position  
+    // Set horizontal position
     if (lax){
         if (document.layers){document.layers[''+id+''].left = lax}
         else if (document.all){document.all[''+id+''].style.left=lax}
@@ -188,7 +188,7 @@ function domlay(id,trigger,lax,lay,content) {
         sprite.write(content);
         sprite.close();
         }
-    else if (document.all) document.all[''+id+''].innerHTML = content;  
+    else if (document.all) document.all[''+id+''].innerHTML = content;
     else if (document.getElementById){
         //Thanx Reyn!
         rng = document.createRange();
@@ -219,7 +219,7 @@ function Calendar(whatMonth,whatYear) {
     else {
         output += '<table width="185" border="3" class="cal-Table" cellspacing="0" cellpadding="0"><form name="Cal"><tr>';
     }
-     
+
     output += '<td class="cal-HeadCell" align="center" width="100%"><a href="javascript:clearDay();"><img name="calbtn1" src="./images/cal_del_small.gif" border="0" width="12" height="10"></a>&nbsp;&nbsp;<a href="javascript:scrollMonth(-1);" class="cal-DayLink">&lt;</a>&nbsp;<SELECT class="cal-TextBox" NAME="cboMonth" onChange="changeMonth();">';
     for (month=0; month<12; month++) {
         if (month == whatMonth) output += '<OPTION VALUE="' + month + '" SELECTED>' + names[month] + '<\/OPTION>';
@@ -255,7 +255,7 @@ function Calendar(whatMonth,whatYear) {
         }
         output += '<td class="cal-HeadCell" width="' + datecolwidth + '" align="center" valign="middle">'+ dow[i] +'<\/td>';
     }
-    
+
     output += '<\/tr><tr>';
 
     var column = 0;
@@ -274,11 +274,11 @@ function Calendar(whatMonth,whatYear) {
             column = -1;
         }
     }
-    
+
     var nextMonth = whatMonth+1;
     var nextYear = whatYear;
     if (nextMonth==12) { nextMonth=0; nextYear=nextYear+1;}
-    
+
     if (column > 0) {
         for (i=1; column<7; i++, column++) {
             output +=  getDayLink(i,true,nextMonth,nextYear);
@@ -289,7 +289,7 @@ function Calendar(whatMonth,whatYear) {
         output = output.substr(0,output.length-4); // remove the <tr> from the end if there's no last row
         output += '<\/table><\/td><\/tr>';
     }
-    
+
     if (ppcNN6) {
         output += '<\/table><\/form>';
     }
@@ -349,11 +349,11 @@ function isDayToday(isDay) {
 }
 
 function isDayValid(validDay, validMonth, validYear){
-    
+
     curDate.setDate(validDay);
     curDate.setMonth(validMonth);
     curDate.setFullYear(validYear);
-    
+
     if ((curDate>=minDate) && (curDate<=maxDate)) {
         return true;
     }
@@ -370,7 +370,7 @@ function clearDay() {
     eval('document.' + calfrmName + '.year.value = \'\'');
     hideCalendar();
     if (FuncsToRun!=null)
-        eval(FuncsToRun); 
+        eval(FuncsToRun);
 }
 
 function changeDay(whatDay) {
@@ -381,18 +381,18 @@ function changeDay(whatDay) {
     eval('document.' + calfrmName + '.year.value = "'+ curDate.getFullYear() + '"');
     hideCalendar();
     if (FuncsToRun!=null)
-        eval(FuncsToRun); 
+        eval(FuncsToRun);
 }
 
 function scrollMonth(amount) {
     var monthCheck;
     var yearCheck;
-    
+
     if (ppcIE) {
         monthCheck = document.forms["Cal"].cboMonth.selectedIndex + amount;
     }
     else if (ppcNN) {
-        monthCheck = document.popupcalendar.document.forms["Cal"].cboMonth.selectedIndex + amount;    
+        monthCheck = document.popupcalendar.document.forms["Cal"].cboMonth.selectedIndex + amount;
     }
     if (monthCheck < 0) {
         yearCheck = curDate.getFullYear() - 1;
@@ -413,10 +413,10 @@ function scrollMonth(amount) {
         }
         else {
             monthCheck = 0;
-        }      
+        }
         curDate.setFullYear(yearCheck);
     }
-    
+
     if (ppcIE) {
         curDate.setMonth(document.forms["Cal"].cboMonth.options[monthCheck].value);
     }
@@ -428,7 +428,7 @@ function scrollMonth(amount) {
 
 function changeMonth() {
 
-    if (ppcIE) {        
+    if (ppcIE) {
         curDate.setMonth(document.forms["Cal"].cboMonth.options[document.forms["Cal"].cboMonth.selectedIndex].value);
         domlay('popupcalendar',1,ppcX,ppcY,Calendar(curDate.getMonth(),curDate.getFullYear()));
     }

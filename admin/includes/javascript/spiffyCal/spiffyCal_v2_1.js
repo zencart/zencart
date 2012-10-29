@@ -1,8 +1,8 @@
 /*
  * Bazillyo's Spiffy DHTML Popup Calendar Control - version 2.1
- * ©2001 S. Ousta 
+ * Â©2001 S. Ousta
  * see the included readme.htm file for license information and release notes.
- * 
+ *
  * For more information see:
  * http://www.geocities.com/bazillyo/spiffy/calendar/index.htm or
  * http://groups.yahoo.com/group/spiffyDHTML or
@@ -82,12 +82,12 @@ function spiffyCalManager() {
 	this.swapImg=swapImg;
 
 	// *** HOLIDAYS ***************************
-	
+
 	this.Holidays = new Array("Dec-25","Jul-4", "Feb-14","Mar-17","Oct-31");
 	this.HolidaysDesc = new Array("Christmas Day","Independance Day","Valentine's Day","St. Patrick's Day","Halloween");
 
 	//*****************************************
-	
+
 	function isHoliday(whatDate) {
 		var i=0;var found=-1;
 		for (i=0;i<this.Holidays.length;i++) {

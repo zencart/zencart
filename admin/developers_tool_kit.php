@@ -181,6 +181,11 @@
           } else {
             $check_case = strstr(strtoupper($line), strtoupper($configuration_key_lookup));
           }
+// use to debug for UTF-8 NO BOM on files: test search on a, e, s change if below to true
+          if (false && htmlspecialchars($line, ENT_QUOTES, CHARSET) == '') {
+            echo '<br>SOMETHING BROKE in: ' . $file . '<br>on: ' . $line_num . ' - ' . $line . '<br>';
+            $check_case = false;
+          }
           if ($check_case) {
             $found_line= 'true';
             $found = 'true';
