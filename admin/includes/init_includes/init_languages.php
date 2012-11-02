@@ -32,6 +32,9 @@ if (!defined('IS_ADMIN_FLAG')) {
   $template_dir = $template_query->fields['template_dir'];
 
 // include the language translations
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/locale.php')) {
+    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/locale.php');
+  }
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
   $current_page = basename($PHP_SELF);
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
