@@ -243,7 +243,8 @@
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_TIMEOUT, 11);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); /* compatibility for SSL communications on some Windows servers (IIS 5.0+) */
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
       if ($proxy) {
         curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, true);
         @curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
