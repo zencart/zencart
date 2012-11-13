@@ -1981,6 +1981,8 @@ class paypalwpp extends base {
         // set the Guest customer ID -- for PWA purposes
         $_SESSION['customer_guest_id'] = $customer_id;
 
+        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(array('customer_id' => $customer_id), $sql_data_array));
+
         // set the customer address information in the array for the table insertion
         $sql_data_array = array(
             'customers_id'              => $customer_id,
@@ -2009,6 +2011,8 @@ class paypalwpp extends base {
 
         // grab the address_id (last insert id)
         $address_id = $db->Insert_ID();
+
+        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $address_id), $sql_data_array));
 
         // set the address id lookup for the customer
         $sql = "UPDATE " . TABLE_CUSTOMERS . "
