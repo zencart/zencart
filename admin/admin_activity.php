@@ -262,6 +262,7 @@ if ($action != '')
                                  'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
                                  'page_accessed' =>  'Log reset by ' . $admname . '.',
                                  'page_parameters' => '',
+                                 'gzpost' => '',
                                  'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45)
                                  );
         zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
