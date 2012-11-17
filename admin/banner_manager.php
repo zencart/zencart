@@ -65,9 +65,9 @@
         $banners_image_local = zen_db_prepare_input($_POST['banners_image_local']);
         $banners_image_target = zen_db_prepare_input($_POST['banners_image_target']);
         $db_image_location = '';
-        $expires_date = zen_db_prepare_input($_POST['expires_date']) == '' ? 'null' : zen_date_raw($_POST['expires_date']);
+        $expires_date = zen_db_prepare_input($_POST['expires_date']) == '' ? 'null' : zen_format_date_raw($_POST['expires_date']);
         $expires_impressions = zen_db_prepare_input($_POST['expires_impressions']);
-        $date_scheduled = zen_db_prepare_input($_POST['date_scheduled']) == '' ? 'null' : zen_date_raw($_POST['date_scheduled']);
+        $date_scheduled = zen_db_prepare_input($_POST['date_scheduled']) == '' ? 'null' : zen_format_date_raw($_POST['date_scheduled']);
         $status = zen_db_prepare_input($_POST['status']);
         $banners_open_new_windows = zen_db_prepare_input($_POST['banners_open_new_windows']);
         $banners_on_ssl = zen_db_prepare_input($_POST['banners_on_ssl']);

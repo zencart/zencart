@@ -3425,3 +3425,27 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
         }
         return 0;
     }
+function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMAT_DATEPICKER_ADMIN)
+{
+  if ($date == 'null' || $date == '') return $date;
+  $mpos = strpos($formatIn, 'm');
+  $dpos = strpos($formatIn, 'd');
+  $ypos = strpos($formatIn, 'y');
+  $d = substr($date, $dpos, 2);
+  $m = substr($date, $mpos, 2);
+  $y = substr($date, $ypos, 4);
+  switch ($formatOut)
+  {
+    case 'raw':
+      $mdate = $y . $m . $d;
+      break;
+    case 'raw-reverse':
+      $mdate = $d . $m . $y;
+      break;
+    case 'mysql':
+     $mdate = $y . '-' . $m . '-' . $d;
+          
+  }
+  return $mdate;
+}
+    

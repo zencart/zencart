@@ -273,8 +273,8 @@ echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorte
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?><br /><small>(YYYY-MM-DD)</small></td>
-            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;'; ?><?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?><br /><small>(<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>)</small></td>
+            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;'; ?><?php echo zen_draw_input_field('products_date_available', zen_date_short($pInfo->products_date_available), 'class="datepicker"'); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

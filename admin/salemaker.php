@@ -74,8 +74,8 @@ define('AUTOCHECK', 'False');
                                             'sale_specials_condition' => zen_db_prepare_input($_POST['condition']),
                                             'sale_categories_selected' => $categories_selected_string,
                                             'sale_categories_all' => $categories_all_string,
-                                            'sale_date_start' => ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_date_raw($_POST['start'])),
-                                            'sale_date_end' => ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_date_raw($_POST['end'])));
+                                            'sale_date_start' => ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start'])),
+                                            'sale_date_end' => ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end'])));
 
         if ($action == 'insert') {
           $salemaker_sales_data_array['sale_status'] = 1;

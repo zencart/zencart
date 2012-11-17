@@ -132,13 +132,13 @@
           $master_categories_id = $_POST['master_categories_id'];
         }
 
-        $products_date_available = ((zen_db_prepare_input($_POST['product_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['product_start']));
+        $products_date_available = ((zen_db_prepare_input($_POST['product_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['product_start']));
 
-        $specials_date_available = ((zen_db_prepare_input($_POST['special_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['special_start']));
-        $specials_expires_date = ((zen_db_prepare_input($_POST['special_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['special_end']));
+        $specials_date_available = ((zen_db_prepare_input($_POST['special_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_start']));
+        $specials_expires_date = ((zen_db_prepare_input($_POST['special_end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_end']));
 
-        $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_start']));
-        $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_end']));
+        $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['featured_start']));
+        $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['featured_end']));
 
     $tmp_value = zen_db_prepare_input($_POST['products_price_sorter']);
     $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;

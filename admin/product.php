@@ -352,7 +352,7 @@ if ($products_query_numrows > 0) {
     <script>
     $(function() {
         $( ".datepicker" ).datepicker({
-         dateFormat: 'yy-mm-dd',
+         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
          changeMonth: true,
          changeYear: true
         });

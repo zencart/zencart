@@ -143,7 +143,7 @@
 
         if (ACCOUNT_DOB == 'true') {
           if (ENTRY_DOB_MIN_LENGTH >0) {
-            if (checkdate(substr(zen_date_raw($customers_dob), 4, 2), substr(zen_date_raw($customers_dob), 6, 2), substr(zen_date_raw($customers_dob), 0, 4))) {
+            if (checkdate(substr(zen_format_date_raw($customers_dob, 'raw'), 4, 2), substr(zen_format_date_raw($customers_dob, 'raw'), 6, 2), substr(zen_format_date_raw($customers_dob, 'raw'), 0, 4))) {
               $entry_date_of_birth_error = false;
             } else {
               $error = true;
@@ -262,7 +262,7 @@
                                 );
 
         if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
-        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = ($customers_dob == '0001-01-01 00:00:00' ? '0001-01-01 00:00:00' : zen_date_raw($customers_dob));
+        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = ($customers_dob == '0001-01-01 00:00:00' ? '0001-01-01 00:00:00' : zen_format_date_raw($customers_dob));
 
         zen_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "'");
 

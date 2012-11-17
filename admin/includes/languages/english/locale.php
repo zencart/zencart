@@ -11,13 +11,13 @@
 setlocale(LC_TIME, 'en_US');
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
-define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
+define('DATE_FORMAT', 'd/m/Y'); // this is used for date()
 define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
-define('DATE_FORMAT_DATEPICKER_ADMIN', 'mm/dd/yy');  //Use only 'dd', 'mm' and 'yy' here in any order
+define('DATE_FORMAT_DATEPICKER_ADMIN', zen_date_datepicker(DATE_FORMAT));  //Use only 'dd', 'mm' and 'yy' here in any order
 
 ////
-// Return date in raw format
+// Return date in raw format - DEPRECATED
 // $date should be in format mm/dd/yyyy
 // raw date is in format YYYYMMDD, or DDMMYYYY
 function zen_date_raw($date, $reverse = false) {
@@ -26,6 +26,13 @@ function zen_date_raw($date, $reverse = false) {
   } else {
     return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
   }
+}
+function zen_date_datepicker($format)
+{
+  $date = preg_replace('/[ds]/', 'dd', $format);
+  $date = preg_replace('/[mn]/', 'mm', $date);
+  $date = preg_replace('/[yY]/', 'yy', $date);
+  return $date;
 }
 
 // Global entries for the <html> tag
