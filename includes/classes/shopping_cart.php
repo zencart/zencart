@@ -665,9 +665,12 @@ class shoppingCart extends base {
 
       $adjust_downloads = 0;
       // attributes price
+      $savedProductTotal = $productTotal;
+      $attributesTotal = 0;
       if (isset($this->contents[$products_id]['attributes'])) {
         reset($this->contents[$products_id]['attributes']);
         while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+          $productTotal = 0;
           $adjust_downloads ++;
           /*
           products_attributes_id, options_values_price, price_prefix,
@@ -801,9 +804,10 @@ class shoppingCart extends base {
             }
             ////////////////////////////////////////////////
           }
+          $attributesTotal += zen_round($productTotal, $decimalPlaces);
         }
       } // attributes price
-
+      $productTotal = $savedProductTotal + $attributesTotal;
       // attributes weight
       if (isset($this->contents[$products_id]['attributes'])) {
         reset($this->contents[$products_id]['attributes']);
@@ -867,7 +871,7 @@ class shoppingCart extends base {
    * @global object access to the db object
    */
   function attributes_price($products_id) {
-    global $db;
+    global $db, $currencies;
 
     $attributes_price = 0;
     $qty = $this->contents[$products_id]['qty'];
@@ -956,6 +960,7 @@ class shoppingCart extends base {
         $_SESSION['cart_errors'] .= zen_get_products_name($attribute_price->fields['products_id'], $_SESSION['languages_id'])  . ERROR_PRODUCT_OPTION_SELECTION . '<br />';
         }
         */
+        $total_attributes_price += zen_round($attributes_price, $currencies->get_decimal_places($_SESSION['currency']));
       }
     }
 
