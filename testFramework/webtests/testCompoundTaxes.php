@@ -71,6 +71,7 @@ class testCompoundTaxes extends zcCommonTestResources
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=27&action=buy_now');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
+    $this->waitForPageToLoad(10000);
     $this->click("ship-flat-flat");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);

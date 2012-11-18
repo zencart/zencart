@@ -24,6 +24,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->select('customers_group_pricing', 'value=1');
     $this->click("//input[@type='image']");
+    $this->waitForPageToLoad(10000);
   }
 
   function testGroupDiscountsDo()
@@ -38,6 +39,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
+    $this->waitForPageToLoad(10000);
     $this->click("ship-storepickup-storepickup");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
@@ -85,6 +87,7 @@ class testGroupDiscount extends zcCommonTestResources
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
+    $this->waitForPageToLoad(10000);
     $this->click("ship-storepickup-storepickup");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);

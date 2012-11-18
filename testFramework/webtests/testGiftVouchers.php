@@ -39,7 +39,6 @@ class testGiftVouchers extends zcCommonTestResources
     $this->assertTextPresent('glob:*10,000.00*');
     $this->assertTextPresent('glob:*Free Shipping*');
     $this->assertTextPresent('glob:*Payment Information*');
-    //    $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*10,000.00*');

@@ -51,7 +51,6 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->assertTextPresent('glob:*118.11*');
     $this->assertTextPresent('glob:*Free Shipping*');
     $this->assertTextPresent('glob:*Payment Information*');
-    //    $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*118.11*');
@@ -87,7 +86,6 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->assertTextPresent('glob:*127.00*');
     $this->assertTextPresent('glob:*Free Shipping*');
     $this->assertTextPresent('glob:*Payment Information*');
-    //    $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*127.00*');
@@ -112,6 +110,7 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=27&action=buy_now');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
+    $this->waitForPageToLoad(10000);
     $this->click("ship-flat-flat");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
@@ -136,10 +135,12 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->open('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_music_info&cPath=62&products_id=166');
+    $this->waitForPageToLoad(10000);
     $this->type('css=input[name=cart_quantity]', '1');
     $this->clickAndWait('css=input[type=image]');
     $this->assertTextPresent('glob:*RTBHUNTER*');
     $this->open('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
+    $this->waitForPageToLoad(10000);
     $this->switchAddToCartRedirect('true');
   }
 }
