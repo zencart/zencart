@@ -873,14 +873,14 @@ class shoppingCart extends base {
   function attributes_price($products_id) {
     global $db, $currencies;
 
-    $attributes_price = 0;
+    $total_attributes_price = 0;
     $qty = $this->contents[$products_id]['qty'];
 
     if (isset($this->contents[$products_id]['attributes'])) {
 
       reset($this->contents[$products_id]['attributes']);
       while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
-
+        $attributes_price = 0;
         $attribute_price_query = "select *
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
                                     where products_id = '" . (int)$products_id . "'
@@ -960,11 +960,15 @@ class shoppingCart extends base {
         $_SESSION['cart_errors'] .= zen_get_products_name($attribute_price->fields['products_id'], $_SESSION['languages_id'])  . ERROR_PRODUCT_OPTION_SELECTION . '<br />';
         }
         */
+<<<<<<< HEAD
         $total_attributes_price += zen_round($attributes_price, $currencies->get_decimal_places($_SESSION['currency']));
+=======
+        $total_attributes_price += $attributes_price;
+>>>>>>> 75859c5... refactor slightly to encapsulate calculation of attribute price in the loop
       }
     }
 
-    return $attributes_price;
+    return $total_attributes_price;
   }
   /**
    * Method to calculate one time price of attributes for a given item
