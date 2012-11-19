@@ -190,7 +190,8 @@
             $found_line= 'true';
             $found = 'true';
             $cnt_found++;
-            $show_file .= "<br />Line #<strong>{$line_num}</strong> : " ;
+            $line_numpos = $line_num + 1;
+            $show_file .= "<br />Line #<strong>{$line_numpos}</strong> : " ;
             //prevent db pwd from being displayed, for sake of security
             $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($line, ENT_QUOTES, CHARSET);
             $show_file .= "<br />\n";
