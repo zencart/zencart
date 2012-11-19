@@ -128,6 +128,18 @@ $sql = "select count(*) as total
                       $new_attributes_price = -$new_attributes_price;
                     }
 
+                    if ($products_options->fields['attributes_price_factor'] > 0) {
+                      $chk_price = zen_get_products_actual_price((int)$_GET['products_id']);
+                      if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL) {
+                        $chk_special = zen_get_products_special_price((int)$_GET['products_id']);
+                      } else {
+                        $chk_special = false;
+                      }
+//echo 'PRICE FACTOR BEFORE zen_get_attributes_price_factor: ' . $new_attributes_price . '<br>';
+                      $new_attributes_price = zen_get_attributes_price_factor($chk_price, $chk_special, $products_options->fields['attributes_price_factor'], $products_options->fields['attributes_price_factor_offset']);
+//echo 'PRICE FACTOR AFTER zen_get_attributes_price_factor: ' . $new_attributes_price . '<br>';
+                    }
+
                     if ($products_options->fields['attributes_price_onetime'] != 0 or $products_options->fields['attributes_price_factor_onetime'] != 0) {
                       $show_onetime_charges_description = 'true';
                       $new_onetime_charges = zen_get_attributes_price_final_onetime($products_options->fields["products_attributes_id"], 1, '');
