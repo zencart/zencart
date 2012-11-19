@@ -117,6 +117,9 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
     }
   }
 
+// check for debug logs
+  require(DIR_WS_INCLUDES . 'debug_logs_checker.php');
+
 // display alerts/error messages, if any
   if ($messageStack->size > 0) {
     echo $messageStack->output();
@@ -174,7 +177,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
   }
 
 // check GV release queue and alert store owner
-  if (SHOW_GV_QUEUE==true) {
+  if (SHOW_GV_QUEUE==true && (zen_is_superuser() || check_page(FILENAME_ORDERS, array()))) {
     $new_gv_queue= $db->Execute("select * from " . TABLE_COUPON_GV_QUEUE . " where release_flag='N'");
     $new_gv_queue_cnt = 0;
     if ($new_gv_queue->RecordCount() > 0) {
