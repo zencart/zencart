@@ -445,7 +445,7 @@ class order extends base {
                                       'tax_groups'=>$taxRates,
                                       'tax_description' => zen_get_tax_description($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId),
                                       'price' => $products[$i]['price'],
-                                      'final_price' => zen_round($products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']), 2),
+                                      'final_price' => zen_round($products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']), $decimals),
                                       'onetime_charges' => $_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity']),
                                       'weight' => $products[$i]['weight'],
                                       'products_priced_by_attribute' => $products[$i]['products_priced_by_attribute'],
