@@ -54,7 +54,7 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*118.11*');
-    $this->assertTextPresent('glob:*8.31*');
+    $this->assertTextPresent('glob:*8.27*');
     $this->assertTextPresent('glob:*Free Shipping*');
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
@@ -88,8 +88,8 @@ class testSundryCartOrders extends zcCommonTestResources
     $this->assertTextPresent('glob:*Payment Information*');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*127.00*');
-    $this->assertTextPresent('glob:*8.31*');
+    $this->assertTextPresent('glob:*126.38*');
+    $this->assertTextPresent('glob:*8.27*');
     $this->assertTextPresent('glob:*Free Shipping*');
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
