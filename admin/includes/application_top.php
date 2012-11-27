@@ -50,6 +50,7 @@ if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 // set php_self in the local scope
 if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
+$PHP_SELF = htmlspecialchars($PHP_SELF);
 
 /**
  * Set the local configuration parameters - mainly for developers
