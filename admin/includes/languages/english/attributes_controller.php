@@ -122,9 +122,11 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTES_COPY_TO_PRODUCTS','PRODUCT');
   define('TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT','Copy Attributes to another <strong>Product</strong> from ID#');
   define('TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO','Select the Product to copy all attributes to:');
+  define('TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO_MANUAL','Or, Manually select the Product to copy all attributes to:');
 
   define('TEXT_ATTRIBUTES_COPY_TO_CATEGORY','CATEGORY');
   define('TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO','Select the Category to copy all attributes to:');
+  define('TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO_MANUAL','Or, Manually select the Category by categories_id to copy all attributes to:');
   define('TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_CATEGORY','Copy Attributes to all Products in <strong>Category</strong> from Product ID#');
 
   define('TEXT_COPY_ATTRIBUTES_CONDITIONS','<strong>How should existing product attributes be handled?</strong>');
@@ -168,4 +170,3 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_INFO_PRODUCTS_OPTION_NAME', '<strong>Option Name: </strong>');
   define('TEXT_INFO_PRODUCTS_OPTION_ID', '<strong>ID#</strong>');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
-  
