@@ -48,8 +48,8 @@ define('TEXT_VOUCHER_IS', 'The coupon code is ');
 define('TEXT_REMEMBER', 'Don\'t lose the coupon code, make sure to keep the code safe so you can benefit from this special offer.');
 define('TEXT_VISIT', 'Visit us at %s');
 define('TEXT_ENTER_CODE', ' and enter the code ');
-define('TEXT_COUPON_HELP_DATE', '<p><p>The coupon is valid between %s and %s</p></p>');
-define('HTML_COUPON_HELP_DATE', '<p><p>The coupon is valid between %s and %s</p></p>');
+define('TEXT_COUPON_HELP_DATE', '<p>The coupon is valid between %s and %s</p>');
+define('HTML_COUPON_HELP_DATE', '<p>The coupon is valid between %s and %s</p>');
 
 define('TABLE_HEADING_ACTION', 'Action');
 
