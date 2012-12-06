@@ -167,6 +167,7 @@ if (isset($_SESSION['cart']->cartID)) {
           if ($_SESSION['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
             $quote[0]['methods'][0]['cost'] = '0';
+            $quote[0]['methods'][0]['icon'] = '';
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
