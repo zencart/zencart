@@ -608,6 +608,7 @@ class shoppingCart extends base {
 define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
     reset($this->contents);
     while (list($products_id, ) = each($this->contents)) {
+      $total_before_discounts = 0;
       $freeShippingTotal = $productTotal = $totalOnetimeCharge = $totalOnetimeChargeNoDiscount = 0;
       $qty = $this->contents[$products_id]['qty'];
 
@@ -671,7 +672,7 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
 
 // ****** WARNING NEED TO ADD ATTRIBUTES AND QTY
         // calculate Product Price without Specials, Sales or Discounts
-        $this->total_before_discounts += $product->fields['products_price'];
+        $total_before_discounts += $product->fields['products_price'];
       }
 
       $adjust_downloads = 0;
@@ -724,7 +725,8 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                 $productTotal -= $attribute_price->fields['options_values_price'];
               }
         // calculate Product Price without Specials, Sales or Discounts
-            $this->total_before_discounts -= $attribute_price->fields['options_values_price'];
+//            $this->total_before_discounts -= $attribute_price->fields['options_values_price'];
+              $total_before_discounts -= $attribute_price->fields['options_values_price'];
             } else {
 // appears to confuse products priced by attributes
                 if ($product->fields['product_is_always_free_shipping'] == '1' or $product->fields['products_virtual'] == '1') {
@@ -739,7 +741,7 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                 $productTotal += $attribute_price->fields['options_values_price'];
               }
         // calculate Product Price without Specials, Sales or Discounts
-            $this->total_before_discounts += $attribute_price->fields['options_values_price'];
+              $total_before_discounts += $attribute_price->fields['options_values_price'];
             } // eof: attribute price
 // adjust for downloads
 // adjust products price
@@ -776,14 +778,14 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                 $freeShippingTotal += $text_words;
               }
         // calculate Product Price without Specials, Sales or Discounts
-            $this->total_before_discounts += $text_letters;
-            $this->total_before_discounts += $text_words;
+              $total_before_discounts += $text_letters;
+              $total_before_discounts += $text_words;
             }
 
             // attributes_price_factor
             $added_charge = 0;
             if ($attribute_price->fields['attributes_price_factor'] > 0) {
-echo 'products_id: ' . $product->fields['products_id'] . ' Prices ' . '$chk_price: ' . $chk_price . ' $chk_special: ' . $chk_special . ' attributes_price_factor:' . $attribute_price->fields['attributes_price_factor'] . ' attributes_price_factor_offset: ' . $attribute_price->fields['attributes_price_factor_offset'] . '<br>';
+//echo 'products_id: ' . $product->fields['products_id'] . ' Prices ' . '$chk_price: ' . $chk_price . ' $chk_special: ' . $chk_special . ' attributes_price_factor:' . $attribute_price->fields['attributes_price_factor'] . ' attributes_price_factor_offset: ' . $attribute_price->fields['attributes_price_factor_offset'] . '<br>';
               $added_charge = zen_get_attributes_price_factor($chk_price, $chk_special, $attribute_price->fields['attributes_price_factor'], $attribute_price->fields['attributes_price_factor_offset']);
 
               $productTotal += $added_charge;
@@ -792,7 +794,7 @@ echo 'products_id: ' . $product->fields['products_id'] . ' Prices ' . '$chk_pric
               }
         // calculate Product Price without Specials, Sales or Discounts
               $added_charge = zen_get_attributes_price_factor($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor'], $attribute_price->fields['attributes_price_factor_offset']);
-            $this->total_before_discounts += $added_charge;
+              $total_before_discounts += $added_charge;
             }
 
             // attributes_qty_prices
@@ -805,9 +807,8 @@ echo 'products_id: ' . $product->fields['products_id'] . ' Prices ' . '$chk_pric
                 $freeShippingTotal += $added_charge;
               }
         // calculate Product Price without Specials, Sales or Discounts
-//            $this->total_before_discounts += $added_charge;
               $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices'], 1);
-              $this->total_before_discounts += $attribute_price->fields['options_values_price'] + $added_charge;
+              $total_before_discounts += $attribute_price->fields['options_values_price'] + $added_charge;
             }
 
             //// one time charges
@@ -905,8 +906,9 @@ echo 'products_id: ' . $product->fields['products_id'] . ' Prices ' . '$chk_pric
 // ******* WARNING ADD ONE TIME ATTRIBUTES, PRICE FACTOR
       // calculate Product Price without Specials, Sales or Discounts
 //echo 'Product Attribute before: ' . $new_attributes_price_before_discounts . '<br>';
-      $this->total_before_discounts = $this->total_before_discounts * $qty;
-      $this->total_before_discounts += $totalOnetimeChargeNoDiscount;
+      $total_before_discounts = $total_before_discounts * $qty;
+      $total_before_discounts += $totalOnetimeChargeNoDiscount;
+      $this->total_before_discounts += $total_before_discounts;
     }
   }
   /**
