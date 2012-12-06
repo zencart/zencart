@@ -123,6 +123,16 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   } //end foreach [attributes]
   if (STOCK_CHECK == 'true') {
     $flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
+// bof: extra check on stock for mixed YES
+    if ($flagStockCheck != true) {
+//echo zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) . '<br>';
+      if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+        $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      } else {
+        $flagStockCheck = '';
+      }
+    }
+// eof: extra check on stock for mixed YES
     if ($flagStockCheck == true) {
       $flagAnyOutOfStock = true;
     }

@@ -50,6 +50,12 @@
       if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
         break;
+      } else {
+// extra check on stock for mixed YES
+        if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+          zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+          break;
+        }
       }
     }
   }
