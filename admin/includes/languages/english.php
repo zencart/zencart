@@ -17,31 +17,6 @@ define('HEADER_LOGO_WIDTH', '200px');
 define('HEADER_LOGO_HEIGHT', '70px');
 define('HEADER_LOGO_IMAGE', 'logo.gif');
 
-// look in your $PATH_LOCALE/locale directory for available locales..
-setlocale(LC_TIME, 'en_US');
-define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
-define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
-define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
-define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date()
-define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
-define('DATE_FORMAT_SPIFFYCAL', 'MM/dd/yyyy');  //Use only 'dd', 'MM' and 'yyyy' here in any order
-
-////
-// Return date in raw format
-// $date should be in format mm/dd/yyyy
-// raw date is in format YYYYMMDD, or DDMMYYYY
-function zen_date_raw($date, $reverse = false) {
-  if ($reverse) {
-    return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
-  } else {
-    return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
-  }
-}
-
-// removed for meta tags
-// page title
-//define('TITLE', 'Zen Cart');
-
 // include template specific meta tags defines
   if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
     $template_dir_select = $template_dir . '/';
@@ -55,12 +30,6 @@ define('ICON_METATAGS_ON', 'Meta Tags Defined');
 define('ICON_METATAGS_OFF', 'Meta Tags Undefined');
 define('TEXT_LEGEND_META_TAGS', 'Meta Tags Defined:');
 define('TEXT_INFO_META_TAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is your defined definition for your site in the meta_tags.php file.');
-
-// Global entries for the <html> tag
-define('HTML_PARAMS','dir="ltr" lang="en"');
-
-// charset for web pages and emails
-define('CHARSET', 'utf-8');
 
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Admin Home');
@@ -82,9 +51,6 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 // text for gender
 define('MALE', 'Male');
 define('FEMALE', 'Female');
-
-// text for date of birth example
-define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
 
 // configuration box text
 define('BOX_HEADING_CONFIGURATION', 'Configuration');
@@ -113,6 +79,7 @@ define('BOX_CONFIGURATION_ALL_LISTING', 'All Listing');
 define('BOX_CONFIGURATION_INDEX_LISTING', 'Index Listing');
 define('BOX_CONFIGURATION_DEFINE_PAGE_STATUS', 'Define Page Status');
 define('BOX_CONFIGURATION_EZPAGES_SETTINGS', 'EZ-Pages Settings');
+define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration');//for 1.5.1
 
 // modules box text
 define('BOX_HEADING_MODULES', 'Modules');
@@ -454,19 +421,6 @@ define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language
 define('ERROR_MODULE_REMOVAL_PROHIBITED', 'ERROR: Module removal prohibited: ');
 define('WARNING_REVIEW_ROGUE_ACTIVITY', 'ALERT: Please review for possible XSS activity:');
 
-define('_JANUARY', 'January');
-define('_FEBRUARY', 'February');
-define('_MARCH', 'March');
-define('_APRIL', 'April');
-define('_MAY', 'May');
-define('_JUNE', 'June');
-define('_JULY', 'July');
-define('_AUGUST', 'August');
-define('_SEPTEMBER', 'September');
-define('_OCTOBER', 'October');
-define('_NOVEMBER', 'November');
-define('_DECEMBER', 'December');
-
 define('TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> gift vouchers)');
 define('TEXT_DISPLAY_NUMBER_OF_COUPONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> coupons)');
 
@@ -608,8 +562,6 @@ define('TEXT_INFO_SET_MASTER_CATEGORIES_ID_WARNING', '<strong>WARNING:</strong> 
 
 define('PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT', 'Product is Call for Price');
 define('PRODUCTS_PRICE_IS_FREE_TEXT','Product is Free');
-
-define('TEXT_PRODUCT_WEIGHT_UNIT','lbs');
 
 // min, max, units
 define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING', 'Max:');

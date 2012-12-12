@@ -1,6 +1,6 @@
 <?php
 /**
- * SAMPLE dist-configure.php
+ * SAMPLE (but NOT FUNCTIONAL) file
  *
  * @package Configuration Settings
  * @package Admin
@@ -49,6 +49,9 @@
 // * DIR_FS_* = Filesystem directories (local/physical)
   define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
   define('DIR_FS_CATALOG', '/');
+
+  //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
+  define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs');
 
   define('DIR_FS_CATALOG_LANGUAGES', DIR_FS_CATALOG . 'includes/languages/');
   define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');

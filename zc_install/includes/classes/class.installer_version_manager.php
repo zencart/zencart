@@ -29,7 +29,7 @@
       /**
        * The version that this edition of the installer is designed to support
        */
-      $this->latest_version = '1.5.1';
+      $this->latest_version = '1.6.0';
 
       /**
        * Check to see if the configuration table can be found...thus validating the installation, in part.
@@ -78,6 +78,7 @@
       $this->version139 = $this->check_version_139();
       $this->version150 = $this->check_version_150();
       $this->version151 = $this->check_version_151();
+      $this->version160 = $this->check_version_160();
 
         if ($this->version110 == true)  $retVal = '1.1.0';
         if ($this->version111 == true)  $retVal = '1.1.1';
@@ -102,6 +103,7 @@
         if ($this->version139 == true) $retVal = '1.3.9';
         if ($this->version150 == true) $retVal = '1.5.0';
         if ($this->version151 == true) $retVal = '1.5.1';
+        if ($this->version160 == true) $retVal = '1.6.0';
 
       return $retVal;
     }
@@ -784,6 +786,24 @@
       }
       return $got_v1_5_1;
     } //end of 1.5.1 check
+
+
+
+    function check_version_160() {
+      global $db_test;
+      $got_v1_6_0 = false;
+      $sql = "select * from " . DB_PREFIX . "configuration where configuration_key = 'SESSION_WRITE_DIRECTORY'";
+      $result = $db_test->Execute($sql);
+      while (!$result->EOF && !$got_v1_6_0) {
+        if (ZC_UPG_DEBUG==true) echo "160-configkey TEST: '" . $result->fields['configuration_key'] . '->' . $result->fields['configuration_description'] . '<br>';
+        if  ($result->fields['configuration_description'] == 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.') {
+          $got_v1_6_0 = true;
+          if (ZC_UPG_DEBUG==true) echo 'Got 1.6.0<br><br>';
+        }
+        $result->MoveNext();
+      }
+      return $got_v1_6_0;
+    } //end of 1.6.0 check
 
 
 

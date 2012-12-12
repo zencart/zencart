@@ -3,7 +3,7 @@
  * checkout_payment header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
@@ -51,6 +51,12 @@ if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
       zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
       break;
+    } else {
+// extra check on stock for mixed YES
+      if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+        zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+        break;
+      }
     }
   }
 }

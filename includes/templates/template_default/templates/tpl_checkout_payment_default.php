@@ -10,6 +10,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_checkout_payment_default.php 19358 2011-08-24 17:36:50Z drbyte $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 ?>
 <?php echo $payment_modules->javascript_validation(); ?>
@@ -18,6 +19,28 @@
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 
 <h1 id="checkoutPaymentHeading"><?php echo HEADING_TITLE; ?></h1>
+
+<!-- bof Order Steps (tableless) -->
+<?php if($COWOA) { ?>
+    <div id="order_steps">
+            <div class="order_steps_text">
+			<span class="order_steps_text1_COWOA"><?php echo TEXT_ORDER_STEPS_BILLING; ?></span><span class="order_steps_text2_COWOA"><?php echo TEXT_ORDER_STEPS_1; ?></span><span id="active_step_text_COWOA"><?php echo zen_image($template->get_template_dir(ORDER_STEPS_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . ORDER_STEPS_IMAGE, ORDER_STEPS_IMAGE_ALT); ?><br /><?php echo TEXT_ORDER_STEPS_2; ?></span><span class="order_steps_text3_COWOA"><?php echo TEXT_ORDER_STEPS_3; ?></span><span class="order_steps_text4_COWOA"><?php echo TEXT_ORDER_STEPS_4; ?></span>
+            </div>
+            <div class="order_steps_line_2">
+		  <span class="progressbar_active_COWOA">&nbsp;</span><span class="progressbar_active_COWOA">&nbsp;</span><span class="progressbar_active_COWOA">&nbsp;</span><span class="progressbar_inactive_COWOA">&nbsp;</span><span class="progressbar_inactive_COWOA">&nbsp;</span>
+            </div>
+    </div>
+<?php } else { ?>
+    <div id="order_steps">
+            <div class="order_steps_text">
+			<span class="order_steps_text2"><?php echo TEXT_ORDER_STEPS_1; ?></span><span id="active_step_text"><?php echo zen_image($template->get_template_dir(ORDER_STEPS_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . ORDER_STEPS_IMAGE, ORDER_STEPS_IMAGE_ALT); ?><br /><?php echo TEXT_ORDER_STEPS_2; ?></span><span class="order_steps_text3"><?php echo TEXT_ORDER_STEPS_3; ?></span><span class="order_steps_text4"><?php echo TEXT_ORDER_STEPS_4; ?></span>
+            </div>
+            <div class="order_steps_line_2">
+                <span class="progressbar_active">&nbsp;</span><span class="progressbar_active">&nbsp;</span><span class="progressbar_inactive">&nbsp;</span><span class="progressbar_inactive">&nbsp;</span>
+            </div>
+    </div>
+<?php } ?>
+<!-- eof Order Steps (tableless) -->
 
 <?php if ($messageStack->size('redemptions') > 0) echo $messageStack->output('redemptions'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
@@ -53,7 +76,7 @@
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       }
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
-
+      
 <fieldset id="checkoutOrderTotals">
 <legend id="checkoutPaymentHeadingTotal"><?php echo TEXT_YOUR_TOTAL; ?></legend>
 <?php
@@ -78,13 +101,15 @@
       }
       for ($j=0, $n2=sizeof($selection[$i]['fields']); $j<$n2; $j++) {
 ?>
-<fieldset>
-<legend><?php echo $selection[$i]['module']; ?></legend>
-<?php echo $selection[$i]['redeem_instructions']; ?>
-<div class="gvBal larger"><?php echo $selection[$i]['checkbox']; ?></div>
-<label class="inputLabel"<?php echo ($selection[$i]['fields'][$j]['tag']) ? ' for="'.$selection[$i]['fields'][$j]['tag'].'"': ''; ?>><?php echo $selection[$i]['fields'][$j]['title']; ?></label>
-<?php echo $selection[$i]['fields'][$j]['field']; ?>
-</fieldset>
+<?php if(!($COWOA && $selection[$i]['module']==MODULE_ORDER_TOTAL_GV_TITLE)) {?>
+  <fieldset>
+  <legend><?php echo $selection[$i]['module']; ?></legend>
+  <?php echo $selection[$i]['redeem_instructions']; ?>
+  <div class="gvBal larger"><?php echo $selection[$i]['checkbox']; ?></div>
+  <label class="inputLabel"<?php echo ($selection[$i]['fields'][$j]['tag']) ? ' for="'.$selection[$i]['fields'][$j]['tag'].'"': ''; ?>><?php echo $selection[$i]['fields'][$j]['title']; ?></label>
+  <?php echo $selection[$i]['fields'][$j]['field']; ?>
+  </fieldset>
+  <?php } ?>
 <?php
       }
     }
@@ -142,7 +167,7 @@
 <?php   } ?>
 <?php
     } else {
-
+    	
 ?>
 <?php echo zen_draw_hidden_field('payment', $selection[$i]['id'], 'id="pmt-'.$selection[$i]['id'].'"'); ?>
 <?php

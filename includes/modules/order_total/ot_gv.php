@@ -3,7 +3,7 @@
  * ot_gv order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ot_gv.php 19103 2011-07-13 18:10:46Z wilt $
@@ -105,12 +105,11 @@ class ot_gv {
   function pre_confirmation_check($order_total) {
     global $order, $currencies, $messageStack;
     // clean out negative values and strip common currency symbols
-    $_SESSION['cot_gv'] = preg_replace('/[^0-9.%]/', '', $_SESSION['cot_gv']);
-    $_SESSION['cot_gv'] = abs($_SESSION['cot_gv']);
+    $_SESSION['cot_gv'] = preg_replace('/[^0-9.,%]/', '', $_SESSION['cot_gv']);
 
     if ($_SESSION['cot_gv'] > 0) {
       // if cot_gv value contains any nonvalid characters, throw error
-      if (preg_match('/[^0-9\.]/', trim($_SESSION['cot_gv']))) {
+      if (preg_match('/[^0-9\,.]/', trim($_SESSION['cot_gv']))) {
         $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, error);
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
@@ -273,7 +272,8 @@ class ot_gv {
   function calculate_credit($save_total_cost) {
     global $db, $order, $currencies;
     // calculate value based on default currency
-    $gv_payment_amount = $currencies->value($_SESSION['cot_gv'], true, DEFAULT_CURRENCY);
+     $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
+     $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
     $full_cost = $save_total_cost - $gv_payment_amount;
     if ($full_cost < 0) {
       $full_cost = 0;

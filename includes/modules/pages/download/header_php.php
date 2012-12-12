@@ -29,7 +29,7 @@ if ((isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']
 
 // Check that order_id, customer_id and filename match
 $sql = "SELECT date_format(o.date_purchased, '%Y-%m-%d')
-          AS date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename, o.*
+          AS date_purchased_day, opd.download_maxdays, opd.download_count, opd.orders_products_filename, o.*
           FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
           WHERE o.customers_id = customersID
           AND o.orders_id = ordersID
@@ -224,7 +224,7 @@ if (DOWNLOAD_BY_REDIRECT == 'true') {
   $link_create_status = @symlink(DIR_FS_DOWNLOAD . $origin_filename, DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $download_link);
 
   if ($link_create_status==true) {
-    $zco_notifier->notify('NOTIFY_DOWNLOAD_VIA_SYMLINK___BEGINS', $download_link, $origin_filename, $tempdir);
+    $zco_notifier->notify('NOTIFY_DOWNLOAD_VIA_SYMLINK___BEGINS', array($download_link, $origin_filename, $tempdir));
     header("HTTP/1.1 303 See Other");
     zen_redirect(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $download_link, 303);
   }

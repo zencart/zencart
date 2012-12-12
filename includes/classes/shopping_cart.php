@@ -54,6 +54,11 @@ class shoppingCart extends base {
    */
   var $free_shipping_price;
   /**
+   * shopping cart total price before Specials, Sales and Discounts
+   * @var decimal
+   */
+  var $total_before_discounts;
+  /**
    * constructor method
    *
    * Simply resets the users cart.
@@ -193,6 +198,7 @@ class shoppingCart extends base {
     $this->contents = array();
     $this->total = 0;
     $this->weight = 0;
+    $this->total_before_discounts = 0;
     $this->content_type = false;
 
     // shipping adjustment
@@ -588,6 +594,7 @@ class shoppingCart extends base {
     global $db, $currencies;
     $this->total = 0;
     $this->weight = 0;
+    $this->total_before_discounts = 0;
     $decimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
     // shipping adjustment
     $this->free_shipping_item = 0;
@@ -596,9 +603,13 @@ class shoppingCart extends base {
 
     if (!is_array($this->contents)) return 0;
 
+// By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
+// Setting a define for ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL to 1 to calculate the Price Factor from Special rather than Price switches this to be based on Special, if it exists
+define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
     reset($this->contents);
     while (list($products_id, ) = each($this->contents)) {
-      $freeShippingTotal = $productTotal = $totalOnetimeCharge = 0;
+      $total_before_discounts = 0;
+      $freeShippingTotal = $productTotal = $totalOnetimeCharge = $totalOnetimeChargeNoDiscount = 0;
       $qty = $this->contents[$products_id]['qty'];
 
       // products price
@@ -658,13 +669,20 @@ class shoppingCart extends base {
 //        $this->total += zen_round(zen_add_tax($products_price, $products_tax),$currencies->get_decimal_places($_SESSION['currency'])) * $qty;
         $productTotal += $products_price;
         $this->weight += ($qty * $products_weight);
+
+// ****** WARNING NEED TO ADD ATTRIBUTES AND QTY
+        // calculate Product Price without Specials, Sales or Discounts
+        $total_before_discounts += $product->fields['products_price'];
       }
 
       $adjust_downloads = 0;
       // attributes price
+      $savedProductTotal = $productTotal;
+      $attributesTotal = 0;
       if (isset($this->contents[$products_id]['attributes'])) {
         reset($this->contents[$products_id]['attributes']);
         while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+          $productTotal = 0;
           $adjust_downloads ++;
           /*
           products_attributes_id, options_values_price, price_prefix,
@@ -681,6 +699,9 @@ class shoppingCart extends base {
           $attribute_price = $db->Execute($attribute_price_query);
 
           $new_attributes_price = 0;
+        // calculate Product Price without Specials, Sales or Discounts
+//          $new_attributes_price_before_discounts = 0;
+
           $discount_type_id = '';
           $sale_maker_discount = '';
 
@@ -703,6 +724,9 @@ class shoppingCart extends base {
               } else {
                 $productTotal -= $attribute_price->fields['options_values_price'];
               }
+        // calculate Product Price without Specials, Sales or Discounts
+//            $this->total_before_discounts -= $attribute_price->fields['options_values_price'];
+              $total_before_discounts -= $attribute_price->fields['options_values_price'];
             } else {
 // appears to confuse products priced by attributes
                 if ($product->fields['product_is_always_free_shipping'] == '1' or $product->fields['products_virtual'] == '1') {
@@ -716,6 +740,8 @@ class shoppingCart extends base {
               } else {
                 $productTotal += $attribute_price->fields['options_values_price'];
               }
+        // calculate Product Price without Specials, Sales or Discounts
+              $total_before_discounts += $attribute_price->fields['options_values_price'];
             } // eof: attribute price
 // adjust for downloads
 // adjust products price
@@ -751,18 +777,26 @@ class shoppingCart extends base {
                 $freeShippingTotal += $text_letters;
                 $freeShippingTotal += $text_words;
               }
+        // calculate Product Price without Specials, Sales or Discounts
+              $total_before_discounts += $text_letters;
+              $total_before_discounts += $text_words;
             }
 
             // attributes_price_factor
             $added_charge = 0;
             if ($attribute_price->fields['attributes_price_factor'] > 0) {
+//echo 'products_id: ' . $product->fields['products_id'] . ' Prices ' . '$chk_price: ' . $chk_price . ' $chk_special: ' . $chk_special . ' attributes_price_factor:' . $attribute_price->fields['attributes_price_factor'] . ' attributes_price_factor_offset: ' . $attribute_price->fields['attributes_price_factor_offset'] . '<br>';
               $added_charge = zen_get_attributes_price_factor($chk_price, $chk_special, $attribute_price->fields['attributes_price_factor'], $attribute_price->fields['attributes_price_factor_offset']);
 
               $productTotal += $added_charge;
               if (($product->fields['product_is_always_free_shipping'] == 1) or ($product->fields['products_virtual'] == 1) or (preg_match('/^GIFT/', addslashes($product->fields['products_model'])))) {
                 $freeShippingTotal += $added_charge;
               }
+        // calculate Product Price without Specials, Sales or Discounts
+              $added_charge = zen_get_attributes_price_factor($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor'], $attribute_price->fields['attributes_price_factor_offset']);
+              $total_before_discounts += $added_charge;
             }
+
             // attributes_qty_prices
             $added_charge = 0;
             if ($attribute_price->fields['attributes_qty_prices'] != '') {
@@ -772,13 +806,19 @@ class shoppingCart extends base {
               if (($product->fields['product_is_always_free_shipping'] == 1) or ($product->fields['products_virtual'] == 1) or (preg_match('/^GIFT/', addslashes($product->fields['products_model'])))) {
                 $freeShippingTotal += $added_charge;
               }
+        // calculate Product Price without Specials, Sales or Discounts
+              $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices'], 1);
+              $total_before_discounts += $attribute_price->fields['options_values_price'] + $added_charge;
             }
 
             //// one time charges
             // attributes_price_onetime
             if ($attribute_price->fields['attributes_price_onetime'] > 0) {
               $totalOnetimeCharge += $attribute_price->fields['attributes_price_onetime'];
+        // calculate Product Price without Specials, Sales or Discounts
+              $totalOnetimeChargeNoDiscount += $attribute_price->fields['attributes_price_onetime'];
             }
+
             // attributes_price_factor_onetime
             $added_charge = 0;
             if ($attribute_price->fields['attributes_price_factor_onetime'] > 0) {
@@ -787,6 +827,9 @@ class shoppingCart extends base {
               $added_charge = zen_get_attributes_price_factor($chk_price, $chk_special, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
 
               $totalOnetimeCharge += $added_charge;
+        // calculate Product Price without Specials, Sales or Discounts
+              $added_charge = zen_get_attributes_price_factor($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
+              $totalOnetimeChargeNoDiscount += $added_charge;
             }
             // attributes_qty_prices_onetime
             $added_charge = 0;
@@ -795,12 +838,16 @@ class shoppingCart extends base {
               $chk_special = zen_get_products_special_price($products_id, false);
               $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], $qty);
               $totalOnetimeCharge += $added_charge;
+        // calculate Product Price without Specials, Sales or Discounts
+              $added_charge = zen_get_attributes_qty_prices_onetime($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
+              $totalOnetimeChargeNoDiscount += $added_charge;
             }
             ////////////////////////////////////////////////
           }
-        }
+          $attributesTotal += zen_round($productTotal, $decimalPlaces);
+        } // eof while
       } // attributes price
-
+      $productTotal = $savedProductTotal + $attributesTotal;
       // attributes weight
       if (isset($this->contents[$products_id]['attributes'])) {
         reset($this->contents[$products_id]['attributes']);
@@ -847,6 +894,7 @@ class shoppingCart extends base {
         $this->free_shipping_item += $qty;
       }
 */
+//echo 'shopping_cart class Price: ' . $productTotal . ' qty: ' . $qty . '<br>';
 
       $this->total += zen_round(zen_add_tax($productTotal, $products_tax), $decimalPlaces) * $qty;
       $this->total += zen_round(zen_add_tax($totalOnetimeCharge, $products_tax), $decimalPlaces);
@@ -854,6 +902,13 @@ class shoppingCart extends base {
       if (($product->fields['product_is_always_free_shipping'] == 1) or ($product->fields['products_virtual'] == 1) or (preg_match('/^GIFT/', addslashes($product->fields['products_model'])))) {
         $this->free_shipping_price += zen_round(zen_add_tax($totalOnetimeCharge, $products_tax), $decimalPlaces);
       }
+
+// ******* WARNING ADD ONE TIME ATTRIBUTES, PRICE FACTOR
+      // calculate Product Price without Specials, Sales or Discounts
+//echo 'Product Attribute before: ' . $new_attributes_price_before_discounts . '<br>';
+      $total_before_discounts = $total_before_discounts * $qty;
+      $total_before_discounts += $totalOnetimeChargeNoDiscount;
+      $this->total_before_discounts += $total_before_discounts;
     }
   }
   /**
@@ -864,16 +919,16 @@ class shoppingCart extends base {
    * @global object access to the db object
    */
   function attributes_price($products_id) {
-    global $db;
+    global $db, $currencies;
 
-    $attributes_price = 0;
+    $total_attributes_price = 0;
     $qty = $this->contents[$products_id]['qty'];
 
     if (isset($this->contents[$products_id]['attributes'])) {
 
       reset($this->contents[$products_id]['attributes']);
       while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
-
+        $attributes_price = 0;
         $attribute_price_query = "select *
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
                                     where products_id = '" . (int)$products_id . "'
@@ -953,10 +1008,11 @@ class shoppingCart extends base {
         $_SESSION['cart_errors'] .= zen_get_products_name($attribute_price->fields['products_id'], $_SESSION['languages_id'])  . ERROR_PRODUCT_OPTION_SELECTION . '<br />';
         }
         */
+        $total_attributes_price += zen_round($attributes_price, $currencies->get_decimal_places($_SESSION['currency']));
       }
     }
 
-    return $attributes_price;
+    return $total_attributes_price;
   }
   /**
    * Method to calculate one time price of attributes for a given item
@@ -1276,6 +1332,19 @@ class shoppingCart extends base {
     $this->notify('NOTIFIER_CART_SHOW_TOTAL_END');
     return $this->total;
   }
+
+  /**
+   * Method to calculate total price of items in cart before Specials, Sales, Discounts
+   *
+   * @return decimal Total Price before Specials, Sales, Discounts
+   */
+  function show_total_before_discounts() {
+    $this->notify('NOTIFIER_CART_SHOW_TOTAL_BEFORE_DISCOUNT_START');
+    $this->calculate();
+    $this->notify('NOTIFIER_CART_SHOW_TOTAL_BEFORE_DISCOUNT_END');
+    return $this->total_before_discounts;
+  }
+
   /**
    * Method to calculate total weight of items in cart
    *

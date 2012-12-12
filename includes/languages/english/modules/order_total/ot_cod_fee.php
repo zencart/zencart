@@ -8,7 +8,7 @@
 // | http://www.zen-cart.com/index.php                                    |
 // |                                                                      |
 // | Portions Copyright (c) 2003 osCommerce                               |
-// | Portions Copyright (c) 2002 Thomas Pl‰nkers                          |
+// | Portions Copyright (c) 2002 Thomas Pl√§nkers                          |
 // |                             http://www.oscommerce.at                 |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the GPL license,       |

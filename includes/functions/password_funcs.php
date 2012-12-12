@@ -115,7 +115,7 @@ function zen_get_entropy($seed)
   }
   if (strlen($entropy) < 16)
   {
-    $entropy = sha1_file('/includes/configure.php');
+    $entropy = sha1_file(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'configure.php');
     $entropy .= microtime() . mt_rand() . $seed;
     //echo "USING FALLBACK" . "<br>";
   }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: customers.php 6352 2007-05-20 21:05:01Z drbyte $
@@ -56,4 +56,13 @@ define('ADDRESS_BOOK_TITLE', 'Address Book Entries');
 define('PRIMARY_ADDRESS', '(primary address)');
 define('TEXT_MAXIMUM_ENTRIES', '<span class="coming"><strong>NOTE:</strong></span> A maximum of %s address book entries allowed.');
 define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | 1 of  ');
-?>
+
+// Title of column in customer overview admin page
+define('TABLE_HEADING_COWOA', 'Account Type');
+
+// Title of section in customer details admin page
+define('COWOA_SECTION_HEADING', 'Account Status');
+
+// Detail output on customer details page 
+define('COWOA_STATUS_TRUE', 'Checked out without Account');
+define('COWOA_STATUS_FALSE', 'Full Account Created');

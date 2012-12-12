@@ -7,6 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_login_default.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 ?>
 <div class="centerColumn" id="loginDefault">
@@ -54,6 +55,21 @@
 </form>
 </fieldset>
 <br class="clearBoth" />
+<?php
+  if ($_SESSION['cart']->count_contents() > 0) { ?>
+<!-- BOF COWOA -->
+<?php if (COWOA_STATUS == 'true') { ?>  
+    <fieldset>
+    <legend>Checkout Without Account</legend>
+    <?php echo TEXT_RATHER_COWOA; ?>
+    <div class="buttonRow forward">
+    <?php echo "<a href=\"" . zen_href_link(FILENAME_NO_ACCOUNT, '', 'SSL') . "\">"; ?>
+    <?php echo zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></a></div>
+    <br class="clearBoth" />
+    </fieldset>
+  <?php } ?>
+<!-- BOF COWOA -->  
+<?php } ?>
 <!--EOF PPEC split login- DO NOT REMOVE-->
 <?php } else { ?>
 <!--BOF normal login-->
@@ -64,6 +80,21 @@
 <?php
   }
 ?>
+<?php
+  if ($_SESSION['cart']->count_contents() > 0) { ?>
+<!-- BOF COWOA -->
+<?php if (COWOA_STATUS == 'true') { ?>  
+    <fieldset>
+    <legend>Checkout Without Account</legend>
+    <?php echo TEXT_RATHER_COWOA; ?>
+    <div class="buttonRow forward">
+    <?php echo "<a href=\"" . zen_href_link(FILENAME_NO_ACCOUNT, '', 'SSL') . "\">"; ?>
+    <?php echo zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></a></div>
+    <br class="clearBoth" />
+    </fieldset>
+  <?php } ?>
+<!-- BOF COWOA -->  
+<?php } ?>
 <?php echo zen_draw_form('login', zen_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', 'id="loginForm"'); ?>
 <fieldset>
 <legend><?php echo HEADING_RETURNING_CUSTOMER; ?></legend>

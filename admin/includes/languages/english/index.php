@@ -1,24 +1,11 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: index.php 2539 2005-12-11 05:17:05Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: DrByte  Wed Sep 5 10:59:13 2012 -0400 Modified in v1.5.1 $
+ */
 
 define('HEADING_TITLE', 'Choose an action..');
 
@@ -70,4 +57,14 @@ define('BOX_ENTRY_SALEMAKER_ACTIVE','Sales Active');
 define('LAST_10_DAYS', 'Counter History for last %s recorded days');
 define('SESSION', 'Session');
 define('TOTAL', 'Total');
-?>
+
+// DASHBOARD - HOME PAGE OF ADMIN - CUSTOMERS section
+define('BOX_TITLE_CUSTOMERS', 'Customers');
+define('BOX_ENTRY_CUSTOMERS_NORMAL', '- Full Accounts :');
+define('BOX_ENTRY_CUSTOMERS_COWOA', '- Without Accounts :');
+define('BOX_ENTRY_CUSTOMERS_TOTAL', 'Total Customer Accounts :');
+define('BOX_ENTRY_CUSTOMERS_TOTAL_DISTINCT', 'Total Distinct Customers :');
+define('BOX_ENTRY_CUSTOMERS_COWOA_DISTINCT', '- Without Accounts :');
+define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration');//for 1.5
+define('COWOA_WITHOUT_ACCOUNT', '(Without Account)');
+

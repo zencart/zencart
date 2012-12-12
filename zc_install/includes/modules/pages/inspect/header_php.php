@@ -240,15 +240,16 @@ if (false) { // DISABLED THIS CODEBLOCK FOR NOW....
     $php_ver = $zc_install->php_version;
     $this_class = 'OK';
   }
+  if (version_compare(PHP_VERSION, 5.5, '>=')) {
+    $php_ver = $zc_install->php_version;
+    $this_class = 'WARN';
+    $err_text = 'This ZC version is not yet tested with this version of PHP.';
+    $err_code = '';
+  }
   $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_PHP_VER, 'Status' => $php_ver, 'Class' => $this_class, 'HelpURL' =>$err_code, 'HelpLabel'=>$err_text);
 
-  //PHP Version Check
-  if (version_compare(PHP_VERSION, 5.4, '>=')) {
-    $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_PHP_VER, 'Status' => PHP_VERSION, 'Class' => 'WARN', 'HelpURL' =>'', 'HelpLabel'=>'This ZC version is not yet tested with this version of PHP.');
-  }
-
+  // SAFE MODE check
   if (version_compare(PHP_VERSION, 5.4, '<')) {
-    // SAFE MODE check
     $safe_mode = (ini_get("safe_mode")) ? "<span class='errors'>" . ON . '</span>' : OFF;
     $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_SAFE_MODE, 'Status' => $safe_mode, 'Class' => ($safe_mode==OFF) ? 'OK' : 'FAIL', 'HelpURL' =>ERROR_CODE_SAFE_MODE_ON, 'HelpLabel'=>ERROR_TEXT_SAFE_MODE_ON);
   }
@@ -312,8 +313,8 @@ if (false) { // DISABLED THIS CODEBLOCK FOR NOW....
   if ($zdb_sql_cache != '') $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_CURRENT_CACHE_PATH, 'Status' => $zdb_sql_cache . '&nbsp;&nbsp;-->' . $zdb_sql_cache_writable , 'Class' => ($zdb_sql_cache_writable ==WRITABLE) ? 'OK' : 'WARN', 'HelpURL' =>ERROR_CODE_CACHE_DIR_ISWRITEABLE, 'HelpLabel'=>ERROR_TEXT_CACHE_DIR_ISWRITEABLE);
   $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_SUGGESTED_CACHE_PATH, 'Status' => $suggested_cache, 'Class' => $sugg_cache_class, 'HelpURL' =>$sugg_cache_code, 'HelpLabel'=>$sugg_cache_text);
 
+//PHP MagicQuotesRuntime
 if (version_compare(PHP_VERSION, 5.4, '<')) {
-  //PHP MagicQuotesRuntime
   $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_PHP_MAG_QT_RUN, 'Status' => $php_magic_quotes_runtime , 'Class' => ($php_magic_quotes_runtime=='OFF')?'OK':'FAIL', 'HelpURL' =>ERROR_CODE_MAGIC_QUOTES_RUNTIME, 'HelpLabel'=>ERROR_TEXT_MAGIC_QUOTES_RUNTIME);
   //PHP MagicQuotesSybase
   $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_PHP_MAG_QT_SYBASE, 'Status' => $php_magic_quotes_sybase , 'Class' => ($php_magic_quotes_sybase=='OFF')?'OK':'FAIL', 'HelpURL' =>ERROR_CODE_MAGIC_QUOTES_SYBASE, 'HelpLabel'=>ERROR_TEXT_MAGIC_QUOTES_SYBASE);

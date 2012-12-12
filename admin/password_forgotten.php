@@ -29,6 +29,7 @@ if ($_SESSION['login_attempt'] > 9) {
 }
 $error = false;
 $reset_token = '';
+$email_message = '';
 if (isset($_POST['submit']))
 {
   if (! $_POST['admin_email'])
@@ -44,6 +45,7 @@ if (isset($_POST['submit']))
   {
     $error = true;
     $email_message = MESSAGE_PASSWORD_SENT;
+    $resetToken = 'bad';
   }
   // BEGIN SLAM PREVENTION
   if ($_POST['admin_email'] != '')
@@ -73,6 +75,7 @@ if (isset($_POST['submit']))
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
+<meta name="robot" content="noindex, nofollow" />
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
 <form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
@@ -80,9 +83,9 @@ if (isset($_POST['submit']))
 <fieldset>
 <legend><?php echo HEADING_TITLE; ?></legend>
 <?php if ($resetToken == '') { ?>
-<label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?><input type="text" id="admin_email" name="admin_email" value="<?php if ($error) echo zen_output_string($admin_email); ?>" autocomplete="off" /></label>
+<label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?><input type="text" id="admin_email" name="admin_email" value="" autocomplete="off" /></label>
 <?php } ?>
-<p class="<?php echo ($error ? 'messageStackError' : 'messageStackSuccess'); ?>"><?php echo $email_message; ?></p>
+<p class="messageStackSuccess"><?php echo $email_message; ?></p>
 <?php if ($resetToken == '') { ?>
 <input type="submit" name="submit" class="button" value="<?php echo TEXT_BUTTON_REQUEST_RESET; ?>" />
 <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_CANCEL; ?>" />
