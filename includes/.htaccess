@@ -24,7 +24,7 @@
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch ".*\.(js|css|html?|ico|jpe?g|JPE?G|gif|GIF|webp|png|swf|flv|xml|xsl)$">
+<FilesMatch ".*\.(js|css|html?|ico|jpe?g|JPE?G|gif|GIF|webp|png|swf|flv|xml|xsl|otf)$">
   Order Allow,Deny
   Allow from all
 </FilesMatch>
@@ -51,7 +51,7 @@ deny from All
   FileETag None
   Header unset ETag
   #Header set Cache-Control "no-transform"
-  <FilesMatch ".*\.(ico|jpe?g|JPE?G|gif|GIF|webp|png|swf|flv)$">
+  <FilesMatch ".*\.(ico|jpe?g|JPE?G|gif|GIF|webp|png|otf|swf|flv)$">
     Header set Cache-control "max-age=864000, public, must-revalidate"
     Header unset Last-Modified
   </FilesMatch>
