@@ -1880,7 +1880,7 @@ CREATE TABLE salemaker_sales (
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
-  sesskey varchar(64) NOT NULL default '',
+  sesskey varchar(128) NOT NULL default '',
   expiry int(11) unsigned NOT NULL default '0',
   value mediumblob NOT NULL,
   PRIMARY KEY  (sesskey)
