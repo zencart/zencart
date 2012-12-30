@@ -138,7 +138,7 @@ CREATE TABLE admin_activity_log (
 
 DROP TABLE IF EXISTS admin_menus;
 CREATE TABLE admin_menus (
-  menu_key VARCHAR(32) NOT NULL DEFAULT '',
+  menu_key VARCHAR(255) NOT NULL DEFAULT '',
   language_key VARCHAR(255) NOT NULL DEFAULT '',
   sort_order INT(11) NOT NULL DEFAULT 0,
   UNIQUE KEY menu_key (menu_key)
@@ -152,11 +152,11 @@ CREATE TABLE admin_menus (
 
 DROP TABLE IF EXISTS admin_pages;
 CREATE TABLE admin_pages (
-  page_key VARCHAR(32) NOT NULL DEFAULT '',
+  page_key VARCHAR(255) NOT NULL DEFAULT '',
   language_key VARCHAR(255) NOT NULL DEFAULT '',
-  main_page varchar(64) NOT NULL default '',
-  page_params varchar(64) NOT NULL default '',
-  menu_key varchar(32) NOT NULL default '',
+  main_page varchar(255) NOT NULL default '',
+  page_params varchar(255) NOT NULL default '',
+  menu_key varchar(255) NOT NULL default '',
   display_on_menu char(1) NOT NULL default 'N',
   sort_order int(11) NOT NULL default 0,
   UNIQUE KEY page_key (page_key)
@@ -171,7 +171,7 @@ CREATE TABLE admin_pages (
 DROP TABLE IF EXISTS admin_profiles;
 CREATE TABLE admin_profiles (
   profile_id int(11) NOT NULL AUTO_INCREMENT,
-  profile_name varchar(64) NOT NULL default '',
+  profile_name varchar(255) NOT NULL default '',
   PRIMARY KEY (profile_id)
 ) ENGINE=MyISAM;
 
@@ -184,7 +184,7 @@ CREATE TABLE admin_profiles (
 DROP TABLE IF EXISTS admin_pages_to_profiles;
 CREATE TABLE admin_pages_to_profiles (
   profile_id int(11) NOT NULL default '0',
-  page_key varchar(32) NOT NULL default '',
+  page_key varchar(255) NOT NULL default '',
   UNIQUE KEY profile_page (profile_id, page_key),
   UNIQUE KEY page_profile (page_key, profile_id)
 ) ENGINE=MyISAM;
