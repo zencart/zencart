@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Thu Aug 2 11:55:32 2012 -0400 Modified in v1.5.1 $
@@ -110,7 +110,7 @@
 /**
  * sanitize $_SERVER vars
  */
-  $_SERVER['REMOTE_ADDR'] = preg_replace('/[^0-9.%]/', '', $_SERVER['REMOTE_ADDR']);
+  $_SERVER['REMOTE_ADDR'] = preg_replace('~[^a-fA-F0-9.:%/]~', '', $_SERVER['REMOTE_ADDR']);
 
 
 /**
