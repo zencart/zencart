@@ -52,7 +52,6 @@
           } else {
             $_GET[$key][$key2] = preg_replace('/'.$strictReplace.'/', '', $val2);
           }
-          unset($GLOBALS[$key]);
         }
       } else {
         if ($key == 'keyword') {
@@ -60,8 +59,8 @@
         } else {
           $_GET[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
         }
-        unset($GLOBALS[$key]);
       }
+      unset($GLOBALS[$key]);
     }
   }
 /**
@@ -70,13 +69,7 @@
  */
   if (isset($_POST) && count($_POST) > 0) {
     foreach($_POST as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
+      unset($GLOBALS[$key]);
     }
   }
 /**
@@ -84,13 +77,7 @@
  */
   if (isset($_COOKIE) && count($_COOKIE) > 0) {
     foreach($_COOKIE as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
+      unset($GLOBALS[$key]);
     }
   }
 /**
@@ -98,13 +85,7 @@
  */
   if (isset($_SESSION) && count($_SESSION) > 0) {
     foreach($_SESSION as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
+      unset($GLOBALS[$key]);
     }
   }
 /**
