@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: define_pages_editor.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -35,6 +35,7 @@
   }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  if (isset($_GET['filename'])) $_GET['filename'] = str_replace('../', '!HA'.'CK'.'ER_A'.'LERT!', $_GET['filename']);
 
   $za_who = $_GET['za_lookup'];
 
@@ -94,6 +95,12 @@
                                'text' => $languages[$i]['name']);
   }
   if (!$lng_exists) $_SESSION['language'] = $language;
+<<<<<<< HEAD
+=======
+
+
+require('includes/admin_html_head.php');
+>>>>>>> a2487f1... CHANGE-416 - Prevent unauthorized information disclosure with editor
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
