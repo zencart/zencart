@@ -2,16 +2,16 @@
 /**
  * debug_logs_checker.php
  *
- * checks for debug logs in /cache
+ * checks for debug logs in /logs/ and /cache/ folders
  *
  * @package admin
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-   $Id: debug_logs_checker.php ver 1.51 by Linda McGrath 2012-01-19
+ * @version $Id: debug_logs_checker.php ver 1.51 by Linda McGrath 2012-01-19
  */
 
-// based on suggested .log checking by Steve Sherratt (torvista)
+// inspired by suggested .log checking by Steve Sherratt (torvista)
   define('DEBUG_LOGS_CHECKER_DISPLAY', 3);
   if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
   if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache');
@@ -24,11 +24,11 @@
     } else {
       continue;
     }
-    while ($file = $dir->read()) {
-      if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
-        if (preg_match('/.*(\.log|\.xml)$/', $file)) { // xml for usps debug
+    while ($logfile = $dir->read()) {
+      if ( ($logfile != '.') && ($logfile != '..') && substr($logfile, 0, 1) != '.') {
+        if (preg_match('/.*(\.log|\.xml)$/', $logfile)) { // xml for usps debug
           if ($cnt_logs < DEBUG_LOGS_CHECKER_DISPLAY){
-            $messageStack->add('Debug log file discovered: ' . $purgeFolder . '/' .$file);
+            $messageStack->add('Debug log file discovered: ' . $purgeFolder . '/' .$logfile);
           }
           $cnt_logs ++;
         }
