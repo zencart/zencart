@@ -3,7 +3,7 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
@@ -360,11 +360,13 @@ class authorizenet_aim extends base {
                          'Date' => $order_time,
                          'IP' => zen_get_ip_address(),
                          'Session' => $sessID );
-    // force conversion to USD
-    if ($order->info['currency'] != 'USD') {
+
+    // force conversion to supported currencies: USD, GBP, CAD, EUR
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR'))) {
+      $gateway_currency = 'USD';
       global $currencies;
-      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value('USD'), 2);
-      $submit_data['x_currency_code'] = 'USD';
+      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($gateway_currency), 2);
+      $submit_data['x_currency_code'] = $gateway_currency;
       unset($submit_data['x_tax'], $submit_data['x_freight']);
     }
 
