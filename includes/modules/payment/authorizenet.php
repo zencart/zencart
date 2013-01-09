@@ -332,7 +332,7 @@ class authorizenet extends base {
     $submit_data_core = array(
       'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
       'x_amount' => number_format($order->info['total'], 2),
-      //'x_currency_code' => $_SESSION['currency'],
+      'x_currency_code' => $_SESSION['currency'],
       'x_version' => '3.1',
       'x_method' => ((MODULE_PAYMENT_AUTHORIZENET_METHOD == 'Credit Card') ? 'CC' : 'ECHECK'),
       'x_type' => MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
@@ -366,12 +366,12 @@ class authorizenet extends base {
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
     );
 
-    // force conversion to USD
-    if ($_SESSION['currency'] != 'USD') {
+    // force conversion to supported currencies: USD, GBP, CAD, EUR
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR'))) {
+      $gateway_currency = 'USD';
       global $currencies;
-      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value('USD'), 2);
-      $submit_data_core['x_currency_code'] = 'USD';
-      unset($submit_data_core['x_tax'], $submit_data_core['x_freight']);
+      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value($gateway_currency), 2);
+      $submit_data_core['x_currency_code'] = $gateway_currency;
     }
 
 
