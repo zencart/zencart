@@ -3,7 +3,7 @@
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.5.1 $
@@ -1615,9 +1615,10 @@ class paypalwpp extends base {
     if ($_SESSION['paypal_ec_markflow'] == 1) $orderReview = false;
     $userActionKey = "&useraction=" . ((int)$orderReview == false ? 'commit' : 'continue');
 
+    $this->ec_redirect_url = $paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . $userActionKey;
     // This is where we actually redirect the customer's browser to PayPal. Upon return from PayPal, they go to ec_step2
     header("HTTP/1.1 302 Object Moved");
-    zen_redirect($paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . $userActionKey);
+    zen_redirect($this->ec_redirect_url);
 
     // this should never be reached:
     return $error;
@@ -2779,11 +2780,12 @@ class paypalwpp extends base {
           }
 
           // if funding source problem occurred, must send back to re-select alternate funding source
-          if ($response['L_ERRORCODE0'] == 10422) {
-            $paypal_url = $this->getPayPalLoginServer();
-            zen_redirect($paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token']);
+          if ($response['L_ERRORCODE0'] == 10422 || $response['L_ERRORCODE0'] == 10486) {
+            header("HTTP/1.1 302 Object Moved");
+            zen_redirect($this->ec_redirect_url);
             die();
           }
+
           // some other error condition
           $errorText = MODULE_PAYMENT_PAYPALWPP_INVALID_RESPONSE;
           $errorNum = urldecode($response['L_ERRORCODE0'] . $response['RESULT']);
