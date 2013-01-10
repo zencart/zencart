@@ -2,7 +2,7 @@
 <!--
 /**
  * @package documentation
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: important_site_security_recommendations.html 19690 2011-10-04 16:41:45Z drbyte $
  */
@@ -92,7 +92,7 @@ It is safe to keep these files on *your* own computer (not the server), since th
 <p>Renaming the &quot;admin&quot; folder makes it much harder for would-be hackers to get into your admin area. </p>
 <p><em>(Before making the following changes, make sure to have a current backup of your files and your database.)</em></p>
 <p>A- Find your Zen Cart<span class="filename"> /admin/</span> directory, using your FTP software or your webhost File Manager.<br>
-Rename the directory to match the settings you just made in your <span class="filename">admin/includes/configure.php</span>.</p>
+Rename the directory.</p>
 <p>B - To login to your admin system you will now have to visit a new URL that matches the new name used in step A above. For example, instead of visiting <em>http://www.example.com/admin/</em> visit <em>http://www.example.com/NeW_NamE4u/</em>. </p>
 
 <h1>3. Use SMTPAUTH or SMTP as your Email Transport method, instead of the generic "PHP" setting.</h1>
@@ -167,13 +167,13 @@ Thus, once your site is built and your images have been created/loaded, you shou
 <p>The folders for which installation suggests read-write access for  setup are these. If your site supports .htaccess protection, then you should use it for these folders. (The .htaccess files included with v1.3.9 and newer should already cover the basics.) </p>
 <ul>
   <li><span class="filename">/cache</span><br>
-    This is used to cache database information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting  in configure.php files as well as Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
+    This is used to cache database information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting in both configure.php files as well as the setting in your admin for Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
   <li><span class="filename">/images</span><br>
     This is discussed earlier in this article. </li>
   <li><span class="filename">/includes/languages/english/html_includes</span><br>
     This is discussed earlier in this article. </li>
   <li><span class="filename">/logs</span><br>
-    This is used to store error logs. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_LOGS setting in configure.php files.)</li>
+    This is used to store error logs. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_LOGS setting in both configure.php files.)</li>
   <li><span class="filename">/media</span><br>
     This is only suggested read-write for the sake of  being able to upload music-product media files via the admin. Could be  done by FTP as an alternative. </li>
   <li><span class="filename">/pub</span><br>
