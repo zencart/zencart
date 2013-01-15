@@ -3,7 +3,7 @@
  * ez_pages ("page") header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 4881 2006-11-04 17:51:31Z ajeh $
@@ -19,13 +19,27 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_EZPAGE');
 
+require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+
 $ezpage_id = (int)$_GET['id'];
 if ($ezpage_id == 0) zen_redirect(zen_href_link(FILENAME_DEFAULT));
 
 $chapter_id = (int)$_GET['chapter'];
 $chapter_link = (int)$_GET['chapter'];
 
-$var_pageDetails = $db->Execute("select * from " . TABLE_EZPAGES . " where pages_id = " . (int)$ezpage_id );
+$sql = "select * from " . TABLE_EZPAGES . " where pages_id = " . (int)$ezpage_id;
+// comment the following line to allow access to pages which don't have a status switch set to Yes:
+$sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or status_footer > 0)";
+
+// Check to see if page exists and is accessible, retrieving relevant details for display if found
+$var_pageDetails = $db->Execute($sql);
+// redirect to home page if page not found (or deactivated/deleted):
+if ($var_pageDetails->EOF) {
+  $messageStack->add_session('header', ERROR_PAGE_NOT_FOUND, 'caution');
+  header('HTTP/1.1 404 Not Found');
+  header('Status: 404 Not Found');
+  zen_redirect(zen_href_link(FILENAME_DEFAULT));
+}
 
 //check db for prev/next based on sort orders
 $pos = (isset($_GET['pos'])) ? $_GET['pos'] : 'v';  // v for vertical, h for horizontal  (v assumed if not specified)
@@ -132,9 +146,6 @@ $home_button = zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT);
 define('NAVBAR_TITLE', $var_pageDetails->fields['pages_title']);
 define('HEADING_TITLE', $var_pageDetails->fields['pages_title']);
 $breadcrumb->add($var_pageDetails->fields['pages_title']);
-
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-
 
 
 // Pull settings from admin switches to determine what, if any, header/column/footer "disable" options need to be set
