@@ -35,8 +35,21 @@ if (!defined('IS_ADMIN_FLAG')) {
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/locale.php')) {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/locale.php');
   }
+  $ajax = FALSE;
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
-  $current_page = basename($PHP_SELF);
+  if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') 
+  {
+    $current_page = isset($_GET['act']) ? $_GET['act'] : '';
+    $ajax = TRUE; 
+  } else
+  {
+    $current_page = basename($PHP_SELF);
+  }
+  
+  if ($ajax = TRUE)
+  {
+    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_DEFAULT . '.php');
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
   }

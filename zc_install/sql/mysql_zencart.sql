@@ -627,6 +627,78 @@ CREATE TABLE customers_info (
 # --------------------------------------------------------
 
 #
+# Table structure for table 'dashboard_widgets_groups'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_groups;
+CREATE TABLE IF NOT EXISTS dashboard_widgets_groups (
+  widget_group varchar(64) NOT NULL,
+  language_id int(11) NOT NULL DEFAULT '1',
+  widget_group_name varchar(255) NOT NULL,
+  PRIMARY KEY (widget_group,language_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets;
+CREATE TABLE IF NOT EXISTS dashboard_widgets (
+  widget_key varchar(64) NOT NULL,
+  widget_group varchar(64) NOT NULL,
+  widget_status int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (widget_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_description'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_description;
+CREATE TABLE IF NOT EXISTS dashboard_widgets_description (
+  widget_key varchar(64) NOT NULL,
+  widget_name varchar(255) NOT NULL,
+  widget_description text NOT NULL,
+  language_id int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (widget_key,language_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_to_profiles'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_to_profiles;
+CREATE TABLE IF NOT EXISTS dashboard_widgets_to_profiles (
+  profile_id int(11) NOT NULL,
+  widget_key varchar(64) NOT NULL,
+  PRIMARY KEY (profile_id,widget_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_to_users'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_to_users;
+CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
+  widget_key varchar(64) NOT NULL,
+  admin_id int(11) NOT NULL,
+  widget_row int(11) NOT NULL DEFAULT '0',
+  widget_column int(11) NOT NULL DEFAULT '0',
+  widget_refresh int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (widget_key,admin_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
 # Table structure for table db_cache
 #
 DROP TABLE IF EXISTS db_cache;
@@ -636,8 +708,6 @@ CREATE TABLE db_cache (
   cache_entry_created int(15) default NULL,
   PRIMARY KEY  (cache_entry_name)
 ) ENGINE=MyISAM;
-
-
 
 # --------------------------------------------------------
 
@@ -3210,6 +3280,35 @@ INSERT INTO project_version (project_version_id, project_version_key, project_ve
 INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '6.0', '', '', '', '', 'New Installation', now());
 INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '6.0', '', 'New Installation', now());
 INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '6.0', '', 'New Installation', now());
+
+
+#
+# Dumping data for table 'dasboard_widgets'
+#
+
+INSERT INTO dasboard_widgets (widget_key, widget_group, widget_status) VALUES
+('general-statistics', 'general-statistics', 1),
+('order-summary', 'order-statistics', 1);
+
+#
+# Dumping data for table 'dashboard_widgets_description'
+#
+
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
+('general-statistics', 'General Statistics', '', 1),
+('order-summary', 'Order Summary', '', 1);
+
+#
+# Dumping data for table 'dashboard_widgets_to_users'
+#
+
+INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
+('general-statistics', 1, 0, 0),
+('order-summary', 1, 0, 1);
+
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
+('general-statistics', 1, 'General Statistics'),
+('order-statistics', 1, 'Order Statistics');
 
 ##### End of SQL setup for Zen Cart.
 

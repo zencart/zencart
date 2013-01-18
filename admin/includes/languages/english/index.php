@@ -68,3 +68,16 @@ define('BOX_ENTRY_CUSTOMERS_COWOA_DISTINCT', '- Without Accounts :');
 define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration');//for 1.5
 define('COWOA_WITHOUT_ACCOUNT', '(Without Account)');
 
+define('TEXT_CANCEL', 'Cancel');
+define('TEXT_REMOVE', 'Remove');
+define('TEXT_UPDATE', 'Update');
+define('TEXT_CONFIRM_REMOVE', 'Are you sure you want to remove this widget from the dashboard?');
+define ('TEXT_WIDGET_UPDATE_HEADER', 'Widget Settings have been updated');
+
+define ('TEXT_TIMER_SELECT_NONE', 'No Refresh');
+define ('TEXT_TIMER_SELECT_1MIN', 'Refresh every Minute');
+define ('TEXT_TIMER_SELECT_5MIN', 'Refresh every 5 Minutes');
+define ('TEXT_TIMER_SELECT_10MIN', 'Refresh every 10 Minutes');
+define ('TEXT_TIMER_SELECT_15MIN', 'Refresh every 15 Minutes');
+
+define ('TEXT_NO_WIDGETS_TO_INSTALL', 'There are currently no widgets available to install.');

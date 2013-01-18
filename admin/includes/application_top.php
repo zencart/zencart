@@ -133,7 +133,6 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 /**
  * Prepare init-system
  */
-unset($loaderPrefix); // admin doesn't need this override
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);

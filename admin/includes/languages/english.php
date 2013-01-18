@@ -671,6 +671,7 @@ define('TEXT_EMAIL', 'Email');
 define('TEXT_NOEMAIL', 'No Email');
 
 define('BOX_HEADING_PRODUCT_TYPES', 'Product Types');
+define('BOX_HEADING_DASHBOARD_WIDGETS', 'Dashboard Widgets');
 
 ///////////////////////////////////////////////////////////
 // include additional files:

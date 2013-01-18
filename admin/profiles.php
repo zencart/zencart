@@ -101,7 +101,7 @@ switch ($action) {
 }
 require('includes/admin_html_head.php');
 ?>
-<link rel="stylesheet" type="text/css" href="includes/admin_access.css">
+<link rel="stylesheet" type="text/css" href="includes/template/css/admin_access.css">
 <script type="text/javascript">
   <!--
   function checkAll(form,header,value){

@@ -103,7 +103,7 @@ foreach ($menu_titles as $id => $title) {
 
 require('includes/admin_html_head.php');
 ?>
-<link rel="stylesheet" type="text/css" href="includes/admin_access.css" />
+<link rel="stylesheet" type="text/css" href="includes/template/css/admin_access.css" />
 </head>
 <body>
 <!-- header //-->

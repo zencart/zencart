@@ -615,6 +615,16 @@ function zen_get_admin_pages($menu_only)
     $productTypes['_productTypes_'.$result->fields['type_handler']] = array('name'=>$result->fields['type_name'], 'file'=>$result->fields['type_handler'], 'params'=>'');
     $result->MoveNext();
   }
+  $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw 
+          LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key 
+          WHERE tdwd.language_id = " . (int)$_SESSION['languages_id'];
+  $result = $db->Execute($sql);
+  while (!$result->EOF)
+  {
+    $dashboardWidgets['_dashboardwidgets_'.$result->fields['widget_key']] = array('name'=>$result->fields['widget_name'], 'file'=>$result->fields['widget_key'], 'params'=>'');
+    $result->MoveNext();
+  }
+  
   $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as page_name
           FROM " . TABLE_ADMIN_PAGES . " ap
           LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key ";
@@ -638,6 +648,13 @@ function zen_get_admin_pages($menu_only)
       if (!isset($retVal['_productTypes']['_productTypes_'.$pageName]))
       {
         $retVal['_productTypes'][$pageName] = $productType;
+      }
+    }
+    foreach ($dashboardWidgets as $pageName => $widget)
+    {
+      if (!isset($retVal['_dashboardWidgets']['_dashboardWidgets_'.$pageName]))
+      {
+        $retVal['_dashboardWidgets'][$pageName] = $widget;
       }
     }
   }
@@ -817,6 +834,7 @@ function zen_get_menu_titles()
     $result->MoveNext();
   }
   $retVal['_productTypes'] = BOX_HEADING_PRODUCT_TYPES;
+  $retVal['_dashboardWidgets'] = BOX_HEADING_DASHBOARD_WIDGETS;
   return $retVal;
 }
 

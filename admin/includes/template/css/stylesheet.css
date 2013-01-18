@@ -2,13 +2,11 @@
  * @package admin
  * @ignore
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
-@import url("menu.css");/* including stylesheet for dhtml menu */
-@import url("index.css");/* including stylesheet for index.php */
 a{
 color:#0000ff;
 text-decoration:none;
@@ -101,19 +99,10 @@ margin:0;
 .clearBoth {
 	clear: both;
 	}
-body#login{
-margin-top:100px;
-text-align:center;
-}
 body#login .button{
 cursor:pointer;
 padding: 3px;
 margin-top: 10px;
-}
-body#login fieldset{
-margin:0 auto;
-padding:10px;
-width:400px;
 }
 
 .loginLabel {
@@ -124,14 +113,6 @@ width:400px;
 	text-align: right;
 	line-height: 1.5;
 	}
-body#login legend{
-background:#ffffff;
-border:1px solid #003D00;
-color:#333333;
-font-size:90%;
-padding:0.2em 0.5em;
-text-align:right;
-}
 checkbox,input,radio,select,textarea,file{
 font-size:11px;
 }
@@ -361,9 +342,6 @@ color:#ff6600;
 }
 .clearBoth {
 	clear:both;
-}
-#loginExpiryPolicy {
-	margin-top: 2em;
 }
 .hiddenField {
 	display: none;

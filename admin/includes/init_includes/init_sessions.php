@@ -31,15 +31,3 @@ if (PHP_VERSION >= '5.2.0') {
 // lets start our session
   zen_session_start();
   $session_started = true;
-
-if (! isset ( $_SESSION ['securityToken'] ))
-{
-  $_SESSION ['securityToken'] = md5 ( uniqid ( rand (), true ) );
-}
-if ((isset ( $_GET ['action'] ) || isset($_POST['action']) ) && $_SERVER['REQUEST_METHOD'] == 'POST')
-{
-  if ((! isset ( $_SESSION ['securityToken'] ) || ! isset ( $_POST ['securityToken'] )) || ($_SESSION ['securityToken'] !== $_POST ['securityToken']))
-  {
-    zen_redirect ( zen_href_link ( FILENAME_DEFAULT, '', 'SSL' ) );
-  }
-}
