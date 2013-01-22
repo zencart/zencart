@@ -438,6 +438,7 @@ class authorizenet_aim extends base {
   function admin_notification($zf_order_id) {
     global $db;
     $output = '';
+    $aimdata = new stdClass;
     $aimdata->fields = array();
     require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/authorizenet/authorizenet_admin_notification.php');
     return $output;
