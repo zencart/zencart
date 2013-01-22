@@ -14,7 +14,7 @@
  */
 function check_page($page, $params) {
   global $db;
-
+  if (!isset($_SESSION['admin_id'])) return FALSE;
   // Most entries (normal case) have their own pages. However, everything on the Configuration
   // and Modules menus are handled by the single pages configuration.php and modules.php. So for
   // these pages we check their respective get params too.
@@ -60,6 +60,7 @@ function check_page($page, $params) {
 function zen_is_superuser()
 {
   global $db;
+  if (!isset($_SESSION['admin_id'])) return FALSE;
   $sql = 'SELECT admin_id from ' . TABLE_ADMIN . '
           WHERE admin_id = :adminId:
           AND admin_profile = ' . SUPERUSER_PROFILE;

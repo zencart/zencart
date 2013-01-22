@@ -196,7 +196,7 @@
         $module = new $class;
         if ($module->check() > 0) {
           if ($module->sort_order > 0) {
-            if ($installed_modules[$module->sort_order] != '') {
+            if (isset($installed_modules[$module->sort_order]) && $installed_modules[$module->sort_order] != '') {
               $zc_valid = false;
             }
             $installed_modules[$module->sort_order] = $file;
@@ -216,12 +216,13 @@
                                           configuration_description, use_function, set_function
                                           from " . TABLE_CONFIGURATION . "
                                           where configuration_key = '" . zen_db_input($module_keys[$j]) . "'");
-
-            $keys_extra[$module_keys[$j]]['title'] = $key_value->fields['configuration_title'];
-            $keys_extra[$module_keys[$j]]['value'] = $key_value->fields['configuration_value'];
-            $keys_extra[$module_keys[$j]]['description'] = $key_value->fields['configuration_description'];
-            $keys_extra[$module_keys[$j]]['use_function'] = $key_value->fields['use_function'];
-            $keys_extra[$module_keys[$j]]['set_function'] = $key_value->fields['set_function'];
+            if (!$key_value->EOF){
+              $keys_extra[$module_keys[$j]]['title'] = $key_value->fields['configuration_title'];
+              $keys_extra[$module_keys[$j]]['value'] = $key_value->fields['configuration_value'];
+              $keys_extra[$module_keys[$j]]['description'] = $key_value->fields['configuration_description'];
+              $keys_extra[$module_keys[$j]]['use_function'] = $key_value->fields['use_function'];
+              $keys_extra[$module_keys[$j]]['set_function'] = $key_value->fields['set_function'];
+            }
           }
           $module_info['keys'] = $keys_extra;
           $mInfo = new objectInfo($module_info);
@@ -295,7 +296,7 @@
   $heading = array();
   $contents = array();
   switch ($action) {
-  	case 'remove':
+    case 'remove':
       $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
 
       $contents = array('form' => zen_draw_form('module_delete', FILENAME_MODULES, '&action=removeconfirm'));

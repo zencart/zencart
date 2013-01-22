@@ -145,6 +145,7 @@
 // Specials and Tax Included
   function zen_get_products_display_price($products_id) {
     global $db, $currencies;
+    $free_tag = $call_tag = '';
 
 // never mask prices in admin
 if (false) {
@@ -847,7 +848,7 @@ If a special exist * 10+9
   function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
     global $currencies;
     global $db;
-
+    $sale_maker_discount_type = '';
 // get products category
     if ($categories_id == true) {
       $check_category = $categories_id;

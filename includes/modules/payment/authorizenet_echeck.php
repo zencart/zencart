@@ -111,10 +111,10 @@ class authorizenet_echeck extends base {
    */
   function update_status() {
     global $order, $db;
-    // if store is not running in SSL, cannot offer credit card module, for PCI reasons
+    // if store is not running in SSL, cannot offer bank module, for PCI reasons
     if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
     // check other reasons for the module to be deactivated:
-    if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE > 0) ) {
+    if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
       while (!$check->EOF) {

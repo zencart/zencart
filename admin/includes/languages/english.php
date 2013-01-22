@@ -83,8 +83,7 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 define('MALE', 'Male');
 define('FEMALE', 'Female');
 
-// text for date of birth example
-define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
+define('NONE', 'None');
 
 // configuration box text
 define('BOX_HEADING_CONFIGURATION', 'Configuration');
@@ -576,6 +575,7 @@ define('TEXT_LEGEND_STATUS_ON', 'Status ON ');
 define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the<br />product category affects the pricing on linked products, example: Sales</strong>');
 define('TEXT_YES', 'Yes');
 define('TEXT_NO', 'No');
+define('TEXT_CANCEL', 'Cancel');
 
 // shipping error messages
 define('ERROR_SHIPPING_CONFIGURATION', '<strong>Shipping Configuration errors!</strong>');

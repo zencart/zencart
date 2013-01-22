@@ -14,7 +14,7 @@
 
   $languages = zen_get_languages();
 
-  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : $products_filter);
+  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : 0);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -322,7 +322,7 @@ if ($processing_message != '') {
           <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_SET_NEXT_ORDER_NUMBER; ?>
             <br />
-            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', $nextOrderNumber); ?>
+            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', (isset($new_orders_id) ? $new_orders_id : '')); ?>
             <?php echo zen_image_submit('button_reset.gif', IMAGE_RESET); ?></td>
             </form>
           </tr>

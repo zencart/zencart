@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_price_manager.php 19294 2011-07-28 18:15:46Z drbyte $
@@ -19,11 +19,11 @@
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
-  $products_filter = (isset($_GET['products_filter']) ? (int)$_GET['products_filter'] : (int)$products_filter);
+  $products_filter = (isset($_GET['products_filter'])) ? (int)$_GET['products_filter'] : 0;
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
+  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : 0);
 
   if ($action == 'new_cat') {
     $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : $current_category_id);
@@ -40,7 +40,7 @@
             AND pt.allow_add_to_cart = 'Y'
             ORDER by pd.products_name";
     $new_product_query = $db->Execute($sql);
-    $products_filter = $new_product_query->fields['products_id'];
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 
@@ -59,7 +59,7 @@
             AND pt.allow_add_to_cart = 'Y'
             ORDER by pd.products_name";
     $new_product_query = $db->Execute($sql);
-    $products_filter = $new_product_query->fields['products_id'];
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     if ($products_filter != '') {
       zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
     }
@@ -67,7 +67,7 @@
     if ($products_filter == '' and $current_category_id == '') {
       $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
       $current_category_id = $reset_categories_id[0]['id'];
-    $sql = "SELECT ptc.*
+      $sql = "SELECT ptc.*
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
             ON ptc.products_id = pd.products_id
@@ -79,8 +79,8 @@
             WHERE ptc.categories_id='" . $current_category_id . "'
             AND pt.allow_add_to_cart = 'Y'
             ORDER by pd.products_name";
-    $new_product_query = $db->Execute($sql);
-      $products_filter = $new_product_query->fields['products_id'];
+      $new_product_query = $db->Execute($sql);
+      $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
       $_GET['products_filter'] = $products_filter;
     }
   }
@@ -140,8 +140,8 @@
         $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_start']));
         $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_end']));
 
-    $tmp_value = zen_db_prepare_input($_POST['products_price_sorter']);
-    $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
+        $tmp_value = zen_db_prepare_input($_POST['products_price_sorter']);
+        $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
 
         $sql = "update " . TABLE_PRODUCTS . " set
             products_price=:price:,
@@ -385,7 +385,7 @@ if ($products_filter != '' && zen_get_product_is_linked($products_filter) == 'tr
     echo '</td><td class="main" align="center" valign="bottom">';
     echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>';
     echo '</td><td class="main" align="center" valign="bottom">';
-  	echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'NONSSL') . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '<br />' . TEXT_ATTRIBUTE_EDIT . '</a>' . '&nbsp;&nbsp;&nbsp;';
+    echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'NONSSL') . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '<br />' . TEXT_ATTRIBUTE_EDIT . '</a>' . '&nbsp;&nbsp;&nbsp;';
   }
 ?>
                 </td>
@@ -429,9 +429,10 @@ if ($products_filter == '') {
                                where p.products_id = f.products_id
                                and f.products_id = '" . (int)$_GET['products_filter'] . "'");
 
-
       if ($product->RecordCount() > 0) {
         $fInfo = new objectInfo($product->fields);
+      } else {
+        $fInfo = new stdClass();
       }
 
 // specials information
@@ -444,6 +445,8 @@ if ($products_filter == '') {
 
       if ($product->RecordCount() > 0) {
         $sInfo = new objectInfo($product->fields);
+      } else {
+        $sInfo = new stdClass();
       }
 
 // products information
@@ -461,9 +464,10 @@ if ($products_filter == '') {
                                and p.products_id = pd.products_id
                                and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
-
       if ($product->RecordCount() > 0) {
         $pInfo = new objectInfo($product->fields);
+      } else {
+        $pInfo = new stdClass();
       }
 
 // set statuses
