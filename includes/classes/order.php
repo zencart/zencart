@@ -943,75 +943,17 @@ class order extends base {
 
   function send_order_email($zf_insert_id, $zf_mode) {
     global $currencies, $order_totals;
+
+    $this->notify('NOTIFY_ORDER_SEND_LOW_STOCK_EMAILS');
     if ($this->email_low_stock != '' and SEND_LOWSTOCK_EMAIL=='1') {
       // send an email
       $email_low_stock = SEND_EXTRA_LOW_STOCK_EMAIL_TITLE . "\n\n" . $this->email_low_stock;
       zen_mail('', SEND_EXTRA_LOW_STOCK_EMAILS_TO, EMAIL_TEXT_SUBJECT_LOWSTOCK, $email_low_stock, STORE_OWNER, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => nl2br($email_low_stock)),'low_stock');
     }
 
-    // lets start with the email confirmation
-    // make an array to store the html version
+    // prepare the email confirmation message details
+    // make an array to store the html version of the email
     $html_msg=array();
-// COWOA:If COWOA and Send Order Status is True     
-
-    if ($_SESSION['COWOA'] && (COWOA_ORDER_STATUS == 'true'))  {
-    $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;;
-    $htmlInvoiceValue=zen_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $zf_insert_id, 'SSL', false);
-    $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
-    $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
-    EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
-    EMAIL_SEPARATOR . "\n" .
-    EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-    EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
-    EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
-    $html_msg['EMAIL_TEXT_HEADER']     = EMAIL_TEXT_HEADER;
-    $html_msg['EMAIL_TEXT_FROM']       = EMAIL_TEXT_FROM;
-    $html_msg['INTRO_STORE_NAME']      = STORE_NAME;
-    $html_msg['EMAIL_THANKS_FOR_SHOPPING'] = EMAIL_THANKS_FOR_SHOPPING;
-    $html_msg['EMAIL_DETAILS_FOLLOW']  = EMAIL_DETAILS_FOLLOW;
-    $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
-    $html_msg['INTRO_ORDER_NUMBER']    = $zf_insert_id;
-    $html_msg['INTRO_DATE_TITLE']      = EMAIL_TEXT_DATE_ORDERED;
-    $html_msg['INTRO_DATE_ORDERED']    = strftime(DATE_FORMAT_LONG);
-    $html_msg['INTRO_URL_TEXT']        = EMAIL_TEXT_INVOICE_URL_CLICK;
-    $html_msg['INTRO_URL_VALUE']       = zen_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $zf_insert_id, 'SSL', false);
-    }
-
-// COWOA:If COWOA but Send Order Status is False
-    if ($_SESSION['COWOA'] && (COWOA_ORDER_STATUS == 'false')){
-    $htmlInvoiceURL='';
-    $htmlInvoiceValue='';
-    $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
-    $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
-    EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
-    EMAIL_SEPARATOR . "\n" .
-    EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-    EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
-    $html_msg['EMAIL_TEXT_HEADER']     = EMAIL_TEXT_HEADER;
-    $html_msg['EMAIL_TEXT_FROM']       = EMAIL_TEXT_FROM;
-    $html_msg['INTRO_STORE_NAME']      = STORE_NAME;
-    $html_msg['EMAIL_THANKS_FOR_SHOPPING'] = EMAIL_THANKS_FOR_SHOPPING;
-    $html_msg['EMAIL_DETAILS_FOLLOW']  = EMAIL_DETAILS_FOLLOW;
-    $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
-    $html_msg['INTRO_ORDER_NUMBER']    = $zf_insert_id;
-    $html_msg['INTRO_DATE_TITLE']      = EMAIL_TEXT_DATE_ORDERED;
-    $html_msg['INTRO_DATE_ORDERED']    = strftime(DATE_FORMAT_LONG);
-    $html_msg['INTRO_URL_TEXT']        = '';
-    $html_msg['INTRO_URL_VALUE']       = '';
-    }
-    // NO COWOA, so lets set up the Text and HTML E-mail Information for the Order History Info
- if (!$_SESSION['COWOA']){  
-      $invoiceInfo=EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
-      $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;;
-      $htmlInvoiceValue=zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
-   
-    $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
-    $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
-    EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
-    EMAIL_SEPARATOR . "\n" .
-    EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-    EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
-    EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
     $html_msg['EMAIL_TEXT_HEADER']     = EMAIL_TEXT_HEADER;
     $html_msg['EMAIL_TEXT_FROM']       = EMAIL_TEXT_FROM;
     $html_msg['INTRO_STORE_NAME']      = STORE_NAME;
@@ -1023,7 +965,47 @@ class order extends base {
     $html_msg['INTRO_DATE_ORDERED']    = strftime(DATE_FORMAT_LONG);
     $html_msg['INTRO_URL_TEXT']        = EMAIL_TEXT_INVOICE_URL_CLICK;
     $html_msg['INTRO_URL_VALUE']       = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
-  }
+
+// COWOA:If COWOA and Send Order Status is True
+    if ($_SESSION['COWOA'] && (COWOA_ORDER_STATUS == 'true'))  {
+      $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;
+      $htmlInvoiceValue=zen_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $zf_insert_id, 'SSL', false);
+      $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
+      $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
+      EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
+      EMAIL_SEPARATOR . "\n" .
+      EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
+      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
+      EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+    }
+
+// COWOA:If COWOA but Send Order Status is False
+    if ($_SESSION['COWOA'] && (COWOA_ORDER_STATUS == 'false')){
+      $htmlInvoiceURL='';
+      $htmlInvoiceValue='';
+      $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
+      $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
+      EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
+      EMAIL_SEPARATOR . "\n" .
+      EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
+      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
+      $html_msg['INTRO_URL_TEXT']        = '';
+      $html_msg['INTRO_URL_VALUE']       = '';
+    }
+// NO COWOA, so lets set up the Text and HTML E-mail Information for the Order History Info
+    if (!$_SESSION['COWOA']){
+      $invoiceInfo=EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+      $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;
+      $htmlInvoiceValue=zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
+      $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
+      $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
+      EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
+      EMAIL_SEPARATOR . "\n" .
+      EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
+      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
+      EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+    }
+
     //comments area
     if ($this->info['comments']) {
       $email_order .= zen_db_output($this->info['comments']) . "\n\n";
