@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package admin
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:$
+ */
 ?>
 <script>
 if (typeof zcJS == "undefined" || !zcJS) {
@@ -7,7 +13,7 @@ if (typeof zcJS == "undefined" || !zcJS) {
 
 zcJS.ajax = function (options) {
   var deferred = $.Deferred(function (d) {
-      var ajaxSecurityToken = '<?php echo $_SESSION['ajaxSecurityToken']; ?>'; 
+      var ajaxSecurityToken = '<?php echo $_SESSION['ajaxSecurityToken']; ?>';
       var defaults = {
           cache: false,
           type: 'POST',
@@ -15,7 +21,7 @@ zcJS.ajax = function (options) {
           dataType: 'json',
           data: $.extend(true,{
             ajaxSecurityToken: ajaxSecurityToken
-        }, options.data) 
+        }, options.data)
       },
       settings = $.extend(true, {}, defaults, options);
 
@@ -34,7 +40,7 @@ zcJS.ajax = function (options) {
       });
       $.ajax(jqXHRSettings);
    }).fail(function(jqXHR, textStatus, errorThrown) {
-	 var response = jqXHR.getResponseHeader('status');
+   var response = jqXHR.getResponseHeader('status');
      switch (response)
      {
        case '403 Forbidden':
@@ -48,15 +54,15 @@ zcJS.ajax = function (options) {
            break;
            case 'SECURITY_TOKEN':
            break;
-           
+
            default:
-             alert('An Internal Error of type '+errorType+' was received while processing an ajax call. The action you requested could not be completed.'); 
+             alert('An Internal Error of type '+errorType+' was received while processing an ajax call. The action you requested could not be completed.');
          }
        break;
        default:
          alert('An unknown response was received while processing an ajax call. The action you requested could not be completed.');
      }
-   });	
+   });
 
   var promise = deferred.promise();
   return promise;
@@ -67,7 +73,7 @@ zcJS.timer = function (options) {
     startEvent: null,
     intervalEvent: null,
     stopEvent: null
-    
+
 },
   settings = $.extend(true, {}, defaults, options);
 
@@ -85,10 +91,10 @@ zcJS.timer = function (options) {
           mySelf.timerId = setInterval(
           function()
           {
-              if (mySelf.settings.intervalEvent) 
+              if (mySelf.settings.intervalEvent)
               {
                 mySelf.settings.intervalEvent(mySelf);
-              } 
+              }
           }, mySelf.settings.interval);
           if (mySelf.settings.startEvent)
           {
@@ -97,13 +103,13 @@ zcJS.timer = function (options) {
       }
   };
   this.Stop = function()
-  {            
+  {
     mySelf.enabled = new Boolean(false);
     clearInterval(mySelf.timerId);
     if (mySelf.settings.stopEvent)
     {
       mySelf.settings.stopEvent(mySelf);
-    }      
-  };  
+    }
+  };
 };
 </script>
