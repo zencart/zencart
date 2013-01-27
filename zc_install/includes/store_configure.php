@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:13:32 2012 -0400 Modified in v1.5.1 $
@@ -12,7 +12,7 @@ $file_contents =
 '<'.'?php' . "\n" .
 '/**' . "\n" .
 ' * @package Configuration Settings circa 1.6.0' . "\n" .
-' * @copyright Copyright 2003-2012 Zen Cart Development Team' . "\n" .
+' * @copyright Copyright 2003-2013 Zen Cart Development Team' . "\n" .
 ' * @copyright Portions Copyright 2003 osCommerce' . "\n" .
 ' * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0' . "\n" .
 ' * File Built by zc_install on ' . date('Y-m-d h:i:s') . "\n" .
@@ -61,10 +61,8 @@ $file_contents =
 '  define(\'DB_SERVER_USERNAME\', \'' . $this->getConfigKey('DB_SERVER_USERNAME') . '\');' . "\n" .
 '  define(\'DB_SERVER_PASSWORD\', \'' . $this->getConfigKey('DB_SERVER_PASSWORD') . '\');' . "\n" .
 '  define(\'DB_DATABASE\', \'' . $this->getConfigKey('DB_DATABASE') . '\');' . "\n\n" .
-'  // The next 2 "defines" are for SQL cache support.' . "\n" .
-'  // For SQL_CACHE_METHOD, you can select from:  none, database, or file' . "\n" .
-'  // If you choose "file", then you need to set the DIR_FS_SQL_CACHE to a directory where your apache ' . "\n" .
-'  // or webserver user has write privileges (chmod 666 or 777). We recommend using the "cache" folder inside the Zen Cart folder' . "\n" .
+'  // For SQL_CACHE_METHOD, you can select from:  none or database' . "\n" .
+'  // DIR_FS_SQL_CACHE should point to the cache folder on your site, and that folder should be made writable' . "\n" .
 '  // ie: /path/to/your/webspace/public_html/zen/cache   -- leave no trailing slash  ' . "\n" .
 '  define(\'SQL_CACHE_METHOD\', \'' . $this->getConfigKey('SQL_CACHE_METHOD') . '\'); ' . "\n" .
 '  define(\'DIR_FS_SQL_CACHE\', \'' . $this->getConfigKey('DIR_FS_SQL_CACHE') . '\');' . "\n\n" .
