@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: update_product.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -59,11 +59,6 @@
       $sql_data_array['products_image'] = '';
       $new_image= 'false';
     }
-
-if ($_POST['image_delete'] == 1) {
-      $sql_data_array['products_image'] = '';
-      $new_image= 'false';
-}
 
     if ($action == 'insert_product') {
       $insert_sql_data = array( 'products_date_added' => 'now()',
