@@ -37,15 +37,15 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
   $ajax = FALSE;
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
-  if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') 
+  if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
   {
-    $current_page = isset($_GET['act']) ? $_GET['act'] : '';
-    $ajax = TRUE; 
+    $current_page = isset($_GET['act']) ? $_GET['act'] : 'ajax_error_GET[act]_not_specified';
+    $ajax = TRUE;
   } else
   {
     $current_page = basename($PHP_SELF);
   }
-  
+
   if ($ajax == TRUE)
   {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_DEFAULT . '.php');
