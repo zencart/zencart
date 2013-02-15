@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: english.php 19690 2011-10-04 16:41:45Z drbyte $
@@ -136,6 +136,15 @@
   define('PULL_DOWN_DEFAULT', 'Please Choose Your Country');
   define('PLEASE_SELECT', 'Please select ...');
   define('TYPE_BELOW', 'Type a choice below ...');
+
+  define('TEXT_CATEGORY', 'Category: ');
+  define('TEXT_CONDITION', 'Condition: ');
+  define('TEXT_CONDITION_NEW', 'New');
+
+  define('TEXT_IN_STOCK', 'In Stock');
+  define('TEXT_OUT_OF_STOCK', 'Out of Stock');
+  define('TEXT_INSTORE_ONLY', 'In Store Only');
+  define('TEXT_PREORDER', 'Pre-Order');
 
   define('ENTRY_COMPANY', 'Company Name:');
   define('ENTRY_COMPANY_ERROR', 'Please enter a company name.');
