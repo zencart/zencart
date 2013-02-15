@@ -3,7 +3,7 @@
  * canonical link handling
  *
  * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_canonical.php 18697 2011-05-04 14:35:20Z wilt $
@@ -31,9 +31,9 @@ $excludeParams[] = 'language';
 $canonicalLink = '';
 switch (TRUE) {
 /**
- * SSL Pages get no special treatment, since they're not normally indexed
+ * SSL Pages get no special treatment, since they're not normally indexed (unless the entire site is intentionally set to always be SSL, which is not typical)
  */
-  case ($request_type == 'SSL'):
+  case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
     $canonicalLink = '';
     break;
 /**
