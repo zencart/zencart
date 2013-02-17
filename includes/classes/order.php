@@ -952,6 +952,7 @@ class order extends base {
 
   function send_order_email($zf_insert_id, $zf_mode) {
     global $currencies, $order_totals;
+    $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', $order_totals);
 
     $this->notify('NOTIFY_ORDER_SEND_LOW_STOCK_EMAILS');
     if ($this->email_low_stock != '' and SEND_LOWSTOCK_EMAIL=='1') {
