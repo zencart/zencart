@@ -3,7 +3,7 @@
  * authorize.net SIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
@@ -82,6 +82,8 @@ class authorizenet extends base {
     if (is_object($order)) $this->update_status();
 
     $this->form_action_url = 'https://secure.authorize.net/gateway/transact.dll';
+//     $this->form_action_url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
+
     if (AUTHORIZENET_DEVELOPER_MODE == 'on') $this->form_action_url = 'https://test.authorize.net/gateway/transact.dll';
     if (AUTHORIZENET_DEVELOPER_MODE == 'echo' || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') $this->form_action_url = 'https://developer.authorize.net/param_dump.asp';
     if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $this->form_action_url = 'https://certification.authorize.net/gateway/transact.dll';
@@ -374,6 +376,10 @@ class authorizenet extends base {
       $submit_data_core['x_currency_code'] = $gateway_currency;
     }
 
+    $this->submit_extras = array();
+    $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_PRESUBMIT_HOOK');
+    unset($this->submit_extras['x_login']);
+    if (sizeof($this->submit_extras)) $submit_data_core = array_merge($submit_data_core, $this->submit_extras);
 
     $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, number_format($order->info['total'], 2), $sequence);
 
@@ -442,7 +448,7 @@ class authorizenet extends base {
     unset($this->authorize['btn_submit_x'], $this->authorize['btn_submit_y']);
     $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], $this->authorize['x_amount']);
     $this->authorize['HashMatchStatus'] = ($this->authorize['x_MD5_Hash'] == $this->authorize['HashValidationValue']) ? 'PASS' : 'FAIL';
-
+    $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTSUBMIT_HOOK', $this->authorize);
     $this->_debugActions($this->authorize, 'Response-Data', '', zen_session_id());
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
@@ -478,6 +484,7 @@ class authorizenet extends base {
    */
   function after_process() {
     global $insert_id, $db;
+    $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTPROCESS_HOOK');
     $sql = "insert into " . TABLE_ORDERS_STATUS_HISTORY . " (comments, orders_id, orders_status_id, customer_notified, date_added) values (:orderComments, :orderID, :orderStatus, -1, now() )";
     $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . '. TransID: ' . $this->transaction_id . '.', 'string');
     $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
