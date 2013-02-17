@@ -953,10 +953,11 @@ class order extends base {
   function send_order_email($zf_insert_id, $zf_mode) {
     global $currencies, $order_totals;
     $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', $order_totals);
+    if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
 
+    $this->send_low_stock_emails = TRUE;
     $this->notify('NOTIFY_ORDER_SEND_LOW_STOCK_EMAILS');
-    if ($this->email_low_stock != '' and SEND_LOWSTOCK_EMAIL=='1') {
-      // send an email
+    if ($this->send_low_stock_emails && $this->email_low_stock != ''  && SEND_LOWSTOCK_EMAIL=='1') {
       $email_low_stock = SEND_EXTRA_LOW_STOCK_EMAIL_TITLE . "\n\n" . $this->email_low_stock;
       zen_mail('', SEND_EXTRA_LOW_STOCK_EMAILS_TO, EMAIL_TEXT_SUBJECT_LOWSTOCK, $email_low_stock, STORE_OWNER, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => nl2br($email_low_stock)),'low_stock');
     }
@@ -975,6 +976,9 @@ class order extends base {
     $html_msg['INTRO_DATE_ORDERED']    = strftime(DATE_FORMAT_LONG);
     $html_msg['INTRO_URL_TEXT']        = EMAIL_TEXT_INVOICE_URL_CLICK;
     $html_msg['INTRO_URL_VALUE']       = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
+
+    $html_msg['EMAIL_CUSTOMER_PHONE']  = $this->customer['telephone'];
+    $html_msg['EMAIL_ORDER_DATE']      = date(ORDER_EMAIL_DATE_FORMAT);
 
 // COWOA:If COWOA and Send Order Status is True
     if ($_SESSION['COWOA'] && (COWOA_ORDER_STATUS == 'true'))  {
