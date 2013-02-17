@@ -338,10 +338,7 @@ class order extends base {
       $coupon_code_query = "select coupon_code
                               from " . TABLE_COUPONS . "
                               where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
-
       $coupon_code = $db->Execute($coupon_code_query);
-
-
     }
 
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
@@ -372,7 +369,7 @@ class order extends base {
     //print_r($GLOBALS);
     //echo $_SESSION['payment'];
     /*
-    // this is set above to the module filename it should be set to the module title like Checks/Money Order rather than moneyorder
+    // this is set above to the module filename it should be set to the module title like Check/Money Order rather than moneyorder
     if (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
     $this->info['payment_method'] = $$_SESSION['payment']->title;
     }
@@ -465,8 +462,8 @@ class order extends base {
         $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
       } else
       {
-        $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $tax_address->fields['entry_country_id'], $tax_address->fields['entry_zone_id']);
-        $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $tax_address->fields['entry_country_id'], $tax_address->fields['entry_zone_id']);
+        $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
+        $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
       }
 
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
@@ -520,41 +517,51 @@ class order extends base {
       // add onetime charges here
       //$_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity'])
 
-      /*********************************************
-       * Calculate taxes for this product
-       *********************************************/
-      $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
-      + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
-      $this->info['subtotal'] += $shown_price;
-      $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
-      // find product's tax rate and description
-      $products_tax = $this->products[$index]['tax'];
-      $products_tax_description = $this->products[$index]['tax_description'];
 
-      if (DISPLAY_PRICE_WITH_TAX == 'true') {
-        // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
-        $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
-      } else {
-        // calculate the amount of tax for this product (assuming tax is NOT included in the price)
-//        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
-        $tax_add = ($products_tax/100) * $shown_price;
-      }
-      $this->info['tax'] += $tax_add;
-      foreach ($taxRates as $taxDescription=>$taxRate)
-      {
-        $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
-                +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
-        if (isset($this->info['tax_groups'][$taxDescription]))
-        {
-          $this->info['tax_groups'][$taxDescription] += $taxAdd;
-        } else
-        {
-          $this->info['tax_groups'][$taxDescription] = $taxAdd;
+      /**************************************
+       * Check for external tax handling code
+       **************************************/
+      $this->use_external_tax_handler_only = FALSE;
+      $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_HANDLING', $index, $taxCountryId, $taxZoneId);
+
+      if ($this->use_external_tax_handler_only == FALSE) {
+        /*********************************************
+         * Calculate taxes for this product
+         *********************************************/
+        $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
+        + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
+        $this->info['subtotal'] += $shown_price;
+        $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
+        // find product's tax rate and description
+        $products_tax = $this->products[$index]['tax'];
+        $products_tax_description = $this->products[$index]['tax_description'];
+
+        if (DISPLAY_PRICE_WITH_TAX == 'true') {
+          // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
+          $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
+        } else {
+          // calculate the amount of tax for this product (assuming tax is NOT included in the price)
+  //        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
+          $tax_add = ($products_tax/100) * $shown_price;
         }
-      }
-      /*********************************************
-       * END: Calculate taxes for this product
-       *********************************************/
+        $this->info['tax'] += $tax_add;
+        foreach ($taxRates as $taxDescription=>$taxRate)
+        {
+          $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
+                  +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
+          if (isset($this->info['tax_groups'][$taxDescription]))
+          {
+            $this->info['tax_groups'][$taxDescription] += $taxAdd;
+          } else
+          {
+            $this->info['tax_groups'][$taxDescription] = $taxAdd;
+          }
+        }
+        /*********************************************
+         * END: Calculate taxes for this product
+         *********************************************/
+      } // end of internal tax calculation
+
       $index++;
     }
 
@@ -585,6 +592,8 @@ class order extends base {
 
   function create($zf_ot_modules, $zf_mode = 2) {
     global $db;
+
+    $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_DURING_ORDER_CREATE', $index, $taxCountryId, $taxZoneId);
 
     if ($this->info['total'] == 0) {
       if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
