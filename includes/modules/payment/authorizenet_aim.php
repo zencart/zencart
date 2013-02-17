@@ -307,6 +307,8 @@ class authorizenet_aim extends base {
     $order->info['cc_cvv']     = '***';
     $sessID = zen_session_id();
 
+    $this->include_x_type = TRUE;
+
     // DATA PREPARATION SECTION
     unset($submit_data);  // Cleans out any previous data stored in the variable
 
@@ -338,7 +340,6 @@ class authorizenet_aim extends base {
                          'x_delim_char' => $this->delimiter,  // The default delimiter is a comma
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
-                         'x_type' => MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
                          'x_method' => 'CC',
                          'x_amount' => number_format($order->info['total'], 2),
                          'x_currency_code' => $order->info['currency'],
@@ -383,16 +384,28 @@ class authorizenet_aim extends base {
                          'IP' => zen_get_ip_address(),
                          'Session' => $sessID );
 
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_EMULATOR_CHECK', $submit_data);
+    if ($this->include_x_type) {
+      $submit_data['x_type'] = MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE';
+    }
+
     // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
     if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD', $this->gateway_currency))) {
+      $gateway_currency = 'USD';
       global $currencies;
       $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data['x_currency_code'] = $this->gateway_currency;
       unset($submit_data['x_tax'], $submit_data['x_freight']);
     }
 
+    $this->submit_extras = array();
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_PRESUBMIT_HOOK');
+    unset($this->submit_extras['x_login'], $this->submit_extras['x_tran_key']);
+    if (sizeof($this->submit_extras)) $submit_data = array_merge($submit_data, $this->submit_extras);
+
     unset($response);
     $response = $this->_sendRequest($submit_data);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', $response);
     $response_code = $response[0];
     $response_text = $response[3];
     $this->auth_code = $response[4];
@@ -564,16 +577,30 @@ class authorizenet_aim extends base {
     }
 
     // set URL
-    $url = 'https://secure.authorize.net/gateway/transact.dll';
     $devurl = 'https://test.authorize.net/gateway/transact.dll';
-    $dumpurl = 'https://developer.authorize.net/param_dump.asp';
     $certurl = 'https://certification.authorize.net/gateway/transact.dll';
     if (defined('AUTHORIZENET_DEVELOPER_MODE')) {
       if (AUTHORIZENET_DEVELOPER_MODE == 'on') $url = $devurl;
-      if (AUTHORIZENET_DEVELOPER_MODE == 'echo' || MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') $url = $dumpurl;
       if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;
     }
-    if (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') $url = $dumpurl;
+
+    $this->mode = 'AIM';
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', $submit_data);
+
+    switch ($this->mode) {
+      case 'eProcessing':
+        //eProcessing sometimes uses an AIM emulator, in which case if you're using this module for that purpose, use the notifier point above to have an observer class change the $class->mode to 'eProcessing', which will trigger the correct URL to be used.
+        $url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
+        break;
+      case (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo'):
+      case 'dump':
+        $url = 'https://developer.authorize.net/param_dump.asp';
+        break;
+      default:
+      case 'AIM':
+        $url = 'https://secure.authorize.net/gateway/transact.dll';
+        break;
+    }
 
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
@@ -633,6 +660,7 @@ class authorizenet_aim extends base {
       die('Press the BACK button in your browser to return to the previous page.');
     }
 
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_ENCAPSULATION_CHECK');
     // parse the data received back from the gateway, taking into account the delimiters and encapsulation characters
     $stringToParse = $this->authorize;
     if (substr($stringToParse,0,1) == $this->encapChar) $stringToParse = substr($stringToParse,1);

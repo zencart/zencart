@@ -1515,6 +1515,10 @@ class paypaldp extends base {
         }
       }
 
+      $this->ot_merge = array();
+      $this->notify('NOTIFY_PAYMENT_PAYPALDP_SUBTOTALS_REVIEW', $order, $order_totals);
+      if (sizeof($this->ot_merge)) $optionsST = array_merge($optionsST, $this->ot_merge);
+
       if ($creditsApplied > 0) $optionsST['ITEMAMT'] -= $creditsApplied;
       if ($surcharges > 0) $optionsST['ITEMAMT'] += $surcharges;
 
