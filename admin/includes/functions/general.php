@@ -122,7 +122,7 @@
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (is_string($value) && strlen($value) > 0) {
-              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($arr)) . '&';
+              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
             }
           } else {
             continue; // legacy code doesn't support passing arrays by GET, so skipping any arrays
