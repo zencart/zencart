@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $includeCPath = FALSE;
 
 // EXCLUDE certain parameters which should not be included in canonical links:
-$excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom', 'dto', 'dfrom', 'inc_subcat');
+$excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom', 'dto', 'dfrom', 'inc_subcat', 'notify');
 $excludeParams[] = 'disp_order';
 $excludeParams[] = 'page';
 $excludeParams[] = 'sort';

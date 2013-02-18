@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:40:54 2012 -0400 Modified in v1.5.1 $
@@ -112,23 +112,69 @@
     return 'cPath=' . $cPath_new;
   }
 
-
-  function zen_get_all_get_params($exclude_array = '') {
-    global $_GET;
-
-    if ($exclude_array == '') $exclude_array = array();
-
+  function zen_get_all_get_params($exclude_array = array()) {
+    if (!is_array($exclude_array)) $exclude_array = array();
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
     $get_url = '';
-
-    reset($_GET);
-    while (list($key, $value) = each($_GET)) {
-      if (($key != zen_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)))
-        $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
+        if (!in_array($key, $exclude_array)) {
+          if (!is_array($value)) {
+            if (is_string($value) && strlen($value) > 0) {
+              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($arr)) . '&';
+            }
+          } else {
+            continue; // legacy code doesn't support passing arrays by GET, so skipping any arrays
+            foreach(array_filter($value) as $arr){
+              $get_url .= zen_output_string_protected($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+            }
+          }
+        }
+      }
     }
+    while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
+    while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
 
     return $get_url;
   }
 
+  /**
+   * Return all GET params as (usually hidden) POST params
+   * @param array $exclude_array
+   * @param boolean $hidden
+   * @return string
+   */
+  function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
+    if (!is_array($exclude_array)) $exclude_array = array();
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
+    $fields = '';
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
+        if (!in_array($key, $exclude_array)) {
+          if (!is_array($value)) {
+            if (is_string($value) && strlen($value) > 0) {
+              if ($hidden) {
+                $fields .= zen_draw_hidden_field($key, $value);
+              } else {
+                $fields .= zen_draw_input_field($key, $value);
+              }
+            }
+          } else {
+            foreach(array_filter($value) as $arr){
+              if ($hidden) {
+                $fields .= zen_draw_hidden_field($key . '[]', $arr);
+              } else {
+                $fields .= zen_draw_input_field($key . '[]', $arr);
+              }
+            }
+          }
+        }
+      }
+    }
+    return $fields;
+  }
 
   function zen_date_long($raw_date) {
     if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
