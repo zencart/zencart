@@ -43,7 +43,7 @@
   define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
 
   define('ENTRY_DATE_OF_BIRTH_ERROR', 'Is your birth date correct? Our system requires the date in this format: ' . DOB_FORMAT_STRING);
-  define('ENTRY_DATE_OF_BIRTH_TEXT', '* (eg. ' . DOB_FORMAT_STRING . ')');
+  define('ENTRY_DATE_OF_BIRTH_EXAMPLE', ' (eg. ' . DOB_FORMAT_STRING . ')');
 
 
   define('TEXT_PRODUCT_WEIGHT_UNIT','lbs');

@@ -159,8 +159,7 @@
   define('ENTRY_LAST_NAME_ERROR', 'Is your last name correct? Our system requires a minimum of ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters. Please try again.');
   define('ENTRY_LAST_NAME_TEXT', '*');
   define('ENTRY_DATE_OF_BIRTH', 'Date of Birth:');
-  define('ENTRY_DATE_OF_BIRTH_ERROR', 'Is your birth date correct? Our system requires the date in this format: MM/DD/YYYY (eg 05/21/1970)');
-  define('ENTRY_DATE_OF_BIRTH_TEXT', '* (eg. 05/21/1970)');
+  define('ENTRY_DATE_OF_BIRTH_TEXT', '* ' . ENTRY_DATE_OF_BIRTH_EXAMPLE);
   define('ENTRY_EMAIL_ADDRESS', 'Email Address:');
   define('ENTRY_EMAIL_ADDRESS_ERROR', 'Is your email address correct? It should contain at least ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters. Please try again.');
   define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Sorry, my system does not understand your email address. Please try again.');
