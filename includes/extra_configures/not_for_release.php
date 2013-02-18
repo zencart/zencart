@@ -3,7 +3,7 @@
  * Load in any specialized developer and/or unit-testing scripts
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: not_for_release.php 14257 2009-08-26 04:22:00Z drbyte $
  */
@@ -18,7 +18,7 @@ $wsDir = 'not_for_release/testFramework/extra_scripts/';
 // Check for new functions in extra_scripts directory
 $directory_array = array();
 
-if ($dir = @dir($fsDir)) {
+if (file_exists($fsDir) && $dir = @dir($fsDir)) {
   while ($file = $dir->read()) {
     if (!is_dir($fsDir . $file)) {
       if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
