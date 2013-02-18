@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: html_output.php 19356 2011-08-22 05:22:42Z drbyte $
@@ -12,6 +12,7 @@
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
     global $request_type, $session_started;
     if ($page == '') {
+      error_log('Error! zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
 
@@ -28,12 +29,12 @@
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( ($add_session_id == true) && ($session_started == true) ) 
+    if ( ($add_session_id == true) && ($session_started == true) )
     {
-      if (defined('SID') && zen_not_null(SID)) 
+      if (defined('SID') && zen_not_null(SID))
       {
         $sid = SID;
-      } 
+      }
      }
 
     if (isset($sid)) {
@@ -53,6 +54,7 @@
         $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       }
     } else {
+      error_log('Error! zen_catalog_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
     if ($parameters == '') {

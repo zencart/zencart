@@ -17,6 +17,7 @@
     global $request_type, $session_started, $http_domain, $https_domain;
 
     if (!zen_not_null($page)) {
+      error_log('Error! zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
     }
 
