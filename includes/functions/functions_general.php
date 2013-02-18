@@ -54,11 +54,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Parse the data used in the html tags to ensure the tags will not break.
- * Basically just an extension to the php strstr function
+ * Basically just an extension to the php strtr function
  * @param string The string to be parsed
  * @param string The needle to find
 */
-// Parse the data used in the html tags to ensure the tags will not break
   function zen_parse_input_field_data($data, $parse) {
     return strtr(trim($data), $parse);
   }
@@ -540,8 +539,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // Return table heading with sorting capabilities
   function zen_create_sort_heading($sortby, $colnum, $heading) {
-    global $PHP_SELF;
-
     $sort_prefix = '';
     $sort_suffix = '';
 

@@ -1217,10 +1217,10 @@
 
     for ($i=0, $n=sizeof($calculated_category_path); $i<$n; $i++) {
       for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
-      	if ($from == 'category')
-      	  $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
-      	else
-      	  $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
+        if ($from == 'category') {
+          $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
+        } else {
+          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
         }
         $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br>';
     }
