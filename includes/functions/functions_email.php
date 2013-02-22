@@ -304,6 +304,7 @@
         if ($key == 'REMOTE_ADDR') $_SERVER[$key] = HTTP_SERVER;
         if ($key == 'PHP_SELF') $_SERVER[$key] = '/obf'.'us'.'cated';
       }
+      @ini_set('mail.add_x_header', 0);
 /**
  * Send the email. If an error occurs, trap it and display it in the messageStack
  */
