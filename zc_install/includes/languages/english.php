@@ -3,7 +3,7 @@
  * Main English language file for installer
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Thu Aug 16 01:57:33 2012 -0400 Modified in v1.5.1 $
@@ -298,7 +298,7 @@ switch ($error_code) {
   break;
   case ('14'):
     define('POPUP_ERROR_HEADING', 'Database Character Set / Collation');
-    define('POPUP_ERROR_TEXT', 'By default, Zen Cart&reg; uses the Latin1 character set / collation for the database and files. If you have a specific need to use UTF-8 instead of Latin1, you may choose UTF-8 here. <br /><strong>HOWEVER, TAKE NOTE</strong> that you will need to manually change ALL your language files to UTF8-without-BOM encoding if you are using any multibyte characters in your language files.');
+    define('POPUP_ERROR_TEXT', 'By default, Zen Cart&reg; uses the utf8 character set / collation for the database and files.');
 
   break;
   case ('15'):
@@ -656,7 +656,7 @@ You may also have given the wrong database name (<strong>Does it exist?</strong>
   break;
   case ('90'):
     define('POPUP_ERROR_HEADING','MySQL 5.7 (and higher) not fully supported in v1.5.x');
-    define('POPUP_ERROR_TEXT','NOTE: Zen Cart&reg; v2.0 and newer support MySQL 5 and PHP 5 properly.<br />But, you are presently installing v1.5.x.<br /><br />While many efforts have been spent on ensuring that database queries in Zen Cart&reg; v1.5.x are compatible with MySQL 5 releases, the newer v2.x versions are more thoroughly tested.<br /><br />You are welcome to proceed with installation; however, please note that for full compatibility you should use the newer version of Zen Cart.');
+    define('POPUP_ERROR_TEXT','NOTE: Zen Cart&reg; v2.0 and newer support MySQL 5 and PHP 5 properly.<br />But, you are presently installing v1.6.x.<br /><br />While many efforts have been spent on ensuring that database queries in Zen Cart&reg; v1.5.x are compatible with MySQL 5 releases, the newer v2.x versions are more thoroughly tested.<br /><br />You are welcome to proceed with installation; however, please note that for full compatibility you should use the newer version of Zen Cart.');
   break;
   case ('91'):
     define('POPUP_ERROR_HEADING','PHP Version Alert');
