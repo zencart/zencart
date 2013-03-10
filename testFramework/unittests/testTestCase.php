@@ -16,10 +16,10 @@ if (file_exists('PHPUnit/Framework.php') && !file_exists('PHPUnit/Autoload.php')
  * Set up some prerequisites
  *
  */
-define('TESTCWD', realpath(dirname(__FILE__)) . '/');
-define('DIR_FS_CATALOG', realpath(dirname(__FILE__) . '/../../../'));
-define('DIR_FS_INCLUDES', realpath(dirname(__FILE__) . '/../../../') . '/includes/');
-define('CWD', DIR_FS_INCLUDES . '../');
+define('TESTCWD', realpath(__DIR__) . '/');
+define('DIR_FS_CATALOG', realpath(__DIR__ . '/../../'));
+define('DIR_FS_INCLUDES', realpath(DIR_FS_CATALOG . '/includes/') . '/');
+define('CWD', DIR_FS_CATALOG);
 define('DIR_WS_CLASSES', '/includes/classes/');
 if (strpos(@ini_get('include_path'), '.') === false)
 {
