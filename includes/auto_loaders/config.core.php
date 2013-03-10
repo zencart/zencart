@@ -55,8 +55,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'language.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'cache.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'sniffer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'class.phpbb.php');
@@ -70,13 +68,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=>'message_stack.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'breadcrumb.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'query_cache.php');
-
-  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
-                               'className'=>'QueryCache',
-                               'objectName'=>'queryCache',
-                               'checkInstantiated'=>true);
 
 
 /**
@@ -101,12 +92,11 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 30.
  *
- * $zc_cache = new cache();
+ * Initialize the cache(s)
  *
  */
-  $autoLoadConfig[30][] = array('autoType'=>'classInstantiate',
-                                'className'=>'cache',
-                                'objectName'=>'zc_cache');
+  $autoLoadConfig[30][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_cache.php');
 /**
  * Breakpoint 40.
  *

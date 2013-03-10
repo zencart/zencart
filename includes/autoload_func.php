@@ -1,20 +1,34 @@
 <?php
 /**
  * File contains the autoloader loop
- * 
- * The autoloader loop takes the array from the auto_loaders directory
- * and uses this this to constuct the InitSysytem. 
- * see {@link http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem} for more details.
  *
- * @package initSystem
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * The autoloader loop takes the array from the auto_loaders directory and uses
+ * this to constuct the InitSysytem.
+ * See {@link http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem}
+ * for more details.
+ *
+ * @package   initSystem
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: autoload_func.php 14141 2009-08-10 19:34:47Z wilt $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version   1.6.0
  */
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+// register an autoloader for namespaced classes
+spl_autoload_register(function($className) {
+  $filepath = DIR_FS_CATALOG . DIR_WS_CLASSES . str_replace('\\', '/', $className) . '.php';
+  if (file_exists($filepath) && is_readable($filepath)) {
+    if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) {
+      echo "(SPL Autoload) Loading $className - [$filepath]<br>" . PHP_EOL;
+    }
+    include_once $filepath;
+  }
+});
+
 reset($autoLoadConfig);
 ksort($autoLoadConfig);
 foreach ($autoLoadConfig as $actionPoint => $row) {

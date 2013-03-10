@@ -14,12 +14,19 @@
  * <li>Load application_bottom.php</li>
  * </ul>
  *
- * @package general
+ * @package   general
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: index.php 2942 2006-02-02 04:41:23Z drbyte $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version   1.6.0
  */
+
+ini_set('display_errors', "0");
+ini_set('html_errors', "0");
+ini_set('log_errors', "1");
+ini_set('error_reporting', E_ALL | E_STRICT);
+
+try {
 /**
  * Load common library stuff
  */
@@ -105,5 +112,12 @@
 /**
  * Load general code run before page closes
  */
-?>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+  require(DIR_WS_INCLUDES . 'application_bottom.php');
+
+} catch (\Exception $e) {
+  trigger_error($e->getMessage(), $e->getCode());
+  if (DEBUG_AUTOLOAD) {
+    echo $e->getMessage() . '<br>' . PHP_EOL;
+    echo '<pre>' . $e->getTraceAsString() . '</pre>' . PHP_EOL;
+  }
+}
