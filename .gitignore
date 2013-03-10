@@ -18,3 +18,9 @@ devtools.php
 dev-*.*
 .DS_Store
 .project
+.settings
+testFramework/report
+testFramework/coverage.xml
+testFramework/logfile.xml
+
+testFramework/unittests/phpunit.xml
