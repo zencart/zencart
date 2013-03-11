@@ -159,7 +159,6 @@ if (!defined('IS_ADMIN_FLAG')) {
         }
       }
     }
-    $get_url = rtrim($get_url, '&');
     while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
     while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
 
