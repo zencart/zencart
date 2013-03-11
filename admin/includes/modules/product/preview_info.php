@@ -142,7 +142,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       reset($_POST);
       while (list($key, $value) = each($_POST)) {
         if (!is_array($_POST[$key])) {
-          echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
+          echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE)) . "\n";
         }
       }
 

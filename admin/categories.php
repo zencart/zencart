@@ -507,7 +507,6 @@
         $sql = "select product_type_id from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " where category_id = '" . (int)$cat_id . "' and product_type_id = '" . (int)$_GET['product_type'] . "'";
         $product_type_good = $db->Execute($sql);
         if ($product_type_list->RecordCount() < 1 || $product_type_good->RecordCount() > 0) {
-          $url = zen_get_all_get_params();
           $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$_GET['product_type'] . "'";
           $handler = $db->Execute($sql);
           zen_redirect(zen_href_link($handler->fields['type_handler'] . '.php', zen_get_all_get_params()));
