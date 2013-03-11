@@ -3,7 +3,7 @@
  * products class
  *
  * @package classes
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products.php 4265 2006-08-25 08:09:36Z drbyte $
@@ -76,6 +76,9 @@ class products extends base {
   function get_handler($type) {
     global $db;
 
+    // this is a fallback safety to protect against damaged (inaccessible) data caused by incorrect code in custom product types
+    if ((int)$type == 0) $type = 1;
+
     $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$type . "'";
     $handler = $db->Execute($sql);
     return $handler->fields['type_handler'];
@@ -94,4 +97,3 @@ class products extends base {
   }
 
 }
-?>
