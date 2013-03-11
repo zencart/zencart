@@ -148,7 +148,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       while (list($key, $value) = each($_GET)) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
-            if (is_string($value) && strlen($value) > 0) {
+            if (strlen($value) > 0) {
               $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
             }
           } else {
@@ -159,6 +159,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         }
       }
     }
+    $get_url = rtrim($get_url, '&');
     while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
     while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
 
@@ -179,7 +180,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       while (list($key, $value) = each($_GET)) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
-            if (is_string($value) && strlen($value) > 0) {
+            if (strlen($value) > 0) {
               if ($hidden) {
                 $fields .= zen_draw_hidden_field($key, $value);
               } else {

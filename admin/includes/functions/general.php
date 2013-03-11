@@ -114,14 +114,15 @@
 
   function zen_get_all_get_params($exclude_array = array()) {
     if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
       while (list($key, $value) = each($_GET)) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
-            if (is_string($value) && strlen($value) > 0) {
+//             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
+            if (strlen($value) > 0) {
               $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
             }
           } else {
@@ -133,6 +134,7 @@
         }
       }
     }
+    $get_url = rtrim($get_url, '&');
     while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
     while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
 
@@ -154,7 +156,7 @@
       while (list($key, $value) = each($_GET)) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
-            if (is_string($value) && strlen($value) > 0) {
+            if (strlen($value) > 0) {
               if ($hidden) {
                 $fields .= zen_draw_hidden_field($key, $value);
               } else {
