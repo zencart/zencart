@@ -1023,7 +1023,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     if ($link_only == true) {
       return $link;
     } else {
-      return '<a href="' . $link . '">';
+      return '<a class="btn-backlink" href="' . $link . '">';
     }
   }
 
@@ -1089,7 +1089,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // show case only superceeds all other settings
     if (STORE_STATUS != '0') {
-      return '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' .  TEXT_SHOWCASE_ONLY . '</a>';
+      return '<a class="btn-contactus" href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' .  TEXT_SHOWCASE_ONLY . '</a>';
     }
 
 // 0 = normal shopping
@@ -1099,7 +1099,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       switch (true) {
         case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
         // customer must be logged in to browse
-        $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
+        $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
         case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
@@ -1108,7 +1108,7 @@ if (!defined('IS_ADMIN_FLAG')) {
           return TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE;
         } else {
           // customer may browse but no prices
-          $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
+          $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         }
         return $login_for_price;
         break;
@@ -1124,7 +1124,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         break;
         case ((CUSTOMERS_APPROVAL_AUTHORIZATION == '3') and $_SESSION['customer_id'] == ''):
         // customer must be logged in and approved to add to cart
-        $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
+        $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
         case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customers_authorization'] > '0'):
@@ -1144,7 +1144,8 @@ if (!defined('IS_ADMIN_FLAG')) {
       return $additional_link;
       break;
     case ($button_check->fields['product_is_call'] == '1'):
-      $return_button = '<a href="' . zen_href_link(FILENAME_CONTACT_US, '' 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+      $return_button = '<a class="btn-callforprice" href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+      $return_button = '';
       break;
     case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
       if ($_GET['main_page'] == zen_get_info_page($product_id)) {
