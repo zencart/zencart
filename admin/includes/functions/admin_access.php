@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Admin Access Management
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Mon Jul 9 14:19:35 2012 +0100 Modified in v1.5.1 $
@@ -30,7 +30,8 @@ function check_page($page, $params) {
           FROM " . TABLE_ADMIN . " a
           LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
           LEFT JOIN " . TABLE_ADMIN_PAGES . " ap ON ap.page_key = ap2p.page_key
-          WHERE admin_id = :adminId:";
+          WHERE admin_id = :adminId:
+          AND ap2p.page_key NOT LIKE '_productTypes_%'";
   $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
   $result = $db->Execute($sql);
   $retVal = FALSE;
@@ -615,8 +616,8 @@ function zen_get_admin_pages($menu_only)
     $productTypes['_productTypes_'.$result->fields['type_handler']] = array('name'=>$result->fields['type_name'], 'file'=>$result->fields['type_handler'], 'params'=>'');
     $result->MoveNext();
   }
-  $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw 
-          LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key 
+  $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw
+          LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key
           WHERE tdwd.language_id = " . (int)$_SESSION['languages_id'];
   $result = $db->Execute($sql);
   while (!$result->EOF)
@@ -624,7 +625,7 @@ function zen_get_admin_pages($menu_only)
     $dashboardWidgets['_dashboardwidgets_'.$result->fields['widget_key']] = array('name'=>$result->fields['widget_name'], 'file'=>$result->fields['widget_key'], 'params'=>'');
     $result->MoveNext();
   }
-  
+
   $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as page_name
           FROM " . TABLE_ADMIN_PAGES . " ap
           LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key ";
