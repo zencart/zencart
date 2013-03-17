@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: orders_status.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -128,6 +128,7 @@ require('includes/admin_html_head.php');
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_STATUS_ID; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></td>
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
@@ -146,6 +147,9 @@ require('includes/admin_html_head.php');
       echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $orders_status->fields['orders_status_id']) . '\'">' . "\n";
     }
 
+?>
+                <td class="dataTableContent"><?php echo $orders_status->fields['orders_status_id']; ?></td>
+<?php
     if (DEFAULT_ORDERS_STATUS_ID == $orders_status->fields['orders_status_id']) {
       echo '                <td class="dataTableContent"><b>' . $orders_status->fields['orders_status_name'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
     } else {
