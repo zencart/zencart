@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: zones.php 14498 2009-10-01 20:16:16Z ajeh $
@@ -53,7 +53,7 @@
   Now you need to set up the shipping rate tables for each zone.  Again,
   some time and effort will go into setting the appropriate rates.  You
   will define a set of weight ranges and the shipping price for each
-  range.  For instance, you might want an order than weighs more than 0
+  range.  For instance, you might want an order that weighs more than 0
   and less than or equal to 3 to cost 5.50 to ship to a certain zone.
   This would be defined by this:  3:5.5
 
@@ -74,6 +74,10 @@
   high shipping rate to discourage orders of that magnitude.  For
   instance:  999:1000
 
+  Or, you can use OFF to turn OFF this shipping module when it reaches 16:
+    1:3.5,2:3.95,3:5.2,4:6.45,5:7.7,6:10.4,7:11.85, 8:13.3,9:14.75,10:16.2,11:17.65,
+    12:19.1,13:20.55,14:22,15:23.45,16:OFF
+
   If you want to be able to ship to any country in the world, you will
   need to enter every country code into the Country fields. For most
   shops, you will not want to enter every country.  This is often
@@ -82,13 +86,16 @@
   indicate that shipping is not available to that destination.
   PLEASE NOTE THAT THE ORDER CAN STILL BE COMPLETED AND PROCESSED!
 
+  Or, to prevent this, you can use the Skip Countries. Skip Countries,
+  use a comma separated list of the two character ISO country codes.
+
+  Or, you can add a Zone defined as: 00 to indicate ALL countries not otherwise previously defined. Be
+  sure to use the definition for: 00 as the LAST Zone definition.
+
   It appears that the osC shipping system automatically rounds the
   shipping weight up to the nearest whole unit.  This makes it more
   difficult to design precise shipping tables.  If you want to, you
   can hack the shipping.php file to get rid of the rounding.
-
-  Lastly, there is a limit of 255 characters on each of the Zone
-  Shipping Tables and Zone Countries.
 
 */
 
@@ -121,7 +128,8 @@
 	  		  if ($this->enabled && $check->EOF) {
           $default_countries = '';
           $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Countries', 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i ."', '" . $default_countries . "', 'Comma separated list of two character ISO country codes that are part of Zone " . $i . ".<br />Set as 00 to indicate all two character ISO country codes that are not specifically defined.', '6', '0', 'zen_cfg_textarea(', now())");
-          $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i ."', '3:8.50,7:10.50,99:20.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights/prices. Example: 3:8.50,7:10.50,... Weight/Price less than or equal to 3 would cost 8.50 for Zone " . $i . " destinations.<br />You can end the last amount as 10000:7% to charge 7% of the Order Total', '6', '0', 'zen_cfg_textarea(', now())");
+          $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i ."', '3:8.50,25:5.50,10000:3.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights/prices.<br />Example: 3:8.50,25:5.50,10000:3.00<br />Weight/Price/Item count less than or equal to 3&nbsp;would cost 8.50 4-25&nbsp;would cost 5.50 and 26+&nbsp;would cost 3.00 to ship for Zone " . $i . " destinations.<br /><br />You can also use percentage amounts, such as 3:8.50,6:5%,9:7.50,12:6.25,15:4.5%,10000:3% to charge a percentage value of the Order Total<br /><br />To terminate quotes use OFF to no longer show this shipping module. To turn off quotes at 10 or more, use 3:8.50,7:10.50,9:15%,10:OFF<br /><br />On Item quotes, you can also use * to set a Rate per Item, such as 3:8.50,6:5%,9:1.50*,12:1.25*,10000:1.00*<br />This would charge for 7-9&nbsp;items as item count * 1.50 and 10-12&nbsp;items as item count * 1.25 and for 13+&nbsp;items as item count * 1.00<br /><br />NOTE: See additional information on Maximum weight and Tare Rate<br /><br />', '6', '0', 'zen_cfg_textarea(', now())");
+
           $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i ." Handling Fee', 'MODULE_SHIPPING_ZONES_HANDLING_" . $i."', '0', 'Handling Fee for this shipping zone', '6', '0', now())");
           $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . "  (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i."', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
   		  	}
@@ -147,7 +155,7 @@
       $dest_zone = 0;
       $error = false;
 
-    $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices() ;
+      $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices() ;
 
       for ($i=1; $i<=$this->num_zones; $i++) {
         $countries_table = constant('MODULE_SHIPPING_ZONES_COUNTRIES_' . $i);
@@ -172,6 +180,7 @@
         $zones_table = preg_split("/[:,]/" , $zones_cost);
         $size = sizeof($zones_table);
         $done = false;
+//echo '<br>START ZONE RATE: ' . $zones_cost . '<br>';
         for ($i=0; $i<$size; $i+=2) {
           switch (MODULE_SHIPPING_ZONES_METHOD) {
         	  case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
@@ -193,44 +202,98 @@
                   break;
                 }
 
-//                $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country . (SHIPPING_BOX_WEIGHT_DISPLAY >= 2 ? ' : ' . $shipping_weight . ' ' . MODULE_SHIPPING_ZONES_TEXT_UNITS : '');
                 $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country . $show_box_weight;
                 $done = true;
-        if (strstr($zones_table[$i+1], '%')) {
-          $shipping = ($zones_table[$i+1]/100) * $order_total_amount;
-        } else {
-          $shipping = $zones_table[$i+1];
-        }
+                switch (true) {
+                  case (strstr($zones_table[$i+1], '%')):
+                    $shipping = ($zones_table[$i+1]/100) * $order_total_amount;
+                    break;
+                  case (strstr($zones_table[$i+1], '*')):
+                    if (MODULE_SHIPPING_ZONES_METHOD == 'Item') {
+                      $shipping = (($total_count - $_SESSION['cart']->free_shipping_items()) * $zones_table[$i+1]);
+                    } else {
+                      $skip_shipping = true;
+                    }
+                    break;
+                  case (strstr($zones_table[$i+1], 'OFF')):
+                    $skip_shipping = true;
+                    break;
+                  default:
+                    $shipping = $zones_table[$i+1];
+                    break;
+                }
                 break;
+        	    } else {
+                if (strstr($zones_table[$i+1], 'OFF')) {
+                  $skip_shipping = true;
+                  break;
+                }
         	    }
-      	    break;
+      	      break;
         	  case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
 // shipping adjustment
               if (($_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices()) <= $zones_table[$i]) {
                 $shipping = $zones_table[$i+1];
                 $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
-        if (strstr($zones_table[$i+1], '%')) {
-          $shipping = ($zones_table[$i+1]/100) * $order_total_amount;
-        } else {
-          $shipping = $zones_table[$i+1];
-        }
+
                 $done = true;
+                switch (true) {
+                  case (strstr($zones_table[$i+1], '%')):
+                    $shipping = ($zones_table[$i+1]/100) * $order_total_amount;
+                    break;
+                  case (strstr($zones_table[$i+1], '*')):
+                    if (MODULE_SHIPPING_ZONES_METHOD == 'Item') {
+                      $shipping = (($total_count - $_SESSION['cart']->free_shipping_items()) * $zones_table[$i+1]);
+                    } else {
+                      $skip_shipping = true;
+                    }
+                    break;
+                  case (strstr($zones_table[$i+1], 'OFF')):
+                    $skip_shipping = true;
+                    break;
+                  default:
+                    $shipping = $zones_table[$i+1];
+                    break;
+                }
                 break;
-	            }
-	          break;
+        	    } else {
+                if (strstr($zones_table[$i+1], 'OFF')) {
+                  $skip_shipping = true;
+                  break;
+                }
+              }
+	            break;
         	  case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
 // shipping adjustment
               if (($total_count - $_SESSION['cart']->free_shipping_items()) <= $zones_table[$i]) {
                 $shipping = $zones_table[$i+1];
                 $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
                 $done = true;
-        if (strstr($zones_table[$i+1], '%')) {
-          $shipping = ($zones_table[$i+1]/100) * $order_total_amount;
-        } else {
-          $shipping = $zones_table[$i+1];
-        }
+                switch (true) {
+                  case (strstr($zones_table[$i+1], '%')):
+                    $shipping = ($zones_table[$i+1]/100) * $order_total_amount;
+                    break;
+                  case (strstr($zones_table[$i+1], '*')):
+                    if (MODULE_SHIPPING_ZONES_METHOD == 'Item') {
+                      $shipping = (($total_count - $_SESSION['cart']->free_shipping_items()) * $zones_table[$i+1]);
+                    } else {
+                      $skip_shipping = true;
+                    }
+                    break;
+                  case (strstr($zones_table[$i+1], 'OFF')):
+                    $skip_shipping = true;
+                    break;
+                  default:
+                    $shipping = $zones_table[$i+1];
+                    break;
+                }
                 break;
-  	          }
+        	    } else {
+                if (strstr($zones_table[$i+1], 'OFF')) {
+                  $skip_shipping = true;
+                  break;
+                }
+        	    }
 	          break;
           }
           if ($done == true) {
@@ -238,7 +301,7 @@
           }
         }
 
-        if ($shipping == -1) {
+        if ($shipping == -1 || $skip_shipping) {
           $shipping_cost = 0;
           $shipping_method = MODULE_SHIPPING_ZONES_UNDEFINED_RATE;
         } else {
@@ -263,12 +326,16 @@
           }
         }
       }
-      $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_ZONES_TEXT_TITLE,
-                            'methods' => array(array('id' => $this->code,
-                                                     'title' => $shipping_method,
-                                                     'cost' => $shipping_cost)));
 
+      if (!$skip_shipping) {
+        $this->quotes = array('id' => $this->code,
+                              'module' => MODULE_SHIPPING_ZONES_TEXT_TITLE,
+                              'methods' => array(array('id' => $this->code,
+                                                       'title' => $shipping_method,
+                                                       'cost' => $shipping_cost)));
+      } else {
+        // skip display of shipping
+      }
       if ($this->tax_class > 0) {
         $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       }
@@ -309,7 +376,7 @@
           $default_countries = 'US,CA';
         }
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Countries', 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i ."', '" . $default_countries . "', 'Comma separated list of two character ISO country codes that are part of Zone " . $i . ".<br />Set as 00 to indicate all two character ISO country codes that are not specifically defined.', '6', '0', 'zen_cfg_textarea(', now())");
-        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i ."', '3:8.50,7:10.50,99:20.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights/prices. Example: 3:8.50,7:10.50,... Weight/Price less than or equal to 3 would cost 8.50 for Zone " . $i . " destinations.<br />You can also use percentage amounts, such 25:8.50,35:5%,40:9.50,10000:7% to charge a percentage value of the Order Total', '6', '0', 'zen_cfg_textarea(', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i ."', '3:8.50,25:5.50,10000:3.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights/prices.<br />Example: 3:8.50,25:5.50,10000:3.00<br />Weight/Price/Item count less than or equal to 3&nbsp;would cost 8.50 4-25&nbsp;would cost 5.50 and 26+&nbsp;would cost 3.00 to ship for Zone " . $i . " destinations.<br /><br />You can also use percentage amounts, such as 3:8.50,6:5%,9:7.50,12:6.25,15:4.5%,10000:3% to charge a percentage value of the Order Total<br /><br />To terminate quotes use OFF to no longer show this shipping module. To turn off quotes at 10 or more, use 3:8.50,7:10.50,9:15%,10:OFF<br /><br />On Item quotes, you can also use * to set a Rate per Item, such as 3:8.50,6:5%,9:1.50*,12:1.25*,10000:1.00*<br />This would charge for 7-9&nbsp;items as item count * 1.50 and 10-12&nbsp;items as item count * 1.25 and for 13+&nbsp;items as item count * 1.00<br /><br />NOTE: See additional information on Maximum weight and Tare Rate<br /><br />', '6', '0', 'zen_cfg_textarea(', now())");
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i ." Handling Fee', 'MODULE_SHIPPING_ZONES_HANDLING_" . $i."', '0', 'Handling Fee for this shipping zone', '6', '0', now())");
 
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . " (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i."', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
@@ -335,4 +402,3 @@
       return $keys;
     }
   }
-?>
