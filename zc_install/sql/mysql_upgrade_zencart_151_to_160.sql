@@ -44,6 +44,12 @@ TRUNCATE TABLE sessions;
 UPDATE configuration set configuration_description = 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.' WHERE configuration_key = 'SESSION_WRITE_DIRECTORY';
 UPDATE configuration set configuration_description = 'Store the database queries in the page parse time log. USE WITH CAUTION. This can seriously degrade your site performance and blow out your disk space storage quotas.' WHERE configuration_key = 'STORE_DB_TRANSACTIONS';
 
+ALTER TABLE admin_menus MODIFY menu_key menu_key VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admin_pages MODIFY page_key page_key VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admin_pages MODIFY main_page main_page VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admin_pages MODIFY page_params page_params VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admin_pages MODIFY menu_key menu_key VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admin_profiles MODIFY profile_name profile_name VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages_to_profiles MODIFY page_key page_key varchar(255) NOT NULL default '';
 ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
 ALTER TABLE whos_online MODIFY session_id varchar(255) NOT NULL default '';
