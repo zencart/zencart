@@ -96,7 +96,6 @@ class table extends base {
    */
   function quote($method = '') {
     global $order, $shipping_weight, $shipping_num_boxes, $total_count;
-    global $cart;
 
     // shipping adjustment
     switch (MODULE_SHIPPING_TABLE_MODE) {
