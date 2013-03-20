@@ -86,11 +86,13 @@
   indicate that shipping is not available to that destination.
   PLEASE NOTE THAT THE ORDER CAN STILL BE COMPLETED AND PROCESSED!
 
-  Or, to prevent this, you can use the Skip Countries. Skip Countries,
-  use a comma separated list of the two character ISO country codes.
-
   Or, you can add a Zone defined as: 00 to indicate ALL countries not otherwise previously defined. Be
   sure to use the definition for: 00 as the LAST Zone definition.
+
+  To prevent this module from working for some Countries, you can use the Skip Countries. Skip Countries,
+  use a comma separated list of the two character ISO country codes.
+
+  Or, to prevent this module from working based on a Zone Definition, you can enter the value of the zone id for the Zone Definition to be skipped.
 
   It appears that the osC shipping system automatically rounds the
   shipping weight up to the nearest whole unit.  This makes it more
@@ -100,7 +102,7 @@
 */
 
   class zones {
-    var $code, $title, $description, $enabled, $num_zones;
+    var $code, $title, $description, $enabled, $num_zones, $skip_shipping_zone;
 
 // class constructor
     function zones() {
@@ -115,6 +117,12 @@
       // disable only when entire cart is free shipping
       if (zen_get_shipping_enabled($this->code)) {
         $this->enabled = ((MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
+      }
+
+      // skip countries in defined Zone Definition
+      if (!IS_ADMIN_FLAG) {
+        $this->skip_shipping_zone = $this->chk_skip_shipping();
+        $this->enabled = !$this->skip_shipping_zone;
       }
 
       // CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
@@ -146,6 +154,7 @@
           }
         }
       }
+
     }
 
 // class methods
@@ -368,7 +377,7 @@
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_ZONES_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Tax Basis', 'MODULE_SHIPPING_ZONES_TAX_BASIS', 'Shipping', 'On what basis is Shipping Tax calculated. Options are<br />Shipping - Based on customers Shipping Address<br />Billing Based on customers Billing address<br />Store - Based on Store address if Billing/Shipping Zone equals Store zone', '6', '0', 'zen_cfg_select_option(array(\'Shipping\', \'Billing\', \'Store\'), ', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_ZONES_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
-      $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Skip Countries, use a comma separated list of the two character ISO country codes', 'MODULE_SHIPPING_ZONES_SKIPPED', '', 'Disable for the following Countries:', '6', '0', 'zen_cfg_textarea(', now())");
+      $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Skip Countries, use a comma separated list of the two character ISO country codes<br />Or, build a Zone Definition for Countries and Zones to be skipped and enter its id. ', 'MODULE_SHIPPING_ZONES_SKIPPED', '', 'Disable for the following Countries:', '6', '0', 'zen_cfg_textarea(', now())");
 
       for ($i = 1; $i <= $this->num_zones; $i++) {
         $default_countries = '';
@@ -400,5 +409,29 @@
       }
 
       return $keys;
+    }
+
+// skip zone from using shipping
+    function chk_skip_shipping() {
+      global $db, $order;
+
+      if ((int)MODULE_SHIPPING_ZONES_SKIPPED > 0 ) {
+        $check_flag = false;
+        $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_ZONES_SKIPPED . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        while (!$check->EOF) {
+          if ($check->fields['zone_id'] < 1) {
+            $check_flag = true;
+            break;
+          } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
+            $check_flag = true;
+            break;
+          }
+          $check->MoveNext();
+        }
+
+        return $check_flag;
+      } else {
+        return false;
+      }
     }
   }
