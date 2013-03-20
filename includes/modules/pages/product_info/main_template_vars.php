@@ -38,16 +38,7 @@
 
     $zco_notifier->notify('NOTIFY_PRODUCT_VIEWS_HIT_INCREMENTOR', (int)$_GET['products_id']);
 
-    $sql = "select p.*, p.products_id, pd.products_name,
-                  pd.products_description, p.products_model,
-                  p.products_quantity, p.products_image,
-                  pd.products_url, p.products_price,
-                  p.products_tax_class_id, p.products_date_added,
-                  p.products_date_available, p.manufacturers_id, p.products_quantity,
-                  p.products_weight, p.products_priced_by_attribute, p.product_is_free,
-                  p.products_qty_box_status,
-                  p.products_quantity_order_max,
-                  p.products_discount_type, p.products_discount_type_from, p.products_sort_order, p.products_price_sorter
+    $sql = "select p.*, pd.*
            from   " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
            where  p.products_status = '1'
            and    p.products_id = '" . (int)$_GET['products_id'] . "'
@@ -61,7 +52,7 @@
     $products_price = $currencies->display_price($product_info->fields['products_price'],
                       zen_get_tax_rate($product_info->fields['products_tax_class_id']));
 
-    $manufacturers_name= zen_get_products_manufacturers_name((int)$_GET['products_id']);
+    $manufacturers_name = zen_get_products_manufacturers_name((int)$_GET['products_id']);
 
     if ($new_price = zen_get_products_special_price($product_info->fields['products_id'])) {
 
