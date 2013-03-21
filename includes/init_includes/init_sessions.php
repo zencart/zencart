@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_sessions.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -135,7 +135,7 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
   }
   if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }
 /**
@@ -148,6 +148,6 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
   if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }
