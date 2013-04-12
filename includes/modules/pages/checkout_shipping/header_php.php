@@ -85,7 +85,6 @@ if (isset($_SESSION['cart']->cartID)) {
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = 'free_free';
-    $_SESSION['shipping']['title'] = 'free_free';
     $_SESSION['sendto'] = false;
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
