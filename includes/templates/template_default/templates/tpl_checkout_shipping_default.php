@@ -76,7 +76,10 @@
         } else {
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
-            $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
+              $checked = false;
+              if ( isset($_SESSION['shipping']['id']) ) {
+                  $checked = ($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']);
+              }
 
             if ( ($checked == true) || ($n == 1 && $n2 == 1) ) {
               //echo '      <div id="defaultSelected" class="moduleRowSelected">' . "\n";
