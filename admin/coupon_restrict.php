@@ -370,7 +370,7 @@ require('includes/admin_html_head.php');
         $products->MoveNext();
       }
 ?>
-                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME . '<br> -- OR -- <br>' . 'Manufacturer: '; ?></td>
+                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME . HEADER_MANUFACTURER_NAME; ?></td>
                     <td class="smallText" align="left"></td><form name="restrict_product" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'info=' . $cInfo->restrict_id, 'NONSSL'); ?>">
                     <?php echo zen_hide_session_id(); ?>
                     <td class="smallText" align="left">
