@@ -35,3 +35,9 @@ define('TEXT_MANUFACTURER', 'Manufacturer: ');
 define('TEXT_CATEGORY', 'Category: ');
 define('ERROR_DISCOUNT_COUPON_DEFINED_CATEGORY', 'Category Not Completed');
 define('ERROR_DISCOUNT_COUPON_DEFINED_PRODUCT', 'Product Not Completed');
+
+define('TEXT_ALL_MANUFACTURERS_ADD', 'Add All Manufacturer Products');
+define('TEXT_ALL_MANUFACTURERS_REMOVE', 'Remove All Manufacturer Products');
+
+define('HEADER_PRODUCT_STATUS', 'Status');
+define('HEADER_PRODUCT_MODEL', 'Model');

@@ -12,6 +12,15 @@
   $restrict_array[] = array('id'=>'Deny', text=>'Deny');
   $restrict_array[] = array('id'=>'Allow', text=>'Allow');
 
+/*
+  if ($_POST['cPath_prod'] > 0 and $_POST['manufacturers_id'] > 0) {
+    $current_category_id = 0;
+    $current_manufacturers_id = 0;
+    $_POST['cPath_prod'] = 0;
+    $_POST['manufacturers_id'] = 0;
+  }
+*/
+
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
   if (isset($_GET['info'])) $_GET['info'] = (int)$_GET['info'];
   if (isset($_POST['cPath'])) $_POST['cPath'] = (int)$_POST['cPath'];
@@ -63,17 +72,31 @@
 // bof: ALL ADD/DELETE of Products in one Category
         if ($_POST['products_drop'] < 0) {
         // adding new records
-          if ($_POST['products_drop'] == -1) {
+          if ($_GET['build_cat'] > 0 && $_POST['products_drop'] == -1) {
           // to insert new products from a given categories_id for a coupon_code that are not already in the table
           // products in the table from the catategories_id are skipped
             $new_products_query = "select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . $_GET['build_cat'] . "' and products_id not in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $_GET['cid'] . "')";
             $new_products = $db->Execute($new_products_query);
           }
 
-          if ($_POST['products_drop'] == -2) {
+          if ($_GET['build_cat'] > 0 && $_POST['products_drop'] == -2) {
           // to delete existing products from a given categories_id for a coupon_code that are already in the table
           // products in the table from the catategories_id are skipped
             $new_products_query = "select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . $_GET['build_cat'] . "' and products_id in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_restrict = '" . $status . "' and coupon_id = '" . $_GET['cid'] . "')";
+            $new_products = $db->Execute($new_products_query);
+          }
+
+          if ($_GET['build_man'] > 0 && $_POST['products_drop'] == -1) {
+          // to insert new products from a given manufacturers_id for a coupon_code that are not already in the table
+          // products in the table from the manufacturers_id are skipped
+            $new_products_query = "select products_id from " . TABLE_PRODUCTS . " where manufacturers_id = '" . $_GET['build_man'] . "' and products_id not in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $_GET['cid'] . "')";
+            $new_products = $db->Execute($new_products_query);
+          }
+
+          if ($_GET['build_man'] > 0 && $_POST['products_drop'] == -2) {
+          // to delete existing products from a given manufacturers_id for a coupon_code that are already in the table
+          // products in the table from the manufacturers_id are skipped
+            $new_products_query = "select products_id from " . TABLE_PRODUCTS . " where manufacturers_id = '" . $_GET['build_man'] . "' and products_id in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_restrict = '" . $status . "' and coupon_id = '" . $_GET['cid'] . "')";
             $new_products = $db->Execute($new_products_query);
           }
 
@@ -111,7 +134,7 @@
       $messageStack->add(ERROR_DISCOUNT_COUPON_DEFINED_PRODUCT . ' ' . (int)$_POST['products_drop'], 'caution');
     }
   }
-  if ($_GET['action']=='remove') { 
+  if ($_GET['action']=='remove') {
     if (isset($_GET['info']) && isset($_POST['actionRemoveProto'])) {
       $db->Execute("delete from " . TABLE_COUPON_RESTRICT . " where restrict_id = '" . $_GET['info'] . "'");
     }
@@ -247,6 +270,8 @@ require('includes/admin_html_head.php');
                     <td class="dataTableHeadingContent"><?php echo HEADER_COUPON_ID; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_COUPON_NAME; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_ID; ?></td>
+              <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_STATUS; ?></td>
+              <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_MODEL; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_NAME; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_ALLOW; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_DENY; ?></td>
@@ -272,6 +297,8 @@ require('includes/admin_html_head.php');
                 <td class="dataTableContent"><?php echo $_GET['cid']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $coupon->fields['coupon_name']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $pr_list->fields['product_id']; ?></td>
+          <td class="dataTableContent" align="center"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_status') == 0 ? zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) : zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON)); ?></td>
+          <td class="dataTableContent" align="left"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_model')); ?></td>
                 <td class="dataTableContent" align="left"><?php echo '<strong>' . $product_name . '</strong><br />' . TEXT_CATEGORY . zen_get_categories_name_from_product($pr_list->fields['product_id']) . '<br />' . TEXT_MANUFACTURER . zen_get_products_manufacturers_name($pr_list->fields['product_id']); ?></td>
 <?php
 		if ($pr_list->fields['coupon_restrict']=='N') {
@@ -311,11 +338,30 @@ require('includes/admin_html_head.php');
       order by pd.products_name");
       $products_array = array();
 
-      if (!$products->EOF) {
+// manufacturers products
+      if (isset($_POST['manufacturers_id'])) $current_manufacturers_id = $_POST['manufacturers_id'];
+      if ($current_manufacturers_id > 0) {
+      $products = $db->Execute("select p.products_id, pd.products_name from " .
+      TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_MANUFACTURERS . " m
+      where p.products_id = pd.products_id and pd.language_id = '" . $_SESSION['languages_id'] . "'
+      and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '" . $_POST['manufacturers_id'] . "'
+      order by pd.products_name");
+      $products_array = array();
+      }
+
+// echo 'I see  ' . $current_category_id . ' vs' . $current_manufacturers_id;
+      if (!$products->EOF && $current_category_id > 0) {
         $products_array[] = array('id' => '-1',
                                    'text' => TEXT_ALL_PRODUCTS_ADD);
         $products_array[] = array('id' => '-2',
                                    'text' => TEXT_ALL_PRODUCTS_REMOVE);
+      }
+
+      if (!$products->EOF && $current_manufacturers_id > 0) {
+        $products_array[] = array('id' => '-1',
+                                   'text' => TEXT_ALL_MANUFACTURERS_ADD);
+        $products_array[] = array('id' => '-2',
+                                   'text' => TEXT_ALL_MANUFACTURERS_REMOVE);
       }
 
       while (!$products->EOF) {
@@ -324,12 +370,34 @@ require('includes/admin_html_head.php');
         $products->MoveNext();
       }
 ?>
-                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME; ?></td>
+                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME . '<br> -- OR -- <br>' . 'Manufacturer: '; ?></td>
                     <td class="smallText" align="left"></td><form name="restrict_product" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'info=' . $cInfo->restrict_id, 'NONSSL'); ?>">
                     <?php echo zen_hide_session_id(); ?>
-                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $current_category_id, 'onChange="this.form.submit();"'); ?></td></form>
+                    <td class="smallText" align="left">
+<?php
+// add manufacturers picker for manufacturers with products
+      $manufacturers_array = array(array('id' => '', 'text' => TEXT_NONE));
+
+      $manufacturers = $db->Execute("select distinct m.manufacturers_id, m.manufacturers_name
+                              from " . TABLE_MANUFACTURERS . " m
+                              left join " . TABLE_PRODUCTS . " p on m.manufacturers_id = p.manufacturers_id
+                              where p.manufacturers_id = m.manufacturers_id
+                              and (p.products_status = 1
+                              and p.products_quantity > 0)
+                              order by m.manufacturers_name");
+
+      while (!$manufacturers->EOF) {
+        $manufacturers_array[] = array('id' => $manufacturers->fields['manufacturers_id'],
+                                       'text' => $manufacturers->fields['manufacturers_name'] . ' [ #' . $manufacturers->fields['manufacturers_id'] . ' ]');
+        $manufacturers->MoveNext();
+      }
+
+      echo zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $current_category_id, 'onChange="this.form.submit();"') . '<br>';
+      echo zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $current_manufacturers_id, 'onChange="this.form.submit();"');
+?>
+                    </td></form>
 <?php if (sizeof($products_array) > 0) { ?>
-                    <form name="restrict_category" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_product&info=' . $cInfo->restrict_id . '&build_cat=' . $current_category_id, 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+                    <form name="restrict_category" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_product&info=' . $cInfo->restrict_id . '&build_cat=' . $current_category_id . '&build_man=' . $current_manufacturers_id, 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                     <td class="smallText" valign="top"><?php echo HEADER_PRODUCT_NAME; ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('products_drop', $products_array, $current_category_id); ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array); ?></td>
