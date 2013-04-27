@@ -94,6 +94,14 @@ class authorizenet extends base {
 
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
+
+    // Determine default/supported currencies
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+      $this->gateway_currency = DEFAULT_CURRENCY;
+    } else {
+      $this->gateway_currency = 'USD';
+    }
+
   }
 
   // Authorize.net utility functions
@@ -369,11 +377,10 @@ class authorizenet extends base {
     );
 
     // force conversion to supported currencies: USD, GBP, CAD, EUR
-    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR'))) {
-      $gateway_currency = 'USD';
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
       global $currencies;
-      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value($gateway_currency), 2);
-      $submit_data_core['x_currency_code'] = $gateway_currency;
+      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data_core['x_currency_code'] = $this->gateway_currency;
     }
 
     $this->submit_extras = array();

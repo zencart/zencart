@@ -106,6 +106,15 @@ class authorizenet_aim extends base {
 
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
+
+    // Determine default/supported currencies
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+      $this->gateway_currency = DEFAULT_CURRENCY;
+    } else {
+      $this->gateway_currency = 'USD';
+    }
+
+
   }
   /**
    * calculate zone matches and flag settings to determine whether this module should display to customers or not
@@ -368,11 +377,10 @@ class authorizenet_aim extends base {
     }
 
     // force conversion to supported currencies: USD, GBP, CAD, EUR
-    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR'))) {
-      $gateway_currency = 'USD';
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
       global $currencies;
-      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($gateway_currency), 2);
-      $submit_data['x_currency_code'] = $gateway_currency;
+      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data['x_currency_code'] = $this->gateway_currency;
       unset($submit_data['x_tax'], $submit_data['x_freight']);
     }
 
