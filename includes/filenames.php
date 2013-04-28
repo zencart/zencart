@@ -4,7 +4,7 @@
  * Defines the filenames used in the project
  *
  * @package general
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: filenames.php 19690 2011-10-04 16:41:45Z drbyte $
@@ -53,6 +53,7 @@ define('FILENAME_COOKIE_USAGE', 'cookie_usage');
 define('FILENAME_COUNTRIES', 'countries');
 define('FILENAME_COUPON_ADMIN', 'coupon_admin');
 define('FILENAME_COUPON_RESTRICT', 'coupon_restrict');
+define('FILENAME_COUPON_ADMIN_EXPORT', 'coupon_admin_export');
 define('FILENAME_CREATE_ACCOUNT', 'create_account');
 define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success');
 define('FILENAME_CURRENCIES', 'currencies');
