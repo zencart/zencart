@@ -226,7 +226,10 @@ class paypaldp extends base {
         $this->enabled = false;
         $this->zcLog('update_status', 'Module disabled due to zone restriction. Billing address is not within the Payment Zone selected in the module settings.');
       }
+    }
 
+    // Purchase amount
+    if ($this->enabled) {
       // module cannot be used for purchase > $10,000 USD
       $order_amount = $this->calc_order_amount($order->info['total'], 'USD');
       if ($order_amount > 10000) {
@@ -237,6 +240,11 @@ class paypaldp extends base {
         $this->enabled = false;
         $this->zcLog('update_status', 'Module disabled because purchase amount is set to 0.00.' . "\n" . print_r($order, true));
       }
+    }
+
+    // other reasons?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**
