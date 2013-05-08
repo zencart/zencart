@@ -1658,6 +1658,7 @@ global $cart, $messageStack;
    */
   function actionUpdateProduct($goto, $parameters) {
     global $messageStack;
+//$messageStack->add_session('shopping_cart', 'FUNCTION actionUpdateProduct ', 'caution');
 
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
@@ -1677,44 +1678,51 @@ global $cart, $messageStack;
         $new_qty = $_POST['cart_quantity'][$i]; // new quantity
         $current_qty = $this->get_quantity($_POST['products_id'][$i]); // how many currently in cart for attribute
         $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
-//echo 'I SEE actionUpdateProduct: ' . $_POST['products_id'] . ' ' . $_POST['products_id'][$i] . '<br>';
 
         $new_qty = $this->adjust_quantity($new_qty, $_POST['products_id'][$i], 'shopping_cart');
+// bof: adjust new quantity to be same as current in stock
+          $chk_current_qty = zen_get_products_stock($_POST['products_id'][$i]);
+          if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty > $chk_current_qty)) {
+              $new_qty = $chk_current_qty;
+              $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
+          }
+// eof: adjust new quantity to be same as current in stock
 
-//die('I see Update Cart: ' . $_POST['products_id'][$i] . ' add qty: ' . $add_max . ' - cart qty: ' . $cart_qty . ' - newqty: ' . $new_qty);
         if (($add_max == 1 and $cart_qty == 1) && $new_qty != $cart_qty) {
           // do not add
           $adjust_max= 'true';
         } else {
         if ($add_max != 0) {
-//$messageStack->add_session('shopping_cart', 'PROCESSING MAX: Update Cart chk_mixed false: ' . $_POST['products_id'][$i] . ' add max: ' . $add_max . ' - cart qty: ' . $cart_qty . ' - newqty: ' . $new_qty . ' current_quantity: ' . $current_qty, 'warning');
+// bof: adjust new quantity to be same as current in stock
+            if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
+                $adjust_new_qty = 'true';
+                $alter_qty = $chk_current_qty - $cart_qty;
+                $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+//                $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . '$chk_current_qty ' . $chk_current_qty . ' $cart_qty ' . $cart_qty . ' $alter_qty ' . $alter_qty . ' - ' . zen_get_products_name($_POST['products_id'][$i]), 'caution');
+                $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
+            }
+// eof: adjust new quantity to be same as current in stock
           // adjust quantity if needed
-//          if ($add_max != 0 && $new_qty > $current_qty && ($cart_quantity - $current_qty + $new_qty) != 0 && (($cart_quantity - $current_qty + $new_qty) + $cart_qty > $add_max)) {
         switch (true) {
           case ($new_qty == $current_qty): // no change
-//$messageStack->add_session('shopping_cart', 'I see NEW=CURRENT Update Cart chk_mixed false: ' . $_POST['products_id'][$i] . ' add max: ' . $add_max . ' - cart qty: ' . $cart_qty . ' - newqty: ' . $new_qty . ' current_quantity: ' . $current_qty, 'warning');
             $adjust_max= 'false';
             $new_qty = $current_qty;
             break;
           case ($new_qty > $add_max && $chk_mixed == false):
-//$messageStack->add_session('shopping_cart', 'I see Update Cart chk_mixed false: ' . $_POST['products_id'][$i] . ' add max: ' . $add_max . ' - cart qty: ' . $cart_qty . ' - newqty: ' . $new_qty . ' something: ' . $something_qty, 'warning');
             $adjust_max= 'true';
             $new_qty = $add_max ;
             break;
           case (($add_max - $cart_qty + $new_qty >= $add_max) && $new_qty > $add_max && $chk_mixed == true):
-//$messageStack->add_session('shopping_cart', 'I see NEW > ADD Update Cart chk_mixed true: ' . $_POST['products_id'][$i] . ' add max: ' . $add_max . ' - cart qty: ' . $cart_qty . ' + newqty: ' . $new_qty, 'warning');
             $adjust_max= 'true';
             $requested_qty = $new_qty;
             $new_qty = $current_qty;
             break;
           case (($cart_qty + $new_qty - $current_qty > $add_max) && $chk_mixed == true):
-//$messageStack->add_session('shopping_cart', 'I see CART + NEW - CURRENT > ADD Update Cart chk_mixed true: ' . $_POST['products_id'][$i] . ' add max: ' . $add_max . ' - cart qty: ' . $cart_qty . ' + newqty: ' . $new_qty . ' current_qty: ' . $current_qty, 'warning');
             $adjust_max= 'true';
             $requested_qty = $new_qty;
             $new_qty = $current_qty;
             break;
           default:
-//$messageStack->add_session('shopping_cart', 'I see DEFAULT Cart - TURN OFF<br>: ' . $_POST['products_id'][$i] . ' add max: ' . $add_max . ' - cart qty: ' . $cart_qty . ' + newqty: ' . $new_qty . '<br>' . 'current: ' . $current_qty, 'warning');
             $adjust_max= 'false';
           }
           $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
@@ -1726,7 +1734,6 @@ global $cart, $messageStack;
         }
         }
         if ($adjust_max == 'true') {
-//          $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . ' A: - ' . zen_get_products_name($_POST['products_id'][$i]), 'caution');
 //$messageStack->add_session('shopping_cart', 'actionUpdateProduct<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id'][$i]) . '<br>Requested: ' . $requested_qty . ' current: ' . $current_qty , 'caution');
           $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id'][$i]), 'caution');
         } else {
@@ -1747,6 +1754,7 @@ global $cart, $messageStack;
    */
   function actionAddProduct($goto, $parameters) {
     global $messageStack, $db;
+//$messageStack->add_session('shopping_cart', 'FUNCTION actionAddProduct ', 'caution');
     if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
       // verify attributes and quantity first
       $the_list = '';
@@ -1760,21 +1768,34 @@ global $cart, $messageStack;
         }
       }
       // verify qty to add
-//          $real_ids = $_POST['id'];
-//die('I see Add to Cart: ' . $_POST['products_id'] . 'real id ' . zen_get_uprid($_POST['products_id'], $real_ids) . ' add qty: ' . $add_max . ' - cart qty: ' . $cart_qty . ' - newqty: ' . $new_qty);
       $add_max = zen_get_products_quantity_order_max($_POST['products_id']);
       $cart_qty = $this->in_cart_mixed($_POST['products_id']);
 //$messageStack->add_session('header', 'actionAddProduct Products_id: ' . $_POST['products_id'] . ' qty: ' . $cart_qty . ' <br>', 'caution');
       $new_qty = $_POST['cart_quantity'];
 
-//echo 'I SEE actionAddProduct: ' . $_POST['products_id'] . '<br>';
       $new_qty = $this->adjust_quantity($new_qty, $_POST['products_id'], 'shopping_cart');
+
+// bof: adjust new quantity to be same as current in stock
+          $chk_current_qty = zen_get_products_stock($_POST['products_id']);
+          if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty > $chk_current_qty)) {
+              $new_qty = $chk_current_qty;
+              $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
+          }
+// eof: adjust new quantity to be same as current in stock
 
       if (($add_max == 1 and $cart_qty == 1)) {
         // do not add
         $new_qty = 0;
         $adjust_max= 'true';
       } else {
+// bof: adjust new quantity to be same as current in stock
+            if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
+                $adjust_new_qty = 'true';
+                $alter_qty = $chk_current_qty - $cart_qty;
+                $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+                $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
+            }
+// eof: adjust new quantity to be same as current in stock
         // adjust quantity if needed
         if (($new_qty + $cart_qty > $add_max) and $add_max != 0) {
           $adjust_max= 'true';
@@ -1832,7 +1853,6 @@ global $cart, $messageStack;
       } // eof: quantity maximum = 1
 
       if ($adjust_max == 'true') {
-//        $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . ' B: - ' . zen_get_products_name($_POST['products_id']), 'caution');
         $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
 //$messageStack->add_session('shopping_cart', 'actionAddProduct<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
       }
@@ -1856,6 +1876,7 @@ global $cart, $messageStack;
    */
   function actionBuyNow($goto, $parameters) {
     global $messageStack;
+//$messageStack->add_session('shopping_cart', 'FUNCTION actionBuyNow ', 'caution');
     if (isset($_GET['products_id'])) {
       if (zen_has_product_attributes($_GET['products_id'])) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['products_id']), 'products_id=' . $_GET['products_id']));
@@ -1900,6 +1921,7 @@ global $cart, $messageStack;
   function actionMultipleAddProduct($goto, $parameters) {
     global $messageStack;
     $addCount = 0;
+//$messageStack->add_session('shopping_cart', 'FUNCTION actionMultipleAddProduct ', 'caution');
     if (is_array($_POST['products_id']) && sizeof($_POST['products_id']) > 0) {
       while ( list( $key, $val ) = each($_POST['products_id']) ) {
         if ($val > 0) {
@@ -1912,12 +1934,29 @@ global $cart, $messageStack;
 //echo 'I SEE actionMultipleAddProduct: ' . $prodId . '<br>';
           $new_qty = $this->adjust_quantity($qty, $prodId, 'shopping_cart');
 
+// bof: adjust new quantity to be same as current in stock
+          $chk_current_qty = zen_get_products_stock($prodId);
+          if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty > $chk_current_qty)) {
+              $new_qty = $chk_current_qty;
+              $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($prodId), 'caution');
+          }
+// eof: adjust new quantity to be same as current in stock
+
           if (($add_max == 1 and $cart_qty == 1)) {
             // do not add
             $adjust_max= 'true';
           } else {
+// bof: adjust new quantity to be same as current in stock
+            if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
+                $adjust_new_qty = 'true';
+                $alter_qty = $chk_current_qty - $cart_qty;
+                $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+//                $messageStack->add_session('shopping_cart', 'NEW + CURRENT = MORE THAN STOCK ' . '$chk_current_qty ' . $chk_current_qty . ' $cart_qty ' . $cart_qty . ' $alter_qty ' . $alter_qty . ' - ' . zen_get_products_name($prodId), 'caution');
+                $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($prodId), 'caution');
+            }
+// eof: adjust new quantity to be same as current in stock
             // adjust quantity if needed
-            if (($new_qty + $cart_qty > $add_max) and $add_max != 0) {
+            if ((($new_qty + $cart_qty > $add_max) and $add_max != 0)) {
               $adjust_max= 'true';
               $new_qty = $add_max - $cart_qty;
             }
