@@ -82,8 +82,26 @@ class queryFactory extends base {
     }
   }
 
+  function simpleConnect($zf_host, $zf_user, $zf_password, $zf_database) {
+    $this->database = $zf_database;
+    $this->user = $zf_user;
+    $this->host = $zf_host;
+    $this->password = $zf_password;
+    $this->link = @mysql_connect($zf_host, $zf_user, $zf_password, true);
+    if ($this->link) {
+      $this->db_connected = true;
+     return true;
+    } else {
+      $this->set_error(mysql_errno(),mysql_error(), $zp_real);
+     return false;
+    }
+  }
   function selectdb($zf_database) {
-    @mysql_select_db($zf_database, $this->link);
+    $result = @mysql_select_db($zf_database, $this->link);
+    if ($result) return $result;
+      $this->set_error(mysql_errno(),mysql_error(), $zp_real);
+     return false;
+    
   }
 
   function prepare_input($zp_string) {
@@ -227,6 +245,7 @@ class queryFactory extends base {
         }
         if (!$zp_db_resource) {
           $this->set_error(@mysql_errno($this->link),@mysql_error($this->link), $this->dieOnErrors);
+          return FALSE;
         }
       }
       if(!is_resource($zp_db_resource)){

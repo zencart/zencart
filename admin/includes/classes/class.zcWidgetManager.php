@@ -58,10 +58,10 @@ class zcWidgetManager extends base
       $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
       $result = $db->execute($sql);
       $profileId = $result->fields['admin_profile'];
-      $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " as tdwtp
-                 LEFT_JOIN " .TABLE_DASHBOARD_WIDGETS . " as tdw ON tdw.widget_key = REPLACE(page_key, '_dashboardwidgets_', '')   
-                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key
-                 WHERE tdwtp.profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%' AND tdwd.language_id = :languageId:";
+      $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " as tdwtp 
+                 LEFT JOIN " .TABLE_DASHBOARD_WIDGETS . " as tdw ON tdw.widget_key = REPLACE(page_key, '_dashboardwidgets_', '')   
+                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key 
+                 WHERE tdwtp.profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%' AND tdwd.language_id = :languageId:"; 
       $sql = $db->bindVars($sql, ':profileId:', $profileId, 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
       $result = $db->execute($sql);

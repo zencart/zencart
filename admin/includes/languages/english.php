@@ -673,6 +673,9 @@ define('TEXT_NOEMAIL', 'No Email');
 define('BOX_HEADING_PRODUCT_TYPES', 'Product Types');
 define('BOX_HEADING_DASHBOARD_WIDGETS', 'Dashboard Widgets');
 
+define('TEXT_FORM_ERROR_REQUIRED', 'Required');
+define('TEXT_SUBMIT', 'Submit');
+
 ///////////////////////////////////////////////////////////
 // include additional files:
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_EMAIL_EXTRAS);

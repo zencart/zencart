@@ -3283,10 +3283,10 @@ INSERT INTO project_version_history (project_version_id, project_version_key, pr
 
 
 #
-# Dumping data for table 'dasboard_widgets'
+# Dumping data for table 'dashboard_widgets'
 #
 
-INSERT INTO dasboard_widgets (widget_key, widget_group, widget_status) VALUES
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('general-statistics', 'general-statistics', 1),
 ('order-summary', 'order-statistics', 1);
 

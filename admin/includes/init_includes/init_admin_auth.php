@@ -10,6 +10,8 @@ if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
 
 define('SUPERUSER_PROFILE', 1);
 
+$hasDoneStartWizard = TRUE;
+
 // admin folder rename required
 if (!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')
 {
@@ -61,5 +63,14 @@ if (basename($_SERVER['SCRIPT_FILENAME']) != FILENAME_ALERT_PAGE . '.php')
   (substr_count(dirname($PHP_SELF),'//') > 0 || substr_count(dirname($PHP_SELF),'.php') > 0))
   {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+  }
+
+  if (STORE_NAME == '' || STORE_OWNER == '')
+  {
+  	$hasDoneStartWizard = FALSE;
+  	if (!in_array($page, array(FILENAME_DEFAULT,FILENAME_LOGOFF,FILENAME_ALERT_PAGE,FILENAME_PASSWORD_FORGOTTEN,FILENAME_DENIED,FILENAME_ALT_NAV)) && isset($_SESSION['admin_id']))
+  	{
+  		zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
+  	}
   }
 }
