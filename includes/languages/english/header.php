@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header.php 2940 2006-02-02 04:29:05Z drbyte $
@@ -16,6 +16,7 @@
   define('HEADER_TITLE_CATALOG', 'Home');
   define('HEADER_TITLE_LOGOFF', 'Log Out');
   define('HEADER_TITLE_LOGIN', 'Log In');
+  define('HEADER_TITLE_ORDER_STATUS', 'Order Status');
 
 // added defines for header alt and text
   define('HEADER_ALT_TEXT', 'Powered by Zen Cart :: The Art of E-Commerce');

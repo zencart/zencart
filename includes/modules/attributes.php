@@ -128,6 +128,18 @@ $sql = "select count(*) as total
                       $new_attributes_price = -$new_attributes_price;
                     }
 
+                    if ($products_options->fields['attributes_price_factor'] > 0) {
+                      $chk_price = zen_get_products_actual_price((int)$_GET['products_id']);
+                      if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL) {
+                        $chk_special = zen_get_products_special_price((int)$_GET['products_id']);
+                      } else {
+                        $chk_special = false;
+                      }
+//echo 'PRICE FACTOR BEFORE zen_get_attributes_price_factor: ' . $new_attributes_price . '<br>';
+                      $new_attributes_price = zen_get_attributes_price_factor($chk_price, $chk_special, $products_options->fields['attributes_price_factor'], $products_options->fields['attributes_price_factor_offset']);
+//echo 'PRICE FACTOR AFTER zen_get_attributes_price_factor: ' . $new_attributes_price . '<br>';
+                    }
+
                     if ($products_options->fields['attributes_price_onetime'] != 0 or $products_options->fields['attributes_price_factor_onetime'] != 0) {
                       $show_onetime_charges_description = 'true';
                       $new_onetime_charges = zen_get_attributes_price_final_onetime($products_options->fields["products_attributes_id"], 1, '');
@@ -479,7 +491,8 @@ $sql = "select count(*) as total
                         $tmp_attributes_image_row = 1;
                       }
 
-                      $tmp_attributes_image .= '<div class="attribImg">' . zen_image(DIR_WS_IMAGES . $products_options->fields['attributes_image']) . (PRODUCT_IMAGES_ATTRIBUTES_NAMES == '1' ? '<br />' . $products_options->fields['products_options_values_name'] : '') . '</div>' . "\n";
+// Do not show TEXT option value on images
+                      $tmp_attributes_image .= '<div class="attribImg">' . zen_image(DIR_WS_IMAGES . $products_options->fields['attributes_image']) . (PRODUCT_IMAGES_ATTRIBUTES_NAMES == '1' ? ( ($products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT && $products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) ? '<br />' . $products_options->fields['products_options_values_name'] : '') : '') . '</div>' . "\n";
                     }
                   }
 

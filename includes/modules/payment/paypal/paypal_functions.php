@@ -438,8 +438,8 @@
     // send received data back to PayPal for validation
     $scheme = 'http://';
     //Parse url
-    $web = parse_url($scheme . (defined('MODULE_PAYMENT_PAYPAL_HANDLER') ? MODULE_PAYMENT_PAYPAL_HANDLER : 'www.paypal.com/cgi-bin/webscr'));
-    if (isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) {
+    $web = parse_url($scheme . 'www.paypal.com/cgi-bin/webscr');
+    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox') {
       $web = parse_url($scheme . 'www.sandbox.paypal.com/cgi-bin/webscr');
     }
     //Set the port number

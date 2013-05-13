@@ -4,7 +4,7 @@
  * HTML-generating functions used throughout the core
  *
  * @package functions
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: html_output.php 19355 2011-08-21 21:12:09Z drbyte $
@@ -17,6 +17,7 @@
     global $request_type, $session_started, $http_domain, $https_domain;
 
     if (!zen_not_null($page)) {
+      error_log('Error! zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
     }
 
@@ -157,8 +158,11 @@
 /*
  * The HTML image wrapper function
  */
-  function zen_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
+  function zen_image($src, $alt = '', $width = '', $height = '', $parameters = '', $rules = '') {
     global $template_dir, $zco_notifier;
+
+    // microdata
+    if (!strstr($parameters, 'itemprop=') && !stristr($rules, 'nomicrodata')) $parameters = trim($parameters . ' itemprop="image"');
 
     // soft clean the alt tag
     $alt = zen_clean_html($alt);

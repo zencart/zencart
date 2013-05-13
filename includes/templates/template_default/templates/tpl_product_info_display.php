@@ -13,7 +13,7 @@
  */
  //require(DIR_WS_MODULES . '/debug_blocks/product_info_prices.php');
 ?>
-<div class="centerColumn" id="productGeneral">
+<div class="centerColumn" id="productGeneral" itemscope itemtype="http://data-vocabulary.org/Product">
 
 <!--bof Form start-->
 <?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data"') . "\n"; ?>
@@ -56,7 +56,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <!--eof Main Product Image-->
 
 <!--bof Product Name-->
-<h1 id="productName" class="productGeneral"><?php echo $products_name; ?></h1>
+<h1 id="productName" class="productGeneral"><span itemprop="name"><?php echo $products_name; ?></span></h1>
 <!--eof Product Name-->
 
 <!--bof Product Price block -->
@@ -68,7 +68,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
   } else {
     $one_time = '';
   }
-  echo $one_time . ((zen_has_product_attributes_values((int)$_GET['products_id']) and $flag_show_product_info_starting_at == 1) ? TEXT_BASE_PRICE : '') . zen_get_products_display_price((int)$_GET['products_id']);
+  echo $one_time . ((zen_has_product_attributes_values((int)$_GET['products_id']) and $flag_show_product_info_starting_at == 1) ? TEXT_BASE_PRICE : '') . '<meta itemprop="currency" content="' . $_SESSION['currency'] . '" />' . '<span itemprop="price">' . zen_get_products_display_price((int)$_GET['products_id']) . '</span>';
 ?></h2>
 <!--eof Product Price block -->
 
@@ -80,7 +80,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 
  <!--bof Product description -->
 <?php if ($products_description != '') { ?>
-<div id="productDescription" class="productGeneral biggerText"><?php echo stripslashes($products_description); ?></div>
+<div id="productDescription" class="productGeneral biggerText"><span itemprop="description"><?php echo stripslashes($products_description); ?></span></div>
 <?php } ?>
 <!--eof Product description -->
 <br class="clearBoth" />
@@ -116,10 +116,12 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 <!--bof Product details list  -->
 <?php if ( (($flag_show_product_info_model == 1 and $products_model != '') or ($flag_show_product_info_weight == 1 and $products_weight !=0) or ($flag_show_product_info_quantity == 1) or ($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name))) ) { ?>
 <ul id="productDetailsList" class="floatingBox back">
-  <?php echo (($flag_show_product_info_model == 1 and $products_model !='') ? '<li>' . TEXT_PRODUCT_MODEL . $products_model . '</li>' : '') . "\n"; ?>
-  <?php echo (($flag_show_product_info_weight == 1 and $products_weight !=0) ? '<li>' . TEXT_PRODUCT_WEIGHT .  $products_weight . TEXT_PRODUCT_WEIGHT_UNIT . '</li>'  : '') . "\n"; ?>
-  <?php echo (($flag_show_product_info_quantity == 1) ? '<li>' . $products_quantity . TEXT_PRODUCT_QUANTITY . '</li>'  : '') . "\n"; ?>
-  <?php echo (($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name)) ? '<li>' . TEXT_PRODUCT_MANUFACTURER . $manufacturers_name . '</li>' : '') . "\n"; ?>
+  <?php if ($flag_show_product_info_model) { ?><li><?php echo TEXT_PRODUCT_MODEL; ?><span itemprop="identifier" content="mpn:<?php echo $products_model;?>"><?php echo $products_model;?></li><?php } ?>
+  <?php if ($flag_show_product_info_weight) {?><li><?php echo TEXT_PRODUCT_WEIGHT .  $products_weight . TEXT_PRODUCT_WEIGHT_UNIT;?></li><?php } ?>
+  <?php if ($flag_show_product_info_quantity) {?><li><span itemprop="quantity"><?php echo $products_quantity;?></span><?php echo TEXT_PRODUCT_QUANTITY;?></li><?php } ?>
+  <?php if ($product_availability_string != '') { ?><li><span itemprop="availability" content="<?php echo $product_availability_microdata;?>"><?php echo $product_availability_string; ?></span></li><?php }?>
+  <?php if ($flag_show_product_info_manufacturer) {?><li><?php echo TEXT_PRODUCT_MANUFACTURER; ?><span itemprop="brand"><?php echo $manufacturers_name; ?></span></li><?php } ?>
+  <?php if ($product_condition_string != '') {?><li class="microdataCondition"><?php echo TEXT_CONDITION; ?><span itemprop="condition" content="<?php echo $product_condition_microdata; ?>"><?php echo $product_condition_string; ?></span></li><?php } ?>
 </ul>
 <br class="clearBoth" />
 <?php

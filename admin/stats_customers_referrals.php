@@ -16,31 +16,15 @@
   $_GET['referral_code'] = (!isset($_GET['referral_code']) ? '0' : $_GET['referral_code']);
 
   include(DIR_WS_CLASSES . 'order.php');
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
+<script language="javascript" type="text/javascript"><!--
+function couponpopupWindow(url) {
+  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
+}
+//--></script>
 </head>
-<body onload="init()">
+<body>
 <!-- header //-->
 <?php
   require(DIR_WS_INCLUDES . 'header.php');

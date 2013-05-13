@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Linkpoint/Yourpay API payment_module
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -16,11 +16,11 @@
   } else {
     define('MODULE_PAYMENT_LINKPOINT_API_TEXT_DESCRIPTION', '<a target="_blank" href="http://www.zen-cart.com/partners/firstdata">Click Here to Sign Up for an Account</a><br /><br /><a target="_blank" href="https://secure.linkpt.net/lpcentral/servlet/LPCLogin">FirstData/Linkpoint/YourPay API Merchant Area</a><br /><br /><a target="_blank" href="http://tutorials.zen-cart.com/index.php?article=298">Click here for <strong>SETUP/Troubleshooting Instructions</strong></a><br /><br /><strong>Requirements:</strong><br /><hr />*<strong>LinkPoint or YourPay Account</strong> (see link above to signup)<br />*<strong>cURL is required </strong>and MUST be compiled into PHP by your hosting company<br />*<strong>Port 1129</strong> is used for bidirectional communication with the gateway, so must be open on your host\'s router/firewall<br />*<strong>PEM RSA Key File </strong>Digital Certificate:<br />To obtain and upload your Digital Certificate (.PEM) key:<br />- Log in to your LinkPoint/Yourpay account on their website<br />- Click on "Support" in the Main Menu Bar.<br />- Click on the word "Download Center" under Downloads in the Side Menu Box.<br />- Click on the word "download" beside the "Store PEM File" section on the right-hand side of the page.<br />- Key in necessary information to start download. You will need to supply your actual SSN or Tax ID which you submitted during the merchant account boarding process.<br />- Upload this file to includes/modules/payment/linkpoint_api/XXXXXX.pem (provided by FirstData - xxxxxx is your store id)');
   }
-  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_TYPE', 'Credit Card Type:');
-  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_OWNER', 'Credit Card Owner:');
-  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_NUMBER', 'Credit Card Number:');
+  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_TYPE', 'Card Type:');
+  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_OWNER', 'Card Owner:');
+  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_NUMBER', 'Card Number:');
   define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CVV', 'CVV Number:');
-  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_EXPIRES', 'Credit Card Expiry Date:');
+  define('MODULE_PAYMENT_LINKPOINT_API_TEXT_CREDIT_CARD_EXPIRES', 'Expiry Date:');
   define('MODULE_PAYMENT_LINKPOINT_API_TEXT_JS_CC_OWNER', '* The cardholder name must be at least ' . CC_OWNER_MIN_LENGTH . ' characters.\n');
   define('MODULE_PAYMENT_LINKPOINT_API_TEXT_JS_CC_NUMBER', '* The credit card number must be at least ' . CC_NUMBER_MIN_LENGTH . ' characters.\n');
   define('MODULE_PAYMENT_LINKPOINT_API_TEXT_JS_CC_CVV', '* You must enter the 3 or 4 digit number on the back of your credit card');

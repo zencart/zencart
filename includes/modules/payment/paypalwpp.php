@@ -3,7 +3,7 @@
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.5.1 $
@@ -101,7 +101,7 @@ class paypalwpp extends base {
     global $order;
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
-    $this->codeVersion = '1.5.1';
+    $this->codeVersion = '1.6.0';
     $this->enableDirectPayment = FALSE;
     $this->enabled = (MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
@@ -164,7 +164,7 @@ class paypalwpp extends base {
     $this->zone = (int)MODULE_PAYMENT_PAYPALWPP_ZONE;
     if (is_object($order)) $this->update_status();
 
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.0') $this->enabled = false;
+    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '6.0') $this->enabled = false;
 
     $this->cards = array();
     // if operating in markflow mode, start EC process when submitting order
@@ -189,7 +189,7 @@ class paypalwpp extends base {
   function update_status() {
     global $order, $db;
 //    $this->zcLog('update_status', 'Checking whether module should be enabled or not.');
-    if ($this->enabled && (int)$this->zone > 0) {
+    if ($this->enabled && (int)$this->zone > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
       $sql = "SELECT zone_id
               FROM " . TABLE_ZONES_TO_GEO_ZONES . "
@@ -214,6 +214,7 @@ class paypalwpp extends base {
         $this->enabled = false;
         $this->zcLog('update_status', 'Module disabled due to zone restriction. Billing address is not within the Payment Zone selected in the module settings.');
       }
+    }
 
       // module cannot be used for purchase > $10,000 USD
       $order_amount = $this->calc_order_amount($order->info['total'], 'USD');
@@ -225,7 +226,6 @@ class paypalwpp extends base {
         $this->enabled = false;
         $this->zcLog('update_status', 'Module disabled because purchase amount is set to 0.00.' . "\n" . print_r($order, true));
       }
-    }
   }
   /**
    *  Validate the credit card information via javascript (Number, Owner, and CVV Lengths)
@@ -272,7 +272,9 @@ class paypalwpp extends base {
     $optionsNVP = array();
 
     $options = $this->getLineItemDetails($this->selectCurrency($order->info['currency']));
-    if (defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
+
+    // Allow delayed payments such as eCheck? (can only use InstantPayment if Action is Sale)
+    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
 
     //$this->zcLog('before_process - 1', 'Have line-item details:' . "\n" . print_r($options, true));
 
@@ -594,7 +596,7 @@ class paypalwpp extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('PayPal Page Style', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'Primary', 'The page-layout style you want customers to see when they visit the PayPal site. You can configure your <strong>Custom Page Styles</strong> in your PayPal Profile settings. This value is case-sensitive.', '6', '25', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Store (Brand) Name at PayPal', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', '', 'The name of your store as it should appear on the PayPal login page. If blank, your store name will be used.', '6', '25', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Payment Action', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'Final Sale', 'How do you want to obtain payment?<br /><strong>Default: Final Sale</strong>', '6', '25', 'zen_cfg_select_option(array(\'Auth Only\', \'Final Sale\'), ',  now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Currency', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'Selected Currency', 'Which currency should the order be sent to PayPal as? <br />NOTE: if an unsupported currency is sent to PayPal, it will be auto-converted to USD (or GBP if using UK account)<br /><strong>Default: Selected Currency</strong>', '6', '25', 'zen_cfg_select_option(array(\'Selected Currency\', \'Only USD\', \'Only AUD\', \'Only CAD\', \'Only EUR\', \'Only GBP\', \'Only CHF\', \'Only CZK\', \'Only DKK\', \'Only HKD\', \'Only HUF\', \'Only JPY\', \'Only NOK\', \'Only NZD\', \'Only PLN\', \'Only SEK\', \'Only SGD\', \'Only THB\', \'Only MXN\', \'Only ILS\', \'Only PHP\', \'Only TWD\', \'Only BRL\', \'Only MYR\', \'Only TKD\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Currency', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'Selected Currency', 'Which currency should the order be sent to PayPal as? <br />NOTE: if an unsupported currency is sent to PayPal, it will be auto-converted to USD (or GBP if using UK account)<br /><strong>Default: Selected Currency</strong>', '6', '25', 'zen_cfg_select_option(array(\'Selected Currency\', \'Only USD\', \'Only AUD\', \'Only CAD\', \'Only EUR\', \'Only GBP\', \'Only CHF\', \'Only CZK\', \'Only DKK\', \'Only HKD\', \'Only HUF\', \'Only JPY\', \'Only NOK\', \'Only NZD\', \'Only PLN\', \'Only SEK\', \'Only SGD\', \'Only THB\', \'Only MXN\', \'Only ILS\', \'Only PHP\', \'Only TWD\', \'Only BRL\', \'Only MYR\', \'Only TRY\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow eCheck?', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'Any', 'Do you want to allow non-instant payments like eCheck/EFT/ELV?', '6', '25', 'zen_cfg_select_option(array(\'Any\', \'Instant Only\'), ', now())");
 
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Fraud Mgmt Filters - FMF', 'MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS', 'No', 'If you have enabled FMF support in your PayPal account and wish to utilize it in your transactions, set this to yes. Otherwise, leave it at No.', '6', '25','zen_cfg_select_option(array(\'No\', \'Yes\'), ', now())");
@@ -1011,7 +1013,7 @@ class paypalwpp extends base {
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
    */
   function selectCurrency($val = '', $subset = 'EC') {
-    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TKD');
+    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY');
     $dp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD');
     $paypalSupportedCurrencies = ($subset == 'EC') ? $ec_currencies : $dp_currencies;
 
@@ -1137,6 +1139,10 @@ class paypalwpp extends base {
           }
         }
       }
+
+      $this->ot_merge = array();
+      $this->notify('NOTIFY_PAYMENT_PAYPALEC_SUBTOTALS_TAX', $order, $order_totals);
+      if (sizeof($this->ot_merge)) $optionsST = array_merge($optionsST, $this->ot_merge);
 
       if ($creditsApplied > 0) $optionsST['ITEMAMT'] -= $creditsApplied;
       if ($surcharges > 0) $optionsST['ITEMAMT'] += $surcharges;
@@ -1445,9 +1451,6 @@ class paypalwpp extends base {
     $lc_code = $this->getLanguageCode();
     if ($lc_code != '') $options['LOCALECODE'] = $lc_code;
 
-    // Allow delayed payments such as eCheck?
-    if (defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
-
     //Gift Options
     $options['GIFTMESSAGEENABLE'] = 0;
     $options['GIFTRECEIPTEENABLE'] = 0;
@@ -1466,6 +1469,9 @@ class paypalwpp extends base {
     $options['PAYMENTACTION'] = (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Sale';
     // for future:
     if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Order') $options['PAYMENTACTION'] = 'Order';
+
+    // Allow delayed payments such as eCheck? (can only use InstantPayment if Action is Sale)
+    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
 
     $options['ALLOWNOTE'] = 1;  // allow customer to enter a note on the PayPal site, which will be copied to order comments upon return to store.
     $options['SOLUTIONTYPE'] = 'Sole';  // Use 'Mark' for normal Express Checkout, 'Sole' for auctions or alternate flow
@@ -1540,11 +1546,17 @@ class paypalwpp extends base {
 
     $this->zcLog('ec_step1 - 2 -submit', print_r(array_merge($options, array('RETURNURL' => $return_url, 'CANCELURL' => $cancel_url)), true));
 
+    $this->options_merge = array();
+    $this->notify('NOTIFY_PAYMENT_PAYPALEC_BEFORE_SETEC', $options, $order, $order_totals);
+    if (sizeof($this->options_merge)) $options = array_merge($options, $this->options_merge);
+
+
     /**
      * Ask PayPal for the token with which to initiate communications
      */
     $response = $doPayPal->SetExpressCheckout($return_url, $cancel_url, $options);
 
+    $this->notify('NOTIFY_PAYMENT_PAYPALEC_TOKEN', $response);
 
   $submissionCheckOne = TRUE;
   $submissionCheckTwo = TRUE;
@@ -1613,9 +1625,10 @@ class paypalwpp extends base {
     if ($_SESSION['paypal_ec_markflow'] == 1) $orderReview = false;
     $userActionKey = "&useraction=" . ((int)$orderReview == false ? 'commit' : 'continue');
 
+    $this->ec_redirect_url = $paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . $userActionKey;
     // This is where we actually redirect the customer's browser to PayPal. Upon return from PayPal, they go to ec_step2
     header("HTTP/1.1 302 Object Moved");
-    zen_redirect($paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . $userActionKey);
+    zen_redirect($this->ec_redirect_url);
 
     // this should never be reached:
     return $error;
@@ -1652,7 +1665,11 @@ class paypalwpp extends base {
 
     // with the token we retrieve the data about this user
     $response = $doPayPal->GetExpressCheckoutDetails($_SESSION['paypal_ec_token']);
+
+    $this->notify('NOTIFY_PAYPALEC_PARSE_GETEC_RESULT', $response);
+
     //$this->zcLog('ec_step2 - GetExpressCheckout response', print_r($response, true));
+
     /**
      * Determine result of request for data -- if error occurred, the errorHandler will redirect accordingly
      */
@@ -1713,7 +1730,7 @@ class paypalwpp extends base {
 //    }
 
     // reset all previously-selected shipping choices, because cart contents may have been changed
-    if (!(isset($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1)) unset($_SESSION['shipping']);
+    if ((isset($response['SHIPPINGCALCULATIONMODE']) && $response['SHIPPINGCALCULATIONMODE'] != 'Callback') && (!(isset($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1))) unset($_SESSION['shipping']);
 
     // set total temporarily based on amount returned from PayPal, so validations continue to work properly
     global $order, $order_totals;
@@ -1981,6 +1998,8 @@ class paypalwpp extends base {
         // set the Guest customer ID -- for PWA purposes
         $_SESSION['customer_guest_id'] = $customer_id;
 
+        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(array('customer_id' => $customer_id), $sql_data_array));
+
         // set the customer address information in the array for the table insertion
         $sql_data_array = array(
             'customers_id'              => $customer_id,
@@ -2009,6 +2028,8 @@ class paypalwpp extends base {
 
         // grab the address_id (last insert id)
         $address_id = $db->Insert_ID();
+
+        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $address_id), $sql_data_array));
 
         // set the address id lookup for the customer
         $sql = "UPDATE " . TABLE_CUSTOMERS . "
@@ -2109,6 +2130,8 @@ class paypalwpp extends base {
 
       // debug
       $this->zcLog('ec_step2_finish - 8', 'Exiting via terminateEC (from originally-not-logged-in mode).' . "\n" . 'Selected address: ' . $address_book_id . "\nOriginal was: " . (int)$original_default_address_id . "\nprepared data: " . print_r($order->customer, true));
+
+      $this->notify('NOTIFY_PAYPALEC_END_ECSTEP2', $order);
 
       // send the user on
       if ($_SESSION['paypal_ec_markflow'] == 1) {
@@ -2773,11 +2796,12 @@ class paypalwpp extends base {
           }
 
           // if funding source problem occurred, must send back to re-select alternate funding source
-          if ($response['L_ERRORCODE0'] == 10422) {
-            $paypal_url = $this->getPayPalLoginServer();
-            zen_redirect($paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token']);
+          if ($response['L_ERRORCODE0'] == 10422 || $response['L_ERRORCODE0'] == 10486) {
+            header("HTTP/1.1 302 Object Moved");
+            zen_redirect($this->ec_redirect_url);
             die();
           }
+
           // some other error condition
           $errorText = MODULE_PAYMENT_PAYPALWPP_INVALID_RESPONSE;
           $errorNum = urldecode($response['L_ERRORCODE0'] . $response['RESULT']);

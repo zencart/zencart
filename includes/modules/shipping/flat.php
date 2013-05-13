@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
@@ -12,8 +12,7 @@
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
-    function flat() {
-      global $order, $db;
+    function __construct() {
 
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
@@ -27,7 +26,12 @@
       if (zen_get_shipping_enabled($this->code)) {
         $this->enabled = ((MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false);
       }
+    }
 
+// class methods
+    function check_enabled_for_zone()
+    {
+      global $order, $db;
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) ) {
         $check_flag = false;
         $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
@@ -46,9 +50,12 @@
           $this->enabled = false;
         }
       }
+      return $this->enabled;
     }
-
-// class methods
+    function check_enabled()
+    {
+      return $this->enabled;
+    }
     function quote($method = '') {
       global $order;
 

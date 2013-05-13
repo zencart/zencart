@@ -32,7 +32,7 @@
  * }<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_main_page.php 7085 2007-09-22 04:56:31Z ajeh $
@@ -96,7 +96,7 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
     <td valign="top">
 <!-- bof  breadcrumb -->
 <?php if (DEFINE_BREADCRUMB_STATUS == '1' || (DEFINE_BREADCRUMB_STATUS == '2' && !$this_is_home_page) ) { ?>
-    <div id="navBreadCrumb"><?php echo $breadcrumb->trail(BREAD_CRUMBS_SEPARATOR); ?></div>
+    <div id="navBreadCrumb" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><?php echo $breadcrumb->trail(BREAD_CRUMBS_SEPARATOR); ?></div>
 <?php } ?>
 <!-- eof breadcrumb -->
 
@@ -110,9 +110,10 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   }
 ?>
 
-<!-- bof upload alerts -->
+<!-- bof messagestack alerts -->
 <?php if ($messageStack->size('upload') > 0) echo $messageStack->output('upload'); ?>
-<!-- eof upload alerts -->
+<?php if ($messageStack->size('main') > 0) echo $messageStack->output('main'); ?>
+<!-- eof messagestack alerts -->
 
 <?php
  /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: update_product.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -14,9 +14,7 @@
     $action = 'new_product';
   } elseif ($_POST['products_model'] . $_POST['products_url'] . $_POST['products_name'] . $_POST['products_description'] != '') {
     $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
-
     $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
-
     // Data-cleaning to prevent MySQL5 data-type mismatch errors:
     $tmp_value = zen_db_prepare_input($_POST['products_quantity']);
     $products_quantity = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
@@ -61,11 +59,6 @@
       $sql_data_array['products_image'] = '';
       $new_image= 'false';
     }
-
-if ($_POST['image_delete'] == 1) {
-      $sql_data_array['products_image'] = '';
-      $new_image= 'false';
-}
 
     if ($action == 'insert_product') {
       $insert_sql_data = array( 'products_date_added' => 'now()',

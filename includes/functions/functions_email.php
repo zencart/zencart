@@ -5,7 +5,7 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
@@ -43,13 +43,15 @@
  * @param string $email_subject     The subject of the eMail
  * @param string $email_text        The text of the email, may contain HTML entities
  * @param string $from_email_name   The name of the sender, e.g. Shop Administration
- * @param string $from_email_adrdess The email address of the sender, e.g. info@myzenshop.com
+ * @param string $from_email_address The email address of the sender, e.g. info@myzenshop.com
  * @param array  $block             Array containing values to be inserted into HTML-based email template
  * @param string $module            The module name of the routine calling zen_mail. Used for HTML template selection and email archiving.
  *                                  This is passed to the archive function denoting what module initiated the sending of the email
  * @param array  $attachments_list  Array of attachment names/mime-types to be included  (this portion still in testing, and not fully reliable)
+ * @param string $email_reply_to_name  Name of the "reply-to" header (defaults to store name if not specified, except for contact-us and order-confirmation)
+ * @param string $email_reply_to_address Email address for reply-to header (defaults to store email address if not specified, except for contact-us and order-confirmation)
 **/
-  function zen_mail($to_name, $to_address, $email_subject, $email_text, $from_email_name, $from_email_address, $block=array(), $module='default', $attachments_list='' ) {
+  function zen_mail($to_name, $to_address, $email_subject, $email_text, $from_email_name, $from_email_address, $block=array(), $module='default', $attachments_list='', $email_reply_to_name = '', $email_reply_to_address = '' ) {
     global $db, $messageStack, $zco_notifier;
     if (!defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') || (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS == 'site'))
       if (SEND_EMAILS != 'true') return false;  // if sending email is disabled in Admin, just exit
@@ -185,7 +187,7 @@
         case 'smtp':
           $mail->IsSMTP();
           $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
-          if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '25' && EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '') $mail->Port = trim(EMAIL_SMTPAUTH_MAIL_SERVER_PORT);
+          if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '25' && EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '') $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
           $mail->LE = "\r\n";
           break;
         case 'smtpauth':
@@ -194,7 +196,7 @@
           $mail->Username = (zen_not_null(EMAIL_SMTPAUTH_MAILBOX)) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
           $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
-          if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '25' && EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '') $mail->Port = trim(EMAIL_SMTPAUTH_MAIL_SERVER_PORT);
+          if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '25' && EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '') $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
           $mail->LE = "\r\n";
           //set encryption protocol to allow support for Gmail or other secured email protocols
           if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT == '465' || EMAIL_SMTPAUTH_MAIL_SERVER_PORT == '587' || EMAIL_SMTPAUTH_MAIL_SERVER == 'smtp.gmail.com') $mail->Protocol = 'ssl';
@@ -229,9 +231,9 @@
       //$mail->AddBCC(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME);
 
       // set the reply-to address.  If none set yet, then use Store's default email name/address.
-      // If sending from contact-us or tell-a-friend page, use the supplied info
-      $email_reply_to_address = (isset($email_reply_to_address) && $email_reply_to_address != '') ? $email_reply_to_address : (in_array($module, array('contact_us',  'tell_a_friend')) ? $from_email_address : EMAIL_FROM);
-      $email_reply_to_name    = (isset($email_reply_to_name) && $email_reply_to_name != '')    ? $email_reply_to_name    : (in_array($module, array('contact_us',  'tell_a_friend')) ? $from_email_name    : STORE_NAME);
+      // If sending from checkout or contact-us or tell-a-friend page, use the supplied info
+      $email_reply_to_address = (isset($email_reply_to_address) && $email_reply_to_address != '') ? $email_reply_to_address : (in_array($module, array('contact_us',  'tell_a_friend', 'checkout_extra')) ? $from_email_address : EMAIL_FROM);
+      $email_reply_to_name    = (isset($email_reply_to_name) && $email_reply_to_name != '')    ? $email_reply_to_name    : (in_array($module, array('contact_us',  'tell_a_friend', 'checkout_extra')) ? $from_email_name    : STORE_NAME);
       $mail->AddReplyTo($email_reply_to_address, $email_reply_to_name);
 
       // if mailserver requires that all outgoing mail must go "from" an email address matching domain on server, set it to store address
@@ -302,6 +304,7 @@
         if ($key == 'REMOTE_ADDR') $_SERVER[$key] = HTTP_SERVER;
         if ($key == 'PHP_SELF') $_SERVER[$key] = '/obf'.'us'.'cated';
       }
+      @ini_set('mail.add_x_header', 0);
 /**
  * Send the email. If an error occurs, trap it and display it in the messageStack
  */
@@ -415,6 +418,7 @@
 **/
   function zen_build_html_email_from_template($module='default', $content='') {
     global $messageStack, $current_page_base;
+    if (NULL == $current_page_base) $current_page_base = $module;
     $block = array();
     if (is_array($content)) {
       $block = $content;

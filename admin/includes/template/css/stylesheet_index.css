@@ -1,0 +1,24 @@
+/**
+ * @package admin
+ * @ignore
+ * @access private
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
+ */
+table
+{
+	border: 0;
+	margin: 0;
+}
+tr td 
+{
+	text-align: right !important;
+}
+.headerBar td {
+background-color:#003D00;
+color: white;
+}
+.headerBar a {
+color: white;
+}

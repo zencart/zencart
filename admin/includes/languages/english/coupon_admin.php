@@ -1,24 +1,11 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: coupon_admin.php 5758 2007-02-08 01:39:34Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: coupon_admin.php 5758 2007-02-08 01:39:34Z ajeh $
+ */
 
 define('TOP_BAR_TITLE', 'Statistics');
 define('HEADING_TITLE', 'Discount Coupons');
@@ -48,8 +35,8 @@ define('TEXT_VOUCHER_IS', 'The coupon code is ');
 define('TEXT_REMEMBER', 'Don\'t lose the coupon code, make sure to keep the code safe so you can benefit from this special offer.');
 define('TEXT_VISIT', 'Visit us at %s');
 define('TEXT_ENTER_CODE', ' and enter the code ');
-define('TEXT_COUPON_HELP_DATE', '<p><p>The coupon is valid between %s and %s</p></p>');
-define('HTML_COUPON_HELP_DATE', '<p><p>The coupon is valid between %s and %s</p></p>');
+define('TEXT_COUPON_HELP_DATE', '<p>The coupon is valid between %s and %s</p>');
+define('HTML_COUPON_HELP_DATE', '<p>The coupon is valid between %s and %s</p>');
 
 define('TABLE_HEADING_ACTION', 'Action');
 
@@ -113,10 +100,36 @@ define('COUPON_ACTIVE', 'Status');
 define('COUPON_START_DATE', 'Starts');
 define('COUPON_EXPIRE_DATE', 'Expires');
 
+define('TEXT_INFO_DUPLICATE_MANAGEMENT', '<strong>Multiple Discount Coupons Management</strong><br /><br />Click on Discount Coupon to base changes on<br />or use the selected Base Coupon Code: <strong>%s</strong>');
 define('ERROR_DISCOUNT_COUPON_WELCOME', 'Discount Coupon CANNOT be deactivated. This Discount Coupon is the Welcome Discount Coupon<br /><br />Change the Welcome Discount Coupon before trying to delete it. See Admin->Configuration->GV Coupons');
 define('SUCCESS_COUPON_DISABLED', 'Success! Discount Coupon was set to Inactive ...');
 define('TEXT_COUPON_NEW', 'Use NEW Discount Coupon Code:');
 define('ERROR_DISCOUNT_COUPON_DUPLICATE', 'WARNING! Duplicate Coupon exists ... Copy cancelled for Coupon Code: ');
 define('TEXT_CONFIRM_COPY', 'Are you sure you want to Copy this Discount Coupon to another Discount Coupon?');
 define('SUCCESS_COUPON_DUPLICATE', 'Success! Discount Coupon was duplicated ...<br /><br />Be sure to check Coupon Name and Dates ...');
-?>
+define('WARNING_COUPON_DUPLICATE', 'Warning! No Discount Coupons were made! Number of Discount Coupons to create was not defined ... ');
+
+define('TEXT_COUPON_COPY_INFO', 'Copy for multiple duplicates');
+define('TEXT_COUPON_COPY_DUPLICATE', 'Create Multiple Coupons with Base Coupon Code of: ');
+define('TEXT_COUPON_COPY_DUPLICATE_CNT', 'How many duplicate Discount Coupons do you want to create? ');
+
+define('TEXT_CONFIRM_DELETE_DUPLICATE', 'Delete all matching Discount Coupons based on the Base coupon code<br />Example: <strong>%s</strong> would delete all Discount Coupons codes starting with: <strong>%s</strong>');
+define('TEXT_COUPON_DELETE_DUPLICATE', 'Delete all Discount Coupons matching base code: ');
+
+define('TEXT_DISCOUNT_COUPON_EMAIL', 'Email Discount Coupon');
+define('TEXT_DISCOUNT_COUPON_CONFIRM_DELETE', 'Confirm Delete Discount Coupon');
+define('TEXT_DISCOUNT_COUPON_CONFIRM_RESTORE', 'Confirm Restore Discount Coupon');
+
+define('TEXT_DISCOUNT_COUPON_EDIT', 'Edit Discount Coupon');
+define('TEXT_DISCOUNT_COUPON_DELETE', 'Delete Discount Coupon');
+define('TEXT_DISCOUNT_COUPON_RESTORE', 'Restore Discount Coupon');
+define('TEXT_DISCOUNT_COUPON_RESTRICT', 'Restrict Discount Coupon');
+define('TEXT_DISCOUNT_COUPON_REPORT', 'Discount Coupon Report');
+define('TEXT_DISCOUNT_COUPON_COPY', 'Copy Discount Coupon');
+define('TEXT_DISCOUNT_COUPON_COPY_MULTIPLE', 'Copy to Multiple Discount Coupons');
+define('TEXT_DISCOUNT_COUPON_DELETE_MULTIPLE', 'Delete Multiple Discount Coupons');
+define('TEXT_DISCOUNT_COUPON_REPORT_MULTIPLE', 'Multiple Discount Coupons Report');
+define('TEXT_DISCOUNT_COUPON_DOWNLOAD', 'Download Multiple Coupon Codes');
+define('REDEEM_ORDER_ID', 'Order #');
+define('SUCCESS_COUPON_REACTIVATE', 'Successful Reactivate');
+define('TEXT_CONFIRM_REACTIVATE', 'Are you sure you want to restore this Coupon?<br />NOTE: Restore does not affect Start/Expiration Dates.<br />Restore does not affect limits on use per coupon/use per customer if already redeemed.');

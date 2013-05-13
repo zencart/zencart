@@ -83,11 +83,12 @@ if ($_GET['action'] == 'send') {
   $_POST['amount'] = str_replace('$', '', $_POST['amount']);
 
   $gv_amount = trim($_POST['amount']);
-  if (preg_match('/[^0-9\.]/', $gv_amount)) {
+  if (preg_match('/[^0-9\.,]/', $gv_amount)) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
   }
-  if ( $currencies->value($gv_amount, true,DEFAULT_CURRENCY) > $customer_amount || $gv_amount == 0) {
+  $gv_amount = $currencies->normalizeValue($gv_amount);
+  if ( $currencies->value($gv_amount, true, DEFAULT_CURRENCY) > $customer_amount || $gv_amount == 0) {
     //echo $currencies->value($customer_amount, true,DEFAULT_CURRENCY);
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
@@ -98,7 +99,7 @@ if ($_GET['action'] == 'process') {
   if (!isset($_POST['back'])) { // customer didn't click the back button
     $id1 = zen_create_coupon_code($mail['customers_email_address']);
     // sanitize and remove non-numeric characters
-    $_POST['amount'] = preg_replace('/[^0-9.%]/', '', $_POST['amount']);
+    $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
     $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
     //die($currencies->value($_POST['amount'], true, $_SESSION['currency']));

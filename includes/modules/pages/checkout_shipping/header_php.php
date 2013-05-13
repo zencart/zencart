@@ -3,14 +3,19 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
-
+  // Finally, destroy the session.
+  // A RETURNING COWOA CUSTOMER SHOULD NOT BE ABLE TO CHECKOUT COMING FROM ORDER STATUS, SO KILL THE SESSION
+  if ($_SESSION['ORDER_STATUS'] == 'True') {
+      zen_session_destroy();
+  }
   require_once(DIR_WS_CLASSES . 'http_client.php');
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -45,6 +50,12 @@
       if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
         break;
+      } else {
+// extra check on stock for mixed YES
+        if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+          zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+          break;
+        }
       }
     }
   }
@@ -156,6 +167,7 @@ if (isset($_SESSION['cart']->cartID)) {
           if ($_SESSION['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
             $quote[0]['methods'][0]['cost'] = '0';
+            $quote[0]['methods'][0]['icon'] = '';
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
@@ -188,8 +200,12 @@ if (isset($_SESSION['cart']->cartID)) {
   if (isset($_SESSION['shipping']) && $_SESSION['shipping'] != FALSE && $_SESSION['shipping'] != '') {
     $checklist = array();
     foreach ($quotes as $key=>$val) {
-      foreach($val['methods'] as $key2=>$method) {
-        $checklist[] = $val['id'] . '_' . $method['id'];
+      if ($val['methods'] != '') {
+        foreach($val['methods'] as $key2=>$method) {
+          $checklist[] = $val['id'] . '_' . $method['id'];
+        }
+      } else {
+        // skip
       }
     }
     $checkval = (is_array($_SESSION['shipping']) ? $_SESSION['shipping']['id'] : $_SESSION['shipping']);

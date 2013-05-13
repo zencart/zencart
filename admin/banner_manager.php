@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: banner_manager.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -65,9 +65,9 @@
         $banners_image_local = zen_db_prepare_input($_POST['banners_image_local']);
         $banners_image_target = zen_db_prepare_input($_POST['banners_image_target']);
         $db_image_location = '';
-        $expires_date = zen_db_prepare_input($_POST['expires_date']) == '' ? 'null' : zen_date_raw($_POST['expires_date']);
+        $expires_date = zen_db_prepare_input($_POST['expires_date']) == '' ? 'null' : zen_format_date_raw($_POST['expires_date']);
         $expires_impressions = zen_db_prepare_input($_POST['expires_impressions']);
-        $date_scheduled = zen_db_prepare_input($_POST['date_scheduled']) == '' ? 'null' : zen_date_raw($_POST['date_scheduled']);
+        $date_scheduled = zen_db_prepare_input($_POST['date_scheduled']) == '' ? 'null' : zen_format_date_raw($_POST['date_scheduled']);
         $status = zen_db_prepare_input($_POST['status']);
         $banners_open_new_windows = zen_db_prepare_input($_POST['banners_open_new_windows']);
         $banners_on_ssl = zen_db_prepare_input($_POST['banners_on_ssl']);
@@ -220,37 +220,15 @@
       $messageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
     }
   }
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
 <script language="javascript"><!--
 function popupImageWindow(url) {
   window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
 }
 //--></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
 </head>
-<body onload="init()">
-<div id="spiffycalendar" class="text"></div>
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -273,7 +251,7 @@ function popupImageWindow(url) {
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND; ?></td>
-            <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '&nbsp' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
+            <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_BANNER_ON_SSL . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_blue_on.gif', IMAGE_ICON_BANNER_ON_SSL_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_blue_off.gif', IMAGE_ICON_BANNER_ON_SSL_OFF); ?></td>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_BANNER_OPEN_NEW_WINDOWS . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_orange_on.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_orange_off.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF); ?></td>
           </tr>
@@ -343,12 +321,6 @@ function popupImageWindow(url) {
       $groups->MoveNext();
     }
 ?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script language="JavaScript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
-<script language="javascript">
-  var dateExpires = new ctlSpiffyCalendarBox("dateExpires", "new_banner", "expires_date","btnDate1","<?php echo zen_date_short($bInfo->expires_date); ?>",scBTNMODE_CUSTOMBLUE);
-  var dateScheduled = new ctlSpiffyCalendarBox("dateScheduled", "new_banner", "date_scheduled","btnDate2","<?php echo zen_date_short($bInfo->date_scheduled); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
@@ -423,14 +395,14 @@ function popupImageWindow(url) {
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?></td>
-            <td valign="top" class="main"><script language="javascript">dateScheduled.writeControl();dateScheduled.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td valign="top" class="main"><?php echo zen_draw_input_field('date_scheduled', zen_date_short($bInfo->date_scheduled), 'class="datepicker"');  ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_BANNERS_EXPIRES_ON; ?></td>
-            <td class="main"><script language="javascript">dateExpires.writeControl();dateExpires.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script><?php echo TEXT_BANNERS_OR_AT . '<br>' . zen_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?></td>
+            <td class="main"><?php echo zen_draw_input_field('expires_date', zen_date_short($bInfo->expires_date), 'class="datepicker"');  ?><?php echo TEXT_BANNERS_OR_AT . '<br>' . zen_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?></td>
           </tr>
         </table></td>
       </tr>
@@ -627,6 +599,15 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
 <br>
+    <script>
+    $(function() {
+        $( ".datepicker" ).datepicker({
+         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+         changeMonth: true,
+         changeYear: true
+        });
+    });
+    </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

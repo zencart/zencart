@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Thu Aug 2 11:55:32 2012 -0400 Modified in v1.5.1 $
@@ -52,7 +52,6 @@
           } else {
             $_GET[$key][$key2] = preg_replace('/'.$strictReplace.'/', '', $val2);
           }
-          unset($GLOBALS[$key]);
         }
       } else {
         if ($key == 'keyword') {
@@ -60,8 +59,8 @@
         } else {
           $_GET[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
         }
-        unset($GLOBALS[$key]);
       }
+      unset($GLOBALS[$key]);
     }
   }
 /**
@@ -70,13 +69,7 @@
  */
   if (isset($_POST) && count($_POST) > 0) {
     foreach($_POST as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
+      unset($GLOBALS[$key]);
     }
   }
 /**
@@ -84,13 +77,7 @@
  */
   if (isset($_COOKIE) && count($_COOKIE) > 0) {
     foreach($_COOKIE as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
+      unset($GLOBALS[$key]);
     }
   }
 /**
@@ -98,19 +85,13 @@
  */
   if (isset($_SESSION) && count($_SESSION) > 0) {
     foreach($_SESSION as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
+      unset($GLOBALS[$key]);
     }
   }
 /**
  * sanitize $_SERVER vars
  */
-  $_SERVER['REMOTE_ADDR'] = preg_replace('/[^0-9.%]/', '', $_SERVER['REMOTE_ADDR']);
+  $_SERVER['REMOTE_ADDR'] = preg_replace('~[^a-fA-F0-9.:%/]~', '', $_SERVER['REMOTE_ADDR']);
 
 
 /**

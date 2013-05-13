@@ -3,10 +3,11 @@
  * Login Page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 
 // This should be first line of the script:
@@ -44,7 +45,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
                                     customers_email_address, customers_default_address_id,
                                     customers_authorization, customers_referral
                            FROM " . TABLE_CUSTOMERS . "
-                           WHERE customers_email_address = :emailAddress";
+                           WHERE customers_email_address = :emailAddress
+                           AND COWOA_account != 1";
 
     $check_customer_query  =$db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
     $check_customer = $db->Execute($check_customer_query);
@@ -104,18 +106,16 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         // eof: not require part of contents merge notice
 
         // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
-              $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
-              zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
-            }
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+        if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
+          if (SHOW_SHOPPING_CART_COMBINED == 2) {
+            // warning only do not send to cart
+            $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+          }
+          if (SHOW_SHOPPING_CART_COMBINED == 1) {
+            // show warning and send to shopping cart for review
+            $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
+            zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
           }
         }
         // eof: contents merge notice

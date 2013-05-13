@@ -3,7 +3,7 @@
  * paypal_curl.php communications class for PayPal Express Checkout / Website Payments Pro / Payflow Pro payment methods
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.5.1 $
  */
@@ -102,10 +102,11 @@ class paypal_curl extends base {
   /**
    * Constructor. Sets up communication infrastructure.
    */
-  function paypal_curl($params = array()) {
+  function __construct($params = array()) {
     foreach ($params as $name => $value) {
       $this->setParam($name, $value);
     }
+    $this->notify('NOTIFY_PAYPAL_CURL_CONSTRUCT', $params);
   }
 
   /**
@@ -167,6 +168,7 @@ class paypal_curl extends base {
                                            'TENDER'  => 'P',
                                            'TRXTYPE' => $this->_trxtype));
     }
+    $this->notify('NOTIFY_PAYPAL_GETEXPRESSCHECKOUTDETAILS');
     return $this->_request($values, 'GetExpressCheckoutDetails');
   }
 
@@ -433,7 +435,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.1';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 1.6.0';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();
@@ -504,13 +506,15 @@ class paypal_curl extends base {
 
     // Adjustments if Micropayments account profile details have been set
     if (defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD != ''
-        && $pairs['AMT'] < strval(MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD)
+        && (($pairs['AMT'] > 0 && $pairs['AMT'] < strval(MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD) )
+           || ($pairs['METHOD'] == 'GetExpressCheckoutDetails' && isset($_SESSION['using_micropayments']) && $_SESSION['using_micropayments'] == TRUE))
         && defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIUSERNAME') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIUSERNAME != ''
         && defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIPASSWORD') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIPASSWORD != ''
         && defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_APISIGNATURE') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_APISIGNATURE != '') {
       $commpairs['USER'] = str_replace('+', '%2B', trim(MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIUSERNAME));
       $commpairs['PWD'] = trim(MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIPASSWORD);
       $commpairs['SIGNATURE'] = trim(MODULE_PAYMENT_PAYPALWPP_MICROPAY_APISIGNATURE);
+      $_SESSION['using_micropayments'] = ($pairs['METHOD'] == 'DoExpressCheckoutPayment') ? FALSE : TRUE;
     }
 
     // Accelerated/Unilateral Boarding support:
@@ -641,13 +645,17 @@ class paypal_curl extends base {
   function log($message, $token = '') {
     static $tokenHash;
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
+    $this->outputDestination = 'File';
+    $this->notify('PAYPAL_CURL_LOG', $token, $tokenHash);
     if ($token == '') $token = $_SESSION['paypal_ec_token'];
     if ($token == '') $token = time();
     $token .= $tokenHash;
-    $file = $this->_logDir . '/' . 'Paypal_CURL_' . $token . '.log';
-    if ($fp = @fopen($file, 'a')) {
-      fwrite($fp, $message . "\n\n");
-      fclose($fp);
+    if ($this->outputDestination == 'File') {
+      $file = $this->_logDir . '/' . 'Paypal_CURL_' . $token . '.log';
+      if ($fp = @fopen($file, 'a')) {
+        fwrite($fp, $message . "\n\n");
+        fclose($fp);
+      }
     }
   }
   /**

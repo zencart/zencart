@@ -13,6 +13,7 @@
   $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set'] : ''));
 
   $is_ssl_protected = (substr(HTTP_SERVER, 0, 5) == 'https') ? TRUE : FALSE;
+  $file_extension = '.php';
 
   if (zen_not_null($set)) {
     switch ($set) {
@@ -71,21 +72,14 @@
                         set configuration_value = '" . zen_db_input($value) . "'
                         where configuration_key = '" . zen_db_input($key) . "'");
         }
-        $configuration_query = 'select configuration_key as cfgkey, configuration_value as cfgvalue
-                                from ' . TABLE_CONFIGURATION;
-        $configuration = $db->Execute($configuration_query);
         $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED, preg_replace('/[^\d\w]/', '*', $_GET['module']), $admname);
         zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'NONSSL'));
+        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')));
         break;
       case 'install':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($_POST['module']);
         if (!$is_ssl_protected && in_array($class, array('paypaldp', 'linkpoint_api', 'authorizenet_aim', 'authorizenet_echeck'))) break;
         if (file_exists($module_directory . $class . $file_extension)) {
-          $configuration_query = 'select configuration_key as cfgkey, configuration_value as cfgvalue
-                                  from ' . TABLE_CONFIGURATION;
-          $configuration = $db->Execute($configuration_query);
           include($module_directory . $class . $file_extension);
           $module = new $class;
           $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
@@ -93,51 +87,41 @@
           $result = $module->install();
         }
         if ($result != 'failed') {
-          zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'NONSSL'));
+          zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit'));
         }
        break;
       case 'removeconfirm':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($_POST['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
-          $configuration_query = 'select configuration_key as cfgkey, configuration_value as cfgvalue
-                                  from ' . TABLE_CONFIGURATION;
-          $configuration = $db->Execute($configuration_query);
           include($module_directory . $class . $file_extension);
           $module = new $class;
           $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
           zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
           $result = $module->remove();
         }
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'NONSSL'));
+        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+       break;
+      case 'commtest':
+        $class = basename($_GET['module']);
+        if (file_exists($module_directory . $class . $file_extension)) {
+          include($module_directory . $class . $file_extension);
+          $module = new $class;
+          if (method_exists($module, 'testCommunications')) {
+            $result = $module->testCommunications();
+            $messageStack->add_session($result['text'], $result['type']);
+          } else {
+            $result = TEXT_ERROR_NO_COMMTEST_OPTION_AVAILABLE;
+            $messageStack->add_session($result, 'caution');
+          }
+        }
+        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
        break;
     }
   }
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
 </head>
-<body onLoad="init()">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->

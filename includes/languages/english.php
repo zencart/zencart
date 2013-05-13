@@ -1,49 +1,13 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: english.php 19690 2011-10-04 16:41:45Z drbyte $
  */
 
-// FOLLOWING WERE moved to meta_tags.php
-//define('TITLE', 'Zen Cart!');
-//define('SITE_TAGLINE', 'The Art of E-commerce');
-//define('CUSTOM_KEYWORDS', 'ecommerce, open source, shop, online shopping');
-// END: moved to meta_tags.php
-
   define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>');
-
-// look in your $PATH_LOCALE/locale directory for available locales..
-  @setlocale(LC_TIME, 'en_US');
-  define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
-  define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
-  define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
-  define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
-
-////
-// Return date in raw format
-// $date should be in format mm/dd/yyyy
-// raw date is in format YYYYMMDD, or DDMMYYYY
-  if (!function_exists('zen_date_raw')) {
-    function zen_date_raw($date, $reverse = false) {
-      if ($reverse) {
-        return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
-      } else {
-        return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
-      }
-    }
-  }
-
-// if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency, instead of the applications default currency (used when changing language)
-  define('LANGUAGE_CURRENCY', 'USD');
-
-// Global entries for the <html> tag
-  define('HTML_PARAMS','dir="ltr" lang="en"');
-
-// charset for web pages and emails
-  define('CHARSET', 'utf-8');
 
 // footer text in includes/footer.php
   define('FOOTER_TEXT_REQUESTS_SINCE', 'requests since');
@@ -65,11 +29,8 @@
   define('MALE_ADDRESS', 'Mr.');
   define('FEMALE_ADDRESS', 'Ms.');
 
-// text for date of birth example
-  define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
-
 //text for sidebox heading links
-  define('BOX_HEADING_LINKS', '&nbsp;&nbsp;[more]');
+  define('BOX_HEADING_LINKS', '&nbsp;&nbsp;<span>more &raquo;</span>');
 
 // categories box text in sideboxes/categories.php
   define('BOX_HEADING_CATEGORIES', 'Categories');
@@ -176,6 +137,15 @@
   define('PLEASE_SELECT', 'Please select ...');
   define('TYPE_BELOW', 'Type a choice below ...');
 
+  define('TEXT_CATEGORY', 'Category: ');
+  define('TEXT_CONDITION', 'Condition: ');
+  define('TEXT_CONDITION_NEW', 'New');
+
+  define('TEXT_IN_STOCK', 'In Stock');
+  define('TEXT_OUT_OF_STOCK', 'Out of Stock');
+  define('TEXT_INSTORE_ONLY', 'In Store Only');
+  define('TEXT_PREORDER', 'Pre-Order');
+
   define('ENTRY_COMPANY', 'Company Name:');
   define('ENTRY_COMPANY_ERROR', 'Please enter a company name.');
   define('ENTRY_COMPANY_TEXT', '');
@@ -189,8 +159,7 @@
   define('ENTRY_LAST_NAME_ERROR', 'Is your last name correct? Our system requires a minimum of ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters. Please try again.');
   define('ENTRY_LAST_NAME_TEXT', '*');
   define('ENTRY_DATE_OF_BIRTH', 'Date of Birth:');
-  define('ENTRY_DATE_OF_BIRTH_ERROR', 'Is your birth date correct? Our system requires the date in this format: MM/DD/YYYY (eg 05/21/1970)');
-  define('ENTRY_DATE_OF_BIRTH_TEXT', '* (eg. 05/21/1970)');
+  define('ENTRY_DATE_OF_BIRTH_TEXT', '* ' . ENTRY_DATE_OF_BIRTH_EXAMPLE);
   define('ENTRY_EMAIL_ADDRESS', 'Email Address:');
   define('ENTRY_EMAIL_ADDRESS_ERROR', 'Is your email address correct? It should contain at least ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters. Please try again.');
   define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Sorry, my system does not understand your email address. Please try again.');
@@ -373,12 +342,6 @@
 // only for where multiple add to cart is used:
   define('SUCCESS_ADDED_TO_CART_PRODUCTS', 'Successfully added selected Product(s) to the cart ...');
 
-  define('TEXT_PRODUCT_WEIGHT_UNIT','lbs');
-
-// Shipping
-  define('TEXT_SHIPPING_WEIGHT','lbs');
-  define('TEXT_SHIPPING_BOXES', 'Boxes');
-
 // Discount Savings
   define('PRODUCT_PRICE_DISCOUNT_PREFIX','Save:&nbsp;');
   define('PRODUCT_PRICE_DISCOUNT_PERCENTAGE','% off');
@@ -386,9 +349,6 @@
 
 // Sale Maker Sale Price
   define('PRODUCT_PRICE_SALE','Sale:&nbsp;');
-
-//universal symbols
-  define('TEXT_NUMBER_SYMBOL', '# ');
 
 // banner_box
   define('BOX_HEADING_BANNER_BOX','Sponsors');
@@ -459,8 +419,6 @@
 
 // Downloads Controller
   define('DOWNLOADS_CONTROLLER_ON_HOLD_MSG','NOTE: Downloads are not available until payment has been confirmed');
-  define('TEXT_FILESIZE_BYTES', ' bytes');
-  define('TEXT_FILESIZE_MEGS', ' MB');
 
 // shopping cart errors
   define('ERROR_PRODUCT','<br />The item: ');
@@ -477,6 +435,7 @@
   define('ERROR_PRODUCT_QUANTITY_MAX_SHOPPING_CART',' ... Maximum Quantity errors - ');
 
   define('WARNING_SHOPPING_CART_COMBINED', 'NOTICE: For your convenience, your current shopping cart has been combined with your shopping cart from your last visit. Please review your shopping cart before checking out.');
+  define('WARNING_PRODUCT_QUANTITY_ADJUSTED', 'Quantity has been adjusted to what is in stock. ');
 
 // error on checkout when $_SESSION['customers_id' does not exist in customers table
   define('ERROR_CUSTOMERS_ID_INVALID', 'Customer information cannot be validated!<br />Please login or recreate your account ...');
@@ -581,9 +540,6 @@
   define('TABLE_HEADING_BYTE_SIZE','File Size');
   define('TEXT_DOWNLOADS_UNLIMITED', 'Unlimited');
   define('TEXT_DOWNLOADS_UNLIMITED_COUNT', '--- *** ---');
-
-// misc
-  define('COLON_SPACER', ':&nbsp;&nbsp;');
 
 // table headings for cart display and upcoming products
   define('TABLE_HEADING_QUANTITY', 'Qty.');

@@ -3,7 +3,7 @@
  * FirstData/Linkpoint/Yourpay API Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -292,7 +292,7 @@ class linkpoint_api {
     // prepare totals for submission
     $surcharges = 0;
     $creditsApplied = 0;
-    global $order_totals;
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_BEFORE_ORDER_TOTALS');
     reset($order_totals);
     $myorder['subtotal'] = $myorder['tax'] = $myorder['shipping'] = $myorder['chargetotal'] = 0;
     for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
@@ -315,7 +315,10 @@ class linkpoint_api {
       if (isset($myorder[$i])) $myorder[$i] = number_format($myorder[$i], 2, '.', '');
     }
 
-    if ($surcharges == 0 && $creditsApplied == 0 && $order->info['total'] >= $order->info['subtotal'] && sizeof($order->products) <= 20) {
+    $this->include_item_details = TRUE;
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_BEFORE_LINEITEM_DETAILS', $myorder, $order, $order_totals);
+
+    if ($this->include_item_details && $surcharges == 0 && $creditsApplied == 0 && $order->info['total'] >= $order->info['subtotal'] && sizeof($order->products) <= 20) {
     // itemized contents
       $num_line_items = 0;
       reset($order->products);
@@ -447,6 +450,10 @@ class linkpoint_api {
     $myorder["ordertype"]  = (MODULE_PAYMENT_LINKPOINT_API_AUTHORIZATION_MODE == 'Authorize Only' ? 'PREAUTH': 'SALE');
     $this->payment_status = $myorder["ordertype"];
 
+    $this->submit_extras = array();
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_PRESUBMIT_HOOK');
+    if (sizeof($this->submit_extras)) $myorder = array_merge($myorder, $this->submit_extras);
+
     // send request to gateway
     $result = $this->_sendRequest($myorder);
 
@@ -465,6 +472,8 @@ class linkpoint_api {
         $myorder["oid"] .= '-b';
         $myorder["chargetotal"] = ($myorder["chargetotal"] - 0.01);
         $result = $this->_sendRequest($myorder);
+        $this->notify('NOTIFY_PAYMENT_LINKPOINT_POSTSUBMIT_HOOK', $result);
+
         if (!is_array($result)) {
           $messageStack->add_session('checkout_payment', MODULE_PAYMENT_LINKPOINT_API_TEXT_FAILURE_MESSAGE, 'error');
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));

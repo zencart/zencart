@@ -6,7 +6,7 @@
  * Displays product-listing when a particular category/subcategory is selected for browsing
  *
  * @package templateSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_index_product_list.php 15589 2010-02-27 15:03:49Z ajeh $
@@ -74,7 +74,7 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
   echo zen_draw_hidden_field('sort', $_GET['sort']);
 
   // draw filter_id (ie: category/mfg depending on $options)
-  if ($do_filter_list) {
+  if ($do_filter_list && sizeof($options) > 0) {
     echo zen_draw_pull_down_menu('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
   }
 

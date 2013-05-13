@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header.php 19529 2011-09-19 13:11:40Z wilt $
@@ -117,6 +117,9 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
     }
   }
 
+// check for debug logs
+  require(DIR_WS_INCLUDES . 'debug_logs_checker.php');
+
 // display alerts/error messages, if any
   if ($messageStack->size > 0) {
     echo $messageStack->output();
@@ -174,7 +177,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
   }
 
 // check GV release queue and alert store owner
-  if (SHOW_GV_QUEUE==true) {
+  if (SHOW_GV_QUEUE==true && (zen_is_superuser() || check_page(FILENAME_ORDERS, array()))) {
     $new_gv_queue= $db->Execute("select * from " . TABLE_COUPON_GV_QUEUE . " where release_flag='N'");
     $new_gv_queue_cnt = 0;
     if ($new_gv_queue->RecordCount() > 0) {
@@ -205,7 +208,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
 <?php
   if ($new_version) {
 ?>
-    <td align="right" class="main" valign="top"><?php echo $new_version; ?><br /><?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?></td>
+    <td align="right" class="main version-notify" valign="top"><?php echo $new_version; ?><br /><?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?></td>
 <?php
   }
 ?>
@@ -227,7 +230,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
       }
     ?>
     </td>
-    <td class="headerBarContent" align="center"><b><?php echo date("r", time()) . 'GMT'  . '&nbsp;[' .  $_SERVER['REMOTE_ADDR'] . ' ]&nbsp;'; ?></b></td>
+    <td class="headerBarContent" align="center"><b><?php echo date(PHP_DATE_TIME_FORMAT . " P", time()) . 'GMT'  . '&nbsp;[' .  $_SERVER['REMOTE_ADDR'] . ' ]&nbsp;'; ?></b></td>
     <td class="headerBarContent" align="right"><?php echo '
         <a href="' . zen_href_link(FILENAME_DEFAULT, '', 'NONSSL') . '" class="headerLink">' . HEADER_TITLE_TOP . '</a>&nbsp;|&nbsp;
         <a href="' . zen_catalog_href_link() . '" class="headerLink" target="_blank">' . HEADER_TITLE_ONLINE_CATALOG . '</a>&nbsp;|&nbsp;

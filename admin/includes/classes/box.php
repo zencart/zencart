@@ -58,4 +58,3 @@ if (!defined('IS_ADMIN_FLAG')) {
       return $this->heading . $this->contents;
     }
   }
-?>

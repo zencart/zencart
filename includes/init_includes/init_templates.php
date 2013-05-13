@@ -4,11 +4,11 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * Determines current template name for current language, from database<br />
- * Then loads template-specific language file, followed by master/default language file<br />
+ * Then loads template-specific locale defines, then the main language file, followed by master/default language file<br />
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
  * @package initSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_templates.php 3123 2006-03-06 23:36:46Z drbyte $
@@ -49,22 +49,26 @@
   define('DIR_WS_TEMPLATE_ICONS', DIR_WS_TEMPLATE_IMAGES . 'icons/');
 
 /**
+ *  Load locale defines specific to language+locale
+ */
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/locale.php')) {
+    $template_dir_select = $template_dir . '/';
+  } else {
+    $template_dir_select = '';
+  }
+  require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'locale.php');
+
+/**
  * Load the appropriate Language files, based on the currently-selected template
  */
 
   if (file_exists(DIR_WS_LANGUAGES . $template_dir . '/' . $_SESSION['language'] . '.php')) {
     $template_dir_select = $template_dir . '/';
-  /**
-   * include the template language overrides
-   */
-      include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
-  } else {
-    $template_dir_select = '';
-      //  include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
+    include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
   }
 /**
  * include the template language master (to catch all items not defined in the override file).
- * The intent here is to: load the override version to catch preferencial changes; 
+ * The intent here is to: load the override version to catch preferencial changes;
  * then load the original/master version to catch any defines that didn't get set into the override version during upgrades, etc.
  */
 // THE FOLLOWING MIGHT NEED TO BE DISABLED DUE TO THE EXISTENCE OF function() DECLARATIONS IN MASTER ENGLISH.PHP FILE
@@ -81,4 +85,3 @@
  * include the extra language definitions
  */
   include(DIR_WS_MODULES . 'extra_definitions.php');
-?>
