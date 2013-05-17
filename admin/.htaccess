@@ -1,5 +1,5 @@
 #
-# @copyright Copyright 2003-2012 Zen Cart Development Team
+# @copyright Copyright 2003-2013 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # @version $Id: .htaccess 19328 2011-08-06 22:53:47Z drbyte $
 #
@@ -25,7 +25,7 @@ DirectoryIndex index.php
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch ".*\.(php|js|css|html?|ico|otf|jpe?g|gif|webp|png|swf|flv|xml|xsl)$">
+<FilesMatch "(?i).*\.(php|js|css|html?|ico|otf|jpe?g|gif|webp|png|swf|flv|xml|xsl)$">
   Order Allow,Deny
   Allow from all
 </FilesMatch>
@@ -52,16 +52,16 @@ deny from All
   FileETag None
   Header unset ETag
   #Header set Cache-Control "no-transform"
-  <FilesMatch ".*\.(ico|jpe?g|JPE?G|gif|GIF|otf|webp|png|swf|flv|svg|svgz)$">
+  <FilesMatch "(?i).*\.(ico|jpe?g|gif|otf|webp|png|swf|flv|svg|svgz)$">
     Header set Cache-control "max-age=864000, public, must-revalidate"
     Header unset Last-Modified
   </FilesMatch>
-  <FilesMatch ".*\.(html|htm|xml|txt|xsl)$">
+  <FilesMatch "(?i).*\.(html|htm|xml|txt|xsl)$">
     Header set Cache-control "max-age=7200, must-revalidate"
   </FilesMatch>
 </IfModule>
 <IfModule mod_deflate.c>
-  <FilesMatch "\.(js|css)$">
+  <FilesMatch "(?i)\.(js|css)$">
     SetOutputFilter DEFLATE
   </FilesMatch>
 </IfModule>
@@ -88,7 +88,7 @@ deny from All
 
 
 
-# The following makes adjustments to the SSL protocol for Internet Explorer browsers
+# The following makes adjustments to the SSL protocol for old Internet Explorer browsers
 <IfModule mod_setenvif.c>
   <IfDefine SSL>
     SetEnvIf User-Agent ".*MSIE.*" \
