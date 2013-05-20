@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_price_manager.php 19294 2011-07-28 18:15:46Z drbyte $
@@ -132,13 +132,13 @@
           $master_categories_id = $_POST['master_categories_id'];
         }
 
-        $products_date_available = ((zen_db_prepare_input($_POST['product_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['product_start']));
+        $products_date_available = ((zen_db_prepare_input($_POST['product_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['product_start']));
 
-        $specials_date_available = ((zen_db_prepare_input($_POST['special_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['special_start']));
-        $specials_expires_date = ((zen_db_prepare_input($_POST['special_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['special_end']));
+        $specials_date_available = ((zen_db_prepare_input($_POST['special_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_start']));
+        $specials_expires_date = ((zen_db_prepare_input($_POST['special_end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_end']));
 
-        $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_start']));
-        $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_end']));
+        $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['featured_start']));
+        $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['featured_end']));
 
     $tmp_value = zen_db_prepare_input($_POST['products_price_sorter']);
     $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
@@ -258,35 +258,10 @@
     }
   }
 
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script language="JavaScript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
-
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
 </head>
-<body onLoad="init()">
-<div id="spiffycalendar" class="text"></div>
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -542,26 +517,6 @@ if ($products_filter == '') {
       $tax_class->MoveNext();
     }
 ?>
-<?php if ($pInfo->products_id != '') { ?>
-<script language="javascript">
-var ProductStartDate = new ctlSpiffyCalendarBox("ProductStartDate", "new_prices", "product_start", "btnDate1","<?php echo (($pInfo->products_date_available <= '0001-01-01') ? '' : zen_date_short($pInfo->products_date_available)); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
-<?php } ?>
-
-<?php if ($fInfo->products_id != '') { ?>
-<script language="javascript">
-var FeaturedStartDate = new ctlSpiffyCalendarBox("FeaturedStartDate", "new_prices", "featured_start", "btnDate2","<?php echo (($fInfo->featured_date_available <= '0001-01-01') ? '' : zen_date_short($fInfo->featured_date_available)); ?>",scBTNMODE_CUSTOMBLUE);
-var FeaturedEndDate = new ctlSpiffyCalendarBox("FeaturedEndDate", "new_prices", "featured_end", "btnDate3","<?php echo (($fInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($fInfo->expires_date)); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
-<?php } ?>
-
-<?php if ($sInfo->products_id != '') { ?>
-<script language="javascript">
-var SpecialStartDate = new ctlSpiffyCalendarBox("SpecialStartDate", "new_prices", "special_start", "btnDate4","<?php echo (($sInfo->specials_date_available <= '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)); ?>",scBTNMODE_CUSTOMBLUE);
-var SpecialEndDate = new ctlSpiffyCalendarBox("SpecialEndDate", "new_prices", "special_end", "btnDate5","<?php echo (($sInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
-<?php } ?>
-
 <?php
 // auto fix bad or missing products master_categories_id
   if (zen_get_product_is_linked($products_filter) == 'false' and $pInfo->master_categories_id != zen_get_products_category_id($products_filter)) {
@@ -692,7 +647,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
           <tr>
             <td class="main" width="200"><?php echo TEXT_PRODUCTS_PRICE_INFO; ?></td>
             <td class="main"><?php echo TEXT_PRICE . '<br />' . zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : '')); ?></td>
-            <td class="main"><?php echo TEXT_PRODUCT_AVAILABLE_DATE; ?><br /><script language="javascript">ProductStartDate.writeControl(); ProductStartDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo TEXT_PRODUCT_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('product_start', (($pInfo->products_date_available <= '0001-01-01') ? '' : zen_date_short($pInfo->products_date_available)), 'class="datepicker"'); ?></td>
             <td colspan="2" class="main"><?php echo zen_draw_radio_field('products_status', '1', $products_in_status) . '&nbsp;' . TEXT_PRODUCT_AVAILABLE . '<br />' . zen_draw_radio_field('products_status', '0', $products_out_status) . '&nbsp;' . TEXT_PRODUCT_NOT_AVAILABLE; ?></td>
           </tr>
 
@@ -749,8 +704,8 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
           <tr>
             <td class="main" width="200"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></td>
             <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_PRICE . '<br />' . zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : '')); ?></td>
-            <td class="main"><?php echo TEXT_SPECIALS_AVAILABLE_DATE; ?><br /><script language="javascript">SpecialStartDate.writeControl(); SpecialStartDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
-            <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?><br /><script language="javascript">SpecialEndDate.writeControl(); SpecialEndDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo TEXT_SPECIALS_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('special_start', (($sInfo->specials_date_available <= '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?><br /><?php echo zen_draw_input_field('special_end', (($sInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)), 'class="datepicker"'); ?></td>
             <td class="main"><?php echo TEXT_SPECIALS_PRODUCTS_STATUS; ?><br />
               <?php echo zen_draw_radio_field('special_status', '1', $special_in_status) . '&nbsp;' . TEXT_SPECIALS_PRODUCT_AVAILABLE . '&nbsp;' . zen_draw_radio_field('special_status', '0', $special_out_status) . '&nbsp;' . TEXT_SPECIALS_PRODUCT_NOT_AVAILABLE; ?>
             </td>
@@ -794,8 +749,8 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
         <td><br><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" width="200"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></td>
-            <td class="main"><?php echo TEXT_FEATURED_AVAILABLE_DATE ; ?><br /><script language="javascript">FeaturedStartDate.writeControl(); FeaturedStartDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
-            <td class="main"><?php echo TEXT_FEATURED_EXPIRES_DATE; ?><br /><script language="javascript">FeaturedEndDate.writeControl(); FeaturedEndDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo TEXT_FEATURED_AVAILABLE_DATE ; ?><br /><?php echo zen_draw_input_field('featured_start', (($fInfo->featured_date_available <= '0001-01-01') ? '' : zen_date_short($fInfo->featured_date_available)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_FEATURED_EXPIRES_DATE; ?><br /><?php echo zen_draw_input_field('featured_end', (($fInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($fInfo->expires_date)), 'class="datepicker"'); ?></td>
             <td class="main"><?php echo TEXT_FEATURED_PRODUCTS_STATUS; ?><br />
               <?php echo zen_draw_radio_field('featured_status', '1', $featured_in_status) . '&nbsp;' . TEXT_FEATURED_PRODUCT_AVAILABLE . '&nbsp;' . zen_draw_radio_field('featured_status', '0', $featured_out_status) . '&nbsp;' . TEXT_FEATURED_PRODUCT_NOT_AVAILABLE; ?>
             </td>
@@ -1023,6 +978,15 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
+    <script>
+    $(function() {
+        $( ".datepicker" ).datepicker({
+         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+         changeMonth: true,
+         changeYear: true
+        });
+    });
+    </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

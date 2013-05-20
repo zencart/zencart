@@ -3,10 +3,11 @@
  * create_account header_php.php
  *
  * @package modules
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2010 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Jul 21 16:05:31 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: create_account.php 17018 2010-07-27 07:25:41Z drbyte $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CREATE_ACCOUNT');
@@ -26,7 +27,6 @@ if (!defined('IS_ADMIN_FLAG')) {
   $error = false;
   $email_format = (ACCOUNT_EMAIL_PREFERENCE == '1' ? 'HTML' : 'TEXT');
   $newsletter = (ACCOUNT_NEWSLETTER_STATUS == '1' || ACCOUNT_NEWSLETTER_STATUS == '0' ? false : true);
-
 /**
  * Process form contents
  */
@@ -73,14 +73,18 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   if (ACCOUNT_NEWSLETTER_STATUS == '1' || ACCOUNT_NEWSLETTER_STATUS == '2') {
     $newsletter = 0;
-    if (isset($_POST['newsletter'])) {
-      $newsletter = zen_db_prepare_input($_POST['newsletter']);
+  if (isset($_POST['newsletter'])) {
+    $newsletter = zen_db_prepare_input($_POST['newsletter']);
     }
   }
 
   $password = zen_db_prepare_input($_POST['password']);
   $confirmation = zen_db_prepare_input($_POST['confirmation']);
 
+  if (ACCOUNT_VALIDATION == 'true' && CREATE_ACCOUNT_VALIDATION == 'true') {
+    $antirobotreg = zen_db_prepare_input($_POST['antirobotreg']);
+  }
+  $error = false;
 
   if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
     if (!isset($_POST['privacy_conditions']) || ($_POST['privacy_conditions'] != '1')) {
@@ -132,7 +136,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   } else {
     $check_email_query = "select count(*) as total
                             from " . TABLE_CUSTOMERS . "
-                            where customers_email_address = '" . zen_db_input($email_address) . "'";
+                            where customers_email_address = '" . zen_db_input($email_address) . "'
+                            and COWOA_account != 1";
+                            
     $check_email = $db->Execute($check_email_query);
 
     if ($check_email->fields['total'] > 0) {
@@ -184,7 +190,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $zone_query = "SELECT distinct zone_id, zone_name, zone_code
                      FROM " . TABLE_ZONES . "
                      WHERE zone_country_id = :zoneCountryID
-                     AND " .
+                     AND " . 
                      ((trim($state) != '' && $zone_id == 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
                     "zone_id = :zoneID
                      ORDER BY zone_code ASC, zone_name";
@@ -239,6 +245,53 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
 
+  if (ACCOUNT_VALIDATION == 'true' && CREATE_ACCOUNT_VALIDATION == 'true') {
+  $sql = "SELECT * FROM " . TABLE_ANTI_ROBOT_REGISTRATION . " WHERE session_id = '" . zen_session_id() . "' LIMIT 1";
+  if( !$result = $db->Execute($sql) ) {
+	$error = true;
+	$entry_antirobotreg_error = true;
+	$text_antirobotreg_error = ERROR_VALIDATION_1;
+	$messageStack->add('create_account', ERROR_VALIDATION_1);
+	} else {
+	$entry_antirobotreg_error = false;
+	$antirobotrow = $db->Execute($sql);
+		if (( strtolower($_POST['antirobotreg']) != $antirobotrow->fields['reg_key'] ) or ($antirobotrow->fields['reg_key'] =='')) {
+		$error = true;
+		$entry_antirobotreg_error = true;
+		$text_antirobotreg_error = ERROR_VALIDATION_2;
+		$messageStack->add('create_account', ERROR_VALIDATION_2);
+		} else {
+                $sql = "DELETE FROM " . TABLE_ANTI_ROBOT_REGISTRATION . " WHERE session_id = '" . zen_session_id() . "'";
+				if( !$result = $db->Execute($sql) )
+				{
+                                $error = true;
+                                $entry_antirobotreg_error = true;
+                                $text_antirobotreg_error = ERROR_VALIDATION_3;
+                               $messageStack->add('create_account', ERROR_VALIDATION_3);
+                                } else {
+                                $sql = "OPTIMIZE TABLE " . TABLE_ANTI_ROBOT_REGISTRATION . "";
+                                        if( !$result = $db->Execute($sql) )
+                                                {
+                                                $error = true;
+                                                $entry_antirobotreg_error = true;
+                                                $text_antirobotreg_error = ERROR_VALIDATION_4;
+                                                $messageStack->add('create_account', ERROR_VALIDATION_4);
+                                                } else {
+                                                $entry_antirobotreg_error = false;
+                         		}
+                                }
+                	}
+  }
+
+	if (strlen($antirobotreg) <> ENTRY_VALIDATION_LENGTH) {
+		$error = true;
+		$entry_antirobotreg_error = true;
+		} else {
+		$entry_antirobotreg_error = false;
+	}
+}
+
+
   if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
     $error = true;
     $messageStack->add('create_account', ENTRY_PASSWORD_ERROR);
@@ -277,7 +330,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['customer_id'] = $db->Insert_ID();
 
     $zco_notifier->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(array('customer_id' => $_SESSION['customer_id']), $sql_data_array));
-
     $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                             'entry_firstname' => $firstname,
                             'entry_lastname' => $lastname,
@@ -304,7 +356,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $address_id = $db->Insert_ID();
 
     $zco_notifier->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $address_id), $sql_data_array));
-
     $sql = "update " . TABLE_CUSTOMERS . "
               set customers_default_address_id = '" . (int)$address_id . "'
               where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
@@ -339,7 +390,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     // hook notifier class
     $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT');
-
+/* IF IT IS  A COWOA ACCOUNT DO NOT SEND A WELCOME E-MAIL  */    
+if ($_SESSION['COWOA']!= true) {
     // build the message content
     $name = $firstname . ' ' . $lastname;
 
@@ -367,7 +419,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . " (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent) values ('" . $coupon_id ."', '0', 'Admin', '" . $email_address . "', now() )");
 
       $text_coupon_help = sprintf(TEXT_COUPON_HELP_DATE, zen_date_short($coupon->fields['coupon_start_date']),zen_date_short($coupon->fields['coupon_expire_date']));
-
       // if on, add in Discount Coupon explanation
       //        $email_text .= EMAIL_COUPON_INCENTIVE_HEADER .
       $email_text .= "\n" . EMAIL_COUPON_INCENTIVE_HEADER .
@@ -427,9 +478,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if (trim(SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO_SUBJECT) != 'n/a') zen_mail('', SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO, SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO_SUBJECT . ' ' . EMAIL_SUBJECT,
       $email_text . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'welcome_extra');
     } //endif send extra emails
-
+}
     zen_redirect(zen_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
 
+    
   } //endif !error
 }
 
@@ -442,5 +494,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $state = ($flag_show_pulldown_states) ? ($state == '' ? '&nbsp;' : $state) : $zone_name;
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
 
+
 // This should be last line of the script:
-$zco_notifier->notify('NOTIFY_MODULE_END_CREATE_ACCOUNT');
+$zco_notifier->notify('NOTIFY_MODULE_END_CREATE_ACCOUNT'); 

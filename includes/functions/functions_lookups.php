@@ -230,7 +230,7 @@
     global $db;
 
     if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' and $not_readonly == 'true') {
-      // don't include READONLY attributes to determin if attributes must be selected to add to cart
+      // don't include READONLY attributes to determine if attributes must be selected to add to cart
       $attributes_query = "select pa.products_attributes_id
                            from " . TABLE_PRODUCTS_ATTRIBUTES . " pa left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
                            where pa.products_id = '" . (int)$products_id . "' and po.products_options_type != '" . PRODUCTS_OPTIONS_TYPE_READONLY . "' limit 1";

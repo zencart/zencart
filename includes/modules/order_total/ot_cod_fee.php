@@ -3,9 +3,9 @@
  * ot_cod_fee order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @copyright Portions Copyright (c) 2002 Thomas Pl�nkers http://www.oscommerce.at
+ * @copyright Portions Copyright (c) 2002 Thomas Plänkers http://www.oscommerce.at
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ot_cod_fee.php 14820 2009-11-15 16:17:45Z ajeh $
  */
@@ -30,7 +30,7 @@
     function process() {
       global $order, $currencies, $cod_cost, $cod_country, $shipping;
 
-      if ($this->enabled == 'true') {
+      if ($this->enabled == true) {
         //Will become true, if cod can be processed.
         $cod_country = false;
 
@@ -51,8 +51,9 @@
           if (substr_count($_SESSION['shipping']['id'], 'zones') !=0) $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_ZONES);
           if (substr_count($_SESSION['shipping']['id'], 'ap') !=0) $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_AP);
           if (substr_count($_SESSION['shipping']['id'], 'dp') !=0) $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DP);
-	  //satt inn av Pompel
-	  if (substr_count($_SESSION['shipping']['id'], 'servicepakke') !=0) $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE);
+
+          //satt inn av Pompel
+          if (substr_count($_SESSION['shipping']['id'], 'servicepakke') !=0) $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE);
 
             for ($i = 0; $i < count($cod_zones); $i++) {
               if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
@@ -110,7 +111,7 @@
 
       return $this->_check;
     }
-//lagt tilk servicepakke her!!!!
+
     function keys() {
       return array('MODULE_ORDER_TOTAL_COD_STATUS', 'MODULE_ORDER_TOTAL_COD_SORT_ORDER', 'MODULE_ORDER_TOTAL_COD_FEE_FLAT', 'MODULE_ORDER_TOTAL_COD_FEE_FREE', 'MODULE_ORDER_TOTAL_COD_FEE_FREESHIPPER', 'MODULE_ORDER_TOTAL_COD_FEE_FREEOPTIONS', 'MODULE_ORDER_TOTAL_COD_FEE_PERWEIGHTUNIT', 'MODULE_ORDER_TOTAL_COD_FEE_ITEM', 'MODULE_ORDER_TOTAL_COD_FEE_TABLE', 'MODULE_ORDER_TOTAL_COD_FEE_UPS', 'MODULE_ORDER_TOTAL_COD_FEE_USPS', 'MODULE_ORDER_TOTAL_COD_FEE_ZONES', 'MODULE_ORDER_TOTAL_COD_FEE_AP', 'MODULE_ORDER_TOTAL_COD_FEE_DP', 'MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE', 'MODULE_ORDER_TOTAL_COD_FEE_FEDEX', 'MODULE_ORDER_TOTAL_COD_TAX_CLASS');
     }
@@ -150,4 +151,3 @@
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in (" . $keys . ")");
     }
   }
-?>

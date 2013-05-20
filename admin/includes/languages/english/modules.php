@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: modules.php 19287 2011-07-28 15:51:25Z drbyte $
@@ -27,3 +27,4 @@ define('TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED', 'This is an automated email fr
 define('TEXT_DELETE_INTRO', 'Are you sure you want to remove this module?');
 define('TEXT_WARNING_SSL_EDIT', 'ALERT: <a href="http://tutorials.zen-cart.com/index.php?article=14" target="_blank">For security reasons, Editing of this module is disabled until your Admin is configured for SSL</a>.');
 define('TEXT_WARNING_SSL_INSTALL', 'ALERT: <a href="http://tutorials.zen-cart.com/index.php?article=14" target="_blank">For security reasons, Installation of this module is disabled until your Admin is configured for SSL</a>.');
+define('TEXT_ERROR_NO_COMMTEST_OPTION_AVAILABLE', 'ERROR: This module does not have a communications-test option. Try a regular transaction via checkout instead.');

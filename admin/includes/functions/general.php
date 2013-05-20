@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:40:54 2012 -0400 Modified in v1.5.1 $
@@ -112,22 +112,70 @@
     return 'cPath=' . $cPath_new;
   }
 
-
-  function zen_get_all_get_params($exclude_array = '') {
-    global $_GET;
-
-    if ($exclude_array == '') $exclude_array = array();
-
+  function zen_get_all_get_params($exclude_array = array()) {
+    if (!is_array($exclude_array)) $exclude_array = array();
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
     $get_url = '';
-
-    reset($_GET);
-    while (list($key, $value) = each($_GET)) {
-      if (($key != zen_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
+        if (!in_array($key, $exclude_array)) {
+          if (!is_array($value)) {
+//             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
+            if (strlen($value) > 0) {
+              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+            }
+          } else {
+            continue; // legacy code doesn't support passing arrays by GET, so skipping any arrays
+            foreach(array_filter($value) as $arr){
+              $get_url .= zen_output_string_protected($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+            }
+          }
+        }
+      }
     }
+    while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
+    while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
 
     return $get_url;
   }
 
+  /**
+   * Return all GET params as (usually hidden) POST params
+   * @param array $exclude_array
+   * @param boolean $hidden
+   * @return string
+   */
+  function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
+    if (!is_array($exclude_array)) $exclude_array = array();
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
+    $fields = '';
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
+        if (!in_array($key, $exclude_array)) {
+          if (!is_array($value)) {
+            if (strlen($value) > 0) {
+              if ($hidden) {
+                $fields .= zen_draw_hidden_field($key, $value);
+              } else {
+                $fields .= zen_draw_input_field($key, $value);
+              }
+            }
+          } else {
+            foreach(array_filter($value) as $arr){
+              if ($hidden) {
+                $fields .= zen_draw_hidden_field($key . '[]', $arr);
+              } else {
+                $fields .= zen_draw_input_field($key . '[]', $arr);
+              }
+            }
+          }
+        }
+      }
+    }
+    return $fields;
+  }
 
   function zen_date_long($raw_date) {
     if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
@@ -1167,15 +1215,18 @@
   function zen_output_generated_category_path($id, $from = 'category') {
     $calculated_category_path_string = '';
     $calculated_category_path = zen_generate_category_path($id, $from);
+
     for ($i=0, $n=sizeof($calculated_category_path); $i<$n; $i++) {
       for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
-//        $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
-        $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
+        if ($from == 'category') {
+          $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
+        } else {
+          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
+        }
+        $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br>';
       }
-      $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br>';
     }
     $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
-
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 
     return $calculated_category_path_string;
@@ -1829,28 +1880,39 @@ while (!$chk_sale_categories_all->EOF) {
     return $tmp_array;
   }
 ////
-// Create a Coupon Code. length may be between 1 and 16 Characters
-// $salt needs some thought.
-
-  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH) {
+/**
+ * Create a Coupon Code. Returns blank if cannot generate a unique code using the passed criteria.
+ * @param string $salt - this is an optional string to help seed the random code with greater entropy
+ * @param int $length - this is the desired length of the generated code
+ * @param string $prefix - include a prefix string if you want to force the generated code to start with a specific string
+ * @return string (new coupon code) (will be blank if the function failed)
+ */
+  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
     global $db;
-    $ccid = md5(uniqid("","salt"));
-    $ccid .= md5(uniqid("","salt"));
-    $ccid .= md5(uniqid("","salt"));
-    $ccid .= md5(uniqid("","salt"));
+    $length = (int)$length;
+    static $max_db_length;
+    if (!isset($max_db_length)) $max_db_length = zen_field_length(TABLE_COUPONS, 'coupon_code');  // schema is normally max 32 chars for this field
+    if ($length > $max_db_length) $length = $max_db_length;
+    if (strlen($prefix) > $max_db_length) return ''; // if prefix is already too long for the db, we can't generate a new code
+    if (strlen($prefix) + (int)$length > $max_db_length) $length = $max_db_length - strlen($prefix);
+    if ($length < 4) return ''; // if the recalculated length (esp in respect to prefixes) is less than 4 (for very basic entropy) then abort
+    $ccid = md5(uniqid("",$salt));
+    $ccid .= md5(uniqid("",$salt));
+    $ccid .= md5(uniqid("",$salt));
+    $ccid .= md5(uniqid("",$salt));
     srand((double)microtime()*1000000); // seed the random number generator
-    $random_start = @rand(0, (128-$length));
     $good_result = 0;
     while ($good_result == 0) {
-      $id1=substr($ccid, $random_start,$length);
+      $random_start = @rand(0, (128-$length));
+      $id1=substr($ccid, $random_start, $length);
       $query = $db->Execute("select coupon_code
                              from " . TABLE_COUPONS . "
-                             where coupon_code = '" . $id1 . "'");
-
+                             where coupon_code = '" . $prefix . $id1 . "'");
       if ($query->RecordCount() < 1 ) $good_result = 1;
     }
-    return $id1;
+    return ($good_result == 1) ? $prefix . $id1 : ''; // blank means couldn't generate a unique code (typically because the max length was encountered before being able to generate unique)
   }
+
 ////
 // Update the Customers GV account
   function zen_gv_account_update($customer_id, $gv_id) {
@@ -3424,3 +3486,26 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
         }
         return 0;
     }
+function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMAT_DATEPICKER_ADMIN)
+{
+  if ($date == 'null' || $date == '') return $date;
+  $mpos = strpos($formatIn, 'm');
+  $dpos = strpos($formatIn, 'd');
+  $ypos = strpos($formatIn, 'y');
+  $d = substr($date, $dpos, 2);
+  $m = substr($date, $mpos, 2);
+  $y = substr($date, $ypos, 4);
+  switch ($formatOut)
+  {
+    case 'raw':
+      $mdate = $y . $m . $d;
+      break;
+    case 'raw-reverse':
+      $mdate = $d . $m . $y;
+      break;
+    case 'mysql':
+     $mdate = $y . '-' . $m . '-' . $d;
+
+  }
+  return $mdate;
+}

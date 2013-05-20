@@ -10,6 +10,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
     if (zen_not_null($_POST)) {
+      $_POST['products_date_available'] = zen_format_date_raw($_POST['products_date_available']);
       $pInfo = new objectInfo($_POST);
       $products_name = $_POST['products_name'];
       $products_description = $_POST['products_description'];
@@ -141,7 +142,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       reset($_POST);
       while (list($key, $value) = each($_POST)) {
         if (!is_array($_POST[$key])) {
-          echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
+          echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE)) . "\n";
         }
       }
 

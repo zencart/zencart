@@ -1,63 +1,23 @@
 <?php
 /**
  * @package Installer
- * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
+ * @version $Id: 
  */
 
-  if (!isset($_POST['admin_username'])) $_POST['admin_username'] = '';
-  if (!isset($_POST['admin_email'])) $_POST['admin_email'] = '';
-
-  @require_once('../includes/configure.php');
-  if (!defined('DB_TYPE') || DB_TYPE=='') {
-    die('Database Type Invalid. Did your configure.php file get written correctly?');
-    $zc_install->setError('Database Type Invalid: (' . DB_TYPE . ')', 27);
-  }
-
-  if ($za_dir = @dir(DIR_FS_SQL_CACHE)) {
-    while ($zv_file = $za_dir->read()) {
-      if (preg_match('/^zcInstall.*\.log$/', $zv_file)) {
-        unlink(DIR_FS_SQL_CACHE . '/' . $zv_file);
-      }
-    }
-    $za_dir->close();
-    unset($za_dir);
-  }
-
-  if (isset($_POST['submit'])) {
-    if (!isset($_POST['admin_pass'])) $_POST['admin_pass'] = '';
-    if (!isset($_POST['admin_pass_confirm'])) $_POST['admin_pass_confirm'] = '';
-    if (!isset($_POST['check_for_updates'])) $_POST['check_for_updates'] = 'True';
-
-    $zc_install->validateAdminSetup($_POST);
-    $zc_install->isEqual($zc_install->configInfo['admin_pass'], zen_db_prepare_input($_POST['admin_pass_confirm']), ERROR_TEXT_ADMIN_PASS_NOTEQUAL, ERROR_CODE_ADMIN_PASS_NOTEQUAL);
-
-    if (!$zc_install->error) {
-      $zc_install->dbAdminSetup();
-      $zc_install->resetConfigKeys();
-      $zc_install->resetConfigInfo();
-      header('location: index.php?main_page=finished' . zcInstallAddSID() );
-      exit;
-    }
-  }
-
-  // quick sanitization
-  foreach($_POST as $key=>$val) {
-    if(is_array($val)){
-      foreach($val as $key2 => $val2){
-        $_POST[$key][$key2] = htmlspecialchars($val2, ENT_COMPAT, CHARSET, TRUE);
-      }
-    } else {
-      $_POST[$key] = htmlspecialchars($val, ENT_COMPAT, CHARSET, TRUE);
-    }
-  }
-
-  setInputValue($_POST['admin_username'], 'ADMIN_USERNAME_VALUE', '');
-  setInputValue($_POST['admin_email'], 'ADMIN_EMAIL_VALUE', '');
-
-// this sets the first field to email address on login - setting in /common/tpl_main_page.php
-  $zc_first_field= 'onload="document.getElementById(\'admin_username\').focus()"';
+  $adminDir = (isset($_POST['adminDir'])) ? zen_output_string_protected($_POST['adminDir']) : 'admin';
+  $admin_password = zen_create_PADSS_password();
+  $wordlist = file(DIR_FS_INSTALL . 'includes/wordlist.csv');
+  $max = count($wordlist) - 1;
+  $word1 = trim($wordlist[zen_pwd_rand(0,$max)]);
+  $pos = zen_pwd_rand(0,4);
+  $word1[$pos] = strtoupper($word1[$pos]);
+  $word3 = trim($wordlist[zen_pwd_rand(0,$max)]);
+  $pos = zen_pwd_rand(0,4);
+  $word3[$pos] = strtoupper($word3[$pos]);
+  $word2 = zen_create_random_value(3, 'chars');
+  $adminNewDir =  $word1 . '-' . $word2 . '-' . $word3;
+  $result = @rename(DIR_FS_ROOT . $adminDir, DIR_FS_ROOT . $adminNewDir);
+  if (!$result) $adminNewDir = 'admin';
 

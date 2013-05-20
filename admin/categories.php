@@ -507,7 +507,6 @@
         $sql = "select product_type_id from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " where category_id = '" . (int)$cat_id . "' and product_type_id = '" . (int)$_GET['product_type'] . "'";
         $product_type_good = $db->Execute($sql);
         if ($product_type_list->RecordCount() < 1 || $product_type_good->RecordCount() > 0) {
-          $url = zen_get_all_get_params();
           $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$_GET['product_type'] . "'";
           $handler = $db->Execute($sql);
           zen_redirect(zen_href_link($handler->fields['type_handler'] . '.php', zen_get_all_get_params()));
@@ -525,36 +524,18 @@
   } else {
     $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
-<!--
-function init()
-{
-  cssjsmenu('navbar');
-  if (document.getElementById)
-  {
-    var kill = document.getElementById('hoverJS');
-    kill.disabled = true;
-  }
-  if (typeof _editor_url == "string") HTMLArea.replaceAll();
-}
-// -->
+  <!--
+  $(document).ready(function(){
+    if (typeof _editor_url == "string") HTMLArea.replaceAll();
+    document.forms['search'].elements['search'].focus();
+  });
+  // -->
 </script>
-<?php if ($action != 'edit_category_meta_tags') { // bof: categories meta tags ?>
-<?php if ($editor_handler != '') include ($editor_handler); ?>
-<?php } // meta tags disable editor eof: categories meta tags?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onLoad="init();document.forms['search'].elements['search'].focus();">
-<div id="spiffycalendar" class="text"></div>
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" >
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -766,7 +747,7 @@ function init()
 
     $contents[] = array('text' => '<br />' . TEXT_EDIT_SORT_ORDER . '<br />' . zen_draw_input_field('sort_order', $cInfo->sort_order, 'size="6"'));
     $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id) . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
-    $contents[] = array('text' => TEXT_RESTRICT_PRODUCT_TYPE . ' ' . zen_draw_pull_down_menu('restrict_type', $type_array) . '&nbsp<input type="submit" name="add_type_all" value="' . BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_ON . '">' . '&nbsp<input type="submit" name="add_type" value="' . BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_OFF . '"></form>');
+    $contents[] = array('text' => TEXT_RESTRICT_PRODUCT_TYPE . ' ' . zen_draw_pull_down_menu('restrict_type', $type_array) . '&nbsp;<input type="submit" name="add_type_all" value="' . BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_ON . '">' . '&nbsp;<input type="submit" name="add_type" value="' . BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_OFF . '"></form>');
     $sql = "select * from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
                            where category_id = '" . (int)$cInfo->categories_id . "'";
 

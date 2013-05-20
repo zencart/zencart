@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: coupon_restrict.php 16174 2010-05-02 14:10:30Z drbyte $
@@ -35,3 +35,10 @@ define('TEXT_MANUFACTURER', 'Manufacturer: ');
 define('TEXT_CATEGORY', 'Category: ');
 define('ERROR_DISCOUNT_COUPON_DEFINED_CATEGORY', 'Category Not Completed');
 define('ERROR_DISCOUNT_COUPON_DEFINED_PRODUCT', 'Product Not Completed');
+
+define('HEADER_MANUFACTURER_NAME', '<br> -- OR -- <br>' . 'Manufacturer: ');
+define('TEXT_ALL_MANUFACTURERS_ADD', 'Add All Manufacturer Products');
+define('TEXT_ALL_MANUFACTURERS_REMOVE', 'Remove All Manufacturer Products');
+
+define('HEADER_PRODUCT_STATUS', 'Status');
+define('HEADER_PRODUCT_MODEL', 'Model');

@@ -18,11 +18,20 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (isset($_GET['sort']) && strlen($_GET['sort']) > 3) {
   $_GET['sort'] = substr($_GET['sort'], 0, 3);
 }
-if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
-  $alpha_sort = " and pd.products_name LIKE '" . chr((int)$_GET['alpha_filter_id']) . "%' ";
-} else {
-  $alpha_sort = '';
-}
+  if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
+      $alpha_sort_list_search = explode(';', '0:reset_placeholder;' . PRODUCT_LIST_ALPHA_SORTER_LIST);
+      for ($j=0, $n=sizeof($alpha_sort_list_search); $j<$n; $j++) {
+        if ((int)$_GET['alpha_filter_id'] == $j) {
+          $elements = explode(':', $alpha_sort_list_search[$j]);
+          $pattern = str_replace(',', '', $elements[1]);
+          $alpha_sort = " and pd.products_name REGEXP '^[" . $pattern . "]' ";
+          break;
+        }
+      }
+  //echo 'Built $alpha_sort: ' . $alpha_sort . '<br>';
+  } else {
+      $alpha_sort = '';
+  }
 if (!isset($select_column_list)) $select_column_list = "";
  // show the products of a specified record-company
   if (isset($_GET['record_company_id']))
@@ -199,6 +208,7 @@ if (!isset($select_column_list)) $select_column_list = "";
     }
     $getoption_set =  false;
     $do_filter_list = false;
+    if (PRODUCT_LIST_ALPHA_SORTER == 'true') $do_filter_list = true;
     $filterlist = $db->Execute($filterlist_sql);
     if ($filterlist->RecordCount() > 1)
     {
