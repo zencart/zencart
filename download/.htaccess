@@ -34,7 +34,7 @@ AuthGroupFile /dev/null
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|m4v|m4a)$">
+<FilesMatch "(?i).*\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$">
   Order Allow,Deny
   Allow from all
 </FilesMatch>
