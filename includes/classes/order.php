@@ -22,13 +22,14 @@ class order extends base {
   var $info, $totals, $products, $customer, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
   $products_ordered, $products_ordered_email, $attachArray;
 
-  function order($order_id = '') {
+  function __construct($order_id = '') {
     $this->info = array();
     $this->totals = array();
     $this->products = array();
     $this->customer = array();
     $this->delivery = array();
 
+    $this->notify('NOTIFY_ORDER_INSTANTIATE', array('order_id' => $order_id));
     if (zen_not_null($order_id)) {
       $this->query($order_id);
     } else {
@@ -40,6 +41,9 @@ class order extends base {
     global $db;
 
     $order_id = zen_db_prepare_input($order_id);
+    $this->queryReturnFlag = NULL;
+    $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array('order_id' => $order_id));
+    if ($this->queryReturnFlag === TRUE) return;
 
     $order_query = "select customers_id, customers_name, customers_company,
                          customers_street_address, customers_suburb, customers_city,
@@ -235,6 +239,7 @@ class order extends base {
       $index++;
       $orders_products->MoveNext();
     }
+    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array('order_id' => $order_id));
   }
 
   function cart() {
@@ -702,7 +707,7 @@ class order extends base {
   }
 
 
-  function  create_add_products($zf_insert_id, $zf_mode = false) {
+  function create_add_products($zf_insert_id, $zf_mode = false) {
     global $db, $currencies, $order_total_modules, $order_totals;
 
     // initialized for the email confirmation
@@ -1111,7 +1116,11 @@ class order extends base {
         $html_msg['EMAIL_TEXT_HEADER'] = nl2br($pmt_details) . $html_msg['EMAIL_TEXT_HEADER'];
       }
 
+      $this->extra_header_text = '';
       $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_FOR_ADDITIONAL_EMAILS', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
+      $email_order = $this->extra_header_text . $email_order;
+      $html_msg['EMAIL_TEXT_HEADER'] = nl2br($this->extra_header_text) . $html_msg['EMAIL_TEXT_HEADER'];
+
       zen_mail('', SEND_EXTRA_ORDER_EMAILS_TO, SEND_EXTRA_NEW_ORDERS_EMAILS_TO_SUBJECT . ' ' . EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id,
       $email_order . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'checkout_extra', $this->attachArray, $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address']);
     }
