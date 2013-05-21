@@ -9,8 +9,9 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<form class="form-horizontal" id="admin_setup" name="db_setup" method="post" action="index.php?main_page=completion">
+<form class="form-horizontal" id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion">
   <input type="hidden" name="action" value="process" >
+  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
     <?php if ($key != 'action') { ?>
     <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" >
@@ -35,6 +36,9 @@
       </div>
     </div>
     <div class="row">
+      <div class="alert-box"><?php echo TEXT_ADMIN_SETUP_USER_PASSWORD_HELP; ?></div>
+    </div>
+    <div class="row">
       <div class="three columns">
         <label class="inline" for="admin_password"><a href="#" class="hasHelpText" id="ADMINPASSWORD"><?php echo TEXT_ADMIN_SETUP_USER_PASSWORD; ?></a></label>
       </div>
@@ -43,7 +47,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="alert-box"><?php echo TEXT_ADMIN_SETUP_USER_PASSWORD_HELP; ?></div>
+      <?php if ($changedDir && $adminDir != 'admin') { ?>
+      <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED; ?></div>
+      <?php } elseif (!$changedDir) { ?>
+      <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT; ?></div>
+      <?php } else { ?>
+      <div class="alert-box "><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED; ?></div>
+      <?php }?>
     </div>
     <div class="row">
       <div class="three columns">
@@ -52,15 +62,6 @@
       <div class="six columns end">
         <input type="text" name="admin_directory" id="admin_directory" value="<?php echo $adminNewDir; ?>" readonly="readonly">
       </div>
-    </div>
-    <div class="row">
-      <?php if ($adminNewDir == $adminDir && $adminDir != 'admin') { ?>
-      <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED; ?></div>
-      <?php } elseif ($adminNewDir == $adminDir) { ?>
-      <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT; ?></div>
-      <?php } else { ?>
-      <div class="alert-box "><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED; ?></div>
-      <?php }?>
     </div>
   </fieldset>
   <input class="radius button" type="submit" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>">

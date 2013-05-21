@@ -14,11 +14,12 @@
  */
 class systemChecker
 {
-  public function __construct()
+  public function __construct($selectedAdminDir)
   {
     $this->adminDirectoryList = self::getAdminDirectoryList();
     $res = sfYaml::load(DIR_FS_INSTALL . 'includes/systemChecks.yml');
     $this -> systemChecks = $res['systemChecks'];
+    $this->selectedAdminDir = $selectedAdminDir;
     $this->extraRunLevels = array();
   }
 
@@ -38,6 +39,7 @@ class systemChecker
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
           $result = $this -> {$methodName}($methodDetail['parameters']);
           $resultCombined &= $result;
+          $this->log($result, $methodName, $methodDetail);
           if (!$result)
           {
             if (isset($methodDetail['localErrorText']))
@@ -293,24 +295,21 @@ class systemChecker
   }
   public function checkWriteableAdminFile($parameters)
   {
-    foreach ($this->adminDirectoryList as $adminDirectory)
+    if (is_writeable(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) return TRUE;
+    if (isset($parameters['changePerms']) &&  $parameters['changePerms'] !== FALSE)
     {
-      if (is_writeable(DIR_FS_ROOT . $adminDirectory . '/' . $parameters['fileDir'])) return TRUE;
-      if (isset($parameters['changePerms']) &&  $parameters['changePerms'] !== FALSE)
+      if (file_exists(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir']))
       {
-        if (file_exists(DIR_FS_ROOT . $adminDirectory . '/' . $parameters['fileDir']))
+        @chmod(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], $parameters['changePerms']);
+      } else
+      {
+        if ($fp = @fopen(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], 'c'))
         {
-          @chmod(DIR_FS_ROOT . $adminDirectory . '/' . $parameters['fileDir'], $parameters['changePerms']);
-        } else
-        {
-          if ($fp = @fopen(DIR_FS_ROOT . $adminDirectory . '/' . $parameters['fileDir'], 'c'))
-          {
-            fclose($fp);
-            chmod(DIR_FS_ROOT . $adminDirectory . '/' . $parameters['fileDir'], $parameters['changePerms']);
-          }
+          fclose($fp);
+          chmod(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], $parameters['changePerms']);
         }
-        if (is_writeable(DIR_FS_ROOT . $adminDirectory . '/' . $parameters['fileDir'])) return TRUE;
       }
+      if (is_writeable(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) return TRUE;
     }
     return FALSE;
   }
@@ -385,6 +384,22 @@ class systemChecker
     if (!$result)
     {
       $this->localErrors = $db -> error_number . ':' . $db -> error_text;
+    }
+    return $result;
+  }
+  public function checkDBConnection($parameters)
+  {
+    $lines = file(DIR_FS_ROOT . 'includes/configure.php');
+    $dbServerVal = $this->getConfigureDefine('DB_SERVER', $lines);
+    $dbNameVal = $this->getConfigureDefine('DB_DATABASE', $lines);
+    $dbPasswordVal = $this->getConfigureDefine('DB_SERVER_PASSWORD', $lines);
+    $dbUserVal = $this->getConfigureDefine('DB_SERVER_USERNAME', $lines);
+    require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+    $db = new queryFactory();
+    $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+    if ($db->error_number != '2002')
+    {
+      $result = TRUE;
     }
     return $result;
   }
@@ -558,5 +573,22 @@ class systemChecker
       }
     }
     return $adminDirectoryList;
+  }
+  function backupConfigureFiles($parameters)
+  {
+    return TRUE;
+  }
+  function log($result, $methodName, $methodDetail)
+  {
+    if (defined('VERBOSE_SYSTEMCHECKER') && VERBOSE_SYSTEMCHECKER)
+    {
+      echo $methodName . "<br>";
+      foreach ($methodDetail['parameters'] as $key=>$value)
+      {
+        echo $key . " : " . $value . "<br>";
+      }
+      echo (($result == 1) ? 'PASSED' : 'FAILED') . "<br>";
+      echo "------------------<br><br>";
+    }
   }  
 }

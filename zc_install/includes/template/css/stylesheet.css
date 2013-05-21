@@ -119,3 +119,9 @@ ul li.active a:after {
 h2 {
 	font-size: 2em;
 }
+
+.modal-help-title { 
+	font-size: 1.5em;
+	padding-bottom: 5px;
+	font-weight:bold;
+}

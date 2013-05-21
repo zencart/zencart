@@ -327,10 +327,13 @@ class zcDatabaseInstaller
     {
       $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
       $progress = ($this->jsonProgressLoggingCount/$this->jsonProgressLoggingTotal*100);
-      $fp = fopen($fileName, "w");  
-      $arr = array('total'=>'0', 'progress'=>$progress, 'message'=>$this->extendedOptions['message']);  
-      fwrite($fp, json_encode($arr));  
-      fclose($fp);
+      $fp = fopen($fileName, "w");
+      if ($fp)
+      {
+        $arr = array('total'=>'0', 'progress'=>$progress, 'message'=>$this->extendedOptions['message']);  
+        fwrite($fp, json_encode($arr));  
+        fclose($fp);
+      }
     }
   }
   private function doJsonProgressLoggingStart($count)
@@ -341,9 +344,12 @@ class zcDatabaseInstaller
       $this->jsonProgressLoggingCount = 0;
       $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
       $fp = fopen($fileName, "w");  
-      $arr = array('total'=>$count, 'progress'=>0, 'message'=>$this->extendedOptions['message']);
-      fwrite($fp, json_encode($arr));  
-      fclose($fp);
+      if ($fp)
+      {
+        $arr = array('total'=>$count, 'progress'=>0, 'message'=>$this->extendedOptions['message']);
+        fwrite($fp, json_encode($arr));  
+        fclose($fp);
+      }
     }
   }
   private function doJsonProgressLoggingEnd()
@@ -353,10 +359,12 @@ class zcDatabaseInstaller
       $this->jsonProgressLoggingCount = 0;
       $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
       $fp = fopen($fileName, "w");  
-      $arr = array('total'=>'0', 'progress'=>100, 'message'=>$this->extendedOptions['message']);  
-      fwrite($fp, json_encode($arr));  
-      fclose($fp);
-      //@TODO
+      if ($fp)
+      {
+        $arr = array('total'=>'0', 'progress'=>100, 'message'=>$this->extendedOptions['message']);  
+        fwrite($fp, json_encode($arr));  
+        fclose($fp);
+      }
     }
   }
-  }
+}

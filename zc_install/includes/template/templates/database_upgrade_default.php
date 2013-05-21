@@ -11,7 +11,8 @@
 <div id="upgradeResponsesHolder"></div>
 
 <form class="form-horizontal" id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion">
-	<input type="hidden" name="action" value="process"> 
+  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+  <input type="hidden" name="action" value="process"> 
 	<input type="hidden" name="upgrade_mode" value="yes"> 
 	<input type="hidden" name="admin_candidate" value="" id="hiddenAdminCandidate">
   <fieldset>

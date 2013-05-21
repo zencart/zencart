@@ -15,10 +15,11 @@ define('HTML_PARAMS','dir="ltr" lang="en"');
 define('TEXT_PAGE_HEADING_INDEX', 'System Inspection');
 define ('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we continue');
 define ('TEXT_INDEX_WARN_ERRORS', 'Some other problems');
-define ('TEXT_INDEX_HEADER_MAIN', 'For some errors and warnings, more information may be available by clicking on the error/warning title.');
+define ('TEXT_HEADER_MAIN', 'For some errors and warnings, more information may be available by clicking on the error/warning title.');
+
+define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 
 define('TEXT_PAGE_HEADING_SYSTEM_SETUP', 'System Setup');
-define('TEXT_SYSTEM_SETUP_HEADER_MAIN', 'For some form inputs, more information may be available by clicking on the input label.');
 define('TEXT_SYSTEM_SETUP_ADMIN_SETTINGS', 'Admin Settings');
 define('TEXT_SYSTEM_SETUP_CATALOG_SETTINGS', 'Catalog Settings');
 define('TEXT_SYSTEM_SETUP_ADMIN_SERVER_DOMAIN', 'Admin Server Domain');
@@ -37,7 +38,6 @@ define('TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH', 'There appears to be a p
 
 
 define('TEXT_PAGE_HEADING_DATABASE', 'Database Setup');
-define('TEXT_DATABASE_HEADER_MAIN', 'For some form inputs, more information may be available by clicking on the input label.');
 define('TEXT_DATABASE_SETUP_SETTINGS', 'Basic Settings');
 define('TEXT_DATABASE_SETUP_DB_HOST', 'Database Host: ');
 define('TEXT_DATABASE_SETUP_DB_USER', 'Database User: ');
@@ -53,8 +53,9 @@ define('TEXT_DATABASE_SETUP_SQL_CACHE_DIRECTORY', 'SQL Cache Directory: ');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occured when running the sql install file');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details<p>');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'UTF-8(default setting)');
-define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN9', 'Latin9');
-define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE', 'Database(recommended)');
+define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'Latin1');
+define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_NONE', 'No SQL Caching');
+define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE', 'Database');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE', 'File');
 define('TEXT_DATABASE_SETUP_CONNECTION_ERROR_DIALOG_TITLE', 'There are some problems');
 define('TEXT_CREATING_DATABASE', 'Creating Database');
@@ -62,16 +63,15 @@ define('TEXT_LOADING_CHARSET_SPECIFIC', 'Loading Character Set specific data');
 define('TEXT_LOADING_DEMO_DATA', 'Loading Demo Data');
 
 define('TEXT_PAGE_HEADING_ADMIN_SETUP', 'Admin Setup');
-define('TEXT_ADMIN_SETUP_HEADER_MAIN', 'For some form inputs, more information may be available by clicking on the input label.');
 define('TEXT_ADMIN_SETUP_USER_SETTINGS', 'Admin User Settings');
 define('TEXT_ADMIN_SETUP_USER_NAME', 'Admin Superuser Name: ');
 define('TEXT_ADMIN_SETUP_USER_EMAIL', 'Admin Superuser Email: ');
 define('TEXT_ADMIN_SETUP_USER_PASSWORD', 'Admin password: ');
-define('TEXT_ADMIN_SETUP_USER_PASSWORD_HELP', 'This is your initial temporary password for your Admin Superuser Account. Please ensure you make a note of it.');
+define('TEXT_ADMIN_SETUP_USER_PASSWORD_HELP', 'Below is your initial temporary password for your Admin Superuser Account. Please ensure you make a note of it.');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY', 'Admin Directory: ');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT', 'We were not able to change your admin directory automatically. You will need to change it yourself before you can access your Store Admin.');
-define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED', 'We were not able to change your admin directory automatically. Although you will be able to access your Admin, we would suggest that you change the directory name.');
-define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED', 'Your store Admin directory has been automatically renamed. Please ensure you make a note of this directory.');
+define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED', 'We did not change your admin directory automatically. Although you will be able to access your Admin, we would suggest that you change the directory name.');
+define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED', 'Your store Admin directory has been automatically renamed. Please ensure you make a note of the directory below.');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_SETTINGS', 'Newsletter');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_EMAIL', 'Newsletter Email: ');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_OPTIN', 'Opt In: ');
@@ -85,7 +85,7 @@ define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finshed');
 define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete. You can access your store front and your Administration area using the links below.');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', 'You need to remove the /zc_install folder so that someone can\'t re-install your shop again and wipe out your database! Warnings will appear until the folder has been removed');
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', 'You need to remove the /zc_install folder so that someone can\'t re-install your shop again and wipe out your database! A message will appear and you will not be able to log into your admin until the folder has been removed.');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
 define('TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS', 'Please confirm your desired upgrade steps');
@@ -121,6 +121,7 @@ define('TEXT_ERROR_SESSION_SUPPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
 define('TEXT_ERROR_SESSION_SUPPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
 define('TEXT_ERROR_DB_CONNECTION', 'Problems with Database Connection');
+define('TEXT_ERROR_DB_CONNECTION_DEFAULT', 'Possible problems with Database Connection');
 define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Probems with Database Connection based on the entries in your current configure.php');
 define('TEXT_ERROR_SET_TIME_LIMIT', 'max_execution_time setting disabled ');
 define('TEXT_ERROR_REGISTER_GLOBALS', 'Register Globals enabled');
@@ -134,10 +135,12 @@ define('TEXT_ERROR_GZIP', 'Gzip Extension not enabled');
 define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be loaded');
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
 define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use Curl to contact a live server');
-define('TEXT_ERROR_HTTPS', 'if possible you should already have installed an SSL certificate, and run the installer using https://');
+define('TEXT_ERROR_HTTPS', 'If possible you should already have installed an SSL certificate, and run the installer using https://');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your Database Settings');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your Database seems to be current. Are you sure you want to install?');
-define('TEXT_ERROR_MULTIPLE_ADMINS', 'Multiple Admin directories seem to exist. Either remove old admin directories and refresh the page or select the correct admin directory below');
+define('TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED', 'Multiple Admin directories seem to exist. Either remove old admin directories and click Refresh or select the correct admin directory below and click Refresh.');
+define('TEXT_ERROR_MULTIPLE_ADMINS_SELECTED', 'Multiple Admin directories seem to exist. If the selected directory below is incorrect, please choose another and click Refresh.');
+define('TEXT_ERROR_SUCCESS_NO_ERRORS', 'No errors or warnings were detected on your system. You may continue with the installation.');
 
 define('TEXT_FORM_VALIDATION_REQUIRED', 'Required');
 define('TEXT_FORM_VALIDATION_AGREE_LICENSE', 'You must agree to the license terms');
@@ -147,9 +150,11 @@ define('TEXT_NAVBAR_FORUM_LINK', 'Forum');
 define('TEXT_NAVBAR_WIKI_LINK', 'Wiki');
 
 define('TEXT_HELP_TITLE_HTACCESSSUPPORT', 'htaccess support');
-define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with the htaccess support on your server. This maybe because you are not using Apache as your Web Server or .htaccess support is disabled or not configured correctly.<br><br>htaccess support is used to provide security for certain files/folders on your server.');
+define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with the htaccess support on your server. This may be because you are not using Apache as your Web Server or .htaccess support is disabled or not configured correctly.<br><br>htaccess support is used to provide security for certain files/folders on your server.');
 define('TEXT_HELP_TITLE_FOLDERPERMS', 'Folder Permissions');
 define('TEXT_HELP_CONTENT_FOLDERPERMS', 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders" target="_blank">http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders</a>');
+define('TEXT_HELP_TITLE_CONNECTIONDATABASECHECK', 'Initial Database Connection');
+define('TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK', 'We tried to connect to MySql using a localhost connection. This failure does not necessarily mean MySql is not working, as some hosts require an IP address or host name for the MySql database.<br><br>If you are using localhost for your database server, you should check that MySql is running correctly.');
 
 define('TEXT_HELP_TITLE_ADMINSERVERDOMAIN', 'Admin Server Domain');
 define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', "");

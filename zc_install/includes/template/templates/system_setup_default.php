@@ -9,6 +9,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 ?>
 <form class="form-horizontal" id="system_setup" name="system_setup" method="post" action="index.php?main_page=database">
 	<input type="hidden" name="action" value="process">
+  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
 	<input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">
 	<input type="hidden" name="dir_ws_https_catalog" value="<?php echo $dir_ws_https_catalog; ?>">
 	<input type="hidden" name="adminDir" value="<?php echo $adminDir; ?>">
@@ -20,7 +21,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="agreeLicense"><a href="#" class="hasHelpText" id="AGREETOTERMS"><?php echo TEXT_SYSTEM_SETUP_AGREE_LICENSE; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="checkbox" name="agreeLicense" id="agreeLicense" >
+        <input type="checkbox" name="agreeLicense" id="agreeLicense" tabindex="1" >
       </div>
       </div>
   </fieldset>                                                                                                                                                                 
@@ -31,7 +32,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="http_server_admin"><a href="#" class="hasHelpText" id="ADMINSERVERDOMAIN"><?php echo TEXT_SYSTEM_SETUP_ADMIN_SERVER_DOMAIN; ?></a></label>
       </div>
       <div class="nine columns">
-        <input id="http_server_admin" type="text" value="<?php echo $adminServer; ?>" name="http_server_admin">
+        <input id="http_server_admin" type="text" value="<?php echo $adminServer; ?>" name="http_server_admin" tabindex="2" >
       </div>
 	  </div>
 	</fieldset>
@@ -42,7 +43,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="enable_ssl_catalog"><a href="#" class="hasHelpText" id="ENABLESSLCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL; ?></a></label>
       </div>
       <div class="nine columns">
-        <input class="checkbox" id="enable_ssl_catalog" type="checkbox" value="true" name="enable_ssl_catalog">
+        <input class="checkbox" id="enable_ssl_catalog" type="checkbox" value="true" name="enable_ssl_catalog" tabindex="3" >
       </div>
 	  </div>
     <div class="row">
@@ -50,7 +51,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="http_server_catalog"><a href="#" class="hasHelpText" id="HTTPSERVERCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_HTTP_SERVER_DOMAIN; ?></a></label>
       </div>
       <div class="nine columns">
-        <input id="http_server_catalog" type="text" value="<?php echo $catalogHttpServer; ?>" name="http_server_catalog">
+        <input id="http_server_catalog" type="text" value="<?php echo $catalogHttpServer; ?>" name="http_server_catalog" tabindex="4" >
       </div>
 		</div>
     <div class="row">
@@ -58,7 +59,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="http_url_catalog"><a href="#" class="hasHelpText" id="HTTPURLCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_HTTP_URL; ?></a></label>
       </div>
       <div class="nine columns">
-        <input id="http_url_catalog" type="text" value="<?php echo $catalogHttpUrl; ?>" name="http_url_catalog">
+        <input id="http_url_catalog" type="text" value="<?php echo $catalogHttpUrl; ?>" name="http_url_catalog" tabindex="5" >
       </div>
 		</div>
     <div class="row">
@@ -66,7 +67,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="https_server_catalog"><a href="#" class="hasHelpText" id="HTTPSSERVERCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_HTTPS_SERVER_DOMAIN; ?></a></label>
       </div>
       <div class="nine columns">
-        <input id="https_server_catalog" type="text" value="<?php echo $catalogHttpsServer; ?>" name="https_server_catalog">
+        <input id="https_server_catalog" type="text" value="<?php echo $catalogHttpsServer; ?>" name="https_server_catalog" tabindex="6" >
       </div>
 		</div>
     <div class="row">
@@ -74,7 +75,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="https_url_catalog"><a href="#" class="hasHelpText" id="HTTPSURLCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_HTTPS_URL; ?></a></label>
       </div>
       <div class="nine columns">
-        <input id="https_url_catalog" type="text" value="<?php echo $catalogHttpsUrl; ?>" name="https_url_catalog">
+        <input id="https_url_catalog" type="text" value="<?php echo $catalogHttpsUrl; ?>" name="https_url_catalog" tabindex="7" >
       </div>
 		</div>
     <div class="row">
@@ -82,11 +83,11 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="physical_path"><a href="#" class="hasHelpText" id="PHYSICALPATH"><?php echo TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH; ?></a></label>
       </div>
       <div class="nine columns">
-        <input id="physical_path" type="text" value="<?php echo $documentRoot; ?>" name="physical_path">
+        <input id="physical_path" type="text" value="<?php echo $documentRoot; ?>" name="physical_path" tabindex="8" >
       </div>
 		</div>
 	</fieldset>
-  <input type="submit" id="btnsubmit" class="radius button" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>">
+  <input type="submit" id="btnsubmit" class="radius button" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="9" >
 </form>
 
 <?php 

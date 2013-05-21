@@ -11,11 +11,7 @@
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Expires" content="Mon, 26 Jul 2001 05:00:00 GMT" />
-<meta http-equiv="Last-Modified" content="<?php echo gmdate("D, d M Y H:i:s"); ?> GMT" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="robots" content="noindex, nofollow" />
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />

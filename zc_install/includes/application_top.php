@@ -71,24 +71,12 @@ require (DIR_FS_ROOT . 'includes/classes/class.base.php');
 require (DIR_FS_ROOT . 'includes/classes/class.notifier.php');
 require (DIR_FS_INSTALL . 'includes/functions/general.php');
 require (DIR_FS_INSTALL . 'includes/functions/password_funcs.php');
+require(DIR_FS_INSTALL . 'includes/languages/languages.php');
 zen_sanitize_request();
 /**
  * set the type of request (secure or not)
  */
 $request_type = ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == '1') || (isset($_SERVER['HTTP_X_FORWARDED_BY']) && strstr(strtoupper($_SERVER['HTTP_X_FORWARDED_BY']), 'SSL')) || (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && strstr(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), 'SSL')) || (isset($_SERVER['SCRIPT_URI']) && strtolower(substr($_SERVER['SCRIPT_URI'], 0, 6)) == 'https:') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
-/*
- * language determination
- */
-$language = (isset($_GET['language']) && $_GET['language'] != '') ? preg_replace('/[^a-zA-Z_]/', '', $_GET['language']) : 'english';
-if ($language == '')
-  $language = 'english';
-if (!file_exists(version . php . 'includes/languages/' . $language . '.php'))
-{
-  // @TODO
-  //$zc_install->throwException('Specified language file not found. Defaulting to english. (' . 'includes/languages/' . $language . '.php)');
-  $language = 'english';
-}
-
 
 define('ZC_UPG_DEBUG',  (!isset($_GET['debug'])  && !isset($_POST['debug'])  || (isset($_POST['debug'])  && $_POST['debug'] == '')) ? false : true);
 define('ZC_UPG_DEBUG2', (!isset($_GET['debug2']) && !isset($_POST['debug2']) || (isset($_POST['debug2']) && $_POST['debug2'] == '')) ? false : true);
@@ -108,5 +96,31 @@ require (DIR_FS_ROOT . 'includes/classes/vendors/yaml/lib/class.sfYamlInline.php
 if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
 $current_page = $_GET['main_page'];
 $page_directory = 'includes/modules/pages/' . $current_page;
-$language_page_directory = 'includes/languages/' . $language . '/';
-require(DIR_FS_INSTALL . 'includes/languages/' . $language . '.php');
+/*
+ * language determination
+ */
+$language = NULL;
+if (isset($_POST['lng']))
+{
+  $lng = preg_replace('/[^a-zA-Z_]/', '', $_POST['lng']);
+  if ($lng == '')
+  {
+    $lng = 'en_us';
+  }
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))  
+  {
+    $lng = 'en_us';
+  }
+} else 
+{
+  $lng = (isset($_GET['lng']) && $_GET['lng'] != '') ? preg_replace('/[^a-zA-Z_]/', '', $_GET['lng']) : 'en_us';
+  if ($lng == '')
+  {
+    $lng = 'en_us';
+  }
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))  
+  {
+    $lng = 'en_us';
+  }
+}
+require(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php');

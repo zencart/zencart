@@ -129,4 +129,20 @@ function zen_get_select_options($optionList, $setDefault)
     return zen_output_string($string, false, true);
   }
   
+  function zen_get_install_languages_list($lng)
+  {
+    global $languagesInstalled;
+    $optionString = "";
+    foreach ($languagesInstalled as $code=>$language)
+    {
+      $optionString .= '<option value="' . $code . '"';
+      if ($code == $lng)
+      {
+        $optionString .= " SELECTED ";
+      }
+      $optionString .= '>' . $language['displayName'];
+      $optionString .= "</option>";
+    }
+    return $optionString;
+  }
   

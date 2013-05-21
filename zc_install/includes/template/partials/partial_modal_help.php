@@ -9,7 +9,7 @@
 <div id="modal-help" class="reveal-modal" tabindex="-1">
 <div class="modal-header">
 <a class="close-reveal-modal">×</a>
-<h3 id="modal-help-title"></h3>
+<div class="modal-help-title" id="modal-help-title"></div>
 </div>
 <div id="modal-help-content" class="modal-body">
 </div>

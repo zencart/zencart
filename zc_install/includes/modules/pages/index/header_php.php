@@ -8,7 +8,12 @@
 
 $otherConfigErrors = FALSE;
 $hasUpgradeErrors = FALSE;
-$systemChecker = new systemChecker();
+$selectedAdminDir = '';
+if (isset($_POST['adminDir']))
+{
+  $selectedAdminDir = zen_output_string_protected($_POST['adminDir']);
+}
+$systemChecker = new systemChecker($selectedAdminDir);
 $dbVersion = $systemChecker->findCurrentDbVersion();
 $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VERSION_MINOR;
 $isCurrentDb = ($dbVersion == $currentDbVersion) ? TRUE : FALSE;
@@ -38,6 +43,9 @@ $hasMultipleAdmins = FALSE;
 if (count($adminDirectoryList) > 1)
 {
   $hasMultipleAdmins = TRUE;
+} else 
+{
+  $selectedAdminDir = $adminDirectoryList[0];
 }
 $formAction = 'system_setup';
 if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && !$isCurrentDb) 

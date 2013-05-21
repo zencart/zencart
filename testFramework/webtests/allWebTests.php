@@ -3,9 +3,9 @@
  * File contains main code for loading tests
  *
  * @package tests
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: allWebTests.php 19153 2011-07-18 21:16:21Z wilt $
+ * @version 
  */
 /**
  * @package tests
@@ -55,16 +55,16 @@ class allTests
   {
     $suite = new PHPUnit_Framework_TestSuite('Zen Cart v1.6 Web Tests');
     $suite->addTestSuite('testInstall');
-    $suite->addTestSuite('testCreateAccount');
-    $suite->addTestSuite('testCreateCoupons');
-    $suite->addTestSuite('testUseCoupons');
-    $suite->addTestSuite('testGroupDiscount');
-    $suite->addTestSuite('testCouponOrders');
-    $suite->addTestSuite('testSundryCartOrders');
-    $suite->addTestSuite('testGiftVouchers');
-    $suite->addTestSuite('testAdminSSLMode');
-    $suite->addTestSuite('testTwoFactorAuthenticationHooks');
-    $suite->addTestSuite('testCompoundTaxes');
+//    $suite->addTestSuite('testCreateAccount');
+//    $suite->addTestSuite('testCreateCoupons');
+//    $suite->addTestSuite('testUseCoupons');
+//    $suite->addTestSuite('testGroupDiscount');
+//    $suite->addTestSuite('testCouponOrders');
+//    $suite->addTestSuite('testSundryCartOrders');
+//    $suite->addTestSuite('testGiftVouchers');
+//    $suite->addTestSuite('testAdminSSLMode');
+//    $suite->addTestSuite('testTwoFactorAuthenticationHooks');
+//    $suite->addTestSuite('testCompoundTaxes');
     return $suite;
   }
 

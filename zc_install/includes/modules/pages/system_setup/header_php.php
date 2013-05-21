@@ -5,7 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: 
  */
-
 $adminDir = (isset($_POST['adminDir'])) ? zen_output_string_protected($_POST['adminDir']) : 'admin';
 $documentRoot = zen_get_document_root();
 $httpServer = zen_get_http_server();
@@ -28,7 +27,7 @@ $catalogHttpUrl = substr($catalogHttpUrl, 0, strpos($catalogHttpUrl, '/zc_instal
 $catalogHttpsServer = 'https://' . $httpServer;
 $catalogHttpsUrl = 'https://' . $httpServer  . $_SERVER['SCRIPT_NAME'];
 $catalogHttpsUrl = substr($catalogHttpsUrl, 0, strpos($catalogHttpsUrl, '/zc_install'));
-$adminPhysicalPath = $documentRoot . '/admin';
+$adminPhysicalPath = $documentRoot . '/' . $adminDir;
 $virtual_path = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
 $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';
 $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';

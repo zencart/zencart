@@ -6,6 +6,12 @@
 #
 
 systemChecks:
+  backupConfigureFiles:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_ADMIN_CONFIGURE .PHP_EOL; ?>
+    methods: 
+      backupConfigureFiles:
   checkStoreConfigureFile:
     runLevel: always
     errorLevel: FAIL
@@ -108,6 +114,13 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_UPGRADE .PHP_EOL; ?>
     methods: 
       checkUpgradeDBConnection:
+  connectionDatabaseCheck:     
+    runLevel: always
+    errorLevel: WARN
+    mainErrorTextHelpId: helpIdConnectionDatabaseCheck 
+    mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
+    methods: 
+      checkDBConnection:
   checkRegisterGlobals:
     runLevel: always
     errorLevel: WARN
