@@ -92,6 +92,13 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
  */
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
+/*
+ * Get time zone info from PHP config
+ */
+if (version_compare(PHP_VERSION, 5.3, '>='))
+{
+  @date_default_timezone_set(date_default_timezone_get());
+}
 /**
  * check for and include load application parameters
  */
