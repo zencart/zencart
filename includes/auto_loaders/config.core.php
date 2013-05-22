@@ -4,7 +4,7 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 Modified in v1.5.1 $
  */
@@ -77,8 +77,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'className'=>'QueryCache',
                                'objectName'=>'queryCache',
                                'checkInstantiated'=>true);
-                                
-                                
+
+
 /**
  * Breakpoint 10.
  *
@@ -190,6 +190,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'objectName'=>'template');
   $autoLoadConfig[100][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_sanitize.php');
+  $autoLoadConfig[100][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_counter.php');
 /**
  * Breakpoint 110.
  *
@@ -268,4 +270,3 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_header.php');
-?>

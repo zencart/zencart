@@ -149,14 +149,8 @@ if (( (!file_exists('includes/configure.php') && !file_exists('includes/local/co
  * load the autoloader interpreter code.
 */
 require('includes/autoload_func.php');
-/**
- * load the counter code
-**/
-if ($spider_flag == false) {
-// counter and counter history
-  require(DIR_WS_INCLUDES . 'counter.php');
-}
-// get customers unique IP that paypal does not touch
+
+// get customer's unique IP that external gateway does not touch
 $customers_ip_address = $_SERVER['REMOTE_ADDR'];
 if (!isset($_SESSION['customers_ip_address'])) {
   $_SESSION['customers_ip_address'] = $customers_ip_address;
