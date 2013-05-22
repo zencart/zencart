@@ -51,7 +51,15 @@ if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') !=
 // set php_self in the local scope
 if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
 $PHP_SELF = htmlspecialchars($PHP_SELF);
+// Suppress html from error messages
 @ini_set("html_errors","0");
+/*
+ * Get time zone info from PHP config
+*/
+if (version_compare(PHP_VERSION, 5.3, '>='))
+{
+  @date_default_timezone_set(date_default_timezone_get());
+}
 /**
  * Set the local configuration parameters - mainly for developers
  */

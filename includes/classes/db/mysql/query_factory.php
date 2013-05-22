@@ -68,7 +68,9 @@ class queryFactory extends base {
           }
         }
         $this->db_connected = true;
-        if (getenv('TZ') && !defined('DISABLE_MYSQL_TZ_SET')) @mysql_query("SET time_zone = '" . substr_replace(date("O"),":",-2,0) . "'", $this->link);
+        if (!defined('DISABLE_MYSQL_TZ_SET')) {
+          mysqli_query($this->link, "SET time_zone = '" . substr_replace(date("O"),":",-2,0) . "'");
+        }
         return true;
       } else {
         $this->set_error(mysql_errno(),mysql_error(), $zp_real);
