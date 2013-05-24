@@ -102,14 +102,10 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
 }
 unset($spiders);
 /**
- * set host_address once per session to reduce load on server
+ * set host_address (once per session to reduce load on server, since gethostbyaddr() can be slow on many servers)
  */
 if (!isset($_SESSION['customers_host_address'])) {
-  if (SESSION_IP_TO_HOST_ADDRESS == 'true') {
-    $_SESSION['customers_host_address']= @gethostbyaddr($_SERVER['REMOTE_ADDR']);
-  } else {
-    $_SESSION['customers_host_address'] = OFFICE_IP_TO_HOST_ADDRESS;
-  }
+  $_SESSION['customers_host_address'] = (SESSION_IP_TO_HOST_ADDRESS == 'true') ? @gethostbyaddr($_SERVER['REMOTE_ADDR']) : $_SERVER['REMOTE_ADDR'];
 }
 /**
  * verify the ssl_session_id if the feature is enabled

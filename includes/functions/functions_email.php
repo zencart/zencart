@@ -506,12 +506,11 @@
  *
  */
   function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone='', $login_fax='') {
+    $email_host_address = '';
     // get host_address from either session or one time for both email types to save server load
     if (!$_SESSION['customers_host_address']) {
       if (SESSION_IP_TO_HOST_ADDRESS == 'true') {
         $email_host_address = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
-      } else {
-        $email_host_address = OFFICE_IP_TO_HOST_ADDRESS;
       }
     } else {
       $email_host_address = $_SESSION['customers_host_address'];
@@ -528,7 +527,7 @@
       ($login_phone !='' ? OFFICE_LOGIN_PHONE . "\t" . $login_phone . "\n" : '') .
       ($login_fax !='' ? OFFICE_LOGIN_FAX . "\t" . $login_fax . "\n" : '') .
       OFFICE_IP_ADDRESS . "\t" . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . "\n" .
-      OFFICE_HOST_ADDRESS . "\t" . $email_host_address . "\n" .
+      ($email_host_address != '' ? OFFICE_HOST_ADDRESS . "\t" . $email_host_address  . "\n" : '') .
       OFFICE_DATE_TIME . "\t" . date("D M j Y G:i:s T") . "\n\n";
 
     $extra_info['HTML'] = '<table class="extra-info">' .
@@ -540,7 +539,7 @@
       ($login_phone !='' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_PHONE . '</td><td>' . $login_phone . '</td></tr>' : '') .
       ($login_fax !='' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_FAX . '</td><td>' . $login_fax . '</td></tr>' : '') .
       '<tr><td class="extra-info-bold">' . OFFICE_IP_ADDRESS . '</td><td>' . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . '</td></tr>' .
-      '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' .
+      ($email_host_address != '' ? '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' : '') .
       '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>' . '</table>';
     return $extra_info;
   }

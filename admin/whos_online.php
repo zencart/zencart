@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: whos_online.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -250,7 +250,10 @@ require('includes/admin_html_head.php');
                 <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='5') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=5"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ1; ?></a>&nbsp;
                 <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='15') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=15"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ2; ?></a>&nbsp;
                 <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='30') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=30"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ3; ?></a>&nbsp;
-                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='60') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=60"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ4; ?></a>&nbsp;<br />
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='60') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=60"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ4; ?></a>&nbsp;
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='300') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=300"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ5; ?></a>&nbsp;
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='600') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=600"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ6; ?></a>&nbsp;
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='840') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=840"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ7; ?></a>&nbsp;<br />
 
                 <?php echo TEXT_WHOS_ONLINE_FILTER_SPIDERS; ?>
                 <a class="optionClick<?php echo ($_SESSION['wo_exclude_spiders'])  ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>ns=1"><?php echo TEXT_YES; ?></a>&nbsp;
