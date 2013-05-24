@@ -6,20 +6,33 @@
  * @version $Id: 
  */
 
-  $adminDir = (isset($_POST['adminDir'])) ? zen_output_string_protected($_POST['adminDir']) : 'admin';
+  @unlink(DIR_FS_ROOT . 'logs/progress.json');
+  require (DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+  $changedDir = $_POST['changedDir'];
+  $adminDir = $_POST['adminDir'];
+  $adminNewDir = $_POST['adminNewDir'];
+  if ($changedDir) $_POST['adminDir'] = $_POST['adminNewDir'];
+  //print_r($_POST);
+  
   $admin_password = zen_create_PADSS_password();
-  $wordlist = file(DIR_FS_INSTALL . 'includes/wordlist.csv');
-  $max = count($wordlist) - 1;
-  $word1 = trim($wordlist[zen_pwd_rand(0,$max)]);
-  $pos = zen_pwd_rand(0,4);
-  $word1[$pos] = strtoupper($word1[$pos]);
-  $word3 = trim($wordlist[zen_pwd_rand(0,$max)]);
-  $pos = zen_pwd_rand(0,4);
-  $word3[$pos] = strtoupper($word3[$pos]);
-  $word2 = zen_create_random_value(3, 'chars');
-  $adminNewDir = $adminDir;
-  if ($adminDir == 'admin') $adminNewDir =  $word1 . '-' . $word2 . '-' . $word3;
-  $result = TRUE;
-  if ($adminDir == 'admin') $result = @rename(DIR_FS_ROOT . $adminDir, DIR_FS_ROOT . $adminNewDir);
-  $changedDir = $result;
-
+  if (isset($_POST['upgrade_mode']) && $_POST['upgrade_mode'] == 'yes')
+  {
+    $isUpgrade = TRUE;
+    $systemChecker = new systemChecker();
+    $options = $systemChecker->getDbConfigOptions();
+    $dbInstaller = new zcDatabaseInstaller($options);
+    $db = $dbInstaller->getDb();
+    if (isset($_POST['admin_candidate']) && $_POST['admin_candidate'] != '')
+    {
+      $sql = "UPDATE " . $options['db_prefix'] . "admin set admin_profile = 1 WHERE admin_id = :adminCandidate:";
+      $sql = $db->bindVars($sql, ':adminCandidate:', $_POST['admin_candidate'], 'integer');
+      $result = $db->execute($sql);
+    }
+  } else
+  {
+    $isUpgrade = FALSE;
+    require (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
+    $result = new zcConfigureFileWriter($_POST);
+    $adminLink = zen_output_string_protected($_POST['http_server_admin']) . zen_output_string_protected($_POST['dir_ws_http_catalog']) . zen_output_string_protected($_POST['admin_directory']);
+    $catalogLink = zen_output_string_protected($_POST['http_server_catalog']) . zen_output_string_protected($_POST['dir_ws_http_catalog']);
+  }

@@ -37,7 +37,7 @@ class zcConfigureFileWriter
     $replaceVars['DIR_FS_SQL_CACHE'] = $inputs['sql_cache_dir'];
     $replaceVars['HTTP_SERVER_ADMIN'] = $inputs['http_server_admin'];
     $this->replaceVars = $replaceVars;
-    $adminDir = $inputs['admin_directory'];
+    $adminDir = $inputs['adminDir'];
     $this->processAllConfigureFiles($adminDir);
   }
   protected function processAllConfigureFiles($adminDir)

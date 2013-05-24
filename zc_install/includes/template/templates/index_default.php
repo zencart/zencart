@@ -18,6 +18,8 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
     <?php } ?> 
     </div>
     <select name="adminDir"><?php echo zen_get_select_options($adminOptionList, $selectedAdminDir)?></select><br><br>
+<?php } else { ?>
+<input type="hidden" name="adminDir" value="<?php echo $selectedAdminDir; ?>" >
 <?php } ?>
 <?php if ($selectedAdminDir != '') { ?>
 <?php if ($hasSaneConfigFile && !$isCurrentDb && !$otherConfigErrors) { ?>

@@ -125,3 +125,8 @@ h2 {
 	padding-bottom: 5px;
 	font-weight:bold;
 }
+
+input[readonly] {
+	 background: #dddddd;
+	
+}

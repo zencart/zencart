@@ -186,7 +186,34 @@ function ajaxTestDBConnection(form) {
               $("#install-errors").reveal();            
             } else
             {
-              myform.submit();
+              $.ajax({
+                type: "POST",
+                timeout: 0,
+                dataType: "json",
+                data: str,
+                url: '<?php echo "ajaxAdminSetup.php"; ?>',
+                success: function(data) {
+                  $('#db_setup').append(
+                      $('<input/>')
+                          .attr('type', 'hidden')
+                          .attr('name', 'adminDir')
+                          .val(data.adminDir)
+                  );
+                  $('#db_setup').append(
+                      $('<input/>')
+                          .attr('type', 'hidden')
+                          .attr('name', 'changedDir')
+                          .val(data.changedDir)
+                  );
+                  $('#db_setup').append(
+                      $('<input/>')
+                          .attr('type', 'hidden')
+                          .attr('name', 'adminNewDir')
+                          .val(data.adminNewDir)
+                  );
+                  myform.submit();
+                }
+              });
             }
           }
         });
