@@ -505,7 +505,7 @@
  * Function to build array of additional email content collected and sent on admin-copies of emails:
  *
  */
-  function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone='', $login_fax='') {
+  function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone='', $login_fax='', $moreinfo = array()) {
     $email_host_address = '';
     // get host_address from either session or one time for both email types to save server load
     if (!$_SESSION['customers_host_address']) {
@@ -541,6 +541,12 @@
       '<tr><td class="extra-info-bold">' . OFFICE_IP_ADDRESS . '</td><td>' . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . '</td></tr>' .
       ($email_host_address != '' ? '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' : '') .
       '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>' . '</table>';
+
+    foreach($moreinfo as $key => $val) {
+      $extra_info['TEXT'] .= $key . ': ' . $val . "\n";
+      $extra_info['HTML'] .= '<tr><td class="extra-info-bold">' . $key . '</td><td>' . $val . '</td></tr>';
+    }
+
     return $extra_info;
   }
 
