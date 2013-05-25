@@ -227,7 +227,18 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
       }
     ?>
     </td>
-    <td class="headerBarContent" align="center"><b><?php echo date(PHP_DATE_TIME_FORMAT . " P", time()) . 'GMT'  . '&nbsp;[' .  $_SERVER['REMOTE_ADDR'] . ' ]&nbsp;'; ?></b></td>
+    <td class="headerBarContent" align="center">
+<?php
+    echo ((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? iconv('ISO-8859-1', 'UTF-8', strftime(ADMIN_NAV_DATE_TIME_FORMAT, time())) : strftime(ADMIN_NAV_DATE_TIME_FORMAT, time())); //windows does not "do" UTF-8...so a manual conversion is necessary
+    echo '&nbsp;' . date("O" , time()) . ' GMT';  // time zone
+    echo '&nbsp;[' . $_SERVER['REMOTE_ADDR'] . ']'; // current admin user's IP address
+    echo '<br />';
+    echo @shell_exec('hostname'); //what server am I working on?
+    echo ' - ' . date_default_timezone_get(); //what is the PHP timezone set to?
+    $loc = setlocale(LC_TIME, 0);
+    if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
+?></td>
+
     <td class="headerBarContent" align="right"><?php echo '
         <a href="' . zen_href_link(FILENAME_DEFAULT, '', 'NONSSL') . '" class="headerLink">' . HEADER_TITLE_TOP . '</a>&nbsp;|&nbsp;
         <a href="' . zen_catalog_href_link() . '" class="headerLink" target="_blank">' . HEADER_TITLE_ONLINE_CATALOG . '</a>&nbsp;|&nbsp;
@@ -238,4 +249,5 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
     </td>
   </tr>
 </table>
+<?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
