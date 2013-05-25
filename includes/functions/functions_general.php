@@ -1541,7 +1541,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @return string
  */
   function charsetClean($string) {
-    if (CHARSET == 'UTF-8') return $string;
+    if (preg_replace('/[^a-z0-9]/', '', strtolower(CHARSET)) == 'utf8') return $string;
     if (function_exists('iconv')) $string = iconv("Windows-1252", CHARSET . "//IGNORE", $string);
     $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
     $string = html_entity_decode($string, ENT_QUOTES, CHARSET);
