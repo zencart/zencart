@@ -56,7 +56,7 @@ if (isset($_POST[zen_session_name()])) {
  * need to tidy up $_SERVER['REMOTE_ADDR'] here beofre we use it any where else
  * one problem we don't address here is if $_SERVER['REMOTE_ADDRESS'] is not set to anything at all
  */
-$ipAddressArray = explode(',', $_SERVER['REMOTE_ADDR']);
+$ipAddressArray = explode(',', zen_get_ip_address());
 $ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '';
 $_SERVER['REMOTE_ADDR'] = $ipAddress;
 /**
