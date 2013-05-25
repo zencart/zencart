@@ -46,7 +46,7 @@ class storepickup extends base {
    *
    * @return storepickup
    */
-  function storepickup() {
+  function __construct() {
     global $order, $db;
 
     $this->code = 'storepickup';
@@ -57,7 +57,10 @@ class storepickup extends base {
     $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
     $this->enabled = ((MODULE_SHIPPING_STOREPICKUP_STATUS == 'True') ? true : false);
+    $this->update_status();
+  }
 
+  function update_status() {
     if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) ) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
@@ -78,6 +81,11 @@ class storepickup extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**

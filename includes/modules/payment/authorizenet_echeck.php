@@ -3,7 +3,7 @@
  * authorize.net echeck payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
@@ -68,10 +68,8 @@ class authorizenet_echeck extends base {
   var $reportable_submit_data = array();
   /**
    * Constructor
-   *
-   * @return authorizenet_echeck
    */
-  function authorizenet_echeck() {
+  function __construct() {
     global $order, $messageStack;
     $this->code = 'authorizenet_echeck';
     $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_ECHECK_STATUS == 'True') ? true : false); // Whether the module is installed or not
@@ -131,6 +129,11 @@ class authorizenet_echeck extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**

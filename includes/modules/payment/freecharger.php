@@ -3,7 +3,7 @@
  * FreeCharger Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: freecharger.php 15420 2010-02-04 21:27:05Z drbyte $
@@ -12,7 +12,7 @@
     var $code, $title, $description, $enabled, $payment;
 
 // class constructor
-    function freecharger() {
+    function __construct() {
       global $order;
       $this->code = 'freecharger';
       $this->title = MODULE_PAYMENT_FREECHARGER_TEXT_TITLE;
@@ -56,6 +56,11 @@
         if ($check_flag == false) {
           $this->enabled = false;
         }
+      }
+
+      // other status checks?
+      if ($this->enabled) {
+        // other checks here
       }
     }
 

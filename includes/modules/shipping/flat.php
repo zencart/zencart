@@ -1,12 +1,11 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: flat.php 14498 2009-10-01 20:16:16Z ajeh $
  */
-// $Id: flat.php 14498 2009-10-01 20:16:16Z ajeh $
-//
 
   class flat {
     var $code, $title, $description, $icon, $enabled;
@@ -101,4 +100,3 @@
       return array('MODULE_SHIPPING_FLAT_STATUS', 'MODULE_SHIPPING_FLAT_COST', 'MODULE_SHIPPING_FLAT_TAX_CLASS', 'MODULE_SHIPPING_FLAT_TAX_BASIS', 'MODULE_SHIPPING_FLAT_ZONE', 'MODULE_SHIPPING_FLAT_SORT_ORDER');
     }
   }
-?>

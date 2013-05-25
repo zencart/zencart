@@ -242,7 +242,7 @@ class paypaldp extends base {
       }
     }
 
-    // other reasons?
+    // other status checks?
     if ($this->enabled) {
       // other checks here
     }
