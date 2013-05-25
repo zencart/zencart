@@ -3,7 +3,7 @@
  * COD Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
@@ -12,7 +12,7 @@
     var $code, $title, $description, $enabled;
 
 // class constructor
-    function cod() {
+    function __construct() {
       global $order;
 
       $this->code = 'cod';
@@ -56,6 +56,11 @@
         if ($order->content_type != 'physical') {
           $this->enabled = false;
         }
+      }
+
+      // other status checks?
+      if ($this->enabled) {
+        // other checks here
       }
     }
 

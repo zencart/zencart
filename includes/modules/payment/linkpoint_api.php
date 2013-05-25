@@ -21,7 +21,7 @@ class linkpoint_api {
   var $collectsCardDataOnsite = TRUE;
 
   // class constructor
-  function linkpoint_api() {
+  function __construct() {
     global $order, $messageStack;
     $this->code = 'linkpoint_api';
     $this->enabled = ((MODULE_PAYMENT_LINKPOINT_API_STATUS == 'True') ? true : false); // Whether the module is installed or not
@@ -100,6 +100,11 @@ class linkpoint_api {
     // if in code-debug mode and IP address is in the down-for-maint list, enable the module (leaves it invisible to non-testers)
     if (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
       if ($this->code_debug) $this->enabled=true;
+    }
+
+      // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
 

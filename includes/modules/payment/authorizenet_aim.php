@@ -71,10 +71,8 @@ class authorizenet_aim extends base {
   var $reportable_submit_data = array();
   /**
    * Constructor
-   *
-   * @return authorizenet_aim
    */
-  function authorizenet_aim() {
+  function __construct() {
     global $order, $messageStack;
     $this->code = 'authorizenet_aim';
     $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS == 'True') ? true : false); // Whether the module is installed or not
@@ -147,6 +145,11 @@ class authorizenet_aim extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**

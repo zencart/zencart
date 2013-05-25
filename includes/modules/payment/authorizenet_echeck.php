@@ -68,10 +68,8 @@ class authorizenet_echeck extends base {
   var $reportable_submit_data = array();
   /**
    * Constructor
-   *
-   * @return authorizenet_echeck
    */
-  function authorizenet_echeck() {
+  function __construct() {
     global $order, $messageStack;
     $this->code = 'authorizenet_echeck';
     $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_ECHECK_STATUS == 'True') ? true : false); // Whether the module is installed or not
@@ -133,6 +131,11 @@ class authorizenet_echeck extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**

@@ -247,6 +247,11 @@ class paypaldp extends base {
         $this->zcLog('update_status', 'Module disabled because purchase amount is set to 0.00.' . "\n" . print_r($order, true));
       }
     }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
+    }
   }
   /**
    *  Validate the credit card information via javascript (Number, Owner, and CVV Lengths)

@@ -86,6 +86,11 @@ class storepickup extends base {
         $this->enabled = false;
       }
     }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
+    }
   }
   /**
    * Obtain quote from shipping system/calculations

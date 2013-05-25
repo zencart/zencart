@@ -10,7 +10,6 @@
  */
 /**
  * authorize.net SIM payment method class
- *
  */
 class authorizenet extends base {
   /**
@@ -55,9 +54,9 @@ class authorizenet extends base {
 
 
   /**
-   * @return authorizenet
+   * Constructor
    */
-  function authorizenet() {
+  function __construct() {
     global $order;
 
     $this->code = 'authorizenet';
@@ -195,6 +194,11 @@ class authorizenet extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**
