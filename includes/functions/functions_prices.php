@@ -306,7 +306,8 @@
 // Specials and Tax Included
   function zen_get_products_display_price($products_id) {
     $val = zen_get_products_output_price($products_id);
-    return $val['legacy_output'];
+    if (is_array($val) && isset($val['legacy_output'])) $val = $val['legacy_output'];
+    return $val;
   }
 
 ////
