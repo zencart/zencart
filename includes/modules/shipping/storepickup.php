@@ -18,13 +18,13 @@ class storepickup extends base {
    */
   var $code;
   /**
-   * $title is the displayed name for this payment method
+   * $title is the displayed name for this shipping method
    *
    * @var string
    */
   var $title;
   /**
-   * $description is a soft name for this payment method
+   * $description is a soft name for this shipping method
    *
    * @var string
    */
@@ -47,8 +47,6 @@ class storepickup extends base {
    * @return storepickup
    */
   function __construct() {
-    global $order, $db;
-
     $this->code = 'storepickup';
     $this->title = MODULE_SHIPPING_STOREPICKUP_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_STOREPICKUP_TEXT_DESCRIPTION;
@@ -61,6 +59,7 @@ class storepickup extends base {
   }
 
   function update_status() {
+    global $order, $db;
     if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) ) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
@@ -97,12 +96,17 @@ class storepickup extends base {
   function quote($method = '') {
     global $order;
 
-    if (trim(MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST) == '') {
+    // this code looks to see if there's a language-specific translation for the available shipping locations/methods, to override what is entered in the Admin (since the admin setting is in the default language)
+    $ways_translated = (defined('MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS')) ? trim(MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS) : '';
+    $ways_default = trim(MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST);
+    $methodsToParse = ($ways_translated == '') ? $ways_default : $ways_translated;
+
+    if ($methodsToParse == '') {
       $this->methodsList[] = array('id' => $this->code,
                                    'title' => trim((string)MODULE_SHIPPING_STOREPICKUP_TEXT_WAY),
                                    'cost' => MODULE_SHIPPING_STOREPICKUP_COST);
     } else {
-      $this->locations = explode(';', (string)MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST);
+      $this->locations = explode(';', (string)$methodsToParse);
       $this->methodsList = array();
       foreach ($this->locations as $key => $val)
       {
