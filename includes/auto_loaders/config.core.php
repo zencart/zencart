@@ -254,6 +254,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'objectName'=>'breadcrumb');
   $autoLoadConfig[160][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_category_path.php');
+
+/**
+ * Breakpoint 165.
+ *
+ * require('includes/init_includes/init_robots_noindex_rules.php');
+ */
+  $autoLoadConfig[165][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_robots_noindex_rules.php');
 /**
  * Breakpoint 170.
  *
@@ -270,3 +278,4 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_header.php');
+
