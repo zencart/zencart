@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Configuration Settings circa 1.6.0
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * File Built by %%_INSTALLER_METHOD_%% on %%_DATE_NOW_%%
@@ -21,11 +21,10 @@
 // NOTE: be sure to leave the trailing '/' at the end of these lines if you make changes!
 // * DIR_WS_* = Webserver directories (virtual/URL)
   // these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)
-  $t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'];$t2 = parse_url(HTTPS_SERVER);$p2 = $t2['path'];
+  $t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'];
 
   define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
   define('DIR_WS_CATALOG', '%%_DIR_WS_CATALOG_%%');
-  define('DIR_WS_HTTPS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p2) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
   define('DIR_WS_HTTPS_CATALOG', '%%_DIR_WS_HTTPS_CATALOG_%%');
 
   define('DIR_WS_IMAGES', 'images/');
@@ -64,28 +63,28 @@ define('DB_SERVER', '%%_DB_SERVER_%%');
 define('DB_SERVER_USERNAME', '%%_DB_SERVER_USERNAME_%%');
 define('DB_SERVER_PASSWORD', '%%_DB_SERVER_PASSWORD_%%');
 define('DB_DATABASE', '%%_DB_DATABASE_%%');
-  
+
   // The next 2 "defines" are for SQL cache support.
   // For SQL_CACHE_METHOD, you can select from:  none, database, or file
-  // If you choose "file", then you need to set the DIR_FS_SQL_CACHE to a directory where your apache 
+  // If you choose "file", then you need to set the DIR_FS_SQL_CACHE to a directory where your apache
   // or webserver user has write privileges (chmod 666 or 777). We recommend using the "cache" folder inside the Zen Cart folder
-  // ie: /path/to/your/webspace/public_html/zen/cache   -- leave no trailing slash  
+  // ie: /path/to/your/webspace/public_html/zen/cache   -- leave no trailing slash
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
 define('DIR_FS_SQL_CACHE', '%%_DIR_FS_SQL_CACHE_%%');
 
 define('SESSION_STORAGE', '%%SESSION_STORAGE%%');
 
 // Define the webserver and path parameters
-  // Main webserver: eg-http://www.your_domain.com - 
+  // Main webserver: eg-http://www.your_domain.com -
   // HTTP_SERVER is your Main webserver: eg-http://www.your_domain.com
   // HTTPS_SERVER is your Secure webserver: eg-https://www.your_domain.com
   // HTTP_CATALOG_SERVER is your Main webserver: eg-http://www.your_domain.com
   // HTTPS_CATALOG_SERVER is your Secure webserver: eg-https://www.your_domain.com
-  /* 
-   * URLs for your site will be built via:  
+  /*
+   * URLs for your site will be built via:
    *     HTTP_SERVER plus DIR_WS_ADMIN or
-   *     HTTPS_SERVER plus DIR_WS_HTTPS_ADMIN or 
-   *     HTTP_SERVER plus DIR_WS_CATALOG or 
+   *     HTTPS_SERVER plus DIR_WS_HTTPS_ADMIN or
+   *     HTTP_SERVER plus DIR_WS_CATALOG or
    *     HTTPS_SERVER plus DIR_WS_HTTPS_CATALOG
    * ...depending on your system configuration settings
    */

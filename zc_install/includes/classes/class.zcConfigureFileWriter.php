@@ -4,11 +4,11 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: 
+ * @version $Id:
  *
  */
 /**
- * 
+ *
  * zcConfigureFileWriter class
  *
  */
@@ -36,8 +36,16 @@ class zcConfigureFileWriter
     $replaceVars['SQL_CACHE_METHOD'] = $inputs['sql_cache_method'];
     $replaceVars['DIR_FS_SQL_CACHE'] = $inputs['sql_cache_dir'];
     $replaceVars['HTTP_SERVER_ADMIN'] = $inputs['http_server_admin'];
+
+    //@TODO:
+    $replaceVars['SESSION_STORAGE'] = 'temporary value added by v160 installer';
+
+
     $this->replaceVars = $replaceVars;
     $adminDir = $inputs['adminDir'];
+
+// die('<pre>' . print_r($inputs, true));
+
     $this->processAllConfigureFiles($adminDir);
   }
   protected function processAllConfigureFiles($adminDir)
@@ -45,17 +53,23 @@ class zcConfigureFileWriter
     $tplFile = DIR_FS_INSTALL . 'includes/catalog-dist-configure.php';
     $outputFile = $this->inputs['physical_path'] . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
+// $result will be greater than 0 if file was written correctly
+
     $tplFile = DIR_FS_INSTALL . 'includes/admin-dist-configure.php';
     $outputFile = $this->inputs['physical_path'] . '/'. $adminDir . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
+// $result will be greater than 0 if file was written correctly
+
   }
   protected function transformConfigureTplFile($tplFile, $outputFile)
   {
     $tplOriginal = @file_get_contents($tplFile);
     foreach ($this->replaceVars as $varName => $varValue)
     {
-      $tplOriginal = str_replace('%%_' . $varName . '_%%', $varValue, $tplOriginal); 
+      $tplOriginal = str_replace('%%_' . $varName . '_%%', $varValue, $tplOriginal);
     }
-    file_put_contents($outputFile, $tplOriginal);
+    $retval = file_put_contents($outputFile, $tplOriginal);
+
+    return $retval;
   }
 }

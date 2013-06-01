@@ -3,7 +3,7 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 
+ * @version $Id:
  */
 ?>
 
@@ -30,7 +30,7 @@
         <label class="inline" for="db_host"><a href="#" class="hasHelpText" id="DBHOST"><?php echo TEXT_DATABASE_SETUP_DB_HOST; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="text" name="db_host" id="db_host" value="<?php echo $db_host; ?>" tabindex="1" >
+        <input type="text" name="db_host" id="db_host" value="<?php echo $db_host; ?>" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_DB_HOST; ?>">
       </div>
     </div>
     <div class="row">
@@ -38,15 +38,15 @@
         <label class="inline" for="db_user"><a href="#" class="hasHelpText" id="DBUSER"><?php echo TEXT_DATABASE_SETUP_DB_USER; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="text" name="db_user" id="db_user" value="<?php echo $db_user; ?>" tabindex="2" >
+        <input type="text" name="db_user" id="db_user" value="<?php echo $db_user; ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_DB_USER; ?>">
       </div>
     </div>
     <div class="row">
       <div class="three columns">
-        <label class="inline" for="db_password"><a href="#" class="hasHelpText" id="DBPASSWORD"><?php echo TEXT_DATABASE_SETUP_DB_PASSWORD; ?></a></label>      
+        <label class="inline" for="db_password"><a href="#" class="hasHelpText" id="DBPASSWORD"><?php echo TEXT_DATABASE_SETUP_DB_PASSWORD; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="password" name="db_password" id="db_password" value="<?php echo $db_password; ?>" tabindex="3" >
+        <input type="password" name="db_password" id="db_password" value="<?php echo $db_password; ?>" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_DB_PWD; ?>">
       </div>
     </div>
     <div class="row">
@@ -54,7 +54,7 @@
         <label class="inline" for="db_name"><a href="#" class="hasHelpText" id="DBNAME"><?php echo TEXT_DATABASE_SETUP_DB_NAME; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="text" name="db_name" id="db_name" value="<?php echo $db_name; ?>" tabindex="4" >
+        <input type="text" name="db_name" id="db_name" value="<?php echo $db_name; ?>" tabindex="4" placeholder="<?php echo TEXT_EXAMPLE_DB_NAME; ?>">
       </div>
     </div>
   </fieldset>
@@ -84,7 +84,7 @@
         <label class="inline" for="db_prefix"><a href="#" class="hasHelpText" id="DBPREFIX"><?php echo TEXT_DATABASE_SETUP_DB_PREFIX; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="text" name="db_prefix" id="db_prefix"  value="<?php echo $db_prefix; ?>" tabindex="7" >
+        <input type="text" name="db_prefix" id="db_prefix"  value="<?php echo $db_prefix; ?>" tabindex="7" placeholder="<?php echo TEXT_EXAMPLE_DB_PREFIX; ?>">
       </div>
     </div>
     <div class="row">
@@ -101,33 +101,33 @@
           <label class="inline" for="sql_cache_dir"><a href="#" class="hasHelpText" id="SQLCACHEDIRECTORY"><?php echo TEXT_DATABASE_SETUP_SQL_CACHE_DIRECTORY; ?></a></label>
         </div>
         <div class="six columns end">
-          <input type="text" name="sql_cache_dir" id="sql_cache_dir" value="<?php echo $sql_cache_dir; ?>" tabindex="9" >
+          <input type="text" name="sql_cache_dir" id="sql_cache_dir" value="<?php echo $sql_cache_dir; ?>" tabindex="9" placeholder="<?php echo TEXT_EXAMPLE_CACHEDIR; ?>">
         </div>
       </div>
     </div>
-  </fieldset>      
+  </fieldset>
   <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="10" >
-</form> 
-<script>  
+</form>
+<script>
 $(function() {
-	if ($('#sql_cache_method').val() == 'file') 
-	{
+  if ($('#sql_cache_method').val() == 'file')
+  {
      $('#sql-cache-directory-input').show();
-	} else 
-	{
-	  $('#sql-cache-directory-input').hide();
+  } else
+  {
+    $('#sql-cache-directory-input').hide();
   }
   $('#sql_cache_method').change(function () {
-		  if ($('#sql_cache_method').val() == 'file') 
-		  {
-	       $('#sql-cache-directory-input').show();
-		  } else 
-		  {
-			  $('#sql-cache-directory-input').hide();
-		  }
+      if ($('#sql_cache_method').val() == 'file')
+      {
+         $('#sql-cache-directory-input').show();
+      } else
+      {
+        $('#sql-cache-directory-input').hide();
+      }
   });
 });
-        
+
 $().ready(function() {
   $("#db_setup").validate({
     submitHandler: function(form) {
@@ -141,22 +141,22 @@ $().ready(function() {
         required: function(element) {
           return $("#sql_cache_method").val() == 'file';
         }
-      }  
+      }
     },
     messages: {
     }
-  }); 
+  });
 });
 
 function ajaxTestDBConnection(form) {
   var str = $(form).serialize();
-  var myform = form;	
+  var myform = form;
   $.ajax({
     type: "POST",
     dataType: "json",
     data: str,
     url: '<?php echo "ajaxTestDBConnection.php"; ?>',
-    success: function(data) {  
+    success: function(data) {
       if (data.error == true)
       {
         var dbErrorList = data.errorList['extraErrors'];
@@ -171,7 +171,7 @@ function ajaxTestDBConnection(form) {
       } else
       {
         $("#progress-bar-dialog").reveal();
-        t = setTimeout("updateStatus()", 300); 
+        t = setTimeout("updateStatus()", 300);
         $.ajax({
           type: "POST",
           timeout: 0,
@@ -183,7 +183,7 @@ function ajaxTestDBConnection(form) {
             {
               var html = "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1; ?>" + data.file + "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2; ?>";
               $("#install-errors-content").html(html);
-              $("#install-errors").reveal();            
+              $("#install-errors").reveal();
             } else
             {
               $.ajax({
@@ -228,18 +228,18 @@ function updateStatus() {
     dataType: "json",
     cache : false,
     url: '<?php echo "ajaxGetProgressValues.php"; ?>',
-    success: function(data) {  
-      if (data.progress) 
+    success: function(data) {
+      if (data.progress)
       {
-        if (data.message) 
+        if (data.message)
         {
           $('#dialog-title').html(data.message);
-        }	
+        }
         if (data.progress >= 0 && data.progress < 99) {
           $("#progress-bar").html('<span class="meter" style="width:'+data.progress+'%;"></span>');
           t = setTimeout("updateStatus()", 200);
         }
-      } else 
+      } else
       {
         t = setTimeout("updateStatus()", 10);
       }
@@ -248,30 +248,30 @@ function updateStatus() {
       t = setTimeout("updateStatus()", 10);
     }
   });
-  
+
 }
-$(function() 
-		{
-		  $('.hasNoHelpText').click(function(e) 
-		  {   
-			  e.preventDefault(); 
-		  })
-		  $('.hasHelpText').click(function(e) 
-			{
-			  var textId = $(this).attr('id');
-		    $.ajax({
-		    	type: "POST",
-		     	timeout: 100000,
-			    dataType: "json",
-			    data: 'id='+textId,
-		      url: '<?php echo "ajaxGetHelpText.php"; ?>',
-			   	success: function(data) {
-		     	  $('#modal-help-title').html(data.title);
-			     	$('#modal-help-content').html(data.text);
-			       $('#modal-help').reveal();
-		      }
-		    });
-			  e.preventDefault(); 
-		  })  
-		});
-</script>                                                                                                                                                                                                                          
+$(function()
+    {
+      $('.hasNoHelpText').click(function(e)
+      {
+        e.preventDefault();
+      })
+      $('.hasHelpText').click(function(e)
+      {
+        var textId = $(this).attr('id');
+        $.ajax({
+          type: "POST",
+           timeout: 100000,
+          dataType: "json",
+          data: 'id='+textId,
+          url: '<?php echo "ajaxGetHelpText.php"; ?>',
+           success: function(data) {
+             $('#modal-help-title').html(data.title);
+             $('#modal-help-content').html(data.text);
+             $('#modal-help').reveal();
+          }
+        });
+        e.preventDefault();
+      })
+    });
+</script>

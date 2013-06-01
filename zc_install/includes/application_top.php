@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
- 
+
 @ini_set("arg_separator.output", "&");
 
 // Check PHP version
@@ -41,9 +41,7 @@ if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '')
   die('ERROR: date.timezone not set in php.ini. Please contact your hosting company to set the timezone in the server PHP configuration before continuing.');
 } elseif (PHP_VERSION >= '5.1')
 {
-  $baseTZ = date_default_timezone_get();
-  date_default_timezone_set($baseTZ);
-  unset($baseTZ);
+  @date_default_timezone_set(date_default_timezone_get());
 }
 
 /*
@@ -107,18 +105,18 @@ if (isset($_POST['lng']))
   {
     $lng = 'en_us';
   }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))  
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))
   {
     $lng = 'en_us';
   }
-} else 
+} else
 {
   $lng = (isset($_GET['lng']) && $_GET['lng'] != '') ? preg_replace('/[^a-zA-Z_]/', '', $_GET['lng']) : 'en_us';
   if ($lng == '')
   {
     $lng = 'en_us';
   }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))  
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))
   {
     $lng = 'en_us';
   }

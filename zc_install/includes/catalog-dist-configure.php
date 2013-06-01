@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Configuration Settings circa 1.6.0
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * File Built by %%_INSTALLER_METHOD_%% on %%_DATE_NOW_%%

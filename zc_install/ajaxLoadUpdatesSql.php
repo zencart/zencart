@@ -4,7 +4,7 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 
+ * @version $Id:
  */
 define('IS_ADMIN_FLAG', false);
 define('DIR_FS_INSTALL', realpath(dirname(__FILE__) . '/') . '/');
@@ -27,6 +27,7 @@ $versionInfo = $updateList[$updateVersion];
 if ($versionInfo['required'] != $dbVersion)
 {
   $error = TRUE;
+  //@TODO - language string to lang file
   $errorList[] = "Could not update to version " . $updateVersion . " Version " . $versionInfo['required'] . 'update required';
 }
 if (!$error)
@@ -36,6 +37,6 @@ if (!$error)
   $options = $systemChecker->getDbConfigOptions();
   $dbInstaller = new zcDatabaseInstaller($options);
   $result = $dbInstaller->getConnection();
-  $errorUpg = $dbInstaller->parseSqlFile($file); 
+  $errorUpg = $dbInstaller->parseSqlFile($file);
 }
 echo json_encode(array('error'=>$error, 'version'=>$_POST['version'], 'errorList'=>$errorList));

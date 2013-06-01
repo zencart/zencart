@@ -15,26 +15,28 @@ define('HTML_PARAMS','dir="ltr" lang="en"');
 define('TEXT_PAGE_HEADING_INDEX', 'System Inspection');
 define ('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we continue');
 define ('TEXT_INDEX_WARN_ERRORS', 'Some other problems');
-define ('TEXT_HEADER_MAIN', 'For some errors and warnings, more information may be available by clicking on the error/warning title.');
+define ('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which explain what each field means.');
+define ('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
 
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 
 define('TEXT_PAGE_HEADING_SYSTEM_SETUP', 'System Setup');
 define('TEXT_SYSTEM_SETUP_ADMIN_SETTINGS', 'Admin Settings');
-define('TEXT_SYSTEM_SETUP_CATALOG_SETTINGS', 'Catalog Settings');
+define('TEXT_SYSTEM_SETUP_CATALOG_SETTINGS', 'Catalog (Storefront) Settings');
 define('TEXT_SYSTEM_SETUP_ADMIN_SERVER_DOMAIN', 'Admin Server Domain');
 define('TEXT_SYSTEM_SETUP_ADMIN_SERVER_URL', 'Admin Server URL');
 define('TEXT_SYSTEM_SETUP_ADMIN_PHYSICAL_PATH', 'Admin Physical Path');
-define('TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL', 'Enable SSL for Catalog');
-define('TEXT_SYSTEM_SETUP_CATALOG_HTTP_SERVER_DOMAIN', 'Catalog HTTP Domain');
-define('TEXT_SYSTEM_SETUP_CATALOG_HTTP_URL', 'Catalog HTTP URL');
-define('TEXT_SYSTEM_SETUP_CATALOG_HTTPS_SERVER_DOMAIN', 'Catalog HTTPS Domain');
-define('TEXT_SYSTEM_SETUP_CATALOG_HTTPS_URL', 'Catalog HTTPS URL');
-define('TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH', 'Catalog Physical Path');
+define('TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL', 'Enable SSL for Storefront?');
+define('TEXT_SYSTEM_SETUP_CATALOG_HTTP_SERVER_DOMAIN', 'Storefront HTTP Domain');
+define('TEXT_SYSTEM_SETUP_CATALOG_HTTP_URL', 'Storefront HTTP URL');
+define('TEXT_SYSTEM_SETUP_CATALOG_HTTPS_SERVER_DOMAIN', 'Storefront HTTPS Domain');
+define('TEXT_SYSTEM_SETUP_CATALOG_HTTPS_URL', 'Storefront HTTPS URL');
+define('TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH', 'Storefront Physical Path');
 define('TEXT_SYSTEM_SETUP_AGREE_LICENSE', 'Agree to licence terms: ');
+define('TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE', '(Check the box to agree to GPL 2 licence terms. Click the title in the left column to view the license.)');
 define('TEXT_SYSTEM_SETUP_ERROR_DIALOG_TITLE', 'There are some problems');
 define('TEXT_SYSTEM_SETUP_ERROR_DIALOG_CONTINUE', 'Continue anyway');
-define('TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH', 'There appears to be a problem with the Catalog Physical Path');
+define('TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH', 'There appears to be a problem with the ' . TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH);
 
 
 define('TEXT_PAGE_HEADING_DATABASE', 'Database Setup');
@@ -57,15 +59,26 @@ define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'Latin1');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_NONE', 'No SQL Caching');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE', 'Database');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE', 'File');
+define('TEXT_EXAMPLE_DB_HOST', "usually 'localhost'");
+define('TEXT_EXAMPLE_DB_USER', 'enter your MySQL username');
+define('TEXT_EXAMPLE_DB_PWD', 'enter the password for your MySQL user');
+define('TEXT_EXAMPLE_DB_PREFIX', "usually best left blank, or use 'zen_'");
+define('TEXT_EXAMPLE_DB_NAME', 'enter your MySQL database name');
+define('TEXT_EXAMPLE_CACHEDIR', 'usually points to the equivalent of /your/user/home/public_html/zencart/cache folder');
+
 define('TEXT_DATABASE_SETUP_CONNECTION_ERROR_DIALOG_TITLE', 'There are some problems');
 define('TEXT_CREATING_DATABASE', 'Creating Database');
 define('TEXT_LOADING_CHARSET_SPECIFIC', 'Loading Character Set specific data');
 define('TEXT_LOADING_DEMO_DATA', 'Loading Demo Data');
+define('TEXT_LOADING_PLUGIN_DATA', 'Loading SQL for Pre-installed Plugins');
 
 define('TEXT_PAGE_HEADING_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_ADMIN_SETUP_USER_SETTINGS', 'Admin User Settings');
 define('TEXT_ADMIN_SETUP_USER_NAME', 'Admin Superuser Name: ');
+define('TEXT_EXAMPLE_USERNAME', 'ie: bill');
 define('TEXT_ADMIN_SETUP_USER_EMAIL', 'Admin Superuser Email: ');
+define('TEXT_EXAMPLE_EMAIL', 'ie: my_email@example.com');
+define('TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retype email: ');
 define('TEXT_ADMIN_SETUP_USER_PASSWORD', 'Admin password: ');
 define('TEXT_ADMIN_SETUP_USER_PASSWORD_HELP', 'Below is your initial temporary password for your Admin Superuser Account. Please ensure you make a note of it.');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY', 'Admin Directory: ');
@@ -76,16 +89,17 @@ define('TEXT_ADMIN_SETUP_NEWSLETTER_SETTINGS', 'Newsletter');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_EMAIL', 'Newsletter Email: ');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_OPTIN', 'Opt In: ');
 //define('TEXT_MAIN_ADMIN_SETUP', '');
-//define('TEXT_MAIN_ADMIN_SETUP', '');
-//define('TEXT_MAIN_ADMIN_SETUP', '');
 
 
 define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finshed');
-//define('TEXT_COMPLETION_HEADER_MAIN', '');
+define('TEXT_COMPLETION_HEADER_MAIN', '');
 define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete. You can access your store front and your Administration area using the links below.');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', 'You need to remove the /zc_install folder so that someone can\'t re-install your shop again and wipe out your database! A message will appear and you will not be able to log into your admin until the folder has been removed.');
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "You need to remove the /zc_install/ folder so that someone can't re-install your shop again and wipe out your database! A message will appear and you will not be able to log into your admin until the folder has been removed.");
+
+define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
+define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
 define('TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS', 'Please confirm your desired upgrade steps');
@@ -108,14 +122,14 @@ define('TEXT_NAVBAR_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_NAVBAR_COMPLETION', 'Finished');
 define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
 
-define('TEXT_ERROR_STORE_CONFIGURE', 'Store configure.php does not exist(isn\'t readable) and/or is not writeable');
+define('TEXT_ERROR_STORE_CONFIGURE', "Store configure.php does not exist (isn't readable) and/or is not writeable");
 define('TEXT_ERROR_ADMIN_CONFIGURE', 'Admin configure.php does not exist or is not writeable');
 define('TEXT_ERROR_PHP_VERSION', 'Incorrect PHP Version');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
 define('TEXT_ERROR_MYSQL_SUPPPORT', 'Problems with your mysql support');
-define('TEXT_ERROR_LOG_FOLDER', 'includes/log folder is not writeable');
-define('TEXT_ERROR_CACHE_FOLDER', 'includes/cache folder is not writeable');
+define('TEXT_ERROR_LOG_FOLDER', '/logs/ folder is not writeable');
+define('TEXT_ERROR_CACHE_FOLDER', '/cache/ folder is not writeable');
 define('TEXT_ERROR_HTACCESS_SUPPPORT', 'Problems with .htaccess support');
 define('TEXT_ERROR_SESSION_SUPPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
@@ -134,7 +148,7 @@ define('TEXT_ERROR_XML', 'XML Extension not enabled');
 define('TEXT_ERROR_GZIP', 'Gzip Extension not enabled');
 define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be loaded');
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
-define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use Curl to contact a live server');
+define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use CURL to contact a live server');
 define('TEXT_ERROR_HTTPS', 'If possible you should already have installed an SSL certificate, and run the installer using https://');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your Database Settings');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your Database seems to be current. Are you sure you want to install?');
@@ -154,22 +168,59 @@ define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with 
 define('TEXT_HELP_TITLE_FOLDERPERMS', 'Folder Permissions');
 define('TEXT_HELP_CONTENT_FOLDERPERMS', 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders" target="_blank">http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders</a>');
 define('TEXT_HELP_TITLE_CONNECTIONDATABASECHECK', 'Initial Database Connection');
-define('TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK', 'We tried to connect to MySql using a localhost connection. This failure does not necessarily mean MySql is not working, as some hosts require an IP address or host name for the MySql database.<br><br>If you are using localhost for your database server, you should check that MySql is running correctly.');
+define('TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK', 'We tried to connect to MySQL using a localhost connection. This failure does not necessarily mean MySQL is not working, as some hosts require an IP address or host name for the MySQL database.<br><br>If you are indeed using localhost for your database server, you should check that MySQL is running correctly.');
 
 define('TEXT_HELP_TITLE_ADMINSERVERDOMAIN', 'Admin Server Domain');
-define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', "");
-define('TEXT_HELP_TITLE_ENABLESSLCATALOG', 'Enable SSL for Catalog');
-define('TEXT_HELP_CONTENT_ENABLESSLCATALOG', "");
-define('TEXT_HELP_TITLE_HTTPSERVERCATALOG', 'Catalog HTTP Domain');
-define('TEXT_HELP_CONTENT_HTTPSERVERCATALOG', "");
-define('TEXT_HELP_TITLE_HTTPURLCATALOG', 'Catalog HTTP URL');
-define('TEXT_HELP_CONTENT_HTTPURLCATALOG', "");
-define('TEXT_HELP_TITLE_HTTPSSERVERCATALOG', 'Catalog HTTPS Domain');
-define('TEXT_HELP_CONTENT_HTTPSSERVERCATALOG', "");
-define('TEXT_HELP_TITLE_HTTPSURLCATALOG', 'Catalog HTTPS URL');
-define('TEXT_HELP_CONTENT_HTTPSURLCATALOG', "");
-define('TEXT_HELP_TITLE_PHYSICALPATH', 'Catalog Physical Path');
-define('TEXT_HELP_CONTENT_PHYSICALPATH', "");
+define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', "Enter the domain name for accessing your Admin area. It is strongly recommended to use HTTPS for this address. Consult your hosting company about enabling SSL on your site.");
+define('TEXT_HELP_TITLE_ENABLESSLCATALOG', 'Enable SSL for Storefront?');
+define('TEXT_HELP_CONTENT_ENABLESSLCATALOG', "Check this box if you have an SSL certificate on your hosting account and you want Zen Cart to use it when displaying sensitive pages such as Login, My Account, Checkout, etc.");
+define('TEXT_HELP_TITLE_HTTPSERVERCATALOG', 'Storefront HTTP Domain');
+define('TEXT_HELP_CONTENT_HTTPSERVERCATALOG', "Enter the domain-part of the URL for your store.");
+define('TEXT_HELP_TITLE_HTTPURLCATALOG', 'Storefront HTTP URL');
+define('TEXT_HELP_CONTENT_HTTPURLCATALOG', "Enter the entire URL for your store.");
+define('TEXT_HELP_TITLE_HTTPSSERVERCATALOG', 'Storefront HTTPS Domain');
+define('TEXT_HELP_CONTENT_HTTPSSERVERCATALOG', "If you have checked the box above to enable use of SSL during checkout, you must enter here the domain-part of the https URL to your store.");
+define('TEXT_HELP_TITLE_HTTPSURLCATALOG', 'Storefront HTTPS URL');
+define('TEXT_HELP_CONTENT_HTTPSURLCATALOG', "Enter the https URL to your store");
+define('TEXT_HELP_TITLE_PHYSICALPATH', 'Storefront Physical Path');
+define('TEXT_HELP_CONTENT_PHYSICALPATH', "This is the actual path (according to your server's filesystem) where your Zen Cart&reg; files are located. Common examples look like '/users/home/public_html/zencart'.");
+
+
+
+define('TEXT_HELP_TITLE_DBHOST', 'Database Host');
+define('TEXT_HELP_CONTENT_DBHOST', "What is the database host?  The database host can be in the form of a host name, such as 'localhost' or 'db1.myserver.com', or as an IP-address, such as '192.168.0.1'.");
+define('TEXT_HELP_TITLE_DBUSER', 'Database User');
+define('TEXT_HELP_CONTENT_DBUSER', "What is the username used to connect to the database? An example username is 'myusername_store'.");
+define('TEXT_HELP_TITLE_DBPASSWORD', 'Database Password');
+define('TEXT_HELP_CONTENT_DBPASSWORD', "What is the password used for your database username account? It was created when the database-username was created.");
+define('TEXT_HELP_TITLE_DBNAME', 'Database Name');
+define('TEXT_HELP_CONTENT_DBNAME', "What is the name of the database used to hold the data? An example database name is 'zencart' or 'myaccount_zencart'.");
+define('TEXT_HELP_TITLE_DEMODATA', 'Load Demo Data');
+define('TEXT_HELP_CONTENT_DEMODATA', "");
+define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
+define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8. If you don't have a reason to use something else, use UTF8.");
+define('TEXT_HELP_TITLE_DBPREFIX', 'Database Tablename Prefix');
+define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: 'zen_'  <strong>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
+define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');
+define('TEXT_HELP_CONTENT_SQLCACHEMETHOD', "Default setting is 'none'. Alternatives are 'database' or 'file'. If your server is really slow, use 'none'. If your site is moderately busy, use 'database'. If your site is extremely high traffic, use 'file'. ");
+define('TEXT_HELP_TITLE_SQLCACHEDIRECTORY', 'SQL Cache Directory');
+define('TEXT_HELP_CONTENT_SQLCACHEDIRECTORY', "Enter the directory to use for file-based caching.");
+
+define('TEXT_HELP_TITLE_ADMINUSER', 'Admin Superuser Name');
+define('TEXT_HELP_CONTENT_ADMINUSER', "This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.");
+define('TEXT_HELP_TITLE_ADMINEMAIL', 'Admin Superuser Email');
+define('TEXT_HELP_CONTENT_ADMINEMAIL', "This email address will be used for password recovery in case you forget your password.");
+define('TEXT_HELP_TITLE_ADMINEMAIL2', 'Retype Email');
+define('TEXT_HELP_CONTENT_ADMINEMAIL2', "Please re-enter the email address. This is just to help catch accidental typos!");
+define('TEXT_HELP_TITLE_ADMINPASSWORD', 'Admin Superuser Password');
+define('TEXT_HELP_CONTENT_ADMINPASSWORD', "REMEMBER THIS PASSWORD!!!!! This is the default password assigned to the admin username you specified above. You may be asked to change it on first login (thus you can personalize it a bit more at that time). You can always manually change it anytime while you're logged into your Admin.<br><br><strong>REMEMBER THIS PASSWORD, because you will need it to log in to your store!</strong>");
+define('TEXT_HELP_TITLE_ADMINDIRECTORY', 'Admin Directory');
+define('TEXT_HELP_CONTENT_ADMINDIRECTORY', "We try to rename your admin folder for you automatically, to offer a degree of security-by-obscurity. While we understand that this doesn't make it foolproof, it does discourage unauthorized visitors from attacking your site. You may still consider changing the foldername yourself (just rename the folder to whatever you wish it to be).");
+
+
+
+
+
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
 define('TEXT_HELP_CONTENT_AGREETOTERMS', "<h2>The GNU General Public License (GPL)</h2>
@@ -184,9 +235,9 @@ define('TEXT_HELP_CONTENT_AGREETOTERMS', "<h2>The GNU General Public License (GP
 <p> Everyone is permitted to copy and distribute verbatim copies<br>
  of this license document, but changing it is not allowed.</p>
 
-		<strong><p>Preamble</p></strong>
+    <strong><p>Preamble</p></strong>
 
-  <p>The licenses for most software are designed to take away your 
+  <p>The licenses for most software are designed to take away your
 freedom to share and change it.  By contrast, the GNU General Public
 License is intended to guarantee your freedom to share and change free
 software--to make sure the software is free for all its users.  This
@@ -235,7 +286,7 @@ patent must be licensed for everyone's free use or not licensed at all.</p>
   <p>The precise terms and conditions for copying, distribution and
 modification follow.</p>
 
-		    <strong><p>TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION</p></strong>
+        <strong><p>TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION</p></strong>
 
   <p><strong>0</strong>. This License applies to any program or other work which contains
 a notice placed by the copyright holder saying it may be distributed
@@ -458,7 +509,7 @@ YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
 PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.</p>
 
-		     <p>END OF TERMS AND CONDITIONS</p>
+         <p>END OF TERMS AND CONDITIONS</p>
 
 
 
@@ -534,32 +585,3 @@ proprietary programs.  If your program is a subroutine library, you may
 consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.</p>");
-
-define('TEXT_HELP_TITLE_DBHOST', 'Database Host');
-define('TEXT_HELP_CONTENT_DBHOST', "");
-define('TEXT_HELP_TITLE_DBUSER', 'Database User');
-define('TEXT_HELP_CONTENT_DBUSER', "");
-define('TEXT_HELP_TITLE_DBPASSWORD', 'Database Password');
-define('TEXT_HELP_CONTENT_DBPASSWORD', "");
-define('TEXT_HELP_TITLE_DBNAME', 'Database Name');
-define('TEXT_HELP_CONTENT_DBNAME', "");
-define('TEXT_HELP_TITLE_DEMODATA', 'Load Demo Data');
-define('TEXT_HELP_CONTENT_DEMODATA', "");
-define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
-define('TEXT_HELP_CONTENT_DBCHARSET', "");
-define('TEXT_HELP_TITLE_DBPREFIX', 'Database Table Prefix');
-define('TEXT_HELP_CONTENT_DBPREFIX', "");
-define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');
-define('TEXT_HELP_CONTENT_SQLCACHEMETHOD', "");
-define('TEXT_HELP_TITLE_SQLCACHEDIRECTORY', 'SQL Cache Directory');
-define('TEXT_HELP_CONTENT_SQLCACHEDIRECTORY', "");
-
-define('TEXT_HELP_TITLE_ADMINUSER', 'Admin Superuser Name');
-define('TEXT_HELP_CONTENT_ADMINUSER', "");
-define('TEXT_HELP_TITLE_ADMINEMAIL', 'Admin Superuser Email');
-define('TEXT_HELP_CONTENT_ADMINEMAIL', "");
-define('TEXT_HELP_TITLE_ADMINPASSWORD', 'Admin Superuser Password');
-define('TEXT_HELP_CONTENT_ADMINPASSWORD', "");
-define('TEXT_HELP_TITLE_ADMINDIRECTORY', 'Admin Directory');
-define('TEXT_HELP_CONTENT_ADMINDIRECTORY', "");
-

@@ -19,6 +19,10 @@ $db_type = 'mysql';
 
 require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
 $options = array('db_host'=>$_POST['db_host'], 'db_user'=>$_POST['db_user'], 'db_password'=>$_POST['db_password'], 'db_name'=>$_POST['db_name'], 'db_charset'=>$_POST['db_charset'], 'db_prefix'=>$_POST['db_prefix'], 'db_type'=>$db_type, 'sql_cache_dir'=>$_POST['sql_cache_dir']);
+// trim spaces from inputs
+foreach($options as $key => $val) {
+  $options[$key] = trim($val);
+}
 $dbInstaller = new zcDatabaseInstaller($options);
 $result = $dbInstaller->getConnection();
 $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DIR_FS_ROOT . 'logs/progress.json', 'id'=>'main', 'message'=>TEXT_CREATING_DATABASE);
@@ -46,4 +50,21 @@ if (!$error)
 {
   $error = $dbInstaller->updateConfigFiles();
 }
-echo json_encode(array('error'=>$error, 'file'=>$file));
+if (!$error)
+{
+  $pluginsfolder = DIR_FS_INSTALL . 'sql/plugins/';
+  $d = @dir($pluginsfolder);
+  while ($entry = $d->read()) {
+    if (!is_dir($pluginsfolder . $entry)) {
+      if (preg_match('~^[^\._].*\.sql$~', $entry) > 0) {
+        $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DIR_FS_ROOT . 'logs/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_PLUGIN_DATA . ' ' . $entry);
+        $fileP = $pluginsfolder . $entry;
+        $errorP = $dbInstaller->parseSqlFile($fileP, $extendedOptions);
+      }
+    }
+  }
+}
+
+echo json_encode(array('error'=>$error, 'file'=>$file, 'errorPlugins'=>$errorP, 'filePlugins'=>$fileP));
+
+
