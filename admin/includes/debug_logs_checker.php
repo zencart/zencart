@@ -11,7 +11,7 @@
  * @version $Id: debug_logs_checker.php ver 1.51 by Linda McGrath 2012-01-19
  */
 
-// inspired by suggested .log checking by Steve Sherratt (torvista)
+// inspired by suggested log checking by Steve Sherratt (torvista)
   define('DEBUG_LOGS_CHECKER_DISPLAY', 3);
   if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
   if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache');
@@ -28,7 +28,7 @@
       if ( ($logfile != '.') && ($logfile != '..') && substr($logfile, 0, 1) != '.') {
         if (preg_match('/.*(\.log|\.xml)$/', $logfile)) { // xml for usps debug
           if ($cnt_logs < DEBUG_LOGS_CHECKER_DISPLAY){
-            $messageStack->add('Debug log file discovered: ' . $purgeFolder . '/' .$logfile);
+            $messageStack->add('Debug log file discovered: ' . $purgeFolder . $logfile);
           }
           $cnt_logs ++;
         }

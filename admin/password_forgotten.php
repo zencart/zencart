@@ -70,13 +70,13 @@ if (isset($_POST['submit']))
 }
 ?>
 <!DOCTYPE html >
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
+<html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
+<meta name="robots" content="noindex, nofollow" />
 <link rel="stylesheet" type="text/css" href="includes/template/css/foundation.css">
-<link href="includes/template/css/login.css" rel="stylesheet" type="text/css" />
-<meta name="robot" content="noindex, nofollow" />
+<link href="includes/template/css/login.css" rel="stylesheet" type="text/css">
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
   <div class="container">
@@ -86,22 +86,22 @@ if (isset($_POST['submit']))
       <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
         <fieldset>
           <legend><?php echo HEADING_TITLE; ?></legend>
-          <?php if ($resetToken == '') { ?>        
+          <?php if ($resetToken == '') { ?>
           <div class="row">
             <div class="three columns">
               <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
-            </div>            
+            </div>
             <div class="six columns end">
-              <input class="left inline" type="text" id="admin_email" name="admin_email" value="" autocomplete="off" />
+              <input class="left inline" type="text" id="admin_email" name="admin_email" value="" autocomplete="off" autofocus="autofocus">
             </div>
           </div>
           <?php } ?>
           <p class="messageStackSuccess"><?php echo $email_message; ?></p>
           <?php if ($resetToken == '') { ?>
-          <input type="submit" name="submit" class="button" value="<?php echo TEXT_BUTTON_REQUEST_RESET; ?>" />
-          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_CANCEL; ?>" />
+          <input type="submit" name="submit" class="button" value="<?php echo TEXT_BUTTON_REQUEST_RESET; ?>">
+          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_CANCEL; ?>">
           <?php } else { ?>
-          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_LOGIN; ?>" />
+          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_LOGIN; ?>">
           <?php } ?>
         </fieldset>
       </form>
