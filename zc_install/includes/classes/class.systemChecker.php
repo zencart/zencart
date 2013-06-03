@@ -289,13 +289,13 @@ class systemChecker
     {
       if (file_exists($parameters['fileDir']))
       {
-        @chmod($parameters['fileDir'], $parameters['changePerms']);
+        @chmod($parameters['fileDir'], octdec($parameters['changePerms']));
       } else
       {
         if ($fp = @fopen($parameters['fileDir'], 'c'))
         {
           fclose($fp);
-          chmod($parameters['fileDir'], $parameters['changePerms']);
+          chmod($parameters['fileDir'], octdec($parameters['changePerms']));
         }
       }
     }
@@ -315,7 +315,7 @@ class systemChecker
     {
       if (isset($parameters['changePerms']) &&  $parameters['changePerms'] !== FALSE)
       {
-        @chmod(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], $parameters['changePerms']);
+        @chmod(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], octdec($parameters['changePerms']));
       }
       if (is_writeable(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) return TRUE;
     }
