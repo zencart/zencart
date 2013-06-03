@@ -170,7 +170,7 @@ function ajaxTestDBConnection(form) {
         $("#connection-errors").reveal();
       } else
       {
-        $("#progress-bar-dialog").reveal();
+        $("#progress-bar-dialog").reveal({closeOnBackgroundClick:false});
         t = setTimeout("updateStatus()", 300);
         $.ajax({
           type: "POST",

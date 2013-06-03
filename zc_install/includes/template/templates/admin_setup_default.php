@@ -51,7 +51,7 @@
         <label class="inline" for="admin_password"><a href="#" class="hasHelpText" id="ADMINPASSWORD"><?php echo TEXT_ADMIN_SETUP_USER_PASSWORD; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="text" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" readonly="readonly">
+        <input type="text" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" readonly="readonly" tabindex="4">
       </div>
     </div>
     <div class="row">
@@ -68,7 +68,7 @@
         <label class="inline" for="admin_directory"><a href="#" class="hasHelpText" id="ADMINDIRECTORY"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY; ?></a></label>
       </div>
       <div class="six columns end">
-        <input type="text" name="admin_directory" id="admin_directory" value="<?php echo $adminNewDir; ?>" readonly="readonly">
+        <input type="text" name="admin_directory" id="admin_directory" value="<?php echo $adminDir; ?>" readonly="readonly" tabindex="5">
       </div>
     </div>
   </fieldset>

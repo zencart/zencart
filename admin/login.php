@@ -82,7 +82,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
   <div class="container">
     <div class="row">
     <div class="four columns centered end">
-  
+
     <form id="loginForm" name="loginForm" action="<?php echo zen_href_link(FILENAME_LOGIN, zen_get_all_get_params(), 'SSL'); ?>" method="post">
       <fieldset>
         <legend><?php echo HEADING_TITLE; ?></legend>
@@ -91,7 +91,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
             <label class="left inline" for="admin_name"><?php echo TEXT_ADMIN_NAME; ?></label>
           </div>
           <div class="six columns end">
-            <input type="text" id="admin_name" name="admin_name" value="<?php echo zen_output_string($admin_name); ?>" autocomplete="off" />
+            <input type="text" id="admin_name" name="admin_name" value="<?php echo zen_output_string($admin_name); ?>" autocomplete="off" autofocus="autofocus" />
           </div>
         </div>
         <div class="row">
@@ -103,7 +103,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
           </div>
         </div>
         <p class="messageStackError"><?php echo $message; ?></p>
-        <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>"> 
+        <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>">
         <input type="submit" name="submit" class="button" value="Login" id="btn_submit"/>
         <input type="hidden" name="action" value="do<?php echo $_SESSION['securityToken']; ?>" id="action1"/>
         <br /><a class="right" href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL');?>"><?php echo TEXT_PASSWORD_FORGOTTEN; ?></a>
@@ -123,7 +123,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
         <fieldset>
           <legend><?php echo HEADING_TITLE_EXPIRED; ?></legend>
           <p class="messageStackError"><?php echo $message; ?></p>
-          <div class="row">    
+          <div class="row">
             <div class="three columns">
               <label class="left inline" for="admin_name-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NAME; ?></label>
             </div>
@@ -131,15 +131,15 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
               <input type="text" id="admin_name" name="admin_name-<?php echo $_SESSION['securityToken']; ?>" value="<?php echo zen_output_string($admin_name); ?>" autocomplete="off"/>
             </div>
           </div>
-          <div class="row">    
+          <div class="row">
             <div class="three columns">
               <label class="left inline" for="oldpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_OLD_PASSWORD; ?></label>
             </div>
             <div class="six columns end">
-              <input type="password" id="old_pwd" name="oldpwd-<?php echo $_SESSION['securityToken']; ?>" autocomplete="off" />
+              <input type="password" id="old_pwd" name="oldpwd-<?php echo $_SESSION['securityToken']; ?>" autocomplete="off" autofocus="autofocus" />
             </div>
           </div>
-          <div class="row">    
+          <div class="row">
             <div class="three columns">
               <label class="left inline" for="newpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NEW_PASSWORD; ?></label>
             </div>
@@ -147,7 +147,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
               <input style="float: left" type="password" id="admin_pass" name="newpwd-<?php echo $_SESSION['securityToken']; ?>" autocomplete="off" />
             </div>
           </div>
-          <div class="row">    
+          <div class="row">
             <div class="three columns">
               <label class="left inline" for="confpwd"-<?php echo $_SESSION['securityToken']; ?>><?php echo TEXT_ADMIN_CONFIRM_PASSWORD; ?></label>
             </div>

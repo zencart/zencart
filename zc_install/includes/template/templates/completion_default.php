@@ -13,6 +13,7 @@
 <?php } else { ?>
 <div class="alert-box success">
 <?php echo TEXT_COMPLETION_INSTALL_COMPLETE; ?>
+ <?php if ($catalogLink != '#') echo TEXT_COMPLETION_INSTALL_LINKS_BELOW; ?>
 </div>
 <?php } ?>
 <?php if ($_POST['admin_directory'] == 'admin') { ?>
@@ -29,9 +30,9 @@
 </div>
 <br>
 <?php } ?>
-<?php if (!$isUpgrade) { ?>
+<?php if (!$isUpgrade && $catalogLink != '#') { ?>
 <div>
-<a class="radius button" href="<?php echo $adminLink; ?>" target="_blank"><?php echo TEXT_COMPLETION_ADMIN_LINK_TEXT; ?><br><u><?php echo $adminLink; ?></u></a>
-<a class="radius button" href="<?php echo $catalogLink; ?>" target="_blank"><?php echo TEXT_COMPLETION_CATALOG_LINK_TEXT; ?><br><u><?php echo $catalogLink; ?></u></a>
+<a class="radius button" href="<?php echo $adminLink; ?>" target="_blank" tabindex="1"><?php echo TEXT_COMPLETION_ADMIN_LINK_TEXT; ?>:<br><br><u><?php echo $adminLink; ?></u></a>
+<a class="radius button" href="<?php echo $catalogLink; ?>" target="_blank" tabindex="2"><?php echo TEXT_COMPLETION_CATALOG_LINK_TEXT; ?>:<br><br><u><?php echo $catalogLink; ?></u></a>
 </div>
 <?php } ?>

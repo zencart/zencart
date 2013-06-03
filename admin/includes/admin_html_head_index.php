@@ -12,11 +12,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
+<meta name="robots" content="noindex, nofollow">
 <?php if (!defined('SKIP_CORE_JQUERY_LOADER') || SKIP_CORE_JQUERY_LOADER == FALSE) { ?>
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-<?php   
+<?php
   //fall back to local if CDN copy didn't load or if offline
   $jqpath = DIR_WS_ADMIN . 'includes/template/javascript/jquery.min.js';
   $jquipath = DIR_WS_ADMIN . 'includes/template/javascript/jquery-ui.min.js';
@@ -32,7 +33,7 @@
 <?php if (isset($extraCss)) { ?>
   <?php foreach ($extraCss as $css) { ?>
   <link rel="stylesheet" type="text/css" href="<?php echo $css['location']; ?>">
-  <?php } ?>  
+  <?php } ?>
 <?php } ?>
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>

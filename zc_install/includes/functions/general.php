@@ -38,9 +38,9 @@ function zen_get_select_options($optionList, $setDefault)
       }
     }
   }
-  
+
   function logDetails($details, $location = "General") {
-      if ($_SESSION['logfilename'] == '') $_SESSION['logfilename'] = date('M-d-Y_h-i-s-') . zen_create_random_value(6);
+      if ($_SESSION['logfilename'] == '') $_SESSION['logfilename'] = date('m-d-Y_h-i-s-') . zen_create_random_value(6);
       if ($fp = @fopen(DIR_FS_ROOT . 'logs/zcInstallLog_' . $_SESSION['logfilename'] . '.log', 'a')) {
         fwrite($fp, '---------------' . "\n" . date('M d Y G:i') . ' -- ' . $location . "\n" . $details . "\n\n");
         fclose($fp);
@@ -77,7 +77,7 @@ function zen_get_select_options($optionList, $setDefault)
   }
   function zen_sanitize_request()
   {
-    if (isset($_POST) && count($_POST) > 0) 
+    if (isset($_POST) && count($_POST) > 0)
     {
       foreach($_POST as $key=>$value)
       {
@@ -92,11 +92,11 @@ function zen_get_select_options($optionList, $setDefault)
         }
       }
     }
-  	$ignoreArray = array();
-  	foreach ($_POST as $key => $value)
-  	{
-  		$_POST[htmlspecialchars($key, ENT_COMPAT, 'UTF-8', FALSE)] = addslashes($value);
-  	}
+    $ignoreArray = array();
+    foreach ($_POST as $key => $value)
+    {
+      $_POST[htmlspecialchars($key, ENT_COMPAT, 'UTF-8', FALSE)] = addslashes($value);
+    }
   }
   /**
    * Returns a string with conversions for security.
@@ -115,7 +115,7 @@ function zen_get_select_options($optionList, $setDefault)
       }
     }
   }
-  
+
   /**
    * Returns a string with conversions for security.
    *
@@ -128,7 +128,7 @@ function zen_get_select_options($optionList, $setDefault)
   function zen_output_string_protected($string) {
     return zen_output_string($string, false, true);
   }
-  
+
   function zen_get_install_languages_list($lng)
   {
     global $languagesInstalled;
@@ -145,4 +145,32 @@ function zen_get_select_options($optionList, $setDefault)
     }
     return $optionString;
   }
-  
+
+  /**
+   * helper function to detect current site URI info
+   * @return array($adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $catalogHttpsServer, $catalogHttpsUrl, $dir_ws_http_catalog, $dir_ws_https_catalog)
+   */
+  function getDetectedURIs($adminDir = 'admin') {
+    global $request_type;
+    if (isset($_POST['adminDir'])) $adminDir = zen_output_string_protected($_POST['adminDir']);
+    $documentRoot = zen_get_document_root();
+    $httpServer = zen_get_http_server();
+    $adminServer = ($request_type == 'SSL') ? 'https://' : 'http://';
+    $adminServer .= $httpServer;
+    //   $adminUrl = $adminServer . $_SERVER['SCRIPT_NAME'];
+    //   $adminUrl = substr($adminUrl, 0, strpos($adminUrl, '/zc_install')) . '/' . $adminDir;
+    $catalogHttpServer = 'http://' . $httpServer;
+    $catalogHttpUrl = 'http://' . $httpServer  . $_SERVER['SCRIPT_NAME'];
+    $catalogHttpUrl = substr($catalogHttpUrl, 0, strpos($catalogHttpUrl, '/zc_install'));
+    $catalogHttpsServer = 'https://' . $httpServer;
+    $catalogHttpsUrl = 'https://' . $httpServer  . $_SERVER['SCRIPT_NAME'];
+    $catalogHttpsUrl = substr($catalogHttpsUrl, 0, strpos($catalogHttpsUrl, '/zc_install'));
+    //   $adminPhysicalPath = $documentRoot . '/' . $adminDir;
+    //   $virtual_path = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+    $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';
+    $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';
+
+    return array($adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $catalogHttpsServer, $catalogHttpsUrl, $dir_ws_http_catalog, $dir_ws_https_catalog);
+  }
+
+

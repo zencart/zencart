@@ -4,23 +4,29 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: 
+ * @version GIT: $Id:
  *
  */
 /**
- * 
+ *
  * systemChecker Class
  *
  */
 class systemChecker
 {
-  public function __construct($selectedAdminDir)
+  public function __construct($selectedAdminDir = 'UNSPECIFIED')
   {
     $this->adminDirectoryList = self::getAdminDirectoryList();
     $res = sfYaml::load(DIR_FS_INSTALL . 'includes/systemChecks.yml');
-    $this -> systemChecks = $res['systemChecks'];
-    $this->selectedAdminDir = $selectedAdminDir;
+    $this->systemChecks = $res['systemChecks'];
     $this->extraRunLevels = array();
+
+    if ($selectedAdminDir == 'UNSPECIFIED' || $selectedAdminDir == '' || !file_exists(DIR_FS_ROOT . $selectedAdminDir))
+    {
+      $adminDirectoryList = $this->getAdminDirectoryList();
+      if (count($adminDirectoryList) == 1) $selectedAdminDir = $adminDirectoryList[0];
+    }
+    $this->selectedAdminDir = $selectedAdminDir;
   }
 
   public function runTests($runLevel = 'always')
@@ -98,6 +104,8 @@ class systemChecker
     {
       $lines = @file(DIR_FS_ROOT . 'includes/configure.php');
       if (!is_array($lines) || count($lines) == 0 ) return FALSE;
+
+      // if the new var added in v160 is present, then this deems the file to be already updated
       $sessionStorage = $this->getConfigureDefine('SESSION_STORAGE', $lines);
       if (isset($sessionStorage))
       {
@@ -131,12 +139,12 @@ class systemChecker
     $dbTypeVal = $this->getConfigureDefine('DB_TYPE', $lines);
     $sqlCacheDirVal = $this->getConfigureDefine('SQL_CACHE_DIR', $lines);
     $retVal = array('db_host'=>$dbServerVal, 'db_user'=>$dbUserVal, 'db_password'=>$dbPasswordVal, 'db_name'=>$dbNameVal, 'db_charset'=>$dbCharsetVal, 'db_prefix'=>$dbPrefixVal, 'db_type'=>$dbTypeVal, 'sql_cache_dir'=>$dbSqlCacheDirVal);
-    return $retVal;    
+    return $retVal;
   }
   public function getServerConfigOptions()
   {
     $lines = file(DIR_FS_ROOT . 'includes/configure.php');
-    return $retVal;    
+    return $retVal;
   }
   public function getConfigureDefine($searchDefine, $lines)
   {
@@ -161,7 +169,7 @@ class systemChecker
     }
     return $retVal;
   }
-  public function findCurrentDbVersion() 
+  public function findCurrentDbVersion()
   {
     foreach ($this->systemChecks as $systemCheckName => $systemCheck)
     {
@@ -179,8 +187,8 @@ class systemChecker
             if (isset($methodDetail['localErrorText']))
             {
               $systemCheck['extraErrors'][] = $methodDetail['localErrorText'];
-            } 
-          } else 
+            }
+          } else
           {
             $version = $systemCheck['version'];
             break;
@@ -237,12 +245,12 @@ class systemChecker
     $result = $db->execute($sql);
     if ($result)
     {
-      while (!$result->EOF && !$retVal) 
+      while (!$result->EOF && !$retVal)
       {
-        if  ($result->fields['Field'] == $parameters['fieldName'] && strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult']) 
+        if  ($result->fields['Field'] == $parameters['fieldName'] && strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult'])
         {
           $retVal = TRUE;
-        }  
+        }
         $result->MoveNext();
       }
     }
@@ -255,7 +263,7 @@ class systemChecker
     $result = $db->execute($sql);
     if ($result)
     {
-      $retVal  = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE; 
+      $retVal  = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
   }
@@ -266,7 +274,7 @@ class systemChecker
     $result = $db->execute($sql);
     if ($result)
     {
-      $retVal  = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE; 
+      $retVal  = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
   }
@@ -282,13 +290,13 @@ class systemChecker
       if (file_exists($parameters['fileDir']))
       {
         @chmod($parameters['fileDir'], $parameters['changePerms']);
-      } else 
+      } else
       {
-      	if ($fp = @fopen($parameters['fileDir'], 'c'))
-      	{
-      	  fclose($fp);
-      	  chmod($parameters['fileDir'], $parameters['changePerms']);
-      	}
+        if ($fp = @fopen($parameters['fileDir'], 'c'))
+        {
+          fclose($fp);
+          chmod($parameters['fileDir'], $parameters['changePerms']);
+        }
       }
     }
     return (is_writeable($parameters['fileDir']));
@@ -296,21 +304,22 @@ class systemChecker
   public function checkWriteableAdminFile($parameters)
   {
     if (is_writeable(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) return TRUE;
-    if (isset($parameters['changePerms']) &&  $parameters['changePerms'] !== FALSE)
+    if (!file_exists(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir']))
     {
-      if (file_exists(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir']))
+      if ($fp = @fopen(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], 'c'))
+      {
+        fclose($fp);
+      }
+    }
+    if (file_exists(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir']))
+    {
+      if (isset($parameters['changePerms']) &&  $parameters['changePerms'] !== FALSE)
       {
         @chmod(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], $parameters['changePerms']);
-      } else
-      {
-        if ($fp = @fopen(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], 'c'))
-        {
-          fclose($fp);
-          chmod(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], $parameters['changePerms']);
-        }
       }
       if (is_writeable(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) return TRUE;
     }
+    logDetails(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], 'ADMIN FILE TEST');
     return FALSE;
   }
   public function checkExtension($parameters)
@@ -321,7 +330,7 @@ class systemChecker
   {
     return (function_exists($parameters['functionName']));
   }
-  
+
   public function checkPhpVersion($parameters)
   {
     $result = version_compare(PHP_VERSION, $parameters['version'], $parameters['versionTest']);
@@ -338,11 +347,11 @@ class systemChecker
       if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
       {
         $result = TRUE;
-      } else 
+      } else
       {
         $result = FALSE;
       }
-      
+
     } else
     {
       $result = TRUE;
@@ -460,10 +469,10 @@ class systemChecker
     $errnum = curl_errno($ch);
     $commInfo = @curl_getinfo($ch);
     curl_close ($ch);
-    if ($errnum != 0 || trim($result) != 'PASS') 
+    if ($errnum != 0 || trim($result) != 'PASS')
     {
       return FALSE;
-    } else 
+    } else
     {
       return TRUE;
     }
@@ -507,28 +516,28 @@ class systemChecker
     {
       $sql = "select admin_id, admin_name, admin_pass from " . $dbPrefixVal . "admin where admin_name = '" . $adminUser . "'";
       $result = $db->execute($sql);
-    	if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) 
+      if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass']))
       {
         return FALSE;
-      } else 
-      {  
+      } else
+      {
         return $result->fields['admin_id'];
       }
-    } else 
+    } else
     {
-    	$sql = "select a.admin_id, a.admin_name, a.admin_pass, a.admin_profile  
-    			    from " . $dbPrefixVal . "admin as a 
-    			    left join " . $dbPrefixVal . "admin_profiles as ap on a.admin_profile = ap.profile_id  		
-    			    where a.admin_name = '" . $adminUser . "' 
-    			    and ap.profile_name = 'Superuser'";
-    	$result = $db->execute($sql);
-    	if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) 
-    	{
-    	  return FALSE;	
-    	} else 
-    	{
-    		return TRUE;
-    	}
+      $sql = "select a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
+              from " . $dbPrefixVal . "admin as a
+              left join " . $dbPrefixVal . "admin_profiles as ap on a.admin_profile = ap.profile_id
+              where a.admin_name = '" . $adminUser . "'
+              and ap.profile_name = 'Superuser'";
+      $result = $db->execute($sql);
+      if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass']))
+      {
+        return FALSE;
+      } else
+      {
+        return TRUE;
+      }
     }
   }
   function curlGetUrl( $url )
@@ -536,14 +545,14 @@ class systemChecker
     $options = array(
         CURLOPT_RETURNTRANSFER => true,     // return web page
         CURLOPT_HEADER         => false,    // don't return headers
-        CURLOPT_FOLLOWLOCATION => false,     // follow redirects
+        CURLOPT_FOLLOWLOCATION => false,    // follow redirects
         CURLOPT_ENCODING       => "",       // handle all encodings
         CURLOPT_AUTOREFERER    => true,     // set referer on redirect
         CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
         CURLOPT_TIMEOUT        => 120,      // timeout on response
         CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
     );
-  
+
     $ch      = curl_init( $url );
     curl_setopt_array( $ch, $options );
     $content = curl_exec( $ch );
@@ -551,7 +560,7 @@ class systemChecker
     $errmsg  = curl_error( $ch );
     $header  = curl_getinfo( $ch );
     curl_close( $ch );
-  
+
     $header['errno']   = $err;
     $header['errmsg']  = $errmsg;
     $header['content'] = $content;
@@ -560,7 +569,7 @@ class systemChecker
   function getAdminDirectoryList()
   {
     $adminDirectoryList = array();
-    
+
     $ignoreArray = array('.', '..', 'cache', 'logs', 'installer', 'zc_install', 'includes', 'testFramework', 'editors', 'extras', 'images', 'docs', 'pub', 'email', 'download', 'media');
     $d = @dir(DIR_FS_ROOT);
     while (false !== ($entry = $d->read())) {
@@ -580,7 +589,7 @@ class systemChecker
   }
   function log($result, $methodName, $methodDetail)
   {
-    if (defined('VERBOSE_SYSTEMCHECKER') && VERBOSE_SYSTEMCHECKER)
+    if (VERBOSE_SYSTEMCHECKER == 'screen' || VERBOSE_SYSTEMCHECKER === TRUE || VERBOSE_SYSTEMCHECKER == 'TRUE')
     {
       echo $methodName . "<br>";
       foreach ($methodDetail['parameters'] as $key=>$value)
@@ -590,5 +599,9 @@ class systemChecker
       echo (($result == 1) ? 'PASSED' : 'FAILED') . "<br>";
       echo "------------------<br><br>";
     }
-  }  
+    if (!in_array(VERBOSE_SYSTEMCHECKER, array('silent', 'none', 'off', 'OFF', 'NONE', 'SILENT')))
+    {
+      logDetails((($result == 1) ? 'PASSED' : 'FAILED') . substr(print_r($methodDetail['parameters'], TRUE), 5), $methodName);
+    }
+  }
 }

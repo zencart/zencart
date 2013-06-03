@@ -48,7 +48,7 @@ if (!$error)
 }
 if (!$error)
 {
-  $error = $dbInstaller->updateConfigFiles();
+  $error = $dbInstaller->updateConfigKeys();
 }
 if (!$error)
 {

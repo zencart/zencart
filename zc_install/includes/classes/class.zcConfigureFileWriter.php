@@ -5,7 +5,6 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
- *
  */
 /**
  *
@@ -53,12 +52,12 @@ class zcConfigureFileWriter
     $tplFile = DIR_FS_INSTALL . 'includes/catalog-dist-configure.php';
     $outputFile = $this->inputs['physical_path'] . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
-// $result will be greater than 0 if file was written correctly
+// logDetails('catalog size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
     $tplFile = DIR_FS_INSTALL . 'includes/admin-dist-configure.php';
     $outputFile = $this->inputs['physical_path'] . '/'. $adminDir . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
-// $result will be greater than 0 if file was written correctly
+// logDetails('admin size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
 
   }
   protected function transformConfigureTplFile($tplFile, $outputFile)

@@ -3,7 +3,7 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 
+ * @version $Id:
  */
 
 $otherConfigErrors = FALSE;
@@ -22,7 +22,7 @@ $hasUpdatedConfigFile = $systemChecker->hasUpdatedConfigFile();
 if ($hasSaneConfigFile)
 {
   $systemChecker->addRunLevel('upgradeDb');
-} 
+}
 $errorList = $systemChecker->runTests();
 list($hasFatalErrors, $listFatalErrors) = $systemChecker->getErrorList();
 list($hasWarnErrors, $listWarnErrors) = $systemChecker->getErrorList('WARN');
@@ -43,15 +43,15 @@ $hasMultipleAdmins = FALSE;
 if (count($adminDirectoryList) > 1)
 {
   $hasMultipleAdmins = TRUE;
-} else 
+} else
 {
   $selectedAdminDir = $adminDirectoryList[0];
 }
 $formAction = 'system_setup';
-if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && !$isCurrentDb) 
+if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && !$isCurrentDb)
 {
   $formAction = 'database_upgrade';
-} 
+}
 $adminOptionList = array();
 foreach ($adminDirectoryList as $directory)
 {

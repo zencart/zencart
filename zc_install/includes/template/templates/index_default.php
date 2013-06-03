@@ -3,7 +3,7 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 
+ * @version $Id:
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
@@ -15,7 +15,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
     <?php  echo TEXT_ERROR_MULTIPLE_ADMINS_SELECTED; ?>
     <?php } else { ?>
     <?php  echo TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED; ?>
-    <?php } ?> 
+    <?php } ?>
     </div>
     <select name="adminDir"><?php echo zen_get_select_options($adminOptionList, $selectedAdminDir)?></select><br><br>
 <?php } else { ?>
@@ -28,7 +28,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
     </div>
 <?php } elseif ($hasSaneConfigFile && !$otherConfigErrors) { ?>
     <div class="alert-box success">
-    <?php  echo TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE; ?> 
+    <?php  echo TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE; ?>
     </div>
 <?php } ?>
 <?php if ($hasFatalErrors) { ?>
@@ -42,9 +42,9 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
       <br><?php echo $detailError ?>
       <?php } ?>
       <?php } ?>
-    </div>  
+    </div>
     <?php } ?>
-</div>   
+</div>
 <?php } ?>
 <?php if ($hasWarnErrors) { ?>
 <div id="warnErrors" class="errorList">
@@ -57,30 +57,30 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
       <br><?php echo $detailError ?>
       <?php } ?>
       <?php } ?>
-      </div>  
+      </div>
     <?php } ?>
-</div>   
+</div>
 <?php } ?>
 <?php if (!$hasFatalErrors && !$hasWarnErrors) { ?>
     <div class="alert-box success">
-    <?php  echo TEXT_ERROR_SUCCESS_NO_ERRORS; ?> 
+    <?php  echo TEXT_ERROR_SUCCESS_NO_ERRORS; ?>
     </div>
 <?php } ?>
 <?php if (!$hasFatalErrors && !$hasSaneConfigFile) { ?>
-  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>">  
+  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" <?php echo ($hasMultipleAdmins) ? '' : 'autofocus="autofocus"'; ?> tabindex="1">
 <?php } ?>
 <?php if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && !$isCurrentDb) { ?>
-  <input type="submit" class="zc-upg radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_UPGRADE; ?>">  
+  <input type="submit" class="zc-upg radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_UPGRADE; ?>" tabindex="2">
 <?php } ?>
 <?php if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors) { ?>
-  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>">  
+  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="3">
 <?php } ?>
 <?php if ($hasUpgradeErrors && $hasSaneConfigFile) { ?>
-  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>">  
+  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="4">
 <?php } ?>
 <?php } ?>
 <?php if ($hasMultipleAdmins) { ?>
-  <input type="submit" class="zc-admin radius button right" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_REFRESH; ?>">  
+  <input type="submit" class="zc-admin radius button right" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_REFRESH; ?>" autofocus="autofocus" tabindex="5">
 <?php } else { ?>
   <?php if ($hasFatalErrors || $hasWarnErrors) { ?>
     <a href="" class="radius button secondary right" ><?php echo TEXT_REFRESH; ?></a>
@@ -89,43 +89,43 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 <br style="clear:both">
 </form>
 <script>
-$(function() 
+$(function()
 {
   $(".zc-full").click(function(e){
     var formUrl  = "index.php?main_page=system_setup";
   $('form:first').attr('action', formUrl);
   $('form:first').submit();
-}); 
+});
 $(".zc-upg").click(function(e){
   var formUrl  = "index.php?main_page=database_upgrade";
 $('form:first').attr('action', formUrl);
 $('form:first').submit();
-}); 
+});
 $(".zc-admin").click(function(e){
   var formUrl  = "index.php?main_page=index";
 $('#systemCheck').attr('action', formUrl);
 $('#systemCheckt').submit();
-}); 
-$('.hasNoHelpText').click(function(e) 
-  {   
-	  e.preventDefault(); 
+});
+$('.hasNoHelpText').click(function(e)
+  {
+    e.preventDefault();
   })
-  $('.hasHelpText').click(function(e) 
-	{
-	  var textId = $(this).attr('id');
+  $('.hasHelpText').click(function(e)
+  {
+    var textId = $(this).attr('id');
     $.ajax({
-    	type: "POST",
-     	timeout: 100000,
-	    dataType: "json",
-	    data: 'id='+textId,
+      type: "POST",
+       timeout: 100000,
+      dataType: "json",
+      data: 'id='+textId,
       url: '<?php echo "ajaxGetHelpText.php"; ?>',
-	   	success: function(data) {
-     	  $('#modal-help-title').html(data.title);
-	     	$('#modal-help-content').html(data.text);
-	       $('#modal-help').reveal();
+       success: function(data) {
+         $('#modal-help-title').html(data.title);
+         $('#modal-help-content').html(data.text);
+         $('#modal-help').reveal();
       }
     });
-	  e.preventDefault(); 
-  })  
+    e.preventDefault();
+  })
 });
 </script>

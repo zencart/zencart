@@ -72,7 +72,7 @@ define('DB_DATABASE', '%%_DB_DATABASE_%%');
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
 define('DIR_FS_SQL_CACHE', '%%_DIR_FS_SQL_CACHE_%%');
 
-define('SESSION_STORAGE', '%%SESSION_STORAGE%%');
+define('SESSION_STORAGE', '%%_SESSION_STORAGE_%%');
 
 // Define the webserver and path parameters
   // Main webserver: eg-http://www.your_domain.com -

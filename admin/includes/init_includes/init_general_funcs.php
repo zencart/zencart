@@ -55,30 +55,28 @@ if (isset($_GET) & sizeof($_GET) > 0 ) {
 
 // check for SSL configuration changes:
 if (!defined('SSLPWSTATUSCHECK')) die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
-list($a, $b, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $b = (int)$b; $c = (int)$c;
-$d = (ENABLE_SSL_ADMIN == 'true') ? '1' : '0';
+list($a, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $c = (int)$c;
 $e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
-$f = ':'.$d.':'.$e;
 if ($a == 0) {
-  if (($b == 0 && $d == 1) || ($c == 0 && $e == 1)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1" . $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 0 && $e == 1) {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
     $sql = "UPDATE " . TABLE_ADMIN . " set pwd_last_change_date = '1990-01-01 14:02:22'";
     $db->Execute($sql);
   }
-  if (($b == 1 && $d == 0) || ($c == 1 && $e == 0)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0". $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 1 && $e == 0) {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0:". $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
 } else if ($a == 1) {  // == 1
-  if (($b == 1 && $d == 0) || ($c == 1 && $e == 0)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0". $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 1 && $e == 0) {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0:". $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
-  if (($b == 0 && $d == 1) || ($c == 0 && $e == 1)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1" . $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 0 && $e == 1) {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
 }
-unset($a,$b,$c,$d,$e,$f);
+unset($a,$c,$e);
 // end ssl config change detection

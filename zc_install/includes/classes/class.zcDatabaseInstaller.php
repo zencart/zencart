@@ -4,11 +4,11 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: 
+ * @version GIT: $Id:
  *
  */
 /**
- * 
+ *
  * zcDatabaseInstaller Class
  *
  */
@@ -16,13 +16,23 @@ class zcDatabaseInstaller
 {
   public function __construct($options)
   {
+    $dbtypes = array();
+    $path = DIR_FS_ROOT . 'includes/classes/db/';
+    $dir = dir($path);
+    while ($entry = $dir->read()) {
+      if (is_dir($path . $entry) && substr($entry, 0,1) != '.') {
+        $dbtypes[] = $entry;
+      }
+    }
+    $dir->close();
+
     $this->dbHost = $options['db_host'];
     $this->dbUser = $options['db_user'];
     $this->dbPassword = $options['db_password'];
     $this->dbName = $options['db_name'];
     $this->dbPrefix = $options['db_prefix'];
     $this->dbCharset = $options['db_charset'];
-    $this->dbType = $options['db_type'];
+    $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
     $this->sqlCacheDir = $options['sql_cache_dir'];
     $this->debugLevel = isset($options['debug']) ? $options['debug'] : FALSE;
     $this->errors = array();
@@ -43,7 +53,7 @@ class zcDatabaseInstaller
     'DROP INDEX ',
     'LEFT JOIN ',
     'FROM ',
-    
+
     );
   }
   public function getConnection()
@@ -82,9 +92,9 @@ class zcDatabaseInstaller
     if (count($this->upgradeExceptions) > 0)
     {
       return TRUE;
-    } else 
+    } else
     {
-      return FALSE;   
+      return FALSE;
     }
   }
   private function processLine($line)
@@ -92,26 +102,26 @@ class zcDatabaseInstaller
     $this->keepTogetherLines = 1;
     $this->line = trim($line);
     if (substr($this->line,0,28) == '#NEXT_X_ROWS_AS_ONE_COMMAND:') $this->keepTogetherLines = substr($this->line,28);
-    if (substr($this->line,0,1) != '#' && substr($this->line,0,1) != '-' && $this->line != '') 
+    if (substr($this->line,0,1) != '#' && substr($this->line,0,1) != '-' && $this->line != '')
     {
       $this->parseLineContent();
       $this->newLine .= $this->line . ' ';
-      if ( substr($this->line,-1) ==  ';') 
+      if ( substr($this->line,-1) ==  ';')
       {
         if (substr($this->newLine,-1)==' ') $this->newLine = substr($this->newLine,0,(strlen($this->newLine)-1));
         $this->keepTogetherCount++;
-        if ($this->keepTogetherCount == $this->keepTogetherLines) 
+        if ($this->keepTogetherCount == $this->keepTogetherLines)
         {
           $this->completeLine = TRUE;
           $this->keepTogetherCount = 0;
-          if (isset($this->collateSuffix) && $this->collateSuffix != '' && @mysql_get_server_info() >= '4.1' && (!defined('IGNORE_DB_CHARSET') || (defined('IGNORE_DB_CHARSET') && IGNORE_DB_CHARSET != FALSE))) 
+          if (isset($this->collateSuffix) && $this->collateSuffix != '' && @mysql_get_server_info() >= '4.1' && (!defined('IGNORE_DB_CHARSET') || (defined('IGNORE_DB_CHARSET') && IGNORE_DB_CHARSET != FALSE)))
           {
             $this->newLine = rtrim($this->newLine, ';') . $this->collateSuffix . ';';
             $this->collateSuffix = '';
           }
-        } else 
+        } else
         {
-          $this->completeLine = FALSE;    
+          $this->completeLine = FALSE;
         }
       }
 //      echo $this->newLine;
@@ -126,7 +136,7 @@ class zcDatabaseInstaller
         $this->keepTogetherLines = 1;
       }
     }
-    
+
   }
   private function parseLineContent()
   {
@@ -144,15 +154,15 @@ class zcDatabaseInstaller
           $this->$parseMethod();
         }
       }
-    }    
+    }
   }
-  
+
   public function tryExecute($sql)
   {
 //    echo $sql;
 //    $this->writeUpgradeExceptions($this->line, '', $this->sqlFile);
     $result = $this->db->execute($sql);
-    if (!$result) 
+    if (!$result)
     {
       //echo $this->db->errorText;
       $this->writeUpgradeExceptions($this->line, $this->db->error_text, $this->sqlFile);
@@ -160,7 +170,7 @@ class zcDatabaseInstaller
   }
   public function parserDropTableIfExists ()
   {
-    $this->line = 'DROP TABLE IF EXISTS ' . $this->dbPrefix . substr($this->line, 21);   
+    $this->line = 'DROP TABLE IF EXISTS ' . $this->dbPrefix . substr($this->line, 21);
   }
   public function parserCreateTable()
   {
@@ -168,56 +178,56 @@ class zcDatabaseInstaller
     if ($this->tableExists($table))
     {
       $this->ignoreLine = TRUE;
-      if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) != 'IF NOT EXISTS') 
+      if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) != 'IF NOT EXISTS')
       {
         $this->writeUpgradeExceptions($this->line, sprintf(REASON_TABLE_ALREADY_EXISTS, $table), $this->filename);
-      }    
-    } else 
+      }
+    } else
     {
       $this->line = (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) == 'IF NOT EXISTS') ? 'CREATE TABLE IF NOT EXISTS ' . $this->dbPrefix . substr($this->line, 27) : 'CREATE TABLE ' . $this->dbPrefix . substr($this->line, 13);
-      $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';     
+      $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';
     }
   }
   public function parserInsertInto()
   {
-    if (($this->lineSplit[2] == 'configuration'       && ($result = $this->checkConfigKey($this->line))) || 
-        ($this->lineSplit[2] == 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) || 
-        ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($line))) || 
-        (!$this->tableExists($this->lineSplit[2]))) 
+    if (($this->lineSplit[2] == 'configuration'       && ($result = $this->checkConfigKey($this->line))) ||
+        ($this->lineSplit[2] == 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) ||
+        ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($line))) ||
+        (!$this->tableExists($this->lineSplit[2])))
     {
       if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
       $this->ignoreLine = true;
-    } else 
+    } else
     {
       $this->line = 'INSERT INTO ' . $this->dbPrefix . substr($this->line, 12);
     }
   }
   public function parserReplaceInto()
   {
-    if (($this->lineSplit[2] == 'configuration'       && ($result = $this->checkConfigKey($this->line))) || 
-        ($this->lineSplit[2] == 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) || 
-        ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($line))) || 
-        (!$this->tableExists($this->lineSplit[2]))) 
+    if (($this->lineSplit[2] == 'configuration'       && ($result = $this->checkConfigKey($this->line))) ||
+        ($this->lineSplit[2] == 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) ||
+        ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($line))) ||
+        (!$this->tableExists($this->lineSplit[2])))
     {
       if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
       $this->ignoreLine = true;
-    } else 
+    } else
     {
       $this->line = 'REPLACE INTO ' . $this->dbPrefix . substr($this->line, 12);
     }
   }
   public function parserUpdate()
   {
-    if (!$this->tableExists($this->lineSplit[1])) 
+    if (!$this->tableExists($this->lineSplit[1]))
     {
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
       $this->ignoreLine = true;
-    } else 
+    } else
     {
       $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
-    }   
+    }
   }
   public function writeUpgradeExceptions($line, $message, $sqlFile)
   {
@@ -231,9 +241,9 @@ class zcDatabaseInstaller
     $result = $this->db->Execute($sql);
     return $result;
   }
-  public function createExceptionsTable() 
+  public function createExceptionsTable()
   {
-    if (!$this->tableExists(TABLE_UPGRADE_EXCEPTIONS)) 
+    if (!$this->tableExists(TABLE_UPGRADE_EXCEPTIONS))
     {
       $result = $this->db->Execute("CREATE TABLE " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS ." (
             upgrade_exception_id smallint(5) NOT NULL auto_increment,
@@ -245,7 +255,7 @@ class zcDatabaseInstaller
     return $result;
     }
   }
-  public function checkCfggroupKey($line) 
+  public function checkCfggroupKey($line)
   {
     $values=array();
     $values=explode("'",$line);
@@ -259,7 +269,7 @@ class zcDatabaseInstaller
     if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIGURATION_GROUP_ID_ALREADY_EXISTS,$id);
     return FALSE;
   }
-  public function checkProductTypeLayoutKey($line) 
+  public function checkProductTypeLayoutKey($line)
   {
     $values=array();
     $values=explode("'",$line);
@@ -270,8 +280,8 @@ class zcDatabaseInstaller
     if ($result->RecordCount() >0 ) return sprintf(REASON_PRODUCT_TYPE_LAYOUT_KEY_ALREADY_EXISTS,$key);
     return FALSE;
   }
-  
-  public function checkConfigKey($line) 
+
+  public function checkConfigKey($line)
   {
     $values = array();
     $values = explode("'",$line);
@@ -291,14 +301,14 @@ class zcDatabaseInstaller
   public function tableExists($table)
   {
     $tables = $this->db->Execute("SHOW TABLES like '" . $this->dbPrefix . $table . "'");
-    if ($tables->RecordCount() > 0) 
+    if ($tables->RecordCount() > 0)
     {
       return TRUE;
     } else {
       return FALSE;
     }
   }
-  public function updateConfigFiles()
+  public function updateConfigKeys()
   {
     $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". $this->sqlCacheDir ."' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
     $this->db->Execute($sql);
@@ -308,11 +318,16 @@ class zcDatabaseInstaller
   }
   public function doCompletion($options)
   {
-    $sql = "update " . $this->dbPrefix . "admin set admin_name = '" . $options['admin_user'] . "', admin_email = '" . $options['admin_email'] . "', admin_pass = '" . zen_encrypt_password($options['admin_password']) . "', pwd_last_change_date = 0, reset_token = '" . (time() + (72 * 60 * 60)) . '}' . zen_encrypt_password($options['admin_password']) . "' where admin_id = 1";
+    global $request_type;
+    if ($request_type == 'SSL') {
+      $sql = "UPDATE " . $this->dbPrefix . "configuration set configuration_value = '1:1', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+      $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
+    }
+    $sql = "update " . $this->dbPrefix . "admin set admin_name = '" . $options['admin_user'] . "', admin_email = '" . $options['admin_email'] . "', admin_pass = '" . zen_encrypt_password($options['admin_password']) . "', pwd_last_change_date = " . ($request_type == 'SSL' ? 'NOW()' : '0') . ($request_type == 'SSL' ? '' : ", reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password($options['admin_password']) . "'") . " where admin_id = 1";
     $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
-    
+
 // enable/disable automatic version-checking
-//    $sql = "update " . DB_PREFIX . "configuration set configuration_value = '".($this->configInfo['check_for_updates'] ? 'true' : 'false' ) ."' where configuration_key = 'SHOW_VERSION_UPDATE_IN_HEADER'";
+//    $sql = "update " . $this->dbPrefix . "configuration set configuration_value = '".($this->configInfo['check_for_updates'] ? 'true' : 'false' ) ."' where configuration_key = 'SHOW_VERSION_UPDATE_IN_HEADER'";
 //    $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
   }
   private function camelize($parseString)
@@ -330,8 +345,8 @@ class zcDatabaseInstaller
       $fp = fopen($fileName, "w");
       if ($fp)
       {
-        $arr = array('total'=>'0', 'progress'=>$progress, 'message'=>$this->extendedOptions['message']);  
-        fwrite($fp, json_encode($arr));  
+        $arr = array('total'=>'0', 'progress'=>$progress, 'message'=>$this->extendedOptions['message']);
+        fwrite($fp, json_encode($arr));
         fclose($fp);
       }
     }
@@ -343,11 +358,11 @@ class zcDatabaseInstaller
       $this->jsonProgressLoggingTotal = $count;
       $this->jsonProgressLoggingCount = 0;
       $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
-      $fp = fopen($fileName, "w");  
+      $fp = fopen($fileName, "w");
       if ($fp)
       {
         $arr = array('total'=>$count, 'progress'=>0, 'message'=>$this->extendedOptions['message']);
-        fwrite($fp, json_encode($arr));  
+        fwrite($fp, json_encode($arr));
         fclose($fp);
       }
     }
@@ -358,11 +373,11 @@ class zcDatabaseInstaller
     {
       $this->jsonProgressLoggingCount = 0;
       $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
-      $fp = fopen($fileName, "w");  
+      $fp = fopen($fileName, "w");
       if ($fp)
       {
-        $arr = array('total'=>'0', 'progress'=>100, 'message'=>$this->extendedOptions['message']);  
-        fwrite($fp, json_encode($arr));  
+        $arr = array('total'=>'0', 'progress'=>100, 'message'=>$this->extendedOptions['message']);
+        fwrite($fp, json_encode($arr));
         fclose($fp);
       }
     }

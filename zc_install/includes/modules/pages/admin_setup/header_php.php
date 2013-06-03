@@ -11,8 +11,11 @@
   $changedDir = (bool)$_POST['changedDir'];
   $adminDir = $_POST['adminDir'];
   $adminNewDir = $_POST['adminNewDir'];
-  if ($changedDir) $_POST['adminDir'] = $_POST['adminNewDir'];
-// echo print_r($_POST, TRUE);
+  if ($changedDir) {
+    $_POST['adminDir'] = $_POST['adminNewDir'];
+    $adminDir = $adminNewDir;
+  }
+// echo '<pre>'. print_r($_POST, TRUE) . '</pre>';
 
   $admin_password = zen_create_PADSS_password();
   if (isset($_POST['upgrade_mode']) && $_POST['upgrade_mode'] == 'yes')
@@ -28,11 +31,10 @@
       $sql = $db->bindVars($sql, ':adminCandidate:', $_POST['admin_candidate'], 'integer');
       $result = $db->execute($sql);
     }
-  } else
+  } else if (isset($_POST['http_server_catalog']))
   {
     $isUpgrade = FALSE;
     require (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
     $result = new zcConfigureFileWriter($_POST);
-    $adminLink = zen_output_string_protected($_POST['http_server_admin']) . zen_output_string_protected($_POST['dir_ws_http_catalog']) . zen_output_string_protected($_POST['admin_directory']);
-    $catalogLink = zen_output_string_protected($_POST['http_server_catalog']) . zen_output_string_protected($_POST['dir_ws_http_catalog']);
+    //@TODO - error reporting?
   }
