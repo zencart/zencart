@@ -36,7 +36,7 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
 /**
  * Timezone problem detection
  */
-if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '')
+if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
   die('ERROR: date.timezone not set in php.ini. Please contact your hosting company to set the timezone in the server PHP configuration before continuing.');
 } elseif (PHP_VERSION >= '5.1')
