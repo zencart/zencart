@@ -67,8 +67,9 @@ if ($messageStack->size > 0) {
     echo '&nbsp;[' . $_SERVER['REMOTE_ADDR'] . ']'; // current admin user's IP address
     echo '<br />';
     echo @shell_exec('hostname'); //what server am I working on?
-    echo ' - ' . getenv('TZ'); //what is the server timezone set to?
-    echo ' - ' . setlocale(LC_TIME, 0); //what is the locale in use?
+    echo ' - ' . date_default_timezone_get(); //what is the PHP timezone set to?
+    $loc = setlocale(LC_TIME, 0);
+    if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
 ?></td>
 
     <td class="headerBarContent" align="right"><?php echo '
