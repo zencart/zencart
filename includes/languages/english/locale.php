@@ -7,14 +7,19 @@
  * @version $Id$
  */
 
-// look in your PHP $PATH_LOCALE/locale directory for available locales..
-  @setlocale(LC_TIME, 'en_US');
+// look in your $PATH_LOCALE/locale directory for available locales..
+// recommended to list all values for your language in this array. And include at least the 3 versions: 'en_US', 'en_US.utf8', 'en'. These help support multiple server configurations (since IIS and Windows are less reliably configured)
+  $locales = array('en_US', 'en_US.utf8', 'en');
+
+// For the most part, LC_TIME is fine here. On rare occasions you might need to change this to LC_ALL.
+  @setlocale(LC_TIME, $locales);
+
   define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
   define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
   define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
   define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 
-  define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA'); // PHP format -- see http://www.php.net/manual/en/function.date.php
+  define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA'); // this is used with date() -- see http://www.php.net/manual/en/function.date.php
 
 
 // Return date in raw format
