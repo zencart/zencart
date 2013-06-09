@@ -5,7 +5,7 @@ if (file_exists(__DIR__ . '/../../includes/local/configure.php')) {
   include(__DIR__ . '/../../includes/local/configure.php');
 } elseif (file_exists(__DIR__ . '/../../includes/configure.php')) {
   // load the default configure
-  include(__DIR__ . '/../../includes/local/configure.php');
+  include(__DIR__ . '/../../includes/configure.php');
 } else {
   die("No valid configuration file");
 }
