@@ -26,10 +26,9 @@ if (defined('DB_TYPE')) {
     // fall back to legacy implementation
     include_once DIR_WS_CLASSES . 'db/' . DB_TYPE . '/query_factory.php';
     $db = new queryFactory;
-    $db->dieOnErrors = true;
   }
 
-  if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
+  if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, true)) {
     $down_for_maint_source = 'nddbc.html';
     if (file_exists('zc_install/index.php')) {
       header('location: zc_install/index.php');

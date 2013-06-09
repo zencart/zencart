@@ -78,6 +78,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
+  $autoLoadConfig[10][] = array('autoType'=>'init_script',
+                                'loadFile'=>'init_cache.php');
   $autoLoadConfig[10][] = array('autoType'=>'require',
                                 'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
 /**
