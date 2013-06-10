@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: specials.php  drbyte Modified in v1.5.4 $
+ * @version $Id: specials.php  drbyte Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -139,7 +139,7 @@ if (zen_not_null($action)) {
                 FROM " . TABLE_PRODUCTS . "
                 WHERE products_id = " . (int)$_POST['pre_add_products_id'];
         $check_special = $db->Execute($sql);
-        if ($check_special->RecordCount() < 1 || substr($check_special->fields['products_model'], 0, 4) == 'GIFT') {
+        if ((!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') && ($check_special->RecordCount() < 1 || substr($check_special->fields['products_model'], 0, 4) == 'GIFT')) {
           $skip_special = true;
           $messageStack->add_session(WARNING_SPECIALS_PRE_ADD_BAD_PRODUCTS_ID, 'caution');
         }
@@ -280,7 +280,8 @@ if (zen_not_null($action)) {
             $specials_array[] = $special['products_id'];
           }
 
-// never include Gift Vouchers for specials
+// never include Gift Vouchers for specials when set to false
+        if (!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') {
           $gift_vouchers = $db->Execute("SELECT distinct p.products_id, p.products_model
                                          FROM " . TABLE_PRODUCTS . " p,
                                               " . TABLE_SPECIALS . " s
@@ -291,7 +292,7 @@ if (zen_not_null($action)) {
               $specials_array[] = $gift_voucher['products_id'];
             }
           }
-
+        }
 // do not include things that cannot go in the cart
           $not_for_cart = $db->Execute("SELECT p.products_id
                                         FROM " . TABLE_PRODUCTS . " p
