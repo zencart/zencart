@@ -254,18 +254,19 @@ require('includes/admin_html_head.php');
         $specials->MoveNext();
       }
 
-// never include Gift Vouchers for specials
-      $gift_vouchers = $db->Execute("select distinct p.products_id, p.products_model
-                                from " . TABLE_PRODUCTS . " p, " . TABLE_SPECIALS . " s
-                                where p.products_model rlike '" . "GIFT" . "'");
+// never include Gift Vouchers for specials when set to false
+			if (MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') {
+        $gift_vouchers = $db->Execute("select distinct p.products_id, p.products_model
+                                  from " . TABLE_PRODUCTS . " p, " . TABLE_SPECIALS . " s
+                                  where p.products_model rlike '" . "GIFT" . "'");
 
-      while (!$gift_vouchers->EOF) {
-        if(substr($gift_vouchers->fields['products_model'], 0, 4) == 'GIFT') {
-          $specials_array[] = $gift_vouchers->fields['products_id'];
+        while (!$gift_vouchers->EOF) {
+          if(substr($gift_vouchers->fields['products_model'], 0, 4) == 'GIFT') {
+            $specials_array[] = $gift_vouchers->fields['products_id'];
+          }
+          $gift_vouchers->MoveNext();
         }
-        $gift_vouchers->MoveNext();
-      }
-
+		  }
 // do not include things that cannot go in the cart
       $not_for_cart = $db->Execute("select p.products_id from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCT_TYPES . " pt on p.products_type= pt.type_id where pt.allow_add_to_cart = 'N'");
 

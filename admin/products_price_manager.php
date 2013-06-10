@@ -730,8 +730,8 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
           <tr>
             <td class="main" width="200"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></td>
 <?php
-// Specials cannot be added to Gift Vouchers
-      if(substr($pInfo->products_model, 0, 4) != 'GIFT') {
+// Specials cannot be added to Gift Vouchers when false
+      if((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true') ) {
 ?>
             <td class="main" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . '&sID=' . $sInfo->specials_id . '&go_back=ON' . '&current_category_id=' . $current_category_id) . '">' .  zen_image_button('button_install.gif', IMAGE_INSTALL_SPECIAL) . '</a>'; ?></td>
 <?php  } else { ?>

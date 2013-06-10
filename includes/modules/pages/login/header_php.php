@@ -3,7 +3,7 @@
  * Login Page
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -114,8 +114,12 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
           }
           if (SHOW_SHOPPING_CART_COMBINED == 1) {
             // show warning and send to shopping cart for review
-            $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+            if (!(isset($_GET['gv_no']))) {
+	            $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
+            	zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+            } else {
+            	$messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+            }
           }
         }
         // eof: contents merge notice

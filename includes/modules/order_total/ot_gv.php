@@ -3,7 +3,7 @@
  * ot_gv order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ot_gv.php 19103 2011-07-13 18:10:46Z wilt $
@@ -144,7 +144,15 @@ class ot_gv {
     // only act on newly-purchased gift certificates
     if (preg_match('/^GIFT/', addslashes($order->products[$i]['model']))) {
       // determine how much GV was purchased
+      // check if GV was purchased on Special
+      $gv_original_price = zen_products_lookup((int)$order->products[$i]['id'], 'products_price');
+     	// if prices differ assume Special ang get Special Price
+     	// Do not use this on GVs Priced by Attribute
+      if (MODULE_ORDER_TOTAL_GV_SPECIAL == 'true' && ($gv_original_price != 0 && $gv_original_price != $order->products[$i]['final_price'] && !zen_get_products_price_is_priced_by_attributes((int)$order->products[$i]['id']))) {
+      	$gv_order_amount = ($gv_original_price * $order->products[$i]['qty']);
+      } else {
       $gv_order_amount = ($order->products[$i]['final_price'] * $order->products[$i]['qty']);
+    	}
       // if tax is to be calculated on purchased GVs, calculate it
       if ($this->credit_tax=='true') $gv_order_amount = $gv_order_amount * (100 + $order->products[$i]['tax']) / 100;
       $gv_order_amount = $gv_order_amount * 100 / 100;
@@ -272,8 +280,8 @@ class ot_gv {
   function calculate_credit($save_total_cost) {
     global $db, $order, $currencies;
     // calculate value based on default currency
-     $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
-     $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
+    $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
+    $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
     $full_cost = $save_total_cost - $gv_payment_amount;
     if ($full_cost < 0) {
       $full_cost = 0;
@@ -356,6 +364,20 @@ class ot_gv {
     // if we are not supposed to include shipping amount in credit calcs, subtract it out
     if ($this->include_shipping != 'true') $order_total -= $order->info['shipping_cost'];
     $order_total = $order->info['total'];
+
+		// check gv_amount in cart and do not allow GVs to pay for GVs
+		$chk_gv_amount = 0;
+		$chk_products = $_SESSION['cart']->get_products();
+	  for ($i=0, $n=sizeof($chk_products); $i<$n; $i++) {
+	    if (preg_match('/^GIFT/', addslashes($chk_products[$i]['model']))) {
+	      // determine how much GV was purchased
+	      $chk_gv_amount += ($chk_products[$i]['price'] * $chk_products[$i]['quantity']);
+			}
+		}
+		// reduce Order Total less GVs
+		$order_total = ($order_total - $chk_gv_amount);
+//echo 'GV chk_gv_amount: ' . $chk_gv_amount . ' $order_total: ' . $order_total . '<br>';
+
     return $order_total;
   }
   /**
@@ -378,7 +400,7 @@ class ot_gv {
    * @return unknown
    */
   function keys() {
-    return array('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX',  'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID');
+    return array('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX',  'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID', 'MODULE_ORDER_TOTAL_GV_SPECIAL');
   }
   /**
    * Enter description here...
@@ -395,6 +417,7 @@ class ot_gv {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', '0', 'Use the following tax class when treating Gift Voucher as Credit Note.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Credit including Tax', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX', 'false', 'Add tax to purchased Gift Voucher when crediting to Account', '6', '8','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID', '0', 'Set the status of orders made where GV covers full payment', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow Gift Voucher Specials', 'MODULE_ORDER_TOTAL_GV_SPECIAL', 'false', 'Do you want to allow Gift Voucher to be placed on Special?', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
   /**
    * Enter description here...
