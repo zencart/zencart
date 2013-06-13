@@ -4,10 +4,10 @@
  *
  * Sometimes it is difficult to debug PHP background activities
  * However, using the PHP error logging facility we can store all PHP errors to a file, and then review separately.
- * Using this method, the debug details are stored at: /cache/myDEBUG-999999-00000000.log
+ * Using this method, the debug details are stored at: /logs/myDEBUG-999999-00000000.log
  *
  * @package debug
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
  */
@@ -53,4 +53,9 @@ if (!defined('DIR_FS_LOGS')) {
     @ini_set('display_errors', 0);      // do not output errors to screen/browser/client
     @ini_set('error_log', $debug_logfile_path);  // the filename to log errors into
     @ini_set('error_reporting', $errors_to_log ); // log only errors according to defined rules
+  }
+
+  if (defined('IS_CLI') && IS_CLI == 'VERBOSE') {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
   }

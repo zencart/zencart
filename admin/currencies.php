@@ -88,42 +88,7 @@
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
         break;
       case 'update_currencies':
-        $server_used = CURRENCY_SERVER_PRIMARY;
-        zen_set_time_limit(600);
-        $currency = $db->Execute("select currencies_id, code, title, decimal_places from " . TABLE_CURRENCIES);
-        while (!$currency->EOF) {
-          $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
-          $rate = $quote_function($currency->fields['code']);
-
-          if (empty($rate) && (zen_not_null(CURRENCY_SERVER_BACKUP))) {
-            // failed to get currency quote from primary server - attempting to use backup server instead
-            $messageStack->add_session(sprintf(WARNING_PRIMARY_SERVER_FAILED, CURRENCY_SERVER_PRIMARY, $currency->fields['title'], $currency->fields['code']), 'warning');
-            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency';
-            $rate = $quote_function($currency->fields['code']);
-            $server_used = CURRENCY_SERVER_BACKUP;
-          }
-
-          /* Add currency uplift */
-          if ($rate != 1 && defined('CURRENCY_UPLIFT_RATIO') && (int)CURRENCY_UPLIFT_RATIO != 0) {
-            $rate = (string)((float)$rate * (float)CURRENCY_UPLIFT_RATIO);
-          }
-
-          // special handling for currencies which don't support decimal places
-          if ($currency->fields['decimal_places'] == '0') {
-            $rate = (int)$rate;
-          }
-
-          if (zen_not_null($rate) && $rate > 0) {
-            $db->Execute("update " . TABLE_CURRENCIES . "
-                          set value = '" . $rate . "', last_updated = now()
-                          where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
-            $messageStack->add_session(sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], $server_used), 'success');
-          } else {
-            $messageStack->add_session(sprintf(ERROR_CURRENCY_INVALID, $currency->fields['title'], $currency->fields['code'], $server_used), 'error');
-          }
-          $currency->MoveNext();
-        }
-
+        zen_update_currencies();
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
         break;
       case 'delete':

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: currencies.php 18931 2011-06-13 15:22:34Z drbyte $
@@ -31,9 +31,5 @@ define('TEXT_INFO_HEADING_NEW_CURRENCY', 'New Currency');
 define('TEXT_INFO_HEADING_EDIT_CURRENCY', 'Edit Currency');
 define('TEXT_INFO_HEADING_DELETE_CURRENCY', 'Delete Currency');
 define('TEXT_INFO_SET_AS_DEFAULT', TEXT_SET_DEFAULT . ' (requires a manual update of currency values)');
-define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %s (%s) was updated successfully via %s.');
-
 define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Error: The default currency can not be removed. Please set another currency as default, and try again.');
-define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not updated via %s. Is it a valid currency code?');
-define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate server (%s) failed for %s (%s) - trying the secondary exchange rate server.');
 define('ERROR_INVALID_CURRENCY_ENTRY', 'ERROR: The information you submitted was incomplete, and has not been saved. You must specify a currency code and a name.');
