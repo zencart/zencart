@@ -13,7 +13,9 @@
  *  'screen': display-to-screen and also to the /logs/ folder  (synonyms: TRUE or 'TRUE' or 1)
  *  'file':   log-to-file-only   (synonyms: anything other than above options)
  */
-  define('VERBOSE_SYSTEMCHECKER', 'file');
+  $mode = 'file';
+  if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE'))) $mode = 'screen';
+  define('VERBOSE_SYSTEMCHECKER', $mode);
 
 /*
  * Ensure that the include_path can handle relative paths, before we try to load any files
