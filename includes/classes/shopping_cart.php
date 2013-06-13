@@ -54,6 +54,11 @@ class shoppingCart extends base {
    */
   var $free_shipping_price;
   /**
+   * total downloads in cart
+   * @var decimal
+   */
+  var $download_count;
+  /**
    * shopping cart total price before Specials, Sales and Discounts
    * @var decimal
    */
@@ -198,6 +203,7 @@ class shoppingCart extends base {
     $this->contents = array();
     $this->total = 0;
     $this->weight = 0;
+    $this->download_count = 0;
     $this->total_before_discounts = 0;
     $this->content_type = false;
 
@@ -600,7 +606,7 @@ class shoppingCart extends base {
     $this->free_shipping_item = 0;
     $this->free_shipping_price = 0;
     $this->free_shipping_weight = 0;
-
+    $this->download_count = 0;
     if (!is_array($this->contents)) return 0;
 
 // By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
@@ -751,6 +757,8 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                     where products_attributes_id = '" . $check_attribute . "'";
   $check_download = $db->Execute($sql);
   if ($check_download->RecordCount()) {
+// count number of downloads
+    $this->download_count += ($check_download->RecordCount() * $qty);
 // do not count download as free when set to product/download combo
     if ($adjust_downloads == 1 and $product->fields['product_is_always_free_shipping'] != 2) {
       $freeShippingTotal += $products_price;
@@ -1658,6 +1666,18 @@ global $cart, $messageStack;
 
     return $this->free_shipping_weight;
   }
+
+  /**
+   * Method to return the total number of downloads in the cart
+   *
+   * @return decimal
+   */
+  function download_counts() {
+    $this->calculate();
+
+    return $this->download_count;
+  }
+
   /**
    * Method to handle cart Action - update product
    *
