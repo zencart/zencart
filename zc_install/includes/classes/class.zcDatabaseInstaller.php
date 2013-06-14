@@ -114,7 +114,7 @@ class zcDatabaseInstaller
         {
           $this->completeLine = TRUE;
           $this->keepTogetherCount = 0;
-          if (isset($this->collateSuffix) && $this->collateSuffix != '' && @mysql_get_server_info() >= '4.1' && (!defined('IGNORE_DB_CHARSET') || (defined('IGNORE_DB_CHARSET') && IGNORE_DB_CHARSET != FALSE)))
+          if (isset($this->collateSuffix) && $this->collateSuffix != '' && (!defined('IGNORE_DB_CHARSET') || (defined('IGNORE_DB_CHARSET') && IGNORE_DB_CHARSET != FALSE)))
           {
             $this->newLine = rtrim($this->newLine, ';') . $this->collateSuffix . ';';
             $this->collateSuffix = '';

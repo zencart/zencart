@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: option_values.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -145,7 +145,6 @@ if ($_GET['options_id']=='') {
             echo '    </tr>' . "\n";
           $row->MoveNext();
         }
-//        while($row = mysql_fetch_array($result));
     } else {
        $option_values_exist = false;
        echo '      <td colspan="3" height="50" align="center" valign="middle" class="dataTableContent">' . TEXT_NO_OPTION_VALUE . zen_options_name($_GET['options_id']) . '</td>' . "\n";

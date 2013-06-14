@@ -3,7 +3,7 @@
  * File contains common unit/web test resources
  *
  * @package tests
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: zcCommonTestResources.php 19138 2011-07-18 17:37:21Z wilt $
  */
@@ -34,18 +34,18 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
   {
     if ($sql == '') return FALSE;
     if (!$this->dbActive) {
-      $this->dbLink = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+      $this->dbLink = mysqli_connect(DB_HOST, DB_USER, DB_PASS);
       if ($this->dbLink) {
-        mysql_select_db(DB_DBNAME, $this->dbLink);
+        mysqli_select_db($this->dbLink, DB_DBNAME);
         $this->dbActive = TRUE;
       } else {
-        echo 'MySQL error: ' . mysql_errno() . ' ' . mysql_error();
+        echo 'MySQL error: ' . mysqli_errno($this->dbLink) . ' ' . mysqli_error($this->dbLink);
         sleep(10);
         die('Script aborted. ' . __FILE__ . ':('.__LINE__.')');
       }
     }
-    $result = mysql_query($sql, $this->dbLink);
-    //mysql_close($this->dbLink);
+    $result = mysqli_query($this->dbLink, $sql);
+    //mysqli_close($this->dbLink);
     return $result;
   }
   public function generalSqlInstallStuff()
@@ -57,10 +57,10 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
   {
     $sql = "SELECT configuration_value FROM " . DB_PREFIX . "configuration WHERE configuration_key = '" . $configKey . "'";
     $q = $this->doDbQuery($sql);
-    $result = mysql_fetch_assoc($q);
+    $result = mysqli_fetch_assoc($q);
     $original = $result['configuration_value'];
     $this->doDbQuery("UPDATE " . DB_PREFIX . "configuration SET configuration_value = '" . $configValue . "' where configuration_key = '" . $configKey . "'");
-    return $original;    
+    return $original;
   }
   /**
    * Enable tax-included pricing (mainly for VAT sites)
@@ -138,7 +138,7 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
     if (!self::$compoundDone)
     {
       $this->doDbQuery("INSERT INTO " . DB_PREFIX . "geo_zones (geo_zone_name, geo_zone_description, last_modified, date_added) VALUES ('Canada', 'Canada Compound', NULL, NOW())");
-      $geoZone = mysql_insert_id();
+      $geoZone = mysqli_insert_id($this->dbLink);
       $this->doDbQuery("INSERT INTO " . DB_PREFIX . "zones_to_geo_zones (zone_country_id, zone_id, geo_zone_id, last_modified, date_added) VALUES (38, 0, $geoZone, NULL, NOW())");
       $this->doDbQuery("INSERT INTO " . DB_PREFIX . "tax_rates (tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES ($geoZone, 1, 1, '3.000', 'CAD Compound 1', NULL, NOW())");
       $this->doDbQuery("INSERT INTO " . DB_PREFIX . "tax_rates (tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES ($geoZone, 1, 2, '8.000', 'CAD Compound 2', NULL, NOW())");

@@ -1157,7 +1157,7 @@
                  'zend' => (function_exists('zend_version') ? zend_version() : ''),
                  'db_server' => DB_SERVER,
                  'db_ip' => gethostbyname(DB_SERVER),
-                 'db_version' => 'MySQL ' . (function_exists('mysql_get_server_info') ? mysql_get_server_info() : ''),
+                 'db_version' => 'MySQL ' . $db->get_server_info(),
                  'db_date' => zen_datetime_short($db_query->fields['datetime']),
                  'php_memlimit' => @ini_get('memory_limit'),
                  'php_safemode' => version_compare(PHP_VERSION, 5.4, '<') ? strtolower(@ini_get('safe_mode')) : '',
