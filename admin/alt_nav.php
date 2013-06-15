@@ -15,10 +15,10 @@ require('includes/application_top.php');
 <title><?php echo TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow" />
 <script src="includes/menu.js" type="text/javaScript"></script>
-<link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css" />
+<style type="text/css">#navbar {display: none;}</style>
 </head>
-<body onLoad="cssjsmenu('navbar')">
+<body >
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
