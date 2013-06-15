@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: developers_tool_kit.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -120,8 +120,8 @@
 
 // show path and filename
     if (strtoupper($configuration_key_lookup) == $configuration_key_lookup) {
-      while (strstr($configuration_key_lookup, '"')) $configuration_key_lookup = str_replace('"', '', $configuration_key_lookup);
-      while (strstr($configuration_key_lookup, "'")) $configuration_key_lookup = str_replace("'", '', $configuration_key_lookup);
+//      while (strstr($configuration_key_lookup, '"')) $configuration_key_lookup = str_replace('"', '', $configuration_key_lookup);
+//      while (strstr($configuration_key_lookup, "'")) $configuration_key_lookup = str_replace("'", '', $configuration_key_lookup);
 
       // if appears to be a constant ask about configuration table
       $check_database = true;
@@ -159,7 +159,7 @@
       $file = $directory_array[$i];
 //echo 'I SEE ' . $directory_array[$i] . '<br>';
       // clean path name
-      while (strstr($file, '//')) $file = str_replace('//', '/', $file);
+      $file = preg_replace('~/+~', '/', $file);
 
       $show_file = '';
       if (file_exists($file)) {
