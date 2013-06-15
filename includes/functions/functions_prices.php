@@ -466,7 +466,6 @@
 ////
 // Return quantity buy now
   function zen_get_buy_now_qty($product_id) {
-    global $cart;
     $check_min = zen_get_products_quantity_order_min($product_id);
     $check_units = zen_get_products_quantity_order_units($product_id);
     $buy_now_qty=1;
@@ -503,7 +502,6 @@
 // compute product discount to be applied to attributes or other values
   function zen_get_discount_calc($product_id, $attributes_id = false, $attributes_amount = false, $check_qty= false) {
     global $discount_type_id, $sale_maker_discount;
-    global $cart;
 
     // no charge
     if ($attributes_id > 0 and $attributes_amount == 0) {
@@ -1089,7 +1087,6 @@ If a special exist * 10
 // attributes final price
   function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false') {
     global $db;
-    global $cart;
 
     $attributes_price_final = 0;
 
@@ -1133,7 +1130,6 @@ If a special exist * 10
 // attributes final price onetime
   function zen_get_attributes_price_final_onetime($attribute, $qty= 1, $pre_selected_onetime) {
     global $db;
-    global $cart;
 
     if ($pre_selected_onetime == '' or $attribute != $pre_selected_onetime->fields["products_attributes_id"]) {
       $pre_selected_onetime = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
@@ -1235,7 +1231,7 @@ If a special exist * 10
 ////
 // compute discount based on qty
   function zen_get_products_discount_price_qty($product_id, $check_qty, $check_amount=0) {
-    global $db, $cart;
+    global $db;
       $new_qty = $_SESSION['cart']->in_cart_mixed_discount_quantity($product_id);
       // check for discount qty mix
       if ($new_qty > $check_qty) {

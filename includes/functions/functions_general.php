@@ -1169,7 +1169,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // enable shipping
   function zen_get_shipping_enabled($shipping_module) {
-    global $PHP_SELF, $cart, $order;
+    global $PHP_SELF, $order;
 
     // for admin always true if installed
     if (strstr($PHP_SELF, FILENAME_MODULES)) {

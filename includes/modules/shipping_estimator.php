@@ -63,7 +63,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
   }
 */
 
-  //if($cart->get_content_type() !== 'virtual') {
+  //if($_SESSION['cart']->get_content_type() !== 'virtual') {
   if ($_SESSION['customer_id']) {
     // user is logged in
     if (isset($_POST['address_id'])){

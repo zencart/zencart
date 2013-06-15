@@ -1546,7 +1546,7 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
     $chk_products_id= zen_get_prid($products_id);
 
 // added for new code - Ajeh
-global $cart, $messageStack;
+    global $messageStack;
 
     // reset($this->contents); // breaks cart
     $check_contents = $this->contents;
