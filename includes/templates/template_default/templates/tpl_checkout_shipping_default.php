@@ -6,7 +6,7 @@
  * Displays allowed shipping modules for selection by customer.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_checkout_shipping_default.php 14807 2009-11-13 17:22:47Z drbyte $
@@ -98,12 +98,14 @@
         } else {
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
-            $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
-
+            $checked = FALSE;
+            if (isset($_SESSION['shipping']['id'])) {
+              $checked = ($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']);
+            }
             if ( ($checked == true) || ($n == 1 && $n2 == 1) ) {
-              //echo '      <div id="defaultSelected" class="moduleRowSelected">' . "\n";
-            //} else {
-              //echo '      <div class="moduleRow">' . "\n";
+//               echo '      <div id="defaultSelected" class="moduleRowSelected">' . "\n";
+//             } else {
+//               echo '      <div class="moduleRow">' . "\n";
             }
 ?>
 <?php
