@@ -145,6 +145,7 @@
 // Specials and Tax Included
   function zen_get_products_display_price($products_id) {
     global $db, $currencies;
+    $free_tag = $call_tag = '';
 
 // never mask prices in admin
 if (false) {
