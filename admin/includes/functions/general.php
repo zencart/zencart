@@ -2891,7 +2891,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   function zen_get_products_to_categories($category_id, $include_inactive = false, $counts_what = 'products') {
     global $db;
 
-    $products_count = 0;
+    $products_count = $cat_products_count = 0;
+    $products_linked = '';
     if ($include_inactive == true) {
       switch ($counts_what) {
         case ('products'):
