@@ -187,6 +187,8 @@ require('includes/admin_html_head.php');
           } else {
             $installed_modules[] = $file;
           }
+          if (method_exists($module, 'check_enabled_for_zone') && $module->enabled) $module->check_enabled_for_zone();
+          if (method_exists($module, 'check_enabled') && $module->enabled) $module->check_enabled_for_zone();
         }
         if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
           $module_info = array('code' => $module->code,
