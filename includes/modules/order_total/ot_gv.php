@@ -46,7 +46,9 @@ class ot_gv {
     $this->show_redeem_box = MODULE_ORDER_TOTAL_GV_REDEEM_BOX;
     $this->credit_class = true;
     if (!zen_not_null(ltrim($_SESSION['cot_gv'], ' 0')) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
-    $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';" />' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br />' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
+    if (IS_ADMIN_FLAG !== true) {
+      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';" />' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br />' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
+    }
     $this->output = array();
     if (IS_ADMIN_FLAG === true) {
       if ($this->include_tax == 'true' && $this->calculate_tax != "None") {
@@ -146,13 +148,13 @@ class ot_gv {
       // determine how much GV was purchased
       // check if GV was purchased on Special
       $gv_original_price = zen_products_lookup((int)$order->products[$i]['id'], 'products_price');
-     	// if prices differ assume Special ang get Special Price
-     	// Do not use this on GVs Priced by Attribute
+       // if prices differ assume Special ang get Special Price
+       // Do not use this on GVs Priced by Attribute
       if (MODULE_ORDER_TOTAL_GV_SPECIAL == 'true' && ($gv_original_price != 0 && $gv_original_price != $order->products[$i]['final_price'] && !zen_get_products_price_is_priced_by_attributes((int)$order->products[$i]['id']))) {
-      	$gv_order_amount = ($gv_original_price * $order->products[$i]['qty']);
+        $gv_order_amount = ($gv_original_price * $order->products[$i]['qty']);
       } else {
       $gv_order_amount = ($order->products[$i]['final_price'] * $order->products[$i]['qty']);
-    	}
+      }
       // if tax is to be calculated on purchased GVs, calculate it
       if ($this->credit_tax=='true') $gv_order_amount = $gv_order_amount * (100 + $order->products[$i]['tax']) / 100;
       $gv_order_amount = $gv_order_amount * 100 / 100;
@@ -365,17 +367,17 @@ class ot_gv {
     if ($this->include_shipping != 'true') $order_total -= $order->info['shipping_cost'];
     $order_total = $order->info['total'];
 
-		// check gv_amount in cart and do not allow GVs to pay for GVs
-		$chk_gv_amount = 0;
-		$chk_products = $_SESSION['cart']->get_products();
-	  for ($i=0, $n=sizeof($chk_products); $i<$n; $i++) {
-	    if (preg_match('/^GIFT/', addslashes($chk_products[$i]['model']))) {
-	      // determine how much GV was purchased
-	      $chk_gv_amount += ($chk_products[$i]['price'] * $chk_products[$i]['quantity']);
-			}
-		}
-		// reduce Order Total less GVs
-		$order_total = ($order_total - $chk_gv_amount);
+    // check gv_amount in cart and do not allow GVs to pay for GVs
+    $chk_gv_amount = 0;
+    $chk_products = $_SESSION['cart']->get_products();
+    for ($i=0, $n=sizeof($chk_products); $i<$n; $i++) {
+      if (preg_match('/^GIFT/', addslashes($chk_products[$i]['model']))) {
+        // determine how much GV was purchased
+        $chk_gv_amount += ($chk_products[$i]['price'] * $chk_products[$i]['quantity']);
+      }
+    }
+    // reduce Order Total less GVs
+    $order_total = ($order_total - $chk_gv_amount);
 //echo 'GV chk_gv_amount: ' . $chk_gv_amount . ' $order_total: ' . $order_total . '<br>';
 
     return $order_total;

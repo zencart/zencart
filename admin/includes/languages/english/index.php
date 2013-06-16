@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Wed Sep 5 10:59:13 2012 -0400 Modified in v1.5.1 $
@@ -65,13 +65,12 @@ define('BOX_ENTRY_CUSTOMERS_COWOA', '- Without Accounts :');
 define('BOX_ENTRY_CUSTOMERS_TOTAL', 'Total Customer Accounts :');
 define('BOX_ENTRY_CUSTOMERS_TOTAL_DISTINCT', 'Total Distinct Customers :');
 define('BOX_ENTRY_CUSTOMERS_COWOA_DISTINCT', '- Without Accounts :');
-define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration');//for 1.5
 define('COWOA_WITHOUT_ACCOUNT', '(Without Account)');
 
 define('TEXT_REMOVE', 'Remove');
 define('TEXT_UPDATE', 'Update');
 define('TEXT_CONFIRM_REMOVE', 'Are you sure you want to remove this widget from the dashboard?');
-define ('TEXT_WIDGET_UPDATE_HEADER', 'Widget Settings have been updated');
+define('TEXT_WIDGET_UPDATE_HEADER', 'Widget Settings have been updated');
 
 define ('TEXT_TIMER_SELECT_NONE', 'No Refresh');
 define ('TEXT_TIMER_SELECT_1MIN', 'Refresh every Minute');

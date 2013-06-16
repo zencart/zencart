@@ -88,12 +88,13 @@ class products extends base {
     global $db;
 
     $sql = "select products_type from " . TABLE_PRODUCTS . " where products_id='" . (int)$zf_product_id . "'";
-    $type_lookup = $db->Execute($sql);
+    $result = $db->Execute($sql);
+    if ($result->EOF) return FALSE;
+    $sql = "select allow_add_to_cart from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$result->fields['products_type'] . "'";
+    $result = $db->Execute($sql);
+    $retVal = (!$result->EOF) ? $result->fields['allow_add_to_cart'] : 0;
 
-    $sql = "select allow_add_to_cart from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$type_lookup->fields['products_type'] . "'";
-    $allow_add_to_cart = $db->Execute($sql);
-
-    return $allow_add_to_cart->fields['allow_add_to_cart'];
+    return $retVal;
   }
 
 }
