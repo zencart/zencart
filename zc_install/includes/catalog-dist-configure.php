@@ -35,7 +35,7 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 //the following path is a COMPLETE path to your Zen Cart files. eg: /var/www/vhost/accountname/public_html/store/
 define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
   //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
-  define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs');
+  define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
 
 define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
