@@ -28,7 +28,7 @@
       if ( ($logfile != '.') && ($logfile != '..') && substr($logfile, 0, 1) != '.') {
         if (preg_match('/.*(\.log|\.xml)$/', $logfile)) { // xml for usps debug
           if ($cnt_logs < DEBUG_LOGS_CHECKER_DISPLAY){
-            $messageStack->add('Debug log file discovered: ' . $purgeFolder . $logfile);
+            $messageStack->add('Debug log file discovered: ' . $purgeFolder . '/' . $logfile);
           }
           $cnt_logs ++;
         }
