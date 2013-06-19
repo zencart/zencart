@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: $
  */
 
 @ini_set("arg_separator.output", "&");
@@ -131,4 +131,5 @@ if (isset($_POST['lng']))
     $lng = 'en_us';
   }
 }
+$lng_short = substr($lng, 0, strpos($lng, '_'));
 require(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php');
