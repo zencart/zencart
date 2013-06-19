@@ -1390,15 +1390,15 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
         $free_ship_check = $db->Execute("select products_virtual, products_model, products_price, product_is_always_free_shipping from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($products_id) . "'");
         $virtual_check = false;
         if (preg_match('/^GIFT/', addslashes($free_ship_check->fields['products_model']))) {
-// @@TO_DO - fix GIFT price in cart special/attribute
-					$gift_special = zen_get_products_special_price(zen_get_prid($products_id), true);
-					$gift_pba = zen_get_products_price_is_priced_by_attributes(zen_get_prid($products_id));
+// @TODO - fix GIFT price in cart special/attribute
+          $gift_special = zen_get_products_special_price(zen_get_prid($products_id), true);
+          $gift_pba = zen_get_products_price_is_priced_by_attributes(zen_get_prid($products_id));
 //echo '$products_id: ' . zen_get_prid($products_id) . ' price: ' . ($free_ship_check->fields['products_price'] + $this->attributes_price($products_id)) . ' vs special price: ' . $gift_special . ' qty: ' . $this->contents[$products_id]['qty'] . ' PBA: ' . ($gift_pba ? 'YES' : 'NO') . '<br>';
-					if (!$gift_pba && $gift_special !=0 && $gift_special != $free_ship_check->fields['products_price']) {
-          	$gift_voucher += ($gift_special * $this->contents[$products_id]['qty']);
-					} else {
+          if (!$gift_pba && $gift_special !=0 && $gift_special != $free_ship_check->fields['products_price']) {
+            $gift_voucher += ($gift_special * $this->contents[$products_id]['qty']);
+          } else {
           $gift_voucher += ($free_ship_check->fields['products_price'] + $this->attributes_price($products_id)) * $this->contents[$products_id]['qty'];
-        	}
+          }
         }
         // product_is_always_free_shipping = 2 is special requires shipping
         // Example: Product with download

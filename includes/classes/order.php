@@ -1060,6 +1060,7 @@ class order extends base {
       $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
       EMAIL_SEPARATOR . "\n" .
       zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
+//       $email_order .= $this->customer['telephone'] . "\n";
     }
 
     //addresses area: For COWOA - Billing info sent if the Cart has a dollar value otherwise, do not show the billing address
@@ -1069,6 +1070,7 @@ class order extends base {
     zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
     $html_msg['ADDRESS_BILLING_TITLE']   = EMAIL_TEXT_BILLING_ADDRESS;
     $html_msg['ADDRESS_BILLING_DETAIL']  = zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, '', "<br />");
+//     $html_msg['ADDRESS_BILLING_DETAIL'] .= $this->customer['telephone'] . '<br />';
     } else{
     $html_msg['ADDRESS_BILLING_TITLE']   = '';
     $html_msg['ADDRESS_BILLING_DETAIL']  = ' <br />';
@@ -1100,13 +1102,14 @@ class order extends base {
     $html_msg['EMAIL_FIRST_NAME'] = $this->customer['firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $this->customer['lastname'];
     //  $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
+
     $html_msg['EXTRA_INFO'] = '';
     $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
     zen_mail($this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id, $email_order, STORE_NAME, EMAIL_FROM, $html_msg, 'checkout', $this->attachArray);
 
     // send additional emails
     if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-      $extra_info=email_collect_extra_info('','', $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], $this->customer['telephone']);
+      $extra_info = email_collect_extra_info('', '', $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], $this->customer['telephone']);
       $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
 
       // include authcode and transaction id in admin-copy of email
@@ -1116,6 +1119,7 @@ class order extends base {
         $html_msg['EMAIL_TEXT_HEADER'] = nl2br($pmt_details) . $html_msg['EMAIL_TEXT_HEADER'];
       }
 
+      // Add extra heading stuff via observer class
       $this->extra_header_text = '';
       $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_FOR_ADDITIONAL_EMAILS', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
       $email_order = $this->extra_header_text . $email_order;

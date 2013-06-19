@@ -258,12 +258,12 @@ switch ($error_code) {
   break;
   case ('6'):
     define('POPUP_ERROR_HEADING', 'Virtual HTTPS Server');
-    define('POPUP_ERROR_TEXT', 'This is the web server address for your secure/SSL server. This address varies depending on how SSL/Secure mode is implemented on your server. You are advised to read the <a href="http://tutorials.zen-cart.com/index.php?article=14" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
+    define('POPUP_ERROR_TEXT', 'This is the web server address for your secure/SSL server. This address varies depending on how SSL/Secure mode is implemented on your server. You are advised to read the <a href="http://www.zen-cart.com/content.php?56" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
 
   break;
   case ('7'):
     define('POPUP_ERROR_HEADING', 'Virtual HTTPS Path');
-    define('POPUP_ERROR_TEXT', 'This is the address you would need to put into a web browser to view your Zen Cart&reg; website in secure/SSL mode. You are advised to read the <a href="http://tutorials.zen-cart.com/index.php?article=14" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
+    define('POPUP_ERROR_TEXT', 'This is the address you would need to put into a web browser to view your Zen Cart&reg; website in secure/SSL mode. You are advised to read the <a href="http://www.zen-cart.com/content.php?56" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
 
   break;
   case ('8'):
