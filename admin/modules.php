@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:40:54 2012 -0400 Modified in v1.5.1 $
@@ -178,7 +178,8 @@ require('includes/admin_html_head.php');
       $class = substr($file, 0, strrpos($file, '.'));
       if (zen_class_exists($class)) {
         $module = new $class;
-        if ($module->check() > 0) {
+        $check = $module->check();
+        if ($check > 0) {
           if ($module->sort_order > 0) {
             if (isset($installed_modules[$module->sort_order]) && $installed_modules[$module->sort_order] != '') {
               $zc_valid = false;
@@ -194,7 +195,7 @@ require('includes/admin_html_head.php');
           $module_info = array('code' => $module->code,
                                'title' => $module->title,
                                'description' => $module->description,
-                               'status' => $module->check());
+                               'status' => $check);
           $module_keys = $module->keys();
           $keys_extra = array();
           for ($j=0, $k=sizeof($module_keys); $j<$k; $j++) {
@@ -214,7 +215,7 @@ require('includes/admin_html_head.php');
           $mInfo = new objectInfo($module_info);
         }
         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
-          if ($module->check() > 0) {
+          if ($check > 0) {
             echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'NONSSL') . '\'">' . "\n";
           } else {
             echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
