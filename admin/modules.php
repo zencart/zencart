@@ -193,6 +193,18 @@ require('includes/admin_html_head.php');
           if (method_exists($module, 'check_enabled') && $module->enabled) $module->check_enabled_for_zone();
         }
 
+        //test for missing keys
+        $error = FALSE;
+        if (is_numeric($module->sort_order)) {
+          foreach ($module->keys() as $test) {
+            if (!defined($test)) {
+              $error = TRUE;
+              break;
+            }
+          }
+        }
+        if ($error) $module->title .= ' ' . WARNING_MODULES_MISSING_KEYS;
+
         if (in_array($set, array('payment', 'shipping'))) {
           $moduleStatusIcon = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
           $moduleStatusText = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? TEXT_MODULE_STATUS_ENABLED : ((empty($module->enabled) && is_numeric($module->sort_order)) ? TEXT_MODULE_STATUS_AMBER : ''));

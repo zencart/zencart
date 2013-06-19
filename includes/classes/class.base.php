@@ -49,11 +49,11 @@ class base {
    * @param string The event ID to notify for
    * @param array paramters to pass to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
    */
-  function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
+  function notify($eventID, $param1 = array(), $param2 = NULL, $param3 = NULL, $param4 = NULL, $param5 = NULL, $param6 = NULL, $param7 = NULL) {
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
-    if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 0 && NOTIFIER_TRACE != FALSE && NOTIFIER_TRACE != 'false') {
+    if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE !== 0 && NOTIFIER_TRACE != FALSE && NOTIFIER_TRACE != 'false') {
       $file = DIR_FS_LOGS . '/notifier_trace.log';
-      $paramArray = array_merge($param1,$param2,$param3,$param4,$param5,$param6,$param7);
+      $paramArray = array_merge((array)$param1,(array)$param2,(array)$param3,(array)$param4,(array)$param5,(array)$param6,(array)$param7);
       if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
         error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $_GET['main_page'] . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . var_export($paramArray, true)) . "\n", 3, $file);
       } elseif (NOTIFIER_TRACE == 'print_r') {
@@ -86,12 +86,12 @@ class base {
   function & getStaticObserver() {
     return base::getStaticProperty('observer');
   }
-  function & setStaticObserver($element, $value)
+  function setStaticObserver($element, $value)
   {
     $observer =  & base::getStaticObserver();
     $observer[$element] = $value;
   }
-  function & unsetStaticObserver($element)
+  function unsetStaticObserver($element)
   {
     $observer =  & base::getStaticObserver();
     unset($observer[$element]);

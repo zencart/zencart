@@ -33,3 +33,5 @@ define('TEXT_DELETE_INTRO', 'Are you sure you want to remove this module?');
 define('TEXT_WARNING_SSL_EDIT', 'ALERT: <a href="http://www.zen-cart.com/content.php?56" target="_blank">For security reasons, Editing of this module is disabled until your Admin is configured for SSL</a>.');
 define('TEXT_WARNING_SSL_INSTALL', 'ALERT: <a href="http://www.zen-cart.com/content.php?56" target="_blank">For security reasons, Installation of this module is disabled until your Admin is configured for SSL</a>.');
 define('TEXT_ERROR_NO_COMMTEST_OPTION_AVAILABLE', 'ERROR: This module does not have a communications-test option. Try a regular transaction via checkout instead.');
+
+define('WARNING_MODULES_MISSING_KEYS', '<span class="alert">Missing keys - Save, Remove, Install and Reconfigure</span>');
