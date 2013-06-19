@@ -18,26 +18,27 @@ class storepickup extends base {
    */
   var $code;
   /**
-   * $title is the displayed name for this shipping method
+   * $title is the displayed name for this shipping method on the storefront
    *
    * @var string
    */
   var $title;
   /**
-   * $description is a soft name for this shipping method
+   * $description is a soft name for this shipping method, rarely used
    *
    * @var string
    */
   var $description;
   /**
-   * module's icon
+   * module's icon, if any.  Must be manually uploaded to the server's images folder, and an appropriate call to zen_image() added to the constructor.
    *
    * @var string
    */
   var $icon;
   /**
-   * $enabled determines whether this module shows or not... during checkout.
-   *
+   * $enabled determines whether this module shows or not during checkout.
+   * Can be updated with custom code in the module's update_status() method.
+   * Can be overridden with observers via notifier points NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE and NOTIFY_SHIPPING_CHECK_ENABLED
    * @var boolean
    */
   var $enabled;
@@ -54,13 +55,43 @@ class storepickup extends base {
     $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
     $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
-    $this->enabled = ((MODULE_SHIPPING_STOREPICKUP_STATUS == 'True') ? true : false);
+    $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS == 'True') ? true : false;
     $this->update_status();
+    $this->notify('MODULE_SHIPPING_' . strtoupper($this->code) . '_INSTANTIATED');
   }
 
+  /**
+   * Coders can add custom logic here in the update_status() method to allow for manipulating the $this->enabled status
+   */
   function update_status() {
     global $order, $db;
-    if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) ) {
+
+    /** THIS SECTION COMMENTED-OUT FOR STORE-PICKUP ONLY:
+    // disable only when entire cart is free shipping
+    if (zen_get_shipping_enabled($this->code) == FALSE) $this->enabled = FALSE;
+    */
+
+    /** CUSTOM ENABLE/DISABLE LOGIC CAN BE ADDED IN THE AREA SPECIFIED BELOW **/
+    if ($this->enabled) {
+      global $template, $current_page_base;
+      // CUSTOMIZED CONDITIONS GO HERE
+      // Optionally add additional code here to disable the module by changing $this->enabled to false based on whatever custom rules you require.
+      // -----
+
+
+      // -----
+      // eof: optional additional code
+    }
+  }
+
+  /**
+   * Sets $this->enabled based on zone restrictions applied to this module
+   * @return boolean
+   */
+  function check_enabled_for_zone()
+  {
+    global $order, $db;
+      if ($this->enabled == true && (int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_STOREPICKUP_ZONE . "'
@@ -81,12 +112,18 @@ class storepickup extends base {
         $this->enabled = false;
       }
     }
-
-    // other status checks?
-    if ($this->enabled) {
-      // other checks here
-    }
+    return $this->enabled;
   }
+
+  /**
+   * Returns the value of $this->enabled variable
+   * @return boolean
+   */
+  function check_enabled()
+  {
+    return $this->enabled;
+  }
+
   /**
    * Obtain quote from shipping system/calculations
    *
@@ -116,6 +153,7 @@ class storepickup extends base {
         if (strstr($val, ',')) {
           list($title, $cost) = explode(',', $val);
         }
+
         $this->methodsList[] = array('id' => $this->code . (string)$key,
                                      'title' => trim($title),
                                      'cost' => $cost);
@@ -132,6 +170,7 @@ class storepickup extends base {
 
     if (zen_not_null($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
 
+    $this->notify('MODULE_SHIPPING_' . strtoupper($this->code) . '_QUOTES_PREPARED');
     return $this->quotes;
   }
   /**
@@ -150,7 +189,6 @@ class storepickup extends base {
   }
   /**
    * Install the shipping module and its configuration settings
-   *
    */
   function install() {
     global $db;
@@ -164,7 +202,6 @@ class storepickup extends base {
   }
   /**
    * Remove the module and all its settings
-   *
    */
   function remove() {
     global $db;

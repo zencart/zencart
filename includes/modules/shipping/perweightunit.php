@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: perweightunit.php 15616 2010-03-06 04:07:11Z ajeh $
@@ -12,32 +12,33 @@
  */
 class perweightunit extends base {
   /**
-   * $code determines the internal 'code' name used to designate "this" payment module
+   * $code determines the internal 'code' name used to designate "this" shipping module
    *
    * @var string
    */
   var $code;
   /**
-   * $title is the displayed name for this payment method
+   * $title is the displayed name for this shipping method on the storefront
    *
    * @var string
    */
   var $title;
   /**
-   * $description is a soft name for this payment method
+   * $description is a soft name for this shipping method, rarely used
    *
    * @var string
    */
   var $description;
   /**
-   * module's icon
+   * module's icon, if any.  Must be manually uploaded to the server's images folder, and an appropriate call to zen_image() added to the constructor.
    *
    * @var string
    */
   var $icon;
   /**
-   * $enabled determines whether this module shows or not... during checkout.
-   *
+   * $enabled determines whether this module shows or not during checkout.
+   * Can be updated with custom code in the module's update_status() method.
+   * Can be overridden with observers via notifier points NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE and NOTIFY_SHIPPING_CHECK_ENABLED
    * @var boolean
    */
   var $enabled;
@@ -46,9 +47,7 @@ class perweightunit extends base {
    *
    * @return perweightunit
    */
-  function perweightunit() {
-    global $order, $db;
-
+  function __construct() {
     $this->code = 'perweightunit';
     $this->title = MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_DESCRIPTION;
@@ -56,21 +55,41 @@ class perweightunit extends base {
     $this->icon = '';
     $this->tax_class = MODULE_SHIPPING_PERWEIGHTUNIT_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_PERWEIGHTUNIT_TAX_BASIS;
+    $this->enabled = (MODULE_SHIPPING_PERWEIGHTUNIT_STATUS == 'True') ? true : false;
+    $this->update_status();
+    $this->notify('MODULE_SHIPPING_' . strtoupper($this->code) . '_INSTANTIATED');
+  }
+
+  /**
+   * Coders can add custom logic here in the update_status() method to allow for manipulating the $this->enabled status
+   */
+  function update_status() {
+    global $order, $db;
 
     // disable only when entire cart is free shipping
-    if (zen_get_shipping_enabled($this->code)) {
-      $this->enabled = ((MODULE_SHIPPING_PERWEIGHTUNIT_STATUS == 'True') ? true : false);
-    }
+    if (zen_get_shipping_enabled($this->code) == FALSE) $this->enabled = FALSE;
 
+    /** CUSTOM ENABLE/DISABLE LOGIC CAN BE ADDED IN THE AREA SPECIFIED BELOW **/
     if ($this->enabled) {
-      // check MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD is in
-      $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD'");
-      if ($check_query->EOF) {
-        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
-      }
-    }
+      global $template, $current_page_base;
+      // CUSTOMIZED CONDITIONS GO HERE
+      // Optionally add additional code here to disable the module by changing $this->enabled to false based on whatever custom rules you require.
+      // -----
 
-    if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_PERWEIGHTUNIT_ZONE > 0) ) {
+
+      // -----
+      // eof: optional additional code
+    }
+  }
+
+  /**
+   * Sets $this->enabled based on zone restrictions applied to this module
+   * @return boolean
+   */
+  function check_enabled_for_zone()
+  {
+    global $order, $db;
+    if ($this->enabled == true && (int)MODULE_SHIPPING_PERWEIGHTUNIT_ZONE > 0) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_PERWEIGHTUNIT_ZONE . "'
@@ -91,7 +110,18 @@ class perweightunit extends base {
         $this->enabled = false;
       }
     }
+    return $this->enabled;
   }
+
+  /**
+   * Returns the value of $this->enabled variable
+   * @return boolean
+   */
+  function check_enabled()
+  {
+    return $this->enabled;
+  }
+
   /**
    * Obtain quote from shipping system/calculations
    *
@@ -109,15 +139,16 @@ class perweightunit extends base {
                                                    'cost' => MODULE_SHIPPING_PERWEIGHTUNIT_COST * ($total_weight_units * $shipping_num_boxes) +
                                                    (MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD == 'Box' ? MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING) ) ));
 
-
     if ($this->tax_class > 0) {
       $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
     }
 
     if (zen_not_null($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
 
+    $this->notify('MODULE_SHIPPING_' . strtoupper($this->code) . '_QUOTES_PREPARED');
     return $this->quotes;
   }
+
   /**
    * Check to see whether module is installed
    *
@@ -131,9 +162,9 @@ class perweightunit extends base {
     }
     return $this->_check;
   }
+
   /**
    * Install the shipping module and its configuration settings
-   *
    */
   function install() {
     global $db;
@@ -148,14 +179,15 @@ class perweightunit extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Shipping Zone', 'MODULE_SHIPPING_PERWEIGHTUNIT_ZONE', '0', 'If a zone is selected, only enable this shipping method for that zone.', '6', '0', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
   }
+
   /**
    * Remove the module and all its settings
-   *
    */
   function remove() {
     global $db;
     $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE  'MODULE\_SHIPPING\_PERWEIGHTUNIT\_%'");
   }
+
   /**
    * Internal list of configuration keys used for configuration of the module
    *
@@ -165,4 +197,3 @@ class perweightunit extends base {
     return array('MODULE_SHIPPING_PERWEIGHTUNIT_STATUS', 'MODULE_SHIPPING_PERWEIGHTUNIT_COST', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD', 'MODULE_SHIPPING_PERWEIGHTUNIT_TAX_CLASS', 'MODULE_SHIPPING_PERWEIGHTUNIT_TAX_BASIS', 'MODULE_SHIPPING_PERWEIGHTUNIT_ZONE', 'MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER');
   }
 }
-?>
