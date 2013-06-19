@@ -471,7 +471,7 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('IMAGE_UPDATE_SORT','Update Sort Order');
   define('IMAGE_EDIT_PRODUCT','Edit Product');
   define('IMAGE_EDIT_ATTRIBUTES','Edit Attributes');
-  define('TEXT_NEW_PRODUCT', 'Product in Category: &quot;%s&quot;');
+  define('TEXT_NEW_PRODUCT', 'Product in Category: %s');
   define('IMAGE_OPTIONS_VALUES','Option Names and Option Values');
   define('TEXT_PRODUCTS_PRICE_MANAGER','PRODUCTS PRICE MANAGER');
   define('TEXT_PRODUCT_EDIT','EDIT PRODUCT');
