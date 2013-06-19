@@ -20,7 +20,7 @@ define('TEXT_MODULE_STATE', 'Module State');
 define('TEXT_MODULE_STATUS_ENABLED', ' <span style="color:#5FC000";>Enabled</span>');
 define('TEXT_MODULE_STATUS_AMBER', ' <span style="color:#FFBB00";>Enabled</span>');
 define('TEXT_MODULE_STATUS_DISABLED', ' <span style="color:red";>Disabled</span>');
-
+define('TEXT_DO_COMMUNICATIONS_TEST', 'Test Communications');
 
 define('TEXT_MODULE_DIRECTORY', 'Module Directory:');
 define('WARNING_MODULES_SORT_ORDER','WARNING: YOU HAVE DUPLICATE SORT ORDERS WHICH WILL RESULT IN CALCULATION ERRORS<br />PLEASE CORRECT THESE ISSUES NOW!');

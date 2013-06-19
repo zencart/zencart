@@ -284,6 +284,7 @@ define('IMAGE_ICON_STATUS_RED_LIGHT', 'Set Inactive');
 define('IMAGE_ICON_STATUS_RED_EZPAGES', 'Error -- too many URL/content types entered');
 define('IMAGE_ICON_STATUS_RED_ERROR', 'Error');
 define('IMAGE_ICON_INFO', 'Info');
+define('IMAGE_ICON_COMM', 'Test Communications');
 define('IMAGE_INSERT', 'Insert');
 define('IMAGE_LOCK', 'Lock');
 define('IMAGE_MODULE_INSTALL', 'Install Module');
