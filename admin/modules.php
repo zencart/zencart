@@ -146,7 +146,8 @@ require('includes/admin_html_head.php');
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                 <td class="dataTableHeadingContent">&nbsp;</td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                <td class="dataTableHeadingContent" colspan="2"><?php echo TEXT_MODULE_STATE; ?></td>
 <?php
   if ($set == 'payment') {
 ?>
@@ -191,6 +192,15 @@ require('includes/admin_html_head.php');
           if (method_exists($module, 'check_enabled_for_zone') && $module->enabled) $module->check_enabled_for_zone();
           if (method_exists($module, 'check_enabled') && $module->enabled) $module->check_enabled_for_zone();
         }
+
+        if (in_array($set, array('payment', 'shipping'))) {
+          $moduleStatusIcon = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
+          $moduleStatusText = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? TEXT_MODULE_STATUS_ENABLED : ((empty($module->enabled) && is_numeric($module->sort_order)) ? TEXT_MODULE_STATUS_AMBER : ''));
+        } else {
+          $moduleStatusIcon = (is_numeric($module->sort_order) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'));
+          $moduleStatusText = (is_numeric($module->sort_order) ? TEXT_MODULE_STATUS_ENABLED : '');
+        }
+
         if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
           $module_info = array('code' => $module->code,
                                'title' => $module->title,
@@ -228,17 +238,9 @@ require('includes/admin_html_head.php');
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo (strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>
-                <td class="dataTableContent" align="right">
-                  <?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?>
-                  <?php
-                    // show current status
-                    if ($set == 'payment' || $set == 'shipping') {
-                      echo '&nbsp;' . ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
-                    } else {
-                      echo '&nbsp;' . (is_numeric($module->sort_order) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'));
-                    }
-                  ?>
-                </td>
+                <td class="dataTableContent" align="center"><?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
+                <td class="dataTableContent" align="right"><?php echo $moduleStatusIcon; ?></td>
+                <td class="dataTableContent"><?php echo $moduleStatusText; ?></td>
 <?php
   if ($set == 'payment') {
     $orders_status_name = $db->Execute("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where orders_status_id='" . (int)$module->order_status . "' and language_id='" . (int)$_SESSION['languages_id'] . "'");
