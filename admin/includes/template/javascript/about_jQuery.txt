@@ -1,0 +1,13 @@
+NOTE:
+Zen Cart loads jQuery from the googleapis CDN.  This is usually the fastest and most efficient.
+
+However, if you are working "offline" and not connected to the internet, you may want to put the following 3 jQuery files in this folder.
+
+FILES:
+/your_admin_folder/includes/template/javascript/jquery.min.js
+/your_admin_folder/includes/template/javascript/jquery-ui.min.js
+/your_admin_folder/includes/template/javascript/jquery-ui.min.css
+
+REPEAT: THESE ARE *NOT* NECESSARY for normal daily operation on a live store, since they will load automatically when online.
+But for working offline (ie: on the subway on a PC with a test-webserver on laptop) then having these 3 files in the specified folder will be useful.
+
