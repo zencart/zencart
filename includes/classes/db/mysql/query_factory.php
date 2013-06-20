@@ -56,7 +56,7 @@ class queryFactory extends base {
     $connectionRetry = 10;
     while (!isset($this->link) || ($this->link == FALSE && $connectionRetry !=0) )
     {
-      $this->link = mysqli_connect($zf_host, $zf_user, $zf_password);
+      $this->link = mysqli_connect($zf_host, $zf_user, $zf_password, $zf_database, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
       $connectionRetry--;
     }
     if ($this->link) {
@@ -87,7 +87,7 @@ class queryFactory extends base {
     $this->user = $zf_user;
     $this->host = $zf_host;
     $this->password = $zf_password;
-    $this->link = @mysqli_connect($zf_host, $zf_user, $zf_password);
+    $this->link = mysqli_connect($zf_host, $zf_user, $zf_password, $zf_database, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
     if ($this->link) {
       $this->db_connected = true;
       return true;
@@ -96,6 +96,7 @@ class queryFactory extends base {
       return false;
     }
   }
+
   function selectdb($zf_database) {
     $result = mysqli_select_db($this->link, $zf_database);
     if ($result) return $result;
