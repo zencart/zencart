@@ -7,14 +7,14 @@
  * @version $Id: index.php 19537 2011-09-20 17:14:44Z drbyte $
  */
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html">
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow">
 <?php if (!defined('SKIP_CORE_JQUERY_LOADER') || SKIP_CORE_JQUERY_LOADER == FALSE) { ?>
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" />
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <?php
@@ -23,12 +23,12 @@
   $jquipath = DIR_WS_ADMIN . 'includes/template/javascript/jquery-ui.min.js';
   $jquicsspath = DIR_WS_ADMIN . 'includes/template/javascript/jquery-ui.min.css';
   if (file_exists(str_replace(DIR_WS_ADMIN, DIR_FS_ADMIN, $jqpath))) { ?>
-    <script>window.jQuery || document.write('<script src="<?php echo $jqpath;?>"><\/script><script src="<?php echo $jquipath;?>"><\/script><link type="stylesheet" href="<?php echo $jquicsspath;?>" />');</script>
+    <script>window.jQuery || document.write('<script src="<?php echo $jqpath;?>"><\/script><script src="<?php echo $jquipath;?>"><\/script><link type="stylesheet" href="<?php echo $jquicsspath;?>">');</script>
 <?php } ?>
 
-<script type="text/javascript" src="includes/javascript/jquery-validation/jquery.validate.js"></script>
-<?php if (file_exists(DIR_FS_ADMIN . 'includes/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js')) { ?>
-<script type="text/javascript" src="<?php echo 'includes/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js'; ?>"></script>
+<script type="text/javascript" src="includes/template/javascript/jquery-validation/jquery.validate.js"></script>
+<?php if (file_exists(DIR_FS_ADMIN . 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js')) { ?>
+<script type="text/javascript" src="<?php echo 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js'; ?>"></script>
 <?php } ?>
 
 <?php } ?>
