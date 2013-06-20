@@ -26,7 +26,6 @@
     <script>window.jQuery || document.write('<script src="<?php echo $jqpath;?>"><\/script><script src="<?php echo $jquipath;?>"><\/script><link type="stylesheet" href="<?php echo $jquicsspath;?>" />');</script>
 <script type="text/javascript" src="includes/javascript/bootstrap/js/bootstrap.js"></script>
 <link rel="stylesheet" type="text/css" href="includes/javascript/bootstrap/css/bootstrap.min.css" />
-<script type="text/javascript" src="includes/javascript/jquery-validation/dist/jquery.validate.js"></script>
 <?php } ?>
 <?php } ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css">
