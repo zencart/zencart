@@ -11,6 +11,8 @@ if (PHP_SAPI != 'cli' && isset($_SERVER["REMOTE_ADDR"]) && ($_SERVER["REMOTE_ADD
   exit(1);
 };
 
+// define('DB_SOCKET', '/tmp/mysql.sock');
+
 // define('STRICT_ERROR_REPORTING', TRUE); // commented out for normal use
 // define('DEBUG_AUTOLOAD', TRUE);         // commented out for normal use
 
