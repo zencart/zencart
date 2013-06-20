@@ -40,7 +40,7 @@
             AND pt.allow_add_to_cart = 'Y'
             ORDER by pd.products_name";
     $new_product_query = $db->Execute($sql);
-    if (!$new_product_query->EOF) $products_filter = $new_product_query->fields['products_id'];
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 
@@ -59,8 +59,8 @@
             AND pt.allow_add_to_cart = 'Y'
             ORDER by pd.products_name";
     $new_product_query = $db->Execute($sql);
-    if (!$new_product_query->EOF) $products_filter = $new_product_query->fields['products_id'];
-    if ((int)$products_filter != 0) {
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
+    if ($products_filter != '') {
       zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
     }
   } else {
@@ -80,7 +80,7 @@
             AND pt.allow_add_to_cart = 'Y'
             ORDER by pd.products_name";
       $new_product_query = $db->Execute($sql);
-      if (!$new_product_query->EOF) $products_filter = $new_product_query->fields['products_id'];
+      $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
       $_GET['products_filter'] = $products_filter;
     }
   }
