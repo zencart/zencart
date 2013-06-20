@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
@@ -55,6 +55,10 @@ if (isset($_GET) & sizeof($_GET) > 0 ) {
 
 // check for SSL configuration changes:
 if (!defined('SSLPWSTATUSCHECK')) die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
+if (SSLPWSTATUSCHECK == '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:1', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+    $db->Execute($sql);
+}
 list($a, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $c = (int)$c;
 $e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
 if ($a == 0) {
