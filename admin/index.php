@@ -29,7 +29,7 @@
       $languages_selected = $languages[$i]['code'];
     }
   }
-$extraCss[] = array('location'=>DIR_WS_INCLUDES . 'template/css/index.css');
+$extraCss[] = array('location' => DIR_WS_INCLUDES . 'template/css/index.css');
 require('includes/admin_html_head_index.php');
 ?>
 </head>
@@ -38,26 +38,41 @@ require('includes/admin_html_head_index.php');
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
 <?php
+/**
+ * Save setup-wizard stuff
+ */
 if (isset($_POST['action']) && $_POST['action'] == 'setup-wizard')
 {
-  $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME'";
-  $sql = $db->bindVars($sql, ':configValue:', $_POST['store_name'], 'string');
-  $db->execute($sql);
-  $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_OWNER'";
-  $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner'], 'string');
-  $db->execute($sql);
-  $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_OWNER_EMAIL_ADDRESS', 'EMAIL_FROM', 'SEND_EXTRA_ORDER_EMAILS_TO', 'SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO', 'SEND_EXTRA_LOW_STOCK_EMAILS_TO', 'SEND_EXTRA_GV_CUSTOMER_EMAILS_TO', 'SEND_EXTRA_GV_ADMIN_EMAILS_TO', 'SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO', 'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO', 'SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', 'MODULE_PAYMENT_CC_EMAIL')";
-  $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner_email'], 'string');
-  $db->execute($sql);
-  $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_COUNTRY', 'SHIPPING_ORIGIN_COUNTRY')";
-  $sql = $db->bindVars($sql, ':configValue:', $_POST['store_country'], 'integer');
-  $db->execute($sql);
-  $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_ZONE'";
-  $sql = $db->bindVars($sql, ':configValue:', $_POST['store_zone'], 'integer');
-  $db->execute($sql);
-  $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME_ADDRESS'";
-  $sql = $db->bindVars($sql, ':configValue:', $_POST['store_address'], 'string');
-  $db->execute($sql);
+  if (isset($_POST['store_name']) && $_POST['store_name'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_name'], 'string');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_owner']) && $_POST['store_owner'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_OWNER'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner'], 'string');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_owner_email']) && $_POST['store_owner_email'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_OWNER_EMAIL_ADDRESS', 'EMAIL_FROM', 'SEND_EXTRA_ORDER_EMAILS_TO', 'SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO', 'SEND_EXTRA_LOW_STOCK_EMAILS_TO', 'SEND_EXTRA_GV_CUSTOMER_EMAILS_TO', 'SEND_EXTRA_GV_ADMIN_EMAILS_TO', 'SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO', 'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO', 'SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', 'MODULE_PAYMENT_CC_EMAIL')";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner_email'], 'string');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_country']) && $_POST['store_country'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_COUNTRY', 'SHIPPING_ORIGIN_COUNTRY')";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_country'], 'integer');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_zone']) && $_POST['store_zone'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_ZONE'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_zone'], 'integer');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_address']) && $_POST['store_address'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME_ADDRESS'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_address'], 'string');
+    $db->execute($sql);
+  }
   $hasDoneStartWizard = TRUE;
 }
 if ($hasDoneStartWizard == FALSE) {

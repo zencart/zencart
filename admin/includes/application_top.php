@@ -99,6 +99,10 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
     }
   }
 }
+
+// Defined for backwards compatibility only. THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
+if (!defined('HTT'.'PS_SERVER')) define('HTT'.'PS_SERVER', HTTP_SERVER);
+
 /*
 // turned off for now
   if ($check_cfg != 'off') {
