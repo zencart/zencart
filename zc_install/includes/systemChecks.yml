@@ -57,7 +57,7 @@ systemChecks:
     methods:
       checkExtension:
         parameters:
-          extension: mysql
+          extension: mysqli
   logFolder:
     runLevel: always
     errorLevel: FAIL
