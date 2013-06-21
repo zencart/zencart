@@ -107,6 +107,9 @@ class paypal_curl extends base {
       $this->setParam($name, $value);
     }
     $this->notify('NOTIFY_PAYPAL_CURL_CONSTRUCT', $params);
+    if ($this->_mode == 'TESTCOMMUNICATIONS') {
+      $this->testResults = $this->_request(array(), 'testCommunications');
+    }
   }
 
   /**
@@ -460,6 +463,10 @@ class paypal_curl extends base {
 
     // do debug/logging
     if ((!in_array($operation, array('GetTransactionDetails','TransactionSearch'))) || (in_array($operation, array('GetTransactionDetails','TransactionSearch')) && !strstr($response, '&ACK=Success')) ) $this->_logTransaction($operation, $this->_getElapsed($start), $response, $errors . ($commErrNo != 0 ? "\n" . print_r($commInfo, true) : ''));
+
+    if ($operation == 'testCommunications') {
+      return ($commInfo['http_code'] == 200) ? TRUE : str_replace("\n", '', $errors);
+    }
 
     if ($response) {
       return $this->_parseNameValueList($response);

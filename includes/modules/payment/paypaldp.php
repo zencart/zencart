@@ -1130,7 +1130,11 @@ class paypaldp extends base {
   /**
    * Initialize the PayPal/PayflowPro object for communication to the processing gateways
    */
-  function paypal_init() {
+  function paypal_init($testmode = 'normal') {
+    if ($testmode == 'testcomm') {
+      $doPayPal = new paypal_curl(array('mode' => 'TESTCOMMUNICATIONS'));
+      return $doPayPal;
+    }
     $nvp = (MODULE_PAYMENT_PAYPALWPP_APIPASSWORD != '' && MODULE_PAYMENT_PAYPALWPP_APISIGNATURE != '') ? true : false;
     $ec = ($nvp && $_GET['type'] == 'ec') ? true : false;
     if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && !$ec) {
@@ -1170,6 +1174,26 @@ class paypaldp extends base {
 
     return $doPayPal;
   }
+
+  /**
+   * Test whether the module is able to communicate with the gateway
+   * @return multitype:string
+   */
+  function testCommunications() {
+    $retVal = array();
+    $doPayPal = $this->paypal_init('testcomm');
+    $result = $doPayPal->testResults;
+    //   die('result=<pre>'.var_export($result, true));
+    if ($result === TRUE) {
+      $retVal['type'] = 'success';
+      $retVal['text'] = 'Communications Test Successful: ' . $this->code . ' (' . $doPayPal->_endpoints[$doPayPal->_server] . ')';
+    } else {
+      $retVal['type'] = 'error';
+      $retVal['text'] = 'Communications Test FAILED: ' . $this->code . ': ' . ' (' . $doPayPal->_endpoints[$doPayPal->_server] . ')' . ' - ' . $result;
+    }
+    return $retVal;
+  }
+
   /**
    * Determine which PayPal URL to direct the customer's browser to when needed
    */

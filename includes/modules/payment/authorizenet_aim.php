@@ -524,6 +524,24 @@ class authorizenet_aim extends base {
     global $db;
     $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_AUTHORIZENET_AIM\_%'");
   }
+
+  /**
+   * Test whether the module is able to communicate with the gateway
+   * @return multitype:string
+   */
+  function testCommunications() {
+    $retVal = array();
+    $result = $this->_sendRequest(array(), 'testcomm');
+//  die('result=<pre>'.var_export($result, true));
+    if ($result == TRUE) {
+      $retVal['type'] = 'success';
+      $retVal['text'] = 'Communications Test Successful: ' . $this->code;
+    } else {
+      $retVal['type'] = 'error';
+      $retVal['text'] = 'Communications Test FAILED: ' . $this->code;
+    }
+    return $retVal;
+  }
   /**
    * Internal list of configuration keys used for configuration of the module
    *
@@ -535,7 +553,7 @@ class authorizenet_aim extends base {
   /**
    * Send communication request
    */
-  function _sendRequest($submit_data) {
+  function _sendRequest($submit_data, $mode = 'normal') {
     global $request_type;
 
     // Populate an array that contains all of the data to be sent to Authorize.net
@@ -628,6 +646,11 @@ class authorizenet_aim extends base {
 
     $this->commInfo = @curl_getinfo($ch);
     curl_close ($ch);
+
+    // handle "communications test only" mode:
+    if ($mode == 'testcomm') {
+      return ($this->commInfo['http_code'] == 200);
+    }
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') {
