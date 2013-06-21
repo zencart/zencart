@@ -50,7 +50,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_DEFAULT . '.php');
   }
-  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
+  if ($current_page != '' && file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
   }
 
