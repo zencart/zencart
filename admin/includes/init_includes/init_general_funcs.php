@@ -14,13 +14,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package admin
 **/
-// customization for the design layout
-  define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
-
-// Define how do we update currency exchange rates
-// Possible values are 'ecb', 'boc', 'oanda', 'xe', or '' (to disable the option).  HOWEVER: Note that using "xe" or "oanda" subjects you to TOS terms requiring you to subscribe to their services. Use at your own risk.
-  define('CURRENCY_SERVER_PRIMARY', 'ecb');
-  define('CURRENCY_SERVER_BACKUP', 'boc');
 
 // include the database functions
   require(DIR_WS_FUNCTIONS . 'database.php');

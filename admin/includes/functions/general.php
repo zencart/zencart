@@ -1015,6 +1015,21 @@
     return zen_draw_pull_down_menu($name, $editors_pulldown, $html_editor);
   }
 
+  function zen_cfg_pull_down_exchange_rate_sources($source, $key = '') {
+    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $pulldown = array();
+    $pulldown[] = array('id' => TEXT_NONE, 'text' => TEXT_NONE);
+    $funcs = get_defined_functions();
+    $funcs = $funcs['user'];
+    sort($funcs);
+    foreach ($funcs as $func) {
+      if (preg_match('/quote_(.*)_currency/', $func, $regs)) {
+        $pulldown[] = array('id' => $regs[1], 'text' => $regs[1]);
+      }
+    }
+    return zen_draw_pull_down_menu($name, $pulldown, $source);
+  }
+
   function zen_cfg_password_input($value, $key = '') {
     if (function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
       $value = dbenc_decrypt($value);
@@ -1111,10 +1126,10 @@
       $indsize += $result->fields['Index_length'];
       $result->MoveNext();
     }
-    $mysql_in_strict_mode = false;
+    $strictmysql = false;
     $result = $db->Execute("SHOW VARIABLES LIKE 'sql\_mode'");
     while (!$result->EOF) {
-      if (strstr($result->fields['Value'], 'strict_')) $mysql_in_strict_mode = true;
+      if (strstr($result->fields['Value'], 'strict_')) $strictmysql = true;
       $result->MoveNext();
     }
 
@@ -1166,7 +1181,7 @@
                  'php_postmaxsize' => @ini_get('post_max_size'),
                  'database_size' => $datsize,
                  'index_size' => $indsize,
-                 'mysql_strict_mode' => $mysql_in_strict_mode,
+                 'mysql_strict_mode' => $strictmysql,
                  );
   }
 
