@@ -66,7 +66,7 @@ class linkpoint_api {
     // if store is not running in SSL, cannot offer credit card module, for PCI reasons
     if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
     // check other reasons for the module to be deactivated:
-    if ( $this->enabled && $this->zone > 0 ) {
+    if ($this->enabled && (int)$this->zone > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
       $sql = "SELECT zone_id
               FROM " . TABLE_ZONES_TO_GEO_ZONES . "
@@ -652,7 +652,7 @@ class linkpoint_api {
      $output = '';
      $sql = "select * from " . TABLE_LINKPOINT_API . " where order_id = '" . $zf_order_id . "' and transaction_result = 'APPROVED' order by date_added";
      $lp_api = $db->Execute($sql);
-     if ($lp_api->RecordCount() > 0) require(DIR_FS_CATALOG. DIR_WS_MODULES . 'payment/linkpoint_api/linkpoint_api_admin_notification.php');
+     if (!$lp_api->EOF && $lp_api->RecordCount() > 0) require(DIR_FS_CATALOG. DIR_WS_MODULES . 'payment/linkpoint_api/linkpoint_api_admin_notification.php');
      return $output;
    }
 
