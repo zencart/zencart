@@ -131,12 +131,31 @@
 
 // clean out old DEBUG logfiles
     case 'clean_debug_files':
-      foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs') as $purgeFolder) {
+      $foldersToClean = array();
+      $foldersToClean[] = DIR_FS_LOGS;
+      $foldersToClean[] = DIR_FS_SQL_CACHE;
+      $foldersToClean[] = DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs';
+
+      $cleaningPatterns = array();
+      $cleaningPatterns[] = 'myDEBUG-';
+      $cleaningPatterns[] = 'AIM_Debug_';
+      $cleaningPatterns[] = 'SIM_Debug_';
+      $cleaningPatterns[] = 'FirstData_Debug_';
+      $cleaningPatterns[] = 'Linkpoint_Debug_';
+      $cleaningPatterns[] = 'Paypal|paypal|ipn_';
+      $cleaningPatterns[] = 'zcInstall';
+      $cleaningPatterns[] = 'SHIP_';
+      $cleaningPatterns[] = 'PAYMENT_';
+      $cleaningPatterns[] = 'usps_';
+      $cleaningPatterns[] = '.*debug';
+      $patternString = implode('|', $cleaningPatterns);
+
+      foreach($foldersToClean as $purgeFolder) {
         $purgeFolder = rtrim($purgeFolder, '/');
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
           if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
-            if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall|SHIP_|PAYMENT_|usps_|.*debug).*\.log$/i', $file)) {
+            if (preg_match('/^(' . $patternString . ').*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
                 zen_remove($purgeFolder . '/' . $file);
               }
