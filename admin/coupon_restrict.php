@@ -44,7 +44,7 @@
     }
   }
   if ($_GET['action']=='add_category' && isset($_POST['cPath'])) {
-  	if ($_POST['cPath'] == 0) $_POST['cPath'] = -1;
+    if ($_POST['cPath'] == 0) $_POST['cPath'] = -1;
     $test_query=$db->Execute("select * from " . TABLE_COUPON_RESTRICT . "
                               where coupon_id = '" . $_GET['cid'] . "'
                               and category_id = '" . $_POST['cPath'] . "'");
@@ -200,7 +200,7 @@ require('includes/admin_html_head.php');
                              where coupon_id = '" . $_GET['cid'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
      $category_name = zen_get_category_name($cr_list->fields['category_id'], $_SESSION['languages_id']);
      } else {
-     	$category_name = TEXT_ALL_CATEGORIES;
+       $category_name = TEXT_ALL_CATEGORIES;
      }
 ?>
                 <td class="dataTableContent"><?php echo $_GET['cid']; ?></td>
@@ -208,17 +208,17 @@ require('includes/admin_html_head.php');
                 <td class="dataTableContent" align="center"><?php echo $cr_list->fields['category_id']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $category_name; ?></td>
 <?php
-		if ($cr_list->fields['coupon_restrict']=='N') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
-		}
-		if ($cr_list->fields['coupon_restrict']=='Y') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
-		}
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
+    if ($cr_list->fields['coupon_restrict']=='N') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
+    }
+    if ($cr_list->fields['coupon_restrict']=='Y') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
+    }
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
 ?>
               </tr>
 <?php
@@ -271,8 +271,8 @@ require('includes/admin_html_head.php');
                     <td class="dataTableHeadingContent"><?php echo HEADER_COUPON_ID; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_COUPON_NAME; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_ID; ?></td>
-              <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_STATUS; ?></td>
-              <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_MODEL; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_STATUS; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_MODEL; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_NAME; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_ALLOW; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_DENY; ?></td>
@@ -298,21 +298,21 @@ require('includes/admin_html_head.php');
                 <td class="dataTableContent"><?php echo $_GET['cid']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $coupon->fields['coupon_name']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $pr_list->fields['product_id']; ?></td>
-          <td class="dataTableContent" align="center"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_status') == 0 ? zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) : zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON)); ?></td>
-          <td class="dataTableContent" align="left"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_model')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_status') == 0 ? zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) : zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON)); ?></td>
+                <td class="dataTableContent" align="left"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_model')); ?></td>
                 <td class="dataTableContent" align="left"><?php echo '<strong>' . $product_name . '</strong><br />' . TEXT_CATEGORY . zen_get_categories_name_from_product($pr_list->fields['product_id']) . '<br />' . TEXT_MANUFACTURER . zen_get_products_manufacturers_name($pr_list->fields['product_id']); ?></td>
 <?php
-		if ($pr_list->fields['coupon_restrict']=='N') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
-		}
-		if ($pr_list->fields['coupon_restrict']=='Y') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_DENY) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ALLOW) . '</a></td>';
-		}
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
+    if ($pr_list->fields['coupon_restrict']=='N') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
+    }
+    if ($pr_list->fields['coupon_restrict']=='Y') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_DENY) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ALLOW) . '</a></td>';
+    }
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
 ?>
               </tr>
 <?php
@@ -450,15 +450,15 @@ require('includes/admin_html_head.php');
 <script type="text/javascript">
 function divertClickActionRemove(href)
 {
-	document.getElementById('actionRemove').action = href;
-	document.getElementById('actionRemove').submit();
-	return false;
+  document.getElementById('actionRemove').action = href;
+  document.getElementById('actionRemove').submit();
+  return false;
 }
 function divertClickSwitchStatus(href)
 {
-	document.getElementById('switchStatus').action = href;
-	document.getElementById('switchStatus').submit();
-	return false;
+  document.getElementById('switchStatus').action = href;
+  document.getElementById('switchStatus').submit();
+  return false;
 }
 </script>
 </body>
