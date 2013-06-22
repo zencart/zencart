@@ -39,7 +39,7 @@
                             'manufacturers_id' => $manufacturers_id,
                             'products_quantity_order_min' => zen_db_prepare_input($_POST['products_quantity_order_min']),
                             'products_quantity_order_units' => zen_db_prepare_input($_POST['products_quantity_order_units']),
-                            'products_priced_by_attribute' => zen_db_prepare_input($_POST['products_priced_by_attribute']),
+                            'products_priced_by_attribute' => zen_db_prepare_input((int)$_POST['products_priced_by_attribute']),
                             'product_is_free' => zen_db_prepare_input((int)$_POST['product_is_free']),
                             'product_is_call' => zen_db_prepare_input((int)$_POST['product_is_call']),
                             'products_quantity_mixed' => zen_db_prepare_input($_POST['products_quantity_mixed']),
