@@ -9,16 +9,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
-  $currencies = new currencies();
-
-  $languages = zen_get_languages();
-
-  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : 0);
-
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
-
-  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
 
   $processing_message = '';
   $processing_action_url = '';
