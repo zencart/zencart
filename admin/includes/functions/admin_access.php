@@ -35,7 +35,7 @@ function check_page($page, $params) {
   $result = $db->Execute($sql);
   $retVal = FALSE;
   while (!$result->EOF) {
-    if ($result->fields['main_page'] != '' && defined($result->fields['main_page']) && constant($result->fields['main_page']) == $page && $result->fields['page_params'] == $page_params) {
+    if ($result->fields['main_page'] != '' && defined($result->fields['main_page']) && (constant($result->fields['main_page']) == $page || constant($result->fields['main_page']) . '.php' == $page) && $result->fields['page_params'] == $page_params) {
       $retVal = TRUE;
     }
     $result->MoveNext();
