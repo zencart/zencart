@@ -1245,6 +1245,9 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_clean_html($clean_it, $extraTags = '') {
     if (!is_array($extraTags)) $extraTags = array($extraTags);
 
+    // remove any embedded javascript
+    $clean_it = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $clean_it);
+
     $clean_it = preg_replace('/\r/', ' ', $clean_it);
     $clean_it = preg_replace('/\t/', ' ', $clean_it);
     $clean_it = preg_replace('/\n/', ' ', $clean_it);

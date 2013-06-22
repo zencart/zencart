@@ -3071,6 +3071,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  */
   function zen_clean_html($clean_it) {
 
+    // remove any embedded javascript
+    $clean_it = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $clean_it);
+
     $clean_it = preg_replace('/\r/', ' ', $clean_it);
     $clean_it = preg_replace('/\t/', ' ', $clean_it);
     $clean_it = preg_replace('/\n/', ' ', $clean_it);
