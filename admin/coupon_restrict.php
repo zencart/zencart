@@ -26,6 +26,7 @@
   if (isset($_POST['cPath'])) $_POST['cPath'] = (int)$_POST['cPath'];
   if (isset($_POST['cPath_prod'])) $_POST['cPath_prod'] = (int)$_POST['cPath_prod'];
   if (isset($_GET['build_cat'])) $_GET['build_cat'] = (int)$_GET['build_cat'];
+  if (isset($_GET['build_man'])) $_GET['build_man'] = (int)$_GET['build_man'];
 
   $the_path = $_POST['cPath'];
   if (isset($_GET['action']) && $_GET['action']=='switch_status') {
@@ -339,12 +340,12 @@ require('includes/admin_html_head.php');
       $products_array = array();
 
 // manufacturers products
-      if (isset($_POST['manufacturers_id'])) $current_manufacturers_id = $_POST['manufacturers_id'];
+      $current_manufacturers_id = (isset($_POST['manufacturers_id'])) ? (int)$_POST['manufacturers_id'] : 0;
       if ($current_manufacturers_id > 0) {
       $products = $db->Execute("select p.products_id, pd.products_name from " .
       TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_MANUFACTURERS . " m
       where p.products_id = pd.products_id and pd.language_id = '" . $_SESSION['languages_id'] . "'
-      and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '" . $_POST['manufacturers_id'] . "'
+      and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '" . (int)$current_manufacturers_id . "'
       order by pd.products_name");
       $products_array = array();
       }
