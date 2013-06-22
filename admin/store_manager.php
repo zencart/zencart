@@ -103,13 +103,13 @@
     break;
 
     case ('optimize_db_start'):
-      $processing_message = TEXT_INFO_OPTIMIZING_DATABASE_TABLES;
-      $processing_action_url = zen_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
+      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes') {
+        $processing_message = TEXT_INFO_OPTIMIZING_DATABASE_TABLES;
+        $processing_action_url = zen_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
+      }
     break;
-    case ('optimize_db_do'):
     // clean out unused space in database
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
+    case ('optimize_db_do'):
         $sql = "SHOW TABLE STATUS FROM `" . DB_DATABASE ."`";
         $tables = $db->Execute($sql);
         while(!$tables->EOF) {
@@ -127,7 +127,6 @@
         $messageStack->add_session(SUCCESS_DB_OPTIMIZE . ' ' . $i, 'success');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
     break;
 
 // clean out old DEBUG logfiles
@@ -199,6 +198,7 @@
 
 require('includes/admin_html_head.php');
 ?>
+<?php if ($processing_message != '' && $processing_action_url != '') echo '<meta http-equiv="refresh" content="2;URL=' . $processing_action_url . '">'; ?>
 </head>
 <body>
 <!-- header //-->
