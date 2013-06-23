@@ -1049,6 +1049,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     if ($str == "") return $str;
     if (is_array($str)) return $str;
     $str = trim($str);
+    $len = (int)$len;
+    if ($len == 0) return '';
     // if it's les than the size given, then return it
     if (strlen($str) <= $len) return $str;
     // else get that size of text
