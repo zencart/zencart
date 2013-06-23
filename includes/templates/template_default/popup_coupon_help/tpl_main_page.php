@@ -57,7 +57,7 @@
         } else {
           $restrict = TEXT_DENIED;
         }
-        if ($get_result->RecordCount() != 1 and $get_result->fields['category_id'] != '-1') {
+        if ($get_result->RecordCount() >= 1 and $get_result->fields['category_id'] != '-1') {
           $result = $db->Execute("SELECT * FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd WHERE c.categories_id = cd.categories_id
           and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' and c.categories_id='" . $get_result->fields['category_id'] . "'");
           $cats[] = array("validity"=> ($get_result->fields['coupon_restrict'] =='N' ? 'A' : 'D'), 'name'=> $result->fields["categories_name"] . $restrict, 'link'=>'<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . (int)$result->fields['categories_id']) . '">' . $result->fields["categories_name"] . '</a>' . $restrict);

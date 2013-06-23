@@ -60,9 +60,17 @@ define('COUPON_AMOUNT', 'Coupon Amount');
 define('COUPON_CODE', 'Coupon Code');
 define('COUPON_STARTDATE', 'Start Date');
 define('COUPON_FINISHDATE', 'End Date');
+define('COUPON_RESTRICTIONS', 'Restrictions');
 define('COUPON_FREE_SHIP', 'Free Shipping');
 define('COUPON_DESC', 'Coupon Description <br />(Customer can see)');
 define('COUPON_MIN_ORDER', 'Coupon Minimum Order');
+
+define('COUPON_TOTAL', 'Coupon Minimum calculated from: ');
+define('TEXT_COUPON_TOTAL_PRODUCTS', 'Allowed Products');
+define('TEXT_COUPON_TOTAL_PRODUCTS_BASED', '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Based on Total of Allowed Products according to Coupon Restriction Rules)');
+define('TEXT_COUPON_TOTAL_ORDER', 'All Products');
+define('TEXT_COUPON_TOTAL_ORDER_BASED', '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Based on Full Order Total of All Products Regardless of Qualifying Coupon Restrictions)');
+
 define('COUPON_USES_COUPON', 'Uses per Coupon');
 define('COUPON_USES_USER', 'Uses per Customer');
 define('COUPON_PRODUCTS', 'Valid Product List');
@@ -85,9 +93,10 @@ define('COUPON_AMOUNT_HELP', 'The value of the discount for the coupon, either f
 define('COUPON_CODE_HELP', 'You can enter your own code here, or leave blank for an auto generated one.');
 define('COUPON_STARTDATE_HELP', 'The date the coupon will be valid from');
 define('COUPON_FINISHDATE_HELP', 'The date the coupon expires');
-define('COUPON_FREE_SHIP_HELP', 'The coupon gives free shipping on an order. Note. This overrides the coupon_amount figure but respects the minimum order value');
+define('COUPON_FREE_SHIP_HELP', 'The coupon gives free shipping on an order.');
 define('COUPON_DESC_HELP', 'A description of the coupon for the customer');
 define('COUPON_MIN_ORDER_HELP', 'The minimum order value before the coupon is valid');
+define('COUPON_TOTAL_HELP', 'If you specify a Coupon Minimum Order for this Discount Coupon, do you want the Minimum amount to be based on Allowed Products according to Coupon Restriction Rules or the Full Order Total, when determining if the Coupon Minimum Order has been met?<br />NOTE: Full Order Total means at least 1 of the Qualifying Restricted Products must be in the cart for the Discount Coupon to work.');
 define('COUPON_USES_COUPON_HELP', 'The maximum number of times the coupon can be used, leave blank if you want no limit.');
 define('COUPON_USES_USER_HELP', 'Number of times a user can use the coupon, leave blank for no limit.');
 define('COUPON_PRODUCTS_HELP', 'A comma separated list of product_ids that this coupon can be used with. Leave blank for no restrictions.');

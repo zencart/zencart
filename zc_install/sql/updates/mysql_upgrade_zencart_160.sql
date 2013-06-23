@@ -66,7 +66,7 @@ ALTER TABLE admin_pages MODIFY page_params VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages MODIFY menu_key VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_profiles MODIFY profile_name VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages_to_profiles MODIFY page_key varchar(255) NOT NULL default '';
-
+ALTER TABLE coupons ADD coupon_total TINYINT(1) NOT NULL DEFAULT '0';
 
 ##@TODO
 ## COWOA CHANGES - Although need to allow for a current cowoa installation

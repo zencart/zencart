@@ -15,6 +15,7 @@
   }
 
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
+  if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YN*]/','',$_GET['status']);
 
   if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
     $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
@@ -24,7 +25,7 @@
       $mail_sent_to = $_POST['email_to'];
     }
 
-    $coupon_result = $db->Execute("select coupon_code, coupon_start_date, coupon_expire_date
+    $coupon_result = $db->Execute("select coupon_code, coupon_start_date, coupon_expire_date, coupon_total
                                    from " . TABLE_COUPONS . "
                                    where coupon_id = '" . $_GET['cid'] . "'");
 
@@ -182,7 +183,8 @@
                                     'coupon_expire_date' => $check_new_coupon->fields['coupon_expire_date'],
                                     'date_created' => 'now()',
                                     'date_modified' => 'now()',
-                                    'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction']);
+                                    'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction'],
+                                    'coupon_total' => $check_new_coupon->fields['coupon_total']);
 
             zen_db_perform(TABLE_COUPONS, $sql_data_array);
             $insert_id = $db->Insert_ID();
@@ -257,7 +259,8 @@
                                 'coupon_expire_date' => $check_new_coupon->fields['coupon_expire_date'],
                                 'date_created' => 'now()',
                                 'date_modified' => 'now()',
-                                'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction']);
+                                'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction'],
+                                'coupon_total' => $check_new_coupon->fields['coupon_total']);
 
           zen_db_perform(TABLE_COUPONS, $sql_data_array);
           $insert_id = $db->Insert_ID();
@@ -361,7 +364,8 @@
                                 'coupon_expire_date' => $_POST['coupon_finishdate'],
                                 'date_created' => 'now()',
                                 'date_modified' => 'now()',
-                                'coupon_zone_restriction' => $_POST['coupon_zone_restriction']);
+                                'coupon_zone_restriction' => $_POST['coupon_zone_restriction'],
+                                'coupon_total' => $_POST['coupon_total']);
         $languages = zen_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
@@ -895,6 +899,10 @@ function check_form(form_name) {
         <td align="left"><?php echo COUPON_MIN_ORDER; ?></td>
         <td align="left"><?php echo zen_db_prepare_input($_POST['coupon_min_order']); ?></td>
       </tr>
+      <tr>
+        <td align="left" class="main"><?php echo COUPON_TOTAL; ?></td>
+        <td align="left"><?php echo zen_draw_radio_field('coupon_total', '0', ($_POST['coupon_total'] == 0)) . '&nbsp;' . TEXT_COUPON_TOTAL_PRODUCTS; ?><br /><?php echo zen_draw_radio_field('coupon_total', '1', ($_POST['coupon_total'] ==1)) . '&nbsp;' . TEXT_COUPON_TOTAL_ORDER; ?></td>
+      </tr>
 
       <tr>
         <td align="left"><?php echo COUPON_FREE_SHIP; ?></td>
@@ -994,7 +1002,7 @@ function check_form(form_name) {
 
     $coupon = $db->Execute("select coupon_code, coupon_amount, coupon_type, coupon_minimum_order,
                                    coupon_start_date, coupon_expire_date, uses_per_coupon,
-                                   uses_per_user, restrict_to_products, restrict_to_categories, coupon_zone_restriction
+                                   uses_per_user, restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_total
                             from " . TABLE_COUPONS . "
                             where coupon_id = '" . $_GET['cid'] . "'");
 
@@ -1015,6 +1023,7 @@ function check_form(form_name) {
     $_POST['coupon_startdate'] = $coupon->fields['coupon_start_date'];
     $_POST['coupon_finishdate'] = $coupon->fields['coupon_expire_date'];
     $_POST['coupon_zone_restriction'] = $coupon->fields['coupon_zone_restriction'];
+    $_POST['coupon_total'] = $coupon->fields['coupon_total'];
 
   case 'new':
 // set some defaults
@@ -1072,6 +1081,11 @@ function check_form(form_name) {
         <td align="left" class="main"><?php echo COUPON_MIN_ORDER; ?></td>
         <td align="left"><?php echo zen_draw_input_field('coupon_min_order', $_POST['coupon_min_order']); ?></td>
         <td align="left" class="main"><?php echo COUPON_MIN_ORDER_HELP; ?></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" class="main"><?php echo COUPON_TOTAL; ?></td>
+        <td align="left" valign="top"><?php echo zen_draw_radio_field('coupon_total', '0', ($_POST['coupon_total'] == 0)) . '&nbsp;' . TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPON_TOTAL_PRODUCTS_BASED; ?><br /><?php echo zen_draw_radio_field('coupon_total', '1', ($_POST['coupon_total'] ==1)) . '&nbsp;' . TEXT_COUPON_TOTAL_ORDER . TEXT_COUPON_TOTAL_ORDER_BASED; ?></td>
+        <td align="left" valign="top" class="main"><?php echo COUPON_TOTAL_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_FREE_SHIP; ?></td>
@@ -1184,13 +1198,14 @@ function check_form(form_name) {
                 <td class="dataTableHeadingContent" align="center"><?php echo COUPON_ACTIVE; ?></td>
                 <td class="dataTableHeadingContent" align="center"><?php echo COUPON_START_DATE; ?></td>
                 <td class="dataTableHeadingContent" align="center"><?php echo COUPON_EXPIRE_DATE; ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo COUPON_RESTRICTIONS; ?></td>
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
     if ($status != '*') {
-      $cc_query_raw = "select coupon_id, coupon_code, coupon_amount, coupon_type, coupon_start_date,coupon_expire_date,uses_per_user,uses_per_coupon,restrict_to_products, restrict_to_categories, date_created,date_modified, coupon_active, coupon_zone_restriction from " . TABLE_COUPONS ." where coupon_active='" . zen_db_input($status) . "' and coupon_type != 'G'";
+      $cc_query_raw = "select * from " . TABLE_COUPONS ." where coupon_active='" . zen_db_input($status) . "' and coupon_type != 'G'";
     } else {
-      $cc_query_raw = "select coupon_id, coupon_code, coupon_amount, coupon_type, coupon_start_date,coupon_expire_date,uses_per_user,uses_per_coupon,restrict_to_products, restrict_to_categories, date_created,date_modified, coupon_active, coupon_zone_restriction from " . TABLE_COUPONS . " where coupon_type != 'G'";
+      $cc_query_raw = "select * from " . TABLE_COUPONS . " where coupon_type != 'G'";
     }
     $maxDisplaySearchResults = (defined('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') && (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS > 0) ? (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS : 20;
     // reset page when page is unknown
@@ -1226,6 +1241,9 @@ function check_form(form_name) {
                                    from " . TABLE_COUPONS_DESCRIPTION . "
                                    where coupon_id = '" . (int)$cc_list->fields['coupon_id'] . "'
                                    and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+
+      $coupon_restrictions = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . (int)$cc_list->fields['coupon_id'] . "' limit 1");
+
 ?>
                 <td class="dataTableContent"><?php echo $coupon_desc->fields['coupon_name']; ?></td>
                 <td class="dataTableContent" align="center">
@@ -1256,6 +1274,7 @@ function check_form(form_name) {
                 <td class="dataTableContent" align="center"><?php echo $cc_list->fields['coupon_active']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo zen_date_short($cc_list->fields['coupon_start_date']); ?></td>
                 <td class="dataTableContent" align="center"><?php echo zen_date_short($cc_list->fields['coupon_expire_date']); ?></td>
+                <td class="dataTableContent" align="center"><?php echo ($coupon_restrictions->RecordCount() > 0 ? '<a href="'.zen_href_link('coupon_restrict.php','cid='.(int)$cc_list->fields['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">' . 'Y' . '</a>' : 'N'); ?></td>
                 <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cc_list->fields['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
@@ -1391,6 +1410,8 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
                      COUPON_USES_USER . '&nbsp;::&nbsp; ' . $uses_user . '<br />' .
                      COUPON_PRODUCTS . '&nbsp;::&nbsp; ' . $prod_details . '<br />' .
                      COUPON_CATEGORIES . '&nbsp;::&nbsp; ' . $cat_details . '<br />' .
+                     COUPON_MIN_ORDER . '&nbsp;::&nbsp; ' . $currencies->format($cInfo->coupon_minimum_order) . '<br />' .
+                     COUPON_TOTAL . '&nbsp; ' . ($cInfo->coupon_total == 0 ? TEXT_COUPON_TOTAL_PRODUCTS : TEXT_COUPON_TOTAL_ORDER) . '<br />' .
                      DATE_CREATED . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->date_created) . '<br />' .
                      DATE_MODIFIED . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->date_modified) . '<br /><br />' .
                      COUPON_ZONE_RESTRICTION . '&nbsp;::&nbsp; ' . zen_get_geo_zone_name($cInfo->coupon_zone_restriction) . '<br /><br />' .

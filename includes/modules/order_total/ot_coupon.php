@@ -167,7 +167,7 @@ class ot_coupon {
 
 
       $sql = "select coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
-              restrict_to_products, restrict_to_categories, coupon_zone_restriction
+              restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_total
               from " . TABLE_COUPONS . "
               where coupon_code= :couponCodeEntered
               and coupon_active='Y'
@@ -180,19 +180,35 @@ class ot_coupon {
       if ($coupon_result->fields['coupon_type'] != 'G') {
 
         if ($coupon_result->RecordCount() < 1 ) {
-          $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON,'caution');
+          $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON . ' ' . $dc_check,'caution');
           $this->clear_posts();
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
         }
         $order_total = $this->get_order_total($coupon_result->fields['coupon_id']);
 
+        // display all error messages at once
+				$error_issues = 0;
+				$dc_link_count = 0;
+				$dc_link = ' <a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_result->fields['coupon_id']) . '\')">' . $dc_check . '</a>';
+        $orderTotalDetails = $this->get_order_total($_SESSION['cc_id']);
+        if ($coupon_result->fields['coupon_total'] == 0) {
+          $coupon_total = $orderTotalDetails['orderTotal'];
+        } else {
+          $coupon_total = $orderTotalDetails['totalFull'];
+        }
+//echo 'Product: ' . $orderTotalDetails['orderTotal'] . ' Order: ' . $orderTotalDetails['totalFull'] . ' $coupon_total: ' . $coupon_total . '<br>';
+//die('DONE!');
 // left for total order amount vs qualified order amount just switch the commented lines
 //        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order']) {
-        if (strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
+//        if (strval($order_total['orderTotal']) > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
+        if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order']) {
+					// $order_total['orderTotal'] . ' vs ' . $order_total['totalFull']
+          $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_REDEEM_COUPON_MINIMUM, $currencies->format($coupon_result->fields['coupon_minimum_order'])) . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
+					$error_issues ++;
+          $dc_link_count ++;
 
-          $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_REDEEM_COUPON_MINIMUM, $currencies->format($coupon_result->fields['coupon_minimum_order'])),'caution');
-          $this->clear_posts();
-          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
+//          $this->clear_posts();
+//          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
         }
 
         // JTD - added missing code here to handle coupon product restrictions
@@ -209,12 +225,17 @@ class ot_coupon {
             }
           }
         }
-
         if (!$foundvalid) {
           $this->clear_posts();
         }
 
-        if (!$foundvalid) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'credit_class_error_code=' . $this->code . '&credit_class_error=' . urlencode(TEXT_INVALID_COUPON_PRODUCT . ' ' . $dc_check), 'SSL',true, false));
+//        if (!$foundvalid) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'credit_class_error_code=' . $this->code . '&credit_class_error=' . urlencode(TEXT_INVALID_COUPON_PRODUCT . ' ' . $dc_check), 'SSL',true, false));
+        if (!$foundvalid) {
+					$messageStack->add_session('redemptions', TEXT_INVALID_COUPON_PRODUCT . ' ' . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
+					$error_issues ++;
+          $dc_link_count ++;
+				}
+
         // JTD - end of additions of missing code to handle coupon product restrictions
 
         $date_query=$db->Execute("select coupon_start_date from " . TABLE_COUPONS . "
@@ -222,9 +243,11 @@ class ot_coupon {
                                   coupon_code='" . zen_db_prepare_input($dc_check) . "'");
 
         if ($date_query->RecordCount() < 1 ) {
-          $messageStack->add_session('redemptions', TEXT_INVALID_STARTDATE_COUPON,'caution');
-          $this->clear_posts();
-          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+          $messageStack->add_session('redemptions', TEXT_INVALID_STARTDATE_COUPON . ' ' . ($dc_link_count ==0 ? $dc_link : ''),'caution');
+					$error_issues ++;
+					$dc_link_count ++;
+//          $this->clear_posts();
+//          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
 
         $date_query=$db->Execute("select coupon_expire_date from " . TABLE_COUPONS . "
@@ -232,9 +255,11 @@ class ot_coupon {
                                   coupon_code='" . zen_db_prepare_input($dc_check) . "'");
 
         if ($date_query->RecordCount() < 1 ) {
-          $messageStack->add_session('redemptions', TEXT_INVALID_FINISHDATE_COUPON,'caution');
-          $this->clear_posts();
-          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+          $messageStack->add_session('redemptions', TEXT_INVALID_FINISHDATE_COUPON . ' ' . ($dc_link_count ==0 ? $dc_link : ''),'caution');
+					$error_issues ++;
+          $dc_link_count ++;
+//          $this->clear_posts();
+//          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
 
         $coupon_count = $db->Execute("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . "
@@ -245,15 +270,19 @@ class ot_coupon {
                                                customer_id = '" . (int)$_SESSION['customer_id'] . "'");
 
         if ($coupon_count->RecordCount() >= $coupon_result->fields['uses_per_coupon'] && $coupon_result->fields['uses_per_coupon'] > 0) {
-          $messageStack->add_session('redemptions', TEXT_INVALID_USES_COUPON . $coupon_result->fields['uses_per_coupon'] . TIMES ,'caution');
-          $this->clear_posts();
-          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+          $messageStack->add_session('redemptions', TEXT_INVALID_USES_COUPON . $coupon_result->fields['uses_per_coupon'] . TIMES . ' ' . ($dc_link_count ==0 ? $dc_link : '') ,'caution');
+					$error_issues ++;
+					$dc_link_count ++;
+//          $this->clear_posts();
+//          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
 
         if ($coupon_count_customer->RecordCount() >= $coupon_result->fields['uses_per_user'] && $coupon_result->fields['uses_per_user'] > 0) {
-          $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_USES_USER_COUPON, $dc_check) . $coupon_result->fields['uses_per_user'] . ($coupon_result->fields['uses_per_user'] == 1 ? TIME : TIMES) ,'caution');
-          $this->clear_posts();
-          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+          $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_USES_USER_COUPON, $dc_check) . $coupon_result->fields['uses_per_user'] . ($coupon_result->fields['uses_per_user'] == 1 ? TIME : TIMES) . ' ' . ($dc_link_count ==0 ? $dc_link : '') ,'caution');
+					$error_issues ++;
+					$dc_link_count ++;
+//          $this->clear_posts();
+//          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
 
         $_SESSION['cc_id'] = $coupon_result->fields['coupon_id'];
@@ -347,16 +376,25 @@ class ot_coupon {
           }
           // remove if fails address validation
           if (!$foundvalid) {
-            $messageStack->add_session('checkout_payment', TEXT_REMOVE_REDEEM_COUPON_ZONE, 'caution');
-            $this->clear_posts();
-            if (!$foundvalid) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
-          } else {
+            $messageStack->add_session('redemptions', TEXT_REMOVE_REDEEM_COUPON_ZONE . ' ' . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
+            $dc_link_count ++;
+          }
+          // display all error messages
+          if ($error_issues > 0 || !$foundvalid) {
+	          $this->clear_posts();
+ 	          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+          }
+
+          // remove if fails address validation
+          if ($foundvalid) {
           //      if ($_POST['submit_redeem_coupon_x'] && !$_POST['gv_redeem_code']) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'credit_class_error_code=' . $this->code . '&credit_class_error=' . urlencode(TEST_NO_REDEEM_CODE), 'SSL', true, false));
             $messageStack->add('checkout', TEXT_VALID_COUPON,'success');
+          } else {
+            $messageStack->add('checkout', TEXT_VALID_COUPON . ' - BROKEN','success');
           }
         }
       } else {
-        $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON,'caution');
+        $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON . ' ' . $dc_check,'caution');
         $this->clear_posts();
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
       }
@@ -390,18 +428,26 @@ class ot_coupon {
     global $db, $order, $messageStack, $currencies;
     $currencyDecimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
     $od_amount = array('tax'=>0, 'total'=>0);
-    if ($_SESSION['cc_id']) 
+    if ($_SESSION['cc_id'])
     {
       $coupon = $db->Execute("select * from " . TABLE_COUPONS . " where coupon_id = '" . (int)$_SESSION['cc_id'] . "'");
       $this->coupon_code = $coupon->fields['coupon_code'];
       $orderTotalDetails = $this->get_order_total($_SESSION['cc_id']);
-      if ($coupon->RecordCount() > 0 && $orderTotalDetails['orderTotal'] != 0 ) 
-      {
-        if (strval($orderTotalDetails['orderTotal']) >= $coupon->fields['coupon_minimum_order']) 
-        {
+// left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 2 of 3
+      if ($coupon->fields['coupon_total'] == 0) {
+        $coupon_total = $orderTotalDetails['orderTotal'];
+      } else {
+        $coupon_total = $orderTotalDetails['totalFull'];
+      }
+//      if ($coupon->RecordCount() > 0 && $orderTotalDetails['totalFull'] != 0) {
+      if ($coupon->RecordCount() > 0 && $orderTotalDetails['orderTotal'] != 0 ) {
+// left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 3 of 3
+//        if (strval($orderTotalDetails['totalFull']) >= $coupon->fields['coupon_minimum_order']) {
+//        if (strval($orderTotalDetails['orderTotal']) >= $coupon->fields['coupon_minimum_order']) {
+        if (strval($coupon_total) >= $coupon->fields['coupon_minimum_order']) {
           switch($coupon->fields['coupon_type'])
           {
-            case 'S':
+            case 'S': // Free Shipping
               $od_amount['total'] = $orderTotalDetails['shipping'];
               $od_amount['type'] = 'S';
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
@@ -410,30 +456,52 @@ class ot_coupon {
               }
               return $od_amount;
               break;
-            case 'P':
+            case 'P': // percentage
               $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
-              $od_amount['type'] = $coupon->fields['coupon_type']; 
+              $od_amount['type'] = $coupon->fields['coupon_type'];
               $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               break;
-            case 'F':
+            case 'E': // percentage & Free Shipping
+              $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
+              $od_amount['type'] = $coupon->fields['coupon_type'];
+              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+              // add in Free Shipping
+              $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
+              $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
+              if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
+                $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
+              }
+              break;
+            case 'F': // amount Off
               $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
               $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               break;
+            case 'O': // amount off & Free Shipping
+              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
+              $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
+              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+              // add in Free Shipping
+              $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
+              $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
+              if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
+                $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
+              }
+              break;
           }
-          switch ($this->calculate_tax) 
+          switch ($this->calculate_tax)
           {
             case 'None':
               break;
             case 'Standard':
               if ($od_amount['total'] >= $orderTotalDetails['orderTotal']) $ratio = 1;
-              foreach ($orderTotalDetails['orderTaxGroups'] as $key=>$value) 
+              foreach ($orderTotalDetails['orderTaxGroups'] as $key=>$value)
               {
                 $od_amount['tax_groups'][$key] = zen_round($orderTotalDetails['orderTaxGroups'][$key] * $ratio, $currencyDecimalPlaces);
                 $od_amount['tax'] += $od_amount['tax_groups'][$key];
                 if ($od_amount['tax_groups'][$key] == 0) unset($od_amount['tax_groups'][$key]);
               }
-              if (DISPLAY_PRICE_WITH_TAX == 'true' && $coupon->fields['coupon_type'] == 'F') $od_amount['total'] = $od_amount['total'] + $od_amount['tax']; 
+              if (DISPLAY_PRICE_WITH_TAX == 'true' && $coupon->fields['coupon_type'] == 'F') $od_amount['total'] = $od_amount['total'] + $od_amount['tax'];
               break;
             case 'Credit Note':
               $tax_rate = zen_get_tax_rate($this->tax_class);
@@ -444,7 +512,7 @@ class ot_coupon {
         }
       }
     }
-    
+
 //    print_r($order->info);
 //    print_r($orderTotalDetails);echo "<br><br>";
 //    echo 'RATIo = '. $ratio;
@@ -477,17 +545,27 @@ class ot_coupon {
     if ($this->include_shipping != 'true')
     {
       $orderTotal -= $order->info['shipping_cost'];
-      if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') 
+      if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '')
       {
-         $orderTaxGroups[$_SESSION['shipping_tax_description']] -= $order->info['shipping_tax']; 
-         $orderTotalTax -= $order->info['shipping_tax']; 
+         $orderTaxGroups[$_SESSION['shipping_tax_description']] -= $order->info['shipping_tax'];
+         $orderTotalTax -= $order->info['shipping_tax'];
       }
     }
     if (DISPLAY_PRICE_WITH_TAX != 'true')
     {
       $orderTotal -= $order->info['tax'];
     }
-    return array('orderTotal'=>$orderTotal, 'orderTaxGroups'=>$orderTaxGroups, 'orderTax'=>$orderTotalTax, 'shipping'=>$order->info['shipping_cost'], 'shippingTax'=>$order->info['shipping_tax']);
+
+    // change what total is used for Discount Coupon Minimum
+    $orderTotalFull = $order->info['total'];
+    //echo 'Current $orderTotalFull: ' . $orderTotalFull . ' shipping_cost: ' . $order->info['shipping_cost'] . '<br>';
+    $orderTotalFull -= $order->info['shipping_cost'];
+    //echo 'Current $orderTotalFull less shipping: ' . $orderTotalFull . '<br>';
+    $orderTotalFull -= $orderTotalTax;
+    //echo 'Current $orderTotalFull less taxes: ' . $orderTotalFull . '<br>';
+    // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) - to include both in array
+    // add total order amount ($orderTotalFull) to array for $order_total['totalFull'] vs $order_total['orderTotal']
+    return array('totalFull'=>$orderTotalFull,'orderTotal'=>$orderTotal, 'orderTaxGroups'=>$orderTaxGroups, 'orderTax'=>$orderTotalTax, 'shipping'=>$order->info['shipping_cost'], 'shippingTax'=>$order->info['shipping_tax']);
   }
   /**
    * Enter description here...
