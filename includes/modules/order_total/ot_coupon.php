@@ -187,9 +187,9 @@ class ot_coupon {
         $order_total = $this->get_order_total($coupon_result->fields['coupon_id']);
 
         // display all error messages at once
-				$error_issues = 0;
-				$dc_link_count = 0;
-				$dc_link = ' <a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_result->fields['coupon_id']) . '\')">' . $dc_check . '</a>';
+        $error_issues = 0;
+        $dc_link_count = 0;
+        $dc_link = ' <a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_result->fields['coupon_id']) . '\')">' . $dc_check . '</a>';
         $orderTotalDetails = $this->get_order_total($_SESSION['cc_id']);
         if ($coupon_result->fields['coupon_total'] == 0) {
           $coupon_total = $orderTotalDetails['orderTotal'];
@@ -202,9 +202,9 @@ class ot_coupon {
 //        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order']) {
 //        if (strval($order_total['orderTotal']) > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
         if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order']) {
-					// $order_total['orderTotal'] . ' vs ' . $order_total['totalFull']
+          // $order_total['orderTotal'] . ' vs ' . $order_total['totalFull']
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_REDEEM_COUPON_MINIMUM, $currencies->format($coupon_result->fields['coupon_minimum_order'])) . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
-					$error_issues ++;
+          $error_issues ++;
           $dc_link_count ++;
 
 //          $this->clear_posts();
@@ -231,10 +231,10 @@ class ot_coupon {
 
 //        if (!$foundvalid) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'credit_class_error_code=' . $this->code . '&credit_class_error=' . urlencode(TEXT_INVALID_COUPON_PRODUCT . ' ' . $dc_check), 'SSL',true, false));
         if (!$foundvalid) {
-					$messageStack->add_session('redemptions', TEXT_INVALID_COUPON_PRODUCT . ' ' . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
-					$error_issues ++;
+          $messageStack->add_session('redemptions', TEXT_INVALID_COUPON_PRODUCT . ' ' . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
+          $error_issues ++;
           $dc_link_count ++;
-				}
+        }
 
         // JTD - end of additions of missing code to handle coupon product restrictions
 
@@ -244,8 +244,8 @@ class ot_coupon {
 
         if ($date_query->RecordCount() < 1 ) {
           $messageStack->add_session('redemptions', TEXT_INVALID_STARTDATE_COUPON . ' ' . ($dc_link_count ==0 ? $dc_link : ''),'caution');
-					$error_issues ++;
-					$dc_link_count ++;
+          $error_issues ++;
+          $dc_link_count ++;
 //          $this->clear_posts();
 //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
@@ -256,7 +256,7 @@ class ot_coupon {
 
         if ($date_query->RecordCount() < 1 ) {
           $messageStack->add_session('redemptions', TEXT_INVALID_FINISHDATE_COUPON . ' ' . ($dc_link_count ==0 ? $dc_link : ''),'caution');
-					$error_issues ++;
+          $error_issues ++;
           $dc_link_count ++;
 //          $this->clear_posts();
 //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
@@ -271,16 +271,16 @@ class ot_coupon {
 
         if ($coupon_count->RecordCount() >= $coupon_result->fields['uses_per_coupon'] && $coupon_result->fields['uses_per_coupon'] > 0) {
           $messageStack->add_session('redemptions', TEXT_INVALID_USES_COUPON . $coupon_result->fields['uses_per_coupon'] . TIMES . ' ' . ($dc_link_count ==0 ? $dc_link : '') ,'caution');
-					$error_issues ++;
-					$dc_link_count ++;
+          $error_issues ++;
+          $dc_link_count ++;
 //          $this->clear_posts();
 //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
 
         if ($coupon_count_customer->RecordCount() >= $coupon_result->fields['uses_per_user'] && $coupon_result->fields['uses_per_user'] > 0) {
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_USES_USER_COUPON, $dc_check) . $coupon_result->fields['uses_per_user'] . ($coupon_result->fields['uses_per_user'] == 1 ? TIME : TIMES) . ' ' . ($dc_link_count ==0 ? $dc_link : '') ,'caution');
-					$error_issues ++;
-					$dc_link_count ++;
+          $error_issues ++;
+          $dc_link_count ++;
 //          $this->clear_posts();
 //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
@@ -381,16 +381,14 @@ class ot_coupon {
           }
           // display all error messages
           if ($error_issues > 0 || !$foundvalid) {
-	          $this->clear_posts();
- 	          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+            $this->clear_posts();
+            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
           }
 
           // remove if fails address validation
           if ($foundvalid) {
           //      if ($_POST['submit_redeem_coupon_x'] && !$_POST['gv_redeem_code']) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'credit_class_error_code=' . $this->code . '&credit_class_error=' . urlencode(TEST_NO_REDEEM_CODE), 'SSL', true, false));
             $messageStack->add('checkout', TEXT_VALID_COUPON,'success');
-          } else {
-            $messageStack->add('checkout', TEXT_VALID_COUPON . ' - BROKEN','success');
           }
         }
       } else {

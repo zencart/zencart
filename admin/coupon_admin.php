@@ -365,7 +365,7 @@
                                 'date_created' => 'now()',
                                 'date_modified' => 'now()',
                                 'coupon_zone_restriction' => $_POST['coupon_zone_restriction'],
-                                'coupon_total' => $_POST['coupon_total']);
+                                'coupon_total' => (int)$_POST['coupon_total']);
         $languages = zen_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];

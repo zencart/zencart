@@ -3,7 +3,7 @@
  * discount coupon info
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 19517 2011-09-14 21:28:12Z wilt $
@@ -65,7 +65,7 @@
         }
         $get_result->MoveNext();
       }
-echo 'CAT SIZE: ' . sizeof($cats) . ' - ' . ' $restrict: ' . $restrict . '<br>';
+//echo 'CAT SIZE: ' . sizeof($cats) . ' - ' . ' $restrict: ' . $restrict . '<br>';
 
       if ($skip_cat_restriction == false || sizeof($cats) == 0) $cats[] = array("link" => TEXT_NO_CAT_RESTRICTIONS);
 
