@@ -72,17 +72,18 @@ define('TEXT_UPDATE', 'Update');
 define('TEXT_CONFIRM_REMOVE', 'Are you sure you want to remove this widget from the dashboard?');
 define('TEXT_WIDGET_UPDATE_HEADER', 'Widget Settings have been updated');
 
-define ('TEXT_TIMER_SELECT_NONE', 'No Refresh');
-define ('TEXT_TIMER_SELECT_1MIN', 'Refresh every Minute');
-define ('TEXT_TIMER_SELECT_5MIN', 'Refresh every 5 Minutes');
-define ('TEXT_TIMER_SELECT_10MIN', 'Refresh every 10 Minutes');
-define ('TEXT_TIMER_SELECT_15MIN', 'Refresh every 15 Minutes');
+define('TEXT_TIMER_SELECT_NONE', 'No Refresh');
+define('TEXT_TIMER_SELECT_1MIN', 'Refresh every Minute');
+define('TEXT_TIMER_SELECT_5MIN', 'Refresh every 5 Minutes');
+define('TEXT_TIMER_SELECT_10MIN', 'Refresh every 10 Minutes');
+define('TEXT_TIMER_SELECT_15MIN', 'Refresh every 15 Minutes');
 
-define ('TEXT_NO_WIDGETS_TO_INSTALL', 'There are currently no widgets available to install.');
+define('TEXT_NO_WIDGETS_TO_INSTALL', 'There are currently no widgets available to install.');
 define('TEXT_FORM_ERROR_CHOOSE_ZONE', 'Please choose a Zone');
-define('TEXT_WARNING_SUPERUSER_REQUIRED', 'Only a Superuser can complete the initial setup. You will not be able to use your Admin until this is done.');
-define('TEXT_HEADING_SETUP_WIZARD', 'Initial Setup Wizard');
 
+// Setup Wizard
+define('TEXT_HEADING_SETUP_WIZARD', 'Initial Setup Wizard');
+define('TEXT_WARNING_SUPERUSER_REQUIRED', 'Only a Superuser can complete the initial setup. You will not be able to use your Admin until this is done.');
 define('TEXT_FORM_LEGEND_REQUIRED_SETUP', 'Required Setup Information');
 define('TEXT_FORM_LABEL_STORE_NAME', 'Store Name');
 define('TEXT_FORM_LABEL_STORE_OWNER', 'Store Owner');
@@ -90,3 +91,6 @@ define('TEXT_FORM_LABEL_STORE_OWNER_EMAIL', 'Store Owner Email');
 define('TEXT_FORM_LABEL_STORE_COUNTRY', 'Store Country');
 define('TEXT_FORM_LABEL_STORE_ZONE', 'Store Zone');
 define('TEXT_FORM_LABEL_STORE_ADDRESS', 'Store Address');
+define('TEXT_EXAMPLE_STORENAME', 'Enter your Store Name here');
+define('TEXT_EXAMPLE_STOREOWNER', 'Store Owner Name - displayed in emails, personalizes the customer experience');
+define('TEXT_EXAMPLE_STOREADDRESS', 'Enter the Mailing Address of your store - displayed on Contact-Us page, and in Invoices/Packing Slips');

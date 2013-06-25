@@ -105,8 +105,8 @@ if ($hasDoneStartWizard == FALSE) {
   $storeOwnerEmail = isset($_POST['store_owner_email']) ? $_POST['store_owner_email'] : ((STORE_OWNER_EMAIL_ADDRESS != '') ? STORE_OWNER_EMAIL_ADDRESS : '');
   $storeCountry = isset($_POST['store_country']) ? $_POST['store_country'] : ((STORE_COUNTRY != '') ? STORE_COUNTRY : '');
   $storeZone = isset($_POST['store_zone']) ? $_POST['store_zone'] : ((STORE_ZONE != -1) ? STORE_ZONE : -1);
-  $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries(), $storeCountry, 'id="store_country"');
-  $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone"');
+  $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries(), $storeCountry, 'id="store_country" tabindex="4"');
+  $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone" tabindex="5"');
 
 //  $sql = "select zone_id, zone_name from " . TABLE_ZONES . "";  // order by zone_country_id, zone_name
 //  $zone = $db->Execute($sql);
@@ -128,7 +128,7 @@ if ($hasDoneStartWizard == FALSE) {
   <label class="inline" for="store_name"><?php echo TEXT_FORM_LABEL_STORE_NAME; ?></label>
   </div>
   <div class="six columns end">
-  <input type="text" id="store_name" name="store_name" value="<?php echo zen_output_string_protected($storeName); ?>" autofocus="autofocus">
+  <input type="text" id="store_name" name="store_name" value="<?php echo zen_output_string_protected($storeName); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STORENAME; ?>">
   </div>
    </div>
 
@@ -137,7 +137,7 @@ if ($hasDoneStartWizard == FALSE) {
    <label class="inline" for="store_owner"><?php echo TEXT_FORM_LABEL_STORE_OWNER; ?></label>
    </div>
   <div class="six columns end">
-   <input type="text" id="store_owner" name="store_owner" value="<?php echo zen_output_string_protected($storeOwner); ?>">
+   <input type="text" id="store_owner" name="store_owner" value="<?php echo zen_output_string_protected($storeOwner); ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
    </div>
    </div>
 
@@ -146,7 +146,7 @@ if ($hasDoneStartWizard == FALSE) {
    <label class="inline" for="store_owner_email"><?php echo TEXT_FORM_LABEL_STORE_OWNER_EMAIL; ?></label>
    </div>
   <div class="six columns end">
-   <input type="text" id="store_owner_email" name="store_owner_email" value="<?php echo zen_output_string_protected($storeOwnerEmail); ?>">
+   <input type="text" id="store_owner_email" name="store_owner_email" value="<?php echo zen_output_string_protected($storeOwnerEmail); ?>" tabindex="3" placeholder="webmaster@example.com">
    </div>
    </div>
 
@@ -173,7 +173,7 @@ if ($hasDoneStartWizard == FALSE) {
    <label class="inline" for="store_address"><?php echo TEXT_FORM_LABEL_STORE_ADDRESS; ?></label>
    </div>
   <div class="six columns end">
-   <textarea rows="" cols=""  id="store_address" name="store_address"></textarea>
+   <textarea rows="" cols=""  id="store_address" name="store_address" tabindex="6" placeholder="<?php echo TEXT_EXAMPLE_STOREADDRESS; ?>"></textarea>
    </div>
    </div>
 
@@ -192,7 +192,7 @@ if ($hasDoneStartWizard == FALSE) {
          rules: {
            store_name: "required",
            store_owner: "required",
-           store_owner_email: "required",
+           store_owner_email: "required email",
            store_zone: {
               required: true,
               min: 0
