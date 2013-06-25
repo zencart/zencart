@@ -177,7 +177,7 @@ if ($hasDoneStartWizard == FALSE) {
    </div>
    </div>
 
-   <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_SUBMIT; ?>">
+   <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_SUBMIT; ?>" tabindex="10">
    </fieldset>
    </form>
 <script>
