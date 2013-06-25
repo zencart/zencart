@@ -123,8 +123,8 @@ define('TEXT_NAVBAR_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_NAVBAR_COMPLETION', 'Finished');
 define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
 
-define('TEXT_ERROR_STORE_CONFIGURE', "Store configure.php does not exist (isn't readable) and/or is not writeable");
-define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin configure.php does not exist (isn't readable) or is not writeable");
+define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not exist (isn't readable) or is not writeable");
+define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', 'Incorrect PHP Version');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
