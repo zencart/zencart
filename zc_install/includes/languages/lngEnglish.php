@@ -4,7 +4,7 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:
+ * @version GIT: $Id: $
  */
 /**
  * defining language components for the page
@@ -124,13 +124,18 @@ define('TEXT_NAVBAR_COMPLETION', 'Finished');
 define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
 
 define('TEXT_ERROR_STORE_CONFIGURE', "Store configure.php does not exist (isn't readable) and/or is not writeable");
-define('TEXT_ERROR_ADMIN_CONFIGURE', 'Admin configure.php does not exist or is not writeable');
+define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', 'Incorrect PHP Version');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
-define('TEXT_ERROR_MYSQL_SUPPPORT', 'Problems with your mysql support');
+define('TEXT_ERROR_MYSQL_SUPPPORT', 'Problems with your MySQL (mysqli) support');
 define('TEXT_ERROR_LOG_FOLDER', '/logs/ folder is not writeable');
 define('TEXT_ERROR_CACHE_FOLDER', '/cache/ folder is not writeable');
+define('TEXT_ERROR_IMAGES_FOLDER', '/images/ folder is not writeable');
+define('TEXT_ERROR_DEFINEPAGES_FOLDER', '/includes/languages/english/html_includes/ folder is not writeable');
+define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
+define('TEXT_ERROR_PUB_FOLDER', '/pub/ folder is not writeable');
+
 define('TEXT_ERROR_HTACCESS_SUPPPORT', 'Problems with .htaccess support');
 define('TEXT_ERROR_SESSION_SUPPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
@@ -143,7 +148,7 @@ define('TEXT_ERROR_REGISTER_GLOBALS', 'Register Globals enabled');
 define('TEXT_ERROR_GD', 'GD Extension not enabled');
 define('TEXT_ERROR_ZLIB', 'Zlib Extension not enabled');
 define('TEXT_ERROR_OPENSSL', 'Openssl Extension not enabled');
-define('TEXT_ERROR_CURL', 'Problems with the Curl extension');
+define('TEXT_ERROR_CURL', 'Problems with the CURL extension');
 define('TEXT_ERROR_UPLOADS', 'Upload Extension not enabled');
 define('TEXT_ERROR_XML', 'XML Extension not enabled');
 define('TEXT_ERROR_GZIP', 'Gzip Extension not enabled');

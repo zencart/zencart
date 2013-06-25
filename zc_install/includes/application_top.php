@@ -21,6 +21,7 @@ if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php'))
 /**
  * set the level of error reporting
  */
+if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_ROOT . 'logs');
 error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);
@@ -28,7 +29,7 @@ $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_
 @ini_set('error_log', $debug_logfile_path);
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
 {
-  @ini_set('display_errors', 1);
+  @ini_set('display_errors', 1);  // to screen
 } else
 {
   @ini_set('display_errors', 0);

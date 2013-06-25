@@ -76,6 +76,42 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_ROOT . 'cache' . PHP_EOL; ?>
+  imagesFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_IMAGES_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'images' . PHP_EOL; ?>
+  htmlIncludesFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_DEFINEPAGES_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'includes/languages/english/html_includes' . PHP_EOL; ?>
+  mediaFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_MEDIA_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'media' . PHP_EOL; ?>
+  pubFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_PUB_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'pub' . PHP_EOL; ?>
   htaccessSupport:
     runLevel: always
     errorLevel: WARN

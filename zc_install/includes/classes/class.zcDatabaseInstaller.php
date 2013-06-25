@@ -77,9 +77,10 @@ class zcDatabaseInstaller
   {
     $this->extendedOptions = (isset($options)) ? $options : array();
     $lines = file($fileName);
+    if (FALSE === $lines) {logDetails('COULD NOT OPEN FILE: ' . $fileName, $fileName); die('HERE_BE_MONSTERS - could not open file');}
     $this->fileName = $fileName;
     $this->upgradeExceptions = array();
-    if (!isset($lines) || !is_array($lines)) die('HERE_BE_MONSTERS');
+    if (!isset($lines) || !is_array($lines)) {logDetails('HERE BE MONSTERS', $fileName); die('HERE_BE_MONSTERS');}
     $this->doJSONProgressLoggingStart(count($lines));
     $this->keepTogetherCount = 0;
     $this->newLine = "";
@@ -88,6 +89,7 @@ class zcDatabaseInstaller
       $this->jsonProgressLoggingCount++;
       $this->processline($line);
     }
+//if (count($lines) < 200) sleep(5);
     $this->doJsonProgressLoggingEnd();
     if (count($this->upgradeExceptions) > 0)
     {
@@ -136,8 +138,8 @@ class zcDatabaseInstaller
         $this->keepTogetherLines = 1;
       }
     }
-
   }
+
   private function parseLineContent()
   {
     $this->lineSplit = explode(" ",(substr($this->line,-1)==';') ? substr($this->line,0,strlen($this->line)-1) : $this->line);
@@ -161,6 +163,7 @@ class zcDatabaseInstaller
   {
 //    echo $sql;
 //    $this->writeUpgradeExceptions($this->line, '', $this->sqlFile);
+//    logDetails($sql, $this->sqlFile);
     $result = $this->db->execute($sql);
     if (!$result)
     {
