@@ -184,13 +184,13 @@ class ot_coupon {
           $this->clear_posts();
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
         }
-        $order_total = $this->get_order_total($coupon_result->fields['coupon_id']);
+        //$order_total = $this->get_order_total($coupon_result->fields['coupon_id']);
 
         // display all error messages at once
         $error_issues = 0;
         $dc_link_count = 0;
         $dc_link = ' <a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_result->fields['coupon_id']) . '\')">' . $dc_check . '</a>';
-        $orderTotalDetails = $this->get_order_total($_SESSION['cc_id']);
+        $orderTotalDetails = $this->get_order_total($coupon_result->fields['coupon_id']);
         if ($coupon_result->fields['coupon_total'] == 0) {
           $coupon_total = $orderTotalDetails['orderTotal'];
         } else {
