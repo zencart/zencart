@@ -13,19 +13,12 @@
  *  'screen': display-to-screen and also to the /logs/ folder  (synonyms: TRUE or 'TRUE' or 1)
  *  'file':   log-to-file-only   (synonyms: anything other than above options)
  */
-  $mode = 'file';
-  if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE'))) $mode = 'screen';
-  define('VERBOSE_SYSTEMCHECKER', $mode);
+  $debug_logging = 'file';
 
 /*
  * Ensure that the include_path can handle relative paths, before we try to load any files
  */
   if (!strstr(ini_get('include_path'), '.')) ini_set('include_path', '.' . PATH_SEPARATOR . ini_get('include_path'));
-
-/*
- * Bypass PHP file caching systems if active, since it interferes with files changed by zc_install
- */
-//@TODO
 
 /*
  * Initialize system core components

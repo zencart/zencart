@@ -19,6 +19,13 @@ if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php'))
   require (DIR_FS_INSTALL . 'includes/localConfig.php');
 
 /**
+ * set the level of system-inspection logging -- can by overridden by adding ?v={mode} to command line, for non-ajax steps, or generically set in localConfig.php
+ */
+if (!isset($debug_logging)) $debug_logging = 'file';
+if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE'))) $debug_logging = 'screen';
+define('VERBOSE_SYSTEMCHECKER', $debug_logging);
+
+/**
  * set the level of error reporting
  */
 if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_ROOT . 'logs');
@@ -39,7 +46,7 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
  */
 if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
-  die('ERROR: date.timezone not set in php.ini. Please contact your hosting company to set the timezone in the server PHP configuration before continuing.');
+  die('ERROR: date.timezone is not set in php.ini. Please contact your hosting company to set the timezone in the server PHP configuration before continuing.');
 } elseif (PHP_VERSION >= '5.1')
 {
   @date_default_timezone_set(date_default_timezone_get());
@@ -60,6 +67,18 @@ if (version_compare(PHP_VERSION, 5.4, '<'))
   if ((int)$val != 0)
     @ini_set('magic_quotes_sybase', 0);
   unset($val);
+}
+
+/*
+ * Bypass PHP file caching systems if active, since it interferes with files changed by zc_install (such as progress.json and configure.php)
+ */
+//APC
+if (function_exists('apc_clear_cache')) @apc_clear_cache();
+//XCACHE
+if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+//EA
+if (@ini_get('eaccelerator.enable') == 1) {
+  @ini_set('eaccelerator.enable', 0);
 }
 
 // define the project version
