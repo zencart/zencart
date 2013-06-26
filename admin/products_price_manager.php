@@ -896,7 +896,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 
   $display_priced_by_attributes = zen_get_products_price_is_priced_by_attributes($_GET['products_filter']);
   $display_price = zen_get_products_base_price($_GET['products_filter']);
-  $display_specials_price = zen_get_products_special_price($_GET['products_filter'], true);
+  $display_specials_price = zen_get_products_special_price($_GET['products_filter'], false);
 //  $display_sale_price = zen_get_products_special_price($_GET['products_filter'], false);
 
     for ($i=0, $n=sizeof($discount_name); $i<$n; $i++) {

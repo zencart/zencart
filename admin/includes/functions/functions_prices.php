@@ -1139,7 +1139,7 @@ If a special exist * 10+9
       $products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id='" . (int)$product_id . "' and discount_qty <='" . zen_db_input($check_qty) . "' order by discount_qty desc");
 
       $display_price = zen_get_products_base_price($product_id);
-      $display_specials_price = zen_get_products_special_price($product_id, true);
+      $display_specials_price = zen_get_products_special_price($product_id, false);
 
       switch ($products_query->fields['products_discount_type']) {
         // none
