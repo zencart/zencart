@@ -84,7 +84,7 @@ switch (true) {
 // $currencies->display_price($discounted_price, zen_get_tax_rate(1), 1)
 
 $display_price = zen_get_products_base_price($products_id_current);
-$display_specials_price = zen_get_products_special_price($products_id_current, true);
+$display_specials_price = zen_get_products_special_price($products_id_current, false);
 $disc_cnt = 1;
 $quantityDiscounts = array();
 $columnCount = 0;
