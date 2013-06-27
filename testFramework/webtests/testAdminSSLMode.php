@@ -17,12 +17,12 @@ class testAdminSSLMode extends zcCommonTestResources
 {
   function testRemoveGroupDiscountsAdmin()
   {
-    $this->open('http://' . BASE_URL . 'admin/');
+    $this->open('http://' . DIR_WS_ADMIN);
     $this->waitForPageToLoad(10000);
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
     $this->clickAndWait("submit");
-    $this->open('http://' . BASE_URL . 'admin/customers.php?page=1&cID=2&action=edit');
+    $this->open('http://' . DIR_WS_ADMIN . 'customers.php?page=1&cID=2&action=edit');
     $this->waitForPageToLoad(10000);
     $this->select('customers_group_pricing', 'value=0');
     $this->click("//input[@type='image']");
@@ -32,7 +32,7 @@ class testAdminSSLMode extends zcCommonTestResources
   {
     $this->createAdminSSLOverride();
     $this->createCatalogSSLOverride();
-    $this->open('https://' . BASE_URL . 'admin/');
+    $this->open('https://' . DIR_WS_ADMIN);
     $this->waitForPageToLoad(10000);
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);

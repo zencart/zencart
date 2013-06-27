@@ -15,7 +15,7 @@ class testCreateCoupons extends zcCommonTestResources
 {
   function testCreateCouponsDo()
   {
-    $this->open('http://' . BASE_URL . 'admin/');
+    $this->open('http://' . DIR_WS_ADMIN);
     $this->waitForPageToLoad(10000);
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
@@ -42,7 +42,7 @@ class testCreateCoupons extends zcCommonTestResources
     $this->clickAndWait("//input[@type='image']");
     $this->assertTextPresent('glob:*Discount Coupons*');
     $this->assertTextPresent('glob:*test10percentrestricted*');
-    $this->open('http://' . BASE_URL . 'admin/coupon_restrict.php?cid=2&page=1');
+    $this->open('http://' . DIR_WS_ADMIN . 'coupon_restrict.php?cid=2&page=1');
     $this->waitForPageToLoad(10000);
     $this->selectAndWait('cPath_prod', 'value=9');
     $this->select('products_drop', 'value=3');
@@ -60,8 +60,10 @@ class testCreateCoupons extends zcCommonTestResources
     $this->clickAndWait("//input[@type='image']");
     $this->assertTextPresent('glob:*Discount Coupons*');
     $this->assertTextPresent('glob:*test10percentrestrictedminimum*');
-    $this->open('http://' . BASE_URL . 'admin/coupon_restrict.php?cid=3&page=1');
+    $this->open('http://' . DIR_WS_ADMIN . 'coupon_restrict.php?cid=3&page=1');
     $this->waitForPageToLoad(10000);
+    $this->select('restrict_status', 'value=Deny');
+    $this->clickAndWait("//input[@name='add' and @value='Add']");
     $this->selectAndWait('cPath_prod', 'value=9');
     $this->select('products_drop', 'value=3');
     $this->select('document.forms[2].elements[2]', 'value=Allow');

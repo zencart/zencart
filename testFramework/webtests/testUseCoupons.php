@@ -27,7 +27,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test10percent');
@@ -47,7 +47,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test100percent');
@@ -62,47 +62,47 @@ class testUseCoupons extends zcCommonTestResources
     $this->waitForPageToLoad(30000);
     
     
-    $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=27&action=buy_now');
-    $this->waitForPageToLoad(10000);
-    $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
-    $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
-    $this->submit('checkout_address');
-    $this->waitForPageToLoad(10000);
-    $this->type('dc_redeem_code', 'test10fixed');
-    $this->click('pmt-moneyorder');
-    $this->submit('checkout_payment');
-    $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*499.99*'); //net price
-    $this->assertTextPresent('glob:*-$10.00*'); //coupon discount
-    $this->assertTextPresent('glob:*$34.30*'); //tax
-    $this->assertTextPresent('glob:*724.29*'); //total
-    $this->clickAndWait('btn_submit');
-    $this->waitForPageToLoad(30000);
+   $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=27&action=buy_now');
+   $this->waitForPageToLoad(10000);
+   $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
+   $this->waitForPageToLoad(10000);
+   $this->click("ship-storepickup-storepickup0");
+   $this->submit('checkout_address');
+   $this->waitForPageToLoad(10000);
+   $this->type('dc_redeem_code', 'test10fixed');
+   $this->click('pmt-moneyorder');
+   $this->submit('checkout_payment');
+   $this->waitForPageToLoad(10000);
+   $this->assertTextPresent('glob:*Confirmation*');
+   $this->assertTextPresent('glob:*499.99*'); //net price
+   $this->assertTextPresent('glob:*-$10.00*'); //coupon discount
+   $this->assertTextPresent('glob:*$34.30*'); //tax
+   $this->assertTextPresent('glob:*724.29*'); //total
+   $this->clickAndWait('btn_submit');
+   $this->waitForPageToLoad(30000);
     
     
-    $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-    $this->waitForPageToLoad(10000);
-    $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-    $this->waitForPageToLoad(10000);
-    $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=27&action=buy_now');
-    $this->waitForPageToLoad(10000);
-    $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
-    $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
-    $this->submit('checkout_address');
-    $this->waitForPageToLoad(10000);
-    $this->type('dc_redeem_code', 'test10percentrestricted');
-    $this->click('pmt-moneyorder');
-    $this->submit('checkout_payment');
-    $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*579.97*'); //net price
-    $this->assertTextPresent('glob:*-$8.00*'); //coupon discount
-    $this->assertTextPresent('glob:*40.04*'); //tax
-    $this->assertTextPresent('glob:*812.01*'); //total
-    $this->clickAndWait('btn_submit');
+   $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
+   $this->waitForPageToLoad(10000);
+   $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
+   $this->waitForPageToLoad(10000);
+   $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=27&action=buy_now');
+   $this->waitForPageToLoad(10000);
+   $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
+   $this->waitForPageToLoad(10000);
+   $this->click("ship-storepickup-storepickup0");
+   $this->submit('checkout_address');
+   $this->waitForPageToLoad(10000);
+   $this->type('dc_redeem_code', 'test10percentrestricted');
+   $this->click('pmt-moneyorder');
+   $this->submit('checkout_payment');
+   $this->waitForPageToLoad(10000);
+   $this->assertTextPresent('glob:*Confirmation*');
+   $this->assertTextPresent('glob:*579.97*'); //net price
+   $this->assertTextPresent('glob:*-$8.00*'); //coupon discount
+   $this->assertTextPresent('glob:*40.04*'); //tax
+   $this->assertTextPresent('glob:*812.01*'); //total
+   $this->clickAndWait('btn_submit');
   }
 
   
@@ -119,7 +119,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test10percent');
@@ -137,7 +137,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test100percent');
@@ -154,7 +154,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test10fixed');
@@ -176,7 +176,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test10percentrestricted');
@@ -281,7 +281,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
-    $this->assertTextPresent('You must spend at least*');
+    $this->assertTextPresent('You must spend *');
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=3_10&products_id=3&action=buy_now');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
@@ -361,7 +361,7 @@ class testUseCoupons extends zcCommonTestResources
     $this->assertTextPresent('glob:*631.34*'); //total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
-  }
+   }
   function testFreeShippingCoupon()
   {
     $this->switchItemShippingTax('off');
@@ -409,8 +409,8 @@ class testUseCoupons extends zcCommonTestResources
     $this->assertTextPresent('glob:*499.99*'); //net price
     $this->assertTextPresent('glob:*100.00*'); //shipping
     $this->assertTextPresent('glob:*-$100.00*'); //coupon discount
-    $this->assertTextPresent('glob:*35.00'); //tax
-    $this->assertTextPresent('glob:*534.99*'); //total
+    $this->assertTextPresent('glob:*$35.00'); //tax
+    $this->assertTextPresent('glob:*$534.99*'); //total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
   }

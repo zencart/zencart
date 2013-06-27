@@ -1,14 +1,17 @@
 <?php
 define('SERVER_NAME', 'localhost');
 define('BASE_URL', 'localhost');
-define('DB_PREFIX', '');
 define('DB_HOST', 'localhost');
 define('DB_USER', 'dbuser');
 define('DB_PASS', 'password');
 define('DB_DBNAME', 'zencart');
-define('DIR_FS_ADMIN', '~/public_html/v15/admin/');
-define('DIR_FS_CATALOG', '~/public_html/v15/');
+define('DB_PREFIX', '');
 define('SELENIUM_BROWSER', '*chrome /Applications/Firefox3.app/Contents/MacOS/firefox-bin');
+define('DIR_FS_ROOT', '~/public_html/v15/');
+define('DIR_ADMIN', 'admin');
+define('DIR_WS_ADMIN', BASE_URL . DIR_ADMIN . '/');
+define('DIR_FS_ADMIN', DIR_FS_ROOT. DIR_ADMIN . '/');
+define('DIR_FS_CATALOG', DIR_FS_ROOT);
 define('DO_SCREENSHOT', FALSE);
 define('SCREENSHOT_PATH', '/');
 

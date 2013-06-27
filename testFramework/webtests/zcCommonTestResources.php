@@ -160,4 +160,59 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
       $this->captureEntirePageScreenshot(SCREENSHOT_PATH . $imageName);
     }
   }
+  public function resetAdminPassword()
+  {
+    $sql = "update " . DB_PREFIX . "admin set admin_name = '" . WEBTEST_ADMIN_NAME_INSTALL . "', admin_email = '" . WEBTEST_ADMIN_EMAIL . "', admin_pass = '" . zen_encrypt_password(WEBTEST_ADMIN_PASSWORD_INSTALL) . "', reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password(WEBTEST_ADMIN_PASSWORD_INSTALL) . "' where admin_id = 1";
+    $this->doDbQuery($sql);
+  }
+  public function renameAdmin()
+  {    $adminDirectoryList = array();
+
+    $ignoreArray = array('.', '..', 'cache', 'logs', 'installer', 'zc_install', 'includes', 'testFramework', 'editors', 'extras', 'images', 'docs', 'pub', 'email', 'download', 'media');
+    $d = @dir(DIR_FS_ROOT);
+    while (false !== ($entry = $d->read())) {
+      if (is_dir(DIR_FS_ROOT . $entry) && !in_array($entry, $ignoreArray))
+      {
+        if (file_exists(DIR_FS_ROOT . $entry . '/' . 'banner_manager.php'))
+        {
+          $adminDirectoryList[] = DIR_FS_ROOT . $entry;
+        }
+      }
+    }
+    $adminDir = $adminDirectoryList[0];
+    rename ($adminDir, DIR_FS_ADMIN);
+  }
 }
+function zen_encrypt_password($plain)
+{
+  $password = '';
+
+  for ($i = 0; $i < 10; $i++)
+  {
+    $password .= zen_rand();
+  }
+
+  $salt = substr(md5($password), 0, 2);
+
+  $password = md5($salt . $plain) . ':' . $salt;
+
+  return $password;
+}
+  function zen_rand($min = null, $max = null) {
+    static $seeded;
+
+    if (!isset($seeded)) {
+      mt_srand((double)microtime()*1000000);
+      $seeded = true;
+    }
+
+    if (isset($min) && isset($max)) {
+      if ($min >= $max) {
+        return $min;
+      } else {
+        return mt_rand($min, $max);
+      }
+    } else {
+      return mt_rand();
+    }
+  }

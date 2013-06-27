@@ -15,12 +15,12 @@ class testGroupDiscount extends zcCommonTestResources
 {
   function testGroupDiscountsAdmin()
   {
-    $this->open('http://' . BASE_URL . 'admin/');
+    $this->open('http://' . DIR_WS_ADMIN);
     $this->waitForPageToLoad(10000);
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
     $this->clickAndWait("submit");
-    $this->open('http://' . BASE_URL . 'admin/customers.php?page=1&cID=2&action=edit');
+    $this->open('http://' . DIR_WS_ADMIN . 'customers.php?page=1&cID=2&action=edit');
     $this->waitForPageToLoad(10000);
     $this->select('customers_group_pricing', 'value=1');
     $this->click("//input[@type='image']");
@@ -40,28 +40,24 @@ class testGroupDiscount extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*39.99*');
-    //net price
-    $this->assertTextPresent('glob:*-$4.00*');
-    //group discount
-    $this->assertTextPresent('glob:*2.52*');
-    //tax
-    $this->assertTextPresent('glob:*238.51*');
-    //total
+    $this->assertTextPresent('glob:*39.99*'); //net price
+    $this->assertTextPresent('glob:*-$4.00*');//group discount
+    $this->assertTextPresent('glob:*2.52*');//tax
+    $this->assertTextPresent('glob:*38.51*');//total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
 
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test10percent');
@@ -69,16 +65,11 @@ class testGroupDiscount extends zcCommonTestResources
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*39.99*');
-    //net price
-    $this->assertTextPresent('glob:*-$4.00*');
-    //coupon discount
-    $this->assertTextPresent('glob:*-$3.60*');
-    //group discount
-    $this->assertTextPresent('glob:*2.27*');
-    //tax
-    $this->assertTextPresent('glob:*234.66*');
-    //total
+    $this->assertTextPresent('glob:*39.99*');//net price
+    $this->assertTextPresent('glob:*-$4.00*');//coupon discount
+    $this->assertTextPresent('glob:*-$3.60*');//group discount
+    $this->assertTextPresent('glob:*2.27*');//tax
+    $this->assertTextPresent('glob:*34.66*');//total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
 
@@ -88,28 +79,24 @@ class testGroupDiscount extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
     $this->waitForPageToLoad(10000);
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->click('pmt-moneyorder');
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*42.79*');
-    //net price
-    $this->assertTextPresent('glob:*-$4.28*');
-    //group discount
-    $this->assertTextPresent('glob:*2.52*');
-    //tax
-    $this->assertTextPresent('glob:*238.51*');
-    //total
+    $this->assertTextPresent('glob:*42.79*');//net price
+    $this->assertTextPresent('glob:*-$4.28*');//group discount
+    $this->assertTextPresent('glob:*2.52*');//tax
+    $this->assertTextPresent('glob:*38.51*');//total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
 
     $this->open('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
     $this->waitForPageToLoad(10000);
     $this->open('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
-    $this->click("ship-storepickup-storepickup");
+    $this->click("ship-storepickup-storepickup0");
     $this->submit('checkout_address');
     $this->waitForPageToLoad(10000);
     $this->type('dc_redeem_code', 'test10percent');
@@ -117,16 +104,11 @@ class testGroupDiscount extends zcCommonTestResources
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*42.79*');
-    //net price
-    $this->assertTextPresent('glob:*-$4.28*');
-    //coupon discount
-    $this->assertTextPresent('glob:*-$3.85*');
-    //group discount
-    $this->assertTextPresent('glob:*2.27*');
-    //tax
-    $this->assertTextPresent('glob:*234.66*');
-    //total
+    $this->assertTextPresent('glob:*42.79*');//net price
+    $this->assertTextPresent('glob:*-$4.28*');//coupon discount
+    $this->assertTextPresent('glob:*-$3.85*');//group discount
+    $this->assertTextPresent('glob:*2.27*');//tax
+    $this->assertTextPresent('glob:*34.66*');//total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
 
@@ -141,16 +123,11 @@ class testGroupDiscount extends zcCommonTestResources
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*42.79*');
-    //net price
-    $this->assertTextPresent('glob:*$5.95*');
-    //shipping
-    $this->assertTextPresent('glob:*-$4.28*');
-    //group discount
-    $this->assertTextPresent('glob:*3.47*');
-    //tax
-    $this->assertTextPresent('glob:*44.46*');
-    //total
+    $this->assertTextPresent('glob:*42.79*');//net price
+    $this->assertTextPresent('glob:*$5.95*');//shipping
+    $this->assertTextPresent('glob:*-$4.28*');//group discount
+    $this->assertTextPresent('glob:*3.47*');//tax
+    $this->assertTextPresent('glob:*44.46*');//total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
     $this->switchFlatShippingTax('off');
@@ -167,25 +144,16 @@ class testGroupDiscount extends zcCommonTestResources
     $this->submit('checkout_payment');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*Confirmation*');
-    $this->assertTextPresent('glob:*42.79*');
-    //net price
-    $this->assertTextPresent('glob:*$5.95*');
-    //shipping
-    $this->assertTextPresent('glob:*-$4.28*');
-    //group discount
-    $this->assertTextPresent('glob:*2.52*');
-    //tax product
-    $this->assertTextPresent('glob:*0.95*');
-    //tax shipping
-    $this->assertTextPresent('glob:*44.46*');
-    //total
+    $this->assertTextPresent('glob:*42.79*');//net price
+    $this->assertTextPresent('glob:*$5.95*');//shipping
+    $this->assertTextPresent('glob:*-$4.28*');//group discount
+    $this->assertTextPresent('glob:*2.52*');//tax product
+    $this->assertTextPresent('glob:*0.95*');//tax shipping
+    $this->assertTextPresent('glob:*44.46*');//total
     $this->clickAndWait('btn_submit');
     $this->waitForPageToLoad(30000);
     $this->switchFlatShippingTax('off');
     $this->switchSplitTaxMode('off');
-
     $this->switchToTaxNonInclusive();
-
   }
-
 }

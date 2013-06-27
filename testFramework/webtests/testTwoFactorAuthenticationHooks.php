@@ -16,7 +16,7 @@ class testTwoFactorAuthenticationHooks extends zcCommonTestResources
   public function testTwoFactorAuthenticationTrue()
   {
     $this->createTwoFactorAuthenticationOverrideTrue();
-    $this->open('https://' . BASE_URL . 'admin/');
+    $this->open('https://' . DIR_WS_ADMIN);
     $this->waitForPageToLoad(10000);
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_SSL);
@@ -27,7 +27,7 @@ class testTwoFactorAuthenticationHooks extends zcCommonTestResources
   public function testTwoFactorAuthenticationFalse()
   {
     $this->createTwoFactorAuthenticationOverrideFalse();
-    $this->open('https://' . BASE_URL . 'admin/');
+    $this->open('https://' . DIR_WS_ADMIN);
     $this->waitForPageToLoad(10000);
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_SSL);

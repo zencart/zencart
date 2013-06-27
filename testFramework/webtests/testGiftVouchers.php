@@ -50,15 +50,15 @@ class testGiftVouchers extends zcCommonTestResources
   }
   function testAdminReleaseGVQueue()
   {
-    $this->open('http://' . BASE_URL . 'admin/');
+    $this->open('http://' . DIR_WS_ADMIN );
     $this->waitForPageToLoad(10000);
     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
     $this->clickAndWait("submit");
-    $this->open('http://' . BASE_URL . 'admin/gv_queue.php');
+    $this->open('http://' . DIR_WS_ADMIN . 'gv_queue.php');
     $this->waitForPageToLoad(10000);
     $this->assertTextPresent('glob:*10,000.00*');
-    $this->open('http://' . BASE_URL . 'admin/gv_queue.php?action=release&gid=1&page=1');
+    $this->open('http://' . DIR_WS_ADMIN . 'gv_queue.php?action=release&gid=1&page=1');
     $this->waitForPageToLoad(10000);
     $this->clickAndWait('css=input[type=image]');
     $this->assertTextPresent('No Gift Certificate to release*');   
