@@ -493,7 +493,7 @@ function couponpopupWindow(url) {
               </tr>
               <tr>
                 <td class="main"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
-                <td class="main"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'] . '&origin=' . FILENAME_DEFAULT, 'SSL') . '" . >' . TEXT_CUSTOMER_LOOKUP . '</a>'; ?></td>
+                <td class="main"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '" . >' . TEXT_CUSTOMER_LOOKUP . '</a>'; ?></td>
               </tr>
             </table></td>
             <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
