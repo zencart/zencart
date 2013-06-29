@@ -3,7 +3,7 @@
  * ipncheck.php diagnostic tool
  *
  * @package utility
- * @copyright Copyright 2007-2012 Zen Cart Development Team
+ * @copyright Copyright 2007-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Fri Aug 31 11:51:59 2012 +0100 Modified in v1.5.1 $
  *
@@ -192,8 +192,8 @@ echo '<br><br>Script finished.';
                       CURLOPT_HEADER => ($headerMode ? TRUE : FALSE),
                       CURLOPT_FOLLOWLOCATION => FALSE,
                       CURLOPT_RETURNTRANSFER => TRUE,
-                      CURLOPT_SSL_VERIFYPEER => FALSE,
-                      CURLOPT_SSL_VERIFYHOST => 2,
+                      //CURLOPT_SSL_VERIFYPEER => FALSE, // Leave this line commented out! This should never be set to FALSE on a live site!
+                      //CURLOPT_CAINFO => '/local/path/to/cacert.pem', // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
                       CURLOPT_FORBID_REUSE => TRUE,
                       CURLOPT_FRESH_CONNECT => TRUE,
                       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,

@@ -2310,10 +2310,11 @@ class paypaldp extends base {
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_POST,1);
       curl_setopt($ch, CURLOPT_POSTFIELDS, "cmpi_msg=".urlencode($data));
-      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+//   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
+//   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
       curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
 
       // Execute the request.
       $result = curl_exec($ch);
