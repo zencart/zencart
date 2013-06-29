@@ -557,8 +557,8 @@
                       CURLOPT_HEADER => FALSE,
                       CURLOPT_FOLLOWLOCATION => FALSE,
                       CURLOPT_RETURNTRANSFER => TRUE,
-                      CURLOPT_SSL_VERIFYPEER => FALSE,
-                      CURLOPT_SSL_VERIFYHOST => 2,
+                      //CURLOPT_SSL_VERIFYPEER => FALSE, // Leave this line commented out! This should never be set to FALSE on a live site!
+                      //CURLOPT_CAINFO => '/local/path/to/cacert.pem', // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
                       CURLOPT_FORBID_REUSE => TRUE,
                       CURLOPT_FRESH_CONNECT => TRUE,
                       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,

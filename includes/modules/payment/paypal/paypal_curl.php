@@ -52,10 +52,11 @@ class paypal_curl extends base {
    */
   var $_curlOptions = array(CURLOPT_HEADER => 0,
                             CURLOPT_RETURNTRANSFER => TRUE,
-                            CURLOPT_TIMEOUT => 60,
+                            CURLOPT_TIMEOUT => 45,
+                            CURLOPT_CONNECTTIMEOUT => 10,
                             CURLOPT_FOLLOWLOCATION => FALSE,
-                            CURLOPT_SSL_VERIFYPEER => FALSE,
-                            CURLOPT_SSL_VERIFYHOST => 2,
+                          //CURLOPT_SSL_VERIFYPEER => FALSE, // Leave this line commented out! This should never be set to FALSE on a live site!
+                          //CURLOPT_CAINFO => '/local/path/to/cacert.pem', // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
                             CURLOPT_SSLVERSION => 3,
                             CURLOPT_FORBID_REUSE => TRUE,
                             CURLOPT_FRESH_CONNECT => TRUE,
