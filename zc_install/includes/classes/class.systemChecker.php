@@ -454,7 +454,7 @@ class systemChecker
   }
   public function checkLiveCurl($parameters)
   {
-    $url = 'http://' . $parameters['testUrl'];
+    $url = (!preg_match('~^http?s:.*~i', $parameters['testUrl'])) ? 'http://' . $parameters['testUrl'] : $parameters['testUrl'];
     $data = $parameters['testData'];
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -463,7 +463,8 @@ class systemChecker
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 11);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); /* compatibility for SSL communications on some Windows servers (IIS 5.0+) */
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // This is intentionally set to FALSE within zc_install since this test is not about whether certificates are good.
     $result = curl_exec($ch);
     $errtext = curl_error($ch);
     $errnum = curl_errno($ch);
