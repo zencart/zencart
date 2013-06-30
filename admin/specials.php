@@ -135,7 +135,7 @@
         if ($skip_special == false) {
           $sql = "select products_id, products_model from " . TABLE_PRODUCTS . " where products_id='" . (int)$_POST['pre_add_products_id'] . "'";
           $check_special = $db->Execute($sql);
-          if (MODULE_ORDER_TOTAL_GV_SPECIAL == 'false' && ($check_special->RecordCount() < 1 || substr($check_special->fields['products_model'], 0, 4) == 'GIFT')) {
+          if ((!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') && ($check_special->RecordCount() < 1 || substr($check_special->fields['products_model'], 0, 4) == 'GIFT')) {
             $skip_special = true;
             $messageStack->add_session(WARNING_SPECIALS_PRE_ADD_BAD_PRODUCTS_ID, 'caution');
           }
@@ -255,7 +255,7 @@ require('includes/admin_html_head.php');
       }
 
 // never include Gift Vouchers for specials when set to false
-			if (MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') {
+			if (!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') {
         $gift_vouchers = $db->Execute("select distinct p.products_id, p.products_model
                                   from " . TABLE_PRODUCTS . " p, " . TABLE_SPECIALS . " s
                                   where p.products_model rlike '" . "GIFT" . "'");
