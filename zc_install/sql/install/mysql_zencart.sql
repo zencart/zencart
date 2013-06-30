@@ -1116,6 +1116,7 @@ CREATE TABLE orders (
   paypal_ipn_id int(11) NOT NULL default '0',
   ip_address varchar(96) NOT NULL default '',
   COWOA_order tinyint(1) NOT NULL default 0,
+  order_weight float NOT NULL default '0'
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
@@ -1146,6 +1147,10 @@ CREATE TABLE orders_products (
   products_discount_type tinyint(1) NOT NULL default '0',
   products_discount_type_from tinyint(1) NOT NULL default '0',
   products_prid tinytext NOT NULL,
+  products_weight FLOAT NOT NULL DEFAULT '0',
+  products_virtual tinyint(1) NOT NULL default '0',
+  product_is_always_free_shipping tinyint(1) NOT NULL default '0',
+  products_attributes_id int(11) NOT NULL
   PRIMARY KEY  (orders_products_id),
   KEY idx_orders_id_prod_id_zen (orders_id,products_id),
   KEY idx_prod_id_orders_id_zen (products_id,orders_id)

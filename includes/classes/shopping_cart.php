@@ -1159,7 +1159,7 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                                   p.products_price, p.products_weight, p.products_tax_class_id,
                                   p.products_quantity_order_min, p.products_quantity_order_units, p.products_quantity_order_max,
                                   p.product_is_free, p.products_priced_by_attribute,
-                                  p.products_discount_type, p.products_discount_type_from
+                                  p.products_discount_type, p.products_discount_type_from, p.products_virtual, p.product_is_always_free_shipping
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            where p.products_id = '" . (int)$products_id . "'
                            and pd.products_id = p.products_id
@@ -1323,7 +1323,10 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                                   'products_priced_by_attribute' => $products->fields['products_priced_by_attribute'],
                                   'product_is_free' => $products->fields['product_is_free'],
                                   'products_discount_type' => $products->fields['products_discount_type'],
-                                  'products_discount_type_from' => $products->fields['products_discount_type_from']);
+                                  'products_discount_type_from' => $products->fields['products_discount_type_from'],
+                                  'products_virtual' => $products->fields['products_virtual'],
+                                  'product_is_always_free_shipping' => $products->fields['product_is_always_free_shipping']
+                                  );
       }
     }
     $this->notify('NOTIFIER_CART_GET_PRODUCTS_END');

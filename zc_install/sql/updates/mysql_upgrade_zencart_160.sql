@@ -67,6 +67,12 @@ ALTER TABLE admin_pages MODIFY menu_key VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_profiles MODIFY profile_name VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages_to_profiles MODIFY page_key varchar(255) NOT NULL default '';
 ALTER TABLE coupons ADD coupon_total TINYINT(1) NOT NULL DEFAULT '0';
+ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
+
+ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
+ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '0';
+ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) NOT NULL default '0';
+ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL;
 
 ##@TODO
 ## COWOA CHANGES - Although need to allow for a current cowoa installation

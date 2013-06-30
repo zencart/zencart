@@ -56,7 +56,7 @@ class order extends base {
                          billing_state, billing_country, billing_address_format_id,
                          payment_method, payment_module_code, shipping_method, shipping_module_code,
                          coupon_code, cc_type, cc_owner, cc_number, cc_expires, currency, currency_value,
-                         date_purchased, orders_status, last_modified, order_total, order_tax, ip_address ,COWOA_order
+                         date_purchased, orders_status, last_modified, order_total, order_tax, ip_address, COWOA_order, order_weight
                         from " . TABLE_ORDERS . "
                         where orders_id = '" . (int)$order_id . "'";
 
@@ -125,7 +125,8 @@ class order extends base {
                         'last_modified' => $order->fields['last_modified'],
                         'total' => $order->fields['order_total'],
                         'tax' => $order->fields['order_tax'],
-                        'ip_address' => $order->fields['ip_address']
+                        'ip_address' => $order->fields['ip_address'],
+                        'order_weight' => $order->field['order_weight']
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -171,7 +172,8 @@ class order extends base {
                                  products_quantity, final_price,
                                  onetime_charges,
                                  products_priced_by_attribute, product_is_free, products_discount_type,
-                                 products_discount_type_from
+                                 products_discount_type_from,
+                                 products_weight, products_virtual, product_is_always_free_shipping
                                   from " . TABLE_ORDERS_PRODUCTS . "
                                   where orders_id = '" . (int)$order_id . "'
                                   order by orders_products_id";
@@ -211,7 +213,11 @@ class order extends base {
                                       'products_priced_by_attribute' => $orders_products->fields['products_priced_by_attribute'],
                                       'product_is_free' => $orders_products->fields['product_is_free'],
                                       'products_discount_type' => $orders_products->fields['products_discount_type'],
-                                      'products_discount_type_from' => $orders_products->fields['products_discount_type_from']);
+                                      'products_discount_type_from' => $orders_products->fields['products_discount_type_from'],
+                                      'products_weight' => $orders_products->fields['products_weight'],
+                                      'products_virtual' => $orders_products->fields['products_virtual'],
+                                      'product_is_always_free_shipping' => $orders_products->fields['product_is_always_free_shipping']
+                                      );
 
       $subindex = 0;
       $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
@@ -366,7 +372,8 @@ class order extends base {
                         'total' => 0,
                         'tax_groups' => array(),
                         'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
-                        'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR']
+                        'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
+                        'order_weight' => ($shipping_weight * $shipping_num_boxes)
                         );
 
     //print_r($GLOBALS[$class]);
@@ -459,7 +466,11 @@ class order extends base {
                                       'products_discount_type' => $products[$i]['products_discount_type'],
                                       'products_discount_type_from' => $products[$i]['products_discount_type_from'],
                                       'id' => $products[$i]['id'],
-                                      'rowClass' => $rowClass);
+                                      'rowClass' => $rowClass,
+                                      'products_weight' => $products[$i]['weight'],
+                                      'products_virtual' => $products[$i]['products_virtual'],
+                                      'product_is_always_free_shipping' => $products[$i]['product_is_always_free_shipping']
+                                      );
 
       if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
       {
@@ -614,6 +625,8 @@ class order extends base {
       $this->info['shipping_module_code'] = $_SESSION['shipping'];
     }
 
+    $this->info['order_weight'] = $_SESSION['shipping_weight'];
+
     // Sanitize cc-num if present, using maximum 10 chars, with middle chars stripped out with XX
     if (strlen($this->info['cc_number']) > 10) {
       $cEnd = substr($this->info['cc_number'], -4);
@@ -667,7 +680,8 @@ class order extends base {
                             'order_tax' => $this->info['tax'],
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
-                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR']
+                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
+                            'order_weight' => $this->info['order_weight']
                             );
 
     if ($_SESSION['COWOA']) $sql_data_array[COWOA_order] = 1;
@@ -792,7 +806,10 @@ class order extends base {
                               'product_is_free' => $this->products[$i]['product_is_free'],
                               'products_discount_type' => $this->products[$i]['products_discount_type'],
                               'products_discount_type_from' => $this->products[$i]['products_discount_type_from'],
-                              'products_prid' => $this->products[$i]['id']);
+                              'products_prid' => $this->products[$i]['id'],
+                              'products_weight' => $this->products[$i]['weight'],
+                              'products_virtual' => $this->products[$i]['products_virtual'],
+                              'product_is_always_free_shipping' => $this->products[$i]['product_is_always_free_shipping']);
       zen_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
       $order_products_id = $db->Insert_ID();
@@ -878,8 +895,9 @@ class order extends base {
                                   'products_prid' => $this->products[$i]['id']
                                   );
 
-
           zen_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
+
+          $products_attributes_id = $db->Insert_ID();
 
           $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ATTRIBUTE_LINE_ITEM', $sql_data_array);
 
@@ -889,7 +907,8 @@ class order extends base {
                                     'orders_products_filename' => $attributes_values->fields['products_attributes_filename'],
                                     'download_maxdays' => $attributes_values->fields['products_attributes_maxdays'],
                                     'download_count' => $attributes_values->fields['products_attributes_maxcount'],
-                                    'products_prid' => $this->products[$i]['id']
+                                    'products_prid' => $this->products[$i]['id'],
+                                    'products_attributes_id' => $products_attributes_id
                                     );
 
             zen_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);

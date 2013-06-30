@@ -57,9 +57,9 @@ class shipping extends base {
         {
           include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
-          
+
           $enabled = $this->check_enabled($GLOBALS[$include_modules[$i]['class']]);
-          if ($enabled == FALSE ) unset($GLOBALS[$include_modules[$i]['class']]); 
+          if ($enabled == FALSE ) unset($GLOBALS[$include_modules[$i]['class']]);
         }
       }
     }
@@ -69,12 +69,12 @@ class shipping extends base {
     $enabled = $class->enabled;
     if (method_exists($class, 'check_enabled_for_zone') && $class->enabled)
     {
-      $enabled = $class->check_enabled_for_zone();         
+      $enabled = $class->check_enabled_for_zone();
     }
     $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE', array(), $class, $enabled);
     if (method_exists($class, 'check_enabled') && $enabled)
     {
-      $enabled = $class->check_enabled();         
+      $enabled = $class->check_enabled();
     }
     $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED', array(), $class, $enabled);
     return $enabled;
@@ -122,6 +122,8 @@ class shipping extends base {
           break;
       }
 
+      // total weight with Tare
+      $_SESSION['shipping_weight'] = $shipping_weight;
       if ($shipping_weight > SHIPPING_MAX_WEIGHT) { // Split into many boxes
 //        $shipping_num_boxes = ceil($shipping_weight/SHIPPING_MAX_WEIGHT);
         $zc_boxes = zen_round(($shipping_weight/SHIPPING_MAX_WEIGHT), 2);
