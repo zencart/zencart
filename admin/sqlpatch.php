@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sun Jul 1 16:59:57 2012 -0400 Modified in v1.5.1 $
@@ -186,7 +186,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
           case (substr($line_upper, 0, 19) == 'INSERT IGNORE INTO '):
             //check to see if table prefix is going to match
             if (!$tbl_exists = zen_table_exists($param[3])) {
-	    $result=sprintf(REASON_TABLE_NOT_FOUND,$param[3]).' CHECK PREFIXES!';
+              $result=sprintf(REASON_TABLE_NOT_FOUND,$param[3]).' CHECK PREFIXES!';
               zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
               $ignore_line=true;
               break;
@@ -785,7 +785,7 @@ require('includes/admin_html_head.php');
         </tr>
         <tr>
           <td valign="top" class="main" width="110px"><?php echo TEXT_ENTER_QUERY_STRING; ?></td>
-          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery"',false); ?></td>
+          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery noEditor"',false); ?></td>
         </tr>
         <tr>
           <td colspan="2" align="right"><?php echo zen_image_submit('button_send.gif', IMAGE_SEND); ?></td>

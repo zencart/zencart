@@ -99,13 +99,6 @@
 
 require('includes/admin_html_head.php');
 ?>
-<script type="text/javascript">
-  <!--
-  $(document).ready(function(){
-    if (typeof _editor_url == "string") HTMLArea.replaceAll();
-  });
-  // -->
-</script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
@@ -172,7 +165,7 @@ if (isset($_GET['filename'])) {
           <tr><?php echo zen_draw_form('language', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save'); ?>
             <td><table border="0" cellspacing="0" cellpadding="2">
               <tr>
-                <td class="main"><?php echo zen_draw_textarea_field('file_contents', 'soft', '100%', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' id="file_contents"'); ?></td>
+                <td class="main"><?php echo zen_draw_textarea_field('file_contents', 'soft', '100%', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' id="file_contents" class="editorHook"'); ?></td>
               </tr>
               <tr>
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

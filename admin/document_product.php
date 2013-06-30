@@ -88,13 +88,6 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<script type="text/javascript">
-  <!--
-  $(document).ready(function(){
-    if (typeof _editor_url == "string") HTMLArea.replaceAll();
-  });
-  // -->
-</script>
 <?php if ($action != 'new_product_meta_tags' && $editor_handler != '') include ($editor_handler); ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">

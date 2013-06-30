@@ -405,7 +405,7 @@ updateGross();
             <td colspan="2"><table border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td class="main" width="25" valign="top"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>&nbsp;</td>
-                <td class="main" width="100%"><?php echo zen_draw_textarea_field('products_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '30', htmlspecialchars((isset($products_description[$languages[$i]['id']])) ? stripslashes($products_description[$languages[$i]['id']]) : zen_get_products_description($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE)); //,'id="'.'products_description' . $languages[$i]['id'] . '"'); ?></td>
+                <td class="main" width="100%"><?php echo zen_draw_textarea_field('products_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '30', htmlspecialchars((isset($products_description[$languages[$i]['id']])) ? stripslashes($products_description[$languages[$i]['id']]) : zen_get_products_description($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"'); //,'id="'.'products_description' . $languages[$i]['id'] . '"'); ?></td>
               </tr>
             </table></td>
           </tr>

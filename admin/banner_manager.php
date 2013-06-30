@@ -222,11 +222,13 @@
   }
 require('includes/admin_html_head.php');
 ?>
+<script language="javascript" src="includes/template/javascript/flot/jquery.flot.min.js"></script>
 <script language="javascript"><!--
 function popupImageWindow(url) {
   window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
 }
 //--></script>
+<?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body>
 <!-- header //-->
@@ -381,7 +383,7 @@ function popupImageWindow(url) {
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_BANNERS_HTML_TEXT; ?></td>
-            <td class="main"><?php echo TEXT_BANNERS_HTML_TEXT_INFO . '<br />' . zen_draw_textarea_field('banners_html_text', 'soft', '60', '5', htmlspecialchars($bInfo->banners_html_text, ENT_COMPAT, CHARSET, TRUE)); ?></td>
+            <td class="main"><?php echo TEXT_BANNERS_HTML_TEXT_INFO . '<br />' . zen_draw_textarea_field('banners_html_text', 'soft', '60', '5', htmlspecialchars($bInfo->banners_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"'); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

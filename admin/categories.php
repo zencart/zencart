@@ -526,14 +526,7 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<script type="text/javascript">
-  <!--
-  $(document).ready(function(){
-    if (typeof _editor_url == "string") HTMLArea.replaceAll();
-    document.forms['search'].elements['search'].focus();
-  });
-  // -->
-</script>
+<?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" >
 <!-- header //-->
@@ -680,7 +673,7 @@ require('includes/admin_html_head.php');
 
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       $category_inputs_string .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;';
-      $category_inputs_string .= zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE));
+      $category_inputs_string .= zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"');
     }
     $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_DESCRIPTION . $category_inputs_string);
     $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_IMAGE . '<br />' . zen_draw_file_field('categories_image'));
@@ -721,7 +714,7 @@ require('includes/admin_html_head.php');
     $category_inputs_string = '';
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       $category_inputs_string .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' ;
-      $category_inputs_string .= zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE));
+      $category_inputs_string .= zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"');
     }
     $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_DESCRIPTION . $category_inputs_string);
     $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_IMAGE . '<br />' . zen_draw_file_field('categories_image'));
@@ -800,14 +793,14 @@ require('includes/admin_html_head.php');
     $category_inputs_string_metatags_keywords = '';
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       $category_inputs_string_metatags_keywords .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_keywords']) . '&nbsp;' ;
-      $category_inputs_string_metatags_keywords .= zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_keywords($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE));
+      $category_inputs_string_metatags_keywords .= zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_keywords($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"');
     }
     $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS . $category_inputs_string_metatags_keywords);
 
     $category_inputs_string_metatags_description = '';
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       $category_inputs_string_metatags_description .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' ;
-      $category_inputs_string_metatags_description .= zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE));
+      $category_inputs_string_metatags_description .= zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"');
     }
     $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION . $category_inputs_string_metatags_description);
 

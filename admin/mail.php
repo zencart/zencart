@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
@@ -105,13 +105,6 @@
 
 require('includes/admin_html_head.php');
 ?>
-<script type="text/javascript">
-  <!--
-  $(document).ready(function(){
-    if (typeof _editor_url == "string") HTMLArea.replaceAll();
-  });
-  // -->
-</script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 <script language="javascript" type="text/javascript"><!--
 var form = "";
@@ -321,7 +314,7 @@ function check_form(form_name) {
               <td class="main" width="750">
 <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED; ?>
 <?php if (EMAIL_USE_HTML == 'true') {
-  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html"');
+  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"');
 } ?>
               </td>
             </tr>
@@ -330,7 +323,7 @@ function check_form(form_name) {
             </tr>
             <tr>
               <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?></td>
-              <td><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars($_POST['message'], ENT_COMPAT, CHARSET, TRUE)); ?></td>
+              <td><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars($_POST['message'], ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
             </tr>
 
 <?php if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED === true && defined('DIR_WS_ADMIN_ATTACHMENTS') && is_dir(DIR_WS_ADMIN_ATTACHMENTS) && is_writable(DIR_WS_ADMIN_ATTACHMENTS) ) { ?>

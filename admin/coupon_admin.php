@@ -400,17 +400,6 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<script type="text/javascript">
-  <!--
-  $(document).ready(function(){
-<?php if ($_GET['action'] == 'new' || $_GET['action'] == 'voucheredit') { ?>
-    if (typeof _editor_url == "string") HTMLArea.replaceAll();
-<?php } else { ?>
-    if (typeof _editor_url == "string") HTMLArea.replace('message_html');
-<?php } ?>
-  });
-  // -->
-</script>
 <script language="javascript" type="text/javascript"><!--
 var form = "";
 var submitted = false;
@@ -829,12 +818,12 @@ function check_form(form_name) {
 <?php   if (EMAIL_USE_HTML == 'true') { ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_RICH_TEXT_MESSAGE; ?></td>
-                <td><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html"'); ?></td>
+                <td><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"'); ?></td>
               </tr>
 <?php } ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?>&nbsp;&nbsp;</td>
-                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(strip_tags(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html'])), ENT_COMPAT, CHARSET, TRUE)); ?></td>
+                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(strip_tags(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html'])), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -1065,7 +1054,7 @@ function check_form(form_name) {
 
       <tr>
         <td align="left" valign="top" class="main"><?php if ($i==0) echo COUPON_DESC; ?></td>
-        <td align="left" valign="top"><?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','8', htmlspecialchars(stripslashes($_POST['coupon_desc'][$language_id]), ENT_COMPAT, CHARSET, TRUE)); ?>
+        <td align="left" valign="top"><?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','8', htmlspecialchars(stripslashes($_POST['coupon_desc'][$language_id]), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"'); ?>
             <?php echo '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></td>
         <td align="left" valign="top" class="main"><?php if ($i==0) echo COUPON_DESC_HELP; ?></td>
       </tr>

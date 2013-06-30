@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
@@ -159,13 +159,6 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<script type="text/javascript">
-  <!--
-  $(document).ready(function(){
-    if (typeof _editor_url == "string") HTMLArea.replaceAll();
-  });
-  // -->
-</script>
 <script language="javascript" type="text/javascript"><!--
 var form = "";
 var submitted = false;
@@ -389,7 +382,7 @@ function check_form(form_name) {
 <?php } ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?></td>
-                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(($_POST['message']=='') ? strip_tags(TEXT_GV_ANNOUNCE) : stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE)); ?></td>
+                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(($_POST['message']=='') ? strip_tags(TEXT_GV_ANNOUNCE) : stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
