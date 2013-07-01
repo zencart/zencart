@@ -1230,7 +1230,13 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                 if ($chk_attributes_exist->EOF) {
                   $fix_once ++;
                   $_SESSION['valid_to_checkout'] = false;
-                  $_SESSION['cart_errors'] .= ERROR_PRODUCT_ATTRIBUTES . $products->fields['products_name'] . ERROR_PRODUCT_STATUS_SHOPPING_CART_ATTRIBUTES . '<br />';
+                  $chk_product_attributes = $db->Execute("SELECT products_status FROM " . TABLE_PRODUCTS . " WHERE products_status = 1 and products_id = '" . $products->fields["products_id"] . "' limit 1");
+                  if (!$chk_product_attributes->EOF && $chk_product_attributes->fields['products_status'] == 1) {
+                    $chk_products_link = '<a href="' . zen_href_link(zen_get_info_page($products->fields["products_id"]), 'cPath=' . zen_get_generated_category_path_rev($products->fields["master_categories_id"]) . '&products_id=' . $products->fields["products_id"]) . '">' . $products->fields['products_name'] . '</a>';
+                  } else {
+                    $chk_products_link = $products->fields['products_name'];
+                  }
+                  $_SESSION['cart_errors'] .= ERROR_PRODUCT_ATTRIBUTES . $chk_products_link . ERROR_PRODUCT_STATUS_SHOPPING_CART_ATTRIBUTES . '<br />';
                   $this->remove($products_id);
                   break;
                 }
