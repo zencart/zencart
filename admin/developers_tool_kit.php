@@ -251,6 +251,9 @@
         $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
       }
       $keySearchResults = $db->Execute($sql);
+      if ($keySearchResults->RecordCount() == 0) {
+        $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
+      }
       break;
 
     case ('locate_configuration'):
