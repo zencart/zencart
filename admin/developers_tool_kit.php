@@ -253,7 +253,6 @@
       // if nothing submitted to search for, force no results
       if ($search_type != 'all' && $search == '') {
         $sql = 'SELECT * from ' . TABLE_CONFIGURATION . ' where 2=3';
-        $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
       }
       $keySearchResults = $db->Execute($sql);
       if ($keySearchResults->RecordCount() == 0) {
