@@ -107,7 +107,7 @@ class zcWidgetManager extends base
           if (file_exists(DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/' . $fileName))
           {
             require(DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/' . $fileName);
-            $widgetClass = new $className($widget);
+            $widgetClass = new $className($widget['widget_key'], $widget);
             $widgetClassList[$widget['widget_key']] = $widgetClass;
           }
         }

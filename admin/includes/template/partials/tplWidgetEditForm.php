@@ -48,6 +48,10 @@ $(function() {
 			  url: "zcAjaxHandler.php?act=dashboardWidget&method=submitWidgetEdit",
 			  data: {form: str}
 			}).done(function( response ) {
+        if (response && response.timerKey)
+        {
+          createWidgetIntervalTimer(response.timerKey, response.timerInterval);
+        }
 				if (response && response.html)
 				{
 					$('#'+ id).find('.widget-body').html(response.html);

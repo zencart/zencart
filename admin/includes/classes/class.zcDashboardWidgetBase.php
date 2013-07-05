@@ -17,9 +17,10 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class zcDashboardWidgetBase extends base
 {
-  public function __construct($widgetInfo)
-  {
+  public function __construct($widgetKey, $widgetInfo = NULL)
+  { 
     $this->widgetInfo = $widgetInfo;
+    $this->widgetKey = $widgetKey;
     $this->tplVars = array();
   }
   public function prepareContent() 
@@ -28,7 +29,7 @@ class zcDashboardWidgetBase extends base
   }
   public function getTemplateFile()
   {
-    $tplFile = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/dashboardWidgets/tpl' . self::camelize(strtolower($this->widgetInfo['widget_key']), TRUE) . '.php';
+    $tplFile = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/dashboardWidgets/tpl' . self::camelize(strtolower($this->widgetKey), TRUE) . '.php';
     if (!file_exists($tplFile))
     {
       $tplFile = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/dashboardWidgets/tplDefault.php';
@@ -41,7 +42,7 @@ class zcDashboardWidgetBase extends base
   }
   public function getWidgetBaseId()
   {
-    return strtolower(str_replace('_', '-', $this->widgetInfo['widget_key']));
+    return strtolower(str_replace('_', '-', $this->widgetKey));
   }
   /**
    * Default form validation

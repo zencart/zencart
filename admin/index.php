@@ -366,7 +366,14 @@ function doWidgetEdit(id)
 function createWidgetIntervalTimer(key, interval)
 {
   var realInterval = interval * 1000;
-  var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
+  if (intervalTimers[key]) {
+    timer = intervalTimers[key];
+    timer.Stop();
+    delete timer;
+    var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
+  } else {  
+    var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
+  }
   intervalTimers[key] = timer;
   timer.Start();
 }

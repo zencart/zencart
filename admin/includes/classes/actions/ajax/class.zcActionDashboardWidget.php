@@ -47,13 +47,13 @@ class zcActionDashboardWidget extends zcActionAjaxBase
   {
     if (isset($_POST['id']))
     {
-      $id = str_replace('widget-edit-dismiss-', '', $_POST['id']);
+      $key = $id = str_replace('widget-edit-dismiss-', '', $_POST['id']);
       $id = self::camelize($id, TRUE);
       $className = 'zcDashboardWidget' . $id;
       $fileName = DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/class.' . $className . '.php';
       require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
       require_once($fileName);
-      $widget = new $className(NULL);
+      $widget = new $className($key);
       $tplVars['widget'] = $widget->prepareContent();
       $html = "";
       if ($addUpdateDiv)
@@ -62,7 +62,7 @@ class zcActionDashboardWidget extends zcActionAjaxBase
       }
       $template = $widget->getTemplateFile();
       $html .= $this->loadTemplateAsString($template, $tplVars);
-      $this->response = array('html'=>$html);
+      $this->response['html'] = $html;
     }
   }
   public function submitWidgetEditExecute()
@@ -72,7 +72,7 @@ class zcActionDashboardWidget extends zcActionAjaxBase
     $fileName = DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/class.' . $className . '.php';
     require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
     require_once($fileName);
-    $widget = new $className(NULL);
+    $widget = new $className($_POST['id']);
     $result = $widget->validateEditForm();
     if ($result == FALSE)
     {
@@ -80,6 +80,9 @@ class zcActionDashboardWidget extends zcActionAjaxBase
     } else 
     {
       $widget->executeEditForm();
+      $interval = $_POST['widget-refresh'];
+      $this->response['timerInterval'] = $interval;
+      $this->response['timerKey'] = $_POST['id'];
       $_POST['id'] = 'widget-edit-dismiss-' . $_POST['id'];
       $this->rebuildWidgetExecute(TRUE);
     }
@@ -91,7 +94,7 @@ class zcActionDashboardWidget extends zcActionAjaxBase
     $fileName = DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/class.' . $className . '.php';
     require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
     require_once($fileName);
-    $widget = new $className(NULL);
+    $widget = new $className($_POST['id']);
     $widget->getFormDefaults($_POST['id'], $this);
   }
   public function timerUpdateExecute()
