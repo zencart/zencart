@@ -161,36 +161,30 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
 ) ENGINE=MyISAM;
 
 #
-# Dumping data for table 'dashboard_widgets'
+# Set up default widgets
 #
-
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('general-statistics', 'general-statistics', 1),
 ('order-summary', 'order-statistics', 1);
-
-#
-# Dumping data for table 'dashboard_widgets_description'
-#
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
 ('general-statistics', 'General Statistics', '', 1),
 ('order-summary', 'Order Summary', '', 1);
 
-#
-# Dumping data for table 'dashboard_widgets_to_users'
-#
-
-INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
-('general-statistics', 1, 0, 0),
-('order-summary', 1, 0, 1);
-
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
 ('general-statistics', 1, 'General Statistics'),
 ('order-statistics', 1, 'Order Statistics');
 
+
+# default widgets for first user
+INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
+('general-statistics', 1, 0, 0),
+('order-summary', 1, 0, 1);
+
+
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
 ## CHANGE-411 increase size of fileds in admin profile related tables
-## CHANGE-367 - Dashboard Widgets for 1.6 Admin Home Page (including ajax infrastructure)…
+## CHANGE-367 - Dashboard Widgets for 1.6 Admin Home Page (including ajax infrastructure)
 
 #############
 

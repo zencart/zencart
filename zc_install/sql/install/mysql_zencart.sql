@@ -3281,40 +3281,35 @@ INSERT INTO get_terms_to_filter VALUES ('music_genre_id', 'TABLE_MUSIC_GENRE', '
 INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPANY', 'record_company_name');
 
 #
-# Dumping data for table project_version
+# default widgets
 #
-
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '6.0', '', '', '', '', 'New Installation', now());
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '6.0', '', '', '', '', 'New Installation', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '6.0', '', 'New Installation', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '6.0', '', 'New Installation', now());
-
-#
-# Dumping data for table 'dashboard_widgets'
-#
-
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('general-statistics', 'general-statistics', 1),
 ('order-summary', 'order-statistics', 1);
-
-#
-# Dumping data for table 'dashboard_widgets_description'
-#
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
 ('general-statistics', 'General Statistics', '', 1),
 ('order-summary', 'Order Summary', '', 1);
 
-#
-# Dumping data for table 'dashboard_widgets_to_users'
-#
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
+('general-statistics', 1, 'General Statistics'),
+('order-statistics', 1, 'Order Statistics');
 
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
 ('general-statistics', 1, 0, 0),
 ('order-summary', 1, 0, 1);
 
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
-('general-statistics', 1, 'General Statistics'),
-('order-statistics', 1, 'Order Statistics');
-##### End of SQL setup for Zen Cart.
 
+
+
+
+### THE FOLLOWING SHOULD BE AT THE END OF THE FILE -- ALL NEW SQL SHOULD GO ABOVE THIS LINE
+#
+# Dumping data for table project_version
+#
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '6.0', '', '', '', '', 'New Installation', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '6.0', '', '', '', '', 'New Installation', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '6.0', '', 'New Installation', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '6.0', '', 'New Installation', now());
+
+##### End of SQL setup for Zen Cart.
