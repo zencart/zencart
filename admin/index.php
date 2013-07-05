@@ -262,6 +262,20 @@ $(function() {
   <?php } ?>
 
   createSortables();
+  
+    $('.widget-minimize').click(function (e) {
+    var id = $(this).parents('.widget-container').attr('id');
+    if ($(this).html() == '-')
+    {
+      $(this).html('&#47;');
+    } else
+    {
+      $(this).html('&#45;');
+    }
+    $('#'+id).find('.widget-body').toggle();
+  });
+
+  
   $('.widget-add').click(function (e) {
     $('#add-widget').reveal({opened: function() {
 
@@ -310,17 +324,6 @@ function createSortables() {
     }
   });
 
-  $('.widget-minimize').click(function (e) {
-    var id = $(this).parents('.widget-container').attr('id');
-    if ($(this).html() == '-')
-    {
-      $(this).html('&#47;');
-    } else
-    {
-      $(this).html('&#45;');
-    }
-    $('#'+id).find('.widget-body').toggle();
-  });
 
   $('.widget-close').click(function (e) {
     var id = $(this).parents('.widget-container').attr('id');
@@ -370,12 +373,17 @@ function createWidgetIntervalTimer(key, interval)
     timer = intervalTimers[key];
     timer.Stop();
     delete timer;
-    var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
+    if (interval != 0)
+    {
+      var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});    
+      intervalTimers[key] = timer;
+      timer.Start();
+    }
   } else {  
     var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
+    intervalTimers[key] = timer;
+    timer.Start();
   }
-  intervalTimers[key] = timer;
-  timer.Start();
 }
 
 function doIntervalProcess(timer)
