@@ -126,7 +126,7 @@ class order extends base {
                         'total' => $order->fields['order_total'],
                         'tax' => $order->fields['order_tax'],
                         'ip_address' => $order->fields['ip_address'],
-                        'order_weight' => $order->field['order_weight']
+                        'order_weight' => $order->fields['order_weight']
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
