@@ -16,6 +16,8 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+if (isset($_POST['zone_country_id'])) $_POST['zone_country_id'] = (int)$_POST['zone_country_id'];
+if (isset($_POST['scid'])) $_POST['scid'] = preg_replace('/[^a-z_0-9\-]/i', '', $_POST['scid']);
 
 // load JS updater
 if ($current_page_base != 'popup_shipping_estimator') {
