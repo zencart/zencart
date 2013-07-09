@@ -89,7 +89,7 @@
     }
 
     function check() {
-..    global $db;
+      global $db;
       if (!isset($this->_check)) {
         $check_query = "select configuration_value
                         from " . TABLE_CONFIGURATION . "
@@ -120,7 +120,7 @@
     }
 
     function remove() {
-..    global $db;
+      global $db;
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
