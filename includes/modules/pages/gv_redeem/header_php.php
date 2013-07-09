@@ -16,10 +16,10 @@ if (!$_SESSION['customer_id']) {
   $_SESSION['navigation']->set_snapshot();
   $messageStack->add_session('login', ERROR_GV_CREATE_ACCOUNT, 'error');
   if (isset($_GET['gv_no'])) {
-	  zen_redirect(zen_href_link(FILENAME_LOGIN, 'gv_no=' . $_GET['gv_no'], 'SSL'));
-	} else {
-  	zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-	}
+    zen_redirect(zen_href_link(FILENAME_LOGIN, 'gv_no=' . $_GET['gv_no'], 'SSL'));
+  } else {
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+  }
 }
 if ($_SESSION['COWOA']) {
   $_SESSION['navigation']->set_snapshot();

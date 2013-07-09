@@ -174,20 +174,20 @@ class zones extends base {
     $this->num_zones = 3;
 
     if (IS_ADMIN_FLAG === true) {
-  		// build in admin only additional zones if missing in the configuration table due to customization of default $this->num_zones = 3
-	  	global $db;
-  	  for ($i = 1; $i <= $this->num_zones; $i++) {
-  		  $check = $db->Execute("select * from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i . "'");
-	  		if ($this->enabled && $check->EOF) {
+      // build in admin only additional zones if missing in the configuration table due to customization of default $this->num_zones = 3
+      global $db;
+      for ($i = 1; $i <= $this->num_zones; $i++) {
+        $check = $db->Execute("select * from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i . "'");
+        if ($this->enabled && $check->EOF) {
           $default_countries = '';
           $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Countries', 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i ."', '" . $default_countries . "', 'Comma separated list of two character ISO country codes that are part of Zone " . $i . ".<br />Set as 00 to indicate all two character ISO country codes that are not specifically defined.', '6', '0', 'zen_cfg_textarea(', now())");
           $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i ." Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i ."', '3:8.50,25:5.50,10000:3.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights/prices.<br />Example: 3:8.50,25:5.50,10000:3.00<br />Weight/Price/Item count less than or equal to 3&nbsp;would cost 8.50 4-25&nbsp;would cost 5.50 and 26+&nbsp;would cost 3.00 to ship for Zone " . $i . " destinations.<br /><br />You can also use percentage amounts, such as 3:8.50,6:5%,9:7.50,12:6.25,15:4.5%,10000:3% to charge a percentage value of the Order Total<br /><br />To terminate quotes use OFF to no longer show this shipping module. To turn off quotes at 10 or more, use 3:8.50,7:10.50,9:15%,10:OFF<br /><br />On Item quotes, you can also use * to set a Rate per Item, such as 3:8.50,6:5%,9:1.50*,12:1.25*,10000:1.00*<br />This would charge for 7-9&nbsp;items as item count * 1.50 and 10-12&nbsp;items as item count * 1.25 and for 13+&nbsp;items as item count * 1.00<br /><br />NOTE: See additional information on Maximum weight and Tare Rate<br /><br />', '6', '0', 'zen_cfg_textarea(', now())");
 
           $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i ." Handling Fee', 'MODULE_SHIPPING_ZONES_HANDLING_" . $i."', '0', 'Handling Fee for this shipping zone', '6', '0', now())");
           $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . "  (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i."', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
-  		  }
-    	}
-  	} // build in admin only
+        }
+      }
+    } // build in admin only
 
     // skip countries in defined Zone Definition
     if (!IS_ADMIN_FLAG) {
@@ -280,7 +280,7 @@ class zones extends base {
 //echo '<br>START ZONE RATE: ' . $zones_cost . '<br>';
       for ($i=0; $i<$size; $i+=2) {
         switch (MODULE_SHIPPING_ZONES_METHOD) {
-      	  case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
+          case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
             if (round($shipping_weight,9) <= $zones_table[$i]) {
               $shipping = $zones_table[$i+1];
 
@@ -320,14 +320,14 @@ class zones extends base {
                   break;
               }
               break;
-      	    } else {
+            } else {
               if (strstr($zones_table[$i+1], 'OFF')) {
                 $skip_shipping = true;
                 break;
               }
-      	    }
-    	      break;
-      	  case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
+            }
+            break;
+          case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
 // shipping adjustment
             if (($_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices()) <= $zones_table[$i]) {
               $shipping = $zones_table[$i+1];
@@ -353,14 +353,14 @@ class zones extends base {
                   break;
               }
               break;
-      	    } else {
+            } else {
               if (strstr($zones_table[$i+1], 'OFF')) {
                 $skip_shipping = true;
                 break;
               }
             }
             break;
-      	  case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
+          case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
 // shipping adjustment
             if (($total_count - $_SESSION['cart']->free_shipping_items()) <= $zones_table[$i]) {
               $shipping = $zones_table[$i+1];
@@ -385,12 +385,12 @@ class zones extends base {
                   break;
               }
               break;
-      	    } else {
+            } else {
               if (strstr($zones_table[$i+1], 'OFF')) {
                 $skip_shipping = true;
                 break;
               }
-      	    }
+            }
           break;
         }
         if ($done == true) {
@@ -403,7 +403,7 @@ class zones extends base {
         $shipping_method = MODULE_SHIPPING_ZONES_UNDEFINED_RATE;
       } else {
         switch (MODULE_SHIPPING_ZONES_METHOD) {
-      	  case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
+          case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
             // charge per box when done by Weight
             // Handling fee per box or order
             if (constant('MODULE_SHIPPING_ZONES_HANDLING_METHOD_' . $dest_zone) == 'Box') {
@@ -412,14 +412,14 @@ class zones extends base {
               $shipping_cost = ($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
             }
             break;
-      	  case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
+          case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
             // don't charge per box when done by Price
             $shipping_cost = ($shipping) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
-          break;
-      	  case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
+            break;
+          case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
             // don't charge per box when done by Item
             $shipping_cost = ($shipping) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
-          break;
+            break;
         }
       }
     }

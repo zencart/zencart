@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
@@ -351,7 +351,7 @@
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')), 'NONSSL'));
         break;
       default:
-      	// COWOA additional field included in this select statement
+        // COWOA additional field included in this select statement
         $customers = $db->Execute("select c.customers_id, c.customers_gender, c.customers_firstname,
                                           c.customers_lastname, c.customers_dob, c.customers_email_address,
                                           a.entry_company, a.entry_street_address, a.entry_suburb,
@@ -359,7 +359,7 @@
                                           a.entry_country_id, c.customers_telephone, c.customers_fax,
                                           c.customers_newsletter, c.customers_default_address_id,
                                           c.customers_email_format, c.customers_group_pricing,
-					  c.COWOA_account, c.customers_authorization, c.customers_referral
+          c.COWOA_account, c.customers_authorization, c.customers_referral
                                   from " . TABLE_CUSTOMERS . " c left join " . TABLE_ADDRESS_BOOK . " a
                                   on c.customers_default_address_id = a.address_book_id
                                   where a.customers_id = c.customers_id
@@ -1047,13 +1047,13 @@ if ($processed == true) {
                   <a href="<?php echo zen_href_link(basename($PHP_SELF) . '?list_order=approval-desc', '', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='approval-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</b>'); ?></a>
                 </td>
 
-				<!-- COWOA+ additional column heading in list of customers -->
+        <!-- COWOA+ additional column heading in list of customers -->
                 <td class="dataTableHeadingContent" align="center">
                   <?php echo (($_GET['list_order']=='COWOA-asc' or $_GET['list_order']=='COWOA-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_COWOA . '</span>' : TABLE_HEADING_COWOA); ?><br>
                   <a href="<?php echo zen_href_link(basename($PHP_SELF) . '?list_order=COWOA-asc', '', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='COWOA-asc' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</b>'); ?></a>&nbsp;
                   <a href="<?php echo zen_href_link(basename($PHP_SELF) . '?list_order=COWOA-desc', '', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='COWOA-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</b>'); ?></a>
                 </td>
-				<!-- COWOA+ -->
+        <!-- COWOA+ -->
                 <td class="dataTableHeadingContent" align="right" valign="top"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
@@ -1155,14 +1155,11 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
                 <td class="dataTableContent" align="right"><?php echo $currencies->format($customers->fields['amount']); ?></td>
 <?php } ?>
                 <td class="dataTableContent" align="center">
-		<?php echo ($customers->fields['customers_authorization'] == 4 ? zen_image(DIR_WS_IMAGES .
-		'icon_red_off.gif', IMAGE_ICON_STATUS_OFF) : ($customers->fields['customers_authorization'] == 0 ?
-		'<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=status&current=' . $customers->fields
-		['customers_authorization'] . '&cID=' . $customers->fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif',
-		IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_CUSTOMERS,
-		'action=status&current=' . $customers->fields['customers_authorization'] . '&cID=' . $customers->
-		fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' .
-		zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>')); ?>&nbsp;</td>
+    <?php echo ($customers->fields['customers_authorization'] == 4 ? zen_image(DIR_WS_IMAGES . 'icon_red_off.gif', IMAGE_ICON_STATUS_OFF) : ($customers->fields['customers_authorization'] == 0 ?
+    '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=status&current=' . $customers->fields['customers_authorization'] . '&cID=' . $customers->fields['customers_id'] .
+    (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' :
+    '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=status&current=' . $customers->fields['customers_authorization'] . '&cID=' . $customers->fields['customers_id'] .
+    (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>')); ?>&nbsp;</td>
 <?php if ($customers->fields['COWOA_account'] == 1) { ?>
                 <td class="dataTableContent" align="center"><?php echo 'COWOA'; ?>&nbsp;</td>
 <?php }else{ ?>

@@ -115,10 +115,10 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
           if (SHOW_SHOPPING_CART_COMBINED == 1) {
             // show warning and send to shopping cart for review
             if (!(isset($_GET['gv_no']))) {
-	            $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            	zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+              $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
+              zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
             } else {
-            	$messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
             }
           }
         }

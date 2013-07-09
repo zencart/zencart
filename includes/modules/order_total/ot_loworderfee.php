@@ -3,7 +3,7 @@
  * ot_total order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ot_loworderfee.php 6101 2007-04-01 10:30:22Z wilt $
@@ -89,7 +89,7 @@
     }
 
     function check() {
-	  global $db;
+..    global $db;
       if (!isset($this->_check)) {
         $check_query = "select configuration_value
                         from " . TABLE_CONFIGURATION . "
@@ -120,8 +120,7 @@
     }
 
     function remove() {
-	  global $db;
+..    global $db;
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

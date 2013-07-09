@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sat Jul 21 17:10:54 2012 -0400 Modified in v1.5.1 $
@@ -719,8 +719,8 @@ function popupWindow(url) {
       <tr>
         <td width="100%"><table border="0" cellspacing="2" cellpadding="2">
           <tr>
-  	        <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_option_names.gif', IMAGE_OPTION_NAMES); ?></a></td>
-  	        <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_option_values.gif', IMAGE_OPTION_VALUES); ?></a></td>
+            <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_option_names.gif', IMAGE_OPTION_NAMES); ?></a></td>
+            <td height="40" valign="bottom"><a href="<?php echo  zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_option_values.gif', IMAGE_OPTION_VALUES); ?></a></td>
           </tr>
         </table></td>
       </tr>
@@ -1252,17 +1252,17 @@ if ($action == '') {
 <tr>
             <td class="smallText" valign="top" width="40">&nbsp;<?php echo $attributes_values->fields['products_attributes_id']; ?><input type="hidden" name="attribute_id" value="<?php echo $attributes_values->fields['products_attributes_id']; ?>">&nbsp;</td>
             <td class="smallText" valign="top">
-      	    <td class="pageHeading" valign="top">&nbsp;
+            <td class="pageHeading" valign="top">&nbsp;
               <input type="hidden" name="products_id" value="<?php echo $products_filter; ?>">
               <input type="hidden" name="current_category_id" value="<?php echo $current_category_id; ?>">
-      	      <?php
-      	        $show_model = zen_get_products_model($products_filter);
-      	        if(!empty($show_model)) {
-      	          $show_model = " - (" . $show_model . ")";
-      	        }
-      	        echo zen_clean_html(zen_get_products_name($products_filter)) . $show_model;
-      	      ?>
-      	    </td>
+              <?php
+                $show_model = zen_get_products_model($products_filter);
+                if(!empty($show_model)) {
+                  $show_model = " - (" . $show_model . ")";
+                }
+                echo zen_clean_html(zen_get_products_name($products_filter)) . $show_model;
+              ?>
+            </td>
 
           </tr></table></td></tr>
           <tr class="attributeBoxContent"><td><table><tr>
@@ -1751,17 +1751,17 @@ if ($action == '') {
         <tr><td class="attributeBoxContent"><table border="0" cellpadding="4" cellspacing="2">
           <tr class="attributeBoxContent"><td><table><tr>
             <td class="attributeBoxContent" width="40">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
-      	    <td class="pageHeading" valign="top">&nbsp;
+            <td class="pageHeading" valign="top">&nbsp;
               <input type="hidden" name="products_id" value="<?php echo $products_filter; ?>">
               <input type="hidden" name="current_category_id" value="<?php echo $current_category_id; ?>">
-      	      <?php
-        	      $show_model = zen_get_products_model($products_filter);
-        	      if(!empty($show_model)) {
-        	        $show_model = " - (" . $show_model . ")";
-        	      }
-      	        echo zen_clean_html(zen_get_products_name($products_filter)) . $show_model;
-      	      ?>
-      	    </td>
+              <?php
+                $show_model = zen_get_products_model($products_filter);
+                if(!empty($show_model)) {
+                  $show_model = " - (" . $show_model . ")";
+                }
+                echo zen_clean_html(zen_get_products_name($products_filter)) . $show_model;
+              ?>
+            </td>
           </tr></table></td></tr>
           <tr class="attributeBoxContent"><td><table><tr>
             <td class="attributeBoxContent" width="40">&nbsp;</td>
