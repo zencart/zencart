@@ -4,18 +4,18 @@
  * @package Installer
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 
+ * @version $Id:
  */
 define('IS_ADMIN_FLAG', false);
   define('DIR_FS_INSTALL', realpath(dirname(__FILE__) . '/') . '/');
   define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
-  
+
   require(DIR_FS_INSTALL . 'includes/application_top.php');
 
   $systemChecker = new systemChecker();
-  
-$error = TRUE;  
-if (isset($_POST['db_name'])) 
+
+$error = TRUE;
+if (isset($_POST['db_name']))
 {
   zcRegistry::setValue('db_host', $_POST['db_host']);
   zcRegistry::setValue('db_user', $_POST['db_user']);
@@ -23,11 +23,11 @@ if (isset($_POST['db_name']))
   zcRegistry::setValue('db_name', $_POST['db_name']);
   zcRegistry::setValue('db_charset', $_POST['db_charset']);
   $errorList = $systemChecker -> runTests('database');
-  if (count($errorList) != 0) 
+  if (count($errorList) != 0)
   {
-  	$errorList = $errorList['newDatabaseCheck'];
+    $errorList = $errorList['newDatabaseCheck'];
     $error = TRUE;
-  } else 
+  } else
   {
     $error  = FALSE;
   }
