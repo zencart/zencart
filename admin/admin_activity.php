@@ -3,7 +3,7 @@
  * Admin Activity Log Viewer/Archiver
  *
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:03:47 2012 -0400 Modified in v1.5.1 $
@@ -289,56 +289,56 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 <!-- body //-->
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
-	<tr>
-		<!-- body_text //-->
-		<td width="100%" valign="top">
-		<table border="0" width="100%" cellspacing="0" cellpadding="0">
-			<tr>
-				<td width="100%">
-				<table border="0" width="100%" cellspacing="0" cellpadding="0">
-					<tr>
-						<td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-						<td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-					</tr>
-				</table>
-				</td>
-			</tr>
-			<tr>
-				<td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-			</tr>
+  <tr>
+    <!-- body_text //-->
+    <td width="100%" valign="top">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="100%">
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+          </tr>
+        </table>
+        </td>
+      </tr>
+      <tr>
+        <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
 
 <?php if ($action == '') { ?>
-			<tr><?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post'); //, 'onsubmit="return check_form(export);"');   ?>
+      <tr><?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post'); //, 'onsubmit="return check_form(export);"');   ?>
         <td align="center">
-				<table border="0" cellspacing="0" cellpadding="2">
-  			<tr><td><h2><?php echo HEADING_SUB1; ?></h2></td></tr>
+        <table border="0" cellspacing="0" cellpadding="2">
+        <tr><td><h2><?php echo HEADING_SUB1; ?></h2></td></tr>
           <tr>
             <td class="main" colspan="2"><?php echo TEXT_INSTRUCTIONS; ?></td>
           </tr>
-					<tr>
-						<td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br /><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
-					</tr>
-					<tr>
-						<td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-					</tr>
-					<tr>
-						<td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
-					</tr>
-					<tr>
-						<td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-					</tr>
-					<tr>
-						<td class="main"><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?> <strong><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></strong><br />
+          <tr>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br /><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td class="main"><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?> <strong><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></strong><br />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TEXT_ACTIVITY_EXPORT_DEST; ?></strong> <em><?php echo DIR_FS_ADMIN_ACTIVITY_EXPORT; ?></em>
               </td>
-					</tr>
-					<tr>
-						<td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
-					</tr>
-				</table>
-				</td>
-				</form>
-			</tr>
+          </tr>
+          <tr>
+            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+          </tr>
+        </table>
+        </td>
+        </form>
+      </tr>
 
 <!-- bof: reset admin_activity_log -->
       <tr>
@@ -356,9 +356,9 @@ require (DIR_WS_INCLUDES . 'header.php');
   <tr><td><?php echo TEXT_ADMIN_LOG_PLEASE_CONFIRM_ERASE; ?><?php echo zen_draw_form('admin_activity_erase', FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); echo zen_image_submit('button_reset.gif', IMAGE_RESET); ?><input type="hidden" name="confirm" value="yes" /></form></td></tr>
 
 <?php } ?>
-				<!-- body_text_eof //-->
-		</table>
-		<!-- body_eof //--> <!-- footer //-->
+        <!-- body_text_eof //-->
+    </table>
+    <!-- body_eof //--> <!-- footer //-->
 <?php require (DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //--> <br />
 

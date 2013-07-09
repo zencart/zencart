@@ -30,13 +30,13 @@ $(function() {
       url: "zcAjaxHandler.php?act=dashboardWidget&method=addWidget",
       data: {'id': id}
     }).done(function( response ) {
-	    if (response.html)
-	    {
-		    $('#main-sortables').html(response.html);
-		    createSortables();
-	    }
-	  });	
-  
+      if (response.html)
+      {
+        $('#main-sortables').html(response.html);
+        createSortables();
+      }
+    });
+
   });
 });
 </script>

@@ -29,42 +29,42 @@
 <script>
 $(function() {
   $('.widget-edit-dismiss').on('click', function() {
-	  var id = $(this).attr('id');
-		zcJS.ajax({
-			  url: "zcAjaxHandler.php?act=dashboardWidget&method=rebuildWidget",
-			  data: {'id': id}
-			}).done(function( response ) {
-				if (response && response.html)
-				{
-					id = id.replace('widget-edit-dismiss-', '');
-					$('#'+ id).find('.widget-body').html(response.html);
-				}
-			});	            
+    var id = $(this).attr('id');
+    zcJS.ajax({
+        url: "zcAjaxHandler.php?act=dashboardWidget&method=rebuildWidget",
+        data: {'id': id}
+      }).done(function( response ) {
+        if (response && response.html)
+        {
+          id = id.replace('widget-edit-dismiss-', '');
+          $('#'+ id).find('.widget-body').html(response.html);
+        }
+      });
   });
   $('.widget-edit-form').submit(function(f) {
-	  var str = $(this).serialize();
-	  var id =  $(this).find("input[name='id']").val()
-	  zcJS.ajax({
-			  url: "zcAjaxHandler.php?act=dashboardWidget&method=submitWidgetEdit",
-			  data: {form: str}
-			}).done(function( response ) {
+    var str = $(this).serialize();
+    var id =  $(this).find("input[name='id']").val()
+    zcJS.ajax({
+        url: "zcAjaxHandler.php?act=dashboardWidget&method=submitWidgetEdit",
+        data: {form: str}
+      }).done(function( response ) {
         if (response && response.timerKey)
         {
           createWidgetIntervalTimer(response.timerKey, response.timerInterval);
         }
-				if (response && response.html)
-				{
-					$('#'+ id).find('.widget-body').html(response.html);
-					
-					$('.widget-update-header').fadeOut(3500, function () {
-					  $('.widget-update-header').remove();
-					});
+        if (response && response.html)
+        {
+          $('#'+ id).find('.widget-body').html(response.html);
+
+          $('.widget-update-header').fadeOut(3500, function () {
+            $('.widget-update-header').remove();
+          });
         } else if (response && response.error && response.errorType == 'FORM_VALIDATION')
-				{
-					handleFormValidationErrors(response.errorList);
-				}
-			});	
-		f.preventDefault();            
+        {
+          handleFormValidationErrors(response.errorList);
+        }
+      });
+    f.preventDefault();
   });
 });
 function handleFormValidationErrors(errorList)

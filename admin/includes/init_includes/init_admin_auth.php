@@ -67,10 +67,10 @@ if (basename($_SERVER['SCRIPT_FILENAME']) != FILENAME_ALERT_PAGE . '.php')
 
   if (STORE_NAME == '' || STORE_OWNER == '')
   {
-  	$hasDoneStartWizard = FALSE;
-  	if (!in_array($page, array(FILENAME_DEFAULT,FILENAME_LOGOFF,FILENAME_ALERT_PAGE,FILENAME_PASSWORD_FORGOTTEN,FILENAME_DENIED,FILENAME_ALT_NAV)) && isset($_SESSION['admin_id']))
-  	{
-  		zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
-  	}
+    $hasDoneStartWizard = FALSE;
+    if (!in_array($page, array(FILENAME_DEFAULT,FILENAME_LOGOFF,FILENAME_ALERT_PAGE,FILENAME_PASSWORD_FORGOTTEN,FILENAME_DENIED,FILENAME_ALT_NAV)) && isset($_SESSION['admin_id']))
+    {
+      zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
+    }
   }
 }
