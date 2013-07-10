@@ -6,7 +6,7 @@
  * Displays confirmation details after order has been successfully processed.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_checkout_success_default.php 16435 2010-05-28 09:34:32Z drbyte $
@@ -63,10 +63,10 @@
 <?php } ?>
 <!-- bof payment-method-alerts -->
 <?php
-if (isset($_SESSION['payment_method_messages']) && $_SESSION['payment_method_messages'] != '') {
+if (isset($additional_payment_messages) && $additional_payment_messages != '') {
 ?>
   <div class="content">
-  <?php echo $_SESSION['payment_method_messages']; ?>
+  <?php echo $additional_payment_messages; ?>
   </div>
 <?php
 }

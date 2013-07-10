@@ -3,7 +3,7 @@
  * checkout_success header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
@@ -57,6 +57,12 @@ $orders_id = $zv_orders_id;
 $order_summary = $_SESSION['order_summary'];
 unset($_SESSION['order_summary']);
 unset($_SESSION['order_number_created']);
+
+$additional_payment_messages = '';
+if (isset($_SESSION['payment_method_messages']) && $_SESSION['payment_method_messages'] != '') {
+  $additional_payment_messages = $_SESSION['payment_method_messages'];
+  unset($_SESSION['payment_method_messages']);
+}
 
 // prepare list of product-notifications for this customer
 $global_query = "SELECT global_product_notifications
