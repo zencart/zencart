@@ -50,6 +50,12 @@ systemChecks:
           versionTest: lt
           localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.5') . PHP_EOL; ?>
 
+  checkZCversion:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_NEW_VERSION_AVAILABLE .PHP_EOL; ?>
+    methods:
+      checkIsZCVersionCurrent:
   mysqlExt:
     runLevel: always
     errorLevel: FAIL

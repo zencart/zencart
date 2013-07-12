@@ -223,6 +223,12 @@ define('TEXT_HELP_CONTENT_ADMINPASSWORD', "REMEMBER THIS PASSWORD!!!!! This is t
 define('TEXT_HELP_TITLE_ADMINDIRECTORY', 'Admin Directory');
 define('TEXT_HELP_CONTENT_ADMINDIRECTORY', "We try to rename your admin folder for you automatically, to offer a degree of security-by-obscurity. While we understand that this doesn't make it foolproof, it does discourage unauthorized visitors from attacking your site. You may still consider changing the foldername yourself (just rename the folder to whatever you wish it to be).");
 
+define('TEXT_VERSION_CHECK_NEW_VER', 'New Version Available v');
+define('TEXT_VERSION_CHECK_NEW_PATCH', 'New PATCH Available: v');
+define('TEXT_VERSION_CHECK_PATCH', 'patch');
+define('TEXT_VERSION_CHECK_DOWNLOAD', 'Download Here');
+define('TEXT_VERSION_CHECK_CURRENT', 'Your version of Zen Cart&reg; appears to be current.');
+define('TEXT_ERROR_NEW_VERSION_AVAILABLE', '<a href="http://www.zen-cart.com/getit">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="http://www.zen-cart.com" style="text-decoration:underline" target="_blank">www.zen-cart.com</a>');
 
 
 
