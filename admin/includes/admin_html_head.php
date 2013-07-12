@@ -14,7 +14,7 @@
 <title><?php echo TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow">
 <?php if (!defined('SKIP_CORE_JQUERY_LOADER') || SKIP_CORE_JQUERY_LOADER == FALSE) { ?>
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" />
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css" />
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <?php
@@ -31,9 +31,9 @@
 <?php } ?>
 
 <?php } ?>
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/template/css/menu.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css" />
+<link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" />
+<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
 <?php if (isset($extraCss)) { ?>
   <?php foreach ($extraCss as $css) { ?>
   <link rel="stylesheet" type="text/css" href="<?php echo $css['location']; ?>">

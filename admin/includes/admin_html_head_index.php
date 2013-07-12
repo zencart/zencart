@@ -14,9 +14,9 @@
 <title><?php echo TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow">
 <?php if (!defined('SKIP_CORE_JQUERY_LOADER') || SKIP_CORE_JQUERY_LOADER == FALSE) { ?>
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css">
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <?php
   //fall back to local if CDN copy didn't load or if offline
   $jqpath = DIR_WS_ADMIN . 'includes/template/javascript/jquery.min.js';
@@ -26,9 +26,9 @@
     <script>window.jQuery || document.write('<script src="<?php echo $jqpath;?>"><\/script><script src="<?php echo $jquipath;?>"><\/script><link type="stylesheet" href="<?php echo $jquicsspath;?>">');</script>
 <?php } ?>
 
-<script type="text/javascript" src="includes/template/javascript/jquery-validation/jquery.validate.js"></script>
+<script src="includes/template/javascript/jquery-validation/jquery.validate.js"></script>
 <?php if (file_exists(DIR_FS_ADMIN . 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js')) { ?>
-<script type="text/javascript" src="<?php echo 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js'; ?>"></script>
+<script src="<?php echo 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js'; ?>"></script>
 <?php } ?>
 
 <?php } ?>
@@ -41,9 +41,9 @@
   <link rel="stylesheet" type="text/css" href="<?php echo $css['location']; ?>">
   <?php } ?>
 <?php } ?>
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script language="javascript" src="includes/template/javascript/foundation/jquery.foundation.reveal.js"></script>
+<script src="includes/menu.js"></script>
+<script src="includes/general.js"></script>
+<script src="includes/template/javascript/foundation/jquery.foundation.reveal.js"></script>
 <?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
 <script type="text/javascript">
   <!--
