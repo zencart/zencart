@@ -96,9 +96,6 @@ background-color:#ffffff;
 color:#333333;
 margin:0;
 }
-.clearBoth {
-	clear: both;
-	}
 body#login .button{
 cursor:pointer;
 padding: 3px;
@@ -341,10 +338,10 @@ color:#ff6600;
   color: #FF0000;
 }
 .clearBoth {
-	clear:both;
+  clear:both;
 }
 .hiddenField {
-	display: none;
+  display: none;
 }
 #alt_nav {
 	padding:20px;
@@ -361,4 +358,5 @@ color:#ff6600;
 	white-space: nowrap;
 }
 
+label.error {color: red; font-weight: bold;}
 

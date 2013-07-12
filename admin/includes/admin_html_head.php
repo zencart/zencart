@@ -25,6 +25,11 @@
   if (file_exists(str_replace(DIR_WS_ADMIN, DIR_FS_ADMIN, $jqpath))) { ?>
     <script>window.jQuery || document.write('<script src="<?php echo $jqpath;?>"><\/script><script src="<?php echo $jquipath;?>"><\/script><link type="stylesheet" href="<?php echo $jquicsspath;?>" />');</script>
 <?php } ?>
+<script type="text/javascript" src="includes/template/javascript/jquery-validation/jquery.validate.js"></script>
+<?php if (file_exists(DIR_FS_ADMIN . 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js')) { ?>
+<script type="text/javascript" src="<?php echo 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js'; ?>"></script>
+<?php } ?>
+
 <?php } ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css">

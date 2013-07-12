@@ -313,6 +313,7 @@ define('IMAGE_PERMISSIONS', 'Edit Permissions');
 define('IMAGE_PREVIEW', 'Preview');
 define('IMAGE_RESTORE', 'Restore');
 define('IMAGE_RESET', 'Reset');
+define('IMAGE_RESET_PWD', 'Reset Password');
 define('IMAGE_SAVE', 'Save');
 define('IMAGE_SEARCH', 'Search');
 define('IMAGE_SELECT', 'Select');
