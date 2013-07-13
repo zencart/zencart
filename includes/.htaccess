@@ -51,11 +51,7 @@ deny from All
   FileETag None
   Header unset ETag
   #Header set Cache-Control "no-transform"
-<<<<<<< HEAD
-  <FilesMatch ".*\.(ico|jpe?g|JPE?G|gif|GIF|webp|png|swf|flv)$">
-=======
   <FilesMatch "(?i).*\.(ico|jpe?g|gif|webp|png|otf|swf|flv)$">
->>>>>>> 4f03e21... CHANGE-487 - Simplify filesmatch rules in htaccess by adding case-insensitivity flag
     Header set Cache-control "max-age=864000, public, must-revalidate"
     Header unset Last-Modified
   </FilesMatch>
