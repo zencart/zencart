@@ -1105,7 +1105,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       return $additional_link;
       break;
     case ($button_check->fields['product_is_call'] == '1'):
-      $return_button = '<a href="' . zen_href_link(FILENAME_CONTACT_US, '' 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+      $return_button = '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
       break;
     case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
       if ($_GET['main_page'] == zen_get_info_page($product_id)) {
