@@ -95,12 +95,9 @@
                                'text' => $languages[$i]['name']);
   }
   if (!$lng_exists) $_SESSION['language'] = $language;
-<<<<<<< HEAD
-=======
 
 
 require('includes/admin_html_head.php');
->>>>>>> a2487f1... CHANGE-416 - Prevent unauthorized information disclosure with editor
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
