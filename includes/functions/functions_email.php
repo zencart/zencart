@@ -88,8 +88,10 @@
       }
       if (!isset($to_email_address)) $to_email_address=trim($to_address); //if not more than one, just use the main one.
 
+      $zco_notifier->notify('NOTIFY_EMAIL_ADDRESS_TEST', array(), $to_name, $to_email_address, $email_subject);
       // ensure the address is valid, to prevent unnecessary delivery failures
       if (!zen_validate_email($to_email_address)) {
+        $zco_notifier->notify('NOTIFY_EMAIL_ADDRESS_VALIDATION_FAILURE', sprintf(EMAIL_SEND_FAILED . ' (failed validation)', $to_name, $to_email_address, $email_subject));
         @error_log(sprintf(EMAIL_SEND_FAILED . ' (failed validation)', $to_name, $to_email_address, $email_subject));
         continue;
       }

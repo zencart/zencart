@@ -388,7 +388,7 @@ class authorizenet extends base {
     }
 
     $this->submit_extras = array();
-    $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_PRESUBMIT_HOOK');
+    $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_PRESUBMIT_HOOK', array(), $submit_data);
     unset($this->submit_extras['x_login']);
     if (sizeof($this->submit_extras)) $submit_data_core = array_merge($submit_data_core, $this->submit_extras);
 
@@ -495,7 +495,7 @@ class authorizenet extends base {
    */
   function after_process() {
     global $insert_id, $db;
-    $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTPROCESS_HOOK');
+    $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTPROCESS_HOOK', $insert_id);
     $sql = "insert into " . TABLE_ORDERS_STATUS_HISTORY . " (comments, orders_id, orders_status_id, customer_notified, date_added) values (:orderComments, :orderID, :orderStatus, -1, now() )";
     $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . '. TransID: ' . $this->transaction_id . '.', 'string');
     $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
@@ -542,6 +542,7 @@ class authorizenet extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Gateway Mode', 'MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE', 'offsite', 'Where should customer credit card info be collected?<br /><b>onsite</b> = here (requires SSL)<br /><b>offsite</b> = authorize.net site', '6', '0', 'zen_cfg_select_option(array(\'onsite\', \'offsite\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Database Storage', 'MODULE_PAYMENT_AUTHORIZENET_STORE_DATA', 'True', 'Do you want to save the gateway communications data to the database?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Debug Mode', 'MODULE_PAYMENT_AUTHORIZENET_DEBUGGING', 'Alerts Only', 'Would you like to enable debug mode?  A  detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Alerts Only\', \'Log File\', \'Log and Email\'), ', now())");
+    $this->notify('NOTIFY_PAYMENT_AUTHORIZENET_SIM_INSTALLED');
   }
   /**
    * Remove the module and all its settings
@@ -550,6 +551,7 @@ class authorizenet extends base {
   function remove() {
     global $db;
     $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+    $this->notify('NOTIFY_PAYMENT_AUTHORIZENET_SIM_UNINSTALLED');
   }
   /**
    * Internal list of configuration keys used for configuration of the module

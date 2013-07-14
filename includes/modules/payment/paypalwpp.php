@@ -1578,9 +1578,7 @@ class paypalwpp extends base {
 
     $this->zcLog('ec_step1 - 2 -submit', print_r(array_merge($options, array('RETURNURL' => $return_url, 'CANCELURL' => $cancel_url)), true));
 
-    $this->options_merge = array();
-    $this->notify('NOTIFY_PAYMENT_PAYPALEC_BEFORE_SETEC', $options, $order, $order_totals);
-    if (sizeof($this->options_merge)) $options = array_merge($options, $this->options_merge);
+    $this->notify('NOTIFY_PAYMENT_PAYPALEC_BEFORE_SETEC', array(), $options, $order, $order_totals);
 
 
     /**
@@ -1588,7 +1586,7 @@ class paypalwpp extends base {
      */
     $response = $doPayPal->SetExpressCheckout($return_url, $cancel_url, $options);
 
-    $this->notify('NOTIFY_PAYMENT_PAYPALEC_TOKEN', $response);
+    $this->notify('NOTIFY_PAYMENT_PAYPALEC_TOKEN', $response, $options);
 
   $submissionCheckOne = TRUE;
   $submissionCheckTwo = TRUE;
@@ -1698,7 +1696,7 @@ class paypalwpp extends base {
     // with the token we retrieve the data about this user
     $response = $doPayPal->GetExpressCheckoutDetails($_SESSION['paypal_ec_token']);
 
-    $this->notify('NOTIFY_PAYPALEC_PARSE_GETEC_RESULT', $response);
+    $this->notify('NOTIFY_PAYPALEC_PARSE_GETEC_RESULT', array(), $response);
 
     //$this->zcLog('ec_step2 - GetExpressCheckout response', print_r($response, true));
 
@@ -2030,7 +2028,7 @@ class paypalwpp extends base {
         // set the Guest customer ID -- for PWA purposes
         $_SESSION['customer_guest_id'] = $customer_id;
 
-        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(array('customer_id' => $customer_id), $sql_data_array));
+        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', $customer_id, $sql_data_array);
 
         // set the customer address information in the array for the table insertion
         $sql_data_array = array(
@@ -2061,7 +2059,7 @@ class paypalwpp extends base {
         // grab the address_id (last insert id)
         $address_id = $db->Insert_ID();
 
-        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $address_id), $sql_data_array));
+        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array(), $address_id, $sql_data_array);
 
         // set the address id lookup for the customer
         $sql = "UPDATE " . TABLE_CUSTOMERS . "
@@ -2122,7 +2120,7 @@ class paypalwpp extends base {
         }
 
         // hook notifier class vis a vis account-creation
-        $this->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT');
+        $this->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT', 'paypal express checkout');
 
       } else {
         // set the boolean ec temp value for the account to false, since we didn't have to create one
@@ -2481,7 +2479,7 @@ class paypalwpp extends base {
       $sql = $db->bindVars($sql, ':countryId', $country_id, 'integer');
       $result = $db->Execute($sql);
       if ($result->EOF) {
-        $this->notify('NOTIFY_HEADER_ADDRESS_BOOK_ADD_ENTRY_INVALID_ATTEMPT');
+        $this->notify('NOTIFY_HEADER_ADDRESS_BOOK_ADD_ENTRY_INVALID_ATTEMPT', $customer_id, $country_id, $address_format_id, $address_question_arr);
         $this->zcLog('addAddressBookEntry - 3', 'Failed to add address due to country restrictions');
         return FALSE;
       }
@@ -2542,7 +2540,7 @@ class paypalwpp extends base {
 
     $new_address_book_id = $db->Insert_ID();
 
-    $this->notify('NOTIFY_HEADER_ADDRESS_BOOK_ADD_ENTRY_DONE');
+    $this->notify('NOTIFY_HEADER_ADDRESS_BOOK_ADD_ENTRY_DONE', 'paypal express checkout', $new_address_book_id, $sql_data_array, $make_default);
 
     // make default if set, update
     if ($make_default) {

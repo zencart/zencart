@@ -336,7 +336,7 @@ class paypal extends base {
     list($this->transaction_amount, $this->transaction_currency) = $_SESSION['paypal_transaction_info'];
     unset($_SESSION['paypal_transaction_info']);
     if (isset($_GET['referer']) && $_GET['referer'] == 'paypal') {
-      $this->notify('NOTIFY_PAYMENT_PAYPAL_RETURN_TO_STORE');
+      $this->notify('NOTIFY_PAYMENT_PAYPAL_RETURN_TO_STORE', $_GET);
       if (defined('MODULE_PAYMENT_PAYPAL_PDTTOKEN') && MODULE_PAYMENT_PAYPAL_PDTTOKEN != '' && isset($_GET['tx']) && $_GET['tx'] != '') {
         $pdtStatus = $this->_getPDTresults($this->transaction_amount, $this->transaction_currency, $_GET['tx']);
       } else {
@@ -361,7 +361,7 @@ class paypal extends base {
         return true;
       }
     } else {
-      $this->notify('NOTIFY_PAYMENT_PAYPAL_CANCELLED_DURING_CHECKOUT');
+      $this->notify('NOTIFY_PAYMENT_PAYPAL_CANCELLED_DURING_CHECKOUT', $_GET);
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
   }

@@ -83,7 +83,7 @@ class shipping extends base {
     global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
     $this->abort_legacy_calculations = FALSE;
-    $this->notify('NOTIFY_SHIPPING_MODULE_PRE_CALCULATE_BOXES_AND_TARE');
+    $this->notify('NOTIFY_SHIPPING_MODULE_PRE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
     if ($this->abort_legacy_calculations) return;
 
     if (is_array($this->modules)) {
@@ -131,7 +131,7 @@ class shipping extends base {
         $shipping_weight = $shipping_weight/$shipping_num_boxes;
       }
     }
-    $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE');
+    $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
   }
 
   function quote($method = '', $module = '', $calc_boxes_weight_tare = true) {

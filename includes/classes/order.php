@@ -29,7 +29,7 @@ class order extends base {
     $this->customer = array();
     $this->delivery = array();
 
-    $this->notify('NOTIFY_ORDER_INSTANTIATE', array('order_id' => $order_id));
+    $this->notify('NOTIFY_ORDER_INSTANTIATE', array(), $order_id);
     if (zen_not_null($order_id)) {
       $this->query($order_id);
     } else {
@@ -42,7 +42,7 @@ class order extends base {
 
     $order_id = zen_db_prepare_input($order_id);
     $this->queryReturnFlag = NULL;
-    $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array('order_id' => $order_id));
+    $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return;
 
     $order_query = "select customers_id, customers_name, customers_company,
@@ -245,7 +245,7 @@ class order extends base {
       $index++;
       $orders_products->MoveNext();
     }
-    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array('order_id' => $order_id));
+    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array(), $order_id);
   }
 
   function cart() {
@@ -538,7 +538,7 @@ class order extends base {
        * Check for external tax handling code
        **************************************/
       $this->use_external_tax_handler_only = FALSE;
-      $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_HANDLING', $index, $taxCountryId, $taxZoneId);
+      $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_HANDLING', array(), $index, $taxCountryId, $taxZoneId);
 
       if ($this->use_external_tax_handler_only == FALSE) {
         /*********************************************
@@ -606,20 +606,21 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_CART_FINISHED');
   }
 
-  function create($zf_ot_modules, $zf_mode = 2) {
+  function create($zf_ot_modules, $zf_mode = FALSE) {
     global $db;
 
-    $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_DURING_ORDER_CREATE', $index, $taxCountryId, $taxZoneId);
+    $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_DURING_ORDER_CREATE', array(), $zf_ot_modules);
 
     if ($this->info['total'] == 0) {
       if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
-        $this->info['order_status'] = DEFAULT_ORDERS_STATUS_ID;
+        $this->info['order_status'] = (int)DEFAULT_ORDERS_STATUS_ID;
       } else {
         if ($_SESSION['payment'] != 'freecharger') {
-          $this->info['order_status'] = DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
+          $this->info['order_status'] = (int)DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
         }
       }
     }
+    $this->notify('NOTIFY_ORDER_CART_ORDERSTATUS');
 
     if ($_SESSION['shipping'] == 'free_free') {
       $this->info['shipping_module_code'] = $_SESSION['shipping'];
@@ -716,12 +717,12 @@ class order extends base {
 
     $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_COMMENT', $sql_data_array);
 
-    return($insert_id);
+    return $insert_id;
 
   }
 
 
-  function create_add_products($zf_insert_id, $zf_mode = false) {
+  function create_add_products($zf_insert_id, $zf_mode = FALSE) {
     global $db, $currencies, $order_total_modules, $order_totals;
 
     // initialized for the email confirmation
@@ -927,7 +928,7 @@ class order extends base {
       //------eof: insert customer-chosen options ----
     $this->notify('NOTIFY_ORDER_PROCESSING_ATTRIBUTES_EXIST', $attributes_exist);
 
-    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADD_PRODUCTS', $custom_insertable_text);
+    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADD_PRODUCTS', array(), $custom_insertable_text);
 
 /* START: ADD MY CUSTOM DETAILS
  * 1. calculate/prepare custom information to be added to this product entry in order-confirmation, perhaps as a function call to custom code to build a serial number etc:
@@ -980,9 +981,9 @@ class order extends base {
   }
 
 
-  function send_order_email($zf_insert_id, $zf_mode) {
+  function send_order_email($zf_insert_id, $zf_mode = FALSE) {
     global $currencies, $order_totals;
-    $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', $order_totals);
+    $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $zf_insert_id, $order_totals, $zf_mode);
     if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
 
     $this->send_low_stock_emails = TRUE;
@@ -1129,7 +1130,7 @@ class order extends base {
     //  $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
 
     $html_msg['EXTRA_INFO'] = '';
-    $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
+    $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', $zf_insert_id, $email_order, $html_msg);
     zen_mail($this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id, $email_order, STORE_NAME, EMAIL_FROM, $html_msg, 'checkout', $this->attachArray);
 
     // send additional emails
@@ -1146,14 +1147,14 @@ class order extends base {
 
       // Add extra heading stuff via observer class
       $this->extra_header_text = '';
-      $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_FOR_ADDITIONAL_EMAILS', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
+      $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_FOR_ADDITIONAL_EMAILS', $zf_insert_id, $email_order, $html_msg);
       $email_order = $this->extra_header_text . $email_order;
       $html_msg['EMAIL_TEXT_HEADER'] = nl2br($this->extra_header_text) . $html_msg['EMAIL_TEXT_HEADER'];
 
       zen_mail('', SEND_EXTRA_ORDER_EMAILS_TO, SEND_EXTRA_NEW_ORDERS_EMAILS_TO_SUBJECT . ' ' . EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id,
       $email_order . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'checkout_extra', $this->attachArray, $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address']);
     }
-    $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', array($zf_insert_id, $email_order, $extra_info, $html_msg));
+    $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
   }
 
 }

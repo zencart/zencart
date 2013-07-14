@@ -199,7 +199,7 @@ class shoppingCart extends base {
    */
   function reset($reset_database = false) {
     global $db;
-    $this->notify('NOTIFIER_CART_RESET_START');
+    $this->notify('NOTIFIER_CART_RESET_START', array(), $reset_database);
     $this->contents = array();
     $this->total = 0;
     $this->weight = 0;
@@ -246,7 +246,7 @@ class shoppingCart extends base {
    */
   function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
     global $db;
-    $this->notify('NOTIFIER_CART_ADD_CART_START');
+    $this->notify('NOTIFIER_CART_ADD_CART_START', array(), $products_id, $qty, $attributes, $notify);
     $products_id = zen_get_uprid($products_id, $attributes);
     if ($notify == true) {
       $_SESSION['new_products_id_in_cart'] = $products_id;
@@ -353,7 +353,7 @@ class shoppingCart extends base {
    */
   function update_quantity($products_id, $quantity = '', $attributes = '') {
     global $db;
-    $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_START');
+    $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_START', array(), $products_id, $quantity, $attributes);
     if (empty($quantity)) return true; // nothing needs to be updated if theres no quantity, so we return true..
 
     $this->contents[$products_id] = array('qty' => (float)$quantity);
@@ -499,12 +499,12 @@ class shoppingCart extends base {
    * @return decimal the quantity of the item
    */
   function get_quantity($products_id) {
-    $this->notify('NOTIFIER_CART_GET_QUANTITY_START');
+    $this->notify('NOTIFIER_CART_GET_QUANTITY_START', array(), $products_id);
     if (isset($this->contents[$products_id])) {
-    $this->notify('NOTIFIER_CART_GET_QUANTITY_END_QTY');
+      $this->notify('NOTIFIER_CART_GET_QUANTITY_END_QTY', array(), $products_id);
       return $this->contents[$products_id]['qty'];
     } else {
-    $this->notify('NOTIFIER_CART_GET_QUANTITY_END_FALSE');
+      $this->notify('NOTIFIER_CART_GET_QUANTITY_END_FALSE', $products_id);
       return 0;
     }
   }
@@ -516,12 +516,12 @@ class shoppingCart extends base {
    */
   function in_cart($products_id) {
     //  die($products_id);
-    $this->notify('NOTIFIER_CART_IN_CART_START');
+    $this->notify('NOTIFIER_CART_IN_CART_START', array(), $products_id);
     if (isset($this->contents[$products_id])) {
-    $this->notify('NOTIFIER_CART_IN_CART_END_TRUE');
+      $this->notify('NOTIFIER_CART_IN_CART_END_TRUE', array(), $products_id);
       return true;
     } else {
-    $this->notify('NOTIFIER_CART_IN_CART_END_FALSE');
+      $this->notify('NOTIFIER_CART_IN_CART_END_FALSE', $products_id);
       return false;
     }
   }
@@ -534,7 +534,7 @@ class shoppingCart extends base {
    */
   function remove($products_id) {
     global $db;
-    $this->notify('NOTIFIER_CART_REMOVE_START');
+    $this->notify('NOTIFIER_CART_REMOVE_START', array(), $products_id);
     //die($products_id);
     //CLR 030228 add call zen_get_uprid to correctly format product ids containing quotes
     //      $products_id = zen_get_uprid($products_id, $attributes);
@@ -1148,7 +1148,7 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
   function get_products($check_for_valid_cart = false) {
     global $db;
 
-    $this->notify('NOTIFIER_CART_GET_PRODUCTS_START');
+    $this->notify('NOTIFIER_CART_GET_PRODUCTS_START', array(), $check_for_valid_cart);
 
     if (!is_array($this->contents)) return false;
 
@@ -1335,7 +1335,7 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
                                   );
       }
     }
-    $this->notify('NOTIFIER_CART_GET_PRODUCTS_END');
+    $this->notify('NOTIFIER_CART_GET_PRODUCTS_END', array(), $products_array);
     return $products_array;
   }
   /**
@@ -2120,7 +2120,7 @@ define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
    * @param url parameters
    */
   function actionCartUserAction($goto, $parameters) {
-    $this->notify('NOTIFY_CART_USER_ACTION');
+    $this->notify('NOTIFY_CART_USER_ACTION', array(), $goto, $parameters);
   }
 
 
