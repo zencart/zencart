@@ -735,8 +735,11 @@ class order extends base {
 
     for ($i=0, $n=sizeof($this->products); $i<$n; $i++) {
       $custom_insertable_text = '';
+
+      $this->doStockDecrement = (STOCK_LIMITED == 'true');
+      $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_INIT', array(), $this->products[$i], $i);
       // Stock Update - Joao Correia
-      if (STOCK_LIMITED == 'true') {
+      if ($this->doStockDecrement) {
         if (DOWNLOAD_ENABLED == 'true') {
           $stock_query_raw = "select p.products_quantity, pad.products_attributes_filename, p.product_is_always_free_shipping
                               from " . TABLE_PRODUCTS . " p
@@ -757,7 +760,7 @@ class order extends base {
           $stock_values = $db->Execute("select * from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
         }
 
-        $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN');
+        $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN', array(), $stock_values);
 
         if ($stock_values->RecordCount() > 0) {
           // do not decrement quantities if products_attributes_filename exists
@@ -788,8 +791,11 @@ class order extends base {
       }
 
       // Update products_ordered (for bestsellers list)
-      //    $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . zen_get_prid($order->products[$i]['id']) . "'");
-      $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+      $this->bestSellersUpdate = TRUE;
+      $this->notify('NOTIFY_ORDER_PROCESSING_BESTSELLERS_UPDATE', array(), $this->products[$i], $i);
+      if ($this->bestSellersUpdate) {
+        $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+      }
 
       $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END');
 
