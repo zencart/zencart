@@ -71,8 +71,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.css">
-<link href="includes/template/css/login.css" rel="stylesheet" type="text/css" />
+<link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
 <meta name="robots" content="noindex, nofollow" />
 <script language="javascript" type="text/javascript"><!--
 function animate(f)

@@ -75,8 +75,7 @@ if (isset($_POST['submit']))
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow" />
-<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.css">
-<link href="includes/template/css/login.css" rel="stylesheet" type="text/css">
+<link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
   <div class="container">
