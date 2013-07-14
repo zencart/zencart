@@ -1,6 +1,8 @@
 /*!
  * jQuery Validation Plugin 1.11.1
  *
+ *  ALERT: Altered slightly by Zen Cart to accommodate alternate URL formats needed during zc_install
+ *
  * http://bassistance.de/jquery-plugins/jquery-plugin-validation/
  * http://docs.jquery.com/Plugins/Validation
  *
