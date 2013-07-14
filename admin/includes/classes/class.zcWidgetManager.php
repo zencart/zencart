@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class zcWidgetManager extends base
 {
-  public function getWidgetsForUser($user, $languageId)
+  public static function getWidgetsForUser($user, $languageId)
   {
     global $db;
     $widgets = array();
@@ -36,7 +36,7 @@ class zcWidgetManager extends base
     }
     return $widgets;
   }
-  public function getWidgetsForProfile($user, $languageId)
+  public static function getWidgetsForProfile($user, $languageId)
   {
     global $db;
     $widgets = array();
@@ -74,7 +74,7 @@ class zcWidgetManager extends base
     return $widgets;
   }
   
-  public function getWidgetInfoForUser($user, $languageId)
+  public static function getWidgetInfoForUser($user, $languageId)
   {
     global $db;
     $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " as tdwtu
@@ -92,7 +92,7 @@ class zcWidgetManager extends base
     }
     return $widgets;
   }
-  public function loadWidgetClasses($widgetList)
+  public static function loadWidgetClasses($widgetList)
   {
     $widgetClassList = array();
     if (count($widgetList) > 0 )
@@ -115,7 +115,7 @@ class zcWidgetManager extends base
     }
     return $widgetClassList;
   }
-  public function prepareTemplateVariables($widgetList)
+  public static function prepareTemplateVariables($widgetList)
   {
     $tplVars = array();
     foreach ($widgetList as $widgetkey => $widget)
@@ -143,7 +143,7 @@ class zcWidgetManager extends base
       $db->execute($sql);
     }
   }
-  public function removeWidget($item, $user)
+  public static function removeWidget($item, $user)
   {
     global $db;
     $sql = "DELETE FROM ". TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE widget_key = :key: AND admin_id = :user:";
@@ -177,7 +177,7 @@ class zcWidgetManager extends base
     }
     return $widgetEnum;
   }
-  public function setWidgetRefresh($widgetRefresh, $item, $user)
+  public static function setWidgetRefresh($widgetRefresh, $item, $user)
   {
     global $db;
     $sql = "UPDATE ". TABLE_DASHBOARD_WIDGETS_TO_USERS . " SET widget_refresh = :refresh: WHERE widget_key = :key: AND admin_id = :user:";
@@ -187,13 +187,13 @@ class zcWidgetManager extends base
     $db->execute($sql);
     
   }
-  public function getWidgetTimerSelect($id)
+  public static function getWidgetTimerSelect($id)
   {
     global $db;
     $optionList = array(array('id'=>0, 'text'=>TEXT_TIMER_SELECT_NONE),array('id'=>60, 'text'=>TEXT_TIMER_SELECT_1MIN),array('id'=>300, 'text'=>TEXT_TIMER_SELECT_5MIN), array('id'=>600, 'text'=>TEXT_TIMER_SELECT_10MIN), array('id'=>900, 'text'=>TEXT_TIMER_SELECT_15MIN));
     return $optionList;
   }
-  public function getWidgetRefresh($item, $user)
+  public static function getWidgetRefresh($item, $user)
   {
     global $db;
     $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :user: and widget_key = :key:";
@@ -202,13 +202,13 @@ class zcWidgetManager extends base
     $result = $db->execute($sql);
     return $result->fields['widget_refresh'];
   }
-  public function getInstallableWidgets($adminId)
+  public static function getInstallableWidgets($adminId)
   {
     $groups = self::getWidgetGroups($_SESSION['languages_id']);
     $installableWidgets = self::getInstallableWidgetsList($_SESSION['admin_id'], $_SESSION['languages_id']);
     return $installableWidgets;
   }
-  public function getWidgetGroups($languageId)
+  public static function getWidgetGroups($languageId)
   {
     global $db;
     $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_GROUPS . " WHERE language_id = :languageId:";
@@ -221,14 +221,14 @@ class zcWidgetManager extends base
     }
     return $groups;
   }
-  public function getInstallableWidgetsList($user, $languageId)
+  public static function getInstallableWidgetsList($user, $languageId)
   {
     $profileWidgets = self::getWidgetsForProfile($user, $languageId);
     $installedWidgets = self::getWidgetsForUser($user, $languageId);
     $installableWidgets = array_diff_assoc($profileWidgets, $installedWidgets);
     return $installableWidgets;
   }
-  public function addWidgetForUser($widget, $user)
+  public static function addWidgetForUser($widget, $user)
   {
     global $db;
     $sql = "SELECT MAX(widget_row) as max FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS;
