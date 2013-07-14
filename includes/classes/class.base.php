@@ -3,7 +3,7 @@
  * File contains just the base class
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: class.base.php 14535 2009-10-07 22:16:19Z wilt $
  */
@@ -20,8 +20,8 @@ class base {
    *
    * NB. We have to get a little sneaky here to stop session based classes adding events ad infinitum
    * To do this we first concatenate the class name with the event id, as a class is only ever going to attach to an
-   * event id once, this provides a unigue key. To ensure there are no naming problems with the array key, we md5 the unique
-   * name to provide a unique hashed key.
+   * event id once, this provides a unique key. To ensure there are no naming problems with the array key, we md5 the
+   * unique name to provide a unique hashed key.
    *
    * @param object Reference to the observer class
    * @param array An array of eventId's to observe
@@ -47,7 +47,8 @@ class base {
    * method to notify observers that an event has occurred in the notifier object
    *
    * @param string The event ID to notify for
-   * @param array paramters to pass to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
+   * @param array parameters to pass to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
+   * NOTE: The $param1 is not received-by-reference, but params 2-7 are.
    */
   function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
@@ -62,6 +63,7 @@ class base {
     }
 
     // handle observers
+    // observers can fire either a generic update() method, or a notifier-point-specific updateNotifierPointCamelCased() method. The specific one will fire if found; else the generic update() will fire instead.
     $observers = & base::getStaticObserver();
     if (is_null($observers)) {
       return;
