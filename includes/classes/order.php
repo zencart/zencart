@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Apr 15 15:06:16 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Tue Apr 15 15:06:16 2014 -0400 Modified in v1.5.5 $
  */
 /**
  * order class
@@ -520,41 +520,49 @@ class order extends base {
       // add onetime charges here
       //$_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity'])
 
-      /*********************************************
-       * Calculate taxes for this product
-       *********************************************/
-      $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
-      + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
-      $this->info['subtotal'] += $shown_price;
-      $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
-      // find product's tax rate and description
-      $products_tax = $this->products[$index]['tax'];
-      $products_tax_description = $this->products[$index]['tax_description'];
+      /**************************************
+       * Check for external tax handling code
+       **************************************/
+      $this->use_external_tax_handler_only = FALSE;
+      $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_HANDLING', array(), $index, $taxCountryId, $taxZoneId);
 
-      if (DISPLAY_PRICE_WITH_TAX == 'true') {
-        // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
-        $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
-      } else {
-        // calculate the amount of tax for this product (assuming tax is NOT included in the price)
-//        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
-        $tax_add = ($products_tax/100) * $shown_price;
-      }
-      $this->info['tax'] += $tax_add;
-      foreach ($taxRates as $taxDescription=>$taxRate)
-      {
-        $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
-                +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
-        if (isset($this->info['tax_groups'][$taxDescription]))
-        {
-          $this->info['tax_groups'][$taxDescription] += $taxAdd;
-        } else
-        {
-          $this->info['tax_groups'][$taxDescription] = $taxAdd;
+      if ($this->use_external_tax_handler_only == FALSE) {
+        /*********************************************
+         * Calculate taxes for this product
+         *********************************************/
+        $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
+        + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
+        $this->info['subtotal'] += $shown_price;
+        $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
+        // find product's tax rate and description
+        $products_tax = $this->products[$index]['tax'];
+        $products_tax_description = $this->products[$index]['tax_description'];
+
+        if (DISPLAY_PRICE_WITH_TAX == 'true') {
+          // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
+          $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
+        } else {
+          // calculate the amount of tax for this product (assuming tax is NOT included in the price)
+  //        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
+          $tax_add = ($products_tax/100) * $shown_price;
         }
-      }
-      /*********************************************
-       * END: Calculate taxes for this product
-       *********************************************/
+        $this->info['tax'] += $tax_add;
+        foreach ($taxRates as $taxDescription=>$taxRate)
+        {
+          $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
+                  +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
+          if (isset($this->info['tax_groups'][$taxDescription]))
+          {
+            $this->info['tax_groups'][$taxDescription] += $taxAdd;
+          } else
+          {
+            $this->info['tax_groups'][$taxDescription] = $taxAdd;
+          }
+        }
+        /*********************************************
+         * END: Calculate taxes for this product
+         *********************************************/
+    }
       $index++;
     }
 
@@ -1089,14 +1097,14 @@ class order extends base {
 
       // Add extra heading stuff via observer class
       $this->extra_header_text = '';
-      $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_FOR_ADDITIONAL_EMAILS', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
+      $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_FOR_ADDITIONAL_EMAILS', $zf_insert_id, $email_order, $html_msg);
       $email_order = $this->extra_header_text . $email_order;
       $html_msg['EMAIL_TEXT_HEADER'] = nl2br($this->extra_header_text) . $html_msg['EMAIL_TEXT_HEADER'];
 
       zen_mail('', SEND_EXTRA_ORDER_EMAILS_TO, SEND_EXTRA_NEW_ORDERS_EMAILS_TO_SUBJECT . ' ' . EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id,
       $email_order . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'checkout_extra', $this->attachArray, $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address']);
     }
-    $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', array($zf_insert_id, $email_order, $extra_info, $html_msg));
+    $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
   }
 
 }

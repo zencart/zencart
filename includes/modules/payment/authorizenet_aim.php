@@ -384,7 +384,7 @@ class authorizenet_aim extends base {
                          'IP' => zen_get_ip_address(),
                          'Session' => $sessID );
 
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_EMULATOR_CHECK', $submit_data);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_EMULATOR_CHECK', array(), $submit_data);
     if ($this->include_x_type) {
       $submit_data['x_type'] = MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE';
     }
@@ -399,13 +399,13 @@ class authorizenet_aim extends base {
     }
 
     $this->submit_extras = array();
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_PRESUBMIT_HOOK');
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_PRESUBMIT_HOOK', array(), $submit_data);
     unset($this->submit_extras['x_login'], $this->submit_extras['x_tran_key']);
     if (sizeof($this->submit_extras)) $submit_data = array_merge($submit_data, $this->submit_extras);
 
     unset($response);
     $response = $this->_sendRequest($submit_data);
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', $response);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', array(), $response);
     $response_code = $response[0];
     $response_text = $response[3];
     $this->auth_code = $response[4];
@@ -585,7 +585,7 @@ class authorizenet_aim extends base {
     }
 
     $this->mode = 'AIM';
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', $submit_data);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', array(), $submit_data);
 
     switch ($this->mode) {
       case 'eProcessing':
