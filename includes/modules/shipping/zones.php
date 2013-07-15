@@ -522,7 +522,7 @@ class zones extends base {
 
     if ((int)MODULE_SHIPPING_ZONES_SKIPPED > 0 ) {
       $check_flag = false;
-      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_ZONES_SKIPPED . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_ZONES_SKIPPED . "' and zone_country_id = '" . (int)$order->delivery['country']['id'] . "' order by zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {
           $check_flag = true;

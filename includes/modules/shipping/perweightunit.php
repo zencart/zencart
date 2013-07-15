@@ -93,7 +93,7 @@ class perweightunit extends base {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_PERWEIGHTUNIT_ZONE . "'
-                             and zone_country_id = '" . $order->delivery['country']['id'] . "'
+                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
                              order by zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {
