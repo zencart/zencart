@@ -164,11 +164,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'objectName'=>'cart',
                                 'checkInstantiated'=>true,
                                 'classSession'=>true);
-  $autoLoadConfig[80][] = array('autoType'=>'classInstantiate',
-                                'className'=>'navigationHistory',
-                                'objectName'=>'navigation',
-                                'checkInstantiated'=>true,
-                                'classSession'=>true);
 /**
  * Breakpoint 90.
  *
@@ -190,6 +185,13 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'objectName'=>'template');
   $autoLoadConfig[100][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_sanitize.php');
+  $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
+                                'className'=>'navigationHistory',
+                                'objectName'=>'navigation',
+                                'checkInstantiated'=>true,
+                                'classSession'=>true);
+  $autoLoadConfig[100][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_counter.php');
 /**
  * Breakpoint 110.
  *
