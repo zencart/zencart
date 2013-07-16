@@ -254,7 +254,7 @@ require('includes/admin_html_head.php');
 
     $order_by = " order by pd.products_name";
 
-    $reviews_query_raw = ("select r.*, rd.*, pd.*, p.* from (" . TABLE_REVIEWS . " r left join " . TABLE_REVIEWS_DESCRIPTION . " rd on r.reviews_id = rd.reviews_id left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on r.products_id = pd.products_id and pd.language_id ='" . (int)$_SESSION['languages_id'] . "' left join " . TABLE_PRODUCTS . " p on p.products_id= r.products_id) " . " where r.products_id = p.products_id " . $search . $order_by);
+    $reviews_query_raw = ("select r.*, rd.*, pd.*, p.*, c.* from (" . TABLE_REVIEWS . " r left join " . TABLE_REVIEWS_DESCRIPTION . " rd on r.reviews_id = rd.reviews_id left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on r.products_id = pd.products_id and pd.language_id ='" . (int)$_SESSION['languages_id'] . "' left join " . TABLE_PRODUCTS . " p on p.products_id= r.products_id) left join " . TABLE_CUSTOMERS . " c on r.customers_id = c.customers_id where r.products_id = p.products_id " . $search . $order_by);
 
 // reset page when page is unknown
 if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
@@ -311,7 +311,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
       }
 ?>
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $reviews->fields['reviews_id'] . '&action=preview') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . zen_get_products_name($reviews->fields['products_id']); ?></td>
-                <td class="dataTableContent"><?php echo $reviews->fields['customers_name']; ?></td>
+                <td class="dataTableContent"><?php echo $reviews->fields['customers_name'] . '<br />' . $reviews->fields['customers_firstname'] . ' ' . $reviews->fields['customers_lastname']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $reviews->fields['reviews_rating'] . '.gif'); ?></td>
                 <td class="dataTableContent" align="right"><?php echo zen_date_short($reviews->fields['date_added']); ?></td>
                 <td  class="dataTableContent" align="center">
@@ -367,7 +367,9 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
         $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($rInfo->date_added));
         if (zen_not_null($rInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
         $contents[] = array('text' => '<br>' . zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
-        $contents[] = array('text' => '<br>' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
+        $contents[] = array('text' => '<br>' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name . '<br />' .
+        $rInfo->customers_firstname . ' ' . $rInfo->customers_lastname . '<br />' .
+        '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $rInfo->customers_email_address, 'SSL') . '" . >' . $rInfo->customers_email_address . '</a>');
         $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif'));
         $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
         $contents[] = array('text' => '<br>' . TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');
