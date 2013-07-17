@@ -185,7 +185,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'objectName'=>'template');
   $autoLoadConfig[100][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_sanitize.php');
-  $autoLoadConfig[80][] = array('autoType'=>'classInstantiate',
+  $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
                                 'className'=>'navigationHistory',
                                 'objectName'=>'navigation',
                                 'checkInstantiated'=>true,
