@@ -16,7 +16,7 @@
 // load the after_process function from the payment modules
   $payment_modules->after_process();
 
-  $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_CART_RESET');
+  $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_CART_RESET', $insert_id);
   $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
