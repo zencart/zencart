@@ -41,14 +41,14 @@ systemChecks:
         method: checkPhpVersion
         parameters:
           version: 5.2
-          versionTest: gt
+          versionTest: ge
           localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.2') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 5.5
-          versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.5') . PHP_EOL; ?>
+          version: 5.5.99
+          versionTest: le
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.5.99') . PHP_EOL; ?>
 
   checkZCversion:
     runLevel: always
