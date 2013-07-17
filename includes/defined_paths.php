@@ -22,12 +22,11 @@ if (!defined('DIR_WS_TEMPLATES')) define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . '
 if (!defined('DIR_WS_UPLOADS')) define('DIR_WS_UPLOADS', DIR_WS_IMAGES . 'uploads/');
 if (!defined('DIR_FS_UPLOADS')) define('DIR_FS_UPLOADS', DIR_FS_CATALOG . DIR_WS_UPLOADS);
 if (!defined('DIR_FS_EMAIL_TEMPLATES')) define('DIR_FS_EMAIL_TEMPLATES', DIR_FS_CATALOG . 'email/');
-if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
 if (!defined('SQL_CACHE_METHOD')) define('SQL_CACHE_METHOD', 'none');
 
 if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache'); // trailing slash omitted
-if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs'); // trailing slash omitted
+if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs'); // trailing slash omitted
 if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 
 if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
