@@ -340,7 +340,9 @@ class zcDatabaseInstaller
   }
   private function camelize($parseString)
   {
-    return preg_replace_callback('/\s([0-9,a-z])/', create_function('$matches', 'return strtoupper($matches[1]);'), strtolower($parseString));
+    $parseString = preg_replace_callback('/\s([0-9,a-z])/', create_function('$matches', 'return strtoupper($matches[1]);'), strtolower($parseString));
+    $parseString[0] = strtoupper($parseString[0]);
+    return $parseString;
   }
   private function doJsonProgressLoggingUpdate()
   {
