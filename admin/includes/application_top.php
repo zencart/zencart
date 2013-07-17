@@ -89,6 +89,18 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') ||
   }
 }
 /**
+ * check for and load system defined path constants
+ */
+if (file_exists('includes/defined_paths.php')) {
+  /**
+   * load the system-defined path constants
+   */
+  require('includes/defined_paths.php');
+} else {
+  die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+  exit;
+}
+/**
  * ignore version-check if INI file setting has been set
  */
 if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
@@ -99,30 +111,10 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
     }
   }
 }
-
-// Defined for backwards compatibility only. THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
-if (!defined('HTT'.'PS_SERVER')) define('HTT'.'PS_SERVER', HTTP_SERVER);
-
 /*
-// turned off for now
-  if ($check_cfg != 'off') {
-    // if the admin/includes/configure.php file doesn't contain admin-related content, throw error
-    $zc_pagepath = str_replace(basename($PHP_SELF),'',__FILE__); //remove page name from full path of current page
-    $zc_pagepath = str_replace(array('\\','\\\\'),'/',$zc_pagepath); // convert '\' marks to '/'
-    $zc_pagepath = str_replace('//','/',$zc_pagepath); //convert doubles to single
-    $zc_pagepath = str_replace(strrchr($zc_pagepath,'/'),'',$zc_pagepath); // remove trailing '/'
-    $zc_adminpage = str_replace('\\','/',DIR_FS_ADMIN); //convert "\" to '/'
-    $zc_adminpage = str_replace('//','/',$zc_adminpage); // remove doubles
-    $zc_adminpage = str_replace(strrchr($zc_adminpage,'/'),'',$zc_adminpage); // remove trailing '/'
-    if (!defined('DIR_WS_ADMIN') || $zc_pagepath != $zc_adminpage ) {
-      echo ('ERROR: The admin/includes/configure.php file has invalid configuration. Please rebuild, or verify specified paths.');
-      if (file_exists('../zc_install/index.php')) {
-        echo '<br /><a href="../zc_install/index.php">Click here for installation</a>';
-      }
-      echo '<br /><br /><br /><br />['.$zc_pagepath.']&nbsp;&nbsp;&nbsp;&laquo;&raquo;&nbsp;&nbsp;&nbsp;[' .$zc_adminpage.']<br />';
-    }
-  }
-*/
+ * Defined for backwards compatibility only. THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
+ */
+if (!defined('HTT'.'PS_SERVER')) define('HTT'.'PS_SERVER', HTTP_SERVER);
 /**
  * include the list of extra configure files
  */

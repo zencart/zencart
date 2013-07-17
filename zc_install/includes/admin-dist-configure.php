@@ -8,84 +8,86 @@
  */
 
 
-/*************** NOTE: This file is similar, but DIFFERENT from the "store" version of configure.php. ***********/
-/***************       The 2 files should be kept separate and not used to overwrite each other.      ***********/
+/*************** NOTE: This file is VERY similar to, but DIFFERENT from the "store" version of configure.php. ***********/
+/***************       The 2 files should be kept separate and not used to overwrite each other.              ***********/
 
-  define('HTTP_SERVER', '%%_HTTP_SERVER_ADMIN_%%');
-  define('HTTP_CATALOG_SERVER', '%%_CATALOG_HTTP_SERVER_%%');
-  define('HTTPS_CATALOG_SERVER', '%%_CATALOG_HTTPS_SERVER_%%');
+/**
+ * Enter the domain for your Admin URL. If you have SSL, enter the correct https address in the HTTP_SERVER setting, instead of just an http address.
+ */
+define('HTTP_SERVER', '%%_HTTP_SERVER_ADMIN_%%');
+/**
+ * Note about HTTPS_SERVER:
+ * There is no longer an HTTPS_SERVER setting for the Admin. Instead, put your SSL URL in the HTTP_SERVER setting above.
+ */
 
-  // secure webserver for storefront?  Valid choices are 'true' or 'false' (including quotes).
-  define('ENABLE_SSL_CATALOG', '%%_ENABLE_SSL_CATALOG_%%');
+/**
+ * Note about DIR_WS_ADMIN
+ * The DIR_WS_ADMIN value is now auto-detected.
+ * In the rare case where it cannot be detected properly, you can add your own DIR_WS_ADMIN definition below.
+ */
 
-// NOTE: be sure to leave the trailing '/' at the end of these lines if you make changes!
-// * DIR_WS_* = Webserver directories (virtual/URL)
-  // these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)
-  $t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'];
+/**
+ * Enter the domain for your storefront URL.
+ * Enter a separate SSL URL in HTTPS_CATALOG_SERVER if your store supports SSL.
+ */
+define('HTTP_CATALOG_SERVER', '%%_CATALOG_HTTP_SERVER_%%');
+define('HTTPS_CATALOG_SERVER', '%%_CATALOG_HTTPS_SERVER_%%');
 
-  define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
-  define('DIR_WS_CATALOG', '%%_DIR_WS_CATALOG_%%');
-  define('DIR_WS_HTTPS_CATALOG', '%%_DIR_WS_HTTPS_CATALOG_%%');
+/**
+ * Do you use SSL for your customers login/checkout on the storefront? If so, enter 'true'. Else 'false'.
+ */
+define('ENABLE_SSL_CATALOG', '%%_ENABLE_SSL_CATALOG_%%');
 
-  define('DIR_WS_IMAGES', 'images/');
-  define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
-  define('DIR_WS_CATALOG_IMAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'images/');
-  define('DIR_WS_CATALOG_TEMPLATE', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/templates/');
-  define('DIR_WS_INCLUDES', 'includes/');
-  define('DIR_WS_BOXES', DIR_WS_INCLUDES . 'boxes/');
-  define('DIR_WS_FUNCTIONS', DIR_WS_INCLUDES . 'functions/');
-  define('DIR_WS_CLASSES', DIR_WS_INCLUDES . 'classes/');
-  define('DIR_WS_MODULES', DIR_WS_INCLUDES . 'modules/');
-  define('DIR_WS_LANGUAGES', DIR_WS_INCLUDES . 'languages/');
-  define('DIR_WS_CATALOG_LANGUAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/languages/');
+/**
+ * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
+ * These values get added to the HTTP_CATALOG_SERVER and HTTPS_CATALOG_SERVER values to form the complete URLs to your storefront.
+ * They should always start and end with a slash ... ie: '/' or '/foldername/'
+ */
+define('DIR_WS_CATALOG', '%%_DIR_WS_CATALOG_%%');
+define('DIR_WS_HTTPS_CATALOG', '%%_DIR_WS_HTTPS_CATALOG_%%');
 
-// * DIR_FS_* = Filesystem directories (local/physical)
-  define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
-  //the following path is a COMPLETE path to your Zen Cart files. eg: /var/www/vhost/accountname/public_html/store/
-  define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
+/**
+ * This is the complete physical path to your store's files.  eg: /var/www/vhost/accountname/public_html/store/
+ * Should have a closing / on it.
+ */
+define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
 
-  //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
-  define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
+/**
+ * NOTE about DIR_FS_ADMIN
+ * The value for DIR_FS_ADMIN is now auto-detected.
+ * In the very rare case where there is a need to override the autodetection, simply add your own definition for it below.
+ */
 
-  define('DIR_FS_CATALOG_LANGUAGES', DIR_FS_CATALOG . 'includes/languages/');
-  define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
-  define('DIR_FS_CATALOG_MODULES', DIR_FS_CATALOG . 'includes/modules/');
-  define('DIR_FS_CATALOG_TEMPLATES', DIR_FS_CATALOG . 'includes/templates/');
-  define('DIR_FS_BACKUP', DIR_FS_ADMIN . 'backups/');
-  define('DIR_FS_EMAIL_TEMPLATES', DIR_FS_CATALOG . 'email/');
-  define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
-
-// define our database connection
-define('DB_TYPE', '%%_DB_TYPE_%%');
+/**
+ * The following settings define your database connection.
+ * These must be the SAME as you're using in your non-admin copy of configure.php
+ */
+define('DB_TYPE', '%%_DB_TYPE_%%'); // always 'mysql'
 define('DB_PREFIX', '%%_DB_PREFIX_%%'); // prefix for database table names -- preferred to be left empty
-define('DB_CHARSET', '%%_DB_CHARSET_%%');
-define('DB_SERVER', '%%_DB_SERVER_%%');
+define('DB_CHARSET', '%%_DB_CHARSET_%%'); // 'utf8' or 'latin1' are most common
+define('DB_SERVER', '%%_DB_SERVER_%%');  // address of your db server
 define('DB_SERVER_USERNAME', '%%_DB_SERVER_USERNAME_%%');
 define('DB_SERVER_PASSWORD', '%%_DB_SERVER_PASSWORD_%%');
 define('DB_DATABASE', '%%_DB_DATABASE_%%');
 
-  // The next 2 "defines" are for SQL cache support.
-  // For SQL_CACHE_METHOD, you can select from:  none, database, or file
-  // If you choose "file", then you need to set the DIR_FS_SQL_CACHE to a directory where your apache
-  // or webserver user has write privileges (chmod 666 or 777). We recommend using the "cache" folder inside the Zen Cart folder
-  // ie: /path/to/your/webspace/public_html/zen/cache   -- leave no trailing slash
+/**
+ * This is an advanced setting to determine whether you want to cache SQL queries.
+ * Options are 'none' (which is the default) and 'file' and 'database'.
+ */
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
-define('DIR_FS_SQL_CACHE', '%%_DIR_FS_SQL_CACHE_%%');
 
+/**
+ * Reserved for future use
+ */
 define('SESSION_STORAGE', '%%_SESSION_STORAGE_%%');
 
-// Define the webserver and path parameters
-  // Main webserver: eg-http://www.your_domain.com -
-  // HTTP_SERVER is your Main webserver: eg-http://www.your_domain.com
-  // HTTPS_SERVER is your Secure webserver: eg-https://www.your_domain.com
-  // HTTP_CATALOG_SERVER is your Main webserver: eg-http://www.your_domain.com
-  // HTTPS_CATALOG_SERVER is your Secure webserver: eg-https://www.your_domain.com
-  /*
-   * URLs for your site will be built via:
-   *     HTTP_SERVER plus DIR_WS_ADMIN or
-   *     HTTPS_SERVER plus DIR_WS_HTTPS_ADMIN or
-   *     HTTP_SERVER plus DIR_WS_CATALOG or
-   *     HTTPS_SERVER plus DIR_WS_HTTPS_CATALOG
-   * ...depending on your system configuration settings
-   */
-// EOF
+/**
+ * Advanced use only:
+ * The following are OPTIONAL, and should NOT be set unless you intend to change their normal use. Most sites will leave these untouched.
+ * To use them, uncomment AND add a proper defined value to them.
+ */
+// define('DIR_FS_SQL_CACHE' ...
+// define('DIR_FS_DOWNLOAD' ...
+// define('DIR_FS_LOGS' ...
+
+// End Of File

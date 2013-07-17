@@ -121,7 +121,19 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
   exit;
 }
 /**
- * include the list of extra configure files
+ * check for and load system defined path constants
+ */
+if (file_exists('includes/defined_paths.php')) {
+  /**
+   * load the system-defined path constants
+   */
+  require('includes/defined_paths.php');
+} else {
+  die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+  exit;
+}
+/**
+ * include the extra_configures files
  */
 if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   while ($zv_file = $za_dir->read()) {
