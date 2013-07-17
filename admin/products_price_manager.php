@@ -982,15 +982,17 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-    <script>
+  <script>
     $(function() {
-        $( ".datepicker" ).datepicker({
-         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
-         changeMonth: true,
-         changeYear: true
-        });
+      $( ".datepicker" ).datepicker({
+        showOn: "both",
+        buttonImage: "images/calendar.gif",
+        dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+        changeMonth: true,
+        changeYear: true
+      });
     });
-    </script>
+  </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

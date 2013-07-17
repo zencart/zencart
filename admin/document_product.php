@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: document_product.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -325,16 +325,17 @@ if ($products_query_numrows > 0) {
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-<br />
-    <script>
+  <script>
     $(function() {
-        $( ".datepicker" ).datepicker({
-         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
-         changeMonth: true,
-         changeYear: true
-        });
+      $( ".datepicker" ).datepicker({
+        showOn: "both",
+        buttonImage: "images/calendar.gif",
+        dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+        changeMonth: true,
+        changeYear: true
+      });
     });
-    </script>
+  </script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

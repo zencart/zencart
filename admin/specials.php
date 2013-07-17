@@ -511,13 +511,15 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-    <script>
+  <script>
     $(function() {
-        $( ".datepicker" ).datepicker({
-         dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
-         changeMonth: true,
-         changeYear: true
-        });
+      $( ".datepicker" ).datepicker({
+        showOn: "both",
+        buttonImage: "images/calendar.gif",
+        dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+        changeMonth: true,
+        changeYear: true
+      });
     });
     </script>
 </body>
