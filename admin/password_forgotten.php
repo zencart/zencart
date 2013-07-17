@@ -75,23 +75,23 @@ if (isset($_POST['submit']))
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow" />
-<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.css">
+<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
 <link href="includes/template/css/login.css" rel="stylesheet" type="text/css">
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
   <div class="container">
     <div class="row">
-    <div class="four columns centered end">
+    <div class="small-12 columns small-centered">
       <form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
       <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
         <fieldset>
           <legend><?php echo HEADING_TITLE; ?></legend>
           <?php if ($resetToken == '') { ?>
           <div class="row">
-            <div class="three columns">
+            <div class="small-3 columns">
               <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
             </div>
-            <div class="six columns end">
+            <div class="small-9 columns">
               <input class="left inline" type="text" id="admin_email" name="admin_email" value="" autocomplete="off" autofocus="autofocus">
             </div>
           </div>

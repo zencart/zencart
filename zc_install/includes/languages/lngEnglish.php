@@ -52,7 +52,7 @@ define('TEXT_DATABASE_SETUP_DB_CHARSET', 'Database Character Set: ');
 define('TEXT_DATABASE_SETUP_DB_PREFIX', 'Store Prefix: ');
 define('TEXT_DATABASE_SETUP_SQL_CACHE_METHOD', 'SQL Cache Method: ');
 define('TEXT_DATABASE_SETUP_SQL_CACHE_DIRECTORY', 'SQL Cache Directory: ');
-define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occured when running the sql install file');
+define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occurred when running the sql install file');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details<p>');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'UTF-8(default setting)');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'Latin1');

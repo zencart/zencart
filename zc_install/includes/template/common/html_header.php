@@ -8,26 +8,29 @@
  */
 ?>
 <!DOCTYPE html >
-<html <?php echo HTML_PARAMS; ?>>
+<!--[if IE 8]>         <html class="no-js lt-ie9" <?php echo HTML_PARAMS; ?>> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" <?php echo HTML_PARAMS; ?>> <!--<![endif]-->
+
 <head>
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title><?php echo META_TAG_TITLE; ?></title>
+
 <meta name="robots" content="noindex, nofollow" />
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-<title><?php echo META_TAG_TITLE; ?></title>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="<?php echo 'includes/jquery-validation/jquery.validate.js'; ?>"></script>
-<?php if (file_exists(DIR_FS_INSTALL .  'includes/jquery-validation/localization/messages_' . $lng_short . '.js')) { ?>
-<script type="text/javascript" src="<?php echo 'includes/jquery-validation/localization/messages_' . $lng_short . '.js'; ?>"></script>
-<?php } ?>
-<script type="text/javascript" src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/modernizr.foundation.js'; ?>"></script>
-<script type="text/javascript" src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/jquery.foundation.reveal.js'; ?>"></script>
-<script type="text/javascript" src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/app.js'; ?>"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/foundation.css'; ?>" />
+
+<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/normalize.css'; ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/foundation.min.css'; ?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/stylesheet.css'; ?>" />
-<!--[if lt IE 9]>
-  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
+
+<script src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/custom.modernizr.js'; ?>"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="includes/template/foundation/jquery.js"><\/script>');</script>
+<script src="<?php echo 'includes/jquery-validation/jquery.validate.js'; ?>"></script>
+<?php if (file_exists(DIR_FS_INSTALL .  'includes/jquery-validation/localization/messages_' . $lng_short . '.js')) { ?>
+<script src="<?php echo 'includes/jquery-validation/localization/messages_' . $lng_short . '.js'; ?>"></script>
+<?php } ?>
 </head>
+

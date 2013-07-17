@@ -122,3 +122,9 @@ text-align:center;
     font-weight: normal;
     font-style: normal;
 }
+
+.row { max-width: none}
+
+.form-horizontal input, select  {font-size: 1.2em !important}
+
+label {font-size: 1.2em}

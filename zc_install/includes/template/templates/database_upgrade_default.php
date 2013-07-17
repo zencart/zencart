@@ -10,7 +10,7 @@
 
 <div id="upgradeResponsesHolder"></div>
 
-<form class="form-horizontal" id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion">
+<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion">
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="upgrade_mode" value="yes">
@@ -18,7 +18,8 @@
   <fieldset>
     <legend><?php echo TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS; ?></legend>
     <div class="row">
-    <div class="three columns end">
+
+    <div class="small-12 columns">
     <?php foreach ($newArray as $key => $value)  { ?>
       <?php $from = ($key == 0) ? $dbVersion : $newArray[($key - 1)]; ?>
       <?php $to = $newArray[$key]; ?>
@@ -34,18 +35,18 @@
   <fieldset class="upgrade-hide-area">
     <legend><?php echo TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS; ?></legend>
     <div class="row">
-      <div class="three columns">
+      <div class="small-3 columns">
         <label class="inline left" for="admin_user"><?php echo TEXT_DATABASE_UPGRADE_ADMIN_USER; ?></label>
       </div>
-      <div class="six columns end">
+      <div class="small-9 columns">
         <input type="text" name="admin_user" id="admin_user" value="">
       </div>
     </div>
     <div class="row">
-      <div class="three columns">
+      <div class="small-3 columns">
         <label class="inline left" for="admin_password"><?php echo TEXT_DATABASE_UPGRADE_ADMIN_PASSWORD; ?></label>
       </div>
-      <div class="six columns end">
+      <div class="small-9 columns">
         <input type="password" name="admin_password" id="admin_password" value="">
       </div>
     </div>
@@ -73,7 +74,7 @@ $().ready(function() {
           if (data.error)
           {
             $('#admin-validation-errors-content').html('<p>Could not verify the Admin Credentials you provided.<p>');
-            $('#admin-validation-errors').reveal();
+            $('#admin-validation-errors').foundation('reveal', 'open');
           } else
           {
             $('#hiddenAdminCandidate').val(data.adminCandidate);

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -10,7 +10,7 @@
   <header class="header">
     <div class="container">
       <div class="row">
-        <div class="twelve columns centred hero-unit">
+        <div class="small-12 columns small-centered hero-unit">
         <div class="logo"></div>
         </div>
       </div>
@@ -18,18 +18,18 @@
   </header>
   <div class="container">
     <div class="row">
-      <div class="twelve columns centred">
+      <div class="small-12 columns small-centered">
         <div class="mainContent">
         <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_breadcrumb.php'); ?>
         <?php if (!isset($_GET['main_page']) || $_GET['main_page'] == 'index' && count($languagesInstalled) > 1) { ?>
         <form name="language_select" id="language_select" method="GET">
           <fieldset>
            <div class="row">
-             <div class="three columns">
-               <label class="inline" for="db_host"><a href="#" class="hasHelpText" id="DBHOST"><?php echo TEXT_INSTALLER_CHOOSE_LANGUAGE; ?></a></label>
+             <div class="small-3 columns">
+               <label class="inline" for="choose_lang"><a href="#" class="hasHelpText" id="choose_lang"><?php echo TEXT_INSTALLER_CHOOSE_LANGUAGE; ?></a></label>
              </div>
-             <div class="six columns end">
-               <select name="lng" id="lng"><?php echo zen_get_install_languages_list($lng); ?></select>
+             <div class="small-9 columns">
+               <select name="lng" id="lng" class="medium"><?php echo zen_get_install_languages_list($lng); ?></select>
              </div>
            </div>
            </fieldset>
@@ -51,18 +51,23 @@
       </div>
       </div>
   </div>
+
+<!-- Initialize Javascript components -->
+<script src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/foundation.min.js'; ?>"></script>
 <script>
+$(document).foundation();
 $().ready(function()
 {
   $.validator.messages.required = '<?php echo TEXT_FORM_VALIDATION_REQUIRED; ?>';
   $(".reveal-modal").find('.dismiss').click(function()
   {
-     $(".reveal-modal").trigger('reveal:close');
+    $('a.close-reveal-modal').trigger('click');
    });
    $('#lng').change(function(e) {
     $('#language_select').submit();
    });
 });
 </script>
+
 </body>
 </html>

@@ -14,10 +14,10 @@
   <fieldset>
     <legend><?php echo 'Widget Settings'; ?></legend>
     <div class="row">
-      <div class="three columns">
+      <div class="small-3 columns">
         <label class="inline" for="widget-refresh"><?php echo 'Refresh'; ?></label>
       </div>
-      <div class="six columns end">
+      <div class="small-9 columns">
         <?php echo zen_draw_pull_down_menu('widget-refresh', zcWidgetManager::getWidgetTimerSelect($tplVars['id']), $tplVars['widget-refresh']); ?>
       </div>
     </div>

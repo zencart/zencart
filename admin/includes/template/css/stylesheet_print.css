@@ -4,12 +4,16 @@
  * @package admin
  * @ignore
  * @access private
- * @copyright Copyright 2003-2005 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet_print.css 2599 2005-12-18 23:36:49Z drbyte $
  */
 
+BODY {width: 100%}
 
-.header-area, .footer-area, .noprint, 
+.headerBar, #navbar,
+.version-notify,
+.header-area, .footer-area, .noprint,
+.messageStack-header,
+footer.copyrightrow,
 .report-button { display: none;}

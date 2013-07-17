@@ -78,8 +78,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'setup-wizard')
 if ($hasDoneStartWizard == FALSE) {
 
 ?>
-<script type="text/javascript" src="includes/javascript/jquery-validation/dist/jquery.validate.js"></script>
 <style>
+/** @TODO - replace this with a Zurb Foundation class */
 .form-horizontal input, select
 {
   font-size: .8em;
@@ -90,7 +90,7 @@ if ($hasDoneStartWizard == FALSE) {
 </style>
 <div class="content-fluid">
   <div class="row">
-    <div class="twelve columns centred">
+    <div class="small-12 columns small-centered">
   <h1><?php echo TEXT_HEADING_SETUP_WIZARD; ?></h1>
 <?php
   if (!zen_is_superuser())
@@ -124,55 +124,55 @@ if ($hasDoneStartWizard == FALSE) {
    <fieldset>
    <legend><?php echo TEXT_FORM_LEGEND_REQUIRED_SETUP; ?></legend>
   <div class="row">
-  <div class="three columns">
+  <div class="small-3 columns">
   <label class="inline" for="store_name"><?php echo TEXT_FORM_LABEL_STORE_NAME; ?></label>
   </div>
-  <div class="six columns end">
+  <div class="small-9 columns">
   <input type="text" id="store_name" name="store_name" value="<?php echo zen_output_string_protected($storeName); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STORENAME; ?>">
   </div>
    </div>
 
   <div class="row">
-  <div class="three columns">
+  <div class="small-3 columns">
    <label class="inline" for="store_owner"><?php echo TEXT_FORM_LABEL_STORE_OWNER; ?></label>
    </div>
-  <div class="six columns end">
-   <input type="text" id="store_owner" name="store_owner" value="<?php echo zen_output_string_protected($storeOwner); ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
+  <div class="small-9 columns">
+    <input type="text" id="store_owner" name="store_owner" value="<?php echo zen_output_string_protected($storeOwner); ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
    </div>
    </div>
 
   <div class="row">
-  <div class="three columns">
+  <div class="small-3 columns">
    <label class="inline" for="store_owner_email"><?php echo TEXT_FORM_LABEL_STORE_OWNER_EMAIL; ?></label>
    </div>
-  <div class="six columns end">
+  <div class="small-9 columns">
    <input type="text" id="store_owner_email" name="store_owner_email" value="<?php echo zen_output_string_protected($storeOwnerEmail); ?>" tabindex="3" placeholder="webmaster@example.com">
    </div>
    </div>
 
   <div class="row">
-  <div class="three columns">
+  <div class="small-3 columns">
    <label class="inline" for="store_country"><?php echo TEXT_FORM_LABEL_STORE_COUNTRY; ?></label>
    </div>
-  <div class="six columns end">
+  <div class="small-9 columns">
    <?php echo $country_string; ?>
    </div>
    </div>
 
   <div class="row">
-  <div class="three columns">
+  <div class="small-3 columns">
    <label class="inline" for="store_zone"><?php echo TEXT_FORM_LABEL_STORE_ZONE; ?></label>
    </div>
-  <div class="six columns end" id="store_zone_container">
+  <div class="small-9 columns" id="store_zone_container">
    <?php echo $zone_string; ?>
    </div>
    </div>
 
   <div class="row">
-  <div class="three columns">
+  <div class="small-3 columns">
    <label class="inline" for="store_address"><?php echo TEXT_FORM_LABEL_STORE_ADDRESS; ?></label>
    </div>
-  <div class="six columns end">
+  <div class="small-9 columns">
    <textarea rows="" cols=""  id="store_address" name="store_address" tabindex="6" placeholder="<?php echo TEXT_EXAMPLE_STOREADDRESS; ?>"></textarea>
    </div>
    </div>
@@ -230,7 +230,7 @@ if ($hasDoneStartWizard == FALSE) {
 
 <div class="container">
   <div class="row">
-    <div class="twelve columns widget-tools">
+    <div class="small-12 columns widget-tools">
       <a href="#" class="widget-add">+ Add Widget</a>
     </div>
   </div>
@@ -238,14 +238,14 @@ if ($hasDoneStartWizard == FALSE) {
 <?php require(DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php'); ?>
   </div>
 </div>
-<div id="deleteWidget" class="reveal-modal">
+<div id="deleteWidget" class="reveal-modal small">
 <a class="close-reveal-modal">x</a>
 <p><?php echo TEXT_CONFIRM_REMOVE; ?></p>
 <a class="radius button remove" href="#"><?php echo TEXT_REMOVE; ?></a>
 <a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
 </div>
 
-<div id="add-widget" class="reveal-modal">
+<div id="add-widget" class="reveal-modal small">
 <div class="add-widget-container"></div>
 <a class="close-reveal-modal">x</a>
 <a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
@@ -262,27 +262,25 @@ $(function() {
   <?php } ?>
 
   createSortables();
-  
-  
-  $('.widget-add').click(function (e) {
-    $('#add-widget').reveal({opened: function() {
 
+
+  $('.widget-add').click(function (e) {
       zcJS.ajax({
         url: "zcAjaxHandler.php?act=dashboardWidget&method=getInstallableWidgets",
         data: {}
       }).done(function( response ) {
         $('.add-widget-container').html(response.html);
+        $('#add-widget').foundation('reveal', 'open');
       });
 
 
-      }
-    });
+      });
+
     $('.dismiss').click(function() {
-      $(this).trigger('reveal:close');
+      $('a.close-reveal-modal').trigger('click');
     });
   });
 
-});
 
 function createSortables() {
   $(".columns").sortable(
@@ -327,7 +325,7 @@ function createSortables() {
 
   $('.widget-close').unbind('click').click(function (e) {
     var id = $(this).parents('.widget-container').attr('id');
-    $('#deleteWidget').reveal();
+    $('#deleteWidget').foundation('reveal', 'open');
     $('.dismiss').click(function() {
       $(this).trigger('reveal:close');
     });
@@ -375,11 +373,11 @@ function createWidgetIntervalTimer(key, interval)
     delete timer;
     if (interval != 0)
     {
-      var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});    
+      var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
       intervalTimers[key] = timer;
       timer.Start();
     }
-  } else {  
+  } else {
     if (interval != 0)
     {
       var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
@@ -403,6 +401,8 @@ function doIntervalProcess(timer)
 <?php } ?>
 </div>
 <?php } ?>
+
+<footer class="small-12 columns small-centered">
 <!-- The following copyright announcement is in compliance
 to section 2c of the GNU General Public License, and
 thus can not be removed, or can only be modified
@@ -411,8 +411,15 @@ appropriately.
 Please leave this comment intact together with the
 following copyright announcement. //-->
 
-<div class="copyrightrow"><a href="http://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" border="0" /></a><br /><br />E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></div><div class="warrantyrow"><br /><br />Zen Cart is derived from: Copyright &copy; 2003 osCommerce<br />This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br />without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br />and is redistributable under the <a href="http://www.zen-cart.com/license/2_0.txt" target="_blank">GNU General Public License</a><br />
-</div>
+  <div class="copyrightrow"><a href="http://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" border="0" /></a><br /><br />E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></div><div class="warrantyrow"><br /><br />Zen Cart is derived from: Copyright &copy; 2003 osCommerce<br />This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br />without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br />and is redistributable under the <a href="http://www.zen-cart.com/license/2_0.txt" target="_blank">GNU General Public License</a></div>
+
+</footer>
+
+<!-- Initialize the Foundation plugins -->
+<script>
+  $(document).foundation();
+</script>
+
 </body>
 </html>
 <?php require('includes/application_bottom.php'); ?>

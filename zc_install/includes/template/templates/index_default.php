@@ -7,7 +7,7 @@
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
-<form class="form-horizontal" id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
+<form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
 <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
 <?php if ($hasMultipleAdmins) { ?>
     <div class="alert-box alert">
@@ -122,7 +122,7 @@ $('.hasNoHelpText').click(function(e)
        success: function(data) {
          $('#modal-help-title').html(data.title);
          $('#modal-help-content').html(data.text);
-         $('#modal-help').reveal();
+         $('#modal-help').foundation('reveal', 'open');
       }
     });
     e.preventDefault();

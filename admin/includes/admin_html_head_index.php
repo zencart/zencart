@@ -4,48 +4,54 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: index.php 19537 2011-09-20 17:14:44Z drbyte $
+ * @version $Id: admin_html_head_index.php $
  */
 ?>
-<!doctype html">
-<html <?php echo HTML_PARAMS; ?>>
+<!doctype html>
+<!--[if IE 8]>         <html class="no-js lt-ie9" <?php echo HTML_PARAMS; ?>> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" <?php echo HTML_PARAMS; ?>> <!--<![endif]-->
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
+<meta charset="<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow">
-<?php if (!defined('SKIP_CORE_JQUERY_LOADER') || SKIP_CORE_JQUERY_LOADER == FALSE) { ?>
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-<?php
-  //fall back to local if CDN copy didn't load or if offline
-  $jqpath = DIR_WS_ADMIN . 'includes/template/javascript/jquery.min.js';
-  $jquipath = DIR_WS_ADMIN . 'includes/template/javascript/jquery-ui.min.js';
-  $jquicsspath = DIR_WS_ADMIN . 'includes/template/javascript/jquery-ui.min.css';
-  if (file_exists(str_replace(DIR_WS_ADMIN, DIR_FS_ADMIN, $jqpath))) { ?>
-    <script>window.jQuery || document.write('<script src="<?php echo $jqpath;?>"><\/script><script src="<?php echo $jquipath;?>"><\/script><link type="stylesheet" href="<?php echo $jquicsspath;?>">');</script>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<link rel="stylesheet" type="text/css" href="includes/template/css/normalize.css">
+<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
+<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print">
+
+<?php if (isset($extraCss)) { ?>
+  <?php foreach ($extraCss as $css) { ?>
+  <link rel="stylesheet" type="text/css" href="<?php echo $css['location']; ?>">
+  <?php } ?>
 <?php } ?>
+
+<script src="includes/template/javascript/foundation/custom.modernizr.js"></script>
+<?php /** The following path might need to be updated from time to time to keep up with the versions hosted by Google **/ ?>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.js"><\/script>');</script>
+<script src="includes/template/javascript/foundation/foundation.min.js"></script>
 
 <script src="includes/template/javascript/jquery-validation/jquery.validate.js"></script>
 <?php if (file_exists(DIR_FS_ADMIN . 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js')) { ?>
 <script src="<?php echo 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js'; ?>"></script>
 <?php } ?>
 
-<?php } ?>
-<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.css">
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css">
+<?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
+<script src="includes/general.js"></script>
+
+<?php /** The following path might need to be updated from time to time to keep up with the versions hosted by Google **/ ?>
+<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css">
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
+<link rel="stylesheet" type="text/css" href="includes/template/css/jquery.ui.theme.css">
+
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<?php if (isset($extraCss)) { ?>
-  <?php foreach ($extraCss as $css) { ?>
-  <link rel="stylesheet" type="text/css" href="<?php echo $css['location']; ?>">
-  <?php } ?>
-<?php } ?>
 <script src="includes/menu.js"></script>
-<script src="includes/general.js"></script>
-<script src="includes/template/javascript/foundation/jquery.foundation.reveal.js"></script>
-<?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
-<script type="text/javascript">
+<script>
   <!--
   $(document).ready(function(){
     cssjsmenu('navbar');

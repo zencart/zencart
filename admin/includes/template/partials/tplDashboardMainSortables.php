@@ -9,8 +9,8 @@
  */
 ?>
   <?php for ($column=0; $column<3; $column++) { ?>
-    <div class="four columns sortable-column">
-      
+    <div class="small-4 columns sortable-column">
+
     <?php if (isset($tplVars['widgetInfoList'][$column])) { ?>
       <?php foreach ($tplVars['widgetInfoList'][$column] as $widget) { ?>
       <?php $tplVars['widget'] = $tplVars[$widget['widget_key']]; ?>
@@ -19,17 +19,17 @@
           <h1 class="widget-handle"><?php echo $tplVars[$widget['widget_key']]['widgetTitle']; ?></h1>
           <div class="widget-actions right">
             <a href="#" class="widget-edit">&#86;</a>
-            <a href="#" class="widget-minimize">&#45;</a> 
-            <a href="#" class="widget-close">&#88;</a> 
-            </div> 
+            <a href="#" class="widget-minimize">&#45;</a>
+            <a href="#" class="widget-close">&#88;</a>
+            </div>
         </div>
         <div class="widget-body">
         <?php require($tplVars[$widget['widget_key']]['templateFile']); ?>
         </div>
       </div>
-           
+
       <?php } ?>
     <?php } ?>
-    
+
     </div>
   <?php }?>

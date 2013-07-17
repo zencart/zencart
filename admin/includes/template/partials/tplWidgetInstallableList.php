@@ -24,7 +24,7 @@
 $(function() {
 
   $('.add-widget-button').click(function() {
-    $(this).trigger('reveal:close');
+    $('a.close-reveal-modal').trigger('click');
     var id = $(this).attr('id');
     zcJS.ajax({
       url: "zcAjaxHandler.php?act=dashboardWidget&method=addWidget",

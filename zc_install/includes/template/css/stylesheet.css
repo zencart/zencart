@@ -3,53 +3,66 @@
  * @access private
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 
+ * @version $Id:
  */
 
-ul.stacked li {
-	display:block;
-}
 .hero-unit {
-	height: 110px;
-	overflow: hidden;
-	box-sizing: border-box;
-	border: 0px solid rgba(0,0,0,.25);
-	border-radius: 8px;
-	box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,.0	);
-	padding: 15px 0;
-	margin-bottom: 20px;
-	/*background: url(../img/banner-lg-1100.jpg) right no-repeat;*/
-	/*background: url(../images/Zen-cart-hero.png) bottom right no-repeat;*/
+  height: 110px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 0px solid rgba(0,0,0,.25);
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,.0	);
+  padding: 15px 0;
+  margin-bottom: 20px;
+  /*background: url(../img/banner-lg-1100.jpg) right no-repeat;*/
+  /*background: url(../images/Zen-cart-hero.png) bottom right no-repeat;*/
 }
-
 
 .logo {
-	background: url(../images/zen-cart-logo-lg.png) left no-repeat;
-	width: 270px;
-	float: left;
-	display: block;
-	height: 100%;
+  background: url(../images/zen-cart-logo-lg.png) left no-repeat;
+  width: 270px;
+  float: left;
+  display: block;
+  height: 100%;
 }
 
-
-
-.invalid {
-	color: #ff2222;
+h2 {
+  font-size: 2em;
 }
 
 .footer {
-	margin-top:10px;
+  margin-top:10px;
+}
+
+.invalid {
+  color: #ff2222;
+}
+
+#fatalErrors a {
+  color: #ffffff;
+}
+
+.modal-help-title {
+  font-size: 1.5em;
+  padding-bottom: 5px;
+  font-weight:bold;
+}
+
+input[readonly] {
+   background: #dddddd;
 }
 
 
 
-/* breadcrumb stuff needs namespacing */
 
-ul {
- margin:  0 0 50px 0 ;   
+/* breadcrumb custom styling */
+
+ul.breadcrumbs {
+ margin:  0 0 50px 0 ;
 }
 
-ul li {
+ul.breadcrumbs li {
     display: inline-block;
     height: 30px;
     line-height: 30px;
@@ -59,23 +72,23 @@ ul li {
     position: relative;
 }
 
-ul li:before {
+ul.breadcrumbs li:before {
     content: " ";
     height: 0;
     width: 0;
     position: absolute;
-    left: -2px;
+    left: -9px;
     border-style: solid;
     border-width: 15px 0 15px 15px;
     border-color: transparent transparent transparent #BCE8F1;
     z-index: 0;
 }
 
-ul li:first-child:before {
+ul.breadcrumbs li:first-child:before {
     border-color: transparent;
 }
 
-ul li a:after {
+ul.breadcrumbs li a:after {
     content: " ";
     height: 0;
     width: 0;
@@ -87,46 +100,30 @@ ul li a:after {
     z-index: 10;
 }
 
-ul li a {
+ul.breadcrumbs li a {
     display: block;
     background: #D9EDF7;
-    text-decoration:none 
+    text-decoration:none
  }
 
-ul li a:hover {
-    text-decoration:none 
+ul.breadcrumbs li a:hover {
+    text-decoration:none
 }
 
 /*
-ul li a:hover:after {
+ul.breadcrumbs li a:hover:after {
     border-color: transparent transparent transparent pink;
 }
 */
-ul li.active a {
-	color: white;
+ul.breadcrumbs li.current a {
+  color: white;
     background: #3A87AD;
     z-index: 100;
 }
 
-ul li.active a:after {
+ul.breadcrumbs li.current a:after {
     border-left-color: #3A87AD;
 }
 
-#fatalErrors a {
-	color: #ffffff;
-}
 
-h2 {
-	font-size: 2em;
-}
 
-.modal-help-title { 
-	font-size: 1.5em;
-	padding-bottom: 5px;
-	font-weight:bold;
-}
-
-input[readonly] {
-	 background: #dddddd;
-	
-}
