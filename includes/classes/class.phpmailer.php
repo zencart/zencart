@@ -1204,14 +1204,13 @@ class PHPMailer
      * @access private
      * @return string
      */
-  function EncodeQP ($str) {
+  function EncodeQP_old_incompatible_with_PHP55 ($str) {
     $encoded = $this->FixEOL($str);
     if (substr($encoded, -(strlen($this->LE))) != $this->LE)
     $encoded .= $this->LE;
 
     // Replace every high ascii, control and = characters
-    $encoded = preg_replace('/([\000-\010\013\014\016-\037\075\177-\377])/e',
-    "'='.sprintf('%02X', ord('\\1'))", $encoded);
+    $encoded = preg_replace('/([\000-\010\013\014\016-\037\075\177-\377])/e',"'='.sprintf('%02X', ord('\\1'))", $encoded);
     // Replace every spaces and tabs when it's the last character on a line
     $encoded = preg_replace("/([\011\040])".$this->LE."/e",
     "'='.sprintf('%02X', ord('\\1')).'".$this->LE."'", $encoded);
@@ -1223,32 +1222,61 @@ class PHPMailer
   }
 
   /**
-     * Encode string to q encoding.
-     * @access private
-     * @return string
-     */
-  function EncodeQ ($str, $position = "text") {
-    // There should not be any EOL in the string
-    $encoded = preg_replace("[\r\n]", "", $str);
+   * Encode string to RFC2045 (6.7) quoted-printable format
+   * @access public
+   * @param string $string The text to encode
+   * @param integer $line_max Number of chars allowed on a line before wrapping
+   * @return string
+   * @link PHP version adapted from http://www.php.net/manual/en/function.quoted-printable-decode.php#89417
+   */
+  function EncodeQP($string, $line_max = 76) {
+    if (function_exists('quoted_printable_encode')) { //Use native function if it's available (>= PHP5.3)
+      return quoted_printable_encode($string);
+    }
+    //Fall back to a pure PHP implementation
+    $string = str_replace(array('%20', '%0D%0A.', '%0D%0A', '%'), array(' ', "\r\n=2E", "\r\n", '='), rawurlencode($string));
+    $string = preg_replace('/[^\r\n]{'.($line_max - 3).'}[^=\r\n]{2}/', "$0=\r\n", $string);
+    return $string;
+  }
 
+  /**
+   * Encode string to q encoding.
+   * @link http://tools.ietf.org/html/rfc2047
+   * @param string $str the text to encode
+   * @param string $position Where the text is going to be used, see the RFC for what that means
+   * @access public
+   * @return string
+   */
+  function EncodeQ($str, $position = 'text') {
+    //There should not be any EOL in the string
+    $pattern = '';
+    $encoded = str_replace(array("\r", "\n"), '', $str);
     switch (strtolower($position)) {
-      case "phrase":
-      $encoded = preg_replace("/([^A-Za-z0-9!*+\/ -])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
-      break;
-      case "comment":
-      $encoded = preg_replace("/([\(\)\"])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
-      case "text":
+      case 'phrase':
+        $pattern = '^A-Za-z0-9!*+\/ -';
+        break;
+
+      case 'comment':
+        $pattern = '\(\)"';
+        //note that we don't break here!
+        //for this reason we build the $pattern without including delimiters and []
+
+      case 'text':
       default:
-      // Replace every high ascii, control =, ? and _ characters
-      $encoded = preg_replace('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/e',
-      "'='.sprintf('%02X', ord('\\1'))", $encoded);
-      break;
+        //Replace every high ascii, control =, ? and _ characters
+        //We put \075 (=) as first value to make sure it's the first one in being converted, preventing double encode
+        $pattern = '\075\000-\011\013\014\016-\037\077\137\177-\377' . $pattern;
+        break;
     }
 
-    // Replace every spaces to _ (more readable than =20)
-    $encoded = str_replace(" ", "_", $encoded);
+    if (preg_match_all("/[{$pattern}]/", $encoded, $matches)) {
+      foreach (array_unique($matches[0]) as $char) {
+        $encoded = str_replace($char, '=' . sprintf('%02X', ord($char)), $encoded);
+      }
+    }
 
-    return $encoded;
+    //Replace every spaces to _ (more readable than =20)
+    return str_replace(' ', '_', $encoded);
   }
 
   /**
