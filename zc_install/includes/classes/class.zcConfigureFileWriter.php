@@ -33,12 +33,8 @@ class zcConfigureFileWriter
     $replaceVars['DB_SERVER_PASSWORD'] = $inputs['db_password'];
     $replaceVars['DB_DATABASE'] = $inputs['db_name'];
     $replaceVars['SQL_CACHE_METHOD'] = $inputs['sql_cache_method'];
-    $replaceVars['DIR_FS_SQL_CACHE'] = $inputs['sql_cache_dir'];
     $replaceVars['HTTP_SERVER_ADMIN'] = $inputs['http_server_admin'];
-
-    //@TODO:
-    $replaceVars['SESSION_STORAGE'] = 'temporary value added by v160 installer';
-
+    $replaceVars['SESSION_STORAGE'] = 'reserved for future use';
 
     $this->replaceVars = $replaceVars;
     $adminDir = $inputs['adminDir'];

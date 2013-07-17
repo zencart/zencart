@@ -137,8 +137,7 @@ class systemChecker
     $dbPrefixVal = $this->getConfigureDefine('DB_PREFIX', $lines);
     $dbCharsetVal = $this->getConfigureDefine('DB_CHARSET', $lines);
     $dbTypeVal = $this->getConfigureDefine('DB_TYPE', $lines);
-    $sqlCacheDirVal = $this->getConfigureDefine('SQL_CACHE_DIR', $lines);
-    $retVal = array('db_host'=>$dbServerVal, 'db_user'=>$dbUserVal, 'db_password'=>$dbPasswordVal, 'db_name'=>$dbNameVal, 'db_charset'=>$dbCharsetVal, 'db_prefix'=>$dbPrefixVal, 'db_type'=>$dbTypeVal, 'sql_cache_dir'=>$dbSqlCacheDirVal);
+    $retVal = array('db_host'=>$dbServerVal, 'db_user'=>$dbUserVal, 'db_password'=>$dbPasswordVal, 'db_name'=>$dbNameVal, 'db_charset'=>$dbCharsetVal, 'db_prefix'=>$dbPrefixVal, 'db_type'=>$dbTypeVal);
     return $retVal;
   }
   public function getServerConfigOptions()

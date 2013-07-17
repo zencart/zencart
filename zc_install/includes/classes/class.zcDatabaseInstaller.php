@@ -33,7 +33,6 @@ class zcDatabaseInstaller
     $this->dbPrefix = $options['db_prefix'];
     $this->dbCharset = $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
-    $this->sqlCacheDir = $options['sql_cache_dir'];
     $this->debugLevel = isset($options['debug']) ? $options['debug'] : FALSE;
     $this->errors = array();
     $this->basicParseStrings = array(

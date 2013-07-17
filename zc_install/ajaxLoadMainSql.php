@@ -18,7 +18,7 @@ $db_type = 'mysql';
 
 
 require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
-$options = array('db_host'=>$_POST['db_host'], 'db_user'=>$_POST['db_user'], 'db_password'=>$_POST['db_password'], 'db_name'=>$_POST['db_name'], 'db_charset'=>$_POST['db_charset'], 'db_prefix'=>$_POST['db_prefix'], 'db_type'=>$db_type, 'sql_cache_dir'=>$_POST['sql_cache_dir']);
+$options = array('db_host'=>$_POST['db_host'], 'db_user'=>$_POST['db_user'], 'db_password'=>$_POST['db_password'], 'db_name'=>$_POST['db_name'], 'db_charset'=>$_POST['db_charset'], 'db_prefix'=>$_POST['db_prefix'], 'db_type'=>$db_type);
 // trim spaces from inputs
 foreach($options as $key => $val) {
   $options[$key] = trim($val);

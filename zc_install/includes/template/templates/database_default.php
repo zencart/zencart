@@ -6,7 +6,6 @@
  * @version $Id:
  */
 ?>
-
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_progress_bar.php'); ?>
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_connection_errors.php'); ?>
@@ -95,39 +94,10 @@
         <select name="sql_cache_method" id="sql_cache_method" tabindex="8" ><?php echo $sqlCacheTypeOptions; ?></select>
       </div>
     </div>
-    <div class="row">
-      <div id="sql-cache-directory-input">
-        <div class="small-3 columns">
-          <label class="inline" for="sql_cache_dir"><a href="#" class="hasHelpText" id="SQLCACHEDIRECTORY"><?php echo TEXT_DATABASE_SETUP_SQL_CACHE_DIRECTORY; ?></a></label>
-        </div>
-        <div class="small-9 columns">
-          <input type="text" name="sql_cache_dir" id="sql_cache_dir" value="<?php echo $sql_cache_dir; ?>" tabindex="9" placeholder="<?php echo TEXT_EXAMPLE_CACHEDIR; ?>">
-        </div>
-      </div>
-    </div>
   </fieldset>
   <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="10" >
 </form>
 <script>
-$(function() {
-  if ($('#sql_cache_method').val() == 'file')
-  {
-     $('#sql-cache-directory-input').show();
-  } else
-  {
-    $('#sql-cache-directory-input').hide();
-  }
-  $('#sql_cache_method').change(function () {
-      if ($('#sql_cache_method').val() == 'file')
-      {
-         $('#sql-cache-directory-input').show();
-      } else
-      {
-        $('#sql-cache-directory-input').hide();
-      }
-  });
-});
-
 $().ready(function() {
   $("#db_setup").validate({
     submitHandler: function(form) {
@@ -136,12 +106,7 @@ $().ready(function() {
     rules: {
       db_host: "required",
       db_user: "required",
-      db_name: "required",
-      sql_cache_dir: {
-        required: function(element) {
-          return $("#sql_cache_method").val() == 'file';
-        }
-      }
+      db_name: "required"
     },
     messages: {
     }
