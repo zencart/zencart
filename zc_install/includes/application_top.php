@@ -122,7 +122,8 @@ require (DIR_FS_INSTALL . 'includes/classes/class.zcRegistry.php');
 require (DIR_FS_ROOT . 'includes/classes/vendors/yaml/lib/class.sfYamlParser.php');
 require (DIR_FS_ROOT . 'includes/classes/vendors/yaml/lib/class.sfYamlInline.php');
 if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
-$current_page = $_GET['main_page'];
+$current_page = preg_replace('/[^a-z0-9]/', '', $_GET['main_page']);
+if ($current_page == '' || !file_exists('includes/modules/pages/' . $current_page)) $_GET['main_page'] = $current_page = 'index';
 $page_directory = 'includes/modules/pages/' . $current_page;
 /*
  * language determination
