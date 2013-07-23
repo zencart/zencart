@@ -380,7 +380,8 @@ CREATE TABLE countries (
   KEY idx_countries_name_zen (countries_name),
   KEY idx_address_format_id_zen (address_format_id),
   KEY idx_iso_2_zen (countries_iso_code_2),
-  KEY idx_iso_3_zen (countries_iso_code_3)
+  KEY idx_iso_3_zen (countries_iso_code_3),
+  KEY idx_status_zen (status, countries_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
