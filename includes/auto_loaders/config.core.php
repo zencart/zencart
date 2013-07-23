@@ -14,6 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  *
+ * require(DIR_WS_INCLUDES . 'version.php');
  * require(DIR_WS_CLASSES . 'class.base.php');
  * require(DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier()'
@@ -33,6 +34,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'language.php');
  *
  */
+  $autoLoadConfig[0][] = array('autoType'=>'include',
+                               'loadFile'=> DIR_WS_INCLUDES . 'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -82,22 +85,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 10.
  *
+ * require('includes/init_includes/init_file_db_names.php');
  * require('includes/init_includes/init_database.php');
- * require('includes/version.php');
  *
  */
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
-/**
- * Breakpoint 20.
- *
- * require('includes/init_includes/init_file_db_names.php');
- *
- */
-  $autoLoadConfig[20][] = array('autoType'=>'include',
-                                'loadFile'=> DIR_WS_INCLUDES . 'version.php');
 /**
  * Breakpoint 30.
  *
