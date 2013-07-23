@@ -52,13 +52,21 @@ class base {
    */
   function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
-    if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 0 && NOTIFIER_TRACE != FALSE && NOTIFIER_TRACE != 'false') {
+    if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 'false' && NOTIFIER_TRACE != 'Off') {
       $file = DIR_FS_LOGS . '/notifier_trace.log';
-      $paramArray = array_merge($param1,$param2,$param3,$param4,$param5,$param6,$param7);
+      $paramArray = $param1;
+      for ($i = 2; $i < 8; $i++) {
+        $param_n = "param$i";
+        if ($$param_n !== NULL) {
+          $paramArray[$param_n] = $$param_n;
+        }
+      }
+      global $this_is_home_page;
+      $main_page = ($this_is_home_page) ? 'index-home' : $_GET['main_page'];
       if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
-        error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $_GET['main_page'] . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . var_export($paramArray, true)) . "\n", 3, $file);
-      } elseif (NOTIFIER_TRACE == 'print_r') {
-        error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $_GET['main_page'] . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . print_r($paramArray, true)) . "\n", 3, $file);
+        error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . var_export($paramArray, true)) . "\n", 3, $file);
+      } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On') {
+        error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . print_r($paramArray, true)) . "\n", 3, $file);
       }
     }
 
