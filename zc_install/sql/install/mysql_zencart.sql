@@ -375,6 +375,7 @@ CREATE TABLE countries (
   countries_iso_code_2 char(2) NOT NULL default '',
   countries_iso_code_3 char(3) NOT NULL default '',
   address_format_id int(11) NOT NULL default '0',
+  status tinyint(1) default 1,
   PRIMARY KEY  (countries_id),
   KEY idx_countries_name_zen (countries_name),
   KEY idx_address_format_id_zen (address_format_id),

@@ -600,6 +600,8 @@
   define('TABLE_HEADING_LOGIN_DETAILS', 'Login Details');
   define('TABLE_HEADING_REFERRAL_DETAILS', 'Were You Referred to Us?');
 
+  define('ERROR_TEXT_COUNTRY_DISABLED_PLEASE_CHANGE', 'Sorry, but we no longer accept billing or shipping addresses in "%s".  Please update this address to continue.');
+
   define('ENTRY_EMAIL_PREFERENCE','Newsletter and Email Details');
   define('ENTRY_EMAIL_HTML_DISPLAY','HTML');
   define('ENTRY_EMAIL_TEXT_DISPLAY','TEXT-Only');
