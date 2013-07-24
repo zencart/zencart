@@ -86,12 +86,12 @@ class base {
   function & getStaticObserver() {
     return base::getStaticProperty('observer');
   }
-  function & setStaticObserver($element, $value)
+  function setStaticObserver($element, $value)
   {
     $observer =  & base::getStaticObserver();
     $observer[$element] = $value;
   }
-  function & unsetStaticObserver($element)
+  function unsetStaticObserver($element)
   {
     $observer =  & base::getStaticObserver();
     unset($observer[$element]);
