@@ -46,6 +46,20 @@
 <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css">
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
+
+<script src="includes/template/javascript/jquery-ui-i18n.min.js"></script>
+<script>
+// init datepicker defaults with localization
+$(function(){
+  $.datepicker.setDefaults($.extend({}, $.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
+      showOn: "both",
+      buttonImage: "images/calendar.gif",
+      dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+      changeMonth: true,
+      changeYear: true
+  }) );
+});
+</script>
 <link rel="stylesheet" type="text/css" href="includes/template/css/jquery.ui.theme.css">
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css">

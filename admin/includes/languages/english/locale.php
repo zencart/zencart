@@ -21,10 +21,11 @@ define('DATE_FORMAT', 'd/m/Y'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 define('DATE_FORMAT_DATEPICKER_ADMIN', zen_date_datepicker(DATE_FORMAT));  //Use only 'dd', 'mm' and 'yy' here in any order
 
-////
-// Return date in raw format - DEPRECATED
-// $date should be in format mm/dd/yyyy
-// raw date is in format YYYYMMDD, or DDMMYYYY
+/**
+ * Return date in raw format - DEPRECATED
+ * $date should be in format mm/dd/yyyy
+ * raw date is in format YYYYMMDD, or DDMMYYYY
+ */
 function zen_date_raw($date, $reverse = false) {
   if ($reverse) {
     return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);

@@ -341,17 +341,11 @@ if ($products_query_numrows > 0) {
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-  <script>
-    $(function() {
-      $( ".datepicker" ).datepicker({
-        showOn: "both",
-        buttonImage: "images/calendar.gif",
-        dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
-        changeMonth: true,
-        changeYear: true
-      });
-    });
-  </script>
+<script>
+  $(function() {
+    $(".datepicker").datepicker();
+  });
+</script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

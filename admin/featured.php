@@ -427,17 +427,11 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['fID'] != '') {
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-  <script>
-    $(function() {
-      $( ".datepicker" ).datepicker({
-        showOn: "both",
-        buttonImage: "images/calendar.gif",
-        dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
-        changeMonth: true,
-        changeYear: true
-      });
-    });
-  </script>
+<script>
+  $(function() {
+    $(".datepicker").datepicker();
+  });
+</script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
