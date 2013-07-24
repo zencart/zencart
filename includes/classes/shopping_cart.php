@@ -611,7 +611,7 @@ class shoppingCart extends base {
 
 // By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
 // Setting a define for ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL to 1 to calculate the Price Factor from Special rather than Price switches this to be based on Special, if it exists
-define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
+    if (!defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL')) define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
     reset($this->contents);
     while (list($products_id, ) = each($this->contents)) {
       $total_before_discounts = 0;
