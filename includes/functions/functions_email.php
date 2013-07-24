@@ -108,9 +108,11 @@
       if ($email_text == '') {
         $email_text = str_replace(array('<br>','<br />'), "<br />\n", $block['EMAIL_MESSAGE_HTML']);
         $email_text = str_replace('</p>', "</p>\n", $email_text);
-        $email_text = ($module != 'xml_record') ? htmlspecialchars(stripslashes(strip_tags($email_text)), ENT_COMPAT, CHARSET, TRUE) : $email_text;
-      } else {
-        $email_text = ($module != 'xml_record') ? strip_tags($email_text) : $email_text;
+        $email_text = ($module != 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
+      } else if ($module != 'xml_record') {
+        $email_text = preg_replace("/<([^(strong>|br ?\/?>|a href=|p |span|script|em|b>|i>|u>)])/", '@lt@\\1', $email_text);
+        $email_text = strip_tags($email_text);
+        $email_text = str_replace('@lt@', '<', $email_text);
       }
 
       if ($module != 'xml_record') {
@@ -308,8 +310,8 @@
  * Send the email. If an error occurs, trap it and display it in the messageStack
  */
       $ErrorInfo = '';
-      $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', $mail);
-      if (!($result = $mail->Send())) {
+      $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', array($mail), $mail);
+      if (!$mail->Send()) {
         if (IS_ADMIN_FLAG === true) {
           $messageStack->add_session(sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject),'error');
         } else {
@@ -494,7 +496,7 @@
     }
 
     //DEBUG -- to display preview on-screen
-    if (EMAIL_SYSTEM_DEBUG=='preview') echo $file_holder;
+    if (EMAIL_SYSTEM_DEBUG === 'preview') echo $file_holder;
 
     return $file_holder;
   }
