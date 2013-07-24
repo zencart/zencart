@@ -17,10 +17,10 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-<link rel="stylesheet" type="text/css" href="includes/template/css/normalize.css">
-<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print">
+<link rel="stylesheet" type="text/css" href="includes/template/css/normalize.css" id="normalizeCSS">
+<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css" id="foundationCSS">
+<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css" id="stylesheetCSS">
+<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print" id="printCSS">
 
 <?php if (isset($extraCss)) { ?>
   <?php foreach ($extraCss as $css) { ?>
@@ -29,9 +29,12 @@
 <?php } ?>
 
 <script src="includes/template/javascript/foundation/custom.modernizr.js"></script>
-<?php /** The following path might need to be updated from time to time to keep up with the versions hosted by Google **/ ?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.js"><\/script>');</script>
+
+<?php /** CDN for jQuery core **/ ?>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.min.js"><\/script>');</script>
+
+<?php /** Load Foundation framework core**/ ?>
 <script src="includes/template/javascript/foundation/foundation.min.js"></script>
 
 <script src="includes/template/javascript/jquery-validation/jquery.validate.js"></script>
@@ -40,11 +43,12 @@
 <?php } ?>
 
 <?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
+
 <script src="includes/general.js"></script>
 
-<?php /** The following path might need to be updated from time to time to keep up with the versions hosted by Google **/ ?>
-<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css">
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<?php /** CDN for jQuery UI components **/ ?>
+<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css" id="jQueryUIBaseCSS">
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
 
 <script src="includes/template/javascript/jquery-ui-i18n.min.js"></script>
@@ -60,11 +64,12 @@ $(function(){
   }) );
 });
 </script>
-<link rel="stylesheet" type="text/css" href="includes/template/css/jquery.ui.theme.css">
+<link rel="stylesheet" type="text/css" href="includes/template/css/jquery.ui.theme.css" id="jQueryUIThemeCSS">
 
-<link rel="stylesheet" type="text/css" href="includes/template/css/menu.css">
+<link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
 <link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
 <script src="includes/menu.js"></script>
 <script>
   $(document).ready(function(){ cssjsmenuinit(); });
 </script>
+
