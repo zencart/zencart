@@ -4,10 +4,14 @@
  * Session functions
  *
  * @package functions
+<<<<<<< HEAD
  * @copyright Copyright 2003-2011 Zen Cart Development Team
+=======
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
+>>>>>>> 3bb09e7... CHANGE-549  PHP Notice: Object of class queryFactoryResult could not be converted to int
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: sessions.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -88,7 +92,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   function _sess_destroy($key) {
     global $db;
     $sql = "delete from " . TABLE_SESSIONS . " where sesskey = '" . zen_db_input($key) . "'";
-    return $db->Execute($sql);
+    $db->Execute($sql);
+    return TRUE;
   }
 
   function _sess_gc($maxlifetime) {
