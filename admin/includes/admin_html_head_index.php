@@ -49,17 +49,8 @@
 <link rel="stylesheet" type="text/css" href="includes/template/css/jquery.ui.theme.css">
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
 <script src="includes/menu.js"></script>
 <script>
-  <!--
-  $(document).ready(function(){
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  });
-  // -->
+  $(document).ready(function(){ cssjsmenuinit(); });
 </script>

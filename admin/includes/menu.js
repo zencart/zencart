@@ -1,5 +1,6 @@
-// combined config.js and cssjsmenu.js for performance reasons
-// to save a cache check and an inline script
+/** NDE CSS/JS Menu Widget **
+
+// combined config.js and cssjsmenu.js
 
 // config.js
 
@@ -230,10 +231,9 @@ function printAlert()
   alert('Thanks to the use of a print-media stylesheet, this page is already printer-friendly!  Just print the article from a CSS-capable browser to get the print styles on paper.');
 }
 
-function init()
+function cssjsmenuinit()
 {
   cssjsmenu('navbar');
-  cssjsmenu('nde-config');
   if (document.getElementById)
   {
     var kill = document.getElementById('hoverJS');
@@ -408,10 +408,10 @@ function cssjsmenu(menuid)
             // work around Gecko Linux only bug where related target is null
             // when clicking on menu links or when right clicking and moving
             // into a context menu.
-	    if (navigator.product == 'Gecko' && navigator.platform.indexOf('Linux') != -1 && !relatedTarget)
-	    {
-	      relatedTarget = e.originalTarget;
-	    }
+            if (navigator.product == 'Gecko' && navigator.platform.indexOf('Linux') != -1 && !relatedTarget)
+            {
+              relatedTarget = e.originalTarget;
+            }
           }
           else if (window.event)
           {
