@@ -22,7 +22,7 @@ header('Cache-Control: no-cache, no-store, must-revalidate');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $showDetails = (isset($_GET['d']) && $_GET['d'] != '0') || (isset($_GET['details']) && $_GET['details'] != '0'); // supports ?d= or ?details= and any value other than '0' turns it on.
-set_time_limit(400);
+set_time_limit(500);
 $errorMessage = '<span style="color:red;font-weight:bold">Error </span>';
 $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
 
@@ -35,7 +35,7 @@ doCurlTest('https://www.zen-cart.com/testcurl.php');
 echo 'Connecting to USPS (port 80)...<br>';
 dofsockTest('production.shippingapis.com', 80);
 
-echo 'Connecting to USPS Test/Staging Server (port 80)...<br>';
+echo 'Connecting to USPS Test/Staging/Sandbox Server (port 80)...<br>';
 dofsockTest('stg-production.shippingapis.com', 80);
 
 echo 'Connecting to UPS (port 80)...<br>';
@@ -50,16 +50,19 @@ dofsockTest('www.paypal.com', 443);
 echo 'Connecting to PayPal Express/Pro Server ...<br>';
 doCurlTest('https://api-3t.paypal.com/nvp');
 
+echo 'Connecting to PayPal Express/Pro Sandbox ...<br>';
+doCurlTest('https://api-3t.sandbox.paypal.com/nvp');
+
 echo 'Connecting to PayPal Payflowpro Server ...<br>';
 doCurlTest('https://payflowpro.paypal.com/transaction');
 
 echo 'Connecting to AuthorizeNet Production Server ...<br>';
 doCurlTest('https://secure.authorize.net/gateway/transact.dll');
 
-echo 'Connecting to AuthorizeNet Developer Server ...<br>';
+echo 'Connecting to AuthorizeNet Developer/Sandbox Server ...<br>';
 doCurlTest('https://test.authorize.net/gateway/transact.dll');
 
-echo 'Connecting to LinkPoint (port 1129)...<br>';
+echo 'Connecting to LinkPointAPI server (port 1129)...<br>';
 doCurlTest('https://secure.linkpt.net/LSGSXML:1129');
 
 ?>
