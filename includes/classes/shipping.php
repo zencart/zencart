@@ -127,10 +127,10 @@ class shipping extends base {
       while (list(, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         if (zen_not_null($module)) {
-          if ( ($module == $class) && ($GLOBALS[$class]->enabled) ) {
+          if ( ($module == $class) && (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) ) {
             $include_quotes[] = $class;
           }
-        } elseif ($GLOBALS[$class]->enabled) {
+        } elseif (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $include_quotes[] = $class;
         }
       }
