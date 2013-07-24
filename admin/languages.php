@@ -210,13 +210,17 @@
 
         // check if the spelling of the name for the default language has just been changed (thus meaning we need to change the spelling of DEFAULT_LANGUAGE to match it)
 // get "code" for the language we just updated
-        $result = $db->Execute("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
+        $result = $db->Execute("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
 // compare "code" vs DEFAULT_LANGUAGE
         $changing_default_lang = (DEFAULT_LANGUAGE == $result->fields['code']) ? true : false;
 // compare whether "code" matches $code (which was just submitted in the edit form
         $default_needs_an_update = (DEFAULT_LANGUAGE == $code) ? false : true;
 // if we just edited the default language id's name, then we need to update the database with the new name for default
         $default_lang_change_flag = ($default_needs_an_update && $changing_default_lang) ? true : false;
+
+        // update current session language code if this update requires it
+        if ($_SESSION['languages_code'] == $result->fields['code'] && $_SESSION['languages_code'] != $code) $_SESSION['languages_code'] = $code;
+        if ($_SESSION['language'] == $result->fields['directory'] && $_SESSION['language'] != $directory) $_SESSION['language'] = $directory;
 
         // save new language settings
         $db->Execute("update " . TABLE_LANGUAGES . "
