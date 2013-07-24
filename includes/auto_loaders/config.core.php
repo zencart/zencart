@@ -18,7 +18,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'class.base.php');
  * require(DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier()'
- * require(DIR_WS_CLASSES . 'mime.php');
  * require(DIR_WS_CLASSES . 'email.php');
  * require(DIR_WS_CLASSES . 'boxes.php');
  * require(DIR_WS_CLASSES . 'category_tree.php');
@@ -213,8 +212,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 130.
  *
- * require('includes/init_includes/init_customer_auth.php');
  * messageStack = new messageStack();
+ * require('includes/init_includes/init_customer_auth.php');
  *
  */
   $autoLoadConfig[130][] = array('autoType'=>'classInstantiate',
@@ -241,8 +240,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 160.
  *
- * require('includes/init_includes/init_category_path.php');
  * $breadcrumb = new breadcrumb();
+ * require('includes/init_includes/init_category_path.php');
  */
   $autoLoadConfig[160][] = array('autoType'=>'classInstantiate',
                                  'className'=>'breadcrumb',
@@ -274,3 +273,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_header.php');
 
+
+/**
+ * NOTE: Most plugins should be added from point 200 onward.
+ */
