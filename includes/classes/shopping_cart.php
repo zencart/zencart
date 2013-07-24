@@ -596,6 +596,9 @@ class shoppingCart extends base {
 
     if (!is_array($this->contents)) return 0;
 
+// By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
+// Setting a define for ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL to 1 to calculate the Price Factor from Special rather than Price switches this to be based on Special, if it exists
+    if (!defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL')) define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
     reset($this->contents);
     while (list($products_id, ) = each($this->contents)) {
       $freeShippingTotal = $productTotal = $totalOnetimeCharge = 0;
