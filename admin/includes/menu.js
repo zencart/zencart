@@ -1,4 +1,4 @@
-/** NDE CSS/JS Menu Widget **
+/** NDE CSS/JS Menu Widget **/
 
 // combined config.js and cssjsmenu.js
 
