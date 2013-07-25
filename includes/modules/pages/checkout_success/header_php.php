@@ -100,6 +100,7 @@ if ($flag_global_notifications != '1') {
   $products_displayed = array();
 
 
+  $customer_has_gv_balance = FALSE;
   $gv_query = "SELECT amount
                FROM " . TABLE_COUPON_GV_CUSTOMER . "
                WHERE customer_id = :customersID ";
@@ -107,7 +108,7 @@ if ($flag_global_notifications != '1') {
   $gv_query = $db->bindVars($gv_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $gv_result = $db->Execute($gv_query);
 
-  if ($gv_result->fields['amount'] > 0 ) {
+  if (!$gv_result->EOF && $gv_result->fields['amount'] > 0 ) {
     $customer_has_gv_balance = true;
     $customer_gv_balance = $currencies->format($gv_result->fields['amount']);
   }
