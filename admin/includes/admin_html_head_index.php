@@ -46,8 +46,8 @@
 
 <script src="includes/general.js"></script>
 
+<link rel="stylesheet" type="text/css" href="includes/template/css/jquery-ui.min.css" id="jQueryUIThemeCSS">
 <?php /** CDN for jQuery UI components **/ ?>
-<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.base.css" id="jQueryUIBaseCSS">
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
 
@@ -64,7 +64,6 @@ $(function(){
   }) );
 });
 </script>
-<link rel="stylesheet" type="text/css" href="includes/template/css/jquery.ui.theme.css" id="jQueryUIThemeCSS">
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
 <link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
