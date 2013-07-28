@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 if (isset($_POST['zone_country_id'])) $_POST['zone_country_id'] = (int)$_POST['zone_country_id'];
-if (isset($_POST['scid'])) $_POST['scid'] = preg_replace('/[^a-z_0-9\-]/i', '', $_POST['scid']);
+if (isset($_POST['scid'])) $_POST['scid'] = preg_replace('/[^a-z_0-9\- ]/i', '', $_POST['scid']);
 
 // load JS updater
 if ($current_page_base != 'popup_shipping_estimator') {
@@ -179,8 +179,22 @@ if ($_SESSION['cart']->count_contents() > 0) {
       $module="";
       $method="";
     }
+
     if (zen_not_null($module)){
-      $selected_quote = $shipping_modules->quote($method, $module);
+      foreach ($quotes as $key=>$value) {
+        if ($value['id'] == $module) {
+          $selected_quote[0] = $value;
+          if (zen_not_null($method)) {
+            foreach ($selected_quote[0]['methods'] as $qkey=>$qval) {
+              if ($qval['id'] == $method) {
+                $selected_quote[0]['methods'] = array($qval);
+                continue;
+              }
+            }
+          }
+        }
+      }
+
       if($selected_quote[0]['error'] || !zen_not_null($selected_quote[0]['methods'][0]['cost'])){
 //        $selected_shipping = $shipping_modules->cheapest();
         $order->info['shipping_method'] = $selected_shipping['title'];
