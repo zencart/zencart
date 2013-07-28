@@ -18,8 +18,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'class.base.php');
  * require(DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier()'
- * require(DIR_WS_CLASSES . 'mime.php');
- * require(DIR_WS_CLASSES . 'email.php');
+ * require(DIR_WS_CLASSES . 'class.phpmailer.php');
  * require(DIR_WS_CLASSES . 'boxes.php');
  * require(DIR_WS_CLASSES . 'category_tree.php');
  * require(DIR_WS_CLASSES . 'cache.php');
@@ -45,8 +44,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'objectName'=>'zco_notifier');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=> 'class.phpmailer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=> 'class.smtp.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=> 'boxes.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -151,7 +148,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 80.
  *
  * if(!$_SESSION['cart']) $_SESSION['cart'] = new shoppingCart();
- * if(!$_SESSION['navigaton']) $_SESSION['navigation'] = new navigaionHistory();
  *
  */
   $autoLoadConfig[80][] = array('autoType'=>'classInstantiate',
@@ -172,6 +168,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 100.
  *
  * require('includes/init_includes/init_sanitize.php');
+ * if(!$_SESSION['navigaton']) $_SESSION['navigation'] = new navigationHistory();
  * $template = new template_func();
  *
  */

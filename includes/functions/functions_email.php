@@ -9,7 +9,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
- * 2007-09-30 added encryption support for Gmail Chuck Redman
  */
 
 /**
@@ -18,10 +17,10 @@
  * 1=show SMTP status errors
  * 2=show SMTP server responses
  * 4=show SMTP readlines if applicable
- * 5=maximum information
+ * 5=maximum information, and output it to error_log
  * 'preview' to show HTML-emails on-screen while sending
  */
-  if (!defined('EMAIL_SYSTEM_DEBUG')) define('EMAIL_SYSTEM_DEBUG','0');
+  if (!defined('EMAIL_SYSTEM_DEBUG')) define('EMAIL_SYSTEM_DEBUG', 0);
   if (!defined('EMAIL_ATTACHMENTS_ENABLED')) define('EMAIL_ATTACHMENTS_ENABLED', true);
 /**
  * enable embedded image support
@@ -29,8 +28,8 @@
   if (!defined('EMAIL_ATTACH_EMBEDDED_IMAGES')) define('EMAIL_ATTACH_EMBEDDED_IMAGES', 'Yes');
 
 /**
- * If using authentication protocol, enter appropriate option here: 'ssl' or 'tls' or 'starttls'
- * If using 'starttls', you must add a define for 'SMTPAUTH_EMAIL_CERTIFICATE_CONTEXT' in the extra_datafiles folder to supply your certificate-context
+ * If you need to force an authentication protocol, enter appropriate option here: 'ssl' or 'tls'
+ * Note that selecting a gmail server or port 465 will automatically select 'ssl' for you.
  */
   if (!defined('SMTPAUTH_EMAIL_PROTOCOL')) define('SMTPAUTH_EMAIL_PROTOCOL', 'none');
 
@@ -176,39 +175,49 @@
 
       // now lets build the mail object with the phpmailer class
       $mail = new PHPMailer();
+      $mail->XMailer = 'PHPMailer '. $mail->Version . ' for Zen Cart';
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
       $mail->SetLanguage($lang_code, DIR_FS_CATALOG . DIR_WS_CLASSES . 'support/');
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";
-      $mail->Encoding = (defined('EMAIL_ENCODING_METHOD')) ? EMAIL_ENCODING_METHOD : "7bit";
+      if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD != '') $mail->Encoding = EMAIL_ENCODING_METHOD;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
-      $mail->WordWrap = 76;    // set word wrap to 76 characters
+      if ((int)EMAIL_SYSTEM_DEBUG > 4 ) $mail->Debugoutput = 'error_log';
+//       $mail->WordWrap = 76;    // set word wrap to 76 characters
+
       // set proper line-endings based on switch ... important for windows vs linux hosts:
-      $mail->LE = (EMAIL_LINEFEED == 'CRLF') ? "\r\n" : "\n";
+//       $mail->LE = (EMAIL_LINEFEED == 'CRLF') ? "\r\n" : "\n";
 
       switch (EMAIL_TRANSPORT) {
-        case 'smtp':
+        case ('Gmail'):
           $mail->IsSMTP();
-          $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
-          if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '25' && EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '') $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
-          $mail->LE = "\r\n";
+          $mail->SMTPAuth = true;
+          $mail->SMTPSecure = 'ssl';
+          $mail->Port = 465;
+          $mail->Host = 'smtp.gmail.com';
+          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
+          if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           break;
         case 'smtpauth':
           $mail->IsSMTP();
           $mail->SMTPAuth = true;
-          $mail->Username = (zen_not_null(EMAIL_SMTPAUTH_MAILBOX)) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
-          $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
-          $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
-          if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '25' && EMAIL_SMTPAUTH_MAIL_SERVER_PORT != '') $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
-          $mail->LE = "\r\n";
-          //set encryption protocol to allow support for Gmail or other secured email protocols
-          if (EMAIL_SMTPAUTH_MAIL_SERVER_PORT == '465' || EMAIL_SMTPAUTH_MAIL_SERVER_PORT == '587' || EMAIL_SMTPAUTH_MAIL_SERVER == 'smtp.gmail.com') $mail->Protocol = 'ssl';
+          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
+          if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
+          $mail->Host = (trim(EMAIL_SMTPAUTH_MAIL_SERVER) != '') ? trim(EMAIL_SMTPAUTH_MAIL_SERVER) : 'localhost';
+          if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
+          if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 465;
+          //set encryption protocol to allow support for secured email protocols
+          if ($mail->Port == '465' || $mail->Host == 'smtp.gmail.com') $mail->SMTPSecure = 'ssl';
+          if ($mail->Port == '587') $mail->SMTPSecure = 'tls';
           if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
-            $mail->Protocol = SMTPAUTH_EMAIL_PROTOCOL;
-            if (SMTPAUTH_EMAIL_PROTOCOL == 'starttls' && defined('SMTPAUTH_EMAIL_CERTIFICATE_CONTEXT')) {
-              $mail->Starttls = true;
-              $mail->Context = SMTPAUTH_EMAIL_CERTIFICATE_CONTEXT;
-            }
+            $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
           }
+//           $mail->LE = "\r\n";
+          break;
+        case 'smtp':
+          $mail->IsSMTP();
+          $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
+          if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
+//           $mail->LE = "\r\n";
           break;
         case 'PHP':
           $mail->IsMail();
@@ -218,19 +227,18 @@
           break;
         case 'sendmail':
         case 'sendmail-f':
-          $mail->LE = "\n";
+//           $mail->LE = "\n";
         default:
           $mail->IsSendmail();
-          if (defined('EMAIL_SENDMAIL_PATH')) $mail->Sendmail = trim(EMAIL_SENDMAIL_PATH);
+          if (defined('EMAIL_SENDMAIL_PATH') && file_exists(trim(EMAIL_SENDMAIL_PATH))) $mail->Sendmail = trim(EMAIL_SENDMAIL_PATH);
           break;
       }
 
       $mail->Subject  = $email_subject;
-      $mail->From     = $from_email_address;
-      $mail->FromName = $from_email_name;
-      $mail->AddAddress($to_email_address, $to_name);
-      //$mail->AddAddress($to_email_address);    // (alternate format if no name, since name is optional)
-      //$mail->AddBCC(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME);
+
+      if (EMAIL_TRANSPORT=='sendmail-f' || EMAIL_SEND_MUST_BE_STORE=='Yes') {
+        $mail->Sender = EMAIL_FROM;
+      }
 
       // set the reply-to address.  If none set yet, then use Store's default email name/address.
       // If sending from checkout or contact-us or tell-a-friend page, use the supplied info
@@ -238,12 +246,13 @@
       $email_reply_to_name    = (isset($email_reply_to_name) && $email_reply_to_name != '')    ? $email_reply_to_name    : (in_array($module, array('contact_us',  'tell_a_friend', 'checkout_extra')) ? $from_email_name    : STORE_NAME);
       $mail->AddReplyTo($email_reply_to_address, $email_reply_to_name);
 
+      $mail->SetFrom($from_email_address, $from_email_name);
       // if mailserver requires that all outgoing mail must go "from" an email address matching domain on server, set it to store address
       if (EMAIL_SEND_MUST_BE_STORE=='Yes') $mail->From = EMAIL_FROM;
 
-      if (EMAIL_TRANSPORT=='sendmail-f' || EMAIL_SEND_MUST_BE_STORE=='Yes') {
-        $mail->Sender = EMAIL_FROM;
-      }
+      $mail->AddAddress($to_email_address, $to_name);
+      //$mail->AddAddress($to_email_address);    // (alternate format if no name, since name is optional)
+      //$mail->AddBCC(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME);
 
       if (EMAIL_USE_HTML == 'true') $email_html = processEmbeddedImages($email_html, $mail);
 
@@ -289,12 +298,17 @@
 
       // prepare content sections:
       if (EMAIL_USE_HTML == 'true' && trim($email_html) != '' &&
-      ($customers_email_format == 'HTML' || (ADMIN_EXTRA_EMAIL_FORMAT != 'TEXT' && substr($module,-6)=='_extra'))) {
-        $mail->IsHTML(true);           // set email format to HTML
-        $mail->Body    = $email_html;  // HTML-content of message
-        $mail->AltBody = $text;        // text-only content of message
-      }  else {                        // use only text portion if not HTML-formatted
-        $mail->Body    = $text;        // text-only content of message
+         ($customers_email_format == 'HTML' || (ADMIN_EXTRA_EMAIL_FORMAT != 'TEXT' && substr($module,-6)=='_extra')))
+      {
+        // Prepare HTML message
+        $mail->MsgHTML($email_html);
+        if ($text != '') {
+          // apply the supplied text-only portion instead of the auto-generated portion
+          $mail->AltBody = $text;
+        }
+      }  else {
+        // If we got here, then other rules specified to send a text-only message instead of HTML
+        $mail->Body = $text;
       }
 
       $oldVars = array(); $tmpVars = array('REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', 'SERVER_NAME');
@@ -306,16 +320,23 @@
         if ($key == 'REMOTE_ADDR') $_SERVER[$key] = HTTP_SERVER;
         if ($key == 'PHP_SELF') $_SERVER[$key] = '/obf'.'us'.'cated';
       }
-/**
- * Send the email. If an error occurs, trap it and display it in the messageStack
- */
+      @ini_set('mail.add_x_header', 0);
+
       $ErrorInfo = '';
       $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', array($mail), $mail);
+      /**
+       * Send the email. If an error occurs, trap it and display it in the messageStack
+       */
       if (!$mail->Send()) {
-        if (IS_ADMIN_FLAG === true) {
-          $messageStack->add_session(sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject),'error');
+        $msg = sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject);
+        if ($messageStack !== NULL) {
+          if (IS_ADMIN_FLAG === true) {
+            $messageStack->add_session($msg, 'error');
+          } else {
+            $messageStack->add('header', $msg, 'error');
+          }
         } else {
-          $messageStack->add('header',sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject),'error');
+          error_log($msg);
         }
         $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . '<br />' : '';
       }
