@@ -310,7 +310,7 @@ class paypaldp extends base {
     $fieldsArray = array();
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_FIRSTNAME,
                            'field' => zen_draw_input_field('paypalwpp_cc_firstname', $order->billing['firstname'], 'id="'.$this->code.'-cc-ownerf"'. $onFocus . ' autocomplete="off"') .
-                           '<script type="text/javascript">function paypalwpp_cc_type_check() { ' . $this->cc_type_check . ' } </script>',
+                           '<script>function paypalwpp_cc_type_check() { ' . $this->cc_type_check . ' } </script>',
                            'tag' => $this->code.'-cc-ownerf');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_LASTNAME,
                            'field' => zen_draw_input_field('paypalwpp_cc_lastname', $order->billing['lastname'], 'id="'.$this->code.'-cc-ownerl"'. $onFocus . ' autocomplete="off"'),
@@ -325,7 +325,7 @@ class paypaldp extends base {
                            'field' => zen_draw_pull_down_menu('paypalwpp_cc_expires_month', $expires_month, strftime('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('paypalwpp_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
                            'tag' => $this->code.'-cc-expires-month');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER,
-                           'field' => zen_draw_input_field('paypalwpp_cc_checkcode', '', 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-cvv"' . $onFocus . ' autocomplete="off"') . '&nbsp;<small>' . MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER_LOCATION . '</small><script type="text/javascript">paypalwpp_cc_type_check();</script>',
+                           'field' => zen_draw_input_field('paypalwpp_cc_checkcode', '', 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-cvv"' . $onFocus . ' autocomplete="off"') . '&nbsp;<small>' . MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER_LOCATION . '</small><script>paypalwpp_cc_type_check();</script>',
                            'tag' => $this->code.'-cc-cvv');
 
     $selection = array('id' => $this->code,

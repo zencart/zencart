@@ -119,7 +119,7 @@ $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] .
 
 } else {
   echo '<html><head>';
-  echo '<script type="text/javascript">
+  echo '<script>
 <!--
 theTimer = 0;
 timeOut = 12;

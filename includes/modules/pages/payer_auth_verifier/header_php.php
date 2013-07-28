@@ -3,7 +3,7 @@
  * payer_auth_verifier page
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -169,7 +169,7 @@ header("Cache-Control: max-age=1");  // stores for only 1 second, which prevents
 <html>
 <head>
 <title>Payer Authentication Window</title>
-<script type="text/javascript">
+<script>
   function onLoadHandler(){
     setTimeout(document.frmResultPage.submit(), 2);
   }

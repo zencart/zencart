@@ -3,7 +3,7 @@
  * Payment Class.
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:40:54 2012 -0400 Modified in v1.5.1 $
@@ -116,7 +116,7 @@ class payment extends base {
   function javascript_validation() {
     $js = '';
     if (is_array($this->modules) && sizeof($this->selection()) > 0) {
-      $js = '<script language="javascript"  type="text/javascript"><!-- ' . "\n" .
+      $js = '<script><!-- ' . "\n" .
       'function check_form() {' . "\n" .
       '  var error = 0;' . "\n" .
       '  var error_message = "' . JS_ERROR . '";' . "\n" .

@@ -272,5 +272,5 @@ if ($_SESSION['cart']->count_contents() > 0) {
 <?php
 }
 ?>
-<script type="text/javascript" language="javascript">update_zone(document.estimator); </script>
+<script>update_zone(document.estimator); </script>
 <!-- shipping_estimator_eof //-->

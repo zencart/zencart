@@ -3,13 +3,13 @@
  * jscript_main
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: jscript_main.php 3126 2006-03-07 03:09:40Z drbyte $
  */
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script><!--
 var i=0;
 function resize() {
   i=0;
@@ -45,7 +45,7 @@ function resize() {
 
 //  window.resizeTo(imgWidth, imgHeight);
   window.resizeTo(frameWidth,frameHeight+i);
-	}
+  }
   else if (document.body) {
     window.resizeTo(document.body.clientWidth, document.body.clientHeight-i);
   }

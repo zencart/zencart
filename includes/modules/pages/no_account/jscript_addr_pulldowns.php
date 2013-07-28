@@ -5,13 +5,13 @@
  * handles pulldown menu dependencies for state/country selection
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script><!--
 
 function update_zone(theForm) {
   // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates
