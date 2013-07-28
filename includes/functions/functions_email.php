@@ -450,19 +450,28 @@
     // Identify and Read the template file for the type of message being sent
     $langfolder = (strtolower($_SESSION['languages_code']) == 'en') ? '' : strtolower($_SESSION['languages_code']) . '/';
     $template_filename_base = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_";
+    $template_filename_base_en = DIR_FS_EMAIL_TEMPLATES . "email_template_";
     $template_filename = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html";
 
-    if (!file_exists($template_filename)) {
-      if (isset($block['EMAIL_TEMPLATE_FILENAME']) && $block['EMAIL_TEMPLATE_FILENAME'] != '' && file_exists($block['EMAIL_TEMPLATE_FILENAME'] . '.html')) {
-        $template_filename = $block['EMAIL_TEMPLATE_FILENAME'] . '.html';
-      } elseif (file_exists($template_filename_base . str_replace(array('_extra','_admin'),'',$module) . '.html')) {
-        $template_filename = $template_filename_base . str_replace(array('_extra','_admin'),'',$module) . '.html';
-      } elseif (file_exists($template_filename_base . 'default' . '.html')) {
-        $template_filename = $template_filename_base . 'default' . '.html';
-      } else {
-        if(isset($messageStack)) $messageStack->add('header','ERROR: The email template file for (' . $template_filename_base . ') or (' . $template_filename . ') cannot be found.','caution');
-        return ''; // couldn't find template file, so return an empty string for html message.
+    $filesToTest = array(DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html",
+                         DIR_FS_EMAIL_TEMPLATES . "email_template_" . $current_page_base . ".html",
+                         (isset($block['EMAIL_TEMPLATE_FILENAME']) && $block['EMAIL_TEMPLATE_FILENAME'] != '' ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : NULL),
+                         $template_filename_base . str_replace(array('_extra','_admin'),'',$module) . '.html',
+                         $template_filename_base_en . str_replace(array('_extra','_admin'),'',$module) . '.html',
+                         $template_filename_base . 'default' . '.html',
+                         $template_filename_base_en . 'default' . '.html',
+                        );
+    $found = FALSE;
+    foreach($filesToTest as $val) {
+      if (file_exists($val)) {
+        $template_filename = $val;
+        $found = TRUE;
+        break;
       }
+    }
+    if (FALSE === $found) {
+      if(isset($messageStack)) $messageStack->add('header','ERROR: The email template file for (' . $template_filename_base . ') or (' . $template_filename . ') cannot be found.', 'caution');
+      return ''; // couldn't find template file, so return an empty string for html message.
     }
 
     if (!$fh = fopen($template_filename, 'rb')) {   // note: the 'b' is for compatibility with Windows systems
