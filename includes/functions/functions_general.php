@@ -623,7 +623,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
       $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
 
-      if (is_object($GLOBALS[$class])) {
+      if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
         if ($GLOBALS[$class]->enabled) {
           $count++;
         }
