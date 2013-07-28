@@ -24,7 +24,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'split_page_results.php');
  * require(DIR_WS_CLASSES . 'object_info.php');
  * require(DIR_WS_CLASSES . 'class.phpmailer.php');
- * require(DIR_WS_CLASSES . 'class.smtp.php');
  * require(DIR_WS_CLASSES . 'upload.php');
  */
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -61,8 +60,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.phpmailer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.smtp.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'upload.php',
                                'classPath'=>DIR_WS_CLASSES);
@@ -233,4 +230,5 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'loadFile'=> 'init_header.php');
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_html_editor.php');
+
 
