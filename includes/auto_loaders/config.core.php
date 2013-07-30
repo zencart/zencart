@@ -190,8 +190,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'objectName'=>'navigation',
                                 'checkInstantiated'=>true,
                                 'classSession'=>true);
-  $autoLoadConfig[100][] = array('autoType'=>'init_script',
-                                 'loadFile'=> 'init_counter.php');
 /**
  * Breakpoint 110.
  *
