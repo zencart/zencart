@@ -681,3 +681,10 @@ You may also have given the wrong database name (<strong>Does it exist?</strong>
 
 }
 
+define('TEXT_VERSION_CHECK_NEW_VER', 'New Version Available v');
+define('TEXT_VERSION_CHECK_NEW_PATCH', 'New PATCH Available: v');
+define('TEXT_VERSION_CHECK_PATCH', 'patch');
+define('TEXT_VERSION_CHECK_DOWNLOAD', 'Download Here');
+define('TEXT_VERSION_CHECK_CURRENT', 'Your version of Zen Cart&reg; appears to be current.');
+define('TEXT_ERROR_NEW_VERSION_AVAILABLE', '<a href="http://www.zen-cart.com/getit">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="http://www.zen-cart.com" style="text-decoration:underline" target="_blank">www.zen-cart.com</a>');
+define('LABEL_ZC_VERSION_CHECK', 'Zen Cart Version:');
