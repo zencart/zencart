@@ -26,9 +26,33 @@ if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE
 define('VERBOSE_SYSTEMCHECKER', $debug_logging);
 
 /**
+ * read some file locations from the "store / catalog" configure.php
+ */
+require (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php');
+$configReader = new zcConfigureFileReader(DIR_FS_ROOT . 'includes/configure.php');
+if (!defined('DIR_FS_LOGS')) {
+  // Use the systemChecker to see if one is defined in the store configure.php
+  $logDir = $configReader->getDefine('DIR_FS_LOGS');
+  if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'logs';
+  define('DIR_FS_LOGS', $logDir);
+}
+if (!defined('DIR_FS_SQL_CACHE')) {
+  // Use the systemChecker to see if one is defined in the store configure.php
+  $logDir = $configReader->getDefine('DIR_FS_SQL_CACHE');
+  if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'cache';
+  define('DIR_FS_SQL_CACHE', $logDir);
+}
+if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
+  // Use the systemChecker to see if one is defined in the store configure.php
+  $logDir = $configReader->getDefine('DIR_FS_DOWNLOAD_PUBLIC');
+  if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'pub';
+  define('DIR_FS_DOWNLOAD_PUBLIC', $logDir);
+}
+
+/**
  * set the level of error reporting
  */
-if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_ROOT . 'logs');
+if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS); 
 error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);

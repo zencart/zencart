@@ -128,12 +128,12 @@ define('TEXT_ERROR_PHP_VERSION', 'Incorrect PHP Version');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
 define('TEXT_ERROR_MYSQL_SUPPPORT', 'Problems with your MySQL (mysqli) support');
-define('TEXT_ERROR_LOG_FOLDER', '/logs/ folder is not writeable');
-define('TEXT_ERROR_CACHE_FOLDER', '/cache/ folder is not writeable');
+define('TEXT_ERROR_LOG_FOLDER', DIR_FS_LOGS . ' folder is not writeable');
+define('TEXT_ERROR_CACHE_FOLDER', DIR_FS_SQL_CACHE . ' folder is not writeable');
 define('TEXT_ERROR_IMAGES_FOLDER', '/images/ folder is not writeable');
 define('TEXT_ERROR_DEFINEPAGES_FOLDER', '/includes/languages/english/html_includes/ folder is not writeable');
 define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
-define('TEXT_ERROR_PUB_FOLDER', '/pub/ folder is not writeable');
+define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable'); 
 
 define('TEXT_ERROR_HTACCESS_SUPPPORT', 'Problems with .htaccess support');
 define('TEXT_ERROR_SESSION_SUPPPORT', 'Problems with session support');
@@ -229,7 +229,7 @@ define('TEXT_VERSION_CHECK_DOWNLOAD', 'Download Here');
 define('TEXT_VERSION_CHECK_CURRENT', 'Your version of Zen Cart&reg; appears to be current.');
 define('TEXT_ERROR_NEW_VERSION_AVAILABLE', '<a href="http://www.zen-cart.com/getit">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="http://www.zen-cart.com" style="text-decoration:underline" target="_blank">www.zen-cart.com</a>');
 
-
+define('TEXT_DB_VERSION_NOT_FOUND', 'A Zen Cart database for %s was not found!');
 
 
 
