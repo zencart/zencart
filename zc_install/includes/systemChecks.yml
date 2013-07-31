@@ -72,7 +72,7 @@ systemChecks:
     methods:
       checkWriteableDir:
         parameters:
-          fileDir: <?php echo DIR_FS_ROOT . 'logs' . PHP_EOL; ?>
+          fileDir: <?php echo DIR_FS_LOGS . PHP_EOL; ?>
   cacheFolder:
     runLevel: always
     errorLevel: FAIL
@@ -81,7 +81,7 @@ systemChecks:
     methods:
       checkWriteableDir:
         parameters:
-          fileDir: <?php echo DIR_FS_ROOT . 'cache' . PHP_EOL; ?>
+          fileDir: <?php echo DIR_FS_SQL_CACHE . PHP_EOL; ?>
   imagesFolder:
     runLevel: always
     errorLevel: WARN
@@ -117,7 +117,7 @@ systemChecks:
     methods:
       checkWriteableDir:
         parameters:
-          fileDir: <?php echo DIR_FS_ROOT . 'pub' . PHP_EOL; ?>
+          fileDir: <?php echo DIR_FS_DOWNLOAD_PUBLIC . PHP_EOL; ?>
   htaccessSupport:
     runLevel: always
     errorLevel: WARN
