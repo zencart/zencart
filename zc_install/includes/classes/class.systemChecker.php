@@ -83,13 +83,11 @@ class systemChecker
   public function hasSaneConfigFile()
   {
     $result = FALSE;
-    if (file_exists(DIR_FS_ROOT . 'includes/configure.php'))
+    if ($this->getServerConfig()->fileLoaded())
     {
-      $lines = @file(DIR_FS_ROOT . 'includes/configure.php');
-      if (!is_array($lines) || count($lines) == 0 ) return FALSE;
-      $httpServerVal = $this->getConfigureDefine('HTTP_SERVER', $lines);
-      $fsCatalogVal = $this->getConfigureDefine('DIR_FS_CATALOG', $lines);
-      $dbPasswordVal = $this->getConfigureDefine('DB_SERVER_PASSWORD', $lines);
+      $httpServerVal = $this->getServerConfig()->getDefine('HTTP_SERVER');
+      $fsCatalogVal = $this->getServerConfig()->getDefine('DIR_FS_CATALOG');
+      $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
       if ($httpServerVal != "" && $fsCatalogVal != "" && $dbPasswordVal != "")
       {
         $result = TRUE;
@@ -100,13 +98,11 @@ class systemChecker
   public function hasUpdatedConfigFile()
   {
     $result = FALSE;
-    if (file_exists(DIR_FS_ROOT . 'includes/configure.php'))
+    if ($this->getServerConfig()->fileLoaded())
     {
-      $lines = @file(DIR_FS_ROOT . 'includes/configure.php');
-      if (!is_array($lines) || count($lines) == 0 ) return FALSE;
 
       // if the new var added in v160 is present, then this deems the file to be already updated
-      $sessionStorage = $this->getConfigureDefine('SESSION_STORAGE', $lines);
+      $sessionStorage = $this->getServerConfig()->getDefine('SESSION_STORAGE');
       if (isset($sessionStorage))
       {
         $result = TRUE;
@@ -129,44 +125,22 @@ class systemChecker
   }
   public function getDbConfigOptions()
   {
-    $lines = file(DIR_FS_ROOT . 'includes/configure.php');
-    $dbServerVal = $this->getConfigureDefine('DB_SERVER', $lines);
-    $dbNameVal = $this->getConfigureDefine('DB_DATABASE', $lines);
-    $dbPasswordVal = $this->getConfigureDefine('DB_SERVER_PASSWORD', $lines);
-    $dbUserVal = $this->getConfigureDefine('DB_SERVER_USERNAME', $lines);
-    $dbPrefixVal = $this->getConfigureDefine('DB_PREFIX', $lines);
-    $dbCharsetVal = $this->getConfigureDefine('DB_CHARSET', $lines);
-    $dbTypeVal = $this->getConfigureDefine('DB_TYPE', $lines);
+    $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+    $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+    $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+    $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+    $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+    $dbCharsetVal = $this->getServerConfig()->getDefine('DB_CHARSET');
+    $dbTypeVal = $this->getServerConfig()->getDefine('DB_TYPE');
     $retVal = array('db_host'=>$dbServerVal, 'db_user'=>$dbUserVal, 'db_password'=>$dbPasswordVal, 'db_name'=>$dbNameVal, 'db_charset'=>$dbCharsetVal, 'db_prefix'=>$dbPrefixVal, 'db_type'=>$dbTypeVal);
     return $retVal;
   }
-  public function getServerConfigOptions()
+  public function getServerConfig()
   {
-    $lines = file(DIR_FS_ROOT . 'includes/configure.php');
-    return $retVal;
+    if(!isset($this->serverConfig)) {
+      $this->serverConfig = new zcConfigureFileReader(DIR_FS_ROOT . 'includes/configure.php');
   }
-  public function getConfigureDefine($searchDefine, $lines)
-  {
-    $retVal = NULL;
-    foreach ($lines as $line)
-    {
-      if (substr(trim($line),0,2) != '//')
-      {
-        $def_string=array();
-        $def_string=explode("'",$line);
-        //define('CONSTANT','value');
-        //[1]=TABLE_CONSTANT
-        //[2]=,
-        //[3]=value
-        //[4]=);
-        //[5]=
-        if (isset($def_string[1]) && strtoupper($def_string[1]) == $searchDefine ) {
-          $retVal = $def_string[3];
-          continue;
-        }
-      }
-    }
-    return $retVal;
+    return $this->serverConfig;
   }
   public function findCurrentDbVersion()
   {
@@ -205,13 +179,12 @@ class systemChecker
   }
   public function dbVersionChecker($parameters)
   {
-    $lines = @file(DIR_FS_ROOT . 'includes/configure.php');
-    if (!is_array($lines) || count($lines) == 0) return FALSE;
-    $dbServerVal = $this->getConfigureDefine('DB_SERVER', $lines);
-    $dbNameVal = $this->getConfigureDefine('DB_DATABASE', $lines);
-    $dbPasswordVal = $this->getConfigureDefine('DB_SERVER_PASSWORD', $lines);
-    $dbUserVal = $this->getConfigureDefine('DB_SERVER_USERNAME', $lines);
-    $dbPrefixVal = $this->getConfigureDefine('DB_PREFIX', $lines);
+    if (!$this->getServerConfig()->fileLoaded()) return FALSE;
+    $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+    $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+    $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+    $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+    $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
     require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
     $db = new queryFactory();
     $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -374,11 +347,10 @@ class systemChecker
 
   public function checkUpgradeDBConnection($parameters)
   {
-    $lines = file(DIR_FS_ROOT . 'includes/configure.php');
-    $dbServerVal = $this->getConfigureDefine('DB_SERVER', $lines);
-    $dbNameVal = $this->getConfigureDefine('DB_DATABASE', $lines);
-    $dbPasswordVal = $this->getConfigureDefine('DB_SERVER_PASSWORD', $lines);
-    $dbUserVal = $this->getConfigureDefine('DB_SERVER_USERNAME', $lines);
+    $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+    $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+    $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+    $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
     require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
     $db = new queryFactory();
     $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -397,14 +369,13 @@ class systemChecker
   }
   public function checkDBConnection($parameters)
   {
-    $lines = file(DIR_FS_ROOT . 'includes/configure.php');
-    $dbServerVal = $this->getConfigureDefine('DB_SERVER', $lines);
-    $dbNameVal = $this->getConfigureDefine('DB_DATABASE', $lines);
-    $dbPasswordVal = $this->getConfigureDefine('DB_SERVER_PASSWORD', $lines);
-    $dbUserVal = $this->getConfigureDefine('DB_SERVER_USERNAME', $lines);
+    $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+    $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+    $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+    $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
     require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
     $db = new queryFactory();
-    $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+    $result = @$db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
     if ($db->error_number != '2002')
     {
       $result = TRUE;
@@ -478,9 +449,9 @@ class systemChecker
       {
         return TRUE;
       }
-    } else 
+    } else
     {
-      return FALSE;    
+      return FALSE;
     }
   }
   public function checkHttpsRequest($parameters)
@@ -496,12 +467,11 @@ class systemChecker
   {
     $parameters = array(array('checkType'=>'fieldSchema', 'tableName'=>'admin', 'fieldName'=>'admin_profile', 'fieldCheck'=>'Type', 'expectedResult'=>'INT(11)'));
     $hasAdminProfiles = $this->dbVersionChecker($parameters);
-    $lines = file(DIR_FS_ROOT . 'includes/configure.php');
-    $dbServerVal = $this->getConfigureDefine('DB_SERVER', $lines);
-    $dbNameVal = $this->getConfigureDefine('DB_DATABASE', $lines);
-    $dbPasswordVal = $this->getConfigureDefine('DB_SERVER_PASSWORD', $lines);
-    $dbUserVal = $this->getConfigureDefine('DB_SERVER_USERNAME', $lines);
-    $dbPrefixVal = $this->getConfigureDefine('DB_PREFIX', $lines);
+    $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+    $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+    $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+    $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+    $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
     require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
     $db = new queryFactory();
     $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);

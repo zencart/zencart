@@ -6,7 +6,7 @@
  * @version $Id:
  */
 
-  @unlink(DIR_FS_ROOT . 'logs/progress.json');
+  @unlink(DEBUG_LOG_FOLDER . '/progress.json');
   require (DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
   $changedDir = (bool)$_POST['changedDir'];
   $adminDir = $_POST['adminDir'];
