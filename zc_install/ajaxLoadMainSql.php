@@ -25,7 +25,7 @@ foreach($options as $key => $val) {
 }
 $dbInstaller = new zcDatabaseInstaller($options);
 $result = $dbInstaller->getConnection();
-$extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DIR_FS_ROOT . 'logs/progress.json', 'id'=>'main', 'message'=>TEXT_CREATING_DATABASE);
+$extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DEBUG_LOG_FOLDER . '/progress.json', 'id'=>'main', 'message'=>TEXT_CREATING_DATABASE);
 $file = DIR_FS_INSTALL . 'sql/install/mysql_zencart.sql';
 logDetails('processing file ' . $file);
 $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
@@ -36,7 +36,7 @@ if ($error)
 // localization file
 if (file_exists(DIR_FS_INSTALL . 'sql/install/mysql_' . $_POST['db_charset'] . '.sql'))
 {
-  $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DIR_FS_ROOT . 'logs/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_CHARSET_SPECIFIC);
+  $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DEBUG_LOG_FOLDER . '/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_CHARSET_SPECIFIC);
   $file = DIR_FS_INSTALL . 'sql/install/mysql_' . $_POST['db_charset'] . '.sql';
   logDetails('processing file ' . $file);
   $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
@@ -48,7 +48,7 @@ if ($error)
 // Demo data
 if (isset($_POST['demoData']))
 {
-  $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DIR_FS_ROOT . 'logs/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_DEMO_DATA);
+  $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DEBUG_LOG_FOLDER . '/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_DEMO_DATA);
   $file = DIR_FS_INSTALL . 'sql/demo/mysql_demo.sql';
   logDetails('processing file ' . $file);
   $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
@@ -71,7 +71,7 @@ if ($d = dir($pluginsfolder)) {
   while ($entry = $d->read()) {
     if (!is_dir($pluginsfolder . $entry)) {
       if (preg_match('~^[^\._].*\.sql$~', $entry) > 0) {
-        $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DIR_FS_ROOT . 'logs/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_PLUGIN_DATA . ' ' . $entry);
+        $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DEBUG_LOG_FOLDER . '/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_PLUGIN_DATA . ' ' . $entry);
         $file = $pluginsfolder . $entry;
         logDetails('processing file ' . $file);
         $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
