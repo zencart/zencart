@@ -78,7 +78,7 @@
       $this->version139 = $this->check_version_139();
       $this->version150 = $this->check_version_150();
       $this->version151 = $this->check_version_151();
-      $this->version151 = $this->check_version_152();
+      $this->version152 = $this->check_version_152();
 
       if ($this->version110 == true)  $retVal = '1.1.0';
       if ($this->version111 == true)  $retVal = '1.1.1';
@@ -790,18 +790,27 @@
 
     function check_version_152() {
       global $db_test;
-      $got_v1_5_2 = false;
-      $sql = "show fields from " . DB_PREFIX . "admin_activity_log";
+      $got_v1_5_2a = $got_v1_5_2b = false;
+      $sql = "show fields from " . DB_PREFIX . "sessions";
       $result = $db_test->Execute($sql);
-      while (!$result->EOF && !$got_v1_5_2) {
-        if (ZC_UPG_DEBUG==true) echo "152-fields-'ip_address TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . '<br>';
-        if  ($result->fields['Field'] == 'ip_address' && strtoupper($result->fields['Type']) == 'VARCHAR(45)') {
-          $got_v1_5_2 = true;
-          if (ZC_UPG_DEBUG==true) echo 'Got 1.5.2<br><br>';
+      while (!$result->EOF && !$got_v1_5_2a) {
+        if (ZC_UPG_DEBUG==true) echo "152-fields-'sesskey TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . ' (expecting VARCHAR(255))<br>';
+        if  ($result->fields['Field'] == 'sesskey' && strtoupper($result->fields['Type']) == 'VARCHAR(255)') {
+          $got_v1_5_2a = true;
+          if (ZC_UPG_DEBUG==true) echo 'OKAY 1.5.2a<br><br>';
         }
         $result->MoveNext();
       }
-      return $got_v1_5_2;
+
+      $sql = "select configuration_description from " . DB_PREFIX . "configuration where configuration_key = 'SESSION_WRITE_DIRECTORY'";
+      $result = $db_test->Execute($sql);
+      if (ZC_UPG_DEBUG==true) echo "152b-configdesc_check SESSION_WRITE_DIRECTORY =" . $result->fields['configuration_description'] . '<br>';
+      if  ($result->fields['configuration_description'] == 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.') {
+        $got_v1_5_2b = true;
+        if (ZC_UPG_DEBUG==true) echo 'OKAY: 1.5.2b<br><br>';
+      }
+
+      return ($got_v1_5_2a && $got_v1_5_2b);
     } //end of 1.5.2 check
 
 
