@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: application_top.php 19969 2011-11-08 17:03:26Z drbyte $
@@ -16,7 +16,7 @@
 @ini_set("arg_separator.output","&");
 
 // Check PHP version
-if (version_compare(PHP_VERSION, '5.2.14', '<'))
+if (version_compare(PHP_VERSION, '5.2.10', '<'))
 {
   require('includes/templates/template_default/templates/tpl_php_version_problem.php');
   die('');

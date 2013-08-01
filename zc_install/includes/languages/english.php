@@ -258,13 +258,11 @@ switch ($error_code) {
   break;
   case ('6'):
     define('POPUP_ERROR_HEADING', 'Virtual HTTPS Server');
-    define('POPUP_ERROR_TEXT', 'This is the web server address for your secure/SSL server. This address varies depending on how SSL/Secure mode is implemented on your server. You are advised to read the <a href="http://tutorials.zen-cart.com/index.php?article=14" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
-
+    define('POPUP_ERROR_TEXT', 'This is the web server address for your secure/SSL server. This address varies depending on how SSL/Secure mode is implemented on your server. You are advised to read the <a href="http://www.zen-cart.com/content.php?56" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
   break;
   case ('7'):
     define('POPUP_ERROR_HEADING', 'Virtual HTTPS Path');
-    define('POPUP_ERROR_TEXT', 'This is the address you would need to put into a web browser to view your Zen Cart&reg; website in secure/SSL mode. You are advised to read the <a href="http://tutorials.zen-cart.com/index.php?article=14" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
-
+    define('POPUP_ERROR_TEXT', 'This is the address you would need to put into a web browser to view your Zen Cart&reg; website in secure/SSL mode. You are advised to read the <a href="http://www.zen-cart.com/content.php?56" target="_blank">FAQ Entry</a> on SSL to ensure this is set correctly.');
   break;
   case ('8'):
     define('POPUP_ERROR_HEADING', 'Enable SSL');
@@ -505,8 +503,7 @@ You may also have given the wrong database name (<strong>Does it exist?</strong>
   break;
   case ('55'):
     define('POPUP_ERROR_HEADING', 'PHP Version not supported');
-    define('POPUP_ERROR_TEXT', 'The PHP Version running on your webserver is not supported by Zen Cart&reg;. <br /><br />PHP 5.3.14 is the minimum requirement. <br />However, we recommend that you use at least PHP v5.3.3 or higher if possible.<br /><br />If you are trying to use older PHP versions, note that using older releases of PHP may result in the admin section of Zen Cart&reg; not being accessible, might leave your site vulnerable to hacking, and may not support some of the PHP Session code that handles keeping individual customer logins unique and separate from other customers. You are advised to upgrade your PHP version.');
-
+    define('POPUP_ERROR_TEXT', 'The PHP Version running on your webserver is not supported by Zen Cart&reg;. <br /><br />PHP 5.2.14 is the minimum requirement. <br />However, we recommend that you use at least PHP v5.3.3 or higher if possible.<br /><br />If you are trying to use older PHP versions, note that using older releases of PHP may result in the admin section of Zen Cart&reg; not being accessible, might leave your site vulnerable to hacking, and may not support some of the PHP Session code that handles keeping individual customer logins unique and separate from other customers. You are advised to upgrade your PHP version.');
   break;
   case ('56'):
     define('POPUP_ERROR_HEADING', 'Admin configure.php is not writeable');
@@ -656,11 +653,11 @@ You may also have given the wrong database name (<strong>Does it exist?</strong>
   break;
   case ('90'):
     define('POPUP_ERROR_HEADING','MySQL 5.7 (and higher) not fully supported in v1.5.x');
-    define('POPUP_ERROR_TEXT','NOTE: Zen Cart&reg; v2.0 and newer support MySQL 5 and PHP 5 properly.<br />But, you are presently installing v1.6.x.<br /><br />While many efforts have been spent on ensuring that database queries in Zen Cart&reg; v1.5.x are compatible with MySQL 5 releases, the newer v2.x versions are more thoroughly tested.<br /><br />You are welcome to proceed with installation; however, please note that for full compatibility you should use the newer version of Zen Cart.');
+    define('POPUP_ERROR_TEXT','While many efforts have been spent on ensuring that database queries in Zen Cart&reg; v1.5.x are compatible with MySQL 5 releases, your version is untested.<br /><br />You are welcome to proceed with installation; however, please note that for full compatibility you should use the newest version of Zen Cart.');
   break;
   case ('91'):
     define('POPUP_ERROR_HEADING','PHP Version Alert');
-    define('POPUP_ERROR_TEXT','Zen Cart&reg; v1.x is designed to run on PHP versions 5.3.14 and greater.<br /><br />There are several PHP functions used in Zen Cart&reg; which are not available in older PHP versions.<br /><br />You will need to upgrade your PHP version if you intend to use Zen Cart&reg; on this server.');
+    define('POPUP_ERROR_TEXT','Zen Cart&reg; v1.x is designed to run on PHP versions 5.2.14 and greater.<br /><br />There are several PHP functions used in Zen Cart&reg; which are not available in older PHP versions.<br /><br />You will need to upgrade your PHP version if you intend to use Zen Cart&reg; on this server.');
   break;
   case ('92'):
     define('POPUP_ERROR_HEADING','open_basedir restriction may cause problems');

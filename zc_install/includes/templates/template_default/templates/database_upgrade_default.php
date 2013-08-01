@@ -82,7 +82,11 @@
     </div>
     <div class="input">
       <input <?php if ($needs_v1_5_1) {echo "checked";} ?> name="version[]" type="checkbox" id="checkbox23" value="1.5.0" tabindex="23" />
-      <label for="checkbox22">Upgrade DB from 1.5.0 to 1.5.1</label>
+      <label for="checkbox23">Upgrade DB from 1.5.0 to 1.5.1</label>
+    </div>
+    <div class="input">
+      <input <?php if ($needs_v1_5_2) {echo "checked";} ?> name="version[]" type="checkbox" id="checkbox24" value="1.5.1" tabindex="24" />
+      <label for="checkbox24">Upgrade DB from 1.5.1 to 1.5.2</label>
     </div>
     </fieldset>
     <br />

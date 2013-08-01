@@ -246,15 +246,17 @@ if (false) { // DISABLED THIS CODEBLOCK FOR NOW....
     $php_ver = $zc_install->php_version;
     $this_class = 'OK';
   }
+  
+  if (version_compare(PHP_VERSION, 5.5, '>=')) {
+    $php_ver = $zc_install->php_version;
+    $this_class = 'WARN';
+    $err_text = 'This ZC version is not yet tested with this version of PHP.';
+    $err_code = '';
+  }
   $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_PHP_VER, 'Status' => $php_ver, 'Class' => $this_class, 'HelpURL' =>$err_code, 'HelpLabel'=>$err_text);
 
-  //PHP Version Check
-  if (version_compare(PHP_VERSION, 5.5, '>=')) {
-    $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_PHP_VER, 'Status' => PHP_VERSION, 'Class' => 'WARN', 'HelpURL' =>'', 'HelpLabel'=>'This ZC version is not yet tested with this version of PHP. Please use the newest version of Zen Cart instead!');
-  }
-
+  // SAFE MODE check
   if (version_compare(PHP_VERSION, 5.4, '<')) {
-    // SAFE MODE check
     $safe_mode = (ini_get("safe_mode")) ? "<span class='errors'>" . ON . '</span>' : OFF;
     $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_SAFE_MODE, 'Status' => $safe_mode, 'Class' => ($safe_mode==OFF) ? 'OK' : 'FAIL', 'HelpURL' =>ERROR_CODE_SAFE_MODE_ON, 'HelpLabel'=>ERROR_TEXT_SAFE_MODE_ON);
   }
