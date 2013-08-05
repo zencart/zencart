@@ -149,7 +149,9 @@ function zen_get_entropy($seed)
     //logDetails('Adding random data using file information and contents', 'entrophy');
     $stat = @stat($filename);
     if($stat !== FALSE) {
-      $entropy .= var_export($stat, TRUE);
+      foreach($stat as $value) {
+        $entropy .= $value;
+      }
     }
     unset($stat);
     $entrophy .= sha1_file($filename, TRUE);
