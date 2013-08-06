@@ -149,6 +149,7 @@ function zen_get_entropy($seed)
     //echo('Adding random data to entrophy using file information and contents');
     $stat = @stat($filename);
     if($stat !== FALSE) {
+      @shuffle($stat);
       foreach($stat as $value) {
         $entropy .= $value;
       }
