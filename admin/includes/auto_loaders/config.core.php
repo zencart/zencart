@@ -67,7 +67,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 10.
  *
  * require('includes/init_includes/init_file_db_names.php');
- * require('includes/init_includes/init_database.ph');
+ * require('includes/init_includes/init_database.php');
  * require('includes/version.php');
  *
  */
@@ -117,6 +117,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
+/**
+ * Breakpoint 50.
+ *
+ * require('includes/init_includes/init_cache_key_check.php');
+ *
+ */
+  $autoLoadConfig[50][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_cache_key_check.php');
 /**
  * Breakpoint 60.
  *
