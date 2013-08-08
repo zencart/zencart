@@ -17,6 +17,9 @@ if (!defined('IS_ADMIN_FLAG')) {
       $SESS_LIFE = (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN);
     }
   } else {
+    if (defined('SESSION_TIMEOUT_CATALOG')) {
+      $SESS_LIFE = (int)SESSION_TIMEOUT_CATALOG;
+    } else
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
     }
