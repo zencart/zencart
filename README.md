@@ -1,10 +1,11 @@
 Zen Cart&reg; - The Art of E-Commerce
 ===============
 
-Zen Cart&reg; v1.5.0 was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
+Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
+Zen Cart&reg; v1.5.2 continues with renewed certification under the latest PA-DSS v2 standard specification.
 
 
-Zen Cart&reg; v1.5.1
+Zen Cart&reg; v1.5.2
 ---------------
 
 Installation
@@ -28,7 +29,7 @@ For a MUCH more detailed set of installation instructions, see the [/docs/1.read
 
 PCI/PA-DSS Compliance
 --------------
-Currently only the v1.5.0 release is PA-DSS ceritified, and only when downloaded from [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files)
+Currently only the v1.5.2 release is PA-DSS certified, and only when downloaded from [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files)
 Other branches are not PA-DSS Certified unless otherwise stated.
  
 __The [Implementation Guide](http://www.zen-cart.net/docs/implementation-guide.pdf) should be followed for PCI Compliant implementation.__
@@ -48,5 +49,5 @@ For news and updates about Zen Cart&reg;, follow us on [Twitter](http://twitter.
 
 
 .
-*&copy;Copyright 2003-2012, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2013, Zen Cart&reg;. All rights reserved.*
 
