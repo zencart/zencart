@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -110,10 +110,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     if (IS_ADMIN_FLAG === true) {
       @ini_set('session.gc_maxlifetime', (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN));
     }
-  	if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '')
-  	{
-  	  zen_session_id(md5(uniqid(rand(), true)));
-  	}
+    if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '')
+    {
+      zen_session_id(md5(uniqid(rand(), true)));
+    }
     $temp = session_start();
     if (!isset($_SESSION['securityToken'])) {
       $_SESSION['securityToken'] = md5(uniqid(rand(), true));
@@ -124,10 +124,10 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_session_id($sessid = '') {
     if (!empty($sessid)) {
       $tempSessid = $sessid;
-  	  if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '')
-  	  {
-  	    $sessid = md5(uniqid(rand(), true));
-  	  }
+      if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '')
+      {
+        $sessid = md5(uniqid(rand(), true));
+      }
       return session_id($sessid);
     } else {
       return session_id();
