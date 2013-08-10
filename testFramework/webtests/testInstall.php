@@ -73,45 +73,45 @@ class testInstall extends zcCommonTestResources
     $this->assertTextPresent('glob:*' . WEBTEST_STORE_NAME . '*');
   }
 
-  function testEnablingHtmlMimeEmail()
-  {
-    $this->open('http://' . DIR_WS_ADMIN);
-    $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!');
-    $this->assertTextPresent('glob:*Admin Username*');
-    $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
-    $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
-    $this->clickAndWait("submit");
-    $this->clickAndWait("link=Developers Tool Kit");
-    $this->assertEquals("Zen Cart!", $this->getTitle());
-    $this->type("search", "EMAIL_USE_HTML");
-    $this->clickAndWait("//input[@type='submit']");
-    $this->assertTextPresent('glob:*HTML format*');
-    $this->open('http://' . DIR_WS_ADMIN . 'configuration.php?gID=12&cID=258&action=edit');
-    $this->click("true-configuration_value");
-    $this->clickAndWait("submitEMAIL_USE_HTML");
-    $this->assertEquals("Zen Cart!", $this->getTitle());
-  }
+//   function testEnablingHtmlMimeEmail()
+//   {
+//     $this->open('http://' . DIR_WS_ADMIN);
+//     $this->waitForPageToLoad(10000);
+//     $this->assertTitle('Zen Cart!');
+//     $this->assertTextPresent('glob:*Admin Username*');
+//     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
+//     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
+//     $this->clickAndWait("submit");
+//     $this->clickAndWait("link=Developers Tool Kit");
+//     $this->assertEquals("Zen Cart!", $this->getTitle());
+//     $this->type("search", "EMAIL_USE_HTML");
+//     $this->clickAndWait("//input[@type='submit']");
+//     $this->assertTextPresent('glob:*HTML format*');
+//     $this->open('http://' . DIR_WS_ADMIN . 'configuration.php?gID=12&cID=258&action=edit');
+//     $this->click("true-configuration_value");
+//     $this->clickAndWait("submitEMAIL_USE_HTML");
+//     $this->assertEquals("Zen Cart!", $this->getTitle());
+//   }
 
-  function testSettingHtmlEmailsAsDefault()
-  {
-    $this->open('http://' . DIR_WS_ADMIN);
-    $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!');
-    $this->assertTextPresent('glob:*Admin Username*');
-    $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
-    $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
-    $this->clickAndWait("submit");
-    $this->clickAndWait("link=Developers Tool Kit");
-    $this->assertEquals("Zen Cart!", $this->getTitle());
-    $this->type("search", "ADMIN_EXTRA_EMAIL_FORMAT");
-    $this->clickAndWait("//input[@type='submit']");
-    $this->assertTextPresent('glob:*Email Admin Format*');
-    $this->open('http://' . DIR_WS_ADMIN . 'configuration.php?gID=12&cID=265&action=edit');
-    $this->click("html-configuration_value");
-    $this->clickAndWait("submitADMIN_EXTRA_EMAIL_FORMAT");
-    $this->assertEquals("Zen Cart!", $this->getTitle());
-  }
+//   function testSettingHtmlEmailsAsDefault()
+//   {
+//     $this->open('http://' . DIR_WS_ADMIN);
+//     $this->waitForPageToLoad(10000);
+//     $this->assertTitle('Zen Cart!');
+//     $this->assertTextPresent('glob:*Admin Username*');
+//     $this->type("admin_name", WEBTEST_ADMIN_NAME_INSTALL);
+//     $this->type("admin_pass", WEBTEST_ADMIN_PASSWORD_INSTALL_1);
+//     $this->clickAndWait("submit");
+//     $this->clickAndWait("link=Developers Tool Kit");
+//     $this->assertEquals("Zen Cart!", $this->getTitle());
+//     $this->type("search", "ADMIN_EXTRA_EMAIL_FORMAT");
+//     $this->clickAndWait("//input[@type='submit']");
+//     $this->assertTextPresent('glob:*Email Admin Format*');
+//     $this->open('http://' . DIR_WS_ADMIN . 'configuration.php?gID=12&cID=265&action=edit');
+//     $this->click("html-configuration_value");
+//     $this->clickAndWait("submitADMIN_EXTRA_EMAIL_FORMAT");
+//     $this->assertEquals("Zen Cart!", $this->getTitle());
+//   }
 
   function testResetEmailServerToSMTPAUTH()
   {
