@@ -493,7 +493,7 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FE','Ferrara');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FI','Firenze');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FG','Foggia');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FC','Forlì Cesena');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FC','Forli Cesena');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FR','Frosinone');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'GE','Genova');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'GO','Gorizia');
