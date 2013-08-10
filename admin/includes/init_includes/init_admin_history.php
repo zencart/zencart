@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:03:47 2012 -0400 Modified in v1.5.1 $
@@ -55,6 +55,12 @@ if (!defined('IS_ADMIN_FLAG')) {
                              'attention' => ($notes === FALSE ? '' : $notes),
                              );
     zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+    /**
+     * hook to 3rd party logging service
+     */
+    $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_ADD_RECORD', $sql_data_array, $postdata);
+
+    // clear variables used, to remove them from global scope
     unset($flagged, $postdata, $notes, $gzpostdata, $sql_data_array, $key, $nul);
   }
 
