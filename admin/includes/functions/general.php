@@ -1265,7 +1265,8 @@
 
   function zen_remove_category($category_id) {
     if ((int)$category_id == 0) return;
-    global $db;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_CATEGORY', array(), $category_id);
 
     // delete from salemaker - sale_categories_selected
     $chk_sale_categories_selected = $db->Execute("select * from " . TABLE_SALEMAKER_SALES . "
@@ -1425,7 +1426,9 @@ while (!$chk_sale_categories_all->EOF) {
   }
 
   function zen_remove_product($product_id, $ptc = 'true') {
-    global $db;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_PRODUCT', array(), $product_id, $ptc);
+
     $product_image = $db->Execute("select products_image
                                    from " . TABLE_PRODUCTS . "
                                    where products_id = '" . (int)$product_id . "'");
@@ -1506,7 +1509,9 @@ while (!$chk_sale_categories_all->EOF) {
   }
 
   function zen_products_attributes_download_delete($product_id) {
-    global $db;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_PRODUCTS_ATTRIBUTES_DOWNLOAD_DELETE', array(), $product_id);
+
   // remove downloads if they exist
     $remove_downloads= $db->Execute("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id= '" . (int)$product_id . "'");
     while (!$remove_downloads->EOF) {
@@ -1516,7 +1521,8 @@ while (!$chk_sale_categories_all->EOF) {
   }
 
   function zen_remove_order($order_id, $restock = false) {
-    global $db;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $order_id, $restock);
     if ($restock == 'on') {
       $order = $db->Execute("select products_id, products_quantity
                              from " . TABLE_ORDERS_PRODUCTS . "
@@ -2339,7 +2345,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * Delete all product attributes
  */
   function zen_delete_products_attributes($delete_product_id) {
-    global $db;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_DELETE_PRODUCTS_ATTRIBUTES', array(), $delete_product_id);
+
     // first delete associated downloads
     $products_delete_from = $db->Execute("select pa.products_id, pad.products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad  where pa.products_id='" . (int)$delete_product_id . "' and pad.products_attributes_id= pa.products_attributes_id");
     while (!$products_delete_from->EOF) {
