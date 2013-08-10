@@ -10,11 +10,6 @@
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
-  // Finally, destroy the session.
-  // A RETURNING COWOA CUSTOMER SHOULD NOT BE ABLE TO CHECKOUT COMING FROM ORDER STATUS, SO KILL THE SESSION
-  if ($_SESSION['ORDER_STATUS'] == 'True') {
-      zen_session_destroy();
-  }
   require_once(DIR_WS_CLASSES . 'http_client.php');
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
