@@ -177,7 +177,7 @@ require('includes/admin_html_head.php');
       include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
       include($module_directory . $file);
       $class = substr($file, 0, strrpos($file, '.'));
-      if (zen_class_exists($class)) {
+      if (class_exists($class)) {
         $module = new $class;
         $check = $module->check();
         if ($check > 0) {
