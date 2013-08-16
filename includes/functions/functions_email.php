@@ -313,11 +313,11 @@
         $mail->Body = $text;
       }
 
-      $oldVars = array(); $tmpVars = array('REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', 'SERVER_NAME');
+      $oldVars = array(); $tmpVars = array('REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', ($mail->Mailer == 'smtp' ? NULL : 'SERVER_NAME'));
       foreach ($tmpVars as $key) {
         if (isset($_SERVER[$key])) {
           $oldVars[$key] = $_SERVER[$key];
-          $_SERVER[$key]='';
+          $_SERVER[$key] = '';
         }
         if ($key == 'REMOTE_ADDR') $_SERVER[$key] = HTTP_SERVER;
         if ($key == 'PHP_SELF') $_SERVER[$key] = '/obf'.'us'.'cated';
