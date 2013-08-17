@@ -311,7 +311,13 @@
         $mail->Body = $text;
       }
 
-      $oldVars = array(); $tmpVars = array('REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', 'SERVER_NAME');
+      // Handle auto-generated admin notices as bulk to avoid autoresponder responses and risk of spam flagging
+      if (in_array($module, array('no_archive', 'admin_settings_changed')) || substr($module, -6) == '_extra') {
+        $mail->AddCustomHeader('Precedence: bulk');
+        $mail->AddCustomHeader('Auto-Submitted: auto-generated');
+      }
+
+      $oldVars = array(); $tmpVars = array('REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', ($mail->Mailer == 'smtp' ? NULL : 'SERVER_NAME'));
       foreach ($tmpVars as $key) {
         if (isset($_SERVER[$key])) {
           $oldVars[$key] = $_SERVER[$key];
