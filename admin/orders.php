@@ -10,6 +10,9 @@
 
   require('includes/application_top.php');
 
+  // unset variable which is sometimes tainted by bad plugins like magneticOne tools
+  if (isset($module)) unset($module);
+
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
@@ -563,7 +566,7 @@ function couponpopupWindow(url) {
         </table></td>
       </tr>
 <?php
-      if (method_exists($module, 'admin_notification')) {
+      if (is_object($module) && method_exists($module, 'admin_notification')) {
 ?>
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
