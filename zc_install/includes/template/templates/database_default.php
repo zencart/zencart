@@ -198,7 +198,7 @@ function updateStatus() {
       {
         if (data.message)
         {
-          $('#dialog-title').html(data.message);
+          $('#dialog-title').html(data.message + ' ' + data.progress.toFixed( 0 ) + '%');
         }
         if (data.progress >= 0 && data.progress < 99) {
           $("#progress-bar").html('<span class="meter" style="width:'+data.progress+'%;"></span>');
