@@ -6,7 +6,7 @@
  * show the products of a specified music_genre
  *
  * @package productTypes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -146,8 +146,8 @@ if (!isset($select_column_list)) $select_column_list = "";
         $_GET['sort'] = '20a';
       }
     } else {
-      $sort_col = substr($_GET['sort'], 0 , 1);
-      $sort_order = substr($_GET['sort'], 1);
+      $sort_col = substr($_GET['sort'], 0, 1);
+      $sort_order = substr($_GET['sort'], -1);
       switch ($column_list[$sort_col-1])
       {
         case 'PRODUCT_LIST_MODEL':
