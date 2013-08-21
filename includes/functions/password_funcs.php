@@ -84,6 +84,14 @@ function zen_create_random_value($length, $type = 'mixed')
 
   return $rand_value;
 }
+/**
+ * Returns entrophy using a hash of various available methods for obtaining
+ * random data. The default hash method is "sha1" and the default size is 32.
+ *
+ * @param string $hash the hash method to use while generating the hash.
+ * @param int $size the size of random data to use while generating the hash.
+ * @return string the randomized salt
+ */
 function zen_get_entropy($hash = 'sha1', $size = 32)
 {
   $data = null;
