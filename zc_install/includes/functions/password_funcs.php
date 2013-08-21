@@ -19,15 +19,15 @@ function zen_validate_password($plain, $encrypted)
     $stack = explode(':', $encrypted);
 
     if (sizeof($stack) != 2)
-      return false;
+      return FALSE;
 
     if (md5($stack[1] . $plain) == $stack[0])
     {
-      return true;
+      return TRUE;
     }
   }
 
-  return false;
+  return FALSE;
 }
 ////
 // This function makes a new password from a plaintext password.
@@ -50,7 +50,7 @@ function zen_encrypt_password($plain)
 function zen_create_random_value($length, $type = 'mixed')
 {
   if (($type != 'mixed') && ($type != 'chars') && ($type != 'digits'))
-    return false;
+    return FALSE;
 
   $rand_value = '';
   while (strlen($rand_value) < $length)
@@ -84,83 +84,99 @@ function zen_create_random_value($length, $type = 'mixed')
 
   return $rand_value;
 }
-function zen_get_entropy($seed)
+/**
+ * Returns entrophy using a hash of various available methods for obtaining
+ * random data. The default hash method is "sha1" and the default size is 32.
+ *
+ * @param string $hash the hash method to use while generating the hash.
+ * @param int $size the size of random data to use while generating the hash.
+ * @return string the randomized salt
+ */
+function zen_get_entropy($hash = 'sha1', $size = 32)
 {
+  $data = null;
+  if (!in_array($hash, hash_algos())) $hash = 'sha1';
+  if (!is_int($size)) $size = (int) $size;
+
+  // Use openssl if available
+  if (function_exists('openssl_random_pseudo_bytes'))
+  {
+    //logDetails('Attempting to create using openssl', 'entrophy');
+    $entropy = openssl_random_pseudo_bytes($size, $strong);
+    if ($strong) $data = $entropy;
+    unset($strong, $entropy);
+  }
+
   // Use mcrypt with /dev/urandom if available
-  if(function_exists('mcrypt_create_iv') && (
+  if ($data === null && function_exists('mcrypt_create_iv') && (
     // There is a bug in Windows + IIS in older versions of PHP
     strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' ||
     version_compare(PHP_VERSION, '5.3.7', '>=')
   ))
   {
     //logDetails('Attempting to create using mcrypt', 'entrophy');
-    $entropy = mcrypt_create_iv(32, MCRYPT_DEV_URANDOM);
-    if($entropy !== FALSE) return sha1($entropy);
+    $entropy = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);
+    if ($entropy !== FALSE) $data = $entropy;
+    unset($entropy);
   }
 
-  // Fall back to raw /dev/urandom (does not work on windows)
-  $fp = @fopen('/dev/urandom', 'rb');
-  if ($fp !== FALSE)
+  if ($data === null)
   {
-    //logDetails('Attempting to create using /dev/urandom', 'entrophy');
-    $entropy = @fread($fp, 32);
-    @fclose($fp);
-    if(strlen($entropy) == 32) return sha1($entrophy);
-  }
-
-  // This can be a bit slow, but try if available
-  if (function_exists('openssl_random_pseudo_bytes')) {
-    //logDetails('Attempting to create using openssl', 'entrophy');
-    $entropy = openssl_random_pseudo_bytes(32, $strong);
-    if($strong) {
-      unset($strong);
-      return sha1($entropy);
-    }
-    unset($strong);
-  }
-
-  // The rest of the code works together as the final fallback. This may seem
-  // kludgy, and it is, but will contain some random data unique to each installation.
-  $entrophy = '';
-  //logDetails('Attempting to create using FALLBACK', 'entrophy');
-
-  // MS-Windows platform?
-  if (@class_exists('COM'))
-  {
-    // http://msdn.microsoft.com/en-us/library/aa388176(VS.85).aspx
-    try
+    // Fall back to using /dev/urandom if available
+    $fp = @fopen('/dev/urandom', 'rb');
+    if ($fp !== FALSE)
     {
-      //logDetails('Adding random data using CAPICOM.Utilities', 'entrophy');
-      $CAPI_Util = new COM('CAPICOM.Utilities.1');
-      $entropy .= $CAPI_Util->GetRandom(16, 0);
-      unset($CAPI_Util);
-      // No return, should add with some more random data
-    }
-    catch (Exception $ex)
-    {
-      //logDetails('Exception: ' . $ex->getMessage(), 'entrophy');
+      //logDetails('Attempting to create using /dev/urandom', 'entrophy');
+      $entropy = @fread($fp, $size);
+      @fclose($fp);
+      if (strlen($entropy) == $size) $data = $entropy;
+      unset($fp, $entropy);
     }
   }
 
-  // Use the file statistics such as atime, mtime, inode, etc.
-  $filename = DIR_FS_INSTALL . '/includes/catalog-dist-configure.php';
-  if(is_readable($filename))
+  // Final fallback (mixture of various methods)
+  if ($data === null)
   {
-    //logDetails('Adding random data using file information and contents', 'entrophy');
+  	//logDetails('Attempting to create using FINAL FALLBACK', 'entrophy');
+    $filename = DIR_FS_INSTALL . '/includes/catalog-dist-configure.php';
     $stat = @stat($filename);
-    if($stat !== FALSE) {
-      @shuffle($stat);
-      foreach($stat as $value) {
-        $entropy .= $value;
-      }
+    if ($stat === FALSE)
+    {
+      $stat = array(
+        'microtime' => microtime()
+      );
     }
-    unset($stat);
-    $entrophy .= sha1_file($filename, TRUE);
+    $stat['mt_rand'] = mt_rand();
+    $stat['file_hash'] = hash_file($hash, $filename, TRUE);
+
+    // Attempt to get a random value on windows
+    // http://msdn.microsoft.com/en-us/library/aa388176(VS.85).aspx
+    if (@class_exists('COM'))
+    {
+      try
+      {
+        $CAPI_Util = new COM('CAPICOM.Utilities.1');
+        $entropy = $CAPI_Util->GetRandom($size, 0);
+
+        if ($entropy)
+        {
+          //logDetails('Adding random data using CAPICOM.Utilities', 'entrophy');
+          $stat['CAPICOM_Utilities_random'] = md5($entropy, TRUE);
+        }
+        unset($CAPI_Util, $entrophy);
+      } catch (Exception $ex) { }
+    }
+
+    //logDetails('Adding random data using file information and contents', 'entrophy');
+    @shuffle($stat);
+    foreach ($stat as $value)
+    {
+      $data .= $value;
+    }
+    unset($filename, $value, $stat);
   }
-  unset($filename);
-  //logDetails('Adding random data using time, mt_rand, and the seed', 'entrophy');
-  $entropy .= microtime() . mt_rand() . $seed;
-  return sha1($entropy);
+
+  return hash($hash, $data);
 }
 function zen_create_PADSS_password($length = 8)
 {
@@ -189,10 +205,10 @@ function zen_pwd_rand($min = 0, $max = 10)
 {
   static $seed;
   if (!isset($seed))
-    $seed = zen_get_entropy(microtime());
-  $random = zen_get_entropy($seed);
-  $random .= zen_get_entropy($random);
-  $random = sha1($random);
+    $seed = zen_get_entropy();
+  $random = hash('sha1', zen_get_entropy() . $seed);
+  $random .= hash('sha1', zen_get_entropy() . $random);
+  $random = hash('sha1', $random);
   $random = substr($random, 0, 8);
   $value = abs(hexdec($random));
   $value = $min + (($max - $min + 1) * ($value / (4294967295 + 1)));
