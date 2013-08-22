@@ -7,7 +7,7 @@
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
-<form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database">
+<form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide>
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">
@@ -21,7 +21,8 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="agreeLicense"><a href="#" class="hasHelpText" id="AGREETOTERMS"><?php echo TEXT_SYSTEM_SETUP_AGREE_LICENSE; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="checkbox" name="agreeLicense" id="agreeLicense" tabindex="1" > <label class="inline" for="agreeLicense"><?php echo TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE; ?></label>
+        <input type="checkbox" name="agreeLicense" id="agreeLicense" tabindex="1" required pattern="checked"> <label class="inline" for="agreeLicense"><?php echo TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE; ?></label>
+        <small class="error"><?php echo TEXT_FORM_VALIDATION_AGREE_LICENSE; ?></small>
       </div>
     </div>
   </fieldset>
@@ -32,7 +33,8 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="http_server_admin"><a href="#" class="hasHelpText" id="ADMINSERVERDOMAIN"><?php echo TEXT_SYSTEM_SETUP_ADMIN_SERVER_DOMAIN; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input id="http_server_admin" type="text" value="<?php echo $adminServer; ?>" name="http_server_admin" tabindex="2" placeholder="ie: https:/www.your_domain.com">
+        <input id="http_server_admin" type="text" value="<?php echo $adminServer; ?>" name="http_server_admin" tabindex="2" placeholder="ie: https:/www.your_domain.com" required>
+        <small class="error"><?php echo TEXT_HELP_CONTENT_ADMINSERVERDOMAIN; ?></small>
       </div>
     </div>
   </fieldset>
@@ -51,7 +53,8 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="http_server_catalog"><a href="#" class="hasHelpText" id="HTTPSERVERCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_HTTP_SERVER_DOMAIN; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input id="http_server_catalog" type="url" value="<?php echo $catalogHttpServer; ?>" name="http_server_catalog" tabindex="4" placeholder="ie: https:/www.your_domain.com">
+        <input id="http_server_catalog" type="url" value="<?php echo $catalogHttpServer; ?>" name="http_server_catalog" tabindex="4" placeholder="ie: http:/www.your_domain.com" required>
+        <small class="error"><?php echo TEXT_HELP_CONTENT_HTTPSERVERCATALOG; ?></small>
       </div>
     </div>
     <div class="row">
@@ -59,7 +62,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="http_url_catalog"><a href="#" class="hasHelpText" id="HTTPURLCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_HTTP_URL; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input id="http_url_catalog" type="url" value="<?php echo $catalogHttpUrl; ?>" name="http_url_catalog" tabindex="5" placeholder="ie: https:/www.your_domain.com">
+        <input id="http_url_catalog" type="url" value="<?php echo $catalogHttpUrl; ?>" name="http_url_catalog" tabindex="5" placeholder="ie: http:/www.your_domain.com">
       </div>
     </div>
     <div class="row">
@@ -67,7 +70,8 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="https_server_catalog"><a href="#" class="hasHelpText" id="HTTPSSERVERCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_HTTPS_SERVER_DOMAIN; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input id="https_server_catalog" type="url" value="<?php echo $catalogHttpsServer; ?>" name="https_server_catalog" tabindex="6" placeholder="ie: https:/www.your_domain.com">
+        <input id="https_server_catalog" type="url" value="<?php echo $catalogHttpsServer; ?>" name="https_server_catalog" tabindex="6" placeholder="ie: https:/www.your_domain.com" required>
+        <small class="error"><?php echo TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL; ?></small>
       </div>
     </div>
     <div class="row">
@@ -83,7 +87,8 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="physical_path"><a href="#" class="hasHelpText" id="PHYSICALPATH"><?php echo TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input id="physical_path" type="text" value="<?php echo $documentRoot; ?>" name="physical_path" tabindex="8"  placeholder="ie: /yourserver/users/yourname/public_html/zencart">
+        <input id="physical_path" type="text" value="<?php echo $documentRoot; ?>" name="physical_path" tabindex="8"  placeholder="ie: /yourserver/users/yourname/public_html/zencart" required>
+        <small class="error"><?php echo TEXT_HELP_CONTENT_PHYSICALPATH; ?></small>
       </div>
     </div>
   </fieldset>
@@ -127,17 +132,6 @@ $().ready(function() {
         }
       });
     },
-    rules: {
-      agreeLicense: "required",
-      http_server_admin: "required",
-      http_server_catalog: "required",
-      https_server_catalog: "required",
-      physical_path: "required",
-      admin_physical_path: "required"
-    },
-    messages: {
-     agreeLicense: "<?php echo TEXT_FORM_VALIDATION_AGREE_LICENSE; ?>"
-    }
   });
 });
 $(function()

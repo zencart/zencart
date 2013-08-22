@@ -103,9 +103,11 @@ define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
 define('TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS', 'Please confirm your desired upgrade steps');
-define('TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS', 'Admin Credentials (Super User)');
+define('TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS', 'Admin Credentials (SuperUser)');
+define('TEXT_VALIDATION_ADMIN_CREDENTIALS', 'To authorize the database upgrade, you must enter an admin username and password with SuperUser permissions in your store.');
 define('TEXT_DATABASE_UPGRADE_ADMIN_USER', 'User Name');
 define('TEXT_DATABASE_UPGRADE_ADMIN_PASSWORD', 'Password');
+define('TEXT_VALIDATION_ADMIN_PASSWORD', 'A valid password is required');
 
 define ('TEXT_CONTINUE', 'Continue');
 define ('TEXT_CANCEL', 'Cancel');
@@ -133,7 +135,7 @@ define('TEXT_ERROR_CACHE_FOLDER', DIR_FS_SQL_CACHE . ' folder is not writeable')
 define('TEXT_ERROR_IMAGES_FOLDER', '/images/ folder is not writeable');
 define('TEXT_ERROR_DEFINEPAGES_FOLDER', '/includes/languages/english/html_includes/ folder is not writeable');
 define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
-define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable'); 
+define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable');
 
 define('TEXT_ERROR_HTACCESS_SUPPPORT', 'Problems with .htaccess support');
 define('TEXT_ERROR_SESSION_SUPPPORT', 'Problems with session support');
@@ -163,6 +165,7 @@ define('TEXT_ERROR_SUCCESS_NO_ERRORS', 'No errors or warnings were detected on y
 
 define('TEXT_FORM_VALIDATION_REQUIRED', 'Required');
 define('TEXT_FORM_VALIDATION_AGREE_LICENSE', 'You must agree to the license terms');
+define('TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL', 'A URL is required here, even if you have temporarily opted not to enable SSL yet.');
 
 define('TEXT_NAVBAR_INSTALLATION_INSTRUCTIONS', 'Installation Instructions');
 define('TEXT_NAVBAR_FORUM_LINK', 'Forum');

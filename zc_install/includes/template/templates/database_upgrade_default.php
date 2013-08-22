@@ -10,7 +10,7 @@
 
 <div id="upgradeResponsesHolder"></div>
 
-<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion">
+<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide>
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="upgrade_mode" value="yes">
@@ -39,7 +39,8 @@
         <label class="inline left" for="admin_user"><?php echo TEXT_DATABASE_UPGRADE_ADMIN_USER; ?></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_user" id="admin_user" value="">
+        <input type="text" name="admin_user" id="admin_user" value="" required>
+        <small class="error"><?php echo TEXT_VALIDATION_ADMIN_CREDENTIALS; ?></small>
       </div>
     </div>
     <div class="row">
@@ -47,7 +48,8 @@
         <label class="inline left" for="admin_password"><?php echo TEXT_DATABASE_UPGRADE_ADMIN_PASSWORD; ?></label>
       </div>
       <div class="small-9 columns">
-        <input type="password" name="admin_password" id="admin_password" value="">
+        <input type="password" name="admin_password" id="admin_password" value="" required>
+        <small class="error"><?php echo TEXT_VALIDATION_ADMIN_PASSWORD; ?></small>
       </div>
     </div>
   </fieldset>
@@ -85,10 +87,6 @@ $().ready(function() {
         }
       })
     },
-    rules: {
-      admin_user: "required",
-      admin_password: "required",
-    }
   });
 });
 

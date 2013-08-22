@@ -9,7 +9,7 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion">
+<form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" data-abide>
   <input type="hidden" name="action" value="process" >
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
@@ -24,7 +24,8 @@
         <label class="inline" for="admin_user"><a href="#" class="hasHelpText" id="ADMINUSER"><?php echo TEXT_ADMIN_SETUP_USER_NAME; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_user" id="admin_user" value="" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_USERNAME; ?>">
+        <input type="text" name="admin_user" id="admin_user" value="" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_USERNAME; ?>" required>
+        <small class="error">A unique admin username is required</small>
       </div>
     </div>
     <div class="row">
@@ -32,7 +33,8 @@
         <label class="inline" for="admin_email"><a href="#" class="hasHelpText" id="ADMINEMAIL"><?php echo TEXT_ADMIN_SETUP_USER_EMAIL; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="email" name="admin_email" id="admin_email" value="" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>">
+        <input type="text" name="admin_email" id="admin_email" value="" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email">
+        <small class="error">A valid email address is required</small>
       </div>
     </div>
     <div class="row">
@@ -40,7 +42,8 @@
         <label class="inline" for="admin_email2"><a href="#" class="hasHelpText" id="ADMINEMAIL2"><?php echo TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="email" name="admin_email2" id="admin_email2" value="" equalto="$admin_email" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>">
+        <input type="text" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" equalto="$admin_email">
+        <small class="error">A matching valid email address is required.</small>
       </div>
     </div>
     <div class="row">
@@ -77,20 +80,20 @@
 
 <script>
 $().ready(function() {
-  $("#admin_setup").validate({
-    submitHandler: function(form) {
-      form.submit();
-    },
-    rules: {
-      admin_user: "required",
-      admin_email: "required email",
-      admin_email2: {
-          equalTo: '#admin_email'
-      }
-    },
-    messages: {
-    }
-  });
+//   $("#admin_setup").validate({
+//     submitHandler: function(form) {
+//       form.submit();
+//     },
+//     rules: {
+//       admin_user: "required",
+//       admin_email: "required email",
+//       admin_email2: {
+//           equalTo: '#admin_email'
+//       }
+//     },
+//     messages: {
+//     }
+//   });
 });
 $(function()
     {

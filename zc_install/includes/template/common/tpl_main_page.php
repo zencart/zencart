@@ -55,7 +55,12 @@
 <!-- Initialize Javascript components -->
 <script src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/foundation.min.js'; ?>"></script>
 <script>
-$(document).foundation();
+$(document).foundation()
+  .foundation('abide', {
+    patterns: {
+      email: /^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@(((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})$/i
+    }
+  });
 $().ready(function()
 {
   $.validator.messages.required = '<?php echo TEXT_FORM_VALIDATION_REQUIRED; ?>';

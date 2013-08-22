@@ -14,7 +14,7 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup">
+<form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide>
   <input type="hidden" name="action" value="process" >
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
@@ -29,7 +29,8 @@
         <label class="inline" for="db_host"><a href="#" class="hasHelpText" id="DBHOST"><?php echo TEXT_DATABASE_SETUP_DB_HOST; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="db_host" id="db_host" value="<?php echo $db_host; ?>" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_DB_HOST; ?>">
+        <input type="text" name="db_host" id="db_host" value="<?php echo $db_host; ?>" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_DB_HOST; ?>" required>
+          <small class="error"><?php echo TEXT_HELP_CONTENT_DBHOST; ?></small>
       </div>
     </div>
     <div class="row">
@@ -37,7 +38,8 @@
         <label class="inline" for="db_user"><a href="#" class="hasHelpText" id="DBUSER"><?php echo TEXT_DATABASE_SETUP_DB_USER; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="db_user" id="db_user" value="<?php echo $db_user; ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_DB_USER; ?>">
+        <input type="text" name="db_user" id="db_user" value="<?php echo $db_user; ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_DB_USER; ?>" required>
+        <small class="error"><?php echo TEXT_HELP_CONTENT_DBUSER; ?></small>
       </div>
     </div>
     <div class="row">
@@ -53,7 +55,8 @@
         <label class="inline" for="db_name"><a href="#" class="hasHelpText" id="DBNAME"><?php echo TEXT_DATABASE_SETUP_DB_NAME; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="db_name" id="db_name" value="<?php echo $db_name; ?>" tabindex="4" placeholder="<?php echo TEXT_EXAMPLE_DB_NAME; ?>">
+        <input type="text" name="db_name" id="db_name" value="<?php echo $db_name; ?>" tabindex="4" placeholder="<?php echo TEXT_EXAMPLE_DB_NAME; ?>" required>
+        <small class="error"><?php echo TEXT_HELP_CONTENT_DBNAME; ?></small>
       </div>
     </div>
   </fieldset>
@@ -102,11 +105,6 @@ $().ready(function() {
   $("#db_setup").validate({
     submitHandler: function(form) {
       ajaxTestDBConnection(form);
-    },
-    rules: {
-      db_host: "required",
-      db_user: "required",
-      db_name: "required"
     },
     messages: {
     }
