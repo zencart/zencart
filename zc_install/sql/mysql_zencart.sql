@@ -2853,17 +2853,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('EZ-Pages Pages to disable right-column', 'EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST', '', 'EZ-Pages "pages" on which to NOT display the normal "right" column (of sideboxes) for your site.<br />Simply list page ID numbers separated by commas with no spaces.<br />Page ID numbers can be obtained from the EZ-Pages screen under Admin->Tools.<br />ie: 3,82,13<br />or leave blank.', 30, 43, NULL, now(), NULL, 'zen_cfg_textarea_small(');
 
 
-<<<<<<< HEAD
-
-=======
-INSERT INTO configuration (configuration_id, configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
-(NULL, 'COWOA', 'COWOA_STATUS', 'false', 'Activate COWOA Checkout? <br />Set to True to allow a customer to checkout without an account.', 31, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-(NULL, 'Enable Order Status', 'COWOA_ORDER_STATUS', 'false', 'Enable The Order Status Function of COWOA?<br />Set to True so that a Customer that uses COWOA will receive an E-Mail with instructions on how to view the status of their order.', 31, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-(NULL, 'Enable E-Mail Only', 'COWOA_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function of COWOA?<br />Set to True so that a Customer that uses COWOA will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 31, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-(NULL, 'Enable Forced Logoff', 'COWOA_LOGOFF', 'false', 'Enable The Forced LogOff Function of COWOA?<br />Set to True so that a Customer that uses COWOA will be logged off automatically after a sucessfull checkout. If they are getting a file download, then they will have to wait for the Status E-Mail to arrive in order to download the file.', 31, 13, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
->>>>>>> 45d300c... CHANGE-412 - Increase length of session key field due to changes in PHP defaults
-
-
 INSERT INTO configuration_group VALUES (1, 'My Store', 'General information about my store', '1', '1');
 INSERT INTO configuration_group VALUES (2, 'Minimum Values', 'The minimum values for functions / data', '2', '1');
 INSERT INTO configuration_group VALUES (3, 'Maximum Values', 'The maximum values for functions / data', '3', '1');
