@@ -17,10 +17,10 @@
       <div class="widget-container sortable" id="<?php echo $tplVars[$widget['widget_key']]['widgetBaseId']; ?>">
         <div class="widget-header">
           <h1 class="widget-handle"><?php echo $tplVars[$widget['widget_key']]['widgetTitle']; ?></h1>
-          <div class="widget-actions right">
-            <a href="#" class="widget-edit">&#86;</a>
-            <a href="#" class="widget-minimize">&#45;</a>
-            <a href="#" class="widget-close">&#88;</a>
+          <div class="right">
+            <a href="#" class="widget-edit"><i class="icon-pencil"></i></a>
+            <a href="#" class="widget-minimize"><i class="icon-down-dir"></i></a>
+            <a href="#" class="widget-close"><i class="icon-cancel-squared"></i></a>
             </div>
         </div>
         <div class="widget-body">

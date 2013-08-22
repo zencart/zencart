@@ -304,12 +304,12 @@ function createSortables() {
 
     $('.widget-minimize').unbind('click').click(function (e) {
     var id = $(this).parents('.widget-container').attr('id');
-    if ($(this).html() == '-')
+    if ($(this).html() == '<i class="icon-down-dir"></i>')
     {
-      $(this).html('&#47;');
+      $(this).html('<i class="icon-up-dir"></i>');
     } else
     {
-      $(this).html('&#45;');
+      $(this).html('<i class="icon-down-dir"></i>');
     }
     $('#'+id).find('.widget-body').toggle();
   });
