@@ -7,7 +7,7 @@
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
-<form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide>
+<form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide data-abide-ajax-final>
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">
@@ -21,7 +21,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="agreeLicense"><a href="#" class="hasHelpText" id="AGREETOTERMS"><?php echo TEXT_SYSTEM_SETUP_AGREE_LICENSE; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="checkbox" name="agreeLicense" id="agreeLicense" tabindex="1" required pattern="checked"> <label class="inline" for="agreeLicense"><?php echo TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE; ?></label>
+        <input type="checkbox" name="agreeLicense" id="agreeLicense" tabindex="1" required > <label class="inline" for="agreeLicense"><?php echo TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE; ?></label>
         <small class="error"><?php echo TEXT_FORM_VALIDATION_AGREE_LICENSE; ?></small>
       </div>
     </div>
@@ -63,6 +63,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
       </div>
       <div class="small-9 columns">
         <input id="http_url_catalog" type="url" value="<?php echo $catalogHttpUrl; ?>" name="http_url_catalog" tabindex="5" placeholder="ie: http:/www.your_domain.com">
+        <small class="error"><?php echo TEXT_HELP_CONTENT_HTTPURLCATALOG; ?></small>
       </div>
     </div>
     <div class="row">
@@ -80,6 +81,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
       </div>
       <div class="small-9 columns">
         <input id="https_url_catalog" type="url" value="<?php echo $catalogHttpsUrl; ?>" name="https_url_catalog" tabindex="7" placeholder="ie: https:/www.your_domain.com">
+        <small class="error"><?php echo TEXT_HELP_CONTENT_HTTPSURLCATALOG; ?></small>
       </div>
     </div>
     <div class="row">
@@ -101,39 +103,38 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_syste
 
 <script>
 $().ready(function() {
-  $("#system_setup").validate({
-    submitHandler: function(form) {
-      var str = $(form).serialize();
-      var myform = form;
-      $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: str,
-        url: '<?php echo "ajaxTestSystemSetup.php"; ?>',
-        success: function(data) {
-          if (!data.error)
-          {
-            myform.submit();
-          } else
-          {
-            var errorList = data.errorList;
-            var errorString = '';
-            for (i in errorList)
-            {
-              errorString += '<p>'+errorList[i]+'</p>';
-            }
-            $("#system-setup-errors-content").html(errorString) ;
-            $("#system-setup-errors").foundation('reveal', 'open');
-            $("#system-setup-errors-submit").click(function()
-            {
-              myform.submit();
-            });
-          }
-        }
-      });
-    },
-  });
-});
+  $("#system_setup").on('valid', function() {
+
+   var str = $(this).serialize();
+   var myform = this;
+   $.ajax({
+     type: "POST",
+     dataType: "json",
+     data: str,
+     url: '<?php echo "ajaxTestSystemSetup.php"; ?>',
+     success: function(data) {
+       if (!data.error)
+       {
+         myform.submit();
+       } else
+       {
+         var errorList = data.errorList;
+         var errorString = '';
+         for (i in errorList)
+         {
+           errorString += '<p>'+errorList[i]+'</p>';
+         }
+         $("#system-setup-errors-content").html(errorString) ;
+         $("#system-setup-errors").foundation('reveal', 'open');
+         $("#system-setup-errors-submit").click(function()
+         {
+           myform.submit();
+         });
+       }
+     }
+   });
+  })
+})
 $(function()
     {
       $('.hasNoHelpText').click(function(e)
