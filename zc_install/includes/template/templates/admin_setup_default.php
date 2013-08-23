@@ -42,7 +42,7 @@
         <label class="inline" for="admin_email2"><a href="#" class="hasHelpText" id="ADMINEMAIL2"><?php echo TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" equalto="$admin_email">
+        <input type="text" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" equalto="admin_email">
         <small class="error">A matching valid email address is required.</small>
       </div>
     </div>
@@ -79,22 +79,6 @@
 </form>
 
 <script>
-$().ready(function() {
-//   $("#admin_setup").validate({
-//     submitHandler: function(form) {
-//       form.submit();
-//     },
-//     rules: {
-//       admin_user: "required",
-//       admin_email: "required email",
-//       admin_email2: {
-//           equalTo: '#admin_email'
-//       }
-//     },
-//     messages: {
-//     }
-//   });
-});
 $(function()
     {
       $('.hasNoHelpText').click(function(e)

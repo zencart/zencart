@@ -14,7 +14,7 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide>
+<form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide data-abide-ajax-final>
   <input type="hidden" name="action" value="process" >
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
@@ -30,7 +30,7 @@
       </div>
       <div class="small-9 columns">
         <input type="text" name="db_host" id="db_host" value="<?php echo $db_host; ?>" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_DB_HOST; ?>" required>
-          <small class="error"><?php echo TEXT_HELP_CONTENT_DBHOST; ?></small>
+        <small class="error"><?php echo TEXT_HELP_CONTENT_DBHOST; ?></small>
       </div>
     </div>
     <div class="row">
@@ -47,7 +47,8 @@
         <label class="inline" for="db_password"><a href="#" class="hasHelpText" id="DBPASSWORD"><?php echo TEXT_DATABASE_SETUP_DB_PASSWORD; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="password" name="db_password" id="db_password" value="<?php echo $db_password; ?>" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_DB_PWD; ?>">
+        <input type="password" name="db_password" id="db_password" value="<?php echo $db_password; ?>" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_DB_PWD; ?>" required>
+        <small class="error"><?php echo TEXT_HELP_CONTENT_DBPASSWORD; ?></small>
       </div>
     </div>
     <div class="row">
@@ -102,12 +103,8 @@
 </form>
 <script>
 $().ready(function() {
-  $("#db_setup").validate({
-    submitHandler: function(form) {
-      ajaxTestDBConnection(form);
-    },
-    messages: {
-    }
+  $("#db_setup").on('valid', function(form){
+      ajaxTestDBConnection(this);
   });
 });
 
