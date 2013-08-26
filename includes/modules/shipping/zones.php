@@ -190,7 +190,7 @@ class zones extends base {
     } // build in admin only
 
     // skip countries in defined Zone Definition
-    if (!IS_ADMIN_FLAG) {
+    if (!IS_ADMIN_FLAG && $this->enabled) {
       $this->skip_shipping_zone = $this->chk_skip_shipping();
       $this->enabled = !$this->skip_shipping_zone;
     }
