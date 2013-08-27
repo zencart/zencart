@@ -9,7 +9,7 @@
 
 // look in your $PATH_LOCALE/locale directory for available locales..
 // recommended to list all values for your language in this array. And include at least the 3 versions: 'en_US', 'en_US.utf8', 'en'. These help support multiple server configurations (since IIS and Windows are less reliably configured)
-  $locales = array('en_US', 'en_US.utf8', 'en');
+  $locales = array('en_US', 'en_US.utf8', 'en', 'English_United States.1252');
 
 // For the most part, LC_TIME is fine here. On rare occasions you might need to change this to LC_ALL.
   @setlocale(LC_TIME, $locales);
