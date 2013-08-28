@@ -47,7 +47,7 @@
         <label class="inline" for="db_password"><a href="#" class="hasHelpText" id="DBPASSWORD"><?php echo TEXT_DATABASE_SETUP_DB_PASSWORD; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="password" name="db_password" id="db_password" value="<?php echo $db_password; ?>" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_DB_PWD; ?>" required>
+        <input type="password" name="db_password" id="db_password" value="<?php echo $db_password; ?>" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_DB_PWD; ?>">
         <small class="error"><?php echo TEXT_HELP_CONTENT_DBPASSWORD; ?></small>
       </div>
     </div>
