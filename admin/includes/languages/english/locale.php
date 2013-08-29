@@ -17,9 +17,10 @@ setlocale(LC_TIME, $locales);
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('ADMIN_NAV_DATE_TIME_FORMAT', '%A %d %b %Y %X'); // this is used for strftime()
-define('DATE_FORMAT', 'd/m/Y'); // this is used for date()
+define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
-define('DATE_FORMAT_DATEPICKER_ADMIN', zen_date_datepicker(DATE_FORMAT));  //Use only 'dd', 'mm' and 'yy' here in any order
+
+define('DATE_FORMAT_DATEPICKER_ADMIN', zen_date_datepicker(DATE_FORMAT)); // Alternatively skip the function and specify a string of 'dd', 'mm' and 'yy' in any order
 
 /**
  * Return date in raw format - DEPRECATED
@@ -33,6 +34,7 @@ function zen_date_raw($date, $reverse = false) {
     return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
   }
 }
+// Converts dsmnyY chars to accepted values because the datepicker widget accepts only 'dd', 'mm' and 'yy' (in any order)
 function zen_date_datepicker($format)
 {
   $date = preg_replace('/[ds]/', 'dd', $format);
