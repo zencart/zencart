@@ -36,7 +36,7 @@ INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, count
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (18,'Bangladesh','BD','BGD','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (19,'Barbados','BB','BRB','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (20,'Belarus','BY','BLR','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (21,'Belgium','BE','BEL','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (21,'Belgium','BE','BEL','5');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (22,'Belize','BZ','BLZ','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (23,'Benin','BJ','BEN','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (24,'Bermuda','BM','BMU','1');
@@ -164,7 +164,7 @@ INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, count
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (147,'Namibia','NA','NAM','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (148,'Nauru','NR','NRU','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (149,'Nepal','NP','NPL','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (150,'Netherlands','NL','NLD','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (150,'Netherlands','NL','NLD','5');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (151,'Netherlands Antilles','AN','ANT','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (152,'New Caledonia','NC','NCL','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (153,'New Zealand','NZ','NZL','1');
