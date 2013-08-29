@@ -63,6 +63,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 ALTER TABLE countries ADD status tinyint(1) default 1;
 ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
+INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$city $state / $country');
+UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
 
 ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
 ALTER TABLE whos_online MODIFY session_id varchar(255) NOT NULL default '';
