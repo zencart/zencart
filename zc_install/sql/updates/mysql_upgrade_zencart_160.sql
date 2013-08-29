@@ -73,6 +73,9 @@ ALTER TABLE admin_pages MODIFY page_params VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages MODIFY menu_key VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_profiles MODIFY profile_name VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages_to_profiles MODIFY page_key varchar(255) NOT NULL default '';
+UPDATE admin_pages SET sort_order = 1 WHERE page_key = 'users';
+UPDATE admin_pages SET sort_order = 2 WHERE page_key = 'profiles';
+
 ALTER TABLE coupons ADD coupon_total TINYINT(1) NOT NULL DEFAULT '0';
 ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
 
