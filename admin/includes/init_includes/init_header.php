@@ -110,7 +110,7 @@ if (basename($PHP_SELF) == FILENAME_DEFAULT . '.php') {
     if (!empty($chk_admin_log->fields['access_date'])) {
       $show_admin_activity_log_link = true;
       $_SESSION['reset_admin_activity_log'] = true;
-      $messageStack->add(WARNING_ADMIN_ACTIVITY_LOG_DATE . date('m-d-Y', strtotime($chk_admin_log->fields['access_date'])), 'caution');
+      $messageStack->add(WARNING_ADMIN_ACTIVITY_LOG_DATE . date(DATE_FORMAT, strtotime($chk_admin_log->fields['access_date'])), 'caution');
     }
   }
 }
