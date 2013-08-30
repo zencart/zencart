@@ -43,7 +43,7 @@ function array_minus_array($a, $b) {
   if ($action == 'new_cat') {
     $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : $current_category_id);
     $new_product_query = $db->Execute("select ptc.* from " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc  left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on ptc.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' where ptc.categories_id='" . $current_category_id . "' order by pd.products_name");
-    $products_filter = $new_product_query->fields['products_id'];
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
 //    $messageStack->add_session('SUCCESSFUL! SWITCHED CATEGORIES', 'success');
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
@@ -51,7 +51,7 @@ function array_minus_array($a, $b) {
 // set categories and products if not set
   if ($products_filter == '' and $current_category_id != '') {
     $new_product_query = $db->Execute("select ptc.* from " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc  left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on ptc.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' where ptc.categories_id='" . $current_category_id . "' order by pd.products_name");
-    $products_filter = $new_product_query->fields['products_id'];
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     if ($products_filter != '') {
       $messageStack->add_session(WARNING_PRODUCTS_LINK_TO_CATEGORY_REMOVED, 'caution');
       zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
@@ -61,7 +61,7 @@ function array_minus_array($a, $b) {
       $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
       $current_category_id = $reset_categories_id[0]['id'];
       $new_product_query = $db->Execute("select ptc.* from " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc  left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on ptc.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' where ptc.categories_id='" . $current_category_id . "' order by pd.products_name");
-      $products_filter = $new_product_query->fields['products_id'];
+      $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
       $_GET['products_filter'] = $products_filter;
     }
   }
