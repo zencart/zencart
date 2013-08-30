@@ -10,7 +10,7 @@
 
 <div id="upgradeResponsesHolder"></div>
 
-<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide>
+<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide data-abide-ajax-final>
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="upgrade_mode" value="yes">
@@ -61,32 +61,31 @@
 <script>
 
 $().ready(function() {
-  $("#db_upgrade").validate({
-    errorElement: 'span',
-    errorClass: 'help-inline invalid',
-    submitHandler: function(form) {
-      $('#upgradeResponsesHolder').html('');
-      var str = $(form).serialize();
-      $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: str,
-        url: '<?php echo "ajaxValidateAdminCredentials.php"; ?>',
-        success: function(data) {
-          if (data.error)
-          {
-            $('#admin-validation-errors-content').html('<p>Could not verify the Admin Credentials you provided.<p>');
-            $('#admin-validation-errors').foundation('reveal', 'open');
-          } else
-          {
-            $('#hiddenAdminCandidate').val(data.adminCandidate);
-            $('#admin_password').val('');
-            $('.upgrade-hide-area').hide();
-            doAjaxUpdateSql(form);
-          }
+  $("#db_upgrade").on('valid', function(){
+    var errorElement = 'span';
+    var errorClass = 'help-inline invalid';
+    $('#upgradeResponsesHolder').html('');
+    var myform = this;
+    var str = $(this).serialize();
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      data: str,
+      url: '<?php echo "ajaxValidateAdminCredentials.php"; ?>',
+      success: function(data) {
+        if (data.error)
+        {
+          $('#admin-validation-errors-content').html('<p>Could not verify the Admin Credentials you provided.<p>');
+          $('#admin-validation-errors').foundation('reveal', 'open');
+        } else
+        {
+          $('#hiddenAdminCandidate').val(data.adminCandidate);
+          $('#admin_password').val('');
+          $('.upgrade-hide-area').hide();
+          doAjaxUpdateSql(myform);
         }
-      })
-    },
+      }
+    })
   });
 });
 

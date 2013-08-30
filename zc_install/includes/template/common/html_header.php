@@ -28,9 +28,5 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="includes/template/foundation/jquery.min.js"><\/script>');</script>
-<script src="<?php echo 'includes/jquery-validation/jquery.validate.js'; ?>"></script>
-<?php if (file_exists(DIR_FS_INSTALL .  'includes/jquery-validation/localization/messages_' . $lng_short . '.js')) { ?>
-<script src="<?php echo 'includes/jquery-validation/localization/messages_' . $lng_short . '.js'; ?>"></script>
-<?php } ?>
 </head>
 
