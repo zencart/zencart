@@ -65,7 +65,7 @@
     where ptc.categories_id='" . $current_category_id . "'
     order by pd.products_name";
     $new_product_query = $db->Execute($sql);
-    $products_filter = $new_product_query->fields['products_id'];
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 
@@ -79,7 +79,7 @@
     where ptc.categories_id='" . $current_category_id . "'
     order by pd.products_name";
     $new_product_query = $db->Execute($sql);
-    $products_filter = $new_product_query->fields['products_id'];
+    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     if ($products_filter != '') {
       zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
     }
@@ -94,7 +94,7 @@
       where ptc.categories_id='" . $current_category_id . "'
       order by pd.products_name";
       $new_product_query = $db->Execute($sql);
-      $products_filter = $new_product_query->fields['products_id'];
+      $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
       $_GET['products_filter'] = $products_filter;
     }
   }
