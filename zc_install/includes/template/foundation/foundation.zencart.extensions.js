@@ -8,6 +8,10 @@
 /*jslint unparam: true, browser: true, indent: 2 */
 
 ;(function ($, window, document, undefined) {
+  /*
+   * override ABIDE to add support for checkbox "required"
+   * override ABIDE to add support for "equalto" comparison
+   */
   Foundation.libs.abide.check_validation_and_apply_styles = function(el_patterns) {
     var count = el_patterns.length,
     validations = [];
@@ -27,7 +31,8 @@
       if (is_radio && required) {
         validations.push(this.valid_radio(el, required));
       } else {
-        if (el_patterns[i][1].test(value) && valid_length && equalToChk || !required && el.value.length < 1 && equalToChk) {
+        if (el_patterns[i][1].test(value) && valid_length && equalToChk ||
+            !required && el.value.length < 1 && equalToChk) {
           $(el).removeAttr('data-invalid').parent().removeClass('error');
           validations.push(true);
         } else {
@@ -38,6 +43,9 @@
     }
     return validations;
   }
+  /*
+   * override ABIDE to allow for data-abide-ajax-final attribute to intercept form submission
+   */
   Foundation.libs.abide.validate = function(els, e) {
    var validations = this.parse_patterns(els),
    validation_count = validations.length,
