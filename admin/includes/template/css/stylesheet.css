@@ -366,3 +366,5 @@ color:#ff6600;
 }
 label.error {color: red; font-weight: bold;}
 
+
+.coupon-future, .coupon-expired {font-weight: bold; color: red}
