@@ -3,7 +3,7 @@
  * Header code file for the Advanced Search Results page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 19702 2011-10-05 20:33:06Z wilt $
@@ -421,8 +421,8 @@ if ((!isset($_GET['sort'])) || (!preg_match('/[1-8][ad]/', $_GET['sort'])) || (s
     $_GET['sort'] = '20a';
   }
 } else {
-  $sort_col = substr($_GET['sort'], 0 , 1);
-  $sort_order = substr($_GET['sort'], 1);
+  $sort_col = substr($_GET['sort'], 0, 1);
+  $sort_order = substr($_GET['sort'], -1);
   $order_str = ' order by ';
   switch ($column_list[$sort_col-1]) {
     case 'PRODUCT_LIST_MODEL':
