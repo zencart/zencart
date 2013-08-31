@@ -6,6 +6,8 @@
  * @version $Id:
  */
 
+@import "foundation-icons.css";
+
 .hero-unit {
   height: 110px;
   overflow: hidden;
