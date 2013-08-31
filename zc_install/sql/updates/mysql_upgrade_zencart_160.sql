@@ -86,6 +86,8 @@ ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '
 ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) NOT NULL default '0';
 ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL;
 
+ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
+
 ##@TODO
 ## COWOA CHANGES - Although need to allow for a current cowoa installation
 ALTER TABLE customers ADD COLUMN COWOA_account tinyint(1) NOT NULL default 0;
