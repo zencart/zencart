@@ -36,7 +36,7 @@
         $value = zen_db_prepare_input((float)$_POST['value']);
 
         // special handling for currencies which don't support decimal places
-        if ($decimal_point == '0' || $code == 'JPY') {
+        if ($decimal_point == '0' || in_array($code, array('JPY', 'HUF', 'TWD'))) {
           $value = (int)$value;
           $decimal_places = 0;
         }
