@@ -3,7 +3,7 @@
  * functions used by payment module class for Paypal IPN payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -955,7 +955,7 @@
     if (isset($optionsST['shipping']) && $optionsST['shipping'] == 0) unset($optionsST['shipping']);
 
     // tidy up all values so that they comply with proper format (number_format(xxxx,2) for PayPal US use )
-    if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], array('JPY', 'NOK', 'HUF'))) {
+    if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], array('JPY', 'NOK', 'HUF', 'TWD'))) {
       if (is_array($optionsST)) foreach ($optionsST as $key=>$value) {
         $optionsST[$key] = number_format($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
       }
