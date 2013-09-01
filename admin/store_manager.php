@@ -142,10 +142,11 @@
       $patternString = implode('|', $cleaningPatterns);
 
       foreach($foldersToClean as $purgeFolder) {
+        if (!file_exists($purgeFolder)) continue;
         $purgeFolder = rtrim($purgeFolder, '/');
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
-          if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
+          if (substr($file, 0, 1) != '.') {
             if (preg_match('/^(' . $patternString . ').*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
                 zen_remove($purgeFolder . '/' . $file);
