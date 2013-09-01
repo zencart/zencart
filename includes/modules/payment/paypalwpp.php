@@ -991,26 +991,38 @@ class paypalwpp extends base {
       }
     }
   }
-
   /**
-   * Determine the language to use when visiting the PayPal site
+   * Determine the language to use when redirecting to the PayPal site
+   * Order of selection: locale for current language, current-language-code, delivery-country, billing-country, store-country
    */
   function getLanguageCode() {
-    global $order;
+    global $order, $locales;
+    $allowed_country_codes = array('US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL', 'PT', 'BR', 'RU');
+    $allowed_language_codes = array('da_DK', 'he_IL', 'id_ID', 'ja_JP', 'no_NO', 'pt_BR', 'ru_RU', 'sv_SE', 'th_TH', 'tr_TR', 'zh_CN', 'zh_HK', 'zh_TW');
+
     $lang_code = '';
-    $orderISO = zen_get_countries($order->customer['country']['id'], true);
+    $user_locale_info = array();
+    if (isset($locales) && is_array($locales)) {
+      $user_locale_info = $locales;
+    }
+    $user_locale_info[] = strtoupper($_SESSION['languages_code']);
+    $shippingISO = zen_get_countries($order->delivery['country']['id'], true);
+    $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2']);
+    $billingISO = zen_get_countries($order->billing['country']['id'], true);
+    $user_locale_info[] = strtoupper($billingISO['countries_iso_code_2']);
+    $custISO = zen_get_countries($order->customer['country']['id'], true);
+    $user_locale_info[] = strtoupper($custISO['countries_iso_code_2']);
     $storeISO = zen_get_countries(STORE_COUNTRY, true);
-    if (in_array(strtoupper($orderISO['countries_iso_code_2']), array('US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL'))) {
-      $lang_code = strtoupper($orderISO['countries_iso_code_2']);
-    } elseif (in_array(strtoupper($storeISO['countries_iso_code_2']), array('US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL'))) {
-      $lang_code = strtoupper($storeISO['countries_iso_code_2']);
+    $user_locale_info[] = strtoupper($storeISO['countries_iso_code_2']);
+
+    $to_match = array_map('strtoupper', array_merge($allowed_country_codes, $allowed_language_codes));
+    foreach($user_locale_info as $val) {
+      if (in_array(strtoupper($val), $to_match)) {
+        if (strtoupper($val) == 'EN' && isset($locales) && $locales[0] == 'en_GB') $val = 'GB';
+        if (strtoupper($val) == 'EN') $val = 'US';
+        return $val;
+      }
     }
-    else
-    if (in_array(strtoupper($_SESSION['languages_code']), array('EN', 'US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL'))) {
-      $lang_code = $_SESSION['languages_code'];
-    }
-    if (strtoupper($lang_code) == 'EN') $lang_code = 'US';
-    return strtoupper($lang_code);
   }
   /**
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
