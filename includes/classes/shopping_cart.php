@@ -245,7 +245,13 @@ class shoppingCart extends base {
    * @todo ICW - documentation stub
    */
   function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
-    global $db;
+    global $db, $messageStack;
+//$messageStack->add_session('shopping_cart', 'FUNCTION add_cart ', 'caution');
+    if (!is_numeric($qty) || $qty < 0) {
+      // adjust quantity when not a value
+      $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($products_id) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($qty), 'error');
+      $qty = 0;
+    }
     $this->notify('NOTIFIER_CART_ADD_CART_START', array(), $products_id, $qty, $attributes, $notify);
     $products_id = zen_get_uprid($products_id, $attributes);
     if ($notify == true) {
@@ -352,7 +358,13 @@ class shoppingCart extends base {
    * @global object access to the db object
    */
   function update_quantity($products_id, $quantity = '', $attributes = '') {
-    global $db;
+    global $db, $messageStack;
+//$messageStack->add_session('shopping_cart', 'FUNCTION update_quantity ', 'caution');
+    if (!is_numeric($quantity) || $quantity < 0) {
+      // adjust quantity when not a value
+      $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($products_id) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($quantity), 'error');
+      $quantity = 0;
+    }
     $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_START', array(), $products_id, $quantity, $attributes);
     if (empty($quantity)) return true; // nothing needs to be updated if theres no quantity, so we return true..
 
@@ -1703,7 +1715,9 @@ class shoppingCart extends base {
         $_POST['cart_quantity'][$i] = 0;
       }
       if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
+        // adjust quantity when not a value
         $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($_POST['products_id'][$i]) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity'][$i]), 'error');
+        $_POST['cart_quantity'][$i] = 0;
         continue;
       }
       if ( in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array())) or $_POST['cart_quantity'][$i]==0) {
@@ -1790,7 +1804,7 @@ class shoppingCart extends base {
    * @param url parameters
    */
   function actionAddProduct($goto, $parameters) {
-    global $messageStack, $db;
+    global $db, $messageStack;
 //$messageStack->add_session('shopping_cart', 'FUNCTION actionAddProduct ', 'caution');
     if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
       // verify attributes and quantity first
@@ -1803,6 +1817,11 @@ class shoppingCart extends base {
             $the_list .= TEXT_ERROR_OPTION_FOR . '<span class="alertBlack">' . zen_options_name($key) . '</span>' . TEXT_INVALID_SELECTION . '<span class="alertBlack">' . (zen_values_name($value) == 'TEXT' ? TEXT_INVALID_USER_INPUT : zen_values_name($value)) . '</span>' . '<br />';
           }
         }
+      }
+      if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
+        // adjust quantity when not a value
+        $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($_POST['products_id']) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity'][$i]), 'error');
+        $_POST['cart_quantity'][$i] = 0;
       }
       // verify qty to add
       $add_max = zen_get_products_quantity_order_max($_POST['products_id']);
@@ -1921,6 +1940,11 @@ class shoppingCart extends base {
         $add_max = zen_get_products_quantity_order_max($_GET['products_id']);
         $cart_qty = $this->in_cart_mixed($_GET['products_id']);
         $new_qty = zen_get_buy_now_qty($_GET['products_id']);
+        if (!is_numeric($new_qty) || $new_qty < 0) {
+          // adjust quantity when not a value
+          $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($_GET['products_id']) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($new_qty), 'error');
+          $new_qty = 0;
+        }
 //die('I see Buy Now Cart: ' . $add_max . ' - cart qty: ' . $cart_qty . ' - newqty: ' . $new_qty);
         if (($add_max == 1 and $cart_qty == 1)) {
           // do not add
@@ -1965,6 +1989,11 @@ class shoppingCart extends base {
           $adjust_max = false;
           $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
           $qty = $val;
+          if (!is_numeric($qty) || $qty < 0) {
+            // adjust quantity when not a value
+            $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($_POST['products_id']) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($qty), 'error');
+            $qty = 0;
+          }
           $add_max = zen_get_products_quantity_order_max($prodId);
           $cart_qty = $this->in_cart_mixed($prodId);
 //        $new_qty = $qty;
@@ -2005,6 +2034,12 @@ class shoppingCart extends base {
 //$messageStack->add_session('shopping_cart', 'actionMultipleAddProduct<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($prodId), 'caution');
             $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . zen_get_products_name($prodId), 'caution');
           }
+        }
+        if (!is_numeric($val) || $val < 0) {
+          // adjust quantity when not a value
+          $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
+          $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($prodId) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($val), 'error');
+          $val = 0;
         }
       }
 // display message if all is good and not on shopping_cart page
