@@ -1985,15 +1985,10 @@ class shoppingCart extends base {
 //$messageStack->add_session('shopping_cart', 'FUNCTION actionMultipleAddProduct ', 'caution');
     if (is_array($_POST['products_id']) && sizeof($_POST['products_id']) > 0) {
       while ( list( $key, $val ) = each($_POST['products_id']) ) {
-        if ($val > 0) {
+        $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
+        if (!is_numeric($val) || $val < 0) {
           $adjust_max = false;
-          $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
           $qty = $val;
-          if (!is_numeric($qty) || $qty < 0) {
-            // adjust quantity when not a value
-            $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($_POST['products_id']) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($qty), 'error');
-            $qty = 0;
-          }
           $add_max = zen_get_products_quantity_order_max($prodId);
           $cart_qty = $this->in_cart_mixed($prodId);
 //        $new_qty = $qty;
@@ -2037,7 +2032,6 @@ class shoppingCart extends base {
         }
         if (!is_numeric($val) || $val < 0) {
           // adjust quantity when not a value
-          $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
           $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . zen_get_products_name($prodId) . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($val), 'error');
           $val = 0;
         }
