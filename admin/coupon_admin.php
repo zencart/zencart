@@ -1334,7 +1334,7 @@ function check_form(form_name) {
       $contents[] = array('text' => '<br />' . COUPON_USES_COUPON . '<br />' . zen_draw_input_field('voucher_number_of'));
       break;
     default:
-      $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code);
+      $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . $_GET['cid'] . ')' : ''));
       $amount = $cInfo->coupon_amount;
       if ($cInfo->coupon_type == 'P' || $cInfo->coupon_type == 'E') {
         $amount .= '%';
@@ -1416,7 +1416,7 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
         $coupon_order_limit = $cInfo->coupon_order_limit;
         if ($uses_coupon == 0 || $uses_coupon == '') $uses_coupon = TEXT_UNLIMITED;
         if ($uses_user == 0 || $uses_user == '') $uses_user = TEXT_UNLIMITED;
-        $contents[] = array('text'=>COUPON_NAME . '&nbsp;::&nbsp; ' . $coupon_name->fields['coupon_name'] . '<br />' .
+        if ($cInfo->coupon_id != '') $contents[] = array('text'=>COUPON_NAME . '&nbsp;::&nbsp; ' . $coupon_name->fields['coupon_name'] . '<br />' .
                      COUPON_AMOUNT . '&nbsp;::&nbsp; ' . $amount . '<br />' .
                      ($coupon_name->fields['coupon_type'] == 'E' || $coupon_name->fields['coupon_type'] == '0' ? TEXT_FREE_SHIPPING . '<br />' : '') .
                      COUPON_STARTDATE . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->coupon_start_date) . '<br />' .
@@ -1431,7 +1431,6 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
                      DATE_MODIFIED . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->date_modified) . '<br /><br />' .
                      COUPON_ZONE_RESTRICTION . '&nbsp;::&nbsp; ' . zen_get_geo_zone_name($cInfo->coupon_zone_restriction) . '<br /><br />' .
                      COUPON_ORDER_LIMIT . '&nbsp;::&nbsp; ' . ($coupon_order_limit > 0 ? $coupon_order_limit : TEXT_UNLIMITED) . '<br /><br />' .
-                     ($cInfo->coupon_id != '' ?
                      '<center><a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.zen_image_button('button_email.gif', TEXT_DISCOUNT_COUPON_EMAIL).'</a>' .
                      '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucheredit&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_edit.gif', TEXT_DISCOUNT_COUPON_EDIT) .'</a>' .
                      ($cInfo->coupon_active  == 'Y' ? '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherdelete&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_delete.gif', TEXT_DISCOUNT_COUPON_DELETE).'</a>' : '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreactivate&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_restore.gif', TEXT_DISCOUNT_COUPON_RESTORE).'</a>') .
@@ -1444,7 +1443,6 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
                      '<br /><a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreportduplicates&cid='.$cInfo->coupon_id . '&codebase=' . $cInfo->coupon_code . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_report.gif', TEXT_DISCOUNT_COUPON_REPORT_MULTIPLE) . '</a>' .
                      '&nbsp;&nbsp;<a href="'.zen_href_link(FILENAME_COUPON_ADMIN_EXPORT, 'cid=' . $cInfo->coupon_id . '&codebase=' . $cInfo->coupon_code . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL') .'">'.zen_image_button('button_download_now.gif', TEXT_DISCOUNT_COUPON_DOWNLOAD) . '</a>' .
                      '</center>'
-                     : ' who ' . $cInfo->coupon_id . ' - ' . $_GET['cid'])
                      );
 
         }
