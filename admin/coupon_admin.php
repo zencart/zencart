@@ -7,10 +7,6 @@
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
  */
 
-//@@TODO - add new fields to mySQL files
-// ALTER TABLE coupons ADD coupon_total TINYINT( 1 ) NOT NULL DEFAULT '0';
-// ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT '0';
-
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
@@ -21,6 +17,7 @@
 
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
   if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YN*]/','',$_GET['status']);
+  if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
 
   if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
     $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
@@ -58,7 +55,7 @@
       $message .= $text_coupon_help . "\n\n";
       $message .= TEXT_REMEMBER . "\n\n";
       $message .=(!empty($coupon_name->fields['coupon_description']) ? $coupon_name->fields['coupon_description'] . "\n\n" : '');
-      $message .= sprintf(TEXT_VISIT ,HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
+      $message .= sprintf(TEXT_VISIT, HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
 
       // disclaimer
       $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
