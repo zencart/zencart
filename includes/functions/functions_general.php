@@ -4,7 +4,7 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Wed Sep 5 13:57:12 2012 +0100 Modified in v1.5.1 $
@@ -54,11 +54,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Parse the data used in the html tags to ensure the tags will not break.
- * Basically just an extension to the php strstr function
+ * Basically just an extension to the php strtr function
  * @param string The string to be parsed
  * @param string The needle to find
 */
-// Parse the data used in the html tags to ensure the tags will not break
   function zen_parse_input_field_data($data, $parse) {
     return strtr(trim($data), $parse);
   }
@@ -140,17 +139,23 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @param mixed either a single or array of parameter names to be excluded from output
 */
-  function zen_get_all_get_params($exclude_array = '', $search_engine_safe = true) {
-
+  function zen_get_all_get_params($exclude_array = array(), $search_engine_safe = true) {
     if (!is_array($exclude_array)) $exclude_array = array();
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'main_page', 'error', 'x', 'y'));
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
       while (list($key, $value) = each($_GET)) {
-        if (is_array($value) || in_array($key, $exclude_array)) continue;
-        if (strlen($value) > 0) {
-          $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+        if (!in_array($key, $exclude_array)) {
+          if (!is_array($value)) {
+            if (strlen($value) > 0) {
+              $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+            }
+          } else {
+            foreach(array_filter($value) as $arr){
+              $get_url .= zen_sanitize_string($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+            }
+          }
         }
       }
     }
@@ -158,6 +163,42 @@ if (!defined('IS_ADMIN_FLAG')) {
     while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
 
     return $get_url;
+  }
+/**
+ * Return all GET params as (usually hidden) POST params
+ * @param array $exclude_array
+ * @param boolean $hidden
+ * @return string
+ */
+  function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
+    if (!is_array($exclude_array)) $exclude_array = array();
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
+    $fields = '';
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
+        if (!in_array($key, $exclude_array)) {
+          if (!is_array($value)) {
+            if (strlen($value) > 0) {
+              if ($hidden) {
+                $fields .= zen_draw_hidden_field($key, $value);
+              } else {
+                $fields .= zen_draw_input_field($key, $value);
+              }
+            }
+          } else {
+            foreach(array_filter($value) as $arr){
+              if ($hidden) {
+                $fields .= zen_draw_hidden_field($key . '[]', $arr);
+              } else {
+                $fields .= zen_draw_input_field($key . '[]', $arr);
+              }
+            }
+          }
+        }
+      }
+    }
+    return $fields;
   }
 
 ////
@@ -498,8 +539,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // Return table heading with sorting capabilities
   function zen_create_sort_heading($sortby, $colnum, $heading) {
-    global $PHP_SELF;
-
     $sort_prefix = '';
     $sort_suffix = '';
 
@@ -584,7 +623,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
       $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
 
-      if (is_object($GLOBALS[$class])) {
+      if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
         if ($GLOBALS[$class]->enabled) {
           $count++;
         }
@@ -984,7 +1023,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     if ($link_only == true) {
       return $link;
     } else {
-      return '<a href="' . $link . '">';
+      return '<a class="btn-backlink" href="' . $link . '">';
     }
   }
 
@@ -1010,6 +1049,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     if ($str == "") return $str;
     if (is_array($str)) return $str;
     $str = trim($str);
+    $len = (int)$len;
+    if ($len == 0) return '';
     // if it's les than the size given, then return it
     if (strlen($str) <= $len) return $str;
     // else get that size of text
@@ -1050,7 +1091,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // show case only superceeds all other settings
     if (STORE_STATUS != '0') {
-      return '<a href="' . zen_href_link(FILENAME_CONTACT_US) . '">' .  TEXT_SHOWCASE_ONLY . '</a>';
+      return '<a class="btn-contactus" href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' .  TEXT_SHOWCASE_ONLY . '</a>';
     }
 
 // 0 = normal shopping
@@ -1060,7 +1101,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       switch (true) {
         case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
         // customer must be logged in to browse
-        $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
+        $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
         case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
@@ -1069,7 +1110,7 @@ if (!defined('IS_ADMIN_FLAG')) {
           return TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE;
         } else {
           // customer may browse but no prices
-          $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
+          $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         }
         return $login_for_price;
         break;
@@ -1085,7 +1126,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         break;
         case ((CUSTOMERS_APPROVAL_AUTHORIZATION == '3') and $_SESSION['customer_id'] == ''):
         // customer must be logged in and approved to add to cart
-        $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
+        $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
         case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customers_authorization'] > '0'):
@@ -1105,7 +1146,8 @@ if (!defined('IS_ADMIN_FLAG')) {
       return $additional_link;
       break;
     case ($button_check->fields['product_is_call'] == '1'):
-      $return_button = '<a href="' . zen_href_link(FILENAME_CONTACT_US) . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+      $return_button = '<a class="btn-callforprice" href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+      $return_button = '';
       break;
     case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
       if ($_GET['main_page'] == zen_get_info_page($product_id)) {
@@ -1129,7 +1171,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // enable shipping
   function zen_get_shipping_enabled($shipping_module) {
-    global $PHP_SELF, $cart, $order;
+    global $PHP_SELF, $order;
 
     // for admin always true if installed
     if (strstr($PHP_SELF, FILENAME_MODULES)) {
@@ -1202,6 +1244,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 // remove common HTML from text for display as paragraph
   function zen_clean_html($clean_it, $extraTags = '') {
     if (!is_array($extraTags)) $extraTags = array($extraTags);
+
+    // remove any embedded javascript
+    $clean_it = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $clean_it);
 
     $clean_it = preg_replace('/\r/', ' ', $clean_it);
     $clean_it = preg_replace('/\t/', ' ', $clean_it);
@@ -1501,7 +1546,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @return string
  */
   function charsetClean($string) {
-    if (CHARSET == 'UTF-8') return $string;
+    if (preg_replace('/[^a-z0-9]/', '', strtolower(CHARSET)) == 'utf8') return $string;
     if (function_exists('iconv')) $string = iconv("Windows-1252", CHARSET . "//IGNORE", $string);
     $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
     $string = html_entity_decode($string, ENT_QUOTES, CHARSET);

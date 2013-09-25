@@ -3,7 +3,7 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
@@ -68,10 +68,8 @@ class authorizenet_aim extends base {
   var $reportable_submit_data = array();
   /**
    * Constructor
-   *
-   * @return authorizenet_aim
    */
-  function authorizenet_aim() {
+  function __construct() {
     global $order, $messageStack;
     $this->code = 'authorizenet_aim';
     $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS == 'True') ? true : false); // Whether the module is installed or not
@@ -106,6 +104,15 @@ class authorizenet_aim extends base {
 
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
+
+    // Determine default/supported currencies
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+      $this->gateway_currency = DEFAULT_CURRENCY;
+    } else {
+      $this->gateway_currency = 'USD';
+    }
+
+
   }
   /**
    * calculate zone matches and flag settings to determine whether this module should display to customers or not
@@ -116,9 +123,9 @@ class authorizenet_aim extends base {
     // if store is not running in SSL, cannot offer credit card module, for PCI reasons
     if (MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE != 'Test' && (!defined('ENABLE_SSL') || ENABLE_SSL != 'true')) $this->enabled = FALSE;
     // check other reasons for the module to be deactivated:
-    if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE > 0) ) {
+    if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
-      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE . "' and zone_country_id = '" . (int)$order->billing['country']['id'] . "' order by zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {
           $check_flag = true;
@@ -133,6 +140,11 @@ class authorizenet_aim extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**
@@ -286,6 +298,8 @@ class authorizenet_aim extends base {
     $order->info['cc_cvv']     = '***';
     $sessID = zen_session_id();
 
+    $this->include_x_type = TRUE;
+
     // DATA PREPARATION SECTION
     unset($submit_data);  // Cleans out any previous data stored in the variable
 
@@ -318,7 +332,6 @@ class authorizenet_aim extends base {
                          'x_delim_char' => $this->delimiter,  // The default delimiter is a comma
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
-                         'x_type' => MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
                          'x_method' => 'CC',
                          'x_amount' => number_format($order->info['total'], 2),
                          'x_currency_code' => $order->info['currency'],
@@ -360,16 +373,28 @@ class authorizenet_aim extends base {
                          'Date' => $order_time,
                          'IP' => zen_get_ip_address(),
                          'Session' => $sessID );
-    // force conversion to USD
-    if ($order->info['currency'] != 'USD') {
+
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_EMULATOR_CHECK', array(), $submit_data);
+    if ($this->include_x_type) {
+      $submit_data['x_type'] = MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE';
+    }
+
+    // force conversion to supported currencies: USD, GBP, CAD, EUR
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
       global $currencies;
-      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value('USD'), 2);
-      $submit_data['x_currency_code'] = 'USD';
+      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data['x_currency_code'] = $this->gateway_currency;
       unset($submit_data['x_tax'], $submit_data['x_freight']);
     }
 
+    $this->submit_extras = array();
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_PRESUBMIT_HOOK', array(), $submit_data);
+    unset($this->submit_extras['x_login'], $this->submit_extras['x_tran_key']);
+    if (sizeof($this->submit_extras)) $submit_data = array_merge($submit_data, $this->submit_extras);
+
     unset($response);
     $response = $this->_sendRequest($submit_data);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', array(), $response);
     $response_code = $response[0];
     $response_text = $response[3];
     $this->auth_code = $response[4];
@@ -436,6 +461,7 @@ class authorizenet_aim extends base {
   function admin_notification($zf_order_id) {
     global $db;
     $output = '';
+    $aimdata = new stdClass;
     $aimdata->fields = array();
     require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/authorizenet/authorizenet_admin_notification.php');
     return $output;
@@ -498,6 +524,24 @@ class authorizenet_aim extends base {
     global $db;
     $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_AUTHORIZENET_AIM\_%'");
   }
+
+  /**
+   * Test whether the module is able to communicate with the gateway
+   * @return multitype:string
+   */
+  function testCommunications() {
+    $retVal = array();
+    $result = $this->_sendRequest(array(), 'testcomm');
+//  die('result=<pre>'.var_export($result, true));
+    if ($result == TRUE) {
+      $retVal['type'] = 'success';
+      $retVal['text'] = 'Communications Test Successful: ' . $this->code;
+    } else {
+      $retVal['type'] = 'error';
+      $retVal['text'] = 'Communications Test FAILED: ' . $this->code;
+    }
+    return $retVal;
+  }
   /**
    * Internal list of configuration keys used for configuration of the module
    *
@@ -509,7 +553,7 @@ class authorizenet_aim extends base {
   /**
    * Send communication request
    */
-  function _sendRequest($submit_data) {
+  function _sendRequest($submit_data, $mode = 'normal') {
     global $request_type;
 
     // Populate an array that contains all of the data to be sent to Authorize.net
@@ -528,16 +572,30 @@ class authorizenet_aim extends base {
     }
 
     // set URL
-    $url = 'https://secure.authorize.net/gateway/transact.dll';
     $devurl = 'https://test.authorize.net/gateway/transact.dll';
-    $dumpurl = 'https://developer.authorize.net/param_dump.asp';
     $certurl = 'https://certification.authorize.net/gateway/transact.dll';
     if (defined('AUTHORIZENET_DEVELOPER_MODE')) {
       if (AUTHORIZENET_DEVELOPER_MODE == 'on') $url = $devurl;
-      if (AUTHORIZENET_DEVELOPER_MODE == 'echo' || MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') $url = $dumpurl;
       if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;
     }
-    if (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') $url = $dumpurl;
+
+    $this->mode = 'AIM';
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', array(), $submit_data);
+
+    switch ($this->mode) {
+      case 'eProcessing':
+        //eProcessing sometimes uses an AIM emulator, in which case if you're using this module for that purpose, use the notifier point above to have an observer class change the $class->mode to 'eProcessing', which will trigger the correct URL to be used.
+        $url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
+        break;
+      case (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo'):
+      case 'dump':
+        $url = 'https://developer.authorize.net/param_dump.asp';
+        break;
+      default:
+      case 'AIM':
+        $url = 'https://secure.authorize.net/gateway/transact.dll';
+        break;
+    }
 
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
@@ -573,8 +631,10 @@ class authorizenet_aim extends base {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
     curl_setopt($ch, CURLOPT_SSLVERSION, 3);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); /* compatibility for SSL communications on some Windows servers (IIS 5.0+) */
+//   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
+//   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
     if (CURL_PROXY_REQUIRED == 'True') {
       $this->proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
       curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, $this->proxy_tunnel_flag);
@@ -589,12 +649,18 @@ class authorizenet_aim extends base {
     $this->commInfo = @curl_getinfo($ch);
     curl_close ($ch);
 
+    // handle "communications test only" mode:
+    if ($mode == 'testcomm') {
+      return ($this->commInfo['http_code'] == 200);
+    }
+
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') {
       echo $this->authorize . ($this->commErrNo != 0 ? '<br />' . $this->commErrNo . ' ' . $this->commError : '') . '<br />';
       die('Press the BACK button in your browser to return to the previous page.');
     }
 
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_ENCAPSULATION_CHECK');
     // parse the data received back from the gateway, taking into account the delimiters and encapsulation characters
     $stringToParse = $this->authorize;
     if (substr($stringToParse,0,1) == $this->encapChar) $stringToParse = substr($stringToParse,1);

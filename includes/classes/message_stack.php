@@ -3,7 +3,7 @@
  * messageStack Class.
  *
  * @package classes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: message_stack.php 14169 2009-08-15 23:58:05Z drbyte $
@@ -20,8 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 class messageStack extends base {
 
   // class constructor
-  function messageStack() {
-
+  function __construct() {
     $this->messages = array();
 
     if (isset($_SESSION['messageToStack']) && $_SESSION['messageToStack']) {
@@ -39,15 +38,15 @@ class messageStack extends base {
     $duplicate = false;
     if (strlen($message) > 0) {
       if ($type == 'error') {
-        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'text' => zen_image($template->get_template_dir(ICON_IMAGE_ERROR, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_ERROR, ICON_ERROR_ALT) . '  ' . $message);
+        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_ERROR, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_ERROR, ICON_ERROR_ALT), 'text' => $message, 'type' => $type);
       } elseif ($type == 'warning') {
-        $theAlert = array('params' => 'class="messageStackWarning larger"', 'class' => $class, 'text' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT) . '  ' . $message);
+        $theAlert = array('params' => 'class="messageStackWarning larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT), 'text' => $message, 'type' => $type);
       } elseif ($type == 'success') {
-        $theAlert = array('params' => 'class="messageStackSuccess larger"', 'class' => $class, 'text' => zen_image($template->get_template_dir(ICON_IMAGE_SUCCESS, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_SUCCESS, ICON_SUCCESS_ALT) . '  ' . $message);
+        $theAlert = array('params' => 'class="messageStackSuccess larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_SUCCESS, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_SUCCESS, ICON_SUCCESS_ALT), 'text' => $message, 'type' => $type);
       } elseif ($type == 'caution') {
-        $theAlert = array('params' => 'class="messageStackCaution larger"', 'class' => $class, 'text' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT) . '  ' . $message);
+        $theAlert = array('params' => 'class="messageStackCaution larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT), 'text' => $message, 'type' => $type);
       } else {
-        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'text' => $message);
+        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => $message, 'type' => $type);
       }
 
       for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
@@ -57,8 +56,16 @@ class messageStack extends base {
     }
   }
 
-  function add_session($class, $message, $type = 'error') {
+  function del($class, $message, $type = '') {
+    for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
+      if ($this->messages[$i]['text'] == $message && $this->messages[$i]['class'] == $class /* && $this->messages[$i]['type'] == $type */ ) {
+        unset($this->messages[$i]);
+        break;
+      }
+    }
+  }
 
+  function add_session($class, $message, $type = 'error') {
     if (!$_SESSION['messageToStack']) {
       $messageToStack = array();
     } else {
@@ -68,6 +75,11 @@ class messageStack extends base {
     $messageToStack[] = array('class' => $class, 'text' => $message, 'type' => $type);
     $_SESSION['messageToStack'] = $messageToStack;
     $this->add($class, $message, $type);
+  }
+
+  function del_session($class, $message, $type = '') {
+    $this->del($class, $message, $type);
+    $_SESSION['messageToStack'] = $this->messages;
   }
 
   function reset() {
@@ -102,4 +114,3 @@ class messageStack extends base {
     return $count;
   }
 }
-?>

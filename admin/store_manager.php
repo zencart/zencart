@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
@@ -9,16 +9,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
-  $currencies = new currencies();
-
-  $languages = zen_get_languages();
-
-  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : $products_filter);
-
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
-
-  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
 
   $processing_message = '';
   $processing_action_url = '';
@@ -103,13 +94,13 @@
     break;
 
     case ('optimize_db_start'):
-      $processing_message = TEXT_INFO_OPTIMIZING_DATABASE_TABLES;
-      $processing_action_url = zen_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
+      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes') {
+        $processing_message = TEXT_INFO_OPTIMIZING_DATABASE_TABLES;
+        $processing_action_url = zen_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
+      }
     break;
-    case ('optimize_db_do'):
     // clean out unused space in database
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
+    case ('optimize_db_do'):
         $sql = "SHOW TABLE STATUS FROM `" . DB_DATABASE ."`";
         $tables = $db->Execute($sql);
         while(!$tables->EOF) {
@@ -127,17 +118,36 @@
         $messageStack->add_session(SUCCESS_DB_OPTIMIZE . ' ' . $i, 'success');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
     break;
 
 // clean out old DEBUG logfiles
     case 'clean_debug_files':
-      foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs') as $purgeFolder) {
+      $foldersToClean = array();
+      $foldersToClean[] = DIR_FS_LOGS;
+      $foldersToClean[] = DIR_FS_SQL_CACHE;
+      $foldersToClean[] = DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs';
+
+      $cleaningPatterns = array();
+      $cleaningPatterns[] = 'myDEBUG-';
+      $cleaningPatterns[] = 'AIM_Debug_';
+      $cleaningPatterns[] = 'SIM_Debug_';
+      $cleaningPatterns[] = 'FirstData_Debug_';
+      $cleaningPatterns[] = 'Linkpoint_Debug_';
+      $cleaningPatterns[] = 'Paypal|paypal|ipn_';
+      $cleaningPatterns[] = 'zcInstall';
+      $cleaningPatterns[] = 'SHIP_';
+      $cleaningPatterns[] = 'PAYMENT_';
+      $cleaningPatterns[] = 'usps_';
+      $cleaningPatterns[] = '.*debug';
+      $patternString = implode('|', $cleaningPatterns);
+
+      foreach($foldersToClean as $purgeFolder) {
+        if (!file_exists($purgeFolder)) continue;
         $purgeFolder = rtrim($purgeFolder, '/');
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
-          if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
-            if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall).*\.log$/', $file)) {
+          if (substr($file, 0, 1) != '.') {
+            if (preg_match('/^(' . $patternString . ').*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
                 zen_remove($purgeFolder . '/' . $file);
               }
@@ -197,33 +207,11 @@
 
     } // eof: action
 
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
 <?php if ($processing_message != '' && $processing_action_url != '') echo '<meta http-equiv="refresh" content="2;URL=' . $processing_action_url . '">'; ?>
-
 </head>
-<body onLoad="init()">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -322,7 +310,7 @@ if ($processing_message != '') {
           <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_SET_NEXT_ORDER_NUMBER; ?>
             <br />
-            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', $nextOrderNumber); ?>
+            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', (isset($new_orders_id) ? $new_orders_id : '')); ?>
             <?php echo zen_image_submit('button_reset.gif', IMAGE_RESET); ?></td>
             </form>
           </tr>

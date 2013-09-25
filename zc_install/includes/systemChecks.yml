@@ -1,0 +1,299 @@
+#
+# @package Installer
+# @copyright Copyright 2003-2013 Zen Cart Development Team
+# @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+# @version $Id:
+#
+
+systemChecks:
+  backupConfigureFiles:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_ADMIN_CONFIGURE .PHP_EOL; ?>
+    methods:
+      backupConfigureFiles:
+  checkStoreConfigureFile:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_STORE_CONFIGURE . PHP_EOL; ?>
+    methods:
+      CheckWriteableFile:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'includes/configure.php' . PHP_EOL; ?>
+          changePerms: '0664'
+          createFile: TRUE
+  checkAdminConfigureFile:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_ADMIN_CONFIGURE .PHP_EOL; ?>
+    methods:
+      CheckWriteableAdminFile:
+        parameters:
+          fileDir: <?php echo 'includes/configure.php' . PHP_EOL; ?>
+          changePerms: '0664'
+          createFile: TRUE
+  checkPhpVersion:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_PHP_VERSION .PHP_EOL; ?>
+    methods:
+      checkPhpVersionMin:
+        method: checkPhpVersion
+        parameters:
+          version: 5.2
+          versionTest: ge
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.2') . PHP_EOL; ?>
+      checkPhpVersionMax:
+        method: checkPhpVersion
+        parameters:
+          version: 5.5.99
+          versionTest: le
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.5.99') . PHP_EOL; ?>
+
+  checkZCversion:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_NEW_VERSION_AVAILABLE .PHP_EOL; ?>
+    methods:
+      checkIsZCVersionCurrent:
+  mysqlExt:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_MYSQL_SUPPPORT .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: mysqli
+  logFolder:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_LOG_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_LOGS . PHP_EOL; ?>
+  cacheFolder:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText:  <?php echo TEXT_ERROR_CACHE_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_SQL_CACHE . PHP_EOL; ?>
+  imagesFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_IMAGES_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'images' . PHP_EOL; ?>
+  htmlIncludesFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_DEFINEPAGES_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'includes/languages/english/html_includes' . PHP_EOL; ?>
+  mediaFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_MEDIA_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'media' . PHP_EOL; ?>
+  pubFolder:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_PUB_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_DOWNLOAD_PUBLIC . PHP_EOL; ?>
+  htaccessSupport:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText:  <?php echo TEXT_ERROR_HTACCESS_SUPPPORT .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdHtaccessSupport
+    methods:
+      checkHtaccessSupport:
+  initialSessionCheck:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_SESSION_SUPPPORT .PHP_EOL; ?>
+    methods:
+      checkInitialSession:
+        parameters:
+          sessionName: zenInstallerId
+      checkIniGet1:
+        method: checkIniGet
+        parameters:
+          inigetName: session.use_trans_sid
+          expectedValue: FALSE
+        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPPORT_USE_TRANS_SID . PHP_EOL; ?>
+      checkIniGet2:
+        method: checkIniGet
+        parameters:
+          inigetName: session.auto_start
+          expectedValue: FALSE
+        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPPORT_AUTO_START . PHP_EOL; ?>
+  newDatabaseCheck:
+    runLevel: database
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION .PHP_EOL; ?>
+    methods:
+      checkNewDBConnection:
+  existingDatabaseCheck:
+    runLevel: upgradeDb
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_UPGRADE .PHP_EOL; ?>
+    methods:
+      checkUpgradeDBConnection:
+  connectionDatabaseCheck:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorTextHelpId: helpIdConnectionDatabaseCheck
+    mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
+    methods:
+      checkDBConnection:
+  checkRegisterGlobals:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_REGISTER_GLOBALS .PHP_EOL; ?>
+    methods:
+      checkRegisterGlobals:
+  checkGD:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_GD .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: gd
+  checkZlib:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_ZLIB .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: zlib
+  checkOpenssl:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_OPENSSL .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: openssl
+  checkCurl:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_CURL .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: curl
+        localErrorText: <?php echo sprintf(TEXT_ERROR_EXTENSION_NOT_LOADED, 'curl') . PHP_EOL; ?>
+      checkFunctionExists:
+        parameters:
+          functionName: curl_init
+        localErrorText: <?php echo sprintf(TEXT_ERROR_FUNCTION_DOES_NOT_EXIST, 'curl_init') . PHP_EOL; ?>
+      checkLiveCurl:
+        parameters:
+          testUrl: "www.zen-cart.com/testcurl.php"
+          testData: "installertest=checking"
+        localErrorText: <?php echo TEXT_ERROR_CURL_LIVE_TEST . PHP_EOL; ?>
+  checkXML:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_XML .PHP_EOL; ?>
+    methods:
+      checkFunctionExists:
+        parameters:
+          functionName: xml_parser_create
+  checkGzip:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_GZIP .PHP_EOL; ?>
+    methods:
+      checkIniGet:
+        parameters:
+          inigetName: output_buffering
+          expectedValue: TRUE
+  checkHttpsREquest:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_HTTPS .PHP_EOL; ?>
+    methods:
+      checkHttpsRequest:
+
+
+  checkDBVersion160:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.6.0'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.6.0') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configDescription
+            fieldName: SESSION_WRITE_DIRECTORY
+            expectedResult: 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.'
+  checkDBVersion151:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.1'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.1') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: fieldSchema
+            tableName: admin_activity_log
+            fieldName: ip_address
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(45)'
+
+  checkDBVersion150:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.0'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.0') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: fieldSchema
+            tableName: admin
+            fieldName: reset_token
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(60)'
+          - checkType: fieldSchema
+            tableName: admin
+            fieldName: last_failed_ip
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(45)'
+
+  checkDBVersion139:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.3.9'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.3.9') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: SHOW_SPLIT_TAX_CHECKOUT
+            expectedResult: 'Show Split Tax Lines'
+          - checkType: fieldSchema
+            tableName: authoizenet
+            fieldName: transaction_id
+            fieldCheck: Type
+            expectedResult: 'BIGINT(20)'

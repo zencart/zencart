@@ -3,13 +3,13 @@
  * jscript_form_check
  *
  * @package page
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: jscript_main.php 17018 2010-07-27 07:25:41Z drbyte $
  */
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script><!--
 var selected;
 
 function check_form_optional(form_name) {

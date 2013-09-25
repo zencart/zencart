@@ -1,13 +1,23 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: index.php 19537 2011-09-20 17:14:44Z drbyte $
+ * @version
  */
   $version_check_index=true;
   require('includes/application_top.php');
+  require(DIR_WS_CLASSES . 'class.zcWidgetManager.php');
+  require(DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
+  //$widgetManager = new zcWidgetManager();
+  $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION['admin_id'], $_SESSION['languages_id']);
+  $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION['admin_id'], $_SESSION['languages_id']);
+  //$widgetProfileList = $widgetManager->mergeProfileInfoList($widgetProfileList, $widgetInfoList);
+  $widgetList = zcWidgetManager::loadWidgetClasses($widgetInfoList);
+  $tplVars = zcWidgetManager::prepareTemplateVariables($widgetList);
+  $tplVars['widgetInfoList'] = $widgetInfoList;
+  //print_r($tplVars);
 
   $languages = zen_get_languages();
   $languages_array = array();
@@ -19,150 +29,380 @@
       $languages_selected = $languages[$i]['code'];
     }
   }
+$extraCss[] = array('location' => DIR_WS_INCLUDES . 'template/css/index.css');
+require('includes/admin_html_head_index.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<meta name="robot" content="noindex, nofollow" />
-<script language="JavaScript" src="includes/menu.js" type="text/JavaScript"></script>
-<link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
 </head>
-<body onLoad="init()">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
- <?php
-
-  $customers = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS);
-
-  $products = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = '1'");
-
-  $products_off = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = '0'");
-
-  $reviews = $db->Execute("select count(*) as count from " . TABLE_REVIEWS);
-  $reviews_pending = $db->Execute("select count(*) as count from " . TABLE_REVIEWS . " where status='0'");
-
-  $newsletters = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
-
-  $counter_query = "select startdate, counter from " . TABLE_COUNTER;
-  $counter = $db->Execute($counter_query);
-  $counter_startdate = $counter->fields['startdate'];
-//  $counter_startdate_formatted = strftime(DATE_FORMAT_LONG, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
-  $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
-
-  $specials = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= '0'");
-  $specials_act = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= '1'");
-  $featured = $db->Execute("select count(*) as count from " . TABLE_FEATURED . " where status= '0'");
-  $featured_act = $db->Execute("select count(*) as count from " . TABLE_FEATURED . " where status= '1'");
-  $salemaker = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER_SALES . " where sale_status = '0'");
-  $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER_SALES . " where sale_status = '1'");
-
-
-?>
-<div id="colone">
-<div class="reportBox">
-<div class="header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
 <?php
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER_DATE . '</span><span class="rigth"> ' . $counter_startdate_formatted . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER . '</span><span class="rigth"> ' . $counter->fields['counter'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS . ' </span><span class="rigth">' . $products->fields['count'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS_OFF . ' </span><span class="rigth">' . $products_off->fields['count'] . '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_REVIEWS . '</span><span class="rigth">' . $reviews->fields['count']. '</span></div>';
-    if (REVIEWS_APPROVAL=='1') {
-	  echo '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_REVIEWS, 'status=1', 'NONSSL') . '">' . BOX_ENTRY_REVIEWS_PENDING . '</a></span><span class="rigth">' . $reviews_pending->fields['count']. '</span></div>';
-    }
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_NEWSLETTERS . '</span><span class="rigth"> ' . $newsletters->fields['count']. '</span></div>';
-
-	echo '<br /><div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_EXPIRED . '</span><span class="rigth"> ' . $specials->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_ACTIVE . '</span><span class="rigth"> ' . $specials_act->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_EXPIRED . '</span><span class="rigth"> ' . $featured->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_ACTIVE . '</span><span class="rigth"> ' . $featured_act->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_EXPIRED . '</span><span class="rigth"> ' . $salemaker->fields['count']. '</span></div>';
-	echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_ACTIVE . '</span><span class="rigth"> ' . $salemaker_act->fields['count']. '</span></div>';
+/**
+ * Save setup-wizard stuff
+ */
+if (isset($_POST['action']) && $_POST['action'] == 'setup-wizard')
+{
+  if (isset($_POST['store_name']) && $_POST['store_name'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_name'], 'string');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_owner']) && $_POST['store_owner'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_OWNER'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner'], 'string');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_owner_email']) && $_POST['store_owner_email'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_OWNER_EMAIL_ADDRESS', 'EMAIL_FROM', 'SEND_EXTRA_ORDER_EMAILS_TO', 'SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO', 'SEND_EXTRA_LOW_STOCK_EMAILS_TO', 'SEND_EXTRA_GV_CUSTOMER_EMAILS_TO', 'SEND_EXTRA_GV_ADMIN_EMAILS_TO', 'SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO', 'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO', 'SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', 'MODULE_PAYMENT_CC_EMAIL')";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner_email'], 'string');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_country']) && $_POST['store_country'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_COUNTRY', 'SHIPPING_ORIGIN_COUNTRY')";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_country'], 'integer');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_zone']) && $_POST['store_zone'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_ZONE'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_zone'], 'integer');
+    $db->execute($sql);
+  }
+  if (isset($_POST['store_address']) && $_POST['store_address'] != '') {
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME_ADDRESS'";
+    $sql = $db->bindVars($sql, ':configValue:', $_POST['store_address'], 'string');
+    $db->execute($sql);
+  }
+  $hasDoneStartWizard = TRUE;
+}
+if ($hasDoneStartWizard == FALSE) {
 
 ?>
- </div>
- <div class="reportBox">
-   <div class="header"><?php echo BOX_TITLE_ORDERS; ?> </div>
-  <?php   $orders_contents = '';
-  $orders_status = $db->Execute("select orders_status_name, orders_status_id from " . TABLE_ORDERS_STATUS . " where language_id = '" . $_SESSION['languages_id'] . "'");
+<style>
+/** @TODO - replace this with a Zurb Foundation class */
+.form-horizontal input, select
+{
+  font-size: .8em;
+}
+.invalid {
+  color: #FF2222
+}
+</style>
+<div class="content-fluid">
+  <div class="row">
+    <div class="small-12 columns small-centered">
+  <h1><?php echo TEXT_HEADING_SETUP_WIZARD; ?></h1>
+<?php
+  if (!zen_is_superuser())
+  {
+?>
+  <div class="alert alert-error"><?php echo TEXT_WARNING_SUPERUSER_REQUIRED; ?></div>
+  </div>
+<?php
+  } else {
+  $storeName = (isset($_POST['store_name'])) ? $_POST['store_name'] : ((STORE_NAME != '') ? STORE_NAME : '');
+  $storeOwner = isset($_POST['store_owner']) ? $_POST['store_owner'] : ((STORE_OWNER != '') ? STORE_OWNER : '');
+  $storeOwnerEmail = isset($_POST['store_owner_email']) ? $_POST['store_owner_email'] : ((STORE_OWNER_EMAIL_ADDRESS != '') ? STORE_OWNER_EMAIL_ADDRESS : '');
+  $storeCountry = isset($_POST['store_country']) ? $_POST['store_country'] : ((STORE_COUNTRY != '') ? STORE_COUNTRY : '');
+  $storeZone = isset($_POST['store_zone']) ? $_POST['store_zone'] : ((STORE_ZONE != -1) ? STORE_ZONE : -1);
+  $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries(), $storeCountry, 'id="store_country" tabindex="4"');
+  $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone" tabindex="5"');
 
-  while (!$orders_status->EOF) {
-    $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . $orders_status->fields['orders_status_id'] . "'");
+//  $sql = "select zone_id, zone_name from " . TABLE_ZONES . "";  // order by zone_country_id, zone_name
+//  $zone = $db->Execute($sql);
+//  $zone_string = '';
+//  $zone_string .= '<option value="-1"' . (($storeZone == -1) ? ' SELECTED ' : '') .  '>' . '-- Please Select --' . '</option>';
+//  $zone_string .= '<option value="0"' . (($storeZone == 0) ? ' SELECTED ' : '') .  '>' . '-None-' . '</option>';
+//  while (!$zone->EOF) {
+//    $zone_string .= '<option value="' . $zone->fields['zone_id'] . '"' . (($storeZone == $zone->fields['zone_id']) ? ' SELECTED ' : '') . '>' . $zone->fields['zone_name'] . '</option>';
+//    $zone->MoveNext();
+//  }
+  ?>
+   <form id="setup-wizard" class="form-horizontal" method="post">
+   <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>">
+   <input type="hidden" name="action" value="setup-wizard">
+   <fieldset>
+   <legend><?php echo TEXT_FORM_LEGEND_REQUIRED_SETUP; ?></legend>
+  <div class="row">
+  <div class="small-3 columns">
+  <label class="inline" for="store_name"><?php echo TEXT_FORM_LABEL_STORE_NAME; ?></label>
+  </div>
+  <div class="small-9 columns">
+  <input type="text" id="store_name" name="store_name" value="<?php echo zen_output_string_protected($storeName); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STORENAME; ?>">
+  </div>
+   </div>
 
-    $orders_contents .= '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $orders_status->fields['orders_status_id'], 'NONSSL') . '">' . $orders_status->fields['orders_status_name'] . '</a>:</span><span class="rigth"> ' . $orders_pending->fields['count'] . '</span>   </div>';
-    $orders_status->MoveNext();
+  <div class="row">
+  <div class="small-3 columns">
+   <label class="inline" for="store_owner"><?php echo TEXT_FORM_LABEL_STORE_OWNER; ?></label>
+   </div>
+  <div class="small-9 columns">
+    <input type="text" id="store_owner" name="store_owner" value="<?php echo zen_output_string_protected($storeOwner); ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
+   </div>
+   </div>
+
+  <div class="row">
+  <div class="small-3 columns">
+   <label class="inline" for="store_owner_email"><?php echo TEXT_FORM_LABEL_STORE_OWNER_EMAIL; ?></label>
+   </div>
+  <div class="small-9 columns">
+   <input type="text" id="store_owner_email" name="store_owner_email" value="<?php echo zen_output_string_protected($storeOwnerEmail); ?>" tabindex="3" placeholder="webmaster@example.com">
+   </div>
+   </div>
+
+  <div class="row">
+  <div class="small-3 columns">
+   <label class="inline" for="store_country"><?php echo TEXT_FORM_LABEL_STORE_COUNTRY; ?></label>
+   </div>
+  <div class="small-9 columns">
+   <?php echo $country_string; ?>
+   </div>
+   </div>
+
+  <div class="row">
+  <div class="small-3 columns">
+   <label class="inline" for="store_zone"><?php echo TEXT_FORM_LABEL_STORE_ZONE; ?></label>
+   </div>
+  <div class="small-9 columns" id="store_zone_container">
+   <?php echo $zone_string; ?>
+   </div>
+   </div>
+
+  <div class="row">
+  <div class="small-3 columns">
+   <label class="inline" for="store_address"><?php echo TEXT_FORM_LABEL_STORE_ADDRESS; ?></label>
+   </div>
+  <div class="small-9 columns">
+   <textarea rows="" cols=""  id="store_address" name="store_address" tabindex="6" placeholder="<?php echo TEXT_EXAMPLE_STOREADDRESS; ?>"></textarea>
+   </div>
+   </div>
+
+   <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_SUBMIT; ?>" tabindex="10">
+   </fieldset>
+   </form>
+<script>
+   $().ready(function() {
+       $.validator.messages.required = '<?php echo TEXT_FORM_ERROR_REQUIRED; ?>';
+       $("#setup-wizard").validate({
+         errorElement: 'span',
+         errorClass: 'help-inline invalid',
+         submitHandler: function(form) {
+          form.submit();
+         },
+         rules: {
+           store_name: "required",
+           store_owner: "required",
+           store_owner_email: "required email",
+           store_zone: {
+              required: true,
+              min: 0
+            }
+        },
+         messages: {
+            store_zone: '<?php echo TEXT_FORM_ERROR_CHOOSE_ZONE; ?>'
+         }
+       });
+     });
+   $(function()
+       {
+     $('#store_country').change(function(e) {
+      zcJS.ajax({
+        url: "zcAjaxHandler.php?act=installWizard&method=getZones",
+        data: {id: $(this).val()}
+      }).done(function( response ) {
+        $('#store_zone_container').html(response.html);
+      });
+
+     });
+       });
+     </script>
+<?php
   }
-
-  echo $orders_contents;
 ?>
   </div>
 </div>
-<div id="coltwo">
-<div class="reportBox">
-<div class="header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
-  <?php  $customers = $db->Execute("select c.customers_id as customers_id, c.customers_firstname as customers_firstname, c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address, a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id order by a.customers_info_date_account_created DESC limit 5");
-
-  while (!$customers->EOF) {
-    $customers->fields['customers_firstname'] = zen_output_string_protected($customers->fields['customers_firstname']);
-    $customers->fields['customers_lastname'] = zen_output_string_protected($customers->fields['customers_lastname']);
-    echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customers->fields['customers_email_address'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink">'. $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a></span><span class="rigth">' . "\n";
-    echo zen_date_short($customers->fields['customers_info_date_account_created']);
-    echo '              </span></div>' . "\n";
-    $customers->MoveNext();
-  }
-?>
-</div>
-
- <div class="reportBox">
 <?php
-  $counter_query = "select startdate, counter, session_counter from " . TABLE_COUNTER_HISTORY . " order by startdate DESC limit 10";
-  $counter = $db->Execute($counter_query);
-?>
-   <div class="header"><?php echo sprintf(LAST_10_DAYS, $counter->RecordCount()); ?><?php echo '<span class="rigth"> &nbsp;&nbsp;&nbsp;' . SESSION . ' - ' . TOTAL . '</span>'; ?></div>
-  <?php
+} else {
 
-  while (!$counter->EOF) {
-    $counter_startdate = $counter->fields['startdate'];
-    $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
-    echo '              <div class="row"><span class="left">' . $counter_startdate_formatted . '</span><span class="rigth"> ' . $counter->fields['session_counter'] . ' - ' . $counter->fields['counter'] . '</span>   </div>' . "\n";
-    $counter->MoveNext();
+?>
+<div id="colone">
+ <?php if (zen_is_superuser() || check_page(FILENAME_ORDERS, array())) { ?>
+
+<div class="container">
+  <div class="row">
+    <div class="small-12 columns widget-tools">
+      <a href="#" class="widget-add">+ Add Widget</a>
+    </div>
+  </div>
+  <div class="row" id="main-sortables">
+<?php require(DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php'); ?>
+  </div>
+</div>
+<div id="deleteWidget" class="reveal-modal small">
+<a class="close-reveal-modal">x</a>
+<p><?php echo TEXT_CONFIRM_REMOVE; ?></p>
+<a class="radius button remove" href="#"><?php echo TEXT_REMOVE; ?></a>
+<a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
+</div>
+
+<div id="add-widget" class="reveal-modal small">
+<div class="add-widget-container"></div>
+<a class="close-reveal-modal">x</a>
+<a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
+</div>
+
+<script>
+var intervalTimers = new Array();
+$(function() {
+  <?php foreach ($widgetList as $widgetObject) { ?>
+    <?php $widget = $widgetObject->getWidgetInfo(); ?>
+    <?php if ($widget['widget_refresh'] != 0) { ?>
+      createWidgetIntervalTimer('<?php echo $widget['widget_key']; ?>', '<?php echo $widget['widget_refresh']; ?>');
+    <?php } ?>
+  <?php } ?>
+
+  createSortables();
+
+
+  $('.widget-add').click(function (e) {
+      zcJS.ajax({
+        url: "zcAjaxHandler.php?act=dashboardWidget&method=getInstallableWidgets",
+        data: {}
+      }).done(function( response ) {
+        $('.add-widget-container').html(response.html);
+        $('#add-widget').foundation('reveal', 'open');
+      });
+
+
+      });
+
+    $('.dismiss').click(function() {
+      $('a.close-reveal-modal').trigger('click');
+    });
+  });
+
+
+function createSortables() {
+  $(".columns").sortable(
+  {
+    connectWith : ".columns",
+    handle: '.widget-handle',
+    placeholder: "ui-sortable-placeholder",
+    forcePlaceholderSize: true,
+    update : function(event, ui)
+    {
+      if (this === ui.item.parent()[0]) {
+        var itemStr = getItems('.columns');
+        zcJS.ajax({
+          url: "zcAjaxHandler.php?act=dashboardWidget&method=updateWidgetPositions",
+          data: {'items': itemStr}
+        }).done(function( msg ) {
+        });
+      }
+    }
+  });
+
+    $('.widget-minimize').unbind('click').click(function (e) {
+    var id = $(this).parents('.widget-container').attr('id');
+    if ($(this).html() == '<i class="icon-down-dir"></i>')
+    {
+      $(this).html('<i class="icon-up-dir"></i>');
+    } else
+    {
+      $(this).html('<i class="icon-down-dir"></i>');
+    }
+    $('#'+id).find('.widget-body').toggle();
+  });
+
+  $('.widget-edit').unbind('click').click(function (e) {
+    if ($('.widget-edit-form').length == 0)
+    {
+      var id = $(this).parents('.widget-container').attr('id');
+      doWidgetEdit(id);
+    }
+  });
+
+
+  $('.widget-close').unbind('click').click(function (e) {
+    var id = $(this).parents('.widget-container').attr('id');
+    $('#deleteWidget').foundation('reveal', 'open');
+    $('.dismiss').click(function() {
+      $(this).trigger('reveal:close');
+    });
+    $('.remove').unbind('click').click(function() {
+      $('#deleteWidget').trigger('reveal:close');
+      $('#'+id).hide();
+      var itemStr = id;
+      zcJS.ajax({
+        url: "zcAjaxHandler.php?act=dashboardWidget&method=removeWidget",
+        data: {'item': itemStr}
+      }).done(function( response ) {
+      });
+    })
+  });
+}
+
+function getItems(container)
+{
+  var columns = [];
+  $(container).each(function(){
+    columns.push($(this).sortable('toArray').join(','));
+  });
+  return columns.join('|');
+}
+function doWidgetEdit(id)
+{
+  //$(".columns").sortable('disable');
+  zcJS.ajax({
+    url: "zcAjaxHandler.php?act=dashboardWidget&method=getWidgetEdit",
+    data: {'id': id}
+  }).done(function( response ) {
+    if (response.html)
+    {
+      $('#'+ id).find('.widget-body').html(response.html);
+      createSortables();
+    }
+  });
+}
+function createWidgetIntervalTimer(key, interval)
+{
+  var realInterval = interval * 1000;
+  if (intervalTimers[key]) {
+    timer = intervalTimers[key];
+    timer.Stop();
+    delete timer;
+    if (interval != 0)
+    {
+      var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
+      intervalTimers[key] = timer;
+      timer.Start();
+    }
+  } else {
+    if (interval != 0)
+    {
+      var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
+      intervalTimers[key] = timer;
+      timer.Start();
+    }
   }
-?>
+}
 
+function doIntervalProcess(timer)
+{
+  zcJS.ajax({
+    url: "zcAjaxHandler.php?act=dashboardWidget&method=timerUpdate",
+    data: {'id': timer.settings.key}
+  }).done(function( response ) {
+    $('#'+ timer.settings.key).find('.widget-body').html(response.html);
+  });
+}
+</script>
 </div>
+<?php } ?>
 </div>
-<div id="colthree">
-<div class="reportBox">
-<div class="header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
-  <?php  $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') order by orders_id DESC limit 5");
+<?php } ?>
 
-  while (!$orders->EOF) {
-    echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink"> ' . $orders->fields['customers_name'] . '</a></span><span class="center">' . $orders->fields['order_total'] . '</span><span class="rigth">' . "\n";
-    echo zen_date_short($orders->fields['date_purchased']);
-    echo '              </span></div>' . "\n";
-    $orders->MoveNext();
-  }
-?>
-</div>
-</div>
+<footer class="small-12 columns small-centered">
 <!-- The following copyright announcement is in compliance
 to section 2c of the GNU General Public License, and
 thus can not be removed, or can only be modified
@@ -171,8 +411,15 @@ appropriately.
 Please leave this comment intact together with the
 following copyright announcement. //-->
 
-<div class="copyrightrow"><a href="http://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" border="0" /></a><br /><br />E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></div><div class="warrantyrow"><br /><br />Zen Cart is derived from: Copyright &copy; 2003 osCommerce<br />This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br />without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br />and is redistributable under the <a href="http://www.zen-cart.com/license/2_0.txt" target="_blank">GNU General Public License</a><br />
-</div>
+  <div class="copyrightrow"><a href="http://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" border="0" /></a><br /><br />E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></div><div class="warrantyrow"><br /><br />Zen Cart is derived from: Copyright &copy; 2003 osCommerce<br />This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br />without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br />and is redistributable under the <a href="http://www.zen-cart.com/license/2_0.txt" target="_blank">GNU General Public License</a></div>
+
+</footer>
+
+<!-- Initialize the Foundation plugins -->
+<script>
+  $(document).foundation();
+</script>
+
 </body>
 </html>
 <?php require('includes/application_bottom.php'); ?>

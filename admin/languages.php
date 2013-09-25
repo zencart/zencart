@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: languages.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -210,13 +210,17 @@
 
         // check if the spelling of the name for the default language has just been changed (thus meaning we need to change the spelling of DEFAULT_LANGUAGE to match it)
 // get "code" for the language we just updated
-        $result = $db->Execute("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
+        $result = $db->Execute("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
 // compare "code" vs DEFAULT_LANGUAGE
         $changing_default_lang = (DEFAULT_LANGUAGE == $result->fields['code']) ? true : false;
 // compare whether "code" matches $code (which was just submitted in the edit form
         $default_needs_an_update = (DEFAULT_LANGUAGE == $code) ? false : true;
 // if we just edited the default language id's name, then we need to update the database with the new name for default
         $default_lang_change_flag = ($default_needs_an_update && $changing_default_lang) ? true : false;
+
+        // update current session language code if this update requires it
+        if ($_SESSION['languages_code'] == $result->fields['code'] && $_SESSION['languages_code'] != $code) $_SESSION['languages_code'] = $code;
+        if ($_SESSION['language'] == $result->fields['directory'] && $_SESSION['language'] != $directory) $_SESSION['language'] = $directory;
 
         // save new language settings
         $db->Execute("update " . TABLE_LANGUAGES . "
@@ -278,31 +282,10 @@
         break;
     }
   }
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
 </head>
-<body onLoad="init()">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->

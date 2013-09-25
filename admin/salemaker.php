@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: salemaker.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -74,8 +74,8 @@ define('AUTOCHECK', 'False');
                                             'sale_specials_condition' => zen_db_prepare_input($_POST['condition']),
                                             'sale_categories_selected' => $categories_selected_string,
                                             'sale_categories_all' => $categories_all_string,
-                                            'sale_date_start' => ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_date_raw($_POST['start'])),
-                                            'sale_date_end' => ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_date_raw($_POST['end'])));
+                                            'sale_date_start' => ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start'])),
+                                            'sale_date_end' => ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end'])));
 
         if ($action == 'insert') {
           $salemaker_sales_data_array['sale_status'] = 1;
@@ -144,34 +144,10 @@ define('AUTOCHECK', 'False');
         break;
     }
   }
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  // -->
-</script>
-<?php
+require('includes/admin_html_head.php');
+
   if ( ($action == 'new') || ($action == 'edit') ) {
 ?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script language="JavaScript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
 <script language="JavaScript">
 function session_win() {
   window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
@@ -181,13 +157,6 @@ function popupWindow(url) {
 }
 function session_win1() {
   window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid='.$category['categories_id']); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
-}
-function init() {
-  cssjsmenu('navbar');
-  if (document.getElementById) {
-    var kill = document.getElementById('hoverJS');
-    kill.disabled = true;
-  }
 }
 function RowClick(RowValue) {
   for (i=0; i<document.sale_form.length; i++) {
@@ -254,13 +223,12 @@ function SetCategories() {
 
 </script>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetCategories();SetFocus();init()">
-<div id="spiffycalendar" class="text"></div>
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetCategories();SetFocus();">
 <?php
   } else {
 ?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();init()">
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
 <?php
   }
 ?>
@@ -294,10 +262,6 @@ function SetCategories() {
       $sInfo = new objectInfo(array());
     }
 ?>
-<script language="javascript">
-var StartDate = new ctlSpiffyCalendarBox("StartDate", "sale_form", "start", "btnDate1","<?php echo (($sInfo->sale_date_start == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_start)); ?>",scBTNMODE_CUSTOMBLUE);
-var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2","<?php echo (($sInfo->sale_date_end == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_end)); ?>",scBTNMODE_CUSTOMBLUE);
-</script>
       <tr><?php echo zen_draw_form("sale_form", FILENAME_SALEMAKER, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action); ?><?php if ($form_action == 'update') echo zen_draw_hidden_field('sID', $_GET['sID']); ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
@@ -326,11 +290,11 @@ var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2"
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SALEMAKER_DATE_START; ?>&nbsp;</td>
-            <td class="main"><script language="javascript">StartDate.writeControl(); StartDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo zen_draw_input_field('start', (($sInfo->sale_date_start == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_start)), 'class="datepicker"'); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SALEMAKER_DATE_END; ?>&nbsp;</td>
-            <td class="main"><script language="javascript">EndDate.writeControl(); EndDate.dateFormat="<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script></td>
+            <td class="main"><?php echo zen_draw_input_field('end', (($sInfo->sale_date_end == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_end)), 'class="datepicker"'); ?></td>
           </tr>
         </table>
       </tr>
@@ -568,6 +532,11 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
+<script>
+  $(function() {
+    $(".datepicker").datepicker();
+  });
+</script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

@@ -4,19 +4,24 @@
  * Session functions
  *
  * @package functions
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: sessions.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
   if (IS_ADMIN_FLAG === true) {
-    if (!$SESS_LIFE = (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN)) {
-      $SESS_LIFE = (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN);
+    if (PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED != 0 && SESSION_TIMEOUT_ADMIN > 900) {
+      $SESS_LIFE = 900;
+    } else {
+      $SESS_LIFE = (int)SESSION_TIMEOUT_ADMIN;
     }
   } else {
+    if (defined('SESSION_TIMEOUT_CATALOG')) {
+      $SESS_LIFE = (int)SESSION_TIMEOUT_CATALOG;
+    } else
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
     }
@@ -88,7 +93,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   function _sess_destroy($key) {
     global $db;
     $sql = "delete from " . TABLE_SESSIONS . " where sesskey = '" . zen_db_input($key) . "'";
-    return $db->Execute($sql);
+    $db->Execute($sql);
+    return TRUE;
   }
 
   function _sess_gc($maxlifetime) {
@@ -106,10 +112,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     if (IS_ADMIN_FLAG === true) {
       @ini_set('session.gc_maxlifetime', (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN));
     }
-  	if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '')
-  	{
-  	  zen_session_id(md5(uniqid(rand(), true)));
-  	}
+    if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '')
+    {
+      zen_session_id(md5(uniqid(rand(), true)));
+    }
     $temp = session_start();
     if (!isset($_SESSION['securityToken'])) {
       $_SESSION['securityToken'] = md5(uniqid(rand(), true));
@@ -117,25 +123,13 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $temp;
   }
 
-  function zen_session_register($variable) {
-    die('This function has been deprecated. Please use Register Globals Off compatible code');
-  }
-
-  function zen_session_is_registered($variable) {
-    die('This function has been deprecated. Please use Register Globals Off compatible code');
-  }
-
-  function zen_session_unregister($variable) {
-    die('This function has been deprecated. Please use Register Globals Off compatible code');
-  }
-
   function zen_session_id($sessid = '') {
     if (!empty($sessid)) {
       $tempSessid = $sessid;
-  	  if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '')
-  	  {
-  	    $sessid = md5(uniqid(rand(), true));
-  	  }
+      if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '')
+      {
+        $sessid = md5(uniqid(rand(), true));
+      }
       return session_id($sessid);
     } else {
       return session_id();

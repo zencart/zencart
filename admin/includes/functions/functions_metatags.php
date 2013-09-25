@@ -1,9 +1,9 @@
 <?php
 /**
- * metatags-editing functions
+ * metatags retrieval functions for admin
  *
  * @package admin
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: functions_metatags.php 2844 2006-01-13 06:46:29Z drbyte $
  * @no-docs
@@ -18,7 +18,7 @@
                              from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
                              where products_id = '" . (int)$product_id . "'
                              and language_id = '" . (int)$language_id . "'");
-
+    if ($product->EOF) return '';
     return $product->fields['metatags_title'];
   }
 
@@ -28,7 +28,7 @@
                              from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
                              where products_id = '" . (int)$product_id . "'
                              and language_id = '" . (int)$language_id . "'");
-
+    if ($product->EOF) return '';
     return $product->fields['metatags_keywords'];
   }
 
@@ -38,7 +38,7 @@
                              from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
                              where products_id = '" . (int)$product_id . "'
                              and language_id = '" . (int)$language_id . "'");
-
+    if ($product->EOF) return '';
     return $product->fields['metatags_description'];
   }
 
@@ -51,7 +51,7 @@
                               from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . "
                               where categories_id = '" . (int)$category_id . "'
                               and language_id = '" . (int)$language_id . "'");
-
+    if ($category->EOF) return '';
     return $category->fields['metatags_title'];
   }
 
@@ -61,7 +61,7 @@
                               from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . "
                               where categories_id = '" . (int)$category_id . "'
                               and language_id = '" . (int)$language_id . "'");
-
+    if ($category->EOF) return '';
     return $category->fields['metatags_description'];
   }
 
@@ -71,12 +71,7 @@
                               from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . "
                               where categories_id = '" . (int)$category_id . "'
                               and language_id = '" . (int)$language_id . "'");
-
+    if ($category->EOF) return '';
     return $category->fields['metatags_keywords'];
   }
 
-/**
- *
- */
- 
-?>

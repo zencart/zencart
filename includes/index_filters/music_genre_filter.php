@@ -6,7 +6,7 @@
  * show the products of a specified music_genre
  *
  * @package productTypes
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -18,11 +18,20 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (isset($_GET['sort']) && strlen($_GET['sort']) > 3) {
   $_GET['sort'] = substr($_GET['sort'], 0, 3);
 }
-if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
-  $alpha_sort = " and pd.products_name LIKE '" . chr((int)$_GET['alpha_filter_id']) . "%' ";
-} else {
-  $alpha_sort = '';
-}
+  if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
+      $alpha_sort_list_search = explode(';', '0:reset_placeholder;' . PRODUCT_LIST_ALPHA_SORTER_LIST);
+      for ($j=0, $n=sizeof($alpha_sort_list_search); $j<$n; $j++) {
+        if ((int)$_GET['alpha_filter_id'] == $j) {
+          $elements = explode(':', $alpha_sort_list_search[$j]);
+          $pattern = str_replace(',', '', $elements[1]);
+          $alpha_sort = " and pd.products_name REGEXP '^[" . $pattern . "]' ";
+          break;
+        }
+      }
+  //echo 'Built $alpha_sort: ' . $alpha_sort . '<br>';
+  } else {
+      $alpha_sort = '';
+  }
 if (!isset($select_column_list)) $select_column_list = "";
 
   // show the products of a specified music_genre
@@ -137,8 +146,8 @@ if (!isset($select_column_list)) $select_column_list = "";
         $_GET['sort'] = '20a';
       }
     } else {
-      $sort_col = substr($_GET['sort'], 0 , 1);
-      $sort_order = substr($_GET['sort'], 1);
+      $sort_col = substr($_GET['sort'], 0, 1);
+      $sort_order = substr($_GET['sort'], -1);
       switch ($column_list[$sort_col-1])
       {
         case 'PRODUCT_LIST_MODEL':
@@ -200,6 +209,7 @@ if (!isset($select_column_list)) $select_column_list = "";
     $getoption_set =  false;
     $filterlist = $db->Execute($filterlist_sql);
     $do_filter_list = false;
+    if (PRODUCT_LIST_ALPHA_SORTER == 'true') $do_filter_list = true;
     if ($filterlist->RecordCount() > 1)
     {
       $do_filter_list = true;

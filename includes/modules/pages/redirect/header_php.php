@@ -1,20 +1,23 @@
 <?php
 /**
- * redirect handler 
+ * redirect handler
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 19516 2011-09-14 21:27:30Z wilt $
  */
+// This should be first line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_START_REDIRECT_HANDLER');
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 switch ($_GET['action']) {
   case 'banner':
   $banner_query = "SELECT banners_url
-                   FROM " . TABLE_BANNERS . " 
+                   FROM " . TABLE_BANNERS . "
                    WHERE banners_id = :bannersID";
 
   $banner_query = $db->bindVars($banner_query, ':bannersID', $_GET['goto'], 'integer');
@@ -33,8 +36,8 @@ switch ($_GET['action']) {
   case 'manufacturer':
   if (isset($_GET['manufacturers_id']) && zen_not_null($_GET['manufacturers_id'])) {
     $sql = "SELECT manufacturers_url
-            FROM " . TABLE_MANUFACTURERS_INFO . " 
-            WHERE manufacturers_id = :manufacturersID 
+            FROM " . TABLE_MANUFACTURERS_INFO . "
+            WHERE manufacturers_id = :manufacturersID
             AND languages_id = :languagesID";
 
     $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
@@ -46,10 +49,10 @@ switch ($_GET['action']) {
 
       if (zen_not_null($manufacturer->fields['manufacturers_url'])) {
         $sql = "UPDATE " . TABLE_MANUFACTURERS_INFO . "
-                SET url_clicked = url_clicked+1, date_last_click = now() 
-                WHERE manufacturers_id = :manufacturersID 
+                SET url_clicked = url_clicked+1, date_last_click = now()
+                WHERE manufacturers_id = :manufacturersID
                 AND languages_id = :languagesID";
-        
+
         $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
         $db->Execute($sql);
@@ -58,11 +61,11 @@ switch ($_GET['action']) {
     } else {
       // no url exists for the selected language, lets use the default language then
       $sql = "SELECT mi.languages_id, mi.manufacturers_url
-              FROM " . TABLE_MANUFACTURERS_INFO . " mi, " . TABLE_LANGUAGES . " l 
-              WHERE mi.manufacturers_id = :manufacturersID 
-              AND mi.languages_id = l.languages_id 
+              FROM " . TABLE_MANUFACTURERS_INFO . " mi, " . TABLE_LANGUAGES . " l
+              WHERE mi.manufacturers_id = :manufacturersID
+              AND mi.languages_id = l.languages_id
               AND l.code = '" . DEFAULT_LANGUAGE . "'";
-      
+
       $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
       $manufacturer = $db->Execute($sql);
 
@@ -70,10 +73,10 @@ switch ($_GET['action']) {
 
         if (zen_not_null($manufacturer->fields['manufacturers_url'])) {
           $sql = "UPDATE " . TABLE_MANUFACTURERS_INFO . "
-                  SET url_clicked = url_clicked+1, date_last_click = now() 
-                  WHERE manufacturers_id = :manufacturersID 
+                  SET url_clicked = url_clicked+1, date_last_click = now()
+                  WHERE manufacturers_id = :manufacturersID
                   AND languages_id = :languagesID";
-          
+
           $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
           $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
           $db->Execute($sql);
@@ -87,5 +90,6 @@ switch ($_GET['action']) {
   break;
 }
 
+// Should not normally get to this point, unless supplied redirect destination is invalid
+$zco_notifier->notify('NOTIFY_HEADER_END_REDIRECT_HANDLER');
 zen_redirect(zen_href_link(FILENAME_DEFAULT));
-?>

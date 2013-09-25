@@ -1,12 +1,12 @@
 <?php
 /**
  * MySQL query_factory Class.
- * Class used for database abstraction to MySQL
+ * Class used for database abstraction to MySQL via mysqli
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @copyright http://www.data-diggers.com/ 
+ * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 Modified in v1.5.1 $
  */
@@ -18,14 +18,14 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class queryFactory extends base {
-  var $link, $count_queries, $total_query_time;
+  var $link, $count_queries, $total_query_time, $dieOnErrors;
 
-  function queryFactory() {
+  function __construct() {
     $this->count_queries = 0;
     $this->total_query_time = 0;
   }
 
-  function query($query, $link) {
+  function query($link, $query) {
       global $queryLog;
       global $queryCache;
 
@@ -35,73 +35,97 @@ class queryFactory extends base {
             $this->count_queries--;
             return($cached_value);
       }
-      
+
       if(isset($queryLog)) $queryLog->start($query);
-      $result = mysql_query($query, $link);
+      $result = mysqli_query($link, $query);
       if(isset($queryLog)) $queryLog->stop($query, $result);
       if(isset($queryCache)) $queryCache->cache($query, $result);
       return($result);
   }
 
-  function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $zp_real = false) {
+  function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $dieOnErrors = false, $options = array()) {
     $this->database = $zf_database;
     $this->user = $zf_user;
     $this->host = $zf_host;
     $this->password = $zf_password;
     $this->pConnect = $zf_pconnect;
-    $this->real = $zp_real;
-    if (!function_exists('mysql_connect')) die ('Call to undefined function: mysql_connect().  Please install the MySQL Connector for PHP');
+    $this->dieOnErrors = $dieOnErrors;
+    if (defined('DB_CHARSET')) $dbCharset = DB_CHARSET;
+    if (isset($options['dbCharset'])) $dbCharset = $options['dbCharset'];
+    if (!function_exists('mysqli_connect')) die ('Call to undefined function: mysqli_connect().  Please install the MySQL Connector for PHP');
     $connectionRetry = 10;
     while (!isset($this->link) || ($this->link == FALSE && $connectionRetry !=0) )
     {
-      $this->link = @mysql_connect($zf_host, $zf_user, $zf_password, true);
+      $this->link = mysqli_connect($zf_host, $zf_user, $zf_password, $zf_database, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
       $connectionRetry--;
     }
     if ($this->link) {
-      if (@mysql_select_db($zf_database, $this->link)) {
-        if (defined('DB_CHARSET') && version_compare(@mysql_get_server_info(), '4.1.0', '>=')) {
-          @mysql_query("SET NAMES '" . DB_CHARSET . "'", $this->link);
-          if (function_exists('mysql_set_charset')) {
-            @mysql_set_charset(DB_CHARSET, $this->link);
+      if (mysqli_select_db($this->link, $zf_database)) {
+        if (isset($dbCharset) ) {
+          mysqli_query($this->link, "SET NAMES '" . $dbCharset . "'");
+          if (function_exists('mysqli_set_charset')) {
+            mysqli_set_charset($this->link, $dbCharset);
           } else {
-            @mysql_query("SET CHARACTER SET '" . DB_CHARSET . "'", $this->link);
+            mysqli_query($this->link, "SET CHARACTER SET '" . $dbCharset . "'");
           }
         }
         $this->db_connected = true;
-        if (getenv('TZ') && !defined('DISABLE_MYSQL_TZ_SET')) @mysql_query("SET time_zone = '" . substr_replace(date("O"),":",-2,0) . "'", $this->link);
+        if (!defined('DISABLE_MYSQL_TZ_SET')) {
+          mysqli_query($this->link, "SET time_zone = '" . substr_replace(date("O"),":",-2,0) . "'");
+        }
         return true;
       } else {
-        $this->set_error(mysql_errno(),mysql_error(), $zp_real);
+        $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $dieOnErrors);
         return false;
       }
     } else {
-      $this->set_error(mysql_errno(),mysql_error(), $zp_real);
+      $this->set_error(mysqli_connect_errno(), mysqli_connect_error(), $dieOnErrors);
+      return false;
+    }
+  }
+
+  function simpleConnect($zf_host, $zf_user, $zf_password, $zf_database) {
+    $this->database = $zf_database;
+    $this->user = $zf_user;
+    $this->host = $zf_host;
+    $this->password = $zf_password;
+    $this->link = mysqli_connect($zf_host, $zf_user, $zf_password, $zf_database, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
+    if ($this->link) {
+      $this->db_connected = true;
+      return true;
+    } else {
+      $this->set_error(mysqli_connect_errno(), mysqli_connect_error(), $zp_real);
       return false;
     }
   }
 
   function selectdb($zf_database) {
-    @mysql_select_db($zf_database, $this->link);
+    $result = mysqli_select_db($this->link, $zf_database);
+    if ($result) return $result;
+      $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $zp_real);
+     return false;
+
   }
 
   function prepare_input($zp_string) {
-    if (function_exists('mysql_real_escape_string')) {
-      return mysql_real_escape_string($zp_string, $this->link);
-    } elseif (function_exists('mysql_escape_string')) {
-      return mysql_escape_string($zp_string, $this->link);
+    if (function_exists('mysqli_real_escape_string')) {
+      return mysqli_real_escape_string($this->link, $zp_string);
+    } elseif (function_exists('mysqli_escape_string')) {
+      return mysqli_escape_string($this->link, $zp_string);
     } else {
       return addslashes($zp_string);
     }
   }
 
   function close() {
-    @mysql_close($this->link);
+    @mysqli_close($this->link);
+    unset($this->link);
   }
 
-  function set_error($zp_err_num, $zp_err_text, $zp_fatal = true) {
+  function set_error($zp_err_num, $zp_err_text, $dieOnErrors = true) {
     $this->error_number = $zp_err_num;
     $this->error_text = $zp_err_text;
-    if ($zp_fatal && $zp_err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
+    if ($dieOnErrors && $zp_err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
       $this->show_error();
       die();
     }
@@ -110,12 +134,12 @@ class queryFactory extends base {
   function show_error() {
     if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && !headers_sent() && file_exists('nddbc.html') ) include('nddbc.html');
     echo '<div class="systemError">';
-    if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) 
+    if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
     {
       echo $this->error_number . ' ' . $this->error_text;
       echo '<br />in:<br />[' . (strstr($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br />';
     } else {
-      echo 'WARNING: An Error occurred, please refresh the page and try again.';	
+      echo 'WARNING: An Error occurred, please refresh the page and try again.';
     }
     trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql, E_USER_ERROR);
     if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG==true) echo 'If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you left no blank fields.<br />';
@@ -127,7 +151,7 @@ class queryFactory extends base {
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS=='true') {
       global $PHP_SELF, $box_id, $current_page_base;
       if (strtoupper(substr($zf_sql,0,6))=='SELECT' /*&& strstr($zf_sql,'products_id')*/) {
-        $f=@fopen(DIR_FS_SQL_CACHE.'/query_selects_' . $current_page_base . '_' . time() . '.txt','a');
+        $f=@fopen(DIR_FS_LOGS.'/query_selects_' . $current_page_base . '_' . time() . '.txt','a');
         if ($f) {
           fwrite($f,  "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $zf_sql.";\n\n");
           fclose($f);
@@ -153,10 +177,10 @@ class queryFactory extends base {
         while (list($key, $value) = each($zp_result_array[0])) {
           $obj->fields[$key] = $value;
         }
-        return $obj;
       } else {
         $obj->EOF = true;
       }
+      return $obj;
     } elseif ($zf_cache) {
       $zc_cache->sql_cache_expire_now($zf_sql);
       $time_start = explode(' ', microtime());
@@ -165,22 +189,21 @@ class queryFactory extends base {
       if (!$this->db_connected)
       {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-        $this->set_error('0', DB_ERROR_NOT_CONNECTED);
+        $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
-      $zp_db_resource = @$this->query($zf_sql, $this->link);
-      if (!$zp_db_resource) $this->set_error(@mysql_errno(),@mysql_error());
-      if(!is_resource($zp_db_resource)){
+      $zp_db_resource = $this->query($this->link, $zf_sql);
+      if (!$zp_db_resource) $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+      if (FALSE === $zp_db_resource){
         $obj = null;
         return true;
       }
       $obj->resource = $zp_db_resource;
       $obj->cursor = 0;
-      $obj->is_cached = true;
       if ($obj->RecordCount() > 0) {
         $obj->EOF = false;
         $zp_ii = 0;
         while (!$obj->EOF) {
-          $zp_result_array = @mysql_fetch_array($zp_db_resource);
+          $zp_result_array = mysqli_fetch_array($zp_db_resource);
           if ($zp_result_array) {
             while (list($key, $value) = each($zp_result_array)) {
               if (!preg_match('/^[0-9]/', $key)) {
@@ -203,6 +226,7 @@ class queryFactory extends base {
         $obj->EOF = true;
       }
       $zc_cache->sql_cache_store($zf_sql, $obj->result);
+       $obj->is_cached = true;
       $time_end = explode (' ', microtime());
       $query_time = $time_end[1]+$time_end[0]-$time_start[1]-$time_start[0];
       $this->total_query_time += $query_time;
@@ -214,20 +238,21 @@ class queryFactory extends base {
       if (!$this->db_connected)
       {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-        $this->set_error('0', DB_ERROR_NOT_CONNECTED);
+        $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
-      $zp_db_resource = @$this->query($zf_sql, $this->link);
+      $zp_db_resource = $this->query($this->link, $zf_sql);
       if (!$zp_db_resource) {
-        if (@mysql_errno($this->link) == 2006) {
+        if (mysqli_errno($this->link) == 2006) {
           $this->link = FALSE;
           $this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real);
-          $zp_db_resource = @mysql_query($zf_sql, $this->link);
+          $zp_db_resource = mysqli_query($this->link, $zf_sql);
         }
         if (!$zp_db_resource) {
-          $this->set_error(@mysql_errno($this->link),@mysql_error($this->link));
+          $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+          return FALSE;
         }
       }
-      if(!is_resource($zp_db_resource)){
+      if (FALSE === $zp_db_resource){
         $obj = null;
         return true;
       }
@@ -235,7 +260,7 @@ class queryFactory extends base {
       $obj->cursor = 0;
       if ($obj->RecordCount() > 0) {
         $obj->EOF = false;
-        $zp_result_array = @mysql_fetch_array($zp_db_resource);
+        $zp_result_array = mysqli_fetch_array($zp_db_resource);
         if ($zp_result_array) {
           while (list($key, $value) = each($zp_result_array)) {
             if (!preg_match('/^[0-9]/', $key)) {
@@ -266,11 +291,11 @@ class queryFactory extends base {
     if (!$this->db_connected)
     {
       if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-      $this->set_error('0', DB_ERROR_NOT_CONNECTED);
+      $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
     }
-    $zp_db_resource = @$this->query($zf_sql, $this->link);
-    if (!$zp_db_resource) $this->set_error(mysql_errno(),mysql_error());
-    if(!is_resource($zp_db_resource)){
+    $zp_db_resource = @$this->query($this->link, $zf_sql);
+    if (!$zp_db_resource) $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+    if (FALSE === $zp_db_resource){
       $obj = null;
       return true;
     }
@@ -287,7 +312,7 @@ class queryFactory extends base {
       $obj->Limit = $zf_limit;
       $zp_ii = 0;
       while (!$obj->EOF) {
-        $zp_result_array = @mysql_fetch_array($zp_db_resource);
+        $zp_result_array = @mysqli_fetch_array($zp_db_resource);
         if ($zp_ii == $zf_limit) $obj->EOF = true;
         if ($zp_result_array) {
           while (list($key, $value) = each($zp_result_array)) {
@@ -324,24 +349,24 @@ class queryFactory extends base {
   }
 
   function insert_ID() {
-    return @mysql_insert_id($this->link);
+    return @mysqli_insert_id($this->link);
   }
 
   function metaColumns($zp_table) {
     $sql = "SHOW COLUMNS from :tableName:";
     $sql = $this->bindVars($sql, ':tableName:', $zp_table, 'noquotestring');
-    $res = $this->execute($sql);    
-    while (!$res->EOF) 
+    $res = $this->execute($sql);
+    while (!$res->EOF)
     {
-      $obj [strtoupper($res->fields['Field'])] = new queryFactoryMeta($res->fields); 
+      $obj [strtoupper($res->fields['Field'])] = new queryFactoryMeta($res->fields);
       $res->MoveNext();
-    }    
+    }
     return $obj;
   }
 
   function get_server_info() {
     if ($this->link) {
-      return mysql_get_server_info($this->link);
+      return mysqli_get_server_info($this->link);
     } else {
       return UNKNOWN;
     }
@@ -479,7 +504,7 @@ class queryFactoryResult {
         }
       }
     } else {
-      $zp_result_array = @mysql_fetch_array($this->resource);
+      $zp_result_array = @mysqli_fetch_array($this->resource);
       if (!$zp_result_array) {
         $this->EOF = true;
       } else {
@@ -507,22 +532,35 @@ class queryFactoryResult {
   }
 
   function RecordCount() {
-    return @mysql_num_rows($this->resource);
+    if ($this->is_cached) return sizeof($this->result);
+    return @mysqli_num_rows($this->resource);
   }
 
   function Move($zp_row) {
     global $db;
-    if (@mysql_data_seek($this->resource, $zp_row)) {
-      $zp_result_array = @mysql_fetch_array($this->resource);
-        while (list($key, $value) = each($zp_result_array)) {
+    if ($this->is_cached) {
+      if($zp_row >= sizeof($this->result)) {
+        $this->cursor = sizeof($this->result);
+        $this->EOF = true;
+      } else {
+        $this->cursor = $zp_row;
+        while(list($key, $value) = each($this->result[$this->cursor])) {
           $this->fields[$key] = $value;
         }
-      @mysql_data_seek($this->resource, $zp_row);
+        $this->EOF = false;
+      }
+    }
+    else if (@mysqli_data_seek($this->resource, $zp_row)) {
+      $zp_result_array = @mysqli_fetch_array($this->resource);
+      while (list($key, $value) = each($zp_result_array)) {
+        $this->fields[$key] = $value;
+      }
+      @mysqli_data_seek($this->resource, $zp_row);
       $this->EOF = false;
       return;
     } else {
       $this->EOF = true;
-      $db->set_error(mysql_errno(),mysql_error());
+      $db->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     }
   }
 }

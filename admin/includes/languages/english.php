@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Wed Sep 5 10:59:13 2012 -0400 Modified in v1.5.1 $
@@ -17,31 +17,6 @@ define('HEADER_LOGO_WIDTH', '200px');
 define('HEADER_LOGO_HEIGHT', '70px');
 define('HEADER_LOGO_IMAGE', 'logo.gif');
 
-// look in your $PATH_LOCALE/locale directory for available locales..
-setlocale(LC_TIME, 'en_US');
-define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
-define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
-define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
-define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date()
-define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
-define('DATE_FORMAT_SPIFFYCAL', 'MM/dd/yyyy');  //Use only 'dd', 'MM' and 'yyyy' here in any order
-
-////
-// Return date in raw format
-// $date should be in format mm/dd/yyyy
-// raw date is in format YYYYMMDD, or DDMMYYYY
-function zen_date_raw($date, $reverse = false) {
-  if ($reverse) {
-    return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
-  } else {
-    return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
-  }
-}
-
-// removed for meta tags
-// page title
-//define('TITLE', 'Zen Cart');
-
 // include template specific meta tags defines
   if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
     $template_dir_select = $template_dir . '/';
@@ -55,12 +30,6 @@ define('ICON_METATAGS_ON', 'Meta Tags Defined');
 define('ICON_METATAGS_OFF', 'Meta Tags Undefined');
 define('TEXT_LEGEND_META_TAGS', 'Meta Tags Defined:');
 define('TEXT_INFO_META_TAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is your defined definition for your site in the meta_tags.php file.');
-
-// Global entries for the <html> tag
-define('HTML_PARAMS','dir="ltr" lang="en"');
-
-// charset for web pages and emails
-define('CHARSET', 'utf-8');
 
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Admin Home');
@@ -83,8 +52,7 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 define('MALE', 'Male');
 define('FEMALE', 'Female');
 
-// text for date of birth example
-define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
+define('NONE', 'None');
 
 // configuration box text
 define('BOX_HEADING_CONFIGURATION', 'Configuration');
@@ -113,6 +81,7 @@ define('BOX_CONFIGURATION_ALL_LISTING', 'All Listing');
 define('BOX_CONFIGURATION_INDEX_LISTING', 'Index Listing');
 define('BOX_CONFIGURATION_DEFINE_PAGE_STATUS', 'Define Page Status');
 define('BOX_CONFIGURATION_EZPAGES_SETTINGS', 'EZ-Pages Settings');
+define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration');//for 1.5.1
 
 // modules box text
 define('BOX_HEADING_MODULES', 'Modules');
@@ -315,6 +284,7 @@ define('IMAGE_ICON_STATUS_RED_LIGHT', 'Set Inactive');
 define('IMAGE_ICON_STATUS_RED_EZPAGES', 'Error -- too many URL/content types entered');
 define('IMAGE_ICON_STATUS_RED_ERROR', 'Error');
 define('IMAGE_ICON_INFO', 'Info');
+define('IMAGE_ICON_COMM', 'Test Communications');
 define('IMAGE_INSERT', 'Insert');
 define('IMAGE_LOCK', 'Lock');
 define('IMAGE_MODULE_INSTALL', 'Install Module');
@@ -343,6 +313,7 @@ define('IMAGE_PERMISSIONS', 'Edit Permissions');
 define('IMAGE_PREVIEW', 'Preview');
 define('IMAGE_RESTORE', 'Restore');
 define('IMAGE_RESET', 'Reset');
+define('IMAGE_RESET_PWD', 'Reset Password');
 define('IMAGE_SAVE', 'Save');
 define('IMAGE_SEARCH', 'Search');
 define('IMAGE_SELECT', 'Select');
@@ -454,19 +425,6 @@ define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language
 define('ERROR_MODULE_REMOVAL_PROHIBITED', 'ERROR: Module removal prohibited: ');
 define('WARNING_REVIEW_ROGUE_ACTIVITY', 'ALERT: Please review for possible XSS activity:');
 
-define('_JANUARY', 'January');
-define('_FEBRUARY', 'February');
-define('_MARCH', 'March');
-define('_APRIL', 'April');
-define('_MAY', 'May');
-define('_JUNE', 'June');
-define('_JULY', 'July');
-define('_AUGUST', 'August');
-define('_SEPTEMBER', 'September');
-define('_OCTOBER', 'October');
-define('_NOVEMBER', 'November');
-define('_DECEMBER', 'December');
-
 define('TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> gift vouchers)');
 define('TEXT_DISPLAY_NUMBER_OF_COUPONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> coupons)');
 
@@ -515,7 +473,7 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('IMAGE_UPDATE_SORT','Update Sort Order');
   define('IMAGE_EDIT_PRODUCT','Edit Product');
   define('IMAGE_EDIT_ATTRIBUTES','Edit Attributes');
-  define('TEXT_NEW_PRODUCT', 'Product in Category: &quot;%s&quot;');
+  define('TEXT_NEW_PRODUCT', 'Product in Category: %s');
   define('IMAGE_OPTIONS_VALUES','Option Names and Option Values');
   define('TEXT_PRODUCTS_PRICE_MANAGER','PRODUCTS PRICE MANAGER');
   define('TEXT_PRODUCT_EDIT','EDIT PRODUCT');
@@ -576,6 +534,7 @@ define('TEXT_LEGEND_STATUS_ON', 'Status ON ');
 define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the<br />product category affects the pricing on linked products, example: Sales</strong>');
 define('TEXT_YES', 'Yes');
 define('TEXT_NO', 'No');
+define('TEXT_CANCEL', 'Cancel');
 
 // shipping error messages
 define('ERROR_SHIPPING_CONFIGURATION', '<strong>Shipping Configuration errors!</strong>');
@@ -608,8 +567,6 @@ define('TEXT_INFO_SET_MASTER_CATEGORIES_ID_WARNING', '<strong>WARNING:</strong> 
 
 define('PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT', 'Product is Call for Price');
 define('PRODUCTS_PRICE_IS_FREE_TEXT','Product is Free');
-
-define('TEXT_PRODUCT_WEIGHT_UNIT','lbs');
 
 // min, max, units
 define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING', 'Max:');
@@ -719,6 +676,16 @@ define('TEXT_EMAIL', 'Email');
 define('TEXT_NOEMAIL', 'No Email');
 
 define('BOX_HEADING_PRODUCT_TYPES', 'Product Types');
+define('BOX_HEADING_DASHBOARD_WIDGETS', 'Dashboard Widgets');
+
+define('TEXT_FORM_ERROR_REQUIRED', 'Required');
+define('TEXT_SUBMIT', 'Submit');
+
+// moved from currencies file:
+define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %s (%s) was updated successfully to %s via %s.');
+define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not updated via %s. Is it a valid currency code?');
+define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate server (%s) failed for %s (%s) - trying the secondary exchange rate server.');
+
 
 ///////////////////////////////////////////////////////////
 // include additional files:

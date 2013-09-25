@@ -3,7 +3,7 @@
  * shipping class
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Thu Aug 2 11:37:22 2012 -0400 Modified in v1.5.1 $
@@ -21,7 +21,7 @@ class shipping extends base {
   var $modules;
 
   // class constructor
-  function shipping($module = '') {
+  function __construct($module = '') {
     global $PHP_SELF, $messageStack;
 
     if (defined('MODULE_SHIPPING_INSTALLED') && zen_not_null(MODULE_SHIPPING_INSTALLED)) {
@@ -52,21 +52,38 @@ class shipping extends base {
           }
         }
         $this->enabled = TRUE;
-        $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $include_modules[$i]['class']);
+        $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $include_modules[$i]['class'], $include_modules[$i]['class']);
         if ($this->enabled)
         {
           include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+
+          $enabled = $this->check_enabled($GLOBALS[$include_modules[$i]['class']]);
+          if ($enabled == FALSE ) unset($GLOBALS[$include_modules[$i]['class']]);
         }
       }
     }
   }
-
+  function check_enabled($class)
+  {
+    $enabled = $class->enabled;
+    if (method_exists($class, 'check_enabled_for_zone') && $class->enabled)
+    {
+      $enabled = $class->check_enabled_for_zone();
+    }
+    $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE', array(), $class, $enabled);
+    if (method_exists($class, 'check_enabled') && $enabled)
+    {
+      $enabled = $class->check_enabled();
+    }
+    $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED', array(), $class, $enabled);
+    return $enabled;
+  }
   function calculate_boxes_weight_and_tare() {
     global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
     $this->abort_legacy_calculations = FALSE;
-    $this->notify('NOTIFY_SHIPPING_MODULE_PRE_CALCULATE_BOXES_AND_TARE');
+    $this->notify('NOTIFY_SHIPPING_MODULE_PRE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
     if ($this->abort_legacy_calculations) return;
 
     if (is_array($this->modules)) {
@@ -105,6 +122,8 @@ class shipping extends base {
           break;
       }
 
+      // total weight with Tare
+      $_SESSION['shipping_weight'] = $shipping_weight;
       if ($shipping_weight > SHIPPING_MAX_WEIGHT) { // Split into many boxes
 //        $shipping_num_boxes = ceil($shipping_weight/SHIPPING_MAX_WEIGHT);
         $zc_boxes = zen_round(($shipping_weight/SHIPPING_MAX_WEIGHT), 2);
@@ -112,10 +131,11 @@ class shipping extends base {
         $shipping_weight = $shipping_weight/$shipping_num_boxes;
       }
     }
-    $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE');
+    $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
   }
 
   function quote($method = '', $module = '', $calc_boxes_weight_tare = true) {
+    global $shipping_weight;
     $quotes_array = array();
 
     if ($calc_boxes_weight_tare) $this->calculate_boxes_weight_and_tare();
@@ -127,21 +147,23 @@ class shipping extends base {
       while (list(, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         if (zen_not_null($module)) {
-          if ( ($module == $class) && ($GLOBALS[$class]->enabled) ) {
+          if ( ($module == $class) && (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) ) {
             $include_quotes[] = $class;
           }
-        } elseif ($GLOBALS[$class]->enabled) {
+        } elseif (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $include_quotes[] = $class;
         }
       }
 
       $size = sizeof($include_quotes);
       for ($i=0; $i<$size; $i++) {
+        $save_shipping_weight = $shipping_weight;
         $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
+        $shipping_weight = $save_shipping_weight;
         if (is_array($quotes)) $quotes_array[] = $quotes;
       }
     }
-    $this->notify('NOTIFY_SHIPPING_MODULE_GET_ALL_QUOTES', $quotes_array);
+    $this->notify('NOTIFY_SHIPPING_MODULE_GET_ALL_QUOTES', $quotes_array, $quotes_array);
     return $quotes_array;
   }
 
@@ -182,7 +204,7 @@ class shipping extends base {
           }
         }
       }
-      $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest);
+      $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest, $cheapest, $rates);
       return $cheapest;
     }
   }

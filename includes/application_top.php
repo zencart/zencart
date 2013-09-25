@@ -7,7 +7,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
@@ -35,7 +35,8 @@ if (!$contaminated) {
         $contaminated = true;
         break;
       }
-      if (isset($_GET[$key]) && strlen($_GET[$key]) > 43) {
+      $len = (in_array($key, array('zenid', 'error_message', 'payment_error'))) ? 255 : 43;
+      if (isset($_GET[$key]) && strlen($_GET[$key]) > $len) {
         $contaminated = true;
         break;
       }
@@ -48,7 +49,7 @@ if ($contaminated)
   header('HTTP/1.1 406 Not Acceptable');
   exit(0);
 }
-unset($contaminated);
+unset($contaminated, $len);
 /* *** END OF INNOCULATION *** */
 /**
  * boolean used to see if we are in the admin script, obviously set to false here.
@@ -60,6 +61,7 @@ define('IS_ADMIN_FLAG', false);
 define('PAGE_PARSE_START_TIME', microtime());
 //  define('DISPLAY_PAGE_PARSE_TIME', 'true');
 @ini_set("arg_separator.output","&");
+@ini_set("html_errors","0");
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -90,6 +92,13 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
  */
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
+/*
+ * Get time zone info from PHP config
+ */
+if (version_compare(PHP_VERSION, 5.3, '>='))
+{
+  @date_default_timezone_set(date_default_timezone_get());
+}
 /**
  * check for and include load application parameters
  */
@@ -112,7 +121,19 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
   exit;
 }
 /**
- * include the list of extra configure files
+ * check for and load system defined path constants
+ */
+if (file_exists('includes/defined_paths.php')) {
+  /**
+   * load the system-defined path constants
+   */
+  require('includes/defined_paths.php');
+} else {
+  die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+  exit;
+}
+/**
+ * include the extra_configures files
  */
 if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   while ($zv_file = $za_dir->read()) {
@@ -147,14 +168,8 @@ if (( (!file_exists('includes/configure.php') && !file_exists('includes/local/co
  * load the autoloader interpreter code.
 */
 require('includes/autoload_func.php');
-/**
- * load the counter code
-**/
-if ($spider_flag == false) {
-// counter and counter history
-  require(DIR_WS_INCLUDES . 'counter.php');
-}
-// get customers unique IP that paypal does not touch
+
+// get customer's unique IP that external gateway does not touch
 $customers_ip_address = $_SERVER['REMOTE_ADDR'];
 if (!isset($_SESSION['customers_ip_address'])) {
   $_SESSION['customers_ip_address'] = $customers_ip_address;

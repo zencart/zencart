@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Sun Jul 22 20:55:36 2012 +0100 Modified in v1.5.1 $
@@ -29,6 +29,7 @@ if ($_SESSION['login_attempt'] > 9) {
 }
 $error = false;
 $reset_token = '';
+$email_message = '';
 if (isset($_POST['submit']))
 {
   if (! $_POST['admin_email'])
@@ -44,6 +45,7 @@ if (isset($_POST['submit']))
   {
     $error = true;
     $email_message = MESSAGE_PASSWORD_SENT;
+    $resetToken = 'bad';
   }
   // BEGIN SLAM PREVENTION
   if ($_POST['admin_email'] != '')
@@ -67,30 +69,45 @@ if (isset($_POST['submit']))
   }
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
+<!DOCTYPE html >
+<html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
+<link href="includes/template/css/login.css" rel="stylesheet" type="text/css">
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
-<form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
-<?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-<fieldset>
-<legend><?php echo HEADING_TITLE; ?></legend>
-<?php if ($resetToken == '') { ?>
-<label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?><input type="text" id="admin_email" name="admin_email" value="<?php if ($error) echo zen_output_string($admin_email); ?>" autocomplete="off" /></label>
-<?php } ?>
-<p class="<?php echo ($error ? 'messageStackError' : 'messageStackSuccess'); ?>"><?php echo $email_message; ?></p>
-<?php if ($resetToken == '') { ?>
-<input type="submit" name="submit" class="button" value="<?php echo TEXT_BUTTON_REQUEST_RESET; ?>" />
-<input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_CANCEL; ?>" />
-<?php } else { ?>
-<input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_LOGIN; ?>" />
-<?php } ?>
-</fieldset>
-</form>
+  <div class="container">
+    <div class="row">
+    <div class="small-12 columns small-centered">
+      <form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
+      <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+        <fieldset>
+          <legend><?php echo HEADING_TITLE; ?></legend>
+          <?php if ($resetToken == '') { ?>
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
+            </div>
+            <div class="small-9 columns">
+              <input class="left inline" type="text" id="admin_email" name="admin_email" value="" autocomplete="off" autofocus="autofocus">
+            </div>
+          </div>
+          <?php } ?>
+          <p class="messageStackSuccess"><?php echo $email_message; ?></p>
+          <?php if ($resetToken == '') { ?>
+          <input type="submit" name="submit" class="button" value="<?php echo TEXT_BUTTON_REQUEST_RESET; ?>">
+          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_CANCEL; ?>">
+          <?php } else { ?>
+          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_LOGIN; ?>">
+          <?php } ?>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 <?php require('includes/application_bottom.php'); ?>

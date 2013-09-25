@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ezpages.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -95,17 +95,17 @@
 
         $alt_url_external = zen_db_prepare_input($_POST['alt_url_external']);
 
-       	$pages_header_sort_order = (int)$_POST['header_sort_order'];
-       	$pages_sidebox_sort_order = (int)$_POST['sidebox_sort_order'];
-       	$pages_footer_sort_order = (int)$_POST['footer_sort_order'];
-       	$pages_toc_sort_order = (int)$_POST['toc_sort_order'];
+         $pages_header_sort_order = (int)$_POST['header_sort_order'];
+         $pages_sidebox_sort_order = (int)$_POST['sidebox_sort_order'];
+         $pages_footer_sort_order = (int)$_POST['footer_sort_order'];
+         $pages_toc_sort_order = (int)$_POST['toc_sort_order'];
 
-       	$toc_chapter = (int)$_POST['toc_chapter'];
+         $toc_chapter = (int)$_POST['toc_chapter'];
 
-       	$status_header = ($pages_header_sort_order == 0 ? 0 : (int)$_POST['status_header']);
-       	$status_sidebox = ($pages_sidebox_sort_order == 0 ? 0 : (int)$_POST['status_sidebox']);
-       	$status_footer = ($pages_footer_sort_order == 0 ? 0 : (int)$_POST['status_footer']);
-       	$status_toc = ($pages_toc_sort_order == 0 ? 0 : (int)$_POST['status_toc']);
+         $status_header = ($pages_header_sort_order == 0 ? 0 : (int)$_POST['status_header']);
+         $status_sidebox = ($pages_sidebox_sort_order == 0 ? 0 : (int)$_POST['status_sidebox']);
+         $status_footer = ($pages_footer_sort_order == 0 ? 0 : (int)$_POST['status_footer']);
+         $status_toc = ($pages_toc_sort_order == 0 ? 0 : (int)$_POST['status_toc']);
 
         $page_error = false;
         if (empty($pages_title)) {
@@ -178,33 +178,11 @@
         break;
     }
   }
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  if (typeof _editor_url == "string") HTMLArea.replaceAll();
-  }
-  // -->
-</script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onLoad="init()">
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
 <!-- body //-->
@@ -428,7 +406,7 @@
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_PAGES_HTML_TEXT; ?></td>
-            <td class="main"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '40', htmlspecialchars($ezInfo->pages_html_text, ENT_COMPAT, CHARSET, TRUE));?></td>
+            <td class="main"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '40', htmlspecialchars($ezInfo->pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"');?></td>
           </tr>
 
           <tr>
@@ -438,8 +416,8 @@
           <tr>
             <td class="main" valign="top"><?php echo TEXT_ALT_URL; ?></td>
             <td class="main" valign="top"><?php echo zen_draw_input_field('alt_url', $ezInfo->alt_url, 'size="100"');
-             			   echo '<br />' . TEXT_ALT_URL_EXPLAIN;
-            		?></td>
+                      echo '<br />' . TEXT_ALT_URL_EXPLAIN;
+                ?></td>
           </tr>
 
           <tr>
@@ -449,8 +427,8 @@
           <tr>
             <td class="main" valign="top"><?php echo TEXT_ALT_URL_EXTERNAL; ?></td>
             <td class="main" valign="top"><?php echo zen_draw_input_field('alt_url_external', $ezInfo->alt_url_external, 'size="100"');
-             			   echo '<br />' . TEXT_ALT_URL_EXTERNAL_EXPLAIN;
-            		?></td>
+                      echo '<br />' . TEXT_ALT_URL_EXTERNAL_EXPLAIN;
+                ?></td>
           </tr>
 
           <tr>

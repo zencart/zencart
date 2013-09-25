@@ -5,11 +5,16 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: checkout_payment.php 4087 2006-08-07 04:46:08Z drbyte $
+ * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
+if($_SESSION['COWOA']) $COWOA=TRUE;
 
 define('NAVBAR_TITLE_1', 'Checkout - Step 1');
 define('NAVBAR_TITLE_2', 'Payment Method - Step 2');
 
+if($COWOA)
+define('HEADING_TITLE', 'Step 3 of 5 - Payment Information');
+else
 define('HEADING_TITLE', 'Step 2 of 3 - Payment Information');
 
 define('TABLE_HEADING_BILLING_ADDRESS', 'Billing Address');
@@ -25,7 +30,11 @@ define('TABLE_HEADING_COMMENTS', 'Special Instructions or Order Comments');
 define('TITLE_NO_PAYMENT_OPTIONS_AVAILABLE', 'Not Available At This Time');
 define('TEXT_NO_PAYMENT_OPTIONS_AVAILABLE','<span class="alert">Sorry, we are not accepting payments from your region at this time.</span><br />Please contact us for alternate arrangements.');
 
+if($COWOA)
+define('TITLE_CONTINUE_CHECKOUT_PROCEDURE', '<strong>Continue to Step 4</strong>');
+else
 define('TITLE_CONTINUE_CHECKOUT_PROCEDURE', '<strong>Continue to Step 3</strong>');
+
 define('TEXT_CONTINUE_CHECKOUT_PROCEDURE', '- to confirm your order.');
 
 define('TABLE_HEADING_CONDITIONS', '<span class="termsconditions">Terms and Conditions</span>');
@@ -34,4 +43,4 @@ define('TEXT_CONDITIONS_CONFIRM', '<span class="termsiagree">I have read and agr
 
 define('TEXT_CHECKOUT_AMOUNT_DUE', 'Total Amount Due: ');
 define('TEXT_YOUR_TOTAL','Your Total');
-?>
+// eof

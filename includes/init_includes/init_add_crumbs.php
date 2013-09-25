@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_add_crumbs.php 18697 2011-05-04 14:35:20Z wilt $
@@ -43,30 +43,30 @@ $sql = "select *
         from " . TABLE_GET_TERMS_TO_FILTER;
 $get_terms = $db->execute($sql);
 while (!$get_terms->EOF) {
-	if (isset($_GET[$get_terms->fields['get_term_name']])) {
-		$sql = "select " . $get_terms->fields['get_term_name_field'] . "
-		        from " . constant($get_terms->fields['get_term_table']) . "
-		        where " . $get_terms->fields['get_term_name'] . " =  " . (int)$_GET[$get_terms->fields['get_term_name']];
-		$get_term_breadcrumb = $db->execute($sql);
+  if (isset($_GET[$get_terms->fields['get_term_name']])) {
+    $sql = "select " . $get_terms->fields['get_term_name_field'] . "
+            from " . constant($get_terms->fields['get_term_table']) . "
+            where " . $get_terms->fields['get_term_name'] . " =  " . (int)$_GET[$get_terms->fields['get_term_name']];
+    $get_term_breadcrumb = $db->execute($sql);
     if ($get_term_breadcrumb->RecordCount() > 0) {
       $breadcrumb->add($get_term_breadcrumb->fields[$get_terms->fields['get_term_name_field']], zen_href_link(FILENAME_DEFAULT, $get_terms->fields['get_term_name'] . "=" . $_GET[$get_terms->fields['get_term_name']]));
     }
-	}
-	$get_terms->movenext();
+  }
+  $get_terms->movenext();
 }
 /**
  * add the products model to the breadcrumb trail
+ * NOTE: for query optimization, this query is identical to the query used in the product pages' header_php and main_template_vars files so that it can benefit from caching performance benefits
  */
 if (isset($_GET['products_id'])) {
-  $productname_query = "select products_name
-                   from " . TABLE_PRODUCTS_DESCRIPTION . "
-                   where products_id = '" . (int)$_GET['products_id'] . "'
-             and language_id = '" . $_SESSION['languages_id'] . "'";
-
-  $productname = $db->Execute($productname_query);
-
-  if ($productname->RecordCount() > 0) {
-    $breadcrumb->add($productname->fields['products_name'], zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
+  $sql = "select p.*, pd.*
+           from   " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+           where  p.products_status = '1'
+           and    p.products_id = '" . (int)$_GET['products_id'] . "'
+           and    pd.products_id = p.products_id
+           and    pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+  $res = $db->Execute($sql);
+  if ($res->RecordCount() == 1 && $res->fields['products_name'] != '') {
+    $breadcrumb->add($res->fields['products_name'], zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
   }
 }
-?>

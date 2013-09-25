@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: functions_prices.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -145,6 +145,7 @@
 // Specials and Tax Included
   function zen_get_products_display_price($products_id) {
     global $db, $currencies;
+    $free_tag = $call_tag = '';
 
 // never mask prices in admin
 if (false) {
@@ -410,7 +411,6 @@ if (false) {
 ////
 // Return quantity buy now
   function zen_get_buy_now_qty($product_id) {
-    global $cart;
     $check_min = zen_get_products_quantity_order_min($product_id);
     $check_units = zen_get_products_quantity_order_units($product_id);
     $buy_now_qty=1;
@@ -447,7 +447,6 @@ if (false) {
 // compute product discount to be applied to attributes or other values
   function zen_get_discount_calc($product_id, $attributes_id = false, $attributes_amount = false, $check_qty= false) {
     global $discount_type_id, $sale_maker_discount;
-    global $cart;
 
     // no charge
     if ($attributes_id > 0 and $attributes_amount == 0) {
@@ -847,7 +846,7 @@ If a special exist * 10+9
   function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
     global $currencies;
     global $db;
-
+    $sale_maker_discount_type = '';
 // get products category
     if ($categories_id == true) {
       $check_category = $categories_id;
@@ -994,7 +993,6 @@ If a special exist * 10+9
 // attributes final price
   function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false') {
     global $db;
-    global $cart;
 
     if ($pre_selected == '' or $attribute != $pre_selected->fields["products_attributes_id"]) {
       $pre_selected = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
@@ -1036,7 +1034,6 @@ If a special exist * 10+9
 // attributes final price onetime
   function zen_get_attributes_price_final_onetime($attribute, $qty= 1, $pre_selected_onetime) {
     global $db;
-    global $cart;
 
     if ($pre_selected_onetime == '' or $attribute != $pre_selected_onetime->fields["products_attributes_id"]) {
       $pre_selected_onetime = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
@@ -1138,7 +1135,7 @@ If a special exist * 10+9
       $products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id='" . (int)$product_id . "' and discount_qty <='" . zen_db_input($check_qty) . "' order by discount_qty desc");
 
       $display_price = zen_get_products_base_price($product_id);
-      $display_specials_price = zen_get_products_special_price($product_id, true);
+      $display_specials_price = zen_get_products_special_price($product_id, false);
 
       switch ($products_query->fields['products_discount_type']) {
         // none

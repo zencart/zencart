@@ -3,7 +3,7 @@
  * FirstData/Linkpoint/Yourpay API Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -17,7 +17,7 @@ class linkpoint_api {
   var $_logDir = DIR_FS_SQL_CACHE;
 
   // class constructor
-  function linkpoint_api() {
+  function __construct() {
     global $order, $messageStack;
     $this->code = 'linkpoint_api';
     $this->enabled = ((MODULE_PAYMENT_LINKPOINT_API_STATUS == 'True') ? true : false); // Whether the module is installed or not
@@ -66,7 +66,7 @@ class linkpoint_api {
     // if store is not running in SSL, cannot offer credit card module, for PCI reasons
     if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
     // check other reasons for the module to be deactivated:
-    if ( $this->enabled && $this->zone > 0 ) {
+    if ($this->enabled && (int)$this->zone > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
       $sql = "SELECT zone_id
               FROM " . TABLE_ZONES_TO_GEO_ZONES . "
@@ -94,6 +94,11 @@ class linkpoint_api {
     // if in code-debug mode and IP address is in the down-for-maint list, enable the module (leaves it invisible to non-testers)
     if (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
       if ($this->code_debug) $this->enabled=true;
+    }
+
+      // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
 
@@ -292,7 +297,7 @@ class linkpoint_api {
     // prepare totals for submission
     $surcharges = 0;
     $creditsApplied = 0;
-    global $order_totals;
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_BEFORE_ORDER_TOTALS', array(), $myorder);
     reset($order_totals);
     $myorder['subtotal'] = $myorder['tax'] = $myorder['shipping'] = $myorder['chargetotal'] = 0;
     for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
@@ -315,7 +320,10 @@ class linkpoint_api {
       if (isset($myorder[$i])) $myorder[$i] = number_format($myorder[$i], 2, '.', '');
     }
 
-    if ($surcharges == 0 && $creditsApplied == 0 && $order->info['total'] >= $order->info['subtotal'] && sizeof($order->products) <= 20) {
+    $this->include_item_details = TRUE;
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_BEFORE_LINEITEM_DETAILS', array(), $myorder, $order, $order_totals);
+
+    if ($this->include_item_details && $surcharges == 0 && $creditsApplied == 0 && $order->info['total'] >= $order->info['subtotal'] && sizeof($order->products) <= 20) {
     // itemized contents
       $num_line_items = 0;
       reset($order->products);
@@ -447,6 +455,10 @@ class linkpoint_api {
     $myorder["ordertype"]  = (MODULE_PAYMENT_LINKPOINT_API_AUTHORIZATION_MODE == 'Authorize Only' ? 'PREAUTH': 'SALE');
     $this->payment_status = $myorder["ordertype"];
 
+    $this->submit_extras = array();
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_PRESUBMIT_HOOK', array(), $myorder);
+    if (sizeof($this->submit_extras)) $myorder = array_merge($myorder, $this->submit_extras);
+
     // send request to gateway
     $result = $this->_sendRequest($myorder);
 
@@ -465,6 +477,8 @@ class linkpoint_api {
         $myorder["oid"] .= '-b';
         $myorder["chargetotal"] = ($myorder["chargetotal"] - 0.01);
         $result = $this->_sendRequest($myorder);
+        $this->notify('NOTIFY_PAYMENT_LINKPOINT_POSTSUBMIT_HOOK', array(), $result, $myorder);
+
         if (!is_array($result)) {
           $messageStack->add_session('checkout_payment', MODULE_PAYMENT_LINKPOINT_API_TEXT_FAILURE_MESSAGE, 'error');
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
@@ -638,7 +652,7 @@ class linkpoint_api {
      $output = '';
      $sql = "select * from " . TABLE_LINKPOINT_API . " where order_id = '" . $zf_order_id . "' and transaction_result = 'APPROVED' order by date_added";
      $lp_api = $db->Execute($sql);
-     if ($lp_api->RecordCount() > 0) require(DIR_FS_CATALOG. DIR_WS_MODULES . 'payment/linkpoint_api/linkpoint_api_admin_notification.php');
+     if (!$lp_api->EOF && $lp_api->RecordCount() > 0) require(DIR_FS_CATALOG. DIR_WS_MODULES . 'payment/linkpoint_api/linkpoint_api_admin_notification.php');
      return $output;
    }
 
@@ -684,6 +698,8 @@ class linkpoint_api {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Database Storage', 'MODULE_PAYMENT_LINKPOINT_API_STORE_DATA', 'True', 'If you enable this option, extended details of each transaction will be stored, enabling you to more effectively conduct audits of fraudulent activity or even track/match order information between Zen Cart and your FirstData/LinkPoint records. You can view this data in Admin->Customers->Linkpoint CC Review.', '6', 121, 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Debug Mode', 'MODULE_PAYMENT_LINKPOINT_API_DEBUG', 'Off', 'Would you like to enable debug mode?  Choosing Alert mode will email logs of failed transactions to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Failure Alerts Only\', \'Log File\', \'Log and Email\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_LINKPOINT_API_TRANSACTION_MODE', 'Production', 'Transaction mode used for processing orders', '6', 121, 'zen_cfg_select_option(array(\'Production\',\'DevelopersTest\'), ', now())");
+
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_API_INSTALLED');
 
     // Now do database-setup:
     global $sniffer;
@@ -753,6 +769,7 @@ class linkpoint_api {
       $result = $db->Execute("select count(id) as count from " . TABLE_LINKPOINT_API);
       if ($result->RecordCount() == 0) $db->Execute("DROP TABLE " . TABLE_LINKPOINT_API);
     }
+    $this->notify('NOTIFY_PAYMENT_LINKPOINT_API_UNINSTALLED');
   }
 
   function keys() {

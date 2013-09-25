@@ -6,7 +6,7 @@
  * Prepares HTML for input fields with required uniqueness so template can display them as needed and keep collected data in proper fields
  *
  * @package modules
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
@@ -126,6 +126,18 @@ $sql = "select count(*) as total
                     // reverse negative values for display
                     if ($new_attributes_price < 0) {
                       $new_attributes_price = -$new_attributes_price;
+                    }
+
+                    if ($products_options->fields['attributes_price_factor'] > 0) {
+                      $chk_price = zen_get_products_actual_price((int)$_GET['products_id']);
+                      if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL) {
+                        $chk_special = zen_get_products_special_price((int)$_GET['products_id']);
+                      } else {
+                        $chk_special = false;
+                      }
+//echo 'PRICE FACTOR BEFORE zen_get_attributes_price_factor: ' . $new_attributes_price . '<br>';
+                      $new_attributes_price = zen_get_attributes_price_factor($chk_price, $chk_special, $products_options->fields['attributes_price_factor'], $products_options->fields['attributes_price_factor_offset']);
+//echo 'PRICE FACTOR AFTER zen_get_attributes_price_factor: ' . $new_attributes_price . '<br>';
                     }
 
                     if ($products_options->fields['attributes_price_onetime'] != 0 or $products_options->fields['attributes_price_factor_onetime'] != 0) {
@@ -457,7 +469,6 @@ $sql = "select count(*) as total
                   if ($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_FILE) {
                     $number_of_uploads++;
                     if (zen_run_normal() == true and zen_check_show_prices() == true) {
-                      // $cart->contents[$_GET['products_id']]['attributes_values'][$products_options_name['products_options_id']]
                       $tmp_html = '<input type="file" name="id[' . TEXT_PREFIX . $products_options_names->fields['products_options_id'] . ']"  id="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '" /><br />' . $_SESSION['cart']->contents[$prod_id]['attributes_values'][$products_options_names->fields['products_options_id']] . "\n" .
                       zen_draw_hidden_field(UPLOAD_PREFIX . $number_of_uploads, $products_options_names->fields['products_options_id']) . "\n" .
                       zen_draw_hidden_field(TEXT_PREFIX . UPLOAD_PREFIX . $number_of_uploads, $_SESSION['cart']->contents[$prod_id]['attributes_values'][$products_options_names->fields['products_options_id']]);
@@ -479,7 +490,8 @@ $sql = "select count(*) as total
                         $tmp_attributes_image_row = 1;
                       }
 
-                      $tmp_attributes_image .= '<div class="attribImg">' . zen_image(DIR_WS_IMAGES . $products_options->fields['attributes_image']) . (PRODUCT_IMAGES_ATTRIBUTES_NAMES == '1' ? '<br />' . $products_options->fields['products_options_values_name'] : '') . '</div>' . "\n";
+// Do not show TEXT option value on images
+                      $tmp_attributes_image .= '<div class="attribImg">' . zen_image(DIR_WS_IMAGES . $products_options->fields['attributes_image']) . (PRODUCT_IMAGES_ATTRIBUTES_NAMES == '1' ? ( ($products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT && $products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) ? '<br />' . $products_options->fields['products_options_values_name'] : '') : '') . '</div>' . "\n";
                     }
                   }
 

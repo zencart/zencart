@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
@@ -50,7 +50,16 @@ if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 // set php_self in the local scope
 if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
-
+$PHP_SELF = htmlspecialchars($PHP_SELF);
+// Suppress html from error messages
+@ini_set("html_errors","0");
+/*
+ * Get time zone info from PHP config
+*/
+if (version_compare(PHP_VERSION, 5.3, '>='))
+{
+  @date_default_timezone_set(date_default_timezone_get());
+}
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -80,6 +89,18 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') ||
   }
 }
 /**
+ * check for and load system defined path constants
+ */
+if (file_exists('includes/defined_paths.php')) {
+  /**
+   * load the system-defined path constants
+   */
+  require('includes/defined_paths.php');
+} else {
+  die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+  exit;
+}
+/**
  * ignore version-check if INI file setting has been set
  */
 if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
@@ -91,25 +112,9 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
   }
 }
 /*
-// turned off for now
-  if ($check_cfg != 'off') {
-    // if the admin/includes/configure.php file doesn't contain admin-related content, throw error
-    $zc_pagepath = str_replace(basename($PHP_SELF),'',__FILE__); //remove page name from full path of current page
-    $zc_pagepath = str_replace(array('\\','\\\\'),'/',$zc_pagepath); // convert '\' marks to '/'
-    $zc_pagepath = str_replace('//','/',$zc_pagepath); //convert doubles to single
-    $zc_pagepath = str_replace(strrchr($zc_pagepath,'/'),'',$zc_pagepath); // remove trailing '/'
-    $zc_adminpage = str_replace('\\','/',DIR_FS_ADMIN); //convert "\" to '/'
-    $zc_adminpage = str_replace('//','/',$zc_adminpage); // remove doubles
-    $zc_adminpage = str_replace(strrchr($zc_adminpage,'/'),'',$zc_adminpage); // remove trailing '/'
-    if (!defined('DIR_WS_ADMIN') || $zc_pagepath != $zc_adminpage ) {
-      echo ('ERROR: The admin/includes/configure.php file has invalid configuration. Please rebuild, or verify specified paths.');
-      if (file_exists('../zc_install/index.php')) {
-        echo '<br /><a href="../zc_install/index.php">Click here for installation</a>';
-      }
-      echo '<br /><br /><br /><br />['.$zc_pagepath.']&nbsp;&nbsp;&nbsp;&laquo;&raquo;&nbsp;&nbsp;&nbsp;[' .$zc_adminpage.']<br />';
-    }
-  }
-*/
+ * Defined for backwards compatibility only. THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
+ */
+if (!defined('HTT'.'PS_SERVER')) define('HTT'.'PS_SERVER', HTTP_SERVER);
 /**
  * include the list of extra configure files
  */
@@ -132,7 +137,6 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 /**
  * Prepare init-system
  */
-unset($loaderPrefix); // admin doesn't need this override
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);

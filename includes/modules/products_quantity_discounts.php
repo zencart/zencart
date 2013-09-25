@@ -3,7 +3,7 @@
  * products_quantity_discounts module
  *
  * @package modules
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_quantity_discounts.php 6477 2007-06-09 04:38:22Z ajeh $
@@ -60,7 +60,7 @@ $products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCO
 $discount_col_cnt = DISCOUNT_QUANTITY_PRICES_COLUMN;
 
 $display_price = zen_get_products_base_price($products_id_current);
-$display_specials_price = zen_get_products_special_price($products_id_current, true);
+$display_specials_price = zen_get_products_special_price($products_id_current, false);
 
 // set first price value
 if ($display_specials_price == false) {
@@ -84,7 +84,7 @@ switch (true) {
 // $currencies->display_price($discounted_price, zen_get_tax_rate(1), 1)
 
 $display_price = zen_get_products_base_price($products_id_current);
-$display_specials_price = zen_get_products_special_price($products_id_current, true);
+$display_specials_price = zen_get_products_special_price($products_id_current, false);
 $disc_cnt = 1;
 $quantityDiscounts = array();
 $columnCount = 0;

@@ -7,7 +7,7 @@
  * - Shows Free Shipping on Virtual products
  *
  * @package modules
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -16,6 +16,8 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+if (isset($_POST['zone_country_id'])) $_POST['zone_country_id'] = (int)$_POST['zone_country_id'];
+if (isset($_POST['scid'])) $_POST['scid'] = preg_replace('/[^a-z_0-9\- ]/i', '', $_POST['scid']);
 
 // load JS updater
 if ($current_page_base != 'popup_shipping_estimator') {
@@ -42,7 +44,9 @@ if ($_SESSION['cart']->count_contents() > 0) {
   // Could be placed in english.php
   // shopping cart quotes
   // shipping cost
-  require_once('includes/classes/http_client.php'); // shipping in basket
+
+  // deprecated; to be removed
+  if (file_exists(DIR_WS_CLASSES . 'http_client.php')) require_once(DIR_WS_CLASSES . 'http_client.php'); // shipping in basket
 
 /*
 // moved below and altered to include Tare
@@ -61,7 +65,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
   }
 */
 
-  //if($cart->get_content_type() !== 'virtual') {
+  //if($_SESSION['cart']->get_content_type() !== 'virtual') {
   if ($_SESSION['customer_id']) {
     // user is logged in
     if (isset($_POST['address_id'])){
@@ -83,8 +87,10 @@ if ($_SESSION['cart']->count_contents() > 0) {
     // include the order class (uses the sendto !)
     require(DIR_WS_CLASSES . 'order.php');
     $order = new order;
-  }else{
+  } else {
     // user not logged in !
+    require(DIR_WS_CLASSES . 'order.php');
+    $order = new order;
     if (isset($_POST['zone_country_id'])){
       // country is selected
       $_SESSION['country_info'] = zen_get_countries($_POST['zone_country_id'],true);
@@ -173,8 +179,22 @@ if ($_SESSION['cart']->count_contents() > 0) {
       $module="";
       $method="";
     }
+
     if (zen_not_null($module)){
-      $selected_quote = $shipping_modules->quote($method, $module);
+      foreach ($quotes as $key=>$value) {
+        if ($value['id'] == $module) {
+          $selected_quote[0] = $value;
+          if (zen_not_null($method)) {
+            foreach ($selected_quote[0]['methods'] as $qkey=>$qval) {
+              if ($qval['id'] == $method) {
+                $selected_quote[0]['methods'] = array($qval);
+                continue;
+              }
+            }
+          }
+        }
+      }
+
       if($selected_quote[0]['error'] || !zen_not_null($selected_quote[0]['methods'][0]['cost'])){
 //        $selected_shipping = $shipping_modules->cheapest();
         $order->info['shipping_method'] = $selected_shipping['title'];
@@ -266,5 +286,5 @@ if ($_SESSION['cart']->count_contents() > 0) {
 <?php
 }
 ?>
-<script type="text/javascript" language="javascript">update_zone(document.estimator); </script>
+<script>update_zone(document.estimator); </script>
 <!-- shipping_estimator_eof //-->

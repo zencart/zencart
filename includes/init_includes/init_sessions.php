@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_sessions.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -30,7 +30,6 @@ require(DIR_WS_FUNCTIONS . 'sessions.php');
  * set the session name and save path
  */
 zen_session_name('zenid');
-zen_session_save_path(SESSION_WRITE_DIRECTORY);
 /**
  * set the session cookie parameters
  */
@@ -54,10 +53,10 @@ if (isset($_POST[zen_session_name()])) {
   zen_session_id($_GET[zen_session_name()]);
 }
 /**
- * need to tidy up $_SERVER['REMOTE_ADDR'] here beofre we use it any where else
+ * need to tidy up $_SERVER['REMOTE_ADDR'] here before we use it anywhere else
  * one problem we don't address here is if $_SERVER['REMOTE_ADDRESS'] is not set to anything at all
  */
-$ipAddressArray = explode(',', $_SERVER['REMOTE_ADDR']);
+$ipAddressArray = explode(',', zen_get_ip_address());
 $ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '';
 $_SERVER['REMOTE_ADDR'] = $ipAddress;
 /**
@@ -103,14 +102,10 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
 }
 unset($spiders);
 /**
- * set host_address once per session to reduce load on server
+ * set host_address (once per session to reduce load on server, since gethostbyaddr() can be slow on many servers)
  */
 if (!isset($_SESSION['customers_host_address'])) {
-  if (SESSION_IP_TO_HOST_ADDRESS == 'true') {
-    $_SESSION['customers_host_address']= @gethostbyaddr($_SERVER['REMOTE_ADDR']);
-  } else {
-    $_SESSION['customers_host_address'] = OFFICE_IP_TO_HOST_ADDRESS;
-  }
+  $_SESSION['customers_host_address'] = (SESSION_IP_TO_HOST_ADDRESS == 'true') ? @gethostbyaddr($_SERVER['REMOTE_ADDR']) : $_SERVER['REMOTE_ADDR'];
 }
 /**
  * verify the ssl_session_id if the feature is enabled
@@ -135,7 +130,7 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
   }
   if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }
 /**
@@ -148,6 +143,6 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
   if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }

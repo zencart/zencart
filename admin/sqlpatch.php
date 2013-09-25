@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sun Jul 1 16:59:57 2012 -0400 Modified in v1.5.1 $
@@ -186,7 +186,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
           case (substr($line_upper, 0, 19) == 'INSERT IGNORE INTO '):
             //check to see if table prefix is going to match
             if (!$tbl_exists = zen_table_exists($param[3])) {
-	    $result=sprintf(REASON_TABLE_NOT_FOUND,$param[3]).' CHECK PREFIXES!';
+              $result=sprintf(REASON_TABLE_NOT_FOUND,$param[3]).' CHECK PREFIXES!';
               zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
               $ignore_line=true;
               break;
@@ -730,33 +730,18 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
     }
   }
 ?>
-<?php if ($action != 'help') { ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
+<?php if ($action != 'help') {
+require('includes/admin_html_head.php');
+?>
 <script type="text/javascript">
   <!--
   function popupHelpWindow(url) {
     window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
   }
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
   // -->
 </script>
 </head>
-<body onLoad="init()" >
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -800,7 +785,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
         </tr>
         <tr>
           <td valign="top" class="main" width="110px"><?php echo TEXT_ENTER_QUERY_STRING; ?></td>
-          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery"',false); ?></td>
+          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery noEditor"',false); ?></td>
         </tr>
         <tr>
           <td colspan="2" align="right"><?php echo zen_image_submit('button_send.gif', IMAGE_SEND); ?></td>
