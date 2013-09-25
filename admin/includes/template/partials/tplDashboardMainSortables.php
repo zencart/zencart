@@ -24,7 +24,11 @@
             </div>
         </div>
         <div class="widget-body">
-        <?php require($tplVars[$widget['widget_key']]['templateFile']); ?>
+        <?php 
+           if (file_exists($tplVars[$widget['widget_key']]['templateFile'])) {
+              require($tplVars[$widget['widget_key']]['templateFile']); 
+           }
+        ?>
         </div>
       </div>
 
