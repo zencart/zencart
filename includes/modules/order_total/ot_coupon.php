@@ -167,7 +167,7 @@ class ot_coupon {
 
 
       $sql = "select coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
-              restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_total
+              restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_total, coupon_order_limit
               from " . TABLE_COUPONS . "
               where coupon_code= :couponCodeEntered
               and coupon_active='Y'
@@ -192,16 +192,21 @@ class ot_coupon {
         $dc_link = ' <a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_result->fields['coupon_id']) . '\')">' . $dc_check . '</a>';
         $orderTotalDetails = $this->get_order_total($coupon_result->fields['coupon_id']);
         if ($coupon_result->fields['coupon_total'] == 0) {
-          $coupon_total = $orderTotalDetails['orderTotal'];
-        } else {
-          $coupon_total = $orderTotalDetails['totalFull'];
+          $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
+          $coupon_total = $orderTotalDetails['orderTotal']; // restricted products
+        }
+        if ($coupon_result->fields['coupon_total'] == 1) {
+          $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
+          $coupon_total = $orderTotalDetails['totalFull']; // all products
         }
 //echo 'Product: ' . $orderTotalDetails['orderTotal'] . ' Order: ' . $orderTotalDetails['totalFull'] . ' $coupon_total: ' . $coupon_total . '<br>';
 //die('DONE!');
 // left for total order amount vs qualified order amount just switch the commented lines
 //        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order']) {
 //        if (strval($order_total['orderTotal']) > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
-        if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order']) {
+
+//        if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order']) {
+        if (strval($coupon_total) > 0 && strval($coupon_total_minimum) < $coupon_result->fields['coupon_minimum_order']) {
           // $order_total['orderTotal'] . ' vs ' . $order_total['totalFull']
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_REDEEM_COUPON_MINIMUM, $currencies->format($coupon_result->fields['coupon_minimum_order'])) . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
           $error_issues ++;
@@ -228,13 +233,24 @@ class ot_coupon {
         if (!$foundvalid) {
           $this->clear_posts();
         }
-
 //        if (!$foundvalid) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'credit_class_error_code=' . $this->code . '&credit_class_error=' . urlencode(TEXT_INVALID_COUPON_PRODUCT . ' ' . $dc_check), 'SSL',true, false));
         if (!$foundvalid) {
           $messageStack->add_session('redemptions', TEXT_INVALID_COUPON_PRODUCT . ' ' . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
           $error_issues ++;
           $dc_link_count ++;
         }
+
+// validate number of Orders
+        if ($coupon_result->fields['coupon_order_limit'] > 0) {
+          $sql = "SELECT orders_id FROM " . TABLE_ORDERS . " WHERE customers_id = '" . $_SESSION['customer_id'] . "'";
+          $chk_customer_orders = $db->Execute($sql);
+          if ($chk_customer_orders->RecordCount() > $coupon_result->fields['coupon_order_limit']) {
+            $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_COUPON_ORDER_LIMIT, $coupon_result->fields['coupon_order_limit']) . ' ' . ($dc_link_count ==0 ? $dc_link : ''), 'caution');
+            $error_issues ++;
+            $dc_link_count ++;
+          }
+        }
+
 
         // JTD - end of additions of missing code to handle coupon product restrictions
 
@@ -432,16 +448,23 @@ class ot_coupon {
       $orderTotalDetails = $this->get_order_total($_SESSION['cc_id']);
 // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 2 of 3
       if ($coupon->fields['coupon_total'] == 0) {
-        $coupon_total = $orderTotalDetails['orderTotal'];
-      } else {
-        $coupon_total = $orderTotalDetails['totalFull'];
+        $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
+        $coupon_total = $orderTotalDetails['orderTotal']; // restricted products
       }
+      if ($coupon->fields['coupon_total'] == 1) {
+        $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
+        $coupon_total = $orderTotalDetails['totalFull']; // all products
+      }
+echo 'ot_coupon coupon_total: ' . $coupon->fields['coupon_total'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$coupon_total: ' . $coupon_total . '<br><br>$coupon->fields[coupon_minimum_order]: ' . $coupon->fields['coupon_minimum_order'] . '<br>$coupon_total_minimum: ' . $coupon_total_minimum . '<br>';
+// @@TODO - adjust all Totals to use $coupon_total but strong reveiw for what total applies where for Percentage, Amount, etc.
 //      if ($coupon->RecordCount() > 0 && $orderTotalDetails['totalFull'] != 0) {
       if ($coupon->RecordCount() > 0 && $orderTotalDetails['orderTotal'] != 0 ) {
 // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 3 of 3
 //        if (strval($orderTotalDetails['totalFull']) >= $coupon->fields['coupon_minimum_order']) {
 //        if (strval($orderTotalDetails['orderTotal']) >= $coupon->fields['coupon_minimum_order']) {
-        if (strval($coupon_total) >= $coupon->fields['coupon_minimum_order']) {
+
+//        if (strval($coupon_total) >= $coupon->fields['coupon_minimum_order']) {
+        if (strval($coupon_total_minimum) >= $coupon->fields['coupon_minimum_order']) {
           switch($coupon->fields['coupon_type'])
           {
             case 'S': // Free Shipping
@@ -454,14 +477,18 @@ class ot_coupon {
               return $od_amount;
               break;
             case 'P': // percentage
-              $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
+//              $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
+              $od_amount['total'] = zen_round($coupon_total*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type'];
-              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+//              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+              $ratio = $od_amount['total']/$coupon_total;
               break;
             case 'E': // percentage & Free Shipping
-              $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
+//              $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
+              $od_amount['total'] = zen_round($coupon_total*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type'];
-              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+//              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+              $ratio = $od_amount['total']/$coupon_total;
               // add in Free Shipping
               $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
@@ -470,14 +497,18 @@ class ot_coupon {
               }
               break;
             case 'F': // amount Off
-              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
+//              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
+              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($coupon_total>0), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
-              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+//              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+              $ratio = $od_amount['total']/$coupon_total;
               break;
             case 'O': // amount off & Free Shipping
-              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
+//              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
+              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($coupon_total>0), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
-              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+//              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
+              $ratio = $od_amount['total']/$coupon_total;
               // add in Free Shipping
               $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
@@ -486,6 +517,7 @@ class ot_coupon {
               }
               break;
           }
+//@@TODO - Standard and Credit_Note
           switch ($this->calculate_tax)
           {
             case 'None':

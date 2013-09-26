@@ -79,6 +79,7 @@ UPDATE admin_pages SET sort_order = 1 WHERE page_key = 'users';
 UPDATE admin_pages SET sort_order = 2 WHERE page_key = 'profiles';
 
 ALTER TABLE coupons ADD coupon_total TINYINT(1) NOT NULL DEFAULT '0';
+ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT '0';
 ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
 
 ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
