@@ -56,6 +56,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     global $db;
     if (!is_object($db)) {
       //PHP 5.2.0 bug workaround ...
+      if (!class_exists('base')) require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php');
       if (!class_exists('queryFactory')) require('includes/classes/db/' .DB_TYPE . '/query_factory.php');
       $db = new queryFactory();
       $db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false);
