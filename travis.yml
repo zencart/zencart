@@ -1,0 +1,7 @@
+language: php
+php:
+  - 5.4
+env:
+  - DB=mysql
+before_script:
+  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS zencart;" -uroot; fi
