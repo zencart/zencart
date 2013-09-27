@@ -20,9 +20,6 @@ if (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramew
 } elseif (file_exists('testFramework/config/localconfig_main.php'))
 {
   require_once ('testFramework/config/localconfig_main.php');
-} elseif (file_exists('not_for_release/config/localconfig_main.php'))
-{
-  require_once ('not_for_release/config/localconfig_main.php');
 } else 
 {
   die('COULD NOT FIND CONFIG FILE');
