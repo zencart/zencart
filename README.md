@@ -51,5 +51,5 @@ For news and updates about Zen Cart&reg;, follow us on [Twitter](http://twitter.
 
 
 .
-*&copy;Copyright 2003-2012, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2013, Zen Cart&reg;. All rights reserved.*
 
