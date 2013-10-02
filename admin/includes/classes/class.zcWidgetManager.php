@@ -103,7 +103,6 @@ class zcWidgetManager extends base
         {
           $className = 'zcDashboardWidget' . self::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
           $fileName = 'class.' . $className . '.php';
-          DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/' . $fileName;
           if (file_exists(DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/' . $fileName))
           {
             require(DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/' . $fileName);
