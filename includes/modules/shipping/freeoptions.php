@@ -82,6 +82,7 @@ class freeoptions extends base {
       // -----
       // eof: optional additional code
     }
+//echo 'FREEOPTIONS function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**

@@ -77,6 +77,7 @@ class freeshipper extends base {
       // -----
       // eof: optional additional code
     }
+//echo 'FREESHIPPER function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**

@@ -7,8 +7,8 @@
  * @version $Id: flatmultiple.php 14498 2009-10-01 20:16:16Z ajeh $
  */
 /**
- * Store-Pickup / Will-Call shipping method
- * with multiple location choices as radio-buttons
+ * Flat Rate shipping method
+ * with multiple names and prices choices as radio-buttons
  */
 class flatmultiple extends base {
   /**
@@ -65,6 +65,7 @@ class flatmultiple extends base {
    */
   function update_status() {
     global $order, $db;
+    if (IS_ADMIN_FLAG == TRUE) return;
 
     // disable only when entire cart is free shipping
     if (zen_get_shipping_enabled($this->code) == FALSE) $this->enabled = FALSE;
@@ -80,6 +81,7 @@ class flatmultiple extends base {
       // -----
       // eof: optional additional code
     }
+//echo 'FLATMULTIPLE function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**

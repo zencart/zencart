@@ -81,6 +81,7 @@ class perweightunit extends base {
       // -----
       // eof: optional additional code
     }
+//echo 'PERWEIGHTUNIT function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**

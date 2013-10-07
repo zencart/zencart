@@ -77,7 +77,7 @@ class table extends base {
       // -----
       // eof: optional additional code
     }
-//echo 'TABLE function update_status $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . '<br>';
+//echo 'TABLE function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**

@@ -78,7 +78,7 @@ class flat extends base {
       // eof: optional additional code
     }
 
-//echo 'FLAT function update_status $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
+//echo 'FLAT function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**
@@ -129,7 +129,7 @@ class flat extends base {
    */
   function quote($method = '') {
     global $order;
-//echo 'FLAT function quote BEFORE missing IF $this->enabled $this->uspsQuote $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
+
     $this->quotes = array('id' => $this->code,
                           'module' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
                           'methods' => array(array('id' => $this->code,

@@ -219,7 +219,7 @@ class zones extends base {
       // -----
       // eof: optional additional code
     }
-//echo 'ZONES function update_status $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
+//echo 'ZONES function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**
