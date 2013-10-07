@@ -62,6 +62,7 @@ class flat extends base {
    */
   function update_status() {
     global $order, $db;
+    if (IS_ADMIN_FLAG == TRUE) return;
 
     // disable only when entire cart is free shipping
     if (zen_get_shipping_enabled($this->code) == FALSE) $this->enabled = FALSE;
@@ -73,10 +74,11 @@ class flat extends base {
       // Optionally add additional code here to disable the module by changing $this->enabled to false based on whatever custom rules you require.
       // -----
 
-
       // -----
       // eof: optional additional code
     }
+
+//echo 'FLAT function update_status $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**
@@ -127,7 +129,7 @@ class flat extends base {
    */
   function quote($method = '') {
     global $order;
-
+//echo 'FLAT function quote BEFORE missing IF $this->enabled $this->uspsQuote $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
     $this->quotes = array('id' => $this->code,
                           'module' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
                           'methods' => array(array('id' => $this->code,

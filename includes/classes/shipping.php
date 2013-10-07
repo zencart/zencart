@@ -157,6 +157,8 @@ class shipping extends base {
 
       $size = sizeof($include_quotes);
       for ($i=0; $i<$size; $i++) {
+        if (method_exists($GLOBALS[$include_quotes[$i]], 'update_status')) $GLOBALS[$include_quotes[$i]]->update_status();
+        if (FALSE == $GLOBALS[$include_quotes[$i]]->enabled) continue;
         $save_shipping_weight = $shipping_weight;
         $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
         $shipping_weight = $save_shipping_weight;

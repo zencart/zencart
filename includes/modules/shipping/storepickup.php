@@ -65,6 +65,7 @@ class storepickup extends base {
    */
   function update_status() {
     global $order, $db;
+    if (IS_ADMIN_FLAG == TRUE) return;
 
     /** THIS SECTION COMMENTED-OUT FOR STORE-PICKUP ONLY:
     // disable only when entire cart is free shipping

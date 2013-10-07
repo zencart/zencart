@@ -61,6 +61,7 @@ class freeshipper extends base {
    */
   function update_status() {
     global $order, $db;
+    if (IS_ADMIN_FLAG == TRUE) return;
 
     // disable only when entire cart is free shipping
     if (zen_get_shipping_enabled($this->code) == FALSE) $this->enabled = FALSE;
