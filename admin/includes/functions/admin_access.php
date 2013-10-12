@@ -367,12 +367,18 @@ function zen_validate_user_login($admin_name, $admin_pass)
       }
     }
   } // END LOGIN SLAM PREVENTION
-  // deal with expireds
-  if ($error == FALSE && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL))
+  // deal with expireds for SSL change
+  if ($error == FALSE && $result['pwd_last_change_date']  == '1990-01-01 14:02:22')
   {
     $expired = true;
     $error = true;
-    if ($result['pwd_last_change_date']  == '1990-01-01 14:02:22') $message = ($message == '' ? '' : $message . '<br /><br />') . EXPIRED_DUE_TO_SSL;
+    $message = ($message == '' ? '' : $message . '<br /><br />') . EXPIRED_DUE_TO_SSL;
+  }
+  // deal with expireds for PA-DSS
+  if ($error == FALSE && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL))
+  {
+    $expired = true;
+    $error = true;
   }
   if ($error == false)
   {
@@ -416,6 +422,7 @@ function zen_check_for_password_problems($password, $adminID = 0)
   // if no user specified, skip checking history
   if ($adminID == 0) return $error;
   // passwords cannot be same as last 4
+  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return $error; // skip the check if flag disabled
   $sql = "SELECT admin_pass, prev_pass1, prev_pass2, prev_pass3 FROM " . TABLE_ADMIN . "
           WHERE admin_id = :adminID:";
   $sql = $db->bindVars($sql, ':adminID:', $adminID, 'integer');
@@ -432,11 +439,12 @@ function zen_check_for_password_problems($password, $adminID = 0)
 
 /**
  * Check whether the specified admin user's password expired more than 90 days ago
- * THIS IS A PA-DSS REQUIREMENT AND MUST NOT BE CHANGED
+ * THIS IS A PA-DSS REQUIREMENT AND MUST NOT BE CHANGED WITHOUT VOIDING COMPLIANCE
  *
  * @param string $adminID
  */
 function zen_check_for_expired_pwd ($adminID) {
+  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return;
   global $db;
   $sql = "SELECT admin_id FROM " . TABLE_ADMIN . "
           WHERE admin_id = :adminID:

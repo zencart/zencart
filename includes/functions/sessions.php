@@ -13,8 +13,10 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
   if (IS_ADMIN_FLAG === true) {
-    if (!$SESS_LIFE = (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN)) {
-      $SESS_LIFE = (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN);
+    if (PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED != 0 && SESSION_TIMEOUT_ADMIN > 900) {
+      $SESS_LIFE = 900;
+    } else {
+      $SESS_LIFE = (int)SESSION_TIMEOUT_ADMIN;
     }
   } else {
     if (defined('SESSION_TIMEOUT_CATALOG')) {
