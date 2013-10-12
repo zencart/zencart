@@ -1359,7 +1359,7 @@ CREATE TABLE paypal_payment_status_history (
   txn_id varchar(64) NOT NULL default '',
   parent_txn_id varchar(64) NOT NULL default '',
   payment_status varchar(17) NOT NULL default '',
-  pending_reason varchar(14) default NULL,
+  pending_reason varchar(32) default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY (payment_status_history_id),
   KEY idx_paypal_ipn_id_zen (paypal_ipn_id)
