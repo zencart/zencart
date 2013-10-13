@@ -180,22 +180,35 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
 #
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('general-statistics', 'general-statistics', 1),
-('order-summary', 'order-statistics', 1);
+('order-summary', 'order-statistics', 1), 
+('new-customers', 'new-customers', 1), 
+('counter-history', 'counter-history', 1),
+('new-orders', 'new-orders', 1)
+;
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
 ('general-statistics', 'General Statistics', '', 1),
-('order-summary', 'Order Summary', '', 1);
+('order-summary', 'Order Summary', '', 1),
+('new-customers', 'New Customers', '', 1),
+('counter-history', 'Counter History', '', 1),
+('new-orders', 'New Orders', '', 1)
+;
 
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
 ('general-statistics', 1, 'General Statistics'),
-('order-statistics', 1, 'Order Statistics');
+('order-statistics', 1, 'Order Statistics'),
+('new-customers', 1, 'New Customers'),
+('counter-history', 1, 'Counter History'),
+('new-orders', 1, 'New Orders')
+;
 
-
-# default widgets for first user
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
 ('general-statistics', 1, 0, 0),
-('order-summary', 1, 0, 1);
-
+('order-summary', 1, 1, 0),
+('new-customers', 1, 0, 1),
+('counter-history', 1, 1, 1),
+('new-orders', 1, 0, 2)
+;
 
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
 ## CHANGE-411 increase size of fileds in admin profile related tables

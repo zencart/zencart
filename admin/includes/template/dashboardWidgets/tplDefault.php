@@ -8,6 +8,12 @@
  * @version GIT: $Id: Author: DrByte  Sun Aug 5 20:48:10 2012 -0400 Modified in v1.5.1 $
  */
 ?>
-  <?php foreach ($tplVars['widget']['content'] as $entry) { ?>
+<?php
+  if (sizeof($tplVars['widget']['content']) > 0) { 
+    foreach ($tplVars['widget']['content'] as $entry) { 
+?>
       <div class="widget-row"><span><?php echo $entry['text']; ?></span><span class="right"><?php echo $entry['value']; ?></span></div>
-  <?php } ?>
+<?php
+    }
+  }
+?>
