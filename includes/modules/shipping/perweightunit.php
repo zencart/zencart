@@ -65,6 +65,7 @@ class perweightunit extends base {
    */
   function update_status() {
     global $order, $db;
+    if (IS_ADMIN_FLAG == TRUE) return;
 
     // disable only when entire cart is free shipping
     if (zen_get_shipping_enabled($this->code) == FALSE) $this->enabled = FALSE;
@@ -80,6 +81,7 @@ class perweightunit extends base {
       // -----
       // eof: optional additional code
     }
+//echo 'PERWEIGHTUNIT function ' . __FUNCTION__ . ' $this->enabled: ' . ($this->enabled ? ' ON' : ' OFF') . ' $shipping_weight: ' . $shipping_weight . '<br>';
   }
 
   /**

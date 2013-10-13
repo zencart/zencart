@@ -31,7 +31,7 @@ if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTOR
   }
   if ($selected_dir == '') $selected_dir = DIR_FS_ROOT . 'cache';
 
-  $sql = "update " . DB_PREFIX . "configuration set configuration_value = '" . $db->prepare_input(trim($selected_dir)) . "' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
+  $sql = "update " . TABLE_CONFIGURATION . " set configuration_value = '" . $db->prepare_input(trim($selected_dir)) . "' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
   $db->Execute($sql);
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
   exit(1);
