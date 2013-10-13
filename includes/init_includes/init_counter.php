@@ -15,8 +15,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  * update counter and counter history if appropriate
  **/
 $update_counter = TRUE;
-if ($spider_flag == false) $update_counter = FALSE;
-if (!strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) $update_counter = FALSE;
+if ($spider_flag) $update_counter = FALSE;
+if (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']) !== FALSE) $update_counter = FALSE;
 
 if ($update_counter == TRUE) {
   if (isset($_SESSION['session_counter']) && $_SESSION['session_counter'] == true) {
