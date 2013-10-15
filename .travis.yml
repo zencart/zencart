@@ -1,7 +1,14 @@
 language: php
 php:
-  - 5.4
-env:
-  - DB=mysql
+  - "5.4"
+#  - "5.3"
+#  - "5.5"
+env: DB=mysql
+services: memcached
+install: true
 before_script:
-  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS zencart;" -uroot; fi
+  - mysql -e "create database IF NOT EXISTS zencart;" --utravis
+#  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+script:
+  - phpunit testFramework/unittests/testTestCase.php
+  - phpunit --configuration testFramework/webtests/phpunit.xml
