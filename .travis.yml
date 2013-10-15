@@ -7,7 +7,7 @@ env: DB=mysql
 services: memcached
 install: true
 before_script:
-  - mysql -e "create database IF NOT EXISTS zencart;" --utravis
+  - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
 #  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script:
   - phpunit testFramework/unittests/testTestCase.php
