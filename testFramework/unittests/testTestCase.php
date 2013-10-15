@@ -3,7 +3,7 @@
  * File contains framework test cases
  *
  * @package tests
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
@@ -17,8 +17,8 @@ if (file_exists('PHPUnit/Framework.php') && !file_exists('PHPUnit/Autoload.php')
  *
  */
 define('TESTCWD', realpath(dirname(__FILE__)) . '/');
-define('DIR_FS_CATALOG', realpath(dirname(__FILE__) . '/../../../'));
-define('DIR_FS_INCLUDES', realpath(dirname(__FILE__) . '/../../../') . '/includes/');
+define('DIR_FS_CATALOG', realpath(dirname(__FILE__) . '/../../'));
+define('DIR_FS_INCLUDES', realpath(dirname(__FILE__) . '/../../') . '/includes/');
 define('CWD', DIR_FS_INCLUDES . '../');
 define('DIR_WS_CLASSES', '/includes/classes/');
 if (strpos(@ini_get('include_path'), '.') === false)
