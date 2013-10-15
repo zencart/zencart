@@ -932,7 +932,7 @@
       if ($optionsST['amount'] < $optionsST['tax_cart']) $optionsST['tax_cart'] = 0;
       if ($optionsST['amount'] < $optionsST['shipping']) $optionsST['shipping'] = 0;
       $discountProblemsFlag = TRUE;
-      $this->zcLog('getLineItemDetails 6', 'Discounts have caused the subtotal to calculate incorrectly. Line-item-details cannot be submitted.' . "\nBefore:" . print_r($pre, TRUE) . "\nAfter:" . print_r(array_merge($optionsST, $optionsLI), true));
+      ipn_logging('getLineItemDetails 6', 'Discounts have caused the subtotal to calculate incorrectly. Line-item-details cannot be submitted.' . "\nBefore:" . print_r($pre, TRUE) . "\nAfter:" . print_r(array_merge($optionsST, $optionsLI), true));
     }
 
     // if amount or subtotal values are 0 (ie: certain OT modules disabled), we have to get subtotals manually
