@@ -54,6 +54,8 @@ UPDATE configuration set configuration_title = 'Log Database Queries', configura
 UPDATE configuration set configuration_title = 'Enable HTML Emails?', configuration_description = 'Send emails in HTML format if recipient has enabled it in their preferences.' WHERE configuration_key = 'EMAIL_USE_HTML';
 UPDATE configuration set configuration_title = 'Email Admin Format?', configuration_description = 'Please select the Admin extra email format (Note: Enable HTML Emails must be on for HTML option to work)' WHERE configuration_key = 'ADMIN_EXTRA_EMAIL_FORMAT';
 
+INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$city $state / $country');
+UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
 
 ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
 ALTER TABLE whos_online MODIFY session_id varchar(255) NOT NULL default '';
