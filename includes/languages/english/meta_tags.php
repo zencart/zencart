@@ -8,7 +8,6 @@
  */
 
 // page title
-define('TITLE', 'Zen Cart!');
 if (IS_ADMIN_FLAG) 
 {
   define('TITLE', 'Admin '. STORE_NAME);
