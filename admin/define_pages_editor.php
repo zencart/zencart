@@ -96,8 +96,6 @@
   }
   if (!$lng_exists) $_SESSION['language'] = $language;
 
-
-require('includes/admin_html_head.php');
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
