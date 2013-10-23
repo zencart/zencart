@@ -184,8 +184,8 @@
     $status_check[] = array('Importance' => 'Info', 'Title' => LABEL_REGISTER_GLOBALS, 'Status' => $register_globals, 'Class' => $this_class, 'HelpURL' =>ERROR_CODE_REGISTER_GLOBALS_ON, 'HelpLabel'=>ERROR_TEXT_REGISTER_GLOBALS_ON);
   }
   //Check MySQL version
-  $mysql_support = (function_exists( 'mysql_connect' )) ? ON : OFF;
-  $mysql_version = (function_exists('mysql_get_server_info')) ? @mysql_get_server_info() : UNKNOWN;
+  $mysql_support = (function_exists( 'mysqli_connect' )) ? ON : OFF;
+  $mysql_version = (function_exists('mysqli_get_server_info')) ? @mysqli_get_server_info() : UNKNOWN;
   $mysql_version = ($mysql_version == '') ? UNKNOWN : $mysql_version ;
   //if (is_object($db_test)) $mysql_qry=$db_test->get_server_info();
   $mysql_ver_class = ($mysql_version<'4.1.0') ? 'FAIL' : 'OK';

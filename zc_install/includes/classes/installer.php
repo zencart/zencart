@@ -154,7 +154,7 @@
 
     function functionExists($zp_type, $zp_error_text, $zp_error_code) {
       if ($zp_type == 'mysql') {
-        $function = 'mysql_connect';
+        $function = 'mysqli_connect';
       }
       if (!function_exists($function)) {
         $this->setError($zp_error_text, $zp_error_code, true);
@@ -164,14 +164,14 @@
     function dbConnect($zp_type, $zp_host, $zp_database, $zp_username, $zp_pass, $zp_error_text, $zp_error_code, $zp_error_text2=ERROR_TEXT_DB_NOTEXIST, $zp_error_code2=ERROR_CODE_DB_NOTEXIST) {
       if ($this->error == false) {
         if ($zp_type == 'mysql') {
-          $link = @mysql_connect($zp_host, $zp_username, $zp_pass);
+          $link = @mysqli_connect($zp_host, $zp_username, $zp_pass);
           if ($link == false ) {
-            $this->setError($zp_error_text.'<br />'.@mysql_error(), $zp_error_code, true);
+            $this->setError($zp_error_text.'<br />'.@mysqli_error(), $zp_error_code, true);
           } else {
-            if (!@mysql_select_db($zp_database, $link)) {
-              $this->setError($zp_error_text2.'<br />'.@mysql_error(), $zp_error_code2, true);
+            if (!@mysqli_select_db($link, $zp_database)) {
+              $this->setError($zp_error_text2.'<br />'.@mysqli_error(), $zp_error_code2, true);
             } else {
-              @mysql_close($link);
+              @mysqli_close($link);
             }
           }
         }
@@ -180,7 +180,7 @@
 
     function dbCreate($zp_create, $zp_type, $zp_name, $zp_error_text, $zp_error_code) {
       if ($zp_create == 'true' && $this->error == false) {
-        if ($zp_type == 'mysql' && (@mysql_query('CREATE DATABASE ' . $zp_name) == false)) {
+        if ($zp_type == 'mysql' && (@mysqli_query('CREATE DATABASE ' . $zp_name) == false)) {
           $this->setError($zp_error_text, $zp_error_code, true);
         }
       }
@@ -190,11 +190,11 @@
       //    echo $zp_create;
       if ($zp_create != 'true' && $this->error == false) {
         if ($zp_type == 'mysql') {
-          $link = @mysql_connect($zp_host, $zp_username, $zp_pass);
-          if (@mysql_select_db($zp_name, $link) == false) {
-            $this->setError($zp_error_text.'<br />'.@mysql_error(), $zp_error_code, true);
+          $link = @mysqli_connect($zp_host, $zp_username, $zp_pass);
+          if (@mysqli_select_db($link, $zp_name) == false) {
+            $this->setError($zp_error_text.'<br />'.@mysqli_error(), $zp_error_code, true);
           }
-          @mysql_close($link);
+          @mysqli_close($link);
         }
       }
     }
