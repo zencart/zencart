@@ -69,7 +69,7 @@ class testInstall extends zcCommonTestResources
   {
     $this->open('http://' . BASE_URL);
     $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!, The Art of E-commerce');
+    $this->assertTitle('Selenium Test Store on bamboo-test.zen-cart.com/v160/, The Art of E-commerce');
     $this->assertTextPresent('glob:*' . WEBTEST_STORE_NAME . '*');
   }
 
@@ -257,7 +257,7 @@ class testInstall extends zcCommonTestResources
     $this->open('http://' . DIR_WS_ADMIN . 'modules.php?set=payment&module=cod');
     $this->waitForPageToLoad(10000);
     $this->clickAndWait("//input[@name='installButton']");
-    $this->assertEquals("Zen Cart!", $this->getTitle());
+    $this->assertTitle('Admin Selenium Test Store on bamboo-test.zen-cart.com/v160/');
     $this->clickAndWait("link=Admin Home");
     $this->clickAndWait("link=Logoff");
   }

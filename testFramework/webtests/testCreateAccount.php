@@ -17,7 +17,7 @@ class testCreateAccount extends zcCommonTestResources
   {
     $this->open('http://' . BASE_URL);
     $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!, The Art of E-commerce');
+    $this->assertTitle('Selenium Test Store on bamboo-test.zen-cart.com/v160/, The Art of E-commerce');
     $this->assertTextPresent('glob:*'. WEBTEST_STORE_NAME . '*');
     $this->clickAndWait('link=Log In');
     $this->assertTextPresent('glob:*Welcome, Please Sign In*');
@@ -42,7 +42,7 @@ class testCreateAccount extends zcCommonTestResources
   {
     $this->open('http://' . BASE_URL);
     $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!, The Art of E-commerce');
+    $this->assertTitle('Selenium Test Store on bamboo-test.zen-cart.com/v160/, The Art of E-commerce');
     $this->assertTextPresent('glob:*'. WEBTEST_STORE_NAME . '*');
     $this->clickAndWait('link=Log In');
     $this->assertTextPresent('glob:*Welcome, Please Sign In*');
@@ -67,7 +67,7 @@ class testCreateAccount extends zcCommonTestResources
   {
     $this->open('http://' . BASE_URL);
     $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!, The Art of E-commerce');
+    $this->assertTitle('Selenium Test Store on bamboo-test.zen-cart.com/v160/, The Art of E-commerce');
     $this->assertTextPresent('glob:*'. WEBTEST_STORE_NAME . '*');
     $this->clickAndWait('link=Log In');
     $this->assertTextPresent('glob:*Welcome, Please Sign In*');
@@ -92,7 +92,7 @@ class testCreateAccount extends zcCommonTestResources
   {
     $this->open('http://' . BASE_URL);
     $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!, The Art of E-commerce');
+    $this->assertTitle('Selenium Test Store on bamboo-test.zen-cart.com/v160/, The Art of E-commerce');
     $this->assertTextPresent('glob:*'. WEBTEST_STORE_NAME . '*');
     $this->clickAndWait('link=Log In');
     $this->assertTextPresent('glob:*Welcome, Please Sign In*');
@@ -115,7 +115,7 @@ class testCreateAccount extends zcCommonTestResources
 
     $this->open('http://' . BASE_URL);
     $this->waitForPageToLoad(10000);
-    $this->assertTitle('Zen Cart!, The Art of E-commerce');
+    $this->assertTitle('Selenium Test Store on bamboo-test.zen-cart.com/v160/, The Art of E-commerce');
     $this->assertTextPresent('glob:*'. WEBTEST_STORE_NAME . '*');
     $this->clickAndWait('link=Log In');
     $this->assertTextPresent('glob:*Welcome, Please Sign In*');
