@@ -228,7 +228,7 @@
           $mInfo = new objectInfo($module_info);
         }
         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
-          if ($check > 0) {
+          if ($module->check() > 0) {
             echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . zen_output_string_protected($set) . '&module=' . $class . '&action=edit', 'SSL') . '\'">' . "\n";
           } else {
             echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
