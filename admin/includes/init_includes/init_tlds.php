@@ -10,8 +10,9 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $http_domain = zen_get_top_level_domain(HTTP_SERVER);
-$cookieDomain = $http_domain;
-if (defined('HTTP_COOKIE_DOMAIN'))
+$https_domain = zen_get_top_level_domain(HTTPS_SERVER);
+$cookieDomain = $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
+if (defined('HTTP_COOKIE_DOMAIN') && ($request_type == 'NONSSL'))
 {
   $cookieDomain = HTTP_COOKIE_DOMAIN;
 } elseif (defined('HTTPS_COOKIE_DOMAIN') && ($request_type != 'NONSSL'))
