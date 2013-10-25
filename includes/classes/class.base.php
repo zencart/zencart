@@ -54,7 +54,7 @@ class base {
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
     if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 'false' && NOTIFIER_TRACE != 'Off') {
       $file = DIR_FS_LOGS . '/notifier_trace.log';
-      $paramArray = (is_array($param1) && sizeof($param1) == 0) ? array() : array('param1' => $param1);
+      $paramArray = array('param1' => $param1);
       for ($i = 2; $i < 8; $i++) {
         $param_n = "param$i";
         if ($$param_n !== NULL) {
@@ -73,11 +73,17 @@ class base {
     // handle observers
     // observers can fire either a generic update() method, or a notifier-point-specific updateNotifierPointCamelCased() method. The specific one will fire if found; else the generic update() will fire instead.
     $observers = & base::getStaticObserver();
-    if (!is_null($observers))
+    if (is_null($observers)) {
+      return;
+    } else
     {
       foreach($observers as $key=>$obs) {
-        if ($obs['eventID'] == $eventID) {
-          $obs['obs']->update($this, $eventID, $paramArray);
+        if ($obs['eventID'] == $eventID || $obs['eventID'] === '*') {
+         $method = 'update';
+         $testMethod = $method . self::camelize(strtolower($eventID), TRUE);
+         if (method_exists($obs['obs'], $testMethod))
+           $method = $testMethod;
+         $obs['obs']->{$method}($this, $eventID, $param1,$param2,$param3,$param4,$param5,$param6,$param7);
         }
       }
     }
