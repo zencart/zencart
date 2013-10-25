@@ -86,7 +86,14 @@ if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
 require('../includes/classes/class.base.php');
 require('../includes/classes/class.notifier.php');
 require('includes/functions/general.php');
-
+$sanitGets = array('action', 'adv', 'configfile', 'debug', 'debug2', 'debug3', 'error_code', 'ignorefatal', 'ignorephpver', 'language', 'main_page', 'nogrants', 'overrideconfig', 'reset');
+foreach ($sanitGets as $key)
+{
+  if (isset($_GET[$key]))
+  {
+    $_GET[$key] = preg_replace('/[^0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
+  }
+}
 /**
  * set the type of request (secure or not)
  */
