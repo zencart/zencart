@@ -12,6 +12,8 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">
   <input type="hidden" name="dir_ws_https_catalog" value="<?php echo $dir_ws_https_catalog; ?>">
+  <input type="hidden" name="detected_detected_http_server_catalog" value="<?php echo $catalogHttpServer; ?>">
+  <input type="hidden" name="detected_detected_https_server_catalog" value="<?php echo $catalogHttpsServer; ?>">
   <input type="hidden" name="adminDir" value="<?php echo $adminDir; ?>">
   <input type="hidden" name="db_type" value="<?php echo $db_type; ?>">
   <fieldset>
