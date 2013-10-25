@@ -106,6 +106,7 @@ Improvements:
 <li>CHANGE-491 - Timezone patch for PHP 5.3/5.4/5.5</li>
 <li>CHANGE-566 - Add Admin switch to relax PA-DSS "strong" password requirements when in Demo mode</li>
 <li>CHANGE-432 - Numerous fixes for stricter PHP 5.4 compatibility</li>
+<li>CHANGE-543 - Updates for PHP 5.5 Compatibility</li>
 <li>CHANGE-350 - Improvements to queryFactory to better support sql caching</li>
 <li>CHANGE-359 - Add advanced developer tool for Notifier Trace and a global eventID</li>
 <li>CHANGE-412 - Increase length of session key field due to changes in PHP defaults</li>
@@ -150,7 +151,7 @@ Fixes:
 <li>CHANGE-398 - Store Manager log purge improvements</li>
 <li>CHANGE-403 - Fix PayPal EC to prevent use of ImmediatePayment when AuthOnly is selected</li>
 <li>CHANGE-411 - Increase size of fields in tables for admin profiles</li>
-<li>CHANGE-413 and CHANGE-497 - Change date/time display format in admin header to be consistent with configured preference</li>
+<li>CHANGE-413 - Change date/time display format in admin header to be consistent with configured preference</li>
 <li>CHANGE-416 - Prevent unauthorized information disclosure with editor</li>
 <li>CHANGE-417 - Fix for issue where email confirmation gets truncated on the &lt; symbol in product names</li>
 <li>CHANGE-422 - Fix overzealous regex for handling IPv6</li>
@@ -173,10 +174,11 @@ Fixes:
 <li>CHANGE-474 - Fix boolean typo on comparison in ot_cod_fee module</li>
 <li>CHANGE-476 - Fix for zen_mail doesn't always use default template for non-english use</li>
 <li>CHANGE-478 - Fix Incorrect base_href in admin-sent HTML emails in some configurations</li>
-<li>CHANGE-487a - Simplify filesmatch rules in htaccess by adding case-insensitivity flag</li>
-<li>CHANGE-487b - Add webm permission to htaccess rules for media-playback and downloadable-files</li>
+<li>CHANGE-487 - a Simplify filesmatch rules in htaccess by adding case-insensitivity flag</li>
+<li>CHANGE-487 - b Add webm permission to htaccess rules for media-playback and downloadable-files</li>
 <li>CHANGE-489 - Added additional notifiers to order.php class</li>
 <li>CHANGE-491 - Improvements to automated timezone detection</li>
+<li>CHANGE-497 - Improvements to date/time display in admin header</li>
 <li>CHANGE-498 - Fix proxy-detection support for EXCLUDE_ADMIN_IP_FOR_MAINTENANCE and zen_get_ip_address() vs $_SERVER['REMOTE_ADDR']</li>
 <li>CHANGE-506 - Fix robots tag in admin pages</li>
 <li>CHANGE-509 - Fix minor incorrect variable declaration in option_values_manager.php</li>
@@ -186,7 +188,6 @@ Fixes:
 <li>CHANGE-526 - Additional notifier to allow additional validation in account_edit page</li>
 <li>CHANGE-529 - Fix variable initialization in Shipping Estimator</li>
 <li>CHANGE-532 - Init system - move navigation history to after init_sanitize</li>
-<li>CHANGE-543 - Updates for PHP 5.5 Compatibility</li>
 <li>CHANGE-544 - phpMailer upgrade</li>
 <li>CHANGE-545 - Allow countries to be flagged as available/unavailable for shipping  (built from a combination of code backported from v2 and a contribution by lat9)</li>
 <li>CHANGE-546 - Init system - Relocate version constants to the beginning of the autoloader process.</li>
@@ -213,6 +214,9 @@ Fixes:
 <li>CHANGE-605 - Fix error in PayPal Standard - PHP Fatal error: Using $this when not in object context</li>
 <li>CHANGE-591 - Fix Australia address format to remove comma</li>
 <li>CHANGE-609 - PR12 - Address formats for Belgium, Netherlands</li>
+<li>CHANGE-610 - lat9 $param1 array output reduction in notifier trace</li>
+<li>CHANGE-611 - Sanitize all known get parameters.</li>
+<li>CHANGE-612 - Sanitize all known get parameters.</li>
 </ul>
 
 
