@@ -36,10 +36,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
   // clean up URL before executing it
-    while (strstr($url, '&&')) $url = str_replace('&&', '&', $url);
-    while (strstr($url, '&amp;&amp;')) $url = str_replace('&amp;&amp;', '&amp;', $url);
+    $url = preg_replace('/&{2,}/', '&', $url);
+    $url = preg_replace('/(&amp;)+/', '&amp;', $url);
     // header locates should not have the &amp; in the address it breaks things
-    while (strstr($url, '&amp;')) $url = str_replace('&amp;', '&', $url);
+    $url = preg_replace('/(&amp;)+/', '&', $url);
 
     if ($httpResponseCode == '') {
       header('Location: ' . $url);
@@ -159,8 +159,9 @@ if (!defined('IS_ADMIN_FLAG')) {
         }
       }
     }
-    while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
-    while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
+
+    $get_url = preg_replace('/&{2,}/', '&', $get_url);
+    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
 
     return $get_url;
   }
@@ -1078,7 +1079,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // set current box id
   function zen_get_box_id($box_id) {
-    while (strstr($box_id, '_')) $box_id = str_replace('_', '', $box_id);
+    $box_id = str_replace('_', '', $box_id);
     $box_id = str_replace('.php', '', $box_id);
     return $box_id;
   }
@@ -1254,16 +1255,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     $clean_it= nl2br($clean_it);
 
-// update breaks with a space for text displays in all listings with descriptions
-    while (strstr($clean_it, '<br>'))   $clean_it = str_replace('<br>',   ' ', $clean_it);
-    while (strstr($clean_it, '<br />')) $clean_it = str_replace('<br />', ' ', $clean_it);
-    while (strstr($clean_it, '<br/>'))  $clean_it = str_replace('<br/>',  ' ', $clean_it);
-    while (strstr($clean_it, '<p>'))    $clean_it = str_replace('<p>',    ' ', $clean_it);
-    while (strstr($clean_it, '</p>'))   $clean_it = str_replace('</p>',   ' ', $clean_it);
+  // update breaks with a space for text displays in all listings with descriptions
+    $clean_it = preg_replace('~(<br ?/?>|</?p>)~', ' ', $clean_it);
 
 // temporary fix more for reviews than anything else
-    while (strstr($clean_it, '<span class="smallText">')) $clean_it = str_replace('<span class="smallText">', ' ', $clean_it);
-    while (strstr($clean_it, '</span>')) $clean_it = str_replace('</span>', ' ', $clean_it);
+    $clean_it = str_replace('<span class="smallText">', ' ', $clean_it);
+    $clean_it = str_replace('</span>', ' ', $clean_it);
 
 // clean general and specific tags:
     $taglist = array('strong','b','u','i','em');
@@ -1273,7 +1270,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
 // remove any double-spaces created by cleanups:
-    while (strstr($clean_it, '  ')) $clean_it = str_replace('  ', ' ', $clean_it);
+    $clean_it = preg_replace('/[ ]+/', ' ', $clean_it);
 
 // remove other html code to prevent problems on display of text
     $clean_it = strip_tags($clean_it);

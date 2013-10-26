@@ -1169,9 +1169,8 @@ If a special exist * 10
 // calculate words
   function zen_get_word_count($string, $free=0) {
     $string = str_replace(array("\r\n", "\n", "\r", "\t"), ' ', $string);
-
     if ($string != '') {
-      while (strstr($string, '  ')) $string = str_replace('  ', ' ', $string);
+      $string = preg_replace('/[ ]+/', ' ', $string);
       $string = trim($string);
       $word_count = substr_count($string, ' ');
       return (($word_count+1) - $free);
@@ -1185,7 +1184,6 @@ If a special exist * 10
 ////
 // calculate words price
   function zen_get_word_count_price($string, $free=0, $price) {
-
     $word_count = zen_get_word_count($string, $free);
     if ($word_count >= 1) {
       return ($word_count * $price);
@@ -1199,8 +1197,7 @@ If a special exist * 10
 // calculate letters
   function zen_get_letters_count($string, $free=0) {
     $string = str_replace(array("\r\n", "\n", "\r", "\t"), ' ', $string);
-
-    while (strstr($string, '  ')) $string = str_replace('  ', ' ', $string);
+    $string = preg_replace('/[ ]+/', ' ', $string);
     $string = trim($string);
     if (TEXT_SPACES_FREE == '1') {
       $letters_count = strlen(str_replace(' ', '', $string));

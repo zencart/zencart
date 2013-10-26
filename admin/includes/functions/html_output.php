@@ -26,7 +26,7 @@
       $separator = '&';
     }
 
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+    $link = rtrim($link, '&?');
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( ($add_session_id == true) && ($session_started == true) )
@@ -63,7 +63,7 @@
       $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
     }
 
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+    $link = rtrim($link, '&?');
 
     return $link;
   }

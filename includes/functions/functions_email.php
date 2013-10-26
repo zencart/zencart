@@ -123,9 +123,9 @@
 
       // bof: body of the email clean-up
       // clean up &amp; and && from email text
-      while (strstr($email_text, '&amp;&amp;')) $email_text = str_replace('&amp;&amp;', '&amp;', $email_text);
-      while (strstr($email_text, '&amp;')) $email_text = str_replace('&amp;', '&', $email_text);
-      while (strstr($email_text, '&&')) $email_text = str_replace('&&', '&', $email_text);
+      $email_text = preg_replace('/(&amp;)+/', '&amp;', $email_text);
+      $email_text = preg_replace('/(&amp;)+/', '&', $email_text);
+      $email_text = preg_replace('/&{2,}/', '&', $email_text);
 
       // clean up currencies for text emails
       $zen_fix_currencies = preg_split("/[:,]/" , CURRENCIES_TRANSLATIONS);
@@ -139,9 +139,9 @@
       }
 
       // fix double quotes
-      while (strstr($email_text, '&quot;')) $email_text = str_replace('&quot;', '"', $email_text);
+      $email_text = preg_replace('/(&quot;)+/', '"', $email_text);
       // prevent null characters
-      while (strstr($email_text, chr(0))) $email_text = str_replace(chr(0), ' ', $email_text);
+      $email_text = preg_replace('/\0+/', ' ', $email_text);
 
       // fix slashes
       $text = stripslashes($email_text);

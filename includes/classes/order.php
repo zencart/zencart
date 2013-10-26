@@ -1123,7 +1123,7 @@ class order extends base {
     // include copyright
     if (defined('EMAIL_FOOTER_COPYRIGHT')) $email_order .= "\n-----\n" . EMAIL_FOOTER_COPYRIGHT . "\n\n";
 
-    while (strstr($email_order, '&nbsp;')) $email_order = str_replace('&nbsp;', ' ', $email_order);
+    $email_order = str_replace('&nbsp;', ' ', $email_order);
 
     $html_msg['EMAIL_FIRST_NAME'] = $this->customer['firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $this->customer['lastname'];

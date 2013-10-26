@@ -1073,7 +1073,7 @@ If a special exist * 10+9
 // calculate words
   function zen_get_word_count($string, $free=0) {
     if ($string != '') {
-      while (strstr($string, '  ')) $string = str_replace('  ', ' ', $string);
+      $string = preg_replace('/[ ]+/', ' ', $string);
       $string = trim($string);
       $word_count = substr_count($string, ' ');
       return (($word_count+1) - $free);
@@ -1099,7 +1099,7 @@ If a special exist * 10+9
 ////
 // calculate letters
   function zen_get_letters_count($string, $free=0) {
-    while (strstr($string, '  ')) $string = str_replace('  ', ' ', $string);
+    $string = preg_replace('/[ ]+/', ' ', $string);
     $string = trim($string);
     if (TEXT_SPACES_FREE == '1') {
       $letters_count = strlen(str_replace(' ', '', $string));

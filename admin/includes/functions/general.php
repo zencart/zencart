@@ -13,10 +13,10 @@
     global $logger;
 
 // clean up URL before executing it
-    while (strstr($url, '&&')) $url = str_replace('&&', '&', $url);
-    while (strstr($url, '&amp;&amp;')) $url = str_replace('&amp;&amp;', '&amp;', $url);
+    $url = preg_replace('/&{2,}/', '&', $url);
+    $url = preg_replace('/(&amp;)+/', '&amp;', $url);
     // header locates should not have the &amp; in the address it breaks things
-    while (strstr($url, '&amp;')) $url = str_replace('&amp;', '&', $url);
+    $url = str_replace('&amp;', '&', $url);
 
     header('Location: ' . $url);
     session_write_close();
@@ -134,8 +134,8 @@
         }
       }
     }
-    while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
-    while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
+    $get_url = preg_replace('/&{2,}/', '&', $get_url);
+    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
 
     return $get_url;
   }
@@ -3105,13 +3105,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     $clean_it= nl2br($clean_it);
 
 // update breaks with a space for text displays in all listings with descriptions
-    while (strstr($clean_it, '<br>')) $clean_it = str_replace('<br>', ' ', $clean_it);
-    while (strstr($clean_it, '<br />')) $clean_it = str_replace('<br />', ' ', $clean_it);
-    while (strstr($clean_it, '<br/>')) $clean_it = str_replace('<br/>', ' ', $clean_it);
-    while (strstr($clean_it, '<p>')) $clean_it = str_replace('<p>', ' ', $clean_it);
-    while (strstr($clean_it, '</p>')) $clean_it = str_replace('</p>', ' ', $clean_it);
-
-    while (strstr($clean_it, '  ')) $clean_it = str_replace('  ', ' ', $clean_it);
+    $clean_it = preg_replace('~(<br ?/?>|</?p>)~', ' ', $clean_it);
+    $clean_it = preg_replace('/[ ]+/', ' ', $clean_it);
 
 // remove other html code to prevent problems on display of text
     $clean_it = strip_tags($clean_it);
