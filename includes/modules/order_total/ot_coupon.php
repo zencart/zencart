@@ -455,7 +455,7 @@ class ot_coupon {
         $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
         $coupon_total = $orderTotalDetails['totalFull']; // all products
       }
-echo 'ot_coupon coupon_total: ' . $coupon->fields['coupon_total'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$coupon_total: ' . $coupon_total . '<br><br>$coupon->fields[coupon_minimum_order]: ' . $coupon->fields['coupon_minimum_order'] . '<br>$coupon_total_minimum: ' . $coupon_total_minimum . '<br>';
+//echo 'ot_coupon coupon_total: ' . $coupon->fields['coupon_total'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$coupon_total: ' . $coupon_total . '<br><br>$coupon->fields[coupon_minimum_order]: ' . $coupon->fields['coupon_minimum_order'] . '<br>$coupon_total_minimum: ' . $coupon_total_minimum . '<br>';
 // @@TODO - adjust all Totals to use $coupon_total but strong reveiw for what total applies where for Percentage, Amount, etc.
 //      if ($coupon->RecordCount() > 0 && $orderTotalDetails['totalFull'] != 0) {
       if ($coupon->RecordCount() > 0 && $orderTotalDetails['orderTotal'] != 0 ) {
