@@ -61,8 +61,8 @@ class base {
           $paramArray[$param_n] = $$param_n;
         }
       }
-      global $this_is_home_page;
-      $main_page = ($this_is_home_page) ? 'index-home' : $_GET['main_page'];
+      global $this_is_home_page, $PHP_SELF;
+      $main_page = ($this_is_home_page) ? 'index-home' : (IS_ADMIN_FLAG) ? basename($PHP_SELF) : $_GET['main_page'];
       if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
         error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . var_export($paramArray, true)) . "\n", 3, $file);
       } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On') {
