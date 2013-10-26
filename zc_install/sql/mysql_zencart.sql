@@ -1284,7 +1284,7 @@ CREATE TABLE paypal_payment_status_history (
   txn_id varchar(64) NOT NULL default '',
   parent_txn_id varchar(64) NOT NULL default '',
   payment_status varchar(17) NOT NULL default '',
-  pending_reason varchar(14) default NULL,
+  pending_reason varchar(32) default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY (payment_status_history_id),
   KEY idx_paypal_ipn_id_zen (paypal_ipn_id)
@@ -2047,6 +2047,7 @@ INSERT INTO address_format VALUES (3, '$firstname $lastname$cr$streets$cr$city$c
 INSERT INTO address_format VALUES (4, '$firstname $lastname$cr$streets$cr$city ($postcode)$cr$country', '$postcode / $country');
 INSERT INTO address_format VALUES (5, '$firstname $lastname$cr$streets$cr$postcode $city$cr$country','$city / $country');
 INSERT INTO address_format VALUES (6, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
+INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$city $state / $country');
 
 INSERT INTO admin (admin_id, admin_name, admin_email, admin_pass, admin_profile, last_modified) VALUES
  (1, 'Admin', 'admin@localhost', '351683ea4e19efe34874b501fdbf9792:9b', 1, now());
