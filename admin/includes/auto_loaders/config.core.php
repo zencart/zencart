@@ -85,6 +85,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[20][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
+  $autoLoadConfig[20][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_sanitize.php');
 /**
  * Breakpoint 30.
  *
