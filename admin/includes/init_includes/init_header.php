@@ -163,9 +163,9 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini !='off' && ($v
     // display download link
     if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
   } else {
-  // display the "check for updated version" button.  The button link should be the current page and all param's
-    $url=(isset($_SERVER['REQUEST_URI'])) ? str_replace(array('<','>'), '', $_SERVER['REQUEST_URI']) : zen_href_link(FILENAME_DEFAULT);
-    $url .= (strpos($url,'?')>5) ? '&vcheck=yes' : '?vcheck=yes';
+  // display the "check for updated version" button.  The button link should be the current page and all params
+    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
+    $url .= (strpos($url,'?') > 5 ? '&' : '?') . 'vcheck=yes';
     if ($zv_db_patch_ok == true || $version_check_sysinfo==true ) $new_version = '<a href="' . $url . '">' . zen_image_button('button_check_new_version.gif',IMAGE_CHECK_VERSION) . '</a>';
   }
 
