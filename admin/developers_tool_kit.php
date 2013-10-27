@@ -805,7 +805,7 @@ if ($action == 'search_config_keys') {
       $last_group = $keySearchResults->fields['configuration_group_id'];
       $tdClass = 'dataTableContent' . ($groupChanged ? ' dataTableGroupChange' : '');
 ?>
-      <tr class="dataTableRow" valign="top" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
+      <tr class="dataTableRow" valign="top">
         <td class="<?php echo $tdClass;?>"><?php echo $section;?></td>
         <td class="<?php echo $tdClass;?>" align="center"><?php echo $keySearchResults->fields['configuration_group_title'];?></td>
         <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_title'];?></td>
