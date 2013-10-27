@@ -115,8 +115,8 @@
 
 // show path and filename
     if (strtoupper($configuration_key_lookup) == $configuration_key_lookup) {
-//      while (strstr($configuration_key_lookup, '"')) $configuration_key_lookup = str_replace('"', '', $configuration_key_lookup);
-//      while (strstr($configuration_key_lookup, "'")) $configuration_key_lookup = str_replace("'", '', $configuration_key_lookup);
+
+//      $configuration_key_lookup = str_replace(array('"', "'"), '', $configuration_key_lookup);
 
       // if appears to be a constant ask about configuration table
       $check_database = true;
