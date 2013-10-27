@@ -2263,7 +2263,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Expected Sort Field', 'EXPECTED_PRODUCTS_FIELD', 'date_expected', 'The column to sort by in the expected products box.', '1', '9', 'zen_cfg_select_option(array(\'products_name\', \'date_expected\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Switch To Default Language Currency', 'USE_DEFAULT_LANGUAGE_CURRENCY', 'false', 'Automatically switch to the language\'s currency when it is changed', '1', '10', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Language Selector', 'LANGUAGE_DEFAULT_SELECTOR', 'Default', 'Should the default language be based on the Store preferences, or the customer\'s browser settings?<br /><br />Default: Store\'s default settings', '1', '11', 'zen_cfg_select_option(array(\'Default\', \'Browser\'), ', now());
-INSERT INTO configuration (configuration_id, configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES (NULL, 'Search Engines - Disable Indexing', 'ROBOTS_NOINDEX_MAINTENANCE_MODE', 'Normal', 'When in development it is sometimes desirable to discourage search engines from indexing your site. To do that, set this to Maintenance. This will cause a noindex,nofollow tag to be generated on all pages, thus discouraging search engines from indexing your pages until you set this back to Normal.<br>Default: Normal', 1, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'Normal\', \'Maintenance\'),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES ('Search Engines - Disable Indexing', 'ROBOTS_NOINDEX_MAINTENANCE_MODE', 'Normal', 'When in development it is sometimes desirable to discourage search engines from indexing your site. To do that, set this to Maintenance. This will cause a noindex,nofollow tag to be generated on all pages, thus discouraging search engines from indexing your pages until you set this back to Normal.<br>Default: Normal', 1, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'Normal\', \'Maintenance\'),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Use Search-Engine Safe URLs (still in development)', 'SEARCH_ENGINE_FRIENDLY_URLS', 'false', 'Use search-engine safe urls for all site links', '6', '12', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Display Cart After Adding Product', 'DISPLAY_CART', 'true', 'Display the shopping cart after adding a product (or return back to their origin)', '1', '14', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Default Search Operator', 'ADVANCED_SEARCH_DEFAULT_OPERATOR', 'and', 'Default search operators', '1', '17', 'zen_cfg_select_option(array(\'and\', \'or\'), ', now());
@@ -2939,11 +2939,11 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('EZ-Pages Pages to disable right-column', 'EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST', '', 'EZ-Pages "pages" on which to NOT display the normal "right" column (of sideboxes) for your site.<br />Simply list page ID numbers separated by commas with no spaces.<br />Page ID numbers can be obtained from the EZ-Pages screen under Admin->Tools.<br />ie: 3,82,13<br />or leave blank.', 30, 43, NULL, now(), NULL, 'zen_cfg_textarea_small(');
 
 
-INSERT INTO configuration (configuration_id, configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
-(NULL, 'COWOA Guest Checkout allowed?', 'COWOA_STATUS', 'false', 'Activate COWOA Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-(NULL, 'Enable Order Status', 'COWOA_ORDER_STATUS', 'false', 'Enable The Order Status Function of COWOA?<br />Set to True so that a Customer that uses COWOA will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-(NULL, 'Enable E-Mail Only', 'COWOA_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function of COWOA?<br />Set to True so that a Customer that uses COWOA will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-(NULL, 'Enable Forced Logoff', 'COWOA_LOGOFF', 'false', 'Enable The Forced LogOff Function of COWOA?<br />Set to True so that a Customer that uses COWOA will be logged off automatically after a sucessfull checkout. If they are getting a file download, then they will have to wait for the Status E-Mail to arrive in order to download the file.', 26, 13, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
+('COWOA Guest Checkout allowed?', 'COWOA_STATUS', 'false', 'Activate COWOA Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Order Status', 'COWOA_ORDER_STATUS', 'false', 'Enable The Order Status Function of COWOA?<br />Set to True so that a Customer that uses COWOA will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable E-Mail Only', 'COWOA_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function of COWOA?<br />Set to True so that a Customer that uses COWOA will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Forced Logoff', 'COWOA_LOGOFF', 'false', 'Enable The Forced LogOff Function of COWOA?<br />Set to True so that a Customer that uses COWOA will be logged off automatically after a sucessfull checkout. If they are getting a file download, then they will have to wait for the Status E-Mail to arrive in order to download the file.', 26, 13, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
 
 
 INSERT INTO configuration_group VALUES (1, 'My Store', 'General information about my store', '1', '1');
@@ -3291,7 +3291,7 @@ INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPA
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('general-statistics', 'general-statistics', 1),
 ('order-summary', 'order-statistics', 1),
-('new-customers', 'new-customers', 1), 
+('new-customers', 'new-customers', 1),
 ('counter-history', 'counter-history', 1),
 ('new-orders', 'new-orders', 1);
 
@@ -3301,7 +3301,7 @@ INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_descr
 ('new-customers', 'New Customers', '', 1),
 ('counter-history', 'Counter History', '', 1),
 ('new-orders', 'New Orders', '', 1)
-; 
+;
 
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
 ('general-statistics', 1, 'General Statistics'),
@@ -3309,7 +3309,7 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('new-customers', 1, 'New Customers'),
 ('counter-history', 1, 'Counter History'),
 ('new-orders', 1, 'New Orders')
-; 
+;
 
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
 ('general-statistics', 1, 0, 0),
