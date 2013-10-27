@@ -819,25 +819,20 @@ if ($action == 'search_config_keys') {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_FUNCTION_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_function" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'NONSSL'); ?>"' method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_function" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_CATALOG),
                                               array('id' => '3', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_ADMIN)
                                                     );
-//                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
 
-                echo '<strong>' . TEXT_FUNCTION_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_FUNCTION_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate a function -->
@@ -849,56 +844,46 @@ if ($action == 'search_config_keys') {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_CLASS_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_class" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'NONSSL'); ?>"' method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_class" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_CLASS_LOOKUP_CURRENT_CATALOG),
                                               array('id' => '3', 'text' => TEXT_CLASS_LOOKUP_CURRENT_ADMIN)
                                                     );
-//                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
 
-                echo '<strong>' . TEXT_CLASS_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_CLASS_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate a class -->
 
-<!-- bof: Locate a template files -->
+<!-- bof: Locate template files -->
       <tr>
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_TEMPLATE_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_template" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'NONSSL'); ?>"' method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_template" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_TEMPLATES),
                                               array('id' => '3', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_SIDEBOXES),
                                               array('id' => '4', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_PAGES)
                                                     );
-//                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
 
-                echo '<strong>' . TEXT_TEMPLATE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_TEMPLATE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate template Files -->
@@ -915,13 +900,12 @@ if ($action == 'search_config_keys') {
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG),
                                               array('id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN)
                                                     );
 
-                echo '<strong>' . TEXT_ALL_FILES_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_ALL_FILES_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="left" valign="middle">
@@ -934,15 +918,12 @@ if ($action == 'search_config_keys') {
                                               array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_JS)
                                                     );
 
-                echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, '0');
-                echo '<strong>' . TEXT_CASE_SENSITIVE . '</strong>' . zen_draw_checkbox_field('case_sensitive', true);
+                echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);
+                echo '<label for="locate-cs">' . TEXT_CASE_SENSITIVE . ' </label>' . zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate all files -->
