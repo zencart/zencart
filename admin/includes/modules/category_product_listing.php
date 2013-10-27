@@ -162,8 +162,14 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
       } else {
         echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=setflag_categories&flag=1&cID=' . $categories->fields['categories_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>';
       }
-      if (zen_get_products_to_categories($categories->fields['categories_id'], true, 'products_active') == 'true') {
-        echo '&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED);
+      if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true')
+      {
+        if (zen_get_products_to_categories($categories->fields['categories_id'], true, 'products_active') == 'true') {
+          echo '&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED);
+        }
+      } else 
+      {
+        echo '&nbsp;&nbsp;';
       }
 ?>
                 </td>
