@@ -3,7 +3,7 @@
  * checkout_new_address.php
  *
  * @package modules
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: checkout_new_address.php 6772 2007-08-21 12:33:29Z drbyte $
@@ -166,7 +166,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
         break;
         case 'shipto':
         $_SESSION['sendto'] = $db->Insert_ID();
-        $_SESSION['shipping'] = '';
+        unset($_SESSION['shipping']);
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
         break;
       }
@@ -205,7 +205,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       $reset_shipping = false;
       if ($_SESSION['sendto']) {
         if ($_SESSION['sendto'] != $_POST['address']) {
-          if ($_SESSION['shipping']) {
+          if (isset($_SESSION['shipping'])) {
             $reset_shipping = true;
           }
         }
@@ -220,7 +220,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['sendto'], 'integer');
       $check_address = $db->Execute($check_address_query);
       if ($check_address->fields['total'] == '1') {
-        if ($reset_shipping == true) $_SESSION['shipping'] = '';
+        if ($reset_shipping == true) unset($_SESSION['shipping']);
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       } else {
         $_SESSION['sendto'] = '';

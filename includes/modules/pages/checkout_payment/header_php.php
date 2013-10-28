@@ -3,7 +3,7 @@
  * checkout_payment header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
@@ -30,7 +30,7 @@ if ($_SESSION['cart']->count_contents() <= 0) {
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!$_SESSION['shipping']) {
+if (!isset($_SESSION['shipping'])) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
