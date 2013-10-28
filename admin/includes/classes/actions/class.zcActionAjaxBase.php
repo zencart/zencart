@@ -15,11 +15,11 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package classes
  */
-class zcActionAjaxBase extends base 
+class zcActionAjaxBase extends base
 {
-  public static $templateVariables;
-  public static $response;
-  
+  public $templateVariables;
+  public $response;
+
   public function __construct()
   {
     $this->templateVariables = array();
@@ -40,8 +40,8 @@ class zcActionAjaxBase extends base
     $method = $method . 'Execute';
     if (method_exists($this, $method))
     {
-      $this->$method();      
-    } else 
+      $this->$method();
+    } else
     {
       header("Status: 403 Forbidden", TRUE, 403);
       echo json_encode(array('error'=>TRUE, 'errorType'=>"MISSING_DISPATCHER_METHOD"));
