@@ -33,10 +33,18 @@ echo 'Connecting to Zen Cart Support Server (https) ...<br>';
 doCurlTest('https://www.zen-cart.com/testcurl.php');
 
 echo 'Connecting to USPS (port 80)...<br>';
-dofsockTest('production.shippingapis.com', 80);
+doCurlTest('http://production.shippingapis.com/shippingapi.dll');
+if (isset($_GET['old']) && $_GET['old'] == '1') {
+  echo '2nd test, using old method: ';
+  dofsockTest('production.shippingapis.com', 80);
+}
 
 echo 'Connecting to USPS Test/Staging/Sandbox Server (port 80)...<br>';
-dofsockTest('stg-production.shippingapis.com', 80);
+doCurlTest('http://stg-production.shippingapis.com/ShippingApi.dll');
+if (isset($_GET['old']) && $_GET['old'] == '1') {
+  echo '2nd test, using old method: ';
+  dofsockTest('stg-production.shippingapis.com', 80);
+}
 
 echo 'Connecting to UPS (port 80)...<br>';
 dofsockTest('www.ups.com', 80);
@@ -46,6 +54,10 @@ dofsockTest('fedex.com', 80);
 
 echo 'Connecting to PayPal IPN (port 443)...<br>';
 dofsockTest('www.paypal.com', 443);
+
+// echo 'Connecting to PayPal IPN (port 443) Sandbox ...<br>';
+// dofsockTest('ipnpb.paypal.com', 443);
+// doCurlTest('https://ipnpb.paypal.com');
 
 echo 'Connecting to PayPal Express/Pro Server ...<br>';
 doCurlTest('https://api-3t.paypal.com/nvp');
@@ -93,7 +105,7 @@ function doCurlTest($url = 'http://www.zen-cart.com/testcurl.php', $postdata = "
     curl_setopt($ch, CURLOPT_PORT, $regs[2]);
     curl_setopt($ch, CURLOPT_URL, $regs[1]);
   }
-  curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+//   curl_setopt($ch, CURLOPT_SSLVERSION, 3);
   curl_setopt($ch, CURLOPT_VERBOSE, 1);
   curl_setopt($ch, CURLOPT_HEADER, 0);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -161,4 +173,3 @@ function dofsockTest($url = 'www.zen-cart.com/testcurl.php', $port = 80, $timeou
  * 3. edit your php.ini and set curl.cainfo = '/your/full/path/to/cacert.pem' ... or manually add CURLOPT_CAINFO to every CURL call you do in every php file.
  * NOTE: this opens you up to MITM risks, so should NEVER be done on a live server!!!!!
  */
-?>
