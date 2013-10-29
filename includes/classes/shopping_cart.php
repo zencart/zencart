@@ -367,7 +367,7 @@ class shoppingCart extends base {
    */
   function update_quantity($products_id, $quantity = '', $attributes = '') {
     global $db, $messageStack;
-    if ($this->display_debug_messages) $messageStack->add_session('shopping_cart', 'FUNCTION ' . __FUNCTION__, 'caution');
+    if ($this->display_debug_messages) $messageStack->add_session('shopping_cart', 'FUNCTION ' . __FUNCTION__ . ' $products_id: ' . $products_id . ' $quantity: ' . $quantity, 'caution');
 
     if (!is_numeric($quantity) || $quantity < 0) {
       // adjust quantity when not a value
@@ -378,6 +378,13 @@ class shoppingCart extends base {
     $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_START', array(), $products_id, $quantity, $attributes);
     if (empty($quantity)) return true; // nothing needs to be updated if theres no quantity, so we return true..
 
+// bof: adjust new quantity to be same as current in stock
+    $chk_current_qty = zen_get_products_stock($products_id);
+    if (STOCK_ALLOW_CHECKOUT == 'false' && ($quantity > $chk_current_qty)) {
+      $quantity = $chk_current_qty;
+      $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
+    }
+// eof: adjust new quantity to be same as current in stock
     $this->contents[$products_id] = array('qty' => (float)$quantity);
     // update database
     if (isset($_SESSION['customer_id'])) {
@@ -1736,7 +1743,7 @@ class shoppingCart extends base {
       } else {
         $add_max = zen_get_products_quantity_order_max($_POST['products_id'][$i]); // maximum allowed
         $cart_qty = $this->in_cart_mixed($_POST['products_id'][$i]); // total currently in cart
-        if ($this->display_debug_messages) $messageStack->add_session('shopping_cart', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'] . ' cart_qty: ' . $cart_qty . ' <br>', 'caution');
+        if ($this->display_debug_messages) $messageStack->add_session('shopping_cart', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' cart_qty: ' . $cart_qty . ' <br>', 'caution');
         $new_qty = $_POST['cart_quantity'][$i]; // new quantity
         $current_qty = $this->get_quantity($_POST['products_id'][$i]); // how many currently in cart for attribute
         $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
@@ -1858,12 +1865,12 @@ class shoppingCart extends base {
         $adjust_max= 'true';
       } else {
 // bof: adjust new quantity to be same as current in stock
-            if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
-                $adjust_new_qty = 'true';
-                $alter_qty = $chk_current_qty - $cart_qty;
-                $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
-                $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
-            }
+        if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
+          $adjust_new_qty = 'true';
+          $alter_qty = $chk_current_qty - $cart_qty;
+          $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+          $messageStack->add_session('shopping_cart', WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
+        }
 // eof: adjust new quantity to be same as current in stock
         // adjust quantity if needed
         if (($new_qty + $cart_qty > $add_max) and $add_max != 0) {
