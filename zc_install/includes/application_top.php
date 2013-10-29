@@ -100,7 +100,8 @@ if (version_compare(PHP_VERSION, 5.4, '<'))
 //APC
 if (function_exists('apc_clear_cache')) @apc_clear_cache();
 //XCACHE
-if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+//@TODO - find a way to prevent admin login prompts with xcache
+// if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
 //EA
 if (@ini_get('eaccelerator.enable') == 1) {
   @ini_set('eaccelerator.enable', 0);
