@@ -50,11 +50,11 @@ class base {
    * @param array parameters to pass to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
    * NOTE: The $param1 is not received-by-reference, but params 2-7 are.
    */
-  function notify($eventID, & $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
+  function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
     if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 'false' && NOTIFIER_TRACE != 'Off') {
       $file = DIR_FS_LOGS . '/notifier_trace.log';
-      $paramArray = (is_array($param1) && sizeof($param1) == 0) ? array() : array('param1' => $param1);
+      $paramArray = array('param1' => $param1);
       for ($i = 2; $i < 8; $i++) {
         $param_n = "param$i";
         if ($$param_n !== NULL) {
