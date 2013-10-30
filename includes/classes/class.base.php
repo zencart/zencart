@@ -62,12 +62,17 @@ class base {
         }
       }
       global $this_is_home_page, $PHP_SELF;
-      $main_page = ($this_is_home_page) ? 'index-home' : (IS_ADMIN_FLAG) ? basename($PHP_SELF) : $_GET['main_page'];
-      if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
-        error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . var_export($paramArray, true)) . "\n", 3, $file);
-      } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On') {
-        error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . ((count($paramArray) == 0) ? '' : ', ' . print_r($paramArray, true)) . "\n", 3, $file);
+      $main_page = (isset($this_is_home_page) && $this_is_home_page) ? 'index-home' : (IS_ADMIN_FLAG) ? basename($PHP_SELF) : (isset($_GET['main_page'])) ? $_GET['main_page'] : '';
+      $output = '';
+      if (count($paramArray)) {
+        $output = ', ';
+        if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
+          $output .= var_export($paramArray, true);
+        } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On' || NOTIFIER_TRACE === TRUE) {
+          $output .= print_r($paramArray, true);
+        }
       }
+      error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
 
     // handle observers
