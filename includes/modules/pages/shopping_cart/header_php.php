@@ -15,17 +15,13 @@ $zco_notifier->notify('NOTIFY_HEADER_START_SHOPPING_CART');
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE);
 
-// used to display invalid cart issues when checkout is selected that validated cart and returned to cart due to errors
-if ((isset($_SESSION['valid_to_checkout']) && $_SESSION['valid_to_checkout'] == false) && sizeof($_SESSION['valid_to_checkout']) > 0) {
-  $messageStack->add('shopping_cart', ERROR_CART_UPDATE . $_SESSION['cart_errors'], 'caution');
-}
-
 // Validate Cart for checkout
 $_SESSION['valid_to_checkout'] = true;
 $_SESSION['cart_errors'] = '';
 $_SESSION['cart']->get_products(true);
 
-if (!$_SESSION['valid_to_checkout']) {
+// used to display invalid cart issues when checkout is selected that validated cart and returned to cart due to errors
+if (isset($_SESSION['valid_to_checkout']) && $_SESSION['valid_to_checkout'] == false) {
   $messageStack->add('shopping_cart', ERROR_CART_UPDATE . $_SESSION['cart_errors'] , 'caution');
 }
 
