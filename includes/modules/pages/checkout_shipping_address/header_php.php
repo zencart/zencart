@@ -37,7 +37,7 @@ $order = new order;
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
 if ($order->content_type == 'virtual') {
-  $_SESSION['shipping'] = false;
+  unset($_SESSION['shipping']);
   $_SESSION['sendto'] = false;
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }

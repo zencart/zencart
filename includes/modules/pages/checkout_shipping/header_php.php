@@ -3,7 +3,7 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
@@ -75,7 +75,7 @@
 
     if ($check_address->fields['total'] != '1') {
       $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
-      $_SESSION['shipping'] = '';
+      unset($_SESSION['shipping']);
     }
   }
 
@@ -95,7 +95,7 @@ if (isset($_SESSION['cart']->cartID)) {
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
-    $_SESSION['shipping'] = 'free_free';
+    $_SESSION['shipping']['id'] = 'free_free';
     $_SESSION['shipping']['title'] = 'free_free';
     $_SESSION['sendto'] = false;
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -158,13 +158,10 @@ if (isset($_SESSION['cart']->cartID)) {
          */
         if ($_POST['shipping'] == 'free_free' && ($order->content_type != 'virtual' && !$pass)) {
           $quote['error'] = 'Invalid input. Please make another selection.';
-        } else {
-          $_SESSION['shipping'] = $_POST['shipping'];
         }
-
-        list($module, $method) = explode('_', $_SESSION['shipping']);
-        if ( is_object($$module) || ($_SESSION['shipping'] == 'free_free') ) {
-          if ($_SESSION['shipping'] == 'free_free') {
+        list($module, $method) = explode('_', $_POST['shipping']);
+        if ( is_object($$module) || ($_POST['shipping'] == 'free_free') ) {
+          if ($_POST['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
             $quote[0]['methods'][0]['cost'] = '0';
             $quote[0]['methods'][0]['icon'] = '';
@@ -172,10 +169,10 @@ if (isset($_SESSION['cart']->cartID)) {
             $quote = $shipping_modules->quote($method, $module);
           }
           if (isset($quote['error'])) {
-            $_SESSION['shipping'] = '';
+            unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
-              $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
+              $_SESSION['shipping'] = array('id' => $_POST['shipping'],
                                 'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                 'cost' => $quote[0]['methods'][0]['cost']);
 
@@ -183,11 +180,11 @@ if (isset($_SESSION['cart']->cartID)) {
             }
           }
         } else {
-          $_SESSION['shipping'] = false;
+          unset($_SESSION['shipping']);
         }
       }
     } else {
-      $_SESSION['shipping'] = false;
+      unset($_SESSION['shipping']);
 
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
@@ -197,7 +194,7 @@ if (isset($_SESSION['cart']->cartID)) {
   $quotes = $shipping_modules->quote();
 
   // check that the currently selected shipping method is still valid (in case a zone restriction has disabled it, etc)
-  if (isset($_SESSION['shipping']) && $_SESSION['shipping'] != FALSE && $_SESSION['shipping'] != '') {
+  if (isset($_SESSION['shipping'])) {
     $checklist = array();
     foreach ($quotes as $key=>$val) {
       if ($val['methods'] != '') {
@@ -208,7 +205,7 @@ if (isset($_SESSION['cart']->cartID)) {
         // skip
       }
     }
-    $checkval = (is_array($_SESSION['shipping']) ? $_SESSION['shipping']['id'] : $_SESSION['shipping']);
+    $checkval = $_SESSION['shipping']['id'];
     if (!in_array($checkval, $checklist)) {
       $messageStack->add('checkout_shipping', ERROR_PLEASE_RESELECT_SHIPPING_METHOD, 'error');
     }
@@ -218,7 +215,7 @@ if (isset($_SESSION['cart']->cartID)) {
 // if the modules status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-  if ( !$_SESSION['shipping'] || ( $_SESSION['shipping'] && ($_SESSION['shipping'] == false) && (zen_count_shipping_modules() > 1) ) ) $_SESSION['shipping'] = $shipping_modules->cheapest();
+  if ( !isset($_SESSION['shipping']) && (zen_count_shipping_modules() > 1) )  $_SESSION['shipping'] = $shipping_modules->cheapest();
 
 
   // Should address-edit button be offered?

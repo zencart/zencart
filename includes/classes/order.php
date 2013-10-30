@@ -363,9 +363,9 @@ class order extends base {
     //                          'cc_number' => (isset($GLOBALS['cc_number']) ? $GLOBALS['cc_number'] : ''),
     //                          'cc_expires' => (isset($GLOBALS['cc_expires']) ? $GLOBALS['cc_expires'] : ''),
     //                          'cc_cvv' => (isset($GLOBALS['cc_cvv']) ? $GLOBALS['cc_cvv'] : ''),
-                        'shipping_method' => $_SESSION['shipping']['title'],
+                        'shipping_method' => (isset($_SESSION['shipping']['title'])) ? $_SESSION['shipping']['title'] : '',
                         'shipping_module_code' => (isset($_SESSION['shipping']['id']) && strpos($_SESSION['shipping']['id'], '_') > 0 ? $_SESSION['shipping']['id'] : $_SESSION['shipping']),
-                        'shipping_cost' => $_SESSION['shipping']['cost'],
+                        'shipping_cost' => isset($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0,
                         'subtotal' => 0,
                         'shipping_tax' => 0,
                         'tax' => 0,
@@ -622,8 +622,8 @@ class order extends base {
     }
     $this->notify('NOTIFY_ORDER_CART_ORDERSTATUS');
 
-    if ($_SESSION['shipping'] == 'free_free') {
-      $this->info['shipping_module_code'] = $_SESSION['shipping'];
+    if ($_SESSION['shipping']['id'] == 'free_free') {
+      $this->info['shipping_module_code'] = $_SESSION['shipping']['id'];
     }
 
     $this->info['order_weight'] = $_SESSION['shipping_weight'];

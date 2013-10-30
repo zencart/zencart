@@ -37,7 +37,7 @@ class payment extends base {
         reset($this->modules);
 
         // Free Payment Only shows
-        if (zen_get_configuration_key_value('MODULE_PAYMENT_FREECHARGER_STATUS') and ($_SESSION['cart']->show_total()==0 and $_SESSION['shipping']['cost']== 0)) {
+        if (zen_get_configuration_key_value('MODULE_PAYMENT_FREECHARGER_STATUS') and ($_SESSION['cart']->show_total()==0 and (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0))) {
           $this->selected_module = $module;
           if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . '/payment/' . 'freecharger.php')) {
             $include_modules[] = array('class'=> 'freecharger', 'file' => 'freecharger.php');

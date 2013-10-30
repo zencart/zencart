@@ -2724,7 +2724,7 @@ class paypalwpp extends base {
         // debug
         $this->zcLog('termEC-4', 'We ARE logged in, and $this->showPaymentPage === true');
         // if no shipping selected or if shipping cost is < 0 goto shipping page
-        if ((!$_SESSION['shipping'] || $_SESSION['shipping'] == '') || $_SESSION['shipping']['cost'] < 0) {
+        if ((!isset($_SESSION['shipping'])) || $_SESSION['shipping']['cost'] < 0) {
           // debug
           $this->zcLog('termEC-5', 'Have no shipping method selected, or shipping < 0 so set FILENAME_CHECKOUT_SHIPPING');
           $redirect_path = FILENAME_CHECKOUT_SHIPPING;
