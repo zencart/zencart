@@ -3,7 +3,7 @@
  * functions_categories.php
  *
  * @package functions
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: functions_categories.php 14141 2009-08-10 19:34:47Z wilt $
@@ -603,5 +603,27 @@
     return $categories_imploded;
   }
 //// bof: manage master_categories_id vs cPath
-
-?>
+  function zenGetLeafCategory($cpath)
+  {
+    return (str_replace('_', '', substr($cpath, strrpos($cpath, '_'))));
+  }
+  function zenGetCategoryArrayWithChildren($categoryId, $categories = array())
+  {
+    global $db;
+  
+    $categories[] = $categoryId;
+  
+    $sql = "SELECT categories_id
+            FROM " . TABLE_CATEGORIES . "
+            WHERE parent_id = '" . ( int ) $categoryId . "'";
+    $result = $db->execute ( $sql );
+    if ($result->recordCount () > 0)
+    {
+      while ( ! $result->EOF )
+      {
+        $categories = zenGetCategoryArrayWithChildren($result->fields['categories_id'], $categories);
+        $result->moveNext();
+      }
+    }
+    return $categories;
+  }

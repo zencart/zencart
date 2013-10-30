@@ -3,7 +3,7 @@
  * upcoming_products module
  *
  * @package modules
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: upcoming_products.php 18923 2011-06-13 03:40:09Z wilt $
@@ -18,6 +18,7 @@ $list_of_products = '';
 $expected_query = '';
 
 $display_limit = zen_get_upcoming_date_range();
+$productsInCategory = array();
 
 $limit_clause = "  order by " . (EXPECTED_PRODUCTS_FIELD == 'date_expected' ? 'date_expected' : 'products_name') . " " . (EXPECTED_PRODUCTS_SORT == 'asc' ? 'asc' : 'desc') . "
                    limit " . (int)MAX_DISPLAY_UPCOMING_PRODUCTS;
@@ -31,26 +32,32 @@ if ( (($manufacturers_id > 0 && $_GET['filter_id'] == 0) || $_GET['music_genre_i
                      $display_limit .
                      $limit_clause;
 } else {
-  // get all products and cPaths in this subcat tree
-  $productsInCategory = zen_get_categories_products_list( (($manufacturers_id > 0 && $_GET['filter_id'] > 0) ? zen_get_generated_category_path_rev($_GET['filter_id']) : $cPath), false, true, 0, $display_limit);
+  if ($manufacturers_id > 0 && $_GET['filter_id'] > 0)
+  {
+    $categoryId = $_GET['filter_id'];
+  } else
+  {
+    $categoryId = zenGetLeafCategory($cPath);
+  }
+  
+  if (!isset($contentBoxCategoryList))
+  {
+    $categories = zenGetCategoryArrayWithChildren($categoryId);
+    $contentBoxCategoryList = implode(',', $categories);
+  }
 
-  if (is_array($productsInCategory) && sizeof($productsInCategory) > 0) {
-    // build products-list string to insert into SQL query
-    foreach($productsInCategory as $key => $value) {
-      $list_of_products .= $key . ', ';
-    }
-    $list_of_products = substr($list_of_products, 0, -2); // remove trailing comma
-
-    $expected_query = "select p.products_id, pd.products_name, products_date_available as date_expected, p.master_categories_id
-                       from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                       where p.products_id = pd.products_id
-                       and p.products_id in (" . $list_of_products . ")
+   $expected_query = "select p.products_id, pd.products_name, products_date_available as date_expected, p.master_categories_id
+                       from (" . TABLE_PRODUCTS . " p 
+                       left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id 
+                       left join " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc on p.products_id = ptc.products_id)
+                       where ptc.categories_id IN (" . $contentBoxCategoryList . ")
+                       and p.products_id = pd.products_id
                        and p.products_status = 1
                        and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' " .
                        $display_limit .
                        $limit_clause;
   }
-}
+
 
 if ($expected_query != '') $expected = $db->Execute($expected_query);
 if ($expected_query != '' && $expected->RecordCount() > 0) {
