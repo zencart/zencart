@@ -20,7 +20,8 @@ $_SESSION['valid_to_checkout'] = true;
 $_SESSION['cart_errors'] = '';
 $_SESSION['cart']->get_products(true);
 
-if (!$_SESSION['valid_to_checkout']) {
+// used to display invalid cart issues when checkout is selected that validated cart and returned to cart due to errors
+if (isset($_SESSION['valid_to_checkout']) && $_SESSION['valid_to_checkout'] == false) {
   $messageStack->add('shopping_cart', ERROR_CART_UPDATE . $_SESSION['cart_errors'] , 'caution');
 }
 
