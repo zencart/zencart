@@ -42,7 +42,6 @@ TRUNCATE TABLE sessions;
 ALTER TABLE sessions MODIFY COLUMN sesskey varchar(255) NOT NULL default '';
 ALTER TABLE whos_online MODIFY COLUMN session_id varchar(255) NOT NULL default '';
 
-UPDATE configuration SET configuration_description = 'Store the database queries in the page parse time log. USE WITH CAUTION. This can seriously degrade your site performance and blow out your disk space storage quotas.' WHERE configuration_key = 'STORE_DB_TRANSACTIONS';
 UPDATE configuration SET configuration_description = 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.' WHERE configuration_key = 'SESSION_WRITE_DIRECTORY';
 
 UPDATE configuration set configuration_title = 'Log Page Parse Time', configuration_description = 'Record (to a log file) the time it takes to parse a page' WHERE configuration_key = 'STORE_PAGE_PARSE_TIME';
