@@ -262,6 +262,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[170][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_add_crumbs.php');
+  /**
+   * Breakpoint 175.
+   *
+   * require('includes/init_includes/init_observers.php');
+   *
+   */
+  $autoLoadConfig[175][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_observers.php');
 /**
  * Breakpoint 180.
  *
