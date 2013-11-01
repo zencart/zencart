@@ -416,7 +416,7 @@ function zen_check_for_password_problems($password, $adminID = 0)
   $minLength = (int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH;
 
   // admin passwords must contain at least 1 letter and 1 number and be of required minimum length
-  if (!preg_match('/^(?=.*[a-zA-Z]+.*)(?=.*[\d]+.*)[\d\w[:punct:]]{' . $minLength . ',}$/', $password)) {
+  if (!preg_match('/^(?=.*[a-zA-Z]+.*)(?=.*[\d]+.*)[\d\w\s[:punct:]]{' . $minLength . ',}$/', $password)) {
     $error = TRUE;
   }
   // if no user specified, skip checking history
