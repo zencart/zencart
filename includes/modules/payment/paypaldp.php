@@ -113,7 +113,7 @@ class paypaldp extends base {
   /**
    * Debug tools
    */
-  var $_logDir = 'includes/modules/payment/paypal/logs/';
+  var $_logDir = DIR_FS_LOGS;
   var $_logLevel = 0;
   /**
    * FMF
@@ -180,6 +180,7 @@ class paypaldp extends base {
 
     // debug setup
     if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_CATALOG . $this->_logDir;
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_LOGS;
     if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_SQL_CACHE;
     // Regular mode:
     if ($this->enableDebugging) $this->_logLevel = 2;

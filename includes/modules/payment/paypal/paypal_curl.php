@@ -35,7 +35,7 @@ class paypal_curl extends base {
    *
    * @var string $_logFile
    */
-  var $_logDir = 'logs';
+  var $_logDir = DIR_FS_LOGS;
 
   /**
    * Debug or production?
@@ -111,6 +111,9 @@ class paypal_curl extends base {
     if ($this->_mode == 'TESTCOMMUNICATIONS') {
       $this->testResults = $this->_request(array(), 'testCommunications');
     }
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_CATALOG . $this->_logDir;
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_LOGS;
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_SQL_CACHE;
   }
 
   /**
