@@ -5,6 +5,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
+/*
+ * based on Foundation 4.3
+ */
 /*jslint unparam: true, browser: true, indent: 2 */
 
 ;(function ($, window, document, undefined) {
