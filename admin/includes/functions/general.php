@@ -18,12 +18,12 @@
     // header locates should not have the &amp; in the address it breaks things
     while (strstr($url, '&amp;')) $url = str_replace('&amp;', '&', $url);
 
-    header('Location: ' . $url);
-    session_write_close();
     if (STORE_PAGE_PARSE_TIME == 'true') {
       if (!is_object($logger)) $logger = new logger;
       $logger->timer_stop();
     }
+    session_write_close();
+    header('Location: ' . $url);
     exit;
   }
 
