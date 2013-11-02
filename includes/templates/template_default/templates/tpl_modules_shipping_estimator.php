@@ -3,7 +3,7 @@
  * Module Template - for shipping-estimator display
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_modules_shipping_estimator.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -92,10 +92,13 @@
       </td>
     </tr>
 <?php } ?>
+  <thead>
      <tr>
        <th scope="col" id="seProductsHeading"><?php echo CART_SHIPPING_METHOD_TEXT; ?></th>
        <th scope="col" id="seTotalHeading"><?php echo CART_SHIPPING_METHOD_RATES; ?></th>
      </tr>
+  </thead>
+  <tbody>
 <?php
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         if(sizeof($quotes[$i]['methods'])==1){
@@ -155,6 +158,7 @@
         }
       }
 ?>
+  </tbody>
 </table>
 <?php
    }

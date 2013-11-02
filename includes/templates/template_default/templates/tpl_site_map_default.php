@@ -80,7 +80,8 @@
             <li><?php echo '<a href="' . zen_href_link(FILENAME_PAGE_4) . '">' . BOX_INFORMATION_PAGE_4 . '</a>'; ?></li>
 <?php } ?>
 
-         </ul></li>
+         </ul>
+         </li>
      </ul>
 </div>
 <br class="clearBoth" />

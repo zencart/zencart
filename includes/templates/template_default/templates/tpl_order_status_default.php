@@ -2,11 +2,11 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_edit.<br />
+ * Loaded automatically by index.php?main_page=order_status.<br />
  * Displays information related to a single specific order
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
@@ -14,14 +14,20 @@
 ?>  <!-- TPL_ORDER_STATUS_DEFAULT.PHP -->
 <div class="centerColumn" id="accountHistInfo">
 
-<h1 id="orderHistoryHeading"><?php echo HEADING_TITLE; ?></h1><br />
+<h1 id="orderHistoryHeading"><?php echo HEADING_TITLE; ?></h1>
+<br />
 <?php
-if(isset($_POST['action']) && $_POST['action'] == "process") {
+if (isset($_POST['action']) && $_POST['action'] == "process" && ($errorInvalidID || $errorInvalidEmail || $errorNoMatch)) {
+?>
+<div class="messageStackWarning larger">
+<?php
   if($errorInvalidID) echo ERROR_INVALID_ORDER;
   if($errorInvalidEmail) echo ERROR_INVALID_EMAIL;
-  if($errorNoMatch) echo ERROR_NO_MATCH; 
-}?>
-<?php if($order) { ?>
+  if($errorNoMatch) echo ERROR_NO_MATCH;
+?>
+</div>
+<?php } ?>
+<?php if (isset($order)) { ?>
 
   <table border="0" width="100%" cellspacing="0" cellpadding="0" summary="Itemized listing of previous order, includes number ordered, items and prices">
   <h2 id="orderHistoryDetailedOrder"><?php echo SUB_HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_POST['order_id']); ?></h2>
@@ -110,7 +116,7 @@ if(isset($_POST['action']) && $_POST['action'] == "process") {
       <tr>
           <td><?php echo zen_date_short($statuses['date_added']); ?></td>
           <td><?php echo $statuses['orders_status_name']; ?></td>
-          <td><?php echo (empty($statuses['comments']) ? '&nbsp;' : nl2br(zen_output_string_protected($statuses['comments']))); ?></td> 
+          <td><?php echo (empty($statuses['comments']) ? '&nbsp;' : nl2br(zen_output_string_protected($statuses['comments']))); ?></td>
       </tr>
   <?php
     }
@@ -142,21 +148,21 @@ if(isset($_POST['action']) && $_POST['action'] == "process") {
   <br />
 <?php } ?>
 
-<?php 
+<?php
 echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, '', 'SSL'), 'post') . zen_draw_hidden_field('action', 'process');
 ?>
 <fieldset>
 <legend><?php echo HEADING_TITLE; ?></legend>
 
-
-<?php echo TEXT_LOOKUP_INSTRUCTIONS; ?><br /><br />
+<?php echo TEXT_LOOKUP_INSTRUCTIONS; ?>
+<br /><br />
 
 <label class="inputLabel"><?php echo ENTRY_ORDER_NUMBER; ?></label>
-<?php echo zen_draw_input_field('order_id',$_GET['order_id'],'', 'size="10" id="order_id"'); ?> 
+<?php echo zen_draw_input_field('order_id', (int)$_GET['order_id'], 'size="10" id="order_id"'); ?>
 <br />
 <br />
 <label class="inputLabel"><?php echo ENTRY_EMAIL; ?></label>
-<?php echo zen_draw_input_field('query_email_address', '' , 'size="35" id="query_email_address"'); ?> 
+<?php echo zen_draw_input_field('query_email_address', '', 'size="35" id="query_email_address"'); ?>
 <br />
 
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>

@@ -6,7 +6,7 @@
  * Allows customer to manage entries in their address book
  *
  * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_address_book_default.php 5369 2006-12-23 10:55:52Z drbyte $
@@ -15,14 +15,13 @@
 <div class="centerColumn" id="addressBookDefault">
 
 <h1 id="addressBookDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
- 
-<?php if ($messageStack->size('addressbook') > 0) echo $messageStack->output('addressbook'); ?> 
-      
+
+<?php if ($messageStack->size('addressbook') > 0) echo $messageStack->output('addressbook'); ?>
+
 <h2 id="addressBookDefaultPrimary"><?php echo PRIMARY_ADDRESS_TITLE; ?></h2>
 <address class="back"><?php echo zen_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'); ?></address>
 <div class="instructions"><?php echo PRIMARY_ADDRESS_DESCRIPTION; ?></div>
 <br class="clearBoth" />
-
 <fieldset>
 <legend><?php echo ADDRESS_BOOK_TITLE; ?></legend>
 <div class="alert forward"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>

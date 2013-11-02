@@ -3,7 +3,7 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_product_reviews_info_default.php 2993 2006-02-08 07:14:52Z birdbrain $
@@ -13,7 +13,7 @@
 
 <?php
   if (zen_not_null($products_image)) {
-   	/**
+     /**
      * require the image display code
      */
 ?>

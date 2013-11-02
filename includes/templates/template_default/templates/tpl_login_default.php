@@ -114,7 +114,7 @@
 </form>
 <br class="clearBoth" />
 
-<?php echo zen_draw_form('create_account', zen_href_link(FILENAME_CREATE_ACCOUNT,  (isset($_GET['gv_no']) ? '&gv_no=' . $_GET['gv_no'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(create_account);" id="createAccountForm"') . zen_draw_hidden_field('action', 'process') . zen_draw_hidden_field('email_pref_html', 'email_format'); ?>
+<?php echo zen_draw_form('create_account', zen_href_link(FILENAME_CREATE_ACCOUNT, (isset($_GET['gv_no']) ? '&gv_no=' . $_GET['gv_no'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(create_account);" id="createAccountForm"') . zen_draw_hidden_field('action', 'process') . zen_draw_hidden_field('email_pref_html', 'email_format'); ?>
 <fieldset>
 <legend><?php echo HEADING_NEW_CUSTOMER; ?></legend>
 
