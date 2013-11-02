@@ -54,41 +54,29 @@ if (!defined('IS_ADMIN_FLAG')) {
 
   function _sess_write($key, $val) {
     global $db;
-    if (!is_object($db)) {
-      //PHP 5.2.0 bug workaround ...
-      if (!class_exists('base')) require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php');
-      if (!class_exists('queryFactory')) require('includes/classes/db/' .DB_TYPE . '/query_factory.php');
-      $db = new queryFactory();
-      $db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false);
-    }
+    if (!is_object($db)) return;
     $val = base64_encode($val);
 
     global $SESS_LIFE;
-
     $expiry = time() + $SESS_LIFE;
 
     $qid = "select count(*) as total
             from " . TABLE_SESSIONS . "
             where sesskey = '" . zen_db_input($key) . "'";
-
     $total = $db->Execute($qid);
 
     if ($total->fields['total'] > 0) {
       $sql = "update " . TABLE_SESSIONS . "
               set expiry = '" . zen_db_input($expiry) . "', value = '" . zen_db_input($val) . "'
               where sesskey = '" . zen_db_input($key) . "'";
-
       $result = $db->Execute($sql);
-
     } else {
       $sql = "insert into " . TABLE_SESSIONS . "
               values ('" . zen_db_input($key) . "', '" . zen_db_input($expiry) . "', '" .
                        zen_db_input($val) . "')";
-
       $result = $db->Execute($sql);
-
     }
-  return (!empty($result) && !empty($result->resource));
+    return (!empty($result) && !empty($result->resource));
   }
 
   function _sess_destroy($key) {
@@ -105,7 +93,12 @@ if (!defined('IS_ADMIN_FLAG')) {
     return true;
   }
 
+
+  // Initialize session save-handler
   session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
+  // write and close session at the end of scripts, and before objects are destroyed
+  register_shutdown_function('session_write_close');
+
 
   function zen_session_start() {
     @ini_set('session.gc_probability', 1);
@@ -147,10 +140,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
   }
 
-  function zen_session_close() {
-    if (function_exists('session_close')) {
-      return session_close();
-    }
+  function zen_session_write_close() {
+    return session_write_close();
   }
 
   function zen_session_destroy() {
