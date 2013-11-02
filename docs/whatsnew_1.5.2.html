@@ -111,10 +111,13 @@ Improvements:
 <li>CHANGE-359 - Add advanced developer tool for Notifier Trace and a global eventID</li>
 <li>CHANGE-412 - Increase length of session key field due to changes in PHP defaults</li>
 <li>CHANGE-421 - Update Authorize.net modules to support CAD and UK currencies</li>
+<li>CHANGE-427 - Fix Memory Leak with PHP 5.3/5.4</li>
 <li>CHANGE-434 - Add additional SSL detection checks to accommodate more poorly configured hosting companies</li>
 <li>CHANGE-450 - Switch to SSL for contact-us form (when SSL is enabled)</li>
 <li>CHANGE-452 - Add multiple-language and multiple-location support to the Store Pickup shipping module</li>
 <li>CHANGE-454 - Made low-stock emails interceptable by notifier/observer</li>
+<li>CHANGE-524 - Fix SaleMaker issues on Discount Quantity</li>
+<li>ISSUE-54 - Session handling improvements</li>
 </ul>
 Fixes:
 <ul>
@@ -148,6 +151,7 @@ Fixes:
 <li>CHANGE-389 - Fix confusion about password reset message</li>
 <li>CHANGE-392 - Fix coupon_admin.php contains double &lt;p&gt;&lt;p&gt; tag</li>
 <li>CHANGE-396 - Removed nde-basic.css because it is obsolete since v1.5.0</li>
+<li>CHANGE-397 - Fix Developers Tool Kit where Line number values in results were off by one</li>
 <li>CHANGE-398 - Store Manager log purge improvements</li>
 <li>CHANGE-403 - Fix PayPal EC to prevent use of ImmediatePayment when AuthOnly is selected</li>
 <li>CHANGE-411 - Increase size of fields in tables for admin profiles</li>
@@ -174,6 +178,7 @@ Fixes:
 <li>CHANGE-474 - Fix boolean typo on comparison in ot_cod_fee module</li>
 <li>CHANGE-476 - Fix for zen_mail doesn't always use default template for non-english use</li>
 <li>CHANGE-478 - Fix Incorrect base_href in admin-sent HTML emails in some configurations</li>
+<li>CHANGE-484 - Quantities added to cart should adjust to stock rather than just a message</li>
 <li>CHANGE-487 - a Simplify filesmatch rules in htaccess by adding case-insensitivity flag</li>
 <li>CHANGE-487 - b Add webm permission to htaccess rules for media-playback and downloadable-files</li>
 <li>CHANGE-489 - Added additional notifiers to order.php class</li>
@@ -182,10 +187,13 @@ Fixes:
 <li>CHANGE-498 - Fix proxy-detection support for EXCLUDE_ADMIN_IP_FOR_MAINTENANCE and zen_get_ip_address() vs $_SERVER['REMOTE_ADDR']</li>
 <li>CHANGE-506 - Fix robots tag in admin pages</li>
 <li>CHANGE-509 - Fix minor incorrect variable declaration in option_values_manager.php</li>
+<li>CHANGE-514 - Improve Developers Tool Kit to allow the search of single and double quotes</li>
 <li>CHANGE-519 - Add more error checking in check_page()</li>
 <li>CHANGE-520 - Remove inline javascript and tags which may not be stripped correctly in product listings etc</li>
 <li>CHANGE-521 - Fix error on Incorrect integer value: products_priced_by_attribute</li>
 <li>CHANGE-526 - Additional notifier to allow additional validation in account_edit page</li>
+<li>CHANGE-527 - Add configuration-settings-search to Developers Toolkit, credit B.Bellamy,torvista</li>
+<li>CHANGE-528 - Updates to valid cart issues with attributes and changes prior to checkout</li>
 <li>CHANGE-529 - Fix variable initialization in Shipping Estimator</li>
 <li>CHANGE-532 - Init system - move navigation history to after init_sanitize</li>
 <li>CHANGE-544 - phpMailer upgrade</li>
@@ -214,9 +222,16 @@ Fixes:
 <li>CHANGE-605 - Fix error in PayPal Standard - PHP Fatal error: Using $this when not in object context</li>
 <li>CHANGE-591 - Fix Australia address format to remove comma</li>
 <li>CHANGE-609 - PR12 - Address formats for Belgium, Netherlands</li>
-<li>CHANGE-610 - lat9 $param1 array output reduction in notifier trace</li>
+<li>CHANGE-610,614,617 - lat9 $param1 array output reduction in notifier trace</li>
 <li>CHANGE-611 - Sanitize all known get parameters.</li>
 <li>CHANGE-612 - Sanitize all known get parameters.</li>
+<li>CHANGE-616 - For consistency and PHP 5.4 compatibility $_SESSION['shipping'] should always be treated as an array</li>
+<li>CHANGE-619 - Improve speed of stores with over 10,000 products</li>
+<li>CHANGE-621 - Set defaults on Developers Toolkit pulldowns to improve ease of use</li>
+<li>CHANGE-622 - Fix issues with ot-coupon for ship/free combo</li>
+<li>CHANGE-626 - Fix fresh install error if cache table is damaged or database has no tables</li>
+<li>ISSUE-52 - Change admin rules to allow pass"phrases" by permitting the use of spaces</li>
+
 </ul>
 
 
