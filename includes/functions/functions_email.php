@@ -313,8 +313,8 @@
         $mail->Body = $text;
       }
 
-      // Handle auto-generated admin notices as bulk to avoid autoresponder responses and risk of spam flagging
-      if (in_array($module, array('no_archive', 'admin_settings_changed')) || substr($module, -6) == '_extra') {
+      // Handle auto-generated admin notices, or newsletters, or contact-us as bulk to avoid autoresponder responses and risk of spam flagging
+      if (in_array($module, array('no_archive', 'admin_settings_changed', 'newsletters', 'product_notification', 'contact_us')) || substr($module, -6) == '_extra') {
         $mail->AddCustomHeader('Precedence: bulk');
         $mail->AddCustomHeader('Auto-Submitted: auto-generated');
       }
