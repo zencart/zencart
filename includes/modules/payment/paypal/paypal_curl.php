@@ -35,7 +35,7 @@ class paypal_curl extends base {
    *
    * @var string $_logFile
    */
-  var $_logDir = 'logs';
+  var $_logDir = DIR_FS_LOGS;
 
   /**
    * Debug or production?
@@ -103,10 +103,14 @@ class paypal_curl extends base {
   /**
    * Constructor. Sets up communication infrastructure.
    */
-  function paypal_curl($params = array()) {
+  function __construct($params = array()) {
     foreach ($params as $name => $value) {
       $this->setParam($name, $value);
     }
+    $this->notify('NOTIFY_PAYPAL_CURL_CONSTRUCT', $params);
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_CATALOG . $this->_logDir;
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_LOGS;
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_SQL_CACHE;
   }
 
   /**
@@ -169,6 +173,7 @@ class paypal_curl extends base {
                                            'TENDER'  => 'P',
                                            'TRXTYPE' => $this->_trxtype));
     }
+    $this->notify('NOTIFY_PAYPAL_GETEXPRESSCHECKOUTDETAILS');
     return $this->_request($values, 'GetExpressCheckoutDetails');
   }
 
@@ -645,13 +650,17 @@ class paypal_curl extends base {
   function log($message, $token = '') {
     static $tokenHash;
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
+    $this->outputDestination = 'File';
+    $this->notify('PAYPAL_CURL_LOG', $token, $tokenHash);
     if ($token == '') $token = $_SESSION['paypal_ec_token'];
     if ($token == '') $token = time();
     $token .= $tokenHash;
-    $file = $this->_logDir . '/' . 'Paypal_CURL_' . $token . '.log';
-    if ($fp = @fopen($file, 'a')) {
-      fwrite($fp, $message . "\n\n");
-      fclose($fp);
+    if ($this->outputDestination == 'File') {
+      $file = $this->_logDir . '/' . 'Paypal_CURL_' . $token . '.log';
+      if ($fp = @fopen($file, 'a')) {
+        fwrite($fp, $message . "\n\n");
+        fclose($fp);
+      }
     }
   }
   /**
