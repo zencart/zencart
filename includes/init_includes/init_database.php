@@ -21,6 +21,7 @@ $db = new queryFactory();
 $down_for_maint_source = 'nddbc.html';
 
 if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
+  session_write_close();
   if (file_exists('zc_install/index.php')) {
     header('location: zc_install/index.php');
     exit;

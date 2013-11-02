@@ -209,6 +209,7 @@ if ($action != '')
               header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
               header("Pragma: no-cache");
             }
+            session_write_close();
             echo $exporter_output;
             exit();
           } else

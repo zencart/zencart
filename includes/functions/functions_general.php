@@ -42,11 +42,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     $url = preg_replace('/(&amp;)+/', '&', $url);
 
     if ($httpResponseCode == '') {
+      session_write_close();
       header('Location: ' . $url);
-      session_write_close();
     } else {
-      header('Location: ' . $url, TRUE, (int)$httpResponseCode);
       session_write_close();
+      header('Location: ' . $url, TRUE, (int)$httpResponseCode);
     }
 
     exit();
