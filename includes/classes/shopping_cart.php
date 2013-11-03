@@ -384,7 +384,7 @@ class shoppingCart extends base {
     if (STOCK_ALLOW_CHECKOUT == 'false' && ($quantity > $chk_current_qty)) {
       $quantity = $chk_current_qty;
       if (!$this->flag_duplicate_msgs_set) {
-        $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$_GET[main_page]: ' . $_GET['main_page'] . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
+        $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$_GET[main_page]: ' . $_GET['main_page'] . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
       }
     }
 // eof: adjust new quantity to be same as current in stock
