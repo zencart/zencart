@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
  * File contains just the base class
  *
  * @package classes
@@ -17,7 +17,7 @@
 class base {
   /**
    * method used to an attach an observer to the notifier object
-   * 
+   *
    * NB. We have to get a little sneaky here to stop session based classes adding events ad infinitum
    * To do this we first concatenate the class name with the event id, as a class is only ever going to attach to an
    * event id once, this provides a unique key. To ensure there are no naming problems with the array key, we md5 the
@@ -38,24 +38,36 @@ class base {
    * @param array
    */
   function detach($observer, $eventIDArray) {
-    foreach($eventIDArray as $eventID) {    
+    foreach($eventIDArray as $eventID) {
       $nameHash = md5(get_class($observer).$eventID);
       base::unsetStaticObserver($nameHash);
     }
   }
   /**
-   * method to notify observers that an event as occurred in the notifier object
-   * 
-   * @param string The event ID to notify for
-   * @param array parameters to pass to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
-   * NOTE: The $param1 is not received-by-reference, but params 2-7 are.
+   * method to notify observers that an event has occurred in the notifier object
+   * Can optionally pass parameters and variables to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
+   * Any of params 2-9 can be passed by reference, and will be updated in the calling location if the observer "update" function also receives them by reference
+   *
+   * @param string The event ID to notify.
+   * @param mixed passed as value only.
+   * @param mixed Passed by reference.
+   * @param mixed Passed by reference.
+   * @param mixed Passed by reference.
+   * @param mixed Passed by reference.
+   * @param mixed Passed by reference.
+   * @param mixed Passed by reference.
+   * @param mixed Passed by reference.
+   * @param mixed Passed by reference.
+   *
+   * NOTE: The $param1 is not received-by-reference, but params 2-9 are.
+   * NOTE: The $param1 value CAN be an array, and is sometimes typecast to be an array, but can also safely be a string or int etc if the notifier sends such and the observer class expects same.
    */
-  function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL ) {
+  function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL, & $param8 = NULL, & $param9 = NULL ) {
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
     if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 'false' && NOTIFIER_TRACE != 'Off') {
       $file = DIR_FS_LOGS . '/notifier_trace.log';
       $paramArray = (is_array($param1) && sizeof($param1) == 0) ? array() : array('param1' => $param1);
-      for ($i = 2; $i < 8; $i++) {
+      for ($i = 2; $i < 10; $i++) {
         $param_n = "param$i";
         if ($$param_n !== NULL) {
           $paramArray[$param_n] = $$param_n;
@@ -88,7 +100,7 @@ class base {
          $testMethod = $method . self::camelize(strtolower($eventID), TRUE);
          if (method_exists($obs['obs'], $testMethod))
            $method = $testMethod;
-         $obs['obs']->{$method}($this, $eventID, $param1,$param2,$param3,$param4,$param5,$param6,$param7);
+         $obs['obs']->{$method}($this, $eventID, $param1,$param2,$param3,$param4,$param5,$param6,$param7,$param8,$param9);
         }
       }
     }
