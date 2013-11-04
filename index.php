@@ -100,10 +100,9 @@
  */
   require($template->get_template_dir('tpl_main_page.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_main_page.php');
 ?>
-</html>
 <?php
 /**
- * Load general code run before page closes
+ * Load general code to run before page closes, such as shutting down sessions etc
  */
 ?>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

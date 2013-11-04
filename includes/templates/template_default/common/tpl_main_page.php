@@ -204,3 +204,4 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   echo $template_js_output_bottom;
 ?>
 </body>
+</html>

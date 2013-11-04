@@ -3,7 +3,7 @@
  * Override Template for common/tpl_main_page.php
  *
  * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_main_page.php 3056 2006-02-21 06:41:36Z birdbrain $
@@ -21,3 +21,4 @@
 <p><a href="javascript:window.close();"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a></p>
 </div>
 </body>
+</html>
