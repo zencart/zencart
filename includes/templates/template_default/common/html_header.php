@@ -29,10 +29,6 @@
 <?php if ($robotsNoIndex === true) { ?>
     <meta name="robots" content="noindex, nofollow"<?php if ($isRobotsMaintenanceMode) echo ' mode="maintenance"'; ?>>
 <?php } ?>
-<?php if (defined('FAVICON')) { ?>
-<link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
-<link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
-<?php } //endif FAVICON ?>
 
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ); ?>" />
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
@@ -136,6 +132,14 @@
 
 
 ?>
+    <!--[if lt IE 9]>
+    <meta http-equiv="imagetoolbar" content="no">
+    <![endif]-->
+<?php
+  // FAVICON markup called from template:
+  require($template->get_template_dir('tpl_favicon.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_favicon.php');
+?>
+
 </head>
 <?php // NOTE: Blank line following is intended: ?>
 
