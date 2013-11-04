@@ -39,9 +39,22 @@
  */
   $body_id = ($this_is_home_page) ? 'indexHome' : str_replace('_', '', $_GET['main_page']);
 
+// Disable sidebars on checkout pages
+  if (in_array($current_page_base,explode(",",'checkout,checkout_shipping,checkout_payment,checkout_confirmation,checkout_success')) ) {
+    $flag_disable_right = true;
+    $flag_disable_left = true;
+  }
 
 // the following IF statement can be duplicated/modified as needed to set additional flags
   if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
+    $flag_disable_right = true;
+  }
+  // global disable of column_left
+  if (COLUMN_LEFT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == ''))) {
+    $flag_disable_left = true;
+  }
+  // global disable of column_right:
+  if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == ''))) {
     $flag_disable_right = true;
   }
 
@@ -86,13 +99,8 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contentMainWrapper">
   <tr>
 <?php
-if (COLUMN_LEFT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == ''))) {
-  // global disable of column_left
-  $flag_disable_left = true;
-}
 if (!isset($flag_disable_left) || !$flag_disable_left) {
 ?>
-
  <td id="navColumnOne" class="columnLeft" style="width: <?php echo COLUMN_WIDTH_LEFT; ?>">
 <?php
  /**
@@ -129,7 +137,6 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
 <?php
  /**
   * prepares and displays center column
-  *
   */
  require($body_code); ?>
 
@@ -144,11 +151,6 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
 ?></td>
 
 <?php
-//if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF == 'true' && $_SESSION['customers_authorization'] != 0)) {
-if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == ''))) {
-  // global disable of column_right
-  $flag_disable_right = true;
-}
 if (!isset($flag_disable_right) || !$flag_disable_right) {
 ?>
 <td id="navColumnTwo" class="columnRight" style="width: <?php echo COLUMN_WIDTH_RIGHT; ?>">
