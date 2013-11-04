@@ -187,4 +187,20 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   }
 ?>
 <!--eof- banner #6 display -->
+
+
+
+
+
+<?php
+/*************** JAVASCRIPT OUTPUT before </body> close ************************/
+  // run dynamically-generated jscript_XXXXX.php files
+  foreach ($jscripts as $val) {
+    require($val);
+    echo "\n";
+  }
+
+  // output src links to .js scripts
+  echo $template_js_output_bottom;
+?>
 </body>
