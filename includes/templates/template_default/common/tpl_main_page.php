@@ -50,6 +50,16 @@
   $footer_template = 'tpl_footer.php';
   $left_column_file = 'column_left.php';
   $right_column_file = 'column_right.php';
+  
+  /** bof DESIGNER TESTING ONLY: */
+// $messageStack->add('header', 'this is a sample error message', 'error');
+// $messageStack->add('header', 'this is a sample caution message', 'caution');
+// $messageStack->add('header', 'this is a sample success message', 'success');
+// $messageStack->add('main', 'this is a sample error message', 'error');
+// $messageStack->add('main', 'this is a sample caution message', 'caution');
+// $messageStack->add('main', 'this is a sample success message', 'success');
+/** eof DESIGNER TESTING ONLY */
+
 ?>
 <body id="<?php echo $body_id . 'Body'; ?>"<?php if ($bodyClasses !='') echo ' class="' . trim($bodyClasses) . '"'; ?>>
 <?php
