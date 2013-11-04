@@ -80,6 +80,8 @@
   $left_column_file = 'column_left.php';
   $right_column_file = 'column_right.php';
 
+  // Notifier hook to allow for dynamic changes to template operation
+  $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
 /** bof DESIGNER TESTING ONLY: */
 // $messageStack->add('header', 'this is a sample error message', 'error');
 // $messageStack->add('header', 'this is a sample caution message', 'caution');
