@@ -6,7 +6,7 @@
  * @version $Id: 
  */
 ?>
-<div id="admin-validation-errors" class="reveal-modal tabindex="-1">
+<div id="admin-validation-errors" class="reveal-modal" tabindex="-1">
 <div class="modal-header">
 <a class="close-reveal-modal">×</a>
 <h3 id="admin-validation-errors-title"><?php echo TEXT_DATABASE_SETUP_CONNECTION_ERROR_DIALOG_TITLE; ?></h3>
