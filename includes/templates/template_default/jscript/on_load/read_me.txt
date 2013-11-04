@@ -1,1 +1,0 @@
-Please see http://www.zen-cart.com/wiki/index.php/Customisation_-_Templates_-_Javascript for documentation.
