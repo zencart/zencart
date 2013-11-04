@@ -62,10 +62,10 @@
   if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_HEADER_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
     $flag_disable_header = true;
   }
-  
+
   // nav menu flag
   $flag_disable_nav_menu = FALSE;
-  
+
   $homepage_link = zen_href_link(FILENAME_DEFAULT . '.php', '', $request_type, TRUE, TRUE, TRUE);
   $logo_image = zen_image($template->get_template_dir(HEADER_LOGO_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT);
 
@@ -74,8 +74,8 @@
   $footer_template = 'tpl_footer.php';
   $left_column_file = 'column_left.php';
   $right_column_file = 'column_right.php';
-  
-  /** bof DESIGNER TESTING ONLY: */
+
+/** bof DESIGNER TESTING ONLY: */
 // $messageStack->add('header', 'this is a sample error message', 'error');
 // $messageStack->add('header', 'this is a sample caution message', 'caution');
 // $messageStack->add('header', 'this is a sample success message', 'success');
@@ -113,7 +113,7 @@ if (!$flag_disable_nav_menu) {
   *
   */
   require($template->get_template_dir($header_template,DIR_WS_TEMPLATE, $current_page_base,'common'). '/' . $header_template);
-
+?>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contentMainWrapper">
   <tr>
 <?php
