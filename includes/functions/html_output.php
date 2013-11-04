@@ -79,6 +79,7 @@
     }
 
     if (isset($sid)) {
+      if (!strpos('?', $link)) $separator = '?';
       $link .= $separator . zen_output_string($sid);
     }
 

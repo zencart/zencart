@@ -38,6 +38,7 @@
      }
 
     if (isset($sid)) {
+      if (!strpos('?', $link)) $separator = '?';
       $link .= $separator . $sid;
     }
 
