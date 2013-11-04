@@ -8,7 +8,7 @@
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_templates.php 3123 2006-03-06 23:36:46Z drbyte $
@@ -18,22 +18,28 @@
   }
 
 /*
- * Determine the active template name
+ * Determine the active template name, based on current language
  */
-  $template_dir = "";
-  $sql = "select template_dir
-            from " . TABLE_TEMPLATE_SELECT . "
-            where template_language = 0";
+  $template_dir = '';
+  $sql = "select template_dir from " . TABLE_TEMPLATE_SELECT . "
+          where template_language in ('" . $_SESSION['languages_id'] . "', 0)
+          UNION
+          (select template_dir from " . TABLE_TEMPLATE_SELECT . "
+          where template_language not in ('" . $_SESSION['languages_id'] . "', 0) order by template_language DESC, template_id)";
   $template_query = $db->Execute($sql);
-  $template_dir = $template_query->fields['template_dir'];
 
-  $sql = "select template_dir
-            from " . TABLE_TEMPLATE_SELECT . "
-            where template_language = '" . $_SESSION['languages_id'] . "'";
-  $template_query = $db->Execute($sql);
-  if ($template_query->RecordCount() > 0) {
-    $template_dir = $template_query->fields['template_dir'];
+  // make sure the selected template exists
+  while (!$template_query->EOF) {
+    $test = $template_query->fields['template_dir'];
+    if (file_exists(DIR_WS_INCLUDES . 'templates/' . $test)) {
+      $template_dir = $test;
+    }
+    $template_query->MoveNext();
   }
+  if ($template_dir == '') $template_dir = 'template_default';
+
+  // notifier hook -- usually fires at breakpoint 110, so observer must be instantiated before then
+  $zco_notifier->notify('NOTIFY_INIT_TEMPLATES_SELECT', NULL, $template_dir);
 
 /**
  * The actual template directory to use
@@ -57,6 +63,8 @@
     $template_dir_select = '';
   }
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'locale.php');
+
+  $zco_notifier->notify('NOTIFY_INIT_TEMPLATES_BEFORE_MAIN_LANGUAGE', NULL, $template_dir);
 
 /**
  * Load the appropriate Language files, based on the currently-selected template
