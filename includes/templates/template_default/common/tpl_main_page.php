@@ -58,8 +58,19 @@
     $flag_disable_right = true;
   }
 
+  // header flag
+  if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_HEADER_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
+    $flag_disable_header = true;
+  }
+  
+  // nav menu flag
+  $flag_disable_nav_menu = FALSE;
+  
+  $homepage_link = zen_href_link(FILENAME_DEFAULT . '.php', '', $request_type, TRUE, TRUE, TRUE);
+  $logo_image = zen_image($template->get_template_dir(HEADER_LOGO_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT);
 
   $header_template = 'tpl_header.php';
+  $header_nav_menu_template = 'tpl_header_nav_menu.php';
   $footer_template = 'tpl_footer.php';
   $left_column_file = 'column_left.php';
   $right_column_file = 'column_right.php';
@@ -75,6 +86,16 @@
 
 ?>
 <body id="<?php echo $body_id . 'Body'; ?>"<?php if ($bodyClasses !='') echo ' class="' . trim($bodyClasses) . '"'; ?>>
+
+<?php
+ /**
+  * prepares and displays navigation output
+  */
+if (!$flag_disable_nav_menu) {
+  require($template->get_template_dir($header_nav_menu_template,DIR_WS_TEMPLATE, $current_page_base,'common'). '/' . $header_nav_menu_template);
+}
+?>
+
 <?php
   if (SHOW_BANNERS_GROUP_SET1 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET1)) {
     if ($banner->RecordCount() > 0) {
@@ -91,10 +112,7 @@
   * prepares and displays header output
   *
   */
-  if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_HEADER_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
-    $flag_disable_header = true;
-  }
-  require($template->get_template_dir('tpl_header.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_header.php');?>
+  require($template->get_template_dir($header_template,DIR_WS_TEMPLATE, $current_page_base,'common'). '/' . $header_template);
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contentMainWrapper">
   <tr>
