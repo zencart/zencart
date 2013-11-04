@@ -63,6 +63,11 @@
     $flag_disable_header = true;
   }
 
+  // footer flag
+  if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_FOOTER_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
+    $flag_disable_footer = true;
+  }
+
   // nav menu flag
   $flag_disable_nav_menu = FALSE;
 
@@ -190,10 +195,7 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   * prepares and displays footer output
   *
   */
-  if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_FOOTER_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
-    $flag_disable_footer = true;
-  }
-  require($template->get_template_dir('tpl_footer.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_footer.php');
+  require($template->get_template_dir($footer_template,DIR_WS_TEMPLATE, $current_page_base,'common'). '/' . $footer_template);
 ?>
 
 </div>
