@@ -37,48 +37,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_main_page.php 7085 2007-09-22 04:56:31Z ajeh $
  */
-  $body_id = ($this_is_home_page) ? 'indexHome' : str_replace('_', '', $_GET['main_page']);
-
-// Disable sidebars on checkout pages
-  if (in_array($current_page_base,explode(",",'checkout,checkout_shipping,checkout_payment,checkout_confirmation,checkout_success')) ) {
-    $flag_disable_right = true;
-    $flag_disable_left = true;
-  }
-
-// the following IF statement can be duplicated/modified as needed to set additional flags
-  if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
-    $flag_disable_right = true;
-  }
-  // global disable of column_left
-  if (COLUMN_LEFT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == ''))) {
-    $flag_disable_left = true;
-  }
-  // global disable of column_right:
-  if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == ''))) {
-    $flag_disable_right = true;
-  }
-
-  // header flag
-  if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_HEADER_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
-    $flag_disable_header = true;
-  }
-
-  // footer flag
-  if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_FOOTER_OFF == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
-    $flag_disable_footer = true;
-  }
-
-  // nav menu flag
-  $flag_disable_nav_menu = FALSE;
-
-  $homepage_link = zen_href_link(FILENAME_DEFAULT . '.php', '', $request_type, TRUE, TRUE, TRUE);
-  $logo_image = zen_image($template->get_template_dir(HEADER_LOGO_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT);
-
-  $header_template = 'tpl_header.php';
-  $header_nav_menu_template = 'tpl_header_nav_menu.php';
-  $footer_template = 'tpl_footer.php';
-  $left_column_file = 'column_left.php';
-  $right_column_file = 'column_right.php';
 
   // Notifier hook to allow for dynamic changes to template operation
   $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
