@@ -13,3 +13,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
+
+require(DIR_WS_TEMPLATE . 'template_info.php');
+
+// dynamically discover and prepare proper markup for relevant stylesheets and javascripts
+if (NULL == $css_js_handler || $css_js_handler == '') $css_js_handler = 'tpl_css_js_generator.php';
+require(DIR_WS_MODULES . zen_get_module_directory($css_js_handler));
+
