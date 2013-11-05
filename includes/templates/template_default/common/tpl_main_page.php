@@ -9,27 +9,9 @@
  * - make a directory /templates/my_template/privacy<br />
  * - copy /templates/templates_defaults/common/tpl_main_page.php to /templates/my_template/privacy/tpl_main_page.php<br />
  * <br />
- * to override the global settings and turn off columns un-comment the lines below for the correct column to turn off<br />
- * to turn off the header and/or footer uncomment the lines below<br />
- * Note: header can be disabled in the tpl_header.php<br />
- * Note: footer can be disabled in the tpl_footer.php<br />
- * <br />
- * $flag_disable_header = true;<br />
- * $flag_disable_left = true;<br />
- * $flag_disable_right = true;<br />
- * $flag_disable_footer = true;<br />
- * <br />
- * // example to not display right column on main page when Always Show Categories is OFF<br />
- * <br />
- * if ($current_page_base == 'index' and $cPath == '') {<br />
- *  $flag_disable_right = true;<br />
- * }<br />
- * <br />
- * example to not display right column on main page when Always Show Categories is ON and set to categories_id 3<br />
- * <br />
- * if ($current_page_base == 'index' and $cPath == '' or $cPath == '3') {<br />
- *  $flag_disable_right = true;<br />
- * }<br />
+ * to override the global settings and turn off columns you can either update the main_template_vars.php in the common folder
+ * or add the relevant $flag_disable_xxxx variable in this file, below.
+ * A more universal solution would be a strategic use of an observer class to alter the relevant variables before they're used.
  *
  * @package templateSystem
  * @copyright Copyright 2003-2013 Zen Cart Development Team
