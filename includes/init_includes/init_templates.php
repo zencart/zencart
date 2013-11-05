@@ -33,6 +33,7 @@
     $test = $template_query->fields['template_dir'];
     if (file_exists(DIR_WS_INCLUDES . 'templates/' . $test)) {
       $template_dir = $test;
+      break;
     }
     $template_query->MoveNext();
   }
