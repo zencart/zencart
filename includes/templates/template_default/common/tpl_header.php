@@ -29,9 +29,7 @@
   }
   if (isset($_GET['info_message']) && zen_not_null($_GET['info_message'])) {
    echo zen_output_string_protected($_GET['info_message']);
-} else {
-
-}
+  }
 ?>
 
 
