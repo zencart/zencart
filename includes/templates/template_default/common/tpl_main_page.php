@@ -62,12 +62,10 @@ if (!$flag_disable_nav_menu) {
 ?>
 
 <?php
-  if (SHOW_BANNERS_GROUP_SET1 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET1)) {
-    if ($banner->RecordCount() > 0) {
+  if ($banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET1)) {
 ?>
 <div id="bannerOne" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>
 <?php
-    }
   }
 ?>
 
@@ -103,12 +101,10 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
 <!-- eof breadcrumb -->
 
 <?php
-  if (SHOW_BANNERS_GROUP_SET3 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET3)) {
-    if ($banner->RecordCount() > 0) {
+  if ($banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET3)) {
 ?>
 <div id="bannerThree" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>
 <?php
-    }
   }
 ?>
 
@@ -124,12 +120,10 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
  require($body_code); ?>
 
 <?php
-  if (SHOW_BANNERS_GROUP_SET4 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET4)) {
-    if ($banner->RecordCount() > 0) {
+  if ($banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET4)) {
 ?>
 <div id="bannerFour" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>
 <?php
-    }
   }
 ?></td>
 
@@ -170,12 +164,10 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
 <!--eof- parse time display -->
 <!--bof- banner #6 display -->
 <?php
-  if (SHOW_BANNERS_GROUP_SET6 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET6)) {
-    if ($banner->RecordCount() > 0) {
+  if ($banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET6)) {
 ?>
 <div id="bannerSix" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>
 <?php
-    }
   }
 ?>
 <!--eof- banner #6 display -->

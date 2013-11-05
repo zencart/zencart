@@ -48,12 +48,10 @@ if (SHOW_FOOTER_IP == '1') {
 
 <!--bof-banner #5 display -->
 <?php
-  if (SHOW_BANNERS_GROUP_SET5 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET5)) {
-    if ($banner->RecordCount() > 0) {
+  if ($banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET5)) {
 ?>
 <div id="bannerFive" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>
 <?php
-    }
   }
 ?>
 <!--eof-banner #5 display -->
