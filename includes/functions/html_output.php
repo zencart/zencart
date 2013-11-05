@@ -79,7 +79,7 @@
     }
 
     if (isset($sid)) {
-      if (!strpos('?', $link)) $separator = '?';
+      if (!strpos($link, '?')) $separator = '?';
       $link .= $separator . zen_output_string($sid);
     }
 
@@ -298,35 +298,32 @@
  * concept from contributions by Seb Rouleau and paulm, subsequently adapted to Zen Cart
  * note: any hard-coded buttons will not be able to use this function
 **/
-  function zenCssButton($image = '', $text, $type, $sec_class = '', $parameters = '') {
+  function zenCssButton($image = '', $text = '', $type = 'button', $sec_class = '', $parameters = '') {
 
     // automatic width setting depending on the number of characters
-    $min_width = 80; // this is the minimum button width, change the value as you like
+    $min_width = 0; // this is the minimum button width, change the value as you like
     $character_width = 6.5; // change this value depending on font size!
     // end settings
+
     // added html_entity_decode function to prevent html special chars to be counted as multiple characters (like &amp;)
     $width = strlen(html_entity_decode($text)) * $character_width;
     $width = (int)$width;
     if ($width < $min_width) $width = $min_width;
-    $style = ' style="width: ' . $width . 'px;"';
+    $style = ' style="min-width: ' . $width . 'px;"';
+
     // if no secondary class is set use the image name for the sec_class
-    if (empty($sec_class)) $sec_class = basename($image, '.gif');
-    if(!empty($sec_class))$sec_class = ' ' . $sec_class;
-    if(!empty($parameters))$parameters = ' ' . $parameters;
-    $mouse_out_class  = 'cssButton' . $sec_class;
-    $mouse_over_class = 'cssButtonHover' . $sec_class . $sec_class . 'Hover';
-    // javascript to set different classes on mouseover and mouseout: enables hover effect on the buttons
-    // (pure css hovers on non link elements do work work in every browser)
-    $css_button_js .=  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
+    if (empty($sec_class))   $sec_class = basename($image, '.gif');
+    if (!empty($sec_class))  $sec_class = ' ' . $sec_class;
+    if (!empty($parameters)) $parameters = ' ' . $parameters;
+    $buttonClass = 'btn' . $sec_class;
 
-    if ($type == 'submit'){
-// form input button
-   $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' .$text . '"' . $parameters . $style . ' />';
+    // form input button
+    if ($type == 'submit') {
+      $css_button = '<input class="' . $buttonClass . '" ' . ' type="submit" value="' .$text . '"' . $parameters . $style . ' />';
     }
-
-    if ($type=='button'){
-// link button
-   $css_button = '<span class="' . $mouse_out_class . '" ' . $css_button_js . $style . ' >&nbsp;' . $text . '&nbsp;</span>'; // add $parameters ???
+   // link button
+    if ($type=='button') {
+      $css_button = '<span class="' . $buttonClass . '" ' . $style . ' >&nbsp;' . $text . '&nbsp;</span>'; // add $parameters ???
     }
     return $css_button;
   }
@@ -558,4 +555,3 @@
         || $current_page_base=='down_for_maintenance') $addparms = 'rel="nofollow"';
     return ($parameters == '' ? $addparms : $parameters . ' ' . $addparms);
   }
-?>
