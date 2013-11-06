@@ -87,8 +87,10 @@
       }
       if (!isset($to_email_address)) $to_email_address=trim($to_address); //if not more than one, just use the main one.
 
+      $zco_notifier->notify('NOTIFY_EMAIL_ADDRESS_TEST', array(), $to_name, $to_email_address, $email_subject);
       // ensure the address is valid, to prevent unnecessary delivery failures
       if (!zen_validate_email($to_email_address)) {
+        $zco_notifier->notify('NOTIFY_EMAIL_ADDRESS_VALIDATION_FAILURE', sprintf(EMAIL_SEND_FAILED . ' (failed validation)', $to_name, $to_email_address, $email_subject));
         @error_log(sprintf(EMAIL_SEND_FAILED . ' (failed validation)', $to_name, $to_email_address, $email_subject));
         continue;
       }
@@ -121,9 +123,9 @@
 
       // bof: body of the email clean-up
       // clean up &amp; and && from email text
-      while (strstr($email_text, '&amp;&amp;')) $email_text = str_replace('&amp;&amp;', '&amp;', $email_text);
-      while (strstr($email_text, '&amp;')) $email_text = str_replace('&amp;', '&', $email_text);
-      while (strstr($email_text, '&&')) $email_text = str_replace('&&', '&', $email_text);
+      $email_text = preg_replace('/(&amp;)+/', '&amp;', $email_text);
+      $email_text = preg_replace('/(&amp;)+/', '&', $email_text);
+      $email_text = preg_replace('/&{2,}/', '&', $email_text);
 
       // clean up currencies for text emails
       $zen_fix_currencies = preg_split("/[:,]/" , CURRENCIES_TRANSLATIONS);
@@ -142,7 +144,7 @@
       $email_text = preg_replace('/(&lt;)+/', '<', $email_text);
       $email_text = preg_replace('/(&gt;)+/', '>', $email_text);
       // prevent null characters
-      while (strstr($email_text, chr(0))) $email_text = str_replace(chr(0), ' ', $email_text);
+      $email_text = preg_replace('/\0+/', ' ', $email_text);
 
       // fix slashes
       $text = stripslashes($email_text);
@@ -324,7 +326,7 @@
       foreach ($tmpVars as $key) {
         if (isset($_SERVER[$key])) {
           $oldVars[$key] = $_SERVER[$key];
-          $_SERVER[$key]='';
+          $_SERVER[$key] = '';
         }
         if ($key == 'REMOTE_ADDR') $_SERVER[$key] = HTTP_SERVER;
         if ($key == 'PHP_SELF') $_SERVER[$key] = '/obf'.'us'.'cated';
@@ -545,13 +547,12 @@
  * Function to build array of additional email content collected and sent on admin-copies of emails:
  *
  */
-  function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone='', $login_fax='') {
+  function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone='', $login_fax='', $moreinfo = array()) {
+    $email_host_address = '';
     // get host_address from either session or one time for both email types to save server load
     if (!$_SESSION['customers_host_address']) {
       if (SESSION_IP_TO_HOST_ADDRESS == 'true') {
         $email_host_address = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
-      } else {
-        $email_host_address = OFFICE_IP_TO_HOST_ADDRESS;
       }
     } else {
       $email_host_address = $_SESSION['customers_host_address'];
@@ -568,7 +569,7 @@
       ($login_phone !='' ? OFFICE_LOGIN_PHONE . "\t" . $login_phone . "\n" : '') .
       ($login_fax !='' ? OFFICE_LOGIN_FAX . "\t" . $login_fax . "\n" : '') .
       OFFICE_IP_ADDRESS . "\t" . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . "\n" .
-      OFFICE_HOST_ADDRESS . "\t" . $email_host_address . "\n" .
+      ($email_host_address != '' ? OFFICE_HOST_ADDRESS . "\t" . $email_host_address  . "\n" : '') .
       OFFICE_DATE_TIME . "\t" . date("D M j Y G:i:s T") . "\n\n";
 
     $extra_info['HTML'] = '<table class="extra-info">' .
@@ -580,8 +581,14 @@
       ($login_phone !='' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_PHONE . '</td><td>' . $login_phone . '</td></tr>' : '') .
       ($login_fax !='' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_FAX . '</td><td>' . $login_fax . '</td></tr>' : '') .
       '<tr><td class="extra-info-bold">' . OFFICE_IP_ADDRESS . '</td><td>' . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . '</td></tr>' .
-      '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' .
+      ($email_host_address != '' ? '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' : '') .
       '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>' . '</table>';
+
+    foreach($moreinfo as $key => $val) {
+      $extra_info['TEXT'] .= $key . ': ' . $val . "\n";
+      $extra_info['HTML'] .= '<tr><td class="extra-info-bold">' . $key . '</td><td>' . $val . '</td></tr>';
+    }
+
     return $extra_info;
   }
 
