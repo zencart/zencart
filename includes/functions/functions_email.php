@@ -137,7 +137,10 @@
       }
 
       // fix double quotes
-      while (strstr($email_text, '&quot;')) $email_text = str_replace('&quot;', '"', $email_text);
+      $email_text = preg_replace('/(&quot;)+/', '"', $email_text);
+      // fix symbols
+      $email_text = preg_replace('/(&lt;)+/', '<', $email_text);
+      $email_text = preg_replace('/(&gt;)+/', '>', $email_text);
       // prevent null characters
       while (strstr($email_text, chr(0))) $email_text = str_replace(chr(0), ' ', $email_text);
 
