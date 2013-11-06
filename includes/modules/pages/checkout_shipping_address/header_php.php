@@ -56,4 +56,3 @@ $addresses_count = zen_count_customer_address_book_entries();
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_SHIPPING_ADDRESS');
-?>

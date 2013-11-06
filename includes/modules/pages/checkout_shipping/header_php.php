@@ -44,6 +44,12 @@
       if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
         break;
+      } else {
+// extra check on stock for mixed YES
+        if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+          zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+          break;
+        }
       }
     }
   }
@@ -152,6 +158,7 @@ if (isset($_SESSION['cart']->cartID)) {
           if ($_POST['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
             $quote[0]['methods'][0]['cost'] = '0';
+            $quote[0]['methods'][0]['icon'] = '';
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
@@ -184,16 +191,16 @@ if (isset($_SESSION['cart']->cartID)) {
   if (isset($_SESSION['shipping'])) {
     $checklist = array();
     foreach ($quotes as $key=>$val) {
-      if ($val['methods'] == '') {
-        // skip
-      } else {
+      if ($val['methods'] != '') {
         foreach($val['methods'] as $key2=>$method) {
           $checklist[] = $val['id'] . '_' . $method['id'];
         }
+      } else {
+        // skip
       }
     }
     $checkval = $_SESSION['shipping']['id'];
-    if (!in_array($checkval, $checklist)) {
+    if (!in_array($checkval, $checklist) && $_SESSION['shipping']['id'] != 'free_free') {
       $messageStack->add('checkout_shipping', ERROR_PLEASE_RESELECT_SHIPPING_METHOD, 'error');
     }
   }

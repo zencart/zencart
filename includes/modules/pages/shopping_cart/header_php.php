@@ -3,7 +3,7 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
@@ -124,6 +124,16 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   } //end foreach [attributes]
   if (STOCK_CHECK == 'true') {
     $flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
+// bof: extra check on stock for mixed YES
+    if ($flagStockCheck != true) {
+//echo zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) . '<br>';
+      if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+        $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      } else {
+        $flagStockCheck = '';
+      }
+    }
+// eof: extra check on stock for mixed YES
     if ($flagStockCheck == true) {
       $flagAnyOutOfStock = true;
     }
