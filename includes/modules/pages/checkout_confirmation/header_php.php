@@ -45,7 +45,7 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
 }
 
 if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
-$_SESSION['comments'] = zen_db_prepare_input($_POST['comments']);
+$_SESSION['comments'] = $_POST['comments'];
 
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));

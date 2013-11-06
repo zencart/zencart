@@ -146,7 +146,7 @@ if (isset($_SESSION['cart']->cartID)) {
 // process the selected shipping method
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') ) {
     if (zen_not_null($_POST['comments'])) {
-      $_SESSION['comments'] = zen_db_prepare_input($_POST['comments']);
+      $_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
     }
     $comments = $_SESSION['comments'];
     $quote = array();

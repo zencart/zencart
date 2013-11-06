@@ -140,6 +140,9 @@
 
       // fix double quotes
       $email_text = preg_replace('/(&quot;)+/', '"', $email_text);
+      // fix symbols
+      $email_text = preg_replace('/(&lt;)+/', '<', $email_text);
+      $email_text = preg_replace('/(&gt;)+/', '>', $email_text);
       // prevent null characters
       $email_text = preg_replace('/\0+/', ' ', $email_text);
 
