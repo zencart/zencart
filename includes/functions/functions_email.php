@@ -109,7 +109,7 @@
         $email_text = str_replace('</p>', "</p>\n", $email_text);
         $email_text = ($module != 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
       } else if ($module != 'xml_record') {
-        $email_text = preg_replace("/<([^(strong>|br ?\/?>|a href=|p |span|script|em|b>|i>|u>)])/", '@lt@\\1', $email_text);
+        $email_text = preg_replace('~</?([^(strong>|br ?\/?>|a href=|p |span|script|li|ol|ul|em|b>|i>|u>)])~', '@lt@\\1', $email_text);
         $email_text = strip_tags($email_text);
         $email_text = str_replace('@lt@', '<', $email_text);
       }
