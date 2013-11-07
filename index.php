@@ -9,7 +9,6 @@
  * <li>Load all *header_php.php files from includes/modules/pages/PAGE_NAME/</li>
  * <li>Load html_header.php (this is a common template file)</li>
  * <li>Load main_template_vars.php (this is a common template file)</li>
- * <li>Load on_load scripts (page based and site wide)</li>
  * <li>Load tpl_main_page.php (this is a common template file)</li>
  * <li>Load application_bottom.php</li>
  * </ul>
