@@ -110,7 +110,7 @@ if ($num_images) {
     //      $link = $alternate_link;
 
     // List Box array generation:
-    $list_box_contents[$row][$col] = array('params' => 'class="additionalImages centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
+    $list_box_contents[$row][$col] = array('params' => 'class="additionalImages productBox centeredContent"',
                                            'text' => "\n      " . $link);
     $col ++;
     if ($col > (IMAGES_AUTO_ADDED -1)) {

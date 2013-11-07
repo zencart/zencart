@@ -9,7 +9,32 @@
 
 
 
-.centerBoxWrapper .productBox {
-  width: 33%;
+.productBox {
   float: left;
 }
+
+.additionalImages.productBox {
+  width: 33%;
+}
+.categoryListBoxContents.productBox {
+  width: 33%;
+}
+.specialsListBoxContents.productBox {
+  width: 33%;
+}
+.centerBoxContentsAlsoPurch.productBox {
+  width: 33%;
+}
+.centerBoxContentsSpecials.productBox {
+  width: 33%;
+}
+.centerBoxContentsFeatured.productBox {
+  width: 33%;
+}
+.centerBoxContentsNewProducts.productBox {
+  width: 33%;
+}
+#productAdditionalImages.productBox {
+  width: 33%;
+}
+

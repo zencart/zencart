@@ -36,8 +36,10 @@ if ($num_categories > 0) {
 
     //    $categories->fields['products_name'] = zen_get_products_name($categories->fields['products_id']);
 
-    $list_box_contents[$row][$col] = array('params' => 'class="categoryListBoxContents"' . ' ' . 'style="width:' . $col_width . '%;"',
-                                           'text' => '<a href="' . zen_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . zen_image(DIR_WS_IMAGES . $categories->fields['categories_image'], $categories->fields['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br />' . $categories->fields['categories_name'] . '</a>');
+
+    $list_box_contents[$row][$col] = array('params' => 'class="categoryListBoxContents productBox centeredContent"',
+                                           'text' => '<a class="img-link" href="' . zen_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . zen_image(DIR_WS_IMAGES . $categories->fields['categories_image'], $categories->fields['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br />' . $categories->fields['categories_name'] . '</a>'
+                                          );
 
     $col ++;
     if ($col > (MAX_DISPLAY_CATEGORIES_PER_ROW -1)) {
