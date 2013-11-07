@@ -67,7 +67,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
           '/' . 'font',
   );
   while(list ($key, $value) = each($sheets_array_primary)) {
-    $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
+    $perpagefile = $template->get_template_dir(ltrim($value, '/') . '.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) {
       $stylesheets[] = $perpagefile;
       $deduplicate[] = ltrim($value . '.css', '/');
@@ -78,7 +78,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
    * load all remaining template-specific stylesheets, alphabetically
    * filter out duplicates
    */
-  $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^[^(inline|print)]/', '.css');
+  $directory_array = $template->get_template_part($template->get_template_dir('^[^(inline|print)].*\.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^[^(inline|print)]/', '.css');
   sort($directory_array);
   $directory_array  = array_diff($directory_array, $deduplicate);
   while(list ($key, $value) = each($directory_array)) {
@@ -88,7 +88,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
   /**
    * load 'inline' stylesheet content, named like "inline*.css", alphabetically
    */
-  $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^inline/', '.css');
+  $directory_array = $template->get_template_part($template->get_template_dir('^inline.*\.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^inline/', '.css');
   sort($directory_array);
   while(list ($key, $value) = each($directory_array)) {
     $inline_css[] = $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value;
@@ -106,7 +106,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
 
   $sheets_array = array_intersect($sheets_array_primary, $sheets_array);
   while(list ($key, $value) = each($sheets_array)) {
-    $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
+    $perpagefile = $template->get_template_dir(ltrim($value, '/') . '.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) $inline_css[] = $perpagefile;
   }
 
@@ -114,7 +114,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
   /**
    * load printer-friendly stylesheets -- named like "print*.css", alphabetically
    */
-  $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
+  $directory_array = $template->get_template_part($template->get_template_dir('^print.*\.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
   sort($directory_array);
   while(list ($key, $value) = each($directory_array)) {
     $printsheets[] = $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value;
@@ -123,7 +123,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
   /**
    * load all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically
    */
-  $directory_array = $template->get_template_part($template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.php');
+  $directory_array = $template->get_template_part($template->get_template_dir('^jscript_.*\.php',DIR_WS_TEMPLATE, $current_page_base, 'jscript'), '/^jscript_/', '.php');
   sort($directory_array);
   while(list ($key, $value) = each($directory_array)) {
     /**
@@ -131,9 +131,9 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
      * These .php files can be manipulated by PHP when they're called, and are copied in-full to the browser page
      */
     if (preg_match('~^.*_top.php$~', $value)) {
-      $jscriptsTop[] = $template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
+      $jscriptsTop[] = $template->get_template_dir('^jscript_.*\.php',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
     } else {
-      $jscripts[] = $template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
+      $jscripts[] = $template->get_template_dir('^jscript_.*\.php',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
     }
   }
 
@@ -157,13 +157,13 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
   /**
    * load all site-wide jscript_*.js files from includes/templates/YOURTEMPLATE/jscript, alphabetically
    */
-  $directory_array = $template->get_template_part($template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/.*/', '.js');
+  $directory_array = $template->get_template_part($template->get_template_dir('\.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/.*/', '.js');
   sort($directory_array);
   while(list ($key, $value) = each($directory_array)) {
     if (preg_match('~^.*_top.js$~', $value)) {
-      $jsfilesTop[] = $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
+      $jsfilesTop[] = $template->get_template_dir('\.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
     } else {
-      $jsfiles[] = $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
+      $jsfiles[] = $template->get_template_dir('\.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
     }
   }
 
