@@ -2,7 +2,7 @@
 /**
  * dist-configure.php
  *
- * @package Configuration Settings circa 1.6.0
+ * @package Configuration Settings circa 1.5.2
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
