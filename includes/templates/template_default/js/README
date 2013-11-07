@@ -1,0 +1,2 @@
+This folder is intended to be a place to store OPTIONAL js files that may or may not actually be used.
+It's useful for storing a local copy of jQuery in case a CDN fails to properly load jQuery, such as when working offline, etc.
