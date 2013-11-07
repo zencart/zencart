@@ -8,8 +8,12 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_main_page.php 14175 2009-08-16 05:58:34Z drbyte $
  */
+// Notifier hook to allow for dynamic changes to template operation
+$zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
 ?>
-<body id="popupCouponHelp" onload="resize();">
+<body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"';?>>
+
+<p class="smallText" align="right"><a class="btn close-window" href="javascript:window.close()"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a><br clear="all" /></p>
 
 <?php
   $sql = "select * from " . TABLE_COUPONS . " where coupon_id = :couponID:";
@@ -108,6 +112,19 @@
   echo $text_coupon_help;
 
 ?>
-<p class="smallText" align="right"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></p>
+<p class="smallText" align="right"><a class="btn close-window" href="javascript:window.close()"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a><br clear="all" /></p>
 
+
+<?php
+/*************** JAVASCRIPT OUTPUT before </body> close ************************/
+  // run dynamically-generated jscript_XXXXX.php files
+  foreach ($jscripts as $val) {
+    require($val);
+    echo "\n";
+  }
+
+  // output src links to .js scripts
+  echo $template_js_output_bottom;
+?>
 </body>
+</html>

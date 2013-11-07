@@ -8,13 +8,16 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_main_page.php 14283 2009-08-29 01:43:10Z drbyte $
  */
+// Notifier hook to allow for dynamic changes to template operation
+$zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
 ?>
-<body id="popupAtrribsQuantityPricesHelp">
+<body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"';?>>
+
 <table width="98%" border="2" cellpadding="2" cellspacing ="2" align="center" class="popupattributeqty">
   <tr>
     <td><table width="100%" border="0" cellpadding="2" cellspacing ="2" class="popupattributeqty">
       <tr>
-        <td class="main" align="right"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></td>
+        <td class="main" align="right"><a class="btn close-window" href="javascript:window.close();"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a></td>
       </tr>
       <tr>
         <td class="pageHeading"><?php echo TEXT_ATTRIBUTES_QTY_PRICES_HELP ?></td>
@@ -194,10 +197,22 @@ $show_onetime= 'false';
 <?php } // show onetime ?>
 
       <tr>
-        <td class="main" align="right"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></td>
+        <td class="main" align="right"><a class="btn close-window" href="javascript:window.close();"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a></td>
       </tr>
     </table></td>
   </tr>
 </table>
+
+<?php
+/*************** JAVASCRIPT OUTPUT before </body> close ************************/
+  // run dynamically-generated jscript_XXXXX.php files
+  foreach ($jscripts as $val) {
+    require($val);
+    echo "\n";
+  }
+
+  // output src links to .js scripts
+  echo $template_js_output_bottom;
+?>
 </body>
 </html>
