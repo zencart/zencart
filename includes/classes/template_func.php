@@ -3,7 +3,7 @@
  * template_func Class.
  *
  * @package classes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: template_func.php 14141 2009-08-10 19:34:47Z wilt $
  */
@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 class template_func extends base {
 
   function template_func($template_dir = 'default') {
-    $this->info  = array();
+    $this->info = array();
   }
 
   function get_template_part($page_directory, $template_part, $file_extension = '.php') {
@@ -32,7 +32,6 @@ class template_func extends base {
           }
         }
       }
-
       sort($directory_array);
       $dir->close();
     }
@@ -41,7 +40,7 @@ class template_func extends base {
 
   function get_template_dir($template_code, $current_template, $current_page, $template_dir, $debug=false) {
     //	echo 'template_default/' . $template_dir . '=' . $template_code;
-    if ($this->file_exists($current_template . $current_page, $template_code)) {
+    if ($this->file_exists($current_template . $current_page, $template_code, $debug)) {
       return $current_template . $current_page . '/';
     } elseif ($this->file_exists(DIR_WS_TEMPLATES . 'template_default/' . $current_page, preg_replace('/\//', '', $template_code), $debug)) {
       return DIR_WS_TEMPLATES . 'template_default/' . $current_page;
@@ -55,16 +54,18 @@ class template_func extends base {
   function file_exists($file_dir, $file_pattern, $debug=false) {
     $file_found = false;
     $file_pattern = '/'.str_replace("/", "\/", $file_pattern).'$/';
+    if ($debug) echo '$template->file-exists() testing on: ' . $file_dir . "<br>\nPattern to match: " . $file_pattern . "<br>\n";
     if ($mydir = @dir($file_dir)) {
       while ($file = $mydir->read()) {
         if (preg_match($file_pattern, $file)) {
           $file_found = true;
+          if ($debug) echo 'FOUND ' .$file . "<br>\n";
           break;
         }
+        if ($debug) echo 'NOT FOUND ' . $file . "<br>\n";
       }
       $mydir->close();
     }
     return $file_found;
   }
 }
-?>
