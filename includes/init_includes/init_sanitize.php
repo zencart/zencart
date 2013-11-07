@@ -43,10 +43,10 @@
   {
     if (isset($_GET[$key]))
     {
-      $_GET[$key] = preg_replace('/[^0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
+      $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
     }
   }
-  
+
 /**
  * process all $_GET terms
  */
