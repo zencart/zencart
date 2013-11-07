@@ -250,7 +250,7 @@ function check_form(form_name) {
             <tr>
               <td width="500">
 <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED.'<br />'; ?>
-<?php $html_preview = stripslashes($_POST['message_html']); echo (stristr($html_preview, '<br') ? $html_preview : nl2br($html_preview)); ?><hr /></td>
+<?php $html_preview = zen_output_string_protected($_POST['message_html']); echo (stristr($html_preview, '<br') ? $html_preview : nl2br($html_preview)); ?><hr /></td>
             </tr>
             <tr>
               <td class="smallText"><b><?php echo strip_tags(TEXT_MESSAGE); ?></b><br /></td>
