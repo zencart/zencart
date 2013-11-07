@@ -12,7 +12,6 @@ define('TEXT_INFORMATION', 'You may proceed with your purchase by clicking the C
 define('NAVBAR_TITLE', 'The Shopping Cart');
 define('HEADING_TITLE', 'Your Shopping Cart Contents');
 define('HEADING_TITLE_EMPTY', 'Your Shopping Cart');
-define('TEXT_INFORMATION', 'You may want to add some instructions for using the shopping cart here. (defined in includes/languages/english/shopping_cart.php)');
 define('TABLE_HEADING_REMOVE', 'Remove');
 define('TABLE_HEADING_QUANTITY', 'Qty.');
 define('TABLE_HEADING_MODEL', 'Model');
