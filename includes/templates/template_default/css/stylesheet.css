@@ -626,10 +626,10 @@ LABEL#textAreaReviews {
 	font-weight: normal;
 	margin: 1em 0em;
 	}
+#popupShippingEstimatorBody, #popupSearchHelpBody, #popupImageAdditionalBody, #popupImageBody, #popupCvvHelpBody, #popupCouponHelpBody, #popupAtrributesQtyPricesBody, #infoShoppingCartBody {
+  background-color: #ffffff;
+  }
 
-#popupShippingEstimator, #popupSearchHelp, #popupAdditionalImage, #popupImage, #popupCVVHelp, #popupCouponHelp, #popupAtrribsQuantityPricesHelp, #infoShoppingCart {
-	background-color: #ffffff;
-	}
 .information {padding: 10px 3px; line-height: 150%;}
 
 #shoppingcartBody #shippingEstimatorContent {
