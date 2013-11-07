@@ -98,7 +98,7 @@ if ($_GET['action'] == 'process') {
   if (!isset($_POST['back'])) { // customer didn't click the back button
     $id1 = zen_create_coupon_code($mail['customers_email_address']);
     // sanitize and remove non-numeric characters
-    $_POST['amount'] = preg_replace('/[^0-9.%]/', '', $_POST['amount']);
+    $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
     $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
     //die($currencies->value($_POST['amount'], true, $_SESSION['currency']));
