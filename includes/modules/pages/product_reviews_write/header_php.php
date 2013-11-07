@@ -3,7 +3,7 @@
  * reviews Write
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sat Jul 21 16:05:31 2012 -0400 Modified in v1.5.1 $
@@ -46,8 +46,8 @@ $customer = $db->Execute($customer_query);
 
 $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
-  $rating = zen_db_prepare_input($_POST['rating']);
-  $review_text = zen_db_prepare_input($_POST['review_text']);
+  $rating = (int)$_POST['rating'];
+  $review_text = $_POST['review_text'];
   $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
   $zco_notifier->notify('NOTIFY_REVIEWS_WRITE_CAPTCHA_CHECK');
 
@@ -92,8 +92,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     $sql = $db->bindVars($sql, ':insertID', $insert_id, 'integer');
     $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
     $sql = $db->bindVars($sql, ':reviewText', $review_text, 'string');
-
     $db->Execute($sql);
+
     // send review-notification email to admin
     if (REVIEWS_APPROVAL == '1' && SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO_STATUS == '1' and defined('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO') and SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO !='') {
       $email_text  = sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_INTRO, $product_info->fields['products_name']) . "\n\n" ;
