@@ -29,7 +29,7 @@
       if ($addresses->RecordCount() > 1){
 ?>
 <label class="inputLabel" for="seAddressPulldown"><?php echo CART_SHIPPING_METHOD_ADDRESS; ?></label>
-<?php echo zen_draw_pull_down_menu('address_id', $addresses_array, $selected_address, 'onchange="return shipincart_submit();" id="seAddressPulldown"'); ?>
+<?php echo zen_draw_pull_down_menu('address_id', $addresses_array, $selected_address, 'id="seAddressPulldown"'); ?>
 <?php
       }
 ?>

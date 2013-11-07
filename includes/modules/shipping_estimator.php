@@ -26,13 +26,6 @@ if ($current_page_base != 'popup_shipping_estimator') {
 ?>
 <!-- shipping_estimator //-->
 
-<script language="javascript" type="text/javascript">
-function shipincart_submit(){
-  document.estimator.submit();
-  return false;
-}
-</script>
-
 <?php
 // Only do when something is in the cart
 if ($_SESSION['cart']->count_contents() > 0) {
