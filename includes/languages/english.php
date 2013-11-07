@@ -66,7 +66,8 @@
 // shopping_cart box text in sideboxes/shopping_cart.php
   define('BOX_HEADING_SHOPPING_CART', 'Shopping Cart');
   define('BOX_SHOPPING_CART_EMPTY', 'Your cart is empty.');
-  define('BOX_SHOPPING_CART_DIVIDER', 'ea.-&nbsp;');
+  define('BOX_SHOPPING_CART_DIVIDER', '');
+  define('BOX_HEADING_SHOPPING_CART_TOTAL', 'total');
 
 // order_history box text in sideboxes/order_history.php
   define('BOX_HEADING_CUSTOMER_ORDERS', 'Quick Re-Order');
@@ -241,8 +242,11 @@
   define('PREVNEXT_BUTTON_PREV', '[&lt;&lt;&nbsp;Prev]');
   define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&gt;&gt;]');
   define('PREVNEXT_BUTTON_LAST', 'LAST&gt;&gt;');
+  define('PREVNEXT_TEXT_BACK', 'Back to Listing');
 
   define('TEXT_BASE_PRICE','Starting at: ');
+  define('TEXT_PRICE_HEADING','Price:');
+  define('TEXT_DISCOUNTS_HEADING','Discounts:');
 
   define('TEXT_CLICK_TO_ENLARGE', 'larger image');
 
@@ -558,6 +562,9 @@
   define('TABLE_HEADING_REFERRAL_DETAILS', 'Were You Referred to Us?');
 
   define('ERROR_TEXT_COUNTRY_DISABLED_PLEASE_CHANGE', 'Sorry, but we no longer accept billing or shipping addresses in "%s".  Please update this address to continue.');
+
+  define('TEXT_CHECKOUT_LOGOFF_GUEST', 'NOTE: To complete your order, a temporary account was created. You may close this account by clicking Log Off. Clicking Log Off also ensures that your receipt and purchase information is not visible to the next person using this computer. If you wish to continue shopping, feel free! You may log off at anytime using the link at the top of the page.');
+  define('TEXT_CHECKOUT_LOGOFF_CUSTOMER', 'Thank you for shopping. Please click the Log Off link to ensure that your receipt and purchase information is not visible to the next person using this computer.');
 
   define('ENTRY_EMAIL_PREFERENCE','Newsletter and Email Details');
   define('ENTRY_EMAIL_HTML_DISPLAY','HTML');

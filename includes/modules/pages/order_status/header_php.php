@@ -1,8 +1,7 @@
 <?php
 /**
- *
  * @package page
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: J_Schilz for Integrated COWOA - 2007
@@ -12,12 +11,12 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ORDER_STATUS');
 
-if (!isset($_POST['order_id']) || (isset($_POST['order_id']) && !is_numeric($_POST['order_id'])))
+if (!isset($_POST['order_id']) || (isset($_POST['order_id']) && !is_numeric($_POST['order_id']))) {
   $errorInvalidID=TRUE;
-
-if(!isset($_POST['query_email_address']) || zen_validate_email($_POST['query_email_address']) == false)
+}
+if(!isset($_POST['query_email_address']) || zen_validate_email($_POST['query_email_address']) == false) {
   $errorInvalidEmail=TRUE;
-
+}
 if(!$errorInvalidID && !$errorInvalidEmail)
 {
 
@@ -35,7 +34,7 @@ if(!$errorInvalidID && !$errorInvalidEmail)
     $_SESSION['customer_id'] = $customer_info->fields['customers_id'];
     $_SESSION['COWOA']= 'True';
     $_SESSION['ORDER_STATUS'] = 'True';
-    $statuses_query = "SELECT os.orders_status_name, osh.date_added, osh.comments, osh.customer_notified 
+    $statuses_query = "SELECT os.orders_status_name, osh.date_added, osh.comments, osh.customer_notified
                        FROM   " . TABLE_ORDERS_STATUS . " os, " . TABLE_ORDERS_STATUS_HISTORY . " osh
                        WHERE      osh.orders_id = :ordersID
                        AND        osh.orders_status_id = os.orders_status_id
@@ -50,8 +49,8 @@ if(!$errorInvalidID && !$errorInvalidEmail)
     while (!$statuses->EOF) {
 
       $statusArray[] = array('date_added'=>$statuses->fields['date_added'],
-      'orders_status_name'=>$statuses->fields['orders_status_name'],
-      'comments'=>$statuses->fields['comments']);
+                             'orders_status_name'=>$statuses->fields['orders_status_name'],
+                             'comments'=>$statuses->fields['comments']);
 
       $statuses->MoveNext();
     }
@@ -66,4 +65,3 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_ORDER_STATUS');
-// eof
