@@ -45,15 +45,13 @@ if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
   if ($dir = @dir($products_image_directory)) {
     while ($file = $dir->read()) {
       if (!is_dir($products_image_directory . $file)) {
-        if (substr($file, strrpos($file, '.')) == $file_extension) {
-          if(preg_match('/\Q' . $products_image_base . '\E/i', $file) == 1) {
-            if ($file != $products_image) {
-              if ($products_image_base . str_replace($products_image_base, '', $file) == $file) {
-                //  echo 'I AM A MATCH ' . $file . '<br>';
-                $images_array[] = $file;
-              } else {
-                //  echo 'I AM NOT A MATCH ' . $file . '<br>';
-              }
+        if (preg_match('/\Q' . $products_image_base . '\E/i', $file) == 1) {
+          if (substr($file, 0, strrpos($file, '.')) != substr($products_image, 0, strrpos($products_image, '.'))) {
+            if ($products_image_base . str_replace($products_image_base, '', $file) == $file) {
+              //  echo 'I AM A MATCH ' . $file . '<br>';
+              $images_array[] = $file;
+            } else {
+              //  echo 'I AM NOT A MATCH ' . $file . '<br>';
             }
           }
         }
@@ -65,6 +63,9 @@ if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
     $dir->close();
   }
 }
+
+$zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_LIST', NULL, $images_array);
+
 
 // Build output based on images found
 $num_images = sizeof($images_array);
@@ -99,8 +100,14 @@ if ($num_images) {
     $thumb_regular = zen_image($base_image, $products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
     $large_link = zen_href_link(FILENAME_POPUP_IMAGE_ADDITIONAL, 'pID=' . $_GET['products_id'] . '&pos=' . $i . '&img=' . $products_image_large);
 
+    $js_rel = '';
+    $js_href = 'javascript:popupWindow(\\\'' . str_replace($products_image_large, urlencode(addslashes($products_image_large)), $large_link) . '\\\')';
+
+    $zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_LINKS', $i, $products_image_large, $js_href, $js_rel, $products_name, $large_link, $thumb_slashes);
+
+
     // Link Preparation:
-    $script_link = '<script><!--' . "\n" . 'document.write(\'' . ($flag_display_large ? '<a href="javascript:popupWindow(\\\'' . str_replace($products_image_large, urlencode(addslashes($products_image_large)), $large_link) . '\\\')">' . $thumb_slashes . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>' : $thumb_slashes) . '\');' . "\n" . '//--></script>';
+    $script_link = '<script><!--' . "\n" . 'document.write(\'' . ($flag_display_large ? '<a href="' . $js_href . '"' . ($js_rel != '' ? ' rel="' . $js_rel . '"' : '') . ' title="' . addslashes($products_name) . '">' . $thumb_slashes . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>' : $thumb_slashes) . '\');' . "\n" . '//--></script>';
 
     $noscript_link = '<noscript>' . ($flag_display_large ? '<a href="' . zen_href_link(FILENAME_POPUP_IMAGE_ADDITIONAL, 'pID=' . $_GET['products_id'] . '&pos=' . $i . '&img=' . $products_image_large) . '" target="_blank">' . $thumb_regular . '<br /><span class="imgLinkAdditional">' . TEXT_CLICK_TO_ENLARGE . '</span></a>' : $thumb_regular ) . '</noscript>';
 
