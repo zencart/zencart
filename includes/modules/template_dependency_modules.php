@@ -11,6 +11,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+$zco_notifier->notify('NOTIFY_MODULE_TEMPLATE_DEPENDENCY_MODULES', $current_page_base);
 
 require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 

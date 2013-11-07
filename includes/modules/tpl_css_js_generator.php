@@ -27,7 +27,7 @@ if ($current_page_base == 'page' && isset($ezpage_id)) $tmp_pagename = $current_
 
 /** Built a list of classes to be assigned to the BODY tag for targeted styling */
 $bodyClasses .= ' ' . $_SESSION['language'];
-if ($tmp_pagename != '')        $bodyClasses .= ' ' . $tmp_pagename;
+if ($tmp_pagename != '')        $bodyClasses .= ' ' . base::camelize($tmp_pagename);
 if ($tmp_products_id != '')     $bodyClasses .= ' p' . $tmp_products_id;
 if ($manufacturers_id != '')    $bodyClasses .= ' m' . $manufacturers_id;
 if ($current_category_id != '') $bodyClasses .= ' c' . $current_category_id;
@@ -128,7 +128,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
   while(list ($key, $value) = each($directory_array)) {
     /**
      * include content from all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically.
-     * These .PHP files can be manipulated by PHP when they're called, and are copied in-full to the browser page
+     * These .php files can be manipulated by PHP when they're called, and are copied in-full to the browser page
      */
     if (preg_match('~^.*_top.php$~', $value)) {
       $jscriptsTop[] = $template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;

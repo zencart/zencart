@@ -9,9 +9,12 @@
  * - make a directory /templates/my_template/privacy<br />
  * - copy /templates/templates_defaults/common/tpl_main_page.php to /templates/my_template/privacy/tpl_main_page.php<br />
  * <br />
- * to override the global settings and turn off columns you can either update the main_template_vars.php in the common folder
+ * To override the global settings and turn off columns you can either update the main_template_vars.php in the common folder
  * or add the relevant $flag_disable_xxxx variable in this file, below.
- * A more universal solution would be a strategic use of an observer class to alter the relevant variables before they're used.
+ * A more universal solution would be a strategic use of an observer class on NOTIFY_MAIN_TEMPLATE_VARS_END to alter the relevant variables before they're used.
+ * <br />
+ * To adjust the $body_id, use an observer on NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY
+ * To adjust the $bodyClasses content, use an observer on NOTIFY_ADD_BODY_CLASSES
  *
  * @package templateSystem
  * @copyright Copyright 2003-2013 Zen Cart Development Team
@@ -20,9 +23,7 @@
  * @version $Id: tpl_main_page.php 7085 2007-09-22 04:56:31Z ajeh $
  */
 
-  // Notifier hook to allow for dynamic changes to template operation
-  $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
-/** bof DESIGNER TESTING ONLY: */
+/** bof DESIGNER TESTING ONLY: */
 // $messageStack->add('header', 'this is a sample error message', 'error');
 // $messageStack->add('header', 'this is a sample caution message', 'caution');
 // $messageStack->add('header', 'this is a sample success message', 'success');
@@ -31,8 +32,11 @@
 // $messageStack->add('main', 'this is a sample success message', 'success');
 /** eof DESIGNER TESTING ONLY */
 
+
+  // Notifier hook to allow for dynamic changes to template operation
+  $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
 ?>
-<body id="<?php echo $body_id . 'Body'; ?>"<?php if ($bodyClasses !='') echo ' class="' . trim($bodyClasses) . '"'; ?>>
+<body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"'; // add classes via an observer on NOTIFY_ADD_BODY_CLASSES ?>>
 
 <?php
  /**
@@ -71,7 +75,7 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   *
   */
 ?>
-<div id="navColumnOneWrapper" style="width: <?php echo BOX_WIDTH_LEFT; ?>"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); ?></div></td>
+<div id="navColumnOneWrapper" style="width: <?php echo BOX_WIDTH_LEFT; ?>"><?php require(DIR_WS_MODULES . zen_get_module_directory($left_column_file)); ?></div></td>
 <?php
 }
 ?>
@@ -119,7 +123,7 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   *
   */
 ?>
-<div id="navColumnTwoWrapper" style="width: <?php echo BOX_WIDTH_RIGHT; ?>"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); ?></div></td>
+<div id="navColumnTwoWrapper" style="width: <?php echo BOX_WIDTH_RIGHT; ?>"><?php require(DIR_WS_MODULES . zen_get_module_directory($right_column_file)); ?></div></td>
 <?php
 }
 ?>

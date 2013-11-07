@@ -37,7 +37,8 @@
   // Notifier hook to allow for dynamic changes to template operation
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START', $template_dir);
 
-  $body_id = ($this_is_home_page) ? 'indexHome' : str_replace('_', '', $_GET['main_page']);
+  $body_id = ($this_is_home_page) ? 'indexHome' : base::camelize($_GET['main_page']) . 'Body';
+  $bodyClasses = (isset($bodyClasses)) ? trim($bodyClasses) : FALSE; // just in case someone has left junk in it from an observer class, or has done something to prevent it from being set
 
   $homepage_link = zen_href_link(FILENAME_DEFAULT . '.php', '', $request_type, TRUE, TRUE, TRUE);
   $logo_image = zen_image($template->get_template_dir(HEADER_LOGO_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT);
@@ -86,3 +87,5 @@
   } else {
     $body_code = $template->get_template_dir('tpl_' . preg_replace('/.php/', '',$_GET['main_page']) . '_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_' . $_GET['main_page'] . '_default.php';
   }
+
+  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_END', $template_dir);
