@@ -15,10 +15,7 @@ $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_di
 <body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"';?>>
 
 <div>
-<?php
-  // $products_values->fields['products_image']
-  echo '<a class="btn close-window" href="javascript:window.close()">' . zen_image($products_image_large, $products_values->fields['products_name'] . ' ' . TEXT_CLOSE_WINDOW) . '</a>';
-?>
+<a class="btn close-window" href="javascript:window.close()"><?php echo zen_image($products_image_path, $products_name . ' ' . TEXT_CLOSE_WINDOW); ?></a>
 </div>
 
 <?php

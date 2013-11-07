@@ -249,6 +249,7 @@
   define('TEXT_DISCOUNTS_HEADING','Discounts:');
 
   define('TEXT_CLICK_TO_ENLARGE', 'larger image');
+  define('TEXT_NO_IMAGE_AVAILABLE', 'No image available');
 
   define('TEXT_SORT_PRODUCTS', 'Sort products ');
   define('TEXT_DESCENDINGLY', 'descendingly');
