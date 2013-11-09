@@ -1,0 +1,15 @@
+{
+"name": "zencart/zencart",
+"description": "Open Source E-commerce Application",
+"homepage": "https://www.zen-cart.com",
+"license": "GPL-2.0",
+"authors": [
+    {
+        "name": "The Zen-Cart Team",
+        "homepage": "https://github.com/zencart/zc-v1-series/graphs/contributors"
+    }
+],
+"require": {
+  "php": ">=5.3.0"
+  }
+}
