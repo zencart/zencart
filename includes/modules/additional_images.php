@@ -16,6 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_START');
 
 if (!defined('IMAGE_ADDITIONAL_DISPLAY_LINK_EVEN_WHEN_NO_LARGE')) define('IMAGE_ADDITIONAL_DISPLAY_LINK_EVEN_WHEN_NO_LARGE','Yes');
+if (!defined('IMAGE_ENABLE_LARGER_IMAGE_LINKS')) define('IMAGE_ENABLE_LARGER_IMAGE_LINKS','1');
 $images_array = array();
 
 // do not check for additional images when turned off
@@ -115,6 +116,9 @@ if ($num_images) {
 
     $link = $script_link . "\n      " . $noscript_link;
     //      $link = $alternate_link;
+
+    // if "click for larger image" is disabled for "additional" images, show only the thumbnail
+    if (IMAGE_ENABLE_LARGER_IMAGE_LINKS == 0 || IMAGE_ENABLE_LARGER_IMAGE_LINKS == 2) $link = $thumb_regular;
 
     // List Box array generation:
     $list_box_contents[$row][$col] = array('params' => 'class="additionalImages productBox centeredContent"',

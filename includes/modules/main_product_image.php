@@ -13,6 +13,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $zco_notifier->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_START');
 
+if (!defined('IMAGE_ENABLE_LARGER_IMAGE_LINKS')) define('IMAGE_ENABLE_LARGER_IMAGE_LINKS','1');
+
 $products_image_extension = substr($products_image, strrpos($products_image, '.'));
 $products_image_base = preg_replace('|'.$products_image_extension.'$|', '', $products_image);
 $products_image_medium = DIR_WS_IMAGES . 'medium/' . $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
