@@ -160,7 +160,7 @@ if (isset($_SESSION['cart']->cartID)) {
           $quote['error'] = 'Invalid input. Please make another selection.';
         }
         list($module, $method) = explode('_', $_POST['shipping']);
-        if ( is_object($$module) || ($_POST['shipping'] == 'free_free') ) {
+        if ( is_object($module) || ($_POST['shipping'] == 'free_free') ) {
           if ($_POST['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
             $quote[0]['methods'][0]['cost'] = '0';
