@@ -1056,7 +1056,7 @@ function check_form(form_name) {
 ?>
       <tr>
         <td align="left" class="main"><?php if ($i==0) echo COUPON_NAME; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($_POST['coupon_name'][$language_id]), ENT_COMPAT, CHARSET, TRUE)) . '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($_POST['coupon_name'][$language_id]), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_COUPONS_DESCRIPTION, 'coupon_name')) . '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></td>
         <td align="left" class="main" width="40%"><?php if ($i==0) echo COUPON_NAME_HELP; ?></td>
       </tr>
 <?php
