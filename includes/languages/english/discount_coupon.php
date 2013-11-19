@@ -12,6 +12,7 @@ define('HEADING_TITLE', 'Discount Coupon');
 
 define('TEXT_INFORMATION', '');
 define('TEXT_COUPON_FAILED', '<span class="alert important">%s</span> does not appear to be a valid Coupon Redemption Code. Please try typing it in again.');
+define('TEXT_COUPON_INACTIVE', '<span class="alert important">%s</span> is expired or no longer valid.');
 
 define('HEADING_COUPON_HELP', 'Discount Coupon Help');
 define('TEXT_CLOSE_WINDOW', 'Close Window [x]');

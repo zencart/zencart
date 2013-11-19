@@ -14,7 +14,7 @@ $saniGroup1 = array('action', 'add_products_id', 'attribute_id', 'attribute_page
 'order', 'origin', 'p', 'padID', 'page', 'pages_id', 'payment_status', 'paypal_ipn_sort_order', 'pID', 'ppage', 'product_type', 'products_filter_name_model', 'products_filter', 'products_id',
 'products_options_id_all', 'products_update_id', 'profile', 'ptID', 'q', 'read', 'recip_count', 'referral_code', 'reports_page', 'reset_categories_products_sort_order', 'reset_editor', 'reset_ez_sort_order',
 'reset_option_names_values_copier', 'rID', 's', 'saction', 'selected_box', 'set', 'set_display_categories_dropdown', 'sID', 'spage', 'start_date', 'status', 't', 'tID', 'type', 'uid', 'update_action', 'update_to', 'user',
-'value_id', 'value_page', 'vcheck', 'year', 'za_lookup', 'zID', 'zone', 'zpage');
+'value_id', 'value_page', 'vcheck', 'year', 'za_lookup', 'zID', 'zone', 'zpage', 'coupon_copy_to');
 
 foreach ($saniGroup1 as $key)
 {

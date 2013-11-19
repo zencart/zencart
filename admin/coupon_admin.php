@@ -15,10 +15,24 @@
     $_GET['old_action']='';
   }
 
-  if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
-  if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YN*]/','',$_GET['status']);
-  if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
+  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+    $sql = "SELECT coupon_id, coupon_active from " . TABLE_COUPONS . " WHERE coupon_code = :couponCode:";
+    $sql = $db->bindVars($sql, ':couponCode:', $_GET['search'], 'string');
+    $search_query = $db->Execute($sql);
+    if (!$search_query->EOF) {
+      $_GET['cid'] = $search_query->fields['coupon_id'];
+      $_GET['status'] = $search_query->fields['coupon_active'];
+      $messageStack->add_session(SUCCESS_COUPON_FOUND . ($_GET['status'] == 'N' ? ' - ' . TEXT_COUPON_INACTIVE : ''), 'success');
+      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . '&status=' . $_GET['status']));
+    } else {
+      $messageStack->add_session(ERROR_COUPON_NOT_FOUND, 'caution');
+      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
+    }
+  }
 
+  if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
+  if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YNA]/','',$_GET['status']);
+  if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
   if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
     $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
     $mail = $db->Execute($audience_select['query_string']);
@@ -327,21 +341,35 @@
         $update_errors = 1;
         $messageStack->add(ERROR_NO_COUPON_AMOUNT, 'error');
       }
+      // no Discount Coupon code when editing
+      if ($_GET['oldaction'] != 'new' && !$_POST['coupon_code']) {
+        $update_errors = 1;
+        $messageStack->add(ERROR_NO_COUPON_CODE, 'error');
+      }
       if (!$_POST['coupon_code']) {
         $coupon_code = create_coupon_code();
       }
       if ($_POST['coupon_code']) $coupon_code = $_POST['coupon_code'];
-      $sql = "select coupon_code
+      $sql = "select coupon_id, coupon_code
                               from " . TABLE_COUPONS . "
                               where coupon_code = :couponCode:";
       $sql = $db->bindVars($sql, ':couponCode:', $coupon_code, 'string');
       $query1 = $db->Execute($sql);
       if ($query1->RecordCount()>0 && $_POST['coupon_code'] && $_GET['oldaction'] != 'voucheredit')  {
         $update_errors = 1;
-        $messageStack->add(ERROR_COUPON_EXISTS, 'error');
+        $messageStack->add(ERROR_COUPON_EXISTS . ' - ' . $_POST['coupon_code'], 'error');
       }
+      if ($update_errors == 0 && $query1->RecordCount()>0 &&  $query1->fields['coupon_id'] != $_GET['cid'])  {
+        $update_errors = 1;
+        $messageStack->add(ERROR_COUPON_EXISTS . ' - ' . $_POST['coupon_code'], 'error');
+      }
+
       if ($update_errors != 0) {
-        $_GET['action'] = 'new';
+        if ($_GET['oldaction'] != 'new' && $query1->RecordCount() > 0 && $query1->fields['coupon_id'] != $_GET['cid']) {
+          $_GET['action'] = 'voucheredit';
+        } else {
+          $_GET['action'] = 'new';
+        }
       } else {
         $_GET['action'] = 'update_preview';
       }
@@ -902,8 +930,7 @@ function check_form(form_name) {
       <tr>
         <td align="left" class="main"><?php echo COUPON_TOTAL; ?></td>
         <td align="left">
-          <?php echo zen_draw_radio_field('coupon_total', '0', ($_POST['coupon_total'] == 0)) . '&nbsp;' . TEXT_COUPON_TOTAL_PRODUCTS; ?><br />
-          <?php echo zen_draw_radio_field('coupon_total', '1', ($_POST['coupon_total'] ==1)) . '&nbsp;' . TEXT_COUPON_TOTAL_ORDER; ?><br />
+          <?php echo ($_POST['coupon_total'] == 0 ? TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPON_TOTAL_PRODUCTS_BASED : TEXT_COUPON_TOTAL_ORDER . TEXT_COUPON_TOTAL_ORDER_BASED); ?>
         </td>
       </tr>
 
@@ -1170,7 +1197,7 @@ function check_form(form_name) {
 <?php
     $status_array[] = array('id' => 'Y', 'text' => TEXT_COUPON_ACTIVE);
     $status_array[] = array('id' => 'N', 'text' => TEXT_COUPON_INACTIVE);
-    $status_array[] = array('id' => '*', 'text' => TEXT_COUPON_ALL);
+    $status_array[] = array('id' => 'A', 'text' => TEXT_COUPON_ALL);
 
     if (isset($_GET['status'])) {
       $status = zen_db_prepare_input($_GET['status']);
@@ -1180,11 +1207,6 @@ function check_form(form_name) {
     echo zen_hide_session_id();
     $status = $status[0];
     echo HEADING_TITLE_STATUS . ' ' . zen_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"');
-/*
-// page should not be needed on change of status display
-    echo HEADING_TITLE_STATUS . ' ' . zen_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"') .
-    zen_draw_hidden_field('page', $_GET['page']);
-*/
 ?>
               </form>
            </td>
@@ -1194,6 +1216,14 @@ function check_form(form_name) {
         echo TEXT_EDITOR_INFO . zen_draw_form('set_editor_form', FILENAME_COUPON_ADMIN, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();"') .
         zen_hide_session_id() .
         zen_draw_hidden_field('action', 'set_editor') .
+        '</form>';
+?>
+</td>
+            <td class="main" align="right">
+<?php
+// search for Discount Coupon
+            echo zen_draw_form('search', FILENAME_COUPON_ADMIN, '', 'get', '', true);
+            echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
         '</form>';
 ?>
 </td>
@@ -1215,7 +1245,7 @@ function check_form(form_name) {
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    if ($status != '*') {
+    if ($status != 'A') {
       $cc_query_raw = "select * from " . TABLE_COUPONS ." where coupon_active='" . zen_db_input($status) . "' and coupon_type != 'G'";
     } else {
       $cc_query_raw = "select * from " . TABLE_COUPONS . " where coupon_type != 'G'";
@@ -1431,15 +1461,15 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
                      DATE_MODIFIED . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->date_modified) . '<br /><br />' .
                      COUPON_ZONE_RESTRICTION . '&nbsp;::&nbsp; ' . zen_get_geo_zone_name($cInfo->coupon_zone_restriction) . '<br /><br />' .
                      COUPON_ORDER_LIMIT . '&nbsp;::&nbsp; ' . ($coupon_order_limit > 0 ? $coupon_order_limit : TEXT_UNLIMITED) . '<br /><br />' .
-                     '<center><a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.zen_image_button('button_email.gif', TEXT_DISCOUNT_COUPON_EMAIL).'</a>' .
+                     '<center>' .($cInfo->coupon_active != 'N' ? '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.zen_image_button('button_email.gif', TEXT_DISCOUNT_COUPON_EMAIL).'</a>' : '') .
                      '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucheredit&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_edit.gif', TEXT_DISCOUNT_COUPON_EDIT) .'</a>' .
-                     ($cInfo->coupon_active  == 'Y' ? '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherdelete&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_delete.gif', TEXT_DISCOUNT_COUPON_DELETE).'</a>' : '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreactivate&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_restore.gif', TEXT_DISCOUNT_COUPON_RESTORE).'</a>') .
+                     ($cInfo->coupon_active != 'N' ? '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherdelete&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_delete.gif', TEXT_DISCOUNT_COUPON_DELETE).'</a>' : '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreactivate&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_restore.gif', TEXT_DISCOUNT_COUPON_RESTORE).'</a>') .
                      '<br /><a href="'.zen_href_link('coupon_restrict.php','cid='.$cInfo->coupon_id  . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_restrict.gif', TEXT_DISCOUNT_COUPON_RESTRICT).'</a>' .
                      '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreport&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_report.gif', TEXT_DISCOUNT_COUPON_REPORT) . '</a>' .
-                     '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=vouchercopy&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_copy.gif', TEXT_DISCOUNT_COUPON_COPY) . '</a>' .
+                     '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=vouchercopy&cid='.$cInfo->coupon_id,'NONSSL').'">'.zen_image_button('button_copy.gif', TEXT_DISCOUNT_COUPON_COPY) . '</a>' .
                    '<br /><br />' . zen_draw_separator('pixel_black.gif', '100%', '2') . '<br><br>' . sprintf(TEXT_INFO_DUPLICATE_MANAGEMENT, $cInfo->coupon_code) . '<br>' .
-                     ($cInfo->coupon_active  == 'Y' ? '<br><a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherduplicate&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_copy_to.gif', TEXT_DISCOUNT_COUPON_COPY_MULTIPLE) . '</a>' : '') .
-                     ($cInfo->coupon_active  == 'Y' ? '&nbsp;&nbsp;<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherduplicatedelete&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_remove.gif', TEXT_DISCOUNT_COUPON_DELETE_MULTIPLE) . '</a>' : '').
+                     ($cInfo->coupon_active != 'N' ? '<br><a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherduplicate&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_copy_to.gif', TEXT_DISCOUNT_COUPON_COPY_MULTIPLE) . '</a>' : '') .
+                     ($cInfo->coupon_active != 'N' ? '&nbsp;&nbsp;<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherduplicatedelete&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_remove.gif', TEXT_DISCOUNT_COUPON_DELETE_MULTIPLE) . '</a>' : '').
                      '<br /><a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreportduplicates&cid='.$cInfo->coupon_id . '&codebase=' . $cInfo->coupon_code . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL').'">'.zen_image_button('button_report.gif', TEXT_DISCOUNT_COUPON_REPORT_MULTIPLE) . '</a>' .
                      '&nbsp;&nbsp;<a href="'.zen_href_link(FILENAME_COUPON_ADMIN_EXPORT, 'cid=' . $cInfo->coupon_id . '&codebase=' . $cInfo->coupon_code . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''),'NONSSL') .'">'.zen_image_button('button_download_now.gif', TEXT_DISCOUNT_COUPON_DOWNLOAD) . '</a>' .
                      '</center>'

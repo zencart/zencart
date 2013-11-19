@@ -82,8 +82,8 @@ define('TEXT_HEADING_NEW_COUPON', 'Create New Coupon');
 define('TEXT_NEW_INTRO', 'Please fill out the following information for the new coupon.<br />');
 define('COUPON_ZONE_RESTRICTION', 'Coupon Zone Restriction: ');
 define('TEXT_COUPON_ZONE_RESTRICTION', 'Coupon Zone Restriction are optional.');
-define('COUPON_ORDER_LIMIT', 'Customer Orders less than: ');
-define('COUPON_ORDER_LIMIT_HELP', 'Customer Orders less than, leave blank for unlimited');
+define('COUPON_ORDER_LIMIT', 'Customer previous Orders less than: ');
+define('COUPON_ORDER_LIMIT_HELP', 'Customer must have previous Orders less than, leave blank for unlimited');
 
 
 define('ERROR_NO_COUPON_AMOUNT', 'No coupon amount entered');
@@ -145,3 +145,7 @@ define('TEXT_DISCOUNT_COUPON_DOWNLOAD', 'Download Multiple Coupon Codes');
 define('REDEEM_ORDER_ID', 'Order #');
 define('SUCCESS_COUPON_REACTIVATE', 'Successful Reactivate');
 define('TEXT_CONFIRM_REACTIVATE', 'Are you sure you want to restore this Coupon?<br />NOTE: Restore does not affect Start/Expiration Dates.<br />Restore does not affect limits on use per coupon/use per customer if already redeemed.');
+
+define('SUCCESS_COUPON_FOUND', 'Discount Coupon found!');
+define('ERROR_COUPON_NOT_FOUND', 'Discount Coupon not found!');
+define('ERROR_NO_COUPON_CODE', 'Discount Coupon coupon code not entered!');
