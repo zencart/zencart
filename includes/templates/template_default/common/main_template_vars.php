@@ -51,7 +51,7 @@
 
 
   // Disable sidebars on checkout pages
-  if (in_array($current_page_base,explode(",",'checkout,checkout_shipping,checkout_payment,checkout_confirmation,checkout_success')) ) {
+  if (in_array($current_page_base,explode(",",'checkout,checkout_shipping,checkout_payment,checkout_confirmation,checkout_success,checkout_shipping_address,checkout_payment_address')) ) {
     $flag_disable_right = true;
     $flag_disable_left = true;
   }
