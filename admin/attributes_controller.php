@@ -1097,7 +1097,7 @@ if ($action == '') {
 // fix here border width
 ?>
       <tr>
-        <td><form name="attributes" action="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter ); ?>" method="post", enctype="multipart/form-data"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?><table border="0" cellspacing="0" cellpadding="2">
+        <td><form name="attributes" action="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter ); ?>" method="post" enctype="multipart/form-data"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td colspan="10" class="smallText">
 <?php
