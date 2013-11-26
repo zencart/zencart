@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2011 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: login.php 19296 2011-07-28 18:33:38Z wilt $
+ * @version GIT: $Id: Author: Ian Wilson  Sun Jul 14 21:04:37 2013 +0100 Modified in v1.5.2 $
  */
 define('ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS', 'Yes'); // Can be set to 'No' if you don't want warning/courtesy emails to be sent after several login failures have occurred
 

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2011 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_prices.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: ajeh  Wed Jun 26 11:54:36 2013 -0400 Modified in v1.5.2 $
  */
 ////
 //get specials price or sale price

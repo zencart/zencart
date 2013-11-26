@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: table_block.php 1969 2005-09-13 06:57:21Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Mon Mar 18 12:55:13 2013 -0400 Modified in v1.5.2 $
  */
 
   class tableBlock {

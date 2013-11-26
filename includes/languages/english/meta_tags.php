@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: meta_tags.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version GIT: $Id: Author: DrByte  Fri Feb 1 21:08:47 2013 -0500 Modified in v1.5.2 $
  */
 
 // page title

@@ -5,7 +5,7 @@
  * @package classes
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: class.base.php 14535 2009-10-07 22:16:19Z wilt $
+ * @version GIT: $Id: Author: DrByte  Sat Nov 2 21:09:17 2013 -0400 Modified in v1.5.2 $
  */
 /**
  * abstract class base

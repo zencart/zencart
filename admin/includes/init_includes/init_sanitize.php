@@ -5,7 +5,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_sanitize.php 18698 2011-05-04 14:50:06Z wilt $
+ * @version GIT: $Id: Author: Ian Wilson  Thu Nov 7 15:58:09 2013 +0000 Modified in v1.5.2 $
  */
 $saniGroup1 = array('action', 'add_products_id', 'attribute_id', 'attribute_page', 'attributes_id', 'banner', 'bID', 'box_name', 'build_cat', 'came_from', 'categories_update_id', 'cID', 'cid', 'configuration_key_lookup', 'copy_attributes',
 'cpage', 'cPath', 'current_category_id', 'current', 'customer', 'debug', 'debug2', 'debug3', 'define_it', 'download_reset_off', 'download_reset_on', 'end_date', 'ezID', 'fID', 'filename', 'flag',

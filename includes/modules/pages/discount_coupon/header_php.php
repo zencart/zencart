@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 19517 2011-09-14 21:28:12Z wilt $
+ * @version GIT: $Id: Author: ajeh  Fri Jun 28 10:09:45 2013 -0400 Modified in v1.5.2 $
  */
 
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));

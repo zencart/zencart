@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: products_quantity_discounts.php 6477 2007-06-09 04:38:22Z ajeh $
+ * @version GIT: $Id: Author: ajeh  Wed Jun 26 12:17:51 2013 -0400 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

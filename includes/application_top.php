@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Sun Dec 30 15:16:17 2012 +0000 Modified in v1.5.2 $
  */
 /**
  * inoculate against hack attempts which waste CPU cycles

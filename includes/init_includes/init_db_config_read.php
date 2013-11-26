@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_db_config_read.php 2753 2005-12-31 19:17:17Z wilt $
+ * @version GIT: $Id: Author: DrByte  Wed Mar 20 16:50:39 2013 -0400 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

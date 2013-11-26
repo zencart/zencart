@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2006 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 5244 2006-12-14 18:37:33Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson  Fri Jul 12 13:36:55 2013 +0100 Modified in v1.5.2 $
  */
 
 // This should be first line of the script:

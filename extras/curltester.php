@@ -8,7 +8,7 @@
  * @package utilities
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: curltester.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Mon Oct 28 16:43:30 2013 -0400 Modified in v1.5.2 $
  */
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');

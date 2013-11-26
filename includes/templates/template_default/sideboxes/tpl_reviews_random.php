@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_reviews_random.php 16044 2010-04-23 01:15:45Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Sat Feb 9 14:10:22 2013 -0500 Modified in v1.5.2 $
  */
   $content = "";
   $review_box_counter = 0;

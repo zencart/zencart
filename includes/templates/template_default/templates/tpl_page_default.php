@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_page_default.php 2741 2005-12-30 19:58:21Z birdbrain $
+ * @version GIT: $Id: Author: DrByte  Sat Oct 6 16:09:44 2012 -0400 Modified in v1.5.2 $
  */
 ?>
 <div class="centerColumn" id="ezPageDefault">

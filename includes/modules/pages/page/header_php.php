@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 4881 2006-11-04 17:51:31Z ajeh $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 15 15:50:09 2013 -0500 Modified in v1.5.2 $
  */
 /*
 * This "page" page is the display component of the ez-pages module

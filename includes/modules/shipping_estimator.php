@@ -11,7 +11,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: shipping_estimator.php 19954 2011-11-03 18:09:36Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Sun Jul 28 01:49:38 2013 -0400 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

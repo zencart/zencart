@@ -5,7 +5,7 @@
  * @package admin
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_metatags.php 2844 2006-01-13 06:46:29Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
  * @no-docs
  */
 

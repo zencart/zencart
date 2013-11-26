@@ -3,7 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version GIT: $Id: Author: Ian Wilson  Thu Oct 10 19:30:38 2013 +0100 New in v1.5.2 $
  */
 /**
  * System check for valid SESSION_WRITE_DIRECTORY value

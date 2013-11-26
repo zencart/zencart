@@ -9,7 +9,7 @@
  * @package debug
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Thu Aug 8 14:51:03 2013 -0400 Modified in v1.5.2 $
  */
 
 if (!defined('DIR_FS_LOGS')) {

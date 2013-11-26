@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_product_info_noproduct.php 2578 2005-12-15 19:31:34Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Mon Feb 11 23:15:15 2013 -0500 Modified in v1.5.2 $
  */
 ?>
 <div class="centerColumn" id="productInfoNoProduct">
