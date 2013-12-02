@@ -275,7 +275,7 @@ class zones extends base {
       $shipping = -1;
       $zones_cost = constant('MODULE_SHIPPING_ZONES_COST_' . $dest_zone);
 
-      $zones_table = preg_split("/[:,]/" , $zones_cost);
+      $zones_table = preg_split("/[:,]/" , str_replace(' ', '', $zones_cost));
       $size = sizeof($zones_table);
       $done = false;
 //echo '<br>START ZONE RATE: ' . $zones_cost . '<br>';

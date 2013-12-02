@@ -128,7 +128,7 @@
       $email_text = preg_replace('/&{2,}/', '&', $email_text);
 
       // clean up currencies for text emails
-      $zen_fix_currencies = preg_split("/[:,]/" , CURRENCIES_TRANSLATIONS);
+      $zen_fix_currencies = preg_split("/[:,]/" , str_replace(' ', '', CURRENCIES_TRANSLATIONS));
       $size = sizeof($zen_fix_currencies);
       for ($i=0, $n=$size; $i<$n; $i+=2) {
         $zen_fix_current = $zen_fix_currencies[$i];

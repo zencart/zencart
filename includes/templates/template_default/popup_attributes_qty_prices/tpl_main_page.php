@@ -72,7 +72,8 @@ $show_onetime= 'false';
           if ($products_options_lookup->fields['attributes_qty_prices'] != '') {
             $attribute_quantity= '';
             $attribute_quantity_price= '';
-            $attribute_table_cost = preg_split("/[:,]/" , $products_options_lookup->fields['attributes_qty_prices']);
+            $attribute_table_cost = $products_options_lookup->fields['attributes_qty_prices'];
+            $attribute_table_cost = preg_split("/[:,]/" , str_replace(' ', '', $attribute_table_cost));
             $size = sizeof($attribute_table_cost);
             for ($i=0, $n=$size; $i<$n; $i+=2) {
 //                $attribute_quantity .= '<td align="center">' . (($i <= 1 and $attribute_table_cost[$i] != 1) ? '1-' . $attribute_table_cost[$i] : $attribute_table_cost[$i] . '+') . '</td>';
@@ -168,7 +169,8 @@ $show_onetime= 'false';
           if ($products_options_lookup->fields['attributes_qty_prices_onetime'] != '') {
             $attribute_quantity= '';
             $attribute_quantity_price= '';
-            $attribute_table_cost = preg_split("/[:,]/" , $products_options_lookup->fields['attributes_qty_prices_onetime']);
+            $attribute_table_cost = $products_options_lookup->fields['attributes_qty_prices_onetime'];
+            $attribute_table_cost = preg_split("/[:,]/" , str_replace(' ', '', $attribute_table_cost));
             $size = sizeof($attribute_table_cost);
             for ($i=0, $n=$size; $i<$n; $i+=2) {
                 $attribute_quantity .= '<td align="center">' . $attribute_table_cost[$i] . '</td>';

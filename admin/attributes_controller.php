@@ -282,8 +282,8 @@
             $attributes_price_factor_offset = zen_db_prepare_input($_POST['attributes_price_factor_offset']);
             $attributes_price_factor_onetime = zen_db_prepare_input($_POST['attributes_price_factor_onetime']);
             $attributes_price_factor_onetime_offset = zen_db_prepare_input($_POST['attributes_price_factor_onetime_offset']);
-            $attributes_qty_prices = zen_db_prepare_input($_POST['attributes_qty_prices']);
-            $attributes_qty_prices_onetime = zen_db_prepare_input($_POST['attributes_qty_prices_onetime']);
+            $attributes_qty_prices = zen_db_prepare_input(str_replace(' ', '', $_POST['attributes_qty_prices']));
+            $attributes_qty_prices_onetime = zen_db_prepare_input(str_replace(' ', '', $_POST['attributes_qty_prices_onetime']));
 
             $attributes_price_words = zen_db_prepare_input($_POST['attributes_price_words']);
             $attributes_price_words_free = zen_db_prepare_input($_POST['attributes_price_words_free']);
@@ -417,8 +417,8 @@
             $attributes_price_factor_offset = zen_db_prepare_input($_POST['attributes_price_factor_offset']);
             $attributes_price_factor_onetime = zen_db_prepare_input($_POST['attributes_price_factor_onetime']);
             $attributes_price_factor_onetime_offset = zen_db_prepare_input($_POST['attributes_price_factor_onetime_offset']);
-            $attributes_qty_prices = zen_db_prepare_input($_POST['attributes_qty_prices']);
-            $attributes_qty_prices_onetime = zen_db_prepare_input($_POST['attributes_qty_prices_onetime']);
+            $attributes_qty_prices = zen_db_prepare_input(str_replace(' ', '', $_POST['attributes_qty_prices']));
+            $attributes_qty_prices_onetime = zen_db_prepare_input(str_replace(' ', '', $_POST['attributes_qty_prices_onetime']));
 
             $attributes_price_words = zen_db_prepare_input($_POST['attributes_price_words']);
             $attributes_price_words_free = zen_db_prepare_input($_POST['attributes_price_words_free']);

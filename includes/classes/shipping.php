@@ -91,11 +91,11 @@ class shipping extends base {
       $shipping_num_boxes = 1;
       $shipping_weight = $total_weight;
 
-      $za_tare_array = preg_split("/[:,]/" , SHIPPING_BOX_WEIGHT);
+      $za_tare_array = preg_split("/[:,]/" , str_replace(' ', '', SHIPPING_BOX_WEIGHT));
       $zc_tare_percent= $za_tare_array[0];
       $zc_tare_weight= $za_tare_array[1];
 
-      $za_large_array = preg_split("/[:,]/" , SHIPPING_BOX_PADDING);
+      $za_large_array = preg_split("/[:,]/" , str_replace(' ', '', SHIPPING_BOX_PADDING));
       $zc_large_percent= $za_large_array[0];
       $zc_large_weight= $za_large_array[1];
 

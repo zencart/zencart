@@ -1048,7 +1048,7 @@ If a special exist * 10
 ////
 // return attributes_qty_prices or attributes_qty_prices_onetime based on qty
   function zen_get_attributes_qty_prices_onetime($string, $qty) {
-    $attribute_qty = preg_split("/[:,]/" , $string);
+    $attribute_qty = preg_split("/[:,]/" , str_replace(' ', '', $string));
     $new_price = 0;
     $size = sizeof($attribute_qty);
 // if an empty string is passed then $attributes_qty will consist of a 1 element array
@@ -1070,7 +1070,7 @@ If a special exist * 10
   function zen_get_attributes_quantity_price($check_what, $check_for) {
 // $check_what='1:3.00,5:2.50,10:2.25,20:2.00';
 // $check_for=50;
-      $attribute_table_cost = preg_split("/[:,]/" , $check_what);
+      $attribute_table_cost = preg_split("/[:,]/" , str_replace(' ', '', $check_what));
       $size = sizeof($attribute_table_cost);
       for ($i=0, $n=$size; $i<$n; $i+=2) {
         if ($check_for >= $attribute_table_cost[$i]) {
