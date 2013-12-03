@@ -17,17 +17,15 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class zcWidgetManager extends base
 {
-  public static function getWidgetsForUser($user, $languageId)
+  public static function getWidgetsForUser($user)
   {
     global $db;
     $widgets = array();
     $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " as tdwtu
             LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdwtu.widget_key
-            WHERE tdwd.language_id = :languageId:
-                and tdwtu.admin_id = :adminId:
+            WHERE tdwtu.admin_id = :adminId:
             ORDER BY widget_column, widget_row";
     $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
-    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
     $result = $db->execute($sql);
     while (!$result->EOF)
     {
@@ -36,16 +34,14 @@ class zcWidgetManager extends base
     }
     return $widgets;
   }
-  public static function getWidgetsForProfile($user, $languageId)
+  public static function getWidgetsForProfile($user)
   {
     global $db;
     $widgets = array();
     if (zen_is_superuser($user))
     {
       $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw 
-                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key
-                 WHERE tdwd.language_id = :languageId:";
-      $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
+                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key"; 
       $result = $db->execute($sql);
       while (!$result->EOF)
       {
@@ -61,9 +57,8 @@ class zcWidgetManager extends base
       $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " as tdwtp 
                  LEFT JOIN " .TABLE_DASHBOARD_WIDGETS . " as tdw ON tdw.widget_key = REPLACE(page_key, '_dashboardwidgets_', '')   
                  LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key 
-                 WHERE tdwtp.profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%' AND tdwd.language_id = :languageId:"; 
+                 WHERE tdwtp.profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%'"; 
       $sql = $db->bindVars($sql, ':profileId:', $profileId, 'integer');
-      $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
       $result = $db->execute($sql);
       while (!$result->EOF)
       {
@@ -74,16 +69,14 @@ class zcWidgetManager extends base
     return $widgets;
   }
   
-  public static function getWidgetInfoForUser($user, $languageId)
+  public static function getWidgetInfoForUser($user)
   {
     global $db;
     $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " as tdwtu
             LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdwtu.widget_key 
-            WHERE tdwd.language_id = :languageId: 
-                and tdwtu.admin_id = :adminId:  
+            WHERE tdwtu.admin_id = :adminId:  
             ORDER BY widget_column, widget_row";
     $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
-    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
     $result = $db->execute($sql);
     while (!$result->EOF)
     {
@@ -203,15 +196,14 @@ class zcWidgetManager extends base
   }
   public static function getInstallableWidgets($adminId)
   {
-    $groups = self::getWidgetGroups($_SESSION['languages_id']);
-    $installableWidgets = self::getInstallableWidgetsList($_SESSION['admin_id'], $_SESSION['languages_id']);
+    $groups = self::getWidgetGroups();
+    $installableWidgets = self::getInstallableWidgetsList($_SESSION['admin_id']);
     return $installableWidgets;
   }
-  public static function getWidgetGroups($languageId)
+  public static function getWidgetGroups()
   {
     global $db;
-    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_GROUPS . " WHERE language_id = :languageId:";
-    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
+    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_GROUPS; 
     $result = $db->execute($sql);
     while (!$result->EOF)
     {
@@ -220,10 +212,10 @@ class zcWidgetManager extends base
     }
     return $groups;
   }
-  public static function getInstallableWidgetsList($user, $languageId)
+  public static function getInstallableWidgetsList($user) 
   {
-    $profileWidgets = self::getWidgetsForProfile($user, $languageId);
-    $installedWidgets = self::getWidgetsForUser($user, $languageId);
+    $profileWidgets = self::getWidgetsForProfile($user);
+    $installedWidgets = self::getWidgetsForUser($user);
     $installableWidgets = array_diff_assoc($profileWidgets, $installedWidgets);
     return $installableWidgets;
   }

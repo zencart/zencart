@@ -11,8 +11,8 @@
   require(DIR_WS_CLASSES . 'class.zcWidgetManager.php');
   require(DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
   //$widgetManager = new zcWidgetManager();
-  $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION['admin_id'], $_SESSION['languages_id']);
-  $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION['admin_id'], $_SESSION['languages_id']);
+  $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION['admin_id']); 
+  $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION['admin_id']); 
   //$widgetProfileList = $widgetManager->mergeProfileInfoList($widgetProfileList, $widgetInfoList);
   $widgetList = zcWidgetManager::loadWidgetClasses($widgetInfoList);
   $tplVars = zcWidgetManager::prepareTemplateVariables($widgetList);
