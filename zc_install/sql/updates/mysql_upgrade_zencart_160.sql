@@ -187,19 +187,19 @@ INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ;
  
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
-('general-statistics', 'General Statistics', '', 1),
-('order-summary', 'Order Summary', '', 1),
-('new-customers', 'New Customers', '', 1),
-('counter-history', 'Counter History', '', 1),
-('new-orders', 'New Orders', '', 1)
+('general-statistics', 'GENERAL_STATISTICS', '', 1),
+('order-summary', 'ORDER_SUMMARY', '', 1),
+('new-customers', 'NEW_CUSTOMERS', '', 1),
+('counter-history', 'COUNTER_HISTORY', '', 1),
+('new-orders', 'NEW_ORDERS', '', 1)
 ;
 
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
-('general-statistics', 1, 'General Statistics'),
-('order-statistics', 1, 'Order Statistics'),
-('new-customers', 1, 'New Customers'),
-('counter-history', 1, 'Counter History'),
-('new-orders', 1, 'New Orders')
+('general-statistics', 1, 'GENERAL_STATISTICS_GROUP'),
+('order-statistics', 1, 'ORDER_STATISTICS_GROUP'),
+('new-customers', 1, 'NEW_CUSTOMERS_GROUP'),
+('counter-history', 1, 'COUNTER_HISTORY_GROUP'),
+('new-orders', 1, 'NEW_ORDERS_GROUP')
 ;
 
 # default widgets for first user

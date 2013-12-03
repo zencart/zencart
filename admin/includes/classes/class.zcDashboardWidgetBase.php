@@ -22,6 +22,7 @@ class zcDashboardWidgetBase extends base
     $this->widgetInfo = $widgetInfo;
     $this->widgetKey = $widgetKey;
     $this->tplVars = array();
+    include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/widgets.php'); 
   }
   public function prepareContent() 
   {
@@ -38,7 +39,9 @@ class zcDashboardWidgetBase extends base
   }
   public function getWidgetTitle()
   {
-    return $this->widgetInfo['widget_name'];
+    $name = $this->widgetInfo['widget_name'];
+    if (defined($name)) $name = constant($name); 
+    return $name;
   }
   public function getWidgetBaseId()
   {
