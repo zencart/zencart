@@ -29,6 +29,7 @@ define('NEW_ORDERS_GROUP', 'New Orders');
 // Entries in dashboard_widgets_description
 define('GENERAL_STATISTICS', 'General Statistics'); 
 define('ORDER_STATISTICS', 'Order Statistics'); 
+define('ORDER_SUMMARY', 'Order Summary'); 
 define('NEW_CUSTOMERS', 'New Customers'); 
 define('COUNTER_HISTORY', 'Counter History'); 
 define('NEW_ORDERS', 'New Orders'); 
