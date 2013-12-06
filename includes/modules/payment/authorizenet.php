@@ -95,7 +95,7 @@ class authorizenet extends base {
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
     // Determine default/supported currencies
-    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD'))) {
       $this->gateway_currency = DEFAULT_CURRENCY;
     } else {
       $this->gateway_currency = 'USD';
