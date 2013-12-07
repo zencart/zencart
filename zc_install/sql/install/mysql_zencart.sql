@@ -2245,6 +2245,9 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
 VALUES ('configCOWOA','BOX_CONFIGURATION_COWOA','FILENAME_CONFIGURATION','gID=26', 'configuration', 'Y', 26);
 
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+VALUES ('configWidgets','BOX_CONFIGURATION_WIDGET','FILENAME_CONFIGURATION','gID=27', 'configuration', 'Y', 27);
+
 INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/125zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
 INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/125x125_zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
 INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/bw_zen_88wide.gif', 'BannersAll', '', 0, NULL, NULL, '2005-05-13 10:54:38', NULL, 1, 1, 1, 10);
@@ -2946,6 +2949,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 ('Enable E-Mail Only', 'COWOA_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function of COWOA?<br />Set to True so that a Customer that uses COWOA will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
 ('Enable Forced Logoff', 'COWOA_LOGOFF', 'false', 'Enable The Forced LogOff Function of COWOA?<br />Set to True so that a Customer that uses COWOA will be logged off automatically after a sucessfull checkout. If they are getting a file download, then they will have to wait for the Status E-Mail to arrive in order to download the file.', 26, 13, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
 
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
+('Max Error Logs', 'MAX_ERROR_LOGS', '20', 'Display this number of error logs', 27, '1', now(), NULL, NULL);
 
 INSERT INTO configuration_group VALUES (1, 'My Store', 'General information about my store', '1', '1');
 INSERT INTO configuration_group VALUES (2, 'Minimum Values', 'The minimum values for functions / data', '2', '1');
@@ -2973,6 +2978,7 @@ INSERT INTO configuration_group VALUES (23, 'All Listing', 'All Products Listing
 INSERT INTO configuration_group VALUES (24, 'Index Listing', 'Index Products Listing', '24', '1');
 INSERT INTO configuration_group VALUES (25, 'Define Page Status', 'Define-Pages Options', '25', '1');
 INSERT INTO configuration_group VALUES (26, 'Guest Checkout', 'Set Checkout Without an Account', '26', '1');
+INSERT INTO configuration_group VALUES (27, 'Widget Settings', 'Set Widget Configuration Values', '27', '1');
 INSERT INTO configuration_group VALUES (30, 'EZ-Pages Settings', 'EZ-Pages Settings', 30, '1');
 
 INSERT INTO currencies VALUES (1,'US Dollar','USD','$','','.',',','2','1.0000', now());
@@ -3286,22 +3292,23 @@ INSERT INTO get_terms_to_filter VALUES ('manufacturers_id', 'TABLE_MANUFACTURERS
 INSERT INTO get_terms_to_filter VALUES ('music_genre_id', 'TABLE_MUSIC_GENRE', 'music_genre_name');
 INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPANY', 'record_company_name');
 
-#
-# default widgets
-#
+
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('general-statistics', 'general-statistics', 1),
 ('order-summary', 'order-statistics', 1),
 ('new-customers', 'new-customers', 1),
 ('counter-history', 'counter-history', 1),
-('new-orders', 'new-orders', 1);
+('new-orders', 'new-orders', 1), 
+('logs', 'logs', 1)
+;
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
 ('general-statistics', 'GENERAL_STATISTICS', '', 1),
 ('order-summary', 'ORDER_SUMMARY', '', 1),
 ('new-customers', 'NEW_CUSTOMERS', '', 1),
 ('counter-history', 'COUNTER_HISTORY', '', 1),
-('new-orders', 'NEW_ORDERS', '', 1)
+('new-orders', 'NEW_ORDERS', '', 1),
+('logs', 'LOGS', '', 1)
 ;
 
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
@@ -3309,18 +3316,19 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('order-statistics', 1, 'ORDER_STATISTICS_GROUP'),
 ('new-customers', 1, 'NEW_CUSTOMERS_GROUP'),
 ('counter-history', 1, 'COUNTER_HISTORY_GROUP'),
-('new-orders', 1, 'NEW_ORDERS_GROUP')
+('new-orders', 1, 'NEW_ORDERS_GROUP'),
+('logs', 1, 'LOGS_GROUP')
 ;
 
+# default widgets for first user
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
 ('general-statistics', 1, 0, 0),
-('order-summary', 1, 0, 1),
+('order-summary', 1, 1, 0),
 ('new-customers', 1, 0, 1),
 ('counter-history', 1, 1, 1),
-('new-orders', 1, 0, 2)
+('new-orders', 1, 0, 2),
+('logs', 1, 1, 2)
 ;
-
-
 
 
 
