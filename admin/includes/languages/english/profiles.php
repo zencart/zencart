@@ -11,6 +11,7 @@ define('HEADING_TITLE_ALL_PROFILES', 'User Profiles');
 define('HEADING_TITLE_INDIVIDUAL_PROFILE', 'Profile for %s ');
 define('HEADING_TITLE_NEW_PROFILE', 'New Profile for ');
 
+define('TEXT_CONFIRM_DELETE', 'Delete requested. Please confirm: ');
 define('ERROR_NO_PROFILE_DEFINED', 'The option that you requested cannot be undertaken without specifying a profile');
 define('ERROR_NO_PROFILE_NAME', 'Please enter a name for the new profile');
 define('ERROR_INVALID_PROFILE_NAME', 'Please enter a valid name for the profile');
