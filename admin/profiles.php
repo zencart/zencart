@@ -13,7 +13,7 @@ require('includes/application_top.php');
 if (isset($_POST['action']) && in_array($_POST['action'], array('insert','update','update_name')))
 {
   $action = $_POST['action'];
-} elseif (isset($_GET['action']) && in_array($_GET['action'], array('add','edit','rename','delete'))) {
+} elseif (isset($_GET['action']) && in_array($_GET['action'], array('add','edit','rename','delete','delete_confirm'))) {
   $action = $_GET['action'];
 } else {
   $action = '';
@@ -24,11 +24,11 @@ if (isset($action) && ($action == 'update' || $action == 'update_name') && $_POS
 {
   $profile = $_POST['profile'];
 }
-elseif (isset($action) && ($action == 'edit' || $action == 'delete') && $_GET['profile'])
+elseif (isset($action) && ($action == 'edit' || $action == 'delete' || $action == 'delete_confirm') && $_GET['profile'])
 {
   $profile = $_GET['profile'];
 }
-elseif (in_array($action, array('edit','delete','update','update-name')))
+elseif (in_array($action, array('edit','delete','delete_confirm','update','update-name')))
 {
   $messageStack->add_session(ERROR_NO_PROFILE_DEFINED, 'error');
   zen_redirect(zen_href_link(FILENAME_PROFILES));
@@ -46,7 +46,7 @@ switch ($action) {
     $profileName = zen_get_profile_name($profile);
     $permittedPages = zen_get_permitted_pages_for_profile($profile);
     break;
-  case 'delete':
+  case 'delete_confirm':
     $error = zen_delete_profile($profile);
     if ($error != '')
     {
@@ -95,6 +95,7 @@ switch ($action) {
     zen_redirect(zen_href_link(FILENAME_PROFILES));
     break;
   case 'rename':
+  case 'delete':
   default: // if no specific action requested prepare the listing data
     $profileList = zen_get_profiles(TRUE);
     break;
@@ -122,7 +123,7 @@ require('includes/admin_html_head.php');
 <!-- body //-->
 <div id="pageWrapper">
 
-<?php if (!isset($action) || $action == '' || $action == 'rename') { ?>
+<?php if (!isset($action) || $action == '' || $action == 'rename' || $action == 'delete') { ?>
 
   <h1><?php echo HEADING_TITLE_ALL_PROFILES ?></h1>
 
@@ -136,7 +137,7 @@ require('includes/admin_html_head.php');
       </tr>
     </thead>
 
-<?php if ($action != 'rename') { ?>
+<?php if ($action != 'rename' && $action != 'delete') { ?>
     <tfoot>
       <tr>
         <td colspan="4"><a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=add') ?>"><?php echo zen_image_button('button_add_profile.gif', IMAGE_ADD_PROFILE) ?></a></td>
@@ -164,10 +165,22 @@ require('includes/admin_html_head.php');
         <td class="users"><?php echo zen_output_string($profileDetails['users'], FALSE, TRUE) ?></td>
 <?php if ($profileDetails['id'] != SUPERUSER_PROFILE) { ?>
         <td class="actions">
+<?php if ($action != 'delete') {  ?>
           <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=edit&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
           <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=rename&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_rename.gif', IMAGE_RENAME) ?></a>
+<?php } ?>
 <?php if ($profileDetails['users'] == 0) { ?>
+<?php
+if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($profile)) {
+          echo TEXT_CONFIRM_DELETE; 
+?>
+          <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=delete_confirm&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_confirm_red.gif', IMAGE_DELETE) ?></a>
+            <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+<?php
+          } else if ($action != 'delete') { 
+?>
           <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=delete&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE) ?></a>
+<?php     } ?>
 <?php } ?>
         </td>
 <?php } else { ?>
