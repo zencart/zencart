@@ -81,7 +81,8 @@ define('BOX_CONFIGURATION_ALL_LISTING', 'All Listing');
 define('BOX_CONFIGURATION_INDEX_LISTING', 'Index Listing');
 define('BOX_CONFIGURATION_DEFINE_PAGE_STATUS', 'Define Page Status');
 define('BOX_CONFIGURATION_EZPAGES_SETTINGS', 'EZ-Pages Settings');
-define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration');//for 1.5.1
+define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration'); //for 1.6.0
+define('BOX_CONFIGURATION_WIDGET', 'Widget Configuration'); //for 1.6.0
 
 // modules box text
 define('BOX_HEADING_MODULES', 'Modules');
@@ -688,6 +689,9 @@ define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate serv
 
 define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
 
+// Debug logs
+define('DEBUG_LOGS_DISCOVERED', 'Debug log file(s) discovered. Found: ');
+define('DEBUG_LOGS_WARNING', '*** WARNING *** .log files may indicate problems that need to be resolved. Read the .log file(s) to resolve any errors, then delete them manually or via Tools->Store Manager.');
 
 ///////////////////////////////////////////////////////////
 // include additional files:

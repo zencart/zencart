@@ -101,12 +101,21 @@ INSERT INTO configuration_group VALUES (NULL, 'Guest Checkout', 'Set Checkout Wi
 #NEXT_X_ROWS_AS_ONE_COMMAND:4
 SET @t1=0;
 SELECT (@t1:=configuration_group_id) as t1 FROM configuration_group WHERE configuration_group_title = 'Guest Checkout';
-INSERT INTO admin_pages VALUES ('configCOWOA','BOX_CONFIGURATION_COWOA','FILENAME_CONFIGURATION','gID=@t1:', 'configuration', 'Y', 31);
+INSERT INTO admin_pages VALUES ('configCOWOA','BOX_CONFIGURATION_COWOA','FILENAME_CONFIGURATION',CONCAT('gID=',@t1), 'configuration', 'Y', 31);
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
-('COWOA', 'COWOA_STATUS', 'false', 'Activate COWOA Checkout? <br />Set to True to allow a customer to checkout without an account.', @t1:, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-('Enable Order Status', 'COWOA_ORDER_STATUS', 'false', 'Enable The Order Status Function of COWOA?<br />Set to True so that a Customer that uses COWOA will receive an E-Mail with instructions on how to view the status of their order.', @t1:, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-('Enable E-Mail Only', 'COWOA_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function of COWOA?<br />Set to True so that a Customer that uses COWOA will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', @t1:, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-('Enable Forced Logoff', 'COWOA_LOGOFF', 'false', 'Enable The Forced LogOff Function of COWOA?<br />Set to True so that a Customer that uses COWOA will be logged off automatically after a sucessfull checkout. If they are getting a file download, then they will have to wait for the Status E-Mail to arrive in order to download the file.', @t1:, 13, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
+('COWOA', 'COWOA_STATUS', 'false', 'Activate COWOA Checkout? <br />Set to True to allow a customer to checkout without an account.', @t1, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Order Status', 'COWOA_ORDER_STATUS', 'false', 'Enable The Order Status Function of COWOA?<br />Set to True so that a Customer that uses COWOA will receive an E-Mail with instructions on how to view the status of their order.', @t1, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable E-Mail Only', 'COWOA_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function of COWOA?<br />Set to True so that a Customer that uses COWOA will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', @t1, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Forced Logoff', 'COWOA_LOGOFF', 'false', 'Enable The Forced LogOff Function of COWOA?<br />Set to True so that a Customer that uses COWOA will be logged off automatically after a sucessfull checkout. If they are getting a file download, then they will have to wait for the Status E-Mail to arrive in order to download the file.', @t1, 13, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
+
+
+INSERT INTO configuration_group VALUES (NULL, 'Widget Settings', 'Set Widget Configuration Values', '31', '1');
+#NEXT_X_ROWS_AS_ONE_COMMAND:4
+SET @t1=0;
+SELECT (@t1:=configuration_group_id) as t1 FROM configuration_group WHERE configuration_group_title = 'Widget Settings';
+INSERT INTO admin_pages VALUES ('configWidgets','BOX_CONFIGURATION_WIDGET','FILENAME_CONFIGURATION',CONCAT('gID=',@t1), 'configuration', 'Y', 32);
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
+('Max Error Logs', 'MAX_ERROR_LOGS', '20', 'Display this number of error logs', @t1, '1', now(), NULL, NULL);
 
 INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string ) VALUES ( '', 'email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where COWOA_account != 1 order by customers_lastname, customers_firstname, customers_email_address');
 
@@ -188,7 +197,8 @@ INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('order-summary', 'order-statistics', 1),
 ('new-customers', 'new-customers', 1),
 ('counter-history', 'counter-history', 1),
-('new-orders', 'new-orders', 1)
+('new-orders', 'new-orders', 1), 
+('logs', 'logs', 1)
 ;
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
@@ -196,7 +206,8 @@ INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_descr
 ('order-summary', 'ORDER_SUMMARY', '', 1),
 ('new-customers', 'NEW_CUSTOMERS', '', 1),
 ('counter-history', 'COUNTER_HISTORY', '', 1),
-('new-orders', 'NEW_ORDERS', '', 1)
+('new-orders', 'NEW_ORDERS', '', 1),
+('logs', 'LOGS', '', 1)
 ;
 
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
@@ -204,7 +215,8 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('order-statistics', 1, 'ORDER_STATISTICS_GROUP'),
 ('new-customers', 1, 'NEW_CUSTOMERS_GROUP'),
 ('counter-history', 1, 'COUNTER_HISTORY_GROUP'),
-('new-orders', 1, 'NEW_ORDERS_GROUP')
+('new-orders', 1, 'NEW_ORDERS_GROUP'),
+('logs', 1, 'LOGS_GROUP')
 ;
 
 # default widgets for first user
@@ -213,7 +225,8 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ('order-summary', 1, 1, 0),
 ('new-customers', 1, 0, 1),
 ('counter-history', 1, 1, 1),
-('new-orders', 1, 0, 2)
+('new-orders', 1, 0, 2),
+('logs', 1, 1, 2)
 ;
 
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
