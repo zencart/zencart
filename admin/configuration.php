@@ -137,6 +137,18 @@ require('includes/admin_html_head.php');
       echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=edit') . '\'">' . "\n";
     }
 ?>
+<?php
+   // multilinguage support: 
+   // For example, in admin/includes/languages/spanish/configuration.php
+   // define('CFGTITLE_STORE_NAME', 'Nombre de la Tienda');
+   // define('CFGDESC_STORE_NAME', 'El nombre de mi tienda');
+    if (defined('CFGTITLE_' . $configuration->fields['configuration_key'])) {
+      $configuration->fields['configuration_title'] = constant('CFGTITLE_' . $configuration->fields['configuration_key']);
+    }
+    if (defined('CFGDESC_' . $configuration->fields['configuration_key'])) {
+      $configuration->fields['configuration_description'] = constant('CFGDESC_' . $configuration->fields['configuration_key']); 
+    }
+?>
                 <td class="dataTableContent"><?php echo $configuration->fields['configuration_title']; ?></td>
                 <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); ?></td>
                 <td class="dataTableContent" align="right"><?php if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $configuration->fields['configuration_id']) . '" name="link_' . $configuration->fields['configuration_key'] . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
@@ -149,6 +161,14 @@ require('includes/admin_html_head.php');
 <?php
   $heading = array();
   $contents = array();
+
+    // Translation for contents
+    if (defined('CFGTITLE_' . $cInfo->configuration_key)) {
+      $cInfo->configuration_title = constant('CFGTITLE_' . $cInfo->configuration_key);
+    }
+    if (defined('CFGDESC_' . $cInfo->configuration_key)) {
+      $cInfo->configuration_description = constant('CFGDESC_' . $cInfo->configuration_key); 
+    }
 
   switch ($action) {
     case 'edit':
