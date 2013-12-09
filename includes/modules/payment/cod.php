@@ -32,7 +32,7 @@
     function update_status() {
       global $order, $db;
 
-      if ($this->enabled && (int)MODULE_PAYMENT_COD_ZONE > 0 && isset($order->billing['country']['id'])) {
+      if ($this->enabled && (int)MODULE_PAYMENT_COD_ZONE > 0 && isset($order->delivery['country']['id'])) {
         $check_flag = false;
         $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_COD_ZONE . "' and zone_country_id = '" . (int)$order->delivery['country']['id'] . "' order by zone_id");
         while (!$check->EOF) {
