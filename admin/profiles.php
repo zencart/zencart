@@ -8,6 +8,7 @@
  */
 
 require('includes/application_top.php');
+include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/widgets.php');
 
 // determine whether an action has been requested
 if (isset($_POST['action']) && in_array($_POST['action'], array('insert','update','update_name')))
@@ -172,12 +173,12 @@ require('includes/admin_html_head.php');
 <?php if ($profileDetails['users'] == 0) { ?>
 <?php
 if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($profile)) {
-          echo TEXT_CONFIRM_DELETE; 
+          echo TEXT_CONFIRM_DELETE;
 ?>
           <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=delete_confirm&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_confirm_red.gif', IMAGE_DELETE) ?></a>
-            <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
 <?php
-          } else if ($action != 'delete') { 
+          } else if ($action != 'delete') {
 ?>
           <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=delete&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE) ?></a>
 <?php     } ?>

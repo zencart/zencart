@@ -631,7 +631,7 @@ function zen_get_admin_pages($menu_only)
   $result = $db->Execute($sql);
   while (!$result->EOF)
   {
-    $dashboardWidgets['_dashboardwidgets_'.$result->fields['widget_key']] = array('name'=>$result->fields['widget_name'], 'file'=>$result->fields['widget_key'], 'params'=>'');
+    $dashboardWidgets['_dashboardwidgets_'.$result->fields['widget_key']] = array('name'=>constant($result->fields['widget_name']), 'file'=>$result->fields['widget_key'], 'params'=>'');
     $result->MoveNext();
   }
 
