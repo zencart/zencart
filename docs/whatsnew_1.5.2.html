@@ -104,7 +104,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 Improvements:
 <ul>
 <li>CHANGE-511 - Change DB functions from mysql to mysqli</li>
-<li>CHANGE-491 - Timezone patch for PHP 5.3/5.4/5.5</li>
+<li>CHANGE-491 - Timezone patch for PHP 5.3/5.4/5.5 (this makes the "timezone offset" plugin obsolete)</li>
 <li>CHANGE-566 - Add Admin switch to relax PA-DSS "strong" password requirements when in Demo mode</li>
 <li>CHANGE-432 - Numerous fixes for stricter PHP 5.4 compatibility</li>
 <li>CHANGE-543 - Updates for PHP 5.5 Compatibility</li>
@@ -194,7 +194,7 @@ Fixes:
 <li>CHANGE-520 - Remove inline javascript and tags which may not be stripped correctly in product listings etc</li>
 <li>CHANGE-521 - Fix error on Incorrect integer value: products_priced_by_attribute</li>
 <li>CHANGE-526 - Additional notifier to allow additional validation in account_edit page</li>
-<li>CHANGE-527 - Add configuration-settings-search to Developers Toolkit, credit B.Bellamy,torvista</li>
+<li>CHANGE-527 - Add configuration-settings-search to Developers Toolkit, credit B.Bellamy,torvista (makes the search_configuration_keys plugin obsolete)</li>
 <li>CHANGE-528 - Updates to valid cart issues with attributes and changes prior to checkout</li>
 <li>CHANGE-529 - Fix variable initialization in Shipping Estimator</li>
 <li>CHANGE-532 - Init system - move navigation history to after init_sanitize</li>
@@ -209,7 +209,7 @@ Fixes:
 <li>CHANGE-559 - Fix for Shipping Estimator which was causing shipping modules to request quotes twice</li>
 <li>CHANGE-562 - ironlady github pull request - Add webfont files support to .htaccess whitelist</li>
 <li>CHANGE-563 - Fix zone misspelling in latin1 encoding. Add translations in utf8 version.</li>
-<li>CHANGE-565 - Incorporate the Fix_Cache_key utility code into ZC Admin core</li>
+<li>CHANGE-565 - Incorporate the Fix_Cache_key utility code into ZC Admin core (thus the plugin by the same name is now obsolete)</li>
 <li>CHANGE-568 - Add storeowner-definable session timeout limit</li>
 <li>CHANGE-570 - Add notifier hook to provide ability for Admin Activity Logs be exportable to CLFS or other standard format (PA-DSS feature)</li>
 <li>CHANGE-573 - Rename Email HTML switch setting text and description to be clearer</li>
@@ -236,6 +236,7 @@ Fixes:
 <li>CHANGE-638 - Fix review-text stripping html characters into wrong symbols</li>
 <li>CHANGE-639 - Fix XSS display problem in back-end preview screen</li>
 <li>CHANGE-666 - minor typo in option_name.php language file</li>
+<li>CHANGE-667 - Constant OFFICE_IP_TO_HOST_ADDRESS already set</li>
 <li>ISSUE-52 - Change admin rules to allow pass"phrases" by permitting the use of spaces</li>
 </ul>
 
