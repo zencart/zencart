@@ -54,6 +54,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
   }
 
+  // include additional files:
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_EMAIL_EXTRAS);
+  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/widgets_default.php');
+  include(zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/', FILENAME_OTHER_IMAGES_NAMES, 'false'));
+
   if ($za_dir = @dir(DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions')) {
     while ($zv_file = $za_dir->read()) {
       if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {

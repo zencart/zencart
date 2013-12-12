@@ -693,9 +693,4 @@ define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="http://www.zen-cart.com/co
 define('DEBUG_LOGS_DISCOVERED', 'Debug log file(s) discovered. Found: ');
 define('DEBUG_LOGS_WARNING', '*** WARNING *** .log files may indicate problems that need to be resolved. Read the .log file(s) to resolve any errors, then delete them manually or via Tools->Store Manager.');
 
-///////////////////////////////////////////////////////////
-// include additional files:
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_EMAIL_EXTRAS);
-  include(zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/', FILENAME_OTHER_IMAGES_NAMES, 'false'));
-
 

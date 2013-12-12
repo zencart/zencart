@@ -3,7 +3,7 @@
  * zcDashboardWidgetBase Class.
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
  */
@@ -22,7 +22,6 @@ class zcDashboardWidgetBase extends base
     $this->widgetInfo = $widgetInfo;
     $this->widgetKey = $widgetKey;
     $this->tplVars = array();
-    include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/widgets.php'); 
   }
   public function prepareContent() 
   {
