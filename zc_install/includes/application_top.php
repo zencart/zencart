@@ -10,12 +10,6 @@
 @ini_set("arg_separator.output", "&");
 @set_time_limit(250);
 
-// Check PHP version
-if (version_compare(PHP_VERSION, '5.2.14', '<'))
-{
-  require (DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'templates/tpl_php_version_problem.php');
-  die('');
-}
 if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php'))
   require (DIR_FS_INSTALL . 'includes/localConfig.php');
 
@@ -69,10 +63,15 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
 /**
  * Timezone problem detection
  */
-if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
+if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
+{
+  include ('../includes/extra_configures/set_time_zone.php');
+}
+// re-test
+if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
   die('ERROR: date.timezone is not set in php.ini. Please contact your hosting company to set the timezone in the server PHP configuration before continuing.');
-} elseif (PHP_VERSION >= '5.1')
+} else
 {
   @date_default_timezone_set(date_default_timezone_get());
 }
@@ -83,8 +82,6 @@ if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '' && @date_default_time
 if (version_compare(PHP_VERSION, 5.4, '<'))
 {
   $php_magic_quotes_runtime = (@get_magic_quotes_runtime() > 0) ? 'ON' : 'OFF';
-  if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime'))
-    set_magic_quotes_runtime(0);
   $val = @ini_get('magic_quotes_sybase');
   if (is_string($val) && strtolower($val) == 'on')
     $val = 1;

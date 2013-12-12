@@ -46,7 +46,6 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
 /*
  * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
  */
-if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 // set php_self in the local scope
 if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
@@ -56,10 +55,7 @@ $PHP_SELF = htmlspecialchars($PHP_SELF);
 /*
  * Get time zone info from PHP config
 */
-if (version_compare(PHP_VERSION, 5.3, '>='))
-{
-  @date_default_timezone_set(date_default_timezone_get());
-}
+@date_default_timezone_set(date_default_timezone_get());
 /**
  * Set the local configuration parameters - mainly for developers
  */

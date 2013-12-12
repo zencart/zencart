@@ -21,11 +21,7 @@ $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
 $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PREFIX == 'True') ? '.' : '';
 $secureFlag = (substr(HTTP_SERVER, 0, 6) == 'https:') ? TRUE : FALSE;
 
-if (PHP_VERSION >= '5.2.0') {
-  session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, TRUE);
-} else {
-  session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);
-}
+session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, TRUE);
 
 /**
  * tidy up $_SERVER['REMOTE_ADDR'] before we use it anywhere else

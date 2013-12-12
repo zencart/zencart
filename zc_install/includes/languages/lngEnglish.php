@@ -126,7 +126,13 @@ define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
 
 define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
-define('TEXT_ERROR_PHP_VERSION', 'Incorrect PHP Version');
+define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
+<p>The PHP version you are using (' . PHP_VERSION . ') is too old, and this version of Zen Cart&reg; cannot be used on this server in its present configuration.</p>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.3.0 through 5.5.x (and preferably a minimum of 5.3.7 for security reasons).<br>
+It is <strong>recommended to use the latest version of PHP 5.5.xx.</strong></p>
+<p><em>NOTE: At the time of this release, PHP 5.6 has not yet been extensively tested with this version of Zen Cart&reg;.</em><br>
+Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
+'));
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
 define('TEXT_ERROR_MYSQL_SUPPPORT', 'Problems with your MySQL (mysqli) support');
