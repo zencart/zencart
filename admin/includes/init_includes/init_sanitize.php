@@ -16,6 +16,11 @@ $saniGroup1 = array('action', 'add_products_id', 'attribute_id', 'attribute_page
 'reset_option_names_values_copier', 'rID', 's', 'saction', 'selected_box', 'set', 'set_display_categories_dropdown', 'sID', 'spage', 'start_date', 'status', 't', 'tID', 'type', 'uid', 'update_action', 'update_to', 'user',
 'value_id', 'value_page', 'vcheck', 'year', 'za_lookup', 'zID', 'zone', 'zpage', 'coupon_copy_to');
 
+if (isset($saniGroup) && is_array($saniGroup) && sizeof($saniGroup)) {
+  // merge whitelist from global scope array $saniGroup, for plugins that have added themselves to that array to participate in proper sanitization
+  $saniGroup1 = array_merge($saniGroup1, $saniGroup);
+}
+
 foreach ($saniGroup1 as $key)
 {
   if (isset($_GET[$key]))
