@@ -360,6 +360,7 @@ color:#ff6600;
 #alt_nav a {
   white-space: nowrap;
 }
+.altnavBody #navbar {display: none;}
 
 .copyrightrow {
   font-size:9px;

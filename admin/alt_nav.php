@@ -7,21 +7,15 @@
  * @version $Id: alt_nav.php 19301 2011-07-28 21:50:05Z kuroi $
  */
 require('includes/application_top.php');
+require('includes/admin_html_head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<meta name="robots" content="noindex, nofollow" />
-<script src="includes/menu.js" type="text/javaScript"></script>
-<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css" />
-<style type="text/css">#navbar {display: none;}</style>
 </head>
-<body >
+<body class="altnavBody">
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
+
+<!-- body //-->
 <div id="alt_nav">
 <h1><?php echo HEADING_TITLE ?></h1>
 
