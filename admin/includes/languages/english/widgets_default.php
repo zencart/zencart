@@ -22,3 +22,9 @@ define('NEW_CUSTOMERS', 'New Customers');
 define('COUNTER_HISTORY', 'Counter History');
 define('NEW_ORDERS', 'New Orders');
 define('LOGS', 'Debug Logs');
+
+/* NOTE: defines for additional contributed "plugin" widgets should be placed into
+ * a new file in the extra_definitions folder, not in this file, since
+ * altering this file makes upgrades more complicated
+ * and also makes plugin installation far more complicated than it needs to be.
+ */
