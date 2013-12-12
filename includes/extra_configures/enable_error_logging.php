@@ -39,9 +39,9 @@ if (!defined('DIR_FS_LOGS')) {
 
 /**
  * Error reporting level to log
- * Default: E_ALL ^E_NOTICE
+ * Default: E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT
  */
-  $errors_to_log = (version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
+  $errors_to_log = (version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 
 ///// DO NOT EDIT BELOW THIS LINE /////
