@@ -88,6 +88,12 @@ ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
 ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
 ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '0';
 ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) NOT NULL default '0';
+ALTER TABLE orders_products ADD products_quantity_order_min float NOT NULL default '1';
+ALTER TABLE orders_products ADD products_quantity_order_units float NOT NULL default '1';
+ALTER TABLE orders_products ADD products_quantity_order_max float NOT NULL default '0';
+ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) NOT NULL default '0';
+ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) NOT NULL default '1';
+
 ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL;
 
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
@@ -197,7 +203,7 @@ INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
 ('order-summary', 'order-statistics', 1),
 ('new-customers', 'new-customers', 1),
 ('counter-history', 'counter-history', 1),
-('new-orders', 'new-orders', 1), 
+('new-orders', 'new-orders', 1),
 ('logs', 'logs', 1)
 ;
 

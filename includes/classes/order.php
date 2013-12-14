@@ -173,7 +173,9 @@ class order extends base {
                                  onetime_charges,
                                  products_priced_by_attribute, product_is_free, products_discount_type,
                                  products_discount_type_from,
-                                 products_weight, products_virtual, product_is_always_free_shipping
+                                 products_weight, products_virtual, product_is_always_free_shipping,
+                                 products_quantity_order_min, products_quantity_order_units, products_quantity_order_max,
+                                 products_quantity_mixed, products_mixed_discount_quantity
                                   from " . TABLE_ORDERS_PRODUCTS . "
                                   where orders_id = '" . (int)$order_id . "'
                                   order by orders_products_id";
@@ -216,7 +218,12 @@ class order extends base {
                                       'products_discount_type_from' => $orders_products->fields['products_discount_type_from'],
                                       'products_weight' => $orders_products->fields['products_weight'],
                                       'products_virtual' => $orders_products->fields['products_virtual'],
-                                      'product_is_always_free_shipping' => $orders_products->fields['product_is_always_free_shipping']
+                                      'product_is_always_free_shipping' => $orders_products->fields['product_is_always_free_shipping'],
+                                      'products_quantity_order_min' => $orders_products->fields['products_quantity_order_min'],
+                                      'products_quantity_order_units' => $orders_products->fields['products_quantity_order_units'],
+                                      'products_quantity_order_max' => $orders_products->fields['products_quantity_order_max'],
+                                      'products_quantity_mixed' => $orders_products->fields['products_quantity_mixed'],
+                                      'products_mixed_discount_quantity' => $orders_products->fields['products_mixed_discount_quantity']
                                       );
 
       $subindex = 0;
@@ -469,7 +476,12 @@ class order extends base {
                                       'rowClass' => $rowClass,
                                       'products_weight' => $products[$i]['weight'],
                                       'products_virtual' => $products[$i]['products_virtual'],
-                                      'product_is_always_free_shipping' => $products[$i]['product_is_always_free_shipping']
+                                      'product_is_always_free_shipping' => $products[$i]['product_is_always_free_shipping'],
+                                      'products_quantity_order_min' => $products[$i]['products_quantity_order_min'],
+                                      'products_quantity_order_units' => $products[$i]['products_quantity_order_units'],
+                                      'products_quantity_order_max' => $products[$i]['products_quantity_order_max'],
+                                      'products_quantity_mixed' => $products[$i]['products_quantity_mixed'],
+                                      'products_mixed_discount_quantity' => $products[$i]['products_mixed_discount_quantity']
                                       );
 
       if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
@@ -816,7 +828,13 @@ class order extends base {
                               'products_prid' => $this->products[$i]['id'],
                               'products_weight' => $this->products[$i]['weight'],
                               'products_virtual' => $this->products[$i]['products_virtual'],
-                              'product_is_always_free_shipping' => $this->products[$i]['product_is_always_free_shipping']);
+                              'product_is_always_free_shipping' => $this->products[$i]['product_is_always_free_shipping'],
+                              'products_quantity_order_min' => $this->products[$i]['products_quantity_order_min'],
+                              'products_quantity_order_units' => $this->products[$i]['products_quantity_order_units'],
+                              'products_quantity_order_max' => $this->products[$i]['products_quantity_order_max'],
+                              'products_quantity_mixed' => $this->products[$i]['products_quantity_mixed'],
+                              'products_mixed_discount_quantity' => $this->products[$i]['products_mixed_discount_quantity']
+                              );
       zen_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
       $order_products_id = $db->Insert_ID();
