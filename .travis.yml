@@ -1,8 +1,8 @@
 language: php
 php:
-  - "5.4"
+#  - "5.4"
 #  - "5.3"
-#  - "5.5"
+  - "5.5"
 env: DB=mysql
 services: memcached
 install: true
@@ -10,5 +10,4 @@ before_script:
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
 #  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script:
-  - phpunit testFramework/unittests/testTestCase.php
-  - phpunit --configuration testFramework/webtests/phpunit.xml
+  - phpunit --configuration testFramework/unittests/phpunit.xml
