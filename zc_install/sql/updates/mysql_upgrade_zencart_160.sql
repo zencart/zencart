@@ -98,6 +98,14 @@ ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NU
 
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 
+ALTER TABLE admin MODIFY admin_pass VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE admin MODIFY prev_pass1 VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE admin MODIFY prev_pass2 VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE admin MODIFY prev_pass3 VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE admin MODIFY reset_token VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE customers MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT '';
+
+
 ##@TODO
 ## COWOA CHANGES - Although need to allow for a current cowoa installation
 ALTER TABLE customers ADD COLUMN COWOA_account tinyint(1) NOT NULL default 0;

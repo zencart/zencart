@@ -63,6 +63,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'upload.php',
                                'classPath'=>DIR_WS_CLASSES);
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'class.zcPassword.php');
+
 /**
  * Breakpoint 10.
  *

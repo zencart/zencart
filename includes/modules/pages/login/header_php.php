@@ -50,6 +50,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
     $check_customer_query  =$db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
     $check_customer = $db->Execute($check_customer_query);
+    error_reporting(E_ALL);
+    ini_set('display_errors', 'on');
 
     if (!$check_customer->RecordCount()) {
       $error = true;
@@ -59,11 +61,15 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
       $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
       $messageStack->add('login', TEXT_LOGIN_BANNED);
     } else {
+      $newPassword = $check_customer->fields['customers_password'];
       // Check that password is good
-      if (!zen_validate_password($password, $check_customer->fields['customers_password'])) {
+      if (!zen_validate_password($password, $newPassword)) {
         $error = true;
         $messageStack->add('login', TEXT_LOGIN_ERROR);
       } else {
+        if (password_needs_rehash($newPassword, PASSWORD_DEFAULT)) {
+          $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
+        }
         if (SESSION_RECREATE == 'True') {
           zen_session_recreate();
         }
