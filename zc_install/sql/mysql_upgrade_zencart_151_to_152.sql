@@ -55,7 +55,7 @@ UPDATE configuration set configuration_title = 'Email Admin Format?', configurat
 
 INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$city $state / $country');
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
-UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('BEL', 'NLD');
+UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('BEL', 'NLD', 'SWE');
 ALTER TABLE countries ADD status tinyint(1) DEFAULT '1';
 
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
