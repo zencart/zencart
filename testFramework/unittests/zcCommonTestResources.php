@@ -1,7 +1,6 @@
 <?php
 /**
- * Load testing framework (only needed on OLDER versions of PHPUnit.
- * With v3.5 and newer, the following 2 lines can be deleted:
+ * Unit testing common setup actions
  */
 $bypassWarning = TRUE; // bypass PHPUnit/Framework warning error (works on edited localhost code ... will have to customize Bamboo to do the same if the next line can't be removed
 if (file_exists('PHPUnit/Framework.php') && ! file_exists('PHPUnit/Autoload.php'))

@@ -1,13 +1,18 @@
 language: php
 php:
-#  - "5.4"
-#  - "5.3"
+  - "5.4"
   - "5.5"
-env: DB=mysql
-services: memcached
+  - "5.3"
+env:
+  global:
+  - DB=mysql
+#services: memcached
 install: true
+branches:
+  only:
+    - v160
 before_script:
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
-#  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script:
-  - phpunit --configuration testFramework/unittests/phpunit.xml
+  - phpunit -c testFramework/unittests/phpunit.xml

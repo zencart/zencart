@@ -8,8 +8,7 @@
  * @version $Id$
  */
 /**
- * Load testing framework (only needed on OLDER versions of PHPUnit.
- * With v3.5 and newer, the following 2 lines can be deleted:
+ * Unit Tests for password hashing rules
  */
 class testPasswordHash extends PHPUnit_Framework_TestCase
 {

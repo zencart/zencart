@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit>
+<phpunit colors="true" verbose="true">
   <testsuites>
-    <testsuite name="Passwrord Hash Functions">
-      <file>testTestCase.php</file>
-      <file>testPasswordHashCase.php</file>
+    <testsuite name="Password Hash Functions">
+      <file>testFramework/unittests/testTestCase.php</file>
+      <file>testFramework/unittests/testPasswordHashCase.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
