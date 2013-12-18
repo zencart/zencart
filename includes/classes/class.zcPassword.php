@@ -188,7 +188,7 @@ class zcPassword extends base
               WHERE admin_name = :adminName:";
 
     $sql = $db->bindVars($sql, ':adminName:', $admin, 'string');
-    echo $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
+    $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
     $db->Execute($sql);
     return $updatedPassword;
   }
