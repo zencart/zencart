@@ -91,6 +91,16 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $_SESSION['customer_country_id'] = $check_country->fields['entry_country_id'];
         $_SESSION['customer_zone_id'] = $check_country->fields['entry_zone_id'];
 
+        // enforce db integrity: make sure related record exists
+        $sql = "SELECT customers_info_date_of_last_logon FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_id = :customersID";
+        $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
+        $result = $db->Execute($sql);
+        if ($result->RecordCount() == 0) {
+          $sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id) values (:customersID)";
+          $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
+          $db->Execute($sql);
+        }
+
         $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
               SET customers_info_date_of_last_logon = now(),
                   customers_info_number_of_logons = customers_info_number_of_logons+1
