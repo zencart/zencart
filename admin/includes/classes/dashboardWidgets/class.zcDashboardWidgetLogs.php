@@ -19,6 +19,7 @@ class zcDashboardWidgetLogs extends zcDashboardWidgetBase
 {
   public function prepareContent()
   {
+    require_once(DIR_WS_FUNCTIONS . "logs_functions.php"); 
     $logs = get_logs_data();
     if (sizeof($logs) == 0) return $tplVars; 
     foreach ($logs as $log) { 
