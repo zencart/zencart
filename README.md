@@ -26,9 +26,9 @@ Installation is simple:
   * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](http://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](http://www.zen-cart.com/content.php?305).
 3. Unzip the downloaded zip file 
 4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your public_html or www or html folder (the folder will already exist on your webserver)
-5. In your browser, enter the address to your site, such as: www.your_site.com (or if you uploaded it into another foldername use www.your_site.com/foldername )
-6. Rename the /includes/dist-configure.php and /admin/includes/dist-configure.php files to "configure.php" and make the files writable (so the install process can write your configuration information into them after you answer a few questions in the following steps).
-7. Also make the /cache and /logs folders writable. (You will be prompted about making other folders writable during installation)
+5. In your browser, enter the address to your site, such as: `www.your_site.com` (or if you uploaded it into another foldername use `www.your_site.com/foldername` )
+6. Rename the `/includes/dist-configure.php` and `/admin/includes/dist-configure.php` files to `configure.php` and make the files writable (so the install process can write your configuration information into them after you answer a few questions in the following steps).
+7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
 That's the abbreviated version of installation instructions!
@@ -37,7 +37,7 @@ For a MUCH more detailed set of installation instructions, see the [/docs/1.read
 
 PCI/PA-DSS Compliance
 ---------------------
-Currently only the v1.5.0 release is PA-DSS certified, and only when downloaded from [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files).  
+Currently only the v1.5.0 release is PA-DSS certified, and only when downloaded from the official distribution server: [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files).  
 
 Other branches are not PA-DSS Certified unless otherwise stated.
  
