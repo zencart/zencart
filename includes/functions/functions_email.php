@@ -570,7 +570,7 @@
       ($login_fax !='' ? OFFICE_LOGIN_FAX . "\t" . $login_fax . "\n" : '') .
       OFFICE_IP_ADDRESS . "\t" . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . "\n" .
       ($email_host_address != '' ? OFFICE_HOST_ADDRESS . "\t" . $email_host_address  . "\n" : '') .
-      OFFICE_DATE_TIME . "\t" . date("D M j Y G:i:s T") . "\n\n";
+      OFFICE_DATE_TIME . "\t" . date("D M j Y G:i:s T") . "\n";
 
     $extra_info['HTML'] = '<table class="extra-info">' .
       '<tr><td class="extra-info-bold" colspan="2">' . OFFICE_USE . '</td></tr>' .
@@ -582,12 +582,15 @@
       ($login_fax !='' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_FAX . '</td><td>' . $login_fax . '</td></tr>' : '') .
       '<tr><td class="extra-info-bold">' . OFFICE_IP_ADDRESS . '</td><td>' . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . '</td></tr>' .
       ($email_host_address != '' ? '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' : '') .
-      '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>' . '</table>';
+      '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>';
 
     foreach($moreinfo as $key => $val) {
-      $extra_info['TEXT'] .= $key . ': ' . $val . "\n";
+      $extra_info['TEXT'] .= $key . ": \t" . $val . "\n";
       $extra_info['HTML'] .= '<tr><td class="extra-info-bold">' . $key . '</td><td>' . $val . '</td></tr>';
     }
+
+    $extra_info['TEXT'] .= "\n\n";
+    $extra_info['HTML'] .= '</table>' . "\n";
 
     return $extra_info;
   }
