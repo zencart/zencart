@@ -50,8 +50,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
     $check_customer_query  =$db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
     $check_customer = $db->Execute($check_customer_query);
-    error_reporting(E_ALL);
-    ini_set('display_errors', 'on');
 
     if (!$check_customer->RecordCount()) {
       $error = true;
