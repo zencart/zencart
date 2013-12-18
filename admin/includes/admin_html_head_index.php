@@ -37,11 +37,6 @@
 <?php /** Load Foundation framework core**/ ?>
 <script src="includes/template/javascript/foundation/foundation.min.js"></script>
 
-<script src="includes/template/javascript/jquery-validation/jquery.validate.js"></script>
-<?php if (file_exists(DIR_FS_ADMIN . 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js')) { ?>
-<script src="<?php echo 'includes/template/javascript/jquery-validation/localization/messages_' . substr($_SESSION['languages_code'], 0, strpos($_SESSION['languages_code'], '_')) . '.js'; ?>"></script>
-<?php } ?>
-
 <?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
 
 <script src="includes/general.js"></script>
