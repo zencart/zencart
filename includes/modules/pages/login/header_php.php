@@ -93,9 +93,10 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
           $db->Execute($sql);
         }
 
+        // update login count
         $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
               SET customers_info_date_of_last_logon = now(),
-                  customers_info_number_of_logons = customers_info_number_of_logons+1
+                  customers_info_number_of_logons = IF(customers_info_number_of_logons, customers_info_number_of_logons+1, 1)
               WHERE customers_info_id = :customersID";
 
         $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
