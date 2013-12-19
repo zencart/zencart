@@ -11,8 +11,8 @@
   require(DIR_WS_CLASSES . 'class.zcWidgetManager.php');
   require(DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
   //$widgetManager = new zcWidgetManager();
-  $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION['admin_id']); 
-  $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION['admin_id']); 
+  $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION['admin_id']);
+  $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION['admin_id']);
   //$widgetProfileList = $widgetManager->mergeProfileInfoList($widgetProfileList, $widgetInfoList);
   $widgetList = zcWidgetManager::loadWidgetClasses($widgetInfoList);
   $tplVars = zcWidgetManager::prepareTemplateVariables($widgetList);
@@ -283,16 +283,16 @@ $(function() {
 
 
 function createSortables() {
-  $(".columns").sortable(
+  $(".sortable-column").sortable(
   {
-    connectWith : ".columns",
+    connectWith : ".sortable-column",
     handle: '.widget-handle',
     placeholder: "ui-sortable-placeholder",
     forcePlaceholderSize: true,
     update : function(event, ui)
     {
       if (this === ui.item.parent()[0]) {
-        var itemStr = getItems('.columns');
+        var itemStr = getItems('.sortable-column');
         zcJS.ajax({
           url: "zcAjaxHandler.php?act=dashboardWidget&method=updateWidgetPositions",
           data: {'items': itemStr}

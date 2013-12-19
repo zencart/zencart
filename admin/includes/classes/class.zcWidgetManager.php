@@ -40,24 +40,24 @@ class zcWidgetManager extends base
     $widgets = array();
     if (zen_is_superuser($user))
     {
-      $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw 
-                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key"; 
+      $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw
+                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key";
       $result = $db->execute($sql);
       while (!$result->EOF)
       {
         $widgets[$result->fields['widget_key']] = $result->fields;
         $result->moveNext();
       }
-    } else 
+    } else
     {
       $sql = "SELECT admin_profile FROM " . TABLE_ADMIN . " WHERE admin_id = :adminId:";
       $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
       $result = $db->execute($sql);
       $profileId = $result->fields['admin_profile'];
-      $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " as tdwtp 
-                 LEFT JOIN " .TABLE_DASHBOARD_WIDGETS . " as tdw ON tdw.widget_key = REPLACE(page_key, '_dashboardwidgets_', '')   
-                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key 
-                 WHERE tdwtp.profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%'"; 
+      $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " as tdwtp
+                 LEFT JOIN " .TABLE_DASHBOARD_WIDGETS . " as tdw ON tdw.widget_key = REPLACE(page_key, '_dashboardwidgets_', '')
+                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key
+                 WHERE tdwtp.profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%'";
       $sql = $db->bindVars($sql, ':profileId:', $profileId, 'integer');
       $result = $db->execute($sql);
       while (!$result->EOF)
@@ -68,13 +68,13 @@ class zcWidgetManager extends base
     }
     return $widgets;
   }
-  
+
   public static function getWidgetInfoForUser($user)
   {
     global $db;
     $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " as tdwtu
-            LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdwtu.widget_key 
-            WHERE tdwtu.admin_id = :adminId:  
+            LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdwtu.widget_key
+            WHERE tdwtu.admin_id = :adminId:
             ORDER BY widget_column, widget_row";
     $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
     $result = $db->execute($sql);
@@ -126,7 +126,7 @@ class zcWidgetManager extends base
     $widgetList = self::transformPositions($items);
     foreach ($widgetList as $key => $detail)
     {
-      $sql = "UPDATE " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " SET widget_column = :column:, widget_row = :row: 
+      $sql = "UPDATE " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " SET widget_column = :column:, widget_row = :row:
               WHERE admin_id = :adminId: AND widget_key = :key:";
       $sql = $db->bindVars($sql, ':column:', $detail['col'], 'integer');
       $sql = $db->bindVars($sql, ':row:', $detail['row'], 'integer');
@@ -147,7 +147,7 @@ class zcWidgetManager extends base
   {
     $columns = explode('|', $items);
     {
-      $colC = -1;
+      $colC = 0;
       foreach ($columns as $rowString)
       {
         if ($rowString != '')
@@ -159,7 +159,7 @@ class zcWidgetManager extends base
             if ($row != '')
             {
               //$row = strtoupper(str_replace('-', '_', $row));
-              $widgetEnum[$row] = array('col'=>$colC, 'row'=>$rowC); 
+              $widgetEnum[$row] = array('col'=>$colC, 'row'=>$rowC);
             }
             $rowC ++;
           }
@@ -177,7 +177,7 @@ class zcWidgetManager extends base
     $sql = $db->bindVars($sql, ':user:', $user, 'integer');
     $sql = $db->bindVars($sql, ':refresh:', $widgetRefresh, 'integer');
     $db->execute($sql);
-    
+
   }
   public static function getWidgetTimerSelect($id)
   {
@@ -203,7 +203,7 @@ class zcWidgetManager extends base
   public static function getWidgetGroups()
   {
     global $db;
-    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_GROUPS; 
+    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_GROUPS;
     $result = $db->execute($sql);
     while (!$result->EOF)
     {
@@ -212,7 +212,7 @@ class zcWidgetManager extends base
     }
     return $groups;
   }
-  public static function getInstallableWidgetsList($user) 
+  public static function getInstallableWidgetsList($user)
   {
     $profileWidgets = self::getWidgetsForProfile($user);
     $installedWidgets = self::getWidgetsForUser($user);
@@ -226,7 +226,7 @@ class zcWidgetManager extends base
     $result = $db->execute($sql);
     $max = (int)$result->fields['max'];
     $max++;
-    $sql = "INSERT INTO " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " 
+    $sql = "INSERT INTO " . TABLE_DASHBOARD_WIDGETS_TO_USERS . "
             (widget_key, admin_id, widget_row, widget_column) VALUES (:widgetId:, :adminId:, $max, 0) ";
     $sql = $db->bindVars($sql, ':widgetId:', $widget, 'string');
     $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
