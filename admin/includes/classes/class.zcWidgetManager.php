@@ -203,12 +203,13 @@ class zcWidgetManager extends base
   public static function getWidgetGroups()
   {
     global $db;
+    $groups = array();
     $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_GROUPS;
     $result = $db->execute($sql);
     while (!$result->EOF)
     {
+      $groups[$result->fields['widget_group']] = array('name'=>$result->fields['widget_group_name'], 'count'=>0);
       $result->moveNext();
-      $groups[$result->fields['widget-group']] = array('name'=>$result->fields['widget_group_name'], 'count'=>0);
     }
     return $groups;
   }
@@ -216,7 +217,9 @@ class zcWidgetManager extends base
   {
     $profileWidgets = self::getWidgetsForProfile($user);
     $installedWidgets = self::getWidgetsForUser($user);
-    $installableWidgets = array_diff_assoc($profileWidgets, $installedWidgets);
+    //print_r($profileWidgets);
+    //print_r($installedWidgets);
+    $installableWidgets = array_diff_key($profileWidgets, $installedWidgets);
     return $installableWidgets;
   }
   public static function addWidgetForUser($widget, $user)

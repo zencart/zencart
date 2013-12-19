@@ -19,12 +19,13 @@ class zcDashboardWidgetLogs extends zcDashboardWidgetBase
 {
   public function prepareContent()
   {
-    require_once(DIR_WS_FUNCTIONS . "logs_functions.php"); 
+    $tplVars = array();
+    require_once(DIR_WS_FUNCTIONS . "logs_functions.php");
     $logs = get_logs_data();
-    if (sizeof($logs) == 0) return $tplVars; 
-    foreach ($logs as $log) { 
-      $filename = str_replace(DIR_FS_CATALOG, '', $log); 
-      $filesize = filesize($log);  
+    if (sizeof($logs) == 0) return $tplVars;
+    foreach ($logs as $log) {
+      $filename = str_replace(DIR_FS_CATALOG, '', $log);
+      $filesize = filesize($log);
       $tplVars['content'][] = array('text'=> $filename, 'value'=>$filesize);
     }
     return $tplVars;

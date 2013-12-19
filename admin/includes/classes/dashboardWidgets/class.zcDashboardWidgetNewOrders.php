@@ -20,7 +20,7 @@ class zcDashboardWidgetNewOrders extends zcDashboardWidgetBase
   public function prepareContent()
   {
     global $db;
-
+    $tplVars = array();
     $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') order by orders_id DESC limit 5");
 
     while (!$orders->EOF) {

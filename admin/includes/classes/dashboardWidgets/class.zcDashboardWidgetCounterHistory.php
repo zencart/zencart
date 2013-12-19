@@ -21,6 +21,7 @@ class zcDashboardWidgetCounterHistory extends zcDashboardWidgetBase
   {
     global $db;
 
+    $tplVars = array();
     $counter_query = "select startdate, counter, session_counter from " . TABLE_COUNTER_HISTORY . " order by startdate DESC limit 10";
     $counter = $db->Execute($counter_query);
     while (!$counter->EOF) {

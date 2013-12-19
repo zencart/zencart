@@ -17,12 +17,13 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class zcDashboardWidgetOrderSummary extends zcDashboardWidgetBase
 {
-  public function prepareContent() 
+  public function prepareContent()
   {
     global $db;
+    $tplVars = array();
     $orders_status = $db->Execute("select orders_status_name, orders_status_id from " . TABLE_ORDERS_STATUS . " where language_id = '" . $_SESSION['languages_id'] . "'");
 
-    while (!$orders_status->EOF) 
+    while (!$orders_status->EOF)
     {
       $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . $orders_status->fields['orders_status_id'] . "'");
 

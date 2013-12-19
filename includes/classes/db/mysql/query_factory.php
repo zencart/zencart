@@ -29,7 +29,6 @@ class queryFactory extends base {
       global $queryLog;
       global $queryCache;
 
-      $this->total_queries++;
       if( isset($queryCache) && $queryCache->inCache($query) ) {
             $cached_value = $queryCache->getFromCache($query);
             $this->count_queries--;

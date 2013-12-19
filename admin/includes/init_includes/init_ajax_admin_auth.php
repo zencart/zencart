@@ -8,7 +8,7 @@
 
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
 
-define(SUPERUSER_PROFILE, 1);
+define('SUPERUSER_PROFILE', 1);
 
 // admin folder rename required
 if (!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')

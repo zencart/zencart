@@ -9,8 +9,8 @@
  */
 ?>
 <?php
-  if (sizeof($tplVars['widget']['content']) > 0) { 
-    foreach ($tplVars['widget']['content'] as $entry) { 
+  if (isset($tplVars['widget']['content']) && sizeof($tplVars['widget']['content']) > 0) {
+    foreach ($tplVars['widget']['content'] as $entry) {
 ?>
       <div class="widget-row"><span><?php echo $entry['text']; ?></span><span class="right"><?php echo $entry['value']; ?></span></div>
 <?php

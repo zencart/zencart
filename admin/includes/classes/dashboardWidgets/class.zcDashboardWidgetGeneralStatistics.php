@@ -20,6 +20,7 @@ class zcDashboardWidgetGeneralStatistics extends zcDashboardWidgetBase
   public function prepareContent()
   {
     global $db;
+    $tplVars = array();
     $customers = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS);
     $products = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = '1'");
     $products_off = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = '0'");

@@ -21,6 +21,7 @@ class zcDashboardWidgetNewCustomers extends zcDashboardWidgetBase
   {
     global $db;
 
+    $tplVars = array();
     $customers = $db->Execute("select c.customers_id as customers_id, c.customers_firstname as customers_firstname, c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address, a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id order by a.customers_info_date_account_created DESC limit 5");
     while (!$customers->EOF) {
       $name = $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'];

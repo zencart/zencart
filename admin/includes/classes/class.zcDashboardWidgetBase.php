@@ -18,12 +18,13 @@ if (!defined('IS_ADMIN_FLAG')) {
 class zcDashboardWidgetBase extends base
 {
   public function __construct($widgetKey, $widgetInfo = NULL)
-  { 
+  {
     $this->widgetInfo = $widgetInfo;
     $this->widgetKey = $widgetKey;
     $this->tplVars = array();
+    $this->tplVars['content'] = array();
   }
-  public function prepareContent() 
+  public function prepareContent()
   {
     return array();
   }
@@ -39,7 +40,7 @@ class zcDashboardWidgetBase extends base
   public function getWidgetTitle()
   {
     $name = $this->widgetInfo['widget_name'];
-    if (defined($name)) $name = constant($name); 
+    if (defined($name)) $name = constant($name);
     return $name;
   }
   public function getWidgetBaseId()
@@ -48,7 +49,7 @@ class zcDashboardWidgetBase extends base
   }
   /**
    * Default form validation
-   * 
+   *
    * default form only contains settings for refresh, however does need to validate the securityToken
    * @return boolean
    */
