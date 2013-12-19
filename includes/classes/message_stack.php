@@ -66,9 +66,8 @@ class messageStack extends base {
   }
 
   function add_session($class, $message, $type = 'error') {
-    if (!$_SESSION['messageToStack']) {
-      $messageToStack = array();
-    } else {
+    $messageToStack = array();
+    if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
       $messageToStack = $_SESSION['messageToStack'];
     }
 
