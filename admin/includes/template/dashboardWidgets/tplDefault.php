@@ -15,4 +15,6 @@
       <div class="widget-row"><span><?php echo $entry['text']; ?></span><span class="right"><?php echo $entry['value']; ?></span></div>
 <?php
     }
+  } else { 
+    echo "&nbsp;"; 
   }
