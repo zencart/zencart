@@ -87,16 +87,6 @@ deny from All
 </ifmodule>
 
 
-
-# The following makes adjustments to the SSL protocol for old Internet Explorer browsers
-<IfModule mod_setenvif.c>
-  <IfDefine SSL>
-    SetEnvIf User-Agent ".*MSIE.*" \
-             nokeepalive ssl-unclean-shutdown \
-             downgrade-1.0 force-response-1.0
-  </IfDefine>
-</IfModule>
-
 #turn off X-PHP-Originating-Script header when sending emails from admin
 #uncomment to activate:
 # php_flag mail.add_x_header Off
