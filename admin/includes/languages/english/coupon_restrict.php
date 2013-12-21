@@ -42,3 +42,5 @@ define('TEXT_ALL_MANUFACTURERS_REMOVE', 'Remove All Manufacturer Products');
 
 define('HEADER_PRODUCT_STATUS', 'Status');
 define('HEADER_PRODUCT_MODEL', 'Model');
+
+define('ERROR_RESET_CATEGORY_MANUFACTURER', 'Category and Manufacturer filters reset. Use filters individually.');

@@ -12,14 +12,13 @@
   $restrict_array[] = array('id'=>'Deny', text=>'Deny');
   $restrict_array[] = array('id'=>'Allow', text=>'Allow');
 
-/*
   if ($_POST['cPath_prod'] > 0 and $_POST['manufacturers_id'] > 0) {
     $current_category_id = 0;
     $current_manufacturers_id = 0;
-    $_POST['cPath_prod'] = 0;
-    $_POST['manufacturers_id'] = 0;
+    unset($_POST['cPath_prod']);
+    unset($_POST['manufacturers_id']);
+    $messageStack->add(ERROR_RESET_CATEGORY_MANUFACTURER, 'caution');
   }
-*/
 
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
   if (isset($_GET['info'])) $_GET['info'] = (int)$_GET['info'];
