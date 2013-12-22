@@ -68,6 +68,10 @@ class zcWidgetManager extends base
     }
     return $widgets;
   }
+  public static function setWidgetTitle($name) {
+    if (defined($name)) $name = constant($name); 
+    return $name;
+  }
   
   public static function getWidgetInfoForUser($user)
   {
@@ -85,6 +89,7 @@ class zcWidgetManager extends base
     }
     return $widgets;
   }
+
   public static function loadWidgetClasses($widgetList)
   {
     $widgetClassList = array();
@@ -198,6 +203,9 @@ class zcWidgetManager extends base
   {
     $groups = self::getWidgetGroups();
     $installableWidgets = self::getInstallableWidgetsList($_SESSION['admin_id']);
+    foreach ($installableWidgets as &$w) { 
+      $w['widget_name'] = self::setWidgetTitle($w['widget_name']);
+    }
     return $installableWidgets;
   }
   public static function getWidgetGroups()

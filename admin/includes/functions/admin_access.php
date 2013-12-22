@@ -6,6 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Mon Jul 9 14:19:35 2012 +0100 Modified in v1.5.1 $
  */
+require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_compat.php');
 
 /**
  * This function checks whether the currently logged on user has permission to access
@@ -796,13 +797,42 @@ function zen_remove_profile_permits($profile)
 function zen_insert_pages_into_profile($id, $pages)
 {
   global $db;
-  foreach ($pages as $page) {
+  foreach ($pages as $page) 
+  {
     $sql = "INSERT INTO " . TABLE_ADMIN_PAGES_TO_PROFILES . "
             SET page_key=:page:,
                 profile_id=:profileId:";
     $sql = $db->bindVars($sql, ':page:', $page, 'string');
     $sql = $db->bindVars($sql, ':profileId:', $id, 'integer');
     $db->Execute($sql);
+  }
+  // Now let's see how many were widgets
+  $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . "  
+             WHERE profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%'"; 
+  $sql = $db->bindVars($sql, ':profileId:', $id, 'integer');
+  $result = $db->execute($sql);
+  $widget_key_list = ""; 
+  while (!$result->EOF)
+  {
+    $key = $result->fields['page_key'];
+    $key = str_replace("_dashboardwidgets_", "", $key); 
+    if ($widget_key_list != "") { 
+      $widget_key_list .= ",";
+    } 
+    $widget_key_list .= "'" . $key . "'"; 
+    $result->moveNext();
+  }
+  // So all users of this profile should lose the widgets which are not in this list.
+  $user_query = "SELECT admin_id FROM " . TABLE_ADMIN . " WHERE admin_profile = :profileId:"; 
+  $user_query = $db->bindVars($user_query, ':profileId:', $id, 'integer');
+  $users = $db->execute($user_query); 
+  while (!$users->EOF) 
+  {
+     $admin_id = $users->fields['admin_id']; 
+     $cleanup_query = "DELETE FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :adminId: AND widget_key NOT IN (" . $widget_key_list . ")"; 
+     $cleanup_query = $db->bindVars($cleanup_query, ':adminId:', $admin_id, 'integer');
+     $db->execute($cleanup_query); 
+     $users->moveNext();
   }
 }
 
