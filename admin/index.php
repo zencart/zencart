@@ -226,8 +226,6 @@ if ($hasDoneStartWizard == FALSE) {
 
 ?>
 <div id="colone">
- <?php if (zen_is_superuser() || check_page(FILENAME_ORDERS, array())) { ?>
-
 <div class="container">
   <div class="row">
     <div class="small-12 columns widget-tools">
@@ -398,7 +396,6 @@ function doIntervalProcess(timer)
 }
 </script>
 </div>
-<?php } ?>
 </div>
 <?php } ?>
 
