@@ -226,7 +226,14 @@ class ot_gv {
   function collect_posts() {
     global $db, $currencies, $messageStack;
     // if we have no GV amount selected, set it to 0
-    if (!$_POST['cot_gv']) $_SESSION['cot_gv'] = '0.00';
+    // if requested redemption amount is greater than value of credits on account, throw error
+    if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
+      $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT . ' - ' . number_format($_SESSION['cot_gv'], 2), error);
+      $_SESSION['cot_gv'] = 0.00;
+      zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    }
+    if (isset($_POST['cot_gv']) && $_POST['cot_gv'] == 0) $_SESSION['cot_gv'] = '0.00';
+
     // if we have a GV redemption code submitted, process it
     if ($_POST['gv_redeem_code']) {
       // check for validity
