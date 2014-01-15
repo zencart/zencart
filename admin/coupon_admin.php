@@ -1004,6 +1004,7 @@ function check_form(form_name) {
         echo zen_draw_hidden_field('coupon_finishdate', date('Y-m-d', mktime(0, 0, 0, $_POST['coupon_finishdate_month'],$_POST['coupon_finishdate_day'] ,$_POST['coupon_finishdate_year'] )));
         echo zen_draw_hidden_field('coupon_zone_restriction', $_POST['coupon_zone_restriction']);
         echo zen_draw_hidden_field('coupon_order_limit', $_POST['coupon_order_limit']);
+        echo zen_draw_hidden_field('coupon_total', $_POST['coupon_total']);
 ?>
      <tr>
         <td align="left"><?php echo zen_image_submit('button_confirm.gif',COUPON_BUTTON_CONFIRM, (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?></td>
