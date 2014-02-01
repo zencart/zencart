@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: countries.php 19312 2011-07-30 09:43:12Z kuroi $
@@ -26,4 +26,4 @@ define('TEXT_INFO_HEADING_NEW_COUNTRY', 'New Country');
 define('TEXT_INFO_HEADING_EDIT_COUNTRY', 'Edit Country');
 define('TEXT_INFO_HEADING_DELETE_COUNTRY', 'Delete Country');
 define('ERROR_COUNTRY_IN_USE', 'ERROR: Cannot delete selected country because it is connected to customer records.');
-define('ISO_COUNTRY_CODES_LINK', '<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists.htm" target="_blank">ISO 3166 Country Codes Reference</a>');
+define('ISO_COUNTRY_CODES_LINK', '<a href="http://www.iso.org/iso/country_codes/country_codes" target="_blank">ISO 3166 Country Codes Reference</a>');
