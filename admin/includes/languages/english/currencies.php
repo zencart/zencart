@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: currencies.php 18931 2011-06-13 15:22:34Z drbyte $
@@ -33,3 +33,4 @@ define('TEXT_INFO_HEADING_DELETE_CURRENCY', 'Delete Currency');
 define('TEXT_INFO_SET_AS_DEFAULT', TEXT_SET_DEFAULT . ' (requires a manual update of currency values)');
 define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Error: The default currency can not be removed. Please set another currency as default, and try again.');
 define('ERROR_INVALID_CURRENCY_ENTRY', 'ERROR: The information you submitted was incomplete, and has not been saved. You must specify a currency code and a name.');
+define('ISO_CURRENCY_CODES_LINK', '<a href="https://en.wikipedia.org/wiki/ISO_4217" target="_blank">Currency ISO Codes Reference</a>');
