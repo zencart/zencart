@@ -135,7 +135,7 @@ INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, count
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (118,'Lebanon','LB','LBN','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (119,'Lesotho','LS','LSO','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (120,'Liberia','LR','LBR','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (121,'Libyan Arab Jamahiriya','LY','LBY','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (121,'Libya','LY','LBY','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (122,'Liechtenstein','LI','LIE','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (123,'Lithuania','LT','LTU','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (124,'Luxembourg','LU','LUX','1');
@@ -253,11 +253,12 @@ INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, count
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (236,'Serbia','RS','SRB','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (238,'Zambia','ZM','ZMB','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (239,'Zimbabwe','ZW','ZWE','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (241,'Palestinian Territory','PS','PSE','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (241,'Palestine, State of','PS','PSE','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (242,'Montenegro','ME','MNE','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (243,'Guernsey','GG','GGY','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (244,'Isle of Man','IM','IMN','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (245,'Jersey','JE','JEY','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (246,'South Sudan','SS','SSD','1');
 
 # USA
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (1,223,'AL','Alabama');
@@ -570,3 +571,4 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VV','Vibo Valentia');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VI','Vicenza');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VT','Viterbo');
+

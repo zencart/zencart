@@ -57,6 +57,11 @@ INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('BEL', 'NLD', 'SWE');
 ALTER TABLE countries ADD status tinyint(1) DEFAULT '1';
+#ISO Updates:
+UPDATE countries SET countries_name = 'Libya' WHERE countries_iso_code_3 = 'LBY';
+UPDATE countries SET countries_name = 'Palestine, State of' WHERE countries_iso_code_3 = 'PSE';
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (246,'South Sudan','SS','SSD','1');
+
 
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 
