@@ -77,8 +77,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'className'=>'QueryCache',
                                'objectName'=>'queryCache',
                                'checkInstantiated'=>true);
-                                
-                                
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'class.zcPassword.php');
+
+
 /**
  * Breakpoint 10.
  *

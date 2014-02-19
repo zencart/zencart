@@ -1583,17 +1583,17 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // call additional function files
 // prices and quantities
-  require(DIR_WS_FUNCTIONS . 'functions_prices.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_prices.php');
 // taxes
-  require(DIR_WS_FUNCTIONS . 'functions_taxes.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_taxes.php');
 // gv and coupons
-  require(DIR_WS_FUNCTIONS . 'functions_gvcoupons.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_gvcoupons.php');
 // categories, paths, pulldowns
-  require(DIR_WS_FUNCTIONS . 'functions_categories.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_categories.php');
 // customers and addresses
-  require(DIR_WS_FUNCTIONS . 'functions_customers.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customers.php');
 // lookup information
-  require(DIR_WS_FUNCTIONS . 'functions_lookups.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_lookups.php');
 ////
 /////////////////////////////////////////////
 

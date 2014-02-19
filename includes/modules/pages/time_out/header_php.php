@@ -3,7 +3,7 @@
  * Time out page
  *
  * @package page
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 6350 2007-05-20 21:00:41Z drbyte $
@@ -40,11 +40,15 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $error = true;
       $messageStack->add('login', TEXT_LOGIN_ERROR);
       } else {
+        $newPassword = $check_customer->fields['customers_password'];
         // Check that password is good
-        if (!zen_validate_password($password, $check_customer->fields['customers_password'])) {
+        if (!zen_validate_password($password, $newPassword)) {
           $error = true;
           $messageStack->add('login', TEXT_LOGIN_ERROR);
         } else {
+          if (password_needs_rehash($newPassword, PASSWORD_DEFAULT)) {
+            $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
+          }
           if (SESSION_RECREATE == 'True') {
             zen_session_recreate();
           }
@@ -106,4 +110,3 @@ $breadcrumb->add(NAVBAR_TITLE);
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_LOGIN_TIMEOUT');
 $zco_notifier->notify('NOTIFY_HEADER_END_LOGIN');
-?>
