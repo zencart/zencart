@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sun Jul 1 17:04:00 2012 -0400 Modified in v1.5.1 $
@@ -102,11 +102,11 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
   return $rate;
 }
 
-function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
+function quote_boc_currency($requested = '', $base = DEFAULT_CURRENCY)
 {
-  if ($currencyCode == $base) return 1;
+  if ($requested == $base) return 1;
+  if ($requested == '') return '';
   static $CSVContent;
-  $requested = $currencyCode;
   $url = 'http://www.bankofcanada.ca/stats/assets/csv/fx-seven-day.csv';
   $currencyArray = array();
   $currencyArray['CAD'] = 1;
