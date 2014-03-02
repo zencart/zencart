@@ -4,7 +4,7 @@
  * Class used for database abstraction to MySQL via mysqli
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -25,9 +25,13 @@ class queryFactory extends base {
     $this->total_query_time = 0;
   }
 
-  function query($link, $query) {
+  function query($link, $query, $remove_from_queryCache = false) {
       global $queryLog;
       global $queryCache;
+
+      if ($remove_from_queryCache && isset($queryCache)) {
+        $queryCache->reset($query);
+      }
 
       if( isset($queryCache) && $queryCache->inCache($query) ) {
             $cached_value = $queryCache->getFromCache($query);
@@ -145,7 +149,7 @@ class queryFactory extends base {
     echo '</div>';
   }
 
-  function Execute($zf_sql, $zf_limit = false, $zf_cache = false, $zf_cachetime=0) {
+  function Execute($zf_sql, $zf_limit = false, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     // bof: collect database queries
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS=='true') {
       global $PHP_SELF, $box_id, $current_page_base;
@@ -190,7 +194,7 @@ class queryFactory extends base {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
-      $zp_db_resource = $this->query($this->link, $zf_sql);
+      $zp_db_resource = $this->query($this->link, $zf_sql, $remove_from_queryCache);
       if (!$zp_db_resource) $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
       if (FALSE === $zp_db_resource){
         $obj = null;
@@ -239,7 +243,7 @@ class queryFactory extends base {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
-      $zp_db_resource = $this->query($this->link, $zf_sql);
+      $zp_db_resource = $this->query($this->link, $zf_sql, $remove_from_queryCache);
       if (!$zp_db_resource) {
         if (mysqli_errno($this->link) == 2006) {
           $this->link = FALSE;
@@ -292,7 +296,7 @@ class queryFactory extends base {
       if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
       $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
     }
-    $zp_db_resource = @$this->query($this->link, $zf_sql);
+    $zp_db_resource = @$this->query($this->link, $zf_sql, $remove_from_queryCache);
     if (!$zp_db_resource) $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     if (FALSE === $zp_db_resource){
       $obj = null;
