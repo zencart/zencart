@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: banner_manager.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -54,8 +54,10 @@
 
         zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
         break;
-      case 'insert':
-      case 'update':
+      case 'insert': // deprecated
+      case 'update': // deprecated
+      case 'add':
+      case 'upd':
         if (isset($_POST['banners_id'])) $banners_id = zen_db_prepare_input($_POST['banners_id']);
         $banners_title = zen_db_prepare_input($_POST['banners_title']);
         $banners_url = zen_db_prepare_input($_POST['banners_url']);
@@ -107,7 +109,7 @@
                                   'banners_on_ssl' => $banners_on_ssl,
                                   'banners_sort_order' => (int)$banners_sort_order);
 
-          if ($action == 'insert') {
+          if ($action == 'ins') {
             $insert_sql_data = array('date_added' => 'now()',
                                      'status' => '1');
 
@@ -118,7 +120,7 @@
             $banners_id = zen_db_insert_id();
 
             $messageStack->add_session(SUCCESS_BANNER_INSERTED, 'success');
-          } elseif ($action == 'update') {
+          } elseif ($action == 'upd') {
             zen_db_perform(TABLE_BANNERS, $sql_data_array, 'update', "banners_id = '" . (int)$banners_id . "'");
 
             $messageStack->add_session(SUCCESS_BANNER_UPDATED, 'success');
@@ -262,7 +264,7 @@ function popupImageWindow(url) {
 <?php } // legend ?>
 <?php
   if ($action == 'new') {
-    $form_action = 'insert';
+    $form_action = 'ins';
 
     $parameters = array('expires_date' => '',
                         'date_scheduled' => '',
@@ -278,7 +280,7 @@ function popupImageWindow(url) {
     $bInfo = new objectInfo($parameters);
 
     if (isset($_GET['bID'])) {
-      $form_action = 'update';
+      $form_action = 'upd';
 
       $bID = zen_db_prepare_input($_GET['bID']);
 
@@ -326,7 +328,7 @@ function popupImageWindow(url) {
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
-      <tr><?php echo zen_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); if ($form_action == 'update') echo zen_draw_hidden_field('banners_id', $bID); ?>
+      <tr><?php echo zen_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); if ($form_action == 'upd') echo zen_draw_hidden_field('banners_id', $bID); ?>
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_STATUS; ?></td>
@@ -415,7 +417,7 @@ function popupImageWindow(url) {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_BANNER_NOTE . '<br>' . TEXT_BANNERS_INSERT_NOTE . '<br>' . TEXT_BANNERS_EXPIRCY_NOTE . '<br>' . TEXT_BANNERS_SCHEDULE_NOTE; ?></td>
-            <td class="main" align="right" valign="top" nowrap><?php echo (($form_action == 'insert') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)). '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+            <td class="main" align="right" valign="top" nowrap><?php echo (($form_action == 'add') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)). '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
         </table></td>
       </form></tr>
@@ -534,7 +536,8 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
   $heading = array();
   $contents = array();
   switch ($action) {
-    case 'delete':
+    case 'delete': // deprecated
+    case 'del':
       $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
 
       $contents = array('form' => zen_draw_form('banners', FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('bID', $bInfo->banners_id));
@@ -547,7 +550,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
       if (is_object($bInfo)) {
         $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=del') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
         $contents[] = array('text' => '<br>' . TEXT_BANNERS_DATE_ADDED . ' ' . zen_date_short($bInfo->date_added));
         $contents[] = array('center', 'text' => '<br />' . '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '">' . zen_image_button('button_update.gif', IMAGE_UPDATE) . '</a>' );
 
