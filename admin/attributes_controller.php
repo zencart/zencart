@@ -936,7 +936,7 @@ if ($action == 'attributes_preview') {
 //            where    patrib.products_id='" . $pInfo->products_id . "'
 //            where    patrib.products_id='" . (int)$_GET['products_id'] . "'
   $check_template = $db->Execute("select template_dir from " . TABLE_TEMPLATE_SELECT);
-  echo '<link rel="stylesheet" type="text/css" href="' . DIR_WS_CATALOG_TEMPLATE . $check_template->fields['template_dir'] . '/css/stylesheet.css' . '" />';
+  echo '<link rel="stylesheet" type="text/css" href="' . str_replace('index.php?main_page=NONE', 'includes/templates/' . $check_template->fields['template_dir'] . '/css/stylesheet.css', zen_catalog_href_link('NONE', '', 'SSL')) . '" />';
 ?>
 
   <tr>
