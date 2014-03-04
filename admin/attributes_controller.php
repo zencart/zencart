@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sat Jul 21 17:10:54 2012 -0400 Modified in v1.5.1 $
@@ -921,7 +921,7 @@ if ($action == 'attributes_preview') {
 //            where    patrib.products_id='" . $pInfo->products_id . "'
 //            where    patrib.products_id='" . (int)$_GET['products_id'] . "'
   $check_template = $db->Execute("select template_dir from " . TABLE_TEMPLATE_SELECT);
-  echo '<link rel="stylesheet" type="text/css" href="' . DIR_WS_CATALOG_TEMPLATE . $check_template->fields['template_dir'] . '/css/stylesheet.css' . '" />';
+  echo '<link rel="stylesheet" type="text/css" href="' . str_replace('index.php?main_page=NONE', 'includes/templates/' . $check_template->fields['template_dir'] . '/css/stylesheet.css', zen_catalog_href_link('NONE', '', 'SSL')) . '" />';
 ?>
 
   <tr>
