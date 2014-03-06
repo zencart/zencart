@@ -1104,14 +1104,11 @@ if ($action == '') {
   $per_page = (defined('MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER') && (int)MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER > 3) ? (int)MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER : 40;
   $attributes = "select pa.*
   from (" . TABLE_PRODUCTS_ATTRIBUTES . " pa
-  left join " . TABLE_PRODUCTS_DESCRIPTION . " pd
-  on pa.products_id = pd.products_id
-  and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
   left join " . TABLE_PRODUCTS_OPTIONS . " po
   on pa.options_id = po.products_options_id
   and po.language_id = '" . (int)$_SESSION['languages_id'] . "'" . ")
   where pa.products_id ='" . $products_filter . "'
-  order by pd.products_name, LPAD(po.products_options_sort_order,11,'0'), LPAD(pa.options_id,11,'0'), LPAD(pa.products_options_sort_order,11,'0')";
+  order by LPAD(po.products_options_sort_order,11,'0'), LPAD(pa.options_id,11,'0'), LPAD(pa.products_options_sort_order,11,'0')";
   $attribute_query = $db->Execute($attributes);
 
   $attribute_page_start = ($per_page * $_GET['attribute_page']) - $per_page;
