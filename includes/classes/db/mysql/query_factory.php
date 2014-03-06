@@ -144,7 +144,15 @@ class queryFactory extends base {
     } else {
       echo 'WARNING: An Error occurred, please refresh the page and try again.';
     }
-    trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql, E_USER_ERROR);
+    $backtrace_array = debug_backtrace();
+    $query_factory_caller = '';
+    foreach ($backtrace_array as $current_caller) {
+      if (strcmp($current_caller['file'], __FILE__) != 0) {
+        $query_factory_caller = ' ==> (as called by) ' . $current_caller['file'] . ' on line ' . $current_caller['line'] . ' <==';
+        break;
+      }
+    }
+    trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
     if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG==true) echo 'If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you left no blank fields.<br />';
     echo '</div>';
   }
