@@ -140,6 +140,7 @@ class zcPassword extends base
    */
   public function updateLoggedInCustomerPassword($plain, $customerId)
   {
+    $this->confirmDbSchema('customer');
     global $db;
     $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
     $sql = "UPDATE " . TABLE_CUSTOMERS . "
@@ -161,6 +162,7 @@ class zcPassword extends base
    */
   public function updateNotLoggedInCustomerPassword($plain, $emailAddress)
   {
+    //$this->confirmDbSchema('customer');
     global $db;
     $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
     $sql = "UPDATE " . TABLE_CUSTOMERS . "
@@ -181,6 +183,7 @@ class zcPassword extends base
    */
   public function updateNotLoggedInAdminPassword($plain, $admin)
   {
+    $this->confirmDbSchema('admin');
     global $db;
     $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
     $sql = "UPDATE " . TABLE_ADMIN . "
@@ -191,5 +194,29 @@ class zcPassword extends base
     $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
     $db->Execute($sql);
     return $updatedPassword;
+  }
+  /**
+   * Ensure db schema has been updated to support the required password lengths
+   * @param string $mode
+   */
+  public function confirmDbSchema($mode = '') {
+    global $db;
+    if ($mode == '' || $mode == 'admin') {
+      $sql = "ALTER TABLE " . TABLE_ADMIN . " MODIFY admin_pass VARCHAR( 255 ) NOT NULL DEFAULT ''";
+      $db->Execute($sql);
+      $sql = "ALTER TABLE " . TABLE_ADMIN . " MODIFY prev_pass1 VARCHAR( 255 ) NOT NULL DEFAULT ''";
+      $db->Execute($sql);
+      $sql = "ALTER TABLE " . TABLE_ADMIN . " MODIFY prev_pass2 VARCHAR( 255 ) NOT NULL DEFAULT ''";
+      $db->Execute($sql);
+      $sql = "ALTER TABLE " . TABLE_ADMIN . " MODIFY prev_pass3 VARCHAR( 255 ) NOT NULL DEFAULT ''";
+      $db->Execute($sql);
+      $sql = "ALTER TABLE " . TABLE_ADMIN . " MODIFY reset_token VARCHAR( 255 ) NOT NULL DEFAULT ''";
+      $db->Execute($sql);
+    }
+    if ($mode == '' || $mode == 'customer') {
+      $sql = "ALTER TABLE " . TABLE_CUSTOMERS . " MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT ''";
+      $db->Execute($sql);
+    }
+    return;
   }
 }
