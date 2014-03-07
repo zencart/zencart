@@ -80,18 +80,6 @@ if (!defined('IS_ADMIN_FLAG')) {
           ?>
         </td>
       </tr>
-<?php
-      if ($pInfo->products_url) {
-?>
-      <tr>
-        <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-      <tr>
-        <td class="main"><?php echo sprintf(TEXT_PRODUCT_MORE_INFORMATION, $pInfo->products_url); ?></td>
-      </tr>
-<?php
-      }
-?>
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
