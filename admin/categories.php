@@ -516,6 +516,8 @@
         }
       }
       break;
+      default:
+        $action = $_GET['action'] = '';
     }
   }
 
