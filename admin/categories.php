@@ -11,8 +11,10 @@
   require(DIR_WS_MODULES . 'prod_cat_header_code.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
   if (isset($_GET['page'])) $_GET['page'] = (int)$_GET['page'];
   if (isset($_GET['product_type'])) $_GET['product_type'] = (int)$_GET['product_type'];
+  if (isset($_GET['cID'])) $_GET['cID'] = (int)$_GET['cID'];
 
   if (!isset($_SESSION['categories_products_sort_order'])) {
     $_SESSION['categories_products_sort_order'] = CATEGORIES_PRODUCTS_SORT_ORDER;
