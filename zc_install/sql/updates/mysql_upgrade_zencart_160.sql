@@ -3,7 +3,7 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2013 Zen Cart Development Team
+# * @copyright Copyright 2003-2014 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:03:47 2012 -0400 New in v1.6.0 $
@@ -68,10 +68,10 @@ INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE');
 
-#ISO Updates:
-UPDATE countries SET countries_name = 'Libya' WHERE countries_iso_code_3 = 'LBY';
-UPDATE countries SET countries_name = 'Palestine, State of' WHERE countries_iso_code_3 = 'PSE';
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (246,'South Sudan','SS','SSD','1');
+##ISO Updates, already done in v152 upgrade:
+#UPDATE countries SET countries_name = 'Libya' WHERE countries_iso_code_3 = 'LBY';
+#UPDATE countries SET countries_name = 'Palestine, State of' WHERE countries_iso_code_3 = 'PSE';
+#INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (246,'South Sudan','SS','SSD','1');
 
 ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
 ALTER TABLE whos_online MODIFY session_id varchar(255) NOT NULL default '';
