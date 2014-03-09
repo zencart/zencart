@@ -162,7 +162,7 @@ class zcPassword extends base
    */
   public function updateNotLoggedInCustomerPassword($plain, $emailAddress)
   {
-    //$this->confirmDbSchema('customer');
+    $this->confirmDbSchema('customer');
     global $db;
     $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
     $sql = "UPDATE " . TABLE_CUSTOMERS . "
@@ -214,8 +214,19 @@ class zcPassword extends base
       $db->Execute($sql);
     }
     if ($mode == '' || $mode == 'customer') {
-      $sql = "ALTER TABLE " . TABLE_CUSTOMERS . " MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT ''";
-      $db->Execute($sql);
+      $found = false;
+      $sql = "show fields from " . TABLE_CUSTOMERS;
+      $result = $db->Execute($sql);
+      while (!$result->EOF && !$found) {
+        if ($result->fields['Field'] == 'customers_password' && strtoupper($result->fields['Type']) == 'VARCHAR(255)') {
+          $found = true;
+        }
+        $result->MoveNext();
+      }
+      if (!$found) {
+        $sql = "ALTER TABLE " . TABLE_CUSTOMERS . " MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT ''";
+        $db->Execute($sql);
+      }
     }
     return;
   }
