@@ -3,7 +3,7 @@
  * File contains common unit/web test resources
  *
  * @package tests
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: zcCommonTestResources.php 19138 2011-07-18 17:37:21Z wilt $
  */
