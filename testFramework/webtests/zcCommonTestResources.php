@@ -97,6 +97,7 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
     $fp = fopen(DIR_FS_ADMIN . 'includes/local/configure.php', 'w');
     fputs($fp, '<?php' . PHP_EOL);
     fputs($fp, 'DEFINE("HTTP_SERVER", "https://' . SERVER_NAME . '");' . PHP_EOL);
+    fputs($fp, 'DEFINE("ENABLE_SSL_CATALOG", "true");' . PHP_EOL);
     fclose($fp);
   }
   public function createCatalogSSLOverride()
@@ -111,6 +112,7 @@ class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
     $fp = fopen(DIR_FS_ADMIN . 'includes/local/configure.php', 'w');
     fputs($fp, '<?php' . PHP_EOL);
     fputs($fp, 'DEFINE("HTTP_SERVER", "http://' . SERVER_NAME . '");' . PHP_EOL);
+    fputs($fp, 'DEFINE("ENABLE_SSL_CATALOG", "false");' . PHP_EOL);
     fclose($fp);
   }
   public function createTwoFactorAuthenticationOverrideTrue()
