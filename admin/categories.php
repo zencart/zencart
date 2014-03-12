@@ -518,6 +518,22 @@
         }
       }
       break;
+
+      case 'setflag_categories':
+      case 'new_category':
+      case 'edit_category':
+      case 'delete_category':
+      case 'edit_category_meta_tags':
+      case 'move_category':
+      case 'delete_product':
+      case 'move_product':
+      case 'copy_to':
+      case 'attribute_features':
+      case 'attribute_features_copy_to_product':
+      case 'attribute_features_copy_to_category':
+        // handled by another switch/case later
+        break;
+
       default:
         $action = $_GET['action'] = '';
     }
