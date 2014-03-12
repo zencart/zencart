@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: category_product_listing.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -35,7 +35,7 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
     echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '')) . zen_hide_session_id();
     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-      echo '<br />' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
+      echo '<br />' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_output_string_protected($_GET['search']);
     }
     echo '</form>';
 ?>
