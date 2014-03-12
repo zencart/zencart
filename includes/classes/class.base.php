@@ -3,7 +3,7 @@
  * File contains just the base class
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: class.base.php 14535 2009-10-07 22:16:19Z wilt $
  */
@@ -116,6 +116,9 @@ class base {
   function setStaticObserver($element, $value)
   {
     $observer =  & base::getStaticObserver();
+    if (!is_array($observer)) {
+      $observer = array ();
+    }
     $observer[$element] = $value;
   }
   function unsetStaticObserver($element)
