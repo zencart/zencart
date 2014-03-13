@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       $SESS_LIFE = (int)SESSION_TIMEOUT_ADMIN;
     }
   } else {
-    if (defined('SESSION_TIMEOUT_CATALOG')) {
+    if (defined('SESSION_TIMEOUT_CATALOG') && (int)SESSION_TIMEOUT_CATALOG > 120) {
       $SESS_LIFE = (int)SESSION_TIMEOUT_CATALOG;
     } else
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
@@ -105,6 +105,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     @ini_set('session.gc_divisor', 2);
     if (IS_ADMIN_FLAG === true) {
       @ini_set('session.gc_maxlifetime', (SESSION_TIMEOUT_ADMIN > 900 ? 900 : SESSION_TIMEOUT_ADMIN));
+    } elseif (defined('SESSION_TIMEOUT_CATALOG') && (int)SESSION_TIMEOUT_CATALOG > 120) {
+      @ini_set('session.gc_maxlifetime', (int)SESSION_TIMEOUT_CATALOG);
     }
     if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '')
     {
