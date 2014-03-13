@@ -219,13 +219,13 @@ Fixes:
 <li>CHANGE-574 - Add strict check to some admin pages to protect against invalid variables created by plugins that don't clean up after themselves, like MagneticOne stuff</li>
 <li>CHANGE-575 - update spiders.txt</li>
 <li>CHANGE-580 - torvista pull request 11 - locale addition for Windows servers</li>
+<li>CHANGE-591 - Fix Australia address format to remove comma</li>
 <li>CHANGE-593 - PayPal - Change to Pending Reason responses, required one table schema change</li>
 <li>CHANGE-594 - PayPal API changes - July 2013 (A: deprecated some rarely-used parameters)</li>
 <li>CHANGE-594 - PayPal API changes - July 2013 (B: Updated treatment of currencies which don't support decimal places)</li>
 <li>CHANGE-595 - Expand locale support for PayPal to perform better matching and to include PayPal's latest updates</li>
 <li>CHANGE-601 - Relax PA-DSS "strong" password requirements - sql upgrade changes</li>
 <li>CHANGE-605 - Fix error in PayPal Standard - PHP Fatal error: Using $this when not in object context</li>
-<li>CHANGE-591 - Fix Australia address format to remove comma</li>
 <li>CHANGE-609 - PR12 - Address formats for Belgium, Netherlands</li>
 <li>CHANGE-610,614,617 - lat9 $param1 array output reduction in notifier trace</li>
 <li>CHANGE-611 - Sanitize all known get parameters.</li>
@@ -250,16 +250,18 @@ Fixes:
 <li>CHANGE-682 - Adjust admin product-music code to stop triggering false-positive on security scan</li>
 <li>CHANGE-683 - Backport compatibility fix</li>
 <li>CHANGE-685 - Fix stock reduction problem with checkbox/attribute combinations in cart</li>
+<li>CHANGE-686 - Changes to ensure output is correctly sanitized even in places protected by authentication requirements</li>
 <li>ISSUE-9 - Fix minor issue with model number display on product_reviews page</li>
 <li>ISSUE-19 - Fix coupon-admin date check since mktime() doesn't support is_dst param anymore</li>
 <li>ISSUE-51 - Add ability to autoload observer classes without needing to also create auto_loaders scripts</li>
 <li>ISSUE-52 - Change admin rules to allow pass"phrases" by permitting the use of spaces</li>
+<li>ISSUE-81 - class.base.php: Initialize static observer</li>
 </ul>
 
 
 </fieldset>
 <br><br>
-<p class="center"><em>Copyright 2003 - 2013 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<p class="center"><em>Copyright 2003 - 2014 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
 <br><br>
 </body>
 </html>
