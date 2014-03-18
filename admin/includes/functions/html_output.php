@@ -46,26 +46,78 @@
   }
 
   function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
-    if ($connection == 'NONSSL') {
-      $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL_CATALOG == 'true') {
-        $link = HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG;
-      } else {
+    global $zco_notifier;
+
+    if (!zen_not_null($page)) {
+      error_log('Error! zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
+      die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
+    }
+
+    $link = null;
+    switch ($connection) {
+      case 'SSL':
+        if (ENABLE_SSL == 'true') {
+          $link = HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG;
+          break;
+        }
+      case 'NONSSL':
         $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
+        break;
+      default:
+        // Add a warning to the log and default to NOSSL
+        $e = new Exception();
+        error_log(sprintf(
+          CONNECTION_TYPE_UNKNOWN,
+          $connection,
+          $e->getTraceAsString()
+        ));
+        unset($e);
+        $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
+    }
+
+    // Notify any observers listening for href_link calls
+    $static = false;
+    $zco_notifier->notify(
+      'NOTIFY_HANDLE_HREF_LINK',
+      array(
+      	'page' => $page,
+      	'parameters' => $parameters,
+      	'connection' => $connection,
+      	'add_session_id' => false,
+      	'search_engine_safe' => false,
+      	'static' => $static,
+      	'use_dir_ws_catalog' => true
+   	  ),
+      $page,
+      $parameters,
+      $static
+    );
+
+    if (!$static) {
+      if (zen_not_null($parameters)) {
+        $link .= 'index.php?main_page='. $page . '&' . zen_output_string($parameters);
       }
-    } else {
-      error_log('Error! zen_catalog_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
-      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
+      else {
+        $link .= 'index.php?main_page=' . $page;
+      }
     }
-    if ($parameters == '') {
-      $link .= 'index.php?main_page='. $page;
-    } else {
-      $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
+    else {
+      if (zen_not_null($parameters)) {
+        $link .= $page . '?' . zen_output_string($parameters);
+      }
+      else {
+        $link .= $page;
+      }
     }
+
 
     $link = rtrim($link, '&?');
 
+    // Remove duplicates of '&' and '&amp;' and replace with a single '&'
+    $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
+
+    // Convert any remaining '&' into '&amp' (valid URL for href)
+    $link = str_replace('&', '&amp;', $link);
     return $link;
   }
 

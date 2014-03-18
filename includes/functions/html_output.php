@@ -14,78 +14,104 @@
  * The HTML href link wrapper function
  */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
+    global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
 
     if (!zen_not_null($page)) {
       error_log('Error! zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
     }
 
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL == 'true') {
-        $link = HTTPS_SERVER ;
-      } else {
+    $link = null;
+    switch ($connection) {
+      case 'SSL':
+        if (ENABLE_SSL == 'true') {
+          $link = HTTPS_SERVER;
+          if($use_dir_ws_catalog) $link .= DIR_WS_HTTPS_CATALOG;
+          break;
+        }
+      case 'NONSSL':
         $link = HTTP_SERVER;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
+        if($use_dir_ws_catalog) $link .= DIR_WS_CATALOG;
+        break;
+      default:
+        // Add a warning to the log and default to NOSSL
+        $e = new Exception();
+        error_log(sprintf(
+          CONNECTION_TYPE_UNKNOWN,
+          $connection,
+          $e->getTraceAsString()
+        ));
+        unset($e);
+        $link = HTTP_SERVER;
+        if($use_dir_ws_catalog) $link .= DIR_WS_CATALOG;
     }
 
-    if ($use_dir_ws_catalog) {
-      if ($connection == 'SSL' && ENABLE_SSL == 'true') {
-        $link .= DIR_WS_HTTPS_CATALOG;
-      } else {
-        $link .= DIR_WS_CATALOG;
-      }
-    }
+    // Notify any observers listening for href_link calls
+    $zco_notifier->notify(
+      'NOTIFY_HANDLE_HREF_LINK',
+      array(
+      	'page' => $page,
+      	'parameters' => $parameters,
+      	'connection' => $connection,
+      	'add_session_id' => $add_session_id,
+      	'search_engine_safe' => $search_engine_safe,
+      	'static' => $static,
+      	'use_dir_ws_catalog' => $use_dir_ws_catalog
+   	  ),
+      $page,
+      $parameters,
+      $static
+    );
 
+    // Keep track of the separator
+    $separator = '?';
     if (!$static) {
+      $separator = '&';
       if (zen_not_null($parameters)) {
-        $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
-      } else {
+        $link .= 'index.php?main_page='. $page . $separator . zen_output_string($parameters);
+      }
+      else {
         $link .= 'index.php?main_page=' . $page;
       }
-    } else {
+    }
+    else {
       if (zen_not_null($parameters)) {
-        $link .= $page . "?" . zen_output_string($parameters);
-      } else {
+        $link .= $page . $separator . zen_output_string($parameters);
+        $separator = '&';
+      }
+      else {
         $link .= $page;
+        if(FALSE !== strpos($link, '?')) $separator = '&';
       }
     }
-
-    $separator = '&';
 
     $link = rtrim($link, '&?');
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
-      if (defined('SID') && SID != '') {
-        $sid = SID;
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
+      if (defined('SID') && constant('SID') != '') {
+        $sid = constant('SID');
+      }
+      else if ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
         if ($http_domain != $https_domain) {
           $sid = zen_session_name() . '=' . zen_session_id();
         }
       }
     }
-// clean up the link before processing
-    $link = preg_replace('/&{2,}/', '&', $link);
-    $link = preg_replace('/(&amp;)+/', '&amp;', $link);
+
+    // Remove duplicates of '&' and '&amp;' and replace with a single '&'
+    $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
 
     if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-      $link = preg_replace('/&{2,}/', '&', $link);
-      $link = str_replace(array('&amp;', '?', '&', '='), '/', $link);
+      $link = str_replace(array('?', '&', '='), '/', $link);
       $separator = '?';
     }
 
     if (isset($sid)) {
-      if (!strpos($link, '?')) $separator = '?';
       $link .= $separator . zen_output_string($sid);
     }
 
-// clean up the link after processing
-    $link = preg_replace('/(&amp;)+/', '&amp;', $link);
-    $link = preg_replace('/&/', '&amp;', $link);
+    // Convert any remaining '&' into '&amp' (valid URL for href)
+    $link = str_replace('&', '&amp;', $link);
     return $link;
   }
 
