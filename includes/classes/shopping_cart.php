@@ -1192,7 +1192,6 @@ class shoppingCart extends base {
                                   p.products_quantity_order_min, p.products_quantity_order_units, p.products_quantity_order_max,
                                   p.product_is_free, p.products_priced_by_attribute,
                                   p.products_discount_type, p.products_discount_type_from, p.products_virtual, p.product_is_always_free_shipping,
-                                  p.products_quantity_order_min, p.products_quantity_order_units, p.products_quantity_order_max,
                                   p.products_quantity_mixed, p.products_mixed_discount_quantity
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            where p.products_id = '" . (int)$products_id . "'
