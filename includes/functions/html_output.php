@@ -10,9 +10,64 @@
  * @version $Id: html_output.php 19355 2011-08-21 21:12:09Z drbyte $
  */
 
-/*
- * The HTML href link wrapper function
- */
+  /**
+   * Returns a link formatted for use in a href attribute. This should be used
+   * when adding a link to an web resource / page located within the folder
+   * where Zen Cart is installed. Failure to use this function may result in
+   * broken website links and cause issues with some Zen Cart plugins.
+   *
+   * This function should not be directly called from a language file. Why?
+   * Observers are typically not be loaded until after the language files.
+   * So if this function is used in a language file, any observers may not
+   * receive notification a catalog link is being generated.
+   *
+   * <b>Example Usage:</b>
+   * Link to a category:
+   *   <i>zen_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
+   * Link to a category (using an array for the parameters):
+   *   <i>zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
+   * HTTPS (SSL) Link to an EZ Page:
+   *   <i>zen_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
+   * Static link to an PDF:
+   *   <i>zen_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true, true);</i>
+   * Static HTTPS (SSL) Link to a PHP script (with parameters):
+   *   <i>zen_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true, true);</i>
+   *
+   * @param string $page The Zen Cart page name or the path to a file / web
+   *   resource (relative to the folder containing Zen Cart).
+   *
+   * @param string|array $parameters The urlencoded query string (or an array
+   *   of key => value pairs to urlencode) to append to the link. When an array
+   *   is passed the key / value pairs will be encoded using RFC 3986. Default
+   *   is to not add a query string to the link.
+   *
+   * @param string $connection The connection method to utilize. To use the
+   *   http protocol (unencrypted communication) use 'NONSSL'. To use the
+   *   https protocol (encrypted communication) use 'SSL'. Defaults to 'NONSSL'.
+   *   If the connection method is unknown, 'NONSSL' is used and a warning
+   *   message will be added to the Zen Cart debug logs.
+   *
+   * @param boolean $add_session_id true to add the session id to the link when
+   *   needed (such as when session cookies are disabled, before the session
+   *   cookie exists, or switching connection methods), false otherwise.
+   *   Default is true.
+   *
+   * @param string $search_engine_safe true to replace the query string with
+   *   a string delimited by forward slashes, false otherwise. Default is true.
+   *   This setting has no effect unless SEARCH_ENGINE_FRIENDLY_URLS is also
+   *   configured to 'true'.
+   *
+   *   <i>Example: When enabled, a query string such as "cPath=1_8&products_id=25"
+   *   will be changed to "cPath/1_8/products_id/25".</i>
+   *
+   * @param string $static true when $page is a file / web resource,
+   *   false otherwise. Default is false.
+   *
+   * @param string $use_dir_ws_catalog true to include the website catalog
+   *   directory when creating the link, false otherwise. Default is true.
+   *
+   * @return string
+   */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
     global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
 
@@ -50,18 +105,39 @@
     $zco_notifier->notify(
       'NOTIFY_HANDLE_HREF_LINK',
       array(
-      	'page' => $page,
-      	'parameters' => $parameters,
-      	'connection' => $connection,
-      	'add_session_id' => $add_session_id,
-      	'search_engine_safe' => $search_engine_safe,
-      	'static' => $static,
-      	'use_dir_ws_catalog' => $use_dir_ws_catalog
-   	  ),
+        'page' => $page,
+        'parameters' => $parameters,
+        'connection' => $connection,
+        'add_session_id' => $add_session_id,
+        'search_engine_safe' => $search_engine_safe,
+        'static' => $static,
+        'use_dir_ws_catalog' => $use_dir_ws_catalog
+       ),
       $page,
       $parameters,
       $static
     );
+
+    // Handle parameters passed as an array (using RFC 3986)
+    if(is_array($parameters)) {
+      if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
+      }
+      else {
+        $complile = array();
+        foreach($parameters as $key => $value) {
+          // Prior to PHP 5.3, tildes might be encoded per RFC 1738
+          // This should not impact functionality for 99% of users.
+          $complile[] = rawurlencode($key) . '=' . rawurlencode($value);
+        }
+        $parameters = implode('&', $compile);
+        unset($compile);
+      }
+    }
+    else {
+      // Clean up parameters (should not start or end with these characters)
+      $parameters = trim($parameters, '&?');
+    }
 
     // Keep track of the separator
     $separator = '?';
@@ -85,20 +161,7 @@
       }
     }
 
-    $link = rtrim($link, '&?');
-    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
-      if (defined('SID') && constant('SID') != '') {
-        $sid = constant('SID');
-      }
-      else if ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
-        if ($http_domain != $https_domain) {
-          $sid = zen_session_name() . '=' . zen_session_id();
-        }
-      }
-    }
-
-    // Remove duplicates of '&' and '&amp;' and replace with a single '&'
+    // Replace duplicates of '&' and instances of '&amp;'  with a single '&'
     $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
 
     if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
@@ -106,15 +169,22 @@
       $separator = '?';
     }
 
-    if (isset($sid)) {
-      $link .= $separator . zen_output_string($sid);
+    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+    if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
+      if (defined('SID') && constant('SID') != '') {
+        $link .= $separator . zen_output_string(constant('SID'));
+      }
+      else if ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
+        if ($http_domain != $https_domain) {
+          $link .= zen_output_string(zen_session_name() . '=' . zen_session_id());
+        }
+      }
     }
 
-    // Convert any remaining '&' into '&amp' (valid URL for href)
+    // Convert any remaining '&' into '&amp;' (valid URL for href)
     $link = str_replace('&', '&amp;', $link);
     return $link;
   }
-
 
 /*
  * The HTML image wrapper function for non-proportional images
