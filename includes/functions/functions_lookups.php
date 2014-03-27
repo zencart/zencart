@@ -871,9 +871,9 @@
 
       $download_display = $db->Execute($download_display_query_raw);
       if ($download_display->RecordCount() != 0) {
-        $valid_downloads = false;
-      } else {
         $valid_downloads = true;
+      } else {
+        $valid_downloads = false;
       }
     } else {
       $valid_downloads = false;
