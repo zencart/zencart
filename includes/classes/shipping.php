@@ -3,7 +3,7 @@
  * shipping class
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Thu Aug 2 11:37:22 2012 -0400 Modified in v1.5.1 $
@@ -211,3 +211,41 @@ class shipping extends base {
     }
   }
 }
+
+// shipping quotes that need value of shipping content should not include:
+// virtual, downloads or gift certificates
+// calculate amount not to be insured on shipping
+  function shipping_noinsurance() {
+    $products = $_SESSION['cart']->get_products();
+//@@TODO add notifier
+    $chk_reduce_insurance = 0;
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+//die('DONE!');
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      $reduce_insurance = false;
+      // no insurance on virtual product
+      if ($products[$i]['products_virtual']) {
+        $reduce_insurance = true;
+      }
+      // no insurance on download product
+      if (!$reduce_insurance) {
+        if (zen_has_product_attributes_downloads_status((int)$products[$i]['id'])) {
+          $reduce_insurance = true;
+        }
+      }
+      // no insurance on Gift Certificate product
+      if (!$reduce_insurance) {
+        if (preg_match('/^GIFT/', $products[$i]['model'])) {
+          $reduce_insurance = true;
+        }
+      }
+      if ($reduce_insurance) {
+        //echo '<br>shipping_noinsurance REDUCING!: ' . $products[$i]['id'] . ' final_price: ' . $products[$i]['final_price'] . ' * quantity: ' . $products[$i]['quantity'] . ' = ' . ($products[$i]['final_price'] * $products[$i]['quantity']) . '<br>';
+        $chk_reduce_insurance += $products[$i]['final_price'] * $products[$i]['quantity'];
+      }
+    } // end FOR loop
+
+    //echo 'shipping_noinsurance TOTAL REDUCING!: ' . $chk_reduce_insurance . '<br>';
+//@@TODO add notifier
+    return $chk_reduce_insurance;
+  }
