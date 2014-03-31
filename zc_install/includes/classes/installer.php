@@ -331,7 +331,7 @@
     function getConfigKeysAsPost() {
       $string = '';
       foreach($this->configKeys as $key => $value) {
-        $string .= '<input type="hidden" name="zcinst[' . $key . ']" value="' . $value . '" />' . "\n";
+        $string .= '<input type="hidden" name="zcinst[' . $key . ']" value="' . htmlspecialchars($value) . '" />' . "\n";
       }
       return $string;
     }
