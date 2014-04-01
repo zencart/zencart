@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
@@ -31,6 +31,11 @@ if (!defined('IS_ADMIN_FLAG')) {
   require(DIR_WS_FUNCTIONS . 'html_output.php');
   require(DIR_WS_FUNCTIONS . 'functions_customers.php'); // partial copy of catalog functions customers for now
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
+
+/**
+ * require the plugin support functions
+ */
+require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'plugin_support.php');
 
 /**
  * Per-Page meta-tag editing functions

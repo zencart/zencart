@@ -31,7 +31,7 @@ require(DIR_WS_FUNCTIONS . 'functions_ezpages.php');
 /**
  * require the plugin support functions
  */
-require(DIR_WS_FUNCTIONS . 'plugin_support.php');
+require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'plugin_support.php');
 /**
  * require the password crypto functions
  */
