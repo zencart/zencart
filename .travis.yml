@@ -1,3 +1,10 @@
+addons:
+  sauce_connect:
+    username:
+      secure: "MEY35SouXeBw5dyqYxwJ8krY8GeBmK9hmfnIv+0BFoZsBbEACheNtcuMy5cAS3YfI7OmbBHi1kV49kOniqwTXmSsh7QE6hVO6N1WVsOxGkKWvmCabPLvkauAmI5uo8oc2eY14KeVmB8uCk3YSMki5UXPLgyi2dFlPqkUwuoPjtQ="
+    access_key:
+      secure: "YKdRC0SlkdWRXyFaD8ILSBkEVk3wEIaeYoLbDr2kMqYud/LpVwslVr9NHoZL0mFsf9oHY8kkpv1rB99bAlcg8fE4zq0YyfxBP3BOlF1lvo7Byl56xcqBeVFFkF0xDgP4UTZ8pKVAxErwWcyIESG73pZF2hOJOuEhvsSR1DRKVnA="
+
 language: php
 php:
   - "5.4"
