@@ -2355,6 +2355,7 @@ class paypaldp extends base {
 //   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
       curl_setopt($ch, CURLOPT_TIMEOUT, 8);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 3);
 
       // Execute the request.
       $result = curl_exec($ch);
