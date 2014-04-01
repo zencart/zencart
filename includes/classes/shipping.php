@@ -134,11 +134,12 @@ class shipping extends base {
     $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
   }
 
-  function quote($method = '', $module = '', $calc_boxes_weight_tare = true) {
-    global $shipping_weight;
+  function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = array()) {
+    global $shipping_weight, $uninsurable_value;
     $quotes_array = array();
 
     if ($calc_boxes_weight_tare) $this->calculate_boxes_weight_and_tare();
+    $uninsurable_value = (method_exists($this, 'get_uninsurable_value')) ? $this->get_uninsurable_value($insurance_exclusions) : 0;
 
     if (is_array($this->modules)) {
       $include_quotes = array();
@@ -210,42 +211,47 @@ class shipping extends base {
       return $cheapest;
     }
   }
-}
 
 // shipping quotes that need value of shipping content should not include:
-// virtual, downloads or gift certificates
+// virtual, gift certificates or downloads
 // calculate amount not to be insured on shipping
-  function shipping_noinsurance() {
+  function get_uninsurable_value($exclusions = array()) {
+    //global $messageStack;
     $products = $_SESSION['cart']->get_products();
-//@@TODO add notifier
-    $chk_reduce_insurance = 0;
+    $this->notify('NOTIFY_SHIPPING_CALCULATE_UNINSURABLES_BEGIN', array(), $products, $exclusions);
+    $amount_to_reduce_insurance = 0;
 //echo '<pre>'; echo print_r($products); echo '</pre>';
 //die('DONE!');
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $reduce_insurance = false;
+
       // no insurance on virtual product
-      if ($products[$i]['products_virtual']) {
+      if (!in_array('virtual', $exclusions) && $products[$i]['products_virtual']) {
         $reduce_insurance = true;
       }
-      // no insurance on download product
-      if (!$reduce_insurance) {
-        if (zen_has_product_attributes_downloads_status((int)$products[$i]['id'])) {
-          $reduce_insurance = true;
-        }
-      }
+
       // no insurance on Gift Certificate product
       if (!$reduce_insurance) {
-        if (preg_match('/^GIFT/', $products[$i]['model'])) {
+        if (!in_array('gv', $exclusions) && preg_match('/^GIFT/', $products[$i]['model'])) {
           $reduce_insurance = true;
         }
       }
+
+      // no insurance on download product
+      if (!$reduce_insurance) {
+        if (!in_array('downloads', $exclusions) && zen_has_product_attributes_downloads_status((int)$products[$i]['id'])) {
+          $reduce_insurance = true;
+        }
+      }
+
       if ($reduce_insurance) {
         //echo '<br>shipping_noinsurance REDUCING!: ' . $products[$i]['id'] . ' final_price: ' . $products[$i]['final_price'] . ' * quantity: ' . $products[$i]['quantity'] . ' = ' . ($products[$i]['final_price'] * $products[$i]['quantity']) . '<br>';
-        $chk_reduce_insurance += $products[$i]['final_price'] * $products[$i]['quantity'];
+        $amount_to_reduce_insurance += $products[$i]['final_price'] * $products[$i]['quantity'];
       }
     } // end FOR loop
 
-    //echo 'shipping_noinsurance TOTAL REDUCING!: ' . $chk_reduce_insurance . '<br>';
-//@@TODO add notifier
-    return $chk_reduce_insurance;
+    $this->notify('NOTIFY_SHIPPING_CALCULATE_UNINSURABLES_END', array(), $amount_to_reduce_insurance, $exclusions);
+    //echo 'shipping_noinsurance TOTAL REDUCING!: ' . $amount_to_reduce_insurance . '<br>';
+    return $amount_to_reduce_insurance;
   }
+}
