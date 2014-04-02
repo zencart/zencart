@@ -39,11 +39,10 @@ define('WEBTEST_EMAIL_SMTPAUTH_PASSWORD', '');
 define('WEBTEST_EMAIL_SMTPAUTH_MAIL_SERVER_PORT', '');
 define('WEBTEST_EMAIL_LINEFEED', 'CRLF');
 
-$file_contents = file_get_contents(realpath(dirname(__FILE__)) . '/../../../includes/dist-configure.php');
-chmod(realpath(dirname(__FILE__)) . '/../../../admin/includes/configure.php', 0777);
-chmod(realpath(dirname(__FILE__)) . '/../../../includes/configure.php', 0777);
-$fp = fopen(realpath(dirname(__FILE__)) . '/../../../includes/configure.php', 'w');
-if ($fp)
+$file_contents = file_get_contents(CWD . '/includes/dist-configure.php');
+chmod(CWD . '/admin/includes/configure.php', 0777);
+chmod(CWD . '/includes/configure.php', 0777);
+$fp = fopen(CWD . '/includes/configure.php', 'w');if ($fp)
 {
   fputs($fp, $file_contents);
   fclose($fp);
