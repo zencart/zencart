@@ -183,7 +183,7 @@
       }
       else if ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
         if ($http_domain != $https_domain) {
-          $link .= zen_output_string(zen_session_name() . '=' . zen_session_id());
+          $link .= $separator . zen_output_string(zen_session_name() . '=' . zen_session_id());
         }
       }
     }
