@@ -22,5 +22,6 @@ before_script:
   - touch admin/includes/configure.php
 script:
   - phpunit -c testFramework/unittests/phpunit.xml
-  - phpunit testFramework/webtests/allWebTests.php
-
+  - curl -L http://selenium-release.storage.googleapis.com/2.41/selenium-server-standalone-2.41.0.jar > selenium-server.jar
+  - nohup java -jar selenium-server.jar > ./selenium.log &
+#  - phpunit testFramework/webtests/allWebTests.php

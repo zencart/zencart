@@ -1,6 +1,6 @@
 <?php
 define('SERVER_NAME', 'localhost');
-define('BASE_URL', 'localhost');
+define('BASE_URL', 'localhost:4444');
 define('DB_HOST', 'localhost');
 define('DB_USER', 'travis');
 define('DB_PASS', '');
