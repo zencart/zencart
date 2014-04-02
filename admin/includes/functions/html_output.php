@@ -110,7 +110,31 @@
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
     }
 
-    $link = null;
+      // Notify any observers listening for href_link calls
+    $link = $connection;
+    $zco_notifier->notify(
+      'NOTIFY_HANDLE_HREF_LINK',
+      array(
+        'page' => $page,
+        'parameters' => $parameters,
+        'connection' => $connection,
+        'add_session_id' => false,
+        'search_engine_safe' => $search_engine_safe,
+        'static' => $static,
+        'use_dir_ws_catalog' => $use_dir_ws_catalog
+      ),
+      $page,
+      $parameters,
+      $connection,
+      $static
+    );
+
+    // Do not allow switching from NONSSL to SSL
+    if($connection == 'NONSSL' && $link == 'SSL') {
+      $connection = $link;
+    }
+
+    // Add the protocol, server name, and installed folder
     switch ($connection) {
       case 'SSL':
         if (ENABLE_SSL == 'true') {
@@ -123,7 +147,7 @@
         if($use_dir_ws_catalog) $link .= DIR_WS_CATALOG;
         break;
       default:
-        // Add a warning to the log and default to NOSSL
+        // Add a warning to the log (uses NONSSL as a default)
         $e = new Exception();
         error_log(sprintf(
           CONNECTION_TYPE_UNKNOWN,
@@ -135,34 +159,17 @@
         if($use_dir_ws_catalog) $link .= DIR_WS_CATALOG;
     }
 
-    // Notify any observers listening for href_link calls
-    $zco_notifier->notify(
-      'NOTIFY_HANDLE_HREF_LINK',
-      array(
-        'page' => $page,
-        'parameters' => $parameters,
-        'connection' => $connection,
-        'add_session_id' => false,
-        'search_engine_safe' => $search_engine_safe,
-        'static' => $static,
-        'use_dir_ws_catalog' => $use_dir_ws_catalog
-       ),
-      $page,
-      $parameters,
-      $static
-    );
-
     // Handle parameters passed as an array (using RFC 3986)
     if(is_array($parameters)) {
       if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
         $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
       }
       else {
-        $complile = array();
+        $compile = array();
         foreach($parameters as $key => $value) {
           // Prior to PHP 5.3, tildes might be encoded per RFC 1738
           // This should not impact functionality for 99% of users.
-          $complile[] = rawurlencode($key) . '=' . rawurlencode($value);
+          $compile[] = rawurlencode($key) . '=' . rawurlencode($value);
         }
         $parameters = implode('&', $compile);
         unset($compile);
