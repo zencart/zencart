@@ -7,7 +7,7 @@ define('DB_PASS', '');
 define('DB_DBNAME', 'zencart');
 define('DB_PREFIX', '');
 //define('SELENIUM_BROWSER', '*chrome /Applications/Firefox3.app/Contents/MacOS/firefox-bin');
-define('DIR_FS_ROOT', '~/public_html/v15/');
+define('DIR_FS_ROOT', CWD);
 define('DIR_ADMIN', 'admin');
 define('DIR_WS_ADMIN', BASE_URL . DIR_ADMIN . '/');
 define('DIR_FS_ADMIN', DIR_FS_ROOT. DIR_ADMIN . '/');

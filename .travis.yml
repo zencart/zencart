@@ -6,7 +6,7 @@ php:
 env:
   global:
   - DB=mysql
-  - secure: "MEY35SouXeBw5dyqYxwJ8krY8GeBmK9hmfnIv+0BFoZsBbEACheNtcuMy5cAS3YfI7OmbBHi1kV49kOniqwTXmSsh7QE6hVO6N1WVsOxGkKWvmCabPLvkauAmI5uo8oc2eY14KeVmB8uCk3YSMki5UXPLgyi2dFlPqkUwuoPjtQ="
+  - secure: "rHzH5GDl7vGz1jq0Xb4WD2Z0hC94A9kHCxMrkuiZZm/oqn+Abt0mkwwO9K23GXtxEaoCQcgoF4ogs6T7lMZHaINEVfwNHix+TfF7macDWPESdHFdo01haONoPf2ZfqI5zEb28dYvYMvOwVD1r3sbadNvSSNf16lDDUx+aNUwXqw="
   - secure: "RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8="
 addons:
   sauce_connect: true
@@ -18,6 +18,8 @@ branches:
 before_script:
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
   - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - touch includes/configure.php
+  - touch admin/includes/configure.php
 script:
   - phpunit -c testFramework/unittests/phpunit.xml
   - phpunit testFramework/webtests/allWebTests.php
