@@ -1,7 +1,3 @@
-addons:
-  sauce_connect:
-    username: zencart
-    access_key: f39f7296-a675-481f-a509-9cd78ad3c30b
 language: php
 php:
   - "5.4"
@@ -10,7 +6,11 @@ php:
 env:
   global:
   - DB=mysql
-#services: memcached
+  - secure: "MEY35SouXeBw5dyqYxwJ8krY8GeBmK9hmfnIv+0BFoZsBbEACheNtcuMy5cAS3YfI7OmbBHi1kV49kOniqwTXmSsh7QE6hVO6N1WVsOxGkKWvmCabPLvkauAmI5uo8oc2eY14KeVmB8uCk3YSMki5UXPLgyi2dFlPqkUwuoPjtQ="
+  - secure: "RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8="
+addons:
+  sauce_connect: true
+services: memcached
 install: true
 branches:
   only:
@@ -20,3 +20,5 @@ before_script:
   - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script:
   - phpunit -c testFramework/unittests/phpunit.xml
+  - phpunit testFramework/webtests/allWebTests.php
+
