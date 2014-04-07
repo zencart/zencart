@@ -3,9 +3,9 @@
  * File contains main code for loading tests
  *
  * @package tests
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version
  */
 /**
  * @package tests
@@ -13,17 +13,10 @@
 /**
  * Load localised test config settings
  */
-define('CWD', getcwd());
-echo CWD;
-echo "\n_SERVER:" . print_r($_SERVER, true);
-sleep(5);
-if (isset($_SERVER['TRAVIS']) && $_SERVER['TRAVIS'] == 'true' && file_exists('testFramework/config/localconfig_travis.php'))
+ echo getcwd();
+if (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php'))
 {
-  require_once ('testFramework/config/localconfig_travis.php');
-}
-elseif (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php'))
-{
-  require_once ('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php');
+  require_once ('config/localconfig_' . $_SERVER['USER'] . '.php');
 } elseif (file_exists('testFramework/config/localconfig_main.php'))
 {
   require_once ('testFramework/config/localconfig_main.php');
