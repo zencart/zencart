@@ -120,6 +120,7 @@ Improvements:
 <li>CHANGE-454 - Made low-stock emails interceptable by notifier/observer</li>
 <li>CHANGE-524 - Fix SaleMaker issues on Discount Quantity</li>
 <li>ISSUE-54 - Session handling improvements</li>
+<li>ISSUE-82 - Fix odd PHP 5.4 quirk which triggers fatal error "Allowed memory size of --- bytes exhausted" when accessing SID constant</li>
 </ul>
 Fixes:
 <ul>
@@ -212,6 +213,7 @@ Fixes:
 <li>CHANGE-559 - Fix for Shipping Estimator which was causing shipping modules to request quotes twice</li>
 <li>CHANGE-562 - ironlady github pull request - Add webfont files support to .htaccess whitelist</li>
 <li>CHANGE-563 - Fix zone misspelling in latin1 encoding. Add translations in utf8 version.</li>
+<li>CHANGE-564 - docs</li>
 <li>CHANGE-565 - Incorporate the Fix_Cache_key utility code into ZC Admin core (thus the plugin by the same name is now obsolete)</li>
 <li>CHANGE-568 - Add storeowner-definable session timeout limit</li>
 <li>CHANGE-570 - Add notifier hook to provide ability for Admin Activity Logs be exportable to CLFS or other standard format (PA-DSS feature)</li>
@@ -251,11 +253,17 @@ Fixes:
 <li>CHANGE-683 - Backport compatibility fix</li>
 <li>CHANGE-685 - Fix stock reduction problem with checkbox/attribute combinations in cart</li>
 <li>CHANGE-686 - Changes to ensure output is correctly sanitized even in places protected by authentication requirements</li>
+<li>CHANGE-689 - zc_install updates</li>
+<li>CHANGE-690 - Add function to do lookup of latest version of plugins</li>
+<li>CHANGE-691 - Retire obsolete compatibility functions</li>
+<li>CHANGE-692 - CURL-force SSL3 on Cardinal connections</li>
 <li>ISSUE-9 - Fix minor issue with model number display on product_reviews page</li>
 <li>ISSUE-19 - Fix coupon-admin date check since mktime() doesn't support is_dst param anymore</li>
+<li>ISSUE-23 - Clean up add to cart when non-numeric value is used and display message</li>
 <li>ISSUE-51 - Add ability to autoload observer classes without needing to also create auto_loaders scripts</li>
 <li>ISSUE-52 - Change admin rules to allow pass"phrases" by permitting the use of spaces</li>
 <li>ISSUE-81 - class.base.php: Initialize static observer</li>
+<li>ISSUE-83 - lat9 requested more notifiers for order-class</li>
 </ul>
 
 
