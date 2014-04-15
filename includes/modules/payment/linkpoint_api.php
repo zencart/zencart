@@ -3,7 +3,7 @@
  * FirstData/Linkpoint/Yourpay API Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -63,8 +63,10 @@ class linkpoint_api {
 
   function update_status() {
     global $order, $db;
-    // if store is not running in SSL, cannot offer credit card module, for PCI reasons
-    if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
+    if (IS_ADMIN_FLAG === false) {
+      // if store is not running in SSL, cannot offer credit card module, for PCI reasons
+      if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
+    }
     // check other reasons for the module to be deactivated:
     if ($this->enabled && (int)$this->zone > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;

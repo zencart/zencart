@@ -3,7 +3,7 @@
  * paypaldp.php payment module class for Paypal Payments Pro (aka Website Payments Pro)
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -196,10 +196,12 @@ class paypaldp extends base {
   function update_status() {
     global $order, $db;
 //    $this->zcLog('update_status', 'Checking whether module should be enabled or not.');
-    // if store is not running in SSL, cannot offer credit card module, for PCI reasons
-    if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') {
-      $this->enabled = FALSE;
-      $this->zcLog('update_status', 'Module disabled because SSL is not enabled on this site.');
+    if (IS_ADMIN_FLAG === false) {
+      // if store is not running in SSL, cannot offer credit card module, for PCI reasons
+      if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') {
+        $this->enabled = FALSE;
+        $this->zcLog('update_status', 'Module disabled because SSL is not enabled on this site.');
+      }
     }
     // check other reasons for the module to be deactivated:
     if ($this->enabled && (int)$this->zone > 0 && isset($order->billing['country']['id'])) {
