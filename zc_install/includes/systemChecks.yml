@@ -1,6 +1,6 @@
 #
 # @package Installer
-# @copyright Copyright 2003-2013 Zen Cart Development Team
+# @copyright Copyright 2003-2014 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # @version $Id: $
 #
@@ -40,15 +40,15 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 5.3.0
+          version: 5.3.12
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.3.0') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.3.12') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 5.5.99
+          version: 5.6.99
           versionTest: le
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.5.99') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.6.99') . PHP_EOL; ?>
 
   checkZCversion:
     runLevel: always
@@ -248,6 +248,26 @@ systemChecks:
           - checkType: configDescription
             fieldName: SESSION_WRITE_DIRECTORY
             expectedResult: 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.'
+
+  checkDBVersion152:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.2'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.2') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: fieldSchema
+            tableName: sessions
+            fieldName: sesskey
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
+          - checkType: fieldSchema
+            tableName: customers
+            fieldName: customers_password
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
+
   checkDBVersion151:
     runLevel: dbVersion
     errorLevel: WARN
