@@ -3,7 +3,7 @@
  * ot_gv order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Wed Nov 6 23:04:40 2013 -0500 Modified in v1.5.2 $
@@ -75,13 +75,13 @@ class ot_gv {
           }
         }
         $order->info['total'] = $order->info['total'] - $od_amount['total'];
-        if ($this->calculate_tax = "Standard") $order->info['total'] -= $tax;
+        if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
         if ($order->info['total'] < 0) $order->info['total'] = 0;
         $order->info['tax'] = $order->info['tax'] - $od_amount['tax'];
         // prepare order-total output for display and storing to invoice
         $this->output[] = array('title' => $this->title . ':',
-        'text' => '-' . $currencies->format($od_amount['total']),
-        'value' => $od_amount['total']);
+                                'text' => '-' . $currencies->format($od_amount['total']),
+                                'value' => $od_amount['total']);
       }
     }
   }
