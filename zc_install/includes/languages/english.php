@@ -3,7 +3,7 @@
  * Main English language file for installer
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Thu Aug 1 13:52:15 2013 -0400 Modified in v1.5.2 $
@@ -657,7 +657,7 @@ You may also have given the wrong database name (<strong>Does it exist?</strong>
   break;
   case ('91'):
     define('POPUP_ERROR_HEADING','PHP Version Alert');
-    define('POPUP_ERROR_TEXT','Zen Cart&reg; v1.x is designed to run on PHP versions 5.2.14 and greater.<br /><br />There are several PHP functions used in Zen Cart&reg; which are not available in older PHP versions.<br /><br />You will need to upgrade your PHP version if you intend to use Zen Cart&reg; on this server.');
+    define('POPUP_ERROR_TEXT','Zen Cart&reg; v1.5.2 is designed to run on PHP versions 5.2.10 to 5.6.xx.<br /><br />There are several PHP functions used in Zen Cart&reg; which are not available in older PHP versions.<br /><br />You will need to upgrade your PHP version if you intend to use Zen Cart&reg; on this server.');
   break;
   case ('92'):
     define('POPUP_ERROR_HEADING','open_basedir restriction may cause problems');
