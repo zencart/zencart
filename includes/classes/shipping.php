@@ -216,7 +216,7 @@ class shipping extends base {
 // virtual, gift certificates or downloads
 // calculate amount not to be insured on shipping
   function get_uninsurable_value($exclusions = array()) {
-    //global $messageStack;
+    global $order;
     $products = $_SESSION['cart']->get_products();
     $this->notify('NOTIFY_SHIPPING_CALCULATE_UNINSURABLES_BEGIN', array(), $products, $exclusions);
     $amount_to_reduce_insurance = 0;
@@ -245,8 +245,46 @@ class shipping extends base {
       }
 
       if ($reduce_insurance) {
-        //echo '<br>shipping_noinsurance REDUCING!: ' . $products[$i]['id'] . ' final_price: ' . $products[$i]['final_price'] . ' * quantity: ' . $products[$i]['quantity'] . ' = ' . ($products[$i]['final_price'] * $products[$i]['quantity']) . '<br>';
-        $amount_to_reduce_insurance += $products[$i]['final_price'] * $products[$i]['quantity'];
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+        if ($_SESSION['customer_id'] > 0) {
+          $products_tax = zen_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $amount_to_reduce_insurance_product = (($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity'])
+                                + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax));
+
+//        $amount_to_reduce_insurance += $products[$i]['final_price'] * $products[$i]['quantity'];
+          $amount_to_reduce_insurance += (($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity'])
+                                + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax));
+
+//        echo '<BR>shipping_noinsurance REDUCING! ID#: ' . $products[$i]['id'] . ' $products[$i][name]: ' . $products[$i]['name'] . ' final_price: ' . (($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax))). ' * quantity: ' . ($products[$i]['quantity']) . ' + onetime_charges: ' . (($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax))) . ' = ' . ((($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity']) + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax))) . ' $amount_to_reduce_insurance_product: ' . $amount_to_reduce_insurance_product . ' $products_tax: ' . $products_tax . '<br>';
+//        echo 'shipping_noinsurance REDUCING! ID#: ' . $products[$i]['id'] . ' $products[$i][name]: ' . $products[$i]['name'] . '<br>&nbsp;&nbsp;&nbsp;final_price: ' . ($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)). ' * quantity: ' . $products[$i]['quantity'] . ' + onetime_charges: ' . ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax)) . ' = ' . ((($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity']) + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax))) . ' $amount_to_reduce_insurance_product: ' . $amount_to_reduce_insurance_product . ' $products_tax: ' . $products_tax . '<br>';
+        } else {
+          $products_tax = 0;
+          $amount_to_reduce_insurance_product = (($products[$i]['final_price']) * $products[$i]['quantity'])
+                                + ($products[$i]['onetime_charges']);
+
+//        $amount_to_reduce_insurance += $products[$i]['final_price'] * $products[$i]['quantity'];
+          $amount_to_reduce_insurance += (($products[$i]['final_price']) * $products[$i]['quantity'])
+                                      + ($products[$i]['onetime_charges']);
+
+//        echo 'shipping_noinsurance REDUCING! ID#: ' . $products[$i]['id'] . ' $products[$i][name]: ' . $products[$i]['name'] . '<br>&nbsp;&nbsp;&nbsp;final_price: ' . ($products[$i]['final_price']). ' * quantity: ' . $products[$i]['quantity'] . ' + onetime_charges: ' . (($products[$i]['onetime_charges'])) . ' = ' . ((($products[$i]['final_price']) * $products[$i]['quantity']) + ($products[$i]['onetime_charges'])) . ' $amount_to_reduce_insurance_product: ' . $amount_to_reduce_insurance_product . ' $products_tax: ' . $products_tax . '<br>';
+        }
+
+      } else {
+        if ($_SESSION['customer_id'] > 0) {
+          $products_tax = zen_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $amount_to_reduce_insurance_product = (($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity'])
+                                + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax));
+
+// before parens to fix text/numbers
+//        echo '<BR>PRODUCTS shipping_noinsurance NOT REDUCING!: ' . $products[$i]['id'] . ' $products[$i][name]: ' . $products[$i]['name'] . ' final_price: ' . ($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) . ' * quantity: ' . $products[$i]['quantity'] . ' + onetime_charges: ' . ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax)) . ' = ' . (($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity']) + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax)) . 'C $amount_to_reduce_insurance_product: ' . $amount_to_reduce_insurance_product . ' $products_tax: ' . $products_tax . '<br>';
+//        echo 'PRODUCTS shipping_noinsurance NOT REDUCING! ID#: ' . $products[$i]['id'] . ' $products[$i][name]: ' . $products[$i]['name'] . ' final_price: ' . (($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax))). ' * quantity: ' . ($products[$i]['quantity']) . ' + onetime_charges: ' . (($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax))) . ' = ' . ((($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity']) + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax))) . ' $amount_to_reduce_insurance_product: ' . $amount_to_reduce_insurance_product . ' $products_tax: ' . $products_tax . '<br>';
+//        echo 'PRODUCTS shipping_noinsurance NOT REDUCING! ID#: ' . $products[$i]['id'] . ' $products[$i][name]: ' . $products[$i]['name'] . '<br>&nbsp;&nbsp;&nbsp;final_price: ' . ($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)). ' * quantity: ' . $products[$i]['quantity'] . ' + onetime_charges: ' . (($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax))) . ' = ' . ((($products[$i]['final_price'] + zen_calculate_tax($products[$i]['final_price'], $products_tax)) * $products[$i]['quantity']) + ($products[$i]['onetime_charges'] + zen_calculate_tax($products[$i]['onetime_charges'], $products_tax))) . ' $amount_to_reduce_insurance_product: ' . $amount_to_reduce_insurance_product . ' $products_tax: ' . $products_tax . '<br>';
+        } else {
+          $products_tax = 0;
+          $amount_to_reduce_insurance_product = (($products[$i]['final_price']) * $products[$i]['quantity'])
+                                + ($products[$i]['onetime_charges']);
+//        echo 'PRODUCTS shipping_noinsurance NOT REDUCING!: ' . $products[$i]['id'] . ' $products[$i][name]: ' . $products[$i]['name'] . '<br>&nbsp;&nbsp;&nbsp;final_price: ' . $products[$i]['final_price'] . ' * quantity: ' . $products[$i]['quantity'] . ' + onetime_charges: ' . ($products[$i]['onetime_charges']) . ' = ' . (($products[$i]['final_price'] * $products[$i]['quantity']) + $products[$i]['onetime_charges']) . ' $amount_to_reduce_insurance_product: ' . $amount_to_reduce_insurance_product . ' $products_tax: ' . $products_tax . '<br>';
+        }
       }
     } // end FOR loop
 
