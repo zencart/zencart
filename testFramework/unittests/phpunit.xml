@@ -4,6 +4,7 @@
     <testsuite name="Password Hash Functions">
       <file>testFramework/unittests/testTestCase.php</file>
       <file>testFramework/unittests/testPasswordHashCase.php</file>
+      <file>testFramework/unittests/testRequestCase.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

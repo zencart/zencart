@@ -7,10 +7,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id:
  */
 /**
  * inoculate against hack attempts which waste CPU cycles
@@ -143,6 +143,7 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   $za_dir->close();
   unset($za_dir);
 }
+$systemContext = 'store';
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);

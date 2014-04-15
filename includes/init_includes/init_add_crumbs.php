@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_add_crumbs.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -17,7 +17,7 @@ $breadcrumb->add(HEADER_TITLE_CATALOG, zen_href_link(FILENAME_DEFAULT));
  * add category names or the manufacturer name to the breadcrumb trail
  */
 if (!isset($robotsNoIndex)) $robotsNoIndex = false;
-// might need isset($_GET['cPath']) later ... right now need $cPath or breaks breadcrumb from sidebox etc.
+// might need isset(zcRequest::readGet('cPath')) later ... right now need $cPath or breaks breadcrumb from sidebox etc.
 if (isset($cPath_array) && isset($cPath)) {
   for ($i=0, $n=sizeof($cPath_array); $i<$n; $i++) {
     $categories_query = "select categories_name
@@ -58,15 +58,15 @@ while (!$get_terms->EOF) {
  * add the products model to the breadcrumb trail
  * NOTE: for query optimization, this query is identical to the query used in the product pages' header_php and main_template_vars files so that it can benefit from caching performance benefits
  */
-if (isset($_GET['products_id'])) {
+if (zcRequest::hasGet('products_id')) {
   $sql = "select p.*, pd.*
            from   " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
            where  p.products_status = '1'
-           and    p.products_id = '" . (int)$_GET['products_id'] . "'
+           and    p.products_id = '" . (int)zcRequest::readGet('products_id') . "'
            and    pd.products_id = p.products_id
            and    pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
   $res = $db->Execute($sql);
   if ($res->RecordCount() == 1 && $res->fields['products_name'] != '') {
-    $breadcrumb->add($res->fields['products_name'], zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
+    $breadcrumb->add($res->fields['products_name'], zen_href_link(zen_get_info_page(zcRequest::readGet('products_id')), 'cPath=' . $cPath . '&products_id=' . zcRequest::readGet('products_id')));
   }
 }

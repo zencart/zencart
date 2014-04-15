@@ -4,9 +4,9 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
@@ -79,6 +79,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'checkInstantiated'=>true);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcPassword.php');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+      'loadFile'=>'class.zcRequest.php');
 
 
 /**

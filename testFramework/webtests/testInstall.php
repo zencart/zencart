@@ -3,7 +3,7 @@
  * File contains zc_install tests and some general preliminary test-environment setup scripts
  *
  * @package tests
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -63,7 +63,7 @@ class testInstall extends zcCommonTestResources
     $this->type('store_owner_email', WEBTEST_STORE_OWNER_EMAIL);
     $this->clickAndWait('btnsubmit');
     $this->assertTextPresent('glob:*Configuration*');
-        
+
   }
   function testLoadStoreMainPage()
   {
@@ -71,6 +71,14 @@ class testInstall extends zcCommonTestResources
     $this->waitForPageToLoad(10000);
     $this->assertTitle('Selenium Test Store on bamboo-test.zen-cart.com/v160/, The Art of E-commerce');
     $this->assertTextPresent('glob:*' . WEBTEST_STORE_NAME . '*');
+  }
+  function testLoadStoreCategoryPage()
+  {
+    $this->open('http://' . BASE_URL . 'index.php?main_page=index&cPath=1');
+    $this->waitForPageToLoad(10000);
+    $this->assertTextPresent('glob:*CDROM Drives*');
+    $this->assertTextPresent('glob:*Keyboards*');
+    $this->assertTextPresent('glob:*Monitors*');
   }
 
 //   function testEnablingHtmlMimeEmail()

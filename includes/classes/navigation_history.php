@@ -3,10 +3,10 @@
  * Navigation_history Class.
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: navigation_history.php 19328 2011-08-06 22:53:47Z drbyte $
+ * @version $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -33,9 +33,9 @@ class navigationHistory extends base {
     global $request_type, $cPath;
     $get_vars = "";
 
-    if (is_array($_GET)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+    if (count(zcRequest::all('get')) > 0) {
+      $tmp = zcRequest::all('get');
+      while (list($key, $value) = each($tmp)) {
         if ($key != 'main_page') {
           $get_vars[$key] = $value;
         }
@@ -44,7 +44,7 @@ class navigationHistory extends base {
 
     $set = 'true';
     for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-      if ( ($this->path[$i]['page'] == $_GET['main_page']) ) {
+      if ( ($this->path[$i]['page'] == zcRequest::readGet('main_page')) ) {
         if (isset($cPath)) {
           if (!isset($this->path[$i]['get']['cPath'])) {
             continue;
@@ -78,8 +78,8 @@ class navigationHistory extends base {
     }
 
     if ($set == 'true') {
-      if ($_GET['main_page']) {
-        $page = $_GET['main_page'];
+      if (zcRequest::hasGet('main_page')) {
+        $page = zcRequest::readGet('main_page');
       } else {
         $page = 'index';
       }
@@ -93,7 +93,7 @@ class navigationHistory extends base {
   function remove_current_page() {
 
     $last_entry_position = sizeof($this->path) - 1;
-    if ($this->path[$last_entry_position]['page'] == $_GET['main_page']) {
+    if ($this->path[$last_entry_position]['page'] == zcRequest::readGet('main_page')) {
       unset($this->path[$last_entry_position]);
     }
   }
@@ -107,14 +107,14 @@ class navigationHistory extends base {
                               'get' => $page['get'],
                               'post' => $page['post']);
     } else {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      $tmp = zcRequest::all('get');
+      while (list($key, $value) = each($tmp)) {
         if ($key != 'main_page') {
           $get_vars[$key] = $value;
         }
       }
-      if ($_GET['main_page']) {
-        $page = $_GET['main_page'];
+      if (zcRequest::hasGet('main_page')) {
+        $page = zcRequest::readGet('main_page');
       } else {
         $page = 'index';
       }

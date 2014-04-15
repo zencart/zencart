@@ -1,10 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: config.core.php 19562 2011-09-22 13:38:40Z drbyte $
+ * @version $Id:
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -65,6 +64,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcPassword.php');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+      'loadFile'=>'class.zcRequest.php');
 
 /**
  * Breakpoint 10.
@@ -88,8 +89,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[20][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
-  $autoLoadConfig[20][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_sanitize.php');
 /**
  * Breakpoint 30.
  *

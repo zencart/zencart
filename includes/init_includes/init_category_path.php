@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_category_path.php 17018 2010-07-27 07:25:41Z drbyte $
+ * @version $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,10 +15,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 define('TOP_MOST_CATEGORY_PARENT_ID', 0);
 
 $show_welcome = false;
-if (isset($_GET['cPath'])) {
-  $cPath = $_GET['cPath'];
-} elseif (isset($_GET['products_id']) && !zen_check_url_get_terms()) {
-  $cPath = zen_get_product_path($_GET['products_id']);
+if (zcRequest::hasGet('cPath')) {
+  $cPath = zcRequest::readGet('cPath');
+} elseif (zcRequest::hasGet('products_id') && !zen_check_url_get_terms()) {
+  $cPath = zen_get_product_path(zcRequest::readGet('products_id'));
 } else {
   if (SHOW_CATEGORIES_ALWAYS == '1' && !zen_check_url_get_terms()) {
     $show_welcome = true;
@@ -39,4 +39,4 @@ if (zen_not_null($cPath)) {
 
 // determine whether the current page is the home page or a product listing
 //$this_is_home_page = ($current_page=='index' && ((int)$cPath == 0 || $show_welcome == true));
-$this_is_home_page = ($current_page=='index' && (!isset($_GET['cPath']) || $_GET['cPath'] == '') && (!isset($_GET['manufacturers_id']) || $_GET['manufacturers_id'] == '') && (!isset($_GET['typefilter']) || $_GET['typefilter'] == '') );
+$this_is_home_page = ($current_page=='index' && (zcRequest::readGet('cPath', '') == '') && (!zcRequest::hasGet('manufacturers_id') || zcRequest::readGet('manufacturers_id') == '') && (!zcRequest::hasGet('typefilter') || zcRequest::readGet('typefilter') == '') );

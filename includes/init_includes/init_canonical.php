@@ -3,10 +3,10 @@
  * canonical link handling
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_canonical.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -39,19 +39,19 @@ switch (TRUE) {
 /**
  * for products (esp those linked to multiple categories):
  */
-  case (strstr($current_page, '_info') && isset($_GET['products_id'])):
-    $canonicalLink = zen_href_link($current_page, ($includeCPath ? 'cPath=' . zen_get_generated_category_path_rev(zen_get_products_category_id($_GET['products_id'])) . '&' : '') . 'products_id=' . $_GET['products_id'], 'NONSSL', false);
+  case (strstr($current_page, '_info') && zcRequest::hasGet('products_id')):
+    $canonicalLink = zen_href_link($current_page, ($includeCPath ? 'cPath=' . zen_get_generated_category_path_rev(zen_get_products_category_id(zcRequest::readGet('products_id'))) . '&' : '') . 'products_id=' . zcRequest::readGet('products_id'), 'NONSSL', false);
     break;
 /**
  * for product listings:
  */
-  case ($current_page == 'index' && isset($_GET['cPath'])):
+  case ($current_page == 'index' && zcRequest::hasGet('cPath')):
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
     break;
 /**
  * for music products:
  */
-  case ($current_page == 'index' && isset($_GET['typefilter']) && $_GET['typefilter'] != '' && ( (isset($_GET['music_genre_id']) && $_GET['music_genre_id'] != '' ) || (isset($_GET['record_company_id']) && $_GET['record_company_id'] != '' ) ) ):
+  case ($current_page == 'index' && zcRequest::hasGet('typefilter') && zcRequest::readGet('typefilter') != '' && ( (zcRequest::hasGet('music_genre_id') && zcRequest::readGet('music_genre_id') != '' ) || (zcRequest::has('record_company_id') && zcRequest::readGet('record_company_id') != '' ) ) ):
     unset($excludeParams[array_search('typefilter', $excludeParams)]);
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
     break;
@@ -72,11 +72,11 @@ switch (TRUE) {
 /**
  * for manufacturer listings:
  */
-  case ($current_page == 'index' && isset($_GET['manufacturers_id'])):
+  case ($current_page == 'index' && zcRequest::hasGet('manufacturers_id')):
 /**
  * for ez-pages:
  */
-  case ($current_page == 'page' && isset($_GET['id'])):
+  case ($current_page == 'page' && zcRequest::hasGet('id')):
 /**
  * all the above cases get treated here:
  */

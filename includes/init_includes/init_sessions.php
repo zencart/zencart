@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_sessions.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -44,8 +44,8 @@ session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix
 /**
  * set the session ID if it exists
  */
-if (isset($_POST[zen_session_name()])) {
-  zen_session_id($_POST[zen_session_name()]);
+if (zcRequest::hasPost(zen_session_name())) {
+  zen_session_id(zcRequest::readPost(zen_session_name()));
 } elseif ( ($request_type == 'SSL') && isset($_GET[zen_session_name()]) ) {
   zen_session_id($_GET[zen_session_name()]);
 }
@@ -86,7 +86,7 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     $session_started = true;
   } else {
     if (isset($_GET['zenid']) && $_GET['zenid'] != '') {
-      $tmp = (isset($_GET['main_page']) && $_GET['main_page'] != '') ? $_GET['main_page'] : FILENAME_DEFAULT;
+      $tmp = zcRequest::readGet('main_page', FILENAME_DEFAULT);
       @header("HTTP/1.1 301 Moved Permanently");
       @zen_redirect(@zen_href_link($tmp, @zen_get_all_get_params(array('zenid')), $request_type, FALSE));
       unset($tmp);

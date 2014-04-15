@@ -3,9 +3,9 @@
  * determine whether to output the noindex,nofollow metatag
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_robots_noindex_rules.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -28,9 +28,9 @@ switch (TRUE) {
 // Simply set $robotsNoIndex = TRUE based on whatever custom condition you require it.
 // ie: to set noindex on a certain single product #5 only, the following could work:
 /**
- *  if (isset($_GET['products_id']) && $_GET['products_id'] == 5) $robotsNoIndex = TRUE;
+ *  if (zcRequest::hasGet('products_id') && zcRequest::readGet('products_id') == 5) $robotsNoIndex = TRUE;
  */
 // ie: to set noindex on category #1 the following would work:
 /**
- *  if (isset($_GET['cPath']) && $_GET['cPath'] == '1') $robotsNoIndex = TRUE;
+ *  if (zcRequest::hasGet('cPath') && zcRequest::readGet('cPath') == '1') $robotsNoIndex = TRUE;
  */
