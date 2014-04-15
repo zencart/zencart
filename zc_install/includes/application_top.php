@@ -70,7 +70,7 @@ if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 // re-test
 if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
-  die('ERROR: date.timezone is not set in php.ini. Please contact your hosting company to set the timezone in the server PHP configuration before continuing.');
+  die('ERROR: date.timezone is not set in php.ini. You have two options: 1-Edit /includes/extra_configures/set_time_zone.php to set the $TZ variable manually, or 2-Contact your hosting company to set the timezone correctly in the server PHP configuration before continuing.');
 } else
 {
   @date_default_timezone_set(date_default_timezone_get());
