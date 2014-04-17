@@ -265,7 +265,7 @@
  */
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class /*, $parameters = ''*/ );
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters = '');
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_SUBMIT');
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -291,7 +291,7 @@
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') return zenCssButton($image, $alt, 'button', $sec_class, $parameters = '');
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
     return zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', $parameters);
   }
 
@@ -302,34 +302,49 @@
  * note: any hard-coded buttons will not be able to use this function
 **/
   function zenCssButton($image = '', $text, $type, $sec_class = '', $parameters = '') {
+   global $css_button_text, $css_button_opts, $template, $current_page_base, $language;
 
-    // automatic width setting depending on the number of characters
-    $min_width = 80; // this is the minimum button width, change the value as you like
-    $character_width = 6.5; // change this value depending on font size!
-    // end settings
-    // added html_entity_decode function to prevent html special chars to be counted as multiple characters (like &amp;)
-    $width = strlen(html_entity_decode($text)) * $character_width;
-    $width = (int)$width;
-    if ($width < $min_width) $width = $min_width;
-    $style = ' style="width: ' . $width . 'px;"';
+   $button_name = basename($image, '.gif');
+
     // if no secondary class is set use the image name for the sec_class
-    if (empty($sec_class)) $sec_class = basename($image, '.gif');
-    if(!empty($sec_class))$sec_class = ' ' . $sec_class;
+    if (empty($sec_class)) $sec_class = $button_name;
+    if(!empty($sec_class)) $sec_class = ' ' . $sec_class;
     if(!empty($parameters))$parameters = ' ' . $parameters;
-    $mouse_out_class  = 'cssButton' . $sec_class;
-    $mouse_over_class = 'cssButtonHover' . $sec_class . $sec_class . 'Hover';
+    $mouse_out_class  = 'cssButton ' . (($type == 'submit') ? 'submit_button button ' : 'normal_button button ') . $sec_class;
+    $mouse_over_class = 'cssButtonHover ' . (($type == 'button') ? 'normal_button button ' : '') . $sec_class . $sec_class . 'Hover';
     // javascript to set different classes on mouseover and mouseout: enables hover effect on the buttons
     // (pure css hovers on non link elements do work work in every browser)
     $css_button_js .=  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
+    
+    if (CSS_BUTTON_POPUPS_IS_ARRAY == 'true') {
+      $popuptext = (!empty($css_button_text[$button_name])) ? $css_button_text[$button_name] : ($button_name . CSSBUTTONS_CATALOG_POPUPS_SHOW_BUTTON_NAMES_TEXT);
+      $tooltip = ' title="' . $popuptext . '"';
+    } else {
+      $tooltip = '';
+    }
+    $css_button = '';
 
     if ($type == 'submit'){
 // form input button
-   $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' .$text . '"' . $parameters . $style . ' />';
+      if ($parameters != '') {
+        // If the input parameters include a "name" attribute, need to emulate an <input type="image" /> return value
+        // by adding a _x to the name parameter (thanks to paulm for providing the fix for Zen Cart v1.3.6!).  
+        if (preg_match('/name="([a-zA-Z0-9\-_]+)"/', $parameters, $matches)) {
+          $parameters = str_replace('name="' . $matches[1], 'name="' . $matches[1] . '_x', $parameters);
+        }
+        // If the input parameters include a "value" attribute, remove it since that attribute will be set to the input
+        // text string.
+        if (preg_match('/(value="[a-zA-Z0=9\-_]+")/', $parameters, $matches)) {
+          $parameters = str_replace($matches[1], '', $parameters);
+        }
+      }
+
+      $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' .$text . '"' . $tooltip . $parameters . ' />';
     }
 
     if ($type=='button'){
 // link button
-   $css_button = '<span class="' . $mouse_out_class . '" ' . $css_button_js . $style . ' >&nbsp;' . $text . '&nbsp;</span>'; // add $parameters ???
+      $css_button = '<span class="normal_button button ' . $mouse_out_class . '" ' . $css_button_js . $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
     }
     return $css_button;
   }
