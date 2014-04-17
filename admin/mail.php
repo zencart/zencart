@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Wed Nov 6 21:55:09 2013 -0500 Modified in v1.5.2 $
@@ -68,7 +68,7 @@
     } else {
       $messageStack->add_session(sprintf(NOTICE_EMAIL_FAILED_SEND, $mail_sent_to .  ' (' . $recip_count . ')'), 'error');
     }
-    zen_redirect(zen_href_link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
+    zen_redirect(zen_href_link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count  . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): '') . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer='.zen_output_string_protected($_GET['customer']): '')));
   }
 
   if ( EMAIL_ATTACHMENTS_ENABLED && $action == 'preview') {
@@ -275,7 +275,7 @@ function check_form(form_name) {
             <tr>
               <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
             </tr>
-            <tr><?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=send_email_to_user'); ?>
+            <tr><?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=send_email_to_user' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer='.zen_output_string_protected($_GET['customer']): '') . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): '')); ?>
               <td>
 <?php
   /* Re-Post all POST'ed variables */
@@ -292,7 +292,7 @@ function check_form(form_name) {
                 <table border="0" width="100%" cellpadding="0" cellspacing="2">
                   <tr>
                     <td><?php echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="back"'); ?></td>
-                    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_MAIL) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL); ?></td>
+                    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_MAIL, 'cID=' . zen_db_prepare_input($_GET['cID']) . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL); ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -301,13 +301,13 @@ function check_form(form_name) {
 <?php
 } else {
 ?>
-            <tr><?php echo zen_draw_form('mail', FILENAME_MAIL,'action=preview','post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data"'); ?>
+            <tr><?php echo zen_draw_form('mail', FILENAME_MAIL,'action=preview' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer='.zen_output_string_protected($_GET['customer']): '') . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): ''), 'post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data"'); ?>
               <td><table border="0" cellpadding="0" cellspacing="2">
             <tr>
               <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
             </tr>
 <?php
-  $customers = get_audiences_list('email');
+  $customers = get_audiences_list('email', '', (isset($_GET['customer']) ? $_GET['customer'] : ''));
 ?>
             <tr>
               <td class="main"><?php echo TEXT_CUSTOMER; ?></td>
