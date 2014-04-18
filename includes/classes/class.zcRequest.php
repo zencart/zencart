@@ -5,7 +5,7 @@
  * @package classes
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: $
  */
 /**
  * class request
@@ -61,7 +61,7 @@ class zcRequest extends base
    *
    * @param string $debug
    */
-  public function init($debug = false)
+  public static function init($debug = false)
   {
     global $systemContext;
     if ($debug)
@@ -395,7 +395,7 @@ class zcRequest extends base
     $parameters = isset($sanitizer ['parameters']) ? $sanitizer ['parameters'] : array();
     if (isset($sanitizer ['type']) && is_string($sanitizer ['type'])) {
       if (strpos($sanitizer ['type'], '::') !== false) {
-        list($class, $method) = split('::', $sanitizer ['type']);
+        list($class, $method) = preg_split('/::/', $sanitizer ['type']);
         if (method_exists($class, $method)) {
           $value = call_user_func($sanitizer ['type'], $value, $parameters);
           return $value;
