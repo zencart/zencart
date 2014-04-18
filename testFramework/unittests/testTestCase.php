@@ -42,7 +42,6 @@ class testLibraryMain extends PHPUnit_Framework_TestCase
     $toTestAsValid [] = "hasApostrophe.o'leary@domain.org";
     $toTestAsValid [] = 'uncommonTLD@domain.museum';
     $toTestAsValid [] = 'uncommonTLD@domain.travel';
-    $toTestAsValid [] = 'uncommonTLD@domain.mobi';
     $toTestAsValid [] = 'countryCodeTLD@domain.uk';
     $toTestAsValid [] = 'countryCodeTLD@domain.rw';
     $toTestAsValid [] = 'lettersInDomain@911.com';
@@ -56,6 +55,8 @@ class testLibraryMain extends PHPUnit_Framework_TestCase
     $toTestAsValid [] = 'singleLetterDomain@x.org';
     $toTestAsValid [] = "&*=?^+{}'~@validCharsInLocal.net";
     $toTestAsValid [] = 'foor@bar.newTLD';
+    $toTestAsValid [] = 'gTLD@domain.international';
+    $toTestAsValid [] = 'idn-punycode-gTLDs@domain.XN--CLCHC0EA0B2G2A9GCD';  // taken from https://data.iana.org/TLD/tlds-alpha-by-domain.txt
 
     $toTestAsInvalid [] = 'missingDomain@.com';
     $toTestAsInvalid [] = '@missingLocal.org';
