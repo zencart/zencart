@@ -95,8 +95,8 @@
       $static
     );
 
-    // Do not allow switching from NONSSL to SSL
-    if($connection == 'NONSSL' && $link == 'SSL') {
+    // Do not allow observer to downgrade from SSL to NONSSL
+    if ($connection == 'NONSSL' && $link == 'SSL') {
       $connection = $link;
     }
 
