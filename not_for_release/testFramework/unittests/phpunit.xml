@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit>
   <testsuites>
-    <testsuite name="Passwrord Hash Functions">
+    <testsuite name="Password Hash Functions">
       <file>testTestCase.php</file>
       <file>testPasswordHashCase.php</file>
     </testsuite>
