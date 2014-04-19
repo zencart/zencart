@@ -365,7 +365,7 @@
  */
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class /*, $parameters = ''*/ );
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_SUBMIT');
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -391,7 +391,7 @@
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') return zenCssButton($image, $alt, 'button', $sec_class, $parameters = '');
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
     return zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', $parameters);
   }
 
