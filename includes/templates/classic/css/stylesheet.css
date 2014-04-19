@@ -718,3 +718,6 @@ LABEL#textAreaReviews {
 #seShipTo {
 	padding: 0.2em;
 	}
+
+/* added padding to prevent CSS buttons from touching product image */
+.navNextPrevWrapper {padding-bottom: 5px;}

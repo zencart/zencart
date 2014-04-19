@@ -402,32 +402,63 @@
  * note: any hard-coded buttons will not be able to use this function
 **/
   function zenCssButton($image = '', $text = '', $type = 'button', $sec_class = '', $parameters = '') {
+    global $zco_notifier, $template, $current_page_base, $language;
+    $button_name = basename($image, '.gif');
+    $style = '';
+    $css_button = '';
 
-    // automatic width setting depending on the number of characters
-    $min_width = 0; // this is the minimum button width, change the value as you like
-    $character_width = 6.5; // change this value depending on font size!
-    // end settings
-
-    // added html_entity_decode function to prevent html special chars to be counted as multiple characters (like &amp;)
-    $width = strlen(html_entity_decode($text)) * $character_width;
-    $width = (int)$width;
-    if ($width < $min_width) $width = $min_width;
-    $style = ' style="min-width: ' . $width . 'px;"';
+    $zco_notifier->notify('ZEN_CSS_BUTTON_BEGIN', $current_page_base, $image, $text, $type, $sec_class, $parameters, $button_name);
 
     // if no secondary class is set use the image name for the sec_class
-    if (empty($sec_class))   $sec_class = basename($image, '.gif');
-    if (!empty($sec_class))  $sec_class = ' ' . $sec_class;
-    if (!empty($parameters)) $parameters = ' ' . $parameters;
-    $buttonClass = 'btn' . $sec_class;
+    if (empty($sec_class))  $sec_class = basename($image, '.gif');
+    if (!empty($sec_class)) $sec_class = ' ' . $sec_class;
+    $buttonClass = (($type == 'submit') ? 'submit_button button ' : 'normal_button button ') . 'btn' . $sec_class;
 
-    // form input button
-    if ($type == 'submit') {
-      $css_button = '<input class="' . $buttonClass . '" ' . ' type="submit" value="' .$text . '"' . $parameters . $style . ' />';
+    if (!empty($parameters)) $parameters = ' ' . $parameters;
+
+    if (defined('CSS_BUTTON_MIN_WIDTH')) {
+      // automatic width setting depending on the number of characters
+      $min_width = (int)CSS_BUTTON_MIN_WIDTH; // this is the minimum button width, change the value as you like, by defining CSS_BUTTON_MIN_WIDTH in extra_configures
+      $character_width = (defined('CSS_BUTTON_CHAR_WIDTH')) ? (int)CSS_BUTTON_CHAR_WIDTH : 6.5; // change this value depending on font size, by adding a define in extra_configures
+
+      // added html_entity_decode function to prevent html special chars to be counted as multiple characters (like &amp;)
+      $width = strlen(html_entity_decode($text)) * $character_width;
+      $width = (int)$width;
+      if ($width < $min_width) $width = $min_width;
+      $style = ' style="min-width: ' . $width . 'px;"';
     }
-   // link button
-    if ($type=='button') {
-      $css_button = '<span class="' . $buttonClass . '" ' . $style . ' >&nbsp;' . $text . '&nbsp;</span>'; // add $parameters ???
+
+    if (CSS_BUTTON_POPUPS_IS_ARRAY == 'true' || CSS_BUTTON_POPUPS_IS_ARRAY === true) {
+      global $css_button_text, $css_button_opts;
+      $popuptext = (!empty($css_button_text[$button_name])) ? $css_button_text[$button_name] : ($button_name . CSSBUTTONS_CATALOG_POPUPS_SHOW_BUTTON_NAMES_TEXT);
+      $tooltip = ' title="' . $popuptext . '"';
+    } else {
+      $tooltip = '';
     }
+
+    switch($type) {
+      case 'submit':
+      // form input button
+      if ($parameters != '') {
+        // If the input parameters include a "name" attribute, need to emulate an <input type="image" /> return value by adding a _x to the name parameter (creds to paulm)
+        if (preg_match('/name="([a-zA-Z0-9\-_]+)"/', $parameters, $matches)) {
+          $parameters = str_replace('name="' . $matches[1], 'name="' . $matches[1] . '_x', $parameters);
+        }
+        // If the input parameters include a "value" attribute, remove it since that attribute will be set to the input text string.
+        if (preg_match('/(value="[a-zA-Z0=9\-_]+")/', $parameters, $matches)) {
+          $parameters = str_replace($matches[1], '', $parameters);
+        }
+      }
+      $css_button = '<input class="' . $buttonClass . '" ' . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . $style . '>';
+      break;
+
+      case 'button':
+      // link button
+      default:
+      $css_button = '<span class="' . $buttonClass . '" ' . $tooltip . $parameters . $style . '>&nbsp;' . $text . '&nbsp;</span>';
+    }
+
+    $zco_notifier->notify('ZEN_CSS_BUTTON_END', $current_page_base, $image, $text, $type, $sec_class, $parameters, $css_button);
     return $css_button;
   }
 
