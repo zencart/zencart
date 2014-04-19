@@ -1224,8 +1224,13 @@
         if ($from == 'category') {
           $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
         } else {
-          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '<br>';
+//          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '<br>';
+//          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
+          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . ' [ ' . TEXT_INFO_ID . $calculated_category_path[$i][$j]['id'] . ' ] ' . '<br>&nbsp;&nbsp;';
         }
+      }
+      if ($from == 'product') {
+        $calculated_category_path_string .= '<br />';
       }
     }
     $calculated_category_path_string = preg_replace('/&nbsp;&gt;&nbsp;$/', '', $calculated_category_path_string);
