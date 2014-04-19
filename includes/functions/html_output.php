@@ -315,7 +315,7 @@
     // javascript to set different classes on mouseover and mouseout: enables hover effect on the buttons
     // (pure css hovers on non link elements do work work in every browser)
     $css_button_js .=  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
-    
+
     if (CSS_BUTTON_POPUPS_IS_ARRAY == 'true') {
       $popuptext = (!empty($css_button_text[$button_name])) ? $css_button_text[$button_name] : ($button_name . CSSBUTTONS_CATALOG_POPUPS_SHOW_BUTTON_NAMES_TEXT);
       $tooltip = ' title="' . $popuptext . '"';
@@ -328,7 +328,7 @@
 // form input button
       if ($parameters != '') {
         // If the input parameters include a "name" attribute, need to emulate an <input type="image" /> return value
-        // by adding a _x to the name parameter (thanks to paulm for providing the fix for Zen Cart v1.3.6!).  
+        // by adding a _x to the name parameter (thanks to paulm for providing the fix for Zen Cart v1.3.6!).
         if (preg_match('/name="([a-zA-Z0-9\-_]+)"/', $parameters, $matches)) {
           $parameters = str_replace('name="' . $matches[1], 'name="' . $matches[1] . '_x', $parameters);
         }
@@ -344,7 +344,7 @@
 
     if ($type=='button'){
 // link button
-      $css_button = '<span class="normal_button button ' . $mouse_out_class . '" ' . $css_button_js . $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
+      $css_button = '<span class="' . $mouse_out_class . '" ' . $css_button_js . $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
     }
     return $css_button;
   }
