@@ -1252,23 +1252,6 @@ function check_form(form_name) {
       $cc_query_raw = "select * from " . TABLE_COUPONS . " where coupon_type != 'G'";
     }
     $maxDisplaySearchResults = (defined('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') && (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS > 0) ? (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS : 20;
-    // reset page when page is unknown
-    if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cid'] != '') {
-      $check_page = $db->Execute($cc_query_raw);
-      $check_count=1;
-      if ($check_page->RecordCount() > $maxDisplaySearchResults) {
-        while (!$check_page->EOF) {
-          if ($check_page->fields['coupon_id'] == $_GET['cid']) {
-            break;
-          }
-          $check_count++;
-          $check_page->MoveNext();
-        }
-        $_GET['page'] = round((($check_count/$maxDisplaySearchResults)+(fmod_round($check_count,$maxDisplaySearchResults) !=0 ? .5 : 0)),0);
-      } else {
-        $_GET['page'] = 1;
-      }
-    }
 
     $cc_split = new splitPageResults($_GET['page'], $maxDisplaySearchResults, $cc_query_raw, $cc_query_numrows);
     $cc_list = $db->Execute($cc_query_raw);
