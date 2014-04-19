@@ -325,25 +325,23 @@
     $css_button = '';
 
     if ($type == 'submit'){
-// form input button
+      // form input button
       if ($parameters != '') {
-        // If the input parameters include a "name" attribute, need to emulate an <input type="image" /> return value
-        // by adding a _x to the name parameter (thanks to paulm for providing the fix for Zen Cart v1.3.6!).
+        // If the input parameters include a "name" attribute, need to emulate an <input type="image" /> return value by adding a _x to the name parameter (creds to paulm)
         if (preg_match('/name="([a-zA-Z0-9\-_]+)"/', $parameters, $matches)) {
           $parameters = str_replace('name="' . $matches[1], 'name="' . $matches[1] . '_x', $parameters);
         }
-        // If the input parameters include a "value" attribute, remove it since that attribute will be set to the input
-        // text string.
+        // If the input parameters include a "value" attribute, remove it since that attribute will be set to the input text string.
         if (preg_match('/(value="[a-zA-Z0=9\-_]+")/', $parameters, $matches)) {
           $parameters = str_replace($matches[1], '', $parameters);
         }
       }
 
-      $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' .$text . '"' . $tooltip . $parameters . ' />';
+      $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . ' />';
     }
 
     if ($type=='button'){
-// link button
+      // link button
       $css_button = '<span class="' . $mouse_out_class . '" ' . $css_button_js . $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
     }
     return $css_button;
