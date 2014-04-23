@@ -2,7 +2,7 @@
 /**
  * file contains systemChecker Class
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:
  *
@@ -614,4 +614,20 @@ class systemChecker
     }
     return TRUE;
   }
+  /**
+   * Check to ensure that the PHP version is safe from the CGI bug introduced in 5.3
+   * ref: http://arstechnica.com/security/2014/03/php-bug-allowing-site-hijacking-still-menaces-internet-22-months-on/
+   * @return boolean
+   */
+  function checkIsPhpSafeFromCgiBug()
+  {
+    $phpVersion = PHP_VERSION;
+    if ((version_compare(PHP_VERSION, '5.3.0', 'ge') && version_compare(PHP_VERSION, '5.3.12', 'lt')) || (version_compare(PHP_VERSION, '5.4.0', 'ge') && version_compare(PHP_VERSION, '5.4.2', 'lt'))) {
+      if (stristr(php_sapi_name(), 'cgi')) {
+        // has bug, so not safe, thus return false:
+        return false;
+      }
+    }
+  }
+
 }
