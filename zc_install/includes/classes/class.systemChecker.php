@@ -628,6 +628,7 @@ class systemChecker
         return false;
       }
     }
+    return true;
   }
 
 }
