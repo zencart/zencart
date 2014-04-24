@@ -189,10 +189,10 @@
   $mysql_version = ($mysql_version == '') ? UNKNOWN : $mysql_version ;
   //if (is_object($db_test)) $mysql_qry=$db_test->get_server_info();
   $mysql_ver_class = ($mysql_version<'4.1.0') ? 'FAIL' : 'OK';
-  $mysql_ver_class = ($mysql_version == UNKNOWN || $mysql_version > '5.6') ? 'WARN' : $mysql_ver_class;
+  $mysql_ver_class = ($mysql_version == UNKNOWN || $mysql_version > '5.7') ? 'WARN' : $mysql_ver_class;
 
   $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_MYSQL_AVAILABLE, 'Status' => $mysql_support, 'Class' => ($mysql_support==ON) ? 'OK' : 'FAIL', 'HelpURL' =>ERROR_CODE_DB_NOTSUPPORTED, 'HelpLabel'=>ERROR_TEXT_DB_NOTSUPPORTED);
-  if ($mysql_version != UNKNOWN || ($mysql_version == UNKNOWN && $advanced_mode)) $status_check[] = array('Importance' => 'Info', 'Title' => LABEL_MYSQL_VER, 'Status' => $mysql_version, 'Class' => $mysql_ver_class, 'HelpURL' =>($mysql_version > '5.6' ? ERROR_CODE_DB_MYSQL5 : ERROR_CODE_DB_VER_UNKNOWN), 'HelpLabel'=>($mysql_version > '5.6' ? ERROR_TEXT_DB_MYSQL5 : ERROR_TEXT_DB_VER_UNKNOWN) );
+  if ($mysql_version != UNKNOWN || ($mysql_version == UNKNOWN && $advanced_mode)) $status_check[] = array('Importance' => 'Info', 'Title' => LABEL_MYSQL_VER, 'Status' => $mysql_version, 'Class' => $mysql_ver_class, 'HelpURL' =>($mysql_version > '5.7' ? ERROR_CODE_DB_MYSQL5 : ERROR_CODE_DB_VER_UNKNOWN), 'HelpLabel'=>($mysql_version > '5.7' ? ERROR_TEXT_DB_MYSQL5 : ERROR_TEXT_DB_VER_UNKNOWN) );
 
   //DB Privileges
 if (false) { // DISABLED THIS CODEBLOCK FOR NOW....
@@ -246,8 +246,8 @@ if (false) { // DISABLED THIS CODEBLOCK FOR NOW....
     $php_ver = $zc_install->php_version;
     $this_class = 'OK';
   }
-  
-  if (version_compare(PHP_VERSION, 5.5, '>=')) {
+
+  if (version_compare(PHP_VERSION, 5.7, '>=')) {
     $php_ver = $zc_install->php_version;
     $this_class = 'WARN';
     $err_text = 'This ZC version is not yet tested with this version of PHP.';
