@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:40:54 2012 -0400 Modified in v1.5.1 $
@@ -1224,13 +1224,15 @@
         if ($from == 'category') {
           $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
         } else {
-//          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '<br>';
-//          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
-          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . ' [ ' . TEXT_INFO_ID . $calculated_category_path[$i][$j]['id'] . ' ] ' . '<br>&nbsp;&nbsp;';
+          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'];
+          $calculated_category_path_string .= ' [ ' . TEXT_INFO_ID . $calculated_category_path[$i][$j]['id'] . ' ] ';
+          $calculated_category_path_string .= '<br>';
+          $calculated_category_path_string .= '&nbsp;&nbsp;';
+//           $calculated_category_path_string .= '&nbsp;&gt;&nbsp;';
         }
       }
       if ($from == 'product') {
-        $calculated_category_path_string .= '<br />';
+        $calculated_category_path_string .= '<br>';
       }
     }
     $calculated_category_path_string = preg_replace('/&nbsp;&gt;&nbsp;$/', '', $calculated_category_path_string);
