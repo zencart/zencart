@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: DrByte  Wed Nov 6 22:51:50 2013 -0500 New in v1.5.2 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+.plainbox, div.callout {border: 1px dashed; border-color: #C96E29; margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:10px ;}
+.error {color:#FF0000; }
+.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color: #c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.center {text-align: center}
+-->
+</style>
+<title>Zen Cart&reg; Changed Files</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro center">Welcome to Zen Cart&reg;</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="center small">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.</p>
+</fieldset>
+<br>
+
+
+<fieldset>
+<h1 class="intro center">Version 1.5.3</h1>
+<p>NOTE:<br>
+  For a listing of What's New in this release, please see the <a href="whatsnew_1.5.3.html" target="_blank">whatsnew_1.5.3.html</a> file in the <span class="filename">/docs</span> folder. <br>
+      <a href="http://www.zen-cart.com/releasenotes" target="_blank">You may also see the list in the support forum here</a>. <br>
+      <br>
+      The following is a list of FILE/FOLDER adds/deletes/changes: </p>
+
+<h1>DELETED Files (since release of v1.5.1)</h1><ul>
+<li>/admin/includes/nde-basic.css</li>
+<li>/admin/includes/column_left.php (unused since 1.5.0)</li>
+</ul>
+<h1>NEW Files ADDED (since release of v1.5.1)</h1>
+<ul>
+<li>/admin/includes/extra_configures/use_catalog_time_zone.php (added in v1.5.2)</li>
+<li>/admin/includes/init_includes/init_cache_key_check.php (added in v1.5.2)</li>
+<li>/admin/includes/init_includes/init_sanitize.php (Was removed in an older version. Added back with new contents in v1.5.2)</li>
+<li>/includes/extra_configures/set_time_zone.php (added in v1.5.2)</li>
+<li>/includes/classes/support/*.php  - ALL PHP FILES IN THIS FOLDER ARE NEW/CHANGED in v1.5.2</li>
+<li>/includes/classes/class.zcPassword.php (added in v1.5.3)</li>
+<li>/includes/classes/vendors/password_compat-master/lib/password.php (added in v1.5.3)</li>
+<li>/includes/classes/vendors/password_compat-master/ (numerous files+folders here) (added in v1.5.3)</li>
+<li>/includes/functions/password_compat.php (added in v1.5.3)</li>
+<li>/includes/functions/plugin_support.php (added in v1.5.3)</li>
+<li>/includes/init_includes/init_observers.php (added in v1.5.3)</li>
+<li>/includes/languages/english/page.php (added in v1.5.2)</li>
+</ul>
+<h1>CHANGED Files (since release of v1.5.2)</h1>
+<ul>
+<li>/admin/banner_manager.php</li>
+<li>/admin/coupon_admin.php</li>
+<li>/admin/includes/init_includes/init_general_funcs.php</li>
+<li>/admin/includes/init_includes/init_sanitize.php (Was removed in an older version. Added back with new contents in v1.5.2)</li>
+<li>/admin/includes/modules/product_music/preview_info.php</li>
+<li>/includes/classes/class.zcPassword.php (NEW in v1.5.3)</li>
+<li>/includes/classes/support/*.php  - ALL PHP FILES IN THIS FOLDER ARE NEW/CHANGED in v1.5.2</li>
+<li>/includes/classes/vendors/password_compat-master/lib/password.php  (NEW in v1.5.3)</li>
+<li>/includes/extra_configures/set_time_zone.php  (NEW in v1.5.2)</li>
+<li>/includes/functions/audience.php</li>
+<li>/includes/functions/html_output.php</li>
+<li>/includes/functions/password_compat.php  (NEW in v1.5.3)</li>
+<li>/includes/functions/plugin_support.php  (NEW in v1.5.3)</li>
+<li>/includes/init_includes/init_general_funcs.php</li>
+<li>/includes/init_includes/init_observers.php  (NEW in v1.5.3)</li>
+<li>/includes/languages/english/page.php (added in v1.5.2)</li>
+<li>/includes/modules/pages/account_password/header_php.php</li>
+<li>/includes/modules/pages/login/header_php.php</li>
+<li>/includes/modules/pages/product_reviews/header_php.php</li>
+<li>/includes/modules/pages/time_out/header_php.php</li>
+<li>/includes/templates/classic/css/stylesheet.css</li>
+<li>/includes/templates/classic/css/stylesheet_css_buttons.css</li>
+<li>/includes/templates/template_default/css/stylesheet.css</li>
+<li>/includes/templates/template_default/css/stylesheet_css_buttons.css</li>
+<li>/includes/templates/template_default/templates/tpl_login_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_time_out_default.php</li>
+<br>
+<li>/zc_install/ ... assume *all* of /zc_install/ has changed
+</ul>
+
+
+<h1>&nbsp;</h1>
+</fieldset>
+<p class="center"><em>Copyright 2003 - 2014 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>

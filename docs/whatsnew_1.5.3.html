@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: DrByte  Wed Nov 6 22:51:50 2013 -0500 New in v1.5.2 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+td.plainbox, div.callout {border: 1px dashed;border-color: #C96E29;margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:10px ;}
+.error {color:#FF0000; }
+.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color:#c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.style1 {
+  font-size: 18px;
+  font-weight: bold;
+}
+.emphasize {
+  color: #336600;
+}
+fieldset {max-width: 748px; margin: auto}
+.center {text-align: center}
+
+
+-->
+</style>
+<title>What's New in Zen Cart(R) v1.5.3</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro" style="text-align: center;">Welcome to Zen Cart&reg;</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="small center">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.
+</p>
+</fieldset>
+<br>
+
+<fieldset>
+<h1>About PHP versions</h1>
+<p>Zen Cart&reg; v1.5.3 is compatible with PHP 5.2.10 through PHP 5.6</p>
+<p class="small"><em>(Note: security features are stronger when using PHP 5.3.7 or newer.)</em></p>
+
+<h1>Upgrade Instructions</h1>
+<h2>From v1.5.1 to v1.5.2 or v1.5.3</h2>
+<p>Simple: if you are using v1.5.1 already and have not customized any of the files listed in the changed_files-v1-5-2.html and changed_files-v1-5-3.html documents, then simply replace those files with the new versions contained as listed in those documents.</p>
+<p>If you HAVE customized or altered certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.</p>
+<p>If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original v1.5.1 files, and see what changes were there ... and then re-build those changes in the v1.5.3 file.</p>
+<h2>To v1.5.3 from v1.3.9h or older</h2>
+<p>If you are upgrading from a version OLDER than v1.5.1, then please do a <a href="http://www.zen-cart.com/upgrades">standard complete site upgrade</a>.</p>
+
+<h1>CHANGELOG - List of Changed Files </h1>
+<p>For a list of files that have been changed since v1.5.1, see the <a href="changed_files-v1-5-2.html" target="_blank">changed_files-v1-5-2.html</a> and <a href="changed_files-v1-5-3.html" target="_blank">changed_files-v1-5-3.html</a> documents </p>
+
+<h1>Whats New ... Changes from v1.5.2 to v1.5.3 </h1>
+<h3><strong>The following improvements and bugfixes are included in v1.5.3 since v1.5.2-beta2: </strong></h3>
+Improvements:
+<ul>
+<li>CHANGE-432 - Numerous fixes for stricter PHP 5.4 compatibility</li>
+<li>CHANGE-543 - Updates for PHP 5.5 Compatibility</li>
+<li>CHANGE-89  - Convert to bcrypt for password security hashing (requires PHP 5.3.7 or newer)</li>
+<li>CHANGE-359 - Add advanced developer tool for Notifier Trace and a global eventID</li>
+<li>ISSUE-54 - Session handling improvements</li>
+<li>ISSUE-82 - Fix odd PHP 5.4 quirk which triggers fatal error "Allowed memory size of --- bytes exhausted" when accessing SID constant</li>
+</ul>
+Fixes:
+<ul>
+<li>CHANGE-311 - Data sanity check in customer login and admin customer mgmt to handle missing records resulting from bad imports or damaged data</li>
+<li>CHANGE-446 - Cleanup: Remove duplicate code in update_product.php</li>
+<li>CHANGE-564 - docs</li>
+<li>CHANGE-591 - Fix Australia address format to remove comma</li>
+<li>CHANGE-673 - Remove obsolete ssl-unclean-shutdown hack from admin</li>
+<li>CHANGE-675 - Update country names to reflect changes in the ISO standards thru end of 2013</li>
+<li>CHANGE-677 - Adjust admin categories code to stop triggering false-positive on security scan</li>
+<li>CHANGE-678 - Adjust admin banner code to stop triggering a false-positive alert on security scan</li>
+<li>CHANGE-679 - Adjust admin categories code to stop triggering false-positive on security scan</li>
+<li>CHANGE-681 - Fix admin scenario of mixed content embedded on a page</li>
+<li>CHANGE-682 - Adjust admin product-music code to stop triggering false-positive on security scan</li>
+<li>CHANGE-683 - Backport compatibility fix</li>
+<li>CHANGE-685 - Fix stock reduction problem with checkbox/attribute combinations in cart</li>
+<li>CHANGE-686 - Changes to ensure output is correctly sanitized even in places protected by authentication requirements</li>
+<li>CHANGE-689 - zc_install updates</li>
+<li>CHANGE-690 - Add function to do lookup of latest version of plugins</li>
+<li>CHANGE-691 - Retire obsolete compatibility functions</li>
+<li>CHANGE-692 - CURL-force SSL3 on Cardinal connections</li>
+<li>CHANGE-694 - Stopped admin send-mail page from drawing a huge dropdown list even when a single customer is pre-selected from customers screen</li>
+<li>CHANGE-697 - Change core config entries to not use config-group-id 0 since many sloppy plugin authors delete those core settings</li>
+<li>CHANGE-698 - Fix bugs in calls to zenCssButton()</li>
+<li>ISSUE-9  - Fix minor issue with model number display on product_reviews page</li>
+<li>ISSUE-19 - Fix coupon-admin date check since mktime() doesn't support is_dst param anymore</li>
+<li>ISSUE-23 - Clean up add to cart when non-numeric value is used and display message</li>
+<li>ISSUE-51 - Add ability to autoload observer classes without needing to also create auto_loaders scripts</li>
+<li>ISSUE-81 - class.base.php: Initialize static observer</li>
+<li>ISSUE-83 - lat9 requested more notifiers for order-class</li>
+<li>ISSUE-87 - Fix payment module problem admin-side preventing use of Refund option</li>
+<li>ISSUE-88 - Fix var assignment operator in ot_gv.php for Calculate Tax</li>
+<li>ISSUE-89 - Update zenCssButton function and stylesheet to use CSS3 (courtesy of lat9 contribution)</li>
+<li>ISSUE-90 - Add gTLD support for email addresses (like .marketing or .international)</li>
+</ul>
+
+
+</fieldset>
+<br><br>
+<p class="center"><em>Copyright 2003 - 2014 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>

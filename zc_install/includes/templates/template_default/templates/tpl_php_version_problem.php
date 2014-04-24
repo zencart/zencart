@@ -37,7 +37,7 @@ div .headerimg {padding:0; width: 730px;}
 <h1>Hello. Thank you for loading Zen Cart&reg;.</h1>
 <h2 class="systemError">Unfortunately we've discovered a problem:</h2>
 <p class="systemError">The PHP version you are using (<?php echo PHP_VERSION; ?>) is too old, and this version of Zen Cart&reg; cannot be used. You need to upgrade your server to a newer version of PHP.</p>
-<p>This version of Zen Cart&reg; requires an absolute minimum of PHP version 5.2.10<br>It is <strong>recommended to use the latest version of PHP 5.5.X.</strong></p>
+<p>This version of Zen Cart&reg; requires an absolute minimum of PHP version 5.2.10<br>It is <strong>recommended to use the latest version of PHP 5.6.X.</strong></p>
 <p>The <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQ and Tutorials</a> area on the Zen Cart&reg; website is also an important resource.</p>
 </div>
 <p style="text-align: center; font-size: small;">Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></p>
