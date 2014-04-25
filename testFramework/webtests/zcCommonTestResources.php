@@ -11,20 +11,72 @@
  *
  * @package tests
  */
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
+if (defined('TRAVIS') && TRAVIS ==='true') {
+  require_once 'vendor/autoload.php';
+} else {
+  require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
+}
+
+// bamboo is currently configured for PHPUnit_Extensions_SeleniumTestCase
+#class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
+class zcCommonTestResources extends Sauce\Sausage\WebDriverTestCase
 {
-  protected $coverageScriptUrl = 'http://" . BASE_URL . "phpunit_coverage.php';
+  protected $coverageScriptUrl, $start_url = '';
   protected $paypalSandboxLoginEnabled = FALSE;
   protected static $compoundDone = FALSE;
   private $dbActive;
   private $dbLink;
   private $VATcreated = FALSE;
+  public static $browsers = array();
 
-  protected function setUp()
+  function __construct() {
+    $this->coverageScriptUrl = "http://" . BASE_URL . "/phpunit_coverage.php";
+    $this->start_url = "http://" . BASE_URL . "/index.php";
+
+    if (defined('TRAVIS') && TRAVIS ==='true') {
+      $this->browsers = array(
+          // run FF15 on Windows 8 on Sauce
+          array(
+                  'browserName' => 'firefox',
+                  'desiredCapabilities' => array(
+                          'version' => '15',
+                          'platform' => 'Windows 2012',
+                  )
+          ),
+          // run Chrome on Linux on Sauce
+          array(
+                  'browserName' => 'chrome',
+                  'desiredCapabilities' => array(
+                          'platform' => 'Linux'
+                  )
+          ),
+          // run Mobile Safari on iOS
+          //array(
+          //'browserName' => '',
+          //'desiredCapabilities' => array(
+          //'app' => 'safari',
+          //'device' => 'iPhone Simulator',
+          //'version' => '6.1',
+          //'platform' => 'Mac 10.8',
+          //)
+          //)//,
+          // run Chrome locally
+          //array(
+          //'browserName' => 'chrome',
+          //'local' => true,
+          //'sessionStrategy' => 'shared'
+          //)
+          );
+    }
+  }
+
+  public function setUp()
   {
-    $this->setBrowser(SELENIUM_BROWSER);
-    $this->setBrowserUrl('http://' . BASE_URL);
+
+    if (!defined('TRAVIS')) {
+      $this->setBrowser(SELENIUM_BROWSER);
+    }
+    $this->setBrowserUrl($this->start_url);
     $this->generalSqlInstallStuff();
   }
   /**

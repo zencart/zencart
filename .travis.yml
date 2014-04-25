@@ -46,5 +46,5 @@ before_script:
   - cd ../..
 script:
   - phpunit -c testFramework/unittests/phpunit.xml
-#uncomment the following after apache has been added
-#  - testFramework/webtests/vendor/bin/phpunit testFramework/webtests/allWebTests.php
+#uncomment the following to trigger webtests
+  - testFramework/webtests/vendor/bin/phpunit testFramework/webtests/allWebTests.php
