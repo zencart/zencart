@@ -1,7 +1,8 @@
 language: php
 php:
-  - "5.4"
+  - "5.6"
   - "5.5"
+  - "5.4"
   - "5.3"
 env:
   global:
@@ -16,12 +17,31 @@ branches:
   only:
     - v160
 before_script:
+  - cp composer.json composer.json1
+  - sed --file testFramework/webtests/composer_dev.sed <composer.json1 >composer.json
+  - cat composer.json
+  - composer install --dev
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
   - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - touch includes/configure.php
   - touch admin/includes/configure.php
+  - cd testFramework/webtests
+  - curl -s https://raw.github.com/jlipps/sausage-bun/master/givememysausage.php | php
+  - cd ../..
+  # set up apache server and vhost
+   - sudo apt-get install apache2 libapache2-mod-fastcgi
+   # enable php-fpm
+   - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+   - sudo a2enmod rewrite actions fastcgi alias
+   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+   # configure apache virtual hosts
+   - sudo cp -f testFramework/travis-ci-apache-default /etc/apache2/sites-available/default
+   - sudo cp -f testFramework/travis-ci-apache-default-ssl /etc/apache2/sites-available/default-ssl
+   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default-ssl
+   - sudo service apache2 restart
 script:
   - phpunit -c testFramework/unittests/phpunit.xml
-  - curl -L http://selenium-release.storage.googleapis.com/2.41/selenium-server-standalone-2.41.0.jar > selenium-server.jar
-  - nohup java -jar selenium-server.jar > ./selenium.log &
-# - phpunit testFramework/webtests/allWebTests.php
+#uncomment the following after apache has been added
+  - testFramework/webtests/vendor/bin/phpunit testFramework/webtests/allWebTests.php
