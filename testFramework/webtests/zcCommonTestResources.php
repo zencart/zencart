@@ -29,7 +29,8 @@ class zcCommonTestResources extends Sauce\Sausage\WebDriverTestCase
   private $VATcreated = FALSE;
   public static $browsers = array();
 
-  function __construct() {
+  public function setUp()
+  {
     $this->coverageScriptUrl = "http://" . BASE_URL . "/phpunit_coverage.php";
     $this->start_url = "http://" . BASE_URL . "/index.php";
 
@@ -68,11 +69,6 @@ class zcCommonTestResources extends Sauce\Sausage\WebDriverTestCase
           //)
           );
     }
-  }
-
-  public function setUp()
-  {
-
     if (!defined('TRAVIS')) {
       $this->setBrowser(SELENIUM_BROWSER);
     }
