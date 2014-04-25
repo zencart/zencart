@@ -47,4 +47,4 @@ before_script:
 script:
   - phpunit -c testFramework/unittests/phpunit.xml
 #uncomment the following to trigger webtests
-  - testFramework/webtests/vendor/bin/phpunit testFramework/webtests/allWebTests.php
+#  - testFramework/webtests/vendor/bin/phpunit testFramework/webtests/allWebTests.php
