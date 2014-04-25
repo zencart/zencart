@@ -1,5 +1,5 @@
 # [Zen Cart&reg; - The Art of E-Commerce](http://www.zen-cart.com/) 
-[![Build Status](https://travis-ci.org/zencart/zc-v1-series.png)](https://travis-ci.org/zencart/zc-v1-series) 
+[![Build Status](https://travis-ci.org/zencart/zc-v1-series.svg)](https://travis-ci.org/zencart/zc-v1-series) 
 [![ProjectStatus](http://stillmaintained.com/zencart/zc-v1-series.png)](http://stillmaintained.com/zencart)
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/zencart.svg)](https://saucelabs.com/u/zencart)
 
