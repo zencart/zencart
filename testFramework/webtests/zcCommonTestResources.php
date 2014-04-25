@@ -27,15 +27,7 @@ class zcCommonTestResources extends Sauce\Sausage\WebDriverTestCase
   private $dbActive;
   private $dbLink;
   private $VATcreated = FALSE;
-  public static $browsers = array();
-
-  public function setUp()
-  {
-    $this->coverageScriptUrl = "http://" . BASE_URL . "/phpunit_coverage.php";
-    $this->start_url = "http://" . BASE_URL . "/index.php";
-
-    if (defined('TRAVIS') && TRAVIS ==='true') {
-      $this->browsers = array(
+  public static $browsers = array(
           // run FF15 on Windows 8 on Sauce
           array(
                   'browserName' => 'firefox',
@@ -68,7 +60,12 @@ class zcCommonTestResources extends Sauce\Sausage\WebDriverTestCase
           //'sessionStrategy' => 'shared'
           //)
           );
-    }
+
+  public function setUp()
+  {
+    $this->coverageScriptUrl = "http://" . BASE_URL . "/phpunit_coverage.php";
+    $this->start_url = "http://" . BASE_URL . "/index.php";
+
     if (!defined('TRAVIS')) {
       $this->setBrowser(SELENIUM_BROWSER);
     }
