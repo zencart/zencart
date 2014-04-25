@@ -1,4 +1,6 @@
-# [Zen Cart&reg; - The Art of E-Commerce](http://www.zen-cart.com/) [![Build Status](https://travis-ci.org/zencart/zc-v1-series.png)](https://travis-ci.org/zencart/zc-v1-series) 
+# [Zen Cart&reg; - The Art of E-Commerce](http://www.zen-cart.com/) 
+[![Build Status](https://travis-ci.org/zencart/zc-v1-series.png)](https://travis-ci.org/zencart/zc-v1-series) 
+[![ProjectStatus](http://stillmaintained.com/zencart/zc-v1-series.png)](http://stillmaintained.com/zencart)
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/zencart.svg)](https://saucelabs.com/u/zencart)
 
 ===============
@@ -41,11 +43,11 @@ Currently only the v1.5.0 release is PA-DSS certified, and only when downloaded 
 
 Other branches are not PA-DSS Certified unless otherwise stated.
  
-__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v152.pdf) should be followed for PCI Compliant implementation.__
+__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v153.pdf) should be followed for PCI Compliant implementation.__
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v152.pdf).
+Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v153.pdf).
 
 
 Support
