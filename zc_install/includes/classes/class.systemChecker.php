@@ -204,7 +204,7 @@ class systemChecker
     foreach ($parameters as $parameter)
     {
       $method = 'dbVersionCheck' . ucfirst($parameter['checkType']);
-      $result = $this->$method($db, $dbprefix, $parameter);
+      $result = $this->$method($db, $dbPrefixVal, $parameter);
 //      echo $parameter['checkType'] . ': ' . var_export($result, true) . '<br>';
       $valid = $valid && $result;
     }
