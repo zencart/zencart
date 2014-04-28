@@ -16,7 +16,7 @@ class zcDatabaseInstaller
 {
   public function __construct($options)
   {
-    $this->func = create_function('$matches', 'return strtoupper($matches[1]);');    
+    $this->func = create_function('$matches', 'return strtoupper($matches[1]);');
     $dbtypes = array();
     $path = DIR_FS_ROOT . 'includes/classes/db/';
     $dir = dir($path);
@@ -232,6 +232,36 @@ class zcDatabaseInstaller
       $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
     }
   }
+  public function parserAlterTable() {
+    if(!$this->tableExists($this->lineSplit[2])) {
+      $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->filename);
+    }
+    else {
+      $this->line = 'ALTER TABLE ' . $this->dbPrefix . substr($this->line, 12);
+
+        switch(strtoupper($this->lineSplit[3])) {
+          case 'ADD':
+            // Check to see if the column / index already exists
+            $exists = false;
+            switch(strtoupper($this->lineSplit[4])) {
+              case 'COLUMN':
+                $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[5]);
+                break;
+              case 'INDEX':
+                $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[5]);
+                break;
+              default:
+            }
+            // Ignore this line if the column / index already exists
+            if($exists) $this->ignoreLine = true;
+
+            break;
+          default:
+            // Do nothing
+      }
+    }
+  }
   public function writeUpgradeExceptions($line, $message, $sqlFile)
   {
     logDetails($line . '  ' . $message . '  ' . $sqlFile, 'upgradeException');
@@ -310,6 +340,22 @@ class zcDatabaseInstaller
     } else {
       return FALSE;
     }
+  }
+  public function tableColumnExists($table, $column)
+  {
+    $check = $this->db->Execute(
+      'SHOW COLUMNS FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
+      'WHERE `Field` = \'' . $this->db->prepare_input($column) . '\''
+    );
+    return !$check->EOF;
+  }
+  public function tableIndexExists($table, $index)
+  {
+    $check = $this->db->Execute(
+      'SHOW INDEX FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
+      'WHERE `Key_name` = \'' . $this->db->prepare_input($index) . '\''
+    );
+    return !$check->EOF;
   }
   public function updateConfigKeys()
   {
