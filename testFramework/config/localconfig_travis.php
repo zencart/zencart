@@ -3,7 +3,7 @@ if (isset($_SERVER['CI'])) define('CI', $_SERVER['CI']);
 if (isset($_SERVER['TRAVIS'])) define('TRAVIS', $_SERVER['TRAVIS']);
 
 define('SERVER_NAME', 'localhost');
-define('BASE_URL', 'localhost:4443');
+define('BASE_URL', 'localhost:4445');
 define('DB_HOST', 'localhost');
 define('DB_USER', 'travis');
 define('DB_PASS', '');
