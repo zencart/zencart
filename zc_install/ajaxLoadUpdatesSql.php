@@ -15,7 +15,7 @@ require(DIR_FS_INSTALL . 'includes/application_top.php');
 $error = FALSE;
 $errorList = array();
 $db_type = 'mysql';
-$updateList = array('1.5.0'=>array('required'=>'1.3.9'),'1.5.1'=>array('required'=>'1.5.0'),'1.6.0'=>array('required'=>'1.5.1'));
+$updateList = array('1.5.0'=>array('required'=>'1.3.9'),'1.5.1'=>array('required'=>'1.5.0'),'1.5.2'=>array('required'=>'1.5.1'),'1.6.0'=>array('required'=>'1.5.2'));
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
