@@ -206,12 +206,15 @@ class queryFactory extends base {
         $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
       } else {
         $obj->resource = $zp_db_resource;
+        $obj->result = array();
         $obj->cursor = 0;
-        if ($obj->RecordCount() > 0) {
+        $obj->Limit = $obj->RecordCount();
+        if ($obj->Limit > 0) {
           $zp_ii = 0;
-          while (!$obj->EOF) {
+          while ($zp_ii < $obj->Limit) {
             $zp_result_array = mysqli_fetch_array($zp_db_resource);
             if ($zp_result_array) {
+              $obj->result[$zp_ii] = array();
               while (list($key, $value) = each($zp_result_array)) {
                 if (!preg_match('/^[0-9]/', $key)) {
                   $obj->result[$zp_ii][$key] = $value;
@@ -229,6 +232,7 @@ class queryFactory extends base {
           }
           $obj->EOF = false;
         }
+        unset($zp_ii, $zp_result_array, $key, $value);
       }
       $zc_cache->sql_cache_store($zf_sql, $obj->result);
       $obj->is_cached = true;
@@ -305,10 +309,12 @@ class queryFactory extends base {
         $obj->Move($zp_start_row);
         $obj->Limit = $zf_limit;
         $zp_ii = 0;
-        while (!$obj->EOF) {
+        $obj->Limit = $obj->RecordCount();
+        $obj->result = array();
+        while ($zp_ii < $obj->Limit) {
           $zp_result_array = @mysqli_fetch_array($zp_db_resource);
-          if ($zp_ii == $zf_limit) $obj->EOF = true;
           if ($zp_result_array) {
+            $obj->result[$zp_ii] = array();
             while (list($key, $value) = each($zp_result_array)) {
               $obj->result[$zp_ii][$key] = $value;
             }
@@ -317,7 +323,9 @@ class queryFactory extends base {
           }
           $zp_ii++;
         }
-        $obj->result_random = array_rand($obj->result, sizeof($obj->result));
+        unset($zp_ii, $zp_result_array, $key, $value);
+
+        $obj->result_random = array_rand($obj->result, $obj->Limit);
         if (is_array($obj->result_random)) {
           $zp_ptr = $obj->result_random[$obj->cursor];
         } else {
@@ -523,8 +531,11 @@ class queryFactoryResult {
   }
 
   function RecordCount() {
-    if($this->is_cached) return sizeof($this->result);
-    else if($this->resource !== null) return @mysqli_num_rows($this->resource);
+    if($this->is_cached) {
+      return sizeof($this->result);
+    } else if($this->resource !== null && $this->resource !== true) {
+      return @mysqli_num_rows($this->resource);
+    }
     return 0;
   }
 
