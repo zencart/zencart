@@ -250,18 +250,32 @@ class zcDatabaseInstaller
                 break;
               case 'INDEX':
               case 'KEY':
-                $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[5]);
+                // Do nothing if the index_name is ommitted
+                if($this->lineSplit[5] != 'USING' && substr($this->lineSplit[5], 0, 1) != '(') {
+                  $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[5]);
+                }
                 break;
               case 'UNIQUE':
               case 'FULLTEXT':
               case 'SPATIAL':
-                $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[6]);
+                if($this->lineSplit[6] == 'INDEX' || $this->lineSplit[6] == 'KEY') {
+                  // Do nothing if the index_name is ommitted
+                  if($this->lineSplit[7] != 'USING' && substr($this->lineSplit[7], 0, 1) != '(') {
+                    $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[7]);
+                  }
+                }
+                // Do nothing if the index_name is ommitted
+                else if($this->lineSplit[6] != 'USING' && substr($this->lineSplit[6], 0, 1) != '('){
+                  $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[6]);
+                }
                 break;
               case 'CONSTRAINT':
-                // Do nothing (no checks)
+              case 'PRIMARY':
+              case 'FOREIGN':
+                // Do nothing (no checks at this time)
                 break;
               default:
-              	// No known item added, MySQL defaults to column definition
+                // No known item added, MySQL defaults to column definition
                 $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
             }
             // Ignore this line if the column / index already exists
