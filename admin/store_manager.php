@@ -125,7 +125,7 @@
       $foldersToClean = array();
       $foldersToClean[] = DIR_FS_LOGS;
       $foldersToClean[] = DIR_FS_SQL_CACHE;
-      $foldersToClean[] = DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs';
+      $foldersToClean[] = DIR_FS_CATALOG . 'includes/modules/payment/paypal/logs';
 
       $cleaningPatterns = array();
       $cleaningPatterns[] = 'myDEBUG-';

@@ -31,7 +31,7 @@ class testLibraryMain extends PHPUnit_Framework_TestCase
      */
     global $zco_notifier;
     $zco_notifier = new notifier();
-    require (DIR_FS_CATALOG . '/includes/functions/functions_email.php');
+    require (DIR_FS_CATALOG . 'includes/functions/functions_email.php');
 
     /**
      * Set up test of email addresses to validate

@@ -9,11 +9,11 @@ if (file_exists('PHPUnit/Framework.php') && ! file_exists('PHPUnit/Autoload.php'
  * Set up some prerequisites
  */
 define('TESTCWD', realpath(dirname(__FILE__)) . '/');
-define('DIR_FS_CATALOG', realpath(dirname(__FILE__) . '/../../'));
-define('DIR_FS_INCLUDES', realpath(dirname(__FILE__) . '/../../') . '/includes/');
+define('DIR_FS_CATALOG', realpath(dirname(__FILE__) . '/../../') . '/');
+define('DIR_FS_INCLUDES', DIR_FS_CATALOG . 'includes/');
 define('CWD', DIR_FS_INCLUDES . '../');
-define('DIR_WS_CLASSES', '/includes/classes/');
-define('DIR_WS_FUNCTIONS', '/includes/functions/');
+define('DIR_WS_CLASSES', 'includes/classes/');
+define('DIR_WS_FUNCTIONS', 'includes/functions/');
 if (strpos(@ini_get('include_path'), '.') === false) {
   @ini_set('include_path', '.' . PATH_SEPARATOR . @ini_get('include_path'));
 }
@@ -22,7 +22,7 @@ if (file_exists(TESTCWD . 'localTestSetup.php'))
 
 define('IS_ADMIN_FLAG', FALSE);
 require_once (DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php');
-require (DIR_FS_CATALOG . '/includes/classes/class.notifier.php');
+require (DIR_FS_CATALOG . 'includes/classes/class.notifier.php');
 require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php');
 require_once (DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
 require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
