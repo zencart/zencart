@@ -249,9 +249,20 @@ class zcDatabaseInstaller
                 $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[5]);
                 break;
               case 'INDEX':
+              case 'KEY':
                 $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[5]);
                 break;
+              case 'UNIQUE':
+              case 'FULLTEXT':
+              case 'SPATIAL':
+                $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[6]);
+                break;
+              case 'CONSTRAINT':
+                // Do nothing (no checks)
+                break;
               default:
+              	// No known item added, MySQL defaults to column definition
+                $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
             }
             // Ignore this line if the column / index already exists
             if($exists) $this->ignoreLine = true;
