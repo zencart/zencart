@@ -172,15 +172,15 @@ class queryFactory extends base {
     }
     // eof: collect products_id queries
     global $zc_cache;
+    $obj = new queryFactoryResult();
     if ($zf_limit) {
       $zf_sql = $zf_sql . ' LIMIT ' . $zf_limit;
+      $obj->limit = $zf_limit;
     }
     $this->zf_sql = $zf_sql;
+    $obj->sql_query = $zf_sql;
     if ( $zf_cache AND $zc_cache->sql_cache_exists($zf_sql, $zf_cachetime) ) {
-      $obj = new queryFactoryResult();
-      $obj->cursor = 0;
       $obj->is_cached = true;
-      $obj->sql_query = $zf_sql;
       $zp_result_array = $zc_cache->sql_cache_read($zf_sql);
       $obj->result = $zp_result_array;
       if (sizeof($zp_result_array) > 0 ) {
@@ -192,8 +192,6 @@ class queryFactory extends base {
     } elseif ($zf_cache) {
       $zc_cache->sql_cache_expire_now($zf_sql);
       $time_start = explode(' ', microtime());
-      $obj = new queryFactoryResult();
-      $obj->sql_query = $zf_sql;
       if (!$this->db_connected)
       {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
@@ -204,8 +202,6 @@ class queryFactory extends base {
         $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
       } else {
         $obj->resource = $zp_db_resource;
-        $obj->cursor = 0;
-        $obj->limit = $zf_limit;
         $zp_rows = $obj->RecordCount();
         if ($zp_rows > 0) {
           $zp_ii = 0;
@@ -241,7 +237,6 @@ class queryFactory extends base {
       $this->count_queries++;
     } else {
       $time_start = explode(' ', microtime());
-      $obj = new queryFactoryResult();
       if (!$this->db_connected)
       {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
@@ -259,7 +254,6 @@ class queryFactory extends base {
         $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
       } else {
         $obj->resource = $zp_db_resource;
-        $obj->cursor = 0;
         if ($obj->RecordCount() > 0) {
           $zp_result_array = mysqli_fetch_array($zp_db_resource);
           if ($zp_result_array) {
@@ -295,7 +289,6 @@ class queryFactory extends base {
       $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     } else {
       $obj->resource = $zp_db_resource;
-      $obj->cursor = 0;
       $obj->limit = $zf_limit;
 
       $zp_rows = $obj->RecordCount();
@@ -561,17 +554,17 @@ class queryFactoryResult implements Iterator {
     return $this->cursor;
   }
 
-  /**
-   * Moves the cursor to the next row.
-   */
-  public function MoveNext() {
-    $this->next();
-  }
-
   /* (non-PHPdoc)
    * @see Iterator::next()
    */
   public function next() {
+  $this->MoveNext();
+  }
+
+  /**
+   * Moves the cursor to the next row.
+   */
+  public function MoveNext() {
     $this->cursor++;
     if (!$this->valid()) {
       $this->EOF = true;
