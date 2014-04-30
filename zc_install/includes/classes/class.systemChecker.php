@@ -200,15 +200,16 @@ class systemChecker
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     }
     if ($result == false) return $result;
-    $result = FALSE;
+    $valid = TRUE;
     foreach ($parameters as $parameter)
     {
       $method = 'dbVersionCheck' . ucfirst($parameter['checkType']);
-      $res = $this->$method($db, $dbprefix, $parameter);
-//      echo $parameter['checkType'] . $res . '<br>';
-      $result |= $res;
+      $result = $this->$method($db, $dbPrefixVal, $parameter);
+//      echo $parameter['checkType'] . ': ' . var_export($result, true) . '<br>';
+      $valid = $valid && $result;
     }
-    return $result;
+//    echo 'Valid: ' . var_export($valid, true) . '<br>';
+    return $valid;
   }
   public function dbVersionCheckFieldSchema($db, $dbPrefix, $parameters)
   {
@@ -226,6 +227,7 @@ class systemChecker
         $result->MoveNext();
       }
     }
+//    echo $sql . ': ' . var_export($retVal, true) . '<br>';
     return $retVal;
   }
   public function dbVersionCheckConfigValue($db, $dbPrefix, $parameters)

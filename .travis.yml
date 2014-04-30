@@ -19,31 +19,14 @@ branches:
 before_script:
   - touch includes/configure.php
   - touch admin/includes/configure.php
-  # set up apache server and vhost
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
-  # enable php-fpm
-  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo a2enmod rewrite actions fastcgi alias
-  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  # configure apache virtual hosts
-  - sudo cp -f testFramework/config/travis-ci-apache-default /etc/apache2/sites-available/default
-  - sudo cp -f testFramework/config/travis-ci-apache-default-ssl /etc/apache2/sites-available/default-ssl
-  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default-ssl
-  - sudo service apache2 restart
-  # mysql
-  - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
   # php
   - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  # mysql
+  - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
+  # set up apache server and vhost
+#  - bash testFramework/setup/do-apache.sh
   # sauce setup
-  - cp composer.json composer.json1
-  - sed --file testFramework/webtests/composer_dev.sed <composer.json1 >composer.json
-  - cat composer.json
-  - composer install --dev
-  - cd testFramework/webtests
-  - curl -s https://raw.github.com/jlipps/sausage-bun/master/givememysausage.php | php
-  - cd ../..
+#  - bash testFramework/setup/do-sauce.sh
 script:
   - phpunit -c testFramework/unittests/phpunit.xml
 #uncomment the following to trigger webtests

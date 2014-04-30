@@ -1,5 +1,5 @@
 #
-# * This SQL script upgrades the core Zen Cart database structure from v1.5.1 to v1.6.0
+# * This SQL script upgrades the core Zen Cart database structure from v1.5.2 to v1.6.0
 # *
 # * @package Installer
 # * @access private
@@ -59,21 +59,15 @@ UPDATE configuration set configuration_description = 'Enter the IP port number t
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES ('Search Engines - Disable Indexing', 'ROBOTS_NOINDEX_MAINTENANCE_MODE', 'Normal', 'When in development it is sometimes desirable to discourage search engines from indexing your site. To do that, set this to Maintenance. This will cause a noindex,nofollow tag to be generated on all pages, thus discouraging search engines from indexing your pages until you set this back to Normal.<br>Default: Normal', 1, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'Normal\', \'Maintenance\'),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Primary Source', 'CURRENCY_SERVER_PRIMARY', 'ecb', 'Where to request external currency updates from (Primary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Secondary Source', 'CURRENCY_SERVER_BACKUP', 'boc', 'Where to request external currency updates from (Secondary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
-
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Image - Click For Larger', 'IMAGE_ENABLE_LARGER_IMAGE_LINKS', '1', 'For Product main-image and additional-images, should a clickable link for popup to see larger image be displayed?<br />0= off<br />1= both<br />2=main image only<br />3=additional images only', 4, 76, 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\'), ', now());
 
 UPDATE configuration set configuration_group_id = 6 where configuration_key in ('PRODUCTS_OPTIONS_TYPE_SELECT', 'UPLOAD_PREFIX', 'TEXT_PREFIX');
-
-ALTER TABLE countries ADD status tinyint(1) default 1;
-ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
-INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$city $state / $country');
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE');
 
-##ISO Updates, already done in v152 upgrade:
-#UPDATE countries SET countries_name = 'Libya' WHERE countries_iso_code_3 = 'LBY';
-#UPDATE countries SET countries_name = 'Palestine, State of' WHERE countries_iso_code_3 = 'PSE';
-#INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (246,'South Sudan','SS','SSD','1');
+ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
+
+ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 
 ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
 ALTER TABLE whos_online MODIFY session_id varchar(255) NOT NULL default '';
@@ -102,8 +96,6 @@ ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) NOT NULL de
 ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) NOT NULL default '1';
 
 ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL;
-
-ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 
 ALTER TABLE admin MODIFY admin_pass VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY prev_pass1 VARCHAR( 255 ) NOT NULL DEFAULT '';
@@ -139,8 +131,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 ('Max Error Logs', 'MAX_ERROR_LOGS', '20', 'Display this number of error logs', @t1, '1', now(), NULL, NULL);
 
 INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string ) VALUES ( '', 'email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where COWOA_account != 1 order by customers_lastname, customers_firstname, customers_email_address');
-
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show linked status for categories', 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS', 'true', 'Show Category products linked status?', '1', '19', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 
 # --------------------------------------------------------
 

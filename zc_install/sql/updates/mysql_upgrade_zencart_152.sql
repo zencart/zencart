@@ -57,7 +57,7 @@ UPDATE configuration set configuration_group_id = 6 where configuration_key in (
 
 INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$city $state / $country');
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
-UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('BEL', 'NLD', 'SWE');
+UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE');
 ALTER TABLE countries ADD status tinyint(1) DEFAULT '1';
 #ISO Updates:
 UPDATE countries SET countries_name = 'Libya' WHERE countries_iso_code_3 = 'LBY';
