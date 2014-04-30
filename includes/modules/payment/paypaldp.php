@@ -1052,7 +1052,7 @@ class paypaldp extends base {
     }
     // cannot install DP if EC not already enabled:
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True') {
-      $messageStack->add_session('<strong>Sorry, you must install and configure PayPal Express Checkout first.</strong> PayPal Website Payments Pro requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link('modules.php?set=payment&module=paypalwpp', '', 'NONSSL') . '">Click here to set up Express Checkout.</a>' , 'error');
+      $messageStack->add_session('<strong>Sorry, you must install and configure PayPal Express Checkout first.</strong> PayPal Website Payments Pro requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link(FILENAME_MODULES . '?set=payment&module=paypalwpp', '', 'NONSSL') . '">Click here to set up Express Checkout.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypaldp', 'NONSSL'));
       return 'failed';
     }
