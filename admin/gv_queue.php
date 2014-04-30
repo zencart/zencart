@@ -50,7 +50,7 @@
       if ($gv_resulta->RecordCount() > 0) {
       $gv_amount = $gv_resulta->fields['amount'];
 
-	// Begin composing email content
+  // Begin composing email content
 //      //Let's build a message object using the email class
       $mail = $db->Execute("select customers_firstname, customers_lastname, customers_email_address
                            from " . TABLE_CUSTOMERS . "
@@ -61,7 +61,7 @@
       $message .= TEXT_REDEEM_GV_MESSAGE_THANKS . "\n" . STORE_OWNER . "\n\n" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       $message .= TEXT_REDEEM_GV_MESSAGE_BODY;
       $message .= TEXT_REDEEM_GV_MESSAGE_FOOTER;
-	  $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
+    $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
 
       $html_msg['EMAIL_FIRST_NAME'] = $mail->fields['customers_firstname'];
       $html_msg['EMAIL_LAST_NAME']  = $mail->fields['customers_lastname'];
@@ -74,7 +74,7 @@
       $html_msg['TEXT_REDEEM_GV_MESSAGE_FOOTER'] = TEXT_REDEEM_GV_MESSAGE_FOOTER;
 
 //send the message
-      	zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
+        zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
 
 
 
@@ -148,9 +148,9 @@ require('includes/admin_html_head.php');
       $gInfo = new objectInfo($gv_list->fields);
     }
     if ( (is_object($gInfo)) && ($gv_list->fields['unique_id'] == $gInfo->unique_id) ) {
-      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link('gv_queue.php', zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit') . '\'">' . "\n";
+      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_GV_QUEUE, zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link('gv_queue.php', zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list->fields['unique_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_GV_QUEUE, zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list->fields['unique_id']) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $gv_list->fields['customers_firstname'] . ' ' . $gv_list->fields['customers_lastname']; ?></td>
@@ -178,8 +178,8 @@ require('includes/admin_html_head.php');
   switch ($_GET['action']) {
     case 'release':
       $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
-      $contents[] = array('align' => 'center', 'text' => zen_draw_form('gv_release', FILENAME_GV_QUEUE, 'action=confirmrelease&page=' . $_GET['page']) . zen_image_submit('button_confirm_red.gif', IMAGE_CONFIRM) . '<input type="hidden" name="gid" value="' . $gInfo->unique_id . '" /></form>' . '<a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
-//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => zen_draw_form('gv_release', FILENAME_GV_QUEUE, 'action=confirmrelease&page=' . $_GET['page']) . zen_image_submit('button_confirm_red.gif', IMAGE_CONFIRM) . '<input type="hidden" name="gid" value="' . $gInfo->unique_id . '" /></form>' . '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
@@ -187,7 +187,7 @@ require('includes/admin_html_head.php');
       if ($gv_list->RecordCount() == 0) {
         $contents[] = array('align' => 'center','text' => TEXT_GV_NONE);
       } else {
-        $contents[] = array('align' => 'center','text' => '<a href="' . zen_href_link('gv_queue.php','action=release&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL'). '">' . zen_image_button('button_release_gift.gif', IMAGE_RELEASE) . '</a>');
+        $contents[] = array('align' => 'center','text' => '<a href="' . zen_href_link(FILENAME_GV_QUEUE,'action=release&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL'). '">' . zen_image_button('button_release_gift.gif', IMAGE_RELEASE) . '</a>');
 
 // quick link to order
         $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','90%','3'));
