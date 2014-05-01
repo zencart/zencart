@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_price_manager.php 19294 2011-07-28 18:15:46Z drbyte $
@@ -16,7 +16,6 @@
     zen_redirect(zen_href_link(FILENAME_CATEGORIES));
   }
 
-  require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   $products_filter = (isset($_GET['products_filter'])) ? (int)$_GET['products_filter'] : 0;

@@ -3,7 +3,7 @@
  * currencies Class.
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: currencies.php 15880 2010-04-11 16:24:30Z wilt $
@@ -20,25 +20,22 @@ if (!defined('IS_ADMIN_FLAG')) {
 class currencies extends base {
   var $currencies;
 
-  // class constructor
-  function currencies() {
+  function __construct() {
     global $db;
     $this->currencies = array();
-    $currencies_query = "select code, title, symbol_left, symbol_right, decimal_point,
-                                  thousands_point, decimal_places, value
-                          from " . TABLE_CURRENCIES;
-
+    $currencies_query = "select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value
+                         from " . TABLE_CURRENCIES;
     $currencies = $db->Execute($currencies_query);
 
     while (!$currencies->EOF) {
-      $this->currencies[$currencies->fields['code']] = array('title' => $currencies->fields['title'],
-      'symbol_left' => $currencies->fields['symbol_left'],
-      'symbol_right' => $currencies->fields['symbol_right'],
-      'decimal_point' => $currencies->fields['decimal_point'],
-      'thousands_point' => $currencies->fields['thousands_point'],
-      'decimal_places' => $currencies->fields['decimal_places'],
-      'value' => $currencies->fields['value']);
-
+      $this->currencies[$currencies->fields['code']] = array(
+            'title' => $currencies->fields['title'],
+            'symbol_left' => $currencies->fields['symbol_left'],
+            'symbol_right' => $currencies->fields['symbol_right'],
+            'decimal_point' => $currencies->fields['decimal_point'],
+            'thousands_point' => $currencies->fields['thousands_point'],
+            'decimal_places' => (int)$currencies->fields['decimal_places'],
+            'value' => $currencies->fields['value']);
       $currencies->MoveNext();
     }
   }
@@ -46,25 +43,32 @@ class currencies extends base {
   // class methods
   function format($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
 
-    if (empty($currency_type)) $currency_type = $_SESSION['currency'];
+    if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
 
     if ($calculate_currency_value == true) {
       $rate = (zen_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
       $format_string = $this->currencies[$currency_type]['symbol_left'] . number_format(zen_round($number * $rate, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
+
+      // Special Case: if the selected currency is in the european euro-conversion and the default currency is euro,
+      // then the currency will displayed in both the national currency and euro currency
+      if ( (DEFAULT_CURRENCY == 'EUR') && ($currency_type == 'DEM' || $currency_type == 'BEF' || $currency_type == 'LUF' || $currency_type == 'ESP' || $currency_type == 'FRF' || $currency_type == 'IEP' || $currency_type == 'ITL' || $currency_type == 'NLG' || $currency_type == 'ATS' || $currency_type == 'PTE' || $currency_type == 'FIM' || $currency_type == 'GRD') ) {
+        $format_string .= ' <small>[' . $this->format($number, true, 'EUR') . ']</small>';
+      }
+
     } else {
       $format_string = $this->currencies[$currency_type]['symbol_left'] . number_format(zen_round($number, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
     }
 
-    if ((DOWN_FOR_MAINTENANCE=='true' and DOWN_FOR_MAINTENANCE_PRICES_OFF=='true') and (!strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))) {
+    if (IS_ADMIN_FLAG === false && (DOWN_FOR_MAINTENANCE=='true' and DOWN_FOR_MAINTENANCE_PRICES_OFF=='true') and (!strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))) {
       $format_string= '';
     }
 
     return $format_string;
   }
-  
+
   function rateAdjusted($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
 
-    if (empty($currency_type)) $currency_type = $_SESSION['currency'];
+    if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
 
     if ($calculate_currency_value == true) {
       $rate = (zen_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
@@ -74,10 +78,10 @@ class currencies extends base {
     }
     return $result;
   }
-  
+
   function value($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
 
-    if (empty($currency_type)) $currency_type = $_SESSION['currency'];
+    if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
 
     if ($calculate_currency_value == true) {
       if ($currency_type == DEFAULT_CURRENCY) {
@@ -92,12 +96,14 @@ class currencies extends base {
 
     return $currency_value;
   }
+
   function normalizeValue($valueIn, $currencyType = NULL)
   {
-    if (!isset($currencyType)) $currencyType = $_SESSION['currency'];
+    if (!isset($currencyType)) $currencyType = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
     $value = str_replace($this->currencies[$currencyType]['decimal_point'], '.', $valueIn);
     return $value;
   }
+
   function is_set($code) {
     if (isset($this->currencies[$code]) && zen_not_null($this->currencies[$code])) {
       return true;
@@ -118,4 +124,3 @@ class currencies extends base {
     return $this->format(zen_add_tax($products_price, $products_tax) * $quantity);
   }
 }
-?>

@@ -41,7 +41,6 @@
     }
   }
 
-  require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');

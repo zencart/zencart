@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: whos_online.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -67,7 +67,6 @@ function zen_check_minutes($the_time_last_click) {
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   // same time_entry as time_last_click for 600 seconds = 10 minutes assumed to have left immediately

@@ -49,6 +49,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'loadFile'=> 'box.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'currencies.php');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'message_stack.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -65,7 +67,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcPassword.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-      'loadFile'=>'class.zcRequest.php');
+                               'loadFile'=>'class.zcRequest.php');
 
 /**
  * Breakpoint 10.

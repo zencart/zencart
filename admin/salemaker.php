@@ -1,17 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: salemaker.php 19330 2011-08-07 06:32:56Z drbyte $
  */
-//
-define('AUTOCHECK', 'False');
+
+  define('AUTOCHECK', 'False');
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   $specials_condition_array = array(array('id' => '0', 'text' => SPECIALS_CONDITION_DROPDOWN_0),

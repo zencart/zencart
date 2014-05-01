@@ -1,14 +1,13 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jul 17 22:56:16 2012 -0400 Modified in v1.5.1 $
  */
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   $_GET['start_date'] = (!isset($_GET['start_date']) ? date("m-d-Y",(time())) : $_GET['start_date']);

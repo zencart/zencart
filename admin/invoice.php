@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: invoice.php 19136 2011-07-18 16:56:18Z wilt $
@@ -9,7 +9,6 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   $oID = zen_db_prepare_input($_GET['oID']);
@@ -158,7 +157,7 @@ function couponpopupWindow(url) {
       if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true')
       {
         $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']),$decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
-      } else 
+      } else
       {
         $priceIncTax = $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
       }
