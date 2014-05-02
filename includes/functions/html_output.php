@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php 19355 2011-08-21 21:12:09Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Sat Apr 19 13:30:33 2014 -0400 Modified in v1.5.3 $
  */
 
 /*

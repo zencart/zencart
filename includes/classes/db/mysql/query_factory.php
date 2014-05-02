@@ -8,7 +8,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Oct 15 14:55:19 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu Mar 6 03:41:54 2014 -0500 Modified in v1.5.3 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

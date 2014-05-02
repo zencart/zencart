@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: ajeh  Mon Mar 24 12:44:20 2014 -0400 Modified in v1.5.3 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {

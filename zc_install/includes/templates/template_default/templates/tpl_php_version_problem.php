@@ -6,7 +6,7 @@
  * @access private
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Jul 15 20:50:58 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.3 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/zen_header_bg.jpg')) ? '' : '../';
 ?>

@@ -5,7 +5,7 @@
 # * @copyright Copyright 2003-2013 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version GIT: $Id: Author: DrByte  Wed Oct 23 13:46:09 2013 -0400 Modified in v1.5.2 $
+# * @version GIT: $Id: Author: DrByte  Sat Feb 1 23:58:27 2014 -0500 Modified in v1.5.3 $
 #
 # NOTE: UTF8 files need to be saved with encoding format set to UTF8-without-BOM.
 #
