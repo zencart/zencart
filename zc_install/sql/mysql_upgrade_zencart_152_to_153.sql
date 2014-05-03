@@ -1,5 +1,5 @@
 #
-# * This SQL script upgrades the core Zen Cart database structure from v1.5.1 to v1.5.2
+# * This SQL script upgrades the core Zen Cart database structure from v1.5.2 to v1.5.3
 # *
 # * @package Installer
 # * @access private
