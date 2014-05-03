@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 1 13:52:15 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.3 $
  */
 
   if ($zc_install->error) include(DIR_WS_INSTALL_TEMPLATE . 'templates/display_errors.php');
@@ -87,6 +87,10 @@
     <div class="input">
       <input <?php if ($needs_v1_5_2) {echo "checked";} ?> name="version[]" type="checkbox" id="checkbox24" value="1.5.1" tabindex="24" />
       <label for="checkbox24">Upgrade DB from 1.5.1 to 1.5.2</label>
+    </div>
+    <div class="input">
+      <input <?php if ($needs_v1_5_3) {echo "checked";} ?> name="version[]" type="checkbox" id="checkbox25" value="1.5.2" tabindex="25" />
+      <label for="checkbox24">Upgrade DB from 1.5.2 to 1.5.3</label>
     </div>
     </fieldset>
     <br />
