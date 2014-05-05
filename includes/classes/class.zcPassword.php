@@ -44,7 +44,7 @@ class zcPassword extends base
    *
    * @param string $phpVersion
    */
-  public function __construct($phpVersion)
+  public function __construct($phpVersion = PHP_VERSION)
   {
     if (version_compare($phpVersion, '5.3.7', '<')) {
       require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_compat.php');
