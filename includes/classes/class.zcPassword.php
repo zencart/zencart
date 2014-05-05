@@ -3,7 +3,7 @@
  * File contains just the zcPassword class
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: class.base.php 14535 2009-10-07 22:16:19Z wilt $
  */
@@ -44,7 +44,7 @@ class zcPassword extends base
    *
    * @param string $phpVersion
    */
-  public function __construct($phpVersion)
+  public function __construct($phpVersion = PHP_VERSION)
   {
     if (version_compare($phpVersion, '5.3.7', '<')) {
       require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_compat.php');

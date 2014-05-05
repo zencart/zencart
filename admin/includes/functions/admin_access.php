@@ -6,7 +6,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Mon Jul 9 14:19:35 2012 +0100 Modified in v1.5.1 $
  */
-require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_compat.php');
 
 /**
  * This function checks whether the currently logged on user has permission to access

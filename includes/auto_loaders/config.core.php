@@ -72,13 +72,16 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=>'breadcrumb.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'query_cache.php');
-
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'QueryCache',
                                'objectName'=>'queryCache',
                                'checkInstantiated'=>true);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcPassword.php');
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                               'className'=>'zcPassword',
+                               'objectName'=>'zcPassword');
+
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcRequest.php');
 

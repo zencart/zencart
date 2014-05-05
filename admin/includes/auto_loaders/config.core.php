@@ -66,6 +66,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcPassword.php');
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                               'className'=>'zcPassword',
+                               'objectName'=>'zcPassword');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcRequest.php');
 
