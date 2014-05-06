@@ -173,7 +173,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'className'=>'products',
                                 'objectName'=>'zc_products');
   $autoLoadConfig[90][] = array('autoType'=>'require',
-                                 'loadFile'=> DIR_WS_FUNCTIONS . 'localization.php');
+                                'loadFile'=> DIR_WS_FUNCTIONS . 'localization.php');
 /**
  * Breakpoint 100.
  *

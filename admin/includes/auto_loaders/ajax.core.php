@@ -1,18 +1,15 @@
 <?php
 /**
- * @package Admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @package admin
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: config.core.php 19562 2011-09-22 13:38:40Z drbyte $
+ * @version $Id:
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
- * autoloader array for catalog application_top.php
- *
+ * autoloader array for admin application_top.php
 **/
-
 /**
- *
  * require(DIR_WS_CLASSES . 'class.base.php');
  * require(DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier()'
@@ -26,9 +23,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'split_page_results.php');
  * require(DIR_WS_CLASSES . 'object_info.php');
  * require(DIR_WS_CLASSES . 'class.phpmailer.php');
- * require(DIR_WS_CLASSES . 'class.smtp.php');
  * require(DIR_WS_CLASSES . 'upload.php');
- *
  */
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.base.php');
@@ -54,6 +49,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'loadFile'=> 'box.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'currencies.php');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'message_stack.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -65,15 +62,21 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.phpmailer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.smtp.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'upload.php',
                                'classPath'=>DIR_WS_CLASSES);
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'class.zcPassword.php');
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                               'className'=>'zcPassword',
+                               'objectName'=>'zcPassword');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'class.zcRequest.php');
+
 /**
  * Breakpoint 10.
  *
  * require('includes/init_includes/init_file_db_names.php');
- * require('includes/init_includes/init_database.ph');
+ * require('includes/init_includes/init_database.php');
  * require('includes/version.php');
  *
  */
