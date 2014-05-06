@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Feb 19 15:57:35 2014 +0000 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Mon May 5 12:49 2014 -0400 Modified in v1.5.3 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
