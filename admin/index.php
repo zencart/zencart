@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version
@@ -236,14 +236,14 @@ if ($hasDoneStartWizard == FALSE) {
 <?php require(DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php'); ?>
   </div>
 </div>
-<div id="deleteWidget" class="reveal-modal small">
+<div id="deleteWidget" class="reveal-modal small" data-reveal>
 <a class="close-reveal-modal">x</a>
 <p><?php echo TEXT_CONFIRM_REMOVE; ?></p>
 <a class="radius button remove" href="#"><?php echo TEXT_REMOVE; ?></a>
 <a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
 </div>
 
-<div id="add-widget" class="reveal-modal small">
+<div id="add-widget" class="reveal-modal small" data-reveal>
 <div class="add-widget-container"></div>
 <a class="close-reveal-modal">x</a>
 <a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
