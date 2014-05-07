@@ -1,13 +1,13 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
-<form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide data-abide-ajax-final>
+<form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide="ajax">
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">

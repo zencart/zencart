@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -10,7 +10,7 @@
 
 <div id="upgradeResponsesHolder"></div>
 
-<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide data-abide-ajax-final>
+<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide="ajax">
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="upgrade_mode" value="yes">

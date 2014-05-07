@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -42,7 +42,7 @@
         <label class="inline" for="admin_email2"><a href="#" class="hasHelpText" id="ADMINEMAIL2"><?php echo TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" equalto="admin_email">
+        <input type="text" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" data-equalto="admin_email">
         <small class="error">A matching valid email address is required.</small>
       </div>
     </div>

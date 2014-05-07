@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -14,7 +14,7 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide data-abide-ajax-final>
+<form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide="ajax">
   <input type="hidden" name="action" value="process" >
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
