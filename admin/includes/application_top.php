@@ -74,7 +74,7 @@ if (file_exists('includes/configure.php')) {
    */
   include('includes/configure.php');
 }
-if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
+if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
   if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
     require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
     exit;

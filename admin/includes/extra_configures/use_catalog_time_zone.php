@@ -6,4 +6,4 @@
  * @version $Id:  $
  */
 // get time zone settings from catalog-side file
-include (DIR_FS_CATALOG . '/includes/extra_configures/set_time_zone.php');
+include (DIR_FS_CATALOG . 'includes/extra_configures/set_time_zone.php');
