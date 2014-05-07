@@ -325,10 +325,10 @@ function createSortables() {
     var id = $(this).parents('.widget-container').attr('id');
     $('#deleteWidget').foundation('reveal', 'open');
     $('.dismiss').click(function() {
-      $(this).trigger('reveal:close');
+      $('#deleteWidget').foundation('reveal', 'close');
     });
     $('.remove').unbind('click').click(function() {
-      $('#deleteWidget').trigger('reveal:close');
+      $('#deleteWidget').foundation('reveal', 'close');
       $('#'+id).hide();
       var itemStr = id;
       zcJS.ajax({
