@@ -6,10 +6,10 @@
  * Displays shopping-cart contents
  *
  * @package templateSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_shopping_cart_default.php 15881 2010-04-11 16:32:39Z wilt $
+ * @version $Id:  $
  */
 ?>
 <div class="centerColumn" id="shoppingCartDefault">
@@ -181,51 +181,10 @@ if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATU
 
 <h2 id="cartEmptyText"><?php echo TEXT_CART_EMPTY; ?></h2>
 
-<?php
-$show_display_shopping_cart_empty = $db->Execute(SQL_SHOW_SHOPPING_CART_EMPTY);
-
-while (!$show_display_shopping_cart_empty->EOF) {
-?>
-
-<?php
-  if ($show_display_shopping_cart_empty->fields['configuration_key'] == 'SHOW_SHOPPING_CART_EMPTY_FEATURED_PRODUCTS') { ?>
-<?php
-/**
- * display the Featured Products Center Box
- */
-?>
-<?php require($template->get_template_dir('tpl_modules_featured_products.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_products.php'); ?>
+<?php foreach ($tplVars['listingBoxes'] as $tplVars['listingBox']) { ?>
+<?php require($tplVars['listingBox']['template']); ?>
 <?php } ?>
 
-<?php
-  if ($show_display_shopping_cart_empty->fields['configuration_key'] == 'SHOW_SHOPPING_CART_EMPTY_SPECIALS_PRODUCTS') { ?>
-<?php
-/**
- * display the Special Products Center Box
- */
-?>
-<?php require($template->get_template_dir('tpl_modules_specials_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_specials_default.php'); ?>
-<?php } ?>
-
-<?php
-  if ($show_display_shopping_cart_empty->fields['configuration_key'] == 'SHOW_SHOPPING_CART_EMPTY_NEW_PRODUCTS') { ?>
-<?php
-/**
- * display the New Products Center Box
- */
-?>
-<?php require($template->get_template_dir('tpl_modules_whats_new.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_whats_new.php'); ?>
-<?php } ?>
-
-<?php
-  if ($show_display_shopping_cart_empty->fields['configuration_key'] == 'SHOW_SHOPPING_CART_EMPTY_UPCOMING') {
-    include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_UPCOMING_PRODUCTS));
-  }
-?>
-<?php
-  $show_display_shopping_cart_empty->MoveNext();
-} // !EOF
-?>
 <?php
   }
 ?>

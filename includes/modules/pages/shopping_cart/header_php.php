@@ -179,6 +179,12 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 } // end FOR loop
 
 
+if (!$flagHasCartContents) {
+  $listingBoxManager = zcListingBoxManager::getInstance ('EMPTY_CART');
+  $listingBoxManager->buildListingBoxes ();
+  $listingBoxes = $listingBoxManager->getListingBoxes ();
+  $tplVars['listingBoxes'] = $listingBoxes;
+}
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');
 ?>

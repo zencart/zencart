@@ -31,6 +31,12 @@
   if ( $res->fields['total'] < 1 ) {
 
     $tpl_page_body = '/tpl_product_info_noproduct.php';
+    if (!$flagHasCartContents) {
+      $listingBoxManager = zcListingBoxManager::getInstance ('MISSING_PRODUCT');
+      $listingBoxManager->buildListingBoxes ();
+      $listingBoxes = $listingBoxManager->getListingBoxes ();
+      $tplVars['listingBoxes'] = $listingBoxes;
+    }
 
   } else {
 

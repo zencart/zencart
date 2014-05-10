@@ -126,6 +126,21 @@ class base {
     $observer =  & base::getStaticObserver();
     unset($observer[$element]);
   }
+  public static function classFactory($baseClassDirectory, $classOptions, $classParameters = FALSE)
+  {
+    $classDir = $classOptions ['classDirectory'];
+    $classFile = $classOptions ['classFile'];
+    $className = $classOptions ['className'];
+    // echo $baseClassDirectory . $classDir . $classFile.'<br>';
+    if (is_file($baseClassDirectory . $classDir . $classFile)) {
+      if (! class_exists($className, FALSE))
+        include_once ($baseClassDirectory . $classDir . $classFile);
+      if (class_exists($className, FALSE)) {
+        return new $className($classParameters);
+      }
+    }
+    return NULL;
+  }
   public static function camelize($rawName, $camelFirst = FALSE)
   {
     if ($rawName == "")

@@ -896,6 +896,61 @@ CREATE TABLE layout_boxes (
 # --------------------------------------------------------
 
 #
+# Table structure for table 'listingbox_locations'
+#
+
+DROP TABLE IF EXISTS listingbox_locations;
+CREATE TABLE listingbox_locations (
+  location_key varchar(40) NOT NULL,
+  location_name varchar(255) NOT NULL,
+  PRIMARY KEY (location_key)
+) ENGINE=MyISAM DEFAULT;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'listingboxgroups'
+#
+
+DROP TABLE IF EXISTS listingboxgroups;
+CREATE TABLE listingboxgroups (
+  group_id int(11) NOT NULL AUTO_INCREMENT,
+  group_name varchar(255) NOT NULL,
+  PRIMARY KEY (group_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'listingboxgroups_to_locations'
+#
+
+DROP TABLE IF EXISTS listingboxgroups_to_locations;
+CREATE TABLE listingboxgroups_to_locations (
+  group_id int(11) NOT NULL,
+  location_key varchar(40) NOT NULL,
+  sort_order int(11) NOT NULL DEFAULT '0',
+  UNIQUE KEY main1 (group_id, location_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'listingboxes_to_listingboxgroups'
+#
+
+DROP TABLE IF EXISTS listingboxes_to_listingboxgroups;
+CREATE TABLE IF NOT EXISTS listingboxes_to_listingboxgroups (
+  listingbox varchar(80) NOT NULL,
+  group_id int(11) NOT NULL,
+  sort_order int(11) NOT NULL DEFAULT '0',
+  UNIQUE KEY main1 (listingbox, group_id)
+) ENGINE=MyISAM;
+
+
+# --------------------------------------------------------
+
+#
 # Table structure for table 'manufacturers'
 #
 
@@ -3335,6 +3390,24 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ('logs', 1, 1, 2)
 ;
 
+INSERT INTO listingbox_locations (location_key, location_name) VALUES
+('INDEX_DEFAULT', 'Index Page - Default'),
+('MISSING_PRODUCT', 'Missing Product'),
+('EMPTY_CART', 'Shopping Cart - Empty');
+
+INSERT INTO listingboxgroups (group_id, group_name) VALUES
+(1, 'Featured - Specials - New - Upcoming');
+
+INSERT INTO listingboxgroups_to_locations (group_id, location_key, sort_order) VALUES
+(1, 'INDEX_DEFAULT', 0),
+(1, 'MISSING_PRODUCT', 0),
+(1, 'EMPTY_CART', 0);
+
+INSERT INTO listingboxes_to_listingboxgroups (listingbox, group_id, sort_order) VALUES
+('zcListingBoxFeaturedIndex', 1, 0),
+('zcListingBoxNewIndex', 1, 3),
+('zcListingBoxSpecialsIndex', 1, 2),
+('zcListingBoxUpcomingIndex', 1, 4);
 
 
 ### THE FOLLOWING SHOULD BE AT THE END OF THE FILE -- ALL NEW SQL SHOULD GO ABOVE THIS LINE

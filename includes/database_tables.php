@@ -4,10 +4,10 @@
  * Defines the database table names used in the project
  *
  * @package initSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: database_tables.php 16976 2010-07-24 23:33:45Z kuroi $
+ * @version $Id:  $
  * @private
  */
 
@@ -56,6 +56,9 @@ define('TABLE_GROUP_PRICING', DB_PREFIX . 'group_pricing');
 define('TABLE_GET_TERMS_TO_FILTER', DB_PREFIX . 'get_terms_to_filter');
 define('TABLE_LANGUAGES', DB_PREFIX . 'languages');
 define('TABLE_LAYOUT_BOXES', DB_PREFIX . 'layout_boxes');
+define('TABLE_LISTINGBOXGROUPS', DB_PREFIX . 'listingboxgroups');
+define('TABLE_LISTINGBOXGROUPS_TO_LOCATIONS', DB_PREFIX . 'listingboxgroups_to_locations');
+define('TABLE_LISTINGBOXES_TO_LISTINGBOXGROUPS', DB_PREFIX . 'listingboxes_to_listingboxgroups');
 define('TABLE_MANUFACTURERS', DB_PREFIX . 'manufacturers');
 define('TABLE_MANUFACTURERS_INFO', DB_PREFIX . 'manufacturers_info');
 define('TABLE_META_TAGS_PRODUCTS_DESCRIPTION', DB_PREFIX . 'meta_tags_products_description');

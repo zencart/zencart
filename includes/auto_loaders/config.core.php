@@ -85,6 +85,61 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcRequest.php');
 
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcQueryBuilderManager.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcAbstractTypeFilter.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcQueryBuilder.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcAbstractQueryBuilderFilterBase.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcListingBoxManager.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcAbstractListingBoxBase.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcListingBoxFormatterColumnar.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcListingBoxFormatterTabularProduct.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcListingBoxFormatterTabularCustom.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'loadFile' => 'class.zcListingBoxFormatterListStandard.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'classPath' => DIR_WS_CLASSES . 'paginator/',
+      'loadFile' => 'class.zcPaginator.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'classPath' => DIR_WS_CLASSES . 'paginator/',
+      'loadFile' => 'class.zcPaginatorAdapter.php'
+  );
+  $autoLoadConfig [0] [] = array(
+      'autoType' => 'class',
+      'classPath' => DIR_WS_CLASSES . 'paginator/',
+      'loadFile' => 'class.zcPaginatorScroller.php'
+  );
 
 /**
  * Breakpoint 10.
