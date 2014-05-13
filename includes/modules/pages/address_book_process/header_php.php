@@ -3,7 +3,7 @@
  * Header code file for the Address Book Process page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -21,7 +21,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 /**
  * Process deletes
  */
-if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete'])) 
+if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete']))
 {
   $sql = "DELETE FROM " . TABLE_ADDRESS_BOOK . "
           WHERE  address_book_id = :delete
@@ -197,6 +197,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
       // re-register session variables
       if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $_SESSION['customer_default_address_id']) ) {
         $_SESSION['customer_first_name'] = $firstname;
+        $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customer_country_id'] = $country;
         $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
         $_SESSION['customer_default_address_id'] = (int)$_GET['edit'];
@@ -223,6 +224,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
       // register session variables
       if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
         $_SESSION['customer_first_name'] = $firstname;
+        $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customer_country_id'] = $country;
         $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
         //if (isset($_POST['primary']) && ($_POST['primary'] == 'on'))

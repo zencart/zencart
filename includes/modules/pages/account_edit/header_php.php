@@ -3,7 +3,7 @@
  * Header code file for the customer's Account-Edit page
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 4825 2006-10-23 22:25:11Z drbyte $
@@ -146,6 +146,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     // reset the session variables
     $_SESSION['customer_first_name'] = $firstname;
+    $_SESSION['customer_last_name'] = $lastname;
 
     $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
 
