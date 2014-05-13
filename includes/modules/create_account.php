@@ -3,7 +3,7 @@
  * create_account header_php.php
  *
  * @package modules
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: create_account.php 17018 2010-07-27 07:25:41Z drbyte $
@@ -380,7 +380,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     }
 
     $_SESSION['customer_first_name'] = $firstname;
-    $_SESSION['customer_last_name'] = $check_customer->fields['customers_lastname'];
+    $_SESSION['customer_last_name'] = $lastname;
     $_SESSION['customer_default_address_id'] = $address_id;
     $_SESSION['customer_country_id'] = $country;
     $_SESSION['customer_zone_id'] = $zone_id;
