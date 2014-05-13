@@ -138,7 +138,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             from " . TABLE_CUSTOMERS . "
                             where customers_email_address = '" . zen_db_input($email_address) . "'
                             and COWOA_account != 1";
-                            
+
     $check_email = $db->Execute($check_email_query);
 
     if ($check_email->fields['total'] > 0) {
@@ -190,7 +190,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $zone_query = "SELECT distinct zone_id, zone_name, zone_code
                      FROM " . TABLE_ZONES . "
                      WHERE zone_country_id = :zoneCountryID
-                     AND " . 
+                     AND " .
                      ((trim($state) != '' && $zone_id == 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
                     "zone_id = :zoneID
                      ORDER BY zone_code ASC, zone_name";
@@ -380,6 +380,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     }
 
     $_SESSION['customer_first_name'] = $firstname;
+    $_SESSION['customer_last_name'] = $check_customer->fields['customers_lastname'];
     $_SESSION['customer_default_address_id'] = $address_id;
     $_SESSION['customer_country_id'] = $country;
     $_SESSION['customer_zone_id'] = $zone_id;
@@ -390,7 +391,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     // hook notifier class
     $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT');
-/* IF IT IS  A COWOA ACCOUNT DO NOT SEND A WELCOME E-MAIL  */    
+/* IF IT IS  A COWOA ACCOUNT DO NOT SEND A WELCOME E-MAIL  */
 if ($_SESSION['COWOA']!= true) {
     // build the message content
     $name = $firstname . ' ' . $lastname;
@@ -481,7 +482,7 @@ if ($_SESSION['COWOA']!= true) {
 }
     zen_redirect(zen_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
 
-    
+
   } //endif !error
 }
 
