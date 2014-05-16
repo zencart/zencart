@@ -511,7 +511,7 @@
         if ($product_type_list->RecordCount() < 1 || $product_type_good->RecordCount() > 0) {
           $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$_GET['product_type'] . "'";
           $handler = $db->Execute($sql);
-          zen_redirect(zen_href_link($handler->fields['type_handler'] . '.php', zen_get_all_get_params()));
+          zen_redirect(zen_href_link($handler->fields['type_handler'], zen_get_all_get_params()));
         } else {
           $messageStack->add(ERROR_CANNOT_ADD_PRODUCT_TYPE, 'error');
         }

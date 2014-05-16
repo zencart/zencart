@@ -112,19 +112,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     $category_name_row = $db->Execute($sql);
   } // if id_array
 
-/*
-  if (strstr($PHP_SELF, FILENAME_PRODUCTS_PRICE_MANAGER)) {
-    $curr_page = FILENAME_PRODUCTS_PRICE_MANAGER;
-  } else {
-    $curr_page = FILENAME_ATTRIBUTES_CONTROLLER;
-  }
-*/
-
   switch(true) {
-  case (strstr($PHP_SELF, FILENAME_ATTRIBUTES_CONTROLLER)):
+  case (strstr($PHP_SELF, FILENAME_ATTRIBUTES_CONTROLLER) || zcRequest::readGet('cmd') == FILENAME_ATTRIBUTES_CONTROLLER):
     $curr_page = FILENAME_ATTRIBUTES_CONTROLLER;
     break;
-  case (strstr($PHP_SELF, FILENAME_PRODUCTS_TO_CATEGORIES)):
+  case (strstr($PHP_SELF, FILENAME_PRODUCTS_TO_CATEGORIES) || zcRequest::readGet('cmd') == FILENAME_PRODUCTS_TO_CATEGORIES):
     $curr_page = FILENAME_PRODUCTS_TO_CATEGORIES;
     break;
   default:

@@ -113,6 +113,8 @@ class zcRequest extends base
       return $class->parameterBag [$source] [$paramName];
     } elseif (isset($paramDefault)) {
       return $paramDefault;
+    } elseif ($paramName == 'cmd' && IS_ADMIN_FLAG == 'true' && (! defined('REQUEST_LEGACY_SUPPORT') || (defined('REQUEST_LEGACY_SUPPORT') && REQUEST_LEGACY_SUPPORT == true))) {
+      return (str_replace('.php', '', basename($_SERVER ['SCRIPT_FILENAME'])));
     } else {
       throw new Exception('Exception: Could not zcRequest::get paramName = ' . $paramName);
     }

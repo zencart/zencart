@@ -17,7 +17,7 @@
     }
 
      $link = HTTP_SERVER . DIR_WS_ADMIN;
-//    if (!strstr($page, '.php')) $page .= '.php';
+    if (strstr($page, '.php')) $page = str_replace('.php', '', $page);
     if ($parameters == '') {
       $link .= 'index.php?cmd=' . $page;
 //      $link = $link . $page;
@@ -333,6 +333,7 @@
     }
     $form .= '>';
     if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
+    if (strtolower($method) == 'get') $form .= '<input type="hidden" name="cmd" value="' . $action . '" />';
     return $form;
   }
 

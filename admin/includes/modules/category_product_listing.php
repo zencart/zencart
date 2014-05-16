@@ -441,6 +441,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and isset($_GET['pID']) && $_G
 ?>
 <?php echo '&nbsp;&nbsp;' . zen_draw_pull_down_menu('product_type', $product_restrict_types_array);
 echo zen_hide_session_id(); ?>
+           <input type="hidden" name="cmd" value="<?php echo zcRequest::readGet('cmd'); ?>">
            <input type="hidden" name="cPath" value="<?php echo $cPath; ?>">
            <input type="hidden" name="action" value="new_product">
           </form>
