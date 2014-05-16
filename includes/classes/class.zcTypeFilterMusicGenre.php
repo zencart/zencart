@@ -161,13 +161,15 @@ class zcTypeFilterMusicGenre extends zcAbstractTypeFilter
     if (PRODUCT_LIST_FILTER > 0) {
       if (zcRequest::hasGet('music_genre_id') && zcRequest::readGet('music_genre_id') != '') {
         $filterlist_sql = "select distinct c.categories_id as id, cd.categories_name as name
-      from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_MUSIC_EXTRA . " pme
+      from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_MUSIC_EXTRA . " pme, " . TABLE_MUSIC_GENRE . " m
       where p.products_status = 1
-        and p.products_id = p2c.products_id
-        and p2c.categories_id = c.categories_id
+          and p.products_id = pme.products_id
+          and pme.products_id = p2c.products_id
+         and pme.music_genre_id = m.music_genre_id
+          and p2c.categories_id = c.categories_id
         and p2c.categories_id = cd.categories_id
         and cd.language_id = '" . (int)$_SESSION ['languages_id'] . "'
-        and pme.music_genre_id = '" . (int)zcRequest::readGet('music_genre_id') . "'
+        and m.music_genre_id = '" . (int)zcRequest::readGet('music_genre_id') . "'
        order by cd.categories_name";
       } else {
         $filterlist_sql = "select distinct m.music_genre_id as id, m.music_genre_name as name

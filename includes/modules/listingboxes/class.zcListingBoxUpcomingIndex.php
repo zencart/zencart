@@ -34,7 +34,8 @@ class zcListingBoxUpcomingIndex extends zcAbstractListingBoxBase
     };
 
     $this->productQuery = array(
-        'isRandom' => TRUE,
+        'isRandom' => true,
+        'isDistinct'=>true,
         'queryLimit' => MAX_DISPLAY_UPCOMING_PRODUCTS,
         'joinTables' => array(
             'TABLE_PRODUCTS_DESCRIPTION' => array(
@@ -42,10 +43,16 @@ class zcListingBoxUpcomingIndex extends zcAbstractListingBoxBase
                 'alias' => 'pd',
                 'type' => 'left',
                 'fkeyFieldLeft' => 'products_id',
-                'addColumns' => TRUE
+                'addColumns' => true
             )
         ),
         'whereClauses' => array(
+            array(
+                'table' => TABLE_PRODUCTS_DESCRIPTION,
+                'field' => 'language_id',
+                'value' => $_SESSION ['languages_id'],
+                'type' => 'AND'
+            ),
             array(
                 'custom' => zen_get_upcoming_date_range ()
             )

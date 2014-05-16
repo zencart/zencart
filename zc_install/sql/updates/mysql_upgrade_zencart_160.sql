@@ -250,7 +250,7 @@ CREATE TABLE listingbox_locations (
   location_key varchar(40) NOT NULL,
   location_name varchar(255) NOT NULL,
   PRIMARY KEY (location_key)
-) ENGINE=MyISAM DEFAULT;
+) ENGINE=MyISAM;
 
 
 DROP TABLE IF EXISTS listingboxgroups;

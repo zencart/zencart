@@ -161,13 +161,15 @@ class zcTypeFilterRecordCompany extends zcAbstractTypeFilter
     if (PRODUCT_LIST_FILTER > 0) {
       if (zcRequest::hasGet('record_company_id') && zcRequest::readGet('record_company_id') != '') {
         $filterlist_sql = "select distinct c.categories_id as id, cd.categories_name as name
-      from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " .  TABLE_PRODUCT_MUSIC_EXTRA . " pme
+      from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " .  TABLE_PRODUCT_MUSIC_EXTRA . " pme, " . TABLE_RECORD_COMPANY . " r
       where p.products_status = 1
-        and p.products_id = p2c.products_id
-        and p2c.categories_id = c.categories_id
+          and p.products_id = pme.products_id
+          and pme.products_id = p2c.products_id
+         and pme.record_company_id = r.record_company_id
+         and p2c.categories_id = c.categories_id
         and p2c.categories_id = cd.categories_id
         and cd.language_id = '" . (int)$_SESSION ['languages_id'] . "'
-        and pme.record_company_id = '" . (int)zcRequest::readGet('record_company_id') . "'
+        and r.record_company_id = '" . (int)zcRequest::readGet('record_company_id') . "'
       order by cd.categories_name";
       } else {
         $filterlist_sql = "select distinct r.record_company_id as id, r.record_company_name as name

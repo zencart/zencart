@@ -9,17 +9,13 @@
  */
 ?>
 <ul class="pagination">
-<?php if (!$tplVars['listingBox']['pagination']['scroller']['flagHasPrevious']) { ?>
-<li class="arrow unavailable"><a href="#">&laquo;</a></li>
-<?php } else { ?>
+<?php if ($tplVars['listingBox']['pagination']['scroller']['flagHasPrevious']) { ?>
 <li class="arrow"><a href="<?php echo($tplVars['listingBox']['pagination']['scroller']['previousLink']) ?>">&laquo;</a></li>
 <?php } ?>
 <?php foreach($tplVars['listingBox']['pagination']['scroller']['linkList'] as $item) { ?>
 <li <?php echo ($item['isCurrent']) ? 'class="current"' : ''; ?>><a href="<?php echo($item['itemLink']) ?>"><?php echo($item['itemNumber']) ?></a></li>
 <?php } ?>
-<?php if (!$tplVars['pagination']['scroller']['flagHasNext']) { ?>
-<li class="arrow unavailable"><a href="#">&raquo;</a></li>
-<?php } else { ?>
+<?php if ($tplVars['listingBox']['pagination']['scroller']['flagHasNext']) { ?>
 <li class="arrow"><a href="<?php echo($tplVars['listingBox']['pagination']['scroller']['nextLink']) ?>">&raquo;</a></li>
 <?php } ?>
 </ul>

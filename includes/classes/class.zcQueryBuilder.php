@@ -134,7 +134,7 @@ class zcQueryBuilder extends base
     $this->mainQuery = $this->query ['select'] . $this->query ['table'] . $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'];
     if ($this->isPaginated) {
       if (! isset($this->countQuery)) {
-        $this->countQuery = "SELECT COUNT(*) AS total " . $this->query ['table'] . $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'];
+        $this->countQuery = "SELECT COUNT(" . ($this->isDistinct ? "DISTINCT " : '') . $this->parts ['mainTableAlias'] . "." . $this->parts ['mainTableFkeyField'] . ") AS total " . $this->query ['table'] . $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'];
       }
     }
     $this->notify('NOTIFY_QUERY_BUILDER_ASSEMBLEPARTS_END');

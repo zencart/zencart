@@ -71,8 +71,11 @@ class zcListingBoxNewDefault extends zcAbstractListingBoxBase
                 'field' => 'products_status',
                 'value' => 1,
                 'type' => 'AND'
+            ),
+            array(
+                'custom' => zen_get_new_date_range ()
             )
-        )
+    )
     );
     $this->outputLayout = array(
         'formatter'=>'zcListingBoxFormatterListStandard',
