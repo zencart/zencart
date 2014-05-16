@@ -1,0 +1,93 @@
+<?php
+/**
+ * zcActionAdminIndex Class.
+ *
+ * @package classes
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
+ */
+require_once ('includes/classes/actions/class.zcActionAdminBase.php');
+class zcActionAdminIndex extends zcActionAdminBase
+{
+  public $useFoundation = TRUE;
+  public function initDefinitions()
+  {
+    $this->templateVariables ['cssList'] [] = array(
+        'href' => 'includes/template/css/index.css',
+        'id' => 'indexCSS'
+    );
+  }
+  public function mainExecute()
+  {
+    global $hasDoneStartWizard;
+    if ($hasDoneStartWizard == FALSE) {
+      $this->doStartWizardDisplay();
+    } else {
+      $this->doWidgetsDisplay();
+    }
+  }
+  public function doWidgetsDisplay()
+  {
+    require_once (DIR_WS_CLASSES . 'class.zcWidgetManager.php');
+    require_once (DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
+    $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION ['admin_id'], $_SESSION ['languages_id']);
+    $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
+    $this->templateVariables ['widgetList'] = zcWidgetManager::loadWidgetClasses($widgetInfoList);
+    $this->templateVariables ['widgets'] = zcWidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
+    $this->templateVariables ['widgetInfoList'] = $widgetInfoList;
+  }
+  public function doStartWizardDisplay()
+  {
+    $this->mainTemplate = 'tplIndexStartWizard.php';
+    $storeAddress = zcRequest::readPost('store_address', ((STORE_NAME_ADDRESS != '') ? STORE_NAME_ADDRESS : ''));
+    $storeName = zcRequest::readPost('store_name', ((STORE_NAME != '') ? STORE_NAME : ''));
+    $storeOwner = zcRequest::readPost('store_owner', ((STORE_OWNER != '') ? STORE_OWNER : ''));
+    $storeOwnerEmail = zcRequest::readPost('store_owner_email', ((STORE_OWNER_EMAIL_ADDRESS != '') ? STORE_OWNER_EMAIL_ADDRESS : ''));
+    $storeCountry = zcRequest::readPost('store_country', ((STORE_COUNTRY != '') ? STORE_COUNTRY : ''));
+    $storeZone = zcRequest::readPost('store_zone', ((STORE_ZONE != '') ? STORE_ZONE : ''));
+    $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries(), $storeCountry, 'id="store_country" tabindex="4"');
+    $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone" tabindex="5"');
+    $this->templateVariables ['storeName'] = $storeName;
+    $this->templateVariables ['storeAddress'] = $storeAddress;
+    $this->templateVariables ['storeOwner'] = $storeOwner;
+    $this->templateVariables ['storeOwnerEmail'] = $storeOwnerEmail;
+    $this->templateVariables ['countryString'] = $country_string;
+    $this->templateVariables ['zoneString'] = $zone_string;
+  }
+  public function setupWizardExecute()
+  {
+    global $db;
+    if (zcRequest::readPost('store_name', '') != '') {
+      $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME'";
+      $sql = $db->bindVars($sql, ':configValue:', zcRequest::readPost('store_name'), 'string');
+      $db->execute($sql);
+    }
+    if (zcRequest::readPost('store_owner', '') != '') {
+      $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_OWNER'";
+      $sql = $db->bindVars($sql, ':configValue:', zcRequest::readPost('store_owner'), 'string');
+      $db->execute($sql);
+    }
+    if (zcRequest::readPost('store_owner_email', '') != '') {
+      $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_OWNER_EMAIL_ADDRESS', 'EMAIL_FROM', 'SEND_EXTRA_ORDER_EMAILS_TO', 'SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO', 'SEND_EXTRA_LOW_STOCK_EMAILS_TO', 'SEND_EXTRA_GV_CUSTOMER_EMAILS_TO', 'SEND_EXTRA_GV_ADMIN_EMAILS_TO', 'SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO', 'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO', 'SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', 'MODULE_PAYMENT_CC_EMAIL')";
+      $sql = $db->bindVars($sql, ':configValue:', zcRequest::readPost('store_owner_email'), 'string');
+      $db->execute($sql);
+    }
+    if (zcRequest::readPost('store_country', '') != '') {
+      $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key in ('STORE_COUNTRY', 'SHIPPING_ORIGIN_COUNTRY')";
+      $sql = $db->bindVars($sql, ':configValue:', zcRequest::readPost('store_country'), 'integer');
+      $db->execute($sql);
+    }
+    if (zcRequest::readPost('store_zone', '') != '') {
+      $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_ZONE'";
+      $sql = $db->bindVars($sql, ':configValue:', zcRequest::readPost('store_zone'), 'integer');
+      $db->execute($sql);
+    }
+    if (zcRequest::readPost('store_address', '') != '') {
+      $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue: WHERE configuration_key = 'STORE_NAME_ADDRESS'";
+      $sql = $db->bindVars($sql, ':configValue:', zcRequest::readPost('store_address'), 'string');
+      $db->execute($sql);
+    }
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+  }
+}

@@ -17,12 +17,14 @@
     }
 
      $link = HTTP_SERVER . DIR_WS_ADMIN;
-    if (!strstr($page, '.php')) $page .= '.php';
+//    if (!strstr($page, '.php')) $page .= '.php';
     if ($parameters == '') {
-      $link = $link . $page;
-      $separator = '?';
+      $link .= 'index.php?cmd=' . $page;
+//      $link = $link . $page;
+      $separator = '&';
     } else {
-      $link = $link . $page . '?' . $parameters;
+      $link .= 'index.php?cmd=' . $page . "&" . zen_output_string($parameters);
+//      $link = $link . $page . '?' . $parameters;
       $separator = '&';
     }
 

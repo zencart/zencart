@@ -77,7 +77,7 @@ class zcActionDashboardWidget extends zcActionAjaxBase
     if ($result == FALSE)
     {
       $this->response = array('error'=>TRUE, 'errorType'=>'FORM_VALIDATION', 'errorList'=>$widget->getFormValidationErrors());
-    } else 
+    } else
     {
       $widget->executeEditForm();
       $interval = $_POST['widget-refresh'];
@@ -120,6 +120,8 @@ class zcActionDashboardWidget extends zcActionAjaxBase
     $widgetList = zcWidgetManager::loadWidgetClasses($widgetInfoList);
     $tplVars = zcWidgetManager::prepareTemplateVariables($widgetList);
     $tplVars['widgetInfoList'] = $widgetInfoList;
+    $tplVars['widgetList'] = zcWidgetManager::loadWidgetClasses($widgetInfoList);
+    $tplVars ['widgets'] = zcWidgetManager::prepareTemplateVariables($tplVars['widgetList']);
     $template = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php';
     $html = $this->loadTemplateAsString($template, $tplVars);
     $this->response = array('html'=>$html);
