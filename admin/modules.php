@@ -347,10 +347,10 @@ require('includes/admin_html_head.php');
             $use_function = $value['use_function'];
             if (preg_match('/->/', $use_function)) {
               $class_method = explode('->', $use_function);
-              if (!is_object(${$class_method[0]})) {
-                include(DIR_WS_CLASSES . $class_method[0] . '.php');
+              if (!class_exists($class_method[0]))
+                include_once(DIR_WS_CLASSES . $class_method[0] . '.php');
+              if (!is_object(${$class_method[0]}))
                 ${$class_method[0]} = new $class_method[0]();
-              }
               $keys .= zen_call_function($class_method[1], $value['value'], ${$class_method[0]});
             } else {
               $keys .= zen_call_function($use_function, $value['value']);
