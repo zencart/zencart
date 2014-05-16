@@ -825,14 +825,18 @@ function zen_insert_pages_into_profile($id, $pages)
   $user_query = "SELECT admin_id FROM " . TABLE_ADMIN . " WHERE admin_profile = :profileId:";
   $user_query = $db->bindVars($user_query, ':profileId:', $id, 'integer');
   $users = $db->execute($user_query);
-  while (!$users->EOF)
-  {
-     $admin_id = $users->fields['admin_id'];
-     $cleanup_query = "DELETE FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :adminId: AND widget_key NOT IN (" . $widget_key_list . ")";
-     $cleanup_query = $db->bindVars($cleanup_query, ':adminId:', $admin_id, 'integer');
-     $db->execute($cleanup_query);
-     $users->moveNext();
-  }
+    while (!$users->EOF)
+    {
+      $admin_id = $users->fields['admin_id'];
+      if (trim($widget_key_list != "")) {
+        $cleanup_query = "DELETE FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :adminId: AND widget_key NOT IN (" . $widget_key_list . ")";
+      } else {
+        $cleanup_query = "DELETE FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :adminId:";
+      }
+      $cleanup_query = $db->bindVars($cleanup_query, ':adminId:', $admin_id, 'integer');
+      $db->execute($cleanup_query);
+      $users->moveNext();
+    }
 }
 
 function zen_get_admin_menu_for_user()
