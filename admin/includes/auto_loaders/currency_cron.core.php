@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: currency_cron.core.php 19562 2011-09-22 13:38:40Z drbyte $
  */
@@ -9,6 +9,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * autoloader array for admin currency_cron.php
  */
+  $autoLoadConfig[0][] = array('autoType'=>'require',
+                               'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
