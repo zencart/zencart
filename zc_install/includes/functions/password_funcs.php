@@ -3,7 +3,7 @@
  * password_funcs functions
  *
  * @package functions
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version
@@ -85,7 +85,7 @@ function zen_create_random_value($length, $type = 'mixed')
   return $rand_value;
 }
 /**
- * Returns entrophy using a hash of various available methods for obtaining
+ * Returns entropy using a hash of various available methods for obtaining
  * random data. The default hash method is "sha1" and the default size is 32.
  *
  * @param string $hash the hash method to use while generating the hash.
@@ -101,7 +101,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
   // Use openssl if available
   if (function_exists('openssl_random_pseudo_bytes'))
   {
-    //echo('Attempting to create entrophy using openssl');
+    //echo('Attempting to create entropy using openssl');
     $entropy = openssl_random_pseudo_bytes($size, $strong);
     if ($strong) $data = $entropy;
     unset($strong, $entropy);
@@ -114,7 +114,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
     version_compare(PHP_VERSION, '5.3.7', '>=')
   ))
   {
-    //echo('Attempting to create entrophy using mcrypt');
+    //echo('Attempting to create entropy using mcrypt');
     $entropy = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);
     if ($entropy !== FALSE) $data = $entropy;
     unset($entropy);
@@ -126,7 +126,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
     $fp = @fopen('/dev/urandom', 'rb');
     if ($fp !== FALSE)
     {
-      //echo('Attempting to create entrophy using /dev/urandom');
+      //echo('Attempting to create entropy using /dev/urandom');
       $entropy = @fread($fp, $size);
       @fclose($fp);
       if (strlen($entropy) == $size) $data = $entropy;
@@ -137,7 +137,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
   // Final fallback (mixture of various methods)
   if ($data === null)
   {
-    //echo('Attempting to create entrophy using FINAL FALLBACK');
+    //echo('Attempting to create entropy using FINAL FALLBACK');
     $filename = DIR_FS_ROOT . 'includes/configure.php';
     $stat = @stat($filename);
     if ($stat === FALSE)
@@ -160,14 +160,14 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
 
         if ($entropy)
         {
-          //echo('Adding random data to entrophy using CAPICOM.Utilities');
+          //echo('Adding random data to entrohy using CAPICOM.Utilities');
           $stat['CAPICOM_Utilities_random'] = md5($entropy, TRUE);
         }
-        unset($CAPI_Util, $entrophy);
+        unset($CAPI_Util, $entropy);
       } catch (Exception $ex) { }
     }
 
-    //echo('Adding random data to entrophy using file information and contents');
+    //echo('Adding random data to entropy using file information and contents');
     @shuffle($stat);
     foreach ($stat as $value)
     {
