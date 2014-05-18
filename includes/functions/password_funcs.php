@@ -74,7 +74,7 @@ function zen_create_random_value($length, $type = 'mixed')
   return $rand_value;
 }
 /**
- * Returns entrophy using a hash of various available methods for obtaining
+ * Returns entropy using a hash of various available methods for obtaining
  * random data.
  * The default hash method is "sha1" and the default size is 32.
  *
@@ -94,7 +94,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
 
     // Use openssl if available
   if (function_exists('openssl_random_pseudo_bytes')) {
-    // echo('Attempting to create entrophy using openssl');
+    // echo('Attempting to create entropy using openssl');
     $entropy = openssl_random_pseudo_bytes($size, $strong);
     if ($strong)
       $data = $entropy;
@@ -107,7 +107,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
     (
 strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || version_compare(PHP_VERSION, '5.3.7', '>='))))
   {
-    // echo('Attempting to create entrophy using mcrypt');
+    // echo('Attempting to create entropy using mcrypt');
     $entropy = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);
     if ($entropy !== FALSE)
       $data = $entropy;
@@ -118,7 +118,7 @@ strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || version_compare(PHP_VERSION, '5.3.
     // Fall back to using /dev/urandom if available
     $fp = @fopen('/dev/urandom', 'rb');
     if ($fp !== FALSE) {
-      // echo('Attempting to create entrophy using /dev/urandom');
+      // echo('Attempting to create entropy using /dev/urandom');
       $entropy = @fread($fp, $size);
       @fclose($fp);
       if (strlen($entropy) == $size)
@@ -129,7 +129,8 @@ strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || version_compare(PHP_VERSION, '5.3.
 
   // Final fallback (mixture of various methods)
   if ($data === null) {
-    // echo('Attempting to create entrophy using FINAL FALLBACK');
+    // echo('Attempting to create entropy using FINAL FALLBACK');
+    if (!defined('DIR_FS_ROOT')) define('DIR_FS_ROOT', DIR_FS_CATALOG);
     $filename = DIR_FS_ROOT . 'includes/configure.php';
     $stat = @stat($filename);
     if ($stat === FALSE) {
@@ -148,15 +149,15 @@ strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || version_compare(PHP_VERSION, '5.3.
         $entropy = $CAPI_Util->GetRandom($size, 0);
 
         if ($entropy) {
-          // echo('Adding random data to entrophy using CAPICOM.Utilities');
+          // echo('Adding random data to entropy using CAPICOM.Utilities');
           $stat ['CAPICOM_Utilities_random'] = md5($entropy, TRUE);
         }
-        unset($CAPI_Util, $entrophy);
+        unset($CAPI_Util, $entropy);
       } catch ( Exception $ex ) {
       }
     }
 
-    // echo('Adding random data to entrophy using file information and contents');
+    // echo('Adding random data to entropy using file information and contents');
     @shuffle($stat);
     foreach ( $stat as $value ) {
       $data .= $value;
