@@ -91,8 +91,6 @@ abstract class zcAbstractListingBoxBase extends base
     $this->notify('NOTIFY_LISTING_BOX_INITPRODUCTQUERY_AFTER');
     $this->className = str_replace('zcListingBox', '', get_class($this));
     $m = zcQueryBuilderManager::getInstance();
-    // print_r($this->productQuery);
-    // die('HERER');
     $q = $m->buildNewQuery($this->className, $this->productQuery);
     $this->filterOutputVariables = $q->getFilterOutputVariables();
     $this->mainQuery = $q->getMainQuery();
@@ -129,6 +127,7 @@ abstract class zcAbstractListingBoxBase extends base
    */
   public function initTemplateVariables()
   {
+    global $categoryError;
     $this->notify('NOTIFY_LISTING_BOX_INITTEMPLATEVARIABLES_START');
     $this->templateVariables ['title'] = $this->title;
     $this->templateVariables ['items'] = $this->items;
@@ -145,7 +144,7 @@ abstract class zcAbstractListingBoxBase extends base
       $this->templateVariables ['pagination']['showPaginatorTop'] = ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'));
       $this->templateVariables ['pagination']['showPaginatorBottom'] = ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'));
     }
-    $this->templateVariables ['showFiltersForm'] = (isset($this->templateVariables['filter']['doFilterList']) && $this->templateVariables['filter']['doFilterList']) || ($this->hasContent && PRODUCT_LIST_ALPHA_SORTER == 'true') ? TRUE : FALSE;
+    $this->templateVariables ['showFiltersForm'] = (isset($this->templateVariables['filter']['doFilterList']) && $this->templateVariables['filter']['doFilterList']) || ($this->hasContent && PRODUCT_LIST_ALPHA_SORTER == 'true') || (!$this->hasContent && $categoryError == false) ? TRUE : FALSE;
     $this->notify('NOTIFY_LISTING_BOX_INITTEMPLATEVARIABLES_END');
   }
   /**

@@ -142,7 +142,7 @@ if ($category_depth == 'nested')
   {
     // do not set the category
   }
-  if (!$box->getHasContent())
+  if ($categoryError)
   {
     $cPath = '';
     $new_products_category_id = '0';
