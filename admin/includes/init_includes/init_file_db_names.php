@@ -24,7 +24,7 @@ $request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) ==
                  (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
 
 // set php_self in the local scope
-  if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
+  $PHP_SELF = (isset($_GET ['cmd'])) ? $_GET ['cmd'] .'.php' : $_SERVER['PHP_SELF'];
 
 // include the list of project filenames
   require(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'filenames.php');
