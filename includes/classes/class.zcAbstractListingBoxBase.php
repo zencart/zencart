@@ -132,6 +132,7 @@ abstract class zcAbstractListingBoxBase extends base
     $this->notify('NOTIFY_LISTING_BOX_INITTEMPLATEVARIABLES_START');
     $this->templateVariables ['title'] = $this->title;
     $this->templateVariables ['items'] = $this->items;
+    $this->templateVariables ['hasFormattedItems'] = $this->hasContent;
     $this->templateVariables ['formattedItems'] = $this->formattedItems;
     $this->templateVariables ['template'] = $this->mainTemplate;
     $this->templateVariables ['paginatorScrollerTemplate'] = isset($this->productQuery['paginatorScrollerTemplate']) ? $this->productQuery['paginatorScrollerTemplate'] : 'tpl_paginator_standard.php';
@@ -144,8 +145,7 @@ abstract class zcAbstractListingBoxBase extends base
       $this->templateVariables ['pagination']['showPaginatorTop'] = ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'));
       $this->templateVariables ['pagination']['showPaginatorBottom'] = ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'));
     }
-    $this->templateVariables ['showFiltersForm'] = true;
-//    $this->templateVariables ['showFiltersForm'] = $tplVars['listingBox']['doFilterList'] || (count ( $tplVars['listingBox']['paginator']->getAdapter ()->getTotalItems () ) > 0 && PRODUCT_LIST_ALPHA_SORTER == 'true') ? TRUE : FALSE;
+    $this->templateVariables ['showFiltersForm'] = (isset($this->templateVariables['filter']['doFilterList']) && $this->templateVariables['filter']['doFilterList']) || ($this->hasContent && PRODUCT_LIST_ALPHA_SORTER == 'true') ? TRUE : FALSE;
     $this->notify('NOTIFY_LISTING_BOX_INITTEMPLATEVARIABLES_END');
   }
   /**

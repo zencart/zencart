@@ -22,7 +22,6 @@ class zcListingBoxFeaturedIndex extends zcAbstractListingBoxBase
   public function initProductQueryAndOutputLayout()
   {
     $this->productQuery = array(
-        'isRandom' => TRUE,
         'derivedItems' => array(
             array(
                 'field' => 'displayPrice',
@@ -56,6 +55,12 @@ class zcListingBoxFeaturedIndex extends zcAbstractListingBoxBase
         ),
         'whereClauses' => array(
             array(
+                'table' => TABLE_PRODUCTS,
+                'field' => 'products_status',
+                'value' => 1,
+                'type' => 'AND'
+            ),
+            array(
                 'table' => TABLE_FEATURED,
                 'field' => 'status',
                 'value' => 1,
@@ -67,6 +72,12 @@ class zcListingBoxFeaturedIndex extends zcAbstractListingBoxBase
                 'value' => $_SESSION ['languages_id'],
                 'type' => 'AND'
             )
+        ),
+        'orderBys' => array(
+            array(
+                'field' => 'RAND()',
+                'type' => 'mysql'
+            ),
         )
     );
     $this->outputLayout = array(

@@ -28,7 +28,7 @@
 <?php
   } // end show top button
 ?>
-
+<?php if ($tplVars['listingBox']['hasFormattedItems']) { ?>
 <table width="100%">
 <?php if (isset($tplVars['listingBox']['caption'])) { ?>
 <caption><?php echo $tplVars['listingBox']['caption']; ?></caption>
@@ -50,7 +50,7 @@
 <?php } ?>
 </tbody>
 </table>
-
+<?php } ?>
 <?php if (isset($tplVars['listingBox']['showBottomSubmit']) && $tplVars['listingBox']['showBottomSubmit']) { ?>
   <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit2" name="submit1"'); ?></div>
 <br class="clearBoth">

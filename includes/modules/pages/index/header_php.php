@@ -53,7 +53,7 @@ if (true)
   $box = new zcListingBoxProductsDefault ();
   $box->init ();
   $tplVars['listingBox'] = $box->getTemplateVariables ();
-  if ($category_depth == 'products' && count ( ! $box->getHasContent () ))
+  if ($category_depth == 'products' && !$box->getHasContent ())
     $robotsNoIndex = true;
   if (SKIP_SINGLE_PRODUCT_CATEGORIES == 'True' and (! isset ( $_GET['filter_id'] ) and ! isset ( $_GET['alpha_filter'] )))
   {

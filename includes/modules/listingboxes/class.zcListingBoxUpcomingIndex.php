@@ -34,7 +34,6 @@ class zcListingBoxUpcomingIndex extends zcAbstractListingBoxBase
     };
 
     $this->productQuery = array(
-        'isRandom' => true,
         'isDistinct'=>true,
         'queryLimit' => MAX_DISPLAY_UPCOMING_PRODUCTS,
         'joinTables' => array(
@@ -46,7 +45,18 @@ class zcListingBoxUpcomingIndex extends zcAbstractListingBoxBase
                 'addColumns' => true
             )
         ),
+        'filters' => array(
+            array(
+                'requestHandler' => 'zcQueryBuilderFilterCategories'
+            )
+        ),
         'whereClauses' => array(
+            array(
+                'table' => TABLE_PRODUCTS,
+                'field' => 'products_status',
+                'value' => 1,
+                'type' => 'AND'
+            ),
             array(
                 'table' => TABLE_PRODUCTS_DESCRIPTION,
                 'field' => 'language_id',
@@ -59,7 +69,7 @@ class zcListingBoxUpcomingIndex extends zcAbstractListingBoxBase
         ),
         'orderBys' => array(
             array(
-                'field' => (EXPECTED_PRODUCTS_FIELD == 'date_expected') ? 'products_date_available' : 'products_name',
+                'field' => (EXPECTED_PRODUCTS_FIELD == 'date_expected') ? 'products_date_available' : 'products_name' . ' ' . (EXPECTED_PRODUCTS_SORT == 'asc' ? 'asc' : 'desc') ,
                 'type' => 'custom'
             )
         )

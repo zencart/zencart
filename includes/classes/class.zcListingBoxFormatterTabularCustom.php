@@ -32,25 +32,27 @@ class zcListingBoxFormatterTabularCustom extends base
     }
     $listingbox->setTemplateVariable('headers', $header);
     $listBoxContents = array();
-    foreach ( $items as $item ) {
-      $row = array();
-      foreach ( $outputLayout ['columns'] as $field => $parameters ) {
-        if (isset($parameters ['formatter'])) {
-          $row [] = array(
-              'value' => $parameters ['formatter'](array(
-                  'item' => $item,
-                  'field' => $field
-              )),
-              'col_params' => $parameters ['col_params']
-          );
-        } else {
-          $row [] = array(
-              'value' => $item [$field],
-              'col_params' => $parameters ['col_params']
-          );
+    if (count($items) > 0) {
+      foreach ( $items as $item ) {
+        $row = array();
+        foreach ( $outputLayout ['columns'] as $field => $parameters ) {
+          if (isset($parameters ['formatter'])) {
+            $row [] = array(
+                'value' => $parameters ['formatter'](array(
+                    'item' => $item,
+                    'field' => $field
+                )),
+                'col_params' => $parameters ['col_params']
+            );
+          } else {
+            $row [] = array(
+                'value' => $item [$field],
+                'col_params' => $parameters ['col_params']
+            );
+          }
         }
+        $listBoxContents [] = $row;
       }
-      $listBoxContents [] = $row;
     }
     $this->notify('NOTIFY_LISTING_BOX_FORMATTER_TABULAR_FORMAT_END', NULL, $listBoxContents);
     return $listBoxContents;

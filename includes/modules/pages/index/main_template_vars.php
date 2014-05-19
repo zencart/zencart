@@ -59,7 +59,6 @@ if (isset ( $_GET['alpha_filter_id'] ) && $_GET['alpha_filter_id'] <= 0)
   unset ( $_GET['alpha_filter_id'] );
   unset ( $alpha_filter_id );
 }
-
 // hook to notifier so that additional product-type-specific vars can be released too
 $zco_notifier->notify ( 'NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_RELEASE_PRODUCT_TYPE_VARS' );
 
@@ -143,6 +142,11 @@ if ($category_depth == 'nested')
   {
     // do not set the category
   }
+  if (!$box->getHasContent())
+  {
+    $cPath = '';
+    $new_products_category_id = '0';
+  }
 
   // //////////////////////////////////////////////////////////////////////////////////////////////////////////
   $tpl_page_body = 'tpl_index_product_list.php';
@@ -153,6 +157,7 @@ if ($category_depth == 'nested')
   $tpl_page_body = 'tpl_index_default.php';
   // //////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+
 $listingBoxManager = zcListingBoxManager::getInstance ('INDEX_DEFAULT');
 $listingBoxManager->buildListingBoxes ();
 $listingBoxes = $listingBoxManager->getListingBoxes ();

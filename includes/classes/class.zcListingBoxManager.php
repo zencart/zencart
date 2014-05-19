@@ -69,6 +69,7 @@ class zcListingBoxManager extends base
    */
   public function buildListingBoxes()
   {
+    $this->listingBoxes = array();
     $this->notify('NOTIFY_LISTING_BOX_MANAGER_BUILDLISTINGBOXES_START');
     foreach ( $this->listingBoxesEnabled as $listingBox => $entry ) {
       require (DIR_WS_MODULES . 'listingboxes/' . "class." . $listingBox . ".php");

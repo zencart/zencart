@@ -14,6 +14,7 @@
 //print_r($tplVars['listingBox']);
 ?>
 <div class="centerColumn" id="indexProductList">
+  <?php if ($tplVars['listingBox']['hasFormattedItems']) { ?>
   <h1 id="productListHeading"><?php echo $breadcrumb->last(); ?></h1>
 <?php if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') { ?>
 <?php  if ($categories_image = zen_get_categories_image($current_category_id)) { ?>
@@ -62,16 +63,20 @@ if ($tplVars['listingBox']['showFiltersForm'])
  * require the code for listing products
  */
 require ($template->get_template_dir ( 'tpl_listingbox_tabular_default.php', DIR_WS_TEMPLATE, $current_page_base, 'listingboxes' ) . '/' . 'tpl_listingbox_tabular_default.php');
-// // bof: categories error
-if ($error_categories == true)
-{
-  // verify lost category and reset category
-  $check_category = $db->Execute ( "select categories_id from " . TABLE_CATEGORIES . " where categories_id='" . $cPath . "'" );
-  if ($check_category->RecordCount () == 0)
-  {
-    $new_products_category_id = '0';
-    $cPath = '';
-  }
-}
 ?>
+<?php } else { ?>
+<?php if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') { ?>
+<?php  if ($categories_image = zen_get_categories_image($current_category_id)) { ?>
+<div id="categoryImgListing" class="categoryImg"><?php echo zen_image(DIR_WS_IMAGES . $categories_image, '', CATEGORY_ICON_IMAGE_WIDTH, CATEGORY_ICON_IMAGE_HEIGHT); ?></div>
+<?php   } ?>
+<?php } ?>
+
+<?php if ($current_categories_description != '') { ?>
+<div id="indexProductListCatDescription" class="content"><?php echo $current_categories_description;  ?></div>
+<?php } ?>
+<h2><?php echo TEXT_NO_PRODUCTS; ?></h2>
+<?php foreach ($tplVars['listingBoxes'] as $tplVars['listingBox']) { ?>
+<?php require($tplVars['listingBox']['template']); ?>
+<?php } ?>
+<?php } ?>
 </div>

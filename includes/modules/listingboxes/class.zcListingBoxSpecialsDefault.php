@@ -66,6 +66,12 @@ class zcListingBoxSpecialsDefault extends zcAbstractListingBoxBase
         ),
         'whereClauses' => array(
             array(
+                'table' => TABLE_PRODUCTS,
+                'field' => 'products_status',
+                'value' => 1,
+                'type' => 'AND'
+            ),
+            array(
                 'table' => TABLE_SPECIALS,
                 'field' => 'status',
                 'value' => 1,

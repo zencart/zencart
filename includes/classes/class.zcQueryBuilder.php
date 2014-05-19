@@ -36,11 +36,6 @@ class zcQueryBuilder extends base
   protected $isPaginated;
   /**
    *
-   * @var boolean
-   */
-  protected $isRandom;
-  /**
-   *
    * @var array
    */
   protected $selectColumns;
@@ -99,7 +94,6 @@ class zcQueryBuilder extends base
     $this->isDistinct = (isset($this->parameters ['isDistinct']) && $this->parameters ['isDistinct'] == true) ? true : false;
     $this->isPaginated = (isset($this->parameters ['isPaginated']) && $this->parameters ['isPaginated'] == true) ? true : false;
     $this->paginationScroller = (isset($this->parameters ['paginationScroller']) ? $this->parameters ['paginationScroller'] : 'catalog');
-    $this->isRandom = (isset($this->parameters ['isRandom']) && $this->parameters ['isRandom'] == true) ? true : false;
     $this->parts ['mainTableName'] = TABLE_PRODUCTS;
     $this->parts ['mainTableAlias'] = 'p';
     $this->parts ['mainTableFkeyField'] = 'products_id';
@@ -224,17 +218,11 @@ class zcQueryBuilder extends base
   {
     $this->notify('NOTIFY_QUERY_BUILDER_PROCESSORDERBYS_START');
     $this->query ['orderBy'] = "";
-    if ($this->isRandom) {
-      $this->parts ['orderBys'] [] = array(
-          'type' => 'mysql',
-          'field' => 'RAND()'
-      );
-    }
     if (count($this->parts ['orderBys']) > 0) {
       $this->query ['orderBy'] = " ORDER BY ";
       foreach ( $this->parts ['orderBys'] as $orderBy ) {
         if ($orderBy ['type'] == 'mysql') {
-          $this->query ['orderBy'] .= $orderBy ['field'];
+          $this->query ['orderBy'] .= ' '. $orderBy ['field'] . ', ';
         } elseif ($orderBy ['type'] == 'custom') {
           if (isset($orderBy ['table'])) {
             $this->query ['orderBy'] .= $this->parts ['tableAliases'] [$orderBy ['table']] . ".";
