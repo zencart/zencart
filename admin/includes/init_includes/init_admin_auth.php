@@ -9,7 +9,7 @@ if (! defined('IS_ADMIN_FLAG'))
   die('Illegal Access');
 
 define('SUPERUSER_PROFILE', 1);
-$page = (isset($_GET ['cmd'])) ? $_GET ['cmd'] : basename($PHP_SELF, ".php");
+$page = zcRequest::readGet('cmd', basename($PHP_SELF, ".php"));
 $hasDoneStartWizard = TRUE;
 
 // admin folder rename required
