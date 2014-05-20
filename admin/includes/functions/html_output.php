@@ -200,7 +200,7 @@
     }
 
     // Replace duplicates of '&' and instances of '&amp;'  with a single '&'
-    $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
+    $link = preg_replace('/(&amp;|&){2,}|&amp;/', '&', $link);
 
     if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
       $link = str_replace(array('?', '&', '='), '/', $link);
