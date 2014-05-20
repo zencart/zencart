@@ -66,8 +66,8 @@ require ($template->get_template_dir ( 'tpl_listingbox_tabular_default.php', DIR
 ?>
 <?php } else { ?>
 <h2><?php echo TEXT_NO_PRODUCTS; ?></h2>
+<?php } ?>
 <?php foreach ($tplVars['listingBoxes'] as $tplVars['listingBox']) { ?>
 <?php require($tplVars['listingBox']['template']); ?>
-<?php } ?>
 <?php } ?>
 </div>
