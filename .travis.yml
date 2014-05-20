@@ -16,6 +16,7 @@ install: true
 branches:
   only:
     - v160
+    - zen-href-link-unittests
 before_script:
   - touch includes/configure.php
   - touch admin/includes/configure.php
