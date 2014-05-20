@@ -28,11 +28,11 @@ $hasDoneStartWizard = TRUE;
 // }
 // }
 // }
-if ($_GET ['cmd'] != FILENAME_ALERT_PAGE) {
-  if (! ($_GET ['cmd'] == FILENAME_LOGIN)) {
+if (zcRequest::readGet('cmd') != FILENAME_ALERT_PAGE) {
+  if (! (zcRequest::readGet('cmd') == FILENAME_LOGIN)) {
     if (! isset($_SESSION ['admin_id'])) {
-      if (! ($_GET ['cmd'] == FILENAME_PASSWORD_FORGOTTEN)) {
-        zen_redirect(zen_href_link(FILENAME_LOGIN, 'camefrom=' . $_GET ['cmd'] . '&' . zen_get_all_get_params(array(
+      if (! (zcRequest::readGet('cmd') == FILENAME_PASSWORD_FORGOTTEN)) {
+        zen_redirect(zen_href_link(FILENAME_LOGIN, 'camefrom=' . zcRequest::readGet('cmd') . '&' . zen_get_all_get_params(array(
             'cmd'
         )), 'SSL'));
       }
@@ -46,7 +46,7 @@ if ($_GET ['cmd'] != FILENAME_ALERT_PAGE) {
         FILENAME_DENIED,
         FILENAME_ALT_NAV
     )) && ! zen_is_superuser()) {
-      if (check_page($_GET ['cmd'], $_GET) == FALSE) {
+      if (check_page(zcRequest::readGet('cmd'), zcRequest::all('get')) == FALSE) {
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
       }
     }
