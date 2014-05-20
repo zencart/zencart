@@ -14,8 +14,8 @@ class testRequestCase extends PHPUnit_Framework_TestCase
 {
   public function setup()
   {
-    require_once ('includes/classes/class.zcRequest.php');
-    require_once ('testFramework/unittests/requestSupport.php');
+    require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcRequest.php');
+    require_once('requestSupport.php');
   }
   public function testRequestInitEmpty()
   {
