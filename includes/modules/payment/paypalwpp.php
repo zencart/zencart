@@ -3,10 +3,10 @@
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Nov 2 12:51:04 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Sat Nov 2 12:51:04 2013 -0400 Modified in v1.5.3 $
  */
 /**
  * load the communications layer code
@@ -101,7 +101,7 @@ class paypalwpp extends base {
     global $order;
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
-    $this->codeVersion = '1.5.2';
+    $this->codeVersion = '1.5.3';
     $this->enableDirectPayment = FALSE;
     $this->enabled = (MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin

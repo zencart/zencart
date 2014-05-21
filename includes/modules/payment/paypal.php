@@ -3,10 +3,10 @@
  * paypal.php payment module class for PayPal Payments Standard (IPN) method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Oct 23 01:01:52 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Wed Oct 23 01:01:52 2013 -0400 Modified in v1.5.3 $
  */
 
 define('MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE', 'true');
@@ -54,7 +54,7 @@ class paypal extends base {
   function paypal($paypal_ipn_id = '') {
     global $order, $messageStack;
     $this->code = 'paypal';
-    $this->codeVersion = '1.5.2';
+    $this->codeVersion = '1.5.3';
     if (IS_ADMIN_FLAG === true) {
       // Payment Module title in Admin
       $this->title = STORE_COUNTRY != '223' ? MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE_NONUSA : MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE;
