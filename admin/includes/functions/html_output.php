@@ -107,12 +107,7 @@
   function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
     global $zco_notifier;
 
-    if (!zen_not_null($page)) {
-      error_log('Error! zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\') .... stack-trace: ' . print_r(debug_backtrace(), TRUE) );
-      die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
-    }
-
-      // Notify any observers listening for href_link calls
+    // Notify any observers listening for href_link calls
     $link = $connection;
     $zco_notifier->notify(
       'NOTIFY_HANDLE_HREF_LINK',
@@ -180,6 +175,12 @@
     else {
       // Clean up parameters (should not start or end with these characters)
       $parameters = trim($parameters, '&?');
+    }
+
+    // Check if the request was for the homepage
+    if (!zen_not_null($page) || ($page == FILENAME_DEFAULT && !zen_not_null($parameters))) {
+      $page = '';
+      $static = true;
     }
 
     if (!$static) {
