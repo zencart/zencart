@@ -164,7 +164,7 @@ class paypalwpp extends base {
     $this->zone = (int)MODULE_PAYMENT_PAYPALWPP_ZONE;
     if (is_object($order)) $this->update_status();
 
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.2') $this->enabled = false;
+    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.3') $this->enabled = false;
 
     $this->cards = array();
     // if operating in markflow mode, start EC process when submitting order
