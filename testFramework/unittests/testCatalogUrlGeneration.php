@@ -1,24 +1,20 @@
 <?php
-/**
+ /**
  * File contains URL generation test cases for the catalog side of Zen Cart
  *
  * @package tests
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
+require_once('support/zcUrlGenerationTestCase.php');
 /**
  * Testing Library
  */
-class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
+class testCatalogUrlGeneration extends zcUrlGenerationTestCase
 {
 
   public function setUp()
   {
-    // Configure URL environment
-    if(!defined('HTTP_SERVER'))
-      define('HTTP_SERVER', 'http://zencart-git.local');
-    if(!defined('HTTPS_SERVER'))
-      define('HTTPS_SERVER', 'https://zencart-git.local');
     if(!defined('ENABLE_SSL'))
       define('ENABLE_SSL', 'true');
     if(!defined('SEARCH_ENGINE_FRIENDLY_URLS'))
@@ -28,65 +24,45 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
     if(!defined('SESSION_USE_FQDN'))
       define('SESSION_USE_FQDN', 'True');
 
-    // Configure required language defines
-    if(!defined('CONNECTION_TYPE_UNKNOWN'))
-      define('CONNECTION_TYPE_UNKNOWN', 'Unknown Connection \'%s\' Found: %s');
-
-    // Load some required globals
-    if(!array_key_exists('zco_notifier', $GLOBALS))
-      $GLOBALS['zco_notifier'] = new notifier();
-    if(!array_key_exists('request_type', $GLOBALS))
-      $GLOBALS['request_type'] = 'SSL';
-    if(!array_key_exists('session_started', $GLOBALS))
-      $GLOBALS['session_started'] = false;
-    if(!array_key_exists('http_domain', $GLOBALS))
-      $GLOBALS['http_domain'] = zen_get_top_level_domain(HTTP_SERVER);
-    if(!array_key_exists('https_domain', $GLOBALS))
-      $GLOBALS['https_domain'] = zen_get_top_level_domain(HTTPS_SERVER);
-
-    // Need these two functions (no namespace so using eval to create)
-    if(!function_exists('zen_session_name'))
-      eval('function zen_session_name($name = \'\') { return \'zenid\'; }');
-    if(!function_exists('zen_session_id'))
-      eval('function zen_session_id($sessid = \'\') { return \'1234567890\'; }');
-
-    // Load required files
-    require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'html_output.php');
+    parent::setUp();
   }
 
-  protected function assertURLGenerated($url, $expected)
-  {
-    return $this->assertTrue(
-    $url == $expected,
-      'An incorrect URL was generated:' . PHP_EOL . $url . PHP_EOL .
-      'The expected URL was:'  . PHP_EOL . $expected . PHP_EOL
-    );
-  }
-
-  public function testUrlFunctionExists()
+  public function testUrlFunctionsExist()
   {
     $this->assertTrue(function_exists('zen_href_link'), 'zen_href_link() did not exist');
   }
 
   /**
-   * @depends testUrlFunctionExists
+   * @depends testUrlFunctionsExist
    */
   public function testHomePage()
   {
     $this->assertURLGenerated(
-      zen_href_link('index'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index'
+      zen_href_link(),
+      HTTP_SERVER . DIR_WS_CATALOG
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT),
+      HTTP_SERVER . DIR_WS_CATALOG
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
   }
 
   /**
    * @depends testHomePage
    */
-  public function testSslPage()
+  public function testHomePageSsl()
   {
     $this->assertURLGenerated(
-      zen_href_link('index', null, 'SSL'),
-      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=index'
+      zen_href_link(FILENAME_DEFAULT, null, 'SSL'),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test', 'SSL'),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
   }
 
@@ -95,15 +71,15 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
    */
   public function testUnknownSchemaPage()
   {
-  	// Write error logs to DIR_FS_LOGS
-  	@ini_set('log_errors', 1);          // store to file
-  	@ini_set('log_errors_max_len', 0);  // unlimited length of message output
-  	@ini_set('display_errors', 0);      // do not output errors to screen/browser/client
-  	@ini_set('error_log', TESTCWD . 'log-myDEBUG.txt');
+    // Write error logs to DIR_FS_LOGS
+    @ini_set('log_errors', 1);          // store to file
+    @ini_set('log_errors_max_len', 0);  // unlimited length of message output
+    @ini_set('display_errors', 0);      // do not output errors to screen/browser/client
+    @ini_set('error_log', TESTCWD . 'log-myDEBUG.txt');
 
     $this->assertURLGenerated(
-      zen_href_link('index', null, 'OTHER'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index'
+      zen_href_link(FILENAME_DEFAULT, null, 'OTHER'),
+      HTTP_SERVER . DIR_WS_CATALOG
     );
 
     if(file_exists(TESTCWD . 'log-myDEBUG.txt')) {
@@ -113,30 +89,48 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
      $this->assert('Failed to log to error_log');
     }
     @ini_set('error_log', '');
+
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, null, 'NONSSL', false),
+      HTTP_SERVER . DIR_WS_CATALOG
+    );
   }
 
   /**
    * @depends testHomePage
    */
-   public function testAddSessionWhenSwitchingProtocolAndServers() {
-   	$GLOBALS['session_started'] = true;
-   	$GLOBALS['https_domain'] = 'dummy.local';
-  	$this->assertURLGenerated(
-  	  zen_href_link('index'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;zenid=1234567890'
-  	);
+  public function testAddSessionWhenSwitchingProtocolAndServers()
+  {
+     $GLOBALS['session_started'] = true;
+     $GLOBALS['https_domain'] = 'dummy.local';
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT),
+      HTTP_SERVER . DIR_WS_CATALOG . '?zenid=1234567890'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zenid=1234567890'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, null, 'NONSSL', false),
+      HTTP_SERVER . DIR_WS_CATALOG
+    );
   }
 
   /**
    * @depends testAddSessionWhenSwitchingProtocolAndServers
    */
   public function testAddSessionWhenSidDefined() {
-  	$GLOBALS['session_started'] = true;
-  	define('SID', 'zenid=1234567890');
-  	$this->assertURLGenerated(
-  	  zen_href_link('index'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;zenid=1234567890'
-  	);
+    $GLOBALS['session_started'] = true;
+    define('SID', 'zenid=1234567890');
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT),
+      HTTP_SERVER . DIR_WS_CATALOG . '?zenid=1234567890'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zenid=1234567890'
+    );
   }
 
   /**
@@ -145,28 +139,28 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
   public function testAutoCorrectLeadingQuerySeparator()
   {
     $this->assertURLGenerated(
-      zen_href_link('index', '&test=test'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, '&test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', '&&test=test'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, '&&test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', '?test=test'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, '?test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', '??test=test'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, '??test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', '?&test=test'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, '?&test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', '&?test=test'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, '&?test=test'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
   }
 
@@ -176,28 +170,28 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
   public function testAutoCorrectTrailingQuerySeparator()
   {
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&&'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test?'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, 'test=test?'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test??'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, 'test=test??'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test?&'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, 'test=test?&'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&?'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&?'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
     );
   }
 
@@ -207,42 +201,42 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
   public function testAutoCorrectMultipleAmpersandsInQuery()
   {
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&&zen-cart=the-art-of-e-commerce'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&&&zen-cart=the-art-of-e-commerce'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&&&&zen-cart=the-art-of-e-commerce'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-    );
-
-    $this->assertURLGenerated(
-      zen_href_link('index', '&&test=test&&zen-cart=the-art-of-e-commerce'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-    );
-    $this->assertURLGenerated(
-      zen_href_link('index', '&&&test=test&&zen-cart=the-art-of-e-commerce'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-    );
-    $this->assertURLGenerated(
-      zen_href_link('index', '&&&&test=test&&zen-cart=the-art-of-e-commerce'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
 
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&&zen-cart=the-art-of-e-commerce&&'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, '&&test=test&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&&zen-cart=the-art-of-e-commerce&&&'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, '&&&test=test&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'test=test&&zen-cart=the-art-of-e-commerce&&&&'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, '&&&&test=test&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&zen-cart=the-art-of-e-commerce&&'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&zen-cart=the-art-of-e-commerce&&&'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&zen-cart=the-art-of-e-commerce&&&&'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
   }
 
@@ -252,20 +246,20 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
   public function testAutoCorrectAmpersandEntitiesInQuery()
   {
     $this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
     $this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
     $this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;&amp;&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;&amp;&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
     $this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;&amp;&amp;&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;&amp;&amp;&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
     );
   }
 
@@ -274,38 +268,53 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
    */
   public function testAutoCorrectMixedAmpersandAndAmbersandEntitiesInQuery()
   {
-  	$this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;&zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
-  	$this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;&&zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
-  	$this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;&&&zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
-  	$this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
-  	$this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&&&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
-  	$this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&&&&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
-  	$this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&amp;&&amp;zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
     $this->assertURLGenerated(
-  	  zen_href_link('index', 'test=test&&amp;&zen-cart=the-art-of-e-commerce'),
-  	  HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
-  	);
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;&&&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&&&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&amp;&&amp;zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'test=test&&amp;&zen-cart=the-art-of-e-commerce'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+    );
+  }
+
+  /**
+   * @depends testHomePageSsl
+   */
+  public function testStaticUrlGeneration()
+  {
+    $this->assertURLGenerated(
+      zen_href_link('ipn_main_handler.php', '', 'SSL', true, true, true),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'ipn_main_handler.php'
+    );
+    $this->assertURLGenerated(
+      zen_href_link('ipn_main_handler.php', 'type=test', 'SSL', true, true, true),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'ipn_main_handler.php?type=test'
+    );
   }
 
   /**
@@ -313,22 +322,22 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
    */
   public function testValidCategoryUrls()
   {
-  	$this->assertURLGenerated(
-  			zen_href_link('index', 'cPath=1'),
-  			HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1'
-  	);
-  	$this->assertURLGenerated(
-  			zen_href_link('index', 'cPath=1_8'),
-  			HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1_8'
-  	);
-  	$this->assertURLGenerated(
-  			zen_href_link('index', array('cPath' => '1')),
-  			HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1'
-  	);
-  	$this->assertURLGenerated(
-  			zen_href_link('index', array('cPath' => '1_8')),
-  			HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1_8'
-  	);
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'cPath=1'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, 'cPath=1_8'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1_8'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, array('cPath' => '1')),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8')),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1_8'
+    );
   }
 
   /**
@@ -337,44 +346,92 @@ class testCatalogUrlGeneration extends PHPUnit_Framework_TestCase
   public function testValidCategoryUrlsFilters()
   {
     $this->assertURLGenerated(
-      zen_href_link('index', 'cPath=1&sort=20a&alpha_filter_id=65'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1&amp;sort=20a&amp;alpha_filter_id=65'
+      zen_href_link(FILENAME_DEFAULT, 'cPath=1&sort=20a&alpha_filter_id=65'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1&amp;sort=20a&amp;alpha_filter_id=65'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'cPath=1_8&sort=20a&alpha_filter_id=65'),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1_8&amp;sort=20a&amp;alpha_filter_id=65'
+      zen_href_link(FILENAME_DEFAULT, 'cPath=1_8&sort=20a&alpha_filter_id=65'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1_8&amp;sort=20a&amp;alpha_filter_id=65'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', array('cPath' => '1', 'sort' => '20a', 'alpha_filter_id' => '65')),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1&amp;sort=20a&amp;alpha_filter_id=65'
+      zen_href_link(FILENAME_DEFAULT, array('cPath' => '1', 'sort' => '20a', 'alpha_filter_id' => '65')),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1&amp;sort=20a&amp;alpha_filter_id=65'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', array('cPath' => '1_8', 'sort' => '20a', 'alpha_filter_id' => '65')),
-      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;cPath=1_8&amp;sort=20a&amp;alpha_filter_id=65'
+      zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8', 'sort' => '20a', 'alpha_filter_id' => '65')),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1_8&amp;sort=20a&amp;alpha_filter_id=65'
     );
   }
 
   /**
-   * @depends testSslPage
+   * @depends testHomePageSsl
    */
   public function testValidCategoryUrlsSsl()
   {
     $this->assertURLGenerated(
-      zen_href_link('index', 'cPath=1', 'SSL'),
-      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=index&amp;cPath=1'
+      zen_href_link(FILENAME_DEFAULT, 'cPath=1', 'SSL'),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', 'cPath=1_8', 'SSL'),
-      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=index&amp;cPath=1_8'
+      zen_href_link(FILENAME_DEFAULT, 'cPath=1_8', 'SSL'),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1_8'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', array('cPath' => '1'), 'SSL'),
-      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=index&amp;cPath=1'
+      zen_href_link(FILENAME_DEFAULT, array('cPath' => '1'), 'SSL'),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1'
     );
     $this->assertURLGenerated(
-      zen_href_link('index', array('cPath' => '1_8'), 'SSL'),
-      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=index&amp;cPath=1_8'
+      zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'), 'SSL'),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1_8'
     );
   }
 
+  /**
+   * @depends testHomePage
+   */
+  public function testValidEzPageUrls()
+  {
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_EZPAGES, 'id=1'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_EZPAGES . '&amp;id=1'
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_EZPAGES, 'id=1&chapter=10'),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_EZPAGES . '&amp;id=1&amp;chapter=10'
+    );
+  }
+
+  /**
+   * @depends testHomePage
+   */
+  public function testDefinePageUrls()
+  {
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFINE_PAGE_2),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFINE_PAGE_2
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFINE_PAGE_3),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFINE_PAGE_3
+    );
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFINE_PAGE_4),
+      HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFINE_PAGE_4
+    );
+  }
+
+  /**
+   * @depends testHomePageSsl
+   */
+  public function testObserverCannotDowngradeFromSsl()
+  {
+    $GLOBALS['zcURLTestObserver']->mode = zcURLTestObserver::$CHANGE_CONNECTION;
+
+    $this->assertURLGenerated(
+      zen_href_link(FILENAME_DEFAULT, '', 'SSL'),
+      HTTPS_SERVER . DIR_WS_HTTPS_CATALOG
+    );
+
+    $GLOBALS['zcURLTestObserver']->mode = zcURLTestObserver::$CHANGE_NOTHING;
+  }
 }

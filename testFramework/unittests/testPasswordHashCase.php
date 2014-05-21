@@ -7,14 +7,16 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
+require_once('support/zcCatalogTestCase.php');
 /**
  * Unit Tests for password hashing rules
  */
-class testPasswordHash extends PHPUnit_Framework_TestCase
+class testPasswordHash extends zcCatalogTestCase
 {
   public function setUp()
   {
-    require_once('zcCommonTestResources.php');
+    parent::setUp();
+
     $pass = zcPassword::getInstance(PHP_VERSION);
   }
   public function testPasswordHashFunctionsExist()

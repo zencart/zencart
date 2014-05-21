@@ -7,15 +7,18 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
+require_once('support/zcCatalogTestCase.php');
 /**
  * Testing Library
  */
-class testRequestCase extends PHPUnit_Framework_TestCase
+class testRequestCase extends zcCatalogTestCase
 {
-  public function setup()
+  public function setUp()
   {
+    parent::setUp();
+
     require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcRequest.php');
-    require_once('requestSupport.php');
+    require_once('support/requestSupport.php');
   }
   public function testRequestInitEmpty()
   {
