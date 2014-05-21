@@ -10,7 +10,7 @@ require_once('support/zcUrlGenerationTestCase.php');
 /**
  * Testing Library
  */
-class testCatalogUrlSefuGeneration extends zcUrlGenerationTestCase
+class testAdminCatalogUrlSefuGeneration extends zcUrlGenerationTestCase
 {
 
   public function setUp()
