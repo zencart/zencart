@@ -155,6 +155,7 @@
         $link .= $separator . zen_output_string(constant('SID'));
       }
     }
+    $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
 
     // Convert any remaining '&' into '&amp;' (valid URL for href)
     $link = str_replace('&', '&amp;', $link);
