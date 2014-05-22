@@ -30,6 +30,15 @@ class testCatalogUrlGeneration extends zcUrlGenerationTestCase
   public function testUrlFunctionsExist()
   {
     $this->assertTrue(function_exists('zen_href_link'), 'zen_href_link() did not exist');
+    $reflect = new ReflectionFunction('zen_href_link');
+    $this->assertEquals(7, $reflect->getNumberOfParameters());
+    $params = array(
+      'page', 'parameters', 'connection', 'add_session_id',
+      'search_engine_safe', 'static', 'use_dir_ws_catalog'
+    );
+    foreach($reflect->getParameters() as $param) {
+      $this->assertTrue(in_array($param->getName(), $params));
+    }
   }
 
   /**
