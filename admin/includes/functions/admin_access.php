@@ -828,7 +828,7 @@ function zen_insert_pages_into_profile($id, $pages)
     while (!$users->EOF)
     {
       $admin_id = $users->fields['admin_id'];
-      if (trim($widget_key_list != "")) {
+      if (trim($widget_key_list) != "") {
         $cleanup_query = "DELETE FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :adminId: AND widget_key NOT IN (" . $widget_key_list . ")";
       } else {
         $cleanup_query = "DELETE FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :adminId:";
