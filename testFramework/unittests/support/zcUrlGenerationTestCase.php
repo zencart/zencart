@@ -18,8 +18,6 @@ class zcUrlGenerationTestCase extends zcTestCase
     // Configure URL environment
     if(!defined('HTTP_SERVER'))
       define('HTTP_SERVER', 'http://zencart-git.local');
-    if(!defined('HTTPS_SERVER'))
-      define('HTTPS_SERVER', 'https://zencart-git.local');
     if(!defined('DIR_WS_CATALOG'))
       define('DIR_WS_CATALOG', '/');
     if(!defined('DIR_WS_HTTPS_CATALOG'))
@@ -49,10 +47,16 @@ class zcUrlGenerationTestCase extends zcTestCase
     }
     else
     {
+      if(!defined('HTTPS_SERVER'))
+        define('HTTPS_SERVER', 'https://zencart-git.local');
+
       require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'html_output.php');
 
       if(!function_exists('zen_session_name'))
         eval('function zen_session_name($name = \'\') { return \'zenid\'; }');
+
+      if(!array_key_exists('https_domain', $GLOBALS))
+        $GLOBALS['https_domain'] = zen_get_top_level_domain(HTTPS_SERVER);
     }
     require_once('zcURLTestObserver.php');
 
@@ -68,9 +72,6 @@ class zcUrlGenerationTestCase extends zcTestCase
       $GLOBALS['session_started'] = false;
     if(!array_key_exists('http_domain', $GLOBALS))
       $GLOBALS['http_domain'] = zen_get_top_level_domain(HTTP_SERVER);
-    if(!array_key_exists('https_domain', $GLOBALS))
-      $GLOBALS['https_domain'] = zen_get_top_level_domain(HTTPS_SERVER);
-
 
     // Create the observer
     if(!array_key_exists('zcURLTestObserver', $GLOBALS))
@@ -79,10 +80,6 @@ class zcUrlGenerationTestCase extends zcTestCase
 
   protected function assertURLGenerated($url, $expected)
   {
-    return $this->assertTrue(
-      $url == $expected,
-      'An incorrect URL was generated:' . PHP_EOL . $url . PHP_EOL .
-      'The expected URL was:'  . PHP_EOL . $expected . PHP_EOL
-    );
+    return $this->assertEquals($expected, $url, 'An incorrect URL was generated.');
   }
 }
