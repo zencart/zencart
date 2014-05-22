@@ -52,6 +52,7 @@ if (isset ( $cPath ) && zen_not_null ( $cPath ))
     } else
     {
       $category_depth = 'products'; // category has no products, but display the 'no products' message
+      $categoryError = true;
     }
   }
 }
