@@ -7,8 +7,8 @@ php:
 env:
   global:
   - DB=mysql
-  - secure: "rHzH5GDl7vGz1jq0Xb4WD2Z0hC94A9kHCxMrkuiZZm/oqn+Abt0mkwwO9K23GXtxEaoCQcgoF4ogs6T7lMZHaINEVfwNHix+TfF7macDWPESdHFdo01haONoPf2ZfqI5zEb28dYvYMvOwVD1r3sbadNvSSNf16lDDUx+aNUwXqw="
-  - secure: "RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8="
+#  - secure: "rHzH5GDl7vGz1jq0Xb4WD2Z0hC94A9kHCxMrkuiZZm/oqn+Abt0mkwwO9K23GXtxEaoCQcgoF4ogs6T7lMZHaINEVfwNHix+TfF7macDWPESdHFdo01haONoPf2ZfqI5zEb28dYvYMvOwVD1r3sbadNvSSNf16lDDUx+aNUwXqw="
+#  - secure: "RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8="
 addons:
 #  sauce_connect: true
 services: memcached
@@ -16,7 +16,7 @@ install: true
 branches:
   only:
     - v160
-    - zen-href-link-unittests
+    - zen-admin-href-link-unittests
 before_script:
   - touch includes/configure.php
   - touch admin/includes/configure.php
