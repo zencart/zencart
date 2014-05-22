@@ -11,6 +11,7 @@
       <file>testCatalogUrlSefuGeneration.php</file>
       <file>testAdminCatalogUrlGeneration.php</file>
       <file>testAdminCatalogUrlSefuGeneration.php</file>
+      <file>testAdminUrlGeneration.php</file>
     </testsuite>
   </testsuites>
   <!-- <logging>
