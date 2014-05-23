@@ -589,6 +589,9 @@ if ($products_filter == '') {
               <?php echo ($action == '' ? '<span class="alert">' . TEXT_INFO_PREVIEW_ONLY . '</span>' : ''); ?>
             </td>
           </tr>
+<?php
+          if ($action != 'delete_special' && $action != 'delete_featured') {
+?>
           <tr>
             <td class="main" align="center" valign="middle">
             <?php
@@ -600,18 +603,34 @@ if ($products_filter == '') {
             ?>
             </td>
           </tr>
+<?php
+} else {
+?>
+          <tr>
+            <td><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></td>
+          </tr>
+
+          <tr>
+            <td><?php echo zen_draw_separator('pixel_trans.gif', '100%', '200'); ?></td>
+          </tr>
+<?php
+}
+?>
+
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></td>
           </tr>
         </table></td>
       </tr>
-
+<?php
+if ($action != 'delete_special' && $action != 'delete_featured') {
+?>
       <tr>
         <td><table border="0" cellspacing="0" cellpadding="2">
 
 <?php
-// show when product is linked
-if (zen_get_product_is_linked($products_filter) == 'true') {
+      // show when product is linked
+      if (zen_get_product_is_linked($products_filter) == 'true') {
 ?>
           <tr>
             <td class="main" width="200"><?php echo TEXT_MASTER_CATEGORIES_ID; ?></td>
@@ -631,7 +650,7 @@ if (zen_get_product_is_linked($products_filter) == 'true') {
 <?php } // master category linked ?>
 
 <?php
-if (zen_get_product_is_linked($products_filter) == 'false' and $pInfo->master_categories_id != zen_get_products_category_id($products_filter)) {
+      if (zen_get_product_is_linked($products_filter) == 'false' and $pInfo->master_categories_id != zen_get_products_category_id($products_filter)) {
 ?>
           <tr>
             <td colspan="5" class="main"><span class="alert">
@@ -686,6 +705,9 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
         </table></td>
       </tr>
 <?php
+}
+?>
+<?php
   } else {
 // show nothing
 ?>
@@ -699,7 +721,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 
 
 <?php
-  if ($pInfo->products_id != '') {
+  if ($pInfo->products_id != '' && ($action != 'delete_special' && $action != 'delete_featured')) {
 ?>
 <?php
   if ($sInfo->products_id != '') {
@@ -917,7 +939,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
   } else {
 ?>
           <tr>
-          <td><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></td>
+            <td><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></td>
           </tr>
           <tr>
             <td class="main" align="center" width="500">
@@ -952,6 +974,9 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
             </td>
           </tr>
           <?php } ?>
+<?php
+          if ($action != 'delete_special' && $action != 'delete_featured') {
+?>
           <tr>
             <td class="main" align="center" valign="middle" width="100%">
             <?php
@@ -963,6 +988,9 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
             ?>
             </td>
           </tr>
+<?php
+}
+?>
         </table></td>
       </tr>
       <tr>
