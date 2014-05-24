@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Apr 24 14:58:48 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Thu May 24 17:08 2014 -0400 Modified in v1.5.3 $
  *
  * @TODO - http://dev.mysql.com/doc/refman/5.0/en/user-resources.html
  */
@@ -169,7 +169,7 @@
 
   //get list of disabled functions
   if (!zen_not_null($disabled_funcs)) $disabled_funcs = ini_get("disable_functions");
-  if (zen_not_null($disabled_funcs)) $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_DISABLED_FUNCTIONS, 'Status' => $disabled_funcs, 'Class' => (@substr_count($disabled_funcs,'set_time_limit') ? 'WARN' : 'NA'), 'HelpURL' =>ERROR_CODE_DISABLE_FUNCTIONS, ERROR_TEXT_DISABLE_FUNCTIONS);
+  if (zen_not_null($disabled_funcs)) $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_DISABLED_FUNCTIONS, 'Status' => str_replace(',', ', ', $disabled_funcs), 'Class' => (@substr_count($disabled_funcs,'set_time_limit') ? 'WARN' : 'NA'), 'HelpURL' =>ERROR_CODE_DISABLE_FUNCTIONS, ERROR_TEXT_DISABLE_FUNCTIONS);
 
   if (version_compare(PHP_VERSION, 5.4, '<')) {
     // Check Register Globals
