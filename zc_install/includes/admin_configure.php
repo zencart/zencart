@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Apr 25 00:46:50 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  May 24 2014 Modified in v1.5.3 $
  */
 
 $file_contents =
@@ -38,7 +38,7 @@ $file_contents =
 '// NOTE: be sure to leave the trailing \'/\' at the end of these lines if you make changes!' . "\n" .
 '// * DIR_WS_* = Webserver directories (virtual/URL)' . "\n" .
 '  // these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)' . "\n" .
-'  $t1 = parse_url(HTTP_SERVER);$p1 = $t1[\'path\'];$t2 = parse_url(HTTPS_SERVER);$p2 = $t2[\'path\'];' . "\n\n" .
+'  $t1 = parse_url(HTTP_SERVER);$p1 = $t1[\'path\'].\':\'.$t1[\'port\'];$t2 = parse_url(HTTPS_SERVER);$p2 = $t2[\'path\'].\'.\'.$t2[\'port\'];' . "\n\n" .
 '  define(\'DIR_WS_ADMIN\', preg_replace(\'#^\' . str_replace(\'-\', \'\-\', $p1) . \'#\', \'\', dirname($_SERVER[\'SCRIPT_NAME\'])) . \'/\');' . "\n" .
 '  define(\'DIR_WS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
 '  define(\'DIR_WS_HTTPS_ADMIN\', preg_replace(\'#^\' . str_replace(\'-\', \'\-\', $p2) . \'#\', \'\', dirname($_SERVER[\'SCRIPT_NAME\'])) . \'/\');' . "\n" .

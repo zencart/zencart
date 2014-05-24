@@ -4,10 +4,10 @@
  *
  * @package Configuration Settings
  * @package Admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Sep 24 14:38:59 2012 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  May 24 2014 Modified in v1.5.3 $
  * @private
  */
 /**
@@ -28,8 +28,8 @@
 // NOTE: be sure to leave the trailing '/' at the end of these lines if you make changes!
 // * DIR_WS_* = Webserver directories (virtual/URL)
   // these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)
-  $t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'];$t2 = parse_url(HTTPS_SERVER);$p2 = $t2['path'];
-  
+  $t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'] . ':' . $t1['port'];$t2 = parse_url(HTTPS_SERVER);$p2 = $t2['path'] . ':' . $t2['port'];
+
   define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
   define('DIR_WS_CATALOG', '/');
   define('DIR_WS_HTTPS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p2) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
