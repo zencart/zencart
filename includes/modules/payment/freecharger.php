@@ -8,7 +8,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: freecharger.php 15420 2010-02-04 21:27:05Z drbyte $
  */
-  class freecharger {
+  class freecharger extends base {
     var $code, $title, $description, $enabled, $payment;
 
 // class constructor

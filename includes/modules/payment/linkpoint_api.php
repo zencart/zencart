@@ -12,7 +12,7 @@
   if (!defined('TABLE_LINKPOINT_API')) define('TABLE_LINKPOINT_API', DB_PREFIX . 'linkpoint_api');
   @define('MODULE_PAYMENT_LINKPOINT_API_CODE_DEBUG' ,'off'); // debug for programmer use only
 
-class linkpoint_api {
+class linkpoint_api extends base {
   var $code, $title, $description, $enabled, $payment_status, $auth_code, $transaction_id;
   var $_logDir = DIR_FS_SQL_CACHE;
 
