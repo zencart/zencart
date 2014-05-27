@@ -5,13 +5,13 @@
  * -- ADMIN version --
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: defined_paths.php$
  */
 
-$t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'];
+$t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'] . ':' . $t1['port'];
 /**
  * @TODO - A known issue is that parse_url doesn't recognize all TLDs properly, so ".local" etc might not be detectable properly. Consider shimming.
  */
