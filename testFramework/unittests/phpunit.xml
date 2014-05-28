@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" verbose="true">
-  <testsuites>
-    <testsuite name="Password Hash Functions">
-      <file>testFramework/unittests/testTestCase.php</file>
-      <file>testFramework/unittests/testPasswordHashCase.php</file>
-      <file>testFramework/unittests/testRequestCase.php</file>
-    </testsuite>
-  </testsuites>
+<phpunit colors="true" verbose="true" bootstrap="../config/bootstrap.php">
+    <testsuites>
+        <testsuite name="Password Hash Functions">
+            <file>testTestCase.php</file>
+            <file>testPasswordHashCase.php</file>
+            <file>testRequestCase.php</file>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"
+            lowUpperBound="50" highLowerBound="80" />
+        <log type="coverage-clover" target="build/logs/clover.xml" />
+    </logging>
+
+    <filter>
+        <blacklist>
+            <directory suffix=".php">vendor</directory>
+            <directory suffix=".php">admin</directory>
+            <directory suffix=".php">includes/local</directory>
+            <directory suffix=".php">testFramework</directory>
+            <directory suffix=".php">build</directory>
+            <directory suffix=".php">zc_install</directory>
+            <directory suffix=".php">zc_install_old</directory>
+        </blacklist>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">includes</directory>
+        </whitelist>
+    </filter>
+
+    <php>
+        <const name="PHPUNIT_TESTSUITE" value="true" />
+    </php>
 </phpunit>
