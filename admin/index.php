@@ -8,8 +8,17 @@
  */
 if (!isset($_GET['cmd']))
 {
-  require('includes/application_top.php');
-  zen_redirect(zen_href_link(str_replace('.php', '', basename($_SERVER ['SCRIPT_FILENAME'])), zen_get_all_get_params()));
+  $cmd = str_replace('.php', '', basename($_SERVER['SCRIPT_FILENAME']));
+
+  // Only redirect if not a request for "index.php"
+  if($cmd != 'index') {
+    require('includes/application_top.php');
+    zen_redirect(zen_href_link(str_replace('.php', '', basename($_SERVER ['SCRIPT_FILENAME'])), zen_get_all_get_params()));
+  }
+
+  // Populate the command and continue
+  $_GET['cmd'] = $cmd;
+  unset($cmd);
 }
 $controllerCommand = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET ['cmd']);
 $foundAction = FALSE;
