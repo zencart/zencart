@@ -16,3 +16,14 @@ testFramework/webtests/config/*
 !testFramework/webtests/config/localconfig_EXAMPLE.php
 devtools.php
 dev-*.*
+includes/local
+composer.lock
+vendor
+bin
+build
+*.DS_Store
+
+# Ignore eclipse project files
+.project
+.settings
+.buildpath

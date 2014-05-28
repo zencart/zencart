@@ -1,21 +1,36 @@
 language: php
+
 php:
-  - "5.6"
-  - "5.5"
-  - "5.4"
-  - "5.3"
+  - 5.6
+  - 5.5
+  - 5.4
+  - 5.3
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 5.6
+    - php: 5.3
+    
 env:
   global:
   - DB=mysql
   - secure: "rHzH5GDl7vGz1jq0Xb4WD2Z0hC94A9kHCxMrkuiZZm/oqn+Abt0mkwwO9K23GXtxEaoCQcgoF4ogs6T7lMZHaINEVfwNHix+TfF7macDWPESdHFdo01haONoPf2ZfqI5zEb28dYvYMvOwVD1r3sbadNvSSNf16lDDUx+aNUwXqw="
   - secure: "RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8="
+
 addons:
-  sauce_connect: true
+  #uncomment the following to trigger webtests
+#  sauce_connect: true
+
 services: memcached
-install: true
+
+install:
+  - composer install --dev --no-interaction
+
 branches:
-  only:
-    - v160
+  except:
+    - /^v15.*$/
+
 before_script:
   - touch includes/configure.php
   - touch admin/includes/configure.php
@@ -27,7 +42,14 @@ before_script:
 #  - bash testFramework/setup/do-apache.sh
   # sauce setup
 #  - bash testFramework/setup/do-sauce.sh
+  - mkdir -p build/logs
+
 script:
-  - phpunit -c testFramework/unittests/phpunit.xml
-#uncomment the following to trigger webtests
+  - php vendor/bin/phpunit -c testFramework/unittests/phpunit.xml
+  #uncomment the following to trigger webtests
 #  - testFramework/webtests/vendor/bin/phpunit testFramework/webtests/allWebTests.php
+
+after_script:
+  #- vendor/bin/phpcs --standard=PSR2 includes/ testFramework/
+  - php vendor/bin/coveralls
+  #- vendor/bin/phpmd includes/ text cleancode,codesize,controversial,design,naming,unusedcode
