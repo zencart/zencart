@@ -27,3 +27,7 @@ build
 .project
 .settings
 .buildpath
+
+# Ignore phpStorm stuff 
+.idea
+
