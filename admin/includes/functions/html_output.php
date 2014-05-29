@@ -108,6 +108,7 @@
       $parameters,
       $static
     );
+    $page = str_replace('.php', '', $page);
 
     $link = HTTP_SERVER . DIR_WS_ADMIN;
 
