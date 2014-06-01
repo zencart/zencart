@@ -167,7 +167,7 @@ if ($warning_new_box) {
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
               <tr>
-                <td class="main" align="left"><strong>TABLE_HEADING_BOXES_PATH</strong><?php echo DIR_FS_CATALOG_MODULES . ' ... ' . '<br />&nbsp;'; ?></td>
+                <td class="main" align="left"><strong><?php echo TABLE_HEADING_BOXES_PATH; ?></strong> <?php echo DIR_FS_CATALOG_MODULES; ?> &hellip;<br/></td>
               </tr>
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
