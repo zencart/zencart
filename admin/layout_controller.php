@@ -152,12 +152,12 @@ if (!empty($_GET['action'])) {
         <?php
         if ($warning_new_box) {
           ?>
-        <div class="row messageStackError"><?php echo 'WARNING: New boxes found: ' . $warning_new_box; ?></div>
+        <div class="row messageStackError"><?php echo TEXT_WARNING_NEW_BOXES_FOUND . $warning_new_box; ?></div>
         <?php
       }
       ?>
       <h1><?php echo HEADING_TITLE . ' ' . $template_dir; ?></h1>
-      <div class="row"><strong>Boxes Path: </strong><?php echo DIR_FS_CATALOG_MODULES . ' ... '; ?></div>
+      <div class="row"><strong><?php echo TABLE_HEADING_BOXES_PATH; ?></strong><?php echo DIR_FS_CATALOG_MODULES . ' ... '; ?></div>
       <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
