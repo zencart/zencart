@@ -9,26 +9,36 @@
  * @version
  */
 
-////
-// This function validates a plain text password with an encrpyted password
-function zen_validate_password($plain, $encrypted)
-{
-  if (zen_not_null($plain) && zen_not_null($encrypted))
-  {
-    // split apart the hash / salt
-    $stack = explode(':', $encrypted);
+require_once (__DIR__ . '/../../../includes/classes/class.zcPassword.php');
 
-    if (sizeof($stack) != 2)
-      return false;
+/**
+ * Validates a plain text password with the encrpyted password
+ *
+ * If the encrypted passwod begins with '$2y$', the PHP 5.5 compatible hashing
+ * functions will be used.  Otherwise, a legacy md5-style hash is assumed.
+ *
+ * @param  string $plain     the plain-text password
+ * @param  string $encrypted the encrypted password
+ * @return bool
+ */
+function zen_validate_password($plain, $encrypted) {
+  if (!zen_not_null($plain) || !zen_not_null($encrypted)) {
+    return false;
+  }
 
-    if (md5($stack[1] . $plain) == $stack[0])
-    {
-      return true;
-    }
+  if (strpos($encrypted, '$2y$') === 0) {
+    return zcPassword::getInstance(PHP_VERSION)->validatePassword($plain, $encrypted);
+  }
+
+  // split apart the hash / salt
+  $stack = explode(':', $encrypted);
+  if (sizeof($stack) == 2) {
+    return (md5($stack[1] . $plain) == $stack[0]);
   }
 
   return false;
 }
+
 ////
 // This function makes a new password from a plaintext password.
 function zen_encrypt_password($plain)
