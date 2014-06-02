@@ -2203,8 +2203,6 @@ class shoppingCart extends base {
   function actionCartUserAction($goto, $parameters) {
     $this->notify('NOTIFY_CART_USER_ACTION', array(), $goto, $parameters);
   }
-
-
 /**
  * calculate quantity adjustments based on restrictions
  * USAGE:  $qty = $this->adjust_quantity($qty, (int)$products_id, 'shopping_cart');
@@ -2238,4 +2236,60 @@ class shoppingCart extends base {
         }
      return $new_qty;
   }
+/**
+ * calculate the number of items in a cart based on an attribute option_id and option_values_id combo
+ * USAGE:  $chk_attrib_1_16 = $this->in_cart_check_attrib_quantity(1, 16);
+ * USAGE:  $chk_attrib_1_16 = $_SESSION['cart']->in_cart_check_attrib_quantity(1, 16);
+ *
+ * @param float $check_qty
+ * @param int $check_option_id
+ * @param int $check_option_values_id
+ * @param string $message
+ */
+  function in_cart_check_attrib_quantity($check_option_id, $check_option_values_id) {
+    // if nothing is in cart return 0
+    if (!is_array($this->contents)) return 0;
+
+    // compute total quantity for match
+    $in_cart_check_qty = 0;
+    // get products in cart to check
+    $chk_products = $this->get_products();
+    for ($i=0, $n=sizeof($chk_products); $i<$n; $i++) {
+      if (is_array($chk_products[$i]['attributes'])) {
+        foreach ($chk_products[$i]['attributes'] as $option => $value) {
+          if ($option == $check_option_id && $value == $check_option_values_id) {
+  //          echo 'Attribute FOUND FOR $option: ' . $option . ' $value: ' . $value . ' quantity: ' . $chk_products[$i]['quantity'] . '<br><br>';
+            $in_cart_check_qty += $chk_products[$i]['quantity'];
+          }
+        }
+      }
+    }
+    return $in_cart_check_qty;
+  }
+/**
+ * calculate products_id price in cart
+ * USAGE:  $product_total_price = $this->in_cart_product_total_price(12);
+ * USAGE:  $chk_product_cart_total_price = $_SESSION['cart']->in_cart_product_total_price(12);
+ *
+ * @param str $product_id
+ */
+  function in_cart_product_total_price($product_id) {
+    $products = $this->get_products();
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      $productsName = $products[$i]['name'];
+      $ppe = $products[$i]['final_price'];
+      $ppt = $ppe * $products[$i]['quantity'];
+      $productsPriceEach = $ppe + $products[$i]['onetime_charges'];
+      $productsPriceTotal = $ppt + $products[$i]['onetime_charges'];
+      if ((int)$product_id == (int)$products[$i]['id']) {
+//        echo 'GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $productsPriceEach: ' . $productsPriceEach . ' $productsPriceTotal: ' . $productsPriceTotal . '<br><br>';
+        $in_cart_product_price += $productsPriceTotal;
+      } else {
+//        echo 'NOT GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $productsPriceEach: ' . $productsPriceEach . ' $productsPriceTotal: ' . $productsPriceTotal . '<br><br>';
+      }
+    } // end FOR loop
+    return $in_cart_product_price;
+  }
+
 }
