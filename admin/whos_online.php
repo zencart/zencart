@@ -184,7 +184,7 @@ require('includes/admin_html_head.php');
   // -->
 </script>
 <style>
-<!-- inline CSS Styles
+<!-- inline-CSS-Styles
 .whos-online td {
   color:#444;
   font-family:Helvetica, Arial, sans-serif;
