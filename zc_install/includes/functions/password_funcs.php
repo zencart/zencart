@@ -14,7 +14,7 @@ require_once (__DIR__ . '/../../../includes/classes/class.zcPassword.php');
 /**
  * Validates a plain text password with the encrpyted password
  *
- * If the encrypted passwod begins with '$2y$', the PHP 5.5 compatible hashing
+ * If the encrypted password begins with '$2y$', the PHP 5.5 compatible hashing
  * functions will be used.  Otherwise, a legacy md5-style hash is assumed.
  *
  * @param  string $plain     the plain-text password
