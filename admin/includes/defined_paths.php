@@ -11,12 +11,19 @@
  * @version $Id: defined_paths.php$
  */
 
-$t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'] . ':' . $t1['port'];
-/**
- * @TODO - A known issue is that parse_url doesn't recognize all TLDs properly, so ".local" etc might not be detectable properly. Consider shimming.
- */
-if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
+if (!$t1 = parse_url(HTTP_SERVER)) {
+  /**
+   * A known issue is that parse_url doesn't recognize all TLDs properly, so ".local"
+   * &etc might not be detectable properly.
+   */
+  $t1 = array('host' => $_SERVER['SERVER_NAME'], 'port' => $_SERVER['SERVER_PORT']);
+}
+$p1 = $t1['host'];
+if (isset($t1['port'])) {
+  $p1 .= ':' . $t1['port'];
+}
 
+if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
 
