@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Apr 15 17:08:43 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.5.3 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -569,6 +569,7 @@ class authorizenet_aim extends base {
     $this->reportable_submit_data['x_login'] = '*******';
     $this->reportable_submit_data['x_tran_key'] = '*******';
     if (isset($this->reportable_submit_data['x_card_num'])) $this->reportable_submit_data['x_card_num'] = str_repeat('X', strlen($this->reportable_submit_data['x_card_num'] - 4)) . substr($this->reportable_submit_data['x_card_num'], -4);
+    if (isset($this->reportable_submit_data['x_exp_date'])) $this->reportable_submit_data['x_exp_date'] = '****';
     if (isset($this->reportable_submit_data['x_card_code'])) $this->reportable_submit_data['x_card_code'] = '****';
     $this->reportable_submit_data['url'] = $url;
 

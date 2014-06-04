@@ -539,7 +539,7 @@ class linkpoint_api {
                            array('fieldName'=>'cc_number', 'value' => $cc_number, 'type'=>'string'),
                            array('fieldName'=>'cust_info', 'value' => $cust_info, 'type'=>'string'),
                            array('fieldName'=>'chargetotal', 'value' => $chargetotal, 'type'=>'string'),
-                           array('fieldName'=>'cc_expire', 'value' => $cc_month . '/' . $cc_year, 'type'=>'string'),
+//                            array('fieldName'=>'cc_expire', 'value' => $cc_month . '/' . $cc_year, 'type'=>'string'),
                            array('fieldName'=>'ordertype', 'value' => $myorder['ordertype'], 'type'=>'string'), // transaction type: PREAUTH or SALE
                            array('fieldName'=>'date_added', 'value' => 'now()', 'type'=>'noquotestring'));
     if (MODULE_PAYMENT_LINKPOINT_API_STORE_DATA == 'True') {
