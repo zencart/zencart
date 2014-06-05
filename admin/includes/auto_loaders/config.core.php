@@ -221,10 +221,13 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 160.
  *
  * require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
+ * require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'logging.php');
  *
  */
   $autoLoadConfig[160][] = array('autoType'=>'require',
                                  'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
+  $autoLoadConfig[160][] = array('autoType'=>'require',
+                                 'loadFile'=> DIR_WS_FUNCTIONS . 'logging.php');
 /**
  * Breakpoint 170.
  *
