@@ -3,7 +3,7 @@
  * Product Reviews
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 3117 2006-03-05 20:38:44Z ajeh $
@@ -40,7 +40,7 @@
   $products_price = zen_get_products_display_price($review->fields['products_id']);
   $products_name = $review->fields['products_name'];
 
-  if ($review->fields['products_model'] != '') {
+  if (zen_get_show_product_switch((int)$review_info->fields['products_id'], 'model') == 1 && $review->fields['products_model'] != '') {
     $products_model = '<br /><span class="smallText">[' . $review->fields['products_model'] . ']</span>';
   } else {
     $products_model = '';
