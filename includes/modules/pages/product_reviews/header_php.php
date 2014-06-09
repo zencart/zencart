@@ -40,7 +40,7 @@
   $products_price = zen_get_products_display_price($review->fields['products_id']);
   $products_name = $review->fields['products_name'];
 
-  if (zen_get_show_product_switch((int)$review_info->fields['products_id'], 'model') == 1 && $review->fields['products_model'] != '') {
+  if (zen_get_show_product_switch((int)$review->fields['products_id'], 'model') == 1 && $review->fields['products_model'] != '') {
     $products_model = '<br /><span class="smallText">[' . $review->fields['products_model'] . ']</span>';
   } else {
     $products_model = '';
