@@ -6,10 +6,10 @@
  * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Added in v1.5.3 $
  */
 
-function zen_record_admin_activity($data = '')
+function zen_record_admin_activity($data = '', $specific_message = '', $severity = '')
 {
   global $db, $zco_notifier;
-  if ($data == '') $data = $_POST;
+  if ($data == '' && $specific_message == '') $data = $_POST;
   // initialize (add new entry) if log is blank
   $sql = "SELECT ip_address from " . TABLE_ADMIN_ACTIVITY_LOG . " LIMIT 1";
   $result = $db->Execute($sql);
@@ -51,7 +51,7 @@ function zen_record_admin_activity($data = '')
   $sql_data_array = array( 'access_date' => 'now()',
           'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
           'page_accessed' =>  zcRequest::readGet('cmd') . (!isset($_SESSION['admin_id']) || (int)$_SESSION['admin_id'] == 0 ? ' ' . (isset($data['admin_name']) ? $data['admin_name'] : (isset($data['admin_email']) ? $data['admin_email'] : '') ) : ''),
-          'page_parameters' => preg_replace('/(&amp;|&)$/', '', zen_get_all_get_params()),
+          'page_parameters' => implode("\n", array(preg_replace('/(&amp;|&)$/', '', zen_get_all_get_params()), $specific_message)),
           'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
           'gzpost' => $gzpostdata,
           'flagged' => (int)$flagged,

@@ -73,6 +73,7 @@
                         where configuration_key = '" . zen_db_input($key) . "'");
         }
         $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED, preg_replace('/[^\d\w]/', '*', $_GET['module']), $admname);
+        zen_record_admin_activity('', $msg);
         zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
         zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')));
         break;
@@ -83,6 +84,7 @@
           include($module_directory . $class . $file_extension);
           $module = new $class;
           $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
+          zen_record_admin_activity('', $msg);
           zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
           $result = $module->install();
         }
@@ -96,6 +98,7 @@
           include($module_directory . $class . $file_extension);
           $module = new $class;
           $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
+          zen_record_admin_activity('', $msg);
           zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
           $result = $module->remove();
         }
