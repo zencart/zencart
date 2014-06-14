@@ -30,7 +30,8 @@ function check_page($page, $params) {
           FROM " . TABLE_ADMIN . " a
           LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
           LEFT JOIN " . TABLE_ADMIN_PAGES . " ap ON ap.page_key = ap2p.page_key
-          WHERE admin_id = :adminId:";
+          WHERE admin_id = :adminId:
+          AND ap2p.page_key NOT LIKE '_productTypes_%'";
   $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
   $result = $db->Execute($sql);
   $retVal = FALSE;
