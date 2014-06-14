@@ -10,6 +10,8 @@ function zen_record_admin_activity($data = '', $specific_message = '', $severity
 {
   global $db, $zco_notifier;
   if ($data == '' && $specific_message == '') $data = $_POST;
+  if ($severity != '' && (int)$severity != 0) $severity = (int)$severity;
+
   // initialize (add new entry) if log is blank
   $sql = "SELECT ip_address from " . TABLE_ADMIN_ACTIVITY_LOG . " LIMIT 1";
   $result = $db->Execute($sql);
@@ -22,6 +24,7 @@ function zen_record_admin_activity($data = '', $specific_message = '', $severity
             'gzpost' => '',
             'flagged' => '',
             'attention' => '',
+//            'severity' => $severity,
     );
     zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
   }
@@ -56,13 +59,14 @@ function zen_record_admin_activity($data = '', $specific_message = '', $severity
           'gzpost' => $gzpostdata,
           'flagged' => (int)$flagged,
           'attention' => ($notes === FALSE ? '' : $notes),
+//          'severity' => $severity,
   );
   zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
 
   /**
    * hook to 3rd party logging service
    */
-  $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_ADD_RECORD', $sql_data_array, $postdata);
+  $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_ADD_RECORD', $sql_data_array, $postdata, $severity);
 
   unset($flagged, $postdata, $notes, $gzpostdata, $sql_data_array, $key, $nul);
 }
