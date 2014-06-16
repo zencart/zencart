@@ -153,9 +153,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
   function zen_session_close() {
-    if (function_exists('session_close')) {
-      return session_close();
-    }
+    session_write_close();
   }
 
   function zen_session_destroy() {
