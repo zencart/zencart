@@ -6,10 +6,10 @@
  * Displays details of a music product
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_product_music_info_display.php 19690 2011-10-04 16:41:45Z drbyte $
+ * @version $Id: $
  */
 ?>
 <div class="centerColumn" id="productMusicDisplay">
@@ -224,7 +224,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
   if (zen_not_null($products_record_company_url)) {
     if ($flag_show_product_music_info_record_company == 1) {
 ?>
-    <p id="productInfoLink" class="productMusic centeredContent"><?php echo sprintf(TEXT_RECORD_COMPANY_URL, zen_href_link(FILENAME_REDIRECT, 'action=url&goto=' . urlencode($products_record_company_url), 'NONSSL', true, false)); ?></p>
+    <p id="productInfoLink" class="productMusic centeredContent"><?php echo sprintf(TEXT_RECORD_COMPANY_URL, zen_href_link(FILENAME_REDIRECT, 'action=music_record_company&record_company_id=' . zen_output_string_protected($music_extras->fields['record_company_id']), 'NONSSL', true, false)); ?></p>
 <?php
     } // $flag_show_product_info_record_company
   }
