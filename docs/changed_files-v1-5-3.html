@@ -88,6 +88,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <h1>NEW Files ADDED (since release of v1.5.1)</h1>
 <ul>
 <li>/admin/includes/extra_configures/use_catalog_time_zone.php (added in v1.5.2)</li>
+<li>/admin/includes/functions/logging.php (added in v1.5.3)</li>
 <li>/admin/includes/init_includes/init_cache_key_check.php (added in v1.5.2)</li>
 <li>/admin/includes/init_includes/init_sanitize.php (Was removed in an older version. Added back with new contents in v1.5.2)</li>
 <li>/includes/extra_configures/set_time_zone.php (added in v1.5.2)</li>
@@ -100,13 +101,15 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/init_includes/init_observers.php (added in v1.5.3)</li>
 <li>/includes/languages/english/page.php (added in v1.5.2)</li>
 </ul>
-<h1>CHANGED Files (since release of v1.5.2)</h1>
+<h1>CHANGED Files (since release of v1.5.2-beta)</h1>
 <ul>
 <li>/admin/.htaccess</li>
 <li>/admin/attributes_controller.php</li>
 <li>/admin/banner_manager.php</li>
 <li>/admin/categories.php</li>
+<li>/admin/countries.php</li>
 <li>/admin/coupon_admin.php</li>
+<li>/admin/developers_tool_kit.php</li>
 <li>/admin/mail.php</li>
 <li>/admin/options_name_manager.php</li>
 <li>/admin/options_values_manager.php</li>
@@ -114,20 +117,25 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/includes/auto_loaders/config.core.php</li>
 <li>/admin/includes/functions/admin_access.php</li>
 <li>/admin/includes/functions/general.php</li>
+<li>/admin/includes/functions/html_output.php</li>
+<li>/admin/includes/functions/logging.php (NEW in v1.5.3)</li>
+<li>/admin/includes/init_includes/init_admin_history.php</li>
 <li>/admin/includes/init_includes/init_general_funcs.php</li>
 <li>/admin/includes/init_includes/init_sanitize.php (Was removed in an older version. Added back in v1.5.2 and updated in v1.5.3)</li>
 <li>/admin/includes/modules/category_product_listing.php</li>
 <li>/admin/includes/modules/update_product.php</li>
 <li>/admin/includes/modules/product_music/preview_info.php</li>
+<li>/includes/spiders.txt</li>
+<li>/includes/version.php</li>
 <li>/includes/auto_loaders/config.core.php</li>
 <li>/includes/classes/db/mysql/query_factory.php</li>
 <li>/includes/classes/class.base.php</li>
+<li>/includes/classes/class.zcPassword.php (NEW in v1.5.3)</li>
 <li>/includes/classes/order.php</li>
 <li>/includes/classes/query_cache.php</li>
 <li>/includes/classes/shopping_cart.php</li>
-<li>/includes/classes/class.zcPassword.php (NEW in v1.5.3)</li>
 <li>/includes/classes/support/*.php  - ALL PHP FILES IN THIS FOLDER ARE NEW/CHANGED in v1.5.2</li>
-<li>/includes/classes/vendors/password_compat-master/lib/password.php  (NEW in v1.5.3)</li>
+<li>/includes/classes/vendors/password_compat-master/lib/password.php  (this whole folder is NEW in v1.5.3)</li>
 <li>/includes/extra_configures/set_time_zone.php  (NEW in v1.5.2)</li>
 <li>/includes/functions/audience.php</li>
 <li>/includes/functions/compatibility.php</li>
@@ -144,20 +152,36 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/modules/order_total/ot_gv.php</li>
 <li>/includes/modules/pages/account_password/header_php.php</li>
 <li>/includes/modules/pages/login/header_php.php</li>
+<li>/includes/modules/pages/page/header_php.php</li>
+<li>/includes/modules/pages/password_forgotten/header_php.php</li>
+<li>/includes/modules/pages/product_music/main_template_vars_product_type.php</li>
 <li>/includes/modules/pages/product_reviews/header_php.php</li>
+<li>/includes/modules/pages/redirect/header_php.php</li>
 <li>/includes/modules/pages/time_out/header_php.php</li>
+<li>/includes/modules/payment/authorizenet.php</li>
 <li>/includes/modules/payment/authorizenet_aim.php</li>
 <li>/includes/modules/payment/authorizenet_echeck.php</li>
 <li>/includes/modules/payment/linkpoint_api.php</li>
+<li>/includes/modules/payment/paypal.php</li>
 <li>/includes/modules/payment/paypaldp.php</li>
+<li>/includes/modules/payment/paypalwpp.php</li>
+<li>/includes/modules/payment/paypal/paypal_curl.php</li>
 <li>/includes/templates/classic/css/stylesheet.css</li>
 <li>/includes/templates/classic/css/stylesheet_css_buttons.css</li>
 <li>/includes/templates/template_default/css/stylesheet.css</li>
 <li>/includes/templates/template_default/css/stylesheet_css_buttons.css</li>
+<li>/includes/templates/template_default/templates/tpl_account_password_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_document_general_info_display.php</li>
+<li>/includes/templates/template_default/templates/tpl_document_product_info_display.php</li>
 <li>/includes/templates/template_default/templates/tpl_login_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_modules_create_account.php</li>
+<li>/includes/templates/template_default/templates/tpl_product_free_shipping_info_display.php</li>
+<li>/includes/templates/template_default/templates/tpl_product_info_display.php</li>
+<li>/includes/templates/template_default/templates/tpl_product_music_info_display.php</li>
 <li>/includes/templates/template_default/templates/tpl_time_out_default.php</li>
 <br>
-<li>/zc_install/ ... assume *all* of /zc_install/ has changed
+<li>/zc_install/ ... assume *all* of /zc_install/ has changed<li>
+<li>... and a reminder: delete the /docs and /extras and /readme.md and /install.txt files when you're done installing!
 </ul>
 
 

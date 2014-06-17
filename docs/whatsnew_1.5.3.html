@@ -85,10 +85,13 @@ OSI Certified is a certification mark of the Open Source Initiative.
 
 <fieldset>
 <h1>About PHP versions</h1>
-<p>Zen Cart&reg; v1.5.3 is compatible with PHP 5.2.10 through PHP 5.6</p>
+<p>Zen Cart&reg; v1.5.3 is compatible with PHP 5.2.10 through PHP 5.6, and MySQL 5.1 thru 5.6</p>
 <p class="small"><em>(Note: security features are stronger when using PHP 5.3.7 or newer.)</em></p>
 
 <h1>Upgrade Instructions</h1>
+<p>Note: we mention both 1.5.2 and 1.5.3 here, because 1.5.2 was only released as a beta. <br>
+The incorporation of bcrypt for password security necessitated a version-number increase, hence the jump to 1.5.3.<br>
+This document only mentions the actual changes specific to 1.5.3. If you want to see the long list of 1.5.2-specific improvements, see the <a href="whatsnew_1-5-2.html" target="_blank">whatsnew_1.5.2.html</a> file.</p>
 <h2>From v1.5.1 to v1.5.2 or v1.5.3</h2>
 <p>Simple: if you are using v1.5.1 already and have not customized any of the files listed in the changed_files-v1-5-2.html and changed_files-v1-5-3.html documents, then simply replace those files with the new versions contained as listed in those documents.</p>
 <p>If you HAVE customized or altered certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.</p>
@@ -136,6 +139,7 @@ Fixes:
 <li>CHANGE-698 - Fix bugs in calls to zenCssButton()</li>
 <li>CHANGE-706 - Clean up display of "php disabled functions" list in zc_install inspect screen</li>
 <li>CHANGE-707 - Fix admin url autodetection to accommodate :port suffix in admin urls for local dev setups</li>
+<li>CHANGE-708 - EZ Page Title Tag incorrect (introduced by CHANGE-425)</li>
 <li>ISSUE-9  - Fix minor issue with model number display on product_reviews page</li>
 <li>ISSUE-19 - Fix coupon-admin date check since mktime() doesn't support is_dst param anymore</li>
 <li>ISSUE-23 - Clean up add to cart when non-numeric value is used and display message</li>
@@ -146,6 +150,14 @@ Fixes:
 <li>ISSUE-88 - Fix var assignment operator in ot_gv.php for Calculate Tax</li>
 <li>ISSUE-89 - Update zenCssButton function and stylesheet to use CSS3 (courtesy of lat9 contribution)</li>
 <li>ISSUE-90 - Add gTLD support for email addresses (like .marketing or .international)</li>
+<li>ISSUE-131 - Change password fields to specify autocomplete=off</li>
+<li>ISSUE-132 - Clean up some debug logging activity with payment modules</li>
+<li>ISSUE-133 - Change error messages on password-forgotten screen</li>
+<li>ISSUE-134 - Fix outputs for locate_configuration in DTK added by recent incorporation of lookup plugin</li>
+<li>ISSUE-135 - Fix a potential XSS issue on the countries screen</li>
+<li>ISSUE-136 - Fix frequently-reported scenario where redirect links could be abused to redirect to unverified destinations</li>
+<li>ISSUE-137 - Add PCI DSS warning to the DB query-logging switch</li>
+<li>ISSUE-138 - Riddler spider causing performance issues</li>
 </ul>
 
 
