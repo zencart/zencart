@@ -1,4 +1,4 @@
-$Id: spiders.txt 18695 2011-05-04 05:24:19Z drbyte $
+$Id: spiders.txt 2014-06-10 drbyte $
 bot
 robot
 crawl
@@ -354,6 +354,7 @@ rambler
 raven search
 rbse spider
 resume robot
+riddler
 rixbot
 road runner
 roadhouse crawling system
