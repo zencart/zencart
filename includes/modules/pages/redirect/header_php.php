@@ -3,10 +3,10 @@
  * redirect handler
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 19516 2011-09-14 21:27:30Z wilt $
+ * @version $Id: $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_REDIRECT_HANDLER');
@@ -15,6 +15,73 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 switch ($_GET['action']) {
+  case 'product':
+    if (isset($_GET['products_id']) && zen_not_null($_GET['products_id'])) {
+      $sql = "SELECT products_url from " . TABLE_PRODUCTS_DESCRIPTION . " WHERE products_id = :productId: AND :languageId:";
+      $sql = $db->bindVars($sql, ':productId:', $_GET['products_id'], 'integer');
+      $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
+      $result = $db->execute($sql);
+      if ($result->RecordCount()) {
+        $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_PRODUCT', array(), $_GET['products_id'], $_SESSION['languages_id']);
+        zen_redirect(fixup_url($result->fields['products_url']));
+      } else {
+        $sql = "SELECT products_url from " . TABLE_PRODUCTS_DESCRIPTION . " WHERE products_id = :productId: AND :languageId:";
+        $sql = $db->bindVars($sql, ':productId:', $_GET['products_id'], 'integer');
+        $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
+        $result = $db->execute($sql);
+        if ($result->RecordCount()) {
+          $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_PRODUCT', array(), $_GET['products_id'], $_SESSION['languages_id']);
+          zen_redirect(fixup_url($result->fields['products_url']));
+        }
+      }
+    }
+    break;
+  case 'music_arist':
+    if (isset($_GET['artists_id']) && zen_not_null($_GET['artists_id'])) {
+      $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND :languageId:";
+      $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
+      $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
+      $result = $db->execute($sql);
+      if ($result->RecordCount()) {
+        $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_MUSIC_ARTIST', array(), $_GET['artists_id'], $_SESSION['languages_id']);
+        zen_update_music_artist_clicked($_GET['artists_id'], $_SESSION['languages_id']);
+        zen_redirect(fixup_url($result->fields['artists_url']));
+      } else {
+        $sql = "SELECT products_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND :languageId:";
+        $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
+        $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
+        $result = $db->execute($sql);
+        if ($result->RecordCount()) {
+          $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_MUSIC_ARTIST', array(), $_GET['artists_id'], $_SESSION['languages_id']);
+          zen_update_music_artist_clicked($_GET['artists_id'], DEFAULT_LANGUAGE);
+          zen_redirect(fixup_url($result->fields['artists_url']));
+        }
+      }
+    }
+    break;
+  case 'music_record_company':
+    if (isset($_GET['record_company_id']) && zen_not_null($_GET['record_company_id'])) {
+      $sql = "SELECT record_company_url from " . TABLE_RECORD_COMPANY_INFO . " WHERE record_company_id = :rcId: AND :languageId:";
+      $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');
+      $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
+      $result = $db->execute($sql);
+      if ($result->RecordCount()) {
+        $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_RECORD_COMPANY', array(), $_GET['record_company_id'], $_SESSION['languages_id']);
+        zen_update_record_company_clicked($_GET['record_company_id'], $_SESSION['languages_id']);
+        zen_redirect(fixup_url($result->fields['record_company_url']));
+      } else {
+        $sql = "SELECT record_company_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE record_company_id = :rcId: AND :languageId:";
+        $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');
+        $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
+        $result = $db->execute($sql);
+        if ($result->RecordCount()) {
+          $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_RECORD_COMPANY', array(), $_GET['record_company_id'], $_SESSION['languages_id']);
+          zen_update_record_company_clicked($_GET['record_company_id'], DEFAULT_LANGUAGE);
+          zen_redirect(fixup_url($result->fields['record_company_url']));
+        }
+      }
+    }
+    break;
   case 'banner':
   $banner_query = "SELECT banners_url
                    FROM " . TABLE_BANNERS . "
@@ -27,12 +94,6 @@ switch ($_GET['action']) {
     zen_redirect($banner->fields['banners_url']);
   }
   break;
-  case 'url':
-  if (isset($_GET['goto']) && zen_not_null($_GET['goto'])) {
-    zen_redirect('http://' . $_GET['goto']);
-  }
-  break;
-
   case 'manufacturer':
   if (isset($_GET['manufacturers_id']) && zen_not_null($_GET['manufacturers_id'])) {
     $sql = "SELECT manufacturers_url
@@ -80,14 +141,14 @@ switch ($_GET['action']) {
           $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
           $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
           $db->Execute($sql);
-
-
           zen_redirect($manufacturer->fields['manufacturers_url']);
         }
       }
     }
   }
   break;
+  default:
+    $zco_notifier->notify('NOTIFY_REDIRECT_DEFAULT_ACTION');
 }
 
 // Should not normally get to this point, unless supplied redirect destination is invalid
