@@ -39,7 +39,7 @@
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( ($add_session_id == true) && ($session_started == true) ) {
-      if (defined('SID') && zen_not_null(SID)) {
+      if (defined('SID') && zen_not_null(constant('SID'))) {
         $sid = SID;
       } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL_ADMIN == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
 //die($connection);
