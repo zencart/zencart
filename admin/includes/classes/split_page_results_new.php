@@ -14,7 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Split Page Result Class
  *
- * An sql paging class, that allows for sql reslt to be shown over a number of pages using  simple navigation system
+ * An sql paging class, that allows for sql result to be shown over a number of pages using simple navigation system
  * Overhaul scheduled for subsequent release
  *
  * @package classes
@@ -132,7 +132,7 @@ class splitPageResultsNew{
     if ($cur_window_num < $max_window_num) $display_links_string .= '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . ' ">...</a>&nbsp;';
 
     // next button
-    if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) $display_links_string .= '&nbsp;<a href="' . zen_href_link($_GET['main_page'], $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">' . PREVNEXT_BUTTON_NEXT . '</a>&nbsp;';
+    if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) $display_links_string .= '&nbsp;<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . ($this->current_page_number + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">' . PREVNEXT_BUTTON_NEXT . '</a>&nbsp;';
 
     if ($display_links_string == '&nbsp;<strong class="current">1</strong>&nbsp;') {
       return '&nbsp;';
