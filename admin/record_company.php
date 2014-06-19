@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: record_company.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson  Fri Jun 14 20:02:41 2014 +0100 Modified in v1.5.3 $
  */
 
   require('includes/application_top.php');
@@ -74,7 +74,7 @@
 
             zen_db_perform(TABLE_RECORD_COMPANY_INFO, $sql_data_array);
           } elseif ($action == 'save') {
-            zen_db_perform(TABLE_RECORD_COMPANY_INFO, $sql_data_array, 'update', "record_company_id = '" . (int)$record_company_id . "' and languages_id = '" . (int)$language_id . "'");
+            zen_db_perform_language(TABLE_RECORD_COMPANY_INFO, $sql_data_array, 'record_company_id', (int)$record_company_id, (int)$language_id);
           }
         }
 

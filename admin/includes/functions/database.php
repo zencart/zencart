@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jun 14 20:02:41 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: Ian Wilson  Fri Jun 14 20:02:41 2014 +0100 Modified in v1.5.3 $
  */
 
 
@@ -51,6 +51,47 @@
     }
 
     return $db->Execute($query);
+  }
+  function zen_db_perform_language($table, $data, $keyIdName, $keyId, $languageId, $link = 'db_link') {
+    global $db;
+    reset($data);
+    $sql = "INSERT INTO " . $table . "(" . $keyIdName . ", languages_id, ";
+    while (list($columns, ) = each($data)) {
+      $sql .= $columns . ', ';
+    }
+    $sql = substr($sql, 0, -2) . ') values (' . $keyId . ", " . $languageId . ", ";
+    reset($data);
+    while (list(, $value) = each($data)) {
+      switch ((string)$value) {
+        case 'now()':
+          $sql .= 'now(), ';
+          break;
+        case 'null':
+          $sql .= 'null, ';
+          break;
+        default:
+          $sql .= '\'' . zen_db_input($value) . '\', ';
+          break;
+      }
+    }
+    $sql = substr($sql, 0, -2) . ')';
+    $sql .= ' ON DUPLICATE KEY UPDATE ';
+    reset($data);
+    while (list($columns, $value) = each($data)) {
+      switch ((string)$value) {
+        case 'now()':
+          $sql .= $columns . ' = now(), ';
+          break;
+        case 'null':
+          $sql .= $columns .= ' = null, ';
+          break;
+        default:
+          $sql .= $columns . ' = \'' . zen_db_input($value) . '\', ';
+          break;
+      }
+    }
+    $sql = substr($sql, 0, -2);
+    return $db->Execute($sql);
   }
 
   function zen_db_insert_id() {
