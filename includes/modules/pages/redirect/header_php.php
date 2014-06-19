@@ -38,7 +38,7 @@ switch ($_GET['action']) {
     break;
   case 'music_arist':
     if (isset($_GET['artists_id']) && zen_not_null($_GET['artists_id'])) {
-      $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND language_id = :languageId:";
+      $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
       $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
       $result = $db->execute($sql);
@@ -47,7 +47,7 @@ switch ($_GET['action']) {
         zen_update_music_artist_clicked($_GET['artists_id'], $_SESSION['languages_id']);
         zen_redirect(fixup_url($result->fields['artists_url']));
       } else {
-        $sql = "SELECT products_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND language_id = :languageId:";
+        $sql = "SELECT products_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
         $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
         $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
         $result = $db->execute($sql);
@@ -61,7 +61,7 @@ switch ($_GET['action']) {
     break;
   case 'music_record_company':
     if (isset($_GET['record_company_id']) && zen_not_null($_GET['record_company_id'])) {
-      $sql = "SELECT record_company_url from " . TABLE_RECORD_COMPANY_INFO . " WHERE record_company_id = :rcId: AND language_id = :languageId:";
+      $sql = "SELECT record_company_url from " . TABLE_RECORD_COMPANY_INFO . " WHERE record_company_id = :rcId: AND languages_id = :languageId:";
       $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
       $result = $db->execute($sql);
@@ -70,7 +70,7 @@ switch ($_GET['action']) {
         zen_update_record_company_clicked($_GET['record_company_id'], $_SESSION['languages_id']);
         zen_redirect(fixup_url($result->fields['record_company_url']));
       } else {
-        $sql = "SELECT record_company_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE record_company_id = :rcId: AND language_id = :languageId:";
+        $sql = "SELECT record_company_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE record_company_id = :rcId: AND languages_id = :languageId:";
         $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');
         $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
         $result = $db->execute($sql);
