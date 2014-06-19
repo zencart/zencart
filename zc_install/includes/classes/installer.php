@@ -405,26 +405,50 @@
       $virtual_http_path = parse_url($this->getConfigKey('virtual_http_path'));
       $http_server = $virtual_http_path['scheme'] . '://' . $virtual_http_path['host'];
       $http_catalog = (isset($virtual_http_path['path'])) ? $virtual_http_path['path'] : '';
+
+      // handle /~username cases common to shared-ssl
+      $testarray = explode('/', trim($http_catalog, '/'));
+      if (sizeof($testarray) > 0) {
+        if (substr($testarray[0], 0, 1) == '~') {
+          $http_server .= '/' . $testarray[0];
+          array_shift($testarray);
+          $http_catalog = implode('/', $testarray);
+        }
+      }
+      $http_catalog = str_replace('//', '/', '/' . trim($http_catalog, '/') . '/');
+
       if (isset($virtual_http_path['port']) && !empty($virtual_http_path['port'])) {
         $http_server .= ':' . $virtual_http_path['port'];
       }
-      if (substr($http_catalog, -1) != '/') {
-        $http_catalog .= '/';
-      }
+
       $sql_cache_dir = (int)$this->getConfigKey('DIR_FS_SQL_CACHE');
       $cache_type = $this->getConfigKey('SQL_CACHE_METHOD');
+
       $https_server = $this->getConfigKey('virtual_https_server');
       $https_catalog = $this->getConfigKey('virtual_https_path');
+
       //if the https:// entries were left blank, use non-SSL versions instead of blank
       if ($https_server == '' || trim($https_server) == '' || $https_server == 'https://' || $https_server == '://') $https_server = $http_server;
       if (trim($https_catalog) == '') $https_catalog = $http_catalog;
-      $https_catalog_path = preg_replace('/' . preg_quote($https_server, '/') . '/', '', $https_catalog) . '/';
-      $https_catalog = $https_catalog_path;
+
+      // handle /~username cases common to shared-ssl
+      $testarray = explode('/', trim(str_replace($https_server, '', $https_catalog), '/'));
+      if (sizeof($testarray) > 0) {
+        if (substr($testarray[0], 0, 1) == '~') {
+          $https_server .= '/' . $testarray[0];
+          array_shift($testarray);
+          $https_catalog = implode('/', $testarray);
+        }
+      }
+
+      $https_catalog_path = preg_replace('#' . preg_quote($https_server, '/') . '#', '', $https_catalog);
+      $https_catalog = str_replace('//', '/', '/' . trim($https_catalog_path, '/') . '/');
 
       //now let's write the files
       // Catalog version first:
       require('includes/store_configure.php');
       $config_file_contents_catalog = $file_contents;
+
       $fp = @fopen($this->getConfigKey('DIR_FS_CATALOG') . '/includes/configure.php', 'w');
       if ($fp) {
         fputs($fp, $file_contents);
