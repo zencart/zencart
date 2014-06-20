@@ -59,7 +59,7 @@
     while (list($columns, ) = each($data)) {
       $sql .= $columns . ', ';
     }
-    $sql = substr($sql, 0, -2) . ') values (' . $keyId . ", " . $languageId . ", ";
+    $sql = substr($sql, 0, -2) . ') values (' . (int)$keyId . ", " . (int)$languageId . ", ";
     reset($data);
     while (list(, $value) = each($data)) {
       switch ((string)$value) {
