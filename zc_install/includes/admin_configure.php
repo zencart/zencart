@@ -35,14 +35,13 @@ $file_contents =
 '  // secure webserver for storefront?  Valid choices are \'true\' or \'false\' (including quotes).' . "\n" .
 '  define(\'ENABLE_SSL_CATALOG\', \'' . $this->getConfigKey('ENABLE_SSL') . '\');' . "\n" .
 '' . "\n" .
+'  define(\'DIR_WS_ADMIN\', preg_replace(\'#^\' . str_replace(\'-\', \'\-\', zen_parse_url(HTTP_SERVER, \'/path\')) . \'#\', \'\', dirname($_SERVER[\'SCRIPT_NAME\'])) . \'/\');' . "\n" .
+'  define(\'DIR_WS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
+'  define(\'DIR_WS_HTTPS_ADMIN\', preg_replace(\'#^\' . str_replace(\'-\', \'\-\', zen_parse_url(HTTPS_SERVER, \'/path\')) . \'#\', \'\', dirname($_SERVER[\'SCRIPT_NAME\'])) . \'/\');' . "\n" .
+'  define(\'DIR_WS_HTTPS_CATALOG\', \'' . $https_catalog . '\');' . "\n\n" .
 '// NOTE: be sure to leave the trailing \'/\' at the end of these lines if you make changes!' . "\n" .
 '// * DIR_WS_* = Webserver directories (virtual/URL)' . "\n" .
 '  // these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)' . "\n" .
-'  $t1 = parse_url(HTTP_SERVER);$p1 = $t1[\'path\'].\':\'.$t1[\'port\'];$t2 = parse_url(HTTPS_SERVER);$p2 = $t2[\'path\'].\':\'.$t2[\'port\'];' . "\n\n" .
-'  define(\'DIR_WS_ADMIN\', preg_replace(\'#^\' . str_replace(\'-\', \'\-\', $p1) . \'#\', \'\', dirname($_SERVER[\'SCRIPT_NAME\'])) . \'/\');' . "\n" .
-'  define(\'DIR_WS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
-'  define(\'DIR_WS_HTTPS_ADMIN\', preg_replace(\'#^\' . str_replace(\'-\', \'\-\', $p2) . \'#\', \'\', dirname($_SERVER[\'SCRIPT_NAME\'])) . \'/\');' . "\n" .
-'  define(\'DIR_WS_HTTPS_CATALOG\', \'' . $https_catalog . '\');' . "\n\n" .
 '  define(\'DIR_WS_IMAGES\', \'images/\');' . "\n" .
 '  define(\'DIR_WS_ICONS\', DIR_WS_IMAGES . \'icons/\');' . "\n" .
 '  define(\'DIR_WS_CATALOG_IMAGES\', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . \'images/\');' . "\n" .

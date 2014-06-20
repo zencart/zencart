@@ -25,16 +25,15 @@
   // secure webserver for storefront?  Valid choices are 'true' or 'false' (including quotes).
   define('ENABLE_SSL_CATALOG', 'false');
 
+
+  define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTP_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
+  define('DIR_WS_CATALOG', '/');
+  define('DIR_WS_HTTPS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTPS_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
+  define('DIR_WS_HTTPS_CATALOG', '/');
+
 // NOTE: be sure to leave the trailing '/' at the end of these lines if you make changes!
 // * DIR_WS_* = Webserver directories (virtual/URL)
   // these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)
-  $t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'] . ':' . $t1['port'];$t2 = parse_url(HTTPS_SERVER);$p2 = $t2['path'] . ':' . $t2['port'];
-
-  define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
-  define('DIR_WS_CATALOG', '/');
-  define('DIR_WS_HTTPS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p2) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
-  define('DIR_WS_HTTPS_CATALOG', '/');
-
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
   define('DIR_WS_CATALOG_IMAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'images/');
