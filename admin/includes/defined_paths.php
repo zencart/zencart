@@ -15,7 +15,7 @@ function zen_parse_url($url, $element = 'array')
   // Read the various elements of the URL, to use in auto-detection of admin foldername (basically a simplified parse_url equivalent which automatically supports ports and uncommon TLDs)
   $t1 = array();
   // scheme
-  $s1 = explode('://', HTTP_SERVER);
+  $s1 = explode('://', $url);
   $t1['scheme'] = $s1[0];
   // host
   $s2 = explode('/', trim($s1[1], '/'));
