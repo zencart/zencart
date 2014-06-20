@@ -1,7 +1,7 @@
 <?php
 /**
  *** NOTE: This file contains a list of system-used paths for your site.
- ***       It should NOT be necessary to edit anything here. Anything requiring overrides can be done in override files. ***
+ ***       It should NOT be necessary to edit anything here. Anything requiring overrides can be done in override files or in configure.php directly. ***
  * -- ADMIN version --
  *
  * @package initSystem
@@ -25,7 +25,7 @@ if (isset($t1['port'])) {
 
 if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
-if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
+if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(dirname(__FILE__) . '/../') . '/'));
 
 if (!defined('DIR_WS_IMAGES')) define('DIR_WS_IMAGES', 'images/');
 if (!defined('DIR_WS_ICONS')) define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
