@@ -10,20 +10,35 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: defined_paths.php$
  */
+function zen_parse_url($url, $element = 'array')
+{
+  // Read the various elements of the URL, to use in auto-detection of admin foldername (basically a simplified parse_url equivalent which automatically supports ports and uncommon TLDs)
+  $t1 = array();
+  // scheme
+  $s1 = explode('://', HTTP_SERVER);
+  $t1['scheme'] = $s1[0];
+  // host
+  $s2 = explode('/', trim($s1[1], '/'));
+  $t1['host'] = $s2[0];
+  array_shift($s2);
+  // path/uri
+  $t1['path'] = implode('/', $s2);
+  $p1 = ($t1['path'] != '') ? '/' . $t1['path'] : '';
 
-if (!$t1 = parse_url(HTTP_SERVER)) {
-  /**
-   * A known issue is that parse_url doesn't recognize all TLDs properly, so ".local"
-   * &etc might not be detectable properly.
-   */
-  $t1 = array('host' => $_SERVER['SERVER_NAME'], 'port' => $_SERVER['SERVER_PORT']);
-}
-$p1 = $t1['host'];
-if (isset($t1['port'])) {
-  $p1 .= ':' . $t1['port'];
+  switch($element) {
+    case 'path':
+    case 'host':
+    case 'scheme':
+      return $t1[$element];
+    case '/path':
+      return $p1;
+    case 'array':
+    default:
+      return $t1;
+  }
 }
 
-if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
+if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTP_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(dirname(__FILE__) . '/../') . '/'));
 
