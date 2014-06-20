@@ -56,7 +56,8 @@ $file_contents =
 '  define(\'DIR_WS_CATALOG_LANGUAGES\', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . \'includes/languages/\');' . "\n" .
 '' . "\n" .
 '// * DIR_FS_* = Filesystem directories (local/physical)' . "\n" .
-'  define(\'DIR_FS_ADMIN\', realpath(dirname(__FILE__) . \'/../\') . \'/\');' . "\n" .
+'  define(\'DIR_FS_ADMIN\', preg_replace(\'#/includes/$#\', \'/\', realpath(dirname(__FILE__) . \'/../\') . \'/\'));' . "\n" .
+
 '  //the following path is a COMPLETE path to your Zen Cart files. eg: /var/www/vhost/accountname/public_html/store/' . "\n" .
 '  define(\'DIR_FS_CATALOG\', \'' . $this->getConfigKey('DIR_FS_CATALOG') . '/\');' . "\n\n" .
 '  //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash' . "\n" .

@@ -47,7 +47,8 @@
   define('DIR_WS_CATALOG_LANGUAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/languages/');
 
 // * DIR_FS_* = Filesystem directories (local/physical)
-  define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
+  define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(dirname(__FILE__) . '/../') . '/'));
+
   define('DIR_FS_CATALOG', '/');
 
   //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
