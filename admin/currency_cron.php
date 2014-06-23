@@ -52,7 +52,7 @@ if (isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 
 // setup
-chdir( dirname(__FILE__) );
+chdir(__DIR__);
 $loaderPrefix = 'currency_cron';
 $_SERVER['REMOTE_ADDR'] = 'cron';
 $result = require('includes/application_top.php');
