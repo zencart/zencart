@@ -25,8 +25,8 @@ class zcTestCase extends PHPUnit_Framework_TestCase
     if(!defined('IS_ADMIN_FLAG')) define('IS_ADMIN_FLAG', false);
 
     // Define some pre-requisites
-    if(!defined('TESTCWD')) define('TESTCWD', realpath(dirname(__FILE__) . '/../') . '/');
-    if(!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(dirname(__FILE__) . '/../../../') . '/');
+    if(!defined('TESTCWD')) define('TESTCWD', realpath(__DIR__ . '/../') . '/');
+    if(!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(__DIR__ . '/../../../') . '/');
     if(!defined('DIR_FS_INCLUDES')) define('DIR_FS_INCLUDES', DIR_FS_CATALOG . 'includes/');
     if(!defined('CWD')) define('CWD', DIR_FS_INCLUDES . '../');
 

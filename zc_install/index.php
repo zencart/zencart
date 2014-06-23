@@ -2,7 +2,7 @@
 /**
  * index.php -- This is the main controller file for the Zen Cart installer
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -23,8 +23,8 @@
 /*
  * Initialize system core components
  */
-  define('DIR_FS_INSTALL', realpath(dirname(__FILE__) . '/') . '/');
-  define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
+  define('DIR_FS_INSTALL', realpath(__DIR__ . '/') . '/');
+  define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
   require(DIR_FS_INSTALL . 'includes/application_top.php');
 

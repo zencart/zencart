@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -13,7 +13,7 @@
  */
 
 if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTORY)) {
-  define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
+  define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
   $possible_dir[] = DIR_FS_SQL_CACHE;
   $possible_dir[] = DIR_FS_ROOT . 'cache';
