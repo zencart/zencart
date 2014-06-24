@@ -121,6 +121,10 @@ class paypaldp extends base {
   var $fmfResponse = '';
   var $fmfErrors = array();
   /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
+  /**
    * class constructor
    */
   function paypaldp() {

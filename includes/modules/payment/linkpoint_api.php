@@ -15,6 +15,10 @@
 class linkpoint_api {
   var $code, $title, $description, $enabled, $payment_status, $auth_code, $transaction_id;
   var $_logDir = DIR_FS_SQL_CACHE;
+  /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
 
   // class constructor
   function linkpoint_api() {

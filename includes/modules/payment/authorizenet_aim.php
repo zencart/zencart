@@ -63,6 +63,10 @@ class authorizenet_aim extends base {
   var $commErrNo = 0;
   var $commError = '';
   /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
+  /**
    * debug content var
    */
   var $reportable_submit_data = array();
