@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: system_setup.php 19537 2011-09-20 17:14:44Z drbyte $
@@ -17,7 +17,7 @@
   define('PHYSICAL_PATH', 'Physical Path To Zen Cart&reg;');
   define('PHYSICAL_PATH_INSTRUCTION', 'Physical Path to your<br />Zen Cart&reg; directory.<br />Leave no trailing slash.');
   define('VIRTUAL_HTTP_PATH', 'URL to your Zen Cart&reg; store');
-  define('VIRTUAL_HTTP_PATH_INSTRUCTION', 'Virtual Path/URL to your<br />Zen Cart&reg; directory.<br />Leave no trailing slash.');
+  define('VIRTUAL_HTTP_PATH_INSTRUCTION', 'URL to your Zen Cart&reg; store.<br />Leave no trailing slash.');
   define('VIRTUAL_HTTPS_PATH', 'HTTPS Server URL');
   define('VIRTUAL_HTTPS_PATH_INSTRUCTION', 'Full Virtual Path to your<br />secure Zen Cart&reg; directory.<br />Leave no trailing slash.');
   define('VIRTUAL_HTTPS_SERVER', 'HTTPS Domain');

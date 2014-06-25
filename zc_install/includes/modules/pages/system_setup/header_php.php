@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
@@ -45,16 +45,14 @@ if ($is_upgrade) {
 
 } else { //fresh install, so do auto-detect of several settings
   $dir_fs_www_root = $zc_install->detectDocumentRoot();
-
-  // Determine http path
-  $virtual_path = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-  $virtual_path = substr($virtual_path, 0, strpos($virtual_path, '/zc_install'));
-
-  // Determine the https directory.  This is a best-guess since we're not likely installing over SSL connection:
-  $virtual_https_server = getenv('HTTP_HOST');
+  // Determine http URL and path
+  $virtual_path = preg_replace('~/zc_install/index.php$~', '', $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']);
+  $parsedUrl = zen_parse_url($virtual_path, 'array', true);
+  // Determine the https directory.  This is a best-guess since if we're not installing over SSL we can't fully know for certain. If we are in SSL mode, this is pretty reliable.
+  $virtual_https_server = $parsedUrl['host'];
   $virtual_https_path = $virtual_path;
 
-} //endif $is_upgradable
+} //endif $is_upgrade
 
   // Yahoo hosting and others may use / for physical path ... so instead of leaving it blank, offer '/'
   if ($dir_fs_www_root == '') $dir_fs_www_root = '/';

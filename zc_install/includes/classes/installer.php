@@ -402,7 +402,7 @@
     }
 
     function writeConfigFiles() {
-      $virtual_http_path = parse_url($this->getConfigKey('virtual_http_path'));
+      $virtual_http_path = zen_parse_url($this->getConfigKey('virtual_http_path'));
       $http_server = $virtual_http_path['scheme'] . '://' . $virtual_http_path['host'];
       $http_catalog = (isset($virtual_http_path['path'])) ? $virtual_http_path['path'] : '';
 
