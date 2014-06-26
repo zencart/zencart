@@ -1206,6 +1206,9 @@ if ($action == '') {
 <?php } ?>
 <?php
   $current_options_name = '';
+  // get products tax id
+  $product_check = $db->Execute("select products_tax_class_id from " . TABLE_PRODUCTS . " where products_id = '" . $products_filter . "'" . " limit 1");
+//  echo '$products_filter: ' . $products_filter . ' tax id: ' . $product_check->fields['products_tax_class_id'] . '<br>';
   while (!$attributes_values->EOF) {
     $current_attributes_products_id = $attributes_values->fields['products_id'];
     $current_attributes_options_id = $attributes_values->fields['options_id'];
@@ -1577,9 +1580,9 @@ if ($action == '') {
 // $attributes_values
 $attributes_price_final = zen_get_attributes_price_final($attributes_values->fields["products_attributes_id"], 1, $attributes_values, 'false');
 $attributes_price_final_value = $attributes_price_final;
-$attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate(1), 1);
+$attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
 $attributes_price_final_onetime = zen_get_attributes_price_final_onetime($attributes_values->fields["products_attributes_id"], 1, $attributes_values);
-$attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate(1), 1);
+$attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
 ?>
             <td class="smallText">&nbsp;<?php echo $attributes_values->fields["products_attributes_id"]; ?>&nbsp;</td>
             <td class="smallText">&nbsp;<?php // echo $products_name_only; ?>&nbsp;</td>
@@ -1612,7 +1615,7 @@ if ($action == '') {
     $new_attributes_price = zen_get_attributes_price_final($attributes_values->fields["products_attributes_id"], 1, '', 'false');
     $new_attributes_price = zen_get_discount_calc($products_filter, true, $new_attributes_price);
     if ($new_attributes_price != $attributes_price_final_value) {
-      $new_attributes_price = '|' . $currencies->display_price($new_attributes_price, zen_get_tax_rate(1), 1);
+      $new_attributes_price = '|' . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
     } else {
       $new_attributes_price = '';
     }
