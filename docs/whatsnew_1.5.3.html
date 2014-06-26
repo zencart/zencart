@@ -138,8 +138,10 @@ Fixes:
 <li>CHANGE-697 - Change core config entries to not use config-group-id 0 since many sloppy plugin authors delete those core settings</li>
 <li>CHANGE-698 - Fix bugs in calls to zenCssButton()</li>
 <li>CHANGE-706 - Clean up display of "php disabled functions" list in zc_install inspect screen</li>
-<li>CHANGE-707 - Fix admin url autodetection to accommodate :port suffix in admin urls for local dev setups</li>
+<li>CHANGE-707 - Fix admin url autodetection to accommodate :port suffix in admin urls for local dev setups, and better handle shared-ssl configurations</li>
 <li>CHANGE-708 - EZ Page Title Tag incorrect (introduced by CHANGE-425)</li>
+<li>CHANGE-713 - zc_install problem with correctly detecting working dir on shared-SSL servers</li>
+<li>CHANGE-715 - Fix Attributes Controller not accounting for Tax classes</li>
 <li>ISSUE-9  - Fix minor issue with model number display on product_reviews page</li>
 <li>ISSUE-19 - Fix coupon-admin date check since mktime() doesn't support is_dst param anymore</li>
 <li>ISSUE-23 - Clean up add to cart when non-numeric value is used and display message</li>
@@ -150,6 +152,7 @@ Fixes:
 <li>ISSUE-88 - Fix var assignment operator in ot_gv.php for Calculate Tax</li>
 <li>ISSUE-89 - Update zenCssButton function and stylesheet to use CSS3 (courtesy of lat9 contribution)</li>
 <li>ISSUE-90 - Add gTLD support for email addresses (like .marketing or .international)</li>
+<li>ISSUE-116 - Make admin configure.php "cognizant" of /local subdirectory</li>
 <li>ISSUE-131 - Change password fields to specify autocomplete=off</li>
 <li>ISSUE-132 - Clean up some debug logging activity with payment modules</li>
 <li>ISSUE-133 - Change error messages on password-forgotten screen</li>
@@ -157,7 +160,9 @@ Fixes:
 <li>ISSUE-135 - Fix a potential XSS issue on the countries screen</li>
 <li>ISSUE-136 - Fix frequently-reported scenario where redirect links could be abused to redirect to unverified destinations</li>
 <li>ISSUE-137 - Add PCI DSS warning to the DB query-logging switch</li>
-<li>ISSUE-138 - Riddler spider causing performance issues</li>
+<li>ISSUE-138 - Riddler spider causing performance issues; update spiders.txt list</li>
+<li>ISSUE-142 - Record Company/Record Artist cannot update language dependant fields</li>
+<li>ISSUE-143 - Remove (previously commented-out) SecFilter rules from zc_install/.htaccess so aggressive hosting company security systems don't quarantine</li>
 </ul>
 
 
