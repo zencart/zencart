@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Thu Aug 16 12:36:12 2012 +0100 Modified in v1.5.1 $
@@ -15,22 +15,18 @@
   if (zen_not_null($action)) {
     switch ($action) {
       case 'save':
+        $cID = zen_db_prepare_input($_GET['cID']);
         // demo active test
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cID));
+          zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
         }
         $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
-        $cID = zen_db_prepare_input($_GET['cID']);
 
         $db->Execute("update " . TABLE_CONFIGURATION . "
                       set configuration_value = '" . zen_db_input($configuration_value) . "',
                           last_modified = now() where configuration_id = '" . (int)$cID . "'");
-        $configuration_query = 'select configuration_key as cfgkey, configuration_value as cfgvalue
-                          from ' . TABLE_CONFIGURATION;
-
-        $configuration = $db->Execute($configuration_query);
 
         // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
         if ( (WARN_BEFORE_DOWN_FOR_MAINTENANCE == 'true') && (DOWN_FOR_MAINTENANCE == 'true') ) {
@@ -38,12 +34,7 @@
                       set configuration_value = 'false', last_modified = '" . NOW . "'
                       where configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'"); }
 
-        $configuration_query = 'select configuration_key as cfgkey, configuration_value as cfgvalue
-                          from ' . TABLE_CONFIGURATION;
-
-        $configuration = $db->Execute($configuration_query);
-
-        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cID));
+        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
         break;
     }
   }
@@ -138,7 +129,7 @@ require('includes/admin_html_head.php');
     }
 ?>
 <?php
-   // multilinguage support: 
+   // multilanguage support: 
    // For example, in admin/includes/languages/spanish/configuration.php
    // define('CFGTITLE_STORE_NAME', 'Nombre de la Tienda');
    // define('CFGDESC_STORE_NAME', 'El nombre de mi tienda');
