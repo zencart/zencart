@@ -4,9 +4,8 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Thu Aug 16 12:36:12 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
-
 
   require('includes/application_top.php');
 
@@ -27,6 +26,9 @@
         $db->Execute("update " . TABLE_CONFIGURATION . "
                       set configuration_value = '" . zen_db_input($configuration_value) . "',
                           last_modified = now() where configuration_id = '" . (int)$cID . "'");
+
+        $result = $db->Execute("select configuration_key from " . TABLE_CONFIGURATION . " where configuration_id=" . (int)$cID . " LIMIT 1");
+        zen_record_admin_activity('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value, 'warning');
 
         // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
         if ( (WARN_BEFORE_DOWN_FOR_MAINTENANCE == 'true') && (DOWN_FOR_MAINTENANCE == 'true') ) {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: languages.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -27,6 +27,7 @@
                         values ('" . zen_db_input($name) . "', '" . zen_db_input($code) . "',
                                 '" . zen_db_input($image) . "', '" . zen_db_input($directory) . "',
                                 '" . zen_db_input($sort_order) . "')");
+          zen_record_admin_activity('Language [' . $code . '] added', 'info');
 
           $insert_id = $db->Insert_ID();
 
@@ -235,6 +236,7 @@
                         set configuration_value = '" . zen_db_input(substr($code,0,2)) . "'
                         where configuration_key = 'DEFAULT_LANGUAGE'");
         }
+        zen_record_admin_activity('Language entry updated for language code ' . $code, 'info');
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']));
         break;
       case 'deleteconfirm':
@@ -254,6 +256,7 @@
                         set configuration_value = ''
                         where configuration_key = 'DEFAULT_LANGUAGE'");
         }
+        zen_record_admin_activity('Language with ID ' . $lID . ' deleted.', 'info');
         $db->Execute("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
         $db->Execute("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
         $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lID . "'");

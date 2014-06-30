@@ -3,7 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 /**
  * System check for valid SESSION_WRITE_DIRECTORY value
@@ -13,6 +13,7 @@
  */
 
 if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTORY)) {
+  zen_record_admin_activity('Session directory folder not found. Will attempt to re-detect and update configuration. Old value: ' . SESSION_WRITE_DIRECTORY, 'notice');
   define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
   $possible_dir[] = DIR_FS_SQL_CACHE;
@@ -33,6 +34,7 @@ if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTOR
 
   $sql = "update " . TABLE_CONFIGURATION . " set configuration_value = '" . $db->prepare_input(trim($selected_dir)) . "' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
   $db->Execute($sql);
+  zen_record_admin_activity('Updated SESSION_WRITE_DIRECTORY configuration setting to ' . $selected_dir, 'notice');
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
   exit(1);
 }

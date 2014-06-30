@@ -3,7 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -221,13 +221,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 160.
  *
  * require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
- * require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'logging.php');
  *
  */
   $autoLoadConfig[160][] = array('autoType'=>'require',
                                  'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
-  $autoLoadConfig[160][] = array('autoType'=>'require',
-                                 'loadFile'=> DIR_WS_FUNCTIONS . 'logging.php');
 /**
  * Breakpoint 170.
  *

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: orders.php 19530 2011-09-19 13:52:37Z ajeh $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 
@@ -52,7 +52,7 @@
     if ($orders->RecordCount() <= 0) {
       $order_exists = false;
       if ($action != '') $messageStack->add_session(ERROR_ORDER_DOES_NOT_EXIST . ' ' . $oID, 'error');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
+      zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
     }
   }
 
@@ -287,6 +287,7 @@
             }
           }
           $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
+          zen_record_admin_activity('Order ' . $oID . ' updated.', 'info');
         } else {
           $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
@@ -329,6 +330,7 @@
             }
           }
         }
+        zen_record_admin_activity('Order ' . $oID . ' refund processed. See order comments for details.', 'info');
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
       case 'doAuth':
@@ -371,6 +373,7 @@
             }
           }
         }
+        zen_record_admin_activity('Order ' . $oID . ' void processed. See order comments for details.', 'info');
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
     }
