@@ -35,6 +35,7 @@ while (!$configuration->EOF) {
   define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
   $configuration->movenext();
 }
+unset($configuration);
 if (file_exists(DIR_WS_CLASSES . 'db/' . DB_TYPE . '/define_queries.php')) {
   /**
  * Load the database dependant query defines
