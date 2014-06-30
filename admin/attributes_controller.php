@@ -665,7 +665,7 @@ function translate_type_to_name($opt_type) {
 
       $value_string .= '    ' . $fieldName . '.options[' . $val_count . '] = new Option("' . $products_options_values_name . ($attributes->fields['products_options_values_id'] == 0 ? '/UPLOAD FILE' : '') . ($show_value_numbers ? ' [ #' . $attributes->fields['products_options_values_id'] . ' ] ' : '') . '", "' . $attributes->fields['products_options_values_id'] . '");' . "\n";
 
-      $last_option_processed = $attributes->fields['products_options_id'];;
+      $last_option_processed = $attributes->fields['products_options_id'];
       $val_count++;
       $counter++;
       $attributes->MoveNext();
