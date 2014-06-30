@@ -12,6 +12,19 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+/**
+ * Check if customer's session contains a valid customer_id. If not, then it could be that the administrator has deleted the customer (managing spam etc) so we'll log them out.
+ */
+if (isset($_SESSION['customer_id'])) {
+  $sql = "select customers_id from " . TABLE_CUSTOMERS . " where customers_id = '" . $_SESSION['customer_id'] . "'";
+  $result = $db->Execute($sql);
+  if ($result->RecordCount() == 0) {
+    $_SESSION['cart']->reset(true);
+    zen_session_destroy();
+    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+  }
+}
+
 $down_for_maint_flag = false;
 /**
  * do not let people get to down for maintenance page if not turned on unless is admin in IP list
@@ -37,7 +50,7 @@ if (DOWN_FOR_MAINTENANCE == 'true') {
 if (CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && ($_SESSION['customer_id'] != '' and $_SESSION['customers_authorization'] != '0')) {
   $check_customer_query = "select customers_id, customers_authorization
                              from " . TABLE_CUSTOMERS . "
-                             where customers_id = '" . $_SESSION['customer_id'] . "'";
+                             where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
   $check_customer = $db->Execute($check_customer_query);
   $_SESSION['customers_authorization'] = $check_customer->fields['customers_authorization'];
 }
@@ -156,4 +169,3 @@ switch (true) {
    */
   break;
 }
-?>
