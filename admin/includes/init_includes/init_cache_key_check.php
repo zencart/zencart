@@ -13,7 +13,12 @@
  */
 
 if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTORY)) {
+<<<<<<< HEAD
   define('DIR_FS_ROOT', realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/../') . '/');
+=======
+  zen_record_admin_activity('Session directory folder not found. Will attempt to re-detect and update configuration. Old value: ' . SESSION_WRITE_DIRECTORY, 'notice');
+  define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
+>>>>>>> c4032e1... CHANGE-709 - Refactor logging infrastructure
 
   $possible_dir[] = DIR_FS_SQL_CACHE;
   $possible_dir[] = DIR_FS_CATALOG . 'cache';
@@ -36,11 +41,15 @@ if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTOR
 
   $sql = "update " . TABLE_CONFIGURATION . " set configuration_value = '" . $db->prepare_input(trim($selected_dir)) . "' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
   $db->Execute($sql);
+<<<<<<< HEAD
 
   if (!file_exists($selected_dir) || !is_writable($selected_dir)) {
     die('ALERT: Your cache directory does not exist or is not writable: ' . $selected_dir . ' ... This must be fixed before the page can load correctly.');
   }
 
+=======
+  zen_record_admin_activity('Updated SESSION_WRITE_DIRECTORY configuration setting to ' . $selected_dir, 'notice');
+>>>>>>> c4032e1... CHANGE-709 - Refactor logging infrastructure
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
   exit(1);
 }

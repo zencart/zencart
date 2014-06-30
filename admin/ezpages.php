@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: ezpages.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -11,8 +11,10 @@
   function zen_set_ezpage_status($pages_id, $status, $status_field) {
   global $db;
     if ($status == '1') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 0', 'info');
       return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '0'  where pages_id = '" . (int)$pages_id . "'");
     } elseif ($status == '0') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 1', 'info');
       return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '1'  where pages_id = '" . (int)$pages_id . "'");
     } else {
       return -1;
@@ -43,16 +45,6 @@
         $action='';
         zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . ($_GET['ezID'] != '' ? '&ezID=' . $_GET['ezID'] : '')));
         break;
-      case 'setflag':
-        if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
-          zen_set_ezpage_status(zen_db_prepare_input($_GET['ezID']), zen_db_prepare_input($_GET['flag']));
-          $messageStack->add(SUCCESS_PAGE_STATUS_UPDATED, 'success');
-        } else {
-          $messageStack->add(ERROR_UNKNOWN_STATUS_FLAG, 'error');
-        }
-        zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $_GET['ezID']));
-        break;
-
       case 'page_open_new_window':
         zen_set_ezpage_status(zen_db_prepare_input($_GET['ezID']), zen_db_prepare_input($_GET['current']), 'page_open_new_window');
         $messageStack->add(SUCCESS_PAGE_STATUS_UPDATED, 'success');
@@ -151,9 +143,11 @@
             zen_db_perform(TABLE_EZPAGES, $sql_data_array);
             $pages_id = $db->insert_ID();
             $messageStack->add(SUCCESS_PAGE_INSERTED, 'success');
+            zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' added.', 'info');
           } elseif ($action == 'update') {
             zen_db_perform(TABLE_EZPAGES, $sql_data_array, 'update', "pages_id = '" . (int)$pages_id . "'");
             $messageStack->add(SUCCESS_PAGE_UPDATED, 'success');
+            zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' updated.', 'info');
           }
 
           zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ezID=' . $pages_id));
@@ -174,6 +168,7 @@
         $pages_id = zen_db_prepare_input($_POST['ezID']);
         $db->Execute("delete from " . TABLE_EZPAGES . " where pages_id = '" . (int)$pages_id . "'");
         $messageStack->add(SUCCESS_PAGE_REMOVED, 'success');
+        zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' deleted.', 'notice');
         zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page']));
         break;
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jul 23 19:29:41 2013 -0400 Modified in v1.5.2 $
@@ -27,6 +27,7 @@
                             '" . zen_db_input($countries_iso_code_3) . "',
                             '" . (int)$status . "',
                             '" . (int)$address_format_id . "')");
+        zen_record_admin_activity('Country added: ' . $countries_iso_code_3, 'info');
         zen_redirect(zen_href_link(FILENAME_COUNTRIES));
         break;
       case 'save':
@@ -44,7 +45,7 @@
                           address_format_id = '" . (int)$address_format_id . "',
                           status = " . (int)$status . "
                       where countries_id = '" . (int)$countries_id . "'");
-
+        zen_record_admin_activity('Country updated: ' . $countries_iso_code_3, 'info');
         zen_redirect(zen_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id));
         break;
       case 'deleteconfirm':
@@ -61,6 +62,7 @@
         if ($result->recordCount() == 0) {
           $db->Execute("delete from " . TABLE_COUNTRIES . "
                         where countries_id = '" . (int)$countries_id . "'");
+          zen_record_admin_activity('Country deleted: ' . $countries_id, 'warning');
         } else {
           $messageStack->add_session(ERROR_COUNTRY_IN_USE, 'error');
         }
@@ -71,6 +73,7 @@
         if (isset($_POST['current_status']) && ($_POST['current_status'] == '0' || $_POST['current_status'] == '1')) {
           $sql = "update " . TABLE_COUNTRIES . " set status='" . ($_POST['current_status'] == 0 ? 1 : 0) . "' where countries_id='" . (int)$countries_id . "'";
           $db->Execute($sql);
+          zen_record_admin_activity('Country with ID number: ' . $countries_id . ' changed status to ' . ($_POST['current_status'] == 0 ? 1 : 0), 'info');
           zen_redirect(zen_href_link(FILENAME_COUNTRIES, 'cID=' . (int)$countries_id . '&page=' . $_GET['page']));
         }
         $action = '';

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Feb 12 10:13:44 2013 -0500 Modified in v1.5.3 $
@@ -78,6 +78,8 @@
                     (products_id, categories_id)
                     values ('" . (int)$products_id . "', '" . (int)$current_category_id . "')");
 
+      zen_record_admin_activity('New product ' . (int)$products_id . ' added via admin console.', 'info');
+
       ///////////////////////////////////////////////////////
       //// INSERT PRODUCT-TYPE-SPECIFIC *INSERTS* HERE //////
 
@@ -91,6 +93,8 @@
       $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
       zen_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "'");
+
+      zen_record_admin_activity('Updated product ' . (int)$products_id . ' via admin console.', 'info');
 
       // reset products_price_sorter for searches etc.
       zen_update_products_price_sorter((int)$products_id);

@@ -107,6 +107,7 @@ function zen_delete_user($id)
     $sql = $db->bindVars($sql, ':user:', $id, 'integer');
     $db->Execute($sql);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+    zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), 'warning');
     zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), STORE_NAME, EMAIL_FROM, array(), 'admin_settings_changed');
   }
 }
@@ -171,6 +172,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
 
     $newname = preg_replace('/[^\d\w._-]/', '*', $name);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+    zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
     zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), STORE_NAME, EMAIL_FROM, array(), 'admin_settings_changed');
   }
   return $errors;
@@ -230,6 +232,7 @@ function zen_update_user($name, $email, $id, $profile)
     if (isset($changes['profile'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_PROFILE_CHANGED, $oldData['admin_name'], $changes['profile']['old'], $changes['profile']['new'], $admname) . "\n";
     if ($alertText != '') zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER'=>' ', 'EMAIL_DISCLAIMER' => ' '), 'admin_settings_changed');
     if ($alertText != '') zen_mail($oldData['admin_email'], $oldData['admin_email'], TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER'=>' ', 'EMAIL_DISCLAIMER' => ' '), 'admin_settings_changed');
+    if ($alertText != '') zen_record_admin_activity(TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED . ' ' . $alertText, 'warning');
   }
   return $errors;
 }
@@ -274,13 +277,16 @@ function zen_validate_user_login($admin_name, $admin_pass)
   $result = zen_read_user($admin_name);
   if (!isset($result) || $result == FALSE || $admin_name != $result['admin_name'])
   {
+    // invalid login
     $error = true;
     $message = ERROR_WRONG_LOGIN;
   } else {
     if ($result['lockout_expires'] > time())
     {
+      // account locked
       $error = true;
       $message = ERROR_SECURITY_ERROR; // account locked. Simply give generic error, since otherwise we alert that the account name is correct
+      zen_record_admin_activity('Attempted to log into locked account.', 'warning');
     }
     if ($result['reset_token'] != '')
     {
@@ -318,7 +324,6 @@ function zen_validate_user_login($admin_name, $admin_pass)
     } else {
       $token = $result['admin_pass'];
       if (!zen_validate_password($admin_pass, $token))
-
       {
         $error = true;
         if (!$expired) $message = ERROR_WRONG_LOGIN;
@@ -337,6 +342,9 @@ function zen_validate_user_login($admin_name, $admin_pass)
         {
           $error = TRUE;
           $message = ERROR_WRONG_LOGIN;
+          zen_record_admin_activity('TFA Failure - Two-factor authentication failed', 'warning');
+        } elseif($response === TRUE) {
+          zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'warning');
         }
       }
     }
@@ -355,6 +363,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     {
       $html_msg['EMAIL_CUSTOMERS_NAME'] = $result['admin_name'];
       $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']);
+      zen_record_admin_activity(sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), 'warning');
       zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
     }
     if ($expired_token < 10000)
@@ -365,6 +374,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
         $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
         $db->Execute($sql);
         zen_session_destroy();
+        zen_record_admin_activity('Too many login failures. Account locked for ' . ADMIN_LOGIN_LOCKOUT_TIMER / 60 . ' minutes', 'warning');
         sleep(15);
         $redirect = zen_href_link(FILENAME_DEFAULT, '', 'SSL');
         return array($error, $expired, $message, $redirect);
@@ -488,6 +498,7 @@ function zen_reset_password($id, $password, $compare)
     $sql = $db->bindVars($sql, ':adminID:', $id, 'integer');
     $sql = $db->bindVars($sql, ':newpwd:', $encryptedPassword, 'string');
     $db->Execute($sql);
+    zen_record_admin_activity('Account password change saved.', 'warning');
   }
   return $errors;
 }
@@ -615,6 +626,7 @@ function zen_update_profile_name($profile, $profile_name)
   $sql = $db->bindVars($sql, ':profileName:', zen_db_prepare_input($profile_name), 'string');
   $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
   $db->Execute($sql);
+  zen_record_admin_activity('Admin profile renamed.', 'notice');
 }
 
 function zen_get_admin_pages($menu_only)
@@ -723,6 +735,7 @@ function zen_delete_profile($profile)
     $sql = "DELETE FROM " . TABLE_ADMIN_PROFILES . " WHERE profile_id = :profile:";
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
     $db->Execute($sql);
+    zen_record_admin_activity('Deleted Admin Profile "' . (int)$profile . '"', 'warning');
   } else
   {
     $error = ERROR_PROFILE_HAS_USERS_ATTACHED;
@@ -758,6 +771,7 @@ function zen_create_profile($profileData)
         if (is_numeric($profileId)) {
           // suceeded in creating the profile so result returned was the profile ID
           zen_insert_pages_into_profile($profileId, $profileData['p']);
+          zen_record_admin_activity('Created new admin Profile "' . (int)$profileId . '"', 'warning');
         } else {
           // failed to create the profile return error message
           $retVal = ERROR_UNABLE_TO_CREATE_PROFILE;
@@ -774,6 +788,7 @@ function zen_remove_profile_permits($profile)
   $sql = "DELETE FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " WHERE profile_id = :profile:";
   $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
   $db->Execute($sql);
+  zen_record_admin_activity('Deleted profile permissions from profile #' . (int)$profile, 'warning');
 }
 
 function zen_insert_pages_into_profile($id, $pages)
@@ -786,6 +801,7 @@ function zen_insert_pages_into_profile($id, $pages)
     $sql = $db->bindVars($sql, ':page:', $page, 'string');
     $sql = $db->bindVars($sql, ':profileId:', $id, 'integer');
     $db->Execute($sql);
+    zen_record_admin_activity('Added pages to profile #' . (int)$id, 'warning');
   }
 }
 
@@ -864,6 +880,7 @@ function zen_register_admin_page($page_key, $language_key, $main_page, $page_par
   $sql = $db->bindVars($sql, ':display_on_menu:', $display_on_menu, 'string');
   $sql = $db->bindVars($sql, ':sort_order:', $sort_order, 'integer');
   $db->Execute($sql);
+  zen_record_admin_activity('Registered new admin menu page "' . $page_key . '"', 'warning');
 }
 
 function zen_deregister_admin_pages($pages)
@@ -886,5 +903,6 @@ function zen_deregister_admin_pages($pages)
       $sql = $db->bindVars($sql, ':page_key:', $pages, 'string');
     }
     $db->Execute($sql);
+    zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($pages, true), 'warning');
   }
 }

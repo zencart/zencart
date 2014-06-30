@@ -2,7 +2,7 @@
 //
 /**
  * @package admin
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: move_product_confirm.php 3009 2006-02-11 15:41:10Z wilt $
@@ -35,9 +35,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
           // reset products_price_sorter for searches etc.
           zen_update_products_price_sorter((int)$products_id);
+          zen_record_admin_activity('Moved product ' . (int)$products_id . ' from category ' . (int)$current_category_id . ' to category ' . (int)$new_parent_id, 'notice');
+
         } else {
           $messageStack->add_session(ERROR_CANNOT_MOVE_PRODUCT_TO_CATEGORY_SELF, 'error');
         }
 
         zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
-?>

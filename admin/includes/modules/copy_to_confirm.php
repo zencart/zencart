@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: copy_to_confirm.php 14139 2009-08-10 13:46:02Z wilt $
@@ -26,6 +26,8 @@ if (!defined('IS_ADMIN_FLAG')) {
                 $db->Execute("insert into " . TABLE_PRODUCTS_TO_CATEGORIES . "
                                           (products_id, categories_id)
                               values ('" . (int)$products_id . "', '" . (int)$categories_id . "')");
+
+                zen_record_admin_activity('Product ' . (int)$products_id . ' copied as link to category ' . (int)$categories_id . ' via admin console.', 'info');
               }
             } else {
               $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
@@ -139,6 +141,7 @@ if ( $_POST['copy_attributes']=='copy_attributes_yes' and $_POST['copy_as'] == '
               zen_copy_discounts_to_product($old_products_id, (int)$dup_products_id);
             }
 
+            zen_record_admin_activity('Product ' . (int)$old_products_id . ' duplicated as product ' . (int)$dup_products_id . ' via admin console.', 'info');
           }
 
           // reset products_price_sorter for searches etc.

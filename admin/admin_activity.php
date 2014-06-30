@@ -3,10 +3,10 @@
  * Admin Activity Log Viewer/Archiver
  *
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Nov 2 00:02:54 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Jun 28 2014 Modified in v1.5.3 $
  *
  * @TODO: prettify so on-screen output is more friendly, perhaps adding pagination support etc (using existing "s" and "p" params)
  * @TODO: prettify by hiding postdata until requested, either with hidden layers or other means
@@ -77,7 +77,7 @@ if ($action != '')
         $LINEBREAK = "</tr>" . $NL;
         $sort = ' DESC ';
       }
-      $sql = "select a.access_date, a.admin_id, u.admin_name, a.ip_address, a.page_accessed, a.page_parameters, a.gzpost, a.flagged, a.attention
+      $sql = "select a.access_date, a.admin_id, u.admin_name, a.ip_address, a.page_accessed, a.page_parameters, a.gzpost, a.flagged, a.attention, a.severity, a.logmessage
               FROM " . TABLE_ADMIN_ACTIVITY_LOG . " a LEFT OUTER JOIN " . TABLE_ADMIN . " u ON a.admin_id = u.admin_id ORDER BY access_date " . $sort . $limit;
       $result = $db->Execute($sql);
       $records = $result->RecordCount();
@@ -96,11 +96,13 @@ if ($action != '')
         if ($format == "CSV" || $format == "HTML")
         {
           $exporter_output .= $LINESTART;
+          $exporter_output .= $FIELDSTART . "severity" . $FIELDEND;
+          $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "timestamp" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
-          $exporter_output .= $FIELDSTART . "admin_user" . $FIELDEND;
-          $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "ip_address" . $FIELDEND;
+          $exporter_output .= $FIELDSEPARATOR;
+          $exporter_output .= $FIELDSTART . "admin_user" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "page_accessed" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
@@ -109,6 +111,8 @@ if ($action != '')
           $exporter_output .= $FIELDSTART . "flagged" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "attention" . $FIELDEND;
+          $exporter_output .= $FIELDSEPARATOR;
+          $exporter_output .= $FIELDSTART . "logmessage" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "postdata" . $FIELDEND;
           $exporter_output .= $LINEBREAK;
@@ -128,6 +132,7 @@ if ($action != '')
             $postoutput = nl2br(print_r(json_decode(@gzinflate($result->fields['gzpost'])), true));
             $exporter_output .= "<admin_activity_log>\n";
             $exporter_output .= "  <row>\n";
+            $exporter_output .= "    <severity>" . $result->fields['severity'] . "</severity>\n";
             $exporter_output .= "    <access_date>" . $result->fields['access_date'] . "</access_date>\n";
             $exporter_output .= "    <admin_id>" . $result->fields['admin_id'] . "</admin_id>\n";
             $exporter_output .= "    <admin_name>" . htmlspecialchars($result->fields['admin_name'], ENT_COMPAT, CHARSET, TRUE) . "</admin_name>\n";
@@ -136,6 +141,7 @@ if ($action != '')
             $exporter_output .= "    <page_parameters>" . htmlspecialchars($result->fields['page_parameters'], ENT_COMPAT, CHARSET, TRUE) . "</page_parameters>\n";
             $exporter_output .= "    <flagged>" . htmlspecialchars($result->fields['flagged'], ENT_COMPAT, CHARSET, TRUE) . "</flagged>\n";
             $exporter_output .= "    <attention>" . htmlspecialchars($result->fields['attention'], ENT_COMPAT, CHARSET, TRUE) . "</attention>\n";
+            $exporter_output .= "    <logmessage>" . htmlspecialchars($result->fields['logmessage'], ENT_COMPAT, CHARSET, TRUE) . "</logmessage>\n";
             $exporter_output .= "    <postdata>" . $postoutput . "</postdata>\n";
             $exporter_output .= "  </row>\n";
           } else
@@ -147,11 +153,13 @@ if ($action != '')
               $postoutput = nl2br($postoutput);
             }
             $exporter_output .= $LINESTART;
+            $exporter_output .= $FIELDSTART . $result->fields['severity'] . $FIELDEND;
+            $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['access_date'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
-            $exporter_output .= $FIELDSTART . $result->fields['admin_id'] . ' ' . $result->fields['admin_name'] . $FIELDEND;
-            $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['ip_address'] . $FIELDEND;
+            $exporter_output .= $FIELDSEPARATOR;
+            $exporter_output .= $FIELDSTART . $result->fields['admin_id'] . ' ' . $result->fields['admin_name'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['page_accessed'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
@@ -160,6 +168,8 @@ if ($action != '')
             $exporter_output .= $FIELDSTART . $result->fields['flagged'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['attention'] . $FIELDEND;
+            $exporter_output .= $FIELDSEPARATOR;
+            $exporter_output .= $FIELDSTART . $result->fields['logmessage'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $postoutput . $FIELDEND;
             $exporter_output .= $LINEBREAK;
