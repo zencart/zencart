@@ -115,6 +115,7 @@ Improvements:
 </ul>
 Fixes:
 <ul>
+<li>CHANGE-206 fix admin profiles code to also manage product types</li>
 <li>CHANGE-311 - Data sanity check in customer login and admin customer mgmt to handle missing records resulting from bad imports or damaged data</li>
 <li>CHANGE-446 - Cleanup: Remove duplicate code in update_product.php</li>
 <li>CHANGE-564 - docs</li>
@@ -142,11 +143,13 @@ Fixes:
 <li>CHANGE-708 - EZ Page Title Tag incorrect (introduced by CHANGE-425)</li>
 <li>CHANGE-713 - zc_install problem with correctly detecting working dir on shared-SSL servers</li>
 <li>CHANGE-715 - Fix Attributes Controller not accounting for Tax classes</li>
+<li>CHANGE-716 - General file formatting and syntax cleanups</li>
 <li>ISSUE-9  - Fix minor issue with model number display on product_reviews page</li>
 <li>ISSUE-19 - Fix coupon-admin date check since mktime() doesn't support is_dst param anymore</li>
 <li>ISSUE-23 - Clean up add to cart when non-numeric value is used and display message</li>
 <li>ISSUE-51 - Add ability to autoload observer classes without needing to also create auto_loaders scripts</li>
 <li>ISSUE-81 - class.base.php: Initialize static observer</li>
+<li>ISSUE-82 - Fix odd PHP 5.4 quirk which triggers fatal error "Allowed memory size of --- bytes exhausted" when accessing SID constant</li>
 <li>ISSUE-83 - lat9 requested more notifiers for order-class</li>
 <li>ISSUE-87 - Fix payment module problem admin-side preventing use of Refund option</li>
 <li>ISSUE-88 - Fix var assignment operator in ot_gv.php for Calculate Tax</li>
