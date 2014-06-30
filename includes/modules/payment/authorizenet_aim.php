@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: Ian Wilson Modified in v1.5.4 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -283,6 +283,10 @@ class authorizenet_aim extends base {
     $process_button_string .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
 
     return $process_button_string;
+  }
+  function process_button_ajax() {
+    $processButton = array('ccFields'=>array('cc_owner'=>'authorizenet_aim_cc_owner', 'cc_cvv'=>'authorizenet_aim_cc_cvv', 'cc_expires_month'=>'authorizenet_aim_cc_expires_month', 'cc_expires_year'=>'authorizenet_aim_cc_expires_year'), 'extraFields'=>array(zen_session_name()=>zen_session_id()));
+    return $processButton;
   }
   /**
    * Store the CC info to the order and process any results that come back from the payment gateway

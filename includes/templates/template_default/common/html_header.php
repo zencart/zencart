@@ -102,7 +102,11 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
   while(list ($key, $value) = each($directory_array)) {
     echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
+?>
+  <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"><\/script>');</script>
+  <script>window.jQuery || document.write('<script src="includes/templates/template_default/jscript/query.min.js"><\/script>');</script>
 
+<?php
 /**
  * load all page-specific jscript_*.js files from includes/modules/pages/PAGENAME, alphabetically
  */
@@ -136,8 +140,10 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 
 // DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
 
+/** CDN for jQuery core **/
 
 ?>
+
 </head>
 <?php // NOTE: Blank line following is intended: ?>
 

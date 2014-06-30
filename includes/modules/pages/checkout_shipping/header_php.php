@@ -225,6 +225,9 @@ if (isset($_SESSION['cart']->cartID)) {
     }
   }
 
+  require(DIR_WS_CLASSES . 'payment.php');
+  $payment_modules = new payment;
+
   $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 

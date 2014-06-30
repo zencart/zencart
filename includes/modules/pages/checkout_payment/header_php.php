@@ -11,6 +11,10 @@
 
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_PAYMENT');
+// if (!isset($_SESSION['jscript_enabled'])) {
+//     $messageStack->add_session ('shopping_cart', PAYMENT_JAVASCRIPT_DISABLED, 'error');
+//   zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+// }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
 if ($_SESSION['cart']->count_contents() <= 0) {
