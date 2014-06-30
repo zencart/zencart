@@ -151,7 +151,7 @@ if ($warning_new_box) {
 ?>
         <tr class="messageStackError">
           <td colspan="2" class="messageStackError">
-<?php echo 'WARNING: New boxes found: ' . $warning_new_box; ?>
+<?php echo TEXT_WARNING_NEW_BOXES_FOUND . $warning_new_box; ?>
           </td>
         </tr>
 <?php
@@ -167,7 +167,7 @@ if ($warning_new_box) {
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
               <tr>
-                <td class="main" align="left"><strong>Boxes Path: </strong><?php echo DIR_FS_CATALOG_MODULES . ' ... ' . '<br />&nbsp;'; ?></td>
+                <td class="main" align="left"><strong><?php echo TABLE_HEADING_BOXES_PATH; ?></strong> <?php echo DIR_FS_CATALOG_MODULES; ?> &hellip;<br/></td>
               </tr>
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">

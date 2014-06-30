@@ -9,30 +9,30 @@ if (! defined('IS_ADMIN_FLAG'))
   die('Illegal Access');
 
 define('SUPERUSER_PROFILE', 1);
-$page = (isset($_GET ['cmd'])) ? $_GET ['cmd'] : basename($PHP_SELF, ".php");
+$page = zcRequest::readGet('cmd', basename($PHP_SELF, ".php"));
 $hasDoneStartWizard = TRUE;
 
 // admin folder rename required
-// if (! defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')
-// {
-// if (basename($_SERVER ['SCRIPT_FILENAME']) != FILENAME_ALERT_PAGE . '.php')
-// {
-// if (substr(DIR_WS_ADMIN, - 7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, - 7) == '/admin/')
-// {
-// zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
-// }
-// $check_path = dirname($_SERVER ['SCRIPT_FILENAME']) . '/../zc_install';
-// if (is_dir($check_path))
-// {
-// zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
-// }
-// }
-// }
-if ($_GET ['cmd'] != FILENAME_ALERT_PAGE) {
-  if (! ($_GET ['cmd'] == FILENAME_LOGIN)) {
+if (! defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')
+{
+  if ($page != FILENAME_ALERT_PAGE)
+  {
+    if (substr(DIR_WS_ADMIN, - 7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, - 7) == '/admin/')
+    {
+      zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
+    }
+    $check_path = dirname($_SERVER ['SCRIPT_FILENAME']) . '/../zc_install';
+    if (is_dir($check_path))
+    {
+      zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
+    }
+  }
+}
+if (zcRequest::readGet('cmd') != FILENAME_ALERT_PAGE) {
+  if (! (zcRequest::readGet('cmd') == FILENAME_LOGIN)) {
     if (! isset($_SESSION ['admin_id'])) {
-      if (! ($_GET ['cmd'] == FILENAME_PASSWORD_FORGOTTEN)) {
-        zen_redirect(zen_href_link(FILENAME_LOGIN, 'camefrom=' . $_GET ['cmd'] . '&' . zen_get_all_get_params(array(
+      if (! (zcRequest::readGet('cmd') == FILENAME_PASSWORD_FORGOTTEN)) {
+        zen_redirect(zen_href_link(FILENAME_LOGIN, 'camefrom=' . zcRequest::readGet('cmd') . '&' . zen_get_all_get_params(array(
             'cmd'
         )), 'SSL'));
       }
@@ -46,7 +46,7 @@ if ($_GET ['cmd'] != FILENAME_ALERT_PAGE) {
         FILENAME_DENIED,
         FILENAME_ALT_NAV
     )) && ! zen_is_superuser()) {
-      if (check_page($_GET ['cmd'], $_GET) == FALSE) {
+      if (check_page(zcRequest::readGet('cmd'), zcRequest::all('get')) == FALSE) {
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
       }
     }

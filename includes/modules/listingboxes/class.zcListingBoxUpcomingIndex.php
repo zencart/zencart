@@ -69,7 +69,11 @@ class zcListingBoxUpcomingIndex extends zcAbstractListingBoxBase
         ),
         'orderBys' => array(
             array(
-                'field' => (EXPECTED_PRODUCTS_FIELD == 'date_expected') ? 'products_date_available' : 'products_name' . ' ' . (EXPECTED_PRODUCTS_SORT == 'asc' ? 'asc' : 'desc') ,
+                'field' => call_user_func(function() {
+                         $sort = (EXPECTED_PRODUCTS_FIELD == 'date_expected') ? 'products_date_available' : 'products_name';
+                         $sort .= (EXPECTED_PRODUCTS_SORT == 'asc') ? ' asc ' : ' desc ';
+                         return $sort;
+                }),
                 'type' => 'custom'
             )
         )

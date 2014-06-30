@@ -1,24 +1,46 @@
 <?php
 /**
  *** NOTE: This file contains a list of system-used paths for your site.
- ***       It should NOT be necessary to edit anything here. Anything requiring overrides can be done in override files. ***
+ ***       It should NOT be necessary to edit anything here. Anything requiring overrides can be done in override files or in configure.php directly. ***
  * -- ADMIN version --
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: defined_paths.php$
  */
+function zen_parse_url($url, $element = 'array')
+{
+  // Read the various elements of the URL, to use in auto-detection of admin foldername (basically a simplified parse_url equivalent which automatically supports ports and uncommon TLDs)
+  $t1 = array();
+  // scheme
+  $s1 = explode('://', $url);
+  $t1['scheme'] = $s1[0];
+  // host
+  $s2 = explode('/', trim($s1[1], '/'));
+  $t1['host'] = $s2[0];
+  array_shift($s2);
+  // path/uri
+  $t1['path'] = implode('/', $s2);
+  $p1 = ($t1['path'] != '') ? '/' . $t1['path'] : '';
 
-$t1 = parse_url(HTTP_SERVER);$p1 = $t1['path'];
-/**
- * @TODO - A known issue is that parse_url doesn't recognize all TLDs properly, so ".local" etc might not be detectable properly. Consider shimming.
- */
-if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
+  switch($element) {
+    case 'path':
+    case 'host':
+    case 'scheme':
+      return $t1[$element];
+    case '/path':
+      return $p1;
+    case 'array':
+    default:
+      return $t1;
+  }
+}
 
+if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTP_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
-if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
+if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(dirname(__FILE__) . '/../') . '/'));
 
 if (!defined('DIR_WS_IMAGES')) define('DIR_WS_IMAGES', 'images/');
 if (!defined('DIR_WS_ICONS')) define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');

@@ -12,6 +12,7 @@ if (typeof zcJS == "undefined" || !zcJS) {
 };
 
 zcJS.ajax = function (options) {
+  options.url = options.url.replace("&amp;", "&");
   var deferred = $.Deferred(function (d) {
       var ajaxSecurityToken = '<?php echo $_SESSION['ajaxSecurityToken']; ?>';
       var defaults = {

@@ -83,20 +83,6 @@
       break;
   }
 
-  if (!$_SESSION['language']) $_SESSION['language'] = $language;
-
-  $languages_array = array();
-  $languages = zen_get_languages();
-  $lng_exists = false;
-  for ($i=0; $i<sizeof($languages); $i++) {
-    if ($languages[$i]['directory'] == $_SESSION['language']) $lng_exists = true;
-
-    $languages_array[] = array('id' => $languages[$i]['directory'],
-                               'text' => $languages[$i]['name']);
-  }
-  if (!$lng_exists) $_SESSION['language'] = $language;
-
-
 require('includes/admin_html_head.php');
 ?>
 <?php if ($editor_handler != '') include ($editor_handler); ?>

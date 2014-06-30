@@ -12,18 +12,17 @@ define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
 
 require(DIR_FS_INSTALL . 'includes/application_top.php');
 
-$error = FALSE;
-$adminUser = $_POST['admin_user'];
-$adminPassword = $_POST['admin_password'];
-$systemChecker = new systemChecker();
-$result = $systemChecker->validateAdminCredentials($adminUser, $adminPassword);
-if ($result === FALSE || $result === TRUE)
-{
-  $error = !$result;
+$error          = FALSE;
+$postParams     = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+$systemChecker  = new systemChecker();
+$adminCandidate = $systemChecker->validateAdminCredentials(
+  trim($postParams['admin_user']),
+  trim($postParams['admin_password'])
+);
+
+if (!is_int($adminCandidate)) {
+  $error = !$adminCandidate;
   $adminCandidate = '';
-} else
-{
-  $error = FALSE;
-  $adminCandidate = $result;
 }
-echo json_encode(array('error'=>$error, 'adminCandidate'=>$adminCandidate));
+
+echo json_encode(compact('error', 'adminCandidate'));

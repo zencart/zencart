@@ -109,7 +109,7 @@
                                   'banners_on_ssl' => $banners_on_ssl,
                                   'banners_sort_order' => (int)$banners_sort_order);
 
-          if ($action == 'ins') {
+          if ($action == 'add') {
             $insert_sql_data = array('date_added' => 'now()',
                                      'status' => '1');
 
@@ -264,7 +264,7 @@ function popupImageWindow(url) {
 <?php } // legend ?>
 <?php
   if ($action == 'new') {
-    $form_action = 'ins';
+    $form_action = 'add';
 
     $parameters = array('expires_date' => '',
                         'date_scheduled' => '',

@@ -73,8 +73,47 @@ function zen_get_select_options($optionList, $setDefault)
   }
   function zen_get_http_server()
   {
-    return $_SERVER['HTTP_HOST'];
+    $host = $_SERVER['HTTP_HOST'];
+    $script = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
+    if (substr($script[0], 0, 1) == '~') {
+      $host .= '/' . $script[0];
+    }
+    return $host;
   }
+  function zen_parse_url($url, $element = 'array', $detect_tilde = false)
+  {
+    // Read the various elements of the URL, to use in auto-detection of admin foldername (basically a simplified parse_url equivalent which automatically supports ports and uncommon TLDs)
+    $t1 = array();
+    // scheme
+    $s1 = explode('://', $url);
+    $t1['scheme'] = $s1[0];
+    // host
+    $s2 = explode('/', trim($s1[1], '/'));
+    $t1['host'] = $s2[0];
+    array_shift($s2);
+    // adjust host to accommodate /~username shared-ssl scenarios
+    if ($detect_tilde && substr($s2[0], 0, 1) == '~') {
+      $t1['host'] .= '/' . $s2[0];
+      // array_shift also therefore removes it from ['path'] below
+      array_shift($s2);
+    }
+    // path/uri
+    $t1['path'] = implode('/', $s2);
+    $p1 = ($t1['path'] != '') ? '/' . $t1['path'] : '';
+
+    switch($element) {
+      case 'scheme':
+      case 'host':
+      case 'path':
+        return $t1[$element];
+      case '/path':
+        return $p1;
+      case 'array':
+      default:
+        return $t1;
+    }
+  }
+
   function zen_sanitize_request()
   {
     if (isset($_POST) && count($_POST) > 0)
@@ -154,19 +193,14 @@ function zen_get_select_options($optionList, $setDefault)
     global $request_type;
     if (isset($_POST['adminDir'])) $adminDir = zen_output_string_protected($_POST['adminDir']);
     $documentRoot = zen_get_document_root();
-    $httpServer = zen_get_http_server();
+    $url = ($request_type == 'SSL' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . str_replace('/zc_install/index.php', '', $_SERVER['SCRIPT_NAME']);
+    $httpServer = zen_parse_url($url, 'host', true);
     $adminServer = ($request_type == 'SSL') ? 'https://' : 'http://';
     $adminServer .= $httpServer;
-    //   $adminUrl = $adminServer . $_SERVER['SCRIPT_NAME'];
-    //   $adminUrl = substr($adminUrl, 0, strpos($adminUrl, '/zc_install')) . '/' . $adminDir;
     $catalogHttpServer = 'http://' . $httpServer;
-    $catalogHttpUrl = 'http://' . $httpServer  . $_SERVER['SCRIPT_NAME'];
-    $catalogHttpUrl = substr($catalogHttpUrl, 0, strpos($catalogHttpUrl, '/zc_install'));
+    $catalogHttpUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
     $catalogHttpsServer = 'https://' . $httpServer;
-    $catalogHttpsUrl = 'https://' . $httpServer  . $_SERVER['SCRIPT_NAME'];
-    $catalogHttpsUrl = substr($catalogHttpsUrl, 0, strpos($catalogHttpsUrl, '/zc_install'));
-    //   $adminPhysicalPath = $documentRoot . '/' . $adminDir;
-    //   $virtual_path = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+    $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';
     $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';
 

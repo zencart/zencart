@@ -4,10 +4,10 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Sep 5 13:57:12 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Feb 19 15:57:35 2014 +0000 Modified in v1.5.3 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -1575,8 +1575,30 @@ if (!defined('IS_ADMIN_FLAG')) {
       echo $val;
     }
   }
-
-/////////////////////////////////////////////
+  function fixup_url($url)
+  {
+    if (!preg_match('#^https?://#', $url)) {
+      $url = 'http://' . $url;
+    }
+    return $url;
+  }
+  function zen_update_music_artist_clicked($artistId, $languageId)
+  {
+    global $db;
+    $sql = "UPDATE " . TABLE_RECORD_ARTISTS_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE artists_id = :artistId: AND languages_id = :languageId:";
+    $sql = $db->bindVars($sql, ':artistId:', $artistId, 'integer');
+    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
+    $db->execute($sql);
+  }
+  function zen_update_record_company_clicked($recordCompanyId, $languageId)
+  {
+    global $db;
+    $sql = "UPDATE " . TABLE_RECORD_COMPANY_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE record_company_id = :rcId: AND languages_id = :languageId:";
+    $sql = $db->bindVars($sql, ':rcId:', $recordCompanyId, 'integer');
+    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
+    $db->execute($sql);
+  }
+  /////////////////////////////////////////////
 ////
 // call additional function files
 // prices and quantities

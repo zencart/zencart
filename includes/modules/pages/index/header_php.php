@@ -14,8 +14,19 @@ $zco_notifier->notify ( 'NOTIFY_HEADER_START_INDEX' );
 
 // the following cPath references come from application_top/initSystem
 $category_depth = 'top';
+$categoryError = false;
 if (isset ( $cPath ) && zen_not_null ( $cPath ))
 {
+  $categories_check_query = "SELECT count(*) AS total
+                                FROM   " . TABLE_CATEGORIES . "
+                                WHERE   categories_id = :categoriesID";
+
+  $categories_check_query = $db->bindVars ( $categories_check_query, ':categoriesID', $current_category_id, 'integer' );
+  $categories_check = $db->Execute ( $categories_check_query );
+  if ($categories_check->fields['total'] == 0) {
+    $categoryError = true;
+  }
+
   $categories_products_query = "SELECT count(*) AS total
                                 FROM   " . TABLE_PRODUCTS_TO_CATEGORIES . "
                                 WHERE   categories_id = :categoriesID";
@@ -41,6 +52,7 @@ if (isset ( $cPath ) && zen_not_null ( $cPath ))
     } else
     {
       $category_depth = 'products'; // category has no products, but display the 'no products' message
+      $categoryError = true;
     }
   }
 }

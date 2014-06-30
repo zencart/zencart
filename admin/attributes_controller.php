@@ -232,6 +232,11 @@
         }
         break;
       case 'add_product_attributes':
+// do not add incorrectly selected options_id or values_id
+        if (($_POST['options_id'] == '' || $_POST['values_id'] == '')) {
+          $messageStack->add_session(ATTRIBUTE_WARNING_INVALID_MATCH . ' - ' . zen_options_name($_POST['options_id']) . ' : ' . zen_values_name($_POST['values_id'][$i]), 'error');
+          zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, $_SESSION['page_info'] . '&products_filter=' . $_POST['products_id'] . '&current_category_id=' . $_POST['current_category_id']));
+        }
         $current_image_name = '';
         for ($i=0; $i<sizeof($_POST['values_id']); $i++) {
           if (isset($_POST['values_id'][$i])) $_POST['values_id'][$i] = (int)$_POST['values_id'][$i];
@@ -1776,7 +1781,7 @@ if ($action == '') {
             </select>&nbsp;</td>
             <td class="attributeBoxContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE . '<br />'; ?>
             <select name="values_id[]" id="OptionValue" multiple="multiple" size="<?php echo ($action != 'delete_attribute' ? "15" : "1"); ?>">
-  <option selected>&lt;-- Please select an Option Name from the list ... </option>
+  <option>&lt;-- Please select an Option Name from the list ... </option>
 </select>&nbsp;</td>
 
 <script language="javascript" type="text/javascript"><!--

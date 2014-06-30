@@ -509,13 +509,10 @@ class systemChecker
               where a.admin_name = '" . $adminUser . "'
               and ap.profile_name = 'Superuser'";
       $result = $db->execute($sql);
-      if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass']))
-      {
+      if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
         return FALSE;
-      } else
-      {
-        return TRUE;
       }
+      return $result->fields['admin_id'];
     }
   }
   function curlGetUrl( $url )

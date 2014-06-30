@@ -24,14 +24,14 @@ class zcListingBoxProductsDefault extends zcAbstractListingBoxBase
     $this->productQuery = array(
         'isRandom' => FALSE,
         'isPaginated' => TRUE,
-        'filters' => array(
+       'filters' => array(
             array(
                 'requestHandler' => 'zcQueryBuilderFilterAlphaFilter'
             ),
             array(
                 'requestHandler' => 'zcQueryBuilderFilterTypeFilter'
             )
-        ),
+       ),
         'derivedItems' => array(
             array(
                 'field' => 'displayPrice',
