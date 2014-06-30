@@ -3,7 +3,11 @@
  * @package admin
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+<<<<<<< HEAD
  * @version GIT: $Id: Author: DrByte  Jul 7 2014 Modified in v1.5.3 $
+=======
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+>>>>>>> 5679098... date stamps on CHANGE-709
  */
 /**
  * System check for valid SESSION_WRITE_DIRECTORY value

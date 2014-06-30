@@ -3,7 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte Fri Jun 13 2014  Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

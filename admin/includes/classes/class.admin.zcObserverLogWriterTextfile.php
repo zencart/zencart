@@ -3,9 +3,9 @@
  * @package plugins
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 New in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  *
- * Designed for ZC >= v1.5.3
+ * Designed for ZC >= v1.5.4
  *
  */
 
@@ -13,7 +13,9 @@ class zcObserverLogWriterTextfile extends base {
 
   public function __construct() {
     global $zco_notifier;
-    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS'));
+
+// To enable this module, uncomment the following line
+//    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS'));
 
     /**
      * The following specifies the folderpath on the filesystem where the data will be logged
