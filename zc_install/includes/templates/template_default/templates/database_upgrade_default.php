@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.3 $
@@ -90,7 +90,7 @@
     </div>
     <div class="input">
       <input <?php if ($needs_v1_5_3) {echo "checked";} ?> name="version[]" type="checkbox" id="checkbox25" value="1.5.2" tabindex="25" />
-      <label for="checkbox24">Upgrade DB from 1.5.2 to 1.5.3</label>
+      <label for="checkbox25">Upgrade DB from 1.5.2 to 1.5.3</label>
     </div>
     </fieldset>
     <br />
