@@ -33,18 +33,24 @@ class systemChecker
   {
     $runLevels = array_merge(array($runLevel), $this->extraRunLevels);
     $this -> errorList = array();
+//    print_r($this->systemChecks);
     foreach ($this->systemChecks as $systemCheckName => $systemCheck)
     {
 //      print_r($systemCheck);
       if (in_array($systemCheck['runLevel'], $runLevels))
       {
         $resultCombined = TRUE;
+        $criticalError = false;
         foreach ($systemCheck['methods'] as $methodName => $methodDetail)
         {
           $this->localErrors = NULL;
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
           $result = $this -> {$methodName}($methodDetail['parameters']);
           $resultCombined &= $result;
+          if ($result == false && (isset($this->systemChecks[$systemCheckName]['criticalError'])))
+          {
+            $criticalError = true;
+          }
           $this->log($result, $methodName, $methodDetail);
           if (!$result)
           {
@@ -61,6 +67,7 @@ class systemChecker
         {
           $this -> errorList[$systemCheckName] = $systemCheck;
         }
+        if ($criticalError) break 1;
       }
     }
     return $this -> errorList;
@@ -179,6 +186,7 @@ class systemChecker
   }
   public function dbVersionChecker($parameters)
   {
+    if (function_exists('mysqli_connect')) {
     if (!$this->getServerConfig()->fileLoaded()) return FALSE;
     $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
     $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
@@ -209,6 +217,9 @@ class systemChecker
       $valid = $valid && $result;
     }
 //    echo 'Valid: ' . var_export($valid, true) . '<br>';
+    } else {
+      $valid = false;
+    }
     return $valid;
   }
   public function dbVersionCheckFieldSchema($db, $dbPrefix, $parameters)
@@ -349,6 +360,7 @@ class systemChecker
 
   public function checkUpgradeDBConnection($parameters)
   {
+    if (function_exists('mysqli_connect')) {
     $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
     $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
     $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
@@ -367,10 +379,14 @@ class systemChecker
     {
       $this->localErrors = $db -> error_number . ':' . $db -> error_text;
     }
+    } else {
+      $result = false;
+    }
     return $result;
   }
   public function checkDBConnection($parameters)
   {
+    if (function_exists('mysqli_connect')) {
     $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
     $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
     $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
@@ -381,6 +397,9 @@ class systemChecker
     if ($db->error_number != '2002')
     {
       $result = TRUE;
+    }
+    } else {
+      $result = false;
     }
     return $result;
   }
