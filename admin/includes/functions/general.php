@@ -114,7 +114,10 @@
 
   function zen_get_all_get_params($exclude_array = array()) {
     if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'cmd', 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
+    $exclude_array = array_merge($exclude_array, array('cmd', 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
+    if (function_exists('zen_session_name')) {
+      $exclude_array[] = zen_session_name();
+    }
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
