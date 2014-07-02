@@ -29,6 +29,7 @@ $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $email_address = zen_db_prepare_input($_POST['email_address']);
   $password = zen_db_prepare_input($_POST['password']);
+  $loginAuthorized = false;
 
   /* Privacy-policy-read does not need to be checked during "login"
   if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
@@ -57,15 +58,22 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
       $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
       $messageStack->add('login', TEXT_LOGIN_BANNED);
     } else {
-      $newPassword = $check_customer->fields['customers_password'];
-      // Check that password is good
-      if (!zen_validate_password($password, $newPassword)) {
+
+      $dbPassword = $check_customer->fields['customers_password'];
+      // Check whether the password is good
+      if (zen_validate_password($password, $dbPassword)) {
+        $loginAuthorized = true;
+        if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
+          $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
+        }
+      }
+
+      $zco_notifier->notify('NOTIFY_PROCESS_3RD_PARTY_LOGINS', $email_address, $password, $loginAuthorized);
+
+      if (!$loginAuthorized) {
         $error = true;
         $messageStack->add('login', TEXT_LOGIN_ERROR);
       } else {
-        if (password_needs_rehash($newPassword, PASSWORD_DEFAULT)) {
-          $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
-        }
         if (SESSION_RECREATE == 'True') {
           zen_session_recreate();
         }
