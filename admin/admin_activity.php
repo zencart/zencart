@@ -403,7 +403,7 @@ require (DIR_WS_INCLUDES . 'header.php');
           <tr>
             <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
-        <tr><td><div style="max-width:800px"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></div></td></tr>
+        <tr><td><div style="width:100%;max-width:800px"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></div></td></tr>
         </table>
         </td>
         </form>
