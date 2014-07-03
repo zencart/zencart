@@ -14,8 +14,7 @@ class zcObserverLogWriterTextfile extends base {
   public function __construct() {
     global $zco_notifier;
 
-// To enable this module, uncomment the following line
-//    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS'));
+    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS'));
 
     /**
      * The following specifies the folderpath on the filesystem where the data will be logged
