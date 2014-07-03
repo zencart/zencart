@@ -21,14 +21,23 @@ if (! defined('DIR_FS_ADMIN_ACTIVITY_EXPORT')) define('DIR_FS_ADMIN_ACTIVITY_EXP
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $start = (isset($_GET['s']) ? (int)$_GET['s'] : 0);
 $perpage = (isset($_GET['p']) ? (int)$_GET['p'] : 50);
-$available_export_formats[0] = array('id' => '0' , 'text' => 'Export as HTML (ideal for on-screen viewing)', 'format' => 'HTML'); // review on screen
-$available_export_formats[1] = array('id' => '1' , 'text' => 'Export to CSV (ideal for importing to spreadsheets)', 'format' => 'CSV'); // export to CSV
-//  $available_export_formats[2]=array('id' => '2', 'text' => 'Export to TXT', 'format' => 'TXT');
-//  $available_export_formats[3]=array('id' => '3', 'text' => 'Export to XML', 'format' => 'XML');
+$available_export_formats = array();
+$available_export_formats[0] = array('id' => '0' , 'text' => TEXT_EXPORTFORMAT0, 'format' => 'HTML'); // review on screen
+$available_export_formats[1] = array('id' => '1' , 'text' => TEXT_EXPORTFORMAT1, 'format' => 'CSV'); // export to CSV
+//  $available_export_formats[2]=array('id' => '2', 'text' => TEXT_EXPORTFORMAT2, 'format' => 'TXT');
+//  $available_export_formats[3]=array('id' => '3', 'text' => TEXT_EXPORTFORMAT3, 'format' => 'XML');
 $save_to_file_checked = (isset($_POST['savetofile']) && zen_not_null($_POST['savetofile']) ? $_POST['savetofile'] : 0);
 $post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
 $file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . date('Y-m-d_H-i-s') . '.csv');
+$filter_options = array();
+$filter_options[0] = array('id' => '0', 'text' => TEXT_EXPORTFILTER0, 'filter' => 'all');
+$filter_options[1] = array('id' => '1', 'text' => TEXT_EXPORTFILTER1, 'filter' => 'info');
+$filter_options[2] = array('id' => '2', 'text' => TEXT_EXPORTFILTER2, 'filter' => 'notice');
+$filter_options[3] = array('id' => '3', 'text' => TEXT_EXPORTFILTER3, 'filter' => 'warning');
+$filter_options[4] = array('id' => '4', 'text' => TEXT_EXPORTFILTER4, 'filter' => 'notice+warning');
+$post_filter = (isset($_POST['filter']) && (int)$_POST['filter'] >= 0 && (int)$_POST['filter'] < 5) ? (int)$_POST['filter'] : 4;
+$selected_filter = $filter_options[$post_filter]['filter'];
 
 zen_set_time_limit(600);
 
@@ -77,13 +86,34 @@ if ($action != '')
         $LINEBREAK = "</tr>" . $NL;
         $sort = ' DESC ';
       }
+
+      $where = '';
+      switch($selected_filter) {
+        case 'warning':
+          $where = " severity='warning'";
+          break;
+        case 'notice+warning':
+          $where = " severity in ('warning','notice')";
+          break;
+        case 'notice':
+          $where = " severity='notice'";
+          break;
+        case 'info':
+          $where = " severity='info'";
+          break;
+        default:
+          $where = '';
+      }
+      if ($where != '') $where = " WHERE " . $where;
+
       $sql = "select a.access_date, a.admin_id, u.admin_name, a.ip_address, a.page_accessed, a.page_parameters, a.gzpost, a.flagged, a.attention, a.severity, a.logmessage
-              FROM " . TABLE_ADMIN_ACTIVITY_LOG . " a LEFT OUTER JOIN " . TABLE_ADMIN . " u ON a.admin_id = u.admin_id ORDER BY access_date " . $sort . $limit;
+              FROM " . TABLE_ADMIN_ACTIVITY_LOG . " a LEFT OUTER JOIN " . TABLE_ADMIN . " u ON a.admin_id = u.admin_id " . $where . " ORDER BY log_id " . $sort . $limit;
       $result = $db->Execute($sql);
       $records = $result->RecordCount();
       if ($records == 0)
       {
-        $messageStack->add("No Records Found.", 'error');
+
+        $messageStack->add_session(TEXT_NO_RECORDS_FOUND, 'error');
       } else
       { //process records
         $i = 0;
@@ -287,7 +317,7 @@ if ($action != '')
   } //end switch / case
 } //endif $action
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<?php echo '<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">'; ?>
 <html <?php
 echo HTML_PARAMS;
 ?>>
@@ -321,56 +351,63 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 <!-- body //-->
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
-	<tr>
-		<!-- body_text //-->
-		<td width="100%" valign="top">
-		<table border="0" width="100%" cellspacing="0" cellpadding="0">
-			<tr>
-				<td width="100%">
-				<table border="0" width="100%" cellspacing="0" cellpadding="0">
-					<tr>
-						<td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-						<td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-					</tr>
-				</table>
-				</td>
-			</tr>
-			<tr>
-				<td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-			</tr>
+  <tr>
+    <!-- body_text //-->
+    <td width="100%" valign="top">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="100%">
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+          </tr>
+        </table>
+        </td>
+      </tr>
+      <tr>
+        <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
 
 <?php if ($action == '') { ?>
-			<tr><?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post'); //, 'onsubmit="return check_form(export);"');   ?>
+      <tr><?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post'); //, 'onsubmit="return check_form(export);"');   ?>
         <td align="center">
-				<table border="0" cellspacing="0" cellpadding="2">
-  			<tr><td><h2><?php echo HEADING_SUB1; ?></h2></td></tr>
+        <table border="0" cellspacing="0" cellpadding="2">
+        <tr><td><h2><?php echo HEADING_SUB1; ?></h2></td></tr>
           <tr>
             <td class="main" colspan="2"><?php echo TEXT_INSTRUCTIONS; ?></td>
           </tr>
-					<tr>
-						<td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br /><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
-					</tr>
-					<tr>
-						<td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-					</tr>
-					<tr>
-						<td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
-					</tr>
-					<tr>
-						<td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-					</tr>
-					<tr>
-						<td class="main"><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?> <strong><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></strong><br />
+          <tr>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILTER; ?></strong><br /><?php echo zen_draw_pull_down_menu('filter', $filter_options, $post_filter); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br /><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td class="main"><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?> <strong><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></strong><br />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TEXT_ACTIVITY_EXPORT_DEST; ?></strong> <em><?php echo DIR_FS_ADMIN_ACTIVITY_EXPORT; ?></em>
               </td>
-					</tr>
-					<tr>
-						<td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
-					</tr>
-				</table>
-				</td>
-				</form>
-			</tr>
+          </tr>
+          <tr>
+            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+          </tr>
+        <tr><td width="400px"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></td></tr>
+        </table>
+        </td>
+        </form>
+      </tr>
 
 <!-- bof: reset admin_activity_log -->
       <tr>
@@ -388,9 +425,9 @@ require (DIR_WS_INCLUDES . 'header.php');
   <tr><td><?php echo TEXT_ADMIN_LOG_PLEASE_CONFIRM_ERASE; ?><?php echo zen_draw_form('admin_activity_erase', FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); echo zen_image_submit('button_reset.gif', IMAGE_RESET); ?><input type="hidden" name="confirm" value="yes" /></form></td></tr>
 
 <?php } ?>
-				<!-- body_text_eof //-->
-		</table>
-		<!-- body_eof //--> <!-- footer //-->
+        <!-- body_text_eof //-->
+    </table>
+    <!-- body_eof //--> <!-- footer //-->
 <?php require (DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //--> <br />
 
