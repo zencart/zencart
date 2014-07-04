@@ -104,7 +104,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
   }
 ?>
   <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"><\/script>');</script>
-  <script>window.jQuery || document.write('<script src="includes/templates/template_default/jscript/query.min.js"><\/script>');</script>
+  <script>window.jQuery || document.write('<script src="includes/templates/template_default/jscript/jquery.min.js"><\/script>');</script>
 
 <?php
 /**
