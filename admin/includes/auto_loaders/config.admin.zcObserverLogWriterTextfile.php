@@ -13,6 +13,6 @@
   $autoLoadConfig[1][] = array('autoType'=>'class',
                                'loadFile'=>'class.admin.zcObserverLogWriterTextfile.php',
                                'classPath'=>DIR_WS_CLASSES);
-  $autoLoadConfig[40][] = array('autoType'=>'classInstantiate',
+  $autoLoadConfig[65][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcObserverLogWriterTextfile',
                                'objectName'=>'zcObserverLogWriterTextfile');
