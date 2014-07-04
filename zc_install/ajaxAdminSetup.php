@@ -24,7 +24,7 @@ $word3[$pos] = strtoupper($word3[$pos]);
 $word2 = zen_create_random_value(3, 'chars');
 $adminNewDir = $adminDir;
 $result = FALSE;
-if ($adminDir == 'admin')
+if ($adminDir == 'admin' && (!defined('DEVELOPER_MODE') || DEVELOPER_MODE == false))
 {
   $adminNewDir =  $word1 . '-' . $word2 . '-' . $word3;
   $result = @rename(DIR_FS_ROOT . $adminDir, DIR_FS_ROOT . $adminNewDir);

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -106,7 +106,20 @@ if (@ini_get('eaccelerator.enable') == 1) {
 
 // define the project version
 require (DIR_FS_INSTALL . 'includes/version.php');
-
+/**
+ * include the list of extra configure files
+ */
+if ($za_dir = @dir(DIR_FS_INSTALL . 'includes/extra_configures')) {
+  while ($zv_file = $za_dir->read()) {
+    if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
+      /**
+       * load any user/contribution specific configuration files.
+       */
+      include(DIR_FS_INSTALL . 'includes/extra_configures/' . $zv_file);
+    }
+  }
+  $za_dir->close();
+}
 // set php_self in the local scope
 require (DIR_FS_ROOT . 'includes/classes/class.base.php');
 require (DIR_FS_ROOT . 'includes/classes/class.notifier.php');
