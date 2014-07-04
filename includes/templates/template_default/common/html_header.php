@@ -5,7 +5,7 @@
  * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jul 17 16:02:00 2012 -0400 Modified in v1.5.1 $
@@ -102,8 +102,10 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
   while(list ($key, $value) = each($directory_array)) {
     echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
+
+/** CDN for jQuery core **/
 ?>
-  <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"><\/script>');</script>
+  <script>window.jQuery || document.write('<script src="//code.jquery.com/jquery-1.11.1.min.js"><\/script>');</script>
   <script>window.jQuery || document.write('<script src="includes/templates/template_default/jscript/jquery.min.js"><\/script>');</script>
 
 <?php
@@ -139,9 +141,6 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
   }
 
 // DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
-
-/** CDN for jQuery core **/
-
 ?>
 
 </head>
