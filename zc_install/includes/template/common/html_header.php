@@ -26,7 +26,7 @@
 
 <script src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/modernizr.js'; ?>"></script>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 <script>window.jQuery || document.write('<script src="includes/template/foundation/jquery.min.js"><\/script>');</script>
 </head>
 
