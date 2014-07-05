@@ -313,8 +313,8 @@ CREATE TABLE configuration (
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   use_function text default NULL,
   set_function text default NULL,
-  PRIMARY KEY  (configuration_id),
-  UNIQUE KEY unq_config_key_zen (configuration_key),
+  PRIMARY KEY  (configuration_key),
+  UNIQUE KEY unq_config_id_zen (configuration_id),
   KEY idx_key_value_zen (configuration_key,configuration_value(10)),
   KEY idx_cfg_grp_id_zen (configuration_group_id)
 ) ENGINE=MyISAM;
@@ -1538,8 +1538,8 @@ CREATE TABLE product_type_layout (
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   use_function text default NULL,
   set_function text default NULL,
-  PRIMARY KEY  (configuration_id),
-  UNIQUE KEY unq_config_key_zen (configuration_key),
+  PRIMARY KEY  (configuration_key),
+  UNIQUE KEY unq_config_id_zen (configuration_id),
   KEY idx_key_value_zen (configuration_key,configuration_value(10)),
   KEY idx_type_id_sort_order_zen (product_type_id,sort_order)
 ) ENGINE=MyISAM;
