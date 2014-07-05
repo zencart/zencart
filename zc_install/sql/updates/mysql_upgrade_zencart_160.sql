@@ -243,6 +243,12 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ('new-orders', 1, 0, 2),
 ('logs', 1, 1, 2);
 
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES ('banner-statistics', 'banner-statistics', 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'Banner Statistics', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'Banner Statistics');
+
+
 # --------------------------------------------------------
 
 #
