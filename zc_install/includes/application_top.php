@@ -10,8 +10,30 @@
 @ini_set("arg_separator.output", "&");
 @set_time_limit(250);
 
-if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php'))
+if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {
   require (DIR_FS_INSTALL . 'includes/localConfig.php');
+}
+
+$controller = 'main';
+/* detect CLI params */
+if (isset($argc) && $argc > 0) {
+  for ($i=1;$i<$argc;$i++) {
+    $it = preg_split("/=/",$argv[$i]);
+    $_GET[$it[0]] = (isset($it[1])) ? $it[1] : $it[0];
+    // parse_str($argv[$i],$tmp);
+    // $_REQUEST = array_merge($_REQUEST, $tmp);
+    if ($it[0] == 'cli') $controller = 'cli';
+    if ($it[0] == 'v' || $it[0] == 'verbose') $debug_logging = 'screen';
+  }
+}
+if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
+  for($i=1;$i<$_SERVER["argc"];$i++) {
+    list($key, $val) = explode('=', $_SERVER["argv"][$i]);
+    $_GET[$key] = $_REQUEST[$key] = $val;
+    if ($key == 'cli') $controller = 'cli';
+    if ($key == 'v' || $key == 'verbose') $debug_logging = 'screen';
+  }
+}
 
 /**
  * set the level of system-inspection logging -- can by overridden by adding ?v={mode} to command line, for non-ajax steps, or generically set in localConfig.php
@@ -19,6 +41,7 @@ if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php'))
 if (!isset($debug_logging)) $debug_logging = 'file';
 if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE'))) $debug_logging = 'screen';
 define('VERBOSE_SYSTEMCHECKER', $debug_logging);
+if (VERBOSE_SYSTEMCHECKER == 'screen' && $controller == 'cli') echo 'Verbose mode enabled.' . "\n";
 
 /**
  * read some file locations from the "store / catalog" configure.php
@@ -94,14 +117,16 @@ if (version_compare(PHP_VERSION, 5.4, '<'))
 /*
  * Bypass PHP file caching systems if active, since it interferes with files changed by zc_install (such as progress.json and configure.php)
  */
-//APC
-if (function_exists('apc_clear_cache')) @apc_clear_cache();
-//XCACHE
-//@TODO - find a way to prevent admin login prompts with xcache
-// if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
-//EA
-if (@ini_get('eaccelerator.enable') == 1) {
-  @ini_set('eaccelerator.enable', 0);
+if (!isset($_GET['cacheignore'])) {
+  //APC
+  if (function_exists('apc_clear_cache')) @apc_clear_cache();
+  //XCACHE
+  //@TODO - find a way to prevent admin login prompts with xcache
+  // if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+  //EA
+  if (@ini_get('eaccelerator.enable') == 1) {
+    @ini_set('eaccelerator.enable', 0);
+  }
 }
 
 // define the project version

@@ -2,7 +2,7 @@
 /**
  * file contains zcConfigureFileWriter class
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -17,23 +17,23 @@ class zcConfigureFileWriter
   {
     $this->inputs = $inputs;
     $replaceVars = array();
-    $replaceVars['INSTALLER_METHOD'] = 'Zen Cart Installer';
+    $replaceVars['INSTALLER_METHOD'] = (isset($inputs['installer_method'])) ? trim($inputs['installer_method']) : 'Zen Cart Installer';
     $replaceVars['DATE_NOW'] = date('D M y H:i:s');
-    $replaceVars['CATALOG_HTTP_SERVER'] = $inputs['http_server_catalog'];
-    $replaceVars['CATALOG_HTTPS_SERVER'] = $inputs['https_server_catalog'];
+    $replaceVars['CATALOG_HTTP_SERVER'] = trim($inputs['http_server_catalog'], '/ ');
+    $replaceVars['CATALOG_HTTPS_SERVER'] = trim($inputs['https_server_catalog'], '/ ');
     $replaceVars['ENABLE_SSL_CATALOG'] = isset($inputs['enable_ssl_catalog']) ? 'true' : 'false' ;
-    $replaceVars['DIR_WS_CATALOG'] = $inputs['dir_ws_http_catalog'];
-    $replaceVars['DIR_WS_HTTPS_CATALOG'] = $inputs['dir_ws_https_catalog'];
-    $replaceVars['DIR_FS_CATALOG'] = $inputs['physical_path'] . '/';
-    $replaceVars['DB_TYPE'] = $inputs['db_type'];
-    $replaceVars['DB_PREFIX'] = $inputs['db_prefix'];
-    $replaceVars['DB_CHARSET'] =$inputs['db_charset'];
-    $replaceVars['DB_SERVER'] = $inputs['db_host'];
-    $replaceVars['DB_SERVER_USERNAME'] = $inputs['db_user'];
-    $replaceVars['DB_SERVER_PASSWORD'] = $inputs['db_password'];
-    $replaceVars['DB_DATABASE'] = $inputs['db_name'];
-    $replaceVars['SQL_CACHE_METHOD'] = $inputs['sql_cache_method'];
-    $replaceVars['HTTP_SERVER_ADMIN'] = $inputs['http_server_admin'];
+    $replaceVars['DIR_WS_CATALOG'] = '/' . trim($inputs['dir_ws_http_catalog'], ' /\\') . '/';
+    $replaceVars['DIR_WS_HTTPS_CATALOG'] = '/' . trim($inputs['dir_ws_https_catalog'], ' /\\') . '/';
+    $replaceVars['DIR_FS_CATALOG'] = rtrim($inputs['physical_path'], '/\\') . DIRECTORY_SEPARATOR;
+    $replaceVars['DB_TYPE'] = trim($inputs['db_type']);
+    $replaceVars['DB_PREFIX'] = trim($inputs['db_prefix']);
+    $replaceVars['DB_CHARSET'] = trim($inputs['db_charset']);
+    $replaceVars['DB_SERVER'] = trim($inputs['db_host']);
+    $replaceVars['DB_SERVER_USERNAME'] = trim($inputs['db_user']);
+    $replaceVars['DB_SERVER_PASSWORD'] = trim($inputs['db_password']);
+    $replaceVars['DB_DATABASE'] = trim($inputs['db_name']);
+    $replaceVars['SQL_CACHE_METHOD'] = trim($inputs['sql_cache_method']);
+    $replaceVars['HTTP_SERVER_ADMIN'] = trim($inputs['http_server_admin']);
     $replaceVars['SESSION_STORAGE'] = 'reserved for future use';
 
     $this->replaceVars = $replaceVars;
