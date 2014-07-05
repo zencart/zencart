@@ -60,7 +60,7 @@
 
 require('includes/admin_html_head.php');
 ?>
-<link rel="stylesheet" type="text/css" href="includes/banner_tools.css" />
+<link rel="stylesheet" type="text/css" href="includes/template/css/banner_tools.css" />
 <!--[if lte IE 8]><script src="includes/template/javascript/flot/excanvas.min.js"></script><![endif]-->
 <script src="includes/template/javascript/flot/jquery.flot.min.js"></script>
 <script src="includes/template/javascript/flot/jquery.flot.resize.min.js"></script>
@@ -74,6 +74,145 @@ require('includes/admin_html_head.php');
 <div id="pageWrapper">
 
   <h1><?php echo HEADING_TITLE ?></h1>
+
+<!-- Graph HTML -->
+<div id="graph-wrapper">
+  <div class="graph-info">
+    <a href="javascript:void(0)" class="visitors">Visitors</a>
+    <a href="javascript:void(0)" class="returning">Returning Visitors</a>
+
+    <a href="#" id="bars"><span></span></a>
+    <a href="#" id="lines" class="active"><span></span></a>
+  </div>
+
+  <div class="graph-container">
+    <div id="graph-lines"></div>
+    <div id="graph-bars"></div>
+  </div>
+</div>
+<!-- end Graph HTML -->
+<script>
+$(document).ready(function () {
+  var graphData = [{
+    // Visits
+    data: [ [6, 1300], [7, 1600], [8, 1900], [9, 2100], [10, 2500], [11, 2200], [12, 2000], [13, 1950], [14, 1900], [15, 2000] ],
+    color: '#71c73e'
+  }, {
+    // Returning Visits
+    data: [ [6, 500], [7, 600], [8, 550], [9, 600], [10, 800], [11, 900], [12, 800], [13, 850], [14, 830], [15, 1000] ],
+    color: '#77b7c5',
+    points: { radius: 4, fillColor: '#77b7c5' }
+  }
+];
+
+  // Lines
+  $.plot($('#graph-lines'), graphData, {
+    series: {
+      points: {
+        show: true,
+        radius: 5
+      },
+      lines: {
+        show: true
+      },
+      shadowSize: 0
+    },
+    grid: {
+      color: '#646464',
+      borderColor: 'transparent',
+      borderWidth: 20,
+      hoverable: true
+    },
+    xaxis: {
+      tickColor: 'transparent',
+      tickDecimals: 2
+    },
+    yaxis: {
+      tickSize: 1000
+    }
+  });
+
+  // Bars
+  $.plot($('#graph-bars'), graphData, {
+    series: {
+      bars: {
+        show: true,
+        barWidth: .9,
+        align: 'center'
+      },
+      shadowSize: 0
+    },
+    grid: {
+      color: '#646464',
+      borderColor: 'transparent',
+      borderWidth: 20,
+      hoverable: true
+    },
+    xaxis: {
+      tickColor: 'transparent',
+      tickDecimals: 2
+    },
+    yaxis: {
+      tickSize: 1000
+    }
+  });
+
+  $('#graph-bars').hide();
+
+  $('#lines').on('click', function (e) {
+    $('#bars').removeClass('active');
+    $('#graph-bars').fadeOut();
+    $(this).addClass('active');
+    $('#graph-lines').fadeIn();
+    e.preventDefault();
+  });
+
+  $('#bars').on('click', function (e) {
+    $('#lines').removeClass('active');
+    $('#graph-lines').fadeOut();
+    $(this).addClass('active');
+    $('#graph-bars').fadeIn().removeClass('hidden');
+    e.preventDefault();
+  });
+
+  function showTooltip(x, y, contents) {
+    $('<div id="tooltip">' + contents + '</div>').css({
+      top: y - 16,
+      left: x + 20
+    }).appendTo('body').fadeIn();
+  }
+
+  var previousPoint = null;
+
+  $('#graph-lines, #graph-bars').bind('plothover', function (event, pos, item) {
+    if (item) {
+      if (previousPoint != item.dataIndex) {
+        previousPoint = item.dataIndex;
+        $('#tooltip').remove();
+        var x = item.datapoint[0],
+          y = item.datapoint[1];
+          showTooltip(item.pageX, item.pageY, y + ' visitors at ' + x + '.00h');
+      }
+    } else {
+      $('#tooltip').remove();
+      previousPoint = null;
+    }
+  });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- body_text //-->
   <?php echo zen_draw_form('year', FILENAME_BANNER_STATISTICS, '', 'get'); ?>
@@ -99,9 +238,6 @@ require('includes/admin_html_head.php');
 
 
 <?php
-switch ($type) {
-  case 'yearly':
-
   $stats = zen_get_banner_data_yearly($banner_id);
   $data = array(array('label'=>TEXT_BANNERS_BANNER_VIEWS, 'data'=>$stats[0]), array('label'=>TEXT_BANNERS_BANNER_CLICKS, 'data'=>$stats[1]));
   $title = sprintf(TEXT_BANNERS_YEARLY_STATISTICS, $banner->fields['banners_title']);
@@ -112,14 +248,12 @@ switch ($type) {
   </div>
   <div id="banner-yearly" class="flot_chart" style="width:600px;height:350px;"></div>
   <script>
-    var data = <?php echo json_encode($data); ?> ;
-    var options = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>$stats[3]) ))); ?> ;
-    var plot = $("#banner-yearly").plot(data, options).data("plot");
+    var yData = <?php echo json_encode($data); ?> ;
+    var yOptions = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>$stats[3]) ))); ?> ;
+    var plot = $("#banner-yearly").plot(yData, yOptions).data("plot");
   </script>
 
 <?php
-    break;
-  case 'monthly':
   $stats = zen_get_banner_data_monthly($banner_id, (isset($_GET['year']) ? (int)$_GET['year'] : ''));
   $data = array(array('label'=>TEXT_BANNERS_BANNER_VIEWS, 'data'=>$stats[0]), array('label'=>TEXT_BANNERS_BANNER_CLICKS, 'data'=>$stats[1]));
   $title = sprintf(TEXT_BANNERS_MONTHLY_STATISTICS, $banner->fields['banners_title'], (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')));
@@ -131,16 +265,12 @@ switch ($type) {
   <div id="banner-monthly" class="flot_chart" style="width:600px;height:350px;"></div>
 
   <script>
-    var data = <?php echo json_encode($data); ?> ;
-    var options = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>$stats[3])))); ?> ;
-    var plot = $("#banner-monthly").plot(data, options).data("plot");
+    var mData = <?php echo json_encode($data); ?> ;
+    var mOptions = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>$stats[3])))); ?> ;
+    var plot = $("#banner-monthly").plot(mData, mOptions).data("plot");
   </script>
 
 <?php
-      break;
-    default:
-    case 'daily':
-
   $stats = zen_get_banner_data_daily($banner_id, (isset($_GET['year']) ? (int)$_GET['year'] : ''), (isset($_GET['month']) ? (int)$_GET['month'] : ''));
   $data = array(array('label'=>TEXT_BANNERS_BANNER_VIEWS, 'data'=>$stats[0]), array('label'=>TEXT_BANNERS_BANNER_CLICKS, 'data'=>$stats[1]));
   $title = sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner->fields['banners_title'], strftime('%B', mktime(0,0,0,(isset($_GET['month']) ? (int)$_GET['month'] : date('n')))), (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')));
@@ -152,16 +282,20 @@ switch ($type) {
   <div id="banner-daily" class="flot_chart" style="width:600px;height:350px;"></div>
 
   <script>
-    var data = <?php echo json_encode($data); ?> ;
-    var options = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>sizeof($stats[0]),'tickDecimals' => 0)))); ?> ;
-    var plot = $("#banner-daily").plot(data, options).data("plot");
+    var dData = <?php echo json_encode($data); ?> ;
+    var dOptions = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>sizeof($stats[0]),'tickDecimals' => 0)))); ?> ;
+    var plot = $("#banner-daily").plot(dData, dOptions).data("plot");
   </script>
 
 
-<?php
-  } // end switch
-?>
 
+
+
+
+
+
+
+<?php if (FALSE) { ?>
   <div class="banner-statistics-source-data">
     <table caption="<?php echo TABLE_HEADING_SOURCE; ?>">
       <tr class="headingRow dataTableHeadingRow">
@@ -182,6 +316,13 @@ switch ($type) {
   ?>
     </table>
   </div>
+<?php } ?>
+
+
+
+
+
+
 
 
   <p>
