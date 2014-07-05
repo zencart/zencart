@@ -4,6 +4,7 @@ Zen Cart&reg; - The Art of E-Commerce
 Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
 
 Zen Cart&reg; v1.5.3 has been submitted for updated PA-DSS validation, but until the assessment is completed, it is possible that additional changes may be required. So, rather than stop up this release further, we've decided to publish it so the community can benefit from the many improvements and bugfixes and stronger industry-standard password security.
+A new release, with a new version number, will be made once the certificate is complete.
 
 It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at <http://www.zen-cart.com/forum.php>
 
