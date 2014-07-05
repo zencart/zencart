@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: DrByte  Thu May 24 17:21 2014 -0400 New in v1.5.3 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+.plainbox, div.callout {border: 1px dashed; border-color: #C96E29; margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:10px ;}
+.error {color:#FF0000; }
+.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color: #c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.center {text-align: center}
+-->
+</style>
+<title>Zen Cart&reg; Changed Files</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro center">Welcome to Zen Cart&reg;</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="center small">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.</p>
+</fieldset>
+<br>
+
+
+<fieldset>
+<h1 class="intro center">Version 1.5.4</h1>
+<p>NOTE:<br>
+  For a listing of What's New in this release, please see the <a href="whatsnew_1.5.4.html" target="_blank">whatsnew_1.5.4.html</a> file in the <span class="filename">/docs</span> folder. <br>
+      <a href="http://www.zen-cart.com/releasenotes" target="_blank">You may also see the list in the support forum here</a>. <br>
+      <br>
+      The following is a list of FILE/FOLDER adds/deletes/changes: </p>
+
+<h1>NEW Files ADDED (since release of v1.5.3)</h1>
+<ul>
+<li>/admin/includes/auto_loaders/config.admin.zcObserverLogEventListener.php (added in v1.5.4)</li>
+<li>/admin/includes/auto_loaders/config.admin.zcObserverLogWriterDatabase.php (added in v1.5.4)</li>
+<li>/admin/includes/auto_loaders/config.admin.zcObserverLogWriterTextfile.php (added in v1.5.4)</li>
+<li>/admin/includes/classes/class.admin.zcObserverLogEventListener.php (added in v1.5.4)</li>
+<li>/admin/includes/classes/class.admin.zcObserverLogWriterDatabase.php (added in v1.5.4)</li>
+<li>/admin/includes/classes/class.admin.zcObserverLogWriterTextfile.php (added in v1.5.4)</li>
+<li>/admin/includes/init_includes/init_cache_key_check.php (added in v1.5.2, updated in 1.5.4)</li>
+<li>/includes/classes/ajax/zcAjaxPayment.php (added in v1.5.4)</li>
+<li>/ajax.php (added in v1.5.4)</li>
+</ul>
+<h1>CHANGED Files (since release of v1.5.3)</h1>
+<ul>
+<li>/admin/admin_activity.php</li>
+<li>/admin/configuration.php</li>
+<li>/admin/countries.php</li>
+<li>/admin/coupon_admin.php</li>
+<li>/admin/currencies.php</li>
+<li>/admin/customers.php</li>
+<li>/admin/define_pages_editor.php</li>
+<li>/admin/downloads_manager.php</li>
+<li>/admin/ezpages.php</li>
+<li>/admin/gv_mail.php</li>
+<li>/admin/gv_queue.php</li>
+<li>/admin/languages.php</li>
+<li>/admin/modules.php</li>
+<li>/admin/orders.php</li>
+<li>/admin/sqlpatch.php</li>
+<li>/admin/store_manager.php</li>
+<li>/admin/tax_rates.php</li>
+<li>/admin/includes/auto_loaders/config.admin.zcObserverLogEventListener.php (added in v1.5.4)</li>
+<li>/admin/includes/auto_loaders/config.admin.zcObserverLogWriterDatabase.php (added in v1.5.4)</li>
+<li>/admin/includes/auto_loaders/config.admin.zcObserverLogWriterTextfile.php (added in v1.5.4)</li>
+<li>/admin/includes/classes/class.admin.zcObserverLogEventListener.php (added in v1.5.4)</li>
+<li>/admin/includes/classes/class.admin.zcObserverLogWriterDatabase.php (added in v1.5.4)</li>
+<li>/admin/includes/classes/class.admin.zcObserverLogWriterTextfile.php (added in v1.5.4)</li>
+<li>/admin/includes/classes/upload.php</li>
+<li>/admin/includes/functions/admin_access.php</li>
+<li>/admin/includes/functions/general.php</li>
+<li>/admin/includes/init_includes/init_admin_auth.php</li>
+<li>/admin/includes/init_includes/init_admin_history.php</li>
+<li>/admin/includes/init_includes/init_cache_key_check.php</li>
+<li>/admin/includes/languages/admin_activity.php</li>
+<li>/admin/includes/modules/copy_to_confirm.php</li>
+<li>/admin/includes/modules/move_product_confirm.php</li>
+<li>/admin/includes/modules/update_product.php</li>
+<li>/admin/includes/modules/product_music/copy_to_confirm.php</li>
+<li>/admin/includes/modules/product_music/update_product.php</li>
+<li>/includes/classes/ajax/zcAjaxPayment.php (added in v1.5.4)</li>
+<li>/includes/classes/payment.php</li>
+<li>/includes/languages/english.php</li>
+<li>/includes/modules/pages/checkout_payment/header_php.php</li>
+<li>/includes/modules/pages/checkout_payment/jscript_main.php</li>
+<li>/includes/modules/pages/checkout_shipping/header_php.php</li>
+<li>/includes/modules/pages/shopping_cart/header_php.php</li>
+<li>/includes/modules/payment/authorizenet_aim.php</li>
+<li>/includes/modules/payment/linkpoint_api.php</li>
+<li>/includes/modules/payment/paypaldp.php</li>
+<li>/includes/templates/template_default/common/html_header.php</li>
+<li>/includes/templates/template_default/jscript/jquery.min.js (added in v1.5.4)</li>
+<li>/includes/templates/template_default/jscript/jscript_framework.php (added in v1.5.4)</li>
+<li>/includes/templates/template_default/templates/tpl_ajax_checkout_confirmation_default.php (added in v1.5.4)</li>
+<li>/ajax.php (added in v1.5.4)</li>
+<br>
+<li>/zc_install/ ... assume *all* of /zc_install/ has changed<li>
+<li>... and a reminder: delete the /docs and /extras and /readme.md and /install.txt files when you're done installing!
+</ul>
+
+
+<h1>&nbsp;</h1>
+</fieldset>
+<p class="center"><em>Copyright 2003 - 2014 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>
