@@ -1,24 +1,10 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: banner_manager.php 3131 2006-03-07 22:53:04Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: banner_manager.php 3131 2006-03-07 22:53:04Z ajeh $
+ */
 
 define('HEADING_TITLE', 'Banner Manager');
 
@@ -66,9 +52,8 @@ define('TEXT_BANNERS_EXPIRES_AT_DATE', 'Expires At: <b>%s</b>');
 define('TEXT_BANNERS_EXPIRES_AT_IMPRESSIONS', 'Expires At: <b>%s</b> impressions');
 define('TEXT_BANNERS_STATUS_CHANGE', 'Status Change: %s');
 
-define('TEXT_BANNERS_DATA', 'D<br>A<br>T<br>A');
 define('TEXT_BANNERS_LAST_3_DAYS', 'Last 3 Days');
-define('TEXT_BANNERS_BANNER_VIEWS', 'Banner Views');
+define('TEXT_BANNERS_BANNER_VIEWS', 'Banner Impressions');
 define('TEXT_BANNERS_BANNER_CLICKS', 'Banner Clicks');
 
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this banner?');
@@ -88,9 +73,6 @@ define('ERROR_IMAGE_IS_NOT_WRITEABLE', 'Error: Image can not be removed.');
 define('ERROR_UNKNOWN_STATUS_FLAG', 'Error: Unknown status flag.');
 define('ERROR_BANNER_IMAGE_REQUIRED', 'Error: Banner image required.');
 
-define('ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST', 'Error: Graphs directory does not exist. Please create a graphs directory example: <strong>' . DIR_WS_ADMIN . 'images/graphs</strong>');
-define('ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE', 'Error: Graphs directory is not writeable. This is located at: <strong>' . DIR_WS_ADMIN . 'images/graphs</strong>');
-
 define('TEXT_LEGEND_BANNER_ON_SSL', 'Show SSL');
 define('TEXT_LEGEND_BANNER_OPEN_NEW_WINDOWS', 'New Window');
 
@@ -102,4 +84,4 @@ define('IMAGE_ICON_BANNER_ON_SSL_OFF','Show on Secure Pages - Disabled');
 
 define('SUCCESS_BANNER_OPEN_NEW_WINDOW_UPDATED', 'Success: The status of the banner to open in a new window has been updated.');
 define('SUCCESS_BANNER_ON_SSL_UPDATED', 'Success: The status of the banner to show on SSL has been updated.');
-?>
+
