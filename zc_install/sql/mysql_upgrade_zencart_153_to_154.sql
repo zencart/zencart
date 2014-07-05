@@ -1,12 +1,12 @@
 #
-# * This SQL script upgrades the core Zen Cart database structure from v1.5.2 to v1.5.3
+# * This SQL script upgrades the core Zen Cart database structure from v1.5.3 to v1.5.4
 # *
 # * @package Installer
 # * @access private
 # * @copyright Copyright 2003-2014 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version GIT: $Id: Author: DrByte  Fri Jun 13 2014  New in v1.5.3 $
+# * @version GIT: $Id: Author: DrByte  Fri Jul 4 2014  New in v1.5.4 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
