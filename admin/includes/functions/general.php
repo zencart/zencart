@@ -1684,7 +1684,7 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
-  function zen_banner_image_extension() {
+  function zen_supported_image_extension() {
     if (function_exists('imagetypes')) {
       if (imagetypes() & IMG_PNG) {
         return 'png';
