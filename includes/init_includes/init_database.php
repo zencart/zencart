@@ -22,19 +22,23 @@ $down_for_maint_source = 'nddbc.html';
 
 if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
   session_write_close();
+  // If can't connect, send 503 Service Unavailable header and redirect to install or message page
+  header("HTTP/1.1 503 Service Unavailable");
+
+
   if (file_exists('zc_install/index.php')) {
     header('location: zc_install/index.php');
     exit;
   } elseif (file_exists($down_for_maint_source)) {
-    if (defined('HTTP_SERVER') && defined('DIR_WS_CATALOG')) {
-      header('location: ' . HTTP_SERVER . DIR_WS_CATALOG . $down_for_maint_source );
-    } else {
-      header('location: ' . $down_for_maint_source );
-//    header('location: mystoreisdown.html');
-    }
-    exit;
+    include($down_for_maint_source );
+    exit(1);
+  } elseif (defined('HTTP_SERVER') && defined('DIR_WS_CATALOG')) {
+    header('location: ' . HTTP_SERVER . DIR_WS_CATALOG . $down_for_maint_source );
+    exit(1);
   } else {
-    exit;
+    header('location: ' . $down_for_maint_source);
+//    header('location: mystoreisdown.html');
+    exit(1);
   }
 }
 
