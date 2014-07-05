@@ -3,7 +3,7 @@
  * Contact Us Page
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sat Jul 21 16:05:31 2012 -0400 Modified in v1.5.1 $
@@ -20,14 +20,14 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
   $email_address = zen_db_prepare_input($_POST['email']);
   $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
   $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
-  $zco_notifier->notify('NOTIFY_CONTACT_US_CAPTCHA_CHECK');
+  $zco_notifier->notify('NOTIFY_CONTACT_US_CAPTCHA_CHECK', $_POST);
 
   $zc_validate_email = zen_validate_email($email_address);
 
   if ($zc_validate_email and !empty($enquiry) and !empty($name) && $error == FALSE) {
     // if anti-spam is not triggered, prepare and send email:
    if ($antiSpam != '') {
-      $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US');
+      $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US', $_POST);
    } elseif ($antiSpam == '') {
 
     // auto complete when logged in
@@ -45,6 +45,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
       $customer_name = NOT_LOGGED_IN_TEXT;
     }
 
+    $zco_notifier->notify('NOTIFY_CONTACT_US_ACTION', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0), $customer_email, $customer_name, $email_address, $name, $enquiry);
+
     // use contact us dropdown if defined
     if (CONTACT_US_LIST !=''){
       $send_to_array=explode("," ,CONTACT_US_LIST);
@@ -53,8 +55,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
       $send_to_email= trim(preg_replace("/</", "", $send_to_email));
       $send_to_name = trim(preg_replace('/\<[^*]*/', '', $send_to_array[$_POST['send_to']]));
     } else {  //otherwise default to EMAIL_FROM and store name
-    $send_to_email = trim(EMAIL_FROM);
-    $send_to_name =  trim(STORE_NAME);
+      $send_to_email = trim(EMAIL_FROM);
+      $send_to_name =  trim(STORE_NAME);
     }
 
     // Prepare extra-info details
