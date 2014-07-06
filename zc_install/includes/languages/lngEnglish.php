@@ -19,6 +19,7 @@ define('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which
 define('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
 define('TEXT_DATABASE_UPGRADE_HEADER_MAIN', 'The following list shows the various upgrade steps we detected are required for your database.');
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
+define('TEXT_HELP_CONTENT_CHOOSE_LANG', 'Zen Cart&reg; is multi-lingual, supporting as many languages as there are language packs available. Simply install the necessary language pack and your entire store can operate in multiple languages, including this installer.');
 
 define('TEXT_PAGE_HEADING_SYSTEM_SETUP', 'System Setup');
 define('TEXT_SYSTEM_SETUP_ADMIN_SETTINGS', 'Admin Settings');
