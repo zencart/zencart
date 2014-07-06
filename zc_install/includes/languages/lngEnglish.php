@@ -17,7 +17,7 @@ define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we cont
 define('TEXT_INDEX_WARN_ERRORS', 'Some other problems');
 define('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which explain what each field means.');
 define('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
-
+define('TEXT_DATABASE_UPGRADE_HEADER_MAIN', 'The following list shows the various upgrade steps we detected are required for your database.');
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 
 define('TEXT_PAGE_HEADING_SYSTEM_SETUP', 'System Setup');
@@ -70,6 +70,8 @@ define('TEXT_CREATING_DATABASE', 'Creating Database');
 define('TEXT_LOADING_CHARSET_SPECIFIC', 'Loading Character Set specific data');
 define('TEXT_LOADING_DEMO_DATA', 'Loading Demo Data');
 define('TEXT_LOADING_PLUGIN_DATA', 'Loading SQL for Pre-installed Plugins');
+
+define('TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED', 'Could not update to version %s; Version %s update required first.');
 
 define('TEXT_PAGE_HEADING_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_ADMIN_SETUP_USER_SETTINGS', 'Admin User Settings');
@@ -238,7 +240,6 @@ define('TEXT_VERSION_CHECK_CURRENT', 'Your version of Zen Cart&reg; appears to b
 define('TEXT_ERROR_NEW_VERSION_AVAILABLE', '<a href="http://www.zen-cart.com/getit">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="http://www.zen-cart.com" style="text-decoration:underline" target="_blank">www.zen-cart.com</a>');
 
 define('TEXT_DB_VERSION_NOT_FOUND', 'A Zen Cart database for %s was not found!');
-
 
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');

@@ -15,7 +15,13 @@ require(DIR_FS_INSTALL . 'includes/application_top.php');
 $error = FALSE;
 $errorList = array();
 $db_type = 'mysql';
-$updateList = array('1.5.0'=>array('required'=>'1.3.9'),'1.5.1'=>array('required'=>'1.5.0'),'1.5.2'=>array('required'=>'1.5.1'),'1.5.3'=>array('required'=>'1.5.2'),'1.6.0'=>array('required'=>'1.5.3'));
+$updateList = array(
+        '1.5.0'=>array('required'=>'1.3.9'),
+        '1.5.1'=>array('required'=>'1.5.0'),
+        '1.5.2'=>array('required'=>'1.5.1'),
+        '1.5.3'=>array('required'=>'1.5.2'),
+        '1.5.4'=>array('required'=>'1.5.3'),
+        '1.6.0'=>array('required'=>'1.5.4'));
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
@@ -27,8 +33,7 @@ $versionInfo = $updateList[$updateVersion];
 if ($versionInfo['required'] != $dbVersion)
 {
   $error = TRUE;
-  //@TODO - language string to lang file
-  $errorList[] = "Could not update to version " . $updateVersion . " Version " . $versionInfo['required'] . 'update required';
+  $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $versionInfo['required']);
 }
 if (!$error)
 {
