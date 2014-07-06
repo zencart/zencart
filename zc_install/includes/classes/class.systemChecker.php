@@ -4,7 +4,7 @@
  * @package Installer
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:
+ * @version GIT: $Id: $
  *
  */
 /**
@@ -94,8 +94,8 @@ class systemChecker
     {
       $httpServerVal = $this->getServerConfig()->getDefine('HTTP_SERVER');
       $fsCatalogVal = $this->getServerConfig()->getDefine('DIR_FS_CATALOG');
-      $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
-      if ($httpServerVal != "" && $fsCatalogVal != "" && $dbPasswordVal != "")
+      $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+      if ($httpServerVal != "" && $fsCatalogVal != "" && $dbUserVal != "")
       {
         $result = TRUE;
       }
