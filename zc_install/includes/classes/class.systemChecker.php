@@ -648,5 +648,30 @@ class systemChecker
     }
     return true;
   }
+  /**
+   * add current user IP to allowed-in-maintenance list
+   */
+  public function updateAdminIpList() {
+    if (isset($_SERVER['REMOTE_ADDR']) && strlen($_SERVER['REMOTE_ADDR']) > 4) {
+      $checkip = $_SERVER['REMOTE_ADDR'];
 
+      $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+      $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+      $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+      $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+      $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+      require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+      $db = new queryFactory();
+      $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+      $result = $db -> selectdb($dbNameVal, $db -> link);
+
+      $sql = "select configuration_value from " . DB_PREFIX . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
+      $result = $db->Execute($sql);
+      if (!strstr($result->fields['configuration_value'], $checkip)) {
+        $newip = $result->fields['configuration_value'] . ',' . $checkip;
+        $sql = "update " . DB_PREFIX . "configuration set configuration_value = '" . $db->prepare_input($newip) . "' where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
+        $db->Execute($sql);
+      }
+    }
+  }
 }

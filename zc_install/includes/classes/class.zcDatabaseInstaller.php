@@ -462,17 +462,4 @@ class zcDatabaseInstaller
       }
     }
   }
-  public function updateAdminIpList() {
-    if (isset($_SERVER['REMOTE_ADDR']) && strlen($_SERVER['REMOTE_ADDR']) > 4) {
-      $checkip = $_SERVER['REMOTE_ADDR'];
-      $this->dbActivate();
-      $sql = "select configuration_value from " . DB_PREFIX . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
-      $result = $this->db->Execute($sql);
-      if (!strstr($result->fields['configuration_value'], $checkip)) {
-        $newip = $result->fields['configuration_value'] . ',' . $checkip;
-        $sql = "update " . DB_PREFIX . "configuration set configuration_value = '" . $this->db->prepare_input($newip) . "' where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
-        $this->db->Execute($sql);
-      }
-    }
-  }
 }
