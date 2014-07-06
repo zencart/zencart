@@ -9,7 +9,7 @@
 /**
  * defining language components for the page
  */
-define('META_TAG_TITLE', 'Zen Cart Installer');
+define('META_TAG_TITLE', 'Zen Cart&reg; Installer');
 define('HTML_PARAMS','dir="ltr" lang="en"');
 
 define('TEXT_PAGE_HEADING_INDEX', 'System Inspection');
@@ -51,7 +51,7 @@ define('TEXT_DATABASE_SETUP_ADVANCED_SETTINGS', 'Advanced Settings');
 define('TEXT_DATABASE_SETUP_DB_CHARSET', 'Database Character Set: ');
 define('TEXT_DATABASE_SETUP_DB_PREFIX', 'Store Prefix: ');
 define('TEXT_DATABASE_SETUP_SQL_CACHE_METHOD', 'SQL Cache Method: ');
-define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occurred when running the sql install file');
+define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occurred when running the SQL install file');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details<p>');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'UTF-8(default setting)');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'Latin1');
@@ -149,8 +149,8 @@ define('TEXT_ERROR_SESSION_SUPPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
 define('TEXT_ERROR_SESSION_SUPPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
 define('TEXT_ERROR_DB_CONNECTION', 'Problems with Database Connection');
-define('TEXT_ERROR_DB_CONNECTION_DEFAULT', 'Possible problems with Database Connection');
-define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Probems with Database Connection based on the entries in your current configure.php');
+define('TEXT_ERROR_DB_CONNECTION_DEFAULT', 'Possible problems with database connection');
+define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Probems with database connection based on the entries in your current configure.php');
 define('TEXT_ERROR_SET_TIME_LIMIT', 'max_execution_time setting disabled ');
 define('TEXT_ERROR_REGISTER_GLOBALS', 'Register Globals enabled');
 define('TEXT_ERROR_GD', 'GD Extension not enabled');
@@ -163,16 +163,16 @@ define('TEXT_ERROR_GZIP', 'Gzip Extension not enabled');
 define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be loaded');
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
 define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use CURL to contact a live server');
-define('TEXT_ERROR_HTTPS', 'If possible you should already have installed an SSL certificate, and run the installer using https://');
-define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your Database Settings');
-define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your Database seems to be current. Are you sure you want to install?');
+define('TEXT_ERROR_HTTPS', 'PRO TIP: If possible you should already have installed an SSL certificate, and run the installer using https://');
+define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your database structure if you choose "Upgrade..." below.');
+define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your database seems to be current. This suggests you are on a live site. Proceeding with Install will wipe out the current database contents! Are you sure you want to install?');
 define('TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED', 'Multiple Admin directories seem to exist. Either remove old admin directories and click Refresh or select the correct admin directory below and click Refresh.');
 define('TEXT_ERROR_MULTIPLE_ADMINS_SELECTED', 'Multiple Admin directories seem to exist. If the selected directory below is incorrect, please choose another and click Refresh.');
 define('TEXT_ERROR_SUCCESS_NO_ERRORS', 'No errors or warnings were detected on your system. You may continue with the installation.');
 
 define('TEXT_FORM_VALIDATION_REQUIRED', 'Required');
 define('TEXT_FORM_VALIDATION_AGREE_LICENSE', 'You must agree to the license terms');
-define('TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL', 'A URL is required here, even if you have temporarily opted not to enable SSL yet.');
+define('TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL', 'A URL is required here, even if you have temporarily opted not to enable SSL yet. Try using your normal domain name.');
 
 define('TEXT_NAVBAR_INSTALLATION_INSTRUCTIONS', 'Installation Instructions');
 define('TEXT_NAVBAR_FORUM_LINK', 'Forum');
@@ -188,7 +188,7 @@ define('TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK', 'We tried to connect to MySQ
 define('TEXT_HELP_TITLE_ADMINSERVERDOMAIN', 'Admin Server Domain');
 define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', "Enter the domain name for accessing your Admin area. It is strongly recommended to use HTTPS for this address. Consult your hosting company about enabling SSL on your site.");
 define('TEXT_HELP_TITLE_ENABLESSLCATALOG', 'Enable SSL for Storefront?');
-define('TEXT_HELP_CONTENT_ENABLESSLCATALOG', "Check this box if you have an SSL certificate on your hosting account and you want Zen Cart to use it when displaying sensitive pages such as Login, My Account, Checkout, etc.");
+define('TEXT_HELP_CONTENT_ENABLESSLCATALOG', "Check this box if you have an SSL certificate on your hosting account and you want Zen Cart&reg; to use it when displaying sensitive pages such as Login, My Account, Checkout, etc.");
 define('TEXT_HELP_TITLE_HTTPSERVERCATALOG', 'Storefront HTTP Domain');
 define('TEXT_HELP_CONTENT_HTTPSERVERCATALOG', "Enter the domain-part of the URL for your store.");
 define('TEXT_HELP_TITLE_HTTPURLCATALOG', 'Storefront HTTP URL');
