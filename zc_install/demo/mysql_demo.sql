@@ -400,6 +400,20 @@ INSERT INTO products (products_id, products_type, products_quantity, products_mo
 (179, 1, '1000', 'DOWNLOAD1', '1_small.jpg', '39.0000', 0, '2004-10-06 00:08:33', '2004-10-06 00:18:51', NULL, '0.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 0, 0, 0, '39.0000', 60, 1),
 (178, 1, '1000', 'Normal', '1_small.jpg', '60.0000', 0, '2004-10-05 16:54:52', '2004-10-05 17:15:02', NULL, '2.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 0, 0, 1, '0', 0, 1, 0, '50.0000', 55, 1);
 
+#New Products
+UPDATE products SET products_date_added = NOW() WHERE products_id = 168 or products_id = 169 or products_id = 170;
+UPDATE products SET products_date_added = NOW() - INTERVAL 7 DAY WHERE products_id = 171 or products_id = 172 or products_id = 166 or products_id = 133;
+UPDATE products SET products_date_added = NOW() - INTERVAL 20 DAY WHERE products_id = 126 or products_id = 47 or products_id = 34;
+UPDATE products SET products_date_added = NOW() - INTERVAL 50 DAY WHERE products_id = 134 or products_id = 131 or products_id = 160;
+UPDATE products SET products_date_added = NOW() - INTERVAL 70 DAY WHERE products_id = 57 or products_id = 174;
+UPDATE products SET products_date_added = NOW() - INTERVAL 100 DAY WHERE products_id = 6 or products_id = 19;
+
+#Upcoming Products
+UPDATE products SET products_date_available = NOW() + INTERVAL 12 DAY WHERE products_id = 16;
+UPDATE products SET products_date_available = NOW() + INTERVAL 17 DAY WHERE products_id = 174;
+UPDATE products SET products_date_available = NOW() + INTERVAL 27 DAY WHERE products_id = 40;
+UPDATE products SET products_date_available = NOW() + INTERVAL 33 DAY WHERE products_id = 34;
+
 #
 # Dumping data for table `products_attributes`
 #
@@ -1449,7 +1463,7 @@ INSERT INTO record_artists (artists_id, artists_name, artists_image, date_added,
 # Dumping data for table `record_artists_info`
 #
 
-INSERT INTO record_artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'russtippinsband.users.btopenworld.com/', 0, NULL);
+INSERT INTO record_artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'www.russtippins.com/', 0, NULL);
 
 #
 # Dumping data for table `record_company`
