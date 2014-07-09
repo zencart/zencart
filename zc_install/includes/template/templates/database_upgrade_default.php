@@ -39,7 +39,7 @@
         <label class="inline left" for="admin_user"><?php echo TEXT_DATABASE_UPGRADE_ADMIN_USER; ?></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_user" id="admin_user" value="" required>
+        <input type="text" name="admin_user" id="admin_user" value="" autofocus="autofocus" required>
         <small class="error"><?php echo TEXT_VALIDATION_ADMIN_CREDENTIALS; ?></small>
       </div>
     </div>

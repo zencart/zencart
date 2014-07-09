@@ -2,13 +2,13 @@
 /**
  * ajaxAdminSetup.php
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
 define('IS_ADMIN_FLAG', false);
-define('DIR_FS_INSTALL', realpath(dirname(__FILE__) . '/') . '/');
-define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
+define('DIR_FS_INSTALL', realpath(__DIR__ . '/') . '/');
+define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require(DIR_FS_INSTALL . 'includes/application_top.php');
 
@@ -24,7 +24,7 @@ $word3[$pos] = strtoupper($word3[$pos]);
 $word2 = zen_create_random_value(3, 'chars');
 $adminNewDir = $adminDir;
 $result = FALSE;
-if ($adminDir == 'admin')
+if ($adminDir == 'admin' && (!defined('DEVELOPER_MODE') || DEVELOPER_MODE == false))
 {
   $adminNewDir =  $word1 . '-' . $word2 . '-' . $word3;
   $result = @rename(DIR_FS_ROOT . $adminDir, DIR_FS_ROOT . $adminNewDir);

@@ -2,20 +2,26 @@
 /**
  * ajaxLoadUpdatesSql.php
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
 define('IS_ADMIN_FLAG', false);
-define('DIR_FS_INSTALL', realpath(dirname(__FILE__) . '/') . '/');
-define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
+define('DIR_FS_INSTALL', realpath(__DIR__ . '/') . '/');
+define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require(DIR_FS_INSTALL . 'includes/application_top.php');
 
 $error = FALSE;
 $errorList = array();
 $db_type = 'mysql';
-$updateList = array('1.5.0'=>array('required'=>'1.3.9'),'1.5.1'=>array('required'=>'1.5.0'),'1.5.2'=>array('required'=>'1.5.1'),'1.5.3'=>array('required'=>'1.5.2'),'1.6.0'=>array('required'=>'1.5.3'));
+$updateList = array(
+        '1.5.0'=>array('required'=>'1.3.9'),
+        '1.5.1'=>array('required'=>'1.5.0'),
+        '1.5.2'=>array('required'=>'1.5.1'),
+        '1.5.3'=>array('required'=>'1.5.2'),
+        '1.5.4'=>array('required'=>'1.5.3'),
+        '1.6.0'=>array('required'=>'1.5.4'));
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
@@ -27,8 +33,7 @@ $versionInfo = $updateList[$updateVersion];
 if ($versionInfo['required'] != $dbVersion)
 {
   $error = TRUE;
-  //@TODO - language string to lang file
-  $errorList[] = "Could not update to version " . $updateVersion . " Version " . $versionInfo['required'] . 'update required';
+  $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $versionInfo['required']);
 }
 if (!$error)
 {

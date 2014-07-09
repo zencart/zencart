@@ -40,7 +40,7 @@ function zen_get_select_options($optionList, $setDefault)
   }
 
   function logDetails($details, $location = "General") {
-      if ($_SESSION['logfilename'] == '') $_SESSION['logfilename'] = date('m-d-Y_h-i-s-') . zen_create_random_value(6);
+      if (!isset($_SESSION['logfilename']) || $_SESSION['logfilename'] == '') $_SESSION['logfilename'] = date('m-d-Y_h-i-s-') . zen_create_random_value(6);
       if ($fp = @fopen(DEBUG_LOG_FOLDER . '/zcInstallLog_' . $_SESSION['logfilename'] . '.log', 'a')) {
         fwrite($fp, '---------------' . "\n" . date('M d Y G:i') . ' -- ' . $location . "\n" . $details . "\n\n");
         fclose($fp);

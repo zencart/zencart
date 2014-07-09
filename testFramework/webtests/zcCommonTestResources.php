@@ -14,12 +14,12 @@
 if (defined('TRAVIS') && TRAVIS ==='true') {
   require_once 'vendor/autoload.php';
 } else {
-  require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
+  //require_once 'PHPUnit/Extensions/Selenium2TestCase.php';
 }
 
 // bamboo is currently configured for PHPUnit_Extensions_SeleniumTestCase
 #class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
-class zcCommonTestResources extends Sauce\Sausage\WebDriverTestCase
+class zcCommonTestResources extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected $coverageScriptUrl, $start_url = '';
   protected $paypalSandboxLoginEnabled = FALSE;

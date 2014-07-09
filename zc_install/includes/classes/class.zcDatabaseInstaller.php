@@ -242,6 +242,7 @@ class zcDatabaseInstaller
 
         switch(strtoupper($this->lineSplit[3])) {
           case 'ADD':
+          case 'DROP':
             // Check to see if the column / index already exists
             $exists = false;
             switch(strtoupper($this->lineSplit[4])) {

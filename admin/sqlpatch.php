@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Jul 1 16:59:57 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -330,6 +330,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 
       } //endif ! # or -
     } // end foreach $lines
+    zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
    return array('queries'=> $results, 'string'=>$string, 'output'=>$return_output, 'ignored'=>($ignored_count), 'errors'=>$errors);
   } //end function
 

@@ -262,7 +262,7 @@ class ot_gv {
         // now update customer account with gv_amount
         $gv_amount_result=$db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
         $customer_gv = false;
-        $total_gv_amount = $gv_amount;;
+        $total_gv_amount = $gv_amount;
         if ($gv_amount_result->RecordCount() > 0) {
           $total_gv_amount = $gv_amount_result->fields['amount'] + $gv_amount;
           $customer_gv = true;
