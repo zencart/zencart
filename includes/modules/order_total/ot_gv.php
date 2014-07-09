@@ -401,6 +401,13 @@ class ot_gv {
       $this->check = $check_query->RecordCount();
     }
 
+    if ($this->check) {
+      // add new allow Specials option
+      if (!defined('MODULE_ORDER_TOTAL_GV_SPECIAL')) {
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow Gift Voucher Specials', 'MODULE_ORDER_TOTAL_GV_SPECIAL', 'false', 'Do you want to allow Gift Voucher to be placed on Special?', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
+      }
+    }
+
     return $this->check;
   }
   /**
