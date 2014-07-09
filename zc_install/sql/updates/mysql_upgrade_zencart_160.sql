@@ -60,6 +60,9 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Primary Source', 'CURRENCY_SERVER_PRIMARY', 'ecb', 'Where to request external currency updates from (Primary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Secondary Source', 'CURRENCY_SERVER_BACKUP', 'boc', 'Where to request external currency updates from (Secondary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
 
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Allow Gift Voucher Specials', 'MODULE_ORDER_TOTAL_GV_SPECIAL', 'false', 'Do you want to allow Gift Voucher to be placed on Special?', 6, 3, now(), now(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
+DELETE FROM configuration WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID';
+
 ALTER TABLE configuration DROP PRIMARY KEY, ADD PRIMARY KEY (configuration_key), DROP INDEX unq_config_key_zen, ADD UNIQUE unq_config_id_zen (configuration_id);
 ALTER TABLE product_type_layout DROP PRIMARY KEY, ADD PRIMARY KEY (configuration_key), DROP INDEX unq_config_key_zen, ADD UNIQUE unq_config_id_zen (configuration_id);
 
