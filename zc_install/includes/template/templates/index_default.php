@@ -73,10 +73,10 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
   <input type="submit" class="zc-upg radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_UPGRADE; ?>" tabindex="2">
 <?php } ?>
 <?php if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors) { ?>
-  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="3">
+  <input type="submit" class="zc-full radius button" id="btnsubmit1" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="3">
 <?php } ?>
 <?php if ($hasUpgradeErrors && $hasSaneConfigFile) { ?>
-  <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="4">
+  <input type="submit" class="zc-full radius button" id="btnsubmit2" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="4">
 <?php } ?>
 <?php } ?>
 <?php if ($hasMultipleAdmins) { ?>
@@ -92,21 +92,21 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 $(function()
 {
   $(".zc-full").click(function(e){
-    var formUrl  = "index.php?main_page=system_setup";
-  $('form:first').attr('action', formUrl);
-  $('form:first').submit();
-});
-$(".zc-upg").click(function(e){
-  var formUrl  = "index.php?main_page=database_upgrade";
-$('form:first').attr('action', formUrl);
-$('form:first').submit();
-});
-$(".zc-admin").click(function(e){
-  var formUrl  = "index.php?main_page=index";
-$('#systemCheck').attr('action', formUrl);
-$('#systemCheckt').submit();
-});
-$('.hasNoHelpText').click(function(e)
+    var formUrl = "index.php?main_page=system_setup";
+    $('#systemCheck').attr('action', formUrl);
+    $('#systemCheck').submit();
+  });
+  $(".zc-upg").click(function(e){
+    var formUrl = "index.php?main_page=database_upgrade";
+    $('#systemCheck').attr('action', formUrl);
+    $('#systemCheck').submit();
+  });
+  $(".zc-admin").click(function(e){
+    var formUrl = "index.php?main_page=index";
+    $('#systemCheck').attr('action', formUrl);
+    $('#systemCheck').submit();
+  });
+  $('.hasNoHelpText').click(function(e)
   {
     e.preventDefault();
   })
