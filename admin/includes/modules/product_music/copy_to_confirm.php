@@ -44,6 +44,17 @@ if (!defined('IS_ADMIN_FLAG')) {
                                      from " . TABLE_PRODUCTS . "
                                      where products_id = '" . (int)$products_id . "'");
 
+            // fix Product copy from if Unit is 0
+            if ($product->fields['products_quantity_order_units'] == 0) {
+              $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_quantity_order_units = 1 WHERE products_id = '" . (int)$products_id . "'";
+              $results = $db->Execute($sql);
+            }
+            // fix Product copy from if Minimum is 0
+            if ($product->fields['products_quantity_order_min'] == 0) {
+              $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_quantity_order_min = 1 WHERE products_id = '" . (int)$products_id . "'";
+              $results = $db->Execute($sql);
+            }
+
             $tmp_value = zen_db_input($product->fields['products_quantity']);
             $products_quantity = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
             $tmp_value = zen_db_input($product->fields['products_price']);
@@ -72,8 +83,8 @@ if (!defined('IS_ADMIN_FLAG')) {
                                   '" . $products_weight . "', '0',
                                   '" . (int)$product->fields['products_tax_class_id'] . "',
                                   '" . (int)$product->fields['manufacturers_id'] . "',
-                                  '" . zen_db_input($product->fields['products_quantity_order_min']) . "',
-                                  '" . zen_db_input($product->fields['products_quantity_order_units']) . "',
+                                  '" . zen_db_input(($product->fields['products_quantity_order_min'] == 0 ? 1 : $product->fields['products_quantity_order_min'])) . "',
+                                  '" . zen_db_input(($product->fields['products_quantity_order_units'] == 0 ? 1 : $product->fields['products_quantity_order_units'])) . "',
                                   '" . zen_db_input($product->fields['products_priced_by_attribute']) . "',
                                   '" . (int)$product->fields['product_is_free'] . "',
                                   '" . (int)$product->fields['product_is_call'] . "',
