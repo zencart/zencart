@@ -1,24 +1,11 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |   
-// | http://www.zen-cart.com/index.php                                    |   
-// |                                                                      |   
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-// $Id: advanced_search_result.php 1969 2005-09-13 06:57:21Z drbyte $
-//
+/**
+ * @package languageDefines
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: advanced_search_result.php 1969 2005-09-13 06:57:21Z drbyte $
+ */
 
 define('NAVBAR_TITLE_1', 'Advanced Search');
 define('NAVBAR_TITLE_2', 'Search Results');
@@ -44,7 +31,6 @@ define('TEXT_ALL_MANUFACTURERS', 'All Manufacturers');
 
 define('HEADING_SEARCH_HELP', 'Search Help');
 define('TEXT_SEARCH_HELP', 'Keywords may be separated by AND and/or OR statements for greater control of the search results.<br /><br />For example, Microsoft AND mouse would generate a result set that contain both words. However, for mouse OR keyboard, the result set returned would contain both or either words.<br /><br />Exact matches can be searched for by enclosing keywords in double-quotes.<br /><br />For example, "notebook computer" would generate a result set which match the exact string.<br /><br />Brackets can be used for further control on the result set.<br /><br />For example, Microsoft and (keyboard or mouse or "visual basic").');
-define('TEXT_CLOSE_WINDOW', 'Close Window [x]');
 
 define('TABLE_HEADING_IMAGE', '');
 define('TABLE_HEADING_MODEL', 'Model');
@@ -65,4 +51,3 @@ define('ERROR_PRICE_FROM_MUST_BE_NUM', 'Price From must be a number.');
 define('ERROR_PRICE_TO_MUST_BE_NUM', 'Price To must be a number.');
 define('ERROR_PRICE_TO_LESS_THAN_PRICE_FROM', 'Price To must be greater than or equal to Price From.');
 define('ERROR_INVALID_KEYWORDS', 'Invalid keywords.');
-?>

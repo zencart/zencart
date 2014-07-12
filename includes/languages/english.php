@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: english.php 19690 2011-10-04 16:41:45Z drbyte $
@@ -380,7 +380,7 @@
   define('TEXT_INFO_SORT_BY','Sort by: ');
 
 // close window image popups
-  define('TEXT_CLOSE_WINDOW',' - Click Image to Close');
+  define('TEXT_CLOSE_IMAGE_WINDOW',' - Click Image to Close');
 // close popups
   define('TEXT_CURRENT_CLOSE_WINDOW','[ Close Window ]');
 

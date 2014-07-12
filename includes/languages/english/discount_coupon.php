@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * $Id: discount_coupon.php 14712 2009-10-28 22:05:08Z ajeh $
@@ -15,7 +15,6 @@ define('TEXT_COUPON_FAILED', '<span class="alert important">%s</span> does not a
 define('TEXT_COUPON_INACTIVE', '<span class="alert important">%s</span> is expired or no longer valid.');
 
 define('HEADING_COUPON_HELP', 'Discount Coupon Help');
-define('TEXT_CLOSE_WINDOW', 'Close Window [x]');
 define('TEXT_COUPON_HELP_HEADER', '<p class="bold">The Discount Coupon Redemption Code you have entered is for ');
 define('TEXT_COUPON_HELP_NAME', '\'%s\'. </p>');
 define('TEXT_COUPON_HELP_FIXED', '');
@@ -43,4 +42,3 @@ define('TEXT_DISCOUNT_COUPON_ID_INFO', 'Look-up Discount Coupon ... ');
 define('TEXT_DISCOUNT_COUPON_ID', 'Your Code: ');
 
 define('TEXT_COUPON_GV_RESTRICTION_ZONES', 'Billing Address Restrictions apply.');
-?>

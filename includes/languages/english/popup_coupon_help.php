@@ -1,14 +1,13 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: popup_coupon_help.php 14141 2009-08-10 19:34:47Z wilt $
  */
 
 define('HEADING_COUPON_HELP', 'Discount Coupon Help');
-define('TEXT_CLOSE_WINDOW', 'Close Window [x]');
 define('TEXT_COUPON_HELP_HEADER', '<strong>The Discount Coupon Redemption Code you have entered is for</strong> ');
 define('TEXT_COUPON_HELP_NAME', '<br /><br />Coupon Name : %s');
 define('TEXT_COUPON_HELP_FIXED', '<br /><br />The coupon is worth %s discount against your order');
