@@ -1,11 +1,11 @@
-<?php
+<?php namespace Zencart\DashboardWidgets;
 /**
  * zcWidgetManager Class.
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
+ * @version GIT: $Id: $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package classes
  */
-class zcWidgetManager extends base
+class zcWidgetManager extends \base
 {
   public static function getWidgetsForUser($user)
   {
@@ -99,11 +99,14 @@ class zcWidgetManager extends base
       {
         foreach ($widgets as $widget)
         {
+          $classDir = 'vendor/zencart/dashboardWidgets/src/dashboardWidgets/';
+          $classNameSpace = '\\ZenCart\\DashboardWidgets\\dashboardWidgets\\';
           $className = 'zcDashboardWidget' . self::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
-          $fileName = 'class.' . $className . '.php';
-          if (file_exists(DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/' . $fileName))
+          $classFile = $className . '.php';
+          $className = $classNameSpace . $className;
+          if (file_exists(DIR_FS_CATALOG . $classDir . $classFile))
           {
-            require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/' . $fileName);
+            require_once(DIR_FS_CATALOG . $classDir . $classFile);
             $widgetClass = new $className($widget['widget_key'], $widget);
             $widgetClassList[$widget['widget_key']] = $widgetClass;
           }

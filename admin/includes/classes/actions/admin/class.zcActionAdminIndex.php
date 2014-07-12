@@ -5,8 +5,9 @@
  * @package classes
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
+ * @version GIT: $Id:$
  */
+use Zencart\DashboardWidgets\zcWidgetManager;
 require_once ('includes/classes/actions/class.zcActionAdminBase.php');
 class zcActionAdminIndex extends zcActionAdminBase
 {
@@ -29,8 +30,6 @@ class zcActionAdminIndex extends zcActionAdminBase
   }
   public function doWidgetsDisplay()
   {
-    require_once (DIR_WS_CLASSES . 'class.zcWidgetManager.php');
-    require_once (DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
     $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION ['admin_id'], $_SESSION ['languages_id']);
     $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
     $this->templateVariables ['widgetList'] = zcWidgetManager::loadWidgetClasses($widgetInfoList);
