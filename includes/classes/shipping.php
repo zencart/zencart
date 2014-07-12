@@ -139,6 +139,7 @@ class shipping extends base {
     $quotes_array = array();
 
     if ($calc_boxes_weight_tare) $this->calculate_boxes_weight_and_tare();
+    // calculate amount not to be insured on shipping
     $uninsurable_value = (method_exists($this, 'get_uninsurable_value')) ? $this->get_uninsurable_value($insurance_exclusions) : 0;
 
     if (is_array($this->modules)) {
@@ -220,6 +221,7 @@ class shipping extends base {
     $products = $_SESSION['cart']->get_products();
     $this->notify('NOTIFY_SHIPPING_CALCULATE_UNINSURABLES_BEGIN', array(), $products, $exclusions);
     $amount_to_reduce_insurance = 0;
+    $in_cart_attributes_weight = 0;
 //echo '<pre>'; echo print_r($products); echo '</pre>';
 //die('DONE!');
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
@@ -239,7 +241,35 @@ class shipping extends base {
 
       // no insurance on download product
       if (!$reduce_insurance) {
-        if (!in_array('downloads', $exclusions) && zen_has_product_attributes_downloads_status((int)$products[$i]['id'])) {
+        global $db;
+        // attributes weight
+        if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
+          $include_reduce_insurance = false;
+          reset($products[$i]['attributes']);
+          while (list($option, $value) = each($products[$i]['attributes'])) {
+//            echo ' $products[$i][id]: ' . $products[$i]['id'] . ' product_is_always_free_shipping: ' . $products[$i]['product_is_always_free_shipping'] . ' $option: ' . $option . ' $value: ' . $value . '<br>';
+            $sql = "select products_attributes_weight, products_attributes_weight_prefix
+                    from " . TABLE_PRODUCTS_ATTRIBUTES . "
+                    where products_id = '" . (int)$products[$i]['id'] . "'
+                    and options_id = '" . (int)$option . "'
+                    and options_values_id = '" . (int)$value . "'";
+            $attribute_weight = $db->Execute($sql);
+
+            // Do not adjust for free shipping; Product still would be insured
+            // adjust for negative weight
+            $new_attributes_weight = $attribute_weight->fields['products_attributes_weight'];
+            if ($attribute_weight->fields['products_attributes_weight_prefix'] == '-') {
+              $new_attributes_weight = $new_attributes_weight * -1;
+            }
+            // adjust if no weight Example: Download only vs Download with CD
+            $include_reduce_insurance = ($new_attributes_weight <= 0); // true:false
+            $in_cart_attributes_weight += $new_attributes_weight;
+//            echo 'product weight: ' . $products[$i]['weight'] . ' in_cart_product_total_weight Attribute Weight: ' . $in_cart_attributes_weight . ' $include_reduce_insurance: ' . ($include_reduce_insurance ? 'YES' : 'NO') . '<br><br>';
+          }
+        }
+
+        // adjusted for Product with weight but Download without weight
+        if (!in_array('downloads', $exclusions) && $in_cart_attributes_weight <= 0 && $include_reduce_insurance && ($products[$i]['weight'] + $in_cart_attributes_weight) <= 0) {
           $reduce_insurance = true;
         }
       }
