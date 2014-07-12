@@ -3,15 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-<<<<<<< HEAD
-<<<<<<< HEAD
- * @version GIT: $Id: Author: DrByte  Jul 7 2014 Modified in v1.5.3 $
-=======
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
->>>>>>> 5679098... date stamps on CHANGE-709
-=======
  * @version GIT: $Id: Author: DrByte  Jul 7 2014 Modified in v1.5.4 $
->>>>>>> 4093113... Fix init_cache_key_check.php redirect loop which occurs when the user deletes the /cache/ folder
  */
 /**
  * System check for valid SESSION_WRITE_DIRECTORY value
@@ -21,16 +13,8 @@
  */
 
 if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTORY)) {
-<<<<<<< HEAD
-  define('DIR_FS_ROOT', realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/../') . '/');
-=======
   zen_record_admin_activity('Session directory folder not found. Will attempt to re-detect and update configuration. Old value: ' . SESSION_WRITE_DIRECTORY, 'notice');
-<<<<<<< HEAD
-  define('DIR_FS_ROOT', realpath(dirname(__FILE__) . '/../') . '/');
->>>>>>> c4032e1... CHANGE-709 - Refactor logging infrastructure
-=======
   define('DIR_FS_ROOT', realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/../') . '/');
->>>>>>> 4093113... Fix init_cache_key_check.php redirect loop which occurs when the user deletes the /cache/ folder
 
   $possible_dir[] = DIR_FS_SQL_CACHE;
   $possible_dir[] = DIR_FS_CATALOG . 'cache';
@@ -53,23 +37,12 @@ if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTOR
 
   $sql = "update " . TABLE_CONFIGURATION . " set configuration_value = '" . $db->prepare_input(trim($selected_dir)) . "' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
   $db->Execute($sql);
-<<<<<<< HEAD
-
-  if (!file_exists($selected_dir) || !is_writable($selected_dir)) {
-    die('ALERT: Your cache directory does not exist or is not writable: ' . $selected_dir . ' ... This must be fixed before the page can load correctly.');
-  }
-
-=======
   zen_record_admin_activity('Updated SESSION_WRITE_DIRECTORY configuration setting to ' . $selected_dir, 'notice');
-<<<<<<< HEAD
->>>>>>> c4032e1... CHANGE-709 - Refactor logging infrastructure
-=======
 
   if (!file_exists($selected_dir) || !is_writable($selected_dir)) {
     die('ALERT: Your cache directory does not exist or is not writable: ' . $selected_dir . ' ... This must be fixed before the page can load correctly.');
   }
 
->>>>>>> 4093113... Fix init_cache_key_check.php redirect loop which occurs when the user deletes the /cache/ folder
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
   exit(1);
 }
