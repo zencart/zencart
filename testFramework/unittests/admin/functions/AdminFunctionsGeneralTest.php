@@ -33,7 +33,7 @@ class AdminFunctionsGeneralTest extends zcAdminTestCase
   public function testZenHasProductAttributesDownloadsStatusCountsDownloads() {
     define('DOWNLOAD_ENABLED', 'true');
     define('TABLE_PRODUCTS_ATTRIBUTES', 'products_attributes');
-    define('TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD', 'products_attributes_downloads');
+    define('TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD', 'products_attributes_download');
 
     $result = $this->getMock('queryFactoryResult');
     $result->expects($this->once())

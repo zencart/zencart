@@ -2568,7 +2568,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
    * @todo   $downloadsRepository->countForProductId($products_id); #DDD
    */
   function zen_has_product_attributes_downloads_status($products_id, queryFactory $db = null) {
-    if (defined('DOWNLOAD_ENABLED') && DOWNLOAD_ENABLED != 'true') {
+    if (!defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
       return false;
     }
 
