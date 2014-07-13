@@ -1,12 +1,13 @@
-<?php
+<?php namespace Zencart\DashboardWidgets\dashboardWidgets;
 /**
  * zcDashboardWidgetCounterHistory Class.
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Scott Wilson Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
+ * @version GIT: $Id: $
  */
+use Zencart\DashboardWidgets\zcDashboardWidgetBase;
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }

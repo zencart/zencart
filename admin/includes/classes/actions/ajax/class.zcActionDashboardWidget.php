@@ -7,6 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
  */
+use Zencart\DashboardWidgets\zcWidgetManager;
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
@@ -15,8 +16,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package classes
  */
-require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcWidgetManager.php');
-
 class zcActionDashboardWidget extends zcActionAjaxBase
 {
   public function updateWidgetPositionsExecute()
@@ -50,10 +49,11 @@ class zcActionDashboardWidget extends zcActionAjaxBase
       $key = $id = str_replace('widget-edit-dismiss-', '', $_POST['id']);
       $id = self::camelize($id, TRUE);
       $className = 'zcDashboardWidget' . $id;
-      $fileName = DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/class.' . $className . '.php';
-      require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
+      $classNameSpace = '\\ZenCart\\DashboardWidgets\\dashboardWidgets\\' . $className;
+      $classDir = 'vendor/zencart/dashboardWidgets/src/dashboardWidgets/';
+      $fileName = DIR_FS_CATALOG . $classDir . $className . '.php';
       require_once($fileName);
-      $widget = new $className($key);
+      $widget = new $classNameSpace($key);
       $tplVars['widget'] = $widget->prepareContent();
       $html = "";
       if ($addUpdateDiv)
@@ -69,10 +69,11 @@ class zcActionDashboardWidget extends zcActionAjaxBase
   {
     $id = self::camelize($_POST['id'], TRUE);
     $className = 'zcDashboardWidget' . $id;
-    $fileName = DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/class.' . $className . '.php';
-    require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
+    $classNameSpace = '\\ZenCart\\DashboardWidgets\\dashboardWidgets\\' . $className;
+    $classDir = 'vendor/zencart/dashboardWidgets/src/dashboardWidgets/';
+    $fileName = DIR_FS_CATALOG . $classDir . $className . '.php';
     require_once($fileName);
-    $widget = new $className($_POST['id']);
+    $widget = new $classNameSpace($_POST['id']);
     $result = $widget->validateEditForm();
     if ($result == FALSE)
     {
@@ -91,10 +92,11 @@ class zcActionDashboardWidget extends zcActionAjaxBase
   {
     $id = self::camelize($_POST['id'], TRUE);
     $className = 'zcDashboardWidget' . $id;
-    $fileName = DIR_FS_ADMIN . DIR_WS_CLASSES . 'dashboardWidgets/class.' . $className . '.php';
-    require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
+    $classNameSpace = '\\ZenCart\\DashboardWidgets\\dashboardWidgets\\' . $className;
+    $classDir = 'vendor/zencart/dashboardWidgets/src/dashboardWidgets/';
+    $fileName = DIR_FS_CATALOG . $classDir . $className . '.php';
     require_once($fileName);
-    $widget = new $className($_POST['id']);
+    $widget = new $classNameSpace($_POST['id']);
     $widget->getFormDefaults($_POST['id'], $this);
   }
   public function timerUpdateExecute()
@@ -112,7 +114,6 @@ class zcActionDashboardWidget extends zcActionAjaxBase
   }
   public function addWidgetExecute()
   {
-    require_once(DIR_FS_ADMIN . DIR_WS_CLASSES . 'class.zcDashboardWidgetBase.php');
     $id = str_replace('add-widget-', '', $_POST['id']);
     zcWidgetManager::addWidgetForUser($id, $_SESSION['admin_id']);
     $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION['admin_id'], $_SESSION['languages_id']);

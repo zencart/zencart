@@ -1,12 +1,13 @@
-<?php
+<?php namespace Zencart\DashboardWidgets\dashboardWidgets;
 /**
  * zcDashboardWidgetGeneralStatistics Class.
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
+ * @version GIT: $Id:$
  */
+use Zencart\DashboardWidgets\zcDashboardWidgetBase;
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
@@ -28,7 +29,7 @@ class zcDashboardWidgetGeneralStatistics extends zcDashboardWidgetBase
     $reviews_pending = $db->Execute("select count(*) as count from " . TABLE_REVIEWS . " where status='0'");
     $newsletters = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
     $counter = $db->Execute("select startdate, counter from " . TABLE_COUNTER);
-    if ($counter->EOF) {$counter = new StdClass; $counter->fields = array('startdate'=>date('Ymd'), 'counter'=>0);}
+    if ($counter->EOF) {$counter = new \StdClass; $counter->fields = array('startdate'=>date('Ymd'), 'counter'=>0);}
     $counter_startdate = $counter->fields['startdate'];
     $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
     $specials = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= '0'");

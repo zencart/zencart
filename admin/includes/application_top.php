@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id:
  */
 /**
  * File contains just application_top code
@@ -107,6 +107,7 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
     }
   }
 }
+$vendorAutoloadPrefixes = array();
 /*
  * Defined for backwards compatibility only. THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
  */
@@ -124,6 +125,13 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
     }
   }
   $za_dir->close();
+}
+$vendorAutoloadPrefixes[] = array('namespace'=>'Zencart\DashboardWidgets', 'baseDir'=>DIR_FS_CATALOG . '/vendor/zencart/dashboardWidgets/src');
+require(DIR_FS_CATALOG . 'vendor/aura/autoload/src/Loader.php');
+$loader = new \Aura\Autoload\Loader;
+$loader->register();
+foreach($vendorAutoloadPrefixes as $vendorAutoloadPrefix) {
+  $loader->addPrefix($vendorAutoloadPrefix['namespace'], $vendorAutoloadPrefix['baseDir']);
 }
 /**
  * init some vars
