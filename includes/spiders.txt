@@ -1,4 +1,4 @@
-$Id: spiders.txt 18695 2011-05-04 05:24:19Z drbyte $
+$Id: spiders.txt 2014-06-17 drbyte $
 bot
 robot
 crawl
@@ -15,11 +15,13 @@ acoon
 adressendeutschland
 ahoy
 akula
+alexa
 alkaline
 almaden
 amagit
 amfibibot
 amishbot
+analyz
 ananzi
 answerbus
 anthill
@@ -34,6 +36,7 @@ argus
 ariadne
 arks
 ask jeeves
+askquickly
 asaha
 aspider
 aspseek
@@ -53,6 +56,7 @@ bdcindexer
 bdfetch
 becomebot
 big brother
+bing
 bjaaland
 blackwidow
 blaiz
@@ -108,8 +112,10 @@ ditto
 dlvr.it
 dmoz
 dnabot
+dotsemantic
 download express
 dragonbot
+drupact
 dtaagent
 duckduck
 dumbot
@@ -171,6 +177,7 @@ gulliver
 gulperbot
 hambot
 harvest
+header_detector
 helix
 heritrix
 holmes
@@ -332,6 +339,7 @@ pico
 piltdownman
 pimptrain
 pingdom
+pinterest
 pipeliner
 plumtreewebaccessor
 polybot
@@ -353,7 +361,9 @@ quepasacreep
 rambler
 raven search
 rbse spider
+readability
 resume robot
+riddler
 rixbot
 road runner
 roadhouse crawling system
@@ -379,6 +389,7 @@ search.aus-au.com
 searchprocess
 senrigan
 sensis
+seobility
 seocheck
 seosearch
 seventwentyfour
@@ -431,6 +442,7 @@ titan
 titin
 tlspider
 topsy
+tracker
 tulipchain
 turnitinbot
 tutorgigbot
@@ -442,6 +454,7 @@ ultraseek
 unchaos_crawler
 unwind
 uptimebot
+urlstat
 usyd-nlp-spider
 vagabondo
 valkyrie
@@ -469,6 +482,7 @@ webfoot
 web hoper
 web hopper
 web-sniffer
+webimages
 webinator
 webinator-indexer
 weblayers
@@ -491,6 +505,7 @@ webwalker
 webwatch
 webyield robot
 webzinger
+wesee
 wget
 whatuseek
 whizbang
@@ -502,6 +517,7 @@ wombat
 worio
 worldlight
 worm
+wscheck
 xenu
 xget
 xift
@@ -509,6 +525,7 @@ xirq
 xyleme
 yacybot
 yahoo! slurp
+yahoocache
 yahoo-mmcrawler
 yahooseeker
 yandex

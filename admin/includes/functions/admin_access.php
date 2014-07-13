@@ -1,10 +1,10 @@
 <?php
 /**
  * @package Admin Access Management
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Oct 31 21:30:56 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte Fri Jun 13 2014  Modified in v1.5.3 $
  */
 
 /**
@@ -30,7 +30,8 @@ function check_page($page, $params) {
           FROM " . TABLE_ADMIN . " a
           LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
           LEFT JOIN " . TABLE_ADMIN_PAGES . " ap ON ap.page_key = ap2p.page_key
-          WHERE admin_id = :adminId:";
+          WHERE admin_id = :adminId:
+          AND ap2p.page_key NOT LIKE '_productTypes_%'";
   $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
   $result = $db->Execute($sql);
   $retVal = FALSE;
@@ -164,7 +165,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
                 last_modified = now()";
     $sql = $db->bindVars($sql, ':name:', $name, 'string');
     $sql = $db->bindVars($sql, ':email:', $email, 'string');
-    $sql = $db->bindVars($sql, ':password:', zen_encrypt_password($password), 'string');
+    $sql = $db->bindVars($sql, ':password:', password_hash($password, PASSWORD_DEFAULT), 'string');
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
     $db->Execute($sql);
 
@@ -314,12 +315,18 @@ function zen_validate_user_login($admin_name, $admin_pass)
       $error = true;
       $expired = true;
       $message = TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED;
-    } else if (!zen_validate_password($admin_pass, $result['admin_pass']))
-    {
-      $error = true;
-      if (!$expired) $message = ERROR_WRONG_LOGIN;
-    }
+    } else {
+      $token = $result['admin_pass'];
+      if (!zen_validate_password($admin_pass, $token))
 
+      {
+        $error = true;
+        if (!$expired) $message = ERROR_WRONG_LOGIN;
+      }
+    }
+    if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
+      $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
+    }
     // BEGIN 2-factor authentication
     if ($error == FALSE && defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE') && ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE != '')
     {
@@ -428,7 +435,7 @@ function zen_check_for_password_problems($password, $adminID = 0)
   $sql = $db->bindVars($sql, ':adminID:', $adminID, 'integer');
   $result = $db->Execute($sql);
   if ($result->RecordCount()) {
-    foreach($result->fields as $val) {
+    foreach($result->fields as $key => $val) {
       if (zen_validate_password($password, $val)) {
         $error = TRUE;
       }
@@ -474,12 +481,12 @@ function zen_reset_password($id, $password, $compare)
   }
   if (sizeof($errors) == 0)
   {
-    $encryptedPassword = zen_encrypt_password($password);
+    $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
     $sql = "UPDATE " . TABLE_ADMIN . "
             SET prev_pass3 = prev_pass2, prev_pass2 = prev_pass1, prev_pass1 = admin_pass, admin_pass = :newpwd:, pwd_last_change_date = now()
             WHERE admin_id = :adminID:";
     $sql = $db->bindVars($sql, ':adminID:', $id, 'integer');
-    $sql = $db->bindVars($sql, ':newpwd:', zen_encrypt_password($password), 'string');
+    $sql = $db->bindVars($sql, ':newpwd:', $encryptedPassword, 'string');
     $db->Execute($sql);
   }
   return $errors;

@@ -4,11 +4,11 @@
  * Class used for database abstraction to MySQL via mysqli
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Oct 15 14:55:19 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu Mar 6 03:41:54 2014 -0500 Modified in v1.5.3 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -25,11 +25,14 @@ class queryFactory extends base {
     $this->total_query_time = 0;
   }
 
-  function query($link, $query) {
+  function query($link, $query, $remove_from_queryCache = false) {
       global $queryLog;
       global $queryCache;
 
-      $this->total_queries++;
+      if ($remove_from_queryCache && isset($queryCache)) {
+        $queryCache->reset($query);
+      }
+
       if( isset($queryCache) && $queryCache->inCache($query) ) {
             $cached_value = $queryCache->getFromCache($query);
             $this->count_queries--;
@@ -98,6 +101,7 @@ class queryFactory extends base {
       return false;
     }
   }
+
   function selectdb($zf_database) {
     $result = mysqli_select_db($this->link, $zf_database);
     if ($result) return $result;
@@ -140,12 +144,20 @@ class queryFactory extends base {
     } else {
       echo 'WARNING: An Error occurred, please refresh the page and try again.';
     }
-    trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql, E_USER_ERROR);
+    $backtrace_array = debug_backtrace();
+    $query_factory_caller = '';
+    foreach ($backtrace_array as $current_caller) {
+      if (strcmp($current_caller['file'], __FILE__) != 0) {
+        $query_factory_caller = ' ==> (as called by) ' . $current_caller['file'] . ' on line ' . $current_caller['line'] . ' <==';
+        break;
+      }
+    }
+    trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
     if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG==true) echo 'If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you left no blank fields.<br />';
     echo '</div>';
   }
 
-  function Execute($zf_sql, $zf_limit = false, $zf_cache = false, $zf_cachetime=0) {
+  function Execute($zf_sql, $zf_limit = false, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     // bof: collect database queries
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS=='true') {
       global $PHP_SELF, $box_id, $current_page_base;
@@ -190,7 +202,7 @@ class queryFactory extends base {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED);
       }
-      $zp_db_resource = $this->query($this->link, $zf_sql);
+      $zp_db_resource = $this->query($this->link, $zf_sql, $remove_from_queryCache);
       if (!$zp_db_resource) $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
       if (FALSE === $zp_db_resource){
         $obj = null;
@@ -239,7 +251,7 @@ class queryFactory extends base {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED);
       }
-      $zp_db_resource = $this->query($this->link, $zf_sql);
+      $zp_db_resource = $this->query($this->link, $zf_sql, $remove_from_queryCache);
       if (!$zp_db_resource) {
         if (mysqli_errno($this->link) == 2006) {
           $this->link = FALSE;
@@ -292,7 +304,7 @@ class queryFactory extends base {
       if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
       $this->set_error('0', DB_ERROR_NOT_CONNECTED);
     }
-    $zp_db_resource = @$this->query($this->link, $zf_sql);
+    $zp_db_resource = @$this->query($this->link, $zf_sql, $remove_from_queryCache);
     if (!$zp_db_resource) $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     if (FALSE === $zp_db_resource){
       $obj = null;

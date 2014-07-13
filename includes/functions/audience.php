@@ -4,17 +4,16 @@
  * Builds output queries for customer segments
  *
  * @package functions
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: audience.php 4135 2006-08-14 04:25:02Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Thu Apr 17 14:57:10 2014 -0400 Modified in v1.5.3 $
  */
 
-
 //
-// This will  be turned into a class in later release...
+// @TODO turn into a class in later release...
 
-  function get_audiences_list($query_category='email', $display_count="") {
+  function get_audiences_list($query_category='email', $display_count='', $lookup_email_address ='') {
   // used to display drop-down list of available audiences in emailing modules:
   // ie: mail, gv_main, coupon_admin... and eventually newsletters too.
   // gets info from query_builder table
@@ -22,16 +21,16 @@
   include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'audience.php');  //$current_page
   global $db;
   $count_array = array();
-  $count=0;
-  if ($display_count=="") $display_count=AUDIENCE_SELECT_DISPLAY_COUNTS;
+  $count = 0;
+  if ($display_count == '') $display_count = AUDIENCE_SELECT_DISPLAY_COUNTS;
 
   // get list of queries in database table, based on category supplied
   $queries_list = $db->Execute("select query_name, query_string from " . TABLE_QUERY_BUILDER . " " .
                   "where query_category like '%" . $query_category . "%'");
 
-    $audience_list = array();
-    if ($queries_list->RecordCount() > 1) {  // if more than one query record found
-      $audience_list[] = array('id' => '', 'text' => TEXT_SELECT_AN_OPTION); //provide a "not-selected" value
+  $audience_list = array();
+  if ($queries_list->RecordCount() > 1) {  // if more than one query record found
+    $audience_list[] = array('id' => '', 'text' => TEXT_SELECT_AN_OPTION); //provide a "not-selected" value
   }
 
   reset($queries_list);
@@ -46,14 +45,17 @@
     // generate an array consisting of 2 columns which are identical. Key and Text are same.
     // Thus, when the array is used in a Select Box, the key is the same as the displayed description
     // The key can then be used to get the actual select SQL statement using the get...addresses_query function, below.
-      $audience_list[] = array('id' => $queries_list->fields['query_name'], 'text' => $queries_list->fields['query_name'] . ' (' . $count . ')');
+    $audience_list[] = array('id' => $queries_list->fields['query_name'], 'text' => $queries_list->fields['query_name'] . ' (' . $count . ')');
     $queries_list->MoveNext();
   }
 
   //if this is called by an emailing module which offers individual customers as an option, add all customers email addresses as well.
   if ($query_category=='email') {
+    $lookup_filter = ($lookup_email_address != '') ? ' AND customers_email_address= :lookupAddress: ' : '';
+    $lookup_filter = $db->bindVars($lookup_filter, ':lookupAddress:', $lookup_email_address, 'string');
     $customers_values = $db->Execute("select customers_email_address, customers_firstname, customers_lastname " .
                   "from " . TABLE_CUSTOMERS . " WHERE customers_email_format != 'NONE' " .
+                  $lookup_filter .
                   "order by customers_lastname, customers_firstname, customers_email_address");
     while(!$customers_values->EOF) {
       $audience_list[] = array('id' => $customers_values->fields['customers_email_address'],
@@ -120,5 +122,3 @@ function parsed_query_string($read_string) {
    }
    return $good_string;
 }
-
-?>

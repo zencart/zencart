@@ -2,10 +2,10 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Oct 25 01:38:26 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Tue Apr 15 14:38:57 2014 -0400 Modified in v1.5.3 $
  */
 /**
  * ensure odd settings are disabled and set required defaults
@@ -45,20 +45,28 @@ $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_
 @ini_set('log_errors_max_len', 0);
 @ini_set('error_log', $debug_logfile_path);
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
-  @ini_set('display_errors', 1);
+  @ini_set('display_errors', 1);  // to screen
 } else {
   @ini_set('display_errors', 0);
 }
 /**
  * Timezone problem detection
  */
-if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '')
+if (PHP_VERSION >= '5.3' && ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
-  die('ERROR: date.timezone not set in php.ini. Please contact your hosting company to set the timezone in the server PHP configuration before continuing.');
+  include ('../includes/extra_configures/set_time_zone.php');
 } elseif (PHP_VERSION >= '5.1') {
   $baseTZ = date_default_timezone_get();
   date_default_timezone_set($baseTZ);
   unset($baseTZ);
+}
+// re-test
+if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
+{
+  die('ERROR: date.timezone is not set in php.ini. You have two options: 1-Edit /includes/extra_configures/set_time_zone.php to set the $TZ variable manually, or 2-Contact your hosting company to set the timezone correctly in the server PHP configuration before continuing.');
+} else
+{
+  @date_default_timezone_set(date_default_timezone_get());
 }
 
 /*
@@ -97,7 +105,15 @@ foreach ($sanitGets as $key)
 /**
  * set the type of request (secure or not)
  */
-$request_type = ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == '1') || (isset($_SERVER['HTTP_X_FORWARDED_BY']) && strstr(strtoupper($_SERVER['HTTP_X_FORWARDED_BY']),'SSL')) || (isset($_SERVER['HTTP_X_FORWARDED_HOST']) &&  strstr(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']),'SSL')) || (isset($_SERVER['SCRIPT_URI']) && strtolower(substr($_SERVER['SCRIPT_URI'], 0, 6)) == 'https:') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' )   )  ? 'SSL' : 'NONSSL';
+$request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1'))) ||
+                 (isset($_SERVER['HTTP_X_FORWARDED_BY']) && strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_BY']), 'SSL') !== false) ||
+                 (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), 'SSL') !== false || strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), str_replace('https://', '', HTTPS_SERVER)) !== false)) ||
+                 (isset($_SERVER['SCRIPT_URI']) && strtolower(substr($_SERVER['SCRIPT_URI'], 0, 6)) == 'https:') ||
+                 (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) == 'on')) ||
+                 (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https')) ||
+                 (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] != '') ||
+                 (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
+
 /**
  * require the session handling functions
  */

@@ -1,7 +1,7 @@
 #
 # @copyright Copyright 2003-2013 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version GIT: $Id: Author: DrByte  Fri May 17 14:29:18 2013 -0400 Modified in v1.5.2 $
+# @version GIT: $Id: Author: DrByte  Sat Dec 21 17:00:00 2013 -0500 Modified in v1.5.3 $
 #
 # This is used with Apache WebServers
 #
@@ -86,16 +86,6 @@ deny from All
 
 </ifmodule>
 
-
-
-# The following makes adjustments to the SSL protocol for old Internet Explorer browsers
-<IfModule mod_setenvif.c>
-  <IfDefine SSL>
-    SetEnvIf User-Agent ".*MSIE.*" \
-             nokeepalive ssl-unclean-shutdown \
-             downgrade-1.0 force-response-1.0
-  </IfDefine>
-</IfModule>
 
 #turn off X-PHP-Originating-Script header when sending emails from admin
 #uncomment to activate:

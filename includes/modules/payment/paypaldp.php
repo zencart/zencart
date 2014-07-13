@@ -3,11 +3,11 @@
  * paypaldp.php payment module class for Paypal Payments Pro (aka Website Payments Pro)
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Nov 2 12:51:04 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Tue Apr 15 17:08:43 2014 -0400 Modified in v1.5.3 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -128,7 +128,7 @@ class paypaldp extends base {
     global $order;
     $this->code = 'paypaldp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
-    $this->codeVersion = '1.5.2';
+    $this->codeVersion = '1.5.3';
     $this->enableDirectPayment = true;
     $this->enabled = (MODULE_PAYMENT_PAYPALDP_STATUS == 'True');
     // Set the title & description text based on the mode we're in
@@ -166,7 +166,7 @@ class paypaldp extends base {
     $this->zone = (int)MODULE_PAYMENT_PAYPALDP_ZONE;
     if (is_object($order)) $this->update_status();
 
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.2') $this->enabled = false;
+    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.3') $this->enabled = false;
 
     // offer credit card choices for pull-down menu -- only needed for UK version
     $this->cards = array();
@@ -196,10 +196,12 @@ class paypaldp extends base {
   function update_status() {
     global $order, $db;
 //    $this->zcLog('update_status', 'Checking whether module should be enabled or not.');
-    // if store is not running in SSL, cannot offer credit card module, for PCI reasons
-    if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') {
-      $this->enabled = FALSE;
-      $this->zcLog('update_status', 'Module disabled because SSL is not enabled on this site.');
+    if (IS_ADMIN_FLAG === false) {
+      // if store is not running in SSL, cannot offer credit card module, for PCI reasons
+      if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') {
+        $this->enabled = FALSE;
+        $this->zcLog('update_status', 'Module disabled because SSL is not enabled on this site.');
+      }
     }
     // check other reasons for the module to be deactivated:
     if ($this->enabled && (int)$this->zone > 0 && isset($order->billing['country']['id'])) {
@@ -2319,6 +2321,7 @@ class paypaldp extends base {
 //   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
       curl_setopt($ch, CURLOPT_TIMEOUT, 8);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 3);
 
       // Execute the request.
       $result = curl_exec($ch);

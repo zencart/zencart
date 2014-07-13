@@ -3,7 +3,7 @@
  * general functions used by the installer
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Wed Oct 23 18:28:44 2013 +0100 Modified in v1.5.2 $
@@ -899,7 +899,7 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
     if ($connection == '') $connection = $request_type;
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ($session_started == true) {
-      if (defined('SID') && zen_not_null(SID)) {
+      if (defined('SID') && zen_not_null(constant('SID'))) {
         $sid = SID;
       } elseif ( ($request_type == 'NONSSL' && $connection == 'SSL') || ($request_type == 'SSL' && $connection == 'NONSSL') ) {
         if ($http_domain != $https_domain) {
@@ -932,3 +932,53 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
 
     return $rand_value;
   }
+
+  function zen_parse_url($url, $element = 'array', $detect_tilde = false)
+  {
+    // Read the various elements of the URL, to use in auto-detection of admin foldername (basically a simplified parse_url equivalent which automatically supports ports and uncommon TLDs)
+    $t1 = array();
+    if (strpos($url, '://')) {
+      // scheme
+      $s1 = explode('://', $url);
+      $t1['scheme'] = $s1[0];
+      $s2 = explode('/', trim($s1[1], '/'));
+    } else {
+      $s2 = explode('/', trim($url, '/'));
+    }
+    // host
+    $t1['host'] = $s2[0];
+    array_shift($s2);
+    // adjust host to accommodate /~username shared-ssl scenarios
+    if ($detect_tilde && substr($s2[0], 0, 1) == '~') {
+      $t1['host'] .= '/' . $s2[0];
+      // array_shift also therefore removes it from ['path'] below
+      array_shift($s2);
+    }
+    // now look for a parked subdomain in the URL (assumption here is that there is a "." in the foldername)
+    if ($detect_tilde && strpos($s2[0], '.') > 0) {
+      $t1['host'] .= '/' . $s2[0];
+      // array_shift also therefore removes it from ['path'] below
+      array_shift($s2);
+    }
+    // path/uri
+    $t1['path'] = implode('/', $s2);
+    // build another element: the "path parent", that is, the folder above the final path, as this might be useful in detecting complex shared-SSL folder structures.
+    array_pop($s2);
+    $t1['pathparent'] = implode('/', $s2);
+    // prepare the /path value
+    $p1 = ($t1['path'] != '') ? '/' . $t1['path'] : '';
+
+    switch($element) {
+      case 'scheme':
+      case 'host':
+      case 'path':
+      case 'pathparent':
+        return $t1[$element];
+      case '/path':
+        return $p1;
+      case 'array':
+      default:
+        return $t1;
+    }
+  }
+

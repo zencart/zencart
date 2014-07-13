@@ -5,10 +5,10 @@
  * This class is used during the installation and upgrade processes
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 1 18:18:33 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.3 $
  */
 
 
@@ -29,7 +29,7 @@
       /**
        * The version that this edition of the installer is designed to support
        */
-      $this->latest_version = '1.5.2';
+      $this->latest_version = '1.5.3';
 
       /**
        * Check to see if the configuration table can be found...thus validating the installation, in part.
@@ -79,6 +79,7 @@
       $this->version150 = $this->check_version_150();
       $this->version151 = $this->check_version_151();
       $this->version152 = $this->check_version_152();
+      $this->version153 = $this->check_version_153();
 
       if ($this->version110 == true)  $retVal = '1.1.0';
       if ($this->version111 == true)  $retVal = '1.1.1';
@@ -104,6 +105,7 @@
       if ($this->version150 == true) $retVal = '1.5.0';
       if ($this->version151 == true) $retVal = '1.5.1';
       if ($this->version152 == true) $retVal = '1.5.2';
+      if ($this->version153 == true) $retVal = '1.5.3';
 
       return $retVal;
     }
@@ -794,14 +796,13 @@
       $sql = "show fields from " . DB_PREFIX . "sessions";
       $result = $db_test->Execute($sql);
       while (!$result->EOF && !$got_v1_5_2a) {
-        if (ZC_UPG_DEBUG==true) echo "152-fields-'sesskey TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . ' (expecting VARCHAR(255))<br>';
+        if (ZC_UPG_DEBUG==true && $result->fields['Field'] == 'sesskey') echo "152a-fields-'sesskey TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . ' (expecting VARCHAR(255))<br>';
         if  ($result->fields['Field'] == 'sesskey' && strtoupper($result->fields['Type']) == 'VARCHAR(255)') {
           $got_v1_5_2a = true;
           if (ZC_UPG_DEBUG==true) echo 'OKAY 1.5.2a<br><br>';
         }
         $result->MoveNext();
       }
-
       $sql = "select configuration_description from " . DB_PREFIX . "configuration where configuration_key = 'SESSION_WRITE_DIRECTORY'";
       $result = $db_test->Execute($sql);
       if (ZC_UPG_DEBUG==true) echo "152b-configdesc_check SESSION_WRITE_DIRECTORY =" . $result->fields['configuration_description'] . '<br>';
@@ -809,9 +810,29 @@
         $got_v1_5_2b = true;
         if (ZC_UPG_DEBUG==true) echo 'OKAY: 1.5.2b<br><br>';
       }
+      if (ZC_UPG_DEBUG==true && !$got_v1_5_2b) echo 'BAD: 1.5.2b<br><br>';
 
       return ($got_v1_5_2a && $got_v1_5_2b);
     } //end of 1.5.2 check
+
+
+    function check_version_153() {
+      global $db_test;
+      $got_v1_5_3a = false;
+      $sql = "show fields from " . DB_PREFIX . "customers";
+      $result = $db_test->Execute($sql);
+      while (!$result->EOF && !$got_v1_5_3a) {
+        if (ZC_UPG_DEBUG==true && $result->fields['Field'] == 'customers_password') echo "152b-fields-'customers_password TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . ' (expecting VARCHAR(255))<br>';
+        if  ($result->fields['Field'] == 'customers_password' && strtoupper($result->fields['Type']) == 'VARCHAR(255)') {
+          $got_v1_5_3a = true;
+          if (ZC_UPG_DEBUG==true) echo 'OKAY 1.5.3a<br><br>';
+        }
+        $result->MoveNext();
+      }
+      if (ZC_UPG_DEBUG==true && !$got_v1_5_3a) echo 'BAD: 1.5.3a<br><br>';
+
+      return $got_v1_5_3a;
+    } //end of 1.5.3 check
 
 
 

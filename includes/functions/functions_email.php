@@ -5,10 +5,10 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 16:30:40 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Fri Apr 18 14:01:49 2014 -0400 Modified in v1.5.3 $
  */
 
 /**
@@ -570,7 +570,7 @@
       ($login_fax !='' ? OFFICE_LOGIN_FAX . "\t" . $login_fax . "\n" : '') .
       OFFICE_IP_ADDRESS . "\t" . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . "\n" .
       ($email_host_address != '' ? OFFICE_HOST_ADDRESS . "\t" . $email_host_address  . "\n" : '') .
-      OFFICE_DATE_TIME . "\t" . date("D M j Y G:i:s T") . "\n\n";
+      OFFICE_DATE_TIME . "\t" . date("D M j Y G:i:s T") . "\n";
 
     $extra_info['HTML'] = '<table class="extra-info">' .
       '<tr><td class="extra-info-bold" colspan="2">' . OFFICE_USE . '</td></tr>' .
@@ -582,12 +582,15 @@
       ($login_fax !='' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_FAX . '</td><td>' . $login_fax . '</td></tr>' : '') .
       '<tr><td class="extra-info-bold">' . OFFICE_IP_ADDRESS . '</td><td>' . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . '</td></tr>' .
       ($email_host_address != '' ? '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' : '') .
-      '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>' . '</table>';
+      '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>';
 
     foreach($moreinfo as $key => $val) {
-      $extra_info['TEXT'] .= $key . ': ' . $val . "\n";
+      $extra_info['TEXT'] .= $key . ": \t" . $val . "\n";
       $extra_info['HTML'] .= '<tr><td class="extra-info-bold">' . $key . '</td><td>' . $val . '</td></tr>';
     }
+
+    $extra_info['TEXT'] .= "\n\n";
+    $extra_info['HTML'] .= '</table>' . "\n";
 
     return $extra_info;
   }
@@ -605,13 +608,12 @@
  *     first-last@host.com
  *     first's-address@email.host.4somewhere.com
  *     first.last@[123.123.123.123]
- *
- *     hosts with either external IP addresses or from 2-6 characters will pass (e.g. .jp or .museum)
+ *     lastfirst@mail.international
  *
  *     Invalid Addresses:
- *
  *     first last@host.com
  *     'first@host.com
+ *
  * @param string The email address to validate
  * @return boolean true if valid else false
 **/
@@ -625,8 +627,8 @@
     // split the email address into user and domain parts
     // this method will most likely break in that case
     list( $user, $domain ) = explode( "@", $email );
-    $valid_ip_form = '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}';
-    $valid_email_pattern = '^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$';
+    $valid_ip4_form = '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}';
+    $valid_email_pattern = '^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+(XN\-\-[a-z0-9]{2,20}|[a-z]{2,20}))|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$';
     $space_check = '[ ]';
 
     // strip beginning and ending quotes, if and only if both present
@@ -641,7 +643,7 @@
     if (strstr($domain,' ')) return false;
 
     // if email domain part is an IP address, check each part for a value under 256
-    if (preg_match('/'.$valid_ip_form.'/', $domain)) {
+    if (preg_match('/'.$valid_ip4_form.'/', $domain)) {
       $digit = explode( ".", $domain );
       for($i=0; $i<4; $i++) {
         if ($digit[$i] > 255) {
@@ -658,7 +660,7 @@
       }
     }
 
-    if (!preg_match('/'.$valid_email_pattern.'/i', $email)) { // validate against valid email patterns
+    if (!preg_match('/'.$valid_email_pattern.'/i', $email)) { // validate against valid email pattern
       $valid_address = false;
       return $valid_address;
       exit;

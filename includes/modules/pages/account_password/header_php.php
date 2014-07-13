@@ -3,10 +3,10 @@
  * Header code file for the Account Password page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Feb 19 15:57:35 2014 +0000 Modified in v1.5.3 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_PASSWORD');
@@ -45,13 +45,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     if (zen_validate_password($password_current, $check_customer->fields['customers_password'])) {
       $nickname = $check_customer->fields['customers_nick'];
-      $sql = "UPDATE " . TABLE_CUSTOMERS . "
-              SET customers_password = :password 
-              WHERE customers_id = :customersID";
-
-      $sql = $db->bindVars($sql, ':customersID',$_SESSION['customer_id'], 'integer');
-      $sql = $db->bindVars($sql, ':password',zen_encrypt_password($password_new), 'string');
-      $db->Execute($sql);
+      zcPassword::getInstance(PHP_VERSION)->updateLoggedInCustomerPassword($password_new, $_SESSION['customer_id']);
 
       $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
               SET    customers_info_date_account_last_modified = now()

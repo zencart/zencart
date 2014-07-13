@@ -3,10 +3,10 @@
  * ot_gv order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 23:04:40 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Tue Apr 15 17:32:27 2014 -0400 Modified in v1.5.3 $
  */
 /**
  * Enter description here...
@@ -75,13 +75,13 @@ class ot_gv {
           }
         }
         $order->info['total'] = $order->info['total'] - $od_amount['total'];
-        if ($this->calculate_tax = "Standard") $order->info['total'] -= $tax;
+        if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
         if ($order->info['total'] < 0) $order->info['total'] = 0;
         $order->info['tax'] = $order->info['tax'] - $od_amount['tax'];
         // prepare order-total output for display and storing to invoice
         $this->output[] = array('title' => $this->title . ':',
-        'text' => '-' . $currencies->format($od_amount['total']),
-        'value' => $od_amount['total']);
+                                'text' => '-' . $currencies->format($od_amount['total']),
+                                'value' => $od_amount['total']);
       }
     }
   }
@@ -256,7 +256,7 @@ class ot_gv {
         // now update customer account with gv_amount
         $gv_amount_result=$db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
         $customer_gv = false;
-        $total_gv_amount = $gv_amount;;
+        $total_gv_amount = $gv_amount;
         if ($gv_amount_result->RecordCount() > 0) {
           $total_gv_amount = $gv_amount_result->fields['amount'] + $gv_amount;
           $customer_gv = true;

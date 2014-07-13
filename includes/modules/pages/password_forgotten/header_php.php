@@ -3,7 +3,7 @@
  * Password Forgotten
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jul 31 18:47:04 2012 -0400 Modified in v1.5.1 $
@@ -43,7 +43,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
   if ($check_customer->RecordCount() > 0) {
 
-    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED');
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED', $email_address);
 
     $new_password = zen_create_PADSS_password( (ENTRY_PASSWORD_MIN_LENGTH > 0 ? ENTRY_PASSWORD_MIN_LENGTH : 5) );
     $crypted_password = zen_encrypt_password($new_password);
@@ -60,12 +60,12 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password);
     // send the email
     zen_mail($check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'], $email_address, EMAIL_PASSWORD_REMINDER_SUBJECT, sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password), STORE_NAME, EMAIL_FROM, $html_msg,'password_forgotten');
+  } else {
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address);
+  }
 
     $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  } else {
-    $messageStack->add('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
-  }
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_LOGIN, '', 'SSL'));

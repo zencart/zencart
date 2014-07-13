@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Thu Oct 24 21:13:46 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Tue Mar 4 14:33:25 2014 -0500 Modified in v1.5.3 $
  */
   require('includes/application_top.php');
 
@@ -29,7 +29,7 @@
   }
   // check for damaged database, caused by users indiscriminately deleting table data
   $ary = array();
-  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_name = 'TEXT' and products_options_values_id=" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
+  $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id=" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
   while (!$chk_option_values->EOF) {
     $ary[] = $chk_option_values->fields['language_id'];
     $chk_option_values->MoveNext();
@@ -657,7 +657,7 @@ function translate_type_to_name($opt_type) {
 
       $value_string .= '    ' . $fieldName . '.options[' . $val_count . '] = new Option("' . $products_options_values_name . ($attributes->fields['products_options_values_id'] == 0 ? '/UPLOAD FILE' : '') . ($show_value_numbers ? ' [ #' . $attributes->fields['products_options_values_id'] . ' ] ' : '') . '", "' . $attributes->fields['products_options_values_id'] . '");' . "\n";
 
-      $last_option_processed = $attributes->fields['products_options_id'];;
+      $last_option_processed = $attributes->fields['products_options_id'];
       $val_count++;
       $counter++;
       $attributes->MoveNext();
@@ -936,7 +936,7 @@ if ($action == 'attributes_preview') {
 //            where    patrib.products_id='" . $pInfo->products_id . "'
 //            where    patrib.products_id='" . (int)$_GET['products_id'] . "'
   $check_template = $db->Execute("select template_dir from " . TABLE_TEMPLATE_SELECT);
-  echo '<link rel="stylesheet" type="text/css" href="' . DIR_WS_CATALOG_TEMPLATE . $check_template->fields['template_dir'] . '/css/stylesheet.css' . '" />';
+  echo '<link rel="stylesheet" type="text/css" href="' . str_replace('index.php?main_page=NONE', 'includes/templates/' . $check_template->fields['template_dir'] . '/css/stylesheet.css', zen_catalog_href_link('NONE', '', 'SSL')) . '" />';
 ?>
 
   <tr>
@@ -1220,6 +1220,9 @@ if ($action == '') {
 <?php } ?>
 <?php
   $current_options_name = '';
+  // get products tax id
+  $product_check = $db->Execute("select products_tax_class_id from " . TABLE_PRODUCTS . " where products_id = '" . $products_filter . "'" . " limit 1");
+//  echo '$products_filter: ' . $products_filter . ' tax id: ' . $product_check->fields['products_tax_class_id'] . '<br>';
   while (!$attributes_values->EOF) {
     $current_attributes_products_id = $attributes_values->fields['products_id'];
     $current_attributes_options_id = $attributes_values->fields['options_id'];
@@ -1591,9 +1594,9 @@ if ($action == '') {
 // $attributes_values
 $attributes_price_final = zen_get_attributes_price_final($attributes_values->fields["products_attributes_id"], 1, $attributes_values, 'false');
 $attributes_price_final_value = $attributes_price_final;
-$attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate(1), 1);
+$attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
 $attributes_price_final_onetime = zen_get_attributes_price_final_onetime($attributes_values->fields["products_attributes_id"], 1, $attributes_values);
-$attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate(1), 1);
+$attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
 ?>
             <td class="smallText">&nbsp;<?php echo $attributes_values->fields["products_attributes_id"]; ?>&nbsp;</td>
             <td class="smallText">&nbsp;<?php // echo $products_name_only; ?>&nbsp;</td>
@@ -1626,7 +1629,7 @@ if ($action == '') {
     $new_attributes_price = zen_get_attributes_price_final($attributes_values->fields["products_attributes_id"], 1, '', 'false');
     $new_attributes_price = zen_get_discount_calc($products_filter, true, $new_attributes_price);
     if ($new_attributes_price != $attributes_price_final_value) {
-      $new_attributes_price = '|' . $currencies->display_price($new_attributes_price, zen_get_tax_rate(1), 1);
+      $new_attributes_price = '|' . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
     } else {
       $new_attributes_price = '';
     }

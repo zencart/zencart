@@ -3,10 +3,10 @@
  * Login Page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Thu Mar 6 14:59:16 2014 -0500 Modified in v1.5.3 $
  */
 
 // This should be first line of the script:
@@ -29,6 +29,7 @@ $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $email_address = zen_db_prepare_input($_POST['email_address']);
   $password = zen_db_prepare_input($_POST['password']);
+  $loginAuthorized = false;
 
   /* Privacy-policy-read does not need to be checked during "login"
   if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
@@ -57,8 +58,19 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
       $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
       $messageStack->add('login', TEXT_LOGIN_BANNED);
     } else {
-      // Check that password is good
-      if (!zen_validate_password($password, $check_customer->fields['customers_password'])) {
+
+      $dbPassword = $check_customer->fields['customers_password'];
+      // Check whether the password is good
+      if (zen_validate_password($password, $dbPassword)) {
+        $loginAuthorized = true;
+        if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
+          $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
+        }
+      }
+
+      $zco_notifier->notify('NOTIFY_PROCESS_3RD_PARTY_LOGINS', $email_address, $password, $loginAuthorized);
+
+      if (!$loginAuthorized) {
         $error = true;
         $messageStack->add('login', TEXT_LOGIN_ERROR);
       } else {
@@ -83,9 +95,20 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $_SESSION['customer_country_id'] = $check_country->fields['entry_country_id'];
         $_SESSION['customer_zone_id'] = $check_country->fields['entry_zone_id'];
 
+        // enforce db integrity: make sure related record exists
+        $sql = "SELECT customers_info_date_of_last_logon FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_id = :customersID";
+        $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
+        $result = $db->Execute($sql);
+        if ($result->RecordCount() == 0) {
+          $sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id) values (:customersID)";
+          $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
+          $db->Execute($sql);
+        }
+
+        // update login count
         $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
               SET customers_info_date_of_last_logon = now(),
-                  customers_info_number_of_logons = customers_info_number_of_logons+1
+                  customers_info_number_of_logons = IF(customers_info_number_of_logons, customers_info_number_of_logons+1, 1)
               WHERE customers_info_id = :customersID";
 
         $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');

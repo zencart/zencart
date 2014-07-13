@@ -3,10 +3,10 @@
  * ez_pages ("page") header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jan 15 15:50:09 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Jun 1 2014 -0500 Modified in v1.5.3 $
  */
 /*
 * This "page" page is the display component of the ez-pages module
@@ -18,8 +18,6 @@
 
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_EZPAGE');
-
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 $ezpage_id = (int)$_GET['id'];
 if ($ezpage_id == 0) zen_redirect(zen_href_link(FILENAME_DEFAULT));
@@ -35,6 +33,7 @@ $sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or stat
 $var_pageDetails = $db->Execute($sql);
 // redirect to home page if page not found (or deactivated/deleted):
 if ($var_pageDetails->EOF) {
+  require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
   $messageStack->add_session('header', ERROR_PAGE_NOT_FOUND, 'caution');
   header('HTTP/1.1 404 Not Found');
   header('Status: 404 Not Found');
@@ -146,6 +145,10 @@ $home_button = zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT);
 define('NAVBAR_TITLE', $var_pageDetails->fields['pages_title']);
 define('HEADING_TITLE', $var_pageDetails->fields['pages_title']);
 $breadcrumb->add($var_pageDetails->fields['pages_title']);
+
+
+// @TODO - confirm whether the following line can be removed. Preliminary testing suggests it's not needed by any current built-in functionality
+// require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 
 // Pull settings from admin switches to determine what, if any, header/column/footer "disable" options need to be set

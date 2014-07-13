@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Nov 2 00:02:54 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: ajeh  Sat Apr 19 10:20:14 2014 -0400 Modified in v1.5.3 $
  */
 
 ////
@@ -1215,15 +1215,24 @@
   function zen_output_generated_category_path($id, $from = 'category') {
     $calculated_category_path_string = '';
     $calculated_category_path = zen_generate_category_path($id, $from);
+
     for ($i=0, $n=sizeof($calculated_category_path); $i<$n; $i++) {
       for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
-//        $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
-        $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
+        if ($from == 'category') {
+          $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
+        } else {
+          $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'];
+          $calculated_category_path_string .= ' [ ' . TEXT_INFO_ID . $calculated_category_path[$i][$j]['id'] . ' ] ';
+          $calculated_category_path_string .= '<br>';
+          $calculated_category_path_string .= '&nbsp;&nbsp;';
+//           $calculated_category_path_string .= '&nbsp;&gt;&nbsp;';
+        }
       }
-      $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br>';
+      if ($from == 'product') {
+        $calculated_category_path_string .= '<br>';
+      }
     }
-    $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
-
+    $calculated_category_path_string = preg_replace('/&nbsp;&gt;&nbsp;$/', '', $calculated_category_path_string);
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 
     return $calculated_category_path_string;
@@ -1237,9 +1246,9 @@
       for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
         $calculated_category_path_string .= $calculated_category_path[$i][$j]['id'] . '_';
       }
-      $calculated_category_path_string = substr($calculated_category_path_string, 0, -1) . '<br>';
+      $calculated_category_path_string = rtrim($calculated_category_path_string, '_') . '<br>';
     }
-    $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
+    $calculated_category_path_string = preg_replace('/<br>$/', '', $calculated_category_path_string);
 
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 

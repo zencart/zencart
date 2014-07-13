@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Oct 27 16:37:30 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.5.3 $
  */
 
   require('includes/application_top.php');
@@ -129,7 +129,7 @@
         $check_configure = $db->Execute($sql);
       }
       if ($check_configure->RecordCount() >= 1) {
-        $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . $configuration_key_lookup) . '">' . $configuration_key_lookup . '</a><br /><br />';
+        $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br /><br />';
       } else {
         // do nothing
       }
@@ -142,7 +142,7 @@
       // only ask if found
       echo '<tr><td>' . $links . '</td></tr>';
     }
-    echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . $configuration_key_lookup . '</td></tr></table>' . "\n\n";
+    echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>' . "\n\n";
     echo '<tr><td>&nbsp;</td></tr>';
 
 // check all files located
@@ -554,7 +554,7 @@
 
     // if no matches in either databases or selected language directory give an error
     if ($found == 'false') {
-      $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND . ' ' . $configuration_key_lookup, 'caution');
+      $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND . ' ' . zen_output_string_protected($configuration_key_lookup), 'caution');
     } elseif (substr($action, 0, 7) == 'locate_') {
       echo '<table width="90%" align="center"><tr><td>' . zen_draw_separator('pixel_black.gif', '100%', '2') . '</td></tr><tr><td>&nbsp;</td></tr></table>' . "\n";
     }
@@ -682,7 +682,7 @@ if (isset($show_configuration_info) && $show_configuration_info == 'true') {
           <tr class="infoBoxContent">
             <td colspan="2" class="pageHeading" align="center">
 <?php
-      $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . $configuration_key_lookup . '&zv_files=1') . '">' . $configuration_key_lookup . '</a><br />';
+      $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br />';
       echo $links;
 ?>
             </td>

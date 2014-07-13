@@ -4,15 +4,17 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Wed Mar 12 14:41:25 2014 -0400 Modified in v1.5.3 $
  */
   require('includes/application_top.php');
 
   require(DIR_WS_MODULES . 'prod_cat_header_code.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
   if (isset($_GET['page'])) $_GET['page'] = (int)$_GET['page'];
   if (isset($_GET['product_type'])) $_GET['product_type'] = (int)$_GET['product_type'];
+  if (isset($_GET['cID'])) $_GET['cID'] = (int)$_GET['cID'];
 
   if (!isset($_SESSION['categories_products_sort_order'])) {
     $_SESSION['categories_products_sort_order'] = CATEGORIES_PRODUCTS_SORT_ORDER;
@@ -516,6 +518,24 @@
         }
       }
       break;
+
+      case 'setflag_categories':
+      case 'new_category':
+      case 'edit_category':
+      case 'delete_category':
+      case 'edit_category_meta_tags':
+      case 'move_category':
+      case 'delete_product':
+      case 'move_product':
+      case 'copy_to':
+      case 'attribute_features':
+      case 'attribute_features_copy_to_product':
+      case 'attribute_features_copy_to_category':
+        // handled by another switch/case later
+        break;
+
+      default:
+        $action = $_GET['action'] = '';
     }
   }
 

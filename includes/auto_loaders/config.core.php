@@ -4,9 +4,9 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 8 14:51:03 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Mon May 5 12:49 2014 -0400 Modified in v1.5.3 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
@@ -72,13 +72,18 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=>'breadcrumb.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'query_cache.php');
-
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'QueryCache',
                                'objectName'=>'queryCache',
                                'checkInstantiated'=>true);
-                                
-                                
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'class.zcPassword.php');
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                               'className'=>'zcPassword',
+                               'objectName'=>'zcPassword');
+
+
+
 /**
  * Breakpoint 10.
  *
@@ -252,6 +257,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[170][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_add_crumbs.php');
+  /**
+   * Breakpoint 175.
+   *
+   * require('includes/init_includes/init_observers.php');
+   *
+   */
+  $autoLoadConfig[175][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_observers.php');
 /**
  * Breakpoint 180.
  *

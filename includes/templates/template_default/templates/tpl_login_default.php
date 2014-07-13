@@ -3,10 +3,10 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_login_default.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Wed Dec 18 14:20:36 2013 -0500 Modified in v1.5.3 $
  */
 ?>
 <div class="centerColumn" id="loginDefault">
@@ -73,7 +73,7 @@
 <br class="clearBoth" />
 
 <label class="inputLabel" for="login-password"><?php echo ENTRY_PASSWORD; ?></label>
-<?php echo zen_draw_password_field('password', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_password') . ' id="login-password"'); ?>
+<?php echo zen_draw_password_field('password', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_password', 40) . ' id="login-password" autocomplete="off"'); ?>
 <br class="clearBoth" />
 <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
 </fieldset>

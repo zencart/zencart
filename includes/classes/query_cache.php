@@ -3,10 +3,10 @@
  * Temporary cache for sql
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Created by Data-Diggers.com http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jun 14 20:02:41 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Sun Mar 2 16:20:12 2014 -0500 Modified in v1.5.3 $
  *
  */
 /**
@@ -47,5 +47,12 @@
         return(false);
     }
 
+    function reset($query) {
+      if ('ALL' == $query) {
+        $this->queries = array();
+        return FALSE;
+      }
+      unset ($this->queries[$query]);
+    }
 }
 

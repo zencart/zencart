@@ -2,9 +2,9 @@
 <!--
 /**
  * @package documentation
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 22:51:50 2013 -0500 New in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu Apr 17 23:53:25 2014 -0400 Modified in v1.5.3 $
  */
 //-->
 <html>
@@ -91,6 +91,12 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/includes/init_includes/init_cache_key_check.php</li>
 <li>/admin/includes/init_includes/init_sanitize.php (Was removed in an older version. Added back with new contents in v1.5.2)</li>
 <li>/includes/extra_configures/set_time_zone.php</li>
+<li>/includes/classes/class.zcPassword.php</li>
+<li>/includes/classes/vendors/password_compat-master/lib/password.php</li>
+<li>/includes/classes/vendors/password_compat-master/ (numerous files+folders here)</li>
+<li>/includes/functions/password_compat.php</li>
+<li>/includes/functions/plugin_support.php</li>
+<li>/includes/init_includes/init_observers.php</li>
 <li>/includes/languages/english/page.php</li>
 <li>/includes/classes/support/*.php  - ALL PHP FILES IN THIS FOLDER ARE NEW/CHANGED</li>
 </ul>
@@ -101,8 +107,10 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/alert_page.php</li>
 <li>/admin/alt_nav.php</li>
 <li>/admin/attributes_controller.php</li>
+<li>/admin/banner_manager.php</li>
 <li>/admin/categories.php</li>
 <li>/admin/countries.php</li>
+<li>/admin/coupon_admin.php</li>
 <li>/admin/currencies.php</li>
 <li>/admin/define_pages_editor.php</li>
 <li>/admin/developers_tool_kit.php</li>
@@ -121,7 +129,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/whos_online.php</li>
 <li>/admin/includes/.htaccess</li>
 <li>/admin/includes/application_top.php</li>
-<li>/admin/includes/dist_configure.php</li>
+<li>/admin/includes/dist-configure.php</li>
 <li>/admin/includes/header.php</li>
 <li>/admin/includes/auto_loaders/config.core.php</li>
 <li>/admin/includes/classes/box.php</li>
@@ -138,6 +146,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/includes/init_includes/init_cache_key_check.php   (NEW)</li>
 <li>/admin/includes/init_includes/init_database.php</li>
 <li>/admin/includes/init_includes/init_file_db_names.php</li>
+<li>/admin/includes/init_includes/init_general_funcs.php</li>
 <li>/admin/includes/init_includes/init_gzip.php</li>
 <li>/admin/includes/init_includes/init_sanitize.php (NEW -- Was removed in an older version. Added back with new contents in v1.5.2)</li>
 <li>/admin/includes/init_includes/init_sessions.php</li>
@@ -156,6 +165,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/admin/includes/modules/products_previous_next.php</li>
 <li>/admin/includes/modules/products_previous_next_display.php</li>
 <li>/admin/includes/modules/update_product.php</li>
+<li>/admin/includes/modules/product_music/preview_info.php</li>
 <li>/admin/includes/modules/product_music/update_product.php</li>
 <li>/download/.htaccess</li>
 <li>/editors/.htaccess</li>
@@ -165,7 +175,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/images/.htaccess</li>
 <li>/includes/.htaccess</li>
 <li>/includes/application_top.php</li>
-<li>/includes/dist_configure.php</li>
+<li>/includes/dist-configure.php</li>
 <li>/includes/spiders.txt</li>
 <li>/includes/version.php</li>
 <li>/includes/auto_loaders/config.core.php</li>
@@ -173,6 +183,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/classes/class.base.php</li>
 <li>/includes/classes/class.phpmailer.php</li>
 <li>/includes/classes/class.smtp.php</li>
+<li>/includes/classes/class.zcPassword.php (NEW)</li>
 <li>/includes/classes/order.php</li>
 <li>/includes/classes/payment.php</li>
 <li>/includes/classes/products.php</li>
@@ -180,20 +191,27 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/classes/shipping.php</li>
 <li>/includes/classes/shopping_cart.php</li>
 <li>/includes/classes/support/*.php  - ALL PHP FILES IN THIS FOLDER ARE NEW/CHANGED</li>
+<li>/includes/classes/vendors/password_compat-master/lib/password.php  (NEW)</li>
 <li>/includes/extra_configures/set_time_zone.php  (NEW)</li>
+<li>/includes/functions/audience.php</li>
 <li>/includes/functions/functions_email.php</li>
 <li>/includes/functions/functions_general.php</li>
 <li>/includes/functions/functions_lookups.php</li>
 <li>/includes/functions/functions_prices.php</li>
+<li>/includes/functions/html_output.php</li>
+<li>/includes/functions/password_compat.php  (NEW)</li>
 <li>/includes/functions/password_funcs.php</li>
+<li>/includes/functions/plugin_support.php  (NEW)</li>
 <li>/includes/functions/sessions.php</li>
 <li>/includes/init_includes/init_canonical.php</li>
 <li>/includes/init_includes/init_cart_handler.php</li>
 <li>/includes/init_includes/init_database.php</li>
 <li>/includes/init_includes/init_db_config_read.php</li>
 <li>/includes/init_includes/init_file_db_names.php</li>
+<li>/includes/init_includes/init_general_funcs.php</li>
 <li>/includes/init_includes/init_gzip.php</li>
 <li>/includes/init_includes/init_header.php</li>
+<li>/includes/init_includes/init_observers.php  (NEW)</li>
 <li>/includes/init_includes/init_sanitize.php</li>
 <li>/includes/init_includes/init_sessions.php</li>
 <li>/includes/languages/english.php</li>
@@ -217,6 +235,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/modules/order_total/ot_gv.php</li>
 <li>/includes/modules/order_total/ot_shipping.php</li>
 <li>/includes/modules/pages/account_edit/header_php.php</li>
+<li>/includes/modules/pages/account_password/header_php.php</li>
 <li>/includes/modules/pages/checkout_confirmation/header_php.php</li>
 <li>/includes/modules/pages/checkout_payment/header_php.php</li>
 <li>/includes/modules/pages/checkout_shipping/header_php.php</li>
@@ -227,9 +246,12 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/modules/pages/download/header_php.php</li>
 <li>/includes/modules/pages/gv_send/header_php.php</li>
 <li>/includes/modules/pages/index/main_template_vars.php</li>
+<li>/includes/modules/pages/login/header_php.php</li>
 <li>/includes/modules/pages/page/header_php.php</li>
+<li>/includes/modules/pages/product_reviews/header_php.php</li>
 <li>/includes/modules/pages/product_reviews_write/header_php.php</li>
 <li>/includes/modules/pages/shopping_cart/header_php.php</li>
+<li>/includes/modules/pages/time_out/header_php.php</li>
 <li>/includes/modules/payment/linkpoint_api/class.linkpoint_api.php</li>
 <li>/includes/modules/payment/paypal/paypal_curl.php</li>
 <li>/includes/modules/payment/paypal/paypal_functions.php</li>
@@ -246,15 +268,21 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 <li>/includes/modules/shipping/storepickup.php</li>
 <li>/includes/modules/sideboxes/currencies.php</li>
 <li>/includes/modules/sideboxes/information.php</li>
+<li>/includes/templates/classic/css/stylesheet.css</li>
+<li>/includes/templates/classic/css/stylesheet_css_buttons.css</li>
+<li>/includes/templates/template_default/css/stylesheet.css</li>
+<li>/includes/templates/template_default/css/stylesheet_css_buttons.css</li>
 <li>/includes/templates/template_default/popup_coupon_help/tpl_main_page.php</li>
 <li>/includes/templates/template_default/sideboxes/tpl_reviews_random.php</li>
 <li>/includes/templates/template_default/templates/tpl_advanced_search_result_default.php</li>
 <li>/includes/templates/template_default/templates/tpl_checkout_shipping_default.php</li>
 <li>/includes/templates/template_default/templates/tpl_contact_us_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_login_default.php</li>
 <li>/includes/templates/template_default/templates/tpl_page_default.php</li>
 <li>/includes/templates/template_default/templates/tpl_page_not_found_default.php</li>
 <li>/includes/templates/template_default/templates/tpl_product_info_noproduct.php</li>
 <li>/includes/templates/template_default/templates/tpl_site_map_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_time_out_default.php</li>
 <li>/media/.htaccess</li>
 <li>/pub/.htaccess</li>
 <br>
@@ -264,7 +292,7 @@ OSI Certified is a certification mark of the Open Source Initiative.</p>
 
 <h1>&nbsp;</h1>
 </fieldset>
-<p class="center"><em>Copyright 2003 - 2013 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<p class="center"><em>Copyright 2003 - 2014 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
 <br><br>
 </body>
 </html>

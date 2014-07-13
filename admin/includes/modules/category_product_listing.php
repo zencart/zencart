@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Sun Oct 27 15:54:44 2013 +0000 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Mar 12 12:53:44 2014 +0000 Modified in v1.5.3 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -35,7 +35,7 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
     echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-      echo '<br />' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
+      echo '<br />' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_output_string_protected($_GET['search']);
     }
     echo '</form>';
 ?>
@@ -167,7 +167,7 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
         if (zen_get_products_to_categories($categories->fields['categories_id'], true, 'products_active') == 'true') {
           echo '&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED);
         }
-      } else 
+      } else
       {
         echo '&nbsp;&nbsp;';
       }

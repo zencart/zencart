@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Fri Aug 30 18:05:36 2013 -0400 Modified in v1.5.3 $
  */
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -916,12 +916,12 @@ $customer = $db->Execute("select customers_firstname, customers_lastname
     }
 ?>
         <td align="left" class="main"><?php echo COUPON_STARTDATE; ?></td>
-        <td align="left"><?php echo zen_draw_date_selector('coupon_startdate', mktime(0,0,0, $coupon_startdate[1], $coupon_startdate[2], $coupon_startdate[0], 0)); ?></td>
+        <td align="left"><?php echo zen_draw_date_selector('coupon_startdate', mktime(0,0,0, $coupon_startdate[1], $coupon_startdate[2], $coupon_startdate[0])); ?></td>
         <td align="left" class="main"><?php echo COUPON_STARTDATE_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_FINISHDATE; ?></td>
-        <td align="left"><?php echo zen_draw_date_selector('coupon_finishdate', mktime(0,0,0, $coupon_finishdate[1], $coupon_finishdate[2], $coupon_finishdate[0], 0)); ?></td>
+        <td align="left"><?php echo zen_draw_date_selector('coupon_finishdate', mktime(0,0,0, $coupon_finishdate[1], $coupon_finishdate[2], $coupon_finishdate[0])); ?></td>
         <td align="left" class="main"><?php echo COUPON_FINISHDATE_HELP; ?></td>
       </tr>
       <tr>

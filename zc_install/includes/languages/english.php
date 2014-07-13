@@ -3,10 +3,10 @@
  * Main English language file for installer
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 1 13:52:15 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.3 $
  */
 /**
  * defining language components for the page
@@ -233,7 +233,7 @@ if (isset($_GET['error_code'])) {
 switch ($error_code) {
   case ('1'):
     define('POPUP_ERROR_HEADING', 'PHP Version 4.1.2 Detected');
-    define('POPUP_ERROR_TEXT', 'Some releases of PHP Version 4.1.2 have a bug which affects super global arrays. This may result in the admin section of Zen Cart&reg; not being accessible. You are advised to upgrade your PHP version if possible.<br /><br />PHP 4.3.2 or greater is the minimum requirement for Zen Cart&reg;.<br />We STRONGLY recommend using PHP 4.3.11 or greater (in the v4.x series).');
+    define('POPUP_ERROR_TEXT', 'PHP Version 4 no longer supported. Requires PHP 5.2.10 minimum.');
 
   break;
   case ('2'):
@@ -649,7 +649,7 @@ You may also have given the wrong database name (<strong>Does it exist?</strong>
   break;
   case ('89'):
     define('POPUP_ERROR_HEADING','GD Support Details');
-    define('POPUP_ERROR_TEXT','Zen Cart&reg; uses GD support in PHP, if available, to do image management activities.  It is preferred to have at least version 2.0 available.<br /><br />If GD support is not compiled into your PHP install, you may want to ask your hosting company to do this for you.');
+    define('POPUP_ERROR_TEXT','Zen Cart&reg; uses GD support in PHP, if available, to do image management activities.  It is preferred to have at least GD version 2.0 available.<br /><br />If GD support is not compiled into your PHP install, you may want to ask your hosting company to do this for you.');
   break;
   case ('90'):
     define('POPUP_ERROR_HEADING','MySQL 5.7 (and higher) not fully supported in v1.5.x');
@@ -657,7 +657,7 @@ You may also have given the wrong database name (<strong>Does it exist?</strong>
   break;
   case ('91'):
     define('POPUP_ERROR_HEADING','PHP Version Alert');
-    define('POPUP_ERROR_TEXT','Zen Cart&reg; v1.x is designed to run on PHP versions 5.2.14 and greater.<br /><br />There are several PHP functions used in Zen Cart&reg; which are not available in older PHP versions.<br /><br />You will need to upgrade your PHP version if you intend to use Zen Cart&reg; on this server.');
+    define('POPUP_ERROR_TEXT','Zen Cart&reg; v1.5.3 is designed to run on PHP versions 5.2.10 to 5.6.xx.<br /><br />There are several PHP functions used in Zen Cart&reg; which are not available in older PHP versions.<br /><br />You will need to upgrade your PHP version if you intend to use Zen Cart&reg; on this server.');
   break;
   case ('92'):
     define('POPUP_ERROR_HEADING','open_basedir restriction may cause problems');

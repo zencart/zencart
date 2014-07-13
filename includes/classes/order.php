@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Mon Oct 28 17:54:33 2013 +0000 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Tue Apr 15 15:06:16 2014 -0400 Modified in v1.5.3 $
  */
 /**
  * order class
@@ -28,7 +28,7 @@ class order extends base {
     $this->customer = array();
     $this->delivery = array();
 
-    $this->notify('NOTIFY_ORDER_INSTANTIATE', array('order_id' => $order_id));
+    $this->notify('NOTIFY_ORDER_INSTANTIATE', array(), $order_id);
     if (zen_not_null($order_id)) {
       $this->query($order_id);
     } else {
@@ -41,7 +41,7 @@ class order extends base {
 
     $order_id = zen_db_prepare_input($order_id);
     $this->queryReturnFlag = NULL;
-    $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array('order_id' => $order_id));
+    $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return;
 
     $order_query = "select customers_id, customers_name, customers_company,
@@ -238,7 +238,7 @@ class order extends base {
       $index++;
       $orders_products->MoveNext();
     }
-    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array('order_id' => $order_id));
+    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array(), $order_id);
   }
 
   function cart() {
@@ -586,15 +586,18 @@ class order extends base {
   function create($zf_ot_modules, $zf_mode = 2) {
     global $db;
 
+    $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_DURING_ORDER_CREATE', array(), $zf_ot_modules);
+
     if ($this->info['total'] == 0) {
       if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
-        $this->info['order_status'] = DEFAULT_ORDERS_STATUS_ID;
+        $this->info['order_status'] = (int)DEFAULT_ORDERS_STATUS_ID;
       } else {
         if ($_SESSION['payment'] != 'freecharger') {
-          $this->info['order_status'] = DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
+          $this->info['order_status'] = (int)DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
         }
       }
     }
+    $this->notify('NOTIFY_ORDER_CART_ORDERSTATUS');
 
     if ($_SESSION['shipping']['id'] == 'free_free') {
       $this->info['shipping_module_code'] = $_SESSION['shipping']['id'];
@@ -687,7 +690,7 @@ class order extends base {
 
     $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_COMMENT', $sql_data_array);
 
-    return($insert_id);
+    return $insert_id;
 
   }
 
@@ -706,8 +709,11 @@ class order extends base {
 
     for ($i=0, $n=sizeof($this->products); $i<$n; $i++) {
       $custom_insertable_text = '';
+
+      $this->doStockDecrement = (STOCK_LIMITED == 'true');
+      $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_INIT', array(), $this->products[$i], $i);
       // Stock Update - Joao Correia
-      if (STOCK_LIMITED == 'true') {
+      if ($this->doStockDecrement) {
         if (DOWNLOAD_ENABLED == 'true') {
           $stock_query_raw = "select p.products_quantity, pad.products_attributes_filename, p.product_is_always_free_shipping
                               from " . TABLE_PRODUCTS . " p
@@ -723,12 +729,12 @@ class order extends base {
           if (is_array($products_attributes)) {
             $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
           }
-          $stock_values = $db->Execute($stock_query_raw);
+          $stock_values = $db->Execute($stock_query_raw, false, false, 0, true);
         } else {
-          $stock_values = $db->Execute("select * from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+          $stock_values = $db->Execute("select * from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'", false, false, 0, true);
         }
 
-        $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN');
+        $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN', $i, $stock_values);
 
         if ($stock_values->RecordCount() > 0) {
           // do not decrement quantities if products_attributes_filename exists
@@ -759,10 +765,13 @@ class order extends base {
       }
 
       // Update products_ordered (for bestsellers list)
-      //    $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . zen_get_prid($order->products[$i]['id']) . "'");
-      $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+      $this->bestSellersUpdate = TRUE;
+      $this->notify('NOTIFY_ORDER_PROCESSING_BESTSELLERS_UPDATE', array(), $this->products[$i], $i);
+      if ($this->bestSellersUpdate) {
+        $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+      }
 
-      $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END');
+      $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END', $i);
 
       $sql_data_array = array('orders_id' => $zf_insert_id,
                               'products_id' => zen_get_prid($this->products[$i]['id']),
@@ -887,7 +896,7 @@ class order extends base {
       //------eof: insert customer-chosen options ----
     $this->notify('NOTIFY_ORDER_PROCESSING_ATTRIBUTES_EXIST', $attributes_exist);
 
-    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADD_PRODUCTS', $custom_insertable_text);
+    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADD_PRODUCTS', $i, $custom_insertable_text);
 
 /* START: ADD MY CUSTOM DETAILS
  * 1. calculate/prepare custom information to be added to this product entry in order-confirmation, perhaps as a function call to custom code to build a serial number etc:
@@ -912,7 +921,7 @@ class order extends base {
       $this->total_tax += zen_calculate_tax($total_products_price * $this->products[$i]['qty'], $products_tax);
       $this->total_cost += $total_products_price;
 
-      $this->notify('NOTIFY_ORDER_PROCESSING_ONE_TIME_CHARGES_BEGIN');
+      $this->notify('NOTIFY_ORDER_PROCESSING_ONE_TIME_CHARGES_BEGIN', $i);
 
       // build output for email notification
       $this->products_ordered .=  $this->products[$i]['qty'] . ' x ' . $this->products[$i]['name'] . ($this->products[$i]['model'] != '' ? ' (' . $this->products[$i]['model'] . ') ' : '') . ' = ' .
@@ -940,9 +949,9 @@ class order extends base {
   }
 
 
-  function send_order_email($zf_insert_id, $zf_mode) {
+  function send_order_email($zf_insert_id, $zf_mode = FALSE) {
     global $currencies, $order_totals;
-    $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', $order_totals);
+    $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $zf_insert_id, $order_totals, $zf_mode);
     if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
 
     $this->send_low_stock_emails = TRUE;
@@ -1061,13 +1070,14 @@ class order extends base {
     $html_msg['EMAIL_FIRST_NAME'] = $this->customer['firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $this->customer['lastname'];
     //  $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
+
     $html_msg['EXTRA_INFO'] = '';
-    $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
+    $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg), $email_order, $html_msg);
     zen_mail($this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id, $email_order, STORE_NAME, EMAIL_FROM, $html_msg, 'checkout', $this->attachArray);
 
     // send additional emails
     if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-      $extra_info=email_collect_extra_info('','', $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], $this->customer['telephone']);
+      $extra_info = email_collect_extra_info('', '', $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], $this->customer['telephone']);
       $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
 
       // include authcode and transaction id in admin-copy of email
@@ -1077,6 +1087,7 @@ class order extends base {
         $html_msg['EMAIL_TEXT_HEADER'] = nl2br($pmt_details) . $html_msg['EMAIL_TEXT_HEADER'];
       }
 
+      // Add extra heading stuff via observer class
       $this->extra_header_text = '';
       $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_FOR_ADDITIONAL_EMAILS', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg));
       $email_order = $this->extra_header_text . $email_order;

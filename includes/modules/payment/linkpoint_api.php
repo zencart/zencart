@@ -3,11 +3,11 @@
  * FirstData/Linkpoint/Yourpay API Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Tue Apr 15 17:08:43 2014 -0400 Modified in v1.5.3 $
  */
   if (!defined('TABLE_LINKPOINT_API')) define('TABLE_LINKPOINT_API', DB_PREFIX . 'linkpoint_api');
   @define('MODULE_PAYMENT_LINKPOINT_API_CODE_DEBUG' ,'off'); // debug for programmer use only
@@ -63,8 +63,10 @@ class linkpoint_api {
 
   function update_status() {
     global $order, $db;
-    // if store is not running in SSL, cannot offer credit card module, for PCI reasons
-    if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
+    if (IS_ADMIN_FLAG === false) {
+      // if store is not running in SSL, cannot offer credit card module, for PCI reasons
+      if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
+    }
     // check other reasons for the module to be deactivated:
     if ($this->enabled && (int)$this->zone > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
@@ -537,7 +539,7 @@ class linkpoint_api {
                            array('fieldName'=>'cc_number', 'value' => $cc_number, 'type'=>'string'),
                            array('fieldName'=>'cust_info', 'value' => $cust_info, 'type'=>'string'),
                            array('fieldName'=>'chargetotal', 'value' => $chargetotal, 'type'=>'string'),
-                           array('fieldName'=>'cc_expire', 'value' => $cc_month . '/' . $cc_year, 'type'=>'string'),
+//                            array('fieldName'=>'cc_expire', 'value' => $cc_month . '/' . $cc_year, 'type'=>'string'),
                            array('fieldName'=>'ordertype', 'value' => $myorder['ordertype'], 'type'=>'string'), // transaction type: PREAUTH or SALE
                            array('fieldName'=>'date_added', 'value' => 'now()', 'type'=>'noquotestring'));
     if (MODULE_PAYMENT_LINKPOINT_API_STORE_DATA == 'True') {

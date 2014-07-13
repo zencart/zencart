@@ -2,10 +2,10 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Oct 23 18:28:44 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu May 24 17:08 2014 -0400 Modified in v1.5.3 $
  *
  * @TODO - http://dev.mysql.com/doc/refman/5.0/en/user-resources.html
  */
@@ -169,7 +169,7 @@
 
   //get list of disabled functions
   if (!zen_not_null($disabled_funcs)) $disabled_funcs = ini_get("disable_functions");
-  if (zen_not_null($disabled_funcs)) $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_DISABLED_FUNCTIONS, 'Status' => $disabled_funcs, 'Class' => (@substr_count($disabled_funcs,'set_time_limit') ? 'WARN' : 'NA'), 'HelpURL' =>ERROR_CODE_DISABLE_FUNCTIONS, ERROR_TEXT_DISABLE_FUNCTIONS);
+  if (zen_not_null($disabled_funcs)) $status_check[] = array('Importance' => 'Recommended', 'Title' => LABEL_DISABLED_FUNCTIONS, 'Status' => str_replace(',', ', ', $disabled_funcs), 'Class' => (@substr_count($disabled_funcs,'set_time_limit') ? 'WARN' : 'NA'), 'HelpURL' =>ERROR_CODE_DISABLE_FUNCTIONS, ERROR_TEXT_DISABLE_FUNCTIONS);
 
   if (version_compare(PHP_VERSION, 5.4, '<')) {
     // Check Register Globals
@@ -189,10 +189,10 @@
   $mysql_version = ($mysql_version == '') ? UNKNOWN : $mysql_version ;
   //if (is_object($db_test)) $mysql_qry=$db_test->get_server_info();
   $mysql_ver_class = ($mysql_version<'4.1.0') ? 'FAIL' : 'OK';
-  $mysql_ver_class = ($mysql_version == UNKNOWN || $mysql_version > '5.6') ? 'WARN' : $mysql_ver_class;
+  $mysql_ver_class = ($mysql_version == UNKNOWN || $mysql_version > '5.7') ? 'WARN' : $mysql_ver_class;
 
   $status_check[] = array('Importance' => 'Critical', 'Title' => LABEL_MYSQL_AVAILABLE, 'Status' => $mysql_support, 'Class' => ($mysql_support==ON) ? 'OK' : 'FAIL', 'HelpURL' =>ERROR_CODE_DB_NOTSUPPORTED, 'HelpLabel'=>ERROR_TEXT_DB_NOTSUPPORTED);
-  if ($mysql_version != UNKNOWN || ($mysql_version == UNKNOWN && $advanced_mode)) $status_check[] = array('Importance' => 'Info', 'Title' => LABEL_MYSQL_VER, 'Status' => $mysql_version, 'Class' => $mysql_ver_class, 'HelpURL' =>($mysql_version > '5.6' ? ERROR_CODE_DB_MYSQL5 : ERROR_CODE_DB_VER_UNKNOWN), 'HelpLabel'=>($mysql_version > '5.6' ? ERROR_TEXT_DB_MYSQL5 : ERROR_TEXT_DB_VER_UNKNOWN) );
+  if ($mysql_version != UNKNOWN || ($mysql_version == UNKNOWN && $advanced_mode)) $status_check[] = array('Importance' => 'Info', 'Title' => LABEL_MYSQL_VER, 'Status' => $mysql_version, 'Class' => $mysql_ver_class, 'HelpURL' =>($mysql_version > '5.7' ? ERROR_CODE_DB_MYSQL5 : ERROR_CODE_DB_VER_UNKNOWN), 'HelpLabel'=>($mysql_version > '5.7' ? ERROR_TEXT_DB_MYSQL5 : ERROR_TEXT_DB_VER_UNKNOWN) );
 
   //DB Privileges
 if (false) { // DISABLED THIS CODEBLOCK FOR NOW....
@@ -246,8 +246,8 @@ if (false) { // DISABLED THIS CODEBLOCK FOR NOW....
     $php_ver = $zc_install->php_version;
     $this_class = 'OK';
   }
-  
-  if (version_compare(PHP_VERSION, 5.5, '>=')) {
+
+  if (version_compare(PHP_VERSION, 5.7, '>=')) {
     $php_ver = $zc_install->php_version;
     $this_class = 'WARN';
     $err_text = 'This ZC version is not yet tested with this version of PHP.';
