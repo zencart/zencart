@@ -2,11 +2,11 @@
 /**
  * dist-configure.php
  *
- * @package Configuration Settings
+ * @package Configuration Settings circa 1.5.2
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 31 17:24:25 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Wed Nov 6 20:54:59 2013 -0500 Modified in v1.5.2 $
  * @private
  */
 // Define the webserver and path parameters
@@ -37,6 +37,8 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 // * DIR_FS_* = Filesystem directories (local/physical)
 //the following path is a COMPLETE path to your Zen Cart files. eg: /var/www/vhost/accountname/public_html/store/
 define('DIR_FS_CATALOG', '/');
+  //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
+  define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs');
 
 define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');

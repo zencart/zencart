@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2006 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 5244 2006-12-14 18:37:33Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson  Fri Jul 12 13:36:55 2013 +0100 Modified in v1.5.2 $
  */
 
 // This should be first line of the script:
@@ -15,6 +15,14 @@ $zco_notifier->notify('NOTIFY_HEADER_START_CREATE_ACCOUNT_SUCCESS');
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE_1);
 $breadcrumb->add(NAVBAR_TITLE_2);
+
+//-BOF-lat9
+// Remove this page from the navigation history and if the customer returns to this page after time-out, redirect them to the time_out page
+$_SESSION['navigation']->remove_current_page();
+if (!$_SESSION['customer_id']) {
+  zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'NONSSL'));
+}
+//-EOF-lat9
 
 if (sizeof($_SESSION['navigation']->snapshot) > 0) {
   $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], array(zen_session_name())), $_SESSION['navigation']->snapshot['mode']);

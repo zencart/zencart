@@ -1,7 +1,7 @@
 #
-# @copyright Copyright 2003-2010 Zen Cart Development Team
+# @copyright Copyright 2003-2013 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: .htaccess 16111 2010-04-29 22:39:02Z drbyte $
+# @version GIT: $Id: Author: DrByte  Fri May 17 14:29:18 2013 -0400 Modified in v1.5.2 $
 #
 # This is used with Apache WebServers
 #
@@ -10,7 +10,7 @@
 # Will also prevent people from seeing what is in the dir. and any sub-directories
 #
 # For this to work, you must include either 'All' or at least: 'Limit' and 'Indexes' parameters to the AllowOverride configuration in your apache/conf/httpd.conf file.
-# Additionally, if you want the added protection offered by the OPTIONS directive below, you'll need to add 'Options' to the AllowOverride list, if 'All' is not specified. 
+# Additionally, if you want the added protection offered by the OPTIONS directive below, you'll need to add 'Options' to the AllowOverride list, if 'All' is not specified.
 # Example:
 #<Directory "/usr/local/apache/htdocs">
 #  AllowOverride Limit Options Indexes
@@ -24,7 +24,7 @@
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch ".*\.(jpe?g|JPE?G|gif|GIF|png|PNG)$">
+<FilesMatch "(?i).*\.(jpe?g|gif|png)$">
   Order Allow,Deny
   Allow from all
 </FilesMatch>

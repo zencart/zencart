@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2011 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_sessions.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -54,10 +54,10 @@ if (isset($_POST[zen_session_name()])) {
   zen_session_id($_GET[zen_session_name()]);
 }
 /**
- * need to tidy up $_SERVER['REMOTE_ADDR'] here beofre we use it any where else
+ * need to tidy up $_SERVER['REMOTE_ADDR'] here before we use it anywhere else
  * one problem we don't address here is if $_SERVER['REMOTE_ADDRESS'] is not set to anything at all
  */
-$ipAddressArray = explode(',', $_SERVER['REMOTE_ADDR']);
+$ipAddressArray = explode(',', zen_get_ip_address());
 $ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '';
 $_SERVER['REMOTE_ADDR'] = $ipAddress;
 /**

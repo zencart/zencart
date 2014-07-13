@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2011 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: update_product.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Fri Jun 21 22:50:13 2013 -0400 Modified in v1.5.2 $
  */
   if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -39,7 +39,7 @@
                             'manufacturers_id' => $manufacturers_id,
                             'products_quantity_order_min' => zen_db_prepare_input($_POST['products_quantity_order_min']),
                             'products_quantity_order_units' => zen_db_prepare_input($_POST['products_quantity_order_units']),
-                            'products_priced_by_attribute' => zen_db_prepare_input($_POST['products_priced_by_attribute']),
+                            'products_priced_by_attribute' => zen_db_prepare_input((int)$_POST['products_priced_by_attribute']),
                             'product_is_free' => zen_db_prepare_input((int)$_POST['product_is_free']),
                             'product_is_call' => zen_db_prepare_input((int)$_POST['product_is_call']),
                             'products_quantity_mixed' => zen_db_prepare_input($_POST['products_quantity_mixed']),

@@ -3,10 +3,10 @@
  * ot_shipping order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_shipping.php 19002 2011-07-03 10:06:10Z wilt $
+ * @version GIT: $Id: Author: Ian Wilson  Mon Oct 28 17:54:33 2013 +0000 Modified in v1.5.2 $
  */
 
   class ot_shipping {
@@ -38,8 +38,8 @@
           $order->info['shipping_cost'] = 0;
         }
       }
-      $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      if (zen_not_null($order->info['shipping_method'])) {
+      $module = (isset($_SESSION['shipping']) && isset($_SESSION['shipping']['id'])) ? substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_')) : '';
+      if (is_object(($order)) && zen_not_null($order->info['shipping_method'])) {
         if ($GLOBALS[$module]->tax_class > 0) {
           if (!isset($GLOBALS[$module]->tax_basis)) {
             $shipping_tax_basis = STORE_SHIPPING_TAX_BASIS;
@@ -74,7 +74,7 @@
           if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
         }
 
-        if ($_SESSION['shipping'] == 'free_free') {
+        if ($_SESSION['shipping']['id'] == 'free_free') {
           $order->info['shipping_method'] = FREE_SHIPPING_TITLE;
           $order->info['shipping_cost'] = 0;
         }
@@ -84,19 +84,17 @@
 
     function process() {
       global $order, $currencies;
-
-        $this->output[] = array('title' => $order->info['shipping_method'] . ':',
-                                'text' => $currencies->format($order->info['shipping_cost'], true, $order->info['currency'], $order->info['currency_value']),
-                                'value' => $order->info['shipping_cost']);
+      $this->output[] = array('title' => $order->info['shipping_method'] . ':',
+                              'text' => $currencies->format($order->info['shipping_cost'], true, $order->info['currency'], $order->info['currency_value']),
+                              'value' => $order->info['shipping_cost']);
     }
 
     function check() {
-	  global $db;
+      global $db;
       if (!isset($this->_check)) {
         $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_SHIPPING_STATUS'");
         $this->_check = $check_query->RecordCount();
       }
-
       return $this->_check;
     }
 
@@ -105,7 +103,7 @@
     }
 
     function install() {
-	  global $db;
+      global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('This module is installed', 'MODULE_ORDER_TOTAL_SHIPPING_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER', '200', 'Sort order of display.', '6', '2', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow Free Shipping', 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING', 'false', 'Do you want to allow free shipping?', '6', '3', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
@@ -114,7 +112,7 @@
     }
 
     function remove() {
-	  global $db;
+      global $db;
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }

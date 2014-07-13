@@ -3,10 +3,10 @@
  * index.php -- This is the main hub file for the Zen Cart installer
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: index.php 17018 2010-07-27 07:25:41Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Thu Oct 4 22:17:16 2012 -0400 Modified in v1.5.2 $
  */
 
   define('IS_ADMIN_FLAG',false);
@@ -14,6 +14,30 @@
  * Ensure that the include_path can handle relative paths, before we try to load any files
  */
   if (!strstr(ini_get('include_path'), '.')) ini_set('include_path', '.' . PATH_SEPARATOR . ini_get('include_path'));
+
+/**
+ * Bypass PHP file caching systems if active, since it interferes with files changed by zc_install
+ */
+//APC
+// if (ini_get('apc.enabled') == 1) {
+//   if (@ini_get('apc.enable') == 1) @ini_set('apc.filters', '-configure\.php$');
+//   $test1 = realpath(dirname(basename(__FILE__)) . '/../includes/configure.php');
+//   $test2 = realpath(dirname(basename(__FILE__)) . '/../admin/includes/configure.php');
+//   if (file_exists($test1)) $filesToDecache[] = $test1;
+//   if (file_exists($test2)) $filesToDecache[] = $test2;
+//   if (sizeof($filesToDecache)) apc_delete_file($filesToDecache);
+// }
+if (function_exists('apc_clear_cache')) @apc_clear_cache();
+//XCACHE
+if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+//EA
+if (@ini_get('eaccelerator.enable') == 1) {
+  @ini_set('eaccelerator.filter', '!*/configure.php');
+  $info = eaccelerator_info();
+  //if ($info['version'] < '0.9.5.3')
+   @ini_set('eaccelerator.enable', 0);
+}
+
 /*
  * Initialize system core components
  */

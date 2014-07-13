@@ -2,9 +2,9 @@
 <!--
 /**
  * @package documentation
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: important_site_security_recommendations.html 19690 2011-10-04 16:41:45Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Mon Sep 24 14:38:59 2012 -0400 Modified in v1.5.2 $
  */
 //-->
 <html>
@@ -92,7 +92,7 @@ It is safe to keep these files on *your* own computer (not the server), since th
 <p>Renaming the &quot;admin&quot; folder makes it much harder for would-be hackers to get into your admin area. </p>
 <p><em>(Before making the following changes, make sure to have a current backup of your files and your database.)</em></p>
 <p>A- Find your Zen Cart<span class="filename"> /admin/</span> directory, using your FTP software or your webhost File Manager.<br>
-Rename the directory to match the settings you just made in your <span class="filename">admin/includes/configure.php</span>.</p>
+Rename the directory.</p>
 <p>B - To login to your admin system you will now have to visit a new URL that matches the new name used in step A above. For example, instead of visiting <em>http://www.example.com/admin/</em> visit <em>http://www.example.com/NeW_NamE4u/</em>. </p>
 
 <h1>3. Use SMTPAUTH or SMTP as your Email Transport method, instead of the generic "PHP" setting.</h1>
@@ -117,7 +117,7 @@ In your admin area, open the <strong>Admin Access</strong>menu, and choose <stro
 <p><strong>It is wise to use complicated passwords so that a would-be hacker cannot easily guess them.</strong><br>
 <br>
 <span class="error">You can change your admin password</span> in Admin-&gt;Admin Access-&gt;Admin Users, and click on the &quot;<strong>Reset Password</strong>&quot; button. </p>
-<p>We recommend that you use passwords that are at least 8 characters long.<br> 
+<p>We recommend that you use passwords that are at least 8 characters long.<br>
 Making them alpha-numeric (including letters, numbers, upper-and-lower-case, etc) helps too.<br>
 If you are going to use normal words it is a good idea to join together two normal words that don't normally go together.</p>
 
@@ -167,11 +167,13 @@ Thus, once your site is built and your images have been created/loaded, you shou
 <p>The folders for which installation suggests read-write access for  setup are these. If your site supports .htaccess protection, then you should use it for these folders. (The .htaccess files included with v1.3.9 and newer should already cover the basics.) </p>
 <ul>
   <li><span class="filename">/cache</span><br>
-    This is used to cache session and database  information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting  in configure.php files as well as Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
+    This is used to cache database information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting in both configure.php files as well as the setting in your admin for Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
   <li><span class="filename">/images</span><br>
     This is discussed earlier in this article. </li>
   <li><span class="filename">/includes/languages/english/html_includes</span><br>
     This is discussed earlier in this article. </li>
+  <li><span class="filename">/logs</span><br>
+    This is used to store error logs. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_LOGS setting in both configure.php files.)</li>
   <li><span class="filename">/media</span><br>
     This is only suggested read-write for the sake of  being able to upload music-product media files via the admin. Could be  done by FTP as an alternative. </li>
   <li><span class="filename">/pub</span><br>
@@ -203,10 +205,11 @@ o </em>On page setup window click on the tab "Margins &amp;  Header/Footer". In 
 <li>Check your website files regularly to be sure nothing's been added or altered
 <li>Ask your webhost what they have done to be sure the server you're on is safe and secure so that outsiders cannot do any harm, and so that other websites on your server cannot be used to get to your site and cause any harm (in case they have security holes in them)
 <li>If your business warrants, or you still want additional assurance (esp if running forum software on your site, or other scripts outside of Zen Cart&reg;), hire a security consultant to check your site regularly and give you peace of mind in exchange for a few dollars </li>
-<li>Check your Zen Cart /cache/ folder for myDebug-XXXXX.log files to see whether any errors are happening which need to be fixed. Delete the log files after you've addressed the errors.</li>
+<li>Check your Zen Cart /cache/ folder for leftover files that don't belong there.</li>
+<li>Check your Zen Cart /logs/ folder for myDebug-XXXXX.log files to see whether any errors are happening which need to be fixed. Delete the log files after you've addressed the errors.</li>
 </ol><br>
 </fieldset>
 
-<p class="center"><em>Copyright 2003 - 2011 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<p class="center"><em>Copyright 2003 - 2013 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
 </body>
 </html>

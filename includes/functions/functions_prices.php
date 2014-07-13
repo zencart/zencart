@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2011 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_prices.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version GIT: $Id: Author: ajeh  Wed Jun 26 11:54:36 2013 -0400 Modified in v1.5.2 $
  */
 
 ////
@@ -1222,7 +1222,7 @@ If a special exist * 10
       $products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id='" . (int)$product_id . "' and discount_qty <='" . (float)$check_qty . "' order by discount_qty desc");
 
       $display_price = zen_get_products_base_price($product_id);
-      $display_specials_price = zen_get_products_special_price($product_id, true);
+      $display_specials_price = zen_get_products_special_price($product_id, false);
 
       switch ($products_query->fields['products_discount_type']) {
         // none

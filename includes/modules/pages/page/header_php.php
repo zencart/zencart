@@ -3,10 +3,10 @@
  * ez_pages ("page") header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 4881 2006-11-04 17:51:31Z ajeh $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 15 15:50:09 2013 -0500 Modified in v1.5.2 $
  */
 /*
 * This "page" page is the display component of the ez-pages module
@@ -19,21 +19,32 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_EZPAGE');
 
+require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+
 $ezpage_id = (int)$_GET['id'];
 if ($ezpage_id == 0) zen_redirect(zen_href_link(FILENAME_DEFAULT));
 
 $chapter_id = (int)$_GET['chapter'];
 $chapter_link = (int)$_GET['chapter'];
 
-//die('I SEE ' . $ezpage_id . ' - ' . $group_id);
-//die('I SEE ' . $ezpage_id . ' - ' . $chapter_id);
+$sql = "select * from " . TABLE_EZPAGES . " where pages_id = " . (int)$ezpage_id;
+// comment the following line to allow access to pages which don't have a status switch set to Yes:
+$sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or status_footer > 0)";
 
-$var_pageDetails = $db->Execute("select * from " . TABLE_EZPAGES . " where pages_id = " . (int)$ezpage_id );
+// Check to see if page exists and is accessible, retrieving relevant details for display if found
+$var_pageDetails = $db->Execute($sql);
+// redirect to home page if page not found (or deactivated/deleted):
+if ($var_pageDetails->EOF) {
+  $messageStack->add_session('header', ERROR_PAGE_NOT_FOUND, 'caution');
+  header('HTTP/1.1 404 Not Found');
+  header('Status: 404 Not Found');
+  zen_redirect(zen_href_link(FILENAME_DEFAULT));
+}
 
 //check db for prev/next based on sort orders
 $pos = (isset($_GET['pos'])) ? $_GET['pos'] : 'v';  // v for vertical, h for horizontal  (v assumed if not specified)
 $vert_links = array();
-$horiz_links = array();
+$toc_links = array();
 //  $pages_order_query = "SELECT pages_id FROM " . TABLE_EZPAGES . " WHERE status = 1 and vertical_sort_order <> 0 ORDER BY vertical_sort_order, horizontal_sort_order, pages_title";
 //  $pages_order_query = "SELECT * FROM " . TABLE_EZPAGES . " WHERE ((status_sidebox = 1 and sidebox_sort_order <> 0) or (status_footer = 1 and footer_sort_order <> 0) or (status_header = 1 and header_sort_order <> 0)) and alt_url_external = '' ORDER BY header_sort_order, sidebox_sort_order, footer_sort_order, pages_title";
 $pages_order_query = "SELECT *
@@ -45,14 +56,14 @@ $pages_order_query = "SELECT *
 $pages_order_query = $db->bindVars($pages_order_query, ':chapterID', $chapter_id, 'integer');
 $pages_ordering = $db->execute($pages_order_query);
 
-$pages_listing = $db->execute($pages_order_query);
-
 while (!$pages_ordering->EOF) {
   $vert_links[] = $pages_ordering->fields['pages_id'];
+  $toc_links[] = array('pages_id' => $pages_ordering->fields['pages_id'], 'pages_title' => $pages_ordering->fields['pages_title']);
   $pages_ordering->MoveNext();
 }
 
-/*
+/**
+$horiz_links = array();
 //  $pages_order_query = "SELECT pages_id FROM " . TABLE_EZPAGES . " WHERE status = 1 and horizontal_sort_order <> 0 ORDER BY horizontal_sort_order, pages_title";
 $pages_order_query = "SELECT * FROM " . TABLE_EZPAGES . " WHERE status_footer = 1 and footer_sort_order <> 0 and alt_url_external = '' ORDER BY footer_sort_order, pages_title";
 $pages_ordering = $db->execute($pages_order_query);
@@ -90,7 +101,7 @@ while (list($key, $value) = each ($vert_links)) {
 }
 if ($previous_v == -1) $previous_v = $last_v;
 
-/*
+/**
 //prev/next for horiz now
 reset ($horiz_links);
 $counter = 0;
@@ -136,9 +147,6 @@ define('NAVBAR_TITLE', $var_pageDetails->fields['pages_title']);
 define('HEADING_TITLE', $var_pageDetails->fields['pages_title']);
 $breadcrumb->add($var_pageDetails->fields['pages_title']);
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-
-
 
 // Pull settings from admin switches to determine what, if any, header/column/footer "disable" options need to be set
 // Note that these are defined normally under Admin->Configuration->EZ-Pages-Settings
@@ -159,4 +167,3 @@ if ($ezpage_id > 0 ) {
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_EZPAGE');
-?>

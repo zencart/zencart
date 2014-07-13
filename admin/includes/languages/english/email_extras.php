@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2011 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: email_extras.php 18698 2011-05-04 14:50:06Z wilt $
+ * @version GIT: $Id: Author: DrByte  Sat Jul 27 20:38:11 2013 -0400 Modified in v1.5.2 $
  */
 
 // office use only
@@ -22,7 +22,7 @@
   define('OFFICE_DATE_TIME','Date and Time:');
 
 // email disclaimer
-  define('EMAIL_DISCLAIMER', 'This email address was given to us by you or by one of our customers. If you feel that you have received this email in error, please send an email to %s');
+  define('EMAIL_DISCLAIMER', "\n" . 'This email address was given to us by you or by one of our customers. If you feel that you have received this email in error, please send an email to %s');
   define('EMAIL_SPAM_DISCLAIMER','This e-mail is sent in accordance with the US CAN-SPAM Law in effect 01/01/2004. Removal requests can be sent to this address and will be honored and respected.');
   define('EMAIL_FOOTER_COPYRIGHT','Copyright (c) ' . date('Y') . ' <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>. Powered by <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>');
   define('SEND_EXTRA_GV_ADMIN_EMAILS_TO_SUBJECT','[GV ADMIN SENT]');

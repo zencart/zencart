@@ -6,7 +6,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Thu Aug 8 14:51:03 2013 -0400 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
@@ -14,11 +14,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  *
+ * require(DIR_WS_INCLUDES . 'version.php');
  * require(DIR_WS_CLASSES . 'class.base.php');
  * require(DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier()'
- * require(DIR_WS_CLASSES . 'mime.php');
- * require(DIR_WS_CLASSES . 'email.php');
+ * require(DIR_WS_CLASSES . 'class.phpmailer.php');
  * require(DIR_WS_CLASSES . 'boxes.php');
  * require(DIR_WS_CLASSES . 'category_tree.php');
  * require(DIR_WS_CLASSES . 'cache.php');
@@ -33,6 +33,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'language.php');
  *
  */
+  $autoLoadConfig[0][] = array('autoType'=>'include',
+                               'loadFile'=> DIR_WS_INCLUDES . 'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -42,8 +44,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'objectName'=>'zco_notifier');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=> 'class.phpmailer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=> 'class.smtp.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=> 'boxes.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -82,22 +82,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 10.
  *
+ * require('includes/init_includes/init_file_db_names.php');
  * require('includes/init_includes/init_database.php');
- * require('includes/version.php');
  *
  */
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
-/**
- * Breakpoint 20.
- *
- * require('includes/init_includes/init_file_db_names.php');
- *
- */
-  $autoLoadConfig[20][] = array('autoType'=>'include',
-                                'loadFile'=> DIR_WS_INCLUDES . 'version.php');
 /**
  * Breakpoint 30.
  *
@@ -156,17 +148,11 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 80.
  *
  * if(!$_SESSION['cart']) $_SESSION['cart'] = new shoppingCart();
- * if(!$_SESSION['navigaton']) $_SESSION['navigation'] = new navigaionHistory();
  *
  */
   $autoLoadConfig[80][] = array('autoType'=>'classInstantiate',
                                 'className'=>'shoppingCart',
                                 'objectName'=>'cart',
-                                'checkInstantiated'=>true,
-                                'classSession'=>true);
-  $autoLoadConfig[80][] = array('autoType'=>'classInstantiate',
-                                'className'=>'navigationHistory',
-                                'objectName'=>'navigation',
                                 'checkInstantiated'=>true,
                                 'classSession'=>true);
 /**
@@ -182,6 +168,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 100.
  *
  * require('includes/init_includes/init_sanitize.php');
+ * if(!$_SESSION['navigaton']) $_SESSION['navigation'] = new navigationHistory();
  * $template = new template_func();
  *
  */
@@ -190,6 +177,11 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'objectName'=>'template');
   $autoLoadConfig[100][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_sanitize.php');
+  $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
+                                'className'=>'navigationHistory',
+                                'objectName'=>'navigation',
+                                'checkInstantiated'=>true,
+                                'classSession'=>true);
 /**
  * Breakpoint 110.
  *
@@ -268,4 +260,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_header.php');
-?>
+
+
+/**
+ * NOTE: Most plugins should be added from point 200 onward.
+ */

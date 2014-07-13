@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Sep 5 10:59:13 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Mon Oct 28 23:52:35 2013 -0400 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -18,14 +18,15 @@ define('HEADER_LOGO_HEIGHT', '70px');
 define('HEADER_LOGO_IMAGE', 'logo.gif');
 
 // look in your $PATH_LOCALE/locale directory for available locales..
-setlocale(LC_TIME, 'en_US');
+$locales = array('en_US', 'en_US.utf8', 'en', 'English_United States.1252');
+@setlocale(LC_TIME, $locales);
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
 define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 define('DATE_FORMAT_SPIFFYCAL', 'MM/dd/yyyy');  //Use only 'dd', 'MM' and 'yyyy' here in any order
-
+define('ADMIN_NAV_DATE_TIME_FORMAT', '%A %d %b %Y %X'); // this is used for strftime()
 ////
 // Return date in raw format
 // $date should be in format mm/dd/yyyy
@@ -83,8 +84,7 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 define('MALE', 'Male');
 define('FEMALE', 'Female');
 
-// text for date of birth example
-define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
+define('NONE', 'None');
 
 // configuration box text
 define('BOX_HEADING_CONFIGURATION', 'Configuration');
@@ -576,6 +576,7 @@ define('TEXT_LEGEND_STATUS_ON', 'Status ON ');
 define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the<br />product category affects the pricing on linked products, example: Sales</strong>');
 define('TEXT_YES', 'Yes');
 define('TEXT_NO', 'No');
+define('TEXT_CANCEL', 'Cancel');
 
 // shipping error messages
 define('ERROR_SHIPPING_CONFIGURATION', '<strong>Shipping Configuration errors!</strong>');
@@ -623,8 +624,8 @@ define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING', 'Max:');
 
 // Rich Text / HTML resources
 define('TEXT_HTML_EDITOR_NOT_DEFINED','If you have no HTML editor defined or JavaScript disabled, you may enter raw HTML text here manually.');
-define('TEXT_WARNING_HTML_DISABLED','<span class = "main">Note: You are using TEXT only email. If you would like to send HTML you need to enable "use MIME HTML" under Email Options</span>');
-define('TEXT_WARNING_CANT_DISPLAY_HTML','<span class = "main">Note: You are using TEXT only email. If you would like to send HTML you need to enable "use MIME HTML" under Email Options</span>');
+define('TEXT_WARNING_HTML_DISABLED','<span class = "main">Note: You are using TEXT only email. If you would like to send HTML you need to enable "Enable HTML Emails" under Email Options</span>');
+define('TEXT_WARNING_CANT_DISPLAY_HTML','<span class = "main">Note: You are using TEXT only email. If you would like to send HTML you need to enable "Enable HTML Emails" under Email Options</span>');
 define('TEXT_EMAIL_CLIENT_CANT_DISPLAY_HTML',"You're seeing this text because we sent you an email in HTML format but your email client cannot display HTML messages.");
 define('ENTRY_EMAIL_PREFERENCE','Email Format Pref:');
 define('ENTRY_EMAIL_FORMAT_COMMENTS','Choosing "none" or "optout" disables ALL mail, including order details');
@@ -719,6 +720,9 @@ define('TEXT_EMAIL', 'Email');
 define('TEXT_NOEMAIL', 'No Email');
 
 define('BOX_HEADING_PRODUCT_TYPES', 'Product Types');
+
+define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
+
 
 ///////////////////////////////////////////////////////////
 // include additional files:

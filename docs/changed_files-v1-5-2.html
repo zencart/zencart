@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: DrByte  Wed Nov 6 22:51:50 2013 -0500 New in v1.5.2 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+.plainbox, div.callout {border: 1px dashed; border-color: #C96E29; margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:10px ;}
+.error {color:#FF0000; }
+.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color: #c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.center {text-align: center}
+-->
+</style>
+<title>Zen Cart&reg; Changed Files</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro center">Welcome to Zen Cart&reg;</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="center small">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.</p>
+</fieldset>
+<br>
+
+
+<fieldset>
+<h1 class="intro center">Version 1.5.2</h1>
+<p>NOTE:<br>
+  For a listing of What's New in this release, please see the <a href="whatsnew_1.5.2.html" target="_blank">whatsnew_1.5.2.html</a> file in the <span class="filename">/docs</span> folder. <br>
+      <a href="http://www.zen-cart.com/releasenotes" target="_blank">You may also see the list in the support forum here</a>. <br>
+      <br>
+      The following is a list of FILE/FOLDER adds/deletes/changes: </p>
+
+<h1>DELETED Files (since release of v1.5.1)</h1><ul>
+<li>/admin/includes/nde-basic.css</li>
+<li>/admin/includes/column_left.php (unused since 1.5.0)</li>
+</ul>
+<h1>NEW Files ADDED (since release of v1.5.1)</h1>
+<ul>
+<li>/admin/includes/extra_configures/use_catalog_time_zone.php</li>
+<li>/admin/includes/init_includes/init_cache_key_check.php</li>
+<li>/admin/includes/init_includes/init_sanitize.php (Was removed in an older version. Added back with new contents in v1.5.2)</li>
+<li>/includes/extra_configures/set_time_zone.php</li>
+<li>/includes/languages/english/page.php</li>
+<li>/includes/classes/support/*.php  - ALL PHP FILES IN THIS FOLDER ARE NEW/CHANGED</li>
+</ul>
+<h1>CHANGED Files (since release of v1.5.1)</h1>
+<ul>
+<li>/admin/.htaccess</li>
+<li>/admin/admin_activity.php</li>
+<li>/admin/alert_page.php</li>
+<li>/admin/alt_nav.php</li>
+<li>/admin/attributes_controller.php</li>
+<li>/admin/categories.php</li>
+<li>/admin/countries.php</li>
+<li>/admin/currencies.php</li>
+<li>/admin/define_pages_editor.php</li>
+<li>/admin/developers_tool_kit.php</li>
+<li>/admin/index.php</li>
+<li>/admin/login.php</li>
+<li>/admin/mail.php</li>
+<li>/admin/modules.php</li>
+<li>/admin/options_name_manager.php</li>
+<li>/admin/options_values_manager.php</li>
+<li>/admin/option_values.php</li>
+<li>/admin/orders.php</li>
+<li>/admin/password_forgotten.php</li>
+<li>/admin/products_price_manager.php</li>
+<li>/admin/products_to_categories.php</li>
+<li>/admin/store_manager.php</li>
+<li>/admin/whos_online.php</li>
+<li>/admin/includes/.htaccess</li>
+<li>/admin/includes/application_top.php</li>
+<li>/admin/includes/dist_configure.php</li>
+<li>/admin/includes/header.php</li>
+<li>/admin/includes/auto_loaders/config.core.php</li>
+<li>/admin/includes/classes/box.php</li>
+<li>/admin/includes/classes/table_block.php</li>
+<li>/admin/includes/extra_configures/enable_error_logging.php</li>
+<li>/admin/includes/extra_configures/use_catalog_time_zone.php   (NEW)</li>
+<li>/admin/includes/functions/admin_access.php</li>
+<li>/admin/includes/functions/database.php</li>
+<li>/admin/includes/functions/functions_metatags.php</li>
+<li>/admin/includes/functions/functions_prices.php</li>
+<li>/admin/includes/functions/general.php</li>
+<li>/admin/includes/init_includes/init_admin_auth.php</li>
+<li>/admin/includes/init_includes/init_admin_history.php</li>
+<li>/admin/includes/init_includes/init_cache_key_check.php   (NEW)</li>
+<li>/admin/includes/init_includes/init_database.php</li>
+<li>/admin/includes/init_includes/init_file_db_names.php</li>
+<li>/admin/includes/init_includes/init_gzip.php</li>
+<li>/admin/includes/init_includes/init_sanitize.php (NEW -- Was removed in an older version. Added back with new contents in v1.5.2)</li>
+<li>/admin/includes/init_includes/init_sessions.php</li>
+<li>/admin/includes/init_includes/init_tlds.php</li>
+<li>/admin/includes/languages/english.php</li>
+<li>/admin/includes/languages/english/categories.php</li>
+<li>/admin/includes/languages/english/countries.php</li>
+<li>/admin/includes/languages/english/coupon_admin.php</li>
+<li>/admin/includes/languages/english/developers_tool_kit.php</li>
+<li>/admin/includes/languages/english/email_extras.php</li>
+<li>/admin/includes/languages/english/index.php</li>
+<li>/admin/includes/languages/english/option_name.php</li>
+<li>/admin/includes/languages/english/password_forgotten.php</li>
+<li>/admin/includes/languages/english/store_manager.php</li>
+<li>/admin/includes/modules/category_product_listing.php</li>
+<li>/admin/includes/modules/products_previous_next.php</li>
+<li>/admin/includes/modules/products_previous_next_display.php</li>
+<li>/admin/includes/modules/update_product.php</li>
+<li>/admin/includes/modules/product_music/update_product.php</li>
+<li>/download/.htaccess</li>
+<li>/editors/.htaccess</li>
+<li>/email/.htaccess</li>
+<li>/extras/curltester.php</li>
+<li>/extras/ipncheck.php</li>
+<li>/images/.htaccess</li>
+<li>/includes/.htaccess</li>
+<li>/includes/application_top.php</li>
+<li>/includes/dist_configure.php</li>
+<li>/includes/spiders.txt</li>
+<li>/includes/version.php</li>
+<li>/includes/auto_loaders/config.core.php</li>
+<li>/includes/classes/db/mysql/query_factory.php</li>
+<li>/includes/classes/class.base.php</li>
+<li>/includes/classes/class.phpmailer.php</li>
+<li>/includes/classes/class.smtp.php</li>
+<li>/includes/classes/order.php</li>
+<li>/includes/classes/payment.php</li>
+<li>/includes/classes/products.php</li>
+<li>/includes/classes/query_cache.php</li>
+<li>/includes/classes/shipping.php</li>
+<li>/includes/classes/shopping_cart.php</li>
+<li>/includes/classes/support/*.php  - ALL PHP FILES IN THIS FOLDER ARE NEW/CHANGED</li>
+<li>/includes/extra_configures/set_time_zone.php  (NEW)</li>
+<li>/includes/functions/functions_email.php</li>
+<li>/includes/functions/functions_general.php</li>
+<li>/includes/functions/functions_lookups.php</li>
+<li>/includes/functions/functions_prices.php</li>
+<li>/includes/functions/password_funcs.php</li>
+<li>/includes/functions/sessions.php</li>
+<li>/includes/init_includes/init_canonical.php</li>
+<li>/includes/init_includes/init_cart_handler.php</li>
+<li>/includes/init_includes/init_database.php</li>
+<li>/includes/init_includes/init_db_config_read.php</li>
+<li>/includes/init_includes/init_file_db_names.php</li>
+<li>/includes/init_includes/init_gzip.php</li>
+<li>/includes/init_includes/init_header.php</li>
+<li>/includes/init_includes/init_sanitize.php</li>
+<li>/includes/init_includes/init_sessions.php</li>
+<li>/includes/languages/english.php</li>
+<li>/includes/languages/english/html_includes/define_site_map.php</li>
+<li>/includes/languages/english/html_includes/classic/define_site_map.php</li>
+<li>/includes/languages/english/modules/order_total/ot_cod_fee.php</li>
+<li>/includes/languages/english/modules/shipping/storepickup.php</li>
+<li>/includes/languages/english/checkout_success.php</li>
+<li>/includes/languages/english/create_account_success.php</li>
+<li>/includes/languages/english/discount_coupon.php</li>
+<li>/includes/languages/english/download_time_out.php</li>
+<li>/includes/languages/english/email_extras.php</li>
+<li>/includes/languages/english/meta_tags.php</li>
+<li>/includes/languages/english/page.php  (NEW)</li>
+<li>/includes/languages/english/popup_coupon_help.php</li>
+<li>/includes/modules/checkout_new_address.php</li>
+<li>/includes/modules/products_quantity_discounts.php</li>
+<li>/includes/modules/shipping_estimator.php</li>
+<li>/includes/modules/order_total/ot_cod_fee.php</li>
+<li>/includes/modules/order_total/ot_coupon.php</li>
+<li>/includes/modules/order_total/ot_gv.php</li>
+<li>/includes/modules/order_total/ot_shipping.php</li>
+<li>/includes/modules/pages/account_edit/header_php.php</li>
+<li>/includes/modules/pages/checkout_confirmation/header_php.php</li>
+<li>/includes/modules/pages/checkout_payment/header_php.php</li>
+<li>/includes/modules/pages/checkout_shipping/header_php.php</li>
+<li>/includes/modules/pages/checkout_shipping_address/header_php.php</li>
+<li>/includes/modules/pages/contact_us/header_php.php</li>
+<li>/includes/modules/pages/create_account_success/header_php.php</li>
+<li>/includes/modules/pages/discount_coupon/header_php.php</li>
+<li>/includes/modules/pages/download/header_php.php</li>
+<li>/includes/modules/pages/gv_send/header_php.php</li>
+<li>/includes/modules/pages/index/main_template_vars.php</li>
+<li>/includes/modules/pages/page/header_php.php</li>
+<li>/includes/modules/pages/product_reviews_write/header_php.php</li>
+<li>/includes/modules/pages/shopping_cart/header_php.php</li>
+<li>/includes/modules/payment/linkpoint_api/class.linkpoint_api.php</li>
+<li>/includes/modules/payment/paypal/paypal_curl.php</li>
+<li>/includes/modules/payment/paypal/paypal_functions.php</li>
+<li>/includes/modules/payment/authorizenet.php</li>
+<li>/includes/modules/payment/authorizenet_aim.php</li>
+<li>/includes/modules/payment/authorizenet_echeck.php</li>
+<li>/includes/modules/payment/cod.php</li>
+<li>/includes/modules/payment/freecharger.php</li>
+<li>/includes/modules/payment/linkpoint_api.php</li>
+<li>/includes/modules/payment/moneyorder.php</li>
+<li>/includes/modules/payment/paypal.php</li>
+<li>/includes/modules/payment/paypaldp.php</li>
+<li>/includes/modules/payment/paypalwpp.php</li>
+<li>/includes/modules/shipping/storepickup.php</li>
+<li>/includes/modules/sideboxes/currencies.php</li>
+<li>/includes/modules/sideboxes/information.php</li>
+<li>/includes/templates/template_default/popup_coupon_help/tpl_main_page.php</li>
+<li>/includes/templates/template_default/sideboxes/tpl_reviews_random.php</li>
+<li>/includes/templates/template_default/templates/tpl_advanced_search_result_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_checkout_shipping_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_contact_us_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_page_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_page_not_found_default.php</li>
+<li>/includes/templates/template_default/templates/tpl_product_info_noproduct.php</li>
+<li>/includes/templates/template_default/templates/tpl_site_map_default.php</li>
+<li>/media/.htaccess</li>
+<li>/pub/.htaccess</li>
+<br>
+<li>/zc_install/ ... assume *all* of /zc_install/ has changed
+</ul>
+
+
+<h1>&nbsp;</h1>
+</fieldset>
+<p class="center"><em>Copyright 2003 - 2013 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>

@@ -3,10 +3,10 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -106,6 +106,15 @@ class authorizenet_aim extends base {
 
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
+
+    // Determine default/supported currencies
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+      $this->gateway_currency = DEFAULT_CURRENCY;
+    } else {
+      $this->gateway_currency = 'USD';
+    }
+
+
   }
   /**
    * calculate zone matches and flag settings to determine whether this module should display to customers or not
@@ -116,7 +125,7 @@ class authorizenet_aim extends base {
     // if store is not running in SSL, cannot offer credit card module, for PCI reasons
     if (MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE != 'Test' && (!defined('ENABLE_SSL') || ENABLE_SSL != 'true')) $this->enabled = FALSE;
     // check other reasons for the module to be deactivated:
-    if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE > 0) ) {
+    if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
       while (!$check->EOF) {
@@ -360,11 +369,12 @@ class authorizenet_aim extends base {
                          'Date' => $order_time,
                          'IP' => zen_get_ip_address(),
                          'Session' => $sessID );
-    // force conversion to USD
-    if ($order->info['currency'] != 'USD') {
+
+    // force conversion to supported currencies: USD, GBP, CAD, EUR
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
       global $currencies;
-      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value('USD'), 2);
-      $submit_data['x_currency_code'] = 'USD';
+      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data['x_currency_code'] = $this->gateway_currency;
       unset($submit_data['x_tax'], $submit_data['x_freight']);
     }
 
@@ -436,6 +446,7 @@ class authorizenet_aim extends base {
   function admin_notification($zf_order_id) {
     global $db;
     $output = '';
+    $aimdata = new stdClass;
     $aimdata->fields = array();
     require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/authorizenet/authorizenet_admin_notification.php');
     return $output;
@@ -573,8 +584,10 @@ class authorizenet_aim extends base {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
     curl_setopt($ch, CURLOPT_SSLVERSION, 3);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); /* compatibility for SSL communications on some Windows servers (IIS 5.0+) */
+//   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
+//   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
     if (CURL_PROXY_REQUIRED == 'True') {
       $this->proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
       curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, $this->proxy_tunnel_flag);

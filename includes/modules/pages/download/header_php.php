@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Aug 19 23:55:33 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Sat Nov 2 00:02:54 2013 -0400 Modified in v1.5.2 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_DOWNLOAD');
@@ -236,10 +236,13 @@ if (DOWNLOAD_BY_REDIRECT != 'true' or $link_create_status==false ) {
 
   if ((int)$downloadFilesize > 0) header("Content-Length: " . (string) $downloadFilesize);
 
+
   $disabled_funcs = @ini_get("disable_functions");
   if (DOWNLOAD_IN_CHUNKS != 'true' && !strstr($disabled_funcs,'readfile')) {
     $zco_notifier->notify('NOTIFY_DOWNLOAD_WITHOUT_REDIRECT___COMPLETED', $origin_filename);
-    // This will work on all systems, but will need considerable resources
+    // close the session, since it is not needed for streaming the file contents
+    session_write_close();
+    // Dump the file to the browser. This will work on all systems, but will need considerable resources
     readfile(DIR_FS_DOWNLOAD . $origin_filename);
   } else {
     // override PHP timeout to 25 minutes, if allowed
@@ -248,6 +251,9 @@ if (DOWNLOAD_BY_REDIRECT != 'true' or $link_create_status==false ) {
     // loop with fread($fp, xxxx) to allow streaming in chunk sizes below the PHP memory_limit
     $handle = @fopen(DIR_FS_DOWNLOAD . $origin_filename, "rb");
     if ($handle) {
+      // close the session, since it is not needed for streaming the file contents
+      session_write_close();
+      // stream the file in 4K chunks
       while (!@feof($handle)) {
         echo(fread($handle, 4096));
         @flush();

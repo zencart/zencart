@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: ajeh  Tue Jun 11 11:17:56 2013 -0400 Modified in v1.5.2 $
  */
 
   require('includes/application_top.php');
@@ -14,7 +14,7 @@
 
   $languages = zen_get_languages();
 
-  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : $products_filter);
+  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : 0);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -137,7 +137,7 @@
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
           if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
-            if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall).*\.log$/', $file)) {
+            if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall|SHIP_|PAYMENT_|usps_|.*debug).*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
                 zen_remove($purgeFolder . '/' . $file);
               }
@@ -322,7 +322,7 @@ if ($processing_message != '') {
           <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_SET_NEXT_ORDER_NUMBER; ?>
             <br />
-            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', $nextOrderNumber); ?>
+            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', (isset($new_orders_id) ? $new_orders_id : '')); ?>
             <?php echo zen_image_submit('button_reset.gif', IMAGE_RESET); ?></td>
             </form>
           </tr>

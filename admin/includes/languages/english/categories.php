@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: categories.php 14139 2009-08-10 13:46:02Z wilt $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
  */
 
 define('HEADING_TITLE', 'Categories / Products');
@@ -136,11 +136,6 @@ define('ERROR_CANNOT_ADD_PRODUCT_TYPE','The specified product type cannot be add
   define('TEXT_CATEGORIES_IMAGE_DIR','Upload to directory:');
   define('TEXT_CATEGORIES_IMAGE_MANUAL', '<strong>Or, select an existing image file from server, filename:</strong>');
 
-  define('TEXT_VIRTUAL_PREVIEW','Warning: This product is marked - Free Shipping and Skips Shipping Address');
-  define('TEXT_VIRTUAL_EDIT','Warning: This product is marked - Free Shipping and Skips Shipping Address');
-  define('TEXT_FREE_SHIPPING_PREVIEW','Warning: This product is marked - Free Shipping, Shipping Address Required');
-  define('TEXT_FREE_SHIPPING_EDIT','Warning: Yes makes the product - Free Shipping, Shipping Address Required');
-
   define('TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW','Warning: Does not show Quantity Box, Default to Qty 1');
   define('TEXT_PRODUCTS_QTY_BOX_STATUS_EDIT','Warning: Does not show Quantity Box, Default to Qty 1');
 
@@ -162,7 +157,6 @@ define('ERROR_CANNOT_ADD_PRODUCT_TYPE','The specified product type cannot be add
 
   define('TEXT_PRODUCTS_MIXED','Product Qty Min/Unit Mix:');
 
-  define('PRODUCTS_PRICE_IS_FREE_TEXT', 'Product is Free');
   define('TEXT_PRODUCT_IS_FREE','Product is Free:');
   define('TEXT_PRODUCTS_IS_FREE_PREVIEW','*Product is marked as FREE');
   define('TEXT_PRODUCTS_IS_FREE_EDIT','*Product is marked as FREE');
@@ -199,14 +193,13 @@ define('TEXT_PRODUCTS_STATUS_ON_OF',' of ');
 define('TEXT_PRODUCTS_STATUS_ACTIVE',' active ');
 
 define('TEXT_CATEGORIES_DESCRIPTION', 'Categories Description:');
-define('PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT', 'Product is call for price');
 
 // Metatags
-  define('TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS', 'Categories Meta Tags Definitions');
-  define('TEXT_EDIT_CATEGORIES_META_TAGS_INTRO', 'Define Custom Meta Tags');
-  define('TEXT_EDIT_CATEGORIES_META_TAGS_TITLE', 'Title:');
-  define('TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS', 'Keywords:');
-  define('TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION', 'Description:');
+define('TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS', 'Categories Meta Tags Definitions');
+define('TEXT_EDIT_CATEGORIES_META_TAGS_INTRO', 'Define Custom Meta Tags');
+define('TEXT_EDIT_CATEGORIES_META_TAGS_TITLE', 'Title:');
+define('TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS', 'Keywords:');
+define('TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION', 'Description:');
 
 define('WARNING_PRODUCTS_IN_TOP_INFO', 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ');
 

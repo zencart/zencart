@@ -3,10 +3,10 @@
  * canonical link handling
  *
  * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_canonical.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version GIT: $Id: Author: DrByte  Sun Feb 17 22:58:47 2013 -0500 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $includeCPath = FALSE;
 
 // EXCLUDE certain parameters which should not be included in canonical links:
-$excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom', 'dto', 'dfrom', 'inc_subcat');
+$excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom', 'dto', 'dfrom', 'inc_subcat', 'notify');
 $excludeParams[] = 'disp_order';
 $excludeParams[] = 'page';
 $excludeParams[] = 'sort';
@@ -31,9 +31,9 @@ $excludeParams[] = 'language';
 $canonicalLink = '';
 switch (TRUE) {
 /**
- * SSL Pages get no special treatment, since they're not normally indexed
+ * SSL Pages get no special treatment, since they're not normally indexed (unless the entire site is intentionally set to always be SSL, which is not typical)
  */
-  case ($request_type == 'SSL'):
+  case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
     $canonicalLink = '';
     break;
 /**

@@ -3,10 +3,10 @@
  * Payment Class.
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:40:54 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Mon Oct 28 17:54:33 2013 +0000 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -37,7 +37,7 @@ class payment extends base {
         reset($this->modules);
 
         // Free Payment Only shows
-        if (zen_get_configuration_key_value('MODULE_PAYMENT_FREECHARGER_STATUS') and ($_SESSION['cart']->show_total()==0 and $_SESSION['shipping']['cost']== 0)) {
+        if (zen_get_configuration_key_value('MODULE_PAYMENT_FREECHARGER_STATUS') and ($_SESSION['cart']->show_total()==0 and (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0))) {
           $this->selected_module = $module;
           if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . '/payment/' . 'freecharger.php')) {
             $include_modules[] = array('class'=> 'freecharger', 'file' => 'freecharger.php');

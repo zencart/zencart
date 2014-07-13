@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 31 11:39:58 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Thu Oct 24 21:13:46 2013 +0100 Modified in v1.5.2 $
  */
 
   require('includes/application_top.php');
@@ -22,7 +22,7 @@
   }
   for ($i=0, $n=sizeof($languages); $i<$n; $i ++) {
     if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
-      $db->Execute("INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name) VALUES ((int)PRODUCTS_OPTIONS_VALUES_TEXT_ID, " . (int)$languages[$i]['id'] . ", 'TEXT')");
+      $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name) VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
     }
   }
 

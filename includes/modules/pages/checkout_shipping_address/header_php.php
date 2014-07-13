@@ -3,10 +3,10 @@
  * Page to let customer change their shipping address(ship to)
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 4793 2006-10-20 05:25:20Z ajeh $
+ * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
  */
 
 // This should be first line of the script:
@@ -37,7 +37,7 @@ $order = new order;
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
 if ($order->content_type == 'virtual') {
-  $_SESSION['shipping'] = false;
+  unset($_SESSION['shipping']);
   $_SESSION['sendto'] = false;
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
@@ -56,4 +56,3 @@ $addresses_count = zen_count_customer_address_book_entries();
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_SHIPPING_ADDRESS');
-?>

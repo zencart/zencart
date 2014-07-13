@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 2 11:55:32 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Thu Nov 7 15:58:09 2013 +0000 Modified in v1.5.2 $
  * @todo move the array process to security class
  */
 
@@ -38,6 +38,15 @@
   if (isset($_GET['cPath'])) $_GET['cPath'] = preg_replace('/[^0-9_]/', '', $_GET['cPath']);
   if (isset($_GET['main_page'])) $_GET['main_page'] = preg_replace('/[^0-9a-zA-Z_]/', '', $_GET['main_page']);
   if (isset($_GET['sort'])) $_GET['sort'] = preg_replace('/[^0-9a-zA-Z]/', '', $_GET['sort']);
+  $saniGroup1 = array('action', 'addr', 'alpha_filter_id', 'alpha_filter', 'authcapt', 'chapter', 'cID', 'currency', 'debug', 'delete', 'dfrom', 'disp_order', 'dto', 'edit', 'faq_item', 'filter_id', 'goback', 'goto', 'gv_no', 'id', 'inc_subcat', 'language', 'markflow', 'music_genre_id', 'nocache', 'notify', 'number_of_uploads', 'order_id', 'order', 'override', 'page', 'pfrom', 'pid', 'pID', 'pos', 'product_id', 'products_image_large_additional', 'products_tax_class_id', 'pto', 'record_company_id', 'referer', 'reviews_id', 'search_in_description', 'set_session_login', 'token', 'tx', 'type', 'zenid');
+  foreach ($saniGroup1 as $key)
+  {
+    if (isset($_GET[$key]))
+    {
+      $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
+    }
+  }
+
 /**
  * process all $_GET terms
  */
@@ -110,7 +119,7 @@
 /**
  * sanitize $_SERVER vars
  */
-  $_SERVER['REMOTE_ADDR'] = preg_replace('/[^0-9.%]/', '', $_SERVER['REMOTE_ADDR']);
+  $_SERVER['REMOTE_ADDR'] = preg_replace('~[^a-fA-F0-9.:%/]~', '', $_SERVER['REMOTE_ADDR']);
 
 
 /**

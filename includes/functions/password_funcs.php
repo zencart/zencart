@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Aug 29 13:38:15 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Oct 3 20:02:07 2012 +0100 Modified in v1.5.2 $
  */
 
 ////
@@ -115,7 +115,7 @@ function zen_get_entropy($seed)
   }
   if (strlen($entropy) < 16)
   {
-    $entropy = sha1_file('/includes/configure.php');
+    $entropy = sha1_file(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'configure.php');
     $entropy .= microtime() . mt_rand() . $seed;
     //echo "USING FALLBACK" . "<br>";
   }

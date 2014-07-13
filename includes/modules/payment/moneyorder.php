@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2010 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: moneyorder.php 15420 2010-02-04 21:27:05Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
  */
   class moneyorder {
     var $code, $title, $description, $enabled;
@@ -35,7 +35,7 @@
     function update_status() {
       global $order, $db;
 
-      if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_MONEYORDER_ZONE > 0) ) {
+      if ($this->enabled && (int)MODULE_PAYMENT_MONEYORDER_ZONE > 0 && isset($order->billing['country']['id'])) {
         $check_flag = false;
         $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_MONEYORDER_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
         while (!$check->EOF) {

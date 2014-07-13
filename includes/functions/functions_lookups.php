@@ -4,54 +4,50 @@
  * Lookup Functions for various Zen Cart activities such as countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_lookups.php 19352 2011-08-19 16:13:43Z ajeh $
+ * @version GIT: $Id: Author: DrByte  Tue Jul 23 19:29:41 2013 -0400 Modified in v1.5.2 $
  */
-
 
 /**
  * Returns an array with countries
  *
  * @param int If set limits to a single country
  * @param boolean If true adds the iso codes to the array
-*/
-  function zen_get_countries($countries_id = '', $with_iso_codes = false) {
+ */
+  function zen_get_countries($countries_id = '', $with_iso_codes = false, $activeOnly = TRUE) {
     global $db;
     $countries_array = array();
     if (zen_not_null($countries_id)) {
+      $countries_array['countries_name'] = '';
+      $countries = "select countries_name, countries_iso_code_2, countries_iso_code_3
+                    from " . TABLE_COUNTRIES . "
+                    where countries_id = '" . (int)$countries_id . "'";
+      if ($activeOnly) $countries .= " and status != 0 ";
+      $countries .= " order by countries_name";
+      $countries_values = $db->Execute($countries);
+
       if ($with_iso_codes == true) {
-        $countries = "select countries_name, countries_iso_code_2, countries_iso_code_3
-                      from " . TABLE_COUNTRIES . "
-                      where countries_id = '" . (int)$countries_id . "'
-                      order by countries_name";
-
-        $countries_values = $db->Execute($countries);
-
-        $countries_array = array('countries_name' => $countries_values->fields['countries_name'],
-                                 'countries_iso_code_2' => $countries_values->fields['countries_iso_code_2'],
-                                 'countries_iso_code_3' => $countries_values->fields['countries_iso_code_3']);
+        $countries_array['countries_iso_code_2'] = '';
+        $countries_array['countries_iso_code_3'] = '';
+        if (!$countries_values->EOF) {
+          $countries_array = array('countries_name' => $countries_values->fields['countries_name'],
+                                   'countries_iso_code_2' => $countries_values->fields['countries_iso_code_2'],
+                                   'countries_iso_code_3' => $countries_values->fields['countries_iso_code_3']);
+        }
       } else {
-        $countries = "select countries_name
-                      from " . TABLE_COUNTRIES . "
-                      where countries_id = '" . (int)$countries_id . "'";
-
-        $countries_values = $db->Execute($countries);
-
-        $countries_array = array('countries_name' => $countries_values->fields['countries_name']);
+        if (!$countries_values->EOF) $countries_array = array('countries_name' => $countries_values->fields['countries_name']);
       }
     } else {
       $countries = "select countries_id, countries_name
-                    from " . TABLE_COUNTRIES . "
-                    order by countries_name";
-
+                    from " . TABLE_COUNTRIES . " ";
+      if ($activeOnly) $countries .= " where status != 0 ";
+      $countries .= " order by countries_name";
       $countries_values = $db->Execute($countries);
-
       while (!$countries_values->EOF) {
         $countries_array[] = array('countries_id' => $countries_values->fields['countries_id'],
                                    'countries_name' => $countries_values->fields['countries_name']);
-
         $countries_values->MoveNext();
       }
     }
@@ -62,9 +58,8 @@
 /*
  *  Alias function to zen_get_countries()
  */
-  function zen_get_country_name($country_id) {
-    $country_array = zen_get_countries($country_id);
-
+  function zen_get_country_name($country_id, $activeOnly = TRUE) {
+    $country_array = zen_get_countries($country_id, FALSE, $activeOnly);
     return $country_array['countries_name'];
   }
 
@@ -73,8 +68,8 @@
  *
  * @param int If set limits to a single country
 */
-  function zen_get_countries_with_iso_codes($countries_id) {
-    return zen_get_countries($countries_id, true);
+  function zen_get_countries_with_iso_codes($countries_id, $activeOnly = TRUE) {
+    return zen_get_countries($countries_id, true, $activeOnly);
   }
 
 /*

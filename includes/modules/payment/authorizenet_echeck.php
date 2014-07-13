@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
  */
 /**
  * Authorize.net echeck Payment Module
@@ -111,10 +111,10 @@ class authorizenet_echeck extends base {
    */
   function update_status() {
     global $order, $db;
-    // if store is not running in SSL, cannot offer credit card module, for PCI reasons
+    // if store is not running in SSL, cannot offer bank module, for PCI reasons
     if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') $this->enabled = FALSE;
     // check other reasons for the module to be deactivated:
-    if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE > 0) ) {
+    if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
       while (!$check->EOF) {
@@ -583,8 +583,10 @@ class authorizenet_echeck extends base {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
     curl_setopt($ch, CURLOPT_SSLVERSION, 3);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); /* compatibility for SSL communications on some Windows servers (IIS 5.0+) */
+//   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
+//   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
     if (CURL_PROXY_REQUIRED == 'True') {
       $this->proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
       curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, $this->proxy_tunnel_flag);

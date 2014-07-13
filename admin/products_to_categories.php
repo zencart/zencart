@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: products_to_categories.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson  Thu Oct 24 21:13:46 2013 +0100 Modified in v1.5.2 $
  */
 
   require('includes/application_top.php');
@@ -799,28 +799,31 @@ if ($_GET['products_filter'] != '') {
       $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . '&nbsp;<a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>' . '</form>');
       break;
     default:
-      $heading[] = array('text' => '<b>' . $product_to_copy->fields['products_id'] . ' ' . $product_to_copy->fields['products_name'] . '</b>');
+      // only show if a Product is selected
       if ($products_filter > 0) {
-        $contents[] = array('text' => zen_image(DIR_WS_CATALOG_IMAGES . $product_to_copy->fields['products_image'], $product_to_copy->fields['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
-      }
-      $contents[] = array('text' => '<br />' . TEXT_PRODUCTS_NAME . $product_to_copy->fields['products_name']);
-      $contents[] = array('text' => TEXT_PRODUCTS_MODEL . $product_to_copy->fields['products_model']);
-      $contents[] = array('text' => TEXT_PRODUCTS_PRICE . zen_get_products_display_price($products_filter));
-      switch (true) {
-        case ($product_to_copy->fields['master_categories_id'] == 0 and $products_filter > 0):
-          $contents[] = array('text' => '<br /><span class="alert">' . WARNING_MASTER_CATEGORIES_ID . '</span><br />&nbsp;');
-          break;
-        default:
-          $contents[] = array('text' => '<form action="' . FILENAME_PRODUCTS_TO_CATEGORIES . '.php' . '?action=edit&current_category_id=' . $current_category_id . '" method="post"><input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" /><input type="hidden" name="products_filter" value="' . $products_filter . '" />');
-          $contents[] = array('align' => 'center', 'text' => '<input type="submit" value="' . BUTTON_NEW_PRODUCTS_TO_CATEGORIES . '"></form>');
-          $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3') . '<br />&nbsp;');
-          $contents[] = array('align' => 'center', 'text' =>
-            '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '</a>&nbsp;&nbsp;' .
-            '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_products_price_manager.gif', IMAGE_PRODUCTS_PRICE_MANAGER) . '</a><br /><br />' .
-            '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_details.gif', IMAGE_DETAILS) . '</a>&nbsp;&nbsp;' .
-            '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '</a>' . '<br />&nbsp;'
-            );
-          break;
+        $heading[] = array('text' => '<b>' . $product_to_copy->fields['products_id'] . ' ' . $product_to_copy->fields['products_name'] . '</b>');
+        if ($products_filter > 0) {
+          $contents[] = array('text' => zen_image(DIR_WS_CATALOG_IMAGES . $product_to_copy->fields['products_image'], $product_to_copy->fields['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
+        }
+        $contents[] = array('text' => '<br />' . TEXT_PRODUCTS_NAME . $product_to_copy->fields['products_name']);
+        $contents[] = array('text' => TEXT_PRODUCTS_MODEL . $product_to_copy->fields['products_model']);
+        $contents[] = array('text' => TEXT_PRODUCTS_PRICE . zen_get_products_display_price($products_filter));
+        switch (true) {
+          case ($product_to_copy->fields['master_categories_id'] == 0 and $products_filter > 0):
+            $contents[] = array('text' => '<br /><span class="alert">' . WARNING_MASTER_CATEGORIES_ID . '</span><br />&nbsp;');
+            break;
+          default:
+            $contents[] = array('text' => '<form action="' . FILENAME_PRODUCTS_TO_CATEGORIES . '.php' . '?action=edit&current_category_id=' . $current_category_id . '" method="post"><input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" /><input type="hidden" name="products_filter" value="' . $products_filter . '" />');
+            $contents[] = array('align' => 'center', 'text' => '<input type="submit" value="' . BUTTON_NEW_PRODUCTS_TO_CATEGORIES . '"></form>');
+            $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3') . '<br />&nbsp;');
+            $contents[] = array('align' => 'center', 'text' =>
+              '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '</a>&nbsp;&nbsp;' .
+              '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_products_price_manager.gif', IMAGE_PRODUCTS_PRICE_MANAGER) . '</a><br /><br />' .
+              '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_details.gif', IMAGE_DETAILS) . '</a>&nbsp;&nbsp;' .
+              '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '</a>' . '<br />&nbsp;'
+              );
+            break;
+        }
       }
     break;
   }

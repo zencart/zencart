@@ -1,20 +1,15 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: developers_tool_kit.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Sun Oct 27 16:37:30 2013 -0400 Modified in v1.5.2 $
  */
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
-  $currencies = new currencies();
-
-  $languages = zen_get_languages();
-
-  $configuration_key_lookup = zen_db_prepare_input($_POST['configuration_key'], false);
+  $configuration_key_lookup = (isset($_POST['configuration_key'])) ? zen_db_prepare_input($_POST['configuration_key'], false) : '';
   if (isset($_GET['configuration_key_lookup']) && $_GET['configuration_key_lookup'] != '') {
     $configuration_key_lookup = zen_db_prepare_input(strtoupper($_GET['configuration_key_lookup']), false);
     $_POST['configuration_key'] = strtoupper($_GET['configuration_key_lookup']);
@@ -120,8 +115,8 @@
 
 // show path and filename
     if (strtoupper($configuration_key_lookup) == $configuration_key_lookup) {
-      while (strstr($configuration_key_lookup, '"')) $configuration_key_lookup = str_replace('"', '', $configuration_key_lookup);
-      while (strstr($configuration_key_lookup, "'")) $configuration_key_lookup = str_replace("'", '', $configuration_key_lookup);
+
+//      $configuration_key_lookup = str_replace(array('"', "'"), '', $configuration_key_lookup);
 
       // if appears to be a constant ask about configuration table
       $check_database = true;
@@ -159,7 +154,7 @@
       $file = $directory_array[$i];
 //echo 'I SEE ' . $directory_array[$i] . '<br>';
       // clean path name
-      while (strstr($file, '//')) $file = str_replace('//', '/', $file);
+      $file = preg_replace('~/+~', '/', $file);
 
       $show_file = '';
       if (file_exists($file)) {
@@ -185,7 +180,8 @@
             $found_line= 'true';
             $found = 'true';
             $cnt_found++;
-            $show_file .= "<br />Line #<strong>{$line_num}</strong> : " ;
+            $line_numpos = $line_num + 1;
+            $show_file .= "<br />Line #<strong>{$line_numpos}</strong> : " ;
             //prevent db pwd from being displayed, for sake of security
             $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($line, ENT_QUOTES, CHARSET);
             $show_file .= "<br />\n";
@@ -207,17 +203,58 @@
     echo '<table border="0" width="100%" cellspacing="2" cellpadding="1" align="center"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . '</td></tr></table>';
   } // zen_display_files
 
-
-  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : (isset($products_filter) ? $products_filter : ''));
+  /* ==================================================================== */
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   // don't do any 'action' if clicked on the Check for Updates button
   if (isset($_GET['vcheck']) && $_GET['vcheck']=='yes') $action = '';
 
-  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
   $found= 'true';
 
+  $search = (isset($_POST['search']) ? $_POST['search'] : '');
+  $flags =  (isset($_GET['v']) ? '&v=' : '') . (isset($_GET['s']) ? '&s=' . preg_replace('/[^a-z]/', '', $_GET['s']) : '');
+
   switch($action) {
+    case ('search_config_keys'):
+      // credits Benjamin Bellamy, torvista
+      $search_type = (isset($_GET['t']) && $_GET['t'] == 'all') ? 'all' : 'keyword';
+      if ($search_type == 'all') $search = '';
+      // The request that returns the configuration keys:
+      // Product-Type info is limited to products_type=1 (general)
+      $sql="(select configuration_id, configuration_key, c.configuration_group_id as configuration_group_id, configuration_group_title, configuration_title, configuration_description, (case when use_function = 'zen_cfg_password_display' then '********' else configuration_value end) as configuration_value, 'conf' as src
+         from " . TABLE_CONFIGURATION . " as c, " . TABLE_CONFIGURATION_GROUP . " as g
+         where c.configuration_group_id=g.configuration_group_id :cfgAndClause: " . (!isset($_GET['v']) ? ' and g.visible=1 ' : '') . " order by configuration_title, configuration_group_id)
+         union
+        (select configuration_id, configuration_key, p.product_type_id as configuration_group_id, type_name as configuration_group_title, configuration_title, configuration_description, configuration_value, 'type' as src
+         from ". TABLE_PRODUCT_TYPE_LAYOUT . " as p, " . TABLE_PRODUCT_TYPES . " as t
+         where p.product_type_id=t.type_id :typeRestriction: :ptypeAndClause: order by configuration_title, configuration_group_id)";
+      $searchClause = $cfgKeySearch = '';
+      // add search criteria
+      if (zen_not_null($search) && $search_type != 'all') {
+        $searchClause = "and (configuration_title like '%:search:%' or configuration_description like '%:search:%' :cfgKeySearch:)";
+        // support configuration_key constants
+        $cfgKeySearch = " or configuration_key = :zcconfigkey:";
+        if (strtoupper($search) == $search && preg_match('/^(%?).*(%?)$/', $search)) $cfgKeySearch = " or configuration_key like :zcconfigkey: ";
+      }
+      $cfgAndClause = $searchClause;
+      $ptypeAndClause = $searchClause;
+      $sql = $db->bindVars($sql, ':cfgAndClause:', $cfgAndClause, 'passthru');
+      $sql = $db->bindVars($sql, ':ptypeAndClause:', $ptypeAndClause, 'passthru');
+      $sql = $db->bindVars($sql, ':typeRestriction:', ' and t.type_id=1 ', 'passthru');
+      $sql = $db->BindVars($sql, ':cfgKeySearch:', $cfgKeySearch, 'passthru');
+      $sql = $db->BindVars($sql, ':zcconfigkey:', str_replace('_', '\_', strtoupper($search)), 'string');
+      $sql = $db->bindVars($sql, ':search:', $search, 'noquotestring');
+      if (isset($_GET['s']) && $_GET['s'] == 'k') $sql .= ' order by configuration_key';
+      // if nothing submitted to search for, force no results
+      if ($search_type != 'all' && $search == '') {
+        $sql = 'SELECT * from ' . TABLE_CONFIGURATION . ' where 2=3';
+      }
+      $keySearchResults = $db->Execute($sql);
+      if ($keySearchResults->RecordCount() == 0) {
+        $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
+      }
+      break;
+
     case ('locate_configuration'):
       if ($configuration_key_lookup == '') {
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
@@ -226,7 +263,7 @@
       $found = 'false';
       $zv_files_group = $_POST['zv_files'];
 
-      $sql = "select * from " . TABLE_CONFIGURATION . " where configuration_key=:zcconfigkey:";
+      $sql = "select *, (case when use_function = 'zen_cfg_password_display' then '********' else configuration_value end) as configuration_value from " . TABLE_CONFIGURATION . " where configuration_key=:zcconfigkey:";
       $sql = $db->BindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
       $check_configure = $db->Execute($sql);
       if ($check_configure->RecordCount() < 1) {
@@ -518,7 +555,7 @@
     // if no matches in either databases or selected language directory give an error
     if ($found == 'false') {
       $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND . ' ' . $configuration_key_lookup, 'caution');
-    } elseif ($action != '') {
+    } elseif (substr($action, 0, 7) == 'locate_') {
       echo '<table width="90%" align="center"><tr><td>' . zen_draw_separator('pixel_black.gif', '100%', '2') . '</td></tr><tr><td>&nbsp;</td></tr></table>' . "\n";
     }
 
@@ -546,6 +583,7 @@
   }
   // -->
 </script>
+<style>.dataTableGroupChange {border-top: 2px solid black;}</style>
 </head>
 <body onLoad="init()">
 <!-- header //-->
@@ -607,10 +645,9 @@ if (isset($show_configuration_info) && $show_configuration_info == 'true') {
             <td class="infoBoxHeading"><?php echo TABLE_TITLE_GROUP; ?></td>
             <td class="dataTableHeadingContentWhois">
             <?php
-              if ($check_configure_group->fields['configuration_group_id'] == '6') {
+              $id_note = '';
+              if (isset($check_configure_group->fields['visible']) && $check_configure_group->fields['visible'] == '0') {
                 $id_note = TEXT_INFO_CONFIGURATION_HIDDEN;
-              } else {
-                $id_note = '';
               }
               echo 'ID#' . $check_configure_group->fields['configuration_group_id'] . ' ' . $check_configure_group->fields['configuration_group_title'] . $id_note;
             ?>
@@ -620,7 +657,7 @@ if (isset($show_configuration_info) && $show_configuration_info == 'true') {
           <tr>
             <td class="main" align="center" valign="middle">
               <?php
-                if ($show_products_type_layout == 'false' and ($check_configure->fields['configuration_id'] != 0 and $check_configure->fields['configuration_group_id'] != 6)) {
+                if ($show_products_type_layout == 'false' and ($check_configure->fields['configuration_id'] != 0 and $check_configure_group->fields['visible'] != 0)) {
                   echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
                 } else {
                   $page= '';
@@ -705,6 +742,93 @@ if (false) {
 <!-- eof: Locate a configuration constant -->
 
 
+<!-- bof: search configuration keys -->
+      <tr>
+        <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
+          <tr>
+            <td class="main" align="left" valign="middle"><?php echo SEARCH_CFG_KEYS_HEADING_TITLE; ?></td>
+          </tr>
+          <tr><form name="search_keys" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys' . $flags); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+            <td class="main" align="left" valign="bottom"><?php echo SEARCH_CFG_KEYS_SEARCH_BOX_TEXT . '<br />' . zen_draw_input_field('search', zen_output_string_protected($search), ' size="40" placeholder="' . SEARCH_CFG_KEYS_FORM_PLACEHOLDER . '"');?>
+            <input type="submit" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>">
+            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&s=k' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>">
+            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&t=all' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>">
+            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, '') ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET;?>">
+            </td>
+          </form>
+          </tr>
+<?php
+if ($action == 'search_config_keys') {
+?>
+          <tr>
+            <td class="main" align="left" valign="middle"><?php echo ($keySearchResults->RecordCount() > 0) ? $keySearchResults->RecordCount() . ' ' .SEARCH_CFG_KEYS_FOUND_KEYS : SEARCH_CFG_KEYS_NOT_FOUND_KEYS; ?></td>
+          </tr>
+<?php } ?>
+        </table>
+<?php
+  if ($action == 'search_config_keys' && $keySearchResults->RecordCount() > 0)
+  {
+    $last_group = $keySearchResults->fields['configuration_group_id'];
+    $groupChanged = FALSE;
+?>
+    <table width="100%" cellspacing="2" cellpadding="3" style="padding:5px 10px;">
+      <tr class="dataTableHeadingRow">
+        <td class="dataTableHeadingContent"><?php echo SEARCH_CFG_KEYS_TABLE_SECTION; ?></td>
+        <td class="dataTableHeadingContent" align="center"><?php echo SEARCH_CFG_KEYS_TABLE_GROUP; ?></td>
+        <td class="dataTableHeadingContent"><?php echo SEARCH_CFG_KEYS_TABLE_TITLE; ?></td>
+        <td class="dataTableHeadingContent"><?php echo SEARCH_CFG_KEYS_TABLE_DESCRIPTION; ?></td>
+        <td class="dataTableHeadingContent"><?php echo SEARCH_CFG_KEYS_TABLE_KEY_NAME; ?></td>
+        <td class="dataTableHeadingContent"><?php echo SEARCH_CFG_KEYS_TABLE_VALUE; ?></td>
+        <td class="dataTableHeadingContent" align="center"><?php echo SEARCH_CFG_KEYS_TABLE_EDIT; ?></td>
+      </tr>
+<?php
+    while (!$keySearchResults->EOF)
+    {
+      if($keySearchResults->fields['src']=='type')
+      {
+        $section = 'Product Types';
+        $editlink = zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' .  $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=layout_edit');
+        $viewlink = zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' .  $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=layout');
+      }
+      else if($keySearchResults->fields['src']=='conf')
+      {
+        $section = 'Configuration';
+        $editlink = zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=edit');
+        $viewlink = zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id']);
+      }
+      else
+      {
+        $editlink = "";
+        $viewlink = "";
+      }
+      if (!strpos($flags, 's=k') && $last_group != $keySearchResults->fields['configuration_group_id']) $groupChanged = TRUE;
+      $last_group = $keySearchResults->fields['configuration_group_id'];
+      $tdClass = 'dataTableContent' . ($groupChanged ? ' dataTableGroupChange' : '');
+?>
+      <tr class="dataTableRow" valign="top">
+        <td class="<?php echo $tdClass;?>"><?php echo $section;?></td>
+        <td class="<?php echo $tdClass;?>" align="center"><?php echo $keySearchResults->fields['configuration_group_title'];?></td>
+        <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_title'];?></td>
+
+        <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_description'];?> &nbsp;</td>
+        <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_key'];?></td>
+        <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_value']; // implode("<br />\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value']))?></td>
+        <td class="<?php echo $tdClass;?>" align="center" onclick="document.location.href='<?php echo $viewlink;?>'"><a href="<?php echo $editlink;?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT);?></a></td>
+      </tr>
+<?php
+      $groupChanged = FALSE;
+      $keySearchResults->MoveNext();
+    }
+?>
+    </table>
+<?php
+  }
+?>
+        </td>
+      </tr>
+<!-- eof: search configuration keys -->
+
+
 <!-- bof: Locate a function -->
       <tr>
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
@@ -712,25 +836,20 @@ if (false) {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_FUNCTION_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_function" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'NONSSL'); ?>"' method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_function" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_CATALOG),
                                               array('id' => '3', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_ADMIN)
                                                     );
-//                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
 
-                echo '<strong>' . TEXT_FUNCTION_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_FUNCTION_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate a function -->
@@ -742,56 +861,46 @@ if (false) {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_CLASS_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_class" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'NONSSL'); ?>"' method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_class" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_CLASS_LOOKUP_CURRENT_CATALOG),
                                               array('id' => '3', 'text' => TEXT_CLASS_LOOKUP_CURRENT_ADMIN)
                                                     );
-//                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
 
-                echo '<strong>' . TEXT_CLASS_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_CLASS_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate a class -->
 
-<!-- bof: Locate a template files -->
+<!-- bof: Locate template files -->
       <tr>
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_TEMPLATE_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_template" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'NONSSL'); ?>"' method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_template" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_TEMPLATES),
                                               array('id' => '3', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_SIDEBOXES),
                                               array('id' => '4', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_PAGES)
                                                     );
-//                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
 
-                echo '<strong>' . TEXT_TEMPLATE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_TEMPLATE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate template Files -->
@@ -808,13 +917,12 @@ if (false) {
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
-                $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-                                              array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
+                $za_lookup = array(array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
                                               array('id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG),
                                               array('id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN)
                                                     );
 
-                echo '<strong>' . TEXT_ALL_FILES_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
+                echo '<strong>' . TEXT_ALL_FILES_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
             <td class="main" align="left" valign="middle">
@@ -827,15 +935,12 @@ if (false) {
                                               array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_JS)
                                                     );
 
-                echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, '0');
-                echo '<strong>' . TEXT_CASE_SENSITIVE . '</strong>' . zen_draw_checkbox_field('case_sensitive', true);
+                echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);
+                echo '<label for="locate-cs">' . TEXT_CASE_SENSITIVE . ' </label>' . zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
           </form></tr>
-          <tr>
-            <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
-          </tr>
         </table></td>
       </tr>
 <!-- eof: Locate all files -->

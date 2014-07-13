@@ -2,17 +2,17 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 17:13:32 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Thu Aug 1 13:52:15 2013 -0400 Modified in v1.5.2 $
  */
 
 $file_contents =
 '<'.'?php' . "\n" .
 '/**' . "\n" .
-' * @package Configuration Settings circa 1.5.1' . "\n" .
-' * @copyright Copyright 2003-2012 Zen Cart Development Team' . "\n" .
+' * @package Configuration Settings circa 1.5.2' . "\n" .
+' * @copyright Copyright 2003-2013 Zen Cart Development Team' . "\n" .
 ' * @copyright Portions Copyright 2003 osCommerce' . "\n" .
 ' * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0' . "\n" .
 ' * File Built by zc_install on ' . date('Y-m-d h:i:s') . "\n" .

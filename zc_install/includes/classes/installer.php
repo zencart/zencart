@@ -4,10 +4,10 @@
  * This class is used during the installation and upgrade processes
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Apr 5 15:25:02 2012 +0000 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Oct 23 18:28:44 2013 +0100 Modified in v1.5.2 $
  */
 
 
@@ -154,7 +154,7 @@
 
     function functionExists($zp_type, $zp_error_text, $zp_error_code) {
       if ($zp_type == 'mysql') {
-        $function = 'mysql_connect';
+        $function = 'mysqli_connect';
       }
       if (!function_exists($function)) {
         $this->setError($zp_error_text, $zp_error_code, true);
@@ -164,14 +164,14 @@
     function dbConnect($zp_type, $zp_host, $zp_database, $zp_username, $zp_pass, $zp_error_text, $zp_error_code, $zp_error_text2=ERROR_TEXT_DB_NOTEXIST, $zp_error_code2=ERROR_CODE_DB_NOTEXIST) {
       if ($this->error == false) {
         if ($zp_type == 'mysql') {
-          $link = @mysql_connect($zp_host, $zp_username, $zp_pass);
+          $link = @mysqli_connect($zp_host, $zp_username, $zp_pass);
           if ($link == false ) {
-            $this->setError($zp_error_text.'<br />'.@mysql_error(), $zp_error_code, true);
+            $this->setError($zp_error_text.'<br />'.@mysqli_error(), $zp_error_code, true);
           } else {
-            if (!@mysql_select_db($zp_database, $link)) {
-              $this->setError($zp_error_text2.'<br />'.@mysql_error(), $zp_error_code2, true);
+            if (!@mysqli_select_db($link, $zp_database)) {
+              $this->setError($zp_error_text2.'<br />'.@mysqli_error(), $zp_error_code2, true);
             } else {
-              @mysql_close($link);
+              @mysqli_close($link);
             }
           }
         }
@@ -180,7 +180,7 @@
 
     function dbCreate($zp_create, $zp_type, $zp_name, $zp_error_text, $zp_error_code) {
       if ($zp_create == 'true' && $this->error == false) {
-        if ($zp_type == 'mysql' && (@mysql_query('CREATE DATABASE ' . $zp_name) == false)) {
+        if ($zp_type == 'mysql' && (@mysqli_query('CREATE DATABASE ' . $zp_name) == false)) {
           $this->setError($zp_error_text, $zp_error_code, true);
         }
       }
@@ -190,11 +190,11 @@
       //    echo $zp_create;
       if ($zp_create != 'true' && $this->error == false) {
         if ($zp_type == 'mysql') {
-          $link = @mysql_connect($zp_host, $zp_username, $zp_pass);
-          if (@mysql_select_db($zp_name, $link) == false) {
-            $this->setError($zp_error_text.'<br />'.@mysql_error(), $zp_error_code, true);
+          $link = @mysqli_connect($zp_host, $zp_username, $zp_pass);
+          if (@mysqli_select_db($link, $zp_name) == false) {
+            $this->setError($zp_error_text.'<br />'.@mysqli_error(), $zp_error_code, true);
           }
-          @mysql_close($link);
+          @mysqli_close($link);
         }
       }
     }
@@ -243,7 +243,6 @@
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_TIMEOUT, 11);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); /* compatibility for SSL communications on some Windows servers (IIS 5.0+) */
       if ($proxy) {
         curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, true);
         @curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
@@ -892,6 +891,39 @@
        * sanitize $_SERVER vars
        */
       $_SERVER['REMOTE_ADDR'] = preg_replace('/[^0-9.%:]/', '', $_SERVER['REMOTE_ADDR']);
+    }
+
+    function checkIsZCVersionCurrent()
+    {
+      $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
+      $lines = @file(NEW_VERSION_CHECKUP_URL);
+      //check for major/minor version info
+      if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
+        $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];
+      }
+      //check for patch version info
+      // first confirm that we're at latest major/minor -- otherwise no need to check patches:
+      if (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) == PROJECT_VERSION_MINOR) {
+      //check to see if either patch needs to be applied
+        if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1) || trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
+        // reset update message, since we WILL be advising of an available upgrade
+          if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
+          //check for patch #1
+          if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
+          // if ($new_version != '') $new_version .= '<br />';
+            $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' .TEXT_VERSION_CHECK_PATCH .': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
+          }
+          if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
+          // if ($new_version != '') $new_version .= '<br />';
+            $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' .TEXT_VERSION_CHECK_PATCH .': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
+          }
+        }
+      }
+      // prepare displayable download link
+      if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
+        $new_version .= '<a href="' . $lines[6] . '" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
+      }
+      return $new_version;
     }
 
 

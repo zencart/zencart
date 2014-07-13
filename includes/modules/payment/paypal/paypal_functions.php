@@ -3,11 +3,11 @@
  * functions used by payment module class for Paypal IPN payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Mon Oct 28 17:54:33 2013 +0000 Modified in v1.5.2 $
  */
 
 // Functions for paypal processing
@@ -438,8 +438,8 @@
     // send received data back to PayPal for validation
     $scheme = 'http://';
     //Parse url
-    $web = parse_url($scheme . (defined('MODULE_PAYMENT_PAYPAL_HANDLER') ? MODULE_PAYMENT_PAYPAL_HANDLER : 'www.paypal.com/cgi-bin/webscr'));
-    if (isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) {
+    $web = parse_url($scheme . 'www.paypal.com/cgi-bin/webscr');
+    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox') {
       $web = parse_url($scheme . 'www.sandbox.paypal.com/cgi-bin/webscr');
     }
     //Set the port number
@@ -557,8 +557,8 @@
                       CURLOPT_HEADER => FALSE,
                       CURLOPT_FOLLOWLOCATION => FALSE,
                       CURLOPT_RETURNTRANSFER => TRUE,
-                      CURLOPT_SSL_VERIFYPEER => FALSE,
-                      CURLOPT_SSL_VERIFYHOST => 2,
+                      //CURLOPT_SSL_VERIFYPEER => FALSE, // Leave this line commented out! This should never be set to FALSE on a live site!
+                      //CURLOPT_CAINFO => '/local/path/to/cacert.pem', // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
                       CURLOPT_FORBID_REUSE => TRUE,
                       CURLOPT_FRESH_CONNECT => TRUE,
                       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
@@ -729,7 +729,7 @@
 
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
-      $module = strpos($_SESSION['shipping']['id'], '_') > 0 ? substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_')) : $_SESSION['shipping'];
+      $module = strpos($_SESSION['shipping']['id'], '_') > 0 ? substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_')) : $_SESSION['shipping']['id'];
       if (isset($GLOBALS[$module]) && zen_not_null($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
         if ($GLOBALS[$module]->tax_class > 0) {
           $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
@@ -932,7 +932,7 @@
       if ($optionsST['amount'] < $optionsST['tax_cart']) $optionsST['tax_cart'] = 0;
       if ($optionsST['amount'] < $optionsST['shipping']) $optionsST['shipping'] = 0;
       $discountProblemsFlag = TRUE;
-      $this->zcLog('getLineItemDetails 6', 'Discounts have caused the subtotal to calculate incorrectly. Line-item-details cannot be submitted.' . "\nBefore:" . print_r($pre, TRUE) . "\nAfter:" . print_r(array_merge($optionsST, $optionsLI), true));
+      ipn_logging('getLineItemDetails 6', 'Discounts have caused the subtotal to calculate incorrectly. Line-item-details cannot be submitted.' . "\nBefore:" . print_r($pre, TRUE) . "\nAfter:" . print_r(array_merge($optionsST, $optionsLI), true));
     }
 
     // if amount or subtotal values are 0 (ie: certain OT modules disabled), we have to get subtotals manually
@@ -955,7 +955,7 @@
     if (isset($optionsST['shipping']) && $optionsST['shipping'] == 0) unset($optionsST['shipping']);
 
     // tidy up all values so that they comply with proper format (number_format(xxxx,2) for PayPal US use )
-    if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], array('JPY', 'NOK', 'HUF'))) {
+    if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], array('JPY', 'NOK', 'HUF', 'TWD'))) {
       if (is_array($optionsST)) foreach ($optionsST as $key=>$value) {
         $optionsST[$key] = number_format($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
       }

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header.php 19529 2011-09-19 13:11:40Z wilt $
+ * @version GIT: $Id: Author: DrByte  Thu Oct 24 20:13:44 2013 -0400 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -167,9 +167,9 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
     // display download link
     if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
   } else {
-    // display the "check for updated version" button.  The button link should be the current page and all param's
-    $url=(isset($_SERVER['REQUEST_URI'])) ? str_replace(array('<','>'), '', $_SERVER['REQUEST_URI']) : zen_href_link(FILENAME_DEFAULT);
-    $url .= (strpos($url,'?')>5) ? '&vcheck=yes' : '?vcheck=yes';
+    // display the "check for updated version" button.  The button link should be the current page and all params
+    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
+    $url .= (strpos($url,'?') > 5 ? '&' : '?') . 'vcheck=yes';
     if ($zv_db_patch_ok == true || $version_check_sysinfo==true ) $new_version = '<a href="' . $url . '">' . zen_image_button('button_check_new_version.gif',IMAGE_CHECK_VERSION) . '</a>';
   }
 
@@ -227,7 +227,18 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
       }
     ?>
     </td>
-    <td class="headerBarContent" align="center"><b><?php echo date("r", time()) . 'GMT'  . '&nbsp;[' .  $_SERVER['REMOTE_ADDR'] . ' ]&nbsp;'; ?></b></td>
+    <td class="headerBarContent" align="center">
+<?php
+    echo ((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? iconv('ISO-8859-1', 'UTF-8', strftime(ADMIN_NAV_DATE_TIME_FORMAT, time())) : strftime(ADMIN_NAV_DATE_TIME_FORMAT, time())); //windows does not "do" UTF-8...so a manual conversion is necessary
+    echo '&nbsp;' . date("O" , time()) . ' GMT';  // time zone
+    echo '&nbsp;[' . $_SERVER['REMOTE_ADDR'] . ']'; // current admin user's IP address
+    echo '<br />';
+    echo @shell_exec('hostname'); //what server am I working on?
+    echo ' - ' . date_default_timezone_get(); //what is the PHP timezone set to?
+    $loc = setlocale(LC_TIME, 0);
+    if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
+?></td>
+
     <td class="headerBarContent" align="right"><?php echo '
         <a href="' . zen_href_link(FILENAME_DEFAULT, '', 'NONSSL') . '" class="headerLink">' . HEADER_TITLE_TOP . '</a>&nbsp;|&nbsp;
         <a href="' . zen_catalog_href_link() . '" class="headerLink" target="_blank">' . HEADER_TITLE_ONLINE_CATALOG . '</a>&nbsp;|&nbsp;
@@ -238,4 +249,5 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
     </td>
   </tr>
 </table>
+<?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>

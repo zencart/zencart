@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2011 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: english.php 19690 2011-10-04 16:41:45Z drbyte $
+ * @version GIT: $Id: Author: ajeh  Tue Oct 29 18:16:39 2013 -0400 Modified in v1.5.2 $
  */
 
 // FOLLOWING WERE moved to meta_tags.php
@@ -16,7 +16,8 @@
   define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>');
 
 // look in your $PATH_LOCALE/locale directory for available locales..
-  @setlocale(LC_TIME, 'en_US');
+  $locales = array('en_US', 'en_US.utf8', 'en', 'English_United States.1252');
+  @setlocale(LC_TIME, $locales);
   define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
   define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
   define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
@@ -477,6 +478,7 @@
   define('ERROR_PRODUCT_QUANTITY_MAX_SHOPPING_CART',' ... Maximum Quantity errors - ');
 
   define('WARNING_SHOPPING_CART_COMBINED', 'NOTICE: For your convenience, your current shopping cart has been combined with your shopping cart from your last visit. Please review your shopping cart before checking out.');
+  define('WARNING_PRODUCT_QUANTITY_ADJUSTED', 'Quantity has been adjusted to what is in stock. ');
 
 // error on checkout when $_SESSION['customers_id' does not exist in customers table
   define('ERROR_CUSTOMERS_ID_INVALID', 'Customer information cannot be validated!<br />Please login or recreate your account ...');
@@ -600,12 +602,15 @@
   define('TABLE_HEADING_LOGIN_DETAILS', 'Login Details');
   define('TABLE_HEADING_REFERRAL_DETAILS', 'Were You Referred to Us?');
 
+  define('ERROR_TEXT_COUNTRY_DISABLED_PLEASE_CHANGE', 'Sorry, but we no longer accept billing or shipping addresses in "%s".  Please update this address to continue.');
+
   define('ENTRY_EMAIL_PREFERENCE','Newsletter and Email Details');
   define('ENTRY_EMAIL_HTML_DISPLAY','HTML');
   define('ENTRY_EMAIL_TEXT_DISPLAY','TEXT-Only');
   define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
 
   define('DB_ERROR_NOT_CONNECTED', 'Error - Could not connect to Database');
+  define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
 
   // EZ-PAGES Alerts
   define('TEXT_EZPAGES_STATUS_HEADER_ADMIN', 'WARNING: EZ-PAGES HEADER - On for Admin IP Only');

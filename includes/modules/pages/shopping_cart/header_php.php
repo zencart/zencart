@@ -3,10 +3,10 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
+ * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
  */
 
 // This should be first line of the script:
@@ -20,7 +20,8 @@ $_SESSION['valid_to_checkout'] = true;
 $_SESSION['cart_errors'] = '';
 $_SESSION['cart']->get_products(true);
 
-if (!$_SESSION['valid_to_checkout']) {
+// used to display invalid cart issues when checkout is selected that validated cart and returned to cart due to errors
+if (isset($_SESSION['valid_to_checkout']) && $_SESSION['valid_to_checkout'] == false) {
   $messageStack->add('shopping_cart', ERROR_CART_UPDATE . $_SESSION['cart_errors'] , 'caution');
 }
 
@@ -123,6 +124,16 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   } //end foreach [attributes]
   if (STOCK_CHECK == 'true') {
     $flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
+// bof: extra check on stock for mixed YES
+    if ($flagStockCheck != true) {
+//echo zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) . '<br>';
+      if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+        $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      } else {
+        $flagStockCheck = '';
+      }
+    }
+// eof: extra check on stock for mixed YES
     if ($flagStockCheck == true) {
       $flagAnyOutOfStock = true;
     }

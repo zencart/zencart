@@ -1,24 +1,11 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: index.php 2539 2005-12-11 05:17:05Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: Ian Wilson  Sat Aug 10 18:43:55 2013 +0100 Modified in v1.5.2 $
+ */
 
 define('HEADING_TITLE', 'Choose an action..');
 
@@ -70,4 +57,33 @@ define('BOX_ENTRY_SALEMAKER_ACTIVE','Sales Active');
 define('LAST_10_DAYS', 'Counter History for last %s recorded days');
 define('SESSION', 'Session');
 define('TOTAL', 'Total');
-?>
+
+// DASHBOARD - HOME PAGE OF ADMIN - CUSTOMERS section
+define('BOX_TITLE_CUSTOMERS', 'Customers');
+define('BOX_ENTRY_CUSTOMERS_NORMAL', '- Full Accounts :');
+define('BOX_ENTRY_CUSTOMERS_TOTAL', 'Total Customer Accounts :');
+define('BOX_ENTRY_CUSTOMERS_TOTAL_DISTINCT', 'Total Distinct Customers :');
+
+define('TEXT_REMOVE', 'Remove');
+define('TEXT_UPDATE', 'Update');
+define('TEXT_CONFIRM_REMOVE', 'Are you sure you want to remove this widget from the dashboard?');
+define('TEXT_WIDGET_UPDATE_HEADER', 'Widget Settings have been updated');
+
+define ('TEXT_TIMER_SELECT_NONE', 'No Refresh');
+define ('TEXT_TIMER_SELECT_1MIN', 'Refresh every Minute');
+define ('TEXT_TIMER_SELECT_5MIN', 'Refresh every 5 Minutes');
+define ('TEXT_TIMER_SELECT_10MIN', 'Refresh every 10 Minutes');
+define ('TEXT_TIMER_SELECT_15MIN', 'Refresh every 15 Minutes');
+
+define ('TEXT_NO_WIDGETS_TO_INSTALL', 'There are currently no widgets available to install.');
+define('TEXT_FORM_ERROR_CHOOSE_ZONE', 'Please choose a Zone');
+define('TEXT_WARNING_SUPERUSER_REQUIRED', 'Only a Superuser can complete the initial setup. You will not be able to use your Admin until this is done.');
+define('TEXT_HEADING_SETUP_WIZARD', 'Initial Setup Wizard');
+
+define('TEXT_FORM_LEGEND_REQUIRED_SETUP', 'Required Setup Information');
+define('TEXT_FORM_LABEL_STORE_NAME', 'Store Name');
+define('TEXT_FORM_LABEL_STORE_OWNER', 'Store Owner');
+define('TEXT_FORM_LABEL_STORE_OWNER_EMAIL', 'Store Owner Email');
+define('TEXT_FORM_LABEL_STORE_COUNTRY', 'Store Country');
+define('TEXT_FORM_LABEL_STORE_ZONE', 'Store Zone');
+define('TEXT_FORM_LABEL_STORE_ADDRESS', 'Store Address');

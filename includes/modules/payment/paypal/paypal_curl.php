@@ -3,9 +3,9 @@
  * paypal_curl.php communications class for PayPal Express Checkout / Website Payments Pro / Payflow Pro payment methods
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Sat Nov 2 12:51:04 2013 -0400 Modified in v1.5.2 $
  */
 
 /**
@@ -35,7 +35,7 @@ class paypal_curl extends base {
    *
    * @var string $_logFile
    */
-  var $_logDir = 'logs';
+  var $_logDir = DIR_FS_LOGS;
 
   /**
    * Debug or production?
@@ -52,10 +52,11 @@ class paypal_curl extends base {
    */
   var $_curlOptions = array(CURLOPT_HEADER => 0,
                             CURLOPT_RETURNTRANSFER => TRUE,
-                            CURLOPT_TIMEOUT => 60,
+                            CURLOPT_TIMEOUT => 45,
+                            CURLOPT_CONNECTTIMEOUT => 10,
                             CURLOPT_FOLLOWLOCATION => FALSE,
-                            CURLOPT_SSL_VERIFYPEER => FALSE,
-                            CURLOPT_SSL_VERIFYHOST => 2,
+                          //CURLOPT_SSL_VERIFYPEER => FALSE, // Leave this line commented out! This should never be set to FALSE on a live site!
+                          //CURLOPT_CAINFO => '/local/path/to/cacert.pem', // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
                             CURLOPT_SSLVERSION => 3,
                             CURLOPT_FORBID_REUSE => TRUE,
                             CURLOPT_FRESH_CONNECT => TRUE,
@@ -102,10 +103,14 @@ class paypal_curl extends base {
   /**
    * Constructor. Sets up communication infrastructure.
    */
-  function paypal_curl($params = array()) {
+  function __construct($params = array()) {
     foreach ($params as $name => $value) {
       $this->setParam($name, $value);
     }
+    $this->notify('NOTIFY_PAYPAL_CURL_CONSTRUCT', $params);
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_CATALOG . $this->_logDir;
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_LOGS;
+    if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_SQL_CACHE;
   }
 
   /**
@@ -146,8 +151,9 @@ class paypal_curl extends base {
     if (defined('MODULE_PAYMENT_PAYPAL_CART_BORDER_COLOR')) $values['CARTBORDERCOLOR'] = MODULE_PAYMENT_PAYPAL_CART_BORDER_COLOR;
     if (defined('MODULE_PAYMENT_PAYPALWPP_HEADER_IMAGE')) $values['HDRIMG'] = urlencode(MODULE_PAYMENT_PAYPALWPP_HEADER_IMAGE);
     if (defined('MODULE_PAYMENT_PAYPALWPP_PAGECOLOR'))    $values['PAYFLOWCOLOR'] = MODULE_PAYMENT_PAYPALWPP_PAGECOLOR;
-    if (defined('MODULE_PAYMENT_PAYPALWPP_HEADER_BORDER_COLOR')) $values['HDRBORDERCOLOR'] = MODULE_PAYMENT_PAYPALWPP_HEADER_BORDER_COLOR;
-    if (defined('MODULE_PAYMENT_PAYPALWPP_HEADER_BACK_COLOR')) $values['HDRBACKCOLOR'] = MODULE_PAYMENT_PAYPALWPP_HEADER_BACK_COLOR;
+// The following are deprecated since July 2013:
+//     if (defined('MODULE_PAYMENT_PAYPALWPP_HEADER_BORDER_COLOR')) $values['HDRBORDERCOLOR'] = MODULE_PAYMENT_PAYPALWPP_HEADER_BORDER_COLOR;
+//     if (defined('MODULE_PAYMENT_PAYPALWPP_HEADER_BACK_COLOR')) $values['HDRBACKCOLOR'] = MODULE_PAYMENT_PAYPALWPP_HEADER_BACK_COLOR;
 
     if (PAYPAL_DEV_MODE == 'true') $this->log('SetExpressCheckout - breakpoint 1 - [' . print_r($values, true) .']');
     $this->values = $values;
@@ -167,6 +173,7 @@ class paypal_curl extends base {
                                            'TENDER'  => 'P',
                                            'TRXTYPE' => $this->_trxtype));
     }
+    $this->notify('NOTIFY_PAYPAL_GETEXPRESSCHECKOUTDETAILS');
     return $this->_request($values, 'GetExpressCheckoutDetails');
   }
 
@@ -433,7 +440,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.1';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.2';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();
@@ -504,13 +511,15 @@ class paypal_curl extends base {
 
     // Adjustments if Micropayments account profile details have been set
     if (defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD != ''
-        && $pairs['AMT'] < strval(MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD)
+        && (($pairs['AMT'] > 0 && $pairs['AMT'] < strval(MODULE_PAYMENT_PAYPALWPP_MICROPAY_THRESHOLD) )
+           || ($pairs['METHOD'] == 'GetExpressCheckoutDetails' && isset($_SESSION['using_micropayments']) && $_SESSION['using_micropayments'] == TRUE))
         && defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIUSERNAME') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIUSERNAME != ''
         && defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIPASSWORD') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIPASSWORD != ''
         && defined('MODULE_PAYMENT_PAYPALWPP_MICROPAY_APISIGNATURE') && MODULE_PAYMENT_PAYPALWPP_MICROPAY_APISIGNATURE != '') {
       $commpairs['USER'] = str_replace('+', '%2B', trim(MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIUSERNAME));
       $commpairs['PWD'] = trim(MODULE_PAYMENT_PAYPALWPP_MICROPAY_APIPASSWORD);
       $commpairs['SIGNATURE'] = trim(MODULE_PAYMENT_PAYPALWPP_MICROPAY_APISIGNATURE);
+      $_SESSION['using_micropayments'] = ($pairs['METHOD'] == 'DoExpressCheckoutPayment') ? FALSE : TRUE;
     }
 
     // Accelerated/Unilateral Boarding support:
@@ -641,13 +650,17 @@ class paypal_curl extends base {
   function log($message, $token = '') {
     static $tokenHash;
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
+    $this->outputDestination = 'File';
+    $this->notify('PAYPAL_CURL_LOG', $token, $tokenHash);
     if ($token == '') $token = $_SESSION['paypal_ec_token'];
     if ($token == '') $token = time();
     $token .= $tokenHash;
-    $file = $this->_logDir . '/' . 'Paypal_CURL_' . $token . '.log';
-    if ($fp = @fopen($file, 'a')) {
-      fwrite($fp, $message . "\n\n");
-      fclose($fp);
+    if ($this->outputDestination == 'File') {
+      $file = $this->_logDir . '/' . 'Paypal_CURL_' . $token . '.log';
+      if ($fp = @fopen($file, 'a')) {
+        fwrite($fp, $message . "\n\n");
+        fclose($fp);
+      }
     }
   }
   /**

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
  */
 /**
  * authorize.net SIM payment method class
@@ -92,6 +92,14 @@ class authorizenet extends base {
 
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
+
+    // Determine default/supported currencies
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+      $this->gateway_currency = DEFAULT_CURRENCY;
+    } else {
+      $this->gateway_currency = 'USD';
+    }
+
   }
 
   // Authorize.net utility functions
@@ -170,7 +178,7 @@ class authorizenet extends base {
   function update_status() {
     global $order, $db;
 
-    if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_AUTHORIZENET_ZONE > 0) ) {
+    if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_ZONE > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
       while (!$check->EOF) {
@@ -332,7 +340,7 @@ class authorizenet extends base {
     $submit_data_core = array(
       'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
       'x_amount' => number_format($order->info['total'], 2),
-      //'x_currency_code' => $_SESSION['currency'],
+      'x_currency_code' => $_SESSION['currency'],
       'x_version' => '3.1',
       'x_method' => ((MODULE_PAYMENT_AUTHORIZENET_METHOD == 'Credit Card') ? 'CC' : 'ECHECK'),
       'x_type' => MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
@@ -366,12 +374,11 @@ class authorizenet extends base {
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
     );
 
-    // force conversion to USD
-    if ($_SESSION['currency'] != 'USD') {
+    // force conversion to supported currencies: USD, GBP, CAD, EUR
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
       global $currencies;
-      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value('USD'), 2);
-      $submit_data_core['x_currency_code'] = 'USD';
-      unset($submit_data_core['x_tax'], $submit_data_core['x_freight']);
+      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data_core['x_currency_code'] = $this->gateway_currency;
     }
 
 

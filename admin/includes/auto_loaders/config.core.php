@@ -1,15 +1,14 @@
 <?php
 /**
- * @package Admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @package admin
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: config.core.php 19562 2011-09-22 13:38:40Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson  Thu Oct 24 23:17:32 2013 +0100 Modified in v1.5.2 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
- * autoloader array for catalog application_top.php
- *
+ * autoloader array for admin application_top.php
 **/
 
 /**
@@ -27,7 +26,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'split_page_results.php');
  * require(DIR_WS_CLASSES . 'object_info.php');
  * require(DIR_WS_CLASSES . 'class.phpmailer.php');
- * require(DIR_WS_CLASSES . 'class.smtp.php');
  * require(DIR_WS_CLASSES . 'upload.php');
  *
  */
@@ -66,15 +64,13 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.phpmailer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.smtp.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'upload.php',
                                'classPath'=>DIR_WS_CLASSES);
 /**
  * Breakpoint 10.
  *
  * require('includes/init_includes/init_file_db_names.php');
- * require('includes/init_includes/init_database.ph');
+ * require('includes/init_includes/init_database.php');
  * require('includes/version.php');
  *
  */
@@ -92,6 +88,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[20][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
+  $autoLoadConfig[20][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_sanitize.php');
 /**
  * Breakpoint 30.
  *
@@ -124,6 +122,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
+/**
+ * Breakpoint 50.
+ *
+ * require('includes/init_includes/init_cache_key_check.php');
+ *
+ */
+  $autoLoadConfig[50][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_cache_key_check.php');
 /**
  * Breakpoint 60.
  *

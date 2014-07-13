@@ -2,10 +2,10 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: application_top.php 19969 2011-11-08 17:03:26Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson  Fri Oct 25 01:38:26 2013 +0100 Modified in v1.5.2 $
  */
 /**
  * ensure odd settings are disabled and set required defaults
@@ -16,7 +16,7 @@
 @ini_set("arg_separator.output","&");
 
 // Check PHP version
-if (version_compare(PHP_VERSION, '5.2.14', '<'))
+if (version_compare(PHP_VERSION, '5.2.10', '<'))
 {
   require('includes/templates/template_default/templates/tpl_php_version_problem.php');
   die('');
@@ -86,7 +86,14 @@ if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
 require('../includes/classes/class.base.php');
 require('../includes/classes/class.notifier.php');
 require('includes/functions/general.php');
-
+$sanitGets = array('action', 'adv', 'configfile', 'debug', 'debug2', 'debug3', 'error_code', 'ignorefatal', 'ignorephpver', 'language', 'main_page', 'nogrants', 'overrideconfig', 'reset');
+foreach ($sanitGets as $key)
+{
+  if (isset($_GET[$key]))
+  {
+    $_GET[$key] = preg_replace('/[^0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
+  }
+}
 /**
  * set the type of request (secure or not)
  */

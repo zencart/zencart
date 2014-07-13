@@ -6,10 +6,10 @@
  * They can send up to the amount of GV accumlated in their account by way of purchased GV's or GV's sent to them.
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Wed Nov 6 22:54:11 2013 -0500 Modified in v1.5.2 $
  */
 
 // This should be first line of the script:
@@ -98,7 +98,7 @@ if ($_GET['action'] == 'process') {
   if (!isset($_POST['back'])) { // customer didn't click the back button
     $id1 = zen_create_coupon_code($mail['customers_email_address']);
     // sanitize and remove non-numeric characters
-    $_POST['amount'] = preg_replace('/[^0-9.%]/', '', $_POST['amount']);
+    $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
     $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
     //die($currencies->value($_POST['amount'], true, $_SESSION['currency']));

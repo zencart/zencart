@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Mon Jul 9 14:19:35 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Thu Oct 31 21:30:56 2013 -0400 Modified in v1.5.2 $
  */
 
 /**
@@ -14,7 +14,7 @@
  */
 function check_page($page, $params) {
   global $db;
-
+  if (!isset($_SESSION['admin_id'])) return FALSE;
   // Most entries (normal case) have their own pages. However, everything on the Configuration
   // and Modules menus are handled by the single pages configuration.php and modules.php. So for
   // these pages we check their respective get params too.
@@ -35,7 +35,7 @@ function check_page($page, $params) {
   $result = $db->Execute($sql);
   $retVal = FALSE;
   while (!$result->EOF) {
-    if (constant($result->fields['main_page']) == $page && $result->fields['page_params'] == $page_params) {
+    if ($result->fields['main_page'] != '' && defined($result->fields['main_page']) && (constant($result->fields['main_page']) == $page || constant($result->fields['main_page']) . '.php' == $page) && $result->fields['page_params'] == $page_params) {
       $retVal = TRUE;
     }
     $result->MoveNext();
@@ -60,6 +60,7 @@ function check_page($page, $params) {
 function zen_is_superuser()
 {
   global $db;
+  if (!isset($_SESSION['admin_id'])) return FALSE;
   $sql = 'SELECT admin_id from ' . TABLE_ADMIN . '
           WHERE admin_id = :adminId:
           AND admin_profile = ' . SUPERUSER_PROFILE;
@@ -366,12 +367,18 @@ function zen_validate_user_login($admin_name, $admin_pass)
       }
     }
   } // END LOGIN SLAM PREVENTION
-  // deal with expireds
-  if ($error == FALSE && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL))
+  // deal with expireds for SSL change
+  if ($error == FALSE && $result['pwd_last_change_date']  == '1990-01-01 14:02:22')
   {
     $expired = true;
     $error = true;
-    if ($result['pwd_last_change_date']  == '1990-01-01 14:02:22') $message = ($message == '' ? '' : $message . '<br /><br />') . EXPIRED_DUE_TO_SSL;
+    $message = ($message == '' ? '' : $message . '<br /><br />') . EXPIRED_DUE_TO_SSL;
+  }
+  // deal with expireds for PA-DSS
+  if ($error == FALSE && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL))
+  {
+    $expired = true;
+    $error = true;
   }
   if ($error == false)
   {
@@ -409,12 +416,13 @@ function zen_check_for_password_problems($password, $adminID = 0)
   $minLength = (int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH;
 
   // admin passwords must contain at least 1 letter and 1 number and be of required minimum length
-  if (!preg_match('/^(?=.*[a-zA-Z]+.*)(?=.*[\d]+.*)[\d\w[:punct:]]{' . $minLength . ',}$/', $password)) {
+  if (!preg_match('/^(?=.*[a-zA-Z]+.*)(?=.*[\d]+.*)[\d\w\s[:punct:]]{' . $minLength . ',}$/', $password)) {
     $error = TRUE;
   }
   // if no user specified, skip checking history
   if ($adminID == 0) return $error;
   // passwords cannot be same as last 4
+  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return $error; // skip the check if flag disabled
   $sql = "SELECT admin_pass, prev_pass1, prev_pass2, prev_pass3 FROM " . TABLE_ADMIN . "
           WHERE admin_id = :adminID:";
   $sql = $db->bindVars($sql, ':adminID:', $adminID, 'integer');
@@ -431,11 +439,12 @@ function zen_check_for_password_problems($password, $adminID = 0)
 
 /**
  * Check whether the specified admin user's password expired more than 90 days ago
- * THIS IS A PA-DSS REQUIREMENT AND MUST NOT BE CHANGED
+ * THIS IS A PA-DSS REQUIREMENT AND MUST NOT BE CHANGED WITHOUT VOIDING COMPLIANCE
  *
  * @param string $adminID
  */
 function zen_check_for_expired_pwd ($adminID) {
+  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return;
   global $db;
   $sql = "SELECT admin_id FROM " . TABLE_ADMIN . "
           WHERE admin_id = :adminID:

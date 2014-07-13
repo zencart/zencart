@@ -3,10 +3,10 @@
  * checkout_payment header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
+ * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
  */
 
 // This should be first line of the script:
@@ -30,10 +30,10 @@ if ($_SESSION['cart']->count_contents() <= 0) {
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!$_SESSION['shipping']) {
+if (!isset($_SESSION['shipping'])) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
-if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
+if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && $_SESSION['cart']->get_content_type() != 'virtual' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
@@ -51,6 +51,12 @@ if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
       zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
       break;
+    } else {
+// extra check on stock for mixed YES
+      if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+        zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+        break;
+      }
     }
   }
 }

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:03:47 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Sat Nov 2 00:02:54 2013 -0400 Modified in v1.5.2 $
  *
  * @TODO: prettify so on-screen output is more friendly, perhaps adding pagination support etc (using existing "s" and "p" params)
  * @TODO: prettify by hiding postdata until requested, either with hidden layers or other means
@@ -209,6 +209,7 @@ if ($action != '')
               header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
               header("Pragma: no-cache");
             }
+            session_write_close();
             echo $exporter_output;
             exit();
           } else

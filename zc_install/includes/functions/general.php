@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Oct 23 18:28:44 2013 +0100 Modified in v1.5.2 $
  */
 
   if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
@@ -329,7 +329,7 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
           if ($lines_to_keep_together_counter == $keep_together) { // if all grouped rows have been loaded, go to execute.
             $complete_line = true;
             $lines_to_keep_together_counter=0;
-            if ($collateSuffix != '' && @mysql_get_server_info() >= '4.1' && (!defined('IGNORE_DB_CHARSET') || (defined('IGNORE_DB_CHARSET') && IGNORE_DB_CHARSET != FALSE))) {
+            if ($collateSuffix != '' && @mysqli_get_server_info() >= '4.1' && (!defined('IGNORE_DB_CHARSET') || (defined('IGNORE_DB_CHARSET') && IGNORE_DB_CHARSET != FALSE))) {
               $newline = rtrim($newline, ';') . $collateSuffix . ';';
               $collateSuffix = '';
             }

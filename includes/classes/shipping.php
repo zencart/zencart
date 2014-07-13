@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 2 11:37:22 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Jul 24 17:24:08 2013 +0100 Modified in v1.5.2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -127,10 +127,10 @@ class shipping extends base {
       while (list(, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         if (zen_not_null($module)) {
-          if ( ($module == $class) && ($GLOBALS[$class]->enabled) ) {
+          if ( ($module == $class) && (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) ) {
             $include_quotes[] = $class;
           }
-        } elseif ($GLOBALS[$class]->enabled) {
+        } elseif (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $include_quotes[] = $class;
         }
       }
