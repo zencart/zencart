@@ -1,7 +1,18 @@
 <?php
+/**
+ * File contains framework test cases
+ *
+ * @package tests
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id$
+ */
 
 require __DIR__ . '/../../support/zcAdminTestCase.php';
 
+/**
+ * @see admin/includes/functions/general.php
+ */
 class AdminFunctionsGeneralTest extends zcAdminTestCase
 {
   public function setUp() {
