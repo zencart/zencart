@@ -23,11 +23,12 @@ class AdminFunctionsGeneralTest extends zcAdminTestCase
   public function testZenHasProductAttributesDownloadsStatusWhenDownloadEnabledIsFalse() {
     define('DOWNLOAD_ENABLED', 'false');
 
+    global $db;
     $db = $this->getMock('queryFactory');
     $db->expects($this->never())
       ->method('Execute');
 
-    $this->assertFalse(zen_has_product_attributes_downloads_status(1, $db));
+    $this->assertFalse(zen_has_product_attributes_downloads_status(1));
   }
 
   public function testZenHasProductAttributesDownloadsStatusCountsDownloads() {
@@ -40,11 +41,12 @@ class AdminFunctionsGeneralTest extends zcAdminTestCase
       ->method('RecordCount')
       ->will($this->returnValue(1));
 
+    global $db;
     $db = $this->getMock('queryFactory');
     $db->expects($this->once())
       ->method('Execute')
       ->will($this->returnValue($result));
 
-    $this->assertTrue(zen_has_product_attributes_downloads_status(1, $db));
+    $this->assertTrue(zen_has_product_attributes_downloads_status(1));
   }
 }

@@ -15,7 +15,9 @@ abstract class zcAdminTestCase extends zcTestCase
 {
   public function setUp()
   {
-    defined('IS_ADMIN_FLAG') || define('IS_ADMIN_FLAG', TRUE);
+    if (!defined('IS_ADMIN_FLAG')) {
+      define('IS_ADMIN_FLAG', TRUE);
+    }
     parent::setUp();
   }
 }

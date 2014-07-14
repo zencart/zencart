@@ -2562,32 +2562,22 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
    * check if Product is set to use downloads
    * (does not validate download filename)
    *
-   * @param  int               $products_id
-   * @param  queryFactory|null $db
+   * @param  int $products_id
    * @return bool
    * @todo   $downloadsRepository->countForProductId($products_id); #DDD
    */
-  function zen_has_product_attributes_downloads_status($products_id, queryFactory $db = null) {
+  function zen_has_product_attributes_downloads_status($products_id) {
     if (!defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
       return false;
     }
 
-    if (!$db) {
-      global $db;
-    }
+    $query = 'select pad.products_attributes_id from ' . TABLE_PRODUCTS_ATTRIBUTES . ' pa '
+           . 'left join ' . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . ' pad '
+           . 'on pad.products_attributes_id = pa.products_attributes_id '
+           . 'where pa.products_id = ' . (int) $products_id;
 
-    $query = <<<SQL
-SELECT pad.products_attributes_id
-  FROM `%s` pad RIGHT JOIN `%s` pa
-    ON pad.products_attributes_id = pa.products_attributes_id
- WHERE pa.products_id = %d;
-SQL;
-
-    $result = $db->Execute(
-      sprintf($query, TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, TABLE_PRODUCTS_ATTRIBUTES, $products_id)
-    );
-
-    return ($result->RecordCount() > 0);
+    global $db;
+    return ($db->Execute($query)->RecordCount() > 0);
   }
 
 /**
