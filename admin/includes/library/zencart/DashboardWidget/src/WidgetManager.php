@@ -1,21 +1,27 @@
-<?php namespace Zencart\DashboardWidgets;
+<?php
 /**
- * zcWidgetManager Class.
+ * Dashboard Widget Manager
  *
- * @package classes
+ * @package   ZenCart\Admin\DashboardWidget
  * @copyright Copyright 2003-2014 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version   GIT: $Id: $
  */
+
+namespace ZenCart\Admin\DashboardWidget;
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+use base;
+
 /**
- * zcWidgetManager Class
+ * WidgetManager Class
  *
- * @package classes
+ * @package ZenCart\Admin\DashboardWidget
  */
-class zcWidgetManager extends \base
+final class WidgetManager
 {
   public static function getWidgetsForUser($user)
   {
@@ -34,6 +40,7 @@ class zcWidgetManager extends \base
     }
     return $widgets;
   }
+
   public static function getWidgetsForProfile($user)
   {
     global $db;
@@ -68,6 +75,7 @@ class zcWidgetManager extends \base
     }
     return $widgets;
   }
+
   public static function setWidgetTitle($name) {
     if (defined($name)) $name = constant($name);
     return $name;
@@ -90,44 +98,48 @@ class zcWidgetManager extends \base
     return $widgets;
   }
 
-  public static function loadWidgetClasses($widgetList)
+  /**
+   * @param  array $widgetList
+   * @return array
+   * @todo   Is this necessary or valid with the new autoloading?
+   */
+  public static function loadWidgetClasses(array $widgetList)
   {
     $widgetClassList = array();
-    if (count($widgetList) > 0 )
-    {
-      foreach ($widgetList as $widgets)
-      {
-        foreach ($widgets as $widget)
-        {
-          $classDir = 'vendor/zencart/dashboardWidgets/src/dashboardWidgets/';
-          $classNameSpace = '\\ZenCart\\DashboardWidgets\\dashboardWidgets\\';
-          $className = 'zcDashboardWidget' . self::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
-          $classFile = $className . '.php';
-          $className = $classNameSpace . $className;
-          if (file_exists(DIR_FS_CATALOG . $classDir . $classFile))
-          {
-            require_once(DIR_FS_CATALOG . $classDir . $classFile);
-            $widgetClass = new $className($widget['widget_key'], $widget);
-            $widgetClassList[$widget['widget_key']] = $widgetClass;
-          }
+
+    foreach ($widgetList as $widgets) {
+      foreach ($widgets as $widget) {
+        $classNameSpace = __NAMESPACE__ . '\\';
+        $className = base::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
+        $classFile = __DIR__ . DIRECTORY_SEPARATOR . $className . '.php';
+        $className = $classNameSpace . $className;
+
+        if (!class_exists($className, true) && is_readable($classFile)) {
+          require_once($classFile);
         }
+
+        $widgetClass = new $className($widget['widget_key'], $widget);
+        $widgetClassList[$widget['widget_key']] = $widgetClass;
       }
     }
+
     return $widgetClassList;
   }
+
   public static function prepareTemplateVariables($widgetList)
   {
     $tplVars = array();
-    foreach ($widgetList as $widgetkey => $widget)
-    {
+
+    foreach ($widgetList as $widgetkey => $widget) {
       $tplVars[$widgetkey] = $widget->prepareContent();
-      $template = $widget->getTemplateFile();
-      $tplVars[$widgetkey]['templateFile'] = $template;
-      $tplVars[$widgetkey]['widgetTitle'] = $widget->getWidgetTitle();
+      $tplVars[$widgetkey]['templateFile'] = $widget->getTemplateFile();
+      $tplVars[$widgetkey]['widgetTitle']  = $widget->getWidgetTitle();
       $tplVars[$widgetkey]['widgetBaseId'] = $widget->getWidgetBaseId();
     }
+
     return $tplVars;
   }
+
   public static function applyPositionSettings($items, $user)
   {
     global $db;
@@ -143,6 +155,7 @@ class zcWidgetManager extends \base
       $db->execute($sql);
     }
   }
+
   public static function removeWidget($item, $user)
   {
     global $db;
@@ -151,6 +164,7 @@ class zcWidgetManager extends \base
     $sql = $db->bindVars($sql, ':user:', $user, 'integer');
     $db->execute($sql);
   }
+
   public static function transformPositions($items)
   {
     $columns = explode('|', $items);
@@ -177,6 +191,7 @@ class zcWidgetManager extends \base
     }
     return $widgetEnum;
   }
+
   public static function setWidgetRefresh($widgetRefresh, $item, $user)
   {
     global $db;
@@ -187,12 +202,20 @@ class zcWidgetManager extends \base
     $db->execute($sql);
 
   }
+
   public static function getWidgetTimerSelect($id)
   {
     global $db;
-    $optionList = array(array('id'=>0, 'text'=>TEXT_TIMER_SELECT_NONE),array('id'=>60, 'text'=>TEXT_TIMER_SELECT_1MIN),array('id'=>300, 'text'=>TEXT_TIMER_SELECT_5MIN), array('id'=>600, 'text'=>TEXT_TIMER_SELECT_10MIN), array('id'=>900, 'text'=>TEXT_TIMER_SELECT_15MIN));
+    $optionList = array(
+      array('id' => 0,   'text' => TEXT_TIMER_SELECT_NONE),
+      array('id' => 60,  'text' => TEXT_TIMER_SELECT_1MIN),
+      array('id' => 300, 'text' => TEXT_TIMER_SELECT_5MIN),
+      array('id' => 600, 'text' => TEXT_TIMER_SELECT_10MIN),
+      array('id' => 900, 'text' => TEXT_TIMER_SELECT_15MIN),
+    );
     return $optionList;
   }
+
   public static function getWidgetRefresh($item, $user)
   {
     global $db;
@@ -202,6 +225,7 @@ class zcWidgetManager extends \base
     $result = $db->execute($sql);
     return $result->fields['widget_refresh'];
   }
+
   public static function getInstallableWidgets($adminId)
   {
     $groups = self::getWidgetGroups();
@@ -211,6 +235,7 @@ class zcWidgetManager extends \base
     }
     return $installableWidgets;
   }
+
   public static function getWidgetGroups()
   {
     global $db;
@@ -224,6 +249,7 @@ class zcWidgetManager extends \base
     }
     return $groups;
   }
+
   public static function getInstallableWidgetsList($user)
   {
     $profileWidgets = self::getWidgetsForProfile($user);
@@ -233,6 +259,7 @@ class zcWidgetManager extends \base
     $installableWidgets = array_diff_key($profileWidgets, $installedWidgets);
     return $installableWidgets;
   }
+
   public static function addWidgetForUser($widget, $user)
   {
     global $db;

@@ -1,22 +1,25 @@
-<?php namespace Zencart\DashboardWidgets\dashboardWidgets;
+<?php
 /**
- * zcDashboardWidgetNewOrders Class.
+ * NewOrders Dashboard Widget
  *
  * @package classes
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  $
  */
-use Zencart\DashboardWidgets\zcDashboardWidgetBase;
+
+namespace ZenCart\Admin\DashboardWidget;
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
 /**
- * zcDashboardWidgetNewOrders Class
+ * NewOrders Class
  *
  * @package classes
  */
-class zcDashboardWidgetNewOrders extends zcDashboardWidgetBase
+class NewOrders extends AbstractWidget
 {
   public function prepareContent()
   {

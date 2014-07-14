@@ -107,11 +107,17 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
     }
   }
 }
-$vendorAutoloadPrefixes = array();
-/*
- * Defined for backwards compatibility only. THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
+/**
+ * Defined for backwards compatibility only.
+ * THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
  */
-if (!defined('HTT'.'PS_SERVER')) define('HTT'.'PS_SERVER', HTTP_SERVER);
+if (!defined('HTT'.'PS_SERVER')) {
+  define('HTT'.'PS_SERVER', HTTP_SERVER);
+}
+
+// load the default autoload config
+$autoloadNamespaces = include __DIR__ . '/autoload_namespaces.php';
+
 /**
  * include the list of extra configure files
  */
@@ -121,30 +127,34 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
       /**
        * load any user/contribution specific configuration files.
        */
-      include(DIR_WS_INCLUDES . 'extra_configures/' . $zv_file);
+      include DIR_WS_INCLUDES . 'extra_configures/' . $zv_file;
     }
   }
   $za_dir->close();
 }
-$vendorAutoloadPrefixes[] = array('namespace'=>'Zencart\DashboardWidgets', 'baseDir'=>DIR_FS_CATALOG . '/vendor/zencart/dashboardWidgets/src');
-require(DIR_FS_CATALOG . 'vendor/aura/autoload/src/Loader.php');
+
+require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
 $loader = new \Aura\Autoload\Loader;
 $loader->register();
-foreach($vendorAutoloadPrefixes as $vendorAutoloadPrefix) {
-  $loader->addPrefix($vendorAutoloadPrefix['namespace'], $vendorAutoloadPrefix['baseDir']);
+
+foreach ($autoloadNamespaces as $autoloadNamespace => $autoloadBaseDir) {
+  $loader->addPrefix($autoloadNamespace, $autoloadBaseDir);
 }
+
 /**
  * init some vars
  */
 $systemContext = 'admin';
 $template_dir = '';
-define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
+if (!defined('DIR_WS_TEMPLATES')) {
+  define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
+}
 /**
  * Prepare init-system
  */
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
- $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
+  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
 } else {
   $loaderPrefix = 'config';
 }
@@ -153,4 +163,4 @@ require('includes/initsystem.php');
 /**
  * load the autoloader interpreter code.
  */
-  require(DIR_FS_CATALOG . 'includes/autoload_func.php');
+  require(DIR_FS_CATALOG . DIR_WS_INCLUDES . '/autoload_func.php');

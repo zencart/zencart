@@ -7,7 +7,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
-use Zencart\DashboardWidgets\zcWidgetManager;
+
+use ZenCart\Admin\DashboardWidget\WidgetManager;
 ?>
 <div>
 <form name="widget-edit" action="#" method="post" class="widget-edit-form">
@@ -19,7 +20,7 @@ use Zencart\DashboardWidgets\zcWidgetManager;
         <label class="inline" for="widget-refresh"><?php echo 'Refresh'; ?></label>
       </div>
       <div class="small-9 columns">
-        <?php echo zen_draw_pull_down_menu('widget-refresh', zcWidgetManager::getWidgetTimerSelect($tplVars['id']), $tplVars['widget-refresh']); ?>
+        <?php echo zen_draw_pull_down_menu('widget-refresh', WidgetManager::getWidgetTimerSelect($tplVars['id']), $tplVars['widget-refresh']); ?>
       </div>
     </div>
   </fieldset>

@@ -1,22 +1,25 @@
-<?php namespace Zencart\DashboardWidgets\dashboardWidgets;
+<?php
 /**
- * zcDashboardWidgetCounterHistory Class.
+ * CounterHistory Dashboard Widget
  *
- * @package classes
+ * @package   ZenCart\Admin\DashboardWidget
  * @copyright Copyright 2003-2014 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:  $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version   GIT: $Id:  $
  */
-use Zencart\DashboardWidgets\zcDashboardWidgetBase;
+
+namespace ZenCart\Admin\DashboardWidget;
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
 /**
- * zcDashboardWidgetCounterHistory Class
+ * CounterHistory Class
  *
- * @package classes
+ * @package ZenCart\Admin\DashboardWidget
  */
-class zcDashboardWidgetCounterHistory extends zcDashboardWidgetBase
+class CounterHistory extends AbstractWidget
 {
   public function prepareContent()
   {

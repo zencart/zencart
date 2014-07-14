@@ -1,25 +1,28 @@
-<?php namespace Zencart\DashboardWidgets\dashboardWidgets;
+<?php
 /**
- * zcDashboardWidgetBannerStatistics Class.
+ * BannerStatistics Dashboard Widget
  *
- * @package classes
+ * @package   ZenCart\Admin\DashboardWidget
  * @copyright Copyright 2003-2014 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version   GIT: $Id: $
  */
+
+namespace ZenCart\Admin\DashboardWidget;
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-use Zencart\DashboardWidgets\zcDashboardWidgetBase;
+
 require_once('includes/functions/functions_graphs.php');
 include_once('includes/languages/english/banner_statistics.php');
 
 /**
- * zcDashboardWidgetBannerStatistics Class
+ * BannerStatistics Class
  *
- * @package classes
+ * @package ZenCart\Admin\DashboardWidget
  */
-class zcDashboardWidgetBannerStatistics extends zcDashboardWidgetBase
+class BannerStatistics extends AbstractWidget
 {
   public function prepareContent()
   {
