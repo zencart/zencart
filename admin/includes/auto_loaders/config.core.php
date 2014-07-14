@@ -73,7 +73,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.zcRequest.php');
+                               'loadFile'=>'Request.php',
+                               'classPath'=>DIR_CATALOG_LIBRARY . 'zencart/core/src/');
 
 /**
  * Breakpoint 10.
