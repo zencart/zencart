@@ -56,7 +56,7 @@ if ($messageStack->size > 0) {
     <td class="headerBarContent" align="left">
       <?php
       if (!$hide_languages) {
-        echo zen_draw_form('languages', zcRequest::readGet('cmd'), '', 'get');
+        echo zen_draw_form('languages', Request::readGet('cmd'), '', 'get');
         echo DEFINE_LANGUAGE . '&nbsp;&nbsp;' . (sizeof($languages) > 1 ? zen_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onChange="this.form.submit();"') : '');
         echo zen_hide_session_id();
         echo zen_post_all_get_params(array('language'));

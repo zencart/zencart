@@ -1,0 +1,3 @@
+[submodule "includes/library/aura/web"]
+	path = includes/library/aura/web
+	url = https://github.com/auraphp/Aura.Web
