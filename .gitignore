@@ -18,7 +18,6 @@ devtools.php
 dev-*.*
 includes/local
 composer.lock
-vendor
 bin
 build
 *.DS_Store
