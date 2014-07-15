@@ -116,6 +116,7 @@ define('TEXT_HELP_TITLE_UPGRADEADMINPWD', 'Admin Password for Upgrade');
 define('TEXT_HELP_CONTENT_UPGRADEADMINPWD', TEXT_HELP_CONTENT_UPGRADEADMINNAME);
 define('TEXT_VALIDATION_ADMIN_PASSWORD', 'A valid password is required');
 define('TEXT_ERROR_ADMIN_CREDENTIALS', 'Could not verify the Admin Credentials you provided.<br><br>' . TEXT_HELP_CONTENT_UPGRADEADMINNAME);
+define('TEXT_UPGRADE_IN_PROGRESS', 'Upgrade running. Progress of each step is indicated below ...');
 define('TEXT_UPGRADE_TO_VER_X_COMPLETED', 'Upgrade to version %s completed.');
 
 define ('TEXT_CONTINUE', 'Continue');

@@ -10,13 +10,15 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
+<div class="upgrade-progress-area" style="display:none;">
+  <div class="alert-box secondary"><?php echo TEXT_UPGRADE_IN_PROGRESS; ?></div>
+</div>
 <div id="upgradeResponsesHolder"></div>
 
 <form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide="ajax">
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="action" value="process">
   <input type="hidden" name="upgrade_mode" value="yes">
-  <input type="hidden" name="admin_candidate" value="" id="hiddenAdminCandidate">
   <fieldset>
     <legend><?php echo TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS; ?></legend>
     <div class="row">
@@ -82,8 +84,8 @@ $().ready(function() {
           $('#admin-validation-errors').foundation('reveal', 'open');
         } else
         {
-          $('#hiddenAdminCandidate').val(data.adminCandidate);
           $('#admin_password').val('');
+          $('.upgrade-progress-area').show();
           $('.upgrade-hide-area').hide();
           doAjaxUpdateSql(myform);
         }
@@ -129,12 +131,13 @@ function doAjaxUpdateSql(form)
         id = id.replace(/_/g, '.');
         $('#label-' + version).hide();
         var str = '<?php echo TEXT_UPGRADE_TO_VER_X_COMPLETED;?>';
-        $('#upgradeResponsesHolder').append('<div class="alert-box success round">' + str.replace('/%s/', id) + '</div>');
+        $('#upgradeResponsesHolder').append('<div class="alert-box success round">' + str.replace('%s', id) + '</div>');
       }
     });
   });
   deferred.resolve();
   promise.done(function(response) {
+    $('.upgrade-progress-area').hide();
     if (!error)
     {
       form.submit();
