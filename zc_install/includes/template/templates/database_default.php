@@ -208,8 +208,8 @@ function updateStatus() {
       t = setTimeout("updateStatus()", 10);
     }
   });
-
 }
+
 $(function()
     {
       $('.hasNoHelpText').click(function(e)

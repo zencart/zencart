@@ -108,9 +108,15 @@ define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
 define('TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS', 'Please confirm your desired upgrade steps');
 define('TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS', 'Admin Credentials (SuperUser)');
 define('TEXT_VALIDATION_ADMIN_CREDENTIALS', 'To authorize the database upgrade, you must enter an admin username and password with SuperUser permissions in your store.');
+define('TEXT_HELP_TITLE_UPGRADEADMINNAME', TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS);
+define('TEXT_HELP_CONTENT_UPGRADEADMINNAME', 'To authorize the database upgrade, you must enter an admin username and password with SuperUser (ie: unrestricted) permissions in your store.<br>This will be the username and password you use to log in to the Admin area of your store.<br>(It is NOT your FTP password, and is not your hosting control panel password. Nobody knows this password except you or your storeowner. You can not get it from your hosting company.)<br>If you are locked out of your store and do not know any valid admin passwords and cannot log in to your store Admin page, then you can do an aggressive reset of the password by following the instructions in this article: <a href="http://www.zen-cart.com/content.php?44-how-do-i-change-or-reset-my-admin-password" target="_blank">http://www.zen-cart.com/content.php?44-how-do-i-change-or-reset-my-admin-password</a>.');
 define('TEXT_DATABASE_UPGRADE_ADMIN_USER', 'User Name');
 define('TEXT_DATABASE_UPGRADE_ADMIN_PASSWORD', 'Password');
+define('TEXT_HELP_TITLE_UPGRADEADMINPWD', 'Admin Password for Upgrade');
+define('TEXT_HELP_CONTENT_UPGRADEADMINPWD', TEXT_HELP_CONTENT_UPGRADEADMINNAME);
 define('TEXT_VALIDATION_ADMIN_PASSWORD', 'A valid password is required');
+define('TEXT_ERROR_ADMIN_CREDENTIALS', 'Could not verify the Admin Credentials you provided.<br><br>' . TEXT_HELP_CONTENT_UPGRADEADMINNAME);
+define('TEXT_UPGRADE_TO_VER_X_COMPLETED', 'Upgrade to version %s completed.');
 
 define ('TEXT_CONTINUE', 'Continue');
 define ('TEXT_CANCEL', 'Cancel');
@@ -131,7 +137,7 @@ define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not
 define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is too old, and this version of Zen Cart&reg; cannot be used on this server in its present configuration.</p>
-<p>This version of Zen Cart&reg; is compatible with PHP versions 5.3.0 through 5.6.x (and preferably a minimum of 5.3.7 for security reasons).<br>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.3.7 through 5.6.x (will work with a minimum of 5.3.0 but with weaker security).<br>
 Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
 define('TEXT_ERROR_PHP53_CGI_BUG', 'PHP Versions 5.3.0-thru-5.3.11 and PHP 5.4.0 and 5.4.1 have a <a href="http://arstechnica.com/security/2014/03/php-bug-allowing-site-hijacking" target="_blank">security flaw in CGI mode</a>. Your server has that flaw. You need to upgrade your PHP version to a modern safe version, or stop running in CGI mode.');
