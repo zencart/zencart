@@ -2572,7 +2572,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     }
 
     $query = 'select pad.products_attributes_id from ' . TABLE_PRODUCTS_ATTRIBUTES . ' pa '
-           . 'left join ' . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . ' pad '
+           . 'inner join ' . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . ' pad '
            . 'on pad.products_attributes_id = pa.products_attributes_id '
            . 'where pa.products_id = ' . (int) $products_id;
 
