@@ -522,16 +522,40 @@ class systemChecker
       }
     } else
     {
-      $sql = "select a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
-              from " . $dbPrefixVal . "admin as a
-              left join " . $dbPrefixVal . "admin_profiles as ap on a.admin_profile = ap.profile_id
-              where a.admin_name = '" . $adminUser . "'
-              and ap.profile_name = 'Superuser'";
+      // first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
+      $sql = "select distinct(admin_profile)
+              from " . $dbPrefixVal . "admin
+              order by admin_profile";
       $result = $db->execute($sql);
-      if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
-        return FALSE;
+      if ($result->EOF || ($result->RecordCount() == 1 && $result->fields['admin_profile'] == 0))
+      {
+        $sql = "select admin_id, admin_name, admin_pass
+              from " . $dbPrefixVal . "admin
+              where admin_name = '" . $adminUser . "'";
+        $result = $db->execute($sql);
+        if (!$result->EOF && zen_validate_password($adminPassword, $result->fields['admin_pass']))
+        {
+          $sql = "update " . $dbPrefixVal . "admin
+                  set admin_profile = 1
+                  where admin_id = " . $result->fields['admin_id'];
+          $db->execute($sql);
+          return $result->fields['admin_id'];
+        } else {
+          return false;
+        }
+      } else {
+
+        $sql = "select a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
+                from " . $dbPrefixVal . "admin as a
+                left join " . $dbPrefixVal . "admin_profiles as ap on a.admin_profile = ap.profile_id
+                where a.admin_name = '" . $adminUser . "'
+                and ap.profile_name = 'Superuser'";
+        $result = $db->execute($sql);
+        if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
+          return FALSE;
+        }
+        return $result->fields['admin_id'];
       }
-      return $result->fields['admin_id'];
     }
   }
   function curlGetUrl( $url )
