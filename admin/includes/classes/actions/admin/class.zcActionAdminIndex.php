@@ -7,8 +7,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:$
  */
-use Zencart\DashboardWidgets\zcWidgetManager;
-require_once ('includes/classes/actions/class.zcActionAdminBase.php');
+use ZenCart\Admin\DashboardWidget\WidgetManager;
+
+require_once __DIR__ . '/../class.zcActionAdminBase.php';
+
 class zcActionAdminIndex extends zcActionAdminBase
 {
   public $useFoundation = TRUE;
@@ -30,10 +32,10 @@ class zcActionAdminIndex extends zcActionAdminBase
   }
   public function doWidgetsDisplay()
   {
-    $widgetProfileList = zcWidgetManager::getInstallableWidgetsList($_SESSION ['admin_id'], $_SESSION ['languages_id']);
-    $widgetInfoList = zcWidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
-    $this->templateVariables ['widgetList'] = zcWidgetManager::loadWidgetClasses($widgetInfoList);
-    $this->templateVariables ['widgets'] = zcWidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
+    $widgetProfileList = WidgetManager::getInstallableWidgetsList($_SESSION ['admin_id'], $_SESSION ['languages_id']);
+    $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
+    $this->templateVariables ['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
+    $this->templateVariables ['widgets'] = WidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
     $this->templateVariables ['widgetInfoList'] = $widgetInfoList;
   }
   public function doStartWizardDisplay()

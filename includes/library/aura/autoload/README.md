@@ -1,44 +1,41 @@
 # Aura.Autoload
 
-Provides a PSR-4 (and limited PSR-0) autoloading facility. Although it is
+Provides a full PSR-4 and limited PSR-0 autoloader. Although it is
 installable via Composer, its best use is probably outside a Composer-oriented
 project.
 
+For a full PSR-0 only autoloader, please see [Aura.Autoload v1](https://github.com/auraphp/Aura.Autoload/tree/develop).
+
 ## Foreword
-
-### Requirements
-
-This library requires PHP 5.3 or later, and has no userland dependencies.
 
 ### Installation
 
-This library is installable and autoloadable via Composer with the following
-`require` element in your `composer.json` file:
+This library requires PHP 5.3 or later, and has no userland dependencies.
 
-    "require": {
-        "aura/autoload": "dev-develop-2"
-    }
-    
-Alternatively, download or clone this repository, then require or include its
-_autoload.php_ file.
+It is installable and autoloadable via Composer as [aura/autoload](https://packagist.org/packages/aura/autoload).
 
-### Tests
+Alternatively, [download a release](https://github.com/auraphp/Aura.Autoload/releases) or clone this repository, then require or include its _autoload.php_ file.
 
+### Quality
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/badges/quality-score.png?s=6a3eaf6df96443eca1ac8b0ab68aac87e4b60cd8)](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/)
+[![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/badges/coverage.png?s=cdd39a30828aeb528df12444cb3704c8a419b50e)](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/)
 [![Build Status](https://travis-ci.org/auraphp/Aura.Autoload.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Autoload)
 
-This library has 100% code coverage with [PHPUnit][]. To run the tests at the
-command line, go to the _tests_ directory and issue `phpunit`.
-
-[PHPUnit]: http://phpunit.de/manual/
-
-### PSR Compliance
+To run the [PHPUnit][] tests at the command line, go to the _tests_ directory and issue `phpunit`.
 
 This library attempts to comply with [PSR-1][], [PSR-2][], and [PSR-4][]. If
 you notice compliance oversights, please send a patch via pull request.
 
+[PHPUnit]: http://phpunit.de/manual/
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
+
+
+### Community
+
+To ask questions, provide feedback, or otherwise communicate with the Aura community, please join our [Google Group](http://groups.google.com/group/auraphp), follow [@auraphp on Twitter](http://twitter.com/auraphp), or chat with us on #auraphp on Freenode.
 
 
 ## Getting Started
@@ -94,6 +91,8 @@ To add a namespace conforming to [PSR-0][] specifications, one that uses only
 namespace separators in the class names (no underscores allowed!), point to
 the directory containing classes for that namespace. Multiple directories are
 allowed, and will be searched in the order they are added.
+
+[PSR-0]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
 
 ```php
 <?php
