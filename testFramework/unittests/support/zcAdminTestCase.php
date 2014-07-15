@@ -11,13 +11,13 @@ require_once('zcTestCase.php');
 /**
  * Testing Library
  */
-class zcAdminTestCase extends zcTestCase
+abstract class zcAdminTestCase extends zcTestCase
 {
   public function setUp()
   {
-    if(!defined('IS_ADMIN_FLAG'))
+    if (!defined('IS_ADMIN_FLAG')) {
       define('IS_ADMIN_FLAG', TRUE);
-
+    }
     parent::setUp();
   }
 }

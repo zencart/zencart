@@ -11,10 +11,6 @@ require_once('zcTestCase.php');
 /**
  * Testing Library
  */
-class zcCatalogTestCase extends zcTestCase
+abstract class zcCatalogTestCase extends zcTestCase
 {
-  public function setUp()
-  {
-    parent::setUp();
-  }
 }

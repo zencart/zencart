@@ -10,7 +10,7 @@
 /**
  * Testing Library
  */
-class zcTestCase extends PHPUnit_Framework_TestCase
+abstract class zcTestCase extends PHPUnit_Framework_TestCase
 {
   // This allows us to run in full isolation mode including
   // classes, functions, and defined statements

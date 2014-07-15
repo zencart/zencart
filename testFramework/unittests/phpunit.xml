@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" verbose="true" processIsolation="true" bootstrap="support/zcBootstrap.php">
+<phpunit
+    colors="true"
+    verbose="true"
+    processIsolation="true"
+    bootstrap="../config/bootstrap.php"
+>
   <testsuites>
+    
     <testsuite name="Password Hash Functions">
       <file>testTestCase.php</file>
       <file>testPasswordHashCase.php</file>
       <file>testRequestCase.php</file>
     </testsuite>
+    
     <testsuite name="URL Functions">
       <file>testCatalogUrlGeneration.php</file>
       <file>testCatalogUrlSefuGeneration.php</file>
@@ -13,7 +20,13 @@
       <file>testAdminCatalogUrlSefuGeneration.php</file>
       <file>testAdminUrlGeneration.php</file>
     </testsuite>
+    
+    <testsuite name="AdminFunctions">
+      <directory suffix="Test.php">admin/functions</directory>
+    </testsuite>
+    
   </testsuites>
+  
   <logging>
     <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"
       lowUpperBound="50" highLowerBound="80" />
@@ -23,7 +36,7 @@
   <filter>
     <blacklist>
       <directory suffix=".php">vendor</directory>
-      <directory suffix=".php">admin</directory>
+      <directory suffix=".php">admin/includes/local</directory>
       <directory suffix=".php">includes/local</directory>
       <directory suffix=".php">testFramework</directory>
       <directory suffix=".php">build</directory>
@@ -31,6 +44,7 @@
       <directory suffix=".php">zc_install_old</directory>
     </blacklist>
     <whitelist processUncoveredFilesFromWhitelist="false">
+      <directory suffix=".php">admin/includes</directory>
       <directory suffix=".php">includes</directory>
     </whitelist>
   </filter>
