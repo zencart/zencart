@@ -730,7 +730,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
     case 'pre_add_manufacturer':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS_MANUFACTURER . '</b>');
       $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=insert_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
-      $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO_MANUFACTURER . '<br /><b>TESTING ONLY WORKS ON MANUFACTURER 10</b>');
+      $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO_MANUFACTURER . '<br />');
       $contents[] = array('text' => '<br />' . TEXT_PRE_ADD_MANUFACTURER_ID . '<br>' . zen_draw_input_field('manufacturer_id'));
       $contents[] = array('text' => TEXT_INFO_SKIP_SPECIALS . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_yes', true) . ' ' . TEXT_SKIP_SPECIALS_TRUE . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_no') . ' ' . TEXT_SKIP_SPECIALS_FALSE);
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE . '<br>' . zen_draw_input_field('specials_price'));
@@ -743,7 +743,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
     case 'pre_remove_manufacturer':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_MANUFACTURER . '</b>');
       $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=remove_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
-      $contents[] = array('text' => TEXT_INFO_PRE_REMOVE_INTRO_MANUFACTURER . '<br /><b>TESTING ONLY WORKS ON MANUFACTURER 10</b>');
+      $contents[] = array('text' => TEXT_INFO_PRE_REMOVE_INTRO_MANUFACTURER . '<br />');
       $contents[] = array('text' => '<br />' . TEXT_PRE_REMOVE_MANUFACTURER_ID . '<br>' . zen_draw_input_field('manufacturer_id'));
       $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
