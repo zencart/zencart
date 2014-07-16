@@ -40,14 +40,12 @@ class shipping extends base {
       }
 
       for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-        //          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
         $lang_file = null;
         $module_file = DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file'];
-        if(IS_ADMIN_FLAG === true) {
+        if (IS_ADMIN_FLAG === true) {
           $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
           $module_file = DIR_FS_CATALOG . $module_file;
-        }
-        else {
+        } else {
           $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
         }
         if (@file_exists($lang_file)) {
