@@ -106,7 +106,7 @@
               $products_id = zen_db_prepare_input($new_specials_products_id);
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
-              // check if product has a special and skip if ship_specials
+              // check if product has a special and skip if skip_specials
               if (!$chk_special->EOF) {
                 if ($skip_specials) {
                   continue;
@@ -182,7 +182,7 @@
               $products_id = zen_db_prepare_input($new_specials_products_id);
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
-              // check if product has a special and skip if ship_specials
+              // check if product has a special and skip if skip_specials
               if (!$chk_special->EOF) {
                   $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
               }
@@ -224,7 +224,7 @@
               $products_id = zen_db_prepare_input($new_specials_products_id);
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
-              // check if product has a special and skip if ship_specials
+              // check if product has a special and skip if skip_specials
               if (!$chk_special->EOF) {
                 if ($skip_specials) {
                   continue;
@@ -293,7 +293,7 @@
               $products_id = zen_db_prepare_input($new_specials_products_id);
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
-              // check if product has a special and skip if ship_specials
+              // check if product has a special and skip if skip_specials
               if (!$chk_special->EOF) {
                 $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
               }
