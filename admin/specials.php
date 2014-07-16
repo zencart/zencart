@@ -76,21 +76,9 @@
         }
         break;
       case 'insert_category':
-        if ($_POST['skip_specials'] == 'skip_specials_yes') {
-          $skip_specials = true;
-        } else {
-          $skip_specials = false;
-        }
-        if ($_POST['include_subcategories'] == 'include_subcategories_yes') {
-          $include_subcategories = true;
-        } else {
-          $include_subcategories = false;
-        }
-        if ($_POST['include_inactive'] == 'include_inactive_yes') {
-          $include_inactive = true;
-        } else {
-          $include_inactive = false;
-        }
+        $skip_specials = ($_POST['skip_specials'] == 'skip_specials_yes');
+        $include_subcategories = ($_POST['include_subcategories'] == 'include_subcategories_yes');
+        $include_inactive = ($_POST['include_inactive'] == 'include_inactive_yes');
         if ($_POST['categories_id'] < 1 || empty($_POST['specials_price'])) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_CATEGORY, 'caution');
           zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
@@ -98,7 +86,7 @@
           // get all category products_id
           global $categories_products_id_list;
           $categories_products_id_list = '';
-          $products_id_list = zen_get_categories_products_list($_POST['categories_id'], false, $include_subcategories);
+          $products_id_list = zen_get_categories_products_list($_POST['categories_id'], $include_inactive, $include_subcategories);
           if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
             // build products list
             foreach($products_id_list as $key => $value) {
@@ -156,16 +144,8 @@
         zen_redirect(zen_href_link(FILENAME_SPECIALS));
         break;
       case 'remove_category':
-        if ($_POST['include_subcategories'] == 'include_subcategories_yes') {
-          $include_subcategories = true;
-        } else {
-          $include_subcategories = false;
-        }
-        if ($_POST['include_inactive'] == 'include_inactive_yes') {
-          $include_inactive = true;
-        } else {
-          $include_inactive = false;
-        }
+        $include_subcategories = ($_POST['include_subcategories'] == 'include_subcategories_yes');
+        $include_inactive = ($_POST['include_inactive'] == 'include_inactive_yes');
 
         if ($_POST['categories_id'] < 1) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_CATEGORY, 'caution');
@@ -182,9 +162,9 @@
               $products_id = zen_db_prepare_input($new_specials_products_id);
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
-              // check if product has a special and skip if skip_specials
+              // check if product has a special
               if (!$chk_special->EOF) {
-                  $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
               }
 
               // reset products_price_sorter for searches etc.
@@ -199,11 +179,7 @@
         break;
 
       case 'insert_manufacturer':
-        if ($_POST['skip_specials'] == 'skip_specials_yes') {
-          $skip_specials = true;
-        } else {
-          $skip_specials = false;
-        }
+        $skip_specials = ($_POST['skip_specials'] == 'skip_specials_yes');
 
         if ($_POST['manufacturer_id'] < 1 || empty($_POST['specials_price'])) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_MANUFACTURER, 'caution');
@@ -293,7 +269,7 @@
               $products_id = zen_db_prepare_input($new_specials_products_id);
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
-              // check if product has a special and skip if skip_specials
+              // check if product has a special
               if (!$chk_special->EOF) {
                 $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
               }
@@ -543,11 +519,6 @@ require('includes/admin_html_head.php');
 <?php
   } else {
 ?>
-<?php
-if ($action != '') {
-  // do not show products when setting global additions or deletions
-} else {
-?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
@@ -677,8 +648,6 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
                 </table></td>
               </tr>
             </table></td>
-<?php } // eof: do not show products when setting global additions or deletions
-?>
 <?php
   $heading = array();
   $contents = array();
