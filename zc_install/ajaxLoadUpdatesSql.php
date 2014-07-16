@@ -16,12 +16,20 @@ $error = FALSE;
 $errorList = array();
 $db_type = 'mysql';
 $updateList = array(
+        '1.2.7'=>array('required'=>'1.2.6'),
+        '1.3.0'=>array('required'=>'1.2.7'),
+        '1.3.5'=>array('required'=>'1.3.0'),
+        '1.3.6'=>array('required'=>'1.3.5'),
+        '1.3.7'=>array('required'=>'1.3.6'),
+        '1.3.8'=>array('required'=>'1.3.7'),
+        '1.3.9'=>array('required'=>'1.3.8'),
         '1.5.0'=>array('required'=>'1.3.9'),
         '1.5.1'=>array('required'=>'1.5.0'),
         '1.5.2'=>array('required'=>'1.5.1'),
         '1.5.3'=>array('required'=>'1.5.2'),
         '1.5.4'=>array('required'=>'1.5.3'),
-        '1.6.0'=>array('required'=>'1.5.4'));
+        '1.6.0'=>array('required'=>'1.5.4'),
+        );
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();

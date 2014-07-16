@@ -271,6 +271,11 @@ systemChecks:
           - checkType: configDescription
             fieldName: SESSION_WRITE_DIRECTORY
             expectedResult: 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.'
+          - checkType: fieldSchema
+            tableName: admin
+            fieldName: reset_token
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
 
   checkDBVersion154:
     runLevel: dbVersion
@@ -345,8 +350,7 @@ systemChecks:
           - checkType: fieldSchema
             tableName: admin
             fieldName: last_failed_ip
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(45)'
+            fieldCheck: Exists
 
   checkDBVersion139:
     runLevel: dbVersion
@@ -376,3 +380,93 @@ systemChecks:
           - checkType: configValue
             fieldName: SHOW_SHOPPING_CART_COMBINED
             expectedResult: 'Show Notice of Combining Shopping Cart on Login'
+          - checkType: configValue
+            fieldName: MAX_RANDOM_SELECT_FEATURED_PRODUCTS
+            expectedResult: 'Random Featured Products for SideBox'
+
+  checkDBVersion137:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.3.7'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.3.7') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configDescription
+            fieldName: DEFINE_BREADCRUMB_STATUS
+            expectedResult: 'Enable the Breadcrumb Trail Links?<br />0= OFF<br />1= ON<br />2= Off for Home Page Only'
+          - checkType: configValue
+            fieldName: USE_SPLIT_LOGIN_MODE
+            expectedResult: 'Use split-login page'
+
+  checkDBVersion136:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.3.6'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.3.6') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: META_TAG_INCLUDE_MODEL
+            expectedResult: 'Meta Tags - Include Product Model in Title'
+          - checkType: configValue
+            fieldName: SHOW_SHOPPING_CART_EMPTY_UPCOMING
+            expectedResult: 'Show Upcoming Products on empty Shopping Cart Page'
+
+  checkDBVersion135:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.3.5'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.3.5') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: PRODUCT_LIST_PRICE_BUY_NOW
+            expectedResult: 'Display Product Add to Cart Button (0=off; 1=on; 2=on with Qty Box per Product)'
+          - checkType: configValue
+            fieldName: PRODUCT_LIST_ALPHA_SORTER
+            expectedResult: 'Include Product Listing Alpha Sorter Dropdown'
+
+  checkDBVersion130:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.3.0'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.3.0') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: DEFINE_BREADCRUMB_STATUS
+            expectedResult: 'Define Breadcrumb Status'
+          - checkType: configValue
+            fieldName: EZPAGES_STATUS_HEADER
+            expectedResult: 'EZ-Pages Display Status - HeaderBar'
+
+  checkDBVersion127:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.2.7'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.2.7') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: SHOW_VERSION_UPDATE_IN_HEADER
+            expectedResult: 'Automatically check to see if a new version of Zen Cart is available. Enabling this can sometimes slow down the loading of Admin pages. (Displayed on main Index page after login, and Server Info page.)'
+          - checkType: configValue
+            fieldName: SHOW_SHOPPING_CART_BOX_STATUS
+            expectedResult: 'Shopping Cart Shows<br />0= Always<br />1= Only when full<br />2= Only when full but not when viewing the Shopping Cart'
+
+  checkDBVersion126:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.2.6'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.2.6') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: CATEGORIES_TABS_STATUS
+            expectedResult: 'Categories-Tabs Menu ON/OFF'

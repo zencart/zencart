@@ -231,9 +231,12 @@ class systemChecker
     {
       while (!$result->EOF && !$retVal)
       {
-        if  ($result->fields['Field'] == $parameters['fieldName'] && strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult'])
+        if  ($result->fields['Field'] == $parameters['fieldName'])
         {
-          $retVal = TRUE;
+          if ($parameters['fieldCheck'] == 'Exists' || strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult'])
+          {
+            $retVal = TRUE;
+          }
         }
         $result->MoveNext();
       }

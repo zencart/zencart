@@ -9,6 +9,12 @@
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
 $versionArray = array();
+$versionArray[] = '1.2.6';
+$versionArray[] = '1.2.7';
+$versionArray[] = '1.3.0';
+$versionArray[] = '1.3.5';
+$versionArray[] = '1.3.6';
+$versionArray[] = '1.3.7';
 $versionArray[] = '1.3.8';
 $versionArray[] = '1.3.9';
 $versionArray[] = '1.5.0';
@@ -22,10 +28,6 @@ $versionArray[] = '1.6.0';
 $key = array_search($dbVersion, $versionArray);
 $newArray = array_slice($versionArray, $key + 1);
 //print_r($newArray);
-
-
-
-
 
 
 
