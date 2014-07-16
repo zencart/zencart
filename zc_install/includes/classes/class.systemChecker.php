@@ -224,25 +224,22 @@ class systemChecker
   }
   public function dbVersionCheckFieldSchema($db, $dbPrefix, $parameters)
   {
-    $retVal = FALSE;
     $sql = "show fields from " . $dbPrefix . $parameters['tableName'];
     $result = $db->execute($sql);
-    if ($result)
+    while (!$result->EOF)
     {
-      while (!$result->EOF && !$retVal)
+      // if found the specified field ...
+      if  ($result->fields['Field'] == $parameters['fieldName'])
       {
-        if  ($result->fields['Field'] == $parameters['fieldName'])
+        // then return true if the test was simply "Exists", or check that the field's type matches the fieldCheck test
+        if ($parameters['fieldCheck'] == 'Exists' || strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult'])
         {
-          if ($parameters['fieldCheck'] == 'Exists' || strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult'])
-          {
-            $retVal = TRUE;
-          }
+          return true;
         }
-        $result->MoveNext();
       }
+      $result->MoveNext();
     }
-//    echo $sql . ': ' . var_export($retVal, true) . '<br>';
-    return $retVal;
+    return false;
   }
   public function dbVersionCheckConfigValue($db, $dbPrefix, $parameters)
   {
@@ -510,7 +507,7 @@ class systemChecker
     {
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     }
-    if ($result == FALSE) return $result;
+    if ($result == false) return $result;
 //    echo ($hasAdminProfiles) ? 'YES' : 'NO';
     if (!$hasAdminProfiles)
     {
@@ -518,7 +515,7 @@ class systemChecker
       $result = $db->execute($sql);
       if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass']))
       {
-        return FALSE;
+        return false;
       } else
       {
         return $result->fields['admin_id'];
@@ -543,8 +540,6 @@ class systemChecker
                   where admin_id = " . $result->fields['admin_id'];
           $db->execute($sql);
           return $result->fields['admin_id'];
-        } else {
-          return false;
         }
       } else {
 
@@ -555,12 +550,14 @@ class systemChecker
                 and ap.profile_name = 'Superuser'";
         $result = $db->execute($sql);
         if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
-          return FALSE;
+          return false;
         }
         return $result->fields['admin_id'];
       }
     }
+    return false;
   }
+
   function curlGetUrl( $url )
   {
     $options = array(
