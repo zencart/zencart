@@ -41,7 +41,15 @@ class shipping extends base {
 
       for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
         //          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
-        $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+        $lang_file = null;
+        $module_file = DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file'];
+        if(IS_ADMIN_FLAG === true) {
+          $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+          $module_file = DIR_FS_CATALOG . $module_file;
+        }
+        else {
+          $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+        }
         if (@file_exists($lang_file)) {
           include_once($lang_file);
         } else {
@@ -55,7 +63,7 @@ class shipping extends base {
         $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $include_modules[$i]['class']);
         if ($this->enabled)
         {
-          include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
+          include_once($module_file);
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
         }
       }
