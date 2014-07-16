@@ -25,15 +25,16 @@ $updateList = array(
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
-
 $updateVersion = str_replace('version-', '', $_POST['version']);
 $updateVersion = str_replace('_', '.', $updateVersion);
 $versionInfo = $updateList[$updateVersion];
 
+// $errorList[] = "I have $dbVersion. POST=" . $_POST['version'] . ' which asks for updateVersion=' . $updateVersion . '; therefore versionRequired=' . $versionInfo[required];
+
 if ($versionInfo['required'] != $dbVersion)
 {
   $error = TRUE;
-  $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $versionInfo['required']);
+  $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $dbVersion, $versionInfo['required']);
 }
 if (!$error)
 {

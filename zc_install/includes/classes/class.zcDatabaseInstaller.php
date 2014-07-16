@@ -91,13 +91,13 @@ class zcDatabaseInstaller
     }
 //if (count($lines) < 200) sleep(5);
     $this->doJsonProgressLoggingEnd();
-    if (count($this->upgradeExceptions) > 0)
-    {
-      return TRUE;
-    } else
-    {
-      return FALSE;
-    }
+//     if (count($this->upgradeExceptions) > 0)
+//     {
+//       return TRUE;
+//     } else
+//     {
+//       return FALSE;
+//     }
   }
   private function processLine($line)
   {

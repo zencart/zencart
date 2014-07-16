@@ -3,23 +3,26 @@
  * @package Installer
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_admin_validation_errors.php'); ?>
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<div class="upgrade-progress-area" style="display:none;">
-  <div class="alert-box secondary"><?php echo TEXT_UPGRADE_IN_PROGRESS; ?></div>
+<?php if (sizeof($newArray)) { ?>
+<div class="upgrade-progress-area">
+  <div class="alert-box" id="upgradeHeaderMessage"><?php echo TEXT_DATABASE_UPGRADE_STEPS_DETECTED; ?></div>
 </div>
+<?php } ?>
 <div id="upgradeResponsesHolder"></div>
 
-<form id="db_upgrade" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide="ajax">
+<form id="db_upgrade<?php echo (sizeof($newArray)) ? '' : '_done'; ?>" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide="ajax">
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
   <input type="hidden" name="action" value="process">
+<?php if (sizeof($newArray)) { ?>
   <input type="hidden" name="upgrade_mode" value="yes">
-  <fieldset>
+  <fieldset id="availableUpgradeSteps">
     <legend><?php echo TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS; ?></legend>
     <div class="row">
 
@@ -58,13 +61,17 @@
       </div>
     </div>
   </fieldset>
-  <div class="upgrade-hide-area">
+<?php } else {?>
+<div>
+  <div class="alert-box success round"><?php echo TEXT_NO_REMAINING_UPGRADE_STEPS; ?></div>
+</div>
+<?php } ?>
+  <div class="upgrade-continue-button">
     <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="3">
   </div>
 </form>
 
 <script>
-
 $().ready(function() {
   $("#db_upgrade").on('valid', function(){
     var errorElement = 'span';
@@ -85,8 +92,10 @@ $().ready(function() {
         } else
         {
           $('#admin_password').val('');
-          $('.upgrade-progress-area').show();
+          $('#upgradeHeaderMessage').val('<?php echo TEXT_UPGRADE_IN_PROGRESS;?>');
+          $('#upgradeHeaderMessage').addClass('secondary');
           $('.upgrade-hide-area').hide();
+          $('.upgrade-continue-button').hide();
           doAjaxUpdateSql(myform);
         }
       }
@@ -100,6 +109,8 @@ function doAjaxUpdateSql(form)
   var promise = deferred.promise();
   var length = $('input[type=checkbox]:checked').length;
   var error = false;
+  var errorList = null;
+  var response = null;
   $('input[type=checkbox]:checked').each(function() {
     var version = $(this).attr('id');
     promise=promise.pipe(
@@ -118,18 +129,20 @@ function doAjaxUpdateSql(form)
       }
     )
     .done(function (response, status, ajax) {
-      if (response.error)
+        console.log('response.error='+response.error);
+      if (response.error && response.error === true)
       {
         error = true;
         var errorList = response.errorList;
         var errorString = '';
         $('#upgradeResponsesHolder').append('<div class="alert-box alert round">' + errorList.join('<br>') + '</div>')
         $('.upgrade-hide-area').show();
+        $('.upgrade-continue-button').show();
       } else
       {
         id = response.version.replace('version-', '');
         id = id.replace(/_/g, '.');
-        $('#label-' + version).hide();
+        $('#label-' + version).remove();
         var str = '<?php echo TEXT_UPGRADE_TO_VER_X_COMPLETED;?>';
         $('#upgradeResponsesHolder').append('<div class="alert-box success round">' + str.replace('%s', id) + '</div>');
       }
@@ -138,9 +151,19 @@ function doAjaxUpdateSql(form)
   deferred.resolve();
   promise.done(function(response) {
     $('.upgrade-progress-area').hide();
-    if (!error)
+    var length = $('input[type=checkbox]:not(:checked)').length;
+    console.log('DB Upgrade progress. Remaining checkboxes: '+length);
+    if (length == 0) {
+      $('#availableUpgradeSteps').hide();
+      $('.upgrade-continue-button').show();
+      $("#db_upgrade").off('valid');
+    }
+    if (!error && length == 0)
     {
       form.submit();
+    } else {
+      $('.upgrade-hide-area').show();
+      $('.upgrade-continue-button').show();
     }
   });
 

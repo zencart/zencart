@@ -17,7 +17,6 @@ define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we cont
 define('TEXT_INDEX_WARN_ERRORS', 'Some other problems');
 define('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which explain what each field means.');
 define('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
-define('TEXT_DATABASE_UPGRADE_HEADER_MAIN', 'The following list shows the various upgrade steps we detected are required for your database.');
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 define('TEXT_HELP_CONTENT_CHOOSE_LANG', 'Zen Cart&reg; is multi-lingual, supporting as many languages as there are language packs available. Simply install the necessary language pack and your entire store can operate in multiple languages, including this installer.');
 
@@ -72,7 +71,7 @@ define('TEXT_LOADING_CHARSET_SPECIFIC', 'Loading Character Set specific data');
 define('TEXT_LOADING_DEMO_DATA', 'Loading Demo Data');
 define('TEXT_LOADING_PLUGIN_DATA', 'Loading SQL for Pre-installed Plugins');
 
-define('TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED', 'Could not update to version %s; Version %s update required first.');
+define('TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED', 'Could not update to version %s. We detect that you currently have v%s, and must perform the updates to get to version %s first.');
 
 define('TEXT_PAGE_HEADING_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_ADMIN_SETUP_USER_SETTINGS', 'Admin User Settings');
@@ -105,6 +104,8 @@ define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
 define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
+define('TEXT_DATABASE_UPGRADE_HEADER_MAIN', '');
+define('TEXT_DATABASE_UPGRADE_STEPS_DETECTED', 'The following list shows the various upgrade steps we detected are required for your database.');
 define('TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS', 'Please confirm your desired upgrade steps');
 define('TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS', 'Admin Credentials (SuperUser)');
 define('TEXT_VALIDATION_ADMIN_CREDENTIALS', 'To authorize the database upgrade, you must enter an admin username and password with SuperUser permissions in your store.');
@@ -118,6 +119,7 @@ define('TEXT_VALIDATION_ADMIN_PASSWORD', 'A valid password is required');
 define('TEXT_ERROR_ADMIN_CREDENTIALS', 'Could not verify the Admin Credentials you provided.<br><br>' . TEXT_HELP_CONTENT_UPGRADEADMINNAME);
 define('TEXT_UPGRADE_IN_PROGRESS', 'Upgrade running. Progress of each step is indicated below ...');
 define('TEXT_UPGRADE_TO_VER_X_COMPLETED', 'Upgrade to version %s completed.');
+define('TEXT_NO_REMAINING_UPGRADE_STEPS', 'Looking good! It appears as though there are no more upgrade steps required.');
 
 define ('TEXT_CONTINUE', 'Continue');
 define ('TEXT_CANCEL', 'Cancel');
