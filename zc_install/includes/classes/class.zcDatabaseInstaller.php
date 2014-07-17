@@ -91,13 +91,14 @@ class zcDatabaseInstaller
     }
 //if (count($lines) < 200) sleep(5);
     $this->doJsonProgressLoggingEnd();
-    if (count($this->upgradeExceptions) > 0)
-    {
-      return TRUE;
-    } else
-    {
-      return FALSE;
-    }
+
+    return false;
+    /**
+     * @todo further enhancement could add an advanced mode which returns the actual exceptions list to the browser.
+     *       For now, since outputting them has usually just raised unnecessary questions and confusion for end-users, simply returning false to suppress their display.
+     *       Advanced users/integrators can check the upgrade_exceptions database table or the /logs/ folder for the details.
+     */
+//    return (count($this->upgradeExceptions) > 0);
   }
   private function processLine($line)
   {

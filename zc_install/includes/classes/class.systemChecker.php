@@ -224,22 +224,22 @@ class systemChecker
   }
   public function dbVersionCheckFieldSchema($db, $dbPrefix, $parameters)
   {
-    $retVal = FALSE;
     $sql = "show fields from " . $dbPrefix . $parameters['tableName'];
     $result = $db->execute($sql);
-    if ($result)
+    while (!$result->EOF)
     {
-      while (!$result->EOF && !$retVal)
+      // if found the specified field ...
+      if  ($result->fields['Field'] == $parameters['fieldName'])
       {
-        if  ($result->fields['Field'] == $parameters['fieldName'] && strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult'])
+        // then return true if the test was simply "Exists", or check that the field's type matches the fieldCheck test
+        if ($parameters['fieldCheck'] == 'Exists' || strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult'])
         {
-          $retVal = TRUE;
+          return true;
         }
-        $result->MoveNext();
       }
+      $result->MoveNext();
     }
-//    echo $sql . ': ' . var_export($retVal, true) . '<br>';
-    return $retVal;
+    return false;
   }
   public function dbVersionCheckConfigValue($db, $dbPrefix, $parameters)
   {
@@ -507,7 +507,7 @@ class systemChecker
     {
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     }
-    if ($result == FALSE) return $result;
+    if ($result == false) return $result;
 //    echo ($hasAdminProfiles) ? 'YES' : 'NO';
     if (!$hasAdminProfiles)
     {
@@ -515,25 +515,49 @@ class systemChecker
       $result = $db->execute($sql);
       if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass']))
       {
-        return FALSE;
+        return false;
       } else
       {
         return $result->fields['admin_id'];
       }
     } else
     {
-      $sql = "select a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
-              from " . $dbPrefixVal . "admin as a
-              left join " . $dbPrefixVal . "admin_profiles as ap on a.admin_profile = ap.profile_id
-              where a.admin_name = '" . $adminUser . "'
-              and ap.profile_name = 'Superuser'";
+      // first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
+      $sql = "select distinct(admin_profile)
+              from " . $dbPrefixVal . "admin
+              order by admin_profile";
       $result = $db->execute($sql);
-      if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
-        return FALSE;
+      if ($result->EOF || ($result->RecordCount() == 1 && $result->fields['admin_profile'] == 0))
+      {
+        $sql = "select admin_id, admin_name, admin_pass
+              from " . $dbPrefixVal . "admin
+              where admin_name = '" . $adminUser . "'";
+        $result = $db->execute($sql);
+        if (!$result->EOF && zen_validate_password($adminPassword, $result->fields['admin_pass']))
+        {
+          $sql = "update " . $dbPrefixVal . "admin
+                  set admin_profile = 1
+                  where admin_id = " . $result->fields['admin_id'];
+          $db->execute($sql);
+          return $result->fields['admin_id'];
+        }
+      } else {
+
+        $sql = "select a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
+                from " . $dbPrefixVal . "admin as a
+                left join " . $dbPrefixVal . "admin_profiles as ap on a.admin_profile = ap.profile_id
+                where a.admin_name = '" . $adminUser . "'
+                and ap.profile_name = 'Superuser'";
+        $result = $db->execute($sql);
+        if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
+          return false;
+        }
+        return $result->fields['admin_id'];
       }
-      return $result->fields['admin_id'];
     }
+    return false;
   }
+
   function curlGetUrl( $url )
   {
     $options = array(

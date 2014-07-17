@@ -17,7 +17,6 @@ define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we cont
 define('TEXT_INDEX_WARN_ERRORS', 'Some other problems');
 define('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which explain what each field means.');
 define('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
-define('TEXT_DATABASE_UPGRADE_HEADER_MAIN', 'The following list shows the various upgrade steps we detected are required for your database.');
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 define('TEXT_HELP_CONTENT_CHOOSE_LANG', 'Zen Cart&reg; is multi-lingual, supporting as many languages as there are language packs available. Simply install the necessary language pack and your entire store can operate in multiple languages, including this installer.');
 
@@ -72,7 +71,7 @@ define('TEXT_LOADING_CHARSET_SPECIFIC', 'Loading Character Set specific data');
 define('TEXT_LOADING_DEMO_DATA', 'Loading Demo Data');
 define('TEXT_LOADING_PLUGIN_DATA', 'Loading SQL for Pre-installed Plugins');
 
-define('TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED', 'Could not update to version %s; Version %s update required first.');
+define('TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED', 'Could not update to version %s. We detect that you currently have v%s, and must perform the updates to get to version %s first.');
 
 define('TEXT_PAGE_HEADING_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_ADMIN_SETUP_USER_SETTINGS', 'Admin User Settings');
@@ -105,12 +104,22 @@ define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
 define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
+define('TEXT_DATABASE_UPGRADE_HEADER_MAIN', '');
+define('TEXT_DATABASE_UPGRADE_STEPS_DETECTED', 'The following list shows the various upgrade steps we detected are required for your database.');
 define('TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS', 'Please confirm your desired upgrade steps');
 define('TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS', 'Admin Credentials (SuperUser)');
 define('TEXT_VALIDATION_ADMIN_CREDENTIALS', 'To authorize the database upgrade, you must enter an admin username and password with SuperUser permissions in your store.');
+define('TEXT_HELP_TITLE_UPGRADEADMINNAME', TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS);
+define('TEXT_HELP_CONTENT_UPGRADEADMINNAME', 'To authorize the database upgrade, you must enter an admin username and password with SuperUser (ie: unrestricted) permissions in your store.<br>This will be the username and password you use to log in to the Admin area of your store.<br>(It is NOT your FTP password, and is not your hosting control panel password. Nobody knows this password except you or your storeowner. You can not get it from your hosting company.)<br>If you are locked out of your store and do not know any valid admin passwords and cannot log in to your store Admin page, then you can do an aggressive reset of the password by following the instructions in this article: <a href="http://www.zen-cart.com/content.php?44-how-do-i-change-or-reset-my-admin-password" target="_blank">http://www.zen-cart.com/content.php?44-how-do-i-change-or-reset-my-admin-password</a>.');
 define('TEXT_DATABASE_UPGRADE_ADMIN_USER', 'User Name');
 define('TEXT_DATABASE_UPGRADE_ADMIN_PASSWORD', 'Password');
+define('TEXT_HELP_TITLE_UPGRADEADMINPWD', 'Admin Password for Upgrade');
+define('TEXT_HELP_CONTENT_UPGRADEADMINPWD', TEXT_HELP_CONTENT_UPGRADEADMINNAME);
 define('TEXT_VALIDATION_ADMIN_PASSWORD', 'A valid password is required');
+define('TEXT_ERROR_ADMIN_CREDENTIALS', 'Could not verify the Admin Credentials you provided.<br><br>' . TEXT_HELP_CONTENT_UPGRADEADMINNAME);
+define('TEXT_UPGRADE_IN_PROGRESS', 'Upgrade running. Progress of each step is indicated below ...');
+define('TEXT_UPGRADE_TO_VER_X_COMPLETED', 'Upgrade to version %s completed.');
+define('TEXT_NO_REMAINING_UPGRADE_STEPS', 'Looking good! It appears as though there are no more upgrade steps required.');
 
 define ('TEXT_CONTINUE', 'Continue');
 define ('TEXT_CANCEL', 'Cancel');
@@ -131,7 +140,7 @@ define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not
 define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is too old, and this version of Zen Cart&reg; cannot be used on this server in its present configuration.</p>
-<p>This version of Zen Cart&reg; is compatible with PHP versions 5.3.0 through 5.6.x (and preferably a minimum of 5.3.7 for security reasons).<br>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.3.7 through 5.6.x (will work with a minimum of 5.3.0 but with weaker security).<br>
 Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
 define('TEXT_ERROR_PHP53_CGI_BUG', 'PHP Versions 5.3.0-thru-5.3.11 and PHP 5.4.0 and 5.4.1 have a <a href="http://arstechnica.com/security/2014/03/php-bug-allowing-site-hijacking" target="_blank">security flaw in CGI mode</a>. Your server has that flaw. You need to upgrade your PHP version to a modern safe version, or stop running in CGI mode.');
@@ -187,17 +196,17 @@ define('TEXT_HELP_TITLE_CONNECTIONDATABASECHECK', 'Initial Database Connection')
 define('TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK', 'We tried to connect to MySQL using a localhost connection. This failure does not necessarily mean MySQL is not working, as some hosts require an IP address or host name for the MySQL database.<br><br>If you are indeed using localhost for your database server, you should check that MySQL is running correctly.');
 
 define('TEXT_HELP_TITLE_ADMINSERVERDOMAIN', 'Admin Server Domain');
-define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', "Enter the domain name for accessing your Admin area. It is strongly recommended to use HTTPS for this address. Consult your hosting company about enabling SSL on your site.");
+define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', "Enter the domain name for accessing your Admin area. It is strongly recommended to use HTTPS (SSL) for this address. Consult your hosting company about enabling SSL on your site.");
 define('TEXT_HELP_TITLE_ENABLESSLCATALOG', 'Enable SSL for Storefront?');
 define('TEXT_HELP_CONTENT_ENABLESSLCATALOG', "Check this box if you have an SSL certificate on your hosting account and you want Zen Cart&reg; to use it when displaying sensitive pages such as Login, My Account, Checkout, etc.");
 define('TEXT_HELP_TITLE_HTTPSERVERCATALOG', 'Storefront HTTP Domain');
-define('TEXT_HELP_CONTENT_HTTPSERVERCATALOG', "Enter the domain-part of the URL for your store.");
+define('TEXT_HELP_CONTENT_HTTPSERVERCATALOG', "Enter the domain-part of the URL for your store. eg: http://www.example.com");
 define('TEXT_HELP_TITLE_HTTPURLCATALOG', 'Storefront HTTP URL');
-define('TEXT_HELP_CONTENT_HTTPURLCATALOG', "Enter the entire URL for your store.");
+define('TEXT_HELP_CONTENT_HTTPURLCATALOG', "Enter the entire URL for your store.  eg: http://www.example.com/zencart/");
 define('TEXT_HELP_TITLE_HTTPSSERVERCATALOG', 'Storefront HTTPS Domain');
-define('TEXT_HELP_CONTENT_HTTPSSERVERCATALOG', "If you have checked the box above to enable use of SSL during checkout, you must enter here the domain-part of the https URL to your store.");
+define('TEXT_HELP_CONTENT_HTTPSSERVERCATALOG', "If you have checked the box above to enable use of SSL during checkout, you must enter here the domain-part of the https URL to your store.<br>This is typically something like:<br>https://www.example.com<br>https://www.hostingcompany.com/~username<br>https://www.hostingcompany.com/~username/subdomain.com");
 define('TEXT_HELP_TITLE_HTTPSURLCATALOG', 'Storefront HTTPS URL');
-define('TEXT_HELP_CONTENT_HTTPSURLCATALOG', "Enter the https URL to your store");
+define('TEXT_HELP_CONTENT_HTTPSURLCATALOG', "Enter the https URL to your store. This is typically the same as the HTTPS Domain, followed by the foldername in which your store's files are kept. eg: https://www.example.com/zencart");
 define('TEXT_HELP_TITLE_PHYSICALPATH', 'Storefront Physical Path');
 define('TEXT_HELP_CONTENT_PHYSICALPATH', "This is the actual path (according to your server's filesystem) where your Zen Cart&reg; files are located. Common examples look like '/users/home/public_html/zencart'.");
 
@@ -206,21 +215,21 @@ define('TEXT_HELP_CONTENT_PHYSICALPATH', "This is the actual path (according to 
 define('TEXT_HELP_TITLE_DBHOST', 'Database Host');
 define('TEXT_HELP_CONTENT_DBHOST', "What is the database host?  The database host can be in the form of a host name, such as 'localhost' or 'db1.myserver.com', or as an IP-address, such as '192.168.0.1'.");
 define('TEXT_HELP_TITLE_DBUSER', 'Database User');
-define('TEXT_HELP_CONTENT_DBUSER', "What is the username used to connect to the database? An example username is 'myusername_store'.");
+define('TEXT_HELP_CONTENT_DBUSER', "What is the username used to connect to the database? An example username is 'myusername_store'.<br>For PCI reasons you should NEVER user 'root' here.");
 define('TEXT_HELP_TITLE_DBPASSWORD', 'Database Password');
 define('TEXT_HELP_CONTENT_DBPASSWORD', "What is the password used for your database username account? It was created when the database-username was created.");
 define('TEXT_HELP_TITLE_DBNAME', 'Database Name');
 define('TEXT_HELP_CONTENT_DBNAME', "What is the name of the database used to hold the data? An example database name is 'zencart' or 'myaccount_zencart'.");
 define('TEXT_HELP_TITLE_DEMODATA', 'Load Demo Data');
-define('TEXT_HELP_CONTENT_DEMODATA', "");
+define('TEXT_HELP_CONTENT_DEMODATA', "If you choose to load Demo Data, we will install a base set of products and categories, with sales and specials and attributes and more. These are useful for you to play around and see how various combinations can be set up and how they can look on your storefront.<br><br>You can certainly delete the demo products (by hand) later, or once you've toyed with the samples, you can re-run this install and choose to not install the demo data, and thus have a fully clean site for setting up your own new store.");
 define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
-define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8. If you don't have a reason to use something else, use UTF8.");
+define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8.<br>If you don't have a reason to use something else, use UTF8.");
 define('TEXT_HELP_TITLE_DBPREFIX', 'Database Tablename Prefix');
-define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: 'zen_'  <strong>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
+define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: 'zen_'  <strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
 define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');
 define('TEXT_HELP_CONTENT_SQLCACHEMETHOD', "Default setting is 'none'. Alternatives are 'database' or 'file'. If your server is really slow, use 'none'. If your site is moderately busy, use 'database'. If your site is extremely high traffic, use 'file'. ");
 define('TEXT_HELP_TITLE_SQLCACHEDIRECTORY', 'SQL Cache Directory');
-define('TEXT_HELP_CONTENT_SQLCACHEDIRECTORY', "Enter the directory to use for file-based caching.");
+define('TEXT_HELP_CONTENT_SQLCACHEDIRECTORY', "Enter the directory to use for file-based caching. This is a directory/folder on your webserver, and its permissions must be set to writable so that the webserver (eg Apache) can write files to it.");
 
 define('TEXT_HELP_TITLE_ADMINUSER', 'Admin Superuser Name');
 define('TEXT_HELP_CONTENT_ADMINUSER', "This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.");
