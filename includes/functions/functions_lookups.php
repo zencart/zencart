@@ -442,7 +442,7 @@
     if (preg_match('/^txt_/', $option)) {
       $check_attributes = $db->Execute("select attributes_display_only, attributes_required from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . (int)$product_id . "' and options_id='" . (int)preg_replace('/txt_/', '', $option) . "' and options_values_id='0'");
 // text cannot be blank
-      if ($check_attributes->fields['attributes_required'] == '1' && (empty($value) && !is_numeric($value))) {
+      if ($check_attributes->fields['attributes_required'] == '1' && (!zen_not_null($value) && !is_numeric($value))) {
         $check_valid = false;
       }
     }
