@@ -10,6 +10,7 @@
  */
 
   if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
+  require('../includes/classes/class.zcPassword.php');
 
   function zen_not_null($value) {
     if (is_array($value)) {
@@ -464,16 +465,22 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
   }
 
   function zen_validate_password($plain, $encrypted) {
-    if (zen_not_null($plain) && zen_not_null($encrypted)) {
-      $stack = explode(':', $encrypted);
-      if (sizeof($stack) != 2) return false;
-      if (md5($stack[1] . $plain) == $stack[0]) {
-        return true;
-      }
+
+    if (!zen_not_null($plain) || !zen_not_null($encrypted)) {
+      return false;
     }
+
+    if (strpos($encrypted, '$2y$') === 0) {
+      return zcPassword::getInstance(PHP_VERSION)->validatePassword($plain, $encrypted);
+    }
+
+    $stack = explode(':', $encrypted);
+    if (sizeof($stack) == 2) {
+      return (md5($stack[1] . $plain) == $stack[0]);
+    }
+
     return false;
   }
-
 
   function zen_rand($min = null, $max = null) {
     static $seeded;
