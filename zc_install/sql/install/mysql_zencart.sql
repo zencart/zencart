@@ -497,6 +497,7 @@ CREATE TABLE coupons (
   coupon_zone_restriction int(11) NOT NULL default '0',
   coupon_total tinyint(1) NOT NULL DEFAULT '0',
   coupon_order_limit int(4) NOT NULL default '0',
+  coupon_is_valid_for_sales tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (coupon_id),
   KEY idx_active_type_zen (coupon_active,coupon_type),
   KEY idx_coupon_code_zen (coupon_code),
