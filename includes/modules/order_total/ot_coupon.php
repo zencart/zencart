@@ -230,6 +230,17 @@ class ot_coupon {
             }
           }
         }
+        if ($foundvalid == true) {
+          // check if products on special or sale are valid
+          $foundvalid = false;
+          reset($products);
+          for ($i=0; $i<sizeof($products); $i++) {
+            if (is_coupon_valid_for_sales($products[$i]['id'], $coupon_result->fields['coupon_id'])) {
+              $foundvalid = true;
+              continue;
+            }
+          }
+        }
         if (!$foundvalid) {
           $this->clear_posts();
         }
@@ -556,7 +567,7 @@ class ot_coupon {
     $orderTotal = $order->info['total'];
     $products = $_SESSION['cart']->get_products();
     for ($i=0; $i<sizeof($products); $i++) {
-      if (!is_product_valid($products[$i]['id'], $couponCode)) {
+      if (!is_product_valid($products[$i]['id'], $couponCode) || !is_coupon_valid_for_sales($products[$i]['id'], $couponCode)) {
         $products_tax = zen_get_tax_rate($products[$i]['tax_class_id']);
         $productsTaxAmount = (zen_calculate_tax($products[$i]['final_price'], $products_tax))   * $products[$i]['quantity'];
         $orderTotal -= $products[$i]['final_price'] * $products[$i]['quantity'];

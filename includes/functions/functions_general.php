@@ -897,6 +897,33 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 ////
+// is coupon valid for specials and sales
+  function is_coupon_valid_for_sales($product_id, $coupon_id) {
+    global $db;
+    $sql = "SELECT coupon_id, coupon_is_valid_for_sales
+            FROM " . TABLE_COUPONS . "
+            WHERE coupon_id = '" . (int)$coupon_id . "'";
+
+    $result = $db->Execute($sql);
+
+    // check whether coupon has been flagged for not valid with sales
+    if ($result->fields['coupon_is_valid_for_sales']) {
+      return true;
+    }
+
+    // check for any special on $product_id
+    $chk_product_on_sale = zen_get_products_special_price($product_id, true);
+    if (!$chk_product_on_sale) {
+      // check for any sale on $product_id
+      $chk_product_on_sale = zen_get_products_special_price($product_id, false);
+    }
+    if ($chk_product_on_sale) {
+      return false;
+    }
+    return true; // is on special or sale
+  }
+
+////
   function zen_db_input($string) {
     return addslashes($string);
   }

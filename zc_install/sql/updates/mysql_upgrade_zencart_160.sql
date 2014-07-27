@@ -91,6 +91,7 @@ ALTER TABLE coupons ADD coupon_total TINYINT(1) NOT NULL DEFAULT '0';
 ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT '0';
 ALTER TABLE coupons_description MODIFY coupon_name VARCHAR(64) NOT NULL DEFAULT '';
 ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
+ALTER TABLE coupons ADD coupon_is_valid_for_sales TINYINT(1) NOT NULL DEFAULT 1;
 
 ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
 ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '0';

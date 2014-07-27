@@ -85,6 +85,12 @@ define('TEXT_COUPON_ZONE_RESTRICTION', 'Coupon Zone Restriction are optional.');
 define('COUPON_ORDER_LIMIT', 'Customer previous Orders less than: ');
 define('COUPON_ORDER_LIMIT_HELP', 'Customer must have previous Orders less than, leave blank for unlimited');
 
+define('COUPON_IS_VALID_FOR_SALES', 'Coupon valid for sales:');
+define('TEXT_COUPON_IS_VALID_FOR_SALES', 'Coupon IS allowed for Products on Sale');
+define('TEXT_COUPON_IS_VALID_FOR_SALES_EMAIL', 'Coupon is valid for Products on Sale');
+define('TEXT_NO_COUPON_IS_VALID_FOR_SALES', 'Coupon NOT allowed for Products on Sale');
+define('TEXT_NO_COUPON_IS_VALID_FOR_SALES_EMAIL', 'Coupon is not valid for Products on Sale');
+
 
 define('ERROR_NO_COUPON_AMOUNT', 'No coupon amount entered');
 define('ERROR_NO_COUPON_NAME', 'No coupon name entered ');
