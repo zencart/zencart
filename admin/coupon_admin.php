@@ -1259,7 +1259,7 @@ function check_form(form_name) {
 // search for Discount Coupon
             echo zen_draw_form('search', FILENAME_COUPON_ADMIN, '', 'get', '', true);
             echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
-        '</form>';
+            echo '</form>';
 ?>
 </td>
           </tr>
