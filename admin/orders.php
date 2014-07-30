@@ -1006,8 +1006,8 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
       }
 
 // display customers comment if any exist (comment from first available order status)
-      if (zen_get_orders_comments($oInfo->orders_id) != NULL) {
-        $contents[] = array('align' => 'left', 'text' => '<br />' . TABLE_HEADING_COMMENTS . ': ' . zen_get_orders_comments($oInfo->orders_id));
+      if ($orders_comment = zen_get_orders_comments($oInfo->orders_id)) {
+        $contents[] = array('align' => 'left', 'text' => '<br />' . TABLE_HEADING_COMMENTS . ': ' . $orders_comment);
       }
 
       $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
