@@ -82,7 +82,7 @@ define('TEXT_ADMIN_SETUP_USER_EMAIL', 'Admin Superuser Email: ');
 define('TEXT_EXAMPLE_EMAIL', 'ie: my_email@example.com');
 define('TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retype email: ');
 define('TEXT_ADMIN_SETUP_USER_PASSWORD', 'Admin password: ');
-define('TEXT_ADMIN_SETUP_USER_PASSWORD_HELP', 'Below is your initial temporary password for your Admin Superuser Account. Please ensure you make a note of it.');
+define('TEXT_ADMIN_SETUP_USER_PASSWORD_HELP', '<strong>REMEMBER THIS!!</strong>: Below is your initial temporary password for your Admin Superuser Account. Please ensure you make a note of it.');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY', 'Admin Directory: ');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT', 'We were not able to change your admin directory automatically. You will need to change it yourself before you can access your Store Admin.');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED', 'We did not change your admin directory automatically as it already seems to have been changed from the default.');
