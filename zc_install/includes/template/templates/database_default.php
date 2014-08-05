@@ -68,7 +68,7 @@
         <label class="inline" for="demoData"><a href="#" class="hasHelpText" id="DEMODATA"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="checkbox" name="demoData" id="demoData" tabindex="5" >
+        <input type="checkbox" name="demoData" id="demoData" tabindex="5"><label class="inline" for="demoData"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO_DESCRIPTION; ?></label>
       </div>
     </div>
   </fieldset>
