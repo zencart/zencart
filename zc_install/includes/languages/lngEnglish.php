@@ -242,7 +242,7 @@ define('TEXT_HELP_CONTENT_ADMINEMAIL2', "Please re-enter the email address. This
 define('TEXT_HELP_TITLE_ADMINPASSWORD', 'Admin Superuser Password');
 define('TEXT_HELP_CONTENT_ADMINPASSWORD', "REMEMBER THIS PASSWORD!!!!! This is the default password assigned to the admin username you specified above. You may be asked to change it on first login (thus you can personalize it a bit more at that time). You can always manually change it anytime while you're logged into your Admin.<br><br><strong>REMEMBER THIS PASSWORD, because you will need it to log in to your store!</strong>");
 define('TEXT_HELP_TITLE_ADMINDIRECTORY', 'Admin Directory');
-define('TEXT_HELP_CONTENT_ADMINDIRECTORY', "We try to rename your admin folder for you automatically, to offer a degree of security-by-obscurity. While we understand that this doesn't make it foolproof, it does discourage unauthorized visitors from attacking your site. You may still consider changing the foldername yourself (just rename the folder to whatever you wish it to be).");
+define('TEXT_HELP_CONTENT_ADMINDIRECTORY', "We try to rename your admin folder for you automatically, to offer a degree of security-by-obscurity. While we understand that this doesn't make it foolproof, it does discourage unauthorized visitors from attacking your site. You may still consider changing the foldername yourself (just rename the folder to whatever you wish it to be, by using your FTP program or your hosting company's File Manager tool in your hosting control panel).");
 
 define('TEXT_VERSION_CHECK_NEW_VER', 'New Version Available v');
 define('TEXT_VERSION_CHECK_NEW_PATCH', 'New PATCH Available: v');
