@@ -206,6 +206,7 @@ systemChecks:
     runLevel: always
     errorLevel: WARN
     mainErrorText: <?php echo TEXT_ERROR_CURL .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdCheckCurl
     methods:
       checkExtension:
         parameters:
