@@ -83,7 +83,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'objectName'=>'zcPassword');
 
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.zcRequest.php');
+                               'loadFile'=>'Request.php');
 
   $autoLoadConfig [0] [] = array(
       'autoType' => 'class',

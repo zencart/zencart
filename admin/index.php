@@ -9,6 +9,7 @@
 if (!isset($_GET['cmd']))
 {
   $cmd = str_replace('.php', '', basename($_SERVER['SCRIPT_FILENAME']));
+  $_GET['cmd'] = $cmd;
 
   // Only redirect if not a request for "index.php"
   if($cmd != 'index') {
@@ -17,7 +18,6 @@ if (!isset($_GET['cmd']))
   }
 
   // Populate the command and continue
-  $_GET['cmd'] = $cmd;
   unset($cmd);
 }
 $controllerCommand = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET ['cmd']);
