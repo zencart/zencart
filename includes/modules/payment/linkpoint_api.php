@@ -278,7 +278,7 @@ class linkpoint_api extends base {
     $myorder = array();
 
     // Calculate the next expected order id
-    $last_order_id = $db->Execute("select * from " . TABLE_ORDERS . " order by orders_id desc limit 1");
+    $last_order_id = $db->Execute("select orders_id from " . TABLE_ORDERS . " order by orders_id desc limit 1");
     $new_order_id = $last_order_id->fields['orders_id'];
     $new_order_id = ($new_order_id + 1);
     // add randomized suffix to order id to produce uniqueness ... since it's unwise to submit the same order-number twice to the gateway
