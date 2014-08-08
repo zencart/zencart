@@ -322,7 +322,7 @@ class authorizenet_aim extends base {
     $order_time = date("F j, Y, g:i a");
 
     // Calculate the next expected order id (adapted from code written by Eric Stamper - 01/30/2004 Released under GPL)
-    $last_order_id = $db->Execute("select * from " . TABLE_ORDERS . " order by orders_id desc limit 1");
+    $last_order_id = $db->Execute("select orders_id from " . TABLE_ORDERS . " order by orders_id desc limit 1");
     $new_order_id = $last_order_id->fields['orders_id'];
     $new_order_id = ($new_order_id + 1);
 
