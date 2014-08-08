@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "php": "~5.3"
+        "php": "~5.3",
+        "codeception/codeception": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
