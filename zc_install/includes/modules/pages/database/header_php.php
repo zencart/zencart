@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -15,10 +15,6 @@ $sqlCacheType = array(array('id' => 'none', 'text' => TEXT_DATABASE_SETUP_CACHE_
 $sqlCacheTypeOptions = zen_get_select_options($sqlCacheType, isset($sql_cache_method) ? $sql_cache_method : '');
 $db_host = isset($db_host) ? $db_host : 'localhost';
 $db_name = isset($db_name) ? $db_name : 'zencart';
-if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
-  $db_user = (isset($db_user)) ? $db_user : 'zencart';
-  $db_password = (isset($db_password)) ? $db_password : 'zencart';
-}
 
 // attempt to intelligently manage user-adjusted subdirectory values if they are different from detected defaults
 if ($_POST['http_server_catalog'] != $_POST['detected_http_server_catalog']) $_POST['dir_ws_http_catalog'] = rtrim(str_replace($_POST['http_server_catalog'], '', $_POST['http_url_catalog']), '/') .'/';
