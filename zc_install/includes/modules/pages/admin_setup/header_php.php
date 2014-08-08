@@ -16,7 +16,7 @@
     $adminDir = $adminNewDir;
   }
 // echo '<pre>'. print_r($_POST, TRUE) . '</pre>';
-   if (defined('DEVELOPER_MODE') && DEVELOPER_MODE == true)
+   if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true)
    {
      $admin_password = 'developer1';
    } else {

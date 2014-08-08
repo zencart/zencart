@@ -14,6 +14,11 @@ if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {
   require (DIR_FS_INSTALL . 'includes/localConfig.php');
 }
 
+$envHabitat = getenv('HABITAT') ;
+if ($envHabitat == 'zencart' || $_SERVER['USER'] == 'vagrant') {
+  define('DEVELOPER_MODE', true);
+}
+
 $controller = 'main';
 /* detect CLI params */
 if (isset($argc) && $argc > 0) {

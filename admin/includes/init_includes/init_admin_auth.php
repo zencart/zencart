@@ -12,8 +12,14 @@ define('SUPERUSER_PROFILE', 1);
 $page = zcRequest::readGet('cmd', basename($PHP_SELF, ".php"));
 $hasDoneStartWizard = TRUE;
 
+$val = getenv('HABITAT');
+$habitat = false;
+if ($val == 'zencart' || $_SERVER['USER'] == 'vagrant') {
+  $habitat = true;
+}
+
 // admin folder rename required
-if (! defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')
+if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '') && ($habitat == false))
 {
   if ($page != FILENAME_ALERT_PAGE)
   {
