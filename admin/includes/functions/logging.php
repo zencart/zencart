@@ -53,7 +53,7 @@ function zen_record_admin_activity($data = '', $specific_message = '', $severity
   }
   $sql_data_array = array( 'access_date' => 'now()',
           'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
-          'page_accessed' =>  Request::readGet('cmd') . (!isset($_SESSION['admin_id']) || (int)$_SESSION['admin_id'] == 0 ? ' ' . (isset($data['admin_name']) ? $data['admin_name'] : (isset($data['admin_email']) ? $data['admin_email'] : '') ) : ''),
+          'page_accessed' =>  zcRequest::readGet('cmd') . (!isset($_SESSION['admin_id']) || (int)$_SESSION['admin_id'] == 0 ? ' ' . (isset($data['admin_name']) ? $data['admin_name'] : (isset($data['admin_email']) ? $data['admin_email'] : '') ) : ''),
           'page_parameters' => implode("\n", array(preg_replace('/(&amp;|&)$/', '', zen_get_all_get_params()), $specific_message)),
           'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
           'gzpost' => $gzpostdata,
