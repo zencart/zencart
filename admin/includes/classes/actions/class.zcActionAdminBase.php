@@ -102,7 +102,7 @@ abstract class zcActionAdminBase extends base
   public function invoke()
   {
     $this->controllerAction = 'main';
-    $tmp = Request::get('action', Request::get('action', 'main', 'post'), 'get');
+    $tmp = zcRequest::get('action', zcRequest::get('action', 'main', 'post'), 'get');
     if ($tmp = preg_replace('/[^a-zA-Z0-9_-]/', '', $tmp)) {
       $this->controllerAction = $tmp;
     }

@@ -9,7 +9,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-Request::init();
+zcRequest::init();
 /**
  * set the type of request (secure or not)
  */
@@ -24,7 +24,7 @@ $request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) ==
                  (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
 
 // set php_self in the local scope
-//  $PHP_SELF = Request::hasGet('cmd')  ? Request::readGet('cmd') .'.php' : $_SERVER['PHP_SELF'];
+  $PHP_SELF = zcRequest::hasGet('cmd')  ? zcRequest::readGet('cmd') .'.php' : $_SERVER['PHP_SELF'];
 
 // include the list of project filenames
   require(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'filenames.php');
