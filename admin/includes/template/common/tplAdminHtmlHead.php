@@ -27,7 +27,7 @@
   <?php } ?>
 <?php } ?>
 
-<script src="includes/template/javascript/foundation/custom.modernizr.js"></script>
+<script src="includes/template/javascript/foundation/modernizr.js"></script>
 
 <?php /** CDN for jQuery core **/ ?>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
