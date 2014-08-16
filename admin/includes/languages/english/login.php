@@ -21,9 +21,8 @@ define('ERROR_SECURITY_ERROR', 'There was a security error when trying to login.
 
 define('TEXT_PASSWORD_FORGOTTEN', 'Forgot Password');
 
-define('LOGIN_EXPIRY_NOTICE', 'Please be aware that after 15 minutes of inactivity, you will be required to login again.');
-define('LOGIN_EXPIRY_NOTICE_NONCOMPLIANT', 'Please be aware that after');
-define('LOGIN_EXPIRY_NOTICE_NONCOMPLIANT2', 'minutes of inactivity, you will be required to login again.');
+define('LOGIN_EXPIRY_NOTICE_PART1', 'Please be aware that after');
+define('LOGIN_EXPIRY_NOTICE_PART2', 'minutes of inactivity, you will be required to login again.');
 define('LOGIN_PASSWORD_EXPIRY_NOTICE', 'Note: All passwords expire after 90 days, at which time you will be prompted for a new password.');
 define('ERROR_PASSWORD_EXPIRED', 'NOTE: Your password has expired. Please select a new password. Your password <strong>must contain both NUMBERS and LETTERS and minimum 7 characters.</strong>');
 define('TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED', 'For security reasons, your temporary password needs to be changed. Please select a new password.<br />Your password <strong>must contain both NUMBERS and LETTERS and minimum 7 characters.</strong>');
