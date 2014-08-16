@@ -118,7 +118,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
       } else {
         $sessTimeAdm = round(SESSION_TIMEOUT_ADMIN/60);
       }
-        echo LOGIN_EXPIRY_NOTICE_PART1 . ' ' . $sessTimeAdm . ' ' . LOGIN_EXPIRY_NOTICE_PART2;  
+        echo sprintf(LOGIN_EXPIRY_NOTICE, $sessTimeAdm);
       ?>
     </div>
     <?php if (PADSS_PWD_EXPIRY_ENFORCED == 1) { ?>
