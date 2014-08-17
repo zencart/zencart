@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: zones.php 14498 2009-10-01 20:16:16Z ajeh $
@@ -253,7 +253,12 @@ class zones extends base {
     $dest_zone = 0;
     $error = false;
 
-    $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices() ;
+    // works on adjusted weight, total and count in cart
+    $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
+    $order_total_item = $total_count - $_SESSION['cart']->free_shipping_items();
+    $order_total_weight = $shipping_weight;
+
+//@@TODO - add new NOTIFIER
 
     for ($i=1; $i<=$this->num_zones; $i++) {
       $countries_table = constant('MODULE_SHIPPING_ZONES_COUNTRIES_' . $i);
@@ -282,7 +287,7 @@ class zones extends base {
       for ($i=0; $i<$size; $i+=2) {
         switch (MODULE_SHIPPING_ZONES_METHOD) {
           case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
-            if (round($shipping_weight,9) <= $zones_table[$i]) {
+            if (round($order_total_weight,9) <= $zones_table[$i]) {
               $shipping = $zones_table[$i+1];
 
               switch (SHIPPING_BOX_WEIGHT_DISPLAY) {
@@ -293,10 +298,10 @@ class zones extends base {
                 $show_box_weight = ' (' . $shipping_num_boxes . ' ' . TEXT_SHIPPING_BOXES . ')';
                 break;
               case (2):
-                $show_box_weight = ' (' . number_format($shipping_weight * $shipping_num_boxes,2) . MODULE_SHIPPING_ZONES_TEXT_UNITS . ')';
+                $show_box_weight = ' (' . number_format($order_total_weight * $shipping_num_boxes,2) . MODULE_SHIPPING_ZONES_TEXT_UNITS . ')';
                 break;
               default:
-                $show_box_weight = ' (' . $shipping_num_boxes . ' x ' . number_format($shipping_weight,2) . MODULE_SHIPPING_ZONES_TEXT_UNITS . ')';
+                $show_box_weight = ' (' . $shipping_num_boxes . ' x ' . number_format($order_total_weight,2) . MODULE_SHIPPING_ZONES_TEXT_UNITS . ')';
                 break;
               }
 
@@ -308,7 +313,7 @@ class zones extends base {
                   break;
                 case (strstr($zones_table[$i+1], '*')):
                   if (MODULE_SHIPPING_ZONES_METHOD == 'Item') {
-                    $shipping = (($total_count - $_SESSION['cart']->free_shipping_items()) * $zones_table[$i+1]);
+                    $shipping = ($order_total_item * $zones_table[$i+1]);
                   } else {
                     $skip_shipping = true;
                   }
@@ -330,7 +335,7 @@ class zones extends base {
             break;
           case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
 // shipping adjustment
-            if (($_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices()) <= $zones_table[$i]) {
+            if ($order_total_amount <= $zones_table[$i]) {
               $shipping = $zones_table[$i+1];
               $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
 
@@ -341,7 +346,7 @@ class zones extends base {
                   break;
                 case (strstr($zones_table[$i+1], '*')):
                   if (MODULE_SHIPPING_ZONES_METHOD == 'Item') {
-                    $shipping = (($total_count - $_SESSION['cart']->free_shipping_items()) * $zones_table[$i+1]);
+                    $shipping = ($order_total_item * $zones_table[$i+1]);
                   } else {
                     $skip_shipping = true;
                   }
@@ -363,7 +368,7 @@ class zones extends base {
             break;
           case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
 // shipping adjustment
-            if (($total_count - $_SESSION['cart']->free_shipping_items()) <= $zones_table[$i]) {
+            if ($order_total_item <= $zones_table[$i]) {
               $shipping = $zones_table[$i+1];
               $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
               $done = true;
@@ -373,7 +378,7 @@ class zones extends base {
                   break;
                 case (strstr($zones_table[$i+1], '*')):
                   if (MODULE_SHIPPING_ZONES_METHOD == 'Item') {
-                    $shipping = (($total_count - $_SESSION['cart']->free_shipping_items()) * $zones_table[$i+1]);
+                    $shipping = ($order_total_item * $zones_table[$i+1]);
                   } else {
                     $skip_shipping = true;
                   }
@@ -425,12 +430,15 @@ class zones extends base {
       }
     }
 
+    // calculate final shipping cost
+    $final_shipping_cost = $shipping_cost;
+
     if (!$skip_shipping) {
       $this->quotes = array('id' => $this->code,
                             'module' => MODULE_SHIPPING_ZONES_TEXT_TITLE,
                             'methods' => array(array('id' => $this->code,
                                                      'title' => $shipping_method,
-                                                     'cost' => $shipping_cost)));
+                                                     'cost' => $final_shipping_cost)));
     } else {
       // skip display of shipping
     }
