@@ -2291,5 +2291,27 @@ class shoppingCart extends base {
     } // end FOR loop
     return $in_cart_product_price;
   }
+/**
+ * calculate products_id quantity in cart regardless of attributes
+ * USAGE:  $product_total_quantity = $this->in_cart_product_total_quantity(12);
+ * USAGE:  $chk_product_cart_total_quantity = $_SESSION['cart']->in_cart_product_total_quantity(12);
+ *
+ * @param str $product_id
+ */
+  function in_cart_product_total_quantity($product_id) {
+    $products = $this->get_products();
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+    $in_cart_product_quantity = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      $productsName = $products[$i]['name'];
+      if ((int)$product_id == (int)$products[$i]['id']) {
+//        echo 'GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $in_cart_product_quantity: ' . $in_cart_product_quantity . '<br><br>';
+        $in_cart_product_quantity += $products[$i]['quantity'];
+      } else {
+//        echo 'NOT GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $in_cart_product_quantity: ' . $in_cart_product_quantity . '<br><br>';
+      }
+    } // end FOR loop
+    return $in_cart_product_quantity;
+  }
 
 }
