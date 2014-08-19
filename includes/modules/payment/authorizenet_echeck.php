@@ -325,7 +325,7 @@ class authorizenet_echeck extends base {
     $order_time = date("F j, Y, g:i a");
 
     // Calculate the next expected order id
-    $last_order_id = $db->Execute("select * from " . TABLE_ORDERS . " order by orders_id desc limit 1");
+    $last_order_id = $db->Execute("select orders_id from " . TABLE_ORDERS . " order by orders_id desc limit 1");
     $new_order_id = $last_order_id->fields['orders_id'];
     $new_order_id = ($new_order_id + 1);
     $new_order_id = (string)$new_order_id . '-' . zen_create_random_value(6, 'chars');
