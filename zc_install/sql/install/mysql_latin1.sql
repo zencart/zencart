@@ -569,3 +569,25 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VI','Vicenza');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VT','Viterbo');
 
+# Norway
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'AK', 'Akershus');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'AA', 'Aust-Agder');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'BU', 'Buskerud');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'FI', 'Finnmark');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'HE', 'Hedmark');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'HO', 'Hordaland');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'MR', 'M&oslash;re og Romsdal');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'NT', 'Nord-Tr&oslash;ndelag');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'NL', 'Nordland');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'OF', '&Oslash;stfold');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'OP', 'Oppland');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'OS', 'Oslo');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'RO', 'Rogaland');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'ST', 'S&oslash;r-Tr&oslash;ndelag');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'SF', 'Sogn og Fjordane');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'SV', 'Svalbard');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'TE', 'Telemark');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'TR', 'Troms');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'VA', 'Vest-Agder');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 160, 'VF', 'Vestfold');
+
