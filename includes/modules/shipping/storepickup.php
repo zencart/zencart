@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: storepickup.php 14498 2009-10-01 20:16:16Z ajeh $
@@ -141,24 +141,34 @@ class storepickup extends base {
     $methodsToParse = ($ways_translated == '') ? $ways_default : $ways_translated;
 
     if ($methodsToParse == '') {
+
+      // calculate final shipping cost
+      $final_shipping_cost = MODULE_SHIPPING_STOREPICKUP_COST;
+
       $this->methodsList[] = array('id' => $this->code,
                                    'title' => trim((string)MODULE_SHIPPING_STOREPICKUP_TEXT_WAY),
-                                   'cost' => MODULE_SHIPPING_STOREPICKUP_COST);
+                                   'cost' => $final_shipping_cost);
     } else {
       $this->locations = explode(';', (string)$methodsToParse);
       $this->methodsList = array();
       foreach ($this->locations as $key => $val)
       {
+        if ($val == null) continue; // handles trailing semicolons
+        $val = trim($val); // handles pre/post spaces around the semicolons
         if ($method != '' && $method != $this->code . (string)$key) continue;
         $cost = MODULE_SHIPPING_STOREPICKUP_COST;
         $title = $val;
         if (strstr($val, ',')) {
           list($title, $cost) = explode(',', $val);
+          $cost = trim($cost); // also for pre/post spaces around separating commas
         }
+
+        // calculate final shipping cost
+        $final_shipping_cost = $cost;
 
         $this->methodsList[] = array('id' => $this->code . (string)$key,
                                      'title' => trim($title),
-                                     'cost' => $cost);
+                                     'cost' => $final_shipping_cost);
       }
     }
 

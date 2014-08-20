@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: freeshipper.php 14498 2009-10-01 20:16:16Z ajeh $
@@ -129,11 +129,14 @@ class freeshipper extends base {
   function quote($method = '') {
     global $order;
 
+    // calculate final shipping cost
+    $final_shipping_cost = MODULE_SHIPPING_FREESHIPPER_COST + MODULE_SHIPPING_FREESHIPPER_HANDLING;
+
     $this->quotes = array('id' => $this->code,
                           'module' => MODULE_SHIPPING_FREESHIPPER_TEXT_TITLE,
                           'methods' => array(array('id' => $this->code,
                                                    'title' => MODULE_SHIPPING_FREESHIPPER_TEXT_WAY,
-                                                   'cost' => MODULE_SHIPPING_FREESHIPPER_COST + MODULE_SHIPPING_FREESHIPPER_HANDLING)));
+                                                   'cost' => $final_shipping_cost)));
 
     if ($this->tax_class > 0) {
       $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
