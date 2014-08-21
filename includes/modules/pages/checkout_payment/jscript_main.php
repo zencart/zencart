@@ -12,6 +12,12 @@
 <script language="javascript" type="text/javascript"><!--
 var selected;
 var submitter = null;
+
+function concatExpiresFields(fields) {
+    return $(":input[name=" + fields[0] + "]").val() + $(":input[name=" + fields[1] + "]").val();
+}
+
+
 function popupWindow(url) {
   window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=320,screenX=150,screenY=150,top=150,left=150')
 }
@@ -45,7 +51,7 @@ function collectsCardDataOnsite(paymentValue)
    $('#checkoutPayment').hide();
    $('#navBreadCrumb').html(response.breadCrumbHtml);
    $('#checkoutPayment').before(response.confirmationHtml);
-	 $(document).attr('title', response.pageTitle);
+   $(document).attr('title', response.pageTitle);
 
    });
   } else {

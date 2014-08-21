@@ -289,8 +289,8 @@ class authorizenet_aim extends base {
     return $process_button_string;
   }
   function process_button_ajax() {
-    $processButton = array('ccFields'=>array('cc_owner'=>'authorizenet_aim_cc_owner', 'cc_cvv'=>'authorizenet_aim_cc_cvv', 'cc_expires_month'=>'authorizenet_aim_cc_expires_month', 'cc_expires_year'=>'authorizenet_aim_cc_expires_year'), 'extraFields'=>array(zen_session_name()=>zen_session_id()));
-    return $processButton;
+    $processButton = array('ccFields'=>array('cc_number'=>'authorizenet_aim_cc_number', 'cc_owner'=>'authorizenet_aim_cc_owner', 'cc_cvv'=>'authorizenet_aim_cc_cvv', 'cc_expires'=>array('name'=>'concatExpiresFields', 'args'=>"['authorizenet_aim_cc_expires_month','authorizenet_aim_cc_expires_year']"), 'cc_expires_month'=>'authorizenet_aim_cc_expires_month', 'cc_expires_year'=>'authorizenet_aim_cc_expires_year'), 'extraFields'=>array(zen_session_name()=>zen_session_id()));
+        return $processButton;
   }
   /**
    * Store the CC info to the order and process any results that come back from the payment gateway
