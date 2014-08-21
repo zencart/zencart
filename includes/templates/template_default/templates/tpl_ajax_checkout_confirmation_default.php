@@ -196,7 +196,7 @@ $(document).ready(function () {
      $(":input[name='<?php echo $newField; ?>']").val(oldField);
     });
 </script>
-+<?php } ?>
+<?php } ?>
 <?php
        }
      }
