@@ -185,7 +185,7 @@
 <?php if (!is_array($oldField)) { ?>
 <script>
 $(document).ready(function () {
-  $(":input[name='<?php echo $newField; ?>']").val($(":input[name='<?php echo $oldField; ?>']").val());
+    $(":input[name='<?php echo $newField; ?>']").val($(":input[name='<?php echo $oldField; ?>']").val());
 });
 </script>
 <?php } else { ?>
