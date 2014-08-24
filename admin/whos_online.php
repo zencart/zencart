@@ -202,7 +202,7 @@ function zen_check_minutes($the_time_last_click) {
   // -->
 </script>
 <style>
-<!-- inline CSS Styles
+<!-- inline-CSS-Styles
 .whos-online td {
   color:#444;
   font-family:Helvetica, Arial, sans-serif;
