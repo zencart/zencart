@@ -202,7 +202,7 @@ function zen_check_minutes($the_time_last_click) {
   // -->
 </script>
 <style>
-<!-- inline-CSS-Styles
+/* inline CSS Styles */
 .whos-online td {
   color:#444;
   font-family:Helvetica, Arial, sans-serif;
@@ -228,7 +228,6 @@ function zen_check_minutes($the_time_last_click) {
 #wo-filters { float: right; background-color: #599659; color: #fff}
 #wo-filters .optionClick { display: inline-block; color: #fff; border: 1px solid #fff; font-weight: bold; padding: 1px; margin: 2px 1px;}
 #wo-filters .chosen {background-color: #003D00;}
--->
 </style>
 </head>
 <body onLoad="init()">
