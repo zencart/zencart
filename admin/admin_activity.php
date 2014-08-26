@@ -414,7 +414,7 @@ require (DIR_WS_INCLUDES . 'header.php');
         <td align="center"><table border="0" cellspacing="0" cellpadding="2">
       <tr><td><h2><?php echo HEADING_SUB2; ?></h2></td></tr>
           <tr>
-            <td class=<?php echo ($_SESSION['reset_admin_activity_log'] == true ? "alert" : "main"); ?> align="left" valign="top"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></td>
+            <td class="<?php echo ($_SESSION['reset_admin_activity_log'] == true ? "alert" : "main"); ?>" align="left" valign="top"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></td>
             <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>'; ?></td>
           </tr>
         </table></td>
