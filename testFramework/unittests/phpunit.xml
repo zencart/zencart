@@ -25,6 +25,10 @@
       <directory suffix="Test.php">admin/functions</directory>
     </testsuite>
     
+    <testsuite name="Catalog">
+      <directory suffix="Test.php">catalog</directory>
+    </testsuite>
+    
   </testsuites>
   
   <logging>
