@@ -55,10 +55,14 @@ class breadcrumb extends base {
         if ($this->_trail[$i]['title'] == HEADER_TITLE_CATALOG) {
           $trail_string .= '  <a href="' . ($request_type != 'SSL' ? HTTP_SERVER . DIR_WS_CATALOG : HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) . '">' . $this->_trail[$i]['title'] . '</a>';
         } else {
-          $trail_string .= '  <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">' . '<a itemprop="url" href="' . $this->_trail[$i]['link'] . '">' . '<span itemprop="title">' . $this->_trail[$i]['title'] . '</span>' . '</a>' . '</span>';
+          $trail_string .= '  <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a itemprop="url" href="' . 
+                           $this->_trail[$i]['link'] . '"><span itemprop="title">' . 
+                           $this->_trail[$i]['title'] . '</span></a></span>';
         }
       } else {
-        if ($i==($n-1)) $trail_string .= '  <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">' . '<link itemprop="url" href="' . $this->_trail[$i]['link'] . '" />' . $this->_trail[$i]['title'] . '</span>';
+        if ($i==($n-1)) $trail_string .= '  <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><link itemprop="url" href="' . 
+                                         $this->_trail[$i]['link'] . '" />' . 
+                                         $this->_trail[$i]['title'] . '</span>';
       }
 
       if (($i+1) < $n) $trail_string .= $separator;
