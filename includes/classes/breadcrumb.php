@@ -9,7 +9,7 @@
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 
 /**
@@ -17,39 +17,77 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package classes
  */
-class breadcrumb implements Countable {
-  /** @var string */
-  const DEFAULT_SEPERATOR = '&nbsp;&nbsp;';
-  
-  /** @var array title: string => link: string */
-  private $links = array();
-  
-  /**
-   * @param array $links title: string => link: string
-   */
-  public function __construct(array $links = array()) {
-    foreach ($links as $title => $link) {
-      $this->add($title, $link);
+class breadcrumb implements Countable
+{
+    /** @var string */
+    const DEFAULT_SEPERATOR = '&nbsp;&nbsp;';
+    
+    /** @var array title: string => link: string */
+    private $links = array();
+    
+    /**
+     * @param array $links title: string => link: string
+     */
+    public function __construct(array $links = array())
+    {
+        foreach ($links as $title => $link) {
+            $this->add($title, $link);
+        }
     }
-  }
-  
-  /**
-   * Clear the links array
-   */
-  public function reset() {
-    $this->links = array();
-  }
-  
-  /**
-   * Add a breadcrumb link
-   * 
-   * @param  string $title the link title
-   * @param  string $link  the link href
-   * @throws InvalidArgumentException when either title or link are empty
-   */
-  public function add($title, $link = '#') {
-    if (empty($title) || empty($link)) {
-      throw new InvalidArgumentException("Both title and link must not be empty.");
+    
+    /**
+     * Clear the links array
+     */
+    public function reset()
+    {
+        $this->links = array();
+    }
+    
+    /**
+     * Add a breadcrumb link
+     * 
+     * @param  string $title the link title
+     * @param  string $link  the link href
+     * @throws InvalidArgumentException when either title or link are empty
+     */
+    public function add($title, $link = '#')
+    {
+        if (empty($title) || empty($link)) {
+            throw new InvalidArgumentException("Both title and link must not be empty.");
+        }
+        $this->links[(string) $title] = (string) $link;
+    }
+    
+    /**
+     * Generate an html breadcrumb string
+     * 
+     * @param  string $seperator the string that seperates each crumb
+     * @return string
+     */
+    public function trail($seperator = self::DEFAULT_SEPERATOR)
+    {
+        $trail     = '<nav class="breadcrumb">';
+        $lastTitle = end(array_keys($this->links));
+        
+        foreach ($this->links as $title => $link) {
+            $trail .= '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" class="crumb">';
+            $href   = $this->buildHref($title, $link);
+            $label  = '<span itemprop="title" class="title">' . $title . '</span>';
+            
+            $trail .= ($title == $lastTitle)
+                ? '<link itemprop="url" href="' . $href . '" class="link" />' . $label
+                : '<a itemprop="url" href="' . $href . '" class="link">' . $label . '</a>';
+            
+            $trail .= '</span>' . $seperator;
+        }
+        
+        return rtrim($trail, $seperator) . "</nav>\n";
+    }
+    
+    /** @return int */
+    public function count()
+    {
+        return count($this->links);
     }
     $this->links[(string) $title] = (string) $link;
   }
@@ -94,31 +132,19 @@ class breadcrumb implements Countable {
       $trail_string .= "\n";
     }
     
-    return rtrim($trail, $seperator) . "</nav>\n";
-  }
-  
-  /** @return int */
-  public function count() {
-    return count($this->links);
-  }
-  
-  /** @return string */
-  public function __toString() {
-    return $this->trail();
-  }
-  
-  /**
-   * If the crumb title matches the catalog header title, use the appropriate site url
-   * 
-   * @param  string $title the crumb title
-   * @param  string $link  the default href
-   * @return string
-   */
-  private function buildHref($title, $link) {
-    global $request_type;
-    if ($title == HEADER_TITLE_CATALOG) {
-      return ($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG;
+    /**
+     * If the crumb title matches the catalog header title, use the appropriate site url
+     * 
+     * @param  string $title the crumb title
+     * @param  string $link  the default href
+     * @return string
+     */
+    private function buildHref($title, $link)
+    {
+        global $request_type;
+        if ($title == HEADER_TITLE_CATALOG) {
+            return ($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG;
+        }
+        return $link;
     }
-    return $link;
-  }
 }
