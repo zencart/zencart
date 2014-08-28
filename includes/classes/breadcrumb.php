@@ -2,12 +2,12 @@
 /**
  * breadcrumb Class.
  *
- * @package classes
+ * @package   classes
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: breadcrumb.php 3147 2006-03-10 00:43:57Z drbyte $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
@@ -17,28 +17,64 @@ if (!defined('IS_ADMIN_FLAG')) {
  * If you desire to have the older behaviour of having all product and category items in the breadcrumb be shown as links
  * then you should add a define() for this item in the extra_datafiles folder and set it to 'false' instead of 'true':
  */
-if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM','true');
+if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) {
+  define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM', true);
+}
 
 /**
- * breadcrumb Class.
- * Class to handle page breadcrumbs
+ * Generates breadcrumb links
  *
  * @package classes
  */
-class breadcrumb extends base {
-  var $_trail;
-
-  function breadcrumb() {
-    $this->reset();
+class breadcrumb implements Countable {
+  /** @var string */
+  const DEFAULT_SEPERATOR = '&nbsp;&nbsp;';
+  
+  /** @var array */
+  private $links = array();
+  
+  /**
+   * @param array $links           title => link
+   * @param bool  $disableLastLink don't render the last item as an anchor link
+   */
+  public function __construct(array $links = array()) {
+    foreach ($links as $title => $link) {
+      $this->add($title, $link);
+    }
   }
-
-  function reset() {
-    $this->_trail = array();
+  
+  /**
+   * Clear the links array
+   */
+  public function reset() {
+    $this->links = array();
   }
-
-  function add($title, $link = '') {
-    $this->_trail[] = array('title' => $title, 'link' => $link);
+  
+  /**
+   * Add a breadcrumb link
+   * 
+   * @param  string $title the link title
+   * @param  string $link  the link href
+   * @throws InvalidArgumentException when either title or link are empty
+   */
+  public function add($title, $link) {
+    if (empty($link) || empty($title)) {
+      throw new InvalidArgumentException("Both title and link must not be empty.");
+    }
+    $this->links[] = array('title' => (string) $title, 'link' => (string) $link);
   }
+  
+  /**
+   * Generate an html breadcrumb string
+   * 
+   * @param  string $seperator       the string that seperates each crumb
+   * @param  bool   $disableLastLink don't render an html anchor tag for the last crumb
+   * @return string
+   */
+  public function trail($seperator = self::DEFAULT_SEPERATOR, $disableLastLink = DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM) {
+    $lastLinkDisabled = ($disableLastLink == 'true' || ($disableLastLink != 'false' && $disableLastLink));
+    $trail            = '<nav class="breadcrumb">';
+    $lastTitle        = $this->links[$this->count() - 1]['title'];
 
   function trail($separator = '&nbsp;&nbsp;') {
     global $request_type;
@@ -69,11 +105,30 @@ class breadcrumb extends base {
       $trail_string .= "\n";
     }
 
-    return $trail_string;
+    return trim($trail, $seperator) . "</nav>\n";
   }
-
-  function last() {
-    $trail_size = sizeof($this->_trail);
-    return $this->_trail[$trail_size-1]['title'];
+  
+  /** @return int */
+  public function count() {
+    return count($this->links);
+  }
+  
+  /** @return string */
+  public function __toString() {
+    return $this->trail();
+  }
+  
+  /**
+   * If the crumb title matches the catalog header title, use the appropriate site url
+   * 
+   * @param  array  $crumb
+   * @return string
+   */
+  private function buildHref(array $crumb) {
+    global $request_type;
+    if ($crumb['title'] == HEADER_TITLE_CATALOG) {
+      return ($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG;
+    }
+    return $crumb['link'];
   }
 }
