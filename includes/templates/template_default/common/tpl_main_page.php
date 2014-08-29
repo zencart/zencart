@@ -82,7 +82,7 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
     <td valign="top">
 <!-- bof  breadcrumb -->
 <?php if (DEFINE_BREADCRUMB_STATUS == '1' || (DEFINE_BREADCRUMB_STATUS == '2' && !$this_is_home_page) ) { ?>
-    <div id="navBreadCrumb" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><?php echo $breadcrumb->trail(BREAD_CRUMBS_SEPARATOR); ?></div>
+    <div id="navBreadCrumb"><?php echo $breadcrumb->trail(BREAD_CRUMBS_SEPARATOR); ?></div>
 <?php } ?>
 <!-- eof breadcrumb -->
 
