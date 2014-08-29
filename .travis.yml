@@ -24,10 +24,6 @@ addons:
 
 services: memcached
 
-before_install:
-  - git submodule update --init --recursive
-  
-
 install:
   - composer install --dev --no-interaction
 
