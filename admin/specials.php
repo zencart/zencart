@@ -77,6 +77,8 @@
         break;
       case 'insert_category':
         $skip_specials = ($_POST['skip_specials'] == 'skip_specials_yes');
+        $price_range_from = $_POST['price_range_from'];
+        $price_range_to = $_POST['price_range_to'];
         $include_subcategories = ($_POST['include_subcategories'] == 'include_subcategories_yes');
         $include_inactive = ($_POST['include_inactive'] == 'include_inactive_yes');
         if ($_POST['categories_id'] < 1 || empty($_POST['specials_price'])) {
@@ -88,10 +90,22 @@
           $categories_products_id_list = '';
           $products_id_list = zen_get_categories_products_list($_POST['categories_id'], $include_inactive, $include_subcategories);
           if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_added = false;
             // build products list
             foreach($products_id_list as $key => $value) {
               $new_specials_products_id = $value;
               $products_id = zen_db_prepare_input($new_specials_products_id);
+              // check if a price range is set
+              if ($price_range_from > 0 || $price_range_to > 0) {
+                $products_price_normal = zen_get_products_base_price($products_id);
+                if ($products_price_normal >= $price_range_from && $products_price_normal <= $price_range_to) {
+                  // add the new special
+                } else {
+                  // skip adding the special as products_price is out of price range
+                  continue;
+                }
+              }
+
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
               // check if product has a special and skip if skip_specials
@@ -130,12 +144,19 @@
                                   '" . zen_db_input($specials_price) . "',
                                   now(),
                                   '" . zen_db_input($expires_date) . "', '1', '" . zen_db_input($specials_date_available) . "')");
+              $special_added = true;
 
-              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
-
+//@@TODO - remove $new_special not used?
+//              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
               // reset products_price_sorter for searches etc.
               zen_update_products_price_sorter((int)$products_id);
             }
+            if ($special_added) {
+              $messageStack->add_session(SUCCESS_SPECIALS_UPDATED_CATEGORY . $_POST['categories_id'] . ' ' . SUCCESS_SPECIALS_PRICE_SET . $_POST['specials_price'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']) . ' ' . SUCCESS_SPECIALS_PRICE_SET . $_POST['specials_price'], 'caution');
+            }
+            zen_redirect(zen_href_link(FILENAME_SPECIALS));
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
             zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
@@ -156,6 +177,7 @@
           $categories_products_id_list = '';
           $products_id_list = zen_get_categories_products_list($_POST['categories_id'], $include_inactive, $include_subcategories);
           if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_removed = false;
             // build products list
             foreach($products_id_list as $key => $value) {
               $new_specials_products_id = $value;
@@ -165,10 +187,15 @@
               // check if product has a special
               if (!$chk_special->EOF) {
                 $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                $special_removed = true;
+                // reset products_price_sorter for searches etc.
+                zen_update_products_price_sorter((int)$products_id);
               }
-
-              // reset products_price_sorter for searches etc.
-              zen_update_products_price_sorter((int)$products_id);
+            }
+            if ($special_removed) {
+              $messageStack->add_session(SUCCESS_SPECIALS_REMOVED_CATEGORY . $_POST['categories_id'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
             }
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
@@ -180,6 +207,8 @@
 
       case 'insert_manufacturer':
         $skip_specials = ($_POST['skip_specials'] == 'skip_specials_yes');
+        $price_range_from = $_POST['price_range_from'];
+        $price_range_to = $_POST['price_range_to'];
 
         if ($_POST['manufacturer_id'] < 1 || empty($_POST['specials_price'])) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_MANUFACTURER, 'caution');
@@ -194,10 +223,21 @@
             $chk_special->MoveNext();
           }
           if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_added = false;
             // build products list
             foreach($products_id_list as $key => $value) {
               $new_specials_products_id = $value;
               $products_id = zen_db_prepare_input($new_specials_products_id);
+              // check if a price range is set
+              if ($price_range_from > 0 || $price_range_to > 0) {
+                $products_price_normal = zen_get_products_base_price($products_id);
+                if ($products_price_normal >= $price_range_from && $products_price_normal <= $price_range_to) {
+                  // add the new special
+                } else {
+                  // skip adding the special as products_price is out of price range
+                  continue;
+                }
+              }
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
               // check if product has a special and skip if skip_specials
@@ -236,12 +276,19 @@
                                   '" . zen_db_input($specials_price) . "',
                                   now(),
                                   '" . zen_db_input($expires_date) . "', '1', '" . zen_db_input($specials_date_available) . "')");
+              $special_added = true;
 
-              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
-
+//@@TODO - remove $new_special not used?
+//              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
               // reset products_price_sorter for searches etc.
               zen_update_products_price_sorter((int)$products_id);
             }
+            if ($special_added) {
+              $messageStack->add_session(SUCCESS_SPECIALS_UPDATED_MANUFACTURER . $_POST['manufacturer_id'] . ' ' . SUCCESS_SPECIALS_PRICE_SET . $_POST['specials_price'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
+            }
+            zen_redirect(zen_href_link(FILENAME_SPECIALS));
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
             zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
@@ -263,6 +310,7 @@
             $chk_special->MoveNext();
           }
           if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_removed = false;
             // build products list
             foreach($products_id_list as $key => $value) {
               $new_specials_products_id = $value;
@@ -272,10 +320,15 @@
               // check if product has a special
               if (!$chk_special->EOF) {
                 $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                $special_removed = true;
+                // reset products_price_sorter for searches etc.
+                zen_update_products_price_sorter((int)$products_id);
               }
-
-              // reset products_price_sorter for searches etc.
-              zen_update_products_price_sorter((int)$products_id);
+            }
+            if ($special_removed) {
+              $messageStack->add_session(SUCCESS_SPECIALS_REMOVED_MANUFACTURER . $_POST['manufacturer_id'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
             }
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
@@ -678,6 +731,8 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       $contents[] = array('text' => TEXT_INFO_INCLUDE_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_yes', true) . ' ' . TEXT_SKIP_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_no') . ' ' . TEXT_SKIP_INACTIVE_NO);
       $contents[] = array('text' => TEXT_INFO_SKIP_SPECIALS . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_yes', true) . ' ' . TEXT_SKIP_SPECIALS_TRUE . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_no') . ' ' . TEXT_SKIP_SPECIALS_FALSE);
 
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_FROM . ' ' . zen_draw_input_field('price_range_from') . ' ' . TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_TO . ' ' . zen_draw_input_field('price_range_to'));
+
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE . '<br>' . zen_draw_input_field('specials_price'));
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_START_DATE . '<br>' . zen_draw_input_field('special_start_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_END_DATE . '<br>' . zen_draw_input_field('special_end_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
@@ -702,6 +757,9 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO_MANUFACTURER . '<br />');
       $contents[] = array('text' => '<br />' . TEXT_PRE_ADD_MANUFACTURER_ID . '<br>' . zen_draw_input_field('manufacturer_id'));
       $contents[] = array('text' => TEXT_INFO_SKIP_SPECIALS . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_yes', true) . ' ' . TEXT_SKIP_SPECIALS_TRUE . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_no') . ' ' . TEXT_SKIP_SPECIALS_FALSE);
+
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_FROM . ' ' . zen_draw_input_field('price_range_from') . ' ' . TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_TO . ' ' . zen_draw_input_field('price_range_to'));
+
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE . '<br>' . zen_draw_input_field('specials_price'));
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_START_DATE . '<br>' . zen_draw_input_field('special_start_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_END_DATE . '<br>' . zen_draw_input_field('special_end_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
