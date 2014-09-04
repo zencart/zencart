@@ -219,7 +219,7 @@ if (DOWNLOAD_BY_REDIRECT == 'true') {
   zen_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
   $tempdir = zen_random_name() . '-' . time();
   umask(0000);
-  mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, 0777);
+  mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, DOWNLOAD_CHMOD);
   $download_link = str_replace(array('/','\\'),'_',$browser_filename);
   $link_create_status = @symlink(DIR_FS_DOWNLOAD . $origin_filename, DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $download_link);
 
