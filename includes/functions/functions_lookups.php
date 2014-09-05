@@ -237,12 +237,7 @@
     }
 
     $attributes = $db->Execute($attributes_query);
-
-    if ($attributes->recordCount() > 0 && $attributes->fields['products_attributes_id'] > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return !($attributes->EOF);
   }
 
 /*
