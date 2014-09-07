@@ -14,6 +14,7 @@
  */
 
 use Aura\Web\WebFactory;
+use Aura\Web\Request as WebRequest;
 
 class Request extends \base
 {
@@ -33,10 +34,9 @@ class Request extends \base
     /**
      * constructor
      */
-    public function __construct()
+    public function __construct(WebRequest $webRequest = null)
     {
-        $this->webFactory = new WebFactory($GLOBALS);
-        $this->request = $this->webFactory->newRequest();
+        $this->request = $webRequest ?: (new WebFactory($GLOBALS))->newRequest();
         $this->initParameterBag();
     }
 
