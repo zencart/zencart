@@ -35,7 +35,7 @@ if (file_exists($zcActionFileName))
   if (class_exists($zcActionClassName))
   {
     $foundAction = TRUE;
-    $actionClass = new $zcActionClassName($controllerCommand);
+    $actionClass = new $zcActionClassName($controllerCommand, $zcRequest);
     $actionClass->invoke();
   }
 }

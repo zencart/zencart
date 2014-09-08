@@ -25,8 +25,9 @@ abstract class zcActionAdminBase extends base
     protected $useView = true;
     protected $useFoundation = false;
 
-    public function __construct($controllerCommand)
+    public function __construct($controllerCommand, $request)
     {
+        $this->request = $request;
         $this->controllerCommand = $controllerCommand;
         $this->templateVariables = array();
         $this->response = array(
@@ -105,9 +106,8 @@ abstract class zcActionAdminBase extends base
 
     public function invoke()
     {
-        global $zcRequest;
         $this->controllerAction = 'main';
-        $tmp = $zcRequest->get('action', $zcRequest->get('action', 'main', 'post'), 'get');
+        $tmp = $this->request->get('action', $this->request->get('action', 'main', 'post'), 'get');
         if ($tmp = preg_replace('/[^a-zA-Z0-9_-]/', '', $tmp)) {
             $this->controllerAction = $tmp;
         }
