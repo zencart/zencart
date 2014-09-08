@@ -36,7 +36,7 @@ class Request extends \base
      */
     public function __construct(WebRequest $webRequest = null)
     {
-        $this->request = $webRequest ?: (new WebFactory($GLOBALS))->newRequest();
+        $this->request = $webRequest ? : (new WebFactory($GLOBALS))->newRequest();
         $this->initParameterBag();
     }
 
@@ -53,60 +53,61 @@ class Request extends \base
     /**
      * get a parameter value from the parameter bag
      *
-     * @param $paramName
-     * @param null $paramDefault
+     * @param $param
+     * @param null $default
      * @param string $source
      * @return null
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
-    public function get($paramName, $paramDefault = null, $source = 'get')
+    public function get($param, $default = null, $source = 'get')
     {
-        if (isset($this->parameterBag [$source] [$paramName])) {
-            return $this->parameterBag [$source] [$paramName];
+        if (isset($this->parameterBag [$source] [$param])) {
+            return $this->parameterBag [$source] [$param];
         }
-        if (isset($paramDefault)) {
-            return $paramDefault;
+        if (isset($default)) {
+            return $default;
         }
-        throw new \InvalidArgumentException('Exception: Could not Request::get paramName = ' . $paramName);
-    }
-
-    /**
-     * alias to get a parameter bag value from GET
-     * @param $paramName
-     * @param $paramDefault
-     * @return null
-     */
-    public function readGet($paramName, $paramDefault = null)
-    {
-        return $this->get($paramName, $paramDefault, 'get');
+        throw new \InvalidArgumentException('Exception: Could not Request::get paramName = ' . $param);
     }
 
     /**
      * alias to get a parameter bag value from GET
      *
-     * @param $paramName
-     * @param $paramDefault
+     * @param $param
+     * @param null $default
      * @return null
      */
-    public function readPost($paramName, $paramDefault = null)
+    public function readGet($param, $default = null)
     {
-        return $this->get($paramName, $paramDefault, 'post');
+        return $this->get($param, $default, 'get');
+    }
+
+    /**
+     * alias to get a parameter bag value from POST
+     *
+     * @param $param
+     * @param null $default
+     * @return null
+     */
+    public function readPost($param, $default = null)
+    {
+        return $this->get($param, $default, 'post');
     }
 
     /**
      * test whether parameter bag has a specific key
      *
-     * @param $paramName
+     * @param $param
      * @param string $source
      * @return bool
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
-    public function has($paramName, $source = 'get')
+    public function has($param, $source = 'get')
     {
         if (!isset($this->parameterBag[$source])) {
             throw new \InvalidArgumentException('Exception: invalid source for has operation');
         }
-        return ((isset($this->parameterBag[$source][$paramName])) ? true : false);
+        return ((isset($this->parameterBag[$source][$param])) ? true : false);
     }
 
     /**
