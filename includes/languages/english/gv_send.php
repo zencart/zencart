@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: gv_send.php 3421 2006-04-12 04:16:14Z drbyte $
@@ -25,7 +25,7 @@ define('SECONDARY_MESSAGE', 'Dear %s,<br /><br />' . 'You have been sent a ' . T
 define('PERSONAL_MESSAGE', '%s says:');
 define('TEXT_SUCCESS', 'Congratulations, your ' . TEXT_GV_NAME . ' has been sent.');
 define('TEXT_SEND_ANOTHER', 'Would you like to send another ' . TEXT_GV_NAME . '?');
-define('TEXT_AVAILABLE_BALANCE',  'Gift Certificate Account');
+define('TEXT_AVAILABLE_BALANCE',  TEXT_GV_NAME . ' Account');
 
 define('EMAIL_GV_TEXT_SUBJECT', 'A gift from %s');
 define('EMAIL_SEPARATOR', '----------------------------------------------------------------------------------------');
