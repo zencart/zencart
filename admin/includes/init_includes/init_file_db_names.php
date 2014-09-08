@@ -9,7 +9,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$zcRequest = new Request;
 /**
  * set the type of request (secure or not)
  */

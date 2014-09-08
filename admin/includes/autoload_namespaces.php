@@ -24,5 +24,5 @@ if (!defined('DIR_CATALOG_LIBRARY')) {
 return array(
   __NAMESPACE__ . '\DashboardWidget' => DIR_ADMIN_LIBRARY . 'zencart/DashboardWidget/src',
     '\Aura\Web' => DIR_CATALOG_LIBRARY . 'aura/web/src',
-    'ZenCart\Platform' => DIR_CATALOG_LIBRARY. '/zencart/platform/src/',
+    'ZenCart\Platform' => DIR_CATALOG_LIBRARY. 'zencart/platform/src/',
 );

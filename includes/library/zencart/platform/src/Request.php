@@ -1,4 +1,5 @@
 <?php
+namespace ZenCart\Platform;
 /**
  * File contains just the request class
  *
