@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: button_names.php 19690 2011-10-04 16:41:45Z drbyte $
@@ -72,7 +72,7 @@ define('BUTTON_BUY_NOW_ALT', 'Buy Now');
 define('BUTTON_CANCEL_ALT', 'Cancel');
 define('BUTTON_CHANGE_ADDRESS_ALT', 'Change Address');
 define('BUTTON_CHECKOUT_ALT', 'Checkout');
-define('BUTTON_CONFIRM_SEND_ALT', 'Send Gift Certificate');
+define('BUTTON_CONFIRM_SEND_ALT', 'Send ' . TEXT_GV_NAME);
 define('BUTTON_CONFIRM_ORDER_ALT', 'Confirm Order');
 define('BUTTON_CONTINUE_ALT', 'Continue');
 define('BUTTON_CONTINUE_SHOPPING_ALT', 'Continue Shopping');
@@ -89,8 +89,8 @@ define('BUTTON_RETURN_TO_PROD_LIST_ALT', 'Return to the Product List');
 define('BUTTON_REVIEWS_ALT', 'Go to the Reviews Page');
 define('BUTTON_SEARCH_ALT', 'Search');
 define('BUTTON_SEND_ALT', 'Send Now');
-define('BUTTON_SEND_ANOTHER_ALT', 'Send Another Gift Certificate');
-define('BUTTON_SEND_A_GIFT_CERT_ALT', 'Send A Gift Certificate');
+define('BUTTON_SEND_ANOTHER_ALT', 'Send Another ' . TEXT_GV_NAME);
+define('BUTTON_SEND_A_GIFT_CERT_ALT', 'Send A ' . TEXT_GV_NAME);
 define('BUTTON_SHIPPING_ESTIMATOR_ALT', 'Shipping Estimator');
 define('BUTTON_SOLD_OUT_ALT', 'Sold Out');
 define('BUTTON_SOLD_OUT_SMALL_ALT', 'Sold Out');
