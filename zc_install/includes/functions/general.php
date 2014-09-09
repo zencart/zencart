@@ -900,7 +900,7 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ($session_started == true) {
       if (defined('SID') && zen_not_null(constant('SID'))) {
-        $sid = SID;
+        $sid = constant('SID');
       } elseif ( ($request_type == 'NONSSL' && $connection == 'SSL') || ($request_type == 'SSL' && $connection == 'NONSSL') ) {
         if ($http_domain != $https_domain) {
           $sid = zen_session_name() . '=' . zen_session_id();
