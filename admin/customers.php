@@ -1090,9 +1090,9 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
       $info = $db->Execute($sql);
 
       // if no record found, create one to keep database in sync
-      if (!isset($info->fields) || !is_array($info->fields)) {
-        $insert_sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created)
-                       values ('" . (int)$customers->fields['customers_id'] . "', '0', now())";
+        if ($info->RecordCount() == 0) {
+          $insert_sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id)
+                         values ('" . (int)$customers->fields['customers_id'] . "')";
         $db->Execute($insert_sql);
         $info = $db->Execute($sql);
       }
