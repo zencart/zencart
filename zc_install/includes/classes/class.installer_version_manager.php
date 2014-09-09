@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.4 $
  */
 
 
@@ -29,7 +29,7 @@
       /**
        * The version that this edition of the installer is designed to support
        */
-      $this->latest_version = '1.5.3';
+      $this->latest_version = '1.5.4';
 
       /**
        * Check to see if the configuration table can be found...thus validating the installation, in part.
@@ -80,6 +80,7 @@
       $this->version151 = $this->check_version_151();
       $this->version152 = $this->check_version_152();
       $this->version153 = $this->check_version_153();
+      $this->version154 = $this->check_version_154();
 
       if ($this->version110 == true)  $retVal = '1.1.0';
       if ($this->version111 == true)  $retVal = '1.1.1';
@@ -106,6 +107,7 @@
       if ($this->version151 == true) $retVal = '1.5.1';
       if ($this->version152 == true) $retVal = '1.5.2';
       if ($this->version153 == true) $retVal = '1.5.3';
+      if ($this->version154 == true) $retVal = '1.5.4';
 
       return $retVal;
     }
@@ -822,7 +824,7 @@
       $sql = "show fields from " . DB_PREFIX . "customers";
       $result = $db_test->Execute($sql);
       while (!$result->EOF && !$got_v1_5_3a) {
-        if (ZC_UPG_DEBUG==true && $result->fields['Field'] == 'customers_password') echo "152b-fields-'customers_password TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . ' (expecting VARCHAR(255))<br>';
+        if (ZC_UPG_DEBUG==true && $result->fields['Field'] == 'customers_password') echo "153a-fields-'customers_password TEST: '" . $result->fields['Field'] . '->' . $result->fields['Type'] . ' (expecting VARCHAR(255))<br>';
         if  ($result->fields['Field'] == 'customers_password' && strtoupper($result->fields['Type']) == 'VARCHAR(255)') {
           $got_v1_5_3a = true;
           if (ZC_UPG_DEBUG==true) echo 'OKAY 1.5.3a<br><br>';
@@ -833,6 +835,21 @@
 
       return $got_v1_5_3a;
     } //end of 1.5.3 check
+
+
+    function check_version_154() {
+      global $db_test;
+      $got_v1_5_4a = false;
+      $sql = "select configuration_title from " . DB_PREFIX . "configuration where configuration_key = 'PADSS_AJAX_CHECKOUT'";
+      $result = $db_test->Execute($sql);
+      if (ZC_UPG_DEBUG==true) echo "154a-configtitle_check PADSS_AJAX_CHECKOUT =" . $result->fields['configuration_title'] . '<br>';
+      if (!$result->EOF && $result->fields['configuration_title'] == 'PA-DSS Ajax Checkout?') {
+        $got_v1_5_4a = true;
+      }
+      if (ZC_UPG_DEBUG==true && !$got_v1_5_4a) echo 'BAD: 1.5.4a<br><br>';
+
+      return $got_v1_5_4a;
+    } //end of 1.5.4 check
 
 
 
