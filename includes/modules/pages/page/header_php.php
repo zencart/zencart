@@ -36,7 +36,6 @@ if ($var_pageDetails->EOF) {
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
   $messageStack->add_session('header', ERROR_PAGE_NOT_FOUND, 'caution');
   header('HTTP/1.1 404 Not Found');
-  header('Status: 404 Not Found');
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
 
