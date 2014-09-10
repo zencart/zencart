@@ -19,10 +19,14 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class Breadcrumb implements Countable
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     const DEFAULT_SEPARATOR = '&nbsp;&nbsp;';
 
-    /** @var array title: string => link: string */
+    /**
+     * @var array title: string => link: string
+     */
     private $links = array();
 
     /**
@@ -77,13 +81,17 @@ class Breadcrumb implements Countable
         return rtrim($trail, $separator) . "</nav>\n";
     }
 
-    /** @return int */
+    /**
+     * @return int
+     */
     public function count()
     {
         return count($this->links);
     }
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->trail();
