@@ -20,11 +20,11 @@ use Aura\Web\Request as WebRequest;
 class Request extends \base
 {
     /**
-     * @var Aura\Web\Request
+     * @var \Aura\Web\Request
      */
     protected $request;
     /**
-     * @var Aura\Web\WebFactory
+     * @var \Aura\Web\WebFactory
      */
     protected $webFactory;
     /**
@@ -55,10 +55,10 @@ class Request extends \base
      * get a parameter value from the parameter bag
      *
      * @param $param
-     * @param null $default
+     * @param mixed $default
      * @param string $source
-     * @return null
-     * @throws InvalidArgumentException
+     * @return mixed
+     * @throws \InvalidArgumentException
      */
     public function get($param, $default = null, $source = 'get')
     {
@@ -75,8 +75,8 @@ class Request extends \base
      * alias to get a parameter bag value from GET
      *
      * @param $param
-     * @param null $default
-     * @return null
+     * @param mixed $default
+     * @return mixed
      */
     public function readGet($param, $default = null)
     {
@@ -101,7 +101,7 @@ class Request extends \base
      * @param $param
      * @param string $source
      * @return bool
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function has($param, $source = 'get')
     {
@@ -116,7 +116,7 @@ class Request extends \base
      *
      * @param string $source
      * @return mixed
-     * @throws Exception
+     * @throws \InvalidArgumentException
      */
     public function all($source = 'get')
     {
