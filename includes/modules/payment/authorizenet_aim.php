@@ -332,7 +332,6 @@ class authorizenet_aim extends base {
                          'x_login' => trim(MODULE_PAYMENT_AUTHORIZENET_AIM_LOGIN),
                          'x_tran_key' => trim(MODULE_PAYMENT_AUTHORIZENET_AIM_TXNKEY),
                          'x_relay_response' => 'FALSE', // AIM uses direct response, not relay response
-                         'x_delim_data' => 'TRUE',
                          'x_delim_char' => $this->delimiter,  // The default delimiter is a comma
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
@@ -340,6 +339,7 @@ class authorizenet_aim extends base {
                          'x_method' => 'CC',
                          'x_amount' => number_format($order->info['total'], 2),
                          'x_currency_code' => $order->info['currency'],
+                         'x_market_type' => 0,
                          'x_card_num' => $_POST['cc_number'],
                          'x_exp_date' => $_POST['cc_expires'],
                          'x_card_code' => $_POST['cc_cvv'],
@@ -372,6 +372,7 @@ class authorizenet_aim extends base {
                          'x_tax_exempt' => 'FALSE', /* 'TRUE' or 'FALSE' */
                          'x_tax' => number_format((float)$order->info['tax'],2),
                          'x_duty' => '0',
+                         'x_device_type' => 8,
                          'x_allow_partial_Auth' => 'FALSE', // unable to accept partial authorizations at this time
 
                          // Additional Merchant-defined variables go here
