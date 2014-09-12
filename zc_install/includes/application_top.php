@@ -14,8 +14,9 @@ if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {
   require (DIR_FS_INSTALL . 'includes/localConfig.php');
 }
 
-$envHabitat = getenv('HABITAT') ;
-if ($envHabitat == 'zencart' || $_SERVER['USER'] == 'vagrant') {
+$val = getenv('HABITAT');
+$habitat = ($val == 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] == 'vagrant'));
+if ($habitat) {
   define('DEVELOPER_MODE', true);
 }
 
