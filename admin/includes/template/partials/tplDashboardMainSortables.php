@@ -18,9 +18,9 @@
         <div class="widget-header">
           <h1 class="widget-handle"><?php echo $tplVars['widgets'][$widget['widget_key']]['widgetTitle']; ?></h1>
           <div class="right">
-            <a href="#" class="widget-edit"><i class="icon-pencil"></i></a>
-            <a href="#" class="widget-minimize"><i class="icon-down-dir"></i></a>
-            <a href="#" class="widget-close"><i class="icon-cancel-squared"></i></a>
+            <a href="#" class="widget-edit" title="<?php echo IMAGE_EDIT;?>"><i class="fa fa-edit"></i></a>
+            <a href="#" class="widget-minimize" title="<?php echo IMAGE_COLLAPSE;?>"><i class="fa fa-toggle-down"></i></a>
+            <a href="#" class="widget-close" title="<?php echo IMAGE_DELETE;?>"><i class="fa fa-trash"></i></a>
             </div>
         </div>
         <div class="widget-body">

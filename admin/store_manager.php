@@ -239,7 +239,7 @@ require('includes/admin_html_head.php');
 if ($processing_message != '') {
 ?>
   <tr><td><?php echo $processing_message; ?></td></tr>
-  <tr><td align="center"><?php echo zen_image(DIR_WS_IMAGES . 'loadingsmall.gif'); ?></td></tr>
+  <tr><td align="center"><i class="fa fa-spinner fa-spin fa-4x"></i></td></tr>
 <?php
 } else {
 ?>
