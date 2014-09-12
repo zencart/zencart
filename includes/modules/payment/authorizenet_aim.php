@@ -11,7 +11,6 @@
 /**
  * Authorize.net Payment Module (AIM version)
  * You must have SSL active on your server to be compliant with merchant TOS
- *
  */
 class authorizenet_aim extends base {
   /**
@@ -112,7 +111,7 @@ class authorizenet_aim extends base {
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
     // Determine default/supported currencies
-    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD'))) {
       $this->gateway_currency = DEFAULT_CURRENCY;
     } else {
       $this->gateway_currency = 'USD';
@@ -380,8 +379,8 @@ class authorizenet_aim extends base {
                          'IP' => zen_get_ip_address(),
                          'Session' => $sessID );
 
-    // force conversion to supported currencies: USD, GBP, CAD, EUR
-    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
+    // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD', $this->gateway_currency))) {
       global $currencies;
       $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data['x_currency_code'] = $this->gateway_currency;
