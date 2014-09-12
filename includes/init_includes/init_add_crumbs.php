@@ -66,7 +66,13 @@ if (zcRequest::hasGet('products_id')) {
            and    pd.products_id = p.products_id
            and    pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
   $res = $db->Execute($sql);
-  if ($res->RecordCount() == 1 && $res->fields['products_name'] != '') {
+  if ($res->RecordCount() == 0) {
+    // invalid product id
+    unset($_GET['products_id']);
+    $robotsNoIndex = true;
+    header('HTTP/1.1 404 Not Found');
+  }
+  if ($res->fields['products_name'] != '') {
     $breadcrumb->add($res->fields['products_name'], zen_href_link(zen_get_info_page(zcRequest::readGet('products_id')), 'cPath=' . $cPath . '&products_id=' . zcRequest::readGet('products_id')));
   }
 }
