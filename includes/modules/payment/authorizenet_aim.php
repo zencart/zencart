@@ -574,15 +574,10 @@ class authorizenet_aim extends base {
     }
 
     // set URL
-    $devurl = 'https://test.authorize.net/gateway/transact.dll';
-    $certurl = 'https://certification.authorize.net/gateway/transact.dll';
-    if (defined('AUTHORIZENET_DEVELOPER_MODE')) {
-      if (AUTHORIZENET_DEVELOPER_MODE == 'on') $url = $devurl;
-      if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;
-    }
-
     $this->mode = 'AIM';
     $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', array(), $submit_data);
+    $devurl = 'https://test.authorize.net/gateway/transact.dll';
+    $certurl = 'https://certification.authorize.net/gateway/transact.dll';
 
     switch ($this->mode) {
       case 'eProcessing':
@@ -596,6 +591,10 @@ class authorizenet_aim extends base {
       default:
       case 'AIM':
         $url = 'https://secure.authorize.net/gateway/transact.dll';
+        if (defined('AUTHORIZENET_DEVELOPER_MODE')) {
+          if (AUTHORIZENET_DEVELOPER_MODE == 'on') $url = $devurl;
+          if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;
+        }
         break;
     }
 
