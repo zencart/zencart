@@ -8,6 +8,7 @@
  * @version $Id$
  */
 require_once('support/zcCatalogTestCase.php');
+use ZenCart\Platform\Request;
 
 /**
  * Testing Library
@@ -21,9 +22,7 @@ class testRequestCase extends zcCatalogTestCase
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-
-        require_once(DIR_CATALOG_LIBRARY . 'zencart/platform/src/Request.php');
-        require_once('support/requestSupport.php');
+        $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
     }
 
     public function testRequestInitEmpty()
@@ -188,6 +187,7 @@ class testRequestCase extends zcCatalogTestCase
         }
         $this->fail();
     }
+
     public function testGetWebFactoryRequest()
     {
         unset($_GET);
@@ -211,5 +211,4 @@ class testRequestCase extends zcCatalogTestCase
         $result = $zcRequest->getWebFactoryRequest();
         $this->assertInstanceOf('\Aura\Web\Request', $result);
     }
-
 }
