@@ -280,13 +280,14 @@ function zen_validate_user_login($admin_name, $admin_pass)
     // invalid login
     $error = true;
     $message = ERROR_WRONG_LOGIN;
+    zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
   } else {
     if ($result['lockout_expires'] > time())
     {
       // account locked
       $error = true;
       $message = ERROR_SECURITY_ERROR; // account locked. Simply give generic error, since otherwise we alert that the account name is correct
-      zen_record_admin_activity('Attempted to log into locked account.', 'warning');
+      zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_TO_LOG_IN_TO_LOCKED_ACCOUNT . ' ' . $admin_name, 'warning');
     }
     if ($result['reset_token'] != '')
     {
@@ -306,6 +307,8 @@ function zen_validate_user_login($admin_name, $admin_pass)
           {
             $error = true;
             $message = ERROR_WRONG_LOGIN;
+            zen_record_admin_activity(sprintf(TEXT_ERROR_INCORRECT_PASSWORD_DURING_RESET_FOR_USER) . ' ' . $admin_name, 'warning');
+
           } else
           {
             $error = true;
@@ -326,7 +329,10 @@ function zen_validate_user_login($admin_name, $admin_pass)
       if (!zen_validate_password($admin_pass, $token))
       {
         $error = true;
-        if (!$expired) $message = ERROR_WRONG_LOGIN;
+        if (!$expired) {
+          $message = ERROR_WRONG_LOGIN;
+          zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
+        }
       }
     }
     if (password_needs_rehash($token, PASSWORD_DEFAULT)) {

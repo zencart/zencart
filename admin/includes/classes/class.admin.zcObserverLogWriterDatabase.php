@@ -101,6 +101,11 @@ class zcObserverLogWriterDatabase extends base {
     $db->Execute($sql);
     $sql = "UPDATE " . TABLE_ADMIN_ACTIVITY_LOG . " SET severity='notice' where flagged=1";
     $db->Execute($sql);
+
+    // Init the logs if necessary
+    $this->initLogsTable();
+
+    // Log the schema change
     $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
     $sql_data_array = array( 'access_date' => 'now()',
             'admin_id' => (int)$admin_id,

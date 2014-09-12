@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Sun Jul 14 21:04:37 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
  */
 define('ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS', 'Yes'); // Can be set to 'No' if you don't want warning/courtesy emails to be sent after several login failures have occurred
 
@@ -23,6 +23,7 @@ if (isset($_POST['action']) && $_POST['action'] != '')
   {
     $error = true;
     $message = ERROR_SECURITY_ERROR;
+    zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_ADMIN_LOGIN_WITHOUT_CSRF_TOKEN, 'warning');
   }
   if ($_POST['action'] == 'do' . $_SESSION['securityToken'])
   {
@@ -33,6 +34,7 @@ if (isset($_POST['action']) && $_POST['action'] != '')
       sleep(4);
       $error = true;
       $message = ERROR_WRONG_LOGIN;
+      zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_ADMIN_LOGIN_WITHOUT_USERNAME, 'warning');
     } else
     {
       list($error, $expired, $message, $redirect) = zen_validate_user_login($admin_name, $admin_pass);

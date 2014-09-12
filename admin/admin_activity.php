@@ -58,6 +58,9 @@ if ($action != '')
   {
     case 'save':
       global $db;
+
+      zen_record_admin_activity(sprintf(TEXT_ACTIVITY_LOG_ACCESSED, $format, $selected_filter, ($save_to_file_checked ? '(SaveToFile)' : '(Screen/Download)')), 'warning');
+
       if ($format == 'CSV')
       {
         $FIELDSTART = '"';
@@ -322,7 +325,7 @@ if ($action != '')
 echo HTML_PARAMS;
 ?>>
 <head>
-<meta http-equiv="Content-Type"	content="text/html; charset=<?php echo CHARSET; ?>">
+<meta http-equiv="Content-Type"  content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
