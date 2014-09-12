@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Tue Sep 9 2014 -0500 Modified in v1.5.4 $
  */
 /**
  * authorize.net SIM payment method class
@@ -381,8 +381,7 @@ class authorizenet extends base {
       $submit_data_core['x_currency_code'] = $this->gateway_currency;
     }
 
-
-    $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, number_format($order->info['total'], 2), $sequence);
+    $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, $submit_data_core['x_amount'], $sequence, $submit_data_core['x_currency_code']);
 
     $submit_data_offline = array(
       'x_show_form' => 'PAYMENT_FORM',
