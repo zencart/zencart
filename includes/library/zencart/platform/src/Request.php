@@ -87,8 +87,8 @@ class Request extends \base
      * alias to get a parameter bag value from POST
      *
      * @param $param
-     * @param null $default
-     * @return null
+     * @param mixed $default
+     * @return mixed
      */
     public function readPost($param, $default = null)
     {
