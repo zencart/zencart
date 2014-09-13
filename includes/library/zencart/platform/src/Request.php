@@ -123,7 +123,7 @@ class Request extends \base
         if (!isset($this->parameterBag[$source])) {
             throw new \InvalidArgumentException('Exception: invalid source for all operation');
         }
-        return $this->parameterBag[$source];
+        return new \ArrayObject($this->parameterBag[$source]);
     }
 
     /**
