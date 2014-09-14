@@ -300,15 +300,7 @@ if ($action != '')
     case 'clean_admin_activity_log':
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
-        $db->Execute("truncate table " . TABLE_ADMIN_ACTIVITY_LOG);
-        $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
-        $sql_data_array = array( 'access_date' => 'now()',
-                                 'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
-                                 'page_accessed' =>  'Log reset by ' . $admname . '.',
-                                 'page_parameters' => '',
-                                 'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45)
-                                 );
-        zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+        $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_RESET');
         $messageStack->add_session(SUCCESS_CLEAN_ADMIN_ACTIVITY_LOG, 'success');
         unset($_SESSION['reset_admin_activity_log']);
         zen_redirect(zen_href_link(FILENAME_ADMIN_ACTIVITY));

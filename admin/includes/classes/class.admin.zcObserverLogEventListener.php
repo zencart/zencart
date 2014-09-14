@@ -46,7 +46,7 @@ class zcObserverLogEventListener extends base {
 
   public function __construct() {
     global $zco_notifier;
-    $zco_notifier->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT'));
+    $zco_notifier->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', 'NOTIFY_ADMIN_ACTIVITY_LOG_RESET'));
   }
 
   public function updateNotifyAdminActivityLogEvent(&$class, $eventID, $message_to_log = '', $requested_severity = '')
@@ -176,6 +176,12 @@ class zcObserverLogEventListener extends base {
     } else {
       return FALSE;
     }
+  }
+
+  public function updateNotifyAdminActivityLogReset()
+  {
+    global $zco_notifier;
+    $zco_notifier->notify('NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET');
   }
 
 }
