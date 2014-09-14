@@ -14,7 +14,7 @@ class zcObserverLogWriterTextfile extends base {
   public function __construct() {
     global $zco_notifier;
 
-    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS'));
+    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
 
     /**
      * The following specifies the folderpath on the filesystem where the data will be logged
@@ -75,6 +75,30 @@ class zcObserverLogWriterTextfile extends base {
       error_log('notice [' . date('M-d-Y H:i:s') . '] ' . substr($_SERVER['REMOTE_ADDR'],0,45) . ' ' . 'Log found to be empty. Logging started.' . "\n", 3, $this->destinationLogFilename);
       error_log('notice [' . date('M-d-Y H:i:s') . '] ' . substr($_SERVER['REMOTE_ADDR'],0,45) . ' ' . $data . "\n", 3, $this->destinationLogFilename);
     }
+  }
+
+  public function updateNotifyAdminFireLogWriterReset()
+  {
+    if (file_exists($this->destinationLogFilename))
+    {
+      zen_remove($this->destinationLogFilename);
+    }
+
+    $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
+    $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
+    $data = array('access_date' => date('M-d-Y H:i:s'),
+            'admin_id' => (int)$admin_id,
+            'page_accessed' =>  'Log reset by ' . $admname . '.',
+            'page_parameters' => '',
+            'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
+            'gzpost' => '',
+            'flagged' => 0,
+            'attention' => '',
+            'severity' => 'warning',
+            'logmessage' =>  'Log reset by ' . $admname . '.',
+      );
+      $data = json_encode($data);
+      error_log('notice [' . date('M-d-Y H:i:s') . '] ' . substr($_SERVER['REMOTE_ADDR'],0,45) . ' ' . $data . "\n", 3, $this->destinationLogFilename);
   }
 
 }

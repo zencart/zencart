@@ -13,7 +13,7 @@ class zcObserverLogWriterDatabase extends base {
 
   public function __construct() {
     global $zco_notifier;
-    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS'));
+    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
     $this->checkLogSchema();
   }
 
@@ -101,6 +101,11 @@ class zcObserverLogWriterDatabase extends base {
     $db->Execute($sql);
     $sql = "UPDATE " . TABLE_ADMIN_ACTIVITY_LOG . " SET severity='notice' where flagged=1";
     $db->Execute($sql);
+
+    // Init the logs if necessary
+    $this->initLogsTable();
+
+    // Log the schema change
     $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
     $sql_data_array = array( 'access_date' => 'now()',
             'admin_id' => (int)$admin_id,
@@ -122,4 +127,25 @@ class zcObserverLogWriterDatabase extends base {
     $translated = str_replace($find_chars, $replace_chars, $string);
     return $translated;
   }
+
+  public function updateNotifyAdminFireLogWriterReset()
+  {
+    global $db;
+    $db->Execute("truncate table " . TABLE_ADMIN_ACTIVITY_LOG);
+    $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
+    $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
+    $sql_data_array = array( 'access_date' => 'now()',
+            'admin_id' => (int)$admin_id,
+            'page_accessed' =>  'Log reset by ' . $admname . '.',
+            'page_parameters' => '',
+            'ip_address' => $db->prepare_input(substr($_SERVER['REMOTE_ADDR'],0,45)),
+            'gzpost' => '',
+            'flagged' => 0,
+            'attention' => '',
+            'severity' => 'warning',
+            'logmessage' =>  'Log reset by ' . $admname . '.',
+    );
+    zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+  }
+
 }
