@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 17 16:02:00 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Jul 5 2014 Modified in v1.5.4 $
  */
 /**
  * load the module for generating page meta-tags
@@ -106,7 +106,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 /** CDN for jQuery core **/
 ?>
   <script>window.jQuery || document.write('<script src="//code.jquery.com/jquery-1.11.1.min.js"><\/script>');</script>
-  <script>window.jQuery || document.write('<script src="includes/templates/template_default/jscript/jquery.min.js"><\/script>');</script>
+  <script>window.jQuery || document.write('<script src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"><\/script>');</script>
 
 <?php
 /**
