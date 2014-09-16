@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Jul 16 15:05:32 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Sep 12 2014 Modified in v1.5.4 $
  */
 
 require('includes/application_top.php');
@@ -47,11 +47,11 @@ elseif (in_array($action, array('edit','password','delete','delete_confirm','upd
 switch ($action) {
   case 'add': // display unpopulated form for adding a new user
     $formAction = 'insert';
-    $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+    $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     break;
   case 'edit': // display populated form for editing existing user
     $formAction = 'update';
-    $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+    $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     break;
   case 'password': // display unpopulated form for resetting existing user's password
     $formAction = 'reset';
@@ -63,7 +63,7 @@ switch ($action) {
     }
     break;
   case 'insert': // insert new user into database. Post data is prep'd for db in the first function call
-    $errors = zen_insert_user($_POST['name'],$_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['profile']);
+    $errors = zen_insert_user($_POST['name'],$_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['profile'], $_POST['mobile']);
     if (sizeof($errors) > 0)
     {
       foreach ($errors as $error)
@@ -72,7 +72,7 @@ switch ($action) {
       }
       $action = 'add';
       $formAction = 'insert';
-      $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+      $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     } else
     {
       $action = '';
@@ -80,7 +80,7 @@ switch ($action) {
     }
     break;
   case 'update': // update existing user's details in database. Post data is prep'd for db in the first function call
-    $errors = zen_update_user($_POST['name'],$_POST['email'], $_POST['id'], $_POST['profile']);
+    $errors = zen_update_user($_POST['name'],$_POST['email'], $_POST['id'], $_POST['profile'], $_POST['mobile']);
     if (sizeof($errors) > 0)
     {
       foreach ($errors as $error)
@@ -89,7 +89,7 @@ switch ($action) {
       }
       $action = 'edit';
       $formAction = 'update';
-      $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+      $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     } else
     {
       $action = '';
@@ -141,6 +141,7 @@ require('includes/admin_html_head.php');
         <th class="id"><?php echo TEXT_ID ?></th>
         <th class="name"><?php echo TEXT_NAME ?></th>
         <th class="email"><?php echo TEXT_EMAIL ?></th>
+        <th class="mobile"><?php echo TEXT_MOBILE ?></th>
         <th class="profile"><?php echo TEXT_PROFILE ?></th>
 <?php if ($action == 'add' || $action == 'password') { ?>
         <th class="password"><?php echo TEXT_PASSWORD ?></th>
@@ -163,6 +164,7 @@ require('includes/admin_html_head.php');
         <td class="id">&nbsp;</td>
         <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', false, 'text', true) ?></td>
         <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="field"', false, 'text', true) ?></td>
+        <td class="mobile"><?php echo zen_draw_input_field('mobile', isset($_POST['mobile']) ? $_POST['mobile'] : '', 'class="field"', false, 'text', true) ?></td>
         <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0) ?></td>
         <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="field"', false, 'password'); ?></td>
         <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="field"', false, 'password'); ?></td>
@@ -180,9 +182,11 @@ require('includes/admin_html_head.php');
 <?php if ($action == 'edit' && $user == $userDetails['id']) { ?>
         <td class="name"><?php echo zen_draw_input_field('name', $userDetails['name'], 'class="field"') ?></td>
         <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"') ?></td>
+        <td class="mobile"><?php echo zen_draw_input_field('mobile', $userDetails['mobile'], 'class="field"') ?></td>
 <?php } else { ?>
         <td class="name"><?php echo $userDetails['name'] ?></td>
         <td class="email"><?php echo $userDetails['email'] ?></td>
+        <td class="mobile"><?php echo $userDetails['mobile'] ?></td>
 <?php } ?>
 <?php if ($action == 'edit' && $user == $userDetails['id'] && $user != $currentUser) { ?>
         <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, $userDetails['profile']) ?></td>
