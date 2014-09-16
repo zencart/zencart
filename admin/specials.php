@@ -98,9 +98,7 @@
               // check if a price range is set
               if ($price_range_from > 0 || $price_range_to > 0) {
                 $products_price_normal = zen_get_products_base_price($products_id);
-                if ($products_price_normal >= $price_range_from && $products_price_normal <= $price_range_to) {
-                  // add the new special
-                } else {
+                if ($products_price_normal < $price_range_from || $products_price_normal > $price_range_to) {
                   // skip adding the special as products_price is out of price range
                   continue;
                 }
@@ -231,12 +229,11 @@
               // check if a price range is set
               if ($price_range_from > 0 || $price_range_to > 0) {
                 $products_price_normal = zen_get_products_base_price($products_id);
-                if ($products_price_normal >= $price_range_from && $products_price_normal <= $price_range_to) {
-                  // add the new special
-                } else {
+                if ($products_price_normal < $price_range_from || $products_price_normal > $price_range_to) {
                   // skip adding the special as products_price is out of price range
                   continue;
                 }
+
               }
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
