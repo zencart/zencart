@@ -59,7 +59,7 @@ if ($action != '')
     case 'save':
       global $db;
 
-      zen_record_admin_activity(sprintf(TEXT_ACTIVITY_LOG_ACCESSED, $format, $selected_filter, ($save_to_file_checked ? '(SaveToFile)' : '(Screen/Download)')), 'warning');
+      zen_record_admin_activity(sprintf(TEXT_ACTIVITY_LOG_ACCESSED, $format, $selected_filter, ($save_to_file_checked ? '(SaveToFile)' : ($format =='HTML' ? '(Output to browser)' : '(Download to browser)'))), 'warning');
 
       if ($format == 'CSV')
       {

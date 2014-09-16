@@ -53,7 +53,7 @@ class zcObserverLogEventListener extends base {
   {
     global $zco_notifier, $PHP_SELF;
     $flagged = 0;
-    $notes = $gzpostdata = $postdata = '';
+    $notes = $specific_message = $gzpostdata = $postdata = '';
     $severity = self::INFO;
 
     /**
@@ -84,6 +84,11 @@ class zcObserverLogEventListener extends base {
       $specific_message = $data;
       $notes2 = $this->parseForMaliciousContent(print_r($data, true));
       $notes = $notes . (strlen($notes) > 0 ? '; ' : '') . $notes2;
+    }
+    if ($specific_message == '')
+    {
+      $specific_message = "Accessed page [" . basename($PHP_SELF) . "]";
+      if (isset($_REQUEST['action'])) $specific_message .= ' with action=' . $_REQUEST['action'] . '. Review page_parameters and postdata for details.';
     }
 
     /**
