@@ -233,7 +233,6 @@
                   // skip adding the special as products_price is out of price range
                   continue;
                 }
-
               }
               $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
