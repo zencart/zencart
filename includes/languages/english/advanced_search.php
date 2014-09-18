@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: advanced_search.php 3253 2006-03-25 17:26:14Z birdbrain $
+ * @version $Id: advanced_search.php Modified in v1.5.4 $
  */
 
   define('NAVBAR_TITLE_1', 'Advanced Search');
@@ -26,7 +26,7 @@
   define('ENTRY_DATE_FROM', 'Date From:');
   define('ENTRY_DATE_TO', 'Date To:');
 
-  define('TEXT_SEARCH_HELP_LINK', '<i class="icon-help-circled"></i>');
+  define('TEXT_SEARCH_HELP_LINK', '<i class="fa fa-question-circle fa-2x"></i>');
   define('TEXT_SEARCH_HELP_ALT', 'Search Help');
 
   define('TEXT_ALL_CATEGORIES', 'All Categories');

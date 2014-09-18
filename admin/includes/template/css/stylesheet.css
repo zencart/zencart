@@ -2,13 +2,13 @@
  * @package admin
  * @ignore
  * @access private
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
 @import "foundation-icons.css";
-@import "entypo.css";
+@import "font-awesome.min.css";
 
 a{
 color:#0000ff;
@@ -370,3 +370,6 @@ label.error {color: red; font-weight: bold;}
 
 
 .coupon-future, .coupon-expired {font-weight: bold; color: red}
+
+body#indexBody {font-size: 13px}
+body#indexBody a i.fa {font-size: 1.2em}

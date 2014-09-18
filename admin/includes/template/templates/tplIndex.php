@@ -85,12 +85,12 @@ function createSortables() {
 
     $('.widget-minimize').unbind('click').click(function (e) {
     var id = $(this).parents('.widget-container').attr('id');
-    if ($(this).html() == '<i class="icon-down-dir"></i>')
+    if ($(this).html() == '<i class="fa fa-toggle-down"></i>')
     {
-      $(this).html('<i class="icon-up-dir"></i>');
+      $(this).html('<i class="fa fa-toggle-up"></i>');
     } else
     {
-      $(this).html('<i class="icon-down-dir"></i>');
+      $(this).html('<i class="fa fa-toggle-down"></i>');
     }
     $('#'+id).find('.widget-body').toggle();
   });
