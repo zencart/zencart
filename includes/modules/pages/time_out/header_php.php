@@ -46,7 +46,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
           $error = true;
           $messageStack->add('login', TEXT_LOGIN_ERROR);
         } else {
-          if (password_needs_rehash($newPassword, PASSWORD_DEFAULT)) {
+          if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
             $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
           }
           if (SESSION_RECREATE == 'True') {
