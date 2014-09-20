@@ -11,9 +11,10 @@
 
 class zcObserverLogWriterDatabase extends base {
 
-  public function __construct() {
-    global $zco_notifier;
-    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
+  public function __construct(notifier $zco_notifier = null) {
+    if (!$zco_notifier) $zco_notifier = new notifier;
+    $this->notifier = $zco_notifier;
+    $this->notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
     $this->checkLogSchema();
   }
 
@@ -23,7 +24,7 @@ class zcObserverLogWriterDatabase extends base {
     $this->initLogsTable();
 
     /**
-     * gzip the POST data so that it takes less storage space in the database
+     * gzip the passed postdata so that it takes less storage space in the database
      */
     $gzpostdata = gzdeflate($log_data['postdata'], 7);
 
@@ -48,7 +49,7 @@ class zcObserverLogWriterDatabase extends base {
    * PCI requires that if the log table is blank, that the logs be initialized
    * So this simply tests whether the table has any records, and if not, adds an initialization entry
    */
-  private function initLogsTable()
+  public function initLogsTable()
   {
     global $db;
     $sql = "SELECT ip_address from " . TABLE_ADMIN_ACTIVITY_LOG . " LIMIT 1";
@@ -63,16 +64,16 @@ class zcObserverLogWriterDatabase extends base {
               'gzpost' => '',
               'flagged' => 0,
               'attention' => '',
-              'severity' => 'info',
+              'severity' => 'notice',
               'logmessage' =>  'Log found to be empty. Logging started.',
       );
       zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
     }
   }
 
-  private function checkLogSchema()
+  public function checkLogSchema()
   {
-    // add 'logmessage' field of type mediumtext
+    // adds 'logmessage' field of type mediumtext
     global $db;
     $sql = "show fields from " . TABLE_ADMIN_ACTIVITY_LOG;
     $result = $db->Execute($sql);
@@ -120,7 +121,7 @@ class zcObserverLogWriterDatabase extends base {
     return false;
   }
 
-  private function preserveSpecialCharacters($string)
+  public function preserveSpecialCharacters($string)
   {
     $find_chars = array('\n');
     $replace_chars = array("\n");

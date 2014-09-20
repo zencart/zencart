@@ -11,16 +11,23 @@
 
 class zcObserverLogWriterTextfile extends base {
 
-  public function __construct() {
-    global $zco_notifier;
+  private $destinationLogFilename = '';
 
-    $zco_notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
+  public function __construct(notifier $zco_notifier = null) {
+    if (!$zco_notifier) $zco_notifier = new notifier;
+    $this->notifier = $zco_notifier;
+    $this->notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
+    $this->setLogFilename();
+  }
 
-    /**
-     * The following specifies the folderpath on the filesystem where the data will be logged
-     */
-    $this->destinationLogFilename = DIR_FS_LOGS . '/admin_log.txt';
+  /**
+   * Set the folderpath on the filesystem where the data will be logged
+   */
+  public function setLogFilename($filepath = '')
+  {
+    if ($filepath == '') $filepath = DIR_FS_LOGS . '/admin_log.txt';
 
+    $this->destinationLogFilename = $filepath;
   }
 
   public function updateNotifyAdminFireLogWriters(&$class, $eventID, $log_data)
@@ -41,7 +48,7 @@ class zcObserverLogWriterTextfile extends base {
    * So this tests whether the logging file exists, creates it if necessary, and
    * then if the file is empty initializes it
    */
-  private function initLogFile()
+  public function initLogFile()
   {
     $init_required = false;
     if (!file_exists($this->destinationLogFilename))
@@ -72,7 +79,6 @@ class zcObserverLogWriterTextfile extends base {
       );
       $data = json_encode($data);
 
-      error_log('notice [' . date('M-d-Y H:i:s') . '] ' . substr($_SERVER['REMOTE_ADDR'],0,45) . ' ' . 'Log found to be empty. Logging started.' . "\n", 3, $this->destinationLogFilename);
       error_log('notice [' . date('M-d-Y H:i:s') . '] ' . substr($_SERVER['REMOTE_ADDR'],0,45) . ' ' . $data . "\n", 3, $this->destinationLogFilename);
     }
   }
@@ -81,7 +87,7 @@ class zcObserverLogWriterTextfile extends base {
   {
     if (file_exists($this->destinationLogFilename))
     {
-      zen_remove($this->destinationLogFilename);
+      unlink($this->destinationLogFilename);
     }
 
     $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
