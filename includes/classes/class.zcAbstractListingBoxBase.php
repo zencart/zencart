@@ -123,7 +123,7 @@ abstract class zcAbstractListingBoxBase extends base
     $this->notify('NOTIFY_LISTING_BOX_INITMAINTEMPLATE_END');
   }
   /**
-   * set template varibales for view
+   * set template variables for view
    */
   public function initTemplateVariables()
   {
