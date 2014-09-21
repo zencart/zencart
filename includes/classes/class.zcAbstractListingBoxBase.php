@@ -227,7 +227,7 @@ abstract class zcAbstractListingBoxBase extends base
    */
   public function getFormattedItemsCount()
   {
-    $this->notify('NOTIFY_LISTING_BOX_GETFORMATTEDITEMSCOUNt_START');
+    $this->notify('NOTIFY_LISTING_BOX_GETFORMATTEDITEMSCOUNT_START');
     return count($this->formattedItems);
   }
   /**
