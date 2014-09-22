@@ -11,6 +11,9 @@
 
   if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
 
+  require('../includes/classes/class.zcPassword.php');
+  define('DIR_FS_CATALOG', zen_read_config_value('DIR_FS_CATALOG', FALSE));
+
   function zen_not_null($value) {
     if (is_array($value)) {
       if (sizeof($value) > 0) {
