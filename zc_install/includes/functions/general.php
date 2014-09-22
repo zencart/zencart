@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Oct 23 18:28:44 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
  */
 
   if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
@@ -78,7 +78,6 @@ function setSelected($input, $selected) {
 function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) {
   $debug=false;
   if (!defined('DB_PREFIX')) define('DB_PREFIX', $table_prefix);
-//	  echo 'start SQL execute';
   global $db;
 
   $ignored_count=0;
@@ -440,12 +439,6 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
       }
     }
 
-// Verify e-mail has an associated MX and/or A record.
-// Need alternate method to deal with Verisign shenanigans and with Windows Servers
-//		if (!checkdnsrr($domain, "MX") && !checkdnsrr($domain, "A")) {
-//		  $valid_address = false;
-//		}
-
     return $valid_address;
   }
 
@@ -464,16 +457,22 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
   }
 
   function zen_validate_password($plain, $encrypted) {
-    if (zen_not_null($plain) && zen_not_null($encrypted)) {
-      $stack = explode(':', $encrypted);
-      if (sizeof($stack) != 2) return false;
-      if (md5($stack[1] . $plain) == $stack[0]) {
-        return true;
-      }
+
+    if (!zen_not_null($plain) || !zen_not_null($encrypted)) {
+      return false;
     }
+
+    if (strpos($encrypted, '$2y$') === 0) {
+      return zcPassword::getInstance(PHP_VERSION)->validatePassword($plain, $encrypted);
+    }
+
+    $stack = explode(':', $encrypted);
+    if (sizeof($stack) == 2) {
+      return (md5($stack[1] . $plain) == $stack[0]);
+    }
+
     return false;
   }
-
 
   function zen_rand($min = null, $max = null) {
     static $seeded;
