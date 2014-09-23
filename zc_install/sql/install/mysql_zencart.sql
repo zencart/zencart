@@ -1156,7 +1156,7 @@ CREATE TABLE orders (
   billing_address_format_id int(5) NOT NULL default '0',
   payment_method varchar(128) NOT NULL default '',
   payment_module_code varchar(32) NOT NULL default '',
-  shipping_method varchar(128) NOT NULL default '',
+  shipping_method varchar(255) NOT NULL default '',
   shipping_module_code varchar(32) NOT NULL default '',
   coupon_code varchar(32) NOT NULL default '',
   cc_type varchar(20) default NULL,
