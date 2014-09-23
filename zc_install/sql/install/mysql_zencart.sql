@@ -86,6 +86,7 @@ CREATE TABLE admin (
   admin_id int(11) NOT NULL auto_increment,
   admin_name varchar(32) NOT NULL default '',
   admin_email varchar(96) NOT NULL default '',
+  mobile_phone varchar(20) NOT NULL default '',
   admin_profile int(11) NOT NULL default '0',
   admin_pass varchar(255) NOT NULL default '',
   prev_pass1 varchar(255) NOT NULL default '',
