@@ -20,6 +20,10 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
+
+define('TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_FROM', 'Product pricerange:');
+define('TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_TO', 'to:');
+
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date:');
 define('TEXT_SPECIALS_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>');
@@ -87,3 +91,11 @@ define('TEXT_INFO_MANUAL_MANUFACTURER_REMOVE', 'Remove specials from all product
 define('TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_MANUFACTURER', 'GLOBAL MANUFACTURER REMOVE SPECIALS');
 define('TEXT_INFO_PRE_REMOVE_INTRO_MANUFACTURER', 'All Specials will be removed from Manufacturer');
 define('TEXT_PRE_REMOVE_MANUFACTURER_ID', 'Manufacturer ID to delete ALL Products on Special');
+
+define('SUCCESS_SPECIALS_UPDATED_CATEGORY', 'Specials updated for Category: ');
+define('SUCCESS_SPECIALS_REMOVED_CATEGORY', 'Specials removed for Category: ');
+define('SUCCESS_SPECIALS_UPDATED_MANUFACTURER', 'Specials updated for Manufacturer: ');
+define('SUCCESS_SPECIALS_REMOVED_MANUFACTURER', 'Specials removed for Manufacturer: ');
+
+define('SUCCESS_SPECIALS_UPDATED_MANUFACTURER', 'Specials updated for Manufacturer: ');
+define('SUCCESS_SPECIALS_PRICE_SET', 'Specials set to: ');

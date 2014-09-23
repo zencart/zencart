@@ -36,17 +36,16 @@ class BreadcrumbTest extends zcCatalogTestCase
         'Zen Cart' => 'http://zen-cart.com'
     );
 
-    public function testIsCountable()
+    public function testGetLinksReturnsArray()
     {
         $this->breadcrumb = new Breadcrumb;
-        $this->assertInstanceOf('Countable', $this->breadcrumb);
-        $this->assertCount(0, $this->breadcrumb);
+        $this->assertInternalType('array', $this->breadcrumb->getLinks());
     }
 
     public function testPopulationViaInstanciation()
     {
         $this->breadcrumb = new Breadcrumb($this->links);
-        $this->assertCount(1, $this->breadcrumb);
+        $this->assertEquals($this->links, $this->breadcrumb->getLinks());
     }
 
     public function testAddThrowsException()
@@ -82,5 +81,15 @@ class BreadcrumbTest extends zcCatalogTestCase
     {
         $this->breadcrumb = new Breadcrumb($this->links);
         $this->assertSame((string) $this->breadcrumb, $this->breadcrumb->trail());
+    }
+
+    public function testLastReturnsString()
+    {
+        $this->breadcrumb = new Breadcrumb($this->links);
+        $this->setExpectedException(
+            'PHPUnit_Framework_Error_Deprecated',
+            'Breadcrumb::last is deprecated'
+        );
+        $this->assertSame('Zen Cart', $this->breadcrumb->last());
     }
 }

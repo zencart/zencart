@@ -123,7 +123,7 @@ abstract class zcAbstractListingBoxBase extends base
     $this->notify('NOTIFY_LISTING_BOX_INITMAINTEMPLATE_END');
   }
   /**
-   * set template varibales for view
+   * set template variables for view
    */
   public function initTemplateVariables()
   {
@@ -227,7 +227,7 @@ abstract class zcAbstractListingBoxBase extends base
    */
   public function getFormattedItemsCount()
   {
-    $this->notify('NOTIFY_LISTING_BOX_GETFORMATTEDITEMSCOUNt_START');
+    $this->notify('NOTIFY_LISTING_BOX_GETFORMATTEDITEMSCOUNT_START');
     return count($this->formattedItems);
   }
   /**

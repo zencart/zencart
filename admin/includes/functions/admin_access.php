@@ -86,6 +86,7 @@ function zen_get_users($limit = '')
     $retVal[] = array('id' => $result->fields['admin_id'],
                       'name' => $result->fields['admin_name'],
                       'email' => $result->fields['admin_email'],
+                      'mobile' => $result->fields['mobile_phone'],
                       'profile' => $result->fields['admin_profile'],
                       'profileName' => $result->fields['profile_name']);
     $result->MoveNext();
@@ -120,7 +121,7 @@ function zen_check_for_invalid_admin_chars($val)
   return $isValid;
 }
 
-function zen_insert_user($name, $email, $password, $confirm, $profile)
+function zen_insert_user($name, $email, $password, $confirm, $profile, $mobile)
 {
   global $db;
   $errors = array();
@@ -144,6 +145,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
   $password = zen_db_prepare_input($password);
   $confirm = zen_db_prepare_input($confirm);
   $profile = zen_db_prepare_input($profile);
+  $mobile = zen_db_prepare_input($mobile);
   if ($password != $confirm)
   {
     $errors[] = ERROR_PASSWORDS_NOT_MATCHING;
@@ -162,12 +164,14 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
                 admin_email = :email:,
                 admin_pass = :password:,
                 admin_profile = :profile:,
+                mobile_phone = :mobile:,
                 pwd_last_change_date = now(),
                 last_modified = now()";
     $sql = $db->bindVars($sql, ':name:', $name, 'string');
     $sql = $db->bindVars($sql, ':email:', $email, 'string');
     $sql = $db->bindVars($sql, ':password:', password_hash($password, PASSWORD_DEFAULT), 'string');
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
+    $sql = $db->bindVars($sql, ':mobile:', $mobile, 'integer');
     $db->Execute($sql);
 
     $newname = preg_replace('/[^\d\w._-]/', '*', $name);
@@ -178,7 +182,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
   return $errors;
 }
 
-function zen_update_user($name, $email, $id, $profile)
+function zen_update_user($name, $email, $id, $profile, $mobile)
 {
   global $db;
   $errors = array();
@@ -207,10 +211,12 @@ function zen_update_user($name, $email, $id, $profile)
             SET admin_email = :email:, ";
     if (isset($name) && $name !== FALSE && $name != $oldData['admin_name']) $sql .= "admin_name = :name:, ";
     if (isset($profile) && $profile > 0 && $profile != $oldData['admin_profile']) $sql .= "admin_profile = :profile:, ";
+    if (isset($mobile) && $mobile != '' && $mobile != $oldData['mobile_phone']) $sql .= "mobile_phone = :mobile:, ";
     $sql .= "last_modified = NOW()
              WHERE admin_id=" . $id;
     $sql = $db->bindVars($sql, ':name:', $name, 'string');
     $sql = $db->bindVars($sql, ':email:', $email, 'string');
+    $sql = $db->bindVars($sql, ':mobile:', $mobile, 'string');
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
     $db->Execute($sql);
     // Now notify admin and user of changes
@@ -226,9 +232,13 @@ function zen_update_user($name, $email, $id, $profile)
     if ($oldData['admin_profile'] != $newData['admin_profile']) {
       $changes['profile'] = array('old' => zen_get_profile_name($oldData['admin_profile']) . '(' . $oldData['admin_profile'] . ')', 'new' => zen_get_profile_name($newData['admin_profile']) . '(' . $newData['admin_profile'] . ')');
     }
+    if ($oldData['mobile_phone'] != $newData['mobile_phone']) {
+      $changes['mobile'] = array('old' => $oldData['mobile_phone'], 'new' => $newData['mobile_phone']);
+    }
     $alertText = '';
     if (isset($changes['email'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_EMAIL_CHANGED, $oldData['admin_name'], $changes['email']['old'], $changes['email']['new'], $admname) . "\n";
     if (isset($changes['name'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_NAME_CHANGED, $oldData['admin_name'], $changes['name']['old'], $changes['name']['new'], $admname) . "\n";
+    if (isset($changes['mobile'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_MOBILE_CHANGED, $oldData['admin_name'], $changes['mobile']['old'], $changes['mobile']['new'], $admname) . "\n";
     if (isset($changes['profile'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_PROFILE_CHANGED, $oldData['admin_name'], $changes['profile']['old'], $changes['profile']['new'], $admname) . "\n";
     if ($alertText != '') zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER'=>' ', 'EMAIL_DISCLAIMER' => ' '), 'admin_settings_changed');
     if ($alertText != '') zen_mail($oldData['admin_email'], $oldData['admin_email'], TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER'=>' ', 'EMAIL_DISCLAIMER' => ' '), 'admin_settings_changed');
@@ -243,7 +253,7 @@ function zen_update_user($name, $email, $id, $profile)
 function zen_read_user($name)
 {
   global $db;
-  $sql = "select admin_id, admin_name, admin_email, admin_pass, pwd_last_change_date, reset_token, failed_logins, lockout_expires, admin_profile from " . TABLE_ADMIN . " where admin_name = :adminname:  LIMIT 1";
+  $sql = "select admin_id, admin_name, admin_email, admin_pass, pwd_last_change_date, reset_token, failed_logins, lockout_expires, admin_profile, mobile_phone from " . TABLE_ADMIN . " where admin_name = :adminname:  LIMIT 1";
   $sql = $db->bindVars($sql, ':adminname:', $name, 'string');
   $result = $db->Execute($sql);
   if ($result->EOF || $result->RecordCount() < 1) return FALSE;

@@ -14,7 +14,7 @@
 //print_r($tplVars['listingBox']);
 ?>
 <div class="centerColumn" id="indexProductList">
-  <h1 id="productListHeading"><?php echo $breadcrumb->last(); ?></h1>
+  <h1 id="productListHeading"><?php echo $current_categories_name; ?></h1>
 <?php if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') { ?>
 <?php  if ($categories_image = zen_get_categories_image($current_category_id)) { ?>
 <div id="categoryImgListing" class="categoryImg"><?php echo zen_image(DIR_WS_IMAGES . $categories_image, '', CATEGORY_ICON_IMAGE_WIDTH, CATEGORY_ICON_IMAGE_HEIGHT); ?></div>

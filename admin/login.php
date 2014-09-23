@@ -79,8 +79,6 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
 <link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
 <link href="includes/template/css/login.css" rel="stylesheet" type="text/css" />
 <meta name="robots" content="noindex, nofollow" />
-<script language="javascript" type="text/javascript"><!--
-//--></script>
 </head>
 <?php if (!isset($expired) || $expired == FALSE) { ?>
 <body id="login" >
