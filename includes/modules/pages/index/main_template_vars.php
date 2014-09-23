@@ -164,8 +164,9 @@ $listingBoxes = $listingBoxManager->getListingBoxes ();
 $tplVars['listingBoxes'] = $listingBoxes;
 
 $current_categories_description = "";
+$current_categories_name = "";
 // categories_description
-$sql = "SELECT categories_description
+$sql = "SELECT categories_description, categories_name
         FROM " . TABLE_CATEGORIES_DESCRIPTION . "
         WHERE categories_id= :categoriesID
         AND language_id = :languagesID";
@@ -176,6 +177,7 @@ $categories_description_lookup = $db->Execute ( $sql );
 if ($categories_description_lookup->RecordCount () > 0)
 {
   $current_categories_description = $categories_description_lookup->fields['categories_description'];
+  $current_categories_name = $categories_description_lookup->fields['categories_name'];
 }
 
 $zco_notifier->notify ( 'NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body );
