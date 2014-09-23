@@ -110,7 +110,18 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
         <br /><a class="right" href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL');?>"><?php echo TEXT_PASSWORD_FORGOTTEN; ?></a>
       </fieldset>
     </form>
-    <div id="loginExpiryPolicy"><?php echo LOGIN_EXPIRY_NOTICE; ?></div>
+    <div id="loginExpiryPolicy">
+      <?php if (PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED == 1 && SESSION_TIMEOUT_ADMIN > 900) {
+        $sessTimeAdm = 15;
+      } else {
+        $sessTimeAdm = round(SESSION_TIMEOUT_ADMIN/60);
+      }
+        echo sprintf(LOGIN_EXPIRY_NOTICE, $sessTimeAdm);
+      ?>
+    </div>
+    <?php if (PADSS_PWD_EXPIRY_ENFORCED == 1) { ?>
+      <div id="loginPwdExpiryPolicy"><?php echo LOGIN_PASSWORD_EXPIRY_NOTICE; ?></div>
+    <?php } ?>
     </div>
   </div>
 </div>
