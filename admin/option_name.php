@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: option_name.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: option_name.php  $
  */
 ?>
 <?php
@@ -17,30 +17,31 @@
     zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER));
   }
 
-//  if (!$lng_id) $_GET['lng_id'] = $_SESSION['languages_id'];
-//  if (!$_GET['lng_id']) $_GET['lng_id'] = $_SESSION['languages_id'];
+  $specified_language = (isset($_GET['lng_id'])) ? (int)$_GET['lng_id'] : (int)$_SESSION['languages_id'];
 
+  $lang_exists = false;
   $languages_array = array();
   $languages = zen_get_languages();
-  $_GET['lng_exists'] = false;
   for ($i=0; $i<sizeof($languages); $i++) {
-    if ($languages[$i]['id'] == $_GET['lng_id']) $_GET['lng_exists'] = true;
-
     $languages_array[] = array('id' => $languages[$i]['id'],
                                'text' => $languages[$i]['name']);
+    if ($languages[$i]['id'] == $specified_language) $lang_exists = true;
   }
-  if (!$_GET['lng_exists']==true) $_GET['lng_id'] = (int)$_SESSION['languages_id'];
+  if (! $lang_exists) $specified_language = (int)$_SESSION['languages_id'];
 
 
-if ($_GET['action'] == "update_sort_order") {
-    foreach($_POST['products_options_sort_order'] as $id => $new_sort_order) {
-      $row++;
-      $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS . " set products_options_sort_order= " . (int)$_POST['products_options_sort_order'][$id] . " where products_options_id=" . (int)$id . " and language_id=" . (int)$_GET['lng_id']);
+  if (isset($_GET['action']) && $_GET['action'] == 'update_sort_order') {
+    foreach ($_POST['products_options_sort_order'] as $id => $new_sort_order) {
+      $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS . "
+                    SET products_options_sort_order= " . (int)$_POST['products_options_sort_order'][$id] . "
+                    WHERE products_options_id=" . (int)$id . "
+                    AND language_id=" . (int)$specified_language);
     }
     $messageStack->add_session(SUCCESS_OPTION_SORT_ORDER, 'success');
-    $_GET['action']='';
-    zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_NAME, 'options_id=' . (int)$options_id . '&lng_id=' . (int)$_GET['lng_id']));
-}
+    zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_NAME, 'lng_id=' . (int)$specified_language));
+  }
+
+$usingDefaultLanguage = ($specified_language == $_SESSION['languages_id']);
 
 require('includes/admin_html_head.php');
 ?>
@@ -67,20 +68,19 @@ require('includes/admin_html_head.php');
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <table border="1" cellspacing="3" cellpadding="2" bordercolor="gray">
             <tr class="dataTableHeadingRow">
-              <td colspan="<?php echo ($_GET['lng_id']==$_SESSION['languages_id'] ? '5' : '8'); ?>" align="center" class="dataTableHeadingContent"><?php echo TEXT_EDIT_ALL; ?></td>
+              <td colspan="<?php echo ($usingDefaultLanguage ? '5' : '8'); ?>" align="center" class="dataTableHeadingContent"><?php echo TEXT_EDIT_ALL; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
-              <td colspan="3" align="center" class="dataTableHeadingContent"><?php echo ($_GET['lng_id'] !=$_SESSION['languages_id'] ? 'Current Language' : '&nbsp;'); ?></td>
+              <td colspan="3" align="center" class="dataTableHeadingContent"><?php echo (!$usingDefaultLanguage ? 'Current Language' : '&nbsp;'); ?></td>
               <?php echo zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get'); ?>
-              <?php echo zen_hide_session_id(); ?>
-              <td colspan="<?php echo ($_GET['lng_id']==$_SESSION['languages_id'] ? '2' : '5'); ?>" class="dataTableHeadingContent" align="center" valign="top"><?php echo  TEXT_SELECTED_LANGUAGE . zen_get_language_icon($_GET['lng_id']); ?>&nbsp;&nbsp;&nbsp;<?php echo zen_draw_pull_down_menu('lng_id', $languages_array, $_GET['lng_id'], 'onChange="this.form.submit();"'); ?></td>
+              <td colspan="<?php echo ($usingDefaultLanguage ? '2' : '5'); ?>" class="dataTableHeadingContent" align="center" valign="top"><?php echo  TEXT_SELECTED_LANGUAGE . zen_get_language_icon($specified_language); ?>&nbsp;&nbsp;&nbsp;<?php echo zen_draw_pull_down_menu('lng_id', $languages_array, $specified_language, 'onChange="this.form.submit();"'); ?></td>
               </form>
             </tr>
-            <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_NAME, 'action=update_sort_order&lng_id=' . $_GET['lng_id'], 'post'); ?>
+            <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_NAME, 'action=update_sort_order&lng_id=' . (int)$specified_language, 'post'); ?>
 <?php
     echo '<tr class="dataTableHeadingRow">';
 
-    if ($_GET['lng_id'] != $_SESSION['languages_id']) {
+    if (!$usingDefaultLanguage) {
     echo '  <td class="dataTableHeadingContent">&nbsp;</td>
             <td class="dataTableHeadingContent">' . TEXT_CURRENT_NAME . '</td>
             <td class="dataTableHeadingContent">' . TEXT_SORT_ORDER . '</td>';
@@ -92,7 +92,7 @@ require('includes/admin_html_head.php');
             <td class="dataTableHeadingContent">' . TEXT_SORT_ORDER . '</td>
           </tr>
           <tr>';
-    $row = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . (int)$_GET['lng_id'] . "' ORDER BY products_options_sort_order, products_options_id");
+    $row = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . (int)$specified_language . "' ORDER BY products_options_sort_order, products_options_id");
     while (!$row->EOF) {
       switch (true) {
         case ($row->fields['products_options_type']==PRODUCTS_OPTIONS_TYPE_RADIO):
@@ -112,23 +112,24 @@ require('includes/admin_html_head.php');
           break;
       }
 
-    if ($_GET['lng_id'] !=$_SESSION['languages_id']) {
-            echo '<td align="center" class="dataTableContent">' . zen_get_language_icon($_SESSION['languages_id']) . '</td>' . "\n";
-            echo '<td align="left" class="dataTableContent">' . zen_get_option_name_language($row->fields["products_options_id"], $_SESSION['languages_id']) . '</td>' . "\n";
-            echo '<td align="right" class="dataTableContent">' . zen_get_option_name_language_sort_order($row->fields["products_options_id"], $_SESSION['languages_id']) . '&nbsp;&nbsp;</td>' . "\n";
-    }
-            echo '<td align="center" class="dataTableContent">' . zen_get_language_icon($_GET['lng_id']) . '</td>' . "\n";
-            echo '<td align="right" class="dataTableContent">' . $row->fields["products_options_id"] . '</td>' . "\n";
-            echo '<td class="dataTableContent" align="center">' . $the_attributes_type . '</td>' . "\n";
-            echo '<td class="dataTableContent">' . $row->fields["products_options_name"] . '</td>' . "\n";
-            echo '<td class="dataTableContent" align="center">' . "<input type=\"text\" name=\"products_options_sort_order[".$row->fields['products_options_id']."]\" value={$row->fields['products_options_sort_order']} size=\"4\">" . '</td>' . "\n";
-            echo '</tr>' . "\n";
+      if (!$usingDefaultLanguage) {
+        echo '<td align="center" class="dataTableContent">' . zen_get_language_icon($_SESSION['languages_id']) . '</td>' . "\n";
+        echo '<td align="left" class="dataTableContent">' . zen_get_option_name_language($row->fields['products_options_id'], $_SESSION['languages_id']) . '</td>' . "\n";
+        echo '<td align="right" class="dataTableContent">' . zen_get_option_name_language_sort_order($row->fields['products_options_id'], $_SESSION['languages_id']) . '&nbsp;&nbsp;</td>' . "\n";
+      }
+      echo '<td align="center" class="dataTableContent">' . zen_get_language_icon($specified_language) . '</td>' . "\n";
+      echo '<td align="right" class="dataTableContent">' . $row->fields['products_options_id'] . '</td>' . "\n";
+      echo '<td class="dataTableContent" align="center">' . $the_attributes_type . '</td>' . "\n";
+      echo '<td class="dataTableContent">' . $row->fields['products_options_name'] . '</td>' . "\n";
+      echo '<td class="dataTableContent" align="center">' . '<input type="text" name="products_options_sort_order['.$row->fields['products_options_id'].']" value="' . $row->fields['products_options_sort_order'] . '" size="4">' . '</td>' . "\n";
+      echo '</tr>' . "\n";
+
       $row->MoveNext();
     }
 ?>
             <tr class="dataTableHeadingRow">
-              <td colspan="<?php echo ($_GET['lng_id']==$_SESSION['languages_id'] ? '1' : '4'); ?>" height="50" align="center" valign="middle" class="dataTableHeadingContent">&nbsp;</td>
-              <td colspan="4" height="50" align="center" valign="middle" class="dataTableHeadingContent"><input type="submit" value="Update Sort Order"></td>
+              <td colspan="<?php echo ($usingDefaultLanguage ? '1' : '4'); ?>" height="50" align="center" valign="middle" class="dataTableHeadingContent">&nbsp;</td>
+              <td colspan="4" height="50" align="center" valign="middle" class="dataTableHeadingContent"><input type="submit" value="<?php echo TEXT_UPDATE_SORT_ORDER;?>"></td>
             </tr>
             </form>
           </table>
