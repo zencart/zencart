@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: coupon_restrict.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -9,8 +9,8 @@
   //define('MAX_DISPLAY_RESTRICT_ENTRIES', 10);
   require('includes/application_top.php');
   $restrict_array = array();
-  $restrict_array[] = array('id'=>'Deny', text=>'Deny');
-  $restrict_array[] = array('id'=>'Allow', text=>'Allow');
+  $restrict_array[] = array('id'=>'Deny', text=>TEXT_PULLDOWN_DENY);
+  $restrict_array[] = array('id'=>'Allow', text=>TEXT_PULLDOWN_ALLOW);
 
   if ($_POST['cPath_prod'] > 0 and $_POST['manufacturers_id'] > 0) {
     $current_category_id = 0;
@@ -239,7 +239,7 @@ require('includes/admin_html_head.php');
                     <td class="smallText" align="left"></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $current_category_id); ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, $current_category_id); ?></td>
-                    <td class="smallText" align="left"><input type="submit" name="add" value="Add"></td>
+                    <td class="smallText" align="left"><input type="submit" name="add" value="<?php echo TEXT_SUBMIT_CATEGORY_ADD;?>"></td>
                     <td class="smallText" align="left">&nbsp;</td>
                     <td class="smallText" align="left">&nbsp;</td>
                   </tr>
@@ -401,7 +401,7 @@ require('includes/admin_html_head.php');
                     <td class="smallText" valign="top"><?php echo HEADER_PRODUCT_NAME; ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('products_drop', $products_array, $current_category_id); ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array); ?></td>
-                    <td class="smallText" align="left"><input type="submit" name="add" value="Update"></td>
+                    <td class="smallText" align="left"><input type="submit" name="add" value="<?php echo TEXT_SUBMIT_PRODUCT_UPDATE; ?>"></td>
                     <td class="smallText" align="left">&nbsp;</td>
                     <td class="smallText" align="left">&nbsp;</td>
 <?php } else { ?>

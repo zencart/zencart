@@ -265,8 +265,8 @@ require('includes/admin_html_head.php');
 <?php } ?>
                 <td class="dataTableContent" align="right">
 <?php
-  if (method_exists($module, 'testCommunications')) { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=commtest', 'SSL') . '"><i class="icon-signal"></i></a>'; }
-  if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo '<i class="icon-right-bold"></i>'; } else { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . '<i class="icon-info-circled"></i>' . '</a>'; }
+  if (method_exists($module, 'testCommunications')) { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=commtest', 'SSL') . '" title="' . IMAGE_ICON_COMM . '"><i class="fa fa-bolt fa-fw"></i></a>'; }
+  if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo '<i class="fa fa-chevron-circle-right fa-fw"></i>'; } else { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" title="' . IMAGE_ICON_INFO . '">' . '<i class="fa fa-exclamation-circle fa-fw"></i>' . '</a>'; }
 ?>
                 </td>
               </tr>

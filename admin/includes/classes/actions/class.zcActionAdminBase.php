@@ -123,14 +123,16 @@ abstract class zcActionAdminBase extends base
   {
     $tplVars = $this->templateVariables;
     require ('includes/template/common/tplAdminHtmlHead.php');
-    echo "\n" . "</head>";
-    echo "\n" . "<body>";
+    echo "\n" . '</head>' . "\n";
+    echo '<body id="' . $this->controllerCommand . 'Body">' . "\n";
     require_once ('includes/template/common/tplHeader.php');
     $useTemplate = $this->getMainTemplate();
     if (isset($useTemplate)) {
       require ($useTemplate);
     }
     require ('includes/template/common/tplFooter.php');
+    echo "\n" . '</body>' . "\n";
+    echo '</html>' . "\n";
   }
   public function getMainTemplate()
   {

@@ -1504,6 +1504,9 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
                   where product_id = '" . (int)$product_id . "'");
 
+    $db->Execute("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . "
+                  where products_id = '" . (int)$product_id . "'");
+
     zen_record_admin_activity('Deleted product ' . (int)$product_id . ' from database via admin console.', 'warning');
   }
 

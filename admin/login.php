@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: login.php 19296 2011-07-28 18:33:38Z wilt $
@@ -77,8 +77,6 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
 <link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
 <link href="includes/template/css/login.css" rel="stylesheet" type="text/css" />
 <meta name="robots" content="noindex, nofollow" />
-<script language="javascript" type="text/javascript"><!--
-//--></script>
 </head>
 <?php if (!isset($expired) || $expired == FALSE) { ?>
 <body id="login" >

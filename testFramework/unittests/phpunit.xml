@@ -45,7 +45,6 @@
       <directory suffix=".php">testFramework</directory>
       <directory suffix=".php">build</directory>
       <directory suffix=".php">zc_install</directory>
-      <directory suffix=".php">zc_install_old</directory>
     </blacklist>
     <whitelist processUncoveredFilesFromWhitelist="false">
       <directory suffix=".php">admin/includes</directory>
