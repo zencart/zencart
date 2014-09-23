@@ -24,6 +24,12 @@ addons:
 
 services: memcached
 
+git:
+  submodules: false
+  
+before_install:
+  - git submodule update --init --recursive
+  
 install:
   - composer install --dev --no-interaction
 

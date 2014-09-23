@@ -1,0 +1,17 @@
+actor: Tester
+paths:
+    tests: testFramework/codeception/tests
+    log: testFramework/codeception/tests/_output
+    data: testFramework/codeception/tests/_data
+    helpers: testFramework/codeception/tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+modules:
+    config:
+        Db:
+            dsn: ''
+            user: ''
+            password: ''
+            dump: testFramework/codeception/tests/_data/dump.sql

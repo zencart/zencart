@@ -31,3 +31,4 @@ build
 # Ignore phpStorm stuff 
 .idea
 
+testFramework/codeception/tests/_output/*
