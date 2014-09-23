@@ -149,7 +149,7 @@ class zcPassword extends base
     $sql = $db->bindVars($sql, ':customersId:', $_SESSION ['customer_id'], 'integer');
     $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
     $db->Execute($sql);
-    return $updatePassword;
+    return $updatedPassword;
   }
   /**
    * Update a not logged in Customer password.
