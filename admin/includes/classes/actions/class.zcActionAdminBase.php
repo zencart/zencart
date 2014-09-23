@@ -125,7 +125,6 @@ abstract class zcActionAdminBase extends base
             $this->doViewOutput();
         }
     }
-
     public function doViewOutput()
     {
         $tplVars = $this->templateVariables;

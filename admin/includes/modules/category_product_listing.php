@@ -14,7 +14,7 @@ if (isset($_GET['set_display_categories_dropdown'])) {
   $_SESSION['display_categories_dropdown'] = $_GET['set_display_categories_dropdown'];
 }
 if (!isset($_SESSION['display_categories_dropdown'])) {
-  $_SESSION['display_categories_dropdown'] = 0;
+  $_SESSION['display_categories_dropdown'] = (SHOW_DISPLAY_CATEGORIES_DROPDOWN_STATUS ? 1 : 0);
 }
 ?>
     <table border="0" width="100%" cellspacing="0" cellpadding="2">

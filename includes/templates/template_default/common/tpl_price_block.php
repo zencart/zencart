@@ -3,7 +3,7 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
@@ -68,7 +68,7 @@ if (is_array($price_array)) {
     if ($price_array['show_sale_discount'] . $price_array['show_discount_amount']) $block .= '  <div class="productPriceDiscount">' . $price_array['show_sale_discount'] . $price_array['show_discount_amount']. '</div>' . "\n";
   }
   if (isset($link) && $link != '') {
-    $block .= '  <a class="linkArrow" href="' . $link . '"><i class="icon-right-open-big"></i><span>' . MORE_INFO_TEXT . '</span></a>';
+    $block .= '  <a class="linkArrow" href="' . $link . '"><i class="fa fa-chevron-right fa-2x"></i><span>' . MORE_INFO_TEXT . '</span></a>';
   }
 
   $block .= '</div>' . "\n";

@@ -11,7 +11,7 @@
 ?>
 <div class="centerColumn" id="specialsListing">
 
-<h1 id="specialsListingHeading"><?php echo $breadcrumb->last(); ?></h1>
+<h1 id="specialsListingHeading"><?php echo NAVBAR_TITLE ?></h1>
 
 <?php
   if (($specials_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'))) {

@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package classes
  */
-class Breadcrumb implements Countable
+class Breadcrumb
 {
     /**
      * @var string
@@ -82,11 +82,22 @@ class Breadcrumb implements Countable
     }
 
     /**
-     * @return int
+     * @return array title: string => link: string
      */
-    public function count()
+    public function getLinks()
     {
-        return count($this->links);
+        return $this->links;
+    }
+
+    /**
+     * @deprecated
+     * @return string
+     */
+    public function last()
+    {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+        $titles = array_keys($this->links);
+        return end($titles);
     }
 
     /**
