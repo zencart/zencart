@@ -39,4 +39,3 @@ if (
   // redraw the page without the currency/language info in the URL
   if (isset($_GET['currency']) || isset($_GET['language'])) zen_redirect(zen_href_link($current_page_base, zen_get_all_get_params(array('currency','language'))));
 }
-?>

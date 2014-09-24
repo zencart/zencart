@@ -10,8 +10,7 @@
  */
 if (MAX_DISPLAY_PRODUCTS_NEW > 0 )
 {
-  require_once(DIR_WS_MODULES . "listingboxes/class.zcListingBoxAllDefault.php");
-  $box = new zcListingBoxAllDefault ();
+  $box = new \ZenCart\ListingBox\Build ($zcDiContainer, new \ZenCart\ListingBox\Box\AllDefault());
   $box->init();
   $tplVars['listingBox'] = $box->getTemplateVariables ();
   require($template->get_template_dir('tpl_product_listing_standard.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_product_listing_standard.php');

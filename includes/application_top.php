@@ -1,4 +1,6 @@
 <?php
+use Aura\Di\Container;
+use Aura\Di\Factory;
 /**
  * application_top.php Common actions carried out at the start of each page invocation.
  *
@@ -7,7 +9,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:
@@ -124,6 +126,9 @@ if (file_exists('includes/defined_paths.php')) {
   die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
   exit;
 }
+// load the default autoload config
+$autoloadNamespaces = include __DIR__ . '/autoload_namespaces.php';
+
 /**
  * include the extra_configures files
  */
@@ -139,6 +144,15 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   $za_dir->close();
   unset($za_dir);
 }
+require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
+$loader = new \Aura\Autoload\Loader;
+$loader->register();
+
+foreach ($autoloadNamespaces as $autoloadNamespace => $autoloadBaseDir) {
+    $loader->addPrefix($autoloadNamespace, $autoloadBaseDir);
+}
+$zcDiContainer = new Container(new Factory);
+$zcGlobalRegistry = new arrayObject(array());
 $systemContext = 'store';
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
@@ -167,3 +181,11 @@ $customers_ip_address = $_SERVER['REMOTE_ADDR'];
 if (!isset($_SESSION['customers_ip_address'])) {
   $_SESSION['customers_ip_address'] = $customers_ip_address;
 }
+$zcGlobalRegistry['current_page_base'] = $current_page_base;
+$zcGlobalRegistry['current_category_id'] = $current_category_id;
+$zcGlobalRegistry['template'] = $template;
+$zcGlobalRegistry['manufacturers_id'] = $manufacturers_id;
+$zcGlobalRegistry['new_products_category_id'] = $new_products_category_id;
+$zcGlobalRegistry['cPath'] = $cPath;
+$zcDiContainer->set('globalRegistry', $zcGlobalRegistry);
+$zcDiContainer->set('currencies', $currencies);

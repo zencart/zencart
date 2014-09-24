@@ -232,6 +232,7 @@
   define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> specials)');
   define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_FEATURED_PRODUCTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> featured products)');
   define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_ALL', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> products)');
+  define('TEXT_DISPLAY_NUMBER_OF_ENTRIES', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> entries)');
 
   define('PREVNEXT_TITLE_FIRST_PAGE', 'First Page');
   define('PREVNEXT_TITLE_PREVIOUS_PAGE', 'Previous Page');
@@ -451,6 +452,7 @@
   define('TABLE_HEADING_FEATURED_PRODUCTS','Featured Products');
 
   define('TABLE_HEADING_NEW_PRODUCTS', 'New Products For %s');
+  define('TABLE_HEADING_ALL_PRODUCTS', 'All Products');
   define('TABLE_HEADING_UPCOMING_PRODUCTS', 'Upcoming Products');
   define('TABLE_HEADING_DATE_EXPECTED', 'Date Expected');
   define('TABLE_HEADING_SPECIALS_INDEX', 'Monthly Specials For %s');

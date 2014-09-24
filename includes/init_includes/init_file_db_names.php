@@ -12,7 +12,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-zcRequest::init();
 /**
  * set the type of request (secure or not)
  */

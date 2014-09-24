@@ -13,16 +13,16 @@
 if (! defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$mainPage = zcRequest::readGet('main_page', FILENAME_DEFAULT);
-zcRequest::set('main_page', $mainPage);
+$mainPage = $zcRequest->readGet('main_page', FILENAME_DEFAULT);
+$zcRequest->set('main_page', $mainPage);
 $csrfBlackListLocal = array();
 $csrfBlackList = (isset($csrfBlackListCustom)) ? array_merge($csrfBlackListLocal, $csrfBlackListCustom) : $csrfBlackListLocal;
 if (! isset($_SESSION ['securityToken'])) {
   $_SESSION ['securityToken'] = md5(uniqid(rand(), true));
 }
-if ((zcRequest::hasGet('action') || zcRequest::hasPost('action')) && $_SERVER ['REQUEST_METHOD'] == 'POST') {
+if (($zcRequest->has('action', 'get') || $zcRequest->has('action', 'post')) && $_SERVER ['REQUEST_METHOD'] == 'POST') {
   if (! in_array($mainPage, $csrfBlackList)) {
-    if ((! isset($_SESSION ['securityToken']) || ! zcRequest::hasPost('securityToken')) || ($_SESSION ['securityToken'] !== zcRequest::readPost('securityToken'))) {
+    if ((! isset($_SESSION ['securityToken']) || ! $zcRequest->has('securityToken', 'post')) || ($_SESSION ['securityToken'] !== $zcRequest->readPost('securityToken'))) {
       zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', $request_type));
     }
   }

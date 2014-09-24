@@ -1616,6 +1616,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
     $db->execute($sql);
   }
+
+  function issetorArray(array $array, $key, $default) {
+    return isset($array[$key]) ? $array[$key] : $default;
+  }
   /////////////////////////////////////////////
 ////
 // call additional function files

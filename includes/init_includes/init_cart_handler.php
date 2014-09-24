@@ -12,7 +12,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-if (zcRequest::hasGet('action')) {
+if ($zcRequest->has('action', 'get')) {
   /**
    * redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
    */
@@ -23,16 +23,16 @@ if (zcRequest::hasGet('action')) {
     $goto =  FILENAME_SHOPPING_CART;
     $parameters = array('action', 'cPath', 'products_id', 'pid', 'main_page');
   } else {
-    $chk_handler = zen_get_info_page(zcRequest::readGet('products_id', 0));
-    $goto = zcRequest::readGet('main_page');
-    if (zcRequest::readGet('action') == 'buy_now') {
+    $chk_handler = zen_get_info_page($zcRequest->readGet('products_id', 0));
+    $goto = $zcRequest->readGet('main_page');
+    if ($zcRequest->readGet('action') == 'buy_now') {
       if (strpos($goto, 'reviews') > 5) {
         $parameters = array('action');
         $goto = FILENAME_PRODUCT_REVIEWS;
       } else {
         $parameters = array('action', 'products_id');
       }
-    } elseif (zcRequest::readGet('main_page') == $chk_handler) {
+    } elseif ($zcRequest->readGet('main_page') == $chk_handler) {
       $parameters = array('action', 'pid', 'main_page');
     } else {
       $parameters = array('action', 'pid', 'main_page', 'products_id');

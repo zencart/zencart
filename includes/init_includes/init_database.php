@@ -55,3 +55,5 @@ if ($result->RecordCount() == 0) {
   die('<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
 }
 $db->dieOnErrors = TRUE;
+$zcDiContainer->set('dbConn', $db);
+$zcDiContainer->set('request', $zcRequest);

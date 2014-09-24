@@ -44,8 +44,8 @@ session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix
 /**
  * set the session ID if it exists
  */
-if (zcRequest::hasPost(zen_session_name())) {
-  zen_session_id(zcRequest::readPost(zen_session_name()));
+if ($zcRequest->has(zen_session_name(), 'post')) {
+  zen_session_id($zcRequest->readPost(zen_session_name()));
 } elseif ( ($request_type == 'SSL') && isset($_GET[zen_session_name()]) ) {
   zen_session_id($_GET[zen_session_name()]);
 }

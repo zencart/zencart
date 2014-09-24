@@ -158,9 +158,8 @@ if ($category_depth == 'nested')
   // //////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-$listingBoxManager = zcListingBoxManager::getInstance ('INDEX_DEFAULT');
-$listingBoxManager->buildListingBoxes ();
-$listingBoxes = $listingBoxManager->getListingBoxes ();
+$listingBoxManager = new \ZenCart\ListingBox\Manager();
+$listingBoxes = $listingBoxManager->buildListingBoxes ('INDEX_DEFAULT', $zcDiContainer);
 $tplVars['listingBoxes'] = $listingBoxes;
 
 $current_categories_description = "";

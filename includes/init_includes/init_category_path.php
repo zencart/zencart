@@ -15,10 +15,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 define('TOP_MOST_CATEGORY_PARENT_ID', 0);
 
 $show_welcome = false;
-if (zcRequest::hasGet('cPath')) {
-  $cPath = zcRequest::readGet('cPath');
-} elseif (zcRequest::hasGet('products_id') && !zen_check_url_get_terms()) {
-  $cPath = zen_get_product_path(zcRequest::readGet('products_id'));
+if ($zcRequest->has('cPath')) {
+  $cPath = $zcRequest->readGet('cPath');
+} elseif ($zcRequest->has('products_id') && !zen_check_url_get_terms()) {
+  $cPath = zen_get_product_path($zcRequest->readGet('products_id'));
 } else {
   if (SHOW_CATEGORIES_ALWAYS == '1' && !zen_check_url_get_terms()) {
     $show_welcome = true;
@@ -39,4 +39,4 @@ if (zen_not_null($cPath)) {
 
 // determine whether the current page is the home page or a product listing
 //$this_is_home_page = ($current_page=='index' && ((int)$cPath == 0 || $show_welcome == true));
-$this_is_home_page = ($current_page=='index' && (zcRequest::readGet('cPath', '') == '') && (!zcRequest::hasGet('manufacturers_id') || zcRequest::readGet('manufacturers_id') == '') && (!zcRequest::hasGet('typefilter') || zcRequest::readGet('typefilter') == '') );
+$this_is_home_page = ($current_page=='index' && ($zcRequest->readGet('cPath', '') == '') && (!$zcRequest->has('manufacturers_id') || $zcRequest->readGet('manufacturers_id') == '') && (!$zcRequest->has('typefilter') || $zcRequest->readGet('typefilter') == '') );

@@ -1,22 +1,18 @@
 <?php
-namespace ZenCart\Platform;
 /**
- * File contains just the request class
+ * Class Request
  *
- * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
-/**
- * class request
- *
- * @package classes
- */
-
+namespace ZenCart\Platform;
 use Aura\Web\WebFactory;
 use Aura\Web\Request as WebRequest;
-
+/**
+ * Class Request
+ * @package ZenCart\Platform
+ */
 class Request extends \base
 {
     /**
@@ -37,7 +33,7 @@ class Request extends \base
      */
     public function __construct(WebRequest $webRequest = null)
     {
-        $this->request = $webRequest ? : (new WebFactory($GLOBALS))->newRequest();
+        $this->request = $webRequest ?: (new WebFactory($GLOBALS))->newRequest();
         $this->initParameterBag();
     }
 
@@ -55,7 +51,7 @@ class Request extends \base
      * get a parameter value from the parameter bag
      *
      * @param  string $param
-     * @param  mixed  $default
+     * @param  mixed $default
      * @param  string $source
      * @return mixed
      */
@@ -120,6 +116,18 @@ class Request extends \base
             throw new \InvalidArgumentException('Exception: invalid source for all operation');
         }
         return new \ArrayObject($this->parameterBag[$source]);
+    }
+
+    /**
+     * Set as parameter bag value
+     * Should be noted that this method is temporary until we can refactor out cases where we have done something like $_GET['param'] = val
+     * @param $param
+     * @param $value
+     * @param string $destination
+     */
+    public function set($param, $value, $destination = 'get')
+    {
+        $this->parameterBag[$destination][$param] = $value;
     }
 
     /**

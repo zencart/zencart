@@ -40,13 +40,13 @@ switch (true) {
 /**
  * for products (esp those linked to multiple categories):
  */
-  case (strstr($current_page, '_info') && zcRequest::hasGet('products_id')):
-    $canonicalLink = zen_href_link($current_page, ($includeCPath ? 'cPath=' . zen_get_generated_category_path_rev(zen_get_products_category_id(zcRequest::readGet('products_id'))) . '&' : '') . 'products_id=' . zcRequest::readGet('products_id'), 'NONSSL', false);
+  case (strstr($current_page, '_info') && $zcRequest->has('products_id')):
+    $canonicalLink = zen_href_link($current_page, ($includeCPath ? 'cPath=' . zen_get_generated_category_path_rev(zen_get_products_category_id($zcRequest->readGet('products_id'))) . '&' : '') . 'products_id=' . $zcRequest->readGet('products_id'), 'NONSSL', false);
     break;
 /**
  * for product listings (ie: "categories"):
  */
-  case ($current_page == 'index' && zcRequest::hasGet('cPath')):
+  case ($current_page == 'index' && $zcRequest->has('cPath')):
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
 // alternate way, depending on specialized site needs:
 //    $canonicalLink = zen_href_link($current_page,'cPath=' . zen_get_generated_category_path_rev($current_category_id) , 'NONSSL', false);
@@ -54,7 +54,7 @@ switch (true) {
 /**
  * for music filters:
  */
-  case ($current_page == 'index' && zcRequest::hasGet('typefilter') && zcRequest::readGet('typefilter') != '' && ( (zcRequest::hasGet('music_genre_id') && zcRequest::readGet('music_genre_id') != '' ) || (zcRequest::has('record_company_id') && zcRequest::readGet('record_company_id') != '' ) ) ):
+  case ($current_page == 'index' && $zcRequest->has('typefilter') && $zcRequest->readGet('typefilter') != '' && ( ($zcRequest->has('music_genre_id') && $zcRequest->readGet('music_genre_id') != '' ) || ($zcRequest->has('record_company_id') && $zcRequest->readGet('record_company_id') != '' ) ) ):
     unset($excludeParams[array_search('typefilter', $excludeParams)]);
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
     break;
@@ -75,11 +75,11 @@ switch (true) {
 /**
  * for manufacturer listings:
  */
-  case ($current_page == 'index' && zcRequest::hasGet('manufacturers_id')):
+  case ($current_page == 'index' && $zcRequest->has('manufacturers_id')):
 /**
  * for ez-pages:
  */
-  case ($current_page == 'page' && zcRequest::hasGet('id')):
+  case ($current_page == 'page' && $zcRequest->has('id')):
 /**
  * all the above cases get treated here:
  */

@@ -10,10 +10,8 @@
  */
 if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 )
 {
-  require_once(DIR_WS_MODULES . "listingboxes/class.zcListingBoxSpecialsDefault.php");
-  $box = new zcListingBoxSpecialsDefault ();
-  $box->init();
-  $listingBox = $box->getTemplateVariables ();
-  $tplVars['listingBox'] = $listingBox;
-  require($template->get_template_dir('tpl_product_listing_standard.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_product_listing_standard.php');
+    $box = new \ZenCart\ListingBox\Build ($zcDiContainer, new \ZenCart\ListingBox\Box\SpecialsDefault());
+    $box->init();
+    $tplVars['listingBox'] = $box->getTemplateVariables ();
+    require($template->get_template_dir('tpl_product_listing_standard.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_product_listing_standard.php');
 }

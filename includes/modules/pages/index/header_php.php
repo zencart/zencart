@@ -58,22 +58,16 @@ if (isset ( $cPath ) && zen_not_null ( $cPath ))
 }
 $define_page = zen_get_file_directory ( DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_MAIN_PAGE, 'false' );
 require (DIR_WS_MODULES . zen_get_module_directory ( 'require_languages.php' ));
+    $box = new \ZenCart\ListingBox\Build ($zcDiContainer, new \ZenCart\ListingBox\Box\ProductsDefault());
+    $box->init();
+    $tplVars['listingBox'] = $box->getTemplateVariables ();
+    if ($category_depth == 'products' && $box->getFormattedItemsCount () == 0) $robotsNoIndex = true;
+    if (SKIP_SINGLE_PRODUCT_CATEGORIES == 'True' and (! isset ( $_GET['filter_id'] ) and ! isset ( $_GET['alpha_filter'] ))) {
 
-if (true)
-{
-  require_once (DIR_WS_MODULES . "listingboxes/class.zcListingBoxProductsDefault.php");
-  $box = new zcListingBoxProductsDefault ();
-  $box->init ();
-  $tplVars['listingBox'] = $box->getTemplateVariables ();
-  if ($category_depth == 'products' && !$box->getHasContent ()) $robotsNoIndex = true;
-  if (SKIP_SINGLE_PRODUCT_CATEGORIES == 'True' and (! isset ( $_GET['filter_id'] ) and ! isset ( $_GET['alpha_filter'] )))
-  {
-    // If there is only one item in the list, and the total items available including pagination is still only 1, redirect directly to the product page
-    if ($box->getFormattedItemsCount () == 1 && $box->paginator->getAdapter()->getTotalItems() < 2)
+    if ($box->getItemCount () == 1)
     {
       zen_redirect ( zen_href_link ( zen_get_info_page ( $tplVars['listingBox']['items'][0]['products_id'] ), ($cPath ? 'cPath=' . $tplVars['listingBox']['items'][0]['productCpath'] . '&' : '') . 'products_id=' . $tplVars['listingBox']['items'][0]['products_id'] ) );
     }
   }
-}
 // This should be last line of the script:
 $zco_notifier->notify ( 'NOTIFY_HEADER_END_INDEX' );
