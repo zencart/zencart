@@ -475,7 +475,7 @@ class queryFactory extends base {
   }
 }
 
-class queryFactoryResult implements Iterator {
+class queryFactoryResult implements Countable, Iterator {
   /**
    * Indicates if the result has reached the last row of data.
    *
@@ -616,14 +616,21 @@ class queryFactoryResult implements Iterator {
    */
   public function rewind() {
     $this->Move(0);
-    $this->EOF = ($this->RecordCount() > 0);
+    $this->EOF = ($this->RecordCount() == 0);
   }
 
   /* (non-PHPdoc)
    * @see Iterator::valid()
-  */
+   */
   public function valid() {
     return $this->cursor < $this->RecordCount() && !$this->EOF;
+  }
+
+  /* (non-PHPdoc)
+   * @see Iterator::count()
+   */
+  public function count() {
+    return $this->RecordCount();
   }
 
   /**

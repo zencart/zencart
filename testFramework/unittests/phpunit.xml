@@ -7,28 +7,6 @@
 >
   <testsuites>
 
-    <testsuite name="Password Hash Functions">
-      <file>testTestCase.php</file>
-      <file>testPasswordHashCase.php</file>
-      <file>testRequestCase.php</file>
-    </testsuite>
-
-    <testsuite name="URL Functions">
-      <file>testCatalogUrlGeneration.php</file>
-      <file>testCatalogUrlSefuGeneration.php</file>
-      <file>testAdminCatalogUrlGeneration.php</file>
-      <file>testAdminCatalogUrlSefuGeneration.php</file>
-      <file>testAdminUrlGeneration.php</file>
-    </testsuite>
-
-    <testsuite name="AdminFunctions">
-      <directory suffix="Test.php">admin/functions</directory>
-    </testsuite>
-
-    <testsuite name="Catalog">
-      <directory suffix="Test.php">catalog</directory>
-    </testsuite>
-
     <testsuite name="Admin Logging Infrastructure">
       <file>testAdminLoggingCase.php</file>
     </testsuite>

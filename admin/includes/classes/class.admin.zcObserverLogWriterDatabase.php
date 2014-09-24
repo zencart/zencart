@@ -22,7 +22,13 @@ class zcObserverLogWriterDatabase extends base {
   {
     global $db;
     $this->initLogsTable();
+    $sql_data_array = $this->dbPrepareLogData($log_data);
+    zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+  }
 
+  public function dbPrepareLogData($log_data)
+  {
+    global $db;
     /**
      * gzip the passed postdata so that it takes less storage space in the database
      */
@@ -42,7 +48,7 @@ class zcObserverLogWriterDatabase extends base {
             'severity' => $db->prepare_input($log_data['severity']),
             'logmessage' => $this->preserveSpecialCharacters($db->prepare_input($log_data['specific_message'])),
     );
-    zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+    return $sql_data_array;
   }
 
   /**
@@ -54,7 +60,8 @@ class zcObserverLogWriterDatabase extends base {
     global $db;
     $sql = "SELECT ip_address from " . TABLE_ADMIN_ACTIVITY_LOG . " LIMIT 1";
     $result = $db->Execute($sql);
-    if ($result->RecordCount() < 1) {
+
+    if (count($result) == 0) {
       $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
       $sql_data_array = array( 'access_date' => 'now()',
               'admin_id' => (int)$admin_id,
@@ -78,11 +85,10 @@ class zcObserverLogWriterDatabase extends base {
     $sql = "show fields from " . TABLE_ADMIN_ACTIVITY_LOG;
     $result = $db->Execute($sql);
     $found_logmessage = false;
-    while (!$result->EOF) {
-      if  ($result->fields['Field'] == 'logmessage') {
+    foreach ($result as $field=>$val) {
+      if ($field == 'Field' && $val == 'logmessage') {
         $found_logmessage = true;
       }
-      $result->MoveNext();
     }
     if (!$found_logmessage)
     {
@@ -92,11 +98,10 @@ class zcObserverLogWriterDatabase extends base {
     // add 'severity' field of type varchar(9)
     $sql = "show fields from " . TABLE_ADMIN_ACTIVITY_LOG;
     $result = $db->Execute($sql);
-    while (!$result->EOF) {
-      if  ($result->fields['Field'] == 'severity') {
+    foreach ($result as $field=>$val) {
+      if ($field == 'Field' && $val == 'severity') {
         return true; // exists, so return with no error
       }
-      $result->MoveNext();
     }
     $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " ADD COLUMN severity varchar(9) NOT NULL default 'info'";
     $db->Execute($sql);
@@ -118,7 +123,6 @@ class zcObserverLogWriterDatabase extends base {
             'logmessage' => 'Updated database schema to allow for tracking [severity] in logs. NOTE: Severity levels before this date did not draw extra attention to add/remove of admin users or payment modules (CRUD operations), so old occurrences will have severity of INFO; new occurrences will have the severity of WARNING.',
     );
     zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
-    return false;
   }
 
   public function preserveSpecialCharacters($string)
@@ -129,6 +133,10 @@ class zcObserverLogWriterDatabase extends base {
     return $translated;
   }
 
+  /**
+   * PCI requires that if the log table is reset, that the reset be logged
+   * This does both.
+   */
   public function updateNotifyAdminFireLogWriterReset()
   {
     global $db;
