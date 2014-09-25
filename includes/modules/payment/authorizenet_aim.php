@@ -542,6 +542,7 @@ class authorizenet_aim extends base {
                          'x_delim_char' => $this->delimiter,  // The default delimiter is a comma
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
+                         'x_solution_id' => 'A1000003', // used by authorize.net
                          ), $submit_data);
 
     if(MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE == 'Test') {
