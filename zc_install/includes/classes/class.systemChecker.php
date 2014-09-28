@@ -23,8 +23,7 @@ class systemChecker
 
     if ($selectedAdminDir == 'UNSPECIFIED' || $selectedAdminDir == '' || !file_exists(DIR_FS_ROOT . $selectedAdminDir))
     {
-      $adminDirectoryList = $this->getAdminDirectoryList();
-      if (count($adminDirectoryList) == 1) $selectedAdminDir = $adminDirectoryList[0];
+      if (count($this->adminDirectoryList) == 1) $selectedAdminDir = $this->adminDirectoryList[0];
     }
     $this->selectedAdminDir = $selectedAdminDir;
   }
@@ -584,7 +583,7 @@ class systemChecker
     $header['content'] = $content;
     return $header;
   }
-  function getAdminDirectoryList()
+  static function getAdminDirectoryList()
   {
     $adminDirectoryList = array();
 
