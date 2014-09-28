@@ -429,15 +429,6 @@ class systemChecker
     }
     return $result;
   }
-  public function checkRegisterGlobals($parameters)
-  {
-    $register_globals = ini_get("register_globals");
-    if ($register_globals == '' || $register_globals =='0' || strtoupper($register_globals) =='OFF') {
-      return TRUE;
-    } else {
-      return FALSE;
-    }
-  }
   public function checkIniGet($parameters)
   {
     $result = @ini_get($parameters['inigetName']);
