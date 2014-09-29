@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.6.0 $
  */
 /**
  * authorize.net SIM payment method class
@@ -119,7 +119,7 @@ class authorizenet extends base {
   //   return (bin2hex (mhash(MHASH_MD5, $data, $key)));
   //}
 
-  // Thanks is lance from http://www.php.net/manual/en/function.mhash.php
+  // Thanks to lance from http://www.php.net/manual/en/function.mhash.php#27225
   //lance_rushing at hot* spamfree *mail dot com
   //27-Nov-2002 09:36
   //
@@ -135,7 +135,7 @@ class authorizenet extends base {
     // RFC 2104 HMAC implementation for php.
     // Creates an md5 HMAC.
     // Eliminates the need to install mhash to compute a HMAC
-    // Hacked by Lance Rushing
+    // by Lance Rushing
 
     $b = 64; // byte length for md5
     if (strlen($key) > $b) {
