@@ -15,6 +15,7 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $customers_id = zen_db_prepare_input($_GET['cID']);
   if (isset($_POST['cID'])) $customers_id = zen_db_prepare_input($_POST['cID']);
+  if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 
   $error = false;
   $processed = false;
