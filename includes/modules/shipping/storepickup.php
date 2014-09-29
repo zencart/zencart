@@ -55,6 +55,7 @@ class storepickup extends base {
     $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
     $this->enabled = ((MODULE_SHIPPING_STOREPICKUP_STATUS == 'True') ? true : false);
+    $this->update_status();
   }
   /**
    * Perform various checks to see whether this module should be visible
