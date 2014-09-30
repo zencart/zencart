@@ -1534,7 +1534,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     $fp = @fopen($filepath, 'a');
     if ($fp) {
       @fclose($fp);
-      if ($make_unwritable) set_unwritable($filepath);
+//       if ($make_unwritable) set_unwritable($filepath);
       $fp = @fopen($filepath, 'a');
       if ($fp) {
         @fclose($fp);
