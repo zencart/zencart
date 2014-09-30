@@ -7,9 +7,9 @@
  * Using this method, the debug details are stored at: /logs/myDEBUG-999999-00000000.log
  *
  * @package debug
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.6.0 $
  */
 
 if (!defined('DIR_FS_LOGS')) {
@@ -41,7 +41,7 @@ if (!defined('DIR_FS_LOGS')) {
  * Error reporting level to log
  * Default: E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT
  */
-  $errors_to_log = (version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+  $errors_to_log = E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT;
 
 
 ///// DO NOT EDIT BELOW THIS LINE /////

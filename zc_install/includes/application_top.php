@@ -77,7 +77,7 @@ if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
  * set the level of error reporting
  */
 if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
-error_reporting(version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);
 @ini_set('log_errors_max_len', 0);
@@ -103,21 +103,6 @@ if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 } else
 {
   @date_default_timezone_set(date_default_timezone_get());
-}
-
-/*
- * check settings for, and then turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
-if (version_compare(PHP_VERSION, 5.4, '<'))
-{
-  $php_magic_quotes_runtime = (@get_magic_quotes_runtime() > 0) ? 'ON' : 'OFF';
-  $val = @ini_get('magic_quotes_sybase');
-  if (is_string($val) && strtolower($val) == 'on')
-    $val = 1;
-  $php_magic_quotes_sybase = ((int)$val > 0) ? 'ON' : 'OFF';
-  if ((int)$val != 0)
-    @ini_set('magic_quotes_sybase', 0);
-  unset($val);
 }
 
 /*

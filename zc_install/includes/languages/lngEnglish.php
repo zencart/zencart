@@ -141,10 +141,10 @@ define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not
 define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is too old, and this version of Zen Cart&reg; cannot be used on this server in its present configuration.</p>
-<p>This version of Zen Cart&reg; is compatible with PHP versions 5.3.7 through 5.6.x (will work with a minimum of 5.3.0 but with weaker security).<br>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.4.0 through 5.6.x.<br>
 Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
-define('TEXT_ERROR_PHP53_CGI_BUG', 'PHP Versions 5.3.0-thru-5.3.11 and PHP 5.4.0 and 5.4.1 have a <a href="http://arstechnica.com/security/2014/03/php-bug-allowing-site-hijacking" target="_blank">security flaw in CGI mode</a>. Your server has that flaw. You need to upgrade your PHP version to a modern safe version, or stop running in CGI mode.');
+define('TEXT_ERROR_PHP53_CGI_BUG', 'PHP Versions PHP 5.4.0 and 5.4.1 have a <a href="http://arstechnica.com/security/2014/03/php-bug-allowing-site-hijacking" target="_blank">security flaw in CGI mode</a>. Your server has that flaw. You need to upgrade your PHP version to a modern safe version, or stop running in CGI mode.');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
 define('TEXT_ERROR_MYSQL_SUPPPORT', 'Problems with your MySQL (mysqli) support');
