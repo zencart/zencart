@@ -114,19 +114,7 @@
 
     // Handle parameters passed as an array (using RFC 3986)
     if(is_array($parameters)) {
-      if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
-      }
-      else {
-        $compile = array();
-        foreach($parameters as $key => $value) {
-          // Prior to PHP 5.3, tildes might be encoded per RFC 1738
-          // This should not impact functionality for 99% of users.
-          $compile[] = rawurlencode($key) . '=' . rawurlencode($value);
-        }
-        $parameters = implode('&', $compile);
-        unset($compile);
-      }
+      $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
     }
     else {
       // Clean up parameters (should not start or end with these characters)
@@ -274,19 +262,7 @@
 
     // Handle parameters passed as an array (using RFC 3986)
     if(is_array($parameters)) {
-      if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
-      }
-      else {
-        $compile = array();
-        foreach($parameters as $key => $value) {
-          // Prior to PHP 5.3, tildes might be encoded per RFC 1738
-          // This should not impact functionality for 99% of users.
-          $compile[] = rawurlencode($key) . '=' . rawurlencode($value);
-        }
-        $parameters = implode('&', $compile);
-        unset($compile);
-      }
+      $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
     }
     else {
       // Clean up parameters (should not start or end with these characters)

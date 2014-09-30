@@ -118,11 +118,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
   }
 
   // Use mcrypt with /dev/urandom if available
-  if ($data === null && function_exists('mcrypt_create_iv') && (
-    // There is a bug in Windows + IIS in older versions of PHP
-    strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' ||
-    version_compare(PHP_VERSION, '5.3.7', '>=')
-  ))
+  if ($data === null && function_exists('mcrypt_create_iv'))
   {
     //echo('Attempting to create entropy using mcrypt');
     $entropy = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);

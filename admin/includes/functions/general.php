@@ -1055,11 +1055,8 @@
 
 ////
 // Sets timeout for the current script.
-// Cant be used in safe mode.
   function zen_set_time_limit($limit) {
-    if (version_compare(PHP_VERSION, 5.4, '>=') || !get_cfg_var('safe_mode')) {
-      @set_time_limit($limit);
-    }
+    @set_time_limit($limit);
   }
 
 
@@ -1166,7 +1163,6 @@
                  'db_version' => 'MySQL ' . $db->get_server_info(),
                  'db_date' => zen_datetime_short($db_query->fields['datetime']),
                  'php_memlimit' => @ini_get('memory_limit'),
-                 'php_safemode' => version_compare(PHP_VERSION, 5.4, '<') ? strtolower(@ini_get('safe_mode')) : '',
                  'php_file_uploads' => strtolower(@ini_get('file_uploads')),
                  'php_uploadmaxsize' => @ini_get('upload_max_filesize'),
                  'php_postmaxsize' => @ini_get('post_max_size'),
