@@ -172,12 +172,6 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
     methods:
       checkDBConnection:
-  checkRegisterGlobals:
-    runLevel: always
-    errorLevel: WARN
-    mainErrorText: <?php echo TEXT_ERROR_REGISTER_GLOBALS .PHP_EOL; ?>
-    methods:
-      checkRegisterGlobals:
   checkGD:
     runLevel: always
     errorLevel: WARN
