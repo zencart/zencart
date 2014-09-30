@@ -203,7 +203,7 @@ if (isset($_POST['lng']))
   {
     $lng = 'en_us';
   }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php'))
   {
     $lng = 'en_us';
   }
@@ -214,10 +214,10 @@ if (isset($_POST['lng']))
   {
     $lng = 'en_us';
   }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php'))
   {
     $lng = 'en_us';
   }
 }
 $lng_short = substr($lng, 0, strpos($lng, '_'));
-require(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php');
+require(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php');
