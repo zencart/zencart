@@ -73,8 +73,8 @@ require('includes/admin_html_head.php');
     <td width="51%"><strong><?php echo TITLE_HTTP_SERVER; ?></strong> <?php echo $system['http_server']; ?></td>
   </tr>
   <tr>
-    <td><strong><?php echo TITLE_PHP_VERSION; ?></strong> <?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')' . ($system['php_memlimit'] != '' ? ' &nbsp; <strong>' . TITLE_PHP_MEMORY_LIMIT . '</strong> ' . $system['php_memlimit'] : ''); ?></td>
-    <td><?php echo '<strong>' . TITLE_PHP_SAFE_MODE . '</strong> ' . ($system['php_safemode'] != '' && $system['php_safemode'] != 'off' && $system['php_safemode'] != '0' ? 'On' : 'Off'); ?></td>
+    <td><strong><?php echo TITLE_PHP_VERSION; ?></strong> <?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
+    <td><?php echo ($system['php_memlimit'] != '' ? '<strong>' . TITLE_PHP_MEMORY_LIMIT . '</strong> ' . $system['php_memlimit'] : ''); ?></td>
   </tr>
   <tr>
     <td><strong><?php echo TITLE_PHP_FILE_UPLOADS; ?></strong>

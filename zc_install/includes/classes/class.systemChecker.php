@@ -23,8 +23,7 @@ class systemChecker
 
     if ($selectedAdminDir == 'UNSPECIFIED' || $selectedAdminDir == '' || !file_exists(DIR_FS_ROOT . $selectedAdminDir))
     {
-      $adminDirectoryList = $this->getAdminDirectoryList();
-      if (count($adminDirectoryList) == 1) $selectedAdminDir = $adminDirectoryList[0];
+      if (count($this->adminDirectoryList) == 1) $selectedAdminDir = $this->adminDirectoryList[0];
     }
     $this->selectedAdminDir = $selectedAdminDir;
   }
@@ -429,15 +428,6 @@ class systemChecker
     }
     return $result;
   }
-  public function checkRegisterGlobals($parameters)
-  {
-    $register_globals = ini_get("register_globals");
-    if ($register_globals == '' || $register_globals =='0' || strtoupper($register_globals) =='OFF') {
-      return TRUE;
-    } else {
-      return FALSE;
-    }
-  }
   public function checkIniGet($parameters)
   {
     $result = @ini_get($parameters['inigetName']);
@@ -584,7 +574,7 @@ class systemChecker
     $header['content'] = $content;
     return $header;
   }
-  function getAdminDirectoryList()
+  static function getAdminDirectoryList()
   {
     $adminDirectoryList = array();
 
@@ -657,14 +647,14 @@ class systemChecker
     return TRUE;
   }
   /**
-   * Check to ensure that the PHP version is safe from the CGI bug introduced in 5.3
+   * Check to ensure that the PHP version is safe from the CGI bug introduced in 5.3 and present until 5.4.1
    * ref: http://arstechnica.com/security/2014/03/php-bug-allowing-site-hijacking-still-menaces-internet-22-months-on/
    * @return boolean
    */
   function checkIsPhpSafeFromCgiBug()
   {
     $phpVersion = PHP_VERSION;
-    if ((version_compare(PHP_VERSION, '5.3.0', 'ge') && version_compare(PHP_VERSION, '5.3.12', 'lt')) || (version_compare(PHP_VERSION, '5.4.0', 'ge') && version_compare(PHP_VERSION, '5.4.2', 'lt'))) {
+    if (version_compare(PHP_VERSION, '5.4.0', 'ge') && version_compare(PHP_VERSION, '5.4.2', 'lt')) {
       if (stristr(php_sapi_name(), 'cgi')) {
         // has bug, so not safe, thus return false:
         return false;

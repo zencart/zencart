@@ -8,7 +8,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -19,6 +19,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class queryFactory extends base {
   var $link, $count_queries, $total_query_time, $dieOnErrors;
+  var $error_number = 0;
+  var $error_text = '';
 
   function __construct() {
     $this->count_queries = 0;
@@ -278,7 +280,7 @@ class queryFactory extends base {
     return($obj);
   }
 
-  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0) {
+  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     $this->zf_sql = $zf_sql;
     $time_start = explode(' ', microtime());
     $obj = new queryFactoryResult();
@@ -475,7 +477,7 @@ class queryFactory extends base {
   }
 }
 
-class queryFactoryResult implements Iterator {
+class queryFactoryResult implements Countable, Iterator {
   /**
    * Indicates if the result has reached the last row of data.
    *
@@ -616,14 +618,21 @@ class queryFactoryResult implements Iterator {
    */
   public function rewind() {
     $this->Move(0);
-    $this->EOF = ($this->RecordCount() > 0);
+    $this->EOF = ($this->RecordCount() == 0);
   }
 
   /* (non-PHPdoc)
    * @see Iterator::valid()
-  */
+   */
   public function valid() {
     return $this->cursor < $this->RecordCount() && !$this->EOF;
+  }
+
+  /* (non-PHPdoc)
+   * @see Iterator::count()
+   */
+  public function count() {
+    return $this->RecordCount();
   }
 
   /**
