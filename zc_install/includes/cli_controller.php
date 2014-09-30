@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -57,6 +57,7 @@ if (count($adminDirectoryList) > 1)
 list($adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $catalogHttpsServer, $catalogHttpsUrl, $dir_ws_http_catalog, $dir_ws_https_catalog) = getDetectedURIs();
 $db_type = 'mysql';
 $db_charset = 'utf8';
+$db_prefix = '';
 $sql_cache_method = 'none'; // 'file', 'database'
 $db_host = isset($zc_settings['db_host']) ? $zc_settings['db_host'] : 'localhost';
 $db_name = isset($zc_settings['db_name']) ? $zc_settings['db_name'] : 'zencart';

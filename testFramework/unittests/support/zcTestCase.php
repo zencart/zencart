@@ -29,6 +29,7 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
     if(!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(__DIR__ . '/../../../') . '/');
     if(!defined('DIR_FS_INCLUDES')) define('DIR_FS_INCLUDES', DIR_FS_CATALOG . 'includes/');
     if(!defined('CWD')) define('CWD', DIR_FS_INCLUDES . '../');
+    if (!defined('DIR_CATALOG_LIBRARY')) define('DIR_CATALOG_LIBRARY', DIR_FS_INCLUDES . 'library/');
 
     if (strpos(@ini_get('include_path'), '.') === false)
     {
@@ -64,5 +65,7 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
 
     require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
     require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
+
+
   }
 }

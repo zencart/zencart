@@ -40,9 +40,9 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 5.3.0
+          version: 5.4.0
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.3.0') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.4.0') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
@@ -172,12 +172,6 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
     methods:
       checkDBConnection:
-  checkRegisterGlobals:
-    runLevel: always
-    errorLevel: WARN
-    mainErrorText: <?php echo TEXT_ERROR_REGISTER_GLOBALS .PHP_EOL; ?>
-    methods:
-      checkRegisterGlobals:
   checkGD:
     runLevel: always
     errorLevel: WARN

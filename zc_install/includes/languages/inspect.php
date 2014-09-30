@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: inspect.php 19537 2011-09-20 17:14:44Z drbyte $
@@ -58,7 +58,6 @@
   define('LABEL_REGISTER_GLOBALS','Register Globals');
   define('LABEL_SET_TIME_LIMIT','PHP Max Execution Time per page');
   define('LABEL_DISABLED_FUNCTIONS','Disabled PHP Functions');
-  define('LABEL_SAFE_MODE','PHP Safe Mode');
   define('LABEL_CURRENT_CACHE_PATH','Current SQL Cache Folder');
   define('LABEL_SUGGESTED_CACHE_PATH','Suggested SQL Cache Folder');
   define('LABEL_HTTP_HOST','HTTP Host');
