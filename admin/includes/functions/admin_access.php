@@ -182,7 +182,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile, $mobile)
   return $errors;
 }
 
-function zen_update_user($name, $email, $id, $profile, $mobile)
+function zen_update_user($name, $email, $id, $profile, $mobile = FALSE)
 {
   global $db;
   $errors = array();
@@ -211,7 +211,7 @@ function zen_update_user($name, $email, $id, $profile, $mobile)
             SET admin_email = :email:, ";
     if (isset($name) && $name !== FALSE && $name != $oldData['admin_name']) $sql .= "admin_name = :name:, ";
     if (isset($profile) && $profile > 0 && $profile != $oldData['admin_profile']) $sql .= "admin_profile = :profile:, ";
-    if (isset($mobile) && $mobile != '' && $mobile != $oldData['mobile_phone']) $sql .= "mobile_phone = :mobile:, ";
+    if (isset($mobile) && $mobile !== FALSE && $mobile != $oldData['mobile_phone']) $sql .= "mobile_phone = :mobile:, ";
     $sql .= "last_modified = NOW()
              WHERE admin_id=" . $id;
     $sql = $db->bindVars($sql, ':name:', $name, 'string');
