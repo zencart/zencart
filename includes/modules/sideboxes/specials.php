@@ -32,7 +32,6 @@
                              and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                              and s.status = 1";
 
-//    $random_specials_sidebox_product = zen_random_select($random_specials_sidebox_product_query);
     $random_specials_sidebox_product = $db->ExecuteRandomMulti($random_specials_sidebox_product_query, MAX_RANDOM_SELECT_SPECIALS);
 
     if ($random_specials_sidebox_product->RecordCount() > 0)  {
