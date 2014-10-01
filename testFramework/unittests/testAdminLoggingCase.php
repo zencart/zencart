@@ -466,17 +466,9 @@ class testAdminLoggingCase extends zcAdminTestCase
  * Test Dummy
  */
 if (!function_exists('zen_get_admin_name')) {
-  function zen_get_admin_name() {};
+  function zen_get_admin_name() { return 'TestAdminName';}
 }
 define('TABLE_ADMIN_ACTIVITY_LOG', 'mocked_db_table_instance');
-/**
- * Test Mock
- */
-if (!function_exists('zen_db_perform')) {
-  function zen_db_perform($table, $dataArray, $action = 'insert', $where = '') {
-    // simply takes the $DataArray and stuffs it into $table (unless additional params are passed)
-  }
-}
 
 
 
