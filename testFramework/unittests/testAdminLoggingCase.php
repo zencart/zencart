@@ -13,6 +13,13 @@ use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
 require_once('support/zcAdminTestCase.php');
 /**
+ * Test Dummy
+ */
+if (!function_exists('zen_get_admin_name')) {
+  function zen_get_admin_name() { return 'TestAdminName';}
+}
+
+/**
  * Testing Library
  */
 class testAdminLoggingCase extends zcAdminTestCase
@@ -305,38 +312,17 @@ class testAdminLoggingCase extends zcAdminTestCase
     }
 
 
-
-
     /* ********************************************************* */
 
-
-
-
-    /** db writer **/
+    /** db writer unit tests (note: other methods are tested using functional db tests **/
     public function testDbLogWriterInstantiation()
     {
-      require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-      global $db;
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array('Field'=>'logmessage'), array('Field'=>'severity'));
-      $db->method('execute')
-      ->will($this->returnValue($db));
-
       $observer = new zcObserverLogWriterDatabase(new notifier);
       $this->assertTrue($observer instanceof zcObserverLogWriterDatabase);
     }
 
     public function testDbPrepareLogData()
     {
-      require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-      global $db;
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array('Field'=>'logmessage'), array('Field'=>'severity'));
-      $db->method('execute')
-      ->will($this->returnValue($db));
-      $db->method('prepare_input')->will($this->returnArgument(0));
-
-      global $PHP_SELF;
       $specific_message= 'This is a test message';
       $severity = 'warning';
       $postdata = json_encode(array('name'=>'x', 'desc'=>'y'));
@@ -345,11 +331,11 @@ class testAdminLoggingCase extends zcAdminTestCase
 
       $log_data = array(
               'event_epoch_time'=> time(),
-              'admin_id'        => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
-              'page_accessed'   => basename($PHP_SELF) . (!isset($_SESSION['admin_id']) || (int)$_SESSION['admin_id'] == 0 ? ' ' . (isset($_POST['admin_name']) ? $_POST['admin_name'] : (isset($_POST['admin_email']) ? $_POST['admin_email'] : '') ) : ''),
+              'admin_id'        => 0,
+              'page_accessed'   => 'testpage',
               'page_parameters' => preg_replace('/(&amp;|&)$/', '', '&amp;item1=abc&amp;item2=defg'),
               'specific_message'=> $specific_message,
-              'ip_address'      => substr($_SERVER['REMOTE_ADDR'],0,45),
+              'ip_address'      => 'localhost',
               'postdata'        => $postdata,
               'flagged'         => $flagged,
               'attention'       => ($notes === false ? '' : $notes),
@@ -359,133 +345,19 @@ class testAdminLoggingCase extends zcAdminTestCase
       $observer = new zcObserverLogWriterDatabase(new notifier);
       $result = $observer->dbPrepareLogData($log_data);
 
-      $this->assertTrue($result['severity'] == $severity);
-      $this->assertTrue($result['flagged'] == $flagged);
-      $this->assertTrue($result['gzpost'] == gzdeflate($postdata, 7));
-      $this->assertTrue($result['logmessage'] == $specific_message);
+      $this->assertTrue($result[5]['fieldName'] == 'gzpost'   && $result[5]['value'] == gzdeflate($postdata, 7));
+      $this->assertTrue($result[6]['fieldName'] == 'flagged'  && $result[6]['value'] == $flagged);
+      $this->assertTrue($result[8]['fieldName'] == 'severity' && $result[8]['value'] == $severity);
+      $this->assertTrue($result[9]['fieldName'] == 'logmessage' && $result[9]['value'] == $specific_message);
     }
 
     public function testPreserveSpecialCharacters()
     {
-      require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-      global $db;
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array('Field'=>'logmessage'), array('Field'=>'severity'));
-      $db->method('execute')
-      ->will($this->returnValue($db));
-
       $string = 'test1\ntest2';
       $observer = new zcObserverLogWriterDatabase(new notifier);
       $result = $observer->preserveSpecialCharacters($string);
-      // note the test
+      // note the test uses double-quotes vs the original string uses single-quotes
       $this->assertTrue($result == "test1\ntest2");
     }
 
-    public function testDbWriterInitLogsTable()
-    {
-      require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-      global $db;
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array());
-      $db->method('execute')
-      ->will($this->returnValue($db));
-
-      $observer = new zcObserverLogWriterDatabase(new notifier);
-      $db->fields = array(array());
-      $result = $observer->initLogsTable();
-    }
-
-    public function testUpdateNotifyAdminFireDbLogWriter()
-    {
-      global $PHP_SELF;
-      $specific_message= '';
-      $severity = 'warning';
-      $postdata = json_encode(array('name'=>'x', 'desc'=>'y'));
-      $flagged = false;
-      $notes = false;
-
-      $log_data = array(
-              'event_epoch_time'=> time(),
-              'admin_id'        => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
-              'page_accessed'   => basename($PHP_SELF) . (!isset($_SESSION['admin_id']) || (int)$_SESSION['admin_id'] == 0 ? ' ' . (isset($_POST['admin_name']) ? $_POST['admin_name'] : (isset($_POST['admin_email']) ? $_POST['admin_email'] : '') ) : ''),
-              'page_parameters' => preg_replace('/(&amp;|&)$/', '', '&amp;item1=abc&amp;item2=defg'),
-              'specific_message'=> $specific_message,
-              'ip_address'      => substr($_SERVER['REMOTE_ADDR'],0,45),
-              'postdata'        => $postdata,
-              'flagged'         => $flagged,
-              'attention'       => ($notes === false ? '' : $notes),
-              'severity'        => $severity,
-      );
-
-      require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-      global $db;
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array('Field'=>'logmessage'), array('Field'=>'severity'));
-      $db->method('execute')
-      ->will($this->returnValue($db));
-
-      $observer = new zcObserverLogWriterDatabase(new notifier);
-      $result = $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $log_data);
-    }
-
-    public function testCheckLogSchema()
-    {
-      require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-      global $db;
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array('Field'=>'logmessage'), array('Field'=>'severity'));
-      $db->method('execute')
-      ->will($this->returnValue($db));
-
-      $observer = new zcObserverLogWriterDatabase(new notifier);
-
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array('Field'=>'logmessage'), array('Field'=>'severity'));
-      $db->method('execute')
-      ->will($this->returnValue($db));
-
-      $result = $observer->checkLogSchema();
-    }
-
-    public function testUpdateNotifyAdminFireLogWriterReset()
-    {
-      require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-      global $db;
-      $db = $this->getMock('queryFactory');
-      $db->fields = array(array('Field'=>'logmessage'), array('Field'=>'severity'));
-      $db->method('execute')
-      ->will($this->returnValue($db));
-
-      $observer = new zcObserverLogWriterDatabase(new notifier);
-      $result = $observer->updateNotifyAdminFireLogWriterReset();
-    }
-
 }
-
-/**
- * Test Dummy
- */
-if (!function_exists('zen_get_admin_name')) {
-  function zen_get_admin_name() { return 'TestAdminName';}
-}
-define('TABLE_ADMIN_ACTIVITY_LOG', 'mocked_db_table_instance');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
