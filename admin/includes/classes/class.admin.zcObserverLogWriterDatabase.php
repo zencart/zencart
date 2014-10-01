@@ -23,7 +23,7 @@ class zcObserverLogWriterDatabase extends base {
     global $db;
     $this->initLogsTable();
     $sql_data_array = $this->dbPrepareLogData($log_data);
-    zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+    $db->perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
   }
 
   public function dbPrepareLogData($log_data)
@@ -37,17 +37,18 @@ class zcObserverLogWriterDatabase extends base {
     /**
      * map incoming log data to db schema
      */
-    $sql_data_array = array( 'access_date' => 'now()',
-            'admin_id' => (int)$log_data['admin_id'],
-            'page_accessed' => $db->prepare_input($log_data['page_accessed']),
-            'page_parameters' => $db->prepare_input($log_data['page_parameters']),
-            'ip_address' => $db->prepare_input($log_data['ip_address']),
-            'gzpost' => $gzpostdata,
-            'flagged' => (int)$log_data['flagged'],
-            'attention' => $db->prepare_input($log_data['attention']),
-            'severity' => $db->prepare_input($log_data['severity']),
-            'logmessage' => $this->preserveSpecialCharacters($db->prepare_input($log_data['specific_message'])),
+    $sql_data_array= array(array('fieldName'=>'access_date', 'value'=>'now()', 'type'=>'passthru'),
+            array('fieldName'=>'admin_id',      'value'=> $log_data['admin_id'], 'type'=>'integer'),
+            array('fieldName'=>'page_accessed', 'value'=> $log_data['page_accessed'], 'type'=>'string'),
+            array('fieldName'=>'page_parameters', 'value'=> $log_data['page_parameters'], 'type'=>'string'),
+            array('fieldName'=>'ip_address',    'value'=> $log_data['ip_address'], 'type'=>'string'),
+            array('fieldName'=>'gzpost',        'value'=> $gzpostdata, 'type'=>'string'),
+            array('fieldName'=>'flagged',       'value'=> $log_data['flagged'], 'type'=>'integer'),
+            array('fieldName'=>'attention',     'value'=> $log_data['attention'], 'type'=>'string'),
+            array('fieldName'=>'severity',      'value'=> $log_data['severity'], 'type'=>'string'),
+            array('fieldName'=>'logmessage',    'value'=> $this->preserveSpecialCharacters($log_data['specific_message']), 'type'=>'string'),
     );
+
     return $sql_data_array;
   }
 
@@ -62,19 +63,20 @@ class zcObserverLogWriterDatabase extends base {
     $result = $db->Execute($sql);
 
     if (count($result) == 0) {
-      $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
-      $sql_data_array = array( 'access_date' => 'now()',
-              'admin_id' => (int)$admin_id,
-              'page_accessed' =>  'Log found to be empty. Logging started.',
-              'page_parameters' => '',
-              'ip_address' => $db->prepare_input(substr($_SERVER['REMOTE_ADDR'],0,45)),
-              'gzpost' => '',
-              'flagged' => 0,
-              'attention' => '',
-              'severity' => 'notice',
-              'logmessage' =>  'Log found to be empty. Logging started.',
+      $log_data = array(
+        'event_epoch_time'=> time(),
+        'admin_id'        => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
+        'page_accessed'   => 'Log found to be empty. Logging started.',
+        'page_parameters' => '',
+        'specific_message'=> 'Log found to be empty. Logging started.',
+        'ip_address'      => substr($_SERVER['REMOTE_ADDR'],0,45),
+        'postdata'        => '',
+        'flagged'         => 0,
+        'attention'       => '',
+        'severity'        => 'notice',
       );
-      zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+      $sql_data_array = $this->dbPrepareLogData($log_data);
+      $db->perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
     }
   }
 
@@ -84,9 +86,10 @@ class zcObserverLogWriterDatabase extends base {
     global $db;
     $sql = "show fields from " . TABLE_ADMIN_ACTIVITY_LOG;
     $result = $db->Execute($sql);
+
     $found_logmessage = false;
-    foreach ($result as $field=>$val) {
-      if ($field == 'Field' && $val == 'logmessage') {
+    foreach ($result as $row => $val) {
+      if ($val['Field'] == 'logmessage') {
         $found_logmessage = true;
       }
     }
@@ -98,8 +101,8 @@ class zcObserverLogWriterDatabase extends base {
     // add 'severity' field of type varchar(9)
     $sql = "show fields from " . TABLE_ADMIN_ACTIVITY_LOG;
     $result = $db->Execute($sql);
-    foreach ($result as $field=>$val) {
-      if ($field == 'Field' && $val == 'severity') {
+    foreach ($result as $row => $val) {
+      if ($val['Field'] == 'severity') {
         return true; // exists, so return with no error
       }
     }
@@ -112,17 +115,20 @@ class zcObserverLogWriterDatabase extends base {
     $this->initLogsTable();
 
     // Log the schema change
-    $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
-    $sql_data_array = array( 'access_date' => 'now()',
-            'admin_id' => (int)$admin_id,
-            'ip_address' => $db->prepare_input(substr($_SERVER['REMOTE_ADDR'],0,45)),
-            'gzpost' => '',
-            'flagged' => 1,
-            'attention' => '',
-            'severity' => 'notice',
-            'logmessage' => 'Updated database schema to allow for tracking [severity] in logs. NOTE: Severity levels before this date did not draw extra attention to add/remove of admin users or payment modules (CRUD operations), so old occurrences will have severity of INFO; new occurrences will have the severity of WARNING.',
+    $log_data = array(
+      'event_epoch_time'=> time(),
+      'admin_id'        => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
+      'page_accessed'   => '',
+      'page_parameters' => '',
+      'specific_message'=> 'Updated database schema to allow for tracking [severity] in logs. NOTE: Severity levels before this date did not draw extra attention to add/remove of admin users or payment modules (CRUD operations), so old occurrences will have severity of INFO; new occurrences will have the severity of WARNING.',
+      'ip_address'      => substr($_SERVER['REMOTE_ADDR'],0,45),
+      'postdata'        => '',
+      'flagged'         => 1,
+      'attention'       => '',
+      'severity'        => 'notice',
     );
-    zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+    $sql_data_array = $this->dbPrepareLogData($log_data);
+    $db->perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
   }
 
   public function preserveSpecialCharacters($string)
@@ -142,19 +148,20 @@ class zcObserverLogWriterDatabase extends base {
     global $db;
     $db->Execute("truncate table " . TABLE_ADMIN_ACTIVITY_LOG);
     $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
-    $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
-    $sql_data_array = array( 'access_date' => 'now()',
-            'admin_id' => (int)$admin_id,
-            'page_accessed' =>  'Log reset by ' . $admname . '.',
+    $log_data = array(
+            'event_epoch_time'=> time(),
+            'admin_id'        => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
+            'page_accessed'   => 'Log reset by ' . $admname . '.',
             'page_parameters' => '',
-            'ip_address' => $db->prepare_input(substr($_SERVER['REMOTE_ADDR'],0,45)),
-            'gzpost' => '',
-            'flagged' => 0,
-            'attention' => '',
-            'severity' => 'warning',
-            'logmessage' =>  'Log reset by ' . $admname . '.',
+            'specific_message'=> 'Log reset by ' . $admname . '.',
+            'ip_address'      => substr($_SERVER['REMOTE_ADDR'],0,45),
+            'postdata'        => '',
+            'flagged'         => 0,
+            'attention'       => '',
+            'severity'        => 'warning',
     );
-    zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+    $sql_data_array = $this->dbPrepareLogData($log_data);
+    $db->perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
   }
 
 }
