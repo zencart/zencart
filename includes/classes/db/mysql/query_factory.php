@@ -563,7 +563,7 @@ class queryFactoryResult implements Countable, Iterator {
    * @see Iterator::next()
    */
   public function next() {
-  $this->MoveNext();
+    $this->MoveNext();
   }
 
   /**
@@ -673,7 +673,6 @@ class queryFactoryResult implements Countable, Iterator {
       while (list($key, $value) = each($zp_result_array)) {
         $this->fields[$key] = $value;
       }
-      @mysqli_data_seek($this->resource, $zp_row);
       $this->cursor = $zp_row;
       $this->EOF = false;
     } else {
