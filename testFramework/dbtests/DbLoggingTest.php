@@ -32,8 +32,8 @@ class testDbLogging extends zcAdminTestCase
     if (!defined('DB_PREFIX'))          define('DB_PREFIX', '');
 
     if (!defined('DB_SERVER'))          define('DB_SERVER', 'localhost');
-    if (!defined('DB_SERVER_USERNAME')) define('DB_SERVER_USERNAME', 'root');
-    if (!defined('DB_SERVER_PASSWORD')) define('DB_SERVER_PASSWORD', '');
+    if (!defined('DB_SERVER_USERNAME')) define('DB_SERVER_USERNAME', 'zencart');
+    if (!defined('DB_SERVER_PASSWORD')) define('DB_SERVER_PASSWORD', 'zencart');
     if (!defined('DB_DATABASE'))        define('DB_DATABASE', 'zencart');
 //     if (!defined('DB_PORT'))            define('DB_PORT', '3306');
 //     if (!defined('DB_SOCKET'))          define('DB_SOCKET', '/var/run/mysqld/mysqld.sock');
