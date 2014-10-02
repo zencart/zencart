@@ -24,9 +24,16 @@ class testDbLogging extends zcAdminTestCase
 
   function setUp()
   {
-    if (!defined('DB_SERVER'))          define('DB_SERVER', 'zen.local');
-    if (!defined('DB_SERVER_USERNAME')) define('DB_SERVER_USERNAME', 'zencart');
-    if (!defined('DB_SERVER_PASSWORD')) define('DB_SERVER_PASSWORD', 'zencart');
+    parent::setUp();
+
+    if (!defined('DB_CHARSET'))         define('DB_CHARSET', 'utf-8');
+    if (!defined('SQL_CACHE_METHOD'))   define('SQL_CACHE_METHOD', 'none');
+    if (!defined('DB_TYPE'))            define('DB_TYPE', 'mysql');
+    if (!defined('DB_PREFIX'))          define('DB_PREFIX', '');
+
+    if (!defined('DB_SERVER'))          define('DB_SERVER', 'localhost');
+    if (!defined('DB_SERVER_USERNAME')) define('DB_SERVER_USERNAME', 'root');
+    if (!defined('DB_SERVER_PASSWORD')) define('DB_SERVER_PASSWORD', '');
     if (!defined('DB_DATABASE'))        define('DB_DATABASE', 'zencart');
 //     if (!defined('DB_PORT'))            define('DB_PORT', '3306');
 //     if (!defined('DB_SOCKET'))          define('DB_SOCKET', '/var/run/mysqld/mysqld.sock');
@@ -35,20 +42,15 @@ class testDbLogging extends zcAdminTestCase
       define('IS_ADMIN_FLAG', true);
     }
 
-    parent::setUp();
-
+    require DIR_FS_ADMIN . '../includes/database_tables.php';
     require DIR_FS_ADMIN . '../includes/classes/db/mysql/query_factory.php';
-    require(DIR_FS_ADMIN . '../includes/database_tables.php');
 
     global $db;
     $db = new queryFactory();
     $db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE);
 
-    //TODO:
-    // provision the database, creating necessary tables
-
-
-
+    // Provision the database
+    $this->createTableAdminActivityLog();
 
     require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
     require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';
@@ -60,6 +62,39 @@ class testDbLogging extends zcAdminTestCase
     define('WARNING_REVIEW_ROGUE_ACTIVITY', 'Warning: review rogue activity');
   }
 
+  function tearDown()
+  {
+    global $db;
+    $db->Execute("DROP TABLE " . TABLE_ADMIN_ACTIVITY_LOG);
+  }
+
+  private function createTableAdminActivityLog()
+  {
+    global $db;
+    $db->Execute('DROP TABLE IF EXISTS ' . TABLE_ADMIN_ACTIVITY_LOG);
+
+    $sql = "CREATE TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " (
+        log_id bigint(15) NOT NULL auto_increment,
+        access_date datetime NOT NULL default '0001-01-01 00:00:00',
+        admin_id int(11) NOT NULL default '0',
+        page_accessed varchar(80) NOT NULL default '',
+        page_parameters text,
+        ip_address varchar(45) NOT NULL default '',
+        flagged tinyint NOT NULL default '0',
+        attention varchar(255) NOT NULL default '',
+        gzpost mediumblob,
+        logmessage mediumtext NOT NULL default '',
+        severity varchar(9) NOT NULL default 'info',
+        PRIMARY KEY  (log_id),
+        KEY idx_page_accessed_zen (page_accessed),
+        KEY idx_access_date_zen (access_date),
+        KEY idx_flagged_zen (flagged),
+        KEY idx_ip_zen (ip_address),
+        KEY idx_severity_zen (severity)
+      ) ENGINE=MyISAM";
+    $result = $db->Execute($sql);
+  }
+
   public function testDbLogWriterInstantiation()
   {
     $observer = new zcObserverLogWriterDatabase(new notifier);
@@ -68,18 +103,22 @@ class testDbLogging extends zcAdminTestCase
 
   public function testDbWriterInitLogsTable()
   {
+    $observer = new zcObserverLogWriterDatabase(new notifier);
+
     global $db;
 
-    $observer = new zcObserverLogWriterDatabase(new notifier);
-    $result = $observer->initLogsTable();
-
-    // TODO: test whether the "init" message was stored
-    // TODO -- should we truncate the table first? or make that a second test? and a third?
+    // A. truncate the table, then test whether the init message was inserted
+    $sql = "TRUNCATE TABLE " . TABLE_ADMIN_ACTIVITY_LOG;
+    $result = $db->Execute($sql);
+    $observer->initLogsTable();
+    $sql = "SELECT * FROM " . TABLE_ADMIN_ACTIVITY_LOG . " order by log_id limit 1";
+    $result = $db->Execute($sql);
+    $this->assertTrue($result->fields['logmessage'] == 'Log found to be empty. Logging started.');
   }
 
   public function testUpdateNotifyAdminFireDbLogWriter()
   {
-    global $PHP_SELF;
+    global $db;
     $specific_message= '';
     $severity = 'warning';
     $postdata = json_encode(array('name'=>'x', 'desc'=>'y'));
@@ -100,38 +139,70 @@ class testDbLogging extends zcAdminTestCase
     );
 
     $observer = new zcObserverLogWriterDatabase(new notifier);
-    $result = $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $log_data);
 
-    // TODO - test whether $postdata and $severity were written
-    // TODO - test whether $specific_message does its different work correctly
+    // A. test whether $postdata and $severity were written
+    $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $log_data);
+    $sql = "SELECT * FROM " . TABLE_ADMIN_ACTIVITY_LOG . " order by log_id desc limit 1";
+    $result = $db->Execute($sql);
+    $this->assertTrue($result->fields['gzpost'] == gzdeflate($log_data['postdata'], 7));
+    $this->assertTrue($result->fields['severity'] == $severity);
+
+    // B. test whether $specific_message does its different work correctly
+    $specific_message = 'abcdefg12345';
+    $log_data['specific_message'] = $specific_message;
+    $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $log_data);
+    $sql = "SELECT * FROM " . TABLE_ADMIN_ACTIVITY_LOG . " order by log_id desc limit 1";
+    $result = $db->Execute($sql);
+    $this->assertTrue($result->fields['logmessage'] == $specific_message);
   }
 
   public function testCheckLogSchema()
   {
-
-    // TODO - break the schema
-
+    global $db;
     $observer = new zcObserverLogWriterDatabase(new notifier);
-    $result = $observer->checkLogSchema();
 
-    // TODO - test whether the fields were added correctly
+    // A. break the schema
+    $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " DROP severity";
+    $db->Execute($sql);
+    $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " DROP logmessage";
+    $db->Execute($sql);
+
+    // B. test whether the fields were added correctly
+    $observer->checkLogSchema();
+
+    global $db;
+    $sql = "show fields from " . TABLE_ADMIN_ACTIVITY_LOG;
+    $result = $db->Execute($sql);
+
+    $found_logmessage = $found_severity = false;
+    foreach ($result as $row => $val) {
+      if ($val['Field'] == 'logmessage') {
+        $found_logmessage = true;
+      }
+      if ($val['Field'] == 'severity') {
+        $found_severity = true;
+      }
+    }
+
+    $this->assertTrue($found_logmessage);
+    $this->assertTrue($found_severity);
   }
 
   public function testUpdateNotifyAdminFireLogWriterReset()
   {
+    global $db;
     $observer = new zcObserverLogWriterDatabase(new notifier);
-    $result = $observer->updateNotifyAdminFireLogWriterReset();
+    $observer->updateNotifyAdminFireLogWriterReset();
 
-    // TODO - test whether the table was properly truncated and the proper init records were written
+    // test whether the table was properly truncated and the proper init records were written
+    $sql = "select * from " . TABLE_ADMIN_ACTIVITY_LOG . " limit 10";
+    $result = $db->Execute($sql);
+
+    // A. there should be one record
+    $this->assertTrue(count($result) == 1);
+
+    // B. The first should be a "reset by"
+    $this->assertTrue(substr($result->fields['logmessage'], 0, 13) == 'Log reset by ');
   }
-
-
-
-
-
-
-
-
-
 
 }
