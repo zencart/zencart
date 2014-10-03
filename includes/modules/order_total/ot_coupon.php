@@ -147,6 +147,7 @@ class ot_coupon {
   function collect_posts() {
     global $db, $currencies, $messageStack, $order;
     global $discount_coupon;
+    $_POST['dc_redeem_code'] = trim($_POST['dc_redeem_code']);
     // remove discount coupon by request
     if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == 'REMOVE') {
       unset($_POST['dc_redeem_code']);
