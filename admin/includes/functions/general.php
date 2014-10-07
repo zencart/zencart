@@ -2711,6 +2711,12 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       case (ORDER_WEIGHT_ZERO_STATUS == '1' and ($check_cart_weight == 0 and $shipping_module != 'freeshipper')):
         return false;
         break;
+      case (($_SESSION['cart']->free_shipping_items() == $check_cart_cnt) and $shipping_module == 'freeshipper'):
+        return true;
+        break;
+      case (($_SESSION['cart']->free_shipping_items() == $check_cart_cnt) and $shipping_module != 'freeshipper'):
+        return false;
+        break;
       // Always free shipping only true - enable freeshipper
       case (($check_cart_free == $check_cart_cnt) and $shipping_module == 'freeshipper'):
         return true;
