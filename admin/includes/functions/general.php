@@ -2686,7 +2686,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
  */
   function zen_get_shipping_enabled($shipping_module) {
-    global $order, $zcRequest;
+    global $zcRequest;
 
     // for admin always true if installed
     if (IS_ADMIN_FLAG === true && $zcRequest->readGet('cmd') == FILENAME_MODULES) {
@@ -2699,6 +2699,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
     switch(true) {
       // for admin always true if installed
+      // left for future expansion
       case (IS_ADMIN_FLAG === true && $zcRequest->readGet('cmd') == FILENAME_MODULES):
         return true;
         break;

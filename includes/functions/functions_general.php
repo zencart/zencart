@@ -1199,10 +1199,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // enable shipping
   function zen_get_shipping_enabled($shipping_module) {
-    global $PHP_SELF, $order;
+    global $zcRequest;
 
     // for admin always true if installed
-    if (strstr($PHP_SELF, FILENAME_MODULES)) {
+    if (IS_ADMIN_FLAG === true && $zcRequest->readGet('cmd') == FILENAME_MODULES) {
       return true;
     }
 
@@ -1212,7 +1212,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     switch(true) {
       // for admin always true if installed
-      case (strstr($PHP_SELF, FILENAME_MODULES)):
+      // left for future expansion
+      case (IS_ADMIN_FLAG === true && $zcRequest->readGet('cmd') == FILENAME_MODULES):
         return true;
         break;
       // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
