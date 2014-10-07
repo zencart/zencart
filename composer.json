@@ -10,12 +10,12 @@
         }
     ],
     "require": {
-        "php": "~5.3",
-        "codeception/codeception": "*"
+        "php": "~5.4"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.2",
         "phpmd/phpmd": "~2.0",
+        "phpdocumentor/phpdocumentor": "2.*",
         "squizlabs/php_codesniffer": "~1.5",
         "satooshi/php-coveralls": "~0.6",
         "mikey179/vfsStream": "1.3.*@dev"

@@ -171,7 +171,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile, $mobile)
     $sql = $db->bindVars($sql, ':email:', $email, 'string');
     $sql = $db->bindVars($sql, ':password:', password_hash($password, PASSWORD_DEFAULT), 'string');
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
-    $sql = $db->bindVars($sql, ':mobile:', $mobile, 'integer');
+    $sql = $db->bindVars($sql, ':mobile:', $mobile, 'string');
     $db->Execute($sql);
 
     $newname = preg_replace('/[^\d\w._-]/', '*', $name);

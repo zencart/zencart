@@ -2686,10 +2686,10 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
  */
   function zen_get_shipping_enabled($shipping_module) {
-    global $PHP_SELF, $order;
+    global $zcRequest;
 
     // for admin always true if installed
-    if (strstr($PHP_SELF, FILENAME_MODULES)) {
+    if (IS_ADMIN_FLAG === true && $zcRequest->readGet('cmd') == FILENAME_MODULES) {
       return true;
     }
 
@@ -2699,7 +2699,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
     switch(true) {
       // for admin always true if installed
-      case (strstr($PHP_SELF, FILENAME_MODULES)):
+      // left for future expansion
+      case (IS_ADMIN_FLAG === true && $zcRequest->readGet('cmd') == FILENAME_MODULES):
         return true;
         break;
       // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
@@ -2708,6 +2709,12 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
         break;
       // Free Shipping when 0 weight - disable everyone - ORDER_WEIGHT_ZERO_STATUS must be on
       case (ORDER_WEIGHT_ZERO_STATUS == '1' and ($check_cart_weight == 0 and $shipping_module != 'freeshipper')):
+        return false;
+        break;
+      case (($_SESSION['cart']->free_shipping_items() == $check_cart_cnt) and $shipping_module == 'freeshipper'):
+        return true;
+        break;
+      case (($_SESSION['cart']->free_shipping_items() == $check_cart_cnt) and $shipping_module != 'freeshipper'):
         return false;
         break;
       // Always free shipping only true - enable freeshipper

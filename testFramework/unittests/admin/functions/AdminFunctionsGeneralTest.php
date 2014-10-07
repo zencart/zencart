@@ -36,7 +36,9 @@ class AdminFunctionsGeneralTest extends zcAdminTestCase
     define('TABLE_PRODUCTS_ATTRIBUTES', 'products_attributes');
     define('TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD', 'products_attributes_download');
 
-    $result = $this->getMock('queryFactoryResult');
+    $result = $this->getMockBuilder('queryFactoryResult')
+      ->disableOriginalConstructor()
+      ->getMock();
     $result->expects($this->once())
       ->method('RecordCount')
       ->will($this->returnValue(1));
