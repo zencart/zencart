@@ -3,9 +3,9 @@
  * @package plugins
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.6.0 $
  *
- * Designed for ZC >= v1.5.4
+ * Designed for ZC >= v1.6.0
  *
  * NOTE: A far more PSR-3 compliant approach will be implemented in a future version. This is a simplified implementation in the meantime.
  *
@@ -44,10 +44,8 @@ class zcObserverLogEventListener extends base {
           600 => 'EMERGENCY',
   );
 
-  public function __construct(notifier $zco_notifier = null) {
-    if (!$zco_notifier) $zco_notifier = new notifier;
-    $this->notifier = $zco_notifier;
-    $this->notifier->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', 'NOTIFY_ADMIN_ACTIVITY_LOG_RESET'));
+  public function __construct() {
+    $this->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', 'NOTIFY_ADMIN_ACTIVITY_LOG_RESET'));
   }
 
   public function updateNotifyAdminActivityLogEvent(&$class, $eventID, $message_to_log = '', $requested_severity = '')
@@ -56,7 +54,7 @@ class zcObserverLogEventListener extends base {
     /**
      * Now tell all log-writers to fire, using the curated data
     */
-    $this->notifier->notify('NOTIFY_ADMIN_FIRE_LOG_WRITERS', $log_data);
+    $this->notify('NOTIFY_ADMIN_FIRE_LOG_WRITERS', $log_data);
   }
 
   static function prepareLogdata($message_to_log = '', $requested_severity = '')
@@ -191,7 +189,7 @@ class zcObserverLogEventListener extends base {
 
   public function updateNotifyAdminActivityLogReset()
   {
-    $this->notifier->notify('NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET');
+    $this->notify('NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET');
   }
 
 }

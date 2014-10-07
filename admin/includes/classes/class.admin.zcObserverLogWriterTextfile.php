@@ -3,9 +3,9 @@
  * @package plugins
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.6.0 $
  *
- * Designed for ZC >= v1.5.4
+ * Designed for ZC >= v1.6.0
  *
  */
 
@@ -13,10 +13,8 @@ class zcObserverLogWriterTextfile extends base {
 
   private $destinationLogFilename = '';
 
-  public function __construct(notifier $zco_notifier = null) {
-    if (!$zco_notifier) $zco_notifier = new notifier;
-    $this->notifier = $zco_notifier;
-    $this->notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
+  public function __construct() {
+    $this->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
     $this->setLogFilename();
   }
 
