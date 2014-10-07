@@ -43,6 +43,7 @@ abstract class zcActionAdminBase extends base
     {
         global $extraCss, $PHP_SELF, $messageStack, $new_gv_queue_cnt, $goto_gv, $new_version;
         global $hide_languages, $languages, $languages_array, $languages_selected;
+        $this->templateVariables['cmd'] = $this->request->readGet('cmd');
         if ($this->useView) {
             if (isset($extraCss))
                 $this->templateVariables ['extraCss'] = $extraCss;
