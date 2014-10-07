@@ -7,7 +7,6 @@
  * @version $Id: popup_coupon_help.php 14141 2009-08-10 19:34:47Z wilt $
  */
 
-define('HEADING_COUPON_HELP', 'Discount Coupon Help');
 define('TEXT_COUPON_HELP_HEADER', '<strong>The Discount Coupon Redemption Code you have entered is for</strong> ');
 define('TEXT_COUPON_HELP_NAME', '<br /><br />Coupon Name : %s');
 define('TEXT_COUPON_HELP_FIXED', '<p>The coupon is worth %s discount against your order</p>');
