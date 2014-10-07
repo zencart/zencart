@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+    <title>Zen Cart v1.6.0 phpDocs</title>
+    <parser>
+        <default-package-name>general</default-package-name>
+        <target>./phpdocs</target>
+    </parser>
+    <transformer>
+      <target>./phpdocs</target>
+    </transformer>
+    <files>
+        <file>../index.php</file>
+        <directory>../includes</directory>
+        <directory>../admin</directory>
+        <ignore>includes/classes/support/*</ignore>
+        <ignore>includes/classes/vendors/*</ignore>
+        <ignore>includes/library/*</ignore>
+        <ignore>admin/includes/library/*</ignore>
+        <directory>../admin/includes/library/zencart</directory>
+        <directory>../includes/library/zencart</directory>
+        <file>../ipn_main_handler.php</file>
+        <file>../page_not_found.php</file>
+    </files>
+    <plugins>
+        <plugin path="Core" />
+    </plugins>
+    <transformations>
+        <template name="responsive" />
+    </transformations>
+</phpdocumentor>
