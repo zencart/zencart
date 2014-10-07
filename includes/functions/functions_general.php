@@ -1057,21 +1057,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 
 ////
-// Return a random row from a database query
-  function zen_random_select($query) {
-    global $db;
-    $random_product = '';
-    $random_query = $db->Execute($query);
-    $num_rows = $random_query->RecordCount();
-    if ($num_rows > 1) {
-      $random_row = zen_rand(0, ($num_rows - 1));
-      $random_query->Move($random_row);
-    }
-    return $random_query;
-  }
-
-
-////
 // Truncate a string
   function zen_trunc_string($str = "", $len = 150, $more = 'true') {
     if ($str == "") return $str;

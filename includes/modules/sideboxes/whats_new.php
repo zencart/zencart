@@ -20,7 +20,6 @@
                            and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                            and p.products_status = 1 " . $display_limit;
 
-//  $random_whats_new_sidebox_product = zen_random_select($random_whats_new_sidebox_product_query);
   $random_whats_new_sidebox_product = $db->ExecuteRandomMulti($random_whats_new_sidebox_product_query, MAX_RANDOM_SELECT_NEW);
 
   if ($random_whats_new_sidebox_product->RecordCount() > 0 ) {
