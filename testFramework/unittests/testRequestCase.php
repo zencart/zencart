@@ -49,7 +49,10 @@ class testRequestCase extends zcCatalogTestCase
         $this->assertTrue(count($zcRequest->all('post')) == 2);
     }
 
-    public function testRequestGet()
+    /**
+     * @dataProvider getQueryParams
+     */
+    public function testRequestGet($param, $expected, $default = null)
     {
         $_GET = array(
             'action' => 'test1',
@@ -63,32 +66,48 @@ class testRequestCase extends zcCatalogTestCase
             'blah' => 'x'
         );
         $zcRequest = new Request();
-        $this->assertTrue($zcRequest->readGet('action') == 'test1');
-        $this->assertTrue($zcRequest->readGet('blah') == 'x');
-        $this->assertTrue($zcRequest->get('blah', null, 'get') == 'x');
-        $this->assertTrue($zcRequest->readGet('notexists', 'exists') == 'exists');
-        try {
-            $zcRequest->readGet('notexists');
-            $this->fail("Expected exception not thrown");
-        } catch (Exception $e) {
-            $this->assertEquals(0, $e->getCode());
-            $this->assertEquals("Exception: Could not Request::get paramName = notexists", $e->getMessage());
-        }
-        $this->assertTrue($zcRequest->get('notexists1', 'exists', 'get') == 'exists');
+        $this->assertEquals($expected, $zcRequest->readGet($param, $default));
     }
 
-    public function testRequestPost()
+    /**
+     * data provider for testRequestGet
+     * @return array
+     */
+    public function getQueryParams()
+    {
+        return array(
+            array('action', 'test1'),
+            array('blah', 'x'),
+            array('notexists', 'exists', 'exists'),
+            array('missing', null),
+        );
+    }
+
+    /**
+     * @dataProvider getPostParams
+     */
+    public function testRequestPost($param, $expected, $default = null)
     {
         $_POST = array(
             'cPath' => 'test1',
             'action' => 'test2'
         );
         $zcRequest = new Request();
-        $this->assertTrue($zcRequest->readPost('action') == 'test2');
-        $this->assertTrue($zcRequest->readPost('cPath') == 'test1');
-        $this->assertTrue($zcRequest->get('cPath', null, 'post') == 'test1');
-        $this->assertTrue($zcRequest->readPost('notexists', 'exists') == 'exists');
-        $this->assertTrue($zcRequest->get('notexists1', 'exists', 'post') == 'exists');
+        $this->assertEquals($expected, $zcRequest->readPost($param, $default));
+    }
+
+    /**
+     * data provider for testRequestPost
+     * @return array
+     */
+    public function getPostParams()
+    {
+        return array(
+            array('action', 'test2'),
+            array('cPath', 'test1'),
+            array('notexists', 'exists', 'exists'),
+            array('missing', null),
+        );
     }
 
     public function testRequestHas()

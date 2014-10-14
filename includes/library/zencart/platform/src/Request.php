@@ -54,21 +54,17 @@ class Request extends \base
     /**
      * get a parameter value from the parameter bag
      *
-     * @param $param
-     * @param mixed $default
-     * @param string $source
+     * @param  string $param
+     * @param  mixed  $default
+     * @param  string $source
      * @return mixed
-     * @throws \InvalidArgumentException
      */
     public function get($param, $default = null, $source = 'get')
     {
-        if (isset($this->parameterBag [$source] [$param])) {
-            return $this->parameterBag [$source] [$param];
+        if (isset($this->parameterBag[$source][$param])) {
+            return $this->parameterBag[$source][$param];
         }
-        if (isset($default)) {
-            return $default;
-        }
-        throw new \InvalidArgumentException('Exception: Could not Request::get paramName = ' . $param);
+        return $default;
     }
 
     /**
