@@ -320,13 +320,8 @@ class queryFactory extends base {
         unset($zp_ii, $zp_result_array, $key, $value);
         $obj->EOF = false;
 
-        $obj->result_random = array_rand($obj->result, count($obj->result));
-        if(is_array($obj->result_random)) {
-          shuffle($obj->result_random);
-        }
-        else {
-          $obj->result_random = array(0 => $obj->result_random);
-        }
+        $obj->result_random = $obj->result;
+        shuffle($obj->result_random);
         $obj->cursor = -1;
         $obj->MoveNextRandom();
       }
