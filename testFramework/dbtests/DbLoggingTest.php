@@ -97,26 +97,52 @@ class testDbLogging extends zcAdminTestCase
 
   public function testDbLogWriterInstantiation()
   {
-    $observer = new zcObserverLogWriterDatabase(new notifier);
-    $this->assertTrue($observer instanceof zcObserverLogWriterDatabase);
+    $observer = new zcObserverLogWriterDatabase();
+    $this->assertInstanceOf('zcObserverLogWriterDatabase', $observer);
   }
 
   public function testDbWriterInitLogsTable()
   {
-    $observer = new zcObserverLogWriterDatabase(new notifier);
+    $specific_message = 'abcdefg12345';
+    $severity = 'warning';
+    $postdata = json_encode(array('name'=>'x', 'desc'=>'y'));
+    $flagged = false;
+    $notes = false;
+
+    $log_data = array(
+            'event_epoch_time'=> time(),
+            'admin_id'        => 555,
+            'page_accessed'   => 'dbtest',
+            'page_parameters' => preg_replace('/(&amp;|&)$/', '', '&amp;item1=abc&amp;item2=defg'),
+            'specific_message'=> $specific_message,
+            'ip_address'      => 'localhost',
+            'postdata'        => $postdata,
+            'flagged'         => $flagged,
+            'attention'       => ($notes === false ? '' : $notes),
+            'severity'        => $severity,
+    );
+
+    $observer = new zcObserverLogWriterDatabase();
+
 
     global $db;
-
-    // A. truncate the table, then test whether the init message was inserted
+    // truncate the table before init
     $sql = "TRUNCATE TABLE " . TABLE_ADMIN_ACTIVITY_LOG;
     $result = $db->Execute($sql);
-    $observer->initLogsTable();
+
+    // fire the log-writers to trigger initLogsTable()
+    $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $log_data);
+
+    // test whether initialized properly
     $sql = "SELECT * FROM " . TABLE_ADMIN_ACTIVITY_LOG . " order by log_id limit 1";
     $result = $db->Execute($sql);
-    $this->assertTrue($result->fields['logmessage'] == 'Log found to be empty. Logging started.');
+    $this->assertEquals($result->fields['logmessage'], 'Log found to be empty. Logging started.');
   }
 
-  public function testUpdateNotifyAdminFireDbLogWriter()
+  /**
+   * test triggering logging without a specific message, since a specific_message is treated differently
+   */
+  public function testUpdateNotifyAdminFireDbLogWriterWithoutSpecificMessage()
   {
     global $db;
     $specific_message= '';
@@ -138,28 +164,54 @@ class testDbLogging extends zcAdminTestCase
             'severity'        => $severity,
     );
 
-    $observer = new zcObserverLogWriterDatabase(new notifier);
+    $observer = new zcObserverLogWriterDatabase();
 
-    // A. test whether $postdata and $severity were written
+    // test whether $postdata and $severity were written
     $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $log_data);
     $sql = "SELECT * FROM " . TABLE_ADMIN_ACTIVITY_LOG . " order by log_id desc limit 1";
     $result = $db->Execute($sql);
-    $this->assertTrue($result->fields['gzpost'] == gzdeflate($log_data['postdata'], 7));
-    $this->assertTrue($result->fields['severity'] == $severity);
+    $this->assertEquals($result->fields['gzpost'], gzdeflate($log_data['postdata'], 7));
+    $this->assertEquals($result->fields['severity'], $severity);
+  }
 
-    // B. test whether $specific_message does its different work correctly
+  /**
+   * test whether $specific_message is reflected correctly
+   * (logmessage contains different info if $specific_message is not passed, hence this separate test)
+   */
+  public function testUpdateNotifyAdminFireDbLogWriterWithSpecificMessage()
+  {
+    global $db;
     $specific_message = 'abcdefg12345';
-    $log_data['specific_message'] = $specific_message;
+    $severity = 'warning';
+    $postdata = json_encode(array('name'=>'x', 'desc'=>'y'));
+    $flagged = false;
+    $notes = false;
+
+    $log_data = array(
+            'event_epoch_time'=> time(),
+            'admin_id'        => 555,
+            'page_accessed'   => 'dbtest',
+            'page_parameters' => preg_replace('/(&amp;|&)$/', '', '&amp;item1=abc&amp;item2=defg'),
+            'specific_message'=> $specific_message,
+            'ip_address'      => 'localhost',
+            'postdata'        => $postdata,
+            'flagged'         => $flagged,
+            'attention'       => ($notes === false ? '' : $notes),
+            'severity'        => $severity,
+    );
+
+    $observer = new zcObserverLogWriterDatabase();
+
     $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $log_data);
     $sql = "SELECT * FROM " . TABLE_ADMIN_ACTIVITY_LOG . " order by log_id desc limit 1";
     $result = $db->Execute($sql);
-    $this->assertTrue($result->fields['logmessage'] == $specific_message);
+    $this->assertEquals($result->fields['logmessage'], $specific_message);
   }
 
   public function testCheckLogSchema()
   {
     global $db;
-    $observer = new zcObserverLogWriterDatabase(new notifier);
+    $observer = new zcObserverLogWriterDatabase();
 
     // A. break the schema
     $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " DROP severity";
@@ -167,8 +219,9 @@ class testDbLogging extends zcAdminTestCase
     $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " DROP logmessage";
     $db->Execute($sql);
 
-    // B. test whether the fields were added correctly
-    $observer->checkLogSchema();
+    // B. fire updateNotifyAdminFireLogWriterReset to test whether the fields were added correctly (could fire updateNotifyAdminFireLogWriters too, with minor adjustments)
+    $observer->updateNotifyAdminFireLogWriterReset();
+
 
     global $db;
     $sql = "show fields from " . TABLE_ADMIN_ACTIVITY_LOG;
@@ -184,14 +237,14 @@ class testDbLogging extends zcAdminTestCase
       }
     }
 
-    $this->assertTrue($found_logmessage);
-    $this->assertTrue($found_severity);
+    $this->assertTrue($found_logmessage, 'Expected to find the logmessage field in the db');
+    $this->assertTrue($found_severity, 'Expected to find the severity field in the db');
   }
 
   public function testUpdateNotifyAdminFireLogWriterReset()
   {
     global $db;
-    $observer = new zcObserverLogWriterDatabase(new notifier);
+    $observer = new zcObserverLogWriterDatabase();
     $observer->updateNotifyAdminFireLogWriterReset();
 
     // test whether the table was properly truncated and the proper init records were written
@@ -199,10 +252,10 @@ class testDbLogging extends zcAdminTestCase
     $result = $db->Execute($sql);
 
     // A. there should be one record
-    $this->assertTrue(count($result) == 1);
+    $this->assertEquals(count($result), 1, 'There should only be 1 record.');
 
     // B. The first should be a "reset by"
-    $this->assertTrue(substr($result->fields['logmessage'], 0, 13) == 'Log reset by ');
+    $this->assertEquals(substr($result->fields['logmessage'], 0, 13), 'Log reset by ');
   }
 
 }

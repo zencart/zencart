@@ -13,15 +13,15 @@ class zcObserverLogWriterTextfile extends base {
 
   private $destinationLogFilename = '';
 
-  public function __construct() {
+  public function __construct($file = '') {
     $this->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
-    $this->setLogFilename();
+    $this->setLogFilename($file);
   }
 
   /**
    * Set the folderpath on the filesystem where the data will be logged
    */
-  public function setLogFilename($filepath = '')
+  private function setLogFilename($filepath = '')
   {
     if ($filepath == '') $filepath = DIR_FS_LOGS . '/admin_log.txt';
 
@@ -46,7 +46,7 @@ class zcObserverLogWriterTextfile extends base {
    * So this tests whether the logging file exists, creates it if necessary, and
    * then if the file is empty initializes it
    */
-  public function initLogFile()
+  private function initLogFile()
   {
     $init_required = false;
     if (!file_exists($this->destinationLogFilename))

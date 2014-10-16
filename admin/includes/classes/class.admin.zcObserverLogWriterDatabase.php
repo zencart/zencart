@@ -22,6 +22,9 @@ class zcObserverLogWriterDatabase extends base {
     $db->perform(TABLE_ADMIN_ACTIVITY_LOG, $this->dbPrepareLogData($log_data));
   }
 
+  /**
+   * this method is public for the sake of unit tests; doesn't need to be private anyway
+   */
   public function dbPrepareLogData($log_data)
   {
     /**
@@ -52,7 +55,7 @@ class zcObserverLogWriterDatabase extends base {
    * PCI requires that if the log table is blank, that the logs be initialized
    * So this simply tests whether the table has any records, and if not, adds an initialization entry
    */
-  public function initLogsTable()
+  private function initLogsTable()
   {
     $this->checkLogSchema();
 
@@ -77,7 +80,7 @@ class zcObserverLogWriterDatabase extends base {
     }
   }
 
-  public function checkLogSchema()
+  private function checkLogSchema()
   {
     // adds 'logmessage' field of type mediumtext
     global $db;
@@ -109,7 +112,7 @@ class zcObserverLogWriterDatabase extends base {
     $db->Execute($sql);
   }
 
-  public function preserveSpecialCharacters($string)
+  private function preserveSpecialCharacters($string)
   {
     $find_chars = array('\n');
     $replace_chars = array("\n");
