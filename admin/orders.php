@@ -73,7 +73,7 @@
           $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
           WHERE pa.products_attributes_id = pad.products_attributes_id
-          and pad.products_attributes_filename = '" . $chk_products_download->fields['orders_products_filename'] . "'
+          and pad.products_attributes_filename = '" . $db->prepare_input($chk_products_download->fields['orders_products_filename']) . "'
           and pa.products_id = '" . (int)$chk_products_download->fields['products_prid'] . "'";
 
           $chk_products_download_time = $db->Execute($chk_products_download_time_query);
@@ -211,7 +211,7 @@
               $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
                                                     from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                                     WHERE pa.products_attributes_id = pad.products_attributes_id
-                                                    and pad.products_attributes_filename = '" . $chk_downloads->fields['orders_products_filename'] . "'
+                                                    and pad.products_attributes_filename = '" . $db->prepare_input($chk_downloads->fields['orders_products_filename']) . "'
                                                     and pa.products_id = '" . $chk_downloads->fields['products_id'] . "'";
 
               $chk_products_download_time = $db->Execute($chk_products_download_time_query);
