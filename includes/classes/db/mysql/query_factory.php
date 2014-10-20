@@ -298,11 +298,11 @@ class queryFactory extends base {
 
       $zp_rows = $obj->RecordCount();
       if ($zp_rows > 0 && $zf_limit > 0) {
-        $zp_Start_row = 0;
+        $zp_start_row = 0;
         if ($zf_limit) {
           $zp_start_row = zen_rand(0, $zp_rows - $zf_limit);
         }
-        $obj->Move($zp_start_row);
+        mysqli_data_seek($zp_db_resource, $zp_start_row);
         $zp_ii = 0;
         while ($zp_ii < $zf_limit) {
           $zp_result_array = @mysqli_fetch_array($zp_db_resource);
