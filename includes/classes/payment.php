@@ -143,7 +143,7 @@ class payment extends base {
       while (list(, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
-//          $js .= $GLOBALS[$class]->javascript_validation();
+          $js .= $GLOBALS[$class]->javascript_validation();
         }
       }
 

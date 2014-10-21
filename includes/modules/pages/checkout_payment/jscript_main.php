@@ -60,4 +60,18 @@ function collectsCardDataOnsite(paymentValue)
 });
 return false;
 }
+
+    $(document).ready(function(){
+      $('form[name="checkout_payment"]').submit(function() {
+          $('.paymentSubmit').attr('disabled', true);
+        <?php if ($flagOnSubmit) { ?>
+          formPassed = check_form();
+          if (formPassed == false) {
+              $('.paymentSubmit').attr('disabled', false);
+          }
+          return formPassed;
+        <?php } ?>
+      });
+    });
+
 //--></script>
