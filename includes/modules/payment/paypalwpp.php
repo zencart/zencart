@@ -2791,7 +2791,7 @@ class paypalwpp extends base {
           }
 
           // if funding source problem occurred, must send back to re-select alternate funding source
-          if ($response['L_ERRORCODE0'] == 10422) {
+          if ($response['L_ERRORCODE0'] == 10422 || $response['L_ERRORCODE0'] == 10486) {
             $paypal_url = $this->getPayPalLoginServer();
             zen_redirect($paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token']);
             die();
