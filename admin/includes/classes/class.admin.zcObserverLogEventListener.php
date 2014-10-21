@@ -3,9 +3,9 @@
  * @package plugins
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.6.0 $
  *
- * Designed for ZC >= v1.5.4
+ * Designed for ZC >= v1.6.0
  *
  * NOTE: A far more PSR-3 compliant approach will be implemented in a future version. This is a simplified implementation in the meantime.
  *
@@ -45,15 +45,23 @@ class zcObserverLogEventListener extends base {
   );
 
   public function __construct() {
-    global $zco_notifier;
-    $zco_notifier->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT'));
+    $this->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', 'NOTIFY_ADMIN_ACTIVITY_LOG_RESET'));
   }
 
   public function updateNotifyAdminActivityLogEvent(&$class, $eventID, $message_to_log = '', $requested_severity = '')
   {
-    global $zco_notifier, $PHP_SELF;
+    $log_data = self::prepareLogdata($message_to_log, $requested_severity);
+    /**
+     * Now tell all log-writers to fire, using the curated data
+    */
+    $this->notify('NOTIFY_ADMIN_FIRE_LOG_WRITERS', $log_data);
+  }
+
+  static function prepareLogdata($message_to_log = '', $requested_severity = '')
+  {
+    global $PHP_SELF;
     $flagged = 0;
-    $notes = $gzpostdata = $postdata = '';
+    $notes = $specific_message = $gzpostdata = $postdata = '';
     $severity = self::INFO;
 
     /**
@@ -62,9 +70,9 @@ class zcObserverLogEventListener extends base {
      * and also to draw attention to certain warnings which deserve highlighting for the benefit of storeowners, since they should be monitoring their logs
      */
     $postdata = $_POST;
-    $postdata = $this->filterArrayElements($postdata);
-    $postdata = $this->ensureDataIsUtf8($postdata);
-    $notes = $this->parseForMaliciousContent(print_r($postdata, true));
+    $postdata = self::filterArrayElements($postdata);
+    $postdata = self::ensureDataIsUtf8($postdata);
+    $notes = self::parseForMaliciousContent(print_r($postdata, true));
     /**
      * Since the POST data was an array, we json-encode the parsed POST data for storage in the logging system
      */
@@ -78,19 +86,25 @@ class zcObserverLogEventListener extends base {
       $data = $message_to_log;
       if (is_array($message_to_log))
       {
-        $data = $this->filterArrayElements($data);
-        $data = $this->ensureDataIsUtf8($data);
+        $data = self::filterArrayElements($data);
+        $data = self::ensureDataIsUtf8($data);
+        $data = print_r($data, true);
       }
       $specific_message = $data;
-      $notes2 = $this->parseForMaliciousContent(print_r($data, true));
+      $notes2 = self::parseForMaliciousContent(print_r($data, true));
       $notes = $notes . (strlen($notes) > 0 ? '; ' : '') . $notes2;
+    }
+    if ($specific_message == '')
+    {
+      $specific_message = "Accessed page [" . basename($PHP_SELF) . "]";
+      if (isset($_REQUEST['action'])) $specific_message .= ' with action=' . $_REQUEST['action'] . '. Review page_parameters and postdata for details.';
     }
 
     /**
      * Set severity flags
      * If $notes is not false, then that means the malicious-content detector found things which should be deemed remarkable, so we elevate the severity to 'notice'
      */
-    if ($notes !== FALSE && $notes != '')
+    if ($notes !== false && $notes != '')
     {
       $severity = self::NOTICE;
       $flagged = 1;
@@ -102,12 +116,11 @@ class zcObserverLogEventListener extends base {
     $levels = static::$levels;
     $levels_lookup = array_flip($levels);
 
+    $integer_requested_severity = $requested_severity;
     if (is_string($requested_severity) && $requested_severity != '') {
       if (isset($levels_lookup[strtoupper($requested_severity)])) {
         $integer_requested_severity = $levels_lookup[strtoupper($requested_severity)];
       }
-    } else {
-      $integer_requested_severity = $requested_severity;
     }
     if ($integer_requested_severity > $severity) {
       $severity = $integer_requested_severity;
@@ -127,20 +140,17 @@ class zcObserverLogEventListener extends base {
         'ip_address'      => substr($_SERVER['REMOTE_ADDR'],0,45),
         'postdata'        => $postdata,
         'flagged'         => $flagged,
-        'attention'       => ($notes === FALSE ? '' : $notes),
+        'attention'       => ($notes === false ? '' : $notes),
         'severity'        => strtolower($levels[$severity]),  // converts int to corresponding string
     );
 
-    /**
-     * Now tell all log-writers to fire, using the curated data
-     */
-    $zco_notifier->notify('NOTIFY_ADMIN_FIRE_LOG_WRITERS', $log_data);
+    return $log_data;
   }
 
   /**
    * Filter out things which ought not to be recorded in logs, such as actual pass words
    */
-  private function filterArrayElements($data)
+  static function filterArrayElements($data)
   {
     foreach ($data as $key=>$nul) {
       if (in_array($key, array('x','y','secur'.'ityTo'.'ken','admi'.'n_p'.'ass','pass'.'word','confirm', 'newpwd-'.$_SESSION['securityToken'],'oldpwd-'.$_SESSION['securityToken'],'confpwd-'.$_SESSION['securityToken']))) unset($data[$key]);
@@ -150,15 +160,14 @@ class zcObserverLogEventListener extends base {
   /**
    * In order to json_encode the data for storage, it must be utf8, so we encode each element
    */
-  private function ensureDataIsUtf8($data) {
+  static function ensureDataIsUtf8($data) {
+    if (strtolower(CHARSET) == 'utf-8') return $data;
     foreach ($data as $key=>$nul) {
-      if (strtolower(CHARSET) != 'utf-8') {
-        if (is_string($nul)) $data[$key] = utf8_encode($nul);
-        if (is_array($nul)) {
-          foreach ($nul as $key2=>$val) {
-            if (is_string($val)) $data[$key][$key2] = utf8_encode($val);
-            if (is_array($val)) $data[$key][$key2] = utf8_encode(print_r($val, TRUE));
-          }
+      if (is_string($nul)) $data[$key] = utf8_encode($nul);
+      if (is_array($nul)) {
+        foreach ($nul as $key2=>$val) {
+          if (is_string($val)) $data[$key][$key2] = utf8_encode($val);
+          if (is_array($val)) $data[$key][$key2] = utf8_encode(print_r($val, true));
         }
       }
     }
@@ -168,14 +177,19 @@ class zcObserverLogEventListener extends base {
   /**
    * Look for any risky kinds of incoming POST data which might be flagged under PCI safety rules
    */
-  private function parseForMaliciousContent($string)
+  static function parseForMaliciousContent($string)
   {
     $matches = '';
     if (preg_match_all('~(file://|<iframe|<frame|<embed|<script|<meta)~i', $string, $matches)) {
-      return htmlspecialchars(WARNING_REVIEW_ROGUE_ACTIVITY . ' [' . implode(' and ', $matches[1]) . ']', ENT_COMPAT, CHARSET, TRUE);
+      return htmlspecialchars(WARNING_REVIEW_ROGUE_ACTIVITY . ' [' . implode(' and ', $matches[1]) . ']', ENT_COMPAT, CHARSET, true);
     } else {
-      return FALSE;
+      return false;
     }
+  }
+
+  public function updateNotifyAdminActivityLogReset()
+  {
+    $this->notify('NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET');
   }
 
 }
