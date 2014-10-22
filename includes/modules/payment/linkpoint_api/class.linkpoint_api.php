@@ -253,7 +253,7 @@ class lphp
 					if ($this->debugging)
 						$result = exec ("$cpath -v -d \"$xml\" -E $key  -k $host", $retarr, $retnum);
 					else
-						$result = exec ("$cpath -d \"$xml\" -E $key  -k $host", $retarr, $retnum);
+						$result = exec ("$cpath -d \"$xml\" -E $key $host", $retarr, $retnum);
 				}
 
 				else	//*nix string
@@ -261,7 +261,7 @@ class lphp
 					if ($this->debugging)
           $result = exec ("'$cpath' $args -v -k -E '$key' -d '$xml' '$host'", $retarr, $retnum);
 					else
-          $result = exec ("'$cpath' $args -v -k -E '$key' -d '$xml' '$host'", $retarr, $retnum);
+          $result = exec ("'$cpath' $args -v -E '$key' -d '$xml' '$host'", $retarr, $retnum);
 				}
 
 				# EVALUATE RESPONSE #
