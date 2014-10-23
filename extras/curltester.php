@@ -6,9 +6,9 @@
  *   r=1 -- show Response obtained from destination server -- this may contain an error message, but usually means communication was okay
  *
  * @package utilities
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Oct 28 16:43:30 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte Wed Oct 22 2014 Modified in v1.5.4 $
  */
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');
@@ -49,11 +49,19 @@ if (isset($_GET['old']) && $_GET['old'] == '1') {
 echo 'Connecting to UPS (port 80)...<br>';
 dofsockTest('www.ups.com', 80);
 
+echo 'Connecting to UPSXML (SSL) ...<br>';
+doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
+
 echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
 
 echo 'Connecting to PayPal IPN (port 443)...<br>';
 dofsockTest('www.paypal.com', 443);
+doCurlTest('https://www.paypal.com/cgi-bin/webscr');
+
+echo 'Connecting to PayPal IPN (port 443) Sandbox ...<br>';
+dofsockTest('www.sandbox.paypal.com', 443);
+doCurlTest('https://www.sandbox.paypal.com/cgi-bin/webscr');
 
 // echo 'Connecting to PayPal IPN (port 443) Sandbox ...<br>';
 // dofsockTest('ipnpb.paypal.com', 443);
@@ -73,6 +81,9 @@ doCurlTest('https://secure.authorize.net/gateway/transact.dll');
 
 echo 'Connecting to AuthorizeNet Developer/Sandbox Server ...<br>';
 doCurlTest('https://test.authorize.net/gateway/transact.dll');
+
+echo 'Connecting to First Data GGe4 server (SSL)...<br>';
+doCurlTest('https://checkout.globalgatewaye4.firstdata.com/payment');
 
 echo 'Connecting to LinkPointAPI server (port 1129)...<br>';
 doCurlTest('https://secure.linkpt.net/LSGSXML:1129');
@@ -105,7 +116,7 @@ function doCurlTest($url = 'http://www.zen-cart.com/testcurl.php', $postdata = "
     curl_setopt($ch, CURLOPT_PORT, $regs[2]);
     curl_setopt($ch, CURLOPT_URL, $regs[1]);
   }
-//   curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+
   curl_setopt($ch, CURLOPT_VERBOSE, 1);
   curl_setopt($ch, CURLOPT_HEADER, 0);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -117,6 +128,7 @@ function doCurlTest($url = 'http://www.zen-cart.com/testcurl.php', $postdata = "
   curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart(tm) - CURL TEST');
 
+//  curl_setopt($ch, CURLOPT_SSLVERSION, 4);
 //  curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
 
 
