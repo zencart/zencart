@@ -98,7 +98,7 @@ class zcObserverLogWriterDatabase extends base {
       }
       $result->MoveNext();
     }
-    $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " ADD COLUMN severity varchar(9) NOT NULL default 'info'";
+    $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " ADD COLUMN severity varchar(9) NOT NULL default 'info', ADD INDEX idx_severity_zen (severity)";
     $db->Execute($sql);
     $sql = "UPDATE " . TABLE_ADMIN_ACTIVITY_LOG . " SET severity='notice' where flagged=1";
     $db->Execute($sql);
