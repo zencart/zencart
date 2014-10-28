@@ -49,8 +49,14 @@ if (isset($_GET['old']) && $_GET['old'] == '1') {
 echo 'Connecting to UPS (port 80)...<br>';
 dofsockTest('www.ups.com', 80);
 
-echo 'Connecting to UPSXML (SSL) ...<br>';
+echo 'Connecting to UPSXML (SSL) (wwwcie.ups.com) ...<br>';
 doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
+
+echo 'Connecting to UPSXML (SSL) (www.ups.com) ...<br>';
+doCurlTest('https://www.ups.com/ups.app/xml/Rate');
+
+echo 'Connecting to UPSXML (SSL) (onlinetools.ups.com) ...<br>';
+doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
 
 echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
@@ -128,7 +134,7 @@ function doCurlTest($url = 'http://www.zen-cart.com/testcurl.php', $postdata = "
   curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart(tm) - CURL TEST');
 
-//  curl_setopt($ch, CURLOPT_SSLVERSION, 4);
+//  curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
 //  curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
 
 
