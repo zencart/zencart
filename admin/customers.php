@@ -72,14 +72,14 @@
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, 'cID=' . (int)$_GET['cID'] . '&page=' . $_GET['page'], 'NONSSL'));
         break;
       case 'status':
-        if (isset($_POST['current']) && is_numeric($_POST['current']))
+        if (isset($_GET['current']) && is_numeric($_GET['current']))
         {
-          if ($_POST['current'] == CUSTOMERS_APPROVAL_AUTHORIZATION) {
+          if ($_GET['current'] == CUSTOMERS_APPROVAL_AUTHORIZATION) {
             $sql = "update " . TABLE_CUSTOMERS . " set customers_authorization=0 where customers_id='" . (int)$customers_id . "'";
             $custinfo = $db->Execute("select customers_email_address, customers_firstname, customers_lastname
                                       from " . TABLE_CUSTOMERS . "
                                       where customers_id = '" . (int)$customers_id . "'");
-            if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current'] > 0 && $custinfo->RecordCount() > 0) {
+            if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_GET['current'] > 0 && $custinfo->RecordCount() > 0) {
               $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
               $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE ;
               zen_mail($custinfo->fields['customers_firstname'] . ' ' . $custinfo->fields['customers_lastname'], $custinfo->fields['customers_email_address'], EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');

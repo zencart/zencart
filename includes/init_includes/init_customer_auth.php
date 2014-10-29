@@ -47,12 +47,25 @@ if (DOWN_FOR_MAINTENANCE == 'true') {
 /**
  * recheck customer status for authorization
  */
-if (CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && ($_SESSION['customer_id'] != '' and $_SESSION['customers_authorization'] != '0')) {
+if ($_SESSION['customer_id'] != '') {
   $check_customer_query = "select customers_id, customers_authorization
                              from " . TABLE_CUSTOMERS . "
                              where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
   $check_customer = $db->Execute($check_customer_query);
   $_SESSION['customers_authorization'] = $check_customer->fields['customers_authorization'];
+
+  if ($_SESSION['customers_authorization'] == '4') {
+    // this account is banned
+    $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
+    zen_session_destroy();
+    zen_redirect(zen_href_link(FILENAME_LOGIN));
+  }
+  if ($_SESSION['customers_authorization'] != 0 && in_array(zcRequest::readGet('main_page'), array(FILENAME_CHECKOUT_SHIPPING, FILENAME_CHECKOUT_PAYMENT, FILENAME_CHECKOUT_CONFIRMATION))) {
+    // this account is not valid for checkout
+    global $messageStack;
+    $messageStack->add_session('header', TEXT_AUTHORIZATION_PENDING_CHECKOUT, 'caution');
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+  }
 }
 /**
  * customer login status
