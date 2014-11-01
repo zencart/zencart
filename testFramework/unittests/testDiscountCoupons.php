@@ -87,6 +87,8 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon->process(null);
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 50.25);
+        $this->assertTrue($GLOBALS['order']->info['total'] == 452.24);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
     /**
      * 10% coupon - include shipping = false - no tax calculations
@@ -101,6 +103,8 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon->process(null);
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 50);
+        $this->assertTrue($GLOBALS['order']->info['total'] == 452.49);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
     /**
      * 100% coupon - include shipping = true - no tax calculations
@@ -115,6 +119,8 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon->process(null);
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 502.49);
+        $this->assertTrue($GLOBALS['order']->info['total'] == 0);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
      }
     /**
      * 100% coupon - include shipping = false - no tax calculations
@@ -129,6 +135,8 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon->process(null);
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 499.99);
+        $this->assertTrue($GLOBALS['order']->info['total'] == 2.50);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
     /**
      * Fixed coupon - include shipping = false - no tax calculations
@@ -141,7 +149,10 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
         $this->coupon->process(null);
-        $this->assertEquals($GLOBALS['order']->info['total'],2.50);
+        $result = $this->coupon->output;
+        $this->assertTrue($result[0]['value'] == 499.99);
+        $this->assertTrue($GLOBALS['order']->info['total'] == 2.50);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
     /**
      * Fixed coupon - include shipping = true - no tax calculations
@@ -154,7 +165,10 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
         $this->coupon->process(null);
+        $result = $this->coupon->output;
+        $this->assertTrue($result[0]['value'] == 501);
         $this->assertEquals($GLOBALS['order']->info['total'],1.49);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
     /**
      * Fixed coupon - include shipping = true - tax calculations
@@ -167,7 +181,10 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
         $this->coupon->process(null);
-        $this->assertEquals($GLOBALS['order']->info['total'],1.5892999999999589);
+        $result = $this->coupon->output;
+        $this->assertTrue($result[0]['value'] == 501);
+        $this->assertEquals($GLOBALS['order']->info['total'],1.5893);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
     /**
      * Fixed coupon - include shipping = false - tax calculations
@@ -180,6 +197,41 @@ class testDiscountCoupons extends zcDiscountCouponsTestCase
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
         $this->coupon->process(null);
+        $result = $this->coupon->output;
+        $this->assertTrue($result[0]['value'] == 499.99);
         $this->assertEquals($GLOBALS['order']->info['total'],2.4992999999999483);
+        $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
+    }
+    /**
+     * Fixed coupon + Free Shipping - include shipping = false - no tax calculations
+     */
+    public function testFixedOffCoupon5()
+    {
+        $GLOBALS['order']->info = array('tax_groups'=>array(), 'tax'=>0, 'total'=>502.49, 'shipping_cost'=>2.50, 'shipping_tax'=>0);
+        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        $this->instantiateQfr(array('coupon_code'=>'test', 'coupon_total'=>0, 'coupon_minimum_order'=>0, 'coupon_amount'=>400, 'coupon_type'=>'O'));
+        $this->coupon = new ot_coupon();
+        $this->coupon->include_shipping = 'false';
+        $this->coupon->process(null);
+        $result = $this->coupon->output;
+        $this->assertTrue($result[0]['value'] == 402.50);
+        $this->assertEquals($GLOBALS['order']->info['total'],99.99);
+        $this->assertEquals($GLOBALS['order']->info['shipping_cost'],0);
+    }
+    /**
+     * Fixed coupon + Free Shipping - include shipping = true - no tax calculations
+     */
+    public function testFixedOffCoupon6()
+    {
+        $GLOBALS['order']->info = array('tax_groups'=>array(), 'tax'=>0, 'total'=>33.25, 'shipping_cost'=>5.75, 'shipping_tax'=>0);
+        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        $this->instantiateQfr(array('coupon_code'=>'test', 'coupon_total'=>0, 'coupon_minimum_order'=>0, 'coupon_amount'=> 40, 'coupon_type'=>'O'));
+        $this->coupon = new ot_coupon();
+        $this->coupon->include_shipping = 'true';
+        $this->coupon->process(null);
+        $result = $this->coupon->output;
+        $this->assertTrue($result[0]['value'] == 33.25);
+        $this->assertEquals($GLOBALS['order']->info['total'],0);
+        $this->assertEquals($GLOBALS['order']->info['shipping_cost'],0);
     }
 }
