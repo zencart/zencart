@@ -1213,11 +1213,19 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
                 <td class="dataTableContent" align="right"><?php echo $currencies->format($customers->fields['amount']); ?></td>
 <?php } ?>
                 <td class="dataTableContent" align="center">
-    <?php echo ($customers->fields['customers_authorization'] == 4 ? zen_image(DIR_WS_IMAGES . 'icon_red_off.gif', IMAGE_ICON_STATUS_OFF) : ($customers->fields['customers_authorization'] == 0 ?
-    '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=status&current=' . $customers->fields['customers_authorization'] . '&cID=' . $customers->fields['customers_id'] .
-    (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' :
-    '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=status&current=' . $customers->fields['customers_authorization'] . '&cID=' . $customers->fields['customers_id'] .
-    (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>')); ?>&nbsp;</td>
+                <?php if ($customers->fields['customers_authorization'] == 4) { ?>
+                <?php echo zen_image(DIR_WS_IMAGES . 'icon_red_off.gif', IMAGE_ICON_STATUS_OFF); ?>
+                <?php } else {
+                    echo zen_draw_form('setstatus', FILENAME_CUSTOMERS, 'action=status&cID=' . $customers->fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));?>
+                  <?php if ($customers->fields['customers_authorization'] == 0) { ?>
+                    <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
+                  <?php } else { ?>
+                    <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
+                  <?php } ?>
+                    <input type="hidden" name="current" value="<?php echo $customers->fields['customers_authorization']; ?>" />
+                    </form>
+                <?php } ?>
+                </td>
 <?php if ($customers->fields['COWOA_account'] == 1) { ?>
                 <td class="dataTableContent" align="center"><?php echo 'COWOA'; ?>&nbsp;</td>
 <?php }else{ ?>

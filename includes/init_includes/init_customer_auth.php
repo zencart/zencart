@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Check if customer's session contains a valid customer_id. If not, then it could be that the administrator has deleted the customer (managing spam etc) so we'll log them out.
  */
 if (isset($_SESSION['customer_id'])) {
-  $sql = "select customers_id from " . TABLE_CUSTOMERS . " where customers_id = '" . $_SESSION['customer_id'] . "'";
+  $sql = "select customers_id from " . TABLE_CUSTOMERS . " where customers_id = " . (int)$_SESSION['customer_id'];
   $result = $db->Execute($sql);
   if ($result->RecordCount() == 0) {
     $_SESSION['cart']->reset(true);
@@ -47,12 +47,25 @@ if (DOWN_FOR_MAINTENANCE == 'true') {
 /**
  * recheck customer status for authorization
  */
-if (CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && ($_SESSION['customer_id'] != '' and $_SESSION['customers_authorization'] != '0')) {
+if ((int)$_SESSION['customer_id'] > 0) {
   $check_customer_query = "select customers_id, customers_authorization
                              from " . TABLE_CUSTOMERS . "
-                             where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
+                             where customers_id = " . (int)$_SESSION['customer_id'];
   $check_customer = $db->Execute($check_customer_query);
   $_SESSION['customers_authorization'] = $check_customer->fields['customers_authorization'];
+
+  if ($_SESSION['customers_authorization'] == '4') {
+    // this account is banned
+    $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
+    zen_session_destroy();
+    zen_redirect(zen_href_link(FILENAME_LOGIN));
+  }
+  if ($_SESSION['customers_authorization'] != 0 && in_array(zcRequest::readGet('main_page'), array(FILENAME_CHECKOUT_SHIPPING, FILENAME_CHECKOUT_PAYMENT, FILENAME_CHECKOUT_CONFIRMATION))) {
+    // this account is not valid for checkout
+    global $messageStack;
+    $messageStack->add_session('header', TEXT_AUTHORIZATION_PENDING_CHECKOUT, 'caution');
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+  }
 }
 /**
  * customer login status
@@ -90,7 +103,7 @@ switch (true) {
 /**
  * if not down for maintenance check login status
  */
-  case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
+  case (CUSTOMERS_APPROVAL == '1' and (int)$_SESSION['customer_id'] == 0):
   /**
    * customer must be logged in to browse
    */
@@ -102,7 +115,7 @@ switch (true) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
   break;
-  case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
+  case (CUSTOMERS_APPROVAL == '2' and (int)$_SESSION['customer_id'] == 0):
   /**
    * customer may browse but no prices
    */
@@ -120,7 +133,7 @@ switch (true) {
  */
   case (STORE_STATUS != 0):
     break;
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and $_SESSION['customer_id'] == ''):
+  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and (int)$_SESSION['customer_id'] == 0):
   /**
    * customer must be logged in to browse
    */
@@ -133,7 +146,7 @@ switch (true) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
   break;
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' and $_SESSION['customer_id'] == ''):
+  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' and (int)$_SESSION['customer_id'] == 0):
   /**
    * customer may browse but no prices unless Authorized
    */

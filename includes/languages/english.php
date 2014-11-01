@@ -474,6 +474,7 @@
   define('TEXT_AUTHORIZATION_PENDING_PRICE', 'Price Unavailable');
   define('TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE', 'APPROVAL PENDING');
   define('TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE','Login to Shop');
+  define('TEXT_AUTHORIZATION_PENDING_CHECKOUT', 'Checkout Unavailable - Approval Pending');
 
 // text pricing
   define('TEXT_CHARGES_WORD','Calculated Charge:');
