@@ -3,10 +3,10 @@
  * ot_coupon order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_coupon.php 19063 2011-07-08 20:57:09Z wilt $
+ * @version $Id:
  */
 /**
  * Order Total class  to handle discount coupons
@@ -57,7 +57,7 @@ class ot_coupon {
   function process() {
     global $order, $currencies;
     $order_total = $this->get_order_total(isset($_SESSION['cc_id']) ? $_SESSION['cc_id'] : '');
-    $od_amount = $this->calculate_deductions($order_total['total']);
+    $od_amount = $this->calculate_deductions();
     $this->deduction = $od_amount['total'];
     if ($od_amount['total'] > 0) {
       reset($order->info['tax_groups']);
@@ -449,7 +449,7 @@ class ot_coupon {
     }
     $_SESSION['cc_id'] = "";
   }
-  function calculate_deductions($order_total) {
+  function calculate_deductions() {
     global $db, $order, $messageStack, $currencies;
     $currencyDecimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
     $od_amount = array('tax'=>0, 'total'=>0);
@@ -510,23 +510,27 @@ class ot_coupon {
               break;
             case 'F': // amount Off
 //              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
-              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($coupon_total>0), $currencyDecimalPlaces);
-              $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
+                $od_amount['total'] = zen_round(($coupon->fields['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon->fields['coupon_amount']) * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
+                $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
 //              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               $ratio = $od_amount['total']/$coupon_total;
               break;
             case 'O': // amount off & Free Shipping
 //              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
-              $od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($coupon_total>0), $currencyDecimalPlaces);
+              $od_amount['total'] = zen_round(($coupon->fields['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon->fields['coupon_amount']) * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
+              //$od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($coupon_total>0), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
 //              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               $ratio = $od_amount['total']/$coupon_total;
               // add in Free Shipping
-              $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
+              if ($this->include_shipping == 'false') {
+                  $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
+              }
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
               if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
                 $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
               }
+
               break;
           }
 //@@TODO - Standard and Credit_Note
