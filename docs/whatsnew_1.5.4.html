@@ -106,11 +106,12 @@ This document only mentions the actual changes specific to 1.5.4. If you want to
 Improvements:
 <ul>
 <li>CHANGE-714 - Add progressive-enhancement to checkout flow for PCI compliance when card details collected onsite (added ajax infrastructure, and jQuery)</li>
-<li>CHANGE-724 - Fix init_cache_key_check.php redirect loop which occurs when the user deletes the /cache/ folder</li>
-<li>CHANGE-725 - Fix: Authorizenet SIM module does not hash x_currency_code</li>
+<li>CHANGE-724 - Fix init_cache_key_check.php redirect loop which occurred when the user deletes the /cache/ folder</li>
+<li>CHANGE-423 - PayPal Express Checkout - recover funding failure (10486) with "retry" if card is declined</li>
+<li>CHANGE-725 - Authorizenet SIM module now hashes x_currency_code</li>
 <li>CHANGE-730 - Linkpoint CURL SSL bug triggers PHP Warning: Illegal string offset</li>
-<li>CHANGE-731 - Update Authorize.net SIM and AIM to add support for AUD,NZD currencies</li>
-<li>CHANGE-732 - Update Authorize.net to set defaults for merchant accounts capable of doing POS and Web transactions in one account</li>
+<li>CHANGE-731 - Update Authorize.net SIM and AIM to add support for AUD,NZD currencies (now supports USD CAD GBP EUR AUD NZD)</li>
+<li>CHANGE-732 - Update Authorize.net SIM and AIM to set defaults for merchant accounts capable of doing POS and Web transactions in one account</li>
 <li>CHANGE-733 - Store-pickup module not activating properly for zone restrictions</li>
 <li>CHANGE-311 - Data sanity check in admin/customers.php</li>
 <li>CHANGE-709 - Refactor logging infrastructure</li>
@@ -119,11 +120,13 @@ Improvements:
 <li>Fix #136 - Error in html syntax in admin_activity and CSS comment syntax in who's online</li>
 <li>Fix #152 - Page not found when incorrect EZPage link remove status</li>
 <li>Fix #188 - Remove code comment causing false-positive in security scan</li>
+<li>Fix #209 - POODLE protection - Remove SSLv3 mode, to allow autonegotiation</li>
 <li>Fix #210 - Fix code dealing with apostrophes in filenames</li>
+<li>Fix #215 - Added additional common destinations to curltester script</li>
+<li>Fix #221 - Fix Discount Coupon and Shipping Cost</li>
 <li>ISSUE-82 - (continuation of) Fix odd PHP quirk which triggers fatal error "Allowed memory size of --- bytes exhausted" when accessing SID constant</li>
-<li>POODLE protection - Remove hardcoded SSLv3 mode, to allow autonegotiation</li>
-<li>Backport Fix to PayPal 10486 error</li>
-<li>Added more common destinations to curltester script</li>
+<li>Optimizations and improvements to various database queries</li>
+<li>Fix queries in class.phpbb.php</li>
 </ul>
 
 
