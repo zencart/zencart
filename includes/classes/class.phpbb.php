@@ -182,11 +182,11 @@ if (!defined('IS_ADMIN_FLAG')) {
         $sql = "insert into " . $this->phpBB['users_table'] . "
                 (user_id, group_id, username, username_clean, user_password, user_email, user_email_hash, user_regdate, user_permissions, user_sig, user_occ, user_interests)
                 values
-                ('" . (int)$user_id . "', " . $this->groupId . ", '" . $nick . "', '" . strtolower($nick) . "', '" . md5($password) . "', '" . $email_address . "', '" . crc32(strtolower($email_address)) . strlen($email_address) . "', '" . time() ."', '', '', '', '')";
+                ('" . (int)$user_id . "', " . $this->groupId . ", '" . zen_db_input($nick) . "', '" . zen_db_input(strtolower($nick)) . "', '" . md5($password) . "', '" . zen_db_input($email_address) . "', '" . zen_db_input(crc32(strtolower($email_address))) . strlen($email_address) . "', '" . time() ."', '', '', '', '')";
         $this->db_phpbb->Execute($sql);
         $sql = " update " . $this->phpBB['config_table'] . " SET config_value = '{$user_id}' WHERE config_name = 'newest_user_id'";
         $this->db_phpbb->Execute($sql);
-        $sql = " update " . $this->phpBB['config_table'] . " SET config_value = '{$nick}' WHERE config_name = 'newest_username'";
+        $sql = " update " . $this->phpBB['config_table'] . " SET config_value = '" . zen_db_input($nick) . "' WHERE config_name = 'newest_username'";
         $this->db_phpbb->Execute($sql);
         $sql = " update " . $this->phpBB['config_table'] . " SET config_value = config_value + 1 WHERE config_name = 'num_users'";
         $this->db_phpbb->Execute($sql);
@@ -206,7 +206,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         $sql = "insert into " . $this->phpBB['users_table'] . "
                 (user_id, username, user_password, user_email, user_regdate)
                 values
-                ('" . (int)$user_id . "', '" . $nick . "', '" . md5($password) . "', '" . $email_address . "', '" . time() ."')";
+                ('" . (int)$user_id . "', '" . zen_db_input($nick) . "', '" . md5($password) . "', '" . zen_db_input($email_address) . "', '" . time() ."')";
         $this->db_phpbb->Execute($sql);
 
         $sql = "INSERT INTO " . $this->phpBB['groups_table'] . " (group_name, group_description, group_single_user, group_moderator)
@@ -223,7 +223,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     function phpbb_check_for_duplicate_nick($nick='') {
       if ($this->phpBB['installed'] != true || empty($nick)) return false;
       $status='';
-      $sql = "select * from " . $this->phpBB['users_table'] . " where username = '" . $nick . "'";
+      $sql = "select * from " . $this->phpBB['users_table'] . " where username = '" . zen_db_input($nick) . "'";
       //echo $sql;
       $phpbb_users = $this->db_phpbb->Execute($sql);
       //echo "count=".$phpbb_users->RecordCount();
@@ -236,7 +236,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     function phpbb_check_for_duplicate_email($email_address) {
       if ($this->phpBB['installed'] != true) return false;
       $status='';
-      $sql = "select * from " . $this->phpBB['users_table'] . " where user_email = '" . $email_address . "'";
+      $sql = "select * from " . $this->phpBB['users_table'] . " where user_email = '" . zen_db_input($email_address) . "'";
       $phpbb_users = $this->db_phpbb->Execute($sql);
       if ($phpbb_users->RecordCount() > 0 ) {
         $status='already_exists';
@@ -247,23 +247,23 @@ if (!defined('IS_ADMIN_FLAG')) {
     function phpbb_change_password($nick, $newpassword) {
       if ($this->phpBB['installed'] != true || !zen_not_null($nick) || $nick == '') return false;
         $sql = "update " . $this->phpBB['users_table'] . " set user_password='" . MD5($newpassword) . "'
-                where username = '" . $nick . "'";
+                where username = '" . zen_db_input($nick) . "'";
         $phpbb_users = $this->db_phpbb->Execute($sql);
     }
 
     function phpbb_change_email($old_email, $email_address) {
     // before utilizing this function, we should do an MD5 password validation first
       if ($this->phpBB['installed'] != true || !zen_not_null($email_address) || $email_address == '') return false;
-        $sql = "update " . $this->phpBB['users_table'] . " set user_email='" . $email_address . "', user_email_hash = '" . crc32(strtolower($email_address)) . strlen($email_address) . "'
-                where user_email = '" . $old_email . "'";
+        $sql = "update " . $this->phpBB['users_table'] . " set user_email='" . zen_db_input($email_address) . "', user_email_hash = '" . crc32(strtolower($email_address)) . strlen($email_address) . "'
+                where user_email = '" . zen_db_input($old_email) . "'";
         $phpbb_users = $this->db_phpbb->Execute($sql);
     }
 
     function phpbb_change_nick($old_nick, $new_nick) {
     // before utilizing this function, we should do an MD5 password validation first
       if ($this->phpBB['installed'] != true || !zen_not_null($nick) || $nick == '') return false;
-        $sql = "update " . $this->phpBB['users_table'] . " set username='" . $new_nick . "', username_clean = '" . $new_nick . "'
-                where username = '" . $old_nick . "'";
+        $sql = "update " . $this->phpBB['users_table'] . " set username='" . zen_db_input($new_nick) . "', username_clean = '" . zen_db_input($new_nick) . "'
+                where username = '" . zen_db_input($old_nick) . "'";
         $phpbb_users = $this->db_phpbb->Execute($sql);
     }
 

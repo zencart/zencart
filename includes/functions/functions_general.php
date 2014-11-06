@@ -900,7 +900,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 ////
   function zen_db_input($string) {
-    return addslashes($string);
+    global $db;
+    return $db->prepareInput($string);
   }
 
 ////

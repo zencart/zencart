@@ -219,7 +219,7 @@ class ot_coupon {
 
         $date_query=$db->Execute("select coupon_start_date from " . TABLE_COUPONS . "
                                   where coupon_start_date <= now() and
-                                  coupon_code='" . zen_db_prepare_input($dc_check) . "'");
+                                  coupon_code='" . zen_db_input($dc_check) . "'");
 
         if ($date_query->RecordCount() < 1 ) {
           $messageStack->add_session('redemptions', TEXT_INVALID_STARTDATE_COUPON,'caution');
@@ -229,7 +229,7 @@ class ot_coupon {
 
         $date_query=$db->Execute("select coupon_expire_date from " . TABLE_COUPONS . "
                                   where coupon_expire_date >= now() and
-                                  coupon_code='" . zen_db_prepare_input($dc_check) . "'");
+                                  coupon_code='" . zen_db_input($dc_check) . "'");
 
         if ($date_query->RecordCount() < 1 ) {
           $messageStack->add_session('redemptions', TEXT_INVALID_FINISHDATE_COUPON,'caution');

@@ -593,13 +593,13 @@
     function dbAfterLoadActions() {
       $this->dbActivate(); // can likely remove this line for v1.4
       //update the cache folder setting:
-      $sql = "update ". $this->getConfigKey('DB_PREFIX') ."configuration set configuration_value='". $this->getConfigKey('DIR_FS_SQL_CACHE') ."' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
+      $sql = "update ". $this->getConfigKey('DB_PREFIX') ."configuration set configuration_value='". $this->db->prepareInput($this->getConfigKey('DIR_FS_SQL_CACHE')) ."' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
       $this->db->Execute($sql);
       //update the logging_folder setting:
-      $sql = "update ". $this->getConfigKey('DB_PREFIX') ."configuration set configuration_value='". $this->getConfigKey('DIR_FS_SQL_CACHE') ."/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
+      $sql = "update ". $this->getConfigKey('DB_PREFIX') ."configuration set configuration_value='". $this->db->prepareInput($this->getConfigKey('DIR_FS_SQL_CACHE')) ."/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
       $this->db->Execute($sql);
       //update the phpbb setting:
-//      $sql = "update ". $this->getConfigKey('DB_PREFIX') ."configuration set configuration_value='". $this->getConfigKey('PHPBB_ENABLE') ."' where configuration_key = 'PHPBB_LINKS_ENABLED'";
+//      $sql = "update ". $this->getConfigKey('DB_PREFIX') ."configuration set configuration_value='". $this->db->prepareInput($this->getConfigKey('PHPBB_ENABLE')) ."' where configuration_key = 'PHPBB_LINKS_ENABLED'";
 //      $this->db->Execute($sql);
     }
 
@@ -682,7 +682,7 @@
 
     function dbAdminSetup() {
       $this->dbActivate();
-      $sql = "update " . DB_PREFIX . "admin set admin_name = '" . $this->configInfo['admin_username'] . "', admin_email = '" . $this->configInfo['admin_email'] . "', admin_pass = '" . zen_encrypt_password($this->configInfo['admin_pass']) . "', pwd_last_change_date = 0, reset_token = '" . (time() + (72 * 60 * 60)) . '}' . zen_encrypt_password($this->configInfo['admin_pass']) . "' where admin_id = 1";
+      $sql = "update " . DB_PREFIX . "admin set admin_name = '" . $this->db->prepareInput($this->configInfo['admin_username']) . "', admin_email = '" . $this->db->prepareInput($this->configInfo['admin_email']) . "', admin_pass = '" . zen_encrypt_password($this->configInfo['admin_pass']) . "', pwd_last_change_date = 0, reset_token = '" . (time() + (72 * 60 * 60)) . '}' . $this->db->prepareInput(zen_encrypt_password($this->configInfo['admin_pass'])) . "' where admin_id = 1";
       $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
 
       // enable/disable automatic version-checking
@@ -702,7 +702,7 @@
         $admin_name = zen_db_prepare_input($admin_name);
         $admin_pass = zen_db_prepare_input($admin_pass);
 //@TODO: deal with super-user requirement and expired-passwords?
-        $sql = "select admin_id, admin_name, admin_pass from " . $prefix . "admin where admin_name = '" . $admin_name . "'";
+        $sql = "select admin_id, admin_name, admin_pass from " . $prefix . "admin where admin_name = '" . $this->db->prepareInput($admin_name) . "'";
         //open database connection to run queries against it
         $this->dbActivate();
         $this->db->Close();
@@ -724,7 +724,7 @@
       $this->db->Close();
       unset($this->db);
       $this->dbActivate();
-      $sql = "UPDATE " . $prefix . "admin SET admin_profile = 1 WHERE admin_id = " . $this->candidateSuperuser;
+      $sql = "UPDATE " . $prefix . "admin SET admin_profile = 1 WHERE admin_id = " . (int)$this->candidateSuperuser;
       $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
       $this->db->Close();
     }

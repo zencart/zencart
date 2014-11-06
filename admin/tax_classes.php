@@ -37,7 +37,7 @@
                           last_modified = now()
                       where tax_class_id = '" . (int)$tax_class_id . "'");
 
-        zen_redirect(zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tax_class_id));
+        zen_redirect(zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . (int)$tax_class_id));
         break;
       case 'deleteconfirm':
         // demo active test
@@ -46,15 +46,15 @@
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
           zen_redirect(zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']));
         }
-        $tax_class_id = zen_db_prepare_input($_POST['tID']);
+        $tax_class_id = (int)$_POST['tID'];
 
-        $sql = "select tax_class_id from " . TABLE_TAX_RATES . " where tax_class_id='" . $tax_class_id . "'";
+        $sql = "select tax_class_id from " . TABLE_TAX_RATES . " where tax_class_id='" . (int)$tax_class_id . "'";
         $result = $db->Execute($sql);
         if ($result->RecordCount() > 0) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_TAX_RATE_EXISTS_FOR_CLASS, 'error');
         }
-        $sql = "select count(*) as count from " . TABLE_PRODUCTS . " where products_tax_class_id='" . $tax_class_id . "'";
+        $sql = "select count(*) as count from " . TABLE_PRODUCTS . " where products_tax_class_id='" . (int)$tax_class_id . "'";
         $result = $db->Execute($sql);
         if ($result->fields['count'] > 0) {
           $_GET['action']= '';

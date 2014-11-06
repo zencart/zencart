@@ -114,7 +114,7 @@
         $specials_id = zen_db_prepare_input($_POST['sID']);
 
         // reset products_price_sorter for searches etc.
-        $update_price = $db->Execute("select products_id from " . TABLE_SPECIALS . " where specials_id = '" . $specials_id . "'");
+        $update_price = $db->Execute("select products_id from " . TABLE_SPECIALS . " where specials_id = '" . (int)$specials_id . "'");
         $update_price_id = $update_price->fields['products_id'];
 
         $db->Execute("delete from " . TABLE_SPECIALS . "

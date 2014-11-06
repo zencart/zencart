@@ -47,14 +47,14 @@
       $id1 = create_coupon_code($mail->fields['customers_email_address']);
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
-                                    values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
+                                    values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 
       $insert_id = $db->Insert_ID();
 
       $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . "
                     (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent)
                     values ('" . $insert_id ."', '0', 'Admin',
-                            '" . $mail->fields['customers_email_address'] . "', now() )");
+                            '" . zen_db_input($mail->fields['customers_email_address']) . "', now() )");
 
       $message = $_POST['message'];
       $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
@@ -131,14 +131,14 @@
       // Now create the coupon main entry
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
-                                    values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
+                                    values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 
       $insert_id = $db->Insert_id();
 
       $insert_query = $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . "
                                     (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent)
                                     values ('" . $insert_id ."', '0', 'Admin',
-                                            '" . $_POST['email_to'] . "', now() )");
+                                            '" . zen_db_input($_POST['email_to']) . "', now() )");
 
     }
     zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));

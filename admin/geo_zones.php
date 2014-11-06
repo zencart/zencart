@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: geo_zones.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version $Id: geo_zones.php  drbyte $
  */
 
   require('includes/application_top.php');
@@ -104,7 +104,7 @@
         }
         $zID = zen_db_prepare_input($_POST['zID']);
 
-        $check_tax_rates = $db->Execute("select tax_zone_id from " . TABLE_TAX_RATES . " where tax_zone_id='" . $zID . "'");
+        $check_tax_rates = $db->Execute("select tax_zone_id from " . TABLE_TAX_RATES . " where tax_zone_id='" . (int)$zID . "'");
         if ($check_tax_rates->RecordCount() > 0) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_TAX_RATE_EXISTS, 'caution');
@@ -210,8 +210,7 @@ function update_zone(theForm) {
 // Split Page
 // reset page when page is unknown
 if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') and $_GET['sID'] != '') {
-//  $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from (" . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id) where a.geo_zone_id = " . $_GET['zID'] . " order by association_id";
-  $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from (" . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id) where a.geo_zone_id = " . $_GET['zID'] . " order by c.countries_name, association_id";
+  $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from (" . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id) where a.geo_zone_id = " . (int)$_GET['zID'] . " order by c.countries_name, association_id";
   $check_page = $db->Execute($zones_query_raw);
   $check_count=1;
   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
@@ -228,8 +227,7 @@ if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') an
   }
 }
     $rows = 0;
-//    $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from (" . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id) where a.geo_zone_id = " . $_GET['zID'] . " order by association_id";
-    $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from (" . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id) where a.geo_zone_id = " . $_GET['zID'] . " order by c.countries_name, association_id";
+    $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from (" . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id) where a.geo_zone_id = " . (int)$_GET['zID'] . " order by c.countries_name, association_id";
     $zones_split = new splitPageResults($_GET['spage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
     $zones = $db->Execute($zones_query_raw);
     while (!$zones->EOF) {

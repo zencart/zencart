@@ -17,7 +17,7 @@
         $image = zen_db_prepare_input($_POST['image']);
         $directory = zen_db_prepare_input($_POST['directory']);
         $sort_order = zen_db_prepare_input((int)$_POST['sort_order']);
-        $check = $db->Execute("select * from " . TABLE_LANGUAGES . " where code = '" . $code . "'");
+        $check = $db->Execute("select * from " . TABLE_LANGUAGES . " where code = '" . zen_db_input($code) . "'");
         if ($check->RecordCount() > 0) {
           $messageStack->add(ERROR_DUPLICATE_LANGUAGE_CODE, 'error');
         } else {
@@ -245,7 +245,7 @@
         $lID = zen_db_prepare_input($_POST['lID']);
         $lng = $db->Execute("select languages_id
                              from " . TABLE_LANGUAGES . "
-                             where code = '" . DEFAULT_LANGUAGE . "'");
+                             where code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
 
         if ($lng->fields['languages_id'] == $lID) {
           $db->Execute("update " . TABLE_CONFIGURATION . "
@@ -265,7 +265,7 @@
         $db->Execute("delete from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
 
         // if we just deleted our currently-selected language, need to switch to default lang:
-        $lng = $db->Execute("select languages_id from " . TABLE_LANGUAGES . " where code = '" . DEFAULT_LANGUAGE . "'");
+        $lng = $db->Execute("select languages_id from " . TABLE_LANGUAGES . " where code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
         if ((int)$_SESSION['languages_id'] == (int)$_POST['lID'])  $_SESSION['languages_id'] = $lng->fields['languages_id'];
 
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
