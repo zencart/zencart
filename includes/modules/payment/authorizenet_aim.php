@@ -538,7 +538,6 @@ class authorizenet_aim extends base {
                          'x_login' => trim(MODULE_PAYMENT_AUTHORIZENET_AIM_LOGIN),
                          'x_tran_key' => trim(MODULE_PAYMENT_AUTHORIZENET_AIM_TXNKEY),
                          'x_relay_response' => 'FALSE',
-                         'x_delim_data' => 'TRUE',
                          'x_delim_char' => $this->delimiter,  // The default delimiter is a comma
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
