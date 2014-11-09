@@ -160,14 +160,15 @@ switch (true) {
   }
   */
   break;
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and $_SESSION['customers_authorization'] != '0'):
+  case (((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1)):
   /**
    * customer is pending approval
    * customer must be logged in to browse
+   * customer is logged in and changed to must be authorized to browse
    */
   if (!in_array(zcRequest::readGet('main_page'), array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY))) {
-  if (zcRequest::readGet('main_page') != CUSTOMERS_AUTHORIZATION_FILENAME) {
-    zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME));
+    if (zcRequest::readGet('main_page') != CUSTOMERS_AUTHORIZATION_FILENAME) {
+      zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME));
     }
   }
   break;
