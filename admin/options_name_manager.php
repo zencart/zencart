@@ -202,6 +202,8 @@
         }
         $option_id = zen_db_prepare_input($_GET['option_id']);
 
+        $update_products_price_sorter = $db->Execute("select distinct products_id from " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE options_id ='" . $option_id . "'");
+
         $remove_option_values = $db->Execute("select products_options_id, products_options_values_id from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$option_id . "'");
 
         while (!$remove_option_values->EOF) {
@@ -213,6 +215,12 @@
                       where products_options_id = '" . (int)$option_id . "'");
 
         $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id = '" . (int)$option_id . "'");
+
+        while (!$update_products_price_sorter->EOF) {
+          // update products_price_sorter with new changes
+          zen_update_products_price_sorter($update_products_price_sorter->fields['products_id']);
+          $update_products_price_sorter->MoveNext();
+        }
 
         zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, $_SESSION['page_info'] . '&option_order_by=' . $option_order_by));
         break;
@@ -253,7 +261,7 @@
             // get all option_values
             $all_options_values = $db->Execute("select products_options_id, products_options_values_id from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$_POST['options_id'] . "'");
             $updated = 'false';
-           while (!$all_options_values->EOF) {
+            while (!$all_options_values->EOF) {
               $check_all_options_values = $db->Execute("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . $all_update_products->fields['products_id'] . "' and options_id='" . (int)$all_options_values->fields['products_options_id'] . "' and options_values_id='" . (int)$all_options_values->fields['products_options_values_id'] . "'");
               if ($check_all_options_values->RecordCount() < 1) {
                 // add missing options_value_id
@@ -266,7 +274,10 @@
             }
             if ($updated == 'true') {
               zen_update_attributes_products_option_values_sort_order($all_update_products->fields['products_id']);
+              // update products_price_sorter with new changes
+              zen_update_products_price_sorter($all_update_products->fields['products_id']);
             }
+
             $all_update_products->MoveNext();
           }
           if ($updated='true') {
@@ -280,18 +291,23 @@
             // get all option_values
             $all_options_values = $db->Execute("select products_options_id, products_options_values_id from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$_POST['options_id'] . "'");
             $updated = 'false';
-           while (!$all_options_values->EOF) {
+            while (!$all_options_values->EOF) {
               $check_all_options_values = $db->Execute("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . (int)$all_update_products->fields['products_id'] . "' and options_id='" . (int)$all_options_values->fields['products_options_id'] . "' and options_values_id='" . (int)$all_options_values->fields['products_options_values_id'] . "'");
               if ($check_all_options_values->RecordCount() >= 1) {
                 // delete for this product with Option Name options_value_id
 // echo '<br>This should be deleted: ' . zen_get_products_name($all_options_values->fields['products_options_id']);
 // change to delete
 // should add download delete
+                $updated = 'true';
                 $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . (int)$all_update_products->fields['products_id'] . "' and options_id='" . (int)$_POST['options_id'] . "'");
               } else {
                 // skip this option_name does not exist
               }
               $all_options_values->MoveNext();
+            }
+            if ($updated == 'true') {
+              // update products_price_sorter with new changes
+              zen_update_products_price_sorter((int)$all_update_products->fields['products_id']);
             }
             $all_update_products->MoveNext();
           }
