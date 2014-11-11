@@ -160,7 +160,7 @@ switch (true) {
   }
   */
   break;
-  case (((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1)):
+  case ((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1):
   /**
    * customer is pending approval
    * customer must be logged in to browse
