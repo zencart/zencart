@@ -1340,7 +1340,8 @@ class shoppingCart extends base {
           $new_qty = round($new_qty, 0);
         }
 
-        if ($new_qty == (int)$new_qty) {
+//@@TODO - should be okay to remove
+        if (false && $new_qty == (int)$new_qty) {
           $new_qty = (int)$new_qty;
         }
         $products_array[] = array('id' => $products_id,
