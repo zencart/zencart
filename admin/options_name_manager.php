@@ -280,7 +280,7 @@
 
             $all_update_products->MoveNext();
           }
-          if ($updated='true') {
+          if ($updated == 'true') {
             $messageStack->add_session(SUCCESS_PRODUCTS_OPTIONS_VALUES, 'success');
           } else {
             $messageStack->add_session(ERROR_PRODUCTS_OPTIONS_VALUES, 'error');
