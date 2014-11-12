@@ -3382,7 +3382,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     $x = strval($x);
     $y = strval($y);
     $zc_round = ($x*1000)/($y*1000);
-    $zc_round_ceil = (int)($zc_round);
+    $zc_round_ceil = round($zc_round,0);
     $multiplier = $zc_round_ceil * $y;
     $results = abs(round($x - $multiplier, 6));
      return $results;
