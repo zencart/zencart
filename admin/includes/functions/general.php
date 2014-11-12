@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: Ajeh  Nov 12 2014 Modified in v1.6.0 $
  */
 
 ////
@@ -3620,3 +3620,88 @@ function zen_get_ip_address() {
   return $ip;
 }
 
+/**
+ * Perform an array multisort, based on 1 or 2 columns being passed
+ * (defaults to sorting by first column ascendingly then second column ascendingly unless otherwise specified)
+ *
+ * @param $data        multidimensional array to be sorted
+ * @param $columnName1 string representing the named column to sort by as first criteria
+ * @param $order1      either SORT_ASC or SORT_DESC (default SORT_ASC)
+ * @param $columnName2 string representing named column as second criteria
+ * @param $order2      either SORT_ASC or SORT_DESC (default SORT_ASC)
+ * @return array   Original array sorted as specified
+ */
+function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnName2 = '', $order2 = SORT_ASC)
+{
+  // simple validations
+  $keys = array_keys($data);
+  if ($columnName1 == '') {
+    $columnName1 = $keys[0];
+  }
+  if (!in_array($order1, array(SORT_ASC, SORT_DESC))) $order1=SORT_ASC;
+  if ($columnName2 == '') {
+    $columnName2 = $keys[1];
+  }
+  if (!in_array($order2, array(SORT_ASC, SORT_DESC))) $order2=SORT_ASC;
+
+  // prepare sub-arrays for aiding in sorting
+  foreach($data as $key=>$val)
+  {
+    $sort1[] = $val[$columnName1];
+    $sort2[] = $val[$columnName2];
+  }
+  // do actual sort based on specified fields.
+  array_multisort($sort1, $order1, $sort2, $order2, $data);
+  return $data;
+}
+
+/**
+ * Obtain a list of .log/.xml files from the /logs/ folder
+ * (and also /cache/ folder for backward compatibility of older modules which store logs there)
+ *
+ * If $maxToList == 'count' then it returns the total number of files found
+ * If an integer is passed, then an array of files is returned, including paths, filenames, and datetime details
+ *
+ * @param $maxToList mixed (integer or 'count')
+ * @return array or integer
+ *
+ * inspired by log checking suggestion from Steve Sherratt (torvista)
+ */
+function get_logs_data($maxToList = 'count') {
+  if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
+  if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache');
+  $logs = array();
+  $file = array();
+  $i = 0;
+  foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE) as $purgeFolder) {
+    $purgeFolder = rtrim($purgeFolder, '/');
+    if (file_exists($purgeFolder) && is_dir($purgeFolder)) {
+      $dir = dir($purgeFolder);
+    } else {
+      continue;
+    }
+    while ($logfile = $dir->read()) {
+      if (substr($logfile, 0, 1) != '.') {
+        if (preg_match('/.*(\.log|\.xml)$/', $logfile)) { // xml allows for usps debug
+          if ($maxToList != 'count') {
+            $filename = $purgeFolder . '/' . $logfile;
+            $logs[$i]['path'] = $purgeFolder . "/";
+            $logs[$i]['filename'] = $logfile;
+            $logs[$i]['filesize'] = @filesize($filename);
+            $logs[$i]['unixtime'] = @filemtime($filename);
+            $logs[$i]['datetime'] = strftime(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
+          }
+          $i++;
+        }
+      }
+      if ($maxToList != 'count' && $i >= $maxToList) break;
+    }
+    $dir->close();
+    unset($dir);
+  }
+
+  if ($maxToList == 'count') return $i;
+
+  $logs = zen_sort_array($logs, 'unixtime', SORT_DESC);
+  return $logs;
+}
