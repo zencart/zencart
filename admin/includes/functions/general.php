@@ -3681,19 +3681,17 @@ function get_logs_data($maxToList = 'count') {
       continue;
     }
     while ($logfile = $dir->read()) {
-      if (substr($logfile, 0, 1) != '.') {
-        if (preg_match('/.*(\.log|\.xml)$/', $logfile)) { // xml allows for usps debug
-          if ($maxToList != 'count') {
-            $filename = $purgeFolder . '/' . $logfile;
-            $logs[$i]['path'] = $purgeFolder . "/";
-            $logs[$i]['filename'] = $logfile;
-            $logs[$i]['filesize'] = @filesize($filename);
-            $logs[$i]['unixtime'] = @filemtime($filename);
-            $logs[$i]['datetime'] = strftime(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
-          }
-          $i++;
-        }
+      if (substr($logfile, 0, 1) == '.') continue;
+      if (!preg_match('/.*(\.log|\.xml)$/', $logfile)) continue; // xml allows for usps debug
+      if ($maxToList != 'count') {
+        $filename = $purgeFolder . '/' . $logfile;
+        $logs[$i]['path'] = $purgeFolder . "/";
+        $logs[$i]['filename'] = $logfile;
+        $logs[$i]['filesize'] = @filesize($filename);
+        $logs[$i]['unixtime'] = @filemtime($filename);
+        $logs[$i]['datetime'] = strftime(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
       }
+      $i++;
       if ($maxToList != 'count' && $i >= $maxToList) break;
     }
     $dir->close();
