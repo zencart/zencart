@@ -3388,6 +3388,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
      return $results;
   }
 
+
 /**
  * return any field from products or products_description table
  * Example: zen_products_lookup('3', 'products_date_added');
