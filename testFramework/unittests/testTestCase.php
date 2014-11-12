@@ -105,38 +105,28 @@ class testLibraryMain extends zcCatalogTestCase
   }
 
   /**
-   * Test fmod_round()
+   * @dataProvider fmodRoundProvider
    */
-  public function testFmodRound()
+  public function testFmodRound($a, $b, $expected)
   {
-    $pairs = array();
-    $pairs[] = array(0.01, 0.01);
-    $pairs[] = array(0.02, 0.02);
-    $pairs[] = array(0.0003, 0.0003);
-    $pairs[] = array(0.1, 0.1);
-    $pairs[] = array(0.2, 0.2);
-    $pairs[] = array(0.3, 0.3);
-    $pairs[] = array(14, 0.00007);
-    $pairs[] = array(517.8, 17.26);
-    $pairs[] = array(400000, 800);
-    foreach($pairs as $pair)
-    {
-      $val = fmod_round($pair[0], $pair[1]);
-      if ($val != 0) {
-        $this->fail('fmod_round(' . $pair[0] . ', ' . $pair[1]. ') should be 0. Got ' . $val . ' instead.');
-      }
-    }
+    $this->assertEquals($expected, fmod_round($a, $b));
+  }
 
-    $badpairs = array();
-    $badpairs[] = array(7.3, 0.2);
-    $badpairs[] = array(517.8, 17.27);
-    foreach($badpairs as $pair)
-    {
-      $val = fmod_round($pair[0], $pair[1]);
-      if ($val == 0) {
-        $this->fail('fmod_round(' . $pair[0] . ', ' . $pair[1]. ') should NOT be 0.');
-      }
-    }
+  public function fmodRoundProvider()
+  {
+    return array(
+      array(0.01, 0.01, 0),
+      array(0.02, 0.02, 0),
+      array(0.0003, 0.0003, 0),
+      array(0.1, 0.1, 0),
+      array(0.2, 0.2, 0),
+      array(0.3, 0.3, 0),
+      array(14, 0.00007, 0),
+      array(517.8, 17.26, 0),
+      array(400000, 800, 0),
+      array(7.3, 0.2, 0.1),
+      array(517.8, 17.27, .3),
+    );
   }
 
 }
