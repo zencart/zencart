@@ -3675,14 +3675,13 @@ function get_logs_data($maxToList = 'count') {
   $i = 0;
   foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE) as $purgeFolder) {
     $purgeFolder = rtrim($purgeFolder, '/');
-    if (file_exists($purgeFolder) && is_dir($purgeFolder)) {
-      $dir = dir($purgeFolder);
-    } else {
-      continue;
-    }
+    if (!file_exists($purgeFolder) || !is_dir($purgeFolder)) continue;
+
+    $dir = dir($purgeFolder);
     while ($logfile = $dir->read()) {
       if (substr($logfile, 0, 1) == '.') continue;
       if (!preg_match('/.*(\.log|\.xml)$/', $logfile)) continue; // xml allows for usps debug
+
       if ($maxToList != 'count') {
         $filename = $purgeFolder . '/' . $logfile;
         $logs[$i]['path'] = $purgeFolder . "/";
