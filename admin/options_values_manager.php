@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Sat Jul 21 17:10:54 2012 -0400 Modified in v1.5.1 $
@@ -164,7 +164,7 @@
         $value_id = zen_db_prepare_input($_GET['value_id']);
 
 // remove all attributes from products with value
-        $remove_attributes_query = $db->Execute("select products_attributes_id, options_id, options_values_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where options_values_id ='" . (int)$value_id . "'");
+        $remove_attributes_query = $db->Execute("select products_id, products_attributes_id, options_id, options_values_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where options_values_id ='" . (int)$value_id . "'");
         if ($remove_attributes_query->RecordCount() > 0) {
           // clean all tables of option value
           while (!$remove_attributes_query->EOF) {
@@ -176,8 +176,14 @@
           }
           $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . "
                         where options_values_id='" . (int)$value_id . "'");
-        }
 
+          $remove_attributes_query->rewind();
+          while(!$remove_attributes_query->EOF) {
+            // update products_price_sorter with new changes
+            zen_update_products_price_sorter((int)$remove_attributes_query->fields['products_id']);
+            $remove_attributes_query->MoveNext();
+          }
+        }
         $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                       where products_options_values_id = '" . (int)$value_id . "'");
 
@@ -241,6 +247,8 @@ die('I SEE match from: ' . $options_id_from . '-' . $options_values_values_id_fr
               // do not add duplicate attributes
               if ($check_previous->fields['count'] < 1) {
                 $db->Execute($sql);
+                // update products_price_sorter with new changes
+                zen_update_products_price_sorter((int)$current_products_id);
                 $new_attribute++;
               }
               $products_only->MoveNext();
@@ -391,6 +399,9 @@ die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from
               // add new attribute
                 $db->Execute($sql);
                 //echo $sql . '<br>';
+
+                // update products_price_sorter with new changes
+                zen_update_products_price_sorter((int)$current_products_id);
                 $new_attribute++;
               } else {
                 // ignore
@@ -401,6 +412,8 @@ die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from
                 //echo 'delete old and add new: ' . $current_products_id . '<br>';
                   $db->Execute("DELETE from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . $current_products_id . "' and options_id='" . $options_id_from . "' and options_values_id='" . $options_values_values_id_from . "'");
                   $db->Execute($sql);
+                  // update products_price_sorter with new changes
+                  zen_update_products_price_sorter((int)$current_products_id);
                   $new_attribute++;
                 }
               }
@@ -468,6 +481,10 @@ die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from
                             where products_attributes_id='" . $downloads_remove->fields['products_attributes_id'] . "'");
               $downloads_remove->MoveNext();
             }
+
+            // update products_price_sorter with new changes
+            zen_update_products_price_sorter((int)$current_products_id);
+
             // count deleted attribute
             $new_attribute++;
             $products_only->MoveNext();
