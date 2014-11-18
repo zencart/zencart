@@ -1147,6 +1147,11 @@ if (!defined('IS_ADMIN_FLAG')) {
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
         break;
+        case ((int)$_SESSION['customers_authorization'] >= 2):
+        // customer is logged in and was changed to must be approved to buy
+        $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
+        return $login_for_price;
+        break;
         default:
         // proceed normally
         break;
