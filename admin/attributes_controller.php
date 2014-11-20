@@ -921,6 +921,7 @@ if ($action == 'attributes_preview') {
 // preview shot of attributes
 if ($action == 'attributes_preview') {
   $_GET['products_id'] = $products_filter;
+  $pInfo = new stdClass();
   $pInfo->products_id = $products_filter;
 
   include(DIR_WS_INCLUDES . 'attributes_preview.php');
