@@ -3,13 +3,13 @@
  * Side Box Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_categories.php 4162 2006-08-17 03:55:02Z ajeh $
  */
   $content = "";
-  
+
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">' . "\n";
   for ($i=0;$i<sizeof($box_categories_array);$i++) {
     switch(true) {
@@ -27,10 +27,11 @@
         break;
       default:
         $new_style = 'category-products';
-      }
-     if (zen_get_product_types_to_category($box_categories_array[$i]['path']) == 3 or ($box_categories_array[$i]['top'] != 'true' and SHOW_CATEGORIES_SUBCATEGORIES_ALWAYS != 1)) {
-        // skip if this is for the document box (==3)
-      } else {
+    }
+    if ((CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && $box_categories_array[$i]['count'] == 0) || zen_get_product_types_to_category($box_categories_array[$i]['path']) == 3 or ($box_categories_array[$i]['top'] != 'true' and SHOW_CATEGORIES_SUBCATEGORIES_ALWAYS != 1)) {
+       // skip if this is for the document box (==3)
+       // skip empty or status off categories
+    } else {
       $content .= '<a class="' . $new_style . '" href="' . zen_href_link(FILENAME_DEFAULT, $box_categories_array[$i]['path']) . '">';
 
       if ($box_categories_array[$i]['current']) {
@@ -92,4 +93,3 @@
     }
   }
   $content .= '</div>';
-?>

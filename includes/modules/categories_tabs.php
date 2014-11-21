@@ -3,7 +3,7 @@
  * categories_tabs.php module
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: categories_tabs.php 3018 2006-02-12 21:04:04Z wilt $
@@ -47,16 +47,19 @@ if (CATEGORIES_TABS_STATUS == '1') {
     $li_class = 'cat' . $this_cat_id;
     $a_class = 'category-top cat' . $this_cat_id;
     $zco_notifier->notify('NOTIFY_MODULE_CATEGORIES_TABS_LINKBUILDING', $this_cat_id, $link_text, $href, $name, $current, $li_class, $a_class, $more);
-
-    $links_list[] = array('category' => $this_cat_id,
-                          'name' => $name,
-                          'current' => $current,
-                          'href' => $href,
-                          'text' => $link_text,
-                          'li-class' => $li_class,
-                          'a-class' => $a_class,
-                          'more' => $more,
-                         );
+    if (CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && zen_count_products_in_category((int)$result->fields['categories_id']) == 0) {
+      // skip empty or status off categories
+    } else {
+      $links_list[] = array('category' => $this_cat_id,
+                            'name' => $name,
+                            'current' => $current,
+                            'href' => $href,
+                            'text' => $link_text,
+                            'li-class' => $li_class,
+                            'a-class' => $a_class,
+                            'more' => $more,
+                           );
+    }
     $result->MoveNext();
   }
   unset($more, $link_text, $current, $href, $href_cPath, $name);

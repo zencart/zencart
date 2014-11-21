@@ -3,7 +3,7 @@
  * site_map.php
  *
  * @package general
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: site_map.php 3041 2006-02-15 21:56:45Z wilt $
@@ -33,18 +33,22 @@ if (!defined('IS_ADMIN_FLAG')) {
 
    function zen_SiteMapTree($load_from_database = true) {
      global $languages_id, $db;
-  $this->data = array();
- $categories_query = "select c.categories_id, cd.categories_name, c.parent_id
-                      from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                      where c.categories_id = cd.categories_id
-                      and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                      and c.categories_status != '0'
-                      order by c.parent_id, c.sort_order, cd.categories_name";
-         $categories = $db->Execute($categories_query);
-         while (!$categories->EOF) {
-           $this->data[$categories->fields['parent_id']][$categories->fields['categories_id']] = array('name' => $categories->fields['categories_name'], 'count' => 0);
-           $categories->MoveNext();
-         }
+     $this->data = array();
+     $categories_query = "select c.categories_id, cd.categories_name, c.parent_id
+                          from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                          where c.categories_id = cd.categories_id
+                          and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                          and c.categories_status != '0'
+                          order by c.parent_id, c.sort_order, cd.categories_name";
+      $categories = $db->Execute($categories_query);
+      while (!$categories->EOF) {
+        if (CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && zen_count_products_in_category((int)$categories->fields['categories_id']) == 0) {
+          // skip empty or status off categories
+        } else {
+          $this->data[$categories->fields['parent_id']][$categories->fields['categories_id']] = array('name' => $categories->fields['categories_name'], 'count' => 0);
+        }
+        $categories->MoveNext();
+      }
    }
 
    function buildBranch($parent_id, $level = 0, $parent_link = '') {
@@ -52,6 +56,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     if (isset($this->data[$parent_id])) {
       foreach ($this->data[$parent_id] as $category_id => $category) {
+        if (CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && zen_count_products_in_category((int)$category_id) == 0) {
+          // skip empty or status off categories
+          continue;
+        }
         $category_link = $parent_link . $category_id;
         $result .= $this->child_start_string;
         if (isset($this->data[$category_id])) {
@@ -91,4 +99,3 @@ if (!defined('IS_ADMIN_FLAG')) {
      return $this->buildBranch($this->root_category_id);
    }
  }
-?>
