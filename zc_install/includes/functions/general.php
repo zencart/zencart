@@ -45,7 +45,8 @@
 
 ////
   function zen_db_input($string) {
-    return addslashes($string);
+    global $db;
+    return $db->prepareInput($string);
   }
 
 ////
@@ -280,7 +281,8 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
           case (substr($line_upper, 0, 11) == 'DROP INDEX '):
             // check to see if DROP INDEX command may be safely executed
             if ($result=zen_drop_index_command($param)) {
-              zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
+// ignore alerting about non-existing indexes to drop
+//               zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
               $ignore_line=true;
               break;
             } else {
@@ -395,52 +397,74 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
     return preg_replace("/[<>]/", '_', $string);
   }
 
-  function zen_validate_email($email = "root@localhost.localdomain") {
-    $valid_address = true;
-    $user ="";
-    $domain="";
-// split the e-mail address into user and domain parts
-// need to update to trap for addresses in the format of "first@last"@someplace.com
-// this method will most likely break in that case
-  list( $user, $domain ) = explode( "@", $email );
-  $valid_ip_form = '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}';
-  $valid_email_pattern = '^[a-z0-9]+[a-z0-9_\.\'\-]*@[a-z0-9]+[a-z0-9\.\-]*\.(([a-z]{2,6})|([0-9]{1,3}))$';
-  $space_check = '[ ]';
 
-// strip beginning and ending quotes, if and only if both present
-  if( (preg_match('/^["]/', $user) && preg_match('/["]$/', $user)) ){
-    $user = preg_replace ( '/^["]/', '', $user );
-    $user = preg_replace ( '/["]$/', '', $user );
-    $user = preg_replace ( '/'.$space_check.'/', '', $user ); //spaces in quoted addresses OK per RFC (?)
-    $email = $user."@".$domain; // contine with stripped quotes for remainder
-  }
+/**
+ * validates an email address
+ *
+ * Sample Valid Addresses:
+ *
+ *     first.last@host.com
+ *     firstlast@host.to
+ *     "first last"@host.com
+ *     "first@last"@host.com
+ *     first-last@host.com
+ *     first's-address@email.host.4somewhere.com
+ *     first.last@[123.123.123.123]
+ *     lastfirst@mail.international
+ *
+ *     Invalid Addresses:
+ *     first last@host.com
+ *     'first@host.com
+ *
+ * @param string The email address to validate
+ * @return boolean true if valid else false
+**/
+  function zen_validate_email($email) {
+    $valid_address = TRUE;
 
-// if e-mail domain part is an IP address, check each part for a value under 256
-  if (preg_match('/'.$valid_ip_form.'/', $domain)) {
-    $digit = explode( ".", $domain );
-    for($i=0; $i<4; $i++) {
-    if ($digit[$i] > 255) {
-      $valid_address = false;
-      return $valid_address;
-      exit;
-    }
-// stop crafty people from using internal IP addresses
-    if (($digit[0] == 192) || ($digit[0] == 10)) {
-      $valid_address = false;
-      return $valid_address;
-      exit;
-    }
-    }
-  }
+    // fail if contains no @ symbol or more than one @ symbol
+    if (substr_count($email,'@') != 1) return false;
 
-  if (!preg_match('/'.$space_check.'/', $email)) { // trap for spaces in
-    if ( preg_match('/'.$valid_email_pattern.'/i', $email)) { // validate against valid e-mail patterns
-    $valid_address = true;
-    } else {
-    $valid_address = false;
-    return $valid_address;
-    exit;
+    // split the email address into user and domain parts
+    // this method will most likely break in that case
+    list( $user, $domain ) = explode( "@", $email );
+    $valid_ip4_form = '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}';
+    $valid_email_pattern = '^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+(XN\-\-[a-z0-9]{2,20}|[a-z]{2,20}))|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$';
+    $space_check = '[ ]';
+
+    // strip beginning and ending quotes, if and only if both present
+    if( (preg_match('/^["]/', $user) && preg_match('/["]$/', $user)) ){
+      $user = preg_replace ( '/^["]/', '', $user );
+      $user = preg_replace ( '/["]$/', '', $user );
+      $user = preg_replace ( '/'.$space_check.'/', '', $user ); //spaces in quoted addresses OK per RFC (?)
+      $email = $user."@".$domain; // contine with stripped quotes for remainder
+    }
+
+    // fail if contains spaces in domain name
+    if (strstr($domain,' ')) return false;
+
+    // if email domain part is an IP address, check each part for a value under 256
+    if (preg_match('/'.$valid_ip4_form.'/', $domain)) {
+      $digit = explode( ".", $domain );
+      for($i=0; $i<4; $i++) {
+        if ($digit[$i] > 255) {
+          $valid_address = false;
+          return $valid_address;
+          exit;
+        }
+        // stop crafty people from using internal IP addresses
+        if (($digit[0] == 192) || ($digit[0] == 10)) {
+          $valid_address = false;
+          return $valid_address;
+          exit;
+        }
       }
+    }
+
+    if (!preg_match('/'.$valid_email_pattern.'/i', $email)) { // validate against valid email pattern
+      $valid_address = false;
+      return $valid_address;
+      exit;
     }
 
     return $valid_address;
