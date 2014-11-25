@@ -42,9 +42,8 @@ if (!defined('IS_ADMIN_FLAG')) {
                           order by c.parent_id, c.sort_order, cd.categories_name";
       $categories = $db->Execute($categories_query);
       while (!$categories->EOF) {
-        if (CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && zen_count_products_in_category((int)$categories->fields['categories_id']) == 0) {
-          // skip empty or status off categories
-        } else {
+        // skip empty or status off categories
+        if (!(CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && zen_count_products_in_category((int)$categories->fields['categories_id']) == 0)) {
           $this->data[$categories->fields['parent_id']][$categories->fields['categories_id']] = array('name' => $categories->fields['categories_name'], 'count' => 0);
         }
         $categories->MoveNext();

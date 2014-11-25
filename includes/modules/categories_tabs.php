@@ -47,9 +47,8 @@ if (CATEGORIES_TABS_STATUS == '1') {
     $li_class = 'cat' . $this_cat_id;
     $a_class = 'category-top cat' . $this_cat_id;
     $zco_notifier->notify('NOTIFY_MODULE_CATEGORIES_TABS_LINKBUILDING', $this_cat_id, $link_text, $href, $name, $current, $li_class, $a_class, $more);
-    if (CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && zen_count_products_in_category((int)$result->fields['categories_id']) == 0) {
-      // skip empty or status off categories
-    } else {
+    // skip empty or status off categories
+    if (!(CATEGORIES_PRODUCTS_INACTIVE_HIDE == 1 && zen_count_products_in_category((int)$result->fields['categories_id']) == 0)) {
       $links_list[] = array('category' => $this_cat_id,
                             'name' => $name,
                             'current' => $current,
