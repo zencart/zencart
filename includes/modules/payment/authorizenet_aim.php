@@ -437,10 +437,7 @@ class authorizenet_aim extends base {
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
     }
     if($response_code == '4'){
-        $_SESSION['auth_net_review_req'] = '1';
-    }
-    else{
-        $_SESSION['auth_net_review_req'] = '0';
+        $this->order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REVIEW_ORDER_STATUS_ID;
     }
     if ($response[88] != '') {
       $_SESSION['payment_method_messages'] = $response[88];
@@ -453,13 +450,6 @@ class authorizenet_aim extends base {
    */
   function after_process() {
     global $insert_id, $db;
-    if($_SESSION['auth_net_review_req'] == '1' && $insert_id != 0){
-        $order_status = MODULE_PAYMENT_AUTHORIZENET_AIM_REVIEW_ORDER_STATUS_ID;
-        $db->Execute("UPDATE ".TABLE_ORDERS." SET orders_status='".$order_status."' WHERE orders_id=".(int)$insert_id);
-    }
-    else{
-        $order_status = $this->order_status;
-    }
     $sql = "insert into " . TABLE_ORDERS_STATUS_HISTORY . " (comments, orders_id, orders_status_id, customer_notified, date_added) values (:orderComments, :orderID, :orderStatus, -1, now() )";
     $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . '. TransID: ' . $this->transaction_id . '.', 'string');
     $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
