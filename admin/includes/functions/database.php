@@ -83,3 +83,24 @@
       return $string;
     }
   }
+
+  /*
+   * Checks if a column in the Table exists, also can add the column if needed
+   */
+  function zen_db_check_table_field($tableName,$columnName,$add = false,$column_type='VARCHAR(72) NULL default NULL'){
+      global $db;
+      $return = false;
+      $tableFields = $db->metaColumns($tableName);
+      $columnNameUpper = strtoupper($columnName);
+      foreach($tableFields as $key=>$value) 
+      {    
+          if($key == $columnNameUpper){
+              $return = true;
+          }
+      }
+      if($add != false && $return == false){
+          $db->Execute("ALTER TABLE " . $tableName . " ADD ".$columnName." ".$column_type.";");
+          $return = true;
+      }
+      return $return;
+    } 
