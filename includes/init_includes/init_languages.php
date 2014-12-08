@@ -28,4 +28,3 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
   $_SESSION['languages_id'] = (zen_not_null($lng->language['id']) ? $lng->language['id'] : 1);
   $_SESSION['languages_code'] = (zen_not_null($lng->language['code']) ? $lng->language['code'] : 'en');
 }
-?>
