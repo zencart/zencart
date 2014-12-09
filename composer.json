@@ -13,12 +13,12 @@
         "php": "~5.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.2",
-        "phpmd/phpmd": "~2.0",
+        "phpunit/phpunit": "~4",
+        "phpmd/phpmd": "~2",
         "phpdocumentor/phpdocumentor": "2.*",
-        "squizlabs/php_codesniffer": "~1.5",
+        "squizlabs/php_codesniffer": "~2",
         "satooshi/php-coveralls": "~0.6",
-        "mikey179/vfsStream": "1.3.*@dev"
+        "mikey179/vfsStream": "1.*"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"],
