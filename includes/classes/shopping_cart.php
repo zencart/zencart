@@ -2318,7 +2318,8 @@ class shoppingCart extends base {
  * USAGE:  $product_total_weight = $this->in_cart_product_total_weight(12);
  * USAGE:  $chk_product_cart_total_weight = $_SESSION['cart']->in_cart_product_total_weight(12);
  *
- * @param str $product_id
+ * @param string $product_id
+ * @return float
  */
   function in_cart_product_total_weight($product_id) {
     $products = $this->get_products();
