@@ -10,9 +10,12 @@
  * Loadpoint 40 is for instantiating the observer class after dependencies are loaded
  *
  */
-  $autoLoadConfig[1][] = array('autoType'=>'class',
-                               'loadFile'=>'class.admin.zcObserverLogWriterTextfile.php',
-                               'classPath'=>DIR_WS_CLASSES);
-  $autoLoadConfig[65][] = array('autoType'=>'classInstantiate',
-                               'className'=>'zcObserverLogWriterTextfile',
-                               'objectName'=>'zcObserverLogWriterTextfile');
+
+// To enable this module, uncomment all the following lines:
+//
+//  $autoLoadConfig[1][] = array('autoType'=>'class',
+//                               'loadFile'=>'class.admin.zcObserverLogWriterTextfile.php',
+//                               'classPath'=>DIR_WS_CLASSES);
+//  $autoLoadConfig[65][] = array('autoType'=>'classInstantiate',
+//                               'className'=>'zcObserverLogWriterTextfile',
+//                               'objectName'=>'zcObserverLogWriterTextfile');
