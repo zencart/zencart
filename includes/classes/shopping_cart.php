@@ -2313,4 +2313,23 @@ class shoppingCart extends base {
     return $in_cart_product_quantity;
   }
 
+/**
+ * calculate products_id weight in cart regardless of attributes
+ * USAGE:  $product_total_weight = $this->in_cart_product_total_weight(12);
+ * USAGE:  $chk_product_cart_total_weight = $_SESSION['cart']->in_cart_product_total_weight(12);
+ *
+ * @param string $product_id
+ * @return float
+ */
+  function in_cart_product_total_weight($product_id) {
+    $products = $this->get_products();
+    $in_cart_product_weight = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      if ((int)$product_id == (int)$products[$i]['id']) {
+        $in_cart_product_weight += $products[$i]['weight'] * $products[$i]['quantity'];
+      }
+    } // end FOR loop
+    return $in_cart_product_weight;
+  }
+
 }
