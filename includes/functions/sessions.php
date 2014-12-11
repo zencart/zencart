@@ -60,8 +60,12 @@ if (!defined('IS_ADMIN_FLAG')) {
     global $SESS_LIFE;
     $expiry = time() + $SESS_LIFE;
 
-    $sql = "insert ON DUPLICATE KEY UPDATE " . TABLE_SESSIONS . " (sesskey, expiry, value)
-            values ('" . zen_db_input($key) . "', '" . zen_db_input($expiry) . "', '" . zen_db_input($val) . "')";
+    $sql = "insert into " . TABLE_SESSIONS . " (sesskey, expiry, `value`)
+            values (:zkey, :zexpiry, :zvalue)
+            ON DUPLICATE KEY UPDATE `value`=:zvalue, expiry=:zexpiry";
+    $sql = $db->bindVars($sql, ':zkey', $key, 'string');
+    $sql = $db->bindVars($sql, ':zexpiry', $expiry, 'integer');
+    $sql = $db->bindVars($sql, ':zvalue', $val, 'string');
     $result = $db->Execute($sql);
 
     return (!empty($result) && !empty($result->resource));
