@@ -14,7 +14,7 @@
  * </ul>
  *
  * @package general
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: index.php 2942 2006-02-02 04:41:23Z drbyte $
@@ -30,7 +30,7 @@
 /**
  * We now load header code for a given page. This is the handler for page-specific logic processing.
  * Page code is stored in includes/modules/pages/PAGE_NAME/directory
- * 'header_php.php' files in that directory are loaded now.
+ * 'header_php****.php' files in that directory are loaded now.
  */
     require($code_page_directory . '/' . $value);
   }
