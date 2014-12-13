@@ -18,7 +18,7 @@ $includeCPath = FALSE;
 // EXCLUDE certain parameters which should not be included in canonical links:
 $excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom', 'dto', 'dfrom', 'inc_subcat', 'notify');
 $excludeParams[] = 'disp_order';
-$excludeParams[] = 'page';
+//$excludeParams[] = 'page';
 $excludeParams[] = 'sort';
 $excludeParams[] = 'alpha_filter_id';
 $excludeParams[] = 'filter_id';
@@ -27,11 +27,12 @@ $excludeParams[] = 'utm_medium';
 $excludeParams[] = 'utm_content';
 $excludeParams[] = 'utm_campaign';
 $excludeParams[] = 'language';
+$excludeParams[] = 'number_of_uploads';
 
 $canonicalLink = '';
-switch (TRUE) {
+switch (true) {
 /**
- * SSL Pages get no special treatment, since they're not normally indexed (unless the entire site is intentionally set to always be SSL, which is not typical)
+ * SSL Pages get no special treatment, since they don't usually require being indexed uniquely differently from non-SSL pages
  */
   case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
     $canonicalLink = '';
@@ -43,13 +44,15 @@ switch (TRUE) {
     $canonicalLink = zen_href_link($current_page, ($includeCPath ? 'cPath=' . zen_get_generated_category_path_rev(zen_get_products_category_id(zcRequest::readGet('products_id'))) . '&' : '') . 'products_id=' . zcRequest::readGet('products_id'), 'NONSSL', false);
     break;
 /**
- * for product listings:
+ * for product listings (ie: "categories"):
  */
   case ($current_page == 'index' && zcRequest::hasGet('cPath')):
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
+// alternate way, depending on specialized site needs:
+//    $canonicalLink = zen_href_link($current_page,'cPath=' . zen_get_generated_category_path_rev($current_category_id) , 'NONSSL', false);
     break;
 /**
- * for music products:
+ * for music filters:
  */
   case ($current_page == 'index' && zcRequest::hasGet('typefilter') && zcRequest::readGet('typefilter') != '' && ( (zcRequest::hasGet('music_genre_id') && zcRequest::readGet('music_genre_id') != '' ) || (zcRequest::has('record_company_id') && zcRequest::readGet('record_company_id') != '' ) ) ):
     unset($excludeParams[array_search('typefilter', $excludeParams)]);
