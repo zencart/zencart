@@ -232,7 +232,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Output a raw date string in the selected locale date format
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
   function zen_date_long($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if ( $raw_date == '0001-01-01 00:00:00' || $raw_date == '1970-01-01 00:00:01' || empty($raw_date) ) return false;
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -250,7 +250,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
 // NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
   function zen_date_short($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || empty($raw_date) ) return false;
+    if ( $raw_date == '0001-01-01 00:00:00' || $raw_date == '1970-01-01 00:00:01' || empty($raw_date) ) return false;
 
     $year = substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);

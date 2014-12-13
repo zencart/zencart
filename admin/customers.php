@@ -105,7 +105,7 @@
         $customers_group_pricing = (int)zen_db_prepare_input($_POST['customers_group_pricing']);
         $customers_email_format = zen_db_prepare_input($_POST['customers_email_format']);
         $customers_gender = zen_db_prepare_input($_POST['customers_gender']);
-        $customers_dob = (empty($_POST['customers_dob']) ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['customers_dob']));
+        $customers_dob = (empty($_POST['customers_dob']) ? zen_db_prepare_input('1970-01-01 00:00:01') : zen_db_prepare_input($_POST['customers_dob']));
 
         $customers_authorization = zen_db_prepare_input($_POST['customers_authorization']);
         $customers_referral= zen_db_prepare_input($_POST['customers_referral']);
@@ -155,7 +155,7 @@
             }
           }
         } else {
-            $customers_dob = '0001-01-01 00:00:00';
+            $customers_dob = '1970-01-01 00:00:01';
         }
 
         if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
@@ -266,7 +266,7 @@
                                 );
 
         if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
-        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = ($customers_dob == '0001-01-01 00:00:00' ? '0001-01-01 00:00:00' : zen_format_date_raw($customers_dob));
+        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = ($customers_dob == '1970-01-01 00:00:01' ? '1970-01-01 00:00:01' : zen_format_date_raw($customers_dob));
 
         zen_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "'");
 
@@ -655,12 +655,12 @@ function check_form() {
 <?php
     if ($error == true) {
       if ($entry_date_of_birth_error == true) {
-        echo zen_draw_input_field('customers_dob', ($cInfo->customers_dob == '0001-01-01 00:00:00' ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
+        echo zen_draw_input_field('customers_dob', ($cInfo->customers_dob == '1970-01-01 00:00:01' ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
       } else {
-        echo $cInfo->customers_dob . ($customers_dob == '0001-01-01 00:00:00' ? 'N/A' : zen_draw_hidden_field('customers_dob'));
+        echo $cInfo->customers_dob . ($customers_dob == '1970-01-01 00:00:01' ? 'N/A' : zen_draw_hidden_field('customers_dob'));
       }
     } else {
-      echo zen_draw_input_field('customers_dob', ($customers_dob == '0001-01-01 00:00:00' ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10"', true);
+      echo zen_draw_input_field('customers_dob', ($customers_dob == '1970-01-01 00:00:01' ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10"', true);
     }
 ?></td>
           </tr>

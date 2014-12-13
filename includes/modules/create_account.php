@@ -323,7 +323,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     if ((CUSTOMERS_REFERRAL_STATUS == '2' and $customers_referral != '')) $sql_data_array['customers_referral'] = $customers_referral;
     if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-    if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = (empty($_POST['dob']) || $dob_entered == '0001-01-01 00:00:00' ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']));
+    if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = (empty($_POST['dob']) || $dob_entered == '1970-01-01 00:00:01' ? zen_db_prepare_input('1970-01-01 00:00:01') : zen_date_raw($_POST['dob']));
 
     zen_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 

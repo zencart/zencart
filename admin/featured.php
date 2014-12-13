@@ -28,8 +28,8 @@
         } else {
         $products_id = zen_db_prepare_input($_POST['products_id']);
 
-        $featured_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start']));
-        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end']));
+        $featured_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['start']));
+        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['end']));
 
         $db->Execute("insert into " . TABLE_FEATURED . "
                     (products_id, featured_date_added, expires_date, status, featured_date_available)
@@ -48,8 +48,8 @@
       case 'update':
         $featured_id = zen_db_prepare_input($_POST['featured_id']);
 
-        $featured_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start']));
-        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end']));
+        $featured_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['start']));
+        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['end']));
 
         $db->Execute("update " . TABLE_FEATURED . "
                       set featured_last_modified = now(),
@@ -104,8 +104,8 @@
         }
       // add empty featured
 
-        $featured_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start']));
-        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end']));
+        $featured_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['start']));
+        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['end']));
 
         $products_id = zen_db_prepare_input($_POST['pre_add_products_id']);
         $db->Execute("insert into " . TABLE_FEATURED . "
@@ -222,11 +222,11 @@ require('includes/admin_html_head.php');
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_FEATURED_AVAILABLE_DATE; ?>&nbsp;</td>
-            <td class="main"><?php echo zen_draw_input_field('start', (($fInfo->featured_date_available == '0001-01-01') ? '' : zen_date_short($fInfo->featured_date_available)), 'class="datepicker"');  ?></td>
+            <td class="main"><?php echo zen_draw_input_field('start', (($fInfo->featured_date_available == '1970-01-01') ? '' : zen_date_short($fInfo->featured_date_available)), 'class="datepicker"');  ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_FEATURED_EXPIRES_DATE; ?>&nbsp;</td>
-            <td class="main"><?php echo zen_draw_input_field('end', (($fInfo->expires_date == '0001-01-01') ? '' : zen_date_short($fInfo->expires_date)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo zen_draw_input_field('end', (($fInfo->expires_date == '1970-01-01') ? '' : zen_date_short($fInfo->expires_date)), 'class="datepicker"'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -313,8 +313,8 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['fID'] != '') {
                 <td  class="dataTableContent" align="right"><?php echo $featured->fields['products_id']; ?>&nbsp;</td>
                 <td  class="dataTableContent"><?php echo $featured->fields['products_name']; ?></td>
                 <td  class="dataTableContent" align="left"><?php echo $featured->fields['products_model']; ?>&nbsp;</td>
-                <td  class="dataTableContent" align="center"><?php echo (($featured->fields['featured_date_available'] != '0001-01-01' and $featured->fields['featured_date_available'] !='') ? zen_date_short($featured->fields['featured_date_available']) : TEXT_NONE); ?></td>
-                <td  class="dataTableContent" align="center"><?php echo (($featured->fields['expires_date'] != '0001-01-01' and $featured->fields['expires_date'] !='') ? zen_date_short($featured->fields['expires_date']) : TEXT_NONE); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($featured->fields['featured_date_available'] != '1970-01-01' and $featured->fields['featured_date_available'] !='') ? zen_date_short($featured->fields['featured_date_available']) : TEXT_NONE); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($featured->fields['expires_date'] != '1970-01-01' and $featured->fields['expires_date'] !='') ? zen_date_short($featured->fields['expires_date']) : TEXT_NONE); ?></td>
                 <td  class="dataTableContent" align="center">
 <?php
       if ($featured->fields['status'] == '1') {
@@ -392,8 +392,8 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['fID'] != '') {
         $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($fInfo->featured_last_modified));
         $contents[] = array('align' => 'center', 'text' => '<br />' . zen_info_image($fInfo->products_image, $fInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
 
-        $contents[] = array('text' => '<br />' . TEXT_INFO_AVAILABLE_DATE . ' <b>' . (($fInfo->featured_date_available != '0001-01-01' and $fInfo->featured_date_available !='') ? zen_date_short($fInfo->featured_date_available) : TEXT_NONE) . '</b>');
-        $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' <b>' . (($fInfo->expires_date != '0001-01-01' and $fInfo->expires_date !='') ? zen_date_short($fInfo->expires_date) : TEXT_NONE) . '</b>');
+        $contents[] = array('text' => '<br />' . TEXT_INFO_AVAILABLE_DATE . ' <b>' . (($fInfo->featured_date_available != '1970-01-01' and $fInfo->featured_date_available !='') ? zen_date_short($fInfo->featured_date_available) : TEXT_NONE) . '</b>');
+        $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' <b>' . (($fInfo->expires_date != '1970-01-01' and $fInfo->expires_date !='') ? zen_date_short($fInfo->expires_date) : TEXT_NONE) . '</b>');
         $contents[] = array('text' => '<br />' . TEXT_INFO_STATUS_CHANGE . ' ' . zen_date_short($fInfo->date_status_change));
         $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_CATEGORIES, '&action=new_product' . '&cPath=' . zen_get_product_path($fInfo->products_id, 'override') . '&pID=' . $fInfo->products_id . '&product_type=' . zen_get_products_type($fInfo->products_id)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . '</a>');
 

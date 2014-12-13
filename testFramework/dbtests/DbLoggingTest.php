@@ -75,7 +75,7 @@ class testDbLogging extends zcAdminTestCase
 
     $sql = "CREATE TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " (
         log_id bigint(15) NOT NULL auto_increment,
-        access_date datetime NOT NULL default '0001-01-01 00:00:00',
+        access_date datetime NOT NULL default '1970-01-01 00:00:01',
         admin_id int(11) NOT NULL default '0',
         page_accessed varchar(80) NOT NULL default '',
         page_parameters text,
