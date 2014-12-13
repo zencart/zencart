@@ -125,7 +125,7 @@ class cache extends base {
         return true;
       }
       $result_serialize = $db->prepare_input(base64_encode(serialize($zf_result_array)));
-      $sql = "insert ignore into " . TABLE_DB_CACHE . " (cache_entry_name, cache_data, cache_entry_created) VALUES (:cachename, :cachedata, time() )";
+      $sql = "insert ignore into " . TABLE_DB_CACHE . " (cache_entry_name, cache_data, cache_entry_created) VALUES (:cachename, :cachedata, unix_timestamp() )";
       $sql = $db->bindVars($sql, ':cachename', $zp_cache_name, 'string');
       $sql = $db->bindVars($sql, ':cachedata', $result_serialize, 'string');
       $db->Execute($sql);
