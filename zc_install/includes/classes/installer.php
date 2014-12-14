@@ -701,13 +701,13 @@
         if ($prefix == '^^^') $prefix = DB_PREFIX;
         $admin_name = zen_db_prepare_input($admin_name);
         $admin_pass = zen_db_prepare_input($admin_pass);
-//@TODO: deal with super-user requirement and expired-passwords?
-        $sql = "select admin_id, admin_name, admin_pass from " . $prefix . "admin where admin_name = '" . $this->db->prepareInput($admin_name) . "'";
         //open database connection to run queries against it
         $this->dbActivate();
         $this->db->Close();
         unset($this->db);
         $this->dbActivate();
+//@TODO: deal with super-user requirement and expired-passwords?
+        $sql = "select admin_id, admin_name, admin_pass from " . $prefix . "admin where admin_name = '" . $this->db->prepareInput($admin_name) . "'";
         $result = $this->db->Execute($sql);
         if ($result->EOF || $admin_name != $result->fields['admin_name'] || !zen_validate_password($admin_pass, $result->fields['admin_pass'])) {
           $this->setError(ERROR_TEXT_ADMIN_PWD_REQUIRED, ERROR_CODE_ADMIN_PWD_REQUIRED, true);
