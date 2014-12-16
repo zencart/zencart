@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Oct 24 20:13:44 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -233,7 +233,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
     echo '&nbsp;' . date("O" , time()) . ' GMT';  // time zone
     echo '&nbsp;[' . $_SERVER['REMOTE_ADDR'] . ']'; // current admin user's IP address
     echo '<br />';
-    echo @shell_exec('hostname'); //what server am I working on?
+    echo @gethostname(); //what server am I working on?
     echo ' - ' . date_default_timezone_get(); //what is the PHP timezone set to?
     $loc = setlocale(LC_TIME, 0);
     if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
