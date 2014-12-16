@@ -13,7 +13,7 @@
 
   define('DIR_FS_CATALOG', zen_read_config_value('DIR_FS_CATALOG', FALSE));
   define('DIR_WS_CLASSES', 'includes/classes/');
-  require('../includes/classes/class.zcPassword.php');
+  require (realpath(dirname(__FILE__)) . '/../../../includes/classes/class.zcPassword.php');
 
   function zen_not_null($value) {
     if (is_array($value)) {
