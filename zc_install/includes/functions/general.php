@@ -367,7 +367,6 @@ function executeSql($sql_file, $database, $table_prefix = '', $isupgrade=false) 
                echo '<br /><br />';
                $counter=0;
              }
-             if (function_exists('ob_flush')) @ob_flush();
              @flush();
           }
 
