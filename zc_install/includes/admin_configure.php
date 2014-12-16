@@ -5,13 +5,13 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  May 26 2014 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  */
 
 $file_contents =
 '<'.'?php' . "\n" .
 '/**' . "\n" .
-' * @package Configuration Settings circa 1.5.3' . "\n" .
+' * @package Configuration Settings circa 1.5.4' . "\n" .
 ' * @copyright Copyright 2003-2014 Zen Cart Development Team' . "\n" .
 ' * @copyright Portions Copyright 2003 osCommerce' . "\n" .
 ' * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0' . "\n" .
