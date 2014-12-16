@@ -1,17 +1,23 @@
 <?php
 /**
  * dist-configure.php
+ * SAMPLE (but NOT FUNCTIONAL) file
  *
- * @package Configuration Settings circa 1.5.2
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @package Configuration Settings circa 1.5.4
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 20:54:59 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  * @private
  */
+
+
+/*************** NOTE: This file is similar, but DIFFERENT from the "admin" version of configure.php. ***********/
+/***************       The 2 files should be kept separate and not used to overwrite each other.      ***********/
+
 // Define the webserver and path parameters
-// HTTP_SERVER is your Main webserver: eg-http://www.yourdomain.com
-// HTTPS_SERVER is your Secure webserver: eg-https://www.yourdomain.com
+// HTTP_SERVER is your Main webserver: eg-http://www.your_domain.com
+// HTTPS_SERVER is your Secure webserver: eg-https://www.your_domain.com
 define('HTTP_SERVER', 'http://localhost');
 define('HTTPS_SERVER', 'https://localhost');
 
@@ -19,7 +25,6 @@ define('HTTPS_SERVER', 'https://localhost');
 define('ENABLE_SSL', 'false');
 
 // NOTE: be sure to leave the trailing '/' at the end of these lines if you make changes!
-
 // * DIR_WS_* = Webserver directories (virtual/URL)
 // these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)
 define('DIR_WS_CATALOG', '/');
@@ -36,9 +41,10 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 
 // * DIR_FS_* = Filesystem directories (local/physical)
 //the following path is a COMPLETE path to your Zen Cart files. eg: /var/www/vhost/accountname/public_html/store/
-define('DIR_FS_CATALOG', '/');
-  //the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
-  define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs');
+define('DIR_FS_CATALOG', '/path/to/store/');
+
+//the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
+define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs');
 
 define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
@@ -63,3 +69,4 @@ define('DB_DATABASE', '');
 define('SQL_CACHE_METHOD', 'none');
 define('DIR_FS_SQL_CACHE', '/enter/your/path/to/public_html_or_htdocs/and/zencart/here/zen/cache');
 
+// EOF
