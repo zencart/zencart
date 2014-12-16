@@ -1,10 +1,10 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Feb 14 23:03:50 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  */
 /**
  * Store-Pickup / Will-Call shipping method

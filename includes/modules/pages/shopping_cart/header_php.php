@@ -3,10 +3,10 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
  */
 
 // This should be first line of the script:

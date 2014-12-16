@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: geo_zones.php  drbyte $
+ * @version $Id: geo_zones.php  drbyte  Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');

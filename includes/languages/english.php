@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Tue Oct 29 18:16:39 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
  */
 
 // FOLLOWING WERE moved to meta_tags.php

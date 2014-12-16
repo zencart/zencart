@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Mon Mar 31 17:40:20 2014 +0100 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
  */
 
 

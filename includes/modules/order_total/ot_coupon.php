@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: wilt  Thurs Nov 6 15:37:06 2013 -0400 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: wilt  Modified in v1.5.4 $
  */
 /**
  * Order Total class  to handle discount coupons

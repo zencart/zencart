@@ -10,7 +10,7 @@
  * @package general
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte Jul 8 2014 -0400 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte Dec 12 2014  Modified in v1.5.4 $
  * @private
  */
 

@@ -5,9 +5,9 @@
  * This class is used to interact with phpBB3 forum
  *
  * @package classes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: class.phpbb.php 14689 2009-10-26 17:06:43Z drbyte $
+ * @version $Id: class.phpbb.php 14689 2009-10-26 17:06:43Z drbyte Modified in v1.5.4 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
