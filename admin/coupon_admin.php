@@ -206,7 +206,9 @@
                                     'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction'],
                                     'coupon_total' => $check_new_coupon->fields['coupon_total'],
                                     'coupon_order_limit' => $check_new_coupon->fields['coupon_order_limit'],
-                                    'coupon_is_valid_for_sales' => $check_new_coupon->fields['coupon_is_valid_for_sales']);
+                                    'coupon_is_valid_for_sales' => $check_new_coupon->fields['coupon_is_valid_for_sales'],
+                                    'coupon_active' => 'Y'
+                                    );
             zen_db_perform(TABLE_COUPONS, $sql_data_array);
             $insert_id = $db->Insert_ID();
             $cid = $insert_id;
@@ -283,7 +285,9 @@
                                 'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction'],
                                 'coupon_total' => $check_new_coupon->fields['coupon_total'],
                                 'coupon_order_limit' => $check_new_coupon->fields['coupon_order_limit'],
-                                'coupon_is_valid_for_sales' => $check_new_coupon->fields['coupon_is_valid_for_sales']);
+                                'coupon_is_valid_for_sales' => $check_new_coupon->fields['coupon_is_valid_for_sales'],
+                                'coupon_active' => 'Y'
+                                );
 
           zen_db_perform(TABLE_COUPONS, $sql_data_array);
           $insert_id = $db->Insert_ID();
@@ -404,7 +408,9 @@
                                 'coupon_zone_restriction' => $_POST['coupon_zone_restriction'],
                                 'coupon_total' => (int)$_POST['coupon_total'],
                                 'coupon_order_limit' => zen_db_prepare_input((int)$_POST['coupon_order_limit']),
-                                'coupon_is_valid_for_sales' => (int)$_POST['coupon_is_valid_for_sales']);
+                                'coupon_is_valid_for_sales' => (int)$_POST['coupon_is_valid_for_sales'],
+                                'coupon_active' => 'Y'
+                                );
 
         $languages = zen_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
