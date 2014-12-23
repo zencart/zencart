@@ -23,7 +23,7 @@
 /*
  * Initialize system core components
  */
-  define('DIR_FS_INSTALL', realpath(__DIR__ . '/') . DIRECTORY_SEPARATOR);
+  define('DIR_FS_INSTALL', __DIR__ . DIRECTORY_SEPARATOR);
   define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR);
 
   require(DIR_FS_INSTALL . 'includes/application_top.php');
