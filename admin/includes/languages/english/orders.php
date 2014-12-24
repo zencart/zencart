@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2007 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: orders.php ajeh   Modified in v1.5.4 $
+ * @version $Id: orders.php 6214 2007-04-17 02:24:25Z ajeh $
  */
 
 define('HEADING_TITLE', 'Orders');
@@ -66,7 +66,6 @@ define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Restock product quantity');
 define('TEXT_DATE_ORDER_CREATED', 'Date Created:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Payment Method:');
-define('TEXT_INFO_PRODUCTS_ORDERED', 'Products Ordered: ');
 define('TEXT_PAID', 'Paid');
 define('TEXT_UNPAID', 'Un-paid');
 
@@ -119,3 +118,4 @@ define('TEXT_INFO_EXPIRED_COUNT', 'Expired Count:<br />');
 define('TABLE_HEADING_CUSTOMER_COMMENTS', 'Customer<br />Comments');
 define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
 define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
+?>
