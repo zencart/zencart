@@ -3,11 +3,13 @@
  * GV redeem
  *
  * @package page
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 6736 2007-08-19 09:55:01Z drbyte $
  */
+
+$_GET['gv_no'] = zen_sanitize_string(trim($_GET['gv_no']));
 
 // if the customer is not logged on, redirect them to the login page
 if (!$_SESSION['customer_id']) {
