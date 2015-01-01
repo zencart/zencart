@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -21,19 +21,18 @@
     case ('update_all_products_attributes_sort_order'):
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
-        $all_products_attributes= $db->Execute("select p.products_id, pa.products_attributes_id from " .
+        $all_products_attributes = $db->Execute("select distinct p.products_id from " .
         TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_ATTRIBUTES . " pa " . "
         where p.products_id= pa.products_id"
         );
         while (!$all_products_attributes->EOF)
         {
-          $count++;
-          $product_id_updated .= ' - ' . $all_products_attributes->fields['products_id'] . ':' . $all_products_attributes->fields['products_attributes_id'];
           zen_update_attributes_products_option_values_sort_order($all_products_attributes->fields['products_id']);
           $all_products_attributes->MoveNext();
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_ALL, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products attributes sort order]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -52,6 +51,7 @@
           $update_prices->MoveNext();
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_PRICE_SORTER, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products price sorter]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -65,6 +65,7 @@
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -78,6 +79,7 @@
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_ORDERED, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products ordered]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -89,6 +91,7 @@
     $update_counter = $db->Execute($sql);
 
     $messageStack->add_session(SUCCESS_UPDATE_COUNTER . (int)$_POST['new_counter'], 'success');
+    zen_record_admin_activity('Store Manager executed [update counter], set to ' . (int)$_POST['new_counter'], 'info');
     $action='';
     zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
@@ -116,6 +119,7 @@
           $tables->MoveNext();
         }
         $messageStack->add_session(SUCCESS_DB_OPTIMIZE . ' ' . $i, 'success');
+        zen_record_admin_activity('Store Manager executed [optimize database tables]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
@@ -158,6 +162,7 @@
         unset($dir);
       }
       $messageStack->add_session(SUCCESS_CLEAN_DEBUG_FILES, 'success');
+      zen_record_admin_activity('Store Manager executed [clean debug/log files]', 'info');
       zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
 
@@ -180,6 +185,7 @@
         }
 
         $messageStack->add_session(SUCCESS_UPDATE_ALL_MASTER_CATEGORIES_ID, 'success');
+        zen_record_admin_activity('Store Manager executed [update all master categories id]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -201,6 +207,7 @@
       } else {
         $db->Execute("ALTER TABLE " . TABLE_ORDERS . " AUTO_INCREMENT = " . $new_orders_id);
         $messageStack->add_session(sprintf(TEXT_MSG_NEXT_ORDER, $new_orders_id), 'success');
+        zen_record_admin_activity('Store Manager executed [update next order id], set to ' . $new_orders_id, 'info');
       }
       zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
@@ -230,7 +237,7 @@ require('includes/admin_html_head.php');
 if ($processing_message != '') {
 ?>
   <tr><td><?php echo $processing_message; ?></td></tr>
-  <tr><td align="center"><?php echo zen_image(DIR_WS_IMAGES . 'loadingsmall.gif'); ?></td></tr>
+  <tr><td align="center"><i class="fa fa-spinner fa-spin fa-4x"></i></td></tr>
 <?php
 } else {
 ?>

@@ -68,7 +68,7 @@
         <label class="inline" for="demoData"><a href="#" class="hasHelpText" id="DEMODATA"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="checkbox" name="demoData" id="demoData" tabindex="5" >
+        <input type="checkbox" name="demoData" id="demoData" tabindex="5"><label class="inline" for="demoData"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO_DESCRIPTION; ?></label>
       </div>
     </div>
   </fieldset>
@@ -130,7 +130,7 @@ function ajaxTestDBConnection(form) {
         $("#connection-errors").foundation('reveal', 'open');
       } else
       {
-        $("#progress-bar-dialog").foundation('reveal', 'open', {closeOnBackgroundClick:false});
+        $("#progress-bar-dialog").foundation('reveal', 'open', {close_on_background_click:false});
         t = setTimeout("updateStatus()", 300);
         $.ajax({
           type: "POST",
@@ -208,8 +208,8 @@ function updateStatus() {
       t = setTimeout("updateStatus()", 10);
     }
   });
-
 }
+
 $(function()
     {
       $('.hasNoHelpText').click(function(e)

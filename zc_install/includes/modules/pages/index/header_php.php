@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: $
  */
 
 $otherConfigErrors = FALSE;
@@ -19,6 +19,11 @@ $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VE
 $isCurrentDb = ($dbVersion == $currentDbVersion) ? TRUE : FALSE;
 $hasSaneConfigFile = $systemChecker->hasSaneConfigFile();
 $hasUpdatedConfigFile = $systemChecker->hasUpdatedConfigFile();
+// echo var_dump($dbVersion);
+// echo var_dump($isCurrentDb);
+// echo var_dump($hasSaneConfigFile);
+// echo var_dump($hasUpdatedConfigFile);
+
 if ($hasSaneConfigFile)
 {
   $systemChecker->addRunLevel('upgradeDb');

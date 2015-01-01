@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: table.php 14498 2009-10-01 20:16:16Z ajeh $
@@ -129,20 +129,25 @@ class table extends base {
   function quote($method = '') {
     global $order, $shipping_weight, $shipping_num_boxes, $total_count;
 
+    // works on adjusted weight, total and count in cart
+    $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
+    $order_total_item = $total_count - $_SESSION['cart']->free_shipping_items();
+    $order_total_weight = $shipping_weight;
+
+//@@TODO - add new NOTIFIER
+
     // shipping adjustment
     switch (MODULE_SHIPPING_TABLE_MODE) {
       case ('price'):
-        $order_total = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices() ;
+        $order_total = $order_total_amount;
         break;
       case ('weight'):
-        $order_total = $shipping_weight;
+        $order_total = $order_total_weight;
         break;
       case ('item'):
-        $order_total = $total_count - $_SESSION['cart']->free_shipping_items();
+        $order_total = $order_total_item;
         break;
     }
-
-    $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices() ;
 
     $skip_shipping = false;
     $table_cost = preg_split("/[:,]/" , str_replace(' ', '', MODULE_SHIPPING_TABLE_COST));
@@ -155,7 +160,7 @@ class table extends base {
             break;
           case (strstr($table_cost[$i+1], '*')):
             if (MODULE_SHIPPING_TABLE_MODE == 'item') {
-              $shipping = (($total_count - $_SESSION['cart']->free_shipping_items()) * $table_cost[$i+1]);
+              $shipping = ($order_total_item * $table_cost[$i+1]);
             } else {
               $skip_shipping = true;
             }
@@ -187,20 +192,23 @@ class table extends base {
         $show_box_weight = ' (' . $shipping_num_boxes . ' ' . TEXT_SHIPPING_BOXES . ')';
         break;
         case (2):
-        $show_box_weight = ' (' . number_format($shipping_weight * $shipping_num_boxes,2) . TEXT_SHIPPING_WEIGHT . ')';
+        $show_box_weight = ' (' . number_format($order_total_weight * $shipping_num_boxes,2) . TEXT_SHIPPING_WEIGHT . ')';
         break;
         default:
-        $show_box_weight = ' (' . $shipping_num_boxes . ' x ' . number_format($shipping_weight,2) . TEXT_SHIPPING_WEIGHT . ')';
+        $show_box_weight = ' (' . $shipping_num_boxes . ' x ' . number_format($order_total_weight,2) . TEXT_SHIPPING_WEIGHT . ')';
         break;
       }
     }
+
+    // calculate final shipping cost
+    $final_shipping_cost = $shipping + (MODULE_SHIPPING_TABLE_HANDLING_METHOD == 'Box' ? MODULE_SHIPPING_TABLE_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_TABLE_HANDLING);
 
     if (!$skip_shipping) {
       $this->quotes = array('id' => $this->code,
       'module' => MODULE_SHIPPING_TABLE_TEXT_TITLE . $show_box_weight,
       'methods' => array(array('id' => $this->code,
       'title' => MODULE_SHIPPING_TABLE_TEXT_WAY,
-      'cost' => $shipping + (MODULE_SHIPPING_TABLE_HANDLING_METHOD == 'Box' ? MODULE_SHIPPING_TABLE_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_TABLE_HANDLING) ) ));
+      'cost' => $final_shipping_cost)));
     } else {
       // skip shipping display
     }

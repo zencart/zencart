@@ -1,9 +1,9 @@
 <?php
 /**
- * Product Reviews info 
- * 
+ * Product Reviews info
+ *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 2978 2006-02-07 00:52:01Z drbyte $
@@ -20,7 +20,7 @@
 
 // check product exists and current
 // if product does not exist or is status 0 send to _info page
-    $products_reviews_check_query = "SELECT count(*) AS count 
+    $products_reviews_check_query = "SELECT count(*) AS count
                                      FROM " . TABLE_PRODUCTS . " p
                                      WHERE p.products_id= :productsID
                                      AND p.products_status = 1";
@@ -36,7 +36,7 @@
 // if review must be approved or disabled do not show review
     $review_status = " and r.status = '1'";
 
-    $reviews_count_query = "SELECT count(*) as count 
+    $reviews_count_query = "SELECT count(*) as count
                             FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
                             WHERE r.products_id = :productsID
                             AND r.reviews_id = rd.reviews_id
@@ -97,7 +97,7 @@
 
   $products_name = $review_info->fields['products_name'];
 
-  if ($review_info->fields['products_model'] != '') {
+  if (zen_get_show_product_switch((int)$review_info->fields['products_id'], 'model') == 1 && $review_info->fields['products_model'] != '') {
     $products_model = '<br /><span class="smallText">[' . $review_info->fields['products_model'] . ']</span>';
   } else {
     $products_model = '';

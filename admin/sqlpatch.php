@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Jul 1 16:59:57 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -84,9 +84,8 @@ $linebreak = '
 // NOTE: this line break is intentional!!!!
 
  function executeSql($lines, $database, $table_prefix = '') {
-   if (version_compare(PHP_VERSION, 5.4, '>=') || !get_cfg_var('safe_mode')) {
-     @set_time_limit(1200);
-   }
+   @set_time_limit(1200);
+
    global $db, $debug, $messageStack;
    $sql_file='SQLPATCH';
    $newline = '';
@@ -300,7 +299,6 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 
         if ($complete_line) {
           if ($debug==true) echo ((!$ignore_line) ? '<br />About to execute.': 'Ignoring statement. This command WILL NOT be executed.').'<br />Debug info:<br>$ line='.$line.'<br>$ complete_line='.$complete_line.'<br>$ keep_together='.$keep_together.'<br>SQL='.$newline.'<br><br>';
-          if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_runtime() > 0  && $keepslashes != true ) $newline=stripslashes($newline);
           if (trim(str_replace(';','',$newline)) != '' && !$ignore_line) $output=$db->Execute($newline);
           $results++;
           $string .= $newline.'<br />';
@@ -330,6 +328,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 
       } //endif ! # or -
     } // end foreach $lines
+    zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
    return array('queries'=> $results, 'string'=>$string, 'output'=>$return_output, 'ignored'=>($ignored_count), 'errors'=>$errors);
   } //end function
 
@@ -665,7 +664,6 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
       case 'execute':
        if (isset($_POST['query_string']) && $_POST['query_string'] !='' ) {
          $query_string = $_POST['query_string'];
-         if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_gpc() > 0) $query_string = stripslashes($query_string);
          if ($debug==true) echo $query_string . '<br />';
          $query_string = explode($linebreak, ($query_string));
          $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
@@ -698,7 +696,6 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
               $upload_query = file($_FILES['sql_file']['tmp_name']);
               $query_string  = $upload_query;
             }
-            if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_runtime() > 0) $query_string  = zen_db_prepare_input($upload_query);
             if ($query_string !='') {
               $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
               if ($query_results['queries'] > 0 && $query_results['queries'] != $query_results['ignored']) {

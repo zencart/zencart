@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    colors="true"
+    verbose="true"
+    processIsolation="true"
+    bootstrap="../config/bootstrap.php"
+>
+  <testsuites>
+
+    <testsuite name="Admin DB Logging Infrastructure">
+      <file>DbLoggingTest.php</file>
+    </testsuite>
+
+  </testsuites>
+
+  <logging>
+    <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"
+      lowUpperBound="50" highLowerBound="80" />
+    <log type="coverage-clover" target="build/logs/clover.xml" />
+  </logging>
+
+  <filter>
+    <blacklist>
+      <directory suffix=".php">vendor</directory>
+      <directory suffix=".php">admin/includes/local</directory>
+      <directory suffix=".php">includes/local</directory>
+      <directory suffix=".php">testFramework</directory>
+      <directory suffix=".php">build</directory>
+      <directory suffix=".php">zc_install</directory>
+    </blacklist>
+    <whitelist processUncoveredFilesFromWhitelist="false">
+      <directory suffix=".php">admin/includes</directory>
+      <directory suffix=".php">includes</directory>
+    </whitelist>
+  </filter>
+
+  <php>
+    <const name="PHPUNIT_TESTSUITE" value="true" />
+  </php>
+</phpunit>

@@ -60,22 +60,14 @@ if (!defined('IS_ADMIN_FLAG')) {
     global $SESS_LIFE;
     $expiry = time() + $SESS_LIFE;
 
-    $qid = "select count(*) as total
-            from " . TABLE_SESSIONS . "
-            where sesskey = '" . zen_db_input($key) . "'";
-    $total = $db->Execute($qid);
+    $sql = "insert into " . TABLE_SESSIONS . " (sesskey, expiry, `value`)
+            values (:zkey, :zexpiry, :zvalue)
+            ON DUPLICATE KEY UPDATE `value`=:zvalue, expiry=:zexpiry";
+    $sql = $db->bindVars($sql, ':zkey', $key, 'string');
+    $sql = $db->bindVars($sql, ':zexpiry', $expiry, 'integer');
+    $sql = $db->bindVars($sql, ':zvalue', $val, 'string');
+    $result = $db->Execute($sql);
 
-    if ($total->fields['total'] > 0) {
-      $sql = "update " . TABLE_SESSIONS . "
-              set expiry = '" . zen_db_input($expiry) . "', value = '" . zen_db_input($val) . "'
-              where sesskey = '" . zen_db_input($key) . "'";
-      $result = $db->Execute($sql);
-    } else {
-      $sql = "insert into " . TABLE_SESSIONS . "
-              values ('" . zen_db_input($key) . "', '" . zen_db_input($expiry) . "', '" .
-                       zen_db_input($val) . "')";
-      $result = $db->Execute($sql);
-    }
     return (!empty($result) && !empty($result->resource));
   }
 

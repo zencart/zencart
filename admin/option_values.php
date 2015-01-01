@@ -39,15 +39,13 @@
       break;
 // update by category
     case ('update_categories_attributes'):
-      $all_products_attributes= $db->Execute("select ptoc.products_id, pa.products_attributes_id from " .
+      $all_products_attributes= $db->Execute("select distinct ptoc.products_id from " .
       TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
       TABLE_PRODUCTS_ATTRIBUTES . " pa " . "
       where ptoc.categories_id = '" . (int)$_POST['categories_update_id'] . "' and
       pa.products_id = ptoc.products_id"
       );
       while (!$all_products_attributes->EOF) {
-        $count++;
-        $product_id_updated .= ' - ' . $all_products_attributes->fields['products_id'] . ':' . $all_products_attributes->fields['products_attributes_id'];
         zen_update_attributes_products_option_values_sort_order($all_products_attributes->fields['products_id']);
         $all_products_attributes->MoveNext();
       }
@@ -59,13 +57,12 @@
     case ('update_all_products_attributes_sort_order'):
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'y')
       {
-        $all_products_attributes= $db->Execute("select p.products_id, pa.products_attributes_id from " .
+        $all_products_attributes = $db->Execute("select distinct p.products_id from " .
         TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_ATTRIBUTES . " pa " . "
         where p.products_id= pa.products_id"
         );
         while (!$all_products_attributes->EOF) {
-          $count++;
           zen_update_attributes_products_option_values_sort_order($all_products_attributes->fields['products_id']);
           $all_products_attributes->MoveNext();
         }

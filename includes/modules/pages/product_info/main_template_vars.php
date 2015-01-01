@@ -98,7 +98,7 @@
     $products_image = $product_info->fields['products_image'];
   }
 
-  $product_category = $categories->fields['categories_name'];
+  $product_category = zen_get_categories_name($current_category_id);
   $products_url = $product_info->fields['products_url'];
   $products_date_available = $product_info->fields['products_date_available'];
   $products_date_added = $product_info->fields['products_date_added'];

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id:
  */
 /**
  * File contains just application_top code
@@ -39,14 +39,10 @@ define('PAGE_PARSE_START_TIME', microtime());
  */
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
   @ini_set('display_errors', TRUE);
-  error_reporting(version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+  error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 } else {
   error_reporting(0);
 }
-/*
- * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
-if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 // set php_self in the local scope
 if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
 $PHP_SELF = htmlspecialchars($PHP_SELF);
@@ -107,10 +103,17 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
     }
   }
 }
-/*
- * Defined for backwards compatibility only. THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
+/**
+ * Defined for backwards compatibility only.
+ * THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
  */
-if (!defined('HTT'.'PS_SERVER')) define('HTT'.'PS_SERVER', HTTP_SERVER);
+if (!defined('HTT'.'PS_SERVER')) {
+  define('HTT'.'PS_SERVER', HTTP_SERVER);
+}
+
+// load the default autoload config
+$autoloadNamespaces = include __DIR__ . '/autoload_namespaces.php';
+
 /**
  * include the list of extra configure files
  */
@@ -120,23 +123,34 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
       /**
        * load any user/contribution specific configuration files.
        */
-      include(DIR_WS_INCLUDES . 'extra_configures/' . $zv_file);
+      include DIR_WS_INCLUDES . 'extra_configures/' . $zv_file;
     }
   }
   $za_dir->close();
 }
+
+require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
+$loader = new \Aura\Autoload\Loader;
+$loader->register();
+
+foreach ($autoloadNamespaces as $autoloadNamespace => $autoloadBaseDir) {
+  $loader->addPrefix($autoloadNamespace, $autoloadBaseDir);
+}
+
 /**
  * init some vars
  */
 $systemContext = 'admin';
 $template_dir = '';
-define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
+if (!defined('DIR_WS_TEMPLATES')) {
+  define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
+}
 /**
  * Prepare init-system
  */
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
- $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
+  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
 } else {
   $loaderPrefix = 'config';
 }
@@ -145,4 +159,4 @@ require('includes/initsystem.php');
 /**
  * load the autoloader interpreter code.
  */
-  require(DIR_FS_CATALOG . 'includes/autoload_func.php');
+  require(DIR_FS_CATALOG . DIR_WS_INCLUDES . '/autoload_func.php');

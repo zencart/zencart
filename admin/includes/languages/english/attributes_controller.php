@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: attributes_controller.php 15883 2010-04-11 16:41:26Z wilt $
@@ -148,9 +148,6 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTE_COPY_INSERTING','<strong>Inserting New Attribute from </strong>');
   define('TEXT_ATTRIBUTE_COPY_UPDATING','<strong>Updating from Attribute </strong>');
 
-// preview
-  define('TEXT_ATTRIBUTES_PREVIEW','PREVIEW ATTRIBUTES');
-  define('TEXT_ATTRIBUTES_PREVIEW_DISPLAY','PREVIEW ATTRIBUTES DISPLAY FOR ID#');
   define('TEXT_PRODUCT_OPTIONS', '<strong>Please Choose:</strong>');
 
   define('TEXT_ATTRIBUTES_INSERT_INFO', '<strong>Define the Attribute Settings then press Insert to apply</strong>');

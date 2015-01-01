@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: update_product.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
   if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -35,8 +35,8 @@
                             'products_virtual' => zen_db_prepare_input((int)$_POST['products_virtual']),
                             'products_tax_class_id' => zen_db_prepare_input((int)$_POST['products_tax_class_id']),
                             'manufacturers_id' => $manufacturers_id,
-                            'products_quantity_order_min' => zen_db_prepare_input($_POST['products_quantity_order_min']),
-                            'products_quantity_order_units' => zen_db_prepare_input($_POST['products_quantity_order_units']),
+                            'products_quantity_order_min' => zen_db_prepare_input(($_POST['products_quantity_order_min'] == 0 ? 1 : $_POST['products_quantity_order_min'])),
+                            'products_quantity_order_units' => zen_db_prepare_input(($_POST['products_quantity_order_units'] == 0 ? 1 : $_POST['products_quantity_order_units']) ),
                             'products_priced_by_attribute' => zen_db_prepare_input((int)$_POST['products_priced_by_attribute']),
                             'product_is_free' => zen_db_prepare_input((int)$_POST['product_is_free']),
                             'product_is_call' => zen_db_prepare_input((int)$_POST['product_is_call']),
@@ -76,6 +76,8 @@
                     (products_id, categories_id)
                     values ('" . (int)$products_id . "', '" . (int)$current_category_id . "')");
 
+      zen_record_admin_activity('New product ' . (int)$products_id . ' added via admin console.', 'info');
+
       ///////////////////////////////////////////////////////
       //// INSERT PRODUCT-TYPE-SPECIFIC *INSERTS* HERE //////
 
@@ -89,6 +91,8 @@
       $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
       zen_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "'");
+
+      zen_record_admin_activity('Updated product ' . (int)$products_id . ' via admin console.', 'info');
 
       // reset products_price_sorter for searches etc.
       zen_update_products_price_sorter((int)$products_id);

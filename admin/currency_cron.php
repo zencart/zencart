@@ -2,7 +2,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: currency_cron.php $
  */
@@ -48,8 +48,11 @@ if (isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
   }
 }
 
+// backward compatibility for before PHP 5.3:
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+
 // setup
-chdir( dirname(__FILE__) );
+chdir(__DIR__);
 $loaderPrefix = 'currency_cron';
 $_SERVER['REMOTE_ADDR'] = 'cron';
 $result = require('includes/application_top.php');

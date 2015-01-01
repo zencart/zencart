@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: customers.php 6352 2007-05-20 21:05:01Z drbyte $
@@ -48,7 +48,7 @@ define('ERROR_PWD_TOO_SHORT', 'Error: password is shorter than the number of cha
 define('SUCCESS_PASSWORD_UPDATED', 'Password updated.');
 
 define('EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE', 'Your password has been changed by the store administrator. Your new password is: ');
-define('EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT', 'Account password reset');
+define('EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT', 'Account password reset');
 define('EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE_FOR_ADMIN', 'You have reset the password for a customer: ' . "\n" . '%s' . "\n\n" . 'Administrator ID: %s');
 
 define('CUSTOMERS_AUTHORIZATION', 'Customers Authorization Status');

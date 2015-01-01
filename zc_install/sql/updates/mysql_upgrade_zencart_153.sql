@@ -6,7 +6,7 @@
 # * @copyright Copyright 2003-2014 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 New in v1.5.3 $
+# * @version GIT: $Id: Author: DrByte  Fri Jun 13 2014  New in v1.5.3 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -52,6 +52,9 @@ ALTER TABLE admin MODIFY prev_pass2 VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY prev_pass3 VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY reset_token VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE customers MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT '';
+
+UPDATE configuration set configuration_description = 'Record the database queries to files in the system /logs/ folder. USE WITH CAUTION. This can seriously degrade your site performance and blow out your disk space storage quotas.<br><strong>Enabling this makes your site NON-COMPLIANT with PCI DSS rules, thus invalidating any certification.</strong>' where configuration_key = 'STORE_DB_TRANSACTIONS';
+
 
 
 #############

@@ -5,7 +5,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_db_config_read.php 2753 2005-12-31 19:17:17Z wilt $
@@ -35,6 +35,7 @@ while (!$configuration->EOF) {
   define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
   $configuration->movenext();
 }
+unset($configuration);
 if (file_exists(DIR_WS_CLASSES . 'db/' . DB_TYPE . '/define_queries.php')) {
   /**
  * Load the database dependant query defines

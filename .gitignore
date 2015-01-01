@@ -11,6 +11,8 @@ includes/configure.php
 local/configure.php
 includes/local/configure.php
 admin/includes/local/configure.php
+docs/phpdocs*
+phpdoc.xml
 dbencdata*.ini
 testFramework/webtests/config/*
 !testFramework/webtests/config/localconfig_EXAMPLE.php
@@ -31,3 +33,4 @@ build
 # Ignore phpStorm stuff 
 .idea
 
+testFramework/codeception/tests/_output/*

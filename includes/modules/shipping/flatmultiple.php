@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: flatmultiple.php 14498 2009-10-01 20:16:16Z ajeh $
@@ -139,9 +139,13 @@ class flatmultiple extends base {
     $methodsToParse = ($ways_translated == '') ? $ways_default : $ways_translated;
 
     if ($methodsToParse == '') {
+
+      // calculate final shipping cost
+      $final_shipping_cost = MODULE_SHIPPING_FLATMULTIPLE_COST;
+
       $this->methodsList[] = array('id' => $this->code,
                                    'title' => trim((string)MODULE_SHIPPING_FLATMULTIPLE_TEXT_WAY),
-                                   'cost' => MODULE_SHIPPING_FLATMULTIPLE_COST);
+                                   'cost' => $final_shipping_cost);
     } else {
       $this->locations = explode(';', (string)$methodsToParse);
       $this->methodsList = array();
@@ -154,9 +158,12 @@ class flatmultiple extends base {
           list($title, $cost) = explode(',', $val);
         }
 
+        // calculate final shipping cost
+        $final_shipping_cost = $cost;
+
         $this->methodsList[] = array('id' => $this->code . (string)$key,
                                      'title' => trim($title),
-                                     'cost' => $cost);
+                                     'cost' => $final_shipping_cost);
       }
     }
 

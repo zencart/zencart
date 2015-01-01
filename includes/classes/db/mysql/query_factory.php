@@ -8,7 +8,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -19,6 +19,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class queryFactory extends base {
   var $link, $count_queries, $total_query_time, $dieOnErrors;
+  var $error_number = 0;
+  var $error_text = '';
 
   function __construct() {
     $this->count_queries = 0;
@@ -97,7 +99,7 @@ class queryFactory extends base {
       $this->db_connected = true;
       return true;
     } else {
-      $this->set_error(mysqli_connect_errno(), mysqli_connect_error(), $zp_real);
+      $this->set_error(mysqli_connect_errno(), mysqli_connect_error(), $this->dieOnErrors);
       return false;
     }
   }
@@ -105,7 +107,7 @@ class queryFactory extends base {
   function selectdb($zf_database) {
     $result = mysqli_select_db($this->link, $zf_database);
     if ($result) return $result;
-      $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $zp_real);
+      $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
      return false;
 
   }
@@ -135,7 +137,10 @@ class queryFactory extends base {
   }
 
   function show_error() {
-    if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && !headers_sent() && file_exists('nddbc.html') ) include('nddbc.html');
+    if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && !headers_sent() && file_exists('nddbc.html') ) {
+      header("HTTP/1.1 503 Service Unavailable");
+      include('nddbc.html');
+    }
     echo '<div class="systemError">';
     if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
     {
@@ -172,7 +177,7 @@ class queryFactory extends base {
     }
     // eof: collect products_id queries
     global $zc_cache;
-    $obj = new queryFactoryResult();
+    $obj = new queryFactoryResult($this->link);
     if ($zf_limit) {
       $zf_sql = $zf_sql . ' LIMIT ' . $zf_limit;
       $obj->limit = $zf_limit;
@@ -275,10 +280,10 @@ class queryFactory extends base {
     return($obj);
   }
 
-  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0) {
+  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     $this->zf_sql = $zf_sql;
     $time_start = explode(' ', microtime());
-    $obj = new queryFactoryResult();
+    $obj = new queryFactoryResult($this->link);
     if (!$this->db_connected)
     {
       if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
@@ -293,11 +298,11 @@ class queryFactory extends base {
 
       $zp_rows = $obj->RecordCount();
       if ($zp_rows > 0 && $zf_limit > 0) {
-        $zp_Start_row = 0;
+        $zp_start_row = 0;
         if ($zf_limit) {
           $zp_start_row = zen_rand(0, $zp_rows - $zf_limit);
         }
-        $obj->Move($zp_start_row);
+        mysqli_data_seek($zp_db_resource, $zp_start_row);
         $zp_ii = 0;
         while ($zp_ii < $zf_limit) {
           $zp_result_array = @mysqli_fetch_array($zp_db_resource);
@@ -472,7 +477,7 @@ class queryFactory extends base {
   }
 }
 
-class queryFactoryResult implements Iterator {
+class queryFactoryResult implements Countable, Iterator {
   /**
    * Indicates if the result has reached the last row of data.
    *
@@ -533,11 +538,12 @@ class queryFactoryResult implements Iterator {
   /**
    * Constructs a new Query Factory Result
    */
-  function __construct() {
+  function __construct($link) {
     $this->is_cached = false;
     $this->EOF = true;
     $this->result = array();
     $this->cursor = 0;
+    $this->link = $link;
   }
 
  /* (non-PHPdoc)
@@ -558,7 +564,7 @@ class queryFactoryResult implements Iterator {
    * @see Iterator::next()
    */
   public function next() {
-  $this->MoveNext();
+    $this->MoveNext();
   }
 
   /**
@@ -613,14 +619,21 @@ class queryFactoryResult implements Iterator {
    */
   public function rewind() {
     $this->Move(0);
-    $this->EOF = ($this->RecordCount() > 0);
+    $this->EOF = ($this->RecordCount() == 0);
   }
 
   /* (non-PHPdoc)
    * @see Iterator::valid()
-  */
+   */
   public function valid() {
     return $this->cursor < $this->RecordCount() && !$this->EOF;
+  }
+
+  /* (non-PHPdoc)
+   * @see Iterator::count()
+   */
+  public function count() {
+    return $this->RecordCount();
   }
 
   /**
@@ -661,12 +674,11 @@ class queryFactoryResult implements Iterator {
       while (list($key, $value) = each($zp_result_array)) {
         $this->fields[$key] = $value;
       }
-      @mysqli_data_seek($this->resource, $zp_row);
       $this->cursor = $zp_row;
       $this->EOF = false;
     } else {
       $this->EOF = true;
-      $db->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+      $db->set_error(mysqli_errno($this->link), mysqli_error($this->link), $db->dieOnErrors);
     }
   }
 }

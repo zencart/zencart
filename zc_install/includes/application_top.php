@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -10,8 +10,36 @@
 @ini_set("arg_separator.output", "&");
 @set_time_limit(250);
 
-if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php'))
+if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {
   require (DIR_FS_INSTALL . 'includes/localConfig.php');
+}
+
+$val = getenv('HABITAT');
+$habitat = ($val == 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] == 'vagrant'));
+if ($habitat) {
+  define('DEVELOPER_MODE', true);
+}
+
+$controller = 'main';
+/* detect CLI params */
+if (isset($argc) && $argc > 0) {
+  for ($i=1;$i<$argc;$i++) {
+    $it = preg_split("/=/",$argv[$i]);
+    $_GET[$it[0]] = (isset($it[1])) ? $it[1] : $it[0];
+    // parse_str($argv[$i],$tmp);
+    // $_REQUEST = array_merge($_REQUEST, $tmp);
+    if ($it[0] == 'cli') $controller = 'cli';
+    if ($it[0] == 'v' || $it[0] == 'verbose') $debug_logging = 'screen';
+  }
+}
+if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
+  for($i=1;$i<$_SERVER["argc"];$i++) {
+    list($key, $val) = explode('=', $_SERVER["argv"][$i]);
+    $_GET[$key] = $_REQUEST[$key] = $val;
+    if ($key == 'cli') $controller = 'cli';
+    if ($key == 'v' || $key == 'verbose') $debug_logging = 'screen';
+  }
+}
 
 /**
  * set the level of system-inspection logging -- can by overridden by adding ?v={mode} to command line, for non-ajax steps, or generically set in localConfig.php
@@ -19,6 +47,7 @@ if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php'))
 if (!isset($debug_logging)) $debug_logging = 'file';
 if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE'))) $debug_logging = 'screen';
 define('VERBOSE_SYSTEMCHECKER', $debug_logging);
+if (VERBOSE_SYSTEMCHECKER == 'screen' && $controller == 'cli') echo 'Verbose mode enabled.' . "\n";
 
 /**
  * read some file locations from the "store / catalog" configure.php
@@ -48,7 +77,7 @@ if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
  * set the level of error reporting
  */
 if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
-error_reporting(version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);
 @ini_set('log_errors_max_len', 0);
@@ -77,36 +106,36 @@ if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 }
 
 /*
- * check settings for, and then turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
-if (version_compare(PHP_VERSION, 5.4, '<'))
-{
-  $php_magic_quotes_runtime = (@get_magic_quotes_runtime() > 0) ? 'ON' : 'OFF';
-  $val = @ini_get('magic_quotes_sybase');
-  if (is_string($val) && strtolower($val) == 'on')
-    $val = 1;
-  $php_magic_quotes_sybase = ((int)$val > 0) ? 'ON' : 'OFF';
-  if ((int)$val != 0)
-    @ini_set('magic_quotes_sybase', 0);
-  unset($val);
-}
-
-/*
  * Bypass PHP file caching systems if active, since it interferes with files changed by zc_install (such as progress.json and configure.php)
  */
-//APC
-if (function_exists('apc_clear_cache')) @apc_clear_cache();
-//XCACHE
-//@TODO - find a way to prevent admin login prompts with xcache
-// if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
-//EA
-if (@ini_get('eaccelerator.enable') == 1) {
-  @ini_set('eaccelerator.enable', 0);
+if (!isset($_GET['cacheignore'])) {
+  //APC
+  if (function_exists('apc_clear_cache')) @apc_clear_cache();
+  //XCACHE
+  //@TODO - find a way to prevent admin login prompts with xcache
+  // if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+  //EA
+  if (@ini_get('eaccelerator.enable') == 1) {
+    @ini_set('eaccelerator.enable', 0);
+  }
 }
 
 // define the project version
 require (DIR_FS_INSTALL . 'includes/version.php');
-
+/**
+ * include the list of extra configure files
+ */
+if ($za_dir = @dir(DIR_FS_INSTALL . 'includes/extra_configures')) {
+  while ($zv_file = $za_dir->read()) {
+    if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
+      /**
+       * load any user/contribution specific configuration files.
+       */
+      include(DIR_FS_INSTALL . 'includes/extra_configures/' . $zv_file);
+    }
+  }
+  $za_dir->close();
+}
 // set php_self in the local scope
 require (DIR_FS_ROOT . 'includes/classes/class.base.php');
 require (DIR_FS_ROOT . 'includes/classes/class.notifier.php');
@@ -159,7 +188,7 @@ if (isset($_POST['lng']))
   {
     $lng = 'en_us';
   }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php'))
   {
     $lng = 'en_us';
   }
@@ -170,10 +199,10 @@ if (isset($_POST['lng']))
   {
     $lng = 'en_us';
   }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php'))
+  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php'))
   {
     $lng = 'en_us';
   }
 }
 $lng_short = substr($lng, 0, strpos($lng, '_'));
-require(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng][fileName] . '.php');
+require(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php');

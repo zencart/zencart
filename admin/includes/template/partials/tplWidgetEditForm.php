@@ -3,10 +3,12 @@
  * dashboard widget  Edit Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Aug 5 20:48:10 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: $
  */
+
+use ZenCart\Admin\DashboardWidget\WidgetManager;
 ?>
 <div>
 <form name="widget-edit" action="#" method="post" class="widget-edit-form">
@@ -18,7 +20,7 @@
         <label class="inline" for="widget-refresh"><?php echo 'Refresh'; ?></label>
       </div>
       <div class="small-9 columns">
-        <?php echo zen_draw_pull_down_menu('widget-refresh', zcWidgetManager::getWidgetTimerSelect($tplVars['id']), $tplVars['widget-refresh']); ?>
+        <?php echo zen_draw_pull_down_menu('widget-refresh', WidgetManager::getWidgetTimerSelect($tplVars['id']), $tplVars['widget-refresh']); ?>
       </div>
     </div>
   </fieldset>

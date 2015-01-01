@@ -25,7 +25,7 @@ Installation is simple:
 
 1. [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files)
 2. Ensure you check that the md5/sha1 hash of the Zip matches those publicly posted.
-  * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](http://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](http://www.zen-cart.com/content.php?305).
+  * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](http://www.zen-cart.com/content.php?305).
 3. Unzip the downloaded zip file 
 4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your public_html or www or html folder (the folder will already exist on your webserver)
 5. In your browser, enter the address to your site, such as: `www.your_site.com` (or if you uploaded it into another foldername use `www.your_site.com/foldername` )

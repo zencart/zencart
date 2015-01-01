@@ -278,7 +278,7 @@ class linkpoint_api extends base {
     $myorder = array();
 
     // Calculate the next expected order id
-    $last_order_id = $db->Execute("select * from " . TABLE_ORDERS . " order by orders_id desc limit 1");
+    $last_order_id = $db->Execute("select orders_id from " . TABLE_ORDERS . " order by orders_id desc limit 1");
     $new_order_id = $last_order_id->fields['orders_id'];
     $new_order_id = ($new_order_id + 1);
     // add randomized suffix to order id to produce uniqueness ... since it's unwise to submit the same order-number twice to the gateway
@@ -553,7 +553,7 @@ class linkpoint_api extends base {
                            array('fieldName'=>'cc_number', 'value' => $cc_number, 'type'=>'string'),
                            array('fieldName'=>'cust_info', 'value' => $cust_info, 'type'=>'string'),
                            array('fieldName'=>'chargetotal', 'value' => $chargetotal, 'type'=>'string'),
-                           array('fieldName'=>'cc_expire', 'value' => $cc_month . '/' . $cc_year, 'type'=>'string'),
+//                            array('fieldName'=>'cc_expire', 'value' => $cc_month . '/' . $cc_year, 'type'=>'string'),
                            array('fieldName'=>'ordertype', 'value' => $myorder['ordertype'], 'type'=>'string'), // transaction type: PREAUTH or SALE
                            array('fieldName'=>'date_added', 'value' => 'now()', 'type'=>'noquotestring'));
     if (MODULE_PAYMENT_LINKPOINT_API_STORE_DATA == 'True') {

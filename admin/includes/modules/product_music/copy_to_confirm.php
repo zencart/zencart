@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: copy_to_confirm.php 15591 2010-02-28 05:41:49Z ajeh $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -26,6 +26,8 @@ if (!defined('IS_ADMIN_FLAG')) {
                 $db->Execute("insert into " . TABLE_PRODUCTS_TO_CATEGORIES . "
                                           (products_id, categories_id)
                               values ('" . (int)$products_id . "', '" . (int)$categories_id . "')");
+
+                zen_record_admin_activity('Product ' . (int)$products_id . ' copied as link to category ' . (int)$categories_id . ' via admin console.', 'info');
               }
             } else {
               $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
@@ -41,6 +43,17 @@ if (!defined('IS_ADMIN_FLAG')) {
                                             products_price_sorter, master_categories_id
                                      from " . TABLE_PRODUCTS . "
                                      where products_id = '" . (int)$products_id . "'");
+
+            // fix Product copy from if Unit is 0
+            if ($product->fields['products_quantity_order_units'] == 0) {
+              $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_quantity_order_units = 1 WHERE products_id = '" . (int)$products_id . "'";
+              $results = $db->Execute($sql);
+            }
+            // fix Product copy from if Minimum is 0
+            if ($product->fields['products_quantity_order_min'] == 0) {
+              $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_quantity_order_min = 1 WHERE products_id = '" . (int)$products_id . "'";
+              $results = $db->Execute($sql);
+            }
 
             $tmp_value = zen_db_input($product->fields['products_quantity']);
             $products_quantity = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
@@ -70,8 +83,8 @@ if (!defined('IS_ADMIN_FLAG')) {
                                   '" . $products_weight . "', '0',
                                   '" . (int)$product->fields['products_tax_class_id'] . "',
                                   '" . (int)$product->fields['manufacturers_id'] . "',
-                                  '" . zen_db_input($product->fields['products_quantity_order_min']) . "',
-                                  '" . zen_db_input($product->fields['products_quantity_order_units']) . "',
+                                  '" . zen_db_input(($product->fields['products_quantity_order_min'] == 0 ? 1 : $product->fields['products_quantity_order_min'])) . "',
+                                  '" . zen_db_input(($product->fields['products_quantity_order_units'] == 0 ? 1 : $product->fields['products_quantity_order_units'])) . "',
                                   '" . zen_db_input($product->fields['products_priced_by_attribute']) . "',
                                   '" . (int)$product->fields['product_is_free'] . "',
                                   '" . (int)$product->fields['product_is_call'] . "',
@@ -163,6 +176,7 @@ if ( $_POST['copy_attributes']=='copy_attributes_yes' and $_POST['copy_as'] == '
               zen_copy_discounts_to_product($old_products_id, (int)$dup_products_id);
             }
 
+            zen_record_admin_activity('Product ' . (int)$old_products_id . ' duplicated as product ' . (int)$dup_products_id . ' via admin console.', 'info');
           }
 
           // reset products_price_sorter for searches etc.

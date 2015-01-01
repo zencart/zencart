@@ -69,6 +69,7 @@ function zen_update_currencies($cli_Output = FALSE)
     }
     $currency->MoveNext();
   }
+  zen_record_admin_activity('Currency exchange rates updated.', 'info');
 }
 
 function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)

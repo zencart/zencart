@@ -13,6 +13,8 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
+  zen_set_time_limit(900);
+
   if (zen_not_null($action)) {
     switch ($action) {
       case 'setflag':
@@ -72,6 +74,264 @@
         } else {
           zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $new_special->fields['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         }
+        break;
+      case 'insert_category':
+        $skip_specials = ($_POST['skip_specials'] == 'skip_specials_yes');
+        $price_range_from = $_POST['price_range_from'];
+        $price_range_to = $_POST['price_range_to'];
+        $include_subcategories = ($_POST['include_subcategories'] == 'include_subcategories_yes');
+        $include_inactive = ($_POST['include_inactive'] == 'include_inactive_yes');
+        if ($_POST['categories_id'] < 1 || empty($_POST['specials_price'])) {
+          $messageStack->add_session(ERROR_NOTHING_SELECTED_CATEGORY, 'caution');
+          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+        } else {
+          // get all category products_id
+          global $categories_products_id_list;
+          $categories_products_id_list = '';
+          $products_id_list = zen_get_categories_products_list($_POST['categories_id'], $include_inactive, $include_subcategories);
+          if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_added = false;
+            // build products list
+            foreach($products_id_list as $key => $value) {
+              $new_specials_products_id = $value;
+              $products_id = zen_db_prepare_input($new_specials_products_id);
+              // check if a price range is set
+              if ($price_range_from > 0 || $price_range_to > 0) {
+                $products_price_normal = zen_get_products_base_price($products_id);
+                if ($products_price_normal < $price_range_from || $products_price_normal > $price_range_to) {
+                  // skip adding the special as products_price is out of price range
+                  continue;
+                }
+              }
+
+              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special = $db->Execute($chk_special_query);
+              // check if product has a special and skip if skip_specials
+              if (!$chk_special->EOF) {
+                if ($skip_specials) {
+                  continue;
+                } else {
+                  $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                }
+              }
+
+              $tmp_value = zen_db_prepare_input($_POST['specials_price']);
+              $specials_price = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
+
+              if (substr($specials_price, -1) == '%') {
+                $new_special_insert = $db->Execute("select products_id, products_price, products_priced_by_attribute
+                                                    from " . TABLE_PRODUCTS . "
+                                                    where products_id = '" . (int)$products_id . "'");
+
+                // check if priced by attribute
+                if ($new_special_insert->fields['products_priced_by_attribute'] == '1') {
+                  $products_price = zen_get_products_base_price($products_id);
+                } else {
+                  $products_price = $new_special_insert->fields['products_price'];
+                }
+
+                $specials_price = ($products_price - (($specials_price / 100) * $products_price));
+              }
+
+              $specials_date_available = ((zen_db_prepare_input($_POST['special_start_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_start_date']));
+              $expires_date = ((zen_db_prepare_input($_POST['special_end_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_end_date']));
+
+              $db->Execute("insert into " . TABLE_SPECIALS . "
+                          (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
+                          values ('" . (int)$products_id . "',
+                                  '" . zen_db_input($specials_price) . "',
+                                  now(),
+                                  '" . zen_db_input($expires_date) . "', '1', '" . zen_db_input($specials_date_available) . "')");
+              $special_added = true;
+
+//@@TODO - remove $new_special not used?
+//              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
+              // reset products_price_sorter for searches etc.
+              zen_update_products_price_sorter((int)$products_id);
+            }
+            if ($special_added) {
+              $messageStack->add_session(SUCCESS_SPECIALS_UPDATED_CATEGORY . $_POST['categories_id'] . ' ' . SUCCESS_SPECIALS_PRICE_SET . $_POST['specials_price'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']) . ' ' . SUCCESS_SPECIALS_PRICE_SET . $_POST['specials_price'], 'caution');
+            }
+            zen_redirect(zen_href_link(FILENAME_SPECIALS));
+          } else {
+            $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
+            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          }
+        } // nothing selected
+        zen_redirect(zen_href_link(FILENAME_SPECIALS));
+        break;
+      case 'remove_category':
+        $include_subcategories = ($_POST['include_subcategories'] == 'include_subcategories_yes');
+        $include_inactive = ($_POST['include_inactive'] == 'include_inactive_yes');
+
+        if ($_POST['categories_id'] < 1) {
+          $messageStack->add_session(ERROR_NOTHING_SELECTED_CATEGORY, 'caution');
+          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+        } else {
+          // get all category products_id
+          global $categories_products_id_list;
+          $categories_products_id_list = '';
+          $products_id_list = zen_get_categories_products_list($_POST['categories_id'], $include_inactive, $include_subcategories);
+          if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_removed = false;
+            // build products list
+            foreach($products_id_list as $key => $value) {
+              $new_specials_products_id = $value;
+              $products_id = zen_db_prepare_input($new_specials_products_id);
+              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special = $db->Execute($chk_special_query);
+              // check if product has a special
+              if (!$chk_special->EOF) {
+                $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                $special_removed = true;
+                // reset products_price_sorter for searches etc.
+                zen_update_products_price_sorter((int)$products_id);
+              }
+            }
+            if ($special_removed) {
+              $messageStack->add_session(SUCCESS_SPECIALS_REMOVED_CATEGORY . $_POST['categories_id'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
+            }
+          } else {
+            $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
+            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          }
+        } // nothing selected
+        zen_redirect(zen_href_link(FILENAME_SPECIALS));
+        break;
+
+      case 'insert_manufacturer':
+        $skip_specials = ($_POST['skip_specials'] == 'skip_specials_yes');
+        $price_range_from = $_POST['price_range_from'];
+        $price_range_to = $_POST['price_range_to'];
+
+        if ($_POST['manufacturer_id'] < 1 || empty($_POST['specials_price'])) {
+          $messageStack->add_session(ERROR_NOTHING_SELECTED_MANUFACTURER, 'caution');
+          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+        } else {
+          // build $products_id_list based on manufacturer_id
+          $chk_special_query = "SELECT products_id from " . TABLE_PRODUCTS . " WHERE manufacturers_id = '" . (int)$_POST['manufacturer_id'] . "'";
+          $chk_special = $db->Execute($chk_special_query);
+          $products_id_list = array();
+          while (!$chk_special->EOF) {
+            $products_id_list[] = $chk_special->fields['products_id'];
+            $chk_special->MoveNext();
+          }
+          if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_added = false;
+            // build products list
+            foreach($products_id_list as $key => $value) {
+              $new_specials_products_id = $value;
+              $products_id = zen_db_prepare_input($new_specials_products_id);
+              // check if a price range is set
+              if ($price_range_from > 0 || $price_range_to > 0) {
+                $products_price_normal = zen_get_products_base_price($products_id);
+                if ($products_price_normal < $price_range_from || $products_price_normal > $price_range_to) {
+                  // skip adding the special as products_price is out of price range
+                  continue;
+                }
+              }
+              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special = $db->Execute($chk_special_query);
+              // check if product has a special and skip if skip_specials
+              if (!$chk_special->EOF) {
+                if ($skip_specials) {
+                  continue;
+                } else {
+                  $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                }
+              }
+
+              $tmp_value = zen_db_prepare_input($_POST['specials_price']);
+              $specials_price = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
+
+              if (substr($specials_price, -1) == '%') {
+                $new_special_insert = $db->Execute("select products_id, products_price, products_priced_by_attribute
+                                                    from " . TABLE_PRODUCTS . "
+                                                    where products_id = '" . (int)$products_id . "'");
+
+                // check if priced by attribute
+                if ($new_special_insert->fields['products_priced_by_attribute'] == '1') {
+                  $products_price = zen_get_products_base_price($products_id);
+                } else {
+                  $products_price = $new_special_insert->fields['products_price'];
+                }
+
+                $specials_price = ($products_price - (($specials_price / 100) * $products_price));
+              }
+
+              $specials_date_available = ((zen_db_prepare_input($_POST['special_start_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_start_date']));
+              $expires_date = ((zen_db_prepare_input($_POST['special_end_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_end_date']));
+
+              $db->Execute("insert into " . TABLE_SPECIALS . "
+                          (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
+                          values ('" . (int)$products_id . "',
+                                  '" . zen_db_input($specials_price) . "',
+                                  now(),
+                                  '" . zen_db_input($expires_date) . "', '1', '" . zen_db_input($specials_date_available) . "')");
+              $special_added = true;
+
+//@@TODO - remove $new_special not used?
+//              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
+              // reset products_price_sorter for searches etc.
+              zen_update_products_price_sorter((int)$products_id);
+            }
+            if ($special_added) {
+              $messageStack->add_session(SUCCESS_SPECIALS_UPDATED_MANUFACTURER . $_POST['manufacturer_id'] . ' ' . SUCCESS_SPECIALS_PRICE_SET . $_POST['specials_price'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
+            }
+            zen_redirect(zen_href_link(FILENAME_SPECIALS));
+          } else {
+            $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
+            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          }
+        } // nothing selected
+        zen_redirect(zen_href_link(FILENAME_SPECIALS));
+        break;
+      case 'remove_manufacturer':
+        if ($_POST['manufacturer_id'] < 1) {
+          $messageStack->add_session(ERROR_NOTHING_SELECTED_MANUFACTURER, 'caution');
+          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+        } else {
+          // build $products_id_list based on manufacturer_id
+          $chk_special_query = "SELECT products_id from " . TABLE_PRODUCTS . " WHERE manufacturers_id = '" . (int)$_POST['manufacturer_id'] . "'";
+          $chk_special = $db->Execute($chk_special_query);
+          $products_id_list = array();
+          while (!$chk_special->EOF) {
+            $products_id_list[] = $chk_special->fields['products_id'];
+            $chk_special->MoveNext();
+          }
+          if (is_array($products_id_list) && sizeof($products_id_list) > 0) {
+            $special_removed = false;
+            // build products list
+            foreach($products_id_list as $key => $value) {
+              $new_specials_products_id = $value;
+              $products_id = zen_db_prepare_input($new_specials_products_id);
+              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special = $db->Execute($chk_special_query);
+              // check if product has a special
+              if (!$chk_special->EOF) {
+                $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                $special_removed = true;
+                // reset products_price_sorter for searches etc.
+                zen_update_products_price_sorter((int)$products_id);
+              }
+            }
+            if ($special_removed) {
+              $messageStack->add_session(SUCCESS_SPECIALS_REMOVED_MANUFACTURER . $_POST['manufacturer_id'], 'success');
+            } else {
+              $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
+            }
+          } else {
+            $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
+            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          }
+        } // nothing selected
+        zen_redirect(zen_href_link(FILENAME_SPECIALS));
         break;
       case 'update':
         $specials_id = zen_db_prepare_input($_POST['specials_id']);
@@ -455,7 +715,60 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=pre_add_confirmation' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
       $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_PRE_ADD_PRODUCTS_ID . '<br>' . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id')));
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      break;
+    case 'pre_add_category':
+      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS_CATEGORY . '</b>');
+      $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=insert_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+      $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO_CATEGORY . '<br />');
+      $contents[] = array('text' => '<br />' . TEXT_PRE_ADD_CATEGORY_ID . '<br>' . zen_draw_input_field('categories_id'));
+
+      $contents[] = array('text' => TEXT_INFO_INCLUDE_SUBCATEGORIES . '<br />' . zen_draw_radio_field('include_subcategories', 'include_subcategories_yes', true) . ' ' . TEXT_SKIP_SUBCATEGORIES . '<br />' . zen_draw_radio_field('include_subcategories', 'include_subcategories_no') . ' ' . TEXT_SKIP_SUBCATEGORIES_NO);
+      $contents[] = array('text' => TEXT_INFO_INCLUDE_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_yes', true) . ' ' . TEXT_SKIP_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_no') . ' ' . TEXT_SKIP_INACTIVE_NO);
+      $contents[] = array('text' => TEXT_INFO_SKIP_SPECIALS . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_yes', true) . ' ' . TEXT_SKIP_SPECIALS_TRUE . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_no') . ' ' . TEXT_SKIP_SPECIALS_FALSE);
+
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_FROM . ' ' . zen_draw_input_field('price_range_from') . ' ' . TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_TO . ' ' . zen_draw_input_field('price_range_to'));
+
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE . '<br>' . zen_draw_input_field('specials_price'));
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_START_DATE . '<br>' . zen_draw_input_field('special_start_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_END_DATE . '<br>' . zen_draw_input_field('special_end_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
+
+      $contents[] = array('text' => TEXT_SPECIALS_PRICE_TIP);
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      break;
+    case 'pre_remove_category':
+      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_CATEGORY . '</b>');
+      $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=remove_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+      $contents[] = array('text' => TEXT_INFO_PRE_REMOVE_INTRO_CATEGORY . '<br />');
+      $contents[] = array('text' => '<br />' . TEXT_PRE_REMOVE_CATEGORY_ID . '<br>' . zen_draw_input_field('categories_id'));
+
+      $contents[] = array('text' => TEXT_INFO_INCLUDE_SUBCATEGORIES . '<br />' . zen_draw_radio_field('include_subcategories', 'include_subcategories_yes', true) . ' ' . TEXT_SKIP_SUBCATEGORIES . '<br />' . zen_draw_radio_field('include_subcategories', 'include_subcategories_no') . ' ' . TEXT_SKIP_SUBCATEGORIES_NO);
+      $contents[] = array('text' => TEXT_INFO_INCLUDE_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_yes', true) . ' ' . TEXT_SKIP_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_no') . ' ' . TEXT_SKIP_INACTIVE_NO);
+
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      break;
+    case 'pre_add_manufacturer':
+      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS_MANUFACTURER . '</b>');
+      $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=insert_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+      $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO_MANUFACTURER . '<br />');
+      $contents[] = array('text' => '<br />' . TEXT_PRE_ADD_MANUFACTURER_ID . '<br>' . zen_draw_input_field('manufacturer_id'));
+      $contents[] = array('text' => TEXT_INFO_SKIP_SPECIALS . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_yes', true) . ' ' . TEXT_SKIP_SPECIALS_TRUE . '<br />' . zen_draw_radio_field('skip_specials', 'skip_specials_no') . ' ' . TEXT_SKIP_SPECIALS_FALSE);
+
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_FROM . ' ' . zen_draw_input_field('price_range_from') . ' ' . TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_TO . ' ' . zen_draw_input_field('price_range_to'));
+
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_PRICE . '<br>' . zen_draw_input_field('specials_price'));
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_START_DATE . '<br>' . zen_draw_input_field('special_start_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
+      $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_END_DATE . '<br>' . zen_draw_input_field('special_end_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
+
+      $contents[] = array('text' => TEXT_SPECIALS_PRICE_TIP);
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      break;
+    case 'pre_remove_manufacturer':
+      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_MANUFACTURER . '</b>');
+      $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=remove_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+      $contents[] = array('text' => TEXT_INFO_PRE_REMOVE_INTRO_MANUFACTURER . '<br />');
+      $contents[] = array('text' => '<br />' . TEXT_PRE_REMOVE_MANUFACTURER_ID . '<br>' . zen_draw_input_field('manufacturer_id'));
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (is_object($sInfo)) {
@@ -480,12 +793,17 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
         $contents[] = array('text' => '<br>' . TEXT_INFO_EXPIRES_DATE . ' <b>' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date !='') ? zen_date_short($sInfo->expires_date) : TEXT_NONE) . '</b>');
         $contents[] = array('text' => '' . TEXT_INFO_STATUS_CHANGE . ' ' . zen_date_short($sInfo->date_status_change));
         $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_CATEGORIES, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>');
-
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL . '</a><br /><br />');
       } else {
         $heading[] = array('text' => '<b>' . TEXT_NONE . '</b>');
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL . '</a><br /><br />');
       }
+
+      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL . '</a><br /><br />');
+      $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3') . '<br /><br />');
+      $contents[] = array('align' => 'center', 'text' => TEXT_INFO_CATEGORY . '<br />' . '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL_CATEGORY . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_remove_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '<br />' . TEXT_INFO_MANUAL_CATEGORY_REMOVE . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => TEXT_INFO_MANUFACTURER . '<br />' . '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL_MANUFACTURER . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_remove_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '<br />' . TEXT_INFO_MANUAL_MANUFACTURER_REMOVE . '</a><br /><br />');
+
       break;
   }
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {

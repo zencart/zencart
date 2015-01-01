@@ -526,6 +526,9 @@ class shoppingCart extends base {
   }
   /**
    * Method to get the quantity of an item in the cart
+   * NOTE: This accepts attribute hash as $products_id, such as: 12:a35de52391fcb3134
+   * ... and treats 12 as unique from 12:a35de52391fcb3134
+   * To lookup based only on 12 regardless of the attribute hash, use another method: in_cart_product_total_quantity()
    *
    * @param mixed product ID of item to check
    * @return decimal the quantity of the item
@@ -1341,9 +1344,6 @@ class shoppingCart extends base {
           $new_qty = round($new_qty, 0);
         }
 
-        if ($new_qty == (int)$new_qty) {
-          $new_qty = (int)$new_qty;
-        }
         $products_array[] = array('id' => $products_id,
                                   'category' => $products->fields['master_categories_id'],
                                   'name' => $products->fields['products_name'],
@@ -2290,6 +2290,46 @@ class shoppingCart extends base {
       }
     } // end FOR loop
     return $in_cart_product_price;
+  }
+/**
+ * calculate products_id quantity in cart regardless of attributes
+ * USAGE:  $product_total_quantity = $this->in_cart_product_total_quantity(12);
+ * USAGE:  $chk_product_cart_total_quantity = $_SESSION['cart']->in_cart_product_total_quantity(12);
+ *
+ * @param str $product_id
+ */
+  function in_cart_product_total_quantity($product_id) {
+    $products = $this->get_products();
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+    $in_cart_product_quantity = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      if ((int)$product_id == (int)$products[$i]['id']) {
+//        echo 'GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $in_cart_product_quantity: ' . $in_cart_product_quantity . '<br><br>';
+        $in_cart_product_quantity += $products[$i]['quantity'];
+      } else {
+//        echo 'NOT GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $in_cart_product_quantity: ' . $in_cart_product_quantity . '<br><br>';
+      }
+    } // end FOR loop
+    return $in_cart_product_quantity;
+  }
+
+/**
+ * calculate products_id weight in cart regardless of attributes
+ * USAGE:  $product_total_weight = $this->in_cart_product_total_weight(12);
+ * USAGE:  $chk_product_cart_total_weight = $_SESSION['cart']->in_cart_product_total_weight(12);
+ *
+ * @param string $product_id
+ * @return float
+ */
+  function in_cart_product_total_weight($product_id) {
+    $products = $this->get_products();
+    $in_cart_product_weight = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      if ((int)$product_id == (int)$products[$i]['id']) {
+        $in_cart_product_weight += $products[$i]['weight'] * $products[$i]['quantity'];
+      }
+    } // end FOR loop
+    return $in_cart_product_weight;
   }
 
 }

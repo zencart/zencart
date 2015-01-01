@@ -3,10 +3,10 @@
  * ipn_main_handler.php callback handler for PayPal IPN notifications
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.6.0 $
  */
 if (!defined('TEXT_RESELECT_SHIPPING')) define('TEXT_RESELECT_SHIPPING', 'You have changed the items in your cart since shipping was last calculated, and costs may have changed. Please verify/re-select your shipping method.');
 
@@ -29,7 +29,8 @@ if (isset($_GET['type']) && $_GET['type'] == 'ec') {
   if ( STOCK_CHECK == 'true' && STOCK_ALLOW_CHECKOUT != 'true' && isset($_SESSION['cart']) ) {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
+      $qtyAvailable = zen_get_products_stock($products[$i]['id']);
+      if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
         break;
       }
@@ -125,7 +126,7 @@ Processing...
     @ini_set('log_errors_max_len', 0);
     @ini_set('display_errors', 0); // do not output errors to screen/browser/client (only to log file)
     @ini_set('error_log', DIR_FS_CATALOG . $debug_logfile_path);
-    error_reporting(version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
   }
 
   ipn_debug_email('Breakpoint: Flag Status:' . "\nisECtransaction = " . (int)$isECtransaction . "\nisDPtransaction = " . (int)$isDPtransaction);
@@ -356,12 +357,15 @@ Processing...
         $order->send_order_email($insert_id, 2);
         ipn_debug_email('Breakpoint: 5m - emailing customer');
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
+
         /** Prepare sales-tracking data for use by notifier class **/
         $ototal = $order_subtotal = $credits_applied = 0;
         for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
           if ($order_totals[$i]['code'] == 'ot_subtotal') $order_subtotal = $order_totals[$i]['value'];
           if ($$order_totals[$i]['code']->credit_class == true) $credits_applied += $order_totals[$i]['value'];
           if ($order_totals[$i]['code'] == 'ot_total') $ototal = $order_totals[$i]['value'];
+          if ($order_totals[$i]['code'] == 'ot_tax') $otax = $order_totals[$i]['value'];
+          if ($order_totals[$i]['code'] == 'ot_shipping') $oshipping = $order_totals[$i]['value'];
         }
         $commissionable_order = ($order_subtotal - $credits_applied);
         $commissionable_order_formatted = $currencies->format($commissionable_order);
@@ -371,7 +375,21 @@ Processing...
         $_SESSION['order_summary']['order_total'] = $ototal;
         $_SESSION['order_summary']['commissionable_order'] = $commissionable_order;
         $_SESSION['order_summary']['commissionable_order_formatted'] = $commissionable_order_formatted;
-        $_SESSION['order_summary']['coupon_code'] = $order->info['coupon_code'];
+        $_SESSION['order_summary']['coupon_code'] = urlencode($order->info['coupon_code']);
+        $_SESSION['order_summary']['currency_code'] = $order->info['currency'];
+        $_SESSION['order_summary']['currency_value'] = $order->info['currency_value'];
+        $_SESSION['order_summary']['payment_module_code'] = $order->info['payment_module_code'];
+        $_SESSION['order_summary']['shipping_method'] = $order->info['shipping_method'];
+        $_SESSION['order_summary']['orders_status'] = $order->info['orders_status'];
+        $_SESSION['order_summary']['tax'] = $otax;
+        $_SESSION['order_summary']['shipping'] = $oshipping;
+        $products_array = array();
+        foreach ($order->products as $key=>$val) {
+          $products_array[urlencode($val['id'])] = urlencode($val['model']);
+        }
+        $_SESSION['order_summary']['products_ordered_ids'] = implode('|', array_keys($products_array));
+        $_SESSION['order_summary']['products_ordered_models'] = implode('|', array_values($products_array));
+
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_HANDLE_AFFILIATES', 'paypalipn');
         $_SESSION['cart']->reset(true);
         ipn_debug_email('Breakpoint: 5n - emptying cart');

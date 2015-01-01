@@ -68,7 +68,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $country = zen_db_prepare_input($_POST['zone_country_id']);
   $telephone = zen_db_prepare_input($_POST['telephone']);
   $fax = zen_db_prepare_input($_POST['fax']);
-  $customers_authorization = CUSTOMERS_APPROVAL_AUTHORIZATION;
+  $customers_authorization = (int)CUSTOMERS_APPROVAL_AUTHORIZATION;
   $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
 
   if (ACCOUNT_NEWSLETTER_STATUS == '1' || ACCOUNT_NEWSLETTER_STATUS == '2') {
@@ -318,7 +318,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             'customers_email_format' => $email_format,
                             'customers_default_address_id' => 0,
                             'customers_password' => zen_encrypt_password($password),
-                            'customers_authorization' => (int)CUSTOMERS_APPROVAL_AUTHORIZATION
+                            'customers_authorization' => (int)$customers_authorization
     );
 
     if ((CUSTOMERS_REFERRAL_STATUS == '2' and $customers_referral != '')) $sql_data_array['customers_referral'] = $customers_referral;

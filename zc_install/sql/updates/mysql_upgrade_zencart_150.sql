@@ -139,6 +139,9 @@ CREATE TABLE admin_pages_to_profiles (
 # Insert default data into admin profiles table
 INSERT INTO admin_profiles (profile_id, profile_name) VALUES (1, 'Superuser');
 
+#set all users as superuser for now; can be changed manually as needed
+UPDATE admin SET admin_profile = 1;
+
 # Insert default data into admin_menus table
 INSERT INTO admin_menus (menu_key, language_key, sort_order)
 VALUES ('configuration', 'BOX_HEADING_CONFIGURATION', 1),

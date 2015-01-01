@@ -1,24 +1,11 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: specials.php 4533 2006-09-17 17:21:10Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:
+ */
 
 define('HEADING_TITLE', 'Specials');
 
@@ -33,6 +20,10 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
+
+define('TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_FROM', 'Product pricerange:');
+define('TEXT_PRE_ADD_SPECIAL_PRICE_RANGE_TO', 'to:');
+
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date:');
 define('TEXT_SPECIALS_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>');
@@ -58,4 +49,53 @@ define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Manually add new Special by Produc
 define('TEXT_INFO_PRE_ADD_INTRO', 'On large databases, you may Manually Add a Special by the Product ID<br /><br />This is best used when the page takes too long to render and trying to select a Product from the dropdown becomes difficult due to too many Products from which to choose.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Please enter the Product ID to be Pre-Added: ');
 define('TEXT_INFO_MANUAL', 'Product ID to be Manually Added as a Special');
-?>
+
+define('TEXT_INFO_CATEGORY', 'Global Category Change');
+define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS_CATEGORY', 'GLOBAL CATEGORY CHANGE');
+define('TEXT_INFO_PRE_ADD_INTRO_CATEGORY', 'What changes do you want on all Products in this Category?');
+define('TEXT_INFO_MANUAL_CATEGORY', 'Set Special on all Products in a Category');
+define('TEXT_PRE_ADD_CATEGORY_ID', 'Category ID to set ALL Products on Special:');
+
+define('TEXT_INFO_INCLUDE_SUBCATEGORIES', 'Include Products in ALL subcategories?');
+define('TEXT_SKIP_SUBCATEGORIES', 'Yes, include ALL subcategory Products');
+define('TEXT_SKIP_SUBCATEGORIES_NO', 'No, skip ALL subcategory Products');
+
+define('TEXT_INFO_INCLUDE_INACTIVE', 'Include inactive Products?');
+define('TEXT_SKIP_INACTIVE', 'Yes, include ALL inactive Products');
+define('TEXT_SKIP_INACTIVE_NO', 'No, skip ALL inactive Products');
+
+define('TEXT_INFO_SKIP_SPECIALS', 'Skip changes to products already on Special?');
+define('TEXT_SKIP_SPECIALS_TRUE', 'Yes, skip changes to existing specials');
+define('TEXT_SKIP_SPECIALS_FALSE', 'No, change all products to new special');
+define('TEXT_PRE_ADD_SPECIAL_PRICE','Special Price:');
+define('TEXT_PRE_ADD_SPECIAL_START_DATE', 'Start Date:');
+define('TEXT_PRE_ADD_SPECIAL_END_DATE', 'End Date:');
+define('SPECIALS_DATE_ERROR', '&nbsp;<span class="errorText">(eg. 05/21/1970)</span>');
+define('ERROR_NOTHING_SELECTED_CATEGORY', 'Category ID or Price not set, nothing was changed');
+define('ERROR_NOTHING_SELECTED_CATEGORY_SUB', 'No Products located in Category: %s');
+
+define('TEXT_INFO_MANUAL_CATEGORY_REMOVE', 'Remove specials from all products in Category');
+define('TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_CATEGORY', 'GLOBAL CATEGORY REMOVE SPECIALS');
+define('TEXT_INFO_PRE_REMOVE_INTRO_CATEGORY', 'All Specials will be removed from Category');
+define('TEXT_PRE_REMOVE_CATEGORY_ID', 'Category ID to delete ALL Products on Special');
+
+define('TEXT_INFO_MANUFACTURER', 'Global Manufacturer Change');
+define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS_MANUFACTURER', 'GLOBAL MANUFACTURER CHANGE');
+define('TEXT_INFO_PRE_ADD_INTRO_MANUFACTURER', 'What changes do you want on all Products for this Manufacturer?');
+define('TEXT_INFO_MANUAL_MANUFACTURER', 'Set Special on all Products of a Manufacturer');
+define('TEXT_PRE_ADD_MANUFACTURER_ID', 'Manufacturer ID to set ALL Products on Special:');
+define('ERROR_NOTHING_SELECTED_MANUFACTURER', 'Manufacturer ID or Price not set, nothing was changed');
+define('ERROR_NOTHING_SELECTED_MANUFACTURER_SUB', 'No Products located for Manufacturer: %s');
+
+define('TEXT_INFO_MANUAL_MANUFACTURER_REMOVE', 'Remove specials from all products in Manufacturer');
+define('TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_MANUFACTURER', 'GLOBAL MANUFACTURER REMOVE SPECIALS');
+define('TEXT_INFO_PRE_REMOVE_INTRO_MANUFACTURER', 'All Specials will be removed from Manufacturer');
+define('TEXT_PRE_REMOVE_MANUFACTURER_ID', 'Manufacturer ID to delete ALL Products on Special');
+
+define('SUCCESS_SPECIALS_UPDATED_CATEGORY', 'Specials updated for Category: ');
+define('SUCCESS_SPECIALS_REMOVED_CATEGORY', 'Specials removed for Category: ');
+define('SUCCESS_SPECIALS_UPDATED_MANUFACTURER', 'Specials updated for Manufacturer: ');
+define('SUCCESS_SPECIALS_REMOVED_MANUFACTURER', 'Specials removed for Manufacturer: ');
+
+define('SUCCESS_SPECIALS_UPDATED_MANUFACTURER', 'Specials updated for Manufacturer: ');
+define('SUCCESS_SPECIALS_PRICE_SET', 'Specials set to: ');

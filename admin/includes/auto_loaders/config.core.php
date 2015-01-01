@@ -3,7 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -72,8 +72,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.zcRequest.php');
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                               'className'=>'\\ZenCart\\Platform\\Request',
+                               'objectName'=>'zcRequest');
 
 /**
  * Breakpoint 10.

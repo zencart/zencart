@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.6.0 $
  */
 /**
  * Authorize.net echeck Payment Module
@@ -325,7 +325,7 @@ class authorizenet_echeck extends base {
     $order_time = date("F j, Y, g:i a");
 
     // Calculate the next expected order id
-    $last_order_id = $db->Execute("select * from " . TABLE_ORDERS . " order by orders_id desc limit 1");
+    $last_order_id = $db->Execute("select orders_id from " . TABLE_ORDERS . " order by orders_id desc limit 1");
     $new_order_id = $last_order_id->fields['orders_id'];
     $new_order_id = ($new_order_id + 1);
     $new_order_id = (string)$new_order_id . '-' . zen_create_random_value(6, 'chars');
@@ -607,7 +607,6 @@ class authorizenet_echeck extends base {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_SSLVERSION, 3);
 //   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
 //   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
     if (CURL_PROXY_REQUIRED == 'True') {

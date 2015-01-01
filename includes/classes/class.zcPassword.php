@@ -13,7 +13,6 @@
  * helper class for managing password hashing for different PHP versions
  *
  * Updates admin/customer tables on successful login
- * For php < 5.3.7 uses custom code to create hashes using SHA256 and longer salts
  * For php >= 5.3.7 and < 5.5.0 uses https://github.com/ircmaxell/PHP-PasswordLib
  * For php >= 5.5.0 uses inbuilt php functions
  *
@@ -46,17 +45,15 @@ class zcPassword extends base
    */
   public function __construct($phpVersion = PHP_VERSION)
   {
-    if (version_compare($phpVersion, '5.3.7', '<')) {
-      require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_compat.php');
-    } elseif (version_compare($phpVersion, '5.5.0', '<')) {
-      require_once (DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/password_compat-master/lib/password.php');
+    if (version_compare($phpVersion, '5.5.0', '<')) {
+      require_once realpath(dirname(__FILE__)) . '/vendors/password_compat-master/lib/password.php';
     }
   }
   /**
    * Determine the password type
    *
    * Legacy passwords were hash:salt with a salt of length 2
-   * php < 5.3.7 updated passwords are hash:salt with salt of length > 2
+   * php < 5.3.7 updated passwords were hash:salt with salt of length > 2
    * php >= 5.3.7 passwords are BMCF format
    *
    * @param string $encryptedPassword
@@ -149,7 +146,7 @@ class zcPassword extends base
     $sql = $db->bindVars($sql, ':customersId:', $_SESSION ['customer_id'], 'integer');
     $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
     $db->Execute($sql);
-    return $updatePassword;
+    return $updatedPassword;
   }
   /**
    * Update a not logged in Customer password.

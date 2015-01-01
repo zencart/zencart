@@ -151,9 +151,9 @@
 
 
 /**
- * Return a product's stock count.
+ * Return a product's stock-on-hand
  *
- * @param int The product id of the product who's stock we want
+ * @param int $products_id The product id of the product whose stock we want
 */
   function zen_get_products_stock($products_id) {
     global $db;
@@ -169,23 +169,15 @@
 
 /**
  * Check if the required stock is available.
- *
  * If insufficent stock is available return an out of stock message
  *
- * @param int The product id of the product whos's stock is to be checked
- * @param int Is this amount of stock available
- *
- * @TODO naughty html in a function
+ * @param int $products_id        The product id of the product whose stock is to be checked
+ * @param int $products_quantity  Quantity to compare against
 */
   function zen_check_stock($products_id, $products_quantity) {
     $stock_left = zen_get_products_stock($products_id) - $products_quantity;
-    $out_of_stock = '';
 
-    if ($stock_left < 0) {
-      $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
-    }
-
-    return $out_of_stock;
+    return ($stock_left < 0) ? '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>' : '';
   }
 
 /*
@@ -237,12 +229,7 @@
     }
 
     $attributes = $db->Execute($attributes_query);
-
-    if ($attributes->recordCount() > 0 && $attributes->fields['products_attributes_id'] > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return !($attributes->EOF);
   }
 
 /*
@@ -442,7 +429,7 @@
     if (preg_match('/^txt_/', $option)) {
       $check_attributes = $db->Execute("select attributes_display_only, attributes_required from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . (int)$product_id . "' and options_id='" . (int)preg_replace('/txt_/', '', $option) . "' and options_values_id='0'");
 // text cannot be blank
-      if ($check_attributes->fields['attributes_required'] == '1' && (empty($value) && !is_numeric($value))) {
+      if ($check_attributes->fields['attributes_required'] == '1' && (!zen_not_null($value) && !is_numeric($value))) {
         $check_valid = false;
       }
     }

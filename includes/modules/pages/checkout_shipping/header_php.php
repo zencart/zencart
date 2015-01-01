@@ -3,7 +3,7 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
@@ -47,18 +47,15 @@
   if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
+      $qtyAvailable = zen_get_products_stock($products[$i]['id']);
+      // compare against product inventory, and against mixed=YES
+      if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
         break;
-      } else {
-// extra check on stock for mixed YES
-        if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
-          zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
-          break;
-        }
       }
     }
   }
+
 // if no shipping destination address was selected, use the customers own address as default
   if (!$_SESSION['sendto']) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
@@ -168,7 +165,7 @@ if (isset($_SESSION['cart']->cartID)) {
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
-          if (isset($quote['error'])) {
+          if (isset($quote[0]['error'])) {
             unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {

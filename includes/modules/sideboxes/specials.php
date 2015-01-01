@@ -3,7 +3,7 @@
  * specials sidebox - displays a random product "on special"
  *
  * @package templateSystem
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: specials.php 6475 2007-06-08 21:10:33Z ajeh $
@@ -13,9 +13,9 @@
   $show_specials= false;
 
   if (isset($_GET['products_id'])) {
-    $show_specials= false;
+    $show_specials = false;
   } else {
-    $show_specials= true;
+    $show_specials = true;
   }
 
   if ($show_specials == true) {
@@ -32,7 +32,6 @@
                              and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                              and s.status = 1";
 
-//    $random_specials_sidebox_product = zen_random_select($random_specials_sidebox_product_query);
     $random_specials_sidebox_product = $db->ExecuteRandomMulti($random_specials_sidebox_product_query, MAX_RANDOM_SELECT_SPECIALS);
 
     if ($random_specials_sidebox_product->RecordCount() > 0)  {
@@ -41,5 +40,5 @@
       $title_link = FILENAME_SPECIALS;
       require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default);
     }
+    unset($random_specials_sidebox_product);
   }
-?>

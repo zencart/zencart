@@ -27,10 +27,10 @@
   <?php } ?>
 <?php } ?>
 
-<script src="includes/template/javascript/foundation/custom.modernizr.js"></script>
+<script src="includes/template/javascript/foundation/modernizr.js"></script>
 
 <?php /** CDN for jQuery core **/ ?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.min.js"><\/script>');</script>
 
 <?php /** Load Foundation framework core**/ ?>
@@ -42,7 +42,7 @@
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/jquery-ui.min.css" id="jQueryUIThemeCSS">
 <?php /** CDN for jQuery UI components **/ ?>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 <script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
 
 <script src="includes/template/javascript/jquery-ui-i18n.min.js"></script>

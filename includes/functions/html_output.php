@@ -122,19 +122,7 @@
 
     // Handle parameters passed as an array (using RFC 3986)
     if(is_array($parameters)) {
-      if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
-      }
-      else {
-        $compile = array();
-        foreach($parameters as $key => $value) {
-          // Prior to PHP 5.3, tildes might be encoded per RFC 1738
-          // This should not impact functionality for 99% of users.
-          $compile[] = rawurlencode($key) . '=' . rawurlencode($value);
-        }
-        $parameters = implode('&', $compile);
-        unset($compile);
-      }
+      $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
     }
     else {
       // Clean up parameters (should not start or end with these characters)
@@ -575,10 +563,10 @@
 /*
  *  Output a form hidden field
  */
-  function zen_draw_hidden_field($name, $value = '', $parameters = '') {
+  function zen_draw_hidden_field($name, $value = '~*~*#', $parameters = '') {
     $field = '<input type="hidden" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
 
-    if (zen_not_null($value)) {
+    if (zen_not_null($value) && $value != '~*~*#') {
       $field .= ' value="' . zen_output_string($value) . '"';
     } elseif (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';

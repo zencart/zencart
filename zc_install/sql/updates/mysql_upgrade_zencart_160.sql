@@ -1,5 +1,5 @@
 #
-# * This SQL script upgrades the core Zen Cart database structure from v1.5.2 to v1.6.0
+# * This SQL script upgrades the core Zen Cart database structure from v1.5.4 to v1.6.0
 # *
 # * @package Installer
 # * @access private
@@ -59,7 +59,18 @@ UPDATE configuration set configuration_description = 'Enter the IP port number t
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES ('Search Engines - Disable Indexing', 'ROBOTS_NOINDEX_MAINTENANCE_MODE', 'Normal', 'When in development it is sometimes desirable to discourage search engines from indexing your site. To do that, set this to Maintenance. This will cause a noindex,nofollow tag to be generated on all pages, thus discouraging search engines from indexing your pages until you set this back to Normal.<br>Default: Normal', 1, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'Normal\', \'Maintenance\'),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Primary Source', 'CURRENCY_SERVER_PRIMARY', 'ecb', 'Where to request external currency updates from (Primary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Secondary Source', 'CURRENCY_SERVER_BACKUP', 'boc', 'Where to request external currency updates from (Secondary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Admin Usernames', 'ADMIN_NAME_MINIMUM_LENGTH', '4', 'Minimum length of admin usernames (must be 4 or more)', '2', '18', now());
+
+DELETE FROM configuration WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID';
+
+ALTER TABLE configuration DROP PRIMARY KEY, ADD PRIMARY KEY (configuration_key), DROP INDEX unq_config_key_zen, ADD UNIQUE unq_config_id_zen (configuration_id);
+ALTER TABLE product_type_layout DROP PRIMARY KEY, ADD PRIMARY KEY (configuration_key), DROP INDEX unq_config_key_zen, ADD UNIQUE unq_config_id_zen (configuration_id);
+
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Image - Click For Larger', 'IMAGE_ENABLE_LARGER_IMAGE_LINKS', '1', 'For Product main-image and additional-images, should a clickable link for popup to see larger image be displayed?<br />0= off<br />1= both<br />2=main image only<br />3=additional images only', 4, 76, 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\'), ', now());
+
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show categories Go To dropdown on Categories/Products', 'SHOW_DISPLAY_CATEGORIES_DROPDOWN_STATUS', 'true', 'Show categories Go To dropdown on Categories/Products?', '1', '19', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Set Download directory chmod setting', 'DOWNLOAD_CHMOD', '755', 'Set Download directory chmod setting, 755 is suggested unless you need another setting on your server.', '13', '3', 'zen_cfg_select_option(array(\'777\', \'755\', \'655\', \'644\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Categories with Inactive Products Status', 'CATEGORIES_PRODUCTS_INACTIVE_HIDE', '0', 'Hide Categories with Inactive Products?<br />0= off<br />1= on', 19, 30, 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 
 UPDATE configuration set configuration_group_id = 6 where configuration_key in ('PRODUCTS_OPTIONS_TYPE_SELECT', 'UPLOAD_PREFIX', 'TEXT_PREFIX');
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
@@ -85,6 +96,7 @@ ALTER TABLE coupons ADD coupon_total TINYINT(1) NOT NULL DEFAULT '0';
 ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT '0';
 ALTER TABLE coupons_description MODIFY coupon_name VARCHAR(64) NOT NULL DEFAULT '';
 ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
+ALTER TABLE coupons ADD coupon_is_valid_for_sales TINYINT(1) NOT NULL DEFAULT 1;
 
 ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
 ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '0';
@@ -103,6 +115,9 @@ ALTER TABLE admin MODIFY prev_pass2 VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY prev_pass3 VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY reset_token VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE customers MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE admin ADD mobile_phone VARCHAR(20) NOT NULL DEFAULT '' AFTER admin_email;
+
+ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
 
 
 ##@TODO
@@ -238,6 +253,12 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ('counter-history', 1, 1, 1),
 ('new-orders', 1, 0, 2),
 ('logs', 1, 1, 2);
+
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES ('banner-statistics', 'banner-statistics', 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'Banner Statistics', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'Banner Statistics');
+
 
 # --------------------------------------------------------
 

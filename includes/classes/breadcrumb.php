@@ -1,76 +1,126 @@
 <?php
 /**
- * breadcrumb Class.
+ * Breadcrumb Class
  *
- * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @package   classes
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: breadcrumb.php 3147 2006-03-10 00:43:57Z drbyte $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
+
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 
 /**
- * The following switch simply checks to see if the setting is already defined, and if not, sets it to true
- * If you desire to have the older behaviour of having all product and category items in the breadcrumb be shown as links
- * then you should add a define() for this item in the extra_datafiles folder and set it to 'false' instead of 'true':
- */
-if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM','true');
-
-/**
- * breadcrumb Class.
- * Class to handle page breadcrumbs
+ * Generates breadcrumb links
  *
  * @package classes
  */
-class breadcrumb extends base {
-  var $_trail;
+class Breadcrumb
+{
+    /**
+     * @var string
+     */
+    const DEFAULT_SEPARATOR = '&nbsp;&nbsp;';
 
-  function breadcrumb() {
-    $this->reset();
-  }
+    /**
+     * @var array title: string => link: string
+     */
+    private $links = array();
 
-  function reset() {
-    $this->_trail = array();
-  }
-
-  function add($title, $link = '') {
-    $this->_trail[] = array('title' => $title, 'link' => $link);
-  }
-
-  function trail($separator = '&nbsp;&nbsp;') {
-    global $request_type;
-    $trail_string = '';
-
-    for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
-//    echo 'breadcrumb ' . $i . ' of ' . $n . ': ' . $this->_trail[$i]['title'] . '<br />';
-      $skip_link = false;
-      if ($i==($n-1) && DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM =='true') {
-        $skip_link = true;
-      }
-      if (isset($this->_trail[$i]['link']) && zen_not_null($this->_trail[$i]['link']) && !$skip_link ) {
-        // this line simply sets the "Home" link to be the domain/url, not main_page=index?blahblah:
-        if ($this->_trail[$i]['title'] == HEADER_TITLE_CATALOG) {
-          $trail_string .= '  <a ' . ($i==($n-1) ? 'itemprop="url" ' : '') . 'href="' . ($request_type != 'SSL' ? HTTP_SERVER . DIR_WS_CATALOG : HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) . '">' . $this->_trail[$i]['title'] . '</a>';
-        } else {
-          $trail_string .= '  <a ' . ($i==($n-1) ? 'itemprop="url" ' : '') . 'href="' . $this->_trail[$i]['link'] . '">' . '<span itemprop="title">' . $this->_trail[$i]['title'] . '</span>' . '</a>';
+    /**
+     * @param array $links title: string => link: string
+     */
+    public function __construct(array $links = array())
+    {
+        foreach ($links as $title => $link) {
+            $this->add($title, $link);
         }
-      } else {
-        if ($i==($n-1)) $trail_string .= '  <link itemprop="url" href="' . $this->_trail[$i]['link'] . '" />';
-        $trail_string .= $this->_trail[$i]['title'];
-      }
-
-      if (($i+1) < $n) $trail_string .= $separator;
-      $trail_string .= "\n";
     }
 
-    return $trail_string;
-  }
+    /**
+     * Add a breadcrumb link
+     *
+     * @param  string $title the link title
+     * @param  string $link  the link href
+     * @throws InvalidArgumentException when either title or link are empty
+     */
+    public function add($title, $link = '#')
+    {
+        if (empty($title) || empty($link)) {
+            throw new InvalidArgumentException("Both title and link must not be empty.");
+        }
+        $this->links[(string) $title] = (string) $link;
+    }
 
-  function last() {
-    $trail_size = sizeof($this->_trail);
-    return $this->_trail[$trail_size-1]['title'];
-  }
+    /**
+     * Generate an html breadcrumb string
+     *
+     * @param  string $separator the string that separates each crumb
+     * @return string
+     */
+    public function trail($separator = self::DEFAULT_SEPARATOR)
+    {
+        $trail     = '<nav class="breadcrumb">';
+        $titles    = array_keys($this->links);
+        $lastTitle = end($titles);
+
+        foreach ($this->links as $title => $link) {
+            $trail .= '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" class="crumb">';
+            $href   = $this->buildHref($title, $link);
+            $label  = '<span itemprop="title" class="title">' . $title . '</span>';
+
+            $trail .= ($title == $lastTitle)
+                ? '<link itemprop="url" href="' . $href . '" class="link" />' . $label
+                : '<a itemprop="url" href="' . $href . '" class="link">' . $label . '</a>';
+
+            $trail .= '</span>' . $separator;
+        }
+
+        return rtrim($trail, $separator) . "</nav>\n";
+    }
+
+    /**
+     * @return array title: string => link: string
+     */
+    public function getLinks()
+    {
+        return $this->links;
+    }
+
+    /**
+     * @deprecated
+     * @return string
+     */
+    public function last()
+    {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+        $titles = array_keys($this->links);
+        return end($titles);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->trail();
+    }
+
+    /**
+     * If the crumb title matches the catalog header title, use the appropriate site url
+     *
+     * @param  string $title the crumb title
+     * @param  string $link  the default href
+     * @return string
+     */
+    private function buildHref($title, $link)
+    {
+        global $request_type;
+        if ($title == HEADER_TITLE_CATALOG) {
+            return ($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG;
+        }
+        return $link;
+    }
 }

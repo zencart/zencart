@@ -15,22 +15,32 @@
  */
 define('CWD', getcwd());
 echo "\n\nCWD: " . CWD;
+$commandLineConfig = false;
+if (isset($argc) &&  count($argc) > 0) {
+  $configFile = $argv[0];
+  if (file_exists($configFile)) {
+    require_once($configFile);
+    $commandLineConfig = true;
+  }
+}
 // echo "\n_SERVER:" . print_r($_SERVER, true);
 // sleep(5);
-echo "\nSeeking config file: " . 'testFramework/config/localconfig_' . $_SERVER['USER'] . '.php' . "\n\n";
-if (isset($_SERVER['TRAVIS']) && $_SERVER['TRAVIS'] == 'true' && file_exists('testFramework/config/localconfig_travis.php'))
-{
-  require_once ('testFramework/config/localconfig_travis.php');
-}
-elseif (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php'))
-{
-  require_once ('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php');
-} elseif (file_exists('testFramework/config/localconfig_main.php'))
-{
-  require_once ('testFramework/config/localconfig_main.php');
-} else
-{
-  die('COULD NOT FIND CONFIG FILE');
+if (!$commandLineConfig){
+  echo "\nSeeking config file: " . 'testFramework/config/localconfig_' . $_SERVER['USER'] . '.php' . "\n\n";
+  if (isset($_SERVER['TRAVIS']) && $_SERVER['TRAVIS'] == 'true' && file_exists('testFramework/config/localconfig_travis.php'))
+  {
+   require_once ('testFramework/config/localconfig_travis.php');
+  }
+  elseif (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php'))
+  {
+    require_once ('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php');
+  } elseif (file_exists('testFramework/config/localconfig_main.php'))
+  {
+    require_once ('testFramework/config/localconfig_main.php');
+  } else
+  {
+    die('COULD NOT FIND CONFIG FILE');
+  }
 }
 /**
  * Load class files for test suites

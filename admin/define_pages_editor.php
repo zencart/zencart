@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: define_pages_editor.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -78,6 +78,7 @@
           fwrite($new_file, $file_contents, strlen($file_contents));
           fclose($new_file);
         }
+        zen_record_admin_activity('Define-Page-Editor was used to save changes to file ' . $file, 'info');
         zen_redirect(zen_href_link(FILENAME_DEFINE_PAGES_EDITOR));
       }
       break;

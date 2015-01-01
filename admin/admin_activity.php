@@ -3,10 +3,10 @@
  * Admin Activity Log Viewer/Archiver
  *
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:03:47 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  *
  * @TODO: prettify so on-screen output is more friendly, perhaps adding pagination support etc (using existing "s" and "p" params)
  * @TODO: prettify by hiding postdata until requested, either with hidden layers or other means
@@ -21,14 +21,23 @@ if (! defined('DIR_FS_ADMIN_ACTIVITY_EXPORT')) define('DIR_FS_ADMIN_ACTIVITY_EXP
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $start = (isset($_GET['s']) ? (int)$_GET['s'] : 0);
 $perpage = (isset($_GET['p']) ? (int)$_GET['p'] : 50);
-$available_export_formats[0] = array('id' => '0' , 'text' => 'Export as HTML (ideal for on-screen viewing)', 'format' => 'HTML'); // review on screen
-$available_export_formats[1] = array('id' => '1' , 'text' => 'Export to CSV (ideal for importing to spreadsheets)', 'format' => 'CSV'); // export to CSV
-//  $available_export_formats[2]=array('id' => '2', 'text' => 'Export to TXT', 'format' => 'TXT');
-//  $available_export_formats[3]=array('id' => '3', 'text' => 'Export to XML', 'format' => 'XML');
+$available_export_formats = array();
+$available_export_formats[0] = array('id' => '0' , 'text' => TEXT_EXPORTFORMAT0, 'format' => 'HTML'); // review on screen
+$available_export_formats[1] = array('id' => '1' , 'text' => TEXT_EXPORTFORMAT1, 'format' => 'CSV'); // export to CSV
+//  $available_export_formats[2]=array('id' => '2', 'text' => TEXT_EXPORTFORMAT2, 'format' => 'TXT');
+//  $available_export_formats[3]=array('id' => '3', 'text' => TEXT_EXPORTFORMAT3, 'format' => 'XML');
 $save_to_file_checked = (isset($_POST['savetofile']) && zen_not_null($_POST['savetofile']) ? $_POST['savetofile'] : 0);
 $post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
 $file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . date('Y-m-d_H-i-s') . '.csv');
+$filter_options = array();
+$filter_options[0] = array('id' => '0', 'text' => TEXT_EXPORTFILTER0, 'filter' => 'all');
+$filter_options[1] = array('id' => '1', 'text' => TEXT_EXPORTFILTER1, 'filter' => 'info');
+$filter_options[2] = array('id' => '2', 'text' => TEXT_EXPORTFILTER2, 'filter' => 'notice');
+$filter_options[3] = array('id' => '3', 'text' => TEXT_EXPORTFILTER3, 'filter' => 'warning');
+$filter_options[4] = array('id' => '4', 'text' => TEXT_EXPORTFILTER4, 'filter' => 'notice+warning');
+$post_filter = (isset($_POST['filter']) && (int)$_POST['filter'] >= 0 && (int)$_POST['filter'] < 5) ? (int)$_POST['filter'] : 4;
+$selected_filter = $filter_options[$post_filter]['filter'];
 
 zen_set_time_limit(600);
 
@@ -49,6 +58,9 @@ if ($action != '')
   {
     case 'save':
       global $db;
+
+      zen_record_admin_activity(sprintf(TEXT_ACTIVITY_LOG_ACCESSED, $format, $selected_filter, ($save_to_file_checked ? '(SaveToFile)' : ($format =='HTML' ? '(Output to browser)' : '(Download to browser)'))), 'warning');
+
       if ($format == 'CSV')
       {
         $FIELDSTART = '"';
@@ -77,13 +89,34 @@ if ($action != '')
         $LINEBREAK = "</tr>" . $NL;
         $sort = ' DESC ';
       }
-      $sql = "select a.access_date, a.admin_id, u.admin_name, a.ip_address, a.page_accessed, a.page_parameters, a.gzpost, a.flagged, a.attention
-              FROM " . TABLE_ADMIN_ACTIVITY_LOG . " a LEFT OUTER JOIN " . TABLE_ADMIN . " u ON a.admin_id = u.admin_id ORDER BY access_date " . $sort . $limit;
+
+      $where = '';
+      switch($selected_filter) {
+        case 'warning':
+          $where = " severity='warning'";
+          break;
+        case 'notice+warning':
+          $where = " severity in ('warning','notice')";
+          break;
+        case 'notice':
+          $where = " severity='notice'";
+          break;
+        case 'info':
+          $where = " severity='info'";
+          break;
+        default:
+          $where = '';
+      }
+      if ($where != '') $where = " WHERE " . $where;
+
+      $sql = "select a.access_date, a.admin_id, u.admin_name, a.ip_address, a.page_accessed, a.page_parameters, a.gzpost, a.flagged, a.attention, a.severity, a.logmessage
+              FROM " . TABLE_ADMIN_ACTIVITY_LOG . " a LEFT OUTER JOIN " . TABLE_ADMIN . " u ON a.admin_id = u.admin_id " . $where . " ORDER BY log_id " . $sort . $limit;
       $result = $db->Execute($sql);
       $records = $result->RecordCount();
       if ($records == 0)
       {
-        $messageStack->add("No Records Found.", 'error');
+
+        $messageStack->add_session(TEXT_NO_RECORDS_FOUND, 'error');
       } else
       { //process records
         $i = 0;
@@ -96,11 +129,13 @@ if ($action != '')
         if ($format == "CSV" || $format == "HTML")
         {
           $exporter_output .= $LINESTART;
+          $exporter_output .= $FIELDSTART . "severity" . $FIELDEND;
+          $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "timestamp" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
-          $exporter_output .= $FIELDSTART . "admin_user" . $FIELDEND;
-          $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "ip_address" . $FIELDEND;
+          $exporter_output .= $FIELDSEPARATOR;
+          $exporter_output .= $FIELDSTART . "admin_user" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "page_accessed" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
@@ -109,6 +144,8 @@ if ($action != '')
           $exporter_output .= $FIELDSTART . "flagged" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "attention" . $FIELDEND;
+          $exporter_output .= $FIELDSEPARATOR;
+          $exporter_output .= $FIELDSTART . "logmessage" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
           $exporter_output .= $FIELDSTART . "postdata" . $FIELDEND;
           $exporter_output .= $LINEBREAK;
@@ -128,6 +165,7 @@ if ($action != '')
             $postoutput = nl2br(print_r(json_decode(@gzinflate($result->fields['gzpost'])), true));
             $exporter_output .= "<admin_activity_log>\n";
             $exporter_output .= "  <row>\n";
+            $exporter_output .= "    <severity>" . $result->fields['severity'] . "</severity>\n";
             $exporter_output .= "    <access_date>" . $result->fields['access_date'] . "</access_date>\n";
             $exporter_output .= "    <admin_id>" . $result->fields['admin_id'] . "</admin_id>\n";
             $exporter_output .= "    <admin_name>" . htmlspecialchars($result->fields['admin_name'], ENT_COMPAT, CHARSET, TRUE) . "</admin_name>\n";
@@ -136,6 +174,7 @@ if ($action != '')
             $exporter_output .= "    <page_parameters>" . htmlspecialchars($result->fields['page_parameters'], ENT_COMPAT, CHARSET, TRUE) . "</page_parameters>\n";
             $exporter_output .= "    <flagged>" . htmlspecialchars($result->fields['flagged'], ENT_COMPAT, CHARSET, TRUE) . "</flagged>\n";
             $exporter_output .= "    <attention>" . htmlspecialchars($result->fields['attention'], ENT_COMPAT, CHARSET, TRUE) . "</attention>\n";
+            $exporter_output .= "    <logmessage>" . htmlspecialchars($result->fields['logmessage'], ENT_COMPAT, CHARSET, TRUE) . "</logmessage>\n";
             $exporter_output .= "    <postdata>" . $postoutput . "</postdata>\n";
             $exporter_output .= "  </row>\n";
           } else
@@ -147,11 +186,13 @@ if ($action != '')
               $postoutput = nl2br($postoutput);
             }
             $exporter_output .= $LINESTART;
+            $exporter_output .= $FIELDSTART . $result->fields['severity'] . $FIELDEND;
+            $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['access_date'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
-            $exporter_output .= $FIELDSTART . $result->fields['admin_id'] . ' ' . $result->fields['admin_name'] . $FIELDEND;
-            $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['ip_address'] . $FIELDEND;
+            $exporter_output .= $FIELDSEPARATOR;
+            $exporter_output .= $FIELDSTART . $result->fields['admin_id'] . ' ' . $result->fields['admin_name'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['page_accessed'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
@@ -160,6 +201,8 @@ if ($action != '')
             $exporter_output .= $FIELDSTART . $result->fields['flagged'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result->fields['attention'] . $FIELDEND;
+            $exporter_output .= $FIELDSEPARATOR;
+            $exporter_output .= $FIELDSTART . $result->fields['logmessage'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $postoutput . $FIELDEND;
             $exporter_output .= $LINEBREAK;
@@ -257,16 +300,7 @@ if ($action != '')
     case 'clean_admin_activity_log':
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
-        $db->Execute("truncate table " . TABLE_ADMIN_ACTIVITY_LOG);
-        $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
-        $sql_data_array = array( 'access_date' => 'now()',
-                                 'admin_id' => (isset($_SESSION['admin_id'])) ? (int)$_SESSION['admin_id'] : 0,
-                                 'page_accessed' =>  'Log reset by ' . $admname . '.',
-                                 'page_parameters' => '',
-                                 'gzpost' => '',
-                                 'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45)
-                                 );
-        zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+        $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_RESET');
         $messageStack->add_session(SUCCESS_CLEAN_ADMIN_ACTIVITY_LOG, 'success');
         unset($_SESSION['reset_admin_activity_log']);
         zen_redirect(zen_href_link(FILENAME_ADMIN_ACTIVITY));
@@ -317,6 +351,12 @@ require (DIR_WS_INCLUDES . 'header.php');
             <td class="main" colspan="2"><?php echo TEXT_INSTRUCTIONS; ?></td>
           </tr>
           <tr>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILTER; ?></strong><br /><?php echo zen_draw_pull_down_menu('filter', $filter_options, $post_filter); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
             <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br /><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
           </tr>
           <tr>
@@ -336,6 +376,7 @@ require (DIR_WS_INCLUDES . 'header.php');
           <tr>
             <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
+        <tr><td><div style="width:100%;max-width:800px"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></div></td></tr>
         </table>
         </td>
         </form>
