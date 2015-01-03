@@ -72,7 +72,7 @@ if ($tplVars['messageStack']->size > 0) {
     echo '&nbsp;' . date("O" , time()) . ' GMT';  // time zone
     echo '&nbsp;[' . $_SERVER['REMOTE_ADDR'] . ']'; // current admin user's IP address
     echo '<br />';
-    echo @shell_exec('hostname'); //what server am I working on?
+    echo @gethostname(); //what server am I working on?
     echo ' - ' . date_default_timezone_get(); //what is the PHP timezone set to?
     $loc = setlocale(LC_TIME, 0);
     if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
