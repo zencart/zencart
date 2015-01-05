@@ -95,7 +95,7 @@ class zcObserverLogWriterDatabase extends base {
     }
     if (!$found_logmessage)
     {
-      $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " ADD COLUMN logmessage mediumtext NOT NULL default ''";
+      $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " ADD COLUMN logmessage mediumtext NOT NULL";
       $db->Execute($sql);
     }
     // add 'severity' field of type varchar(9)

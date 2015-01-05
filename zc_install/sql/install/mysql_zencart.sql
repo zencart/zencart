@@ -124,7 +124,7 @@ CREATE TABLE admin_activity_log (
   flagged tinyint NOT NULL default '0',
   attention varchar(255) NOT NULL default '',
   gzpost mediumblob,
-  logmessage mediumtext NOT NULL default '',
+  logmessage mediumtext NOT NULL,
   severity varchar(9) NOT NULL default 'info',
   PRIMARY KEY  (log_id),
   KEY idx_page_accessed_zen (page_accessed),
