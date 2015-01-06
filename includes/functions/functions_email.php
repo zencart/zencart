@@ -734,7 +734,7 @@
    * @param string $customers_id
    * return string
    */
-  function zen_customers_email($customers_id) {
+  function zen_get_email_from_customers_id($customers_id) {
     global $db;
     $customers_values = $db->Execute("select customers_email_address
                                from " . TABLE_CUSTOMERS . "
