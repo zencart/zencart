@@ -73,11 +73,13 @@ class queryFactory extends base {
           }
         }
         $this->db_connected = true;
+        // Set time zone to match PHP, unless disabled by this constant
         if (!defined('DISABLE_MYSQL_TZ_SET')) {
           mysqli_query($this->link, "SET time_zone = '" . substr_replace(date("O"),":",-2,0) . "'");
         }
+        // Set MySQL mode, if one is defined before execution. Ref: https://dev.mysql.com/doc/refman/5.6/en/sql-mode.html (must be only A-Z or _ or , characters)
         if (defined('DB_MYSQL_MODE') && DB_MYSQL_MODE != '') {
-          mysqli_query($this->link, "SET SESSION sql_mode = '" . $this->prepare_input(DB_MYSQL_MODE) . "'");
+          mysqli_query($this->link, "SET SESSION sql_mode = '" . preg_replace('/[^A-Z_,]/', '', DB_MYSQL_MODE) . "'");
         }
         return true;
       } else {
