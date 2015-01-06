@@ -6,7 +6,7 @@
  * Displays information related to a single specific order
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
@@ -53,7 +53,7 @@ if (isset($_POST['action']) && $_POST['action'] == "process" && ($errorInvalidID
           <td class="accountProductDisplay"><?php echo  $order->products[$i]['name'];
 
       if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
-        echo '<ul id="orderAttribsList">';
+        echo '<ul class="orderAttribsList">';
         for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
           echo '<li>' . $order->products[$i]['attributes'][$j]['option'] . TEXT_OPTION_DIVIDER . nl2br($order->products[$i]['attributes'][$j]['value']) . '</li>';
         }
