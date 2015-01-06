@@ -646,7 +646,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
             upgrade_exception_id smallint(5) NOT NULL auto_increment,
             sql_file varchar(50) default NULL,
             reason varchar(200) default NULL,
-            errordate datetime default '0001-01-01 00:00:00',
+            errordate datetime default '1970-01-01 00:00:01',
             sqlstatement text, PRIMARY KEY  (upgrade_exception_id)
           )");
     return $result;

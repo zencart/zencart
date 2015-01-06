@@ -131,13 +131,13 @@
           $master_categories_id = $_POST['master_categories_id'];
         }
 
-        $products_date_available = ((zen_db_prepare_input($_POST['product_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['product_start']));
+        $products_date_available = ((zen_db_prepare_input($_POST['product_start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['product_start']));
 
-        $specials_date_available = ((zen_db_prepare_input($_POST['special_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_start']));
-        $specials_expires_date = ((zen_db_prepare_input($_POST['special_end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_end']));
+        $specials_date_available = ((zen_db_prepare_input($_POST['special_start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['special_start']));
+        $specials_expires_date = ((zen_db_prepare_input($_POST['special_end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['special_end']));
 
-        $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['featured_start']));
-        $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['featured_end']));
+        $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['featured_start']));
+        $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['featured_end']));
 
         $tmp_value = zen_db_prepare_input($_POST['products_price_sorter']);
         $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
@@ -671,7 +671,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
           <tr>
             <td class="main" width="200"><?php echo TEXT_PRODUCTS_PRICE_INFO; ?></td>
             <td class="main"><?php echo TEXT_PRICE . '<br />' . zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : '')); ?></td>
-            <td class="main"><?php echo TEXT_PRODUCT_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('product_start', (($pInfo->products_date_available <= '0001-01-01') ? '' : zen_date_short($pInfo->products_date_available)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_PRODUCT_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('product_start', (($pInfo->products_date_available <= '1970-01-01') ? '' : zen_date_short($pInfo->products_date_available)), 'class="datepicker"'); ?></td>
             <td colspan="2" class="main"><?php echo zen_draw_radio_field('products_status', '1', $products_in_status) . '&nbsp;' . TEXT_PRODUCT_AVAILABLE . '<br />' . zen_draw_radio_field('products_status', '0', $products_out_status) . '&nbsp;' . TEXT_PRODUCT_NOT_AVAILABLE; ?></td>
           </tr>
 
@@ -731,8 +731,8 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
           <tr>
             <td class="main" width="200"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></td>
             <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_PRICE . '<br />' . zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : '')); ?></td>
-            <td class="main"><?php echo TEXT_SPECIALS_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('special_start', (($sInfo->specials_date_available <= '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)), 'class="datepicker"'); ?></td>
-            <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?><br /><?php echo zen_draw_input_field('special_end', (($sInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_SPECIALS_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('special_start', (($sInfo->specials_date_available <= '1970-01-01') ? '' : zen_date_short($sInfo->specials_date_available)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?><br /><?php echo zen_draw_input_field('special_end', (($sInfo->expires_date <= '1970-01-01') ? '' : zen_date_short($sInfo->expires_date)), 'class="datepicker"'); ?></td>
             <td class="main"><?php echo TEXT_SPECIALS_PRODUCTS_STATUS; ?><br />
               <?php echo zen_draw_radio_field('special_status', '1', $special_in_status) . '&nbsp;' . TEXT_SPECIALS_PRODUCT_AVAILABLE . '&nbsp;' . zen_draw_radio_field('special_status', '0', $special_out_status) . '&nbsp;' . TEXT_SPECIALS_PRODUCT_NOT_AVAILABLE; ?>
             </td>
@@ -776,8 +776,8 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
         <td><br><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" width="200"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></td>
-            <td class="main"><?php echo TEXT_FEATURED_AVAILABLE_DATE ; ?><br /><?php echo zen_draw_input_field('featured_start', (($fInfo->featured_date_available <= '0001-01-01') ? '' : zen_date_short($fInfo->featured_date_available)), 'class="datepicker"'); ?></td>
-            <td class="main"><?php echo TEXT_FEATURED_EXPIRES_DATE; ?><br /><?php echo zen_draw_input_field('featured_end', (($fInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($fInfo->expires_date)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_FEATURED_AVAILABLE_DATE ; ?><br /><?php echo zen_draw_input_field('featured_start', (($fInfo->featured_date_available <= '1970-01-01') ? '' : zen_date_short($fInfo->featured_date_available)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo TEXT_FEATURED_EXPIRES_DATE; ?><br /><?php echo zen_draw_input_field('featured_end', (($fInfo->expires_date <= '1970-01-01') ? '' : zen_date_short($fInfo->expires_date)), 'class="datepicker"'); ?></td>
             <td class="main"><?php echo TEXT_FEATURED_PRODUCTS_STATUS; ?><br />
               <?php echo zen_draw_radio_field('featured_status', '1', $featured_in_status) . '&nbsp;' . TEXT_FEATURED_PRODUCT_AVAILABLE . '&nbsp;' . zen_draw_radio_field('featured_status', '0', $featured_out_status) . '&nbsp;' . TEXT_FEATURED_PRODUCT_NOT_AVAILABLE; ?>
             </td>

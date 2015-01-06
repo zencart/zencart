@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: salemaker_popup.php 5498 2007-01-01 04:10:07Z ajeh $
@@ -51,8 +51,8 @@
                 <td  class="dataTableContent" align="left"><?php echo $salemaker_sales->fields['sale_name']; ?></td>
                 <td  class="dataTableContent" align="right"><?php echo $salemaker_sales->fields['sale_deduction_value']; ?></td>
                 <td  class="dataTableContent" align="left"><?php echo $deduction_type_array[$salemaker_sales->fields['sale_deduction_type']]['text']; ?></td>
-                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_start'] == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sales->fields['sale_date_start'])); ?></td>
-                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_end'] == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sales->fields['sale_date_end'])); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_start'] == '1970-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sales->fields['sale_date_start'])); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_end'] == '1970-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sales->fields['sale_date_end'])); ?></td>
                 <td  class="dataTableContent" align="center">
 <?php
       if ($salemaker_sales->fields['sale_status'] == '1') {

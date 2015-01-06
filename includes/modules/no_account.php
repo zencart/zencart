@@ -3,7 +3,7 @@
  * no_account.php
  *
  * @package modules
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2007 Joseph Schilz
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -32,11 +32,11 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $process = true;
-  
+
   /** COWOA - If CART Total is 0, skip all but E-Mail Checks */
-  
+
  if ($_SESSION['cart']->show_total() != 0 || COWOA_EMAIL_ONLY == 'false') {
-  
+
      if (ACCOUNT_GENDER == 'true') {
     if (isset($_POST['gender'])) {
       $gender = zen_db_prepare_input($_POST['gender']);
@@ -49,7 +49,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $firstname = zen_db_prepare_input($_POST['firstname']);
   $lastname = zen_db_prepare_input($_POST['lastname']);
   $nick = zen_db_prepare_input($_POST['nick']);
-  if (ACCOUNT_DOB == 'true') $dob = (empty($_POST['dob']) ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['dob']));
+  if (ACCOUNT_DOB == 'true') $dob = (empty($_POST['dob']) ? zen_db_prepare_input('1970-01-01 00:00:01') : zen_db_prepare_input($_POST['dob']));
   $street_address = zen_db_prepare_input($_POST['street_address']);
   if (ACCOUNT_SUBURB == 'true') $suburb = zen_db_prepare_input($_POST['suburb']);
   $postcode = zen_db_prepare_input($_POST['postcode']);
@@ -133,7 +133,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $zone_query = "SELECT distinct zone_id, zone_name, zone_code
                      FROM " . TABLE_ZONES . "
                      WHERE zone_country_id = :zoneCountryID
-                     AND " . 
+                     AND " .
                      ((trim($state) != '' && $zone_id == 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
                     "zone_id = :zoneID
                      ORDER BY zone_code ASC, zone_name";
@@ -186,11 +186,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
     $messageStack->add('no_account', ENTRY_TELEPHONE_NUMBER_ERROR);
   }
-/* COWOA - End of CART Totals = 0 */ 
+/* COWOA - End of CART Totals = 0 */
  }
- 
+
   $email_address = zen_db_prepare_input($_POST['email_address']);
-  
+
   if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
     $error = true;
     $messageStack->add('no_account', ENTRY_EMAIL_ADDRESS_ERROR);
@@ -209,10 +209,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $messageStack->add('no_account', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
     }
   }
-  
+
 /* COWOA - Set all fields to No_Account for free products */
 if ($_SESSION['cart']->show_total() == 0 and COWOA_EMAIL_ONLY == 'true') {
-    
+
 $company = No_Account;
 $firstname = No_Account;
 $lastname = No_Account;
@@ -221,15 +221,15 @@ $street_address = No_Account;
 $suburb = No_Account;
 $city = No_Account;
 $postcode = 33333;
-$dob = '0001-01-01 00:00:00';
+$dob = '1970-01-01 00:00:01';
 $state = Florida;
 $country = 223;
 $telephone = 5555551212;
 $fax = 5555551212;
 $customers_referrals = No_Account;
 $gender = m;
-} 
- 
+}
+
   $password=zen_create_random_value(15, 'mixed');
 
   if ($error == true) {
@@ -255,7 +255,7 @@ $gender = m;
 
     if ((CUSTOMERS_REFERRAL_STATUS == '2' and $customers_referral != '')) $sql_data_array['customers_referral'] = $customers_referral;
     if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-    if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = (empty($_POST['dob']) || $dob_entered == '0001-01-01 00:00:00' ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']));
+    if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = (empty($_POST['dob']) || $dob_entered == '1970-01-01 00:00:01' ? zen_db_prepare_input('1970-01-01 00:00:01') : zen_date_raw($_POST['dob']));
 
     zen_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
@@ -315,12 +315,12 @@ $gender = m;
 
     // hook notifier class
     $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_NO_ACCOUNT');
-    
+
 
     if ($_SESSION['cart']->count_contents() > 0)
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     else
-      zen_redirect(zen_href_link(FILENAME_SHOPPING_CART)); 
+      zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
   } //endif !error
 }
 

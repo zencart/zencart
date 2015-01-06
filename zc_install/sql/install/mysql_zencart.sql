@@ -31,7 +31,7 @@ CREATE TABLE upgrade_exceptions (
   upgrade_exception_id smallint(5) NOT NULL auto_increment,
   sql_file varchar(50) default NULL,
   reason varchar(200) default NULL,
-  errordate datetime default '0001-01-01 00:00:00',
+  errordate datetime default '1970-01-01 00:00:01',
   sqlstatement text,
   PRIMARY KEY  (upgrade_exception_id)
 ) ENGINE=MyISAM;
@@ -92,14 +92,14 @@ CREATE TABLE admin (
   prev_pass1 varchar(255) NOT NULL default '',
   prev_pass2 varchar(255) NOT NULL default '',
   prev_pass3 varchar(255) NOT NULL default '',
-  pwd_last_change_date datetime NOT NULL default '0000-00-00 00:00:00',
+  pwd_last_change_date datetime NOT NULL default '1970-01-01 00:00:01',
   reset_token varchar(255) NOT NULL default '',
-  last_modified datetime NOT NULL default '0000-00-00 00:00:00',
-  last_login_date datetime NOT NULL default '0000-00-00 00:00:00',
+  last_modified datetime NOT NULL default '1970-01-01 00:00:01',
+  last_login_date datetime NOT NULL default '1970-01-01 00:00:01',
   last_login_ip varchar(45) NOT NULL default '',
   failed_logins smallint(4) unsigned NOT NULL default '0',
   lockout_expires int(11) NOT NULL default '0',
-  last_failed_attempt datetime NOT NULL default '0000-00-00 00:00:00',
+  last_failed_attempt datetime NOT NULL default '1970-01-01 00:00:01',
   last_failed_ip varchar(45) NOT NULL default '',
   PRIMARY KEY  (admin_id),
   KEY idx_admin_name_zen (admin_name),
@@ -116,7 +116,7 @@ CREATE TABLE admin (
 DROP TABLE IF EXISTS admin_activity_log;
 CREATE TABLE admin_activity_log (
   log_id bigint(15) NOT NULL auto_increment,
-  access_date datetime NOT NULL default '0001-01-01 00:00:00',
+  access_date datetime NOT NULL default '1970-01-01 00:00:01',
   admin_id int(11) NOT NULL default '0',
   page_accessed varchar(80) NOT NULL default '',
   page_parameters text,
@@ -231,7 +231,7 @@ CREATE TABLE banners (
   expires_impressions int(7) default '0',
   expires_date datetime default NULL,
   date_scheduled datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   date_status_change datetime default NULL,
   status int(1) NOT NULL default '1',
   banners_open_new_windows int(1) NOT NULL default '1',
@@ -256,7 +256,7 @@ CREATE TABLE banners_history (
   banners_id int(11) NOT NULL default '0',
   banners_shown int(5) NOT NULL default '0',
   banners_clicked int(5) NOT NULL default '0',
-  banners_history_date datetime NOT NULL default '0001-01-01 00:00:00',
+  banners_history_date datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (banners_history_id),
   KEY idx_banners_id_zen (banners_id)
 ) ENGINE=MyISAM;
@@ -314,7 +314,7 @@ CREATE TABLE configuration (
   configuration_group_id int(11) NOT NULL default '0',
   sort_order int(5) default NULL,
   last_modified datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   use_function text default NULL,
   set_function text default NULL,
   PRIMARY KEY  (configuration_key),
@@ -402,7 +402,7 @@ CREATE TABLE coupon_email_track (
   sent_firstname varchar(32) default NULL,
   sent_lastname varchar(32) default NULL,
   emailed_to varchar(32) default NULL,
-  date_sent datetime NOT NULL default '0001-01-01 00:00:00',
+  date_sent datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (unique_id),
   KEY idx_coupon_id_zen (coupon_id)
 ) ENGINE=MyISAM;
@@ -432,7 +432,7 @@ CREATE TABLE coupon_gv_queue (
   customer_id int(5) NOT NULL default '0',
   order_id int(5) NOT NULL default '0',
   amount decimal(15,4) NOT NULL default '0.0000',
-  date_created datetime NOT NULL default '0001-01-01 00:00:00',
+  date_created datetime NOT NULL default '1970-01-01 00:00:01',
   ipaddr varchar(45) NOT NULL default '',
   release_flag char(1) NOT NULL default 'N',
   PRIMARY KEY  (unique_id),
@@ -451,7 +451,7 @@ CREATE TABLE coupon_redeem_track (
   unique_id int(11) NOT NULL auto_increment,
   coupon_id int(11) NOT NULL default '0',
   customer_id int(11) NOT NULL default '0',
-  redeem_date datetime NOT NULL default '0001-01-01 00:00:00',
+  redeem_date datetime NOT NULL default '1970-01-01 00:00:01',
   redeem_ip varchar(45) NOT NULL default '',
   order_id int(11) NOT NULL default '0',
   PRIMARY KEY  (unique_id),
@@ -488,16 +488,16 @@ CREATE TABLE coupons (
   coupon_code varchar(32) NOT NULL default '',
   coupon_amount decimal(15,4) NOT NULL default '0.0000',
   coupon_minimum_order decimal(15,4) NOT NULL default '0.0000',
-  coupon_start_date datetime NOT NULL default '0001-01-01 00:00:00',
-  coupon_expire_date datetime NOT NULL default '0001-01-01 00:00:00',
+  coupon_start_date datetime NOT NULL default '1970-01-01 00:00:01',
+  coupon_expire_date datetime NOT NULL default '1970-01-01 00:00:01',
   uses_per_coupon int(5) NOT NULL default '1',
   uses_per_user int(5) NOT NULL default '0',
   restrict_to_products varchar(255) default NULL,
   restrict_to_categories varchar(255) default NULL,
   restrict_to_customers text,
   coupon_active char(1) NOT NULL default 'Y',
-  date_created datetime NOT NULL default '0001-01-01 00:00:00',
-  date_modified datetime NOT NULL default '0001-01-01 00:00:00',
+  date_created datetime NOT NULL default '1970-01-01 00:00:01',
+  date_modified datetime NOT NULL default '1970-01-01 00:00:01',
   coupon_zone_restriction int(11) NOT NULL default '0',
   coupon_total tinyint(1) NOT NULL DEFAULT '0',
   coupon_order_limit int(4) NOT NULL default '0',
@@ -556,7 +556,7 @@ CREATE TABLE customers (
   customers_gender char(1) NOT NULL default '',
   customers_firstname varchar(32) NOT NULL default '',
   customers_lastname varchar(32) NOT NULL default '',
-  customers_dob datetime NOT NULL default '0001-01-01 00:00:00',
+  customers_dob datetime NOT NULL default '1970-01-01 00:00:01',
   customers_email_address varchar(96) NOT NULL default '',
   customers_nick varchar(96) NOT NULL default '',
   customers_default_address_id int(11) NOT NULL default '0',
@@ -733,7 +733,7 @@ CREATE TABLE email_archive (
   email_subject varchar(255) NOT NULL default '',
   email_html text NOT NULL,
   email_text text NOT NULL,
-  date_sent datetime NOT NULL default '0001-01-01 00:00:00',
+  date_sent datetime NOT NULL default '1970-01-01 00:00:01',
   module varchar(64) NOT NULL default '',
   PRIMARY KEY  (archive_id),
   KEY idx_email_to_address_zen (email_to_address),
@@ -786,10 +786,10 @@ CREATE TABLE featured (
   products_id int(11) NOT NULL default '0',
   featured_date_added datetime default NULL,
   featured_last_modified datetime default NULL,
-  expires_date date NOT NULL default '0001-01-01',
+  expires_date date NOT NULL default '1970-01-01',
   date_status_change datetime default NULL,
   status int(1) NOT NULL default '1',
-  featured_date_available date NOT NULL default '0001-01-01',
+  featured_date_available date NOT NULL default '1970-01-01',
   PRIMARY KEY  (featured_id),
   KEY idx_status_zen (status),
   KEY idx_products_id_zen (products_id),
@@ -825,7 +825,7 @@ CREATE TABLE geo_zones (
   geo_zone_name varchar(32) NOT NULL default '',
   geo_zone_description varchar(255) NOT NULL default '',
   last_modified datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (geo_zone_id)
 ) ENGINE=MyISAM;
 
@@ -854,7 +854,7 @@ CREATE TABLE group_pricing (
   group_name varchar(32) NOT NULL default '',
   group_percentage decimal(5,2) NOT NULL default '0.00',
   last_modified datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (group_id)
 ) ENGINE=MyISAM;
 
@@ -998,8 +998,8 @@ CREATE TABLE media_clips (
   media_id int(11) NOT NULL default '0',
   clip_type smallint(6) NOT NULL default '0',
   clip_filename text NOT NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
+  last_modified datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (clip_id),
   KEY idx_media_id_zen (media_id),
   KEY idx_clip_type_zen (clip_type)
@@ -1015,8 +1015,8 @@ DROP TABLE IF EXISTS media_manager;
 CREATE TABLE media_manager (
   media_id int(11) NOT NULL auto_increment,
   media_name varchar(255) NOT NULL default '',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  last_modified datetime NOT NULL default '1970-01-01 00:00:01',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (media_id),
   KEY idx_media_name_zen (media_name)
 ) ENGINE=MyISAM;
@@ -1112,7 +1112,7 @@ CREATE TABLE newsletters (
   content text NOT NULL,
   content_html text NOT NULL,
   module varchar(255) NOT NULL default '',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   date_sent datetime default NULL,
   status int(1) default NULL,
   locked int(1) default '0',
@@ -1308,7 +1308,7 @@ CREATE TABLE orders_status_history (
   orders_status_history_id int(11) NOT NULL auto_increment,
   orders_id int(11) NOT NULL default '0',
   orders_status_id int(5) NOT NULL default '0',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   customer_notified int(1) default '0',
   comments text,
   PRIMARY KEY  (orders_status_history_id),
@@ -1367,7 +1367,7 @@ CREATE TABLE paypal (
   payer_email varchar(128) NOT NULL default '',
   payer_id varchar(32) NOT NULL default '',
   payer_status varchar(10) NOT NULL default '',
-  payment_date datetime NOT NULL default '0001-01-01 00:00:00',
+  payment_date datetime NOT NULL default '1970-01-01 00:00:01',
   business varchar(128) NOT NULL default '',
   receiver_email varchar(128) NOT NULL default '',
   receiver_id varchar(32) NOT NULL default '',
@@ -1383,8 +1383,8 @@ CREATE TABLE paypal (
   exchange_rate decimal(4,2) default NULL,
   notify_version varchar(6) NOT NULL default '',
   verify_sign varchar(128) NOT NULL default '',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  last_modified datetime NOT NULL default '1970-01-01 00:00:01',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   memo text,
   PRIMARY KEY (paypal_ipn_id,txn_id),
   KEY idx_order_id_zen (order_id)
@@ -1429,7 +1429,7 @@ CREATE TABLE paypal_payment_status_history (
   parent_txn_id varchar(64) NOT NULL default '',
   payment_status varchar(17) NOT NULL default '',
   pending_reason varchar(32) default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY (payment_status_history_id),
   KEY idx_paypal_ipn_id_zen (paypal_ipn_id)
 ) ENGINE=MyISAM;
@@ -1483,7 +1483,7 @@ CREATE TABLE paypal_testing (
   payer_email varchar(128) NOT NULL default '',
   payer_id varchar(32) NOT NULL default '',
   payer_status varchar(10) NOT NULL default '',
-  payment_date datetime NOT NULL default '0001-01-01 00:00:00',
+  payment_date datetime NOT NULL default '1970-01-01 00:00:01',
   business varchar(128) NOT NULL default '',
   receiver_email varchar(128) NOT NULL default '',
   receiver_id varchar(32) NOT NULL default '',
@@ -1499,8 +1499,8 @@ CREATE TABLE paypal_testing (
   exchange_rate decimal(4,2) default NULL,
   notify_version decimal(2,1) NOT NULL default '0.0',
   verify_sign varchar(128) NOT NULL default '',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  last_modified datetime NOT NULL default '1970-01-01 00:00:01',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   memo text,
   PRIMARY KEY  (paypal_ipn_id,txn_id),
   KEY idx_order_id_zen (order_id)
@@ -1540,7 +1540,7 @@ CREATE TABLE product_type_layout (
   product_type_id int(11) NOT NULL default '0',
   sort_order int(5) default NULL,
   last_modified datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   use_function text default NULL,
   set_function text default NULL,
   PRIMARY KEY  (configuration_key),
@@ -1563,8 +1563,8 @@ CREATE TABLE product_types (
   type_master_type int(11) NOT NULL default '1',
   allow_add_to_cart char(1) NOT NULL default 'Y',
   default_image varchar(255) NOT NULL default '',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
+  last_modified datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (type_id),
   KEY idx_type_master_type_zen (type_master_type)
 ) ENGINE=MyISAM;
@@ -1599,7 +1599,7 @@ CREATE TABLE products (
   products_image varchar(64) default NULL,
   products_price decimal(15,4) NOT NULL default '0.0000',
   products_virtual tinyint(1) NOT NULL default '0',
-  products_date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  products_date_added datetime NOT NULL default '1970-01-01 00:00:01',
   products_last_modified datetime default NULL,
   products_date_available datetime default NULL,
   products_weight float NOT NULL default '0',
@@ -1735,7 +1735,7 @@ DROP TABLE IF EXISTS products_notifications;
 CREATE TABLE products_notifications (
   products_id int(11) NOT NULL default '0',
   customers_id int(11) NOT NULL default '0',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (products_id,customers_id)
 ) ENGINE=MyISAM;
 
@@ -1841,7 +1841,7 @@ CREATE TABLE project_version (
   project_version_patch1_source varchar(20) NOT NULL default '',
   project_version_patch2_source varchar(20) NOT NULL default '',
   project_version_comment varchar(250) NOT NULL default '',
-  project_version_date_applied datetime NOT NULL default '0001-01-01 01:01:01',
+  project_version_date_applied datetime NOT NULL default '1970-01-01 01:01:01',
   PRIMARY KEY  (project_version_id),
   UNIQUE KEY idx_project_version_key_zen (project_version_key)
 ) ENGINE=MyISAM COMMENT='Database Version Tracking';
@@ -1860,7 +1860,7 @@ CREATE TABLE project_version_history (
   project_version_minor varchar(20) NOT NULL default '',
   project_version_patch varchar(20) NOT NULL default '',
   project_version_comment varchar(250) NOT NULL default '',
-  project_version_date_applied datetime NOT NULL default '0001-01-01 01:01:01',
+  project_version_date_applied datetime NOT NULL default '1970-01-01 01:01:01',
   PRIMARY KEY  (project_version_id)
 ) ENGINE=MyISAM COMMENT='Database Version Tracking History';
 
@@ -2004,11 +2004,11 @@ CREATE TABLE salemaker_sales (
   sale_specials_condition tinyint(4) NOT NULL default '0',
   sale_categories_selected text,
   sale_categories_all text,
-  sale_date_start date NOT NULL default '0001-01-01',
-  sale_date_end date NOT NULL default '0001-01-01',
-  sale_date_added date NOT NULL default '0001-01-01',
-  sale_date_last_modified date NOT NULL default '0001-01-01',
-  sale_date_status_change date NOT NULL default '0001-01-01',
+  sale_date_start date NOT NULL default '1970-01-01',
+  sale_date_end date NOT NULL default '1970-01-01',
+  sale_date_added date NOT NULL default '1970-01-01',
+  sale_date_last_modified date NOT NULL default '1970-01-01',
+  sale_date_status_change date NOT NULL default '1970-01-01',
   PRIMARY KEY  (sale_id),
   KEY idx_sale_status_zen (sale_status),
   KEY idx_sale_date_start_zen (sale_date_start),
@@ -2042,10 +2042,10 @@ CREATE TABLE specials (
   specials_new_products_price decimal(15,4) NOT NULL default '0.0000',
   specials_date_added datetime default NULL,
   specials_last_modified datetime default NULL,
-  expires_date date NOT NULL default '0001-01-01',
+  expires_date date NOT NULL default '1970-01-01',
   date_status_change datetime default NULL,
   status int(1) NOT NULL default '1',
-  specials_date_available date NOT NULL default '0001-01-01',
+  specials_date_available date NOT NULL default '1970-01-01',
   PRIMARY KEY  (specials_id),
   KEY idx_status_zen (status),
   KEY idx_products_id_zen (products_id),
@@ -2065,7 +2065,7 @@ CREATE TABLE tax_class (
   tax_class_title varchar(32) NOT NULL default '',
   tax_class_description varchar(255) NOT NULL default '',
   last_modified datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (tax_class_id)
 ) ENGINE=MyISAM;
 
@@ -2084,7 +2084,7 @@ CREATE TABLE tax_rates (
   tax_rate decimal(7,4) NOT NULL default '0.0000',
   tax_description varchar(255) NOT NULL default '',
   last_modified datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (tax_rates_id),
   KEY idx_tax_zone_id_zen (tax_zone_id),
   KEY idx_tax_class_id_zen (tax_class_id)
@@ -2161,7 +2161,7 @@ CREATE TABLE zones_to_geo_zones (
   zone_id int(11) default NULL,
   geo_zone_id int(11) default NULL,
   last_modified datetime default NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+  date_added datetime NOT NULL default '1970-01-01 00:00:01',
   PRIMARY KEY  (association_id),
   KEY idx_zones_zen (geo_zone_id,zone_country_id,zone_id)
 ) ENGINE=MyISAM;
@@ -2352,8 +2352,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show if version update available', 'SHOW_VERSION_UPDATE_IN_HEADER', 'true', 'Automatically check to see if a new version of Zen Cart is available. Enabling this can sometimes slow down the loading of Admin pages. (Displayed on main Index page after login, and Server Info page.)', 1, 44, 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Store Status', 'STORE_STATUS', '0', 'What is your Store Status<br />0= Normal Store<br />1= Showcase no prices<br />2= Showcase with prices', '1', '25', 'zen_cfg_select_option(array(\'0\', \'1\', \'2\'), ', now());
 
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Server Uptime', 'DISPLAY_SERVER_UPTIME', 'true', 'Displaying Server uptime can cause entries in error logs on some servers. (true = Display, false = don\'t display)', 1, 46, '2003-11-08 20:24:47', '0001-01-01 00:00:00', '', 'zen_cfg_select_option(array(\'true\', \'false\'),');
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Missing Page Check', 'MISSING_PAGE_CHECK', 'Page Not Found', 'Zen Cart can check for missing pages in the URL and redirect to Index page. For debugging you may want to turn this off. <br /><br /><strong>Default=On</strong><br />On = Send missing pages to \'index\'<br />Off = Don\'t check for missing pages<br />Page Not Found = display the Page-Not-Found page', 1, 48, '2003-11-08 20:24:47', '0001-01-01 00:00:00', '', 'zen_cfg_select_option(array(\'On\', \'Off\', \'Page Not Found\'),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Server Uptime', 'DISPLAY_SERVER_UPTIME', 'true', 'Displaying Server uptime can cause entries in error logs on some servers. (true = Display, false = don\'t display)', 1, 46, '2003-11-08 20:24:47', '1970-01-01 00:00:01', '', 'zen_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Missing Page Check', 'MISSING_PAGE_CHECK', 'Page Not Found', 'Zen Cart can check for missing pages in the URL and redirect to Index page. For debugging you may want to turn this off. <br /><br /><strong>Default=On</strong><br />On = Send missing pages to \'index\'<br />Off = Don\'t check for missing pages<br />Page Not Found = display the Page-Not-Found page', 1, 48, '2003-11-08 20:24:47', '1970-01-01 00:00:01', '', 'zen_cfg_select_option(array(\'On\', \'Off\', \'Page Not Found\'),');
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('cURL Proxy Status', 'CURL_PROXY_REQUIRED', 'False', 'Does your host require that you use a proxy for cURL communication?', 6, '50', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('cURL Proxy Address', 'CURL_PROXY_SERVER_DETAILS', '', 'If you have a hosting service that requires use of a proxy to talk to external sites via cURL, enter their proxy address here.<br />format: address:port<br />ie: 127.0.0.1:3128', 6, 51, NULL, now(), NULL, NULL);

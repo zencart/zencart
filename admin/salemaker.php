@@ -73,14 +73,14 @@
                                             'sale_specials_condition' => zen_db_prepare_input($_POST['condition']),
                                             'sale_categories_selected' => $categories_selected_string,
                                             'sale_categories_all' => $categories_all_string,
-                                            'sale_date_start' => ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start'])),
-                                            'sale_date_end' => ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end'])));
+                                            'sale_date_start' => ((zen_db_prepare_input($_POST['start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['start'])),
+                                            'sale_date_end' => ((zen_db_prepare_input($_POST['end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['end'])));
 
         if ($action == 'insert') {
           $salemaker_sales_data_array['sale_status'] = 1;
           $salemaker_sales_data_array['sale_date_added'] = 'now()';
-          $salemaker_sales_data_array['sale_date_last_modified'] = '0001-01-01';
-          $salemaker_sales_data_array['sale_date_status_change'] = '0001-01-01';
+          $salemaker_sales_data_array['sale_date_last_modified'] = '1970-01-01';
+          $salemaker_sales_data_array['sale_date_status_change'] = '1970-01-01';
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_sales_data_array, 'insert');
 
           $_POST['sID'] = $db->Insert_ID();
@@ -105,8 +105,8 @@
                                   'sale_status' => 0,
                                   'sale_name' => $newname,
                                   'sale_date_added' => 'now()',
-                                  'sale_date_last_modified' => '0001-01-01',
-                                  'sale_date_status_change' => '0001-01-01',
+                                  'sale_date_last_modified' => '1970-01-01',
+                                  'sale_date_status_change' => '1970-01-01',
                                   'sale_deduction_value' => (float)$salemaker_sales->fields['sale_deduction_value'],
                                   'sale_deduction_type' => (float)$salemaker_sales->fields['sale_deduction_type'],
                                   'sale_pricerange_from' => (float)$salemaker_sales->fields['sale_pricerange_from'],
@@ -289,11 +289,11 @@ function SetCategories() {
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SALEMAKER_DATE_START; ?>&nbsp;</td>
-            <td class="main"><?php echo zen_draw_input_field('start', (($sInfo->sale_date_start == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_start)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo zen_draw_input_field('start', (($sInfo->sale_date_start == '1970-01-01') ? '' : zen_date_short($sInfo->sale_date_start)), 'class="datepicker"'); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SALEMAKER_DATE_END; ?>&nbsp;</td>
-            <td class="main"><?php echo zen_draw_input_field('end', (($sInfo->sale_date_end == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_end)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo zen_draw_input_field('end', (($sInfo->sale_date_end == '1970-01-01') ? '' : zen_date_short($sInfo->sale_date_end)), 'class="datepicker"'); ?></td>
           </tr>
         </table>
       </tr>
@@ -428,8 +428,8 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
                 <td  class="dataTableContent" align="left"><?php echo $salemaker_sales->fields['sale_name']; ?></td>
                 <td  class="dataTableContent" align="right"><?php echo $salemaker_sales->fields['sale_deduction_value']; ?></td>
                 <td  class="dataTableContent" align="left"><?php echo $deduction_type_array[$salemaker_sales->fields['sale_deduction_type']]['text']; ?></td>
-                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_start'] == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sales->fields['sale_date_start'])); ?></td>
-                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_end'] == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sales->fields['sale_date_end'])); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_start'] == '1970-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sales->fields['sale_date_start'])); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($salemaker_sales->fields['sale_date_end'] == '1970-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sales->fields['sale_date_end'])); ?></td>
                 <td  class="dataTableContent" align="center">
 <?php
       if ($salemaker_sales->fields['sale_status'] == '1') {
@@ -498,15 +498,15 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
 
         $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=copy') . '">' . zen_image_button('button_copy_to.gif', IMAGE_COPY_TO) . '</a> <a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
         $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->sale_date_added));
-        $contents[] = array('text' => '' . TEXT_INFO_DATE_MODIFIED . ' ' . (($sInfo->sale_date_last_modified == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_last_modified)));
-        $contents[] = array('text' => '' . TEXT_INFO_DATE_STATUS_CHANGE . ' ' . (($sInfo->sale_date_status_change == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_status_change)));
+        $contents[] = array('text' => '' . TEXT_INFO_DATE_MODIFIED . ' ' . (($sInfo->sale_date_last_modified == '1970-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_last_modified)));
+        $contents[] = array('text' => '' . TEXT_INFO_DATE_STATUS_CHANGE . ' ' . (($sInfo->sale_date_status_change == '1970-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_status_change)));
 
         $contents[] = array('text' => '<br>' . TEXT_INFO_DEDUCTION . ' ' . $sInfo->sale_deduction_value . ' ' . $deduction_type_array[$sInfo->sale_deduction_type]['text']);
         $contents[] = array('text' => '' . TEXT_INFO_PRICERANGE_FROM . ' ' . $currencies->format($sInfo->sale_pricerange_from) . TEXT_INFO_PRICERANGE_TO . $currencies->format($sInfo->sale_pricerange_to));
         $contents[] = array('text' => '<table class="dataTableContent" border="0" width="100%" cellspacing="0" cellpadding="0"><tr><td valign="top">' . TEXT_INFO_SPECIALS_CONDITION . '&nbsp;</td><td>' . $specials_condition_array[$sInfo->sale_specials_condition]['text'] . '</td></tr></table>');
 
-        $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_START . ' ' . (($sInfo->sale_date_start == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($sInfo->sale_date_start)));
-        $contents[] = array('text' => '' . TEXT_INFO_DATE_END . ' ' . (($sInfo->sale_date_end == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_end)));
+        $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_START . ' ' . (($sInfo->sale_date_start == '1970-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($sInfo->sale_date_start)));
+        $contents[] = array('text' => '' . TEXT_INFO_DATE_END . ' ' . (($sInfo->sale_date_end == '1970-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_end)));
       }
       break;
   }

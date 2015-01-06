@@ -725,7 +725,7 @@ class linkpoint_api extends base {
                   ordertype varchar(8) NOT NULL default '',
                   cust_info text,
                   chargetotal decimal(15,4) NOT NULL default '0.0000',
-                  date_added datetime NOT NULL default '0001-01-01 00:00:00',
+                  date_added datetime NOT NULL default '1970-01-01 00:00:01',
                   PRIMARY KEY  (id),
                   KEY idx_customer_id_zen (customer_id)     )";
       $db->Execute($sql);
@@ -745,7 +745,7 @@ class linkpoint_api extends base {
       if (!$sniffer->field_exists(TABLE_LINKPOINT_API, 'ordertype'))   $db->Execute("ALTER TABLE " . TABLE_LINKPOINT_API . " ADD ordertype varchar(8) NOT NULL default '' after cc_expire");
       if (!$sniffer->field_exists(TABLE_LINKPOINT_API, 'cust_info'))   $db->Execute("ALTER TABLE " . TABLE_LINKPOINT_API . " ADD cust_info text after ordertype");
       if (!$sniffer->field_exists(TABLE_LINKPOINT_API, 'chargetotal')) $db->Execute("ALTER TABLE " . TABLE_LINKPOINT_API . " ADD chargetotal decimal(15,4) NOT NULL default '0.0000' after cust_info");
-      if (!$sniffer->field_exists(TABLE_LINKPOINT_API, 'date_added'))  $db->Execute("ALTER TABLE " . TABLE_LINKPOINT_API . " ADD date_added datetime NOT NULL default '0001-01-01 00:00:00' after chargetotal");
+      if (!$sniffer->field_exists(TABLE_LINKPOINT_API, 'date_added'))  $db->Execute("ALTER TABLE " . TABLE_LINKPOINT_API . " ADD date_added datetime NOT NULL default '1970-01-01 00:00:01' after chargetotal");
       if ($sniffer->field_exists(TABLE_LINKPOINT_API, 'zen_order_id'))  $db->Execute("ALTER TABLE " . TABLE_LINKPOINT_API . " CHANGE COLUMN zen_order_id order_id int(11) NOT NULL default '0'");
     }
 

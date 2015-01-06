@@ -52,8 +52,8 @@
           $specials_price = ($products_price - (($specials_price / 100) * $products_price));
         }
 
-        $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start']));
-        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end']));
+        $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['start']));
+        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['end']));
 
         $products_id = zen_db_prepare_input($_POST['products_id']);
         $db->Execute("insert into " . TABLE_SPECIALS . "
@@ -133,8 +133,8 @@
                 $specials_price = ($products_price - (($specials_price / 100) * $products_price));
               }
 
-              $specials_date_available = ((zen_db_prepare_input($_POST['special_start_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_start_date']));
-              $expires_date = ((zen_db_prepare_input($_POST['special_end_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_end_date']));
+              $specials_date_available = ((zen_db_prepare_input($_POST['special_start_date']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['special_start_date']));
+              $expires_date = ((zen_db_prepare_input($_POST['special_end_date']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['special_end_date']));
 
               $db->Execute("insert into " . TABLE_SPECIALS . "
                           (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
@@ -263,8 +263,8 @@
                 $specials_price = ($products_price - (($specials_price / 100) * $products_price));
               }
 
-              $specials_date_available = ((zen_db_prepare_input($_POST['special_start_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_start_date']));
-              $expires_date = ((zen_db_prepare_input($_POST['special_end_date']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['special_end_date']));
+              $specials_date_available = ((zen_db_prepare_input($_POST['special_start_date']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['special_start_date']));
+              $expires_date = ((zen_db_prepare_input($_POST['special_end_date']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['special_end_date']));
 
               $db->Execute("insert into " . TABLE_SPECIALS . "
                           (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
@@ -347,8 +347,8 @@
 
         if (substr($specials_price, -1) == '%') $specials_price = ($products_price - (($specials_price / 100) * $products_price));
 
-        $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start']));
-        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end']));
+        $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['start']));
+        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['end']));
 
         $db->Execute("update " . TABLE_SPECIALS . "
                       set specials_new_products_price = '" . zen_db_input($specials_price) . "',
@@ -414,8 +414,8 @@
         }
       // add empty special
 
-        $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start']));
-        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end']));
+        $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['start']));
+        $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '1970-01-01' : zen_format_date_raw($_POST['end']));
 
         $products_id = zen_db_prepare_input($_POST['pre_add_products_id']);
         $db->Execute("insert into " . TABLE_SPECIALS . "
@@ -548,11 +548,11 @@ require('includes/admin_html_head.php');
 
           <tr>
             <td class="main"><?php echo TEXT_SPECIALS_AVAILABLE_DATE; ?>&nbsp;</td>
-            <td class="main"><?php echo zen_draw_input_field('start', (($sInfo->specials_date_available == '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)), 'class="datepicker"');  ?></td>
+            <td class="main"><?php echo zen_draw_input_field('start', (($sInfo->specials_date_available == '1970-01-01') ? '' : zen_date_short($sInfo->specials_date_available)), 'class="datepicker"');  ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
-            <td class="main"><?php echo zen_draw_input_field('end', (($sInfo->expires_date == '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)), 'class="datepicker"'); ?></td>
+            <td class="main"><?php echo zen_draw_input_field('end', (($sInfo->expires_date == '1970-01-01') ? '' : zen_date_short($sInfo->expires_date)), 'class="datepicker"'); ?></td>
           </tr>
 
         </table></td>
@@ -650,8 +650,8 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
                 <td  class="dataTableContent"><?php echo $specials->fields['products_name']; ?></td>
                 <td  class="dataTableContent" align="left"><?php echo $specials->fields['products_model']; ?>&nbsp;</td>
                 <td colspan="2" class="dataTableContent" align="right"><?php echo zen_get_products_display_price($specials->fields['products_id']); ?></td>
-                <td  class="dataTableContent" align="center"><?php echo (($specials->fields['specials_date_available'] != '0001-01-01' and $specials->fields['specials_date_available'] !='') ? zen_date_short($specials->fields['specials_date_available']) : TEXT_NONE); ?></td>
-                <td  class="dataTableContent" align="center"><?php echo (($specials->fields['expires_date'] != '0001-01-01' and $specials->fields['expires_date'] !='') ? zen_date_short($specials->fields['expires_date']) : TEXT_NONE); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($specials->fields['specials_date_available'] != '1970-01-01' and $specials->fields['specials_date_available'] !='') ? zen_date_short($specials->fields['specials_date_available']) : TEXT_NONE); ?></td>
+                <td  class="dataTableContent" align="center"><?php echo (($specials->fields['expires_date'] != '1970-01-01' and $specials->fields['expires_date'] !='') ? zen_date_short($specials->fields['expires_date']) : TEXT_NONE); ?></td>
                 <td  class="dataTableContent" align="center">
 <?php
       if ($specials->fields['status'] == '1') {
@@ -789,8 +789,8 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
         $contents[] = array('text' => '' . TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price));
         $contents[] = array('text' => '' . TEXT_INFO_DISPLAY_PRICE . ' ' . zen_get_products_display_price($sInfo->products_id));
 
-        $contents[] = array('text' => '<br>' . TEXT_INFO_AVAILABLE_DATE . ' <b>' . (($sInfo->specials_date_available != '0001-01-01' and $sInfo->specials_date_available !='') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE) . '</b>');
-        $contents[] = array('text' => '<br>' . TEXT_INFO_EXPIRES_DATE . ' <b>' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date !='') ? zen_date_short($sInfo->expires_date) : TEXT_NONE) . '</b>');
+        $contents[] = array('text' => '<br>' . TEXT_INFO_AVAILABLE_DATE . ' <b>' . (($sInfo->specials_date_available != '1970-01-01' and $sInfo->specials_date_available !='') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE) . '</b>');
+        $contents[] = array('text' => '<br>' . TEXT_INFO_EXPIRES_DATE . ' <b>' . (($sInfo->expires_date != '1970-01-01' and $sInfo->expires_date !='') ? zen_date_short($sInfo->expires_date) : TEXT_NONE) . '</b>');
         $contents[] = array('text' => '' . TEXT_INFO_STATUS_CHANGE . ' ' . zen_date_short($sInfo->date_status_change));
         $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_CATEGORIES, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>');
       } else {

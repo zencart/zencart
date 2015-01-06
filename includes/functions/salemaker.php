@@ -3,7 +3,7 @@
  * salemaker functions
  *
  * @package functions
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: salemaker.php 15974 2010-04-17 00:29:17Z ajeh $
@@ -31,8 +31,8 @@
     $salemaker_query = "select sale_id
                        from " . TABLE_SALEMAKER_SALES . "
                        where sale_status = '1'
-                       and ((" . $zc_sale_date . " >= sale_date_end and sale_date_end != '0001-01-01')
-                       or (" . $zc_sale_date . " < sale_date_start and sale_date_start != '0001-01-01'))";
+                       and ((" . $zc_sale_date . " >= sale_date_end and sale_date_end != '1970-01-01')
+                       or (" . $zc_sale_date . " < sale_date_start and sale_date_start != '1970-01-01'))";
 
     $salemaker = $db->Execute($salemaker_query);
 
@@ -56,9 +56,9 @@
     $salemaker_query = "select sale_id
                        from " . TABLE_SALEMAKER_SALES . "
                        where sale_status = '0'
-                       and (((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '0001-01-01') and (sale_date_end > " . $zc_sale_date . "))
-                       or ((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '0001-01-01') and (sale_date_end = '0001-01-01'))
-                       or (sale_date_start = '0001-01-01' and sale_date_end > " . $zc_sale_date . "))
+                       and (((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '1970-01-01') and (sale_date_end > " . $zc_sale_date . "))
+                       or ((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '1970-01-01') and (sale_date_end = '1970-01-01'))
+                       or (sale_date_start = '1970-01-01' and sale_date_end > " . $zc_sale_date . "))
                        ";
 
     $salemaker = $db->Execute($salemaker_query);
@@ -75,7 +75,7 @@
     $salemaker_query = "select sale_id
                        from " . TABLE_SALEMAKER_SALES . "
                        where sale_status = '1'
-                       and (" . $zc_sale_date . " < sale_date_start and sale_date_start != '0001-01-01')
+                       and (" . $zc_sale_date . " < sale_date_start and sale_date_start != '1970-01-01')
                        ";
 
     $salemaker = $db->Execute($salemaker_query);
@@ -88,4 +88,3 @@
       }
     }
   }
-?>

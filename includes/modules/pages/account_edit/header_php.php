@@ -21,7 +21,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
   $firstname = zen_db_prepare_input($_POST['firstname']);
   $lastname = zen_db_prepare_input($_POST['lastname']);
-  if (ACCOUNT_DOB == 'true') $dob = (empty($_POST['dob']) ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['dob']));
+  if (ACCOUNT_DOB == 'true') $dob = (empty($_POST['dob']) ? zen_db_prepare_input('1970-01-01 00:00:01') : zen_db_prepare_input($_POST['dob']));
   $email_address = zen_db_prepare_input($_POST['email_address']);
   $telephone = zen_db_prepare_input($_POST['telephone']);
   $fax = zen_db_prepare_input($_POST['fax']);
@@ -115,8 +115,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'string');
     }
     if (ACCOUNT_DOB == 'true') {
-      if ($dob == '0001-01-01 00:00:00' or $_POST['dob'] == '') {
-        $sql_data_array[] = array('fieldName'=>'customers_dob', 'value'=>'0001-01-01 00:00:00', 'type'=>'date');
+      if ($dob == '1970-01-01 00:00:01' or $_POST['dob'] == '') {
+        $sql_data_array[] = array('fieldName'=>'customers_dob', 'value'=>'1970-01-01 00:00:01', 'type'=>'date');
       } else {
         $sql_data_array[] = array('fieldName'=>'customers_dob', 'value'=>zen_date_raw($_POST['dob']), 'type'=>'date');
       }
@@ -172,7 +172,7 @@ if (ACCOUNT_GENDER == 'true') {
 }
 
 // if DOB field has database default setting, show blank:
-$dob = ($dob == '0001-01-01 00:00:00') ? '' : $dob;
+$dob = ($dob == '1970-01-01 00:00:01') ? '' : $dob;
 
 $customers_referral = $account->fields['customers_referral'];
 
