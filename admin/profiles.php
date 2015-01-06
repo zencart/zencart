@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
@@ -212,8 +212,8 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
     <dl>
       <dt>
         <strong class="checkLabel"><?php echo $menuTitles[$menuKey] ?></strong>
-        <input class="checkButton" type="button" value="Check All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
-        <input class="checkButton" type="button" value="Uncheck All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
+        <input class="checkButton" type="button" value="<?php echo TEXT_CHECK_ALL; ?>" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
+        <input class="checkButton" type="button" value="<?php echo TEXT_UNCHECK_ALL; ?>" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
 <?php foreach ($pageList as $pageKey => $page) { ?>
       <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), in_array($pageKey,$permittedPages), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
@@ -240,8 +240,8 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
     <dl>
       <dt>
         <strong><?php echo $menuTitles[$menuKey] ?></strong>
-        <input class="checkButton" type="button" value="Check All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
-        <input class="checkButton" type="button" value="Uncheck All" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
+        <input class="checkButton" type="button" value="<?php echo TEXT_CHECK_ALL; ?>" onclick="checkAll(this.form,'<?php echo $menuKey ?>',true);">
+        <input class="checkButton" type="button" value="<?php echo TEXT_UNCHECK_ALL; ?>" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
 <?php foreach ($pageList as $pageKey => $page) { ?>
       <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
