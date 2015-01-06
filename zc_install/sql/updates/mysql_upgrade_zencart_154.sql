@@ -40,6 +40,10 @@ TRUNCATE TABLE db_cache;
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Ajax Checkout?', 'PADSS_AJAX_CHECKOUT', '1', 'PA-DSS Compliance requires that for some inbuilt payment methods, that we use ajax to draw the checkout confirmation screen. While this will only happen if one of those payment methods is actually present, some people may want the traditional checkout flow <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 
+ALTER TABLE admin ADD COLUMN pwd_last_change_date datetime NOT NULL default '0001-01-01 00:00:00';
+ALTER TABLE admin ADD COLUMN last_modified datetime NOT NULL default '0001-01-01 00:00:00';
+ALTER TABLE admin ADD COLUMN last_login_date datetime NOT NULL default '0001-01-01 00:00:00';
+ALTER TABLE admin ADD COLUMN last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00';
 
 #############
 
