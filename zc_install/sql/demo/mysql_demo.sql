@@ -226,8 +226,8 @@ INSERT INTO manufacturers_info (manufacturers_id, languages_id, manufacturers_ur
 # Dumping data for table `media_clips`
 #
 
-INSERT INTO media_clips (clip_id, media_id, clip_type, clip_filename, date_added, last_modified) VALUES (1, 1, 1, 'thehunter.mp3', '2004-06-01 20:57:43', '0000-00-00 00:00:00'),
-(6, 2, 1, 'thehunter.mp3', '2004-07-13 00:45:09', '0000-00-00 00:00:00');
+INSERT INTO media_clips (clip_id, media_id, clip_type, clip_filename, date_added, last_modified) VALUES (1, 1, 1, 'thehunter.mp3', '2004-06-01 20:57:43', '0001-01-01 00:00:00'),
+(6, 2, 1, 'thehunter.mp3', '2004-07-13 00:45:09', '0001-01-01 00:00:00');
 
 #
 # Dumping data for table `media_manager`
