@@ -3,7 +3,7 @@
  * checkout_confirmation header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 16435 2010-05-28 09:34:32Z drbyte $
@@ -45,7 +45,7 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
 }
 
 if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
-$_SESSION['comments'] = $_POST['comments'];
+$_SESSION['comments'] = trim($_POST['comments']);
 
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
