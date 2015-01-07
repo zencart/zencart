@@ -136,14 +136,14 @@ if (isset($_SESSION['cart']->cartID)) {
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
   if (isset($_SESSION['comments'])) {
-    $comments = $_SESSION['comments'];
+    $comments = trim($_SESSION['comments']);
   }
 
 
 // process the selected shipping method
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') ) {
     if (zen_not_null($_POST['comments'])) {
-      $_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
+      $_SESSION['comments'] = zen_output_string_protected(trim($_POST['comments']));
     }
     $comments = $_SESSION['comments'];
     $quote = array();

@@ -97,7 +97,7 @@ $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 
 //  $_SESSION['comments'] = '';
-$comments = $_SESSION['comments'];
+$comments = trim($_SESSION['comments']);
 
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
