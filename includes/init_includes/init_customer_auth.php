@@ -53,6 +53,13 @@ if (CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && ($_SESSION['customer_id'] != '' and 
  * 2 = customer authorization pending can browse but no prices
  */
 switch (true) {
+  /**
+   * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
+   */
+  case (preg_match('/ipn_main_handler\.php$/', $_SERVER['SCRIPT_NAME'])):
+  case (preg_match('/ajax\.php$/', $_SERVER['SCRIPT_NAME'])):
+  break;
+
   case ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'strict'):
     // if DFM is in strict mode, then block access to all pages:
     zen_redirect(zen_href_link(DOWN_FOR_MAINTENANCE_FILENAME));
@@ -102,6 +109,13 @@ switch (true) {
 }
 
 switch (true) {
+  /**
+   * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
+   */
+  case (preg_match('/ipn_main_handler\.php$/', $_SERVER['SCRIPT_NAME'])):
+  case (preg_match('/ajax\.php$/', $_SERVER['SCRIPT_NAME'])):
+  break;
+
 /**
  * check store status before authorizations
  */
