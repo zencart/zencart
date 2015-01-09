@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
@@ -86,27 +86,27 @@ switch (true) {
   case (preg_match('/ajax\.php$/', $_SERVER['SCRIPT_NAME'])):
   break;
 
+  // if DFM is in strict mode, then block access to all pages:
   case ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'strict'):
-    // if DFM is in strict mode, then block access to all pages:
     zen_redirect(zen_href_link(DOWN_FOR_MAINTENANCE_FILENAME));
   break;
 
+  // on special pages, if DFM mode is "relaxed", allow access to these pages
   case ((DOWN_FOR_MAINTENANCE == 'true') && !in_array(zcRequest::readGet('main_page'), array(FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING))):
-    // on special pages, if DFM mode is "relaxed", allow access to these pages
     if ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'relaxed') {
       zen_redirect(zen_href_link(DOWN_FOR_MAINTENANCE_FILENAME));
     }
   break;
 
+  // on special pages, allow customers to access regardless of store mode or cust auth mode
   case (in_array(zcRequest::readGet('main_page'), array(FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING, FILENAME_UNSUBSCRIBE))):
-    // on special pages, allow customers to access regardless of store mode or cust auth mode
   break;
 
 /**
  * check store status before authorizations
  */
   case (STORE_STATUS != 0):
-    break;
+  break;
 /**
  * if not down for maintenance check login status
  */
@@ -146,7 +146,8 @@ switch (true) {
  * check store status before authorizations
  */
   case (STORE_STATUS != 0):
-    break;
+  break;
+
   case (CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and (int)$_SESSION['customer_id'] == 0):
   /**
    * customer must be logged in to browse
@@ -181,7 +182,7 @@ switch (true) {
    */
   if (!in_array(zcRequest::readGet('main_page'), array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY))) {
     if (zcRequest::readGet('main_page') != CUSTOMERS_AUTHORIZATION_FILENAME) {
-      zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME));
+      zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', CUSTOMERS_AUTHORIZATION_FILENAME)));
     }
   }
   break;
