@@ -39,15 +39,11 @@ For a MUCH more detailed set of installation instructions, see the [/docs/1.read
 
 PCI/PA-DSS Compliance
 ---------------------
-Currently only the v1.5.0 release is PA-DSS certified, and only when downloaded from the official distribution server: [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files).  
-
-Other branches are not PA-DSS Certified unless otherwise stated.
- 
-__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v153.pdf) should be followed for PCI Compliant implementation.__
+__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v154.pdf) should be followed for PCI Compliant implementation.__
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v153.pdf).
+Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v154.pdf).
 
 
 Support
@@ -65,5 +61,5 @@ Subscribe to [Critical News Updates And Release Announcements](http://www.zen-ca
 
 &nbsp;  
   
-*&copy;Copyright 2003-2013, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2015, Zen Cart&reg;. All rights reserved.*
 

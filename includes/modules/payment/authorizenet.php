@@ -3,7 +3,7 @@
  * authorize.net SIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.6.0 $
@@ -95,7 +95,7 @@ class authorizenet extends base {
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
     // Determine default/supported currencies
-    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD'))) {
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD'))) {
       $this->gateway_currency = DEFAULT_CURRENCY;
     } else {
       $this->gateway_currency = 'USD';
@@ -347,6 +347,7 @@ class authorizenet extends base {
       'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
       'x_amount' => number_format($order->info['total'], 2),
       'x_currency_code' => $_SESSION['currency'],
+      'x_solution_id' => 'A1000003', // used by authorize.net
       'x_version' => '3.1',
       'x_method' => ((MODULE_PAYMENT_AUTHORIZENET_METHOD == 'Credit Card') ? 'CC' : 'ECHECK'),
       'x_type' => MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
@@ -380,8 +381,8 @@ class authorizenet extends base {
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
     );
 
-    // force conversion to supported currencies: USD, GBP, CAD, EUR
-    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
+    // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD', $this->gateway_currency))) {
       global $currencies;
       $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data_core['x_currency_code'] = $this->gateway_currency;
@@ -392,7 +393,7 @@ class authorizenet extends base {
     unset($this->submit_extras['x_login']);
     if (sizeof($this->submit_extras)) $submit_data_core = array_merge($submit_data_core, $this->submit_extras);
 
-    $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, number_format($order->info['total'], 2), $sequence);
+    $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, $submit_data_core['x_amount'], $sequence, $submit_data_core['x_currency_code']);
 
     $submit_data_offline = array(
       'x_show_form' => 'PAYMENT_FORM',

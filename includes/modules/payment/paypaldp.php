@@ -1450,6 +1450,7 @@ class paypaldp extends base {
       case 'CH':
       $info['state'] = '';
       break;
+      case 'MX':
       case 'GB':
       break;
       default:
