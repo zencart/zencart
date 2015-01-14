@@ -82,8 +82,8 @@ switch (true) {
   /**
    * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
    */
-  case (preg_match('/ipn_main_handler\.php$/', $_SERVER['SCRIPT_NAME'])):
-  case (preg_match('/ajax\.php$/', $_SERVER['SCRIPT_NAME'])):
+  case (preg_match('|_handler\.php$|', $_SERVER['SCRIPT_NAME'])):
+  case (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME'])):
   break;
 
   // if DFM is in strict mode, then block access to all pages:
@@ -138,8 +138,8 @@ switch (true) {
   /**
    * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
    */
-  case (preg_match('/ipn_main_handler\.php$/', $_SERVER['SCRIPT_NAME'])):
-  case (preg_match('/ajax\.php$/', $_SERVER['SCRIPT_NAME'])):
+  case (preg_match('|_handler\.php$|', $_SERVER['SCRIPT_NAME'])):
+  case (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME'])):
   break;
 
 /**
