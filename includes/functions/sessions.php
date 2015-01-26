@@ -100,7 +100,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     } elseif (defined('SESSION_TIMEOUT_CATALOG') && (int)SESSION_TIMEOUT_CATALOG > 120) {
       @ini_set('session.gc_maxlifetime', (int)SESSION_TIMEOUT_CATALOG);
     }
-    if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '')
+    if (preg_replace('/[a-zA-Z0-9,-]/', '', session_id()) != '')
     {
       zen_session_id(md5(uniqid(rand(), true)));
     }
@@ -114,7 +114,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_session_id($sessid = '') {
     if (!empty($sessid)) {
       $tempSessid = $sessid;
-      if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '')
+      if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempSessid) != '')
       {
         $sessid = md5(uniqid(rand(), true));
       }
@@ -127,7 +127,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_session_name($name = '') {
     if (!empty($name)) {
       $tempName = $name;
-      if (preg_replace('/[a-zA-Z0-9]/', '', $tempName) == '') return session_name($name);
+      if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempName) == '') return session_name($name);
       return FALSE;
     } else {
       return session_name();
