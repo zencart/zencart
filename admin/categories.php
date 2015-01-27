@@ -1002,15 +1002,10 @@ function init()
 <?php
 // Split Page
 if ($products_query_numrows > 0) {
-  if (empty($pInfo->products_id)) {
-    $pInfo->products_id= $pID;
-  }
 ?>
             <td class="smallText" align="center"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_RESULTS_CATEGORIES, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS) . '<br>' . $products_split->display_links($products_query_numrows, MAX_DISPLAY_RESULTS_CATEGORIES, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'info', 'x', 'y', 'pID')) ); ?></td>
-
 <?php
 }
-// Split Page
 ?>
           </tr>
         </table></td>
