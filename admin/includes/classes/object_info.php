@@ -7,9 +7,11 @@
  * @version $Id: $
  */
 
-class objectInfo {
+class objectInfo
+{
 
-  function objectInfo($object_array) {
+  function objectInfo($object_array)
+  {
     if (!is_array($object_array)) return;
     reset($object_array);
     while (list($key, $value) = each($object_array)) {
