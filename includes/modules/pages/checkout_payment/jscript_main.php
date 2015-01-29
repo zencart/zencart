@@ -3,31 +3,24 @@
  * jscript_main
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: jscript_main.php 5207 2006-12-11 19:06:28Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson   New in v1.6.0 $
  */
 ?>
+
 <script><!--
-var selected;
-var submitter = null;
-function popupWindow(url) {
-  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=320,screenX=150,screenY=150,top=150,left=150')
-}
-function couponpopupWindow(url) {
-  window.open(url,'couponpopupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=320,screenX=150,screenY=150,top=150,left=150')
-}
-function submitFunction($gv,$total) {
-  if ($gv >=$total) {
-    submitter = 1;
-  }
-}
-
-function methodSelect(theMethod) {
-  if (document.getElementById(theMethod)) {
-    document.getElementById(theMethod).checked = 'checked';
-  }
-}
-
+$(document).ready(function(){
+  $('form[name="checkout_payment"]').submit(function() {
+      $('.paymentSubmit').attr('disabled', true);
+<?php if ($flagOnSubmit) { ?>
+      formPassed = check_form();
+      if (formPassed == false) {
+          $('.paymentSubmit').attr('disabled', false);
+      }
+      return formPassed;
+<?php } ?>
+  });
+});
 //--></script>

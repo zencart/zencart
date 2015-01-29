@@ -3,7 +3,7 @@
  * Navigation_history Class.
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
@@ -30,6 +30,9 @@ class navigationHistory extends base {
   }
 
   function add_current_page() {
+    // check whether there are pages which should be blacklisted against entering navigation history
+    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && zcRequest::readGet('act', '') != '') return;
+
     global $request_type, $cPath;
     $get_vars = "";
 

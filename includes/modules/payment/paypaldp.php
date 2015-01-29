@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.6.0 $
+ * @version GIT: $Id: Author: DrByte   Modified in v1.6.0 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -120,6 +120,10 @@ class paypaldp extends base {
    */
   var $fmfResponse = '';
   var $fmfErrors = array();
+  /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
   /**
    * class constructor
    */
@@ -578,6 +582,20 @@ class paypaldp extends base {
         zen_draw_hidden_field('wpp_payer_lastname', $_POST['paypalwpp_cc_lastname']) . "\n";
     $process_button_string .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
     return $process_button_string;
+  }
+  function process_button_ajax() {
+    $processButton = array('ccFields'=>array('wpp_cc_type'=>'paypalwpp_cc_type',
+        'wpp_cc_expdate_month'=>'paypalwpp_cc_expires_month',
+        'wpp_cc_expdate_year'=>'paypalwpp_cc_expires_year',
+        'wpp_cc_issuedate_month'=>'paypalwpp_cc_issue_year',
+        'wpp_cc_issuedate_year'=>'paypalwpp_cc_issue_year',
+        'wpp_cc_issuenumber'=>'paypalwpp_cc_issuenumber',
+        'wpp_cc_number'=>'paypalwpp_cc_number',
+        'wpp_cc_checkcode'=>'paypalwpp_cc_checkcode',
+        'wpp_payer_firstname'=>'paypalwpp_cc_firstname',
+        'wpp_payer_lastname'=>'paypalwpp_cc_lastname',
+      ), 'extraFields'=>array(zen_session_name()=>zen_session_id()));
+    return $processButton;
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured
