@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
  */
   if (!defined('TABLE_LINKPOINT_API')) define('TABLE_LINKPOINT_API', DB_PREFIX . 'linkpoint_api');
   @define('MODULE_PAYMENT_LINKPOINT_API_CODE_DEBUG' ,'off'); // debug for programmer use only
@@ -15,6 +15,10 @@
 class linkpoint_api extends base {
   var $code, $title, $description, $enabled, $payment_status, $auth_code, $transaction_id;
   var $_logDir = DIR_FS_SQL_CACHE;
+  /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
 
   // class constructor
   function __construct() {
@@ -256,6 +260,15 @@ class linkpoint_api extends base {
   /**
    * Prepare the hidden fields comprising the parameters for the Submit button on the checkout confirmation page
    */
+  function process_button_ajax() {
+    $processButton = array('ccFields'=>array('cc_owner'=>'linkpoint_api_cc_owner',
+        'cc_cvv'=>'linkpoint_api_cc_cvv',
+        'cc_number'=>'linkpoint_api_cc_number',
+        'cc_expires_month'=>'linkpoint_api_cc_expires_month',
+        'cc_expires_year'=>'linkpoint_api_cc_expires_year'),
+        'extraFields'=>array(zen_session_name()=>zen_session_id()));
+    return $processButton;
+  }
   function process_button() {
     // These are hidden fields on the checkout confirmation page
     $process_button_string = zen_draw_hidden_field('cc_owner', $_POST['linkpoint_api_cc_owner']) .

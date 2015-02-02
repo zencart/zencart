@@ -2066,22 +2066,6 @@ while (!$chk_sale_categories_all->EOF) {
 /**
  * Check if product has attributes
  */
-  function zen_has_product_attributes_OLD($products_id) {
-    global $db;
-    $attributes = $db->Execute("select count(*) as count
-                         from " . TABLE_PRODUCTS_ATTRIBUTES . "
-                         where products_id = '" . (int)$products_id . "'");
-
-    if ($attributes->fields['count'] > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-/**
- * Check if product has attributes
- */
   function zen_has_product_attributes($products_id, $not_readonly = 'true') {
     global $db;
 

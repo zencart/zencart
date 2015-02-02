@@ -3,7 +3,7 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
@@ -136,14 +136,14 @@ if (isset($_SESSION['cart']->cartID)) {
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
   if (isset($_SESSION['comments'])) {
-    $comments = $_SESSION['comments'];
+    $comments = trim($_SESSION['comments']);
   }
 
 
 // process the selected shipping method
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') ) {
     if (zen_not_null($_POST['comments'])) {
-      $_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
+      $_SESSION['comments'] = zen_output_string_protected(trim($_POST['comments']));
     }
     $comments = $_SESSION['comments'];
     $quote = array();

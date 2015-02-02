@@ -3,7 +3,7 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.6.0 $
@@ -57,11 +57,19 @@ class authorizenet_aim extends base {
    */
   var $_logDir = '';
   /**
+   *  Emulation mode.  Is 'AIM' by default.
+   */
+  var $emulation_mode = 'AIM';
+  /**
    * communication vars
    */
   var $authorize = '';
   var $commErrNo = 0;
   var $commError = '';
+  /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
   /**
    * debug content var
    */
@@ -106,7 +114,7 @@ class authorizenet_aim extends base {
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
     // Determine default/supported currencies
-    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD'))) {
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD'))) {
       $this->gateway_currency = DEFAULT_CURRENCY;
     } else {
       $this->gateway_currency = 'USD';
@@ -287,6 +295,16 @@ class authorizenet_aim extends base {
 
     return $process_button_string;
   }
+  function process_button_ajax() {
+    $processButton = array('ccFields'=>array('cc_number'=>'authorizenet_aim_cc_number',
+      'cc_owner'=>'authorizenet_aim_cc_owner',
+      'cc_cvv'=>'authorizenet_aim_cc_cvv',
+      'cc_expires'=>array('name'=>'concatExpiresFields', 'args'=>"['authorizenet_aim_cc_expires_month','authorizenet_aim_cc_expires_year']"),
+      'cc_expires_month'=>'authorizenet_aim_cc_expires_month',
+      'cc_expires_year'=>'authorizenet_aim_cc_expires_year'),
+      'extraFields'=>array(zen_session_name()=>zen_session_id()));
+    return $processButton;
+  }
   /**
    * Store the CC info to the order and process any results that come back from the payment gateway
    *
@@ -381,8 +399,14 @@ class authorizenet_aim extends base {
       $submit_data['x_type'] = MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE';
     }
 
-    // force conversion to supported currencies: USD, GBP, CAD, EUR
-    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
+    // set parameters for compatibility with 2014 API updates, to identify this transaction as ecommerce+web
+    if ($this->emulation_mode == 'AIM') {
+      $submit_data['x_device_type'] = 8;
+      $submit_data['x_market_type'] = 0;
+    }
+
+    // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD', $this->gateway_currency))) {
       global $currencies;
       $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data['x_currency_code'] = $this->gateway_currency;
@@ -578,22 +602,23 @@ class authorizenet_aim extends base {
     }
 
     // set URL
-    $this->mode = 'AIM';
     $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', array(), $submit_data);
     $devurl = 'https://test.authorize.net/gateway/transact.dll';
     $certurl = 'https://certification.authorize.net/gateway/transact.dll';
 
-    switch ($this->mode) {
+    switch ($this->emulation_mode) {
       case 'eProcessing':
         //eProcessing sometimes uses an AIM emulator, in which case if you're using this module for that purpose, use the notifier point above to have an observer class change the $class->mode to 'eProcessing', which will trigger the correct URL to be used.
         $url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
         break;
+
       case (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo'):
       case 'dump':
         $url = 'https://developer.authorize.net/param_dump.asp';
         break;
       default:
       case 'AIM':
+        $submit_data['x_solution_id'] = 'A1000003'; // used by authorize.net
         $url = 'https://secure.authorize.net/gateway/transact.dll';
         if (defined('AUTHORIZENET_DEVELOPER_MODE')) {
           if (AUTHORIZENET_DEVELOPER_MODE == 'on') $url = $devurl;
@@ -731,7 +756,7 @@ class authorizenet_aim extends base {
       $sql = $db->bindVars($sql, ':respCode', $response[0], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', $response[11], 'string');
-      $sql = $db->bindVars($sql, ':transID', $this->transaction_id, 'string');
+      $sql = $db->bindVars($sql, ':transID', $this->transaction_id, 'integer');
       $sql = $db->bindVars($sql, ':sentData', print_r($this->reportable_submit_data, true), 'string');
       $sql = $db->bindVars($sql, ':recvData', print_r($response, true), 'string');
       $sql = $db->bindVars($sql, ':orderTime', $order_time, 'string');

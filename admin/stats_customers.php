@@ -43,7 +43,12 @@ require('includes/admin_html_head.php');
               </tr>
 <?php
   if (isset($_GET['page']) && ($_GET['page'] > 1)) $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
-  $customers_query_raw = "select c.customers_id, c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price)+sum(op.onetime_charges)  as ordersum from " . TABLE_CUSTOMERS . " c, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS . " o where c.customers_id = o.customers_id and o.orders_id = op.orders_id group by c.customers_id order by ordersum DESC";
+  $customers_query_raw = "SELECT c.customers_id, c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price)+sum(op.onetime_charges)  as ordersum
+                          FROM " . TABLE_CUSTOMERS . " c, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS . " o
+                          WHERE c.customers_id = o.customers_id
+                          AND o.orders_id = op.orders_id
+                          GROUP BY c.customers_id, c.customers_firstname, c.customers_lastname
+                          ORDER BY ordersum DESC";
   $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $customers_query_raw, $customers_query_numrows);
 // fix counted customers
   $customers_query_m = $db->Execute("select customers_id

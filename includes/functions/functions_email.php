@@ -5,10 +5,10 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: ajeh  Modified in v1.6.0 $
  */
 
 /**
@@ -728,3 +728,17 @@
     return $email_html;
   }
 
+  /**
+   * return customer email address
+   *
+   * @param string $customers_id
+   * return string
+   */
+  function zen_get_email_from_customers_id($customers_id) {
+    global $db;
+    $customers_values = $db->Execute("select customers_email_address
+                               from " . TABLE_CUSTOMERS . "
+                               where customers_id = '" . (int)$customers_id . "'");
+    if ($customers_values->EOF) return '';
+    return $customers_values->fields['customers_email_address'];
+  }

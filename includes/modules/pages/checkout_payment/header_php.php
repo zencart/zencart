@@ -3,7 +3,7 @@
  * checkout_payment header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
@@ -97,7 +97,7 @@ $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 
 //  $_SESSION['comments'] = '';
-$comments = $_SESSION['comments'];
+$comments = trim($_SESSION['comments']);
 
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
