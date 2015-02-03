@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: layout_controller.php 19294 2011-07-28 18:15:46Z drbyte $
+ * @version $Id: layout_controller.php 2014-07-28 drbyte $
  */
 
   require('includes/application_top.php');
@@ -127,11 +127,30 @@
         $messageStack->add_session(SUCCESS_BOX_RESET . $template_dir, 'success');
         zen_redirect(zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page']));
         break;
+      case 'save_defaults':
+        $db->Execute(" update " . TABLE_LAYOUT_BOXES . " def, " . TABLE_LAYOUT_BOXES . " curr set
+                         def.layout_box_status = curr.layout_box_status,
+                         def.layout_box_location = curr.layout_box_location,
+                         def.layout_box_sort_order = curr.layout_box_sort_order,
+                         def.layout_box_sort_order_single = curr.layout_box_sort_order_single,
+                         def.layout_box_status_single = curr.layout_box_status_single
+                       where def.layout_template   = 'default_template_settings'
+                       and curr.layout_template = '" . zen_db_input($template_dir) . "'
+                       and def.layout_box_name = curr.layout_box_name");
+
+        $messageStack->add_session(SUCCESS_BOX_SET_DEFAULTS . '<strong>' . $template_dir . '</strong>', 'success');
+        zen_redirect(zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page']));
+        break;
     }
   }
 
 require('includes/admin_html_head.php');
 ?>
+<style>
+.alignTop {
+  vertical-align: top;
+}
+</style>
 </head>
 <body>
 <!-- header //-->
@@ -217,7 +236,7 @@ if ($warning_new_box) {
     if (($column_controller->fields['layout_box_location'] != $last_box_column) and !$column_controller->EOF) {
 ?>
               <tr valign="top">
-                <td colspan="7" height="20" align="center" valign="middle"><?php echo zen_draw_separator('pixel_black.gif', '90%', '3'); ?></td>
+                <td colspan="8" height="20" align="center" valign="middle"><?php echo zen_draw_separator('pixel_black.gif', '90%', '3'); ?></td>
               </tr>
 <?php
     }
@@ -327,21 +346,22 @@ if ($warning_new_box) {
   }
 ?>
   </tr>
+
+
   <tr>
-    <td><table align="center">
+    <td align="center"><table width="500">
       <tr>
-        <td class="main" align="left">
-          <?php echo '<br />' . TEXT_INFO_RESET_TEMPLATE_SORT_ORDER . '<strong>' . $template_dir . '</strong>'; ?>
-        </td>
-      </tr>
-      <tr>
-        <td class="main" align="center">
+        <td class="alignTop">
+          <?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $bInfo->layout_id . '&action=reset_defaults') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>'; ?>
+          <br>
+          <?php echo TEXT_INFO_RESET_TEMPLATE_SORT_ORDER; ?>
+          <br>
           <?php echo TEXT_INFO_RESET_TEMPLATE_SORT_ORDER_NOTE; ?>
         </td>
-      </tr>
-      <tr>
-        <td class="main" align="center">
-          <?php echo '<br /><a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $bInfo->layout_id . '&action=reset_defaults') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>'; ?>
+        <td style="padding-left: 20px" class="alignTop">
+          <?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $bInfo->layout_id . '&action=save_defaults') . '">' . zen_image_button('button_make_default.gif', IMAGE_SAVE) . '</a>'; ?>
+          <br>
+          <?php echo TEXT_INFO_SET_AS_DEFAULT . sprintf(TEXT_INFO_THE_ABOVE_SETTINGS_ARE_FOR, $template_dir); ?>
         </td>
       </tr>
     </table></td>
