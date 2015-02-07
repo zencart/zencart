@@ -34,7 +34,7 @@
     if ($plugin_file_id == 0) return FALSE;
     $new_version_available = FALSE;
     $lookup_index = 0;
-    $url = 'https://www.zen-cart.com/downloads.php?do=versioncheck' . '&id='.(int)$plugin_file_id;
+    $url = 'http://www.zen-cart.com/downloads.php?do=versioncheck' . '&id='.(int)$plugin_file_id;
     $data = json_decode(file_get_contents($url), true);
     if (!$data || !is_array($data)) return false;
     // compare versions
