@@ -1617,7 +1617,17 @@ if (!defined('IS_ADMIN_FLAG')) {
     $db->execute($sql);
   }
 
-  function issetorArray(array $array, $key, $default) {
+/**
+ * function issetorArray
+ *
+ * returns an array[key] or default value if key does not exist
+ *
+ * @param array $array
+ * @param $key
+ * @param null $default
+ * @return mixed
+ */
+  function issetorArray(array $array, $key, $default = null) {
     return isset($array[$key]) ? $array[$key] : $default;
   }
   /////////////////////////////////////////////
