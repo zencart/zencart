@@ -72,7 +72,7 @@ ALTER TABLE orders ADD INDEX idx_cust_id_orders_id_zen (customers_id,orders_id);
 # fix counter_history race condition
 #NEXT_X_ROWS_AS_ONE_COMMAND:5
 CREATE TABLE counter_history_clean as
-SELECT * FROM counter_history WHERE 1 GROUP BY startdate;
+SELECT startdate, counter, session_counter FROM counter_history WHERE 1 GROUP BY startdate, counter, session_counter;
 DROP TABLE counter_history;
 RENAME TABLE counter_history_clean
 TO counter_history;
