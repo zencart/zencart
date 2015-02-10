@@ -3,7 +3,7 @@
  * File contains just the zcPassword class
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: class.base.php 14535 2009-10-07 22:16:19Z wilt $
  */
@@ -15,6 +15,8 @@
  * Updates admin/customer tables on successful login
  * For php >= 5.3.7 and < 5.5.0 uses https://github.com/ircmaxell/PHP-PasswordLib
  * For php >= 5.5.0 uses inbuilt php functions
+ *
+ * NOTE: Zen Cart v1.6.x requires minimum PHP 5.4.0. Mentions of 5.3.7 here are merely for understanding legacy functionality of this class operation.
  *
  * @package classes
  */
