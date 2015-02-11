@@ -142,8 +142,10 @@ class queryFactory extends base {
   }
 
   function show_error() {
-    if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && !headers_sent() && file_exists('nddbc.html') ) {
+    if (!headers_sent()) {
       header("HTTP/1.1 503 Service Unavailable");
+    }
+    if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && file_exists('nddbc.html') ) {
       include('nddbc.html');
     }
     echo '<div class="systemError">';
