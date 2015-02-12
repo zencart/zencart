@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: stats_products_purchased.php 18698 2011-05-04 14:50:06Z wilt $
+ * @version $Id: stats_products_purchased.php  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -168,12 +168,12 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
   if (isset($_GET['page']) && ($_GET['page'] > 1)) $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
 // The following OLD query only considers the "products_ordered" value from the products table.
 // Thus this older query is somewhat deprecated
-  $products_query_raw = "SELECT p.products_id, p.products_ordered, pd.products_name
+  $products_query_raw = "SELECT p.products_id, sum(p.products_ordered), pd.products_name
                          FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                          WHERE pd.products_id = p.products_id
                          AND pd.language_id = '" . $_SESSION['languages_id']. "'
                          AND p.products_ordered > 0
-                         GROUP BY pd.products_id, pd.products_name
+                         GROUP BY p.products_id, pd.products_name
                          ORDER BY p.products_ordered DESC, pd.products_name";
 
 // The new query uses real order info from the orders_products table, and is theoretically more accurate.
@@ -184,7 +184,7 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
         ON (pd.products_id = op.products_id )
        WHERE pd.language_id = '" . $_SESSION['languages_id']. "'
-       GROUP BY pd.products_id, pd.products_name
+       GROUP BY op.products_id, pd.products_name
        ORDER BY products_ordered DESC, products_name";
 
   $products_query_numrows='';
