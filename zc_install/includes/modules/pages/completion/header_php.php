@@ -35,7 +35,7 @@
     $options = $_POST;
     $options['dieOnErrors'] = true;
     $dbInstaller = new zcDatabaseInstaller($options);
-    $result = $dbInstaller->getConnection(true);
+    $result = $dbInstaller->getConnection();
     $extendedOptions = array();
     $error = $dbInstaller->doCompletion($options);
   }
