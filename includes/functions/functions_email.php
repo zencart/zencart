@@ -335,8 +335,10 @@
 
       $ErrorInfo = '';
 
-      // set Hostname, since it can aid in delivery of emails. If emails are being rejected, comment out the following line and try again:
-      $mail->Hostname = defined('EMAIL_HOSTNAME') ? EMAIL_HOSTNAME : preg_replace('~(^https?://|\/.*$)~', '', defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER);
+      // set Hostname, since it can aid in delivery of emails.
+      $defaultHostname = preg_replace('~(^https?://|\/.*$)~', '', defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER);
+      // If emails are being rejected, comment out the following line and try again:
+      $mail->Hostname = defined('EMAIL_HOSTNAME') ? EMAIL_HOSTNAME : $defaultHostname;
 
       $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', array($mail), $mail);
       /**
