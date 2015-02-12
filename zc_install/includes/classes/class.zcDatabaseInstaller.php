@@ -34,7 +34,7 @@ class zcDatabaseInstaller
     $this->dbPrefix = $options['db_prefix'];
     $this->dbCharset = $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
-    $this->debugLevel = isset($options['debug']) ? $options['debug'] : FALSE;
+    $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
     $this->basicParseStrings = array(
     'DROP TABLE IF EXISTS ',
@@ -56,22 +56,13 @@ class zcDatabaseInstaller
 
     );
   }
-  public function getConnection($dieOnErrors = false)
+  public function getConnection()
   {
     require_once(DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php');
     $this->db = new queryFactory;
     $options = array('dbCharset'=>$this->dbCharset);
-    $result = $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $dieOnErrors, $options);
+    $result = $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
     return $result;
-  }
-  public function getDb($dieOnErrors = false)
-  {
-    require_once(DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php');
-    $db = new queryFactory;
-    $options = array('dbCharset'=>$this->dbCharset);
-    $result = $db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $dieOnErrors, $options);
-    if ($result) return $db;
-    return false;
   }
   public function parseSqlFile($fileName, $options = NULL)
   {
