@@ -39,6 +39,5 @@ filter:
         - 'includes/classes/http_client.php'
         - 'includes/classes/class.phpbb.php'
         - 'includes/library/aura/*'
-        - 'includes/modules/*'
-        - 'includes/functions/*'
+        - 'includes/modules/debug_blocks/*'
         - 'includes/templates/*'
