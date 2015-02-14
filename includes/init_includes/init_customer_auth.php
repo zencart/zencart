@@ -183,7 +183,7 @@ switch (true) {
    */
   if (!in_array($zcRequest->readGet('main_page'), array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY))) {
   if ($zcRequest->readGet('main_page') != CUSTOMERS_AUTHORIZATION_FILENAME) {
-    zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME));
+      zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', CUSTOMERS_AUTHORIZATION_FILENAME)));
     }
   }
   break;
