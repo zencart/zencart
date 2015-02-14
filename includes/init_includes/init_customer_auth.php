@@ -153,7 +153,7 @@ switch (true) {
    * customer must be logged in to browse
    */
 //  if (!in_array(zcRequest::readGet('main_page'), array(FILENAME_LOGIN, FILENAME_CREATE_ACCOUNT))) {
-  if (!in_array($zcRequest->readGet('main_page'), array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CREATE_ACCOUNT, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_PRIVACY))) {
+  if (!in_array($zcRequest->readGet('main_page'), array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CREATE_ACCOUNT, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_PRIVACY, DOWN_FOR_MAINTENANCE_FILENAME))) {
     if (!isset($_GET['set_session_login'])) {
       $_GET['set_session_login'] = 'true';
       $_SESSION['navigation']->set_snapshot();
