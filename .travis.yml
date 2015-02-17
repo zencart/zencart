@@ -13,8 +13,8 @@ matrix:
 env:
   global:
   - DB=mysql
-  - secure: "rHzH5GDl7vGz1jq0Xb4WD2Z0hC94A9kHCxMrkuiZZm/oqn+Abt0mkwwO9K23GXtxEaoCQcgoF4ogs6T7lMZHaINEVfwNHix+TfF7macDWPESdHFdo01haONoPf2ZfqI5zEb28dYvYMvOwVD1r3sbadNvSSNf16lDDUx+aNUwXqw="
-  - secure: "RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8="
+  - secure: rHzH5GDl7vGz1jq0Xb4WD2Z0hC94A9kHCxMrkuiZZm/oqn+Abt0mkwwO9K23GXtxEaoCQcgoF4ogs6T7lMZHaINEVfwNHix+TfF7macDWPESdHFdo01haONoPf2ZfqI5zEb28dYvYMvOwVD1r3sbadNvSSNf16lDDUx+aNUwXqw=
+  - secure: RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8=
 
 addons:
   #uncomment the following to trigger webtests
@@ -33,7 +33,7 @@ install:
 
 branches:
   except:
-    - /^v15.*$/
+  - "/^v15.*$/"
 
 before_script:
   - touch includes/configure.php
@@ -57,3 +57,8 @@ after_script:
   #- vendor/bin/phpcs --standard=PSR2 includes/ testFramework/
   - php vendor/bin/coveralls
   #- vendor/bin/phpmd includes/ text cleancode,codesize,controversial,design,naming,unusedcode
+
+notifications:
+  slack:
+    secure: srX7adSXCcUZKL26uVDUSwjZmIz9+l93G78RXOFY+nTvh1WMgjyYKdoSWLM9HanCBbMGuQ2xYup/w6Bl7yIwyo6ubgigGG1pIqlfLDaa8BPvV+K6p9XD5tK9izrzHK6T6Z/NHIuC41Tjka4IXT424aIPmsN5SkcfbWHeLuX6WOo=
+
