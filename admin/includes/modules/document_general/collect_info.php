@@ -174,7 +174,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   $on_image_delete = false;
   $off_image_delete = true;
 ?>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 var tax_rates = new Array();
 <?php
     for ($i=0, $n=sizeof($tax_class_array); $i<$n; $i++) {
