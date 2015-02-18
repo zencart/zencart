@@ -3,10 +3,10 @@
  * plugin_support.php
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: Modified in v1.6.0 $
  */
 /**
  * Functions to support plugin usage
@@ -36,6 +36,7 @@
     $lookup_index = 0;
     $url = 'http://www.zen-cart.com/downloads.php?do=versioncheck' . '&id='.(int)$plugin_file_id;
     $data = json_decode(file_get_contents($url), true);
+    if (!$data || !is_array($data)) return false;
     // compare versions
     if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
     // check whether present ZC version is compatible with the latest available plugin version

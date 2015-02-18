@@ -2,9 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:
+ * @version $Id: New in v1.6.0
  *
  */
 /**
@@ -34,7 +34,7 @@ class zcDatabaseInstaller
     $this->dbPrefix = $options['db_prefix'];
     $this->dbCharset = $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
-    $this->debugLevel = isset($options['debug']) ? $options['debug'] : FALSE;
+    $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
     $this->basicParseStrings = array(
     'DROP TABLE IF EXISTS ',
@@ -61,17 +61,8 @@ class zcDatabaseInstaller
     require_once(DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php');
     $this->db = new queryFactory;
     $options = array('dbCharset'=>$this->dbCharset);
-    $result = $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', FALSE, $options);
+    $result = $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
     return $result;
-  }
-  public function getDb()
-  {
-    require_once(DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php');
-    $db = new queryFactory;
-    $options = array('dbCharset'=>$this->dbCharset);
-    $result = $db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', FALSE, $options);
-    if ($result) return $db;
-    return FALSE;
   }
   public function parseSqlFile($fileName, $options = NULL)
   {
@@ -403,14 +394,15 @@ class zcDatabaseInstaller
     global $request_type;
     if ($request_type == 'SSL') {
       $sql = "UPDATE " . $this->dbPrefix . "configuration set configuration_value = '1:1', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
-      $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
+      $this->db->Execute($sql);
     }
     $sql = "update " . $this->dbPrefix . "admin set admin_name = '" . $options['admin_user'] . "', admin_email = '" . $options['admin_email'] . "', admin_pass = '" . zen_encrypt_password($options['admin_password']) . "', pwd_last_change_date = " . ($request_type == 'SSL' ? 'NOW()' : '0') . ($request_type == 'SSL' ? '' : ", reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password($options['admin_password']) . "'") . " where admin_id = 1";
-    $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
+    $this->db->Execute($sql);
 
+// @TODO temporarily disabled
 // enable/disable automatic version-checking
 //    $sql = "update " . $this->dbPrefix . "configuration set configuration_value = '".($this->configInfo['check_for_updates'] ? 'true' : 'false' ) ."' where configuration_key = 'SHOW_VERSION_UPDATE_IN_HEADER'";
-//    $this->db->Execute($sql) or die("Error in query: $sql".$this->db->ErrorMsg());
+//    $this->db->Execute($sql);
   }
   private function camelize($parseString)
   {
