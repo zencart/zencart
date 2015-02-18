@@ -47,7 +47,7 @@
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <title><?php echo $page_title; ?></title>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 var i=0;
 
 function resize() {

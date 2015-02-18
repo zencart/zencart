@@ -380,7 +380,7 @@ function SetCategories() {
     if ($prev_categories_array[$category['categories_id']]) {
       echo '        <td>' . "\n";
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript"><!--
 document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']) . '\\\')">'.TEXT_MORE_INFO.'</a>'; ?>');
 //--></script>
 <?php

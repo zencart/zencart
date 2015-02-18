@@ -431,7 +431,7 @@ require('includes/admin_html_head.php');
   if ($action == 'edit' || $action == 'update') {
 // @TODO - convert to jQuery Validator
 ?>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 
 function check_form() {
   var error = 0;

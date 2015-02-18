@@ -174,7 +174,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   $on_image_delete = false;
   $off_image_delete = true;
 ?>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 var tax_rates = new Array();
 <?php
     for ($i=0, $n=sizeof($tax_class_array); $i<$n; $i++) {
@@ -394,7 +394,7 @@ echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorte
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
 
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 updateGross();
 //--></script>
 <?php

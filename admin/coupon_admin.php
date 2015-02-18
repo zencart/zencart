@@ -446,7 +446,7 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript"><!--
 var form = "";
 var submitted = false;
 var error = false;

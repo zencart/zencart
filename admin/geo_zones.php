@@ -125,7 +125,7 @@ require('includes/admin_html_head.php');
 <?php
   if (isset($_GET['zID']) && (($saction == 'edit') || ($saction == 'new'))) {
 ?>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 function resetZoneSelected(theForm) {
   if (theForm.state.value != '') {
     theForm.zone_id.selectedIndex = '0';
