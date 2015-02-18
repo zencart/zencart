@@ -132,7 +132,6 @@ if ($error == true) {
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ADVANCED_SEARCH));
 $breadcrumb->add(NAVBAR_TITLE_2);
 $box = new \ZenCart\ListingBox\Build ($zcDiContainer, new \ZenCart\ListingBox\Box\SearchResults());
-$box->init();
 $tplVars['listingBox'] = $box->getTemplateVariables ();
 if ($box->getItemCount() == 0 )
 {

@@ -16,13 +16,38 @@ use Aura\Di\Factory;
 class Build
 {
     /**
+     * @var Container
+     */
+    protected $diContainer;
+
+    /**
      * @param $zcDiContainer
      * @param $listingBox
      * @throws \Aura\Di\Exception\ContainerLocked
+     * @throws \Aura\Di\Exception\ServiceNotFound
      * @throws \Aura\Di\Exception\ServiceNotObject
      * @throws \Exception
      */
     public function __construct($zcDiContainer, $listingBox)
+    {
+        $this->diContainer = $this->buildLocalDiContainer($zcDiContainer, $listingBox);
+        $this->instantiateFormatter();
+        $listingBox->setFilterVars($this->instantiateFilters());
+        $this->diContainer->set('paginator', $this->instantiatePaginator());
+        $this->diContainer->get('queryBuilder')->init($this->diContainer);
+        $this->diContainer->get('queryBuilder')->processQuery();
+        $this->diContainer->get('queryBuilder')->executeQuery();
+        $this->diContainer->get('listingBox')->init($this->diContainer);
+    }
+
+    /**
+     * @param $zcDiContainer
+     * @param $listingBox
+     * @return Container
+     * @throws \Aura\Di\Exception\ContainerLocked
+     * @throws \Aura\Di\Exception\ServiceNotObject
+     */
+    protected function buildLocalDiContainer($zcDiContainer, $listingBox)
     {
         $buildDiContainer = new Container(new Factory);
         $buildDiContainer->set('queryBuilder', new \ZenCart\Platform\QueryBuilder());
@@ -31,26 +56,8 @@ class Build
         $buildDiContainer->set('globalRegistry', $zcDiContainer->get('globalRegistry'));
         $buildDiContainer->set('listingBox', $listingBox);
         $buildDiContainer->set('derivedItemManager', new \ZenCart\ListingBox\DerivedItemManager());
-
-        $this->diContainer = $buildDiContainer;
-        $this->instantiateFormatter();
-        $filterVars = $this->instantiateFilters();
-        $listingBox->setFilterVars($filterVars);
-        $paginator = $this->instantiatePaginator();
-        $this->diContainer->set('paginator', $paginator);
+        return $buildDiContainer;
     }
-
-    /**
-     * @throws \Aura\Di\Exception\ServiceNotFound
-     */
-    public function init()
-    {
-        $this->diContainer->get('queryBuilder')->init($this->diContainer);
-        $this->diContainer->get('queryBuilder')->processQuery();
-        $this->diContainer->get('queryBuilder')->executeQuery();
-        $this->diContainer->get('listingBox')->init($this->diContainer);
-    }
-
     /**
      * @throws \Aura\Di\Exception\ContainerLocked
      * @throws \Aura\Di\Exception\ServiceNotFound

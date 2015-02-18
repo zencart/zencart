@@ -11,7 +11,6 @@
 if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 )
 {
     $box = new \ZenCart\ListingBox\Build ($zcDiContainer, new \ZenCart\ListingBox\Box\SpecialsDefault());
-    $box->init();
     $tplVars['listingBox'] = $box->getTemplateVariables ();
     require($template->get_template_dir('tpl_product_listing_standard.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_product_listing_standard.php');
 }

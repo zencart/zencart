@@ -26,7 +26,6 @@ class Manager extends \base
         foreach ($listingBoxesEnabled as $listingBox => $entry) {
             $boxClass = '\\ZenCart\\ListingBox\\Box\\' . $listingBox;
             $box = new \ZenCart\ListingBox\Build ($zcDiContainer, new $boxClass);
-            $box->init();
             if ($box->getFormattedItemsCount() > 0) {
                 $listingBoxes [] = $box->getTemplateVariables();
             }

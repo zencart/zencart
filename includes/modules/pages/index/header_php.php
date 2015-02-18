@@ -59,7 +59,6 @@ if (isset ( $cPath ) && zen_not_null ( $cPath ))
 $define_page = zen_get_file_directory ( DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_MAIN_PAGE, 'false' );
 require (DIR_WS_MODULES . zen_get_module_directory ( 'require_languages.php' ));
     $box = new \ZenCart\ListingBox\Build ($zcDiContainer, new \ZenCart\ListingBox\Box\ProductsDefault());
-    $box->init();
     $tplVars['listingBox'] = $box->getTemplateVariables ();
     if ($category_depth == 'products' && $box->getFormattedItemsCount () == 0) $robotsNoIndex = true;
     if (SKIP_SINGLE_PRODUCT_CATEGORIES == 'True' and (! isset ( $_GET['filter_id'] ) and ! isset ( $_GET['alpha_filter'] ))) {
