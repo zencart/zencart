@@ -23,6 +23,5 @@ return array(
     '\Aura\Web' => DIR_CATALOG_LIBRARY . 'aura/web/src',
     '\Aura\Di' => DIR_CATALOG_LIBRARY . 'aura/di/src',
     'ZenCart\Platform' => DIR_CATALOG_LIBRARY. 'zencart/platform/src/',
-    'ZenCart\Paginator' => DIR_CATALOG_LIBRARY. 'zencart/paginator/src/',
     'ZenCart\ListingBox' => DIR_CATALOG_LIBRARY. 'zencart/listingBox/src/',
 );

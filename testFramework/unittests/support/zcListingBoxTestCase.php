@@ -111,7 +111,7 @@ abstract class zcListingBoxTestCase extends zcCatalogTestCase
 
     public function mockPaginator()
     {
-        $p = $this->getMockBuilder('\ZenCart\Paginator\Paginator')
+        $p = $this->getMockBuilder('\ZenCart\Platform\Paginator\Paginator')
             ->disableOriginalConstructor()
             ->getMock();
         $p->method('getItems')->willReturn(array(array('product_id'=>1)));

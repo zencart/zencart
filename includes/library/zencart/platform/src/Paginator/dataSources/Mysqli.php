@@ -2,16 +2,17 @@
 /**
  * Class Mysqli
  *
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
-namespace ZenCart\Paginator\dataSources;
-use ZenCart\Paginator\DataSourceInterface;
-use ZenCart\Paginator\AbstractDataSource;
+namespace ZenCart\Platform\Paginator\dataSources;
+use ZenCart\Platform\Paginator\DataSourceInterface;
+use ZenCart\Platform\Paginator\AbstractDataSource;
+
 /**
  * Class Mysqli
- * @package ZenCart\Paginator\dataSources
+ * @package ZenCart\Platform\Paginator\dataSources
  */
 class Mysqli extends AbstractDataSource implements DataSourceInterface
 {

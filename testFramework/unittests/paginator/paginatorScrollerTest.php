@@ -8,7 +8,7 @@
  * @version $Id$
  */
 require_once(__DIR__ . '/../support/zcPaginatorTestCase.php');
-use ZenCart\Paginator\scrollers\Standard;
+use ZenCart\Platform\Paginator\scrollers\Standard;
 /**
  * Testing Library
  */
@@ -22,7 +22,7 @@ class testPaginationScrollerCase extends zcPaginatorTestCase
         require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/paginator/src');
+        $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
     }
 
     public function testInstantiate()

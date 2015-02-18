@@ -2,14 +2,14 @@
 /**
  * Class AbstractScroller
  *
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
-namespace ZenCart\Paginator;
+namespace ZenCart\Platform\Paginator;
 /**
  * Class AbstractScroller
- * @package ZenCart\Paginator
+ * @package ZenCart\Platform\Paginator
  */
 abstract class AbstractScroller
 {

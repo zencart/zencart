@@ -6,12 +6,13 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
-namespace ZenCart\Paginator\scrollers;
-use ZenCart\Paginator\ScrollerInterface;
-use ZenCart\Paginator\AbstractScroller;
+namespace ZenCart\Platform\Paginator\scrollers;
+use ZenCart\Platform\Paginator\ScrollerInterface;
+use ZenCart\Platform\Paginator\AbstractScroller;
+
 /**
  * Class Standard
- * @package ZenCart\Paginator\scrollers
+ * @package ZenCart\Platform\Paginator\scrollers
  */
 class Standard extends AbstractScroller implements ScrollerInterface
 {

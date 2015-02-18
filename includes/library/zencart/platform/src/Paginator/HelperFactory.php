@@ -2,14 +2,14 @@
 /**
  * Class HelperFactory
  *
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
-namespace ZenCart\Paginator;
+namespace ZenCart\Platform\Paginator;
 /**
  * Class HelperFactory
- * @package ZenCart\Paginator
+ * @package ZenCart\Platform\Paginator
  */
 class HelperFactory
 {
@@ -23,7 +23,7 @@ class HelperFactory
      */
     static public function makeDataSource($type, $data, $parameters)
     {
-        $className = '\\ZenCart\\Paginator\\dataSources\\' . ucfirst($type);
+        $className = __NAMESPACE__ . '\\dataSources\\' . ucfirst($type);
         $obj = new $className($data, $parameters);
         return $obj;
     }
@@ -38,7 +38,7 @@ class HelperFactory
      */
     static public function makeScroller($type, $data, $parameters)
     {
-        $className = '\\ZenCart\\Paginator\\scrollers\\' . ucfirst($type);
+        $className = __NAMESPACE__ . '\\scrollers\\' . ucfirst($type);
         $obj = new $className($data, $parameters);
         return $obj;
     }

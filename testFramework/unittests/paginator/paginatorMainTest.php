@@ -7,7 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
-use ZenCart\Paginator\Paginator;
+use ZenCart\Platform\Paginator\Paginator;
 
 require_once(__DIR__ . '/../support/zcPaginatorTestCase.php');
 
@@ -23,7 +23,7 @@ class testPaginatorCase extends zcPaginatorTestCase
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/paginator/src');
+//        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/paginator/src');
         $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
         if (!defined('TEXT_DISPLAY_NUMBER_OF_ENTRIES')) {
             define('TEXT_DISPLAY_NUMBER_OF_ENTRIES', 'Items To Display');
@@ -82,11 +82,11 @@ class testPaginatorCase extends zcPaginatorTestCase
     {
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $request->method('get')->willReturn(1);
-        $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\dataSources\\Mysqli')
+        $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\dataSources\\Mysqli')
             ->disableOriginalConstructor()
             ->getMock();
         $ds->method('getDsResults')->willReturn(array());
-        $s = $this->getMockBuilder('\\ZenCart\\Paginator\\scrollers\\Standard')
+        $s = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\scrollers\\Standard')
             ->disableOriginalConstructor()
             ->getMock();
         $s->method('getScrollerResults')->willReturn(array());
@@ -105,11 +105,11 @@ class testPaginatorCase extends zcPaginatorTestCase
         $sResultArray = array();
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $request->method('get')->willReturn(1);
-        $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\dataSources\\Mysqli')
+        $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\dataSources\\Mysqli')
 
             ->getMock();
         $ds->method('getDsResults')->willReturn($dsResultArray);
-        $s = $this->getMockBuilder('\\ZenCart\\Paginator\\scrollers\\Standard')
+        $s = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\scrollers\\Standard')
 
             ->getMock();
         $s->method('getScrollerResults')->willReturn($sResultArray);
@@ -127,7 +127,7 @@ class testPaginatorCase extends zcPaginatorTestCase
         $params = array('cmd'=>'countries', 'itemsPerPage'=>5);
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $request->method('get')->willReturn(1);
-        $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\dataSources\\Mysqli')
+        $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\dataSources\\Mysqli')
             ->getMock();
         $ds->method('getDsResults')->willReturn($dsResultArray);
         $t = new Paginator($request, array(), $params, $ds, 'standard');
@@ -144,7 +144,7 @@ class testPaginatorCase extends zcPaginatorTestCase
         $params = array('cmd'=>'countries', 'itemsPerPage'=>5);
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $request->method('get')->willReturn(2);
-        $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\dataSources\\Mysqli')
+        $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\dataSources\\Mysqli')
             ->getMock();
         $ds->method('getDsResults')->willReturn($dsResultArray);
         $t = new Paginator($request, array(), $params, $ds, 'standard');

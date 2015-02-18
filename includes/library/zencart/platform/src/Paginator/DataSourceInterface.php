@@ -2,15 +2,14 @@
 /**
  * Interface DataSourceInterface
  *
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
-namespace ZenCart\Paginator;
-use ZenCart\Paginator\AbstractDataSource;
+namespace ZenCart\Platform\Paginator;
 /**
  * Interface DataSourceInterface
- * @package ZenCart\Paginator
+ * @package ZenCart\Platform\Paginator
  */
 interface DataSourceInterface
 {

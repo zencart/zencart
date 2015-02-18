@@ -101,7 +101,7 @@ class Build
         $ds = issetorArray($productQuery, 'paginatorDataSource', 'Mysqli');
         $po = issetorArray($outputLayout, 'paginatorOptions', array());
         $st = issetorArray($po, 'scroller', 'standard');
-        $paginator = '\\ZenCart\\Paginator\\Paginator';
+        $paginator = '\\ZenCart\\Platform\\Paginator\\Paginator';
         return new $paginator($this->diContainer->get('request'), null, $po, $ds, $st);
     }
 
