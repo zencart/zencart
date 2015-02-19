@@ -1,0 +1,43 @@
+before_commands:
+    - "composer install --prefer-source"
+
+tools:
+    php_sim: true
+    php_pdepend: true
+    php_analyzer: true
+    php_code_sniffer:
+        enabled: false
+        config:
+          standard: PSR2
+    php_cs_fixer:
+        enabled: false
+        config:
+            level: psr2
+    php_loc: true
+    php_mess_detector:
+        enabled: true
+        config:
+            rulesets:
+                - codesize
+                - unusedcode
+                - naming
+                - design
+    sensiolabs_security_checker: true
+
+filter:
+    paths:
+        - 'includes/*'
+        - 'ipn_main_handler.php'
+        - 'ajax.php'
+        - 'index.php'
+        - 'page_not_found.php'
+    excluded_paths:
+        - 'includes/classes/vendors/*'
+        - 'includes/classes/support/*'
+        - 'includes/classes/class.phpmailer.php'
+        - 'includes/classes/class.smtp.php'
+        - 'includes/classes/http_client.php'
+        - 'includes/classes/class.phpbb.php'
+        - 'includes/library/aura/*'
+        - 'includes/modules/debug_blocks/*'
+        - 'includes/templates/*'
