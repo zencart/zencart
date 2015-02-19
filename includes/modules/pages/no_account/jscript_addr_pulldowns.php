@@ -59,4 +59,4 @@ function update_zone(theForm) {
     document.getElementById("stBreak").className = 'clearBoth visibleField';
     document.getElementById("stBreak").setAttribute('className', 'clearBoth visibleField');
   }
-//--></script>
+</script>

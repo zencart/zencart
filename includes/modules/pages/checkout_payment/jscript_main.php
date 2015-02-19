@@ -23,4 +23,4 @@ $(document).ready(function(){
 <?php } ?>
   });
 });
-//--></script>
+</script>

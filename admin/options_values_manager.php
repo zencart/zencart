@@ -511,13 +511,13 @@ die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from
   }
 require('includes/admin_html_head.php');
 ?>
-<script language="javascript"><!--
+<script type="text/javascript">
 function go_option() {
   if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
     location = "<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
   }
 }
-//--></script>
+</script>
 </head>
 <body>
 <!-- header //-->
