@@ -168,7 +168,7 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
   if (isset($_GET['page']) && ($_GET['page'] > 1)) $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
 // The following OLD query only considers the "products_ordered" value from the products table.
 // Thus this older query is somewhat deprecated
-  $products_query_raw = "SELECT p.products_id, sum(p.products_ordered), pd.products_name
+  $products_query_raw = "SELECT p.products_id, sum(p.products_ordered) as products_ordered, pd.products_name
                          FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                          WHERE pd.products_id = p.products_id
                          AND pd.language_id = '" . $_SESSION['languages_id']. "'
