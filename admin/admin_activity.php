@@ -259,7 +259,7 @@ if ($action != '')
           {
             // HTML
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta charset="<?php echo CHARSET; ?>">

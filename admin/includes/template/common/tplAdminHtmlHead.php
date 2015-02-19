@@ -7,7 +7,7 @@
  * @version $Id: $
  */
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <!--[if IE 8]>         <html class="no-js lt-ie9" <?php echo HTML_PARAMS; ?>> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" <?php echo HTML_PARAMS; ?>> <!--<![endif]-->
 <head>

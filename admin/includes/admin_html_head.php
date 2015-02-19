@@ -7,7 +7,7 @@
  * @version $Id: admin_html_head.php $
  */
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <!--[if IE 9]><html class="lt-ie10" <?php echo HTML_PARAMS; ?> > <![endif]-->
 <html class="no-js" <?php echo HTML_PARAMS; ?> >
 

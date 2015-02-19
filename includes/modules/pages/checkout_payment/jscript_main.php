@@ -10,7 +10,7 @@
  */
 ?>
 
-<script><!--
+<script>
 $(document).ready(function(){
   $('form[name="checkout_payment"]').submit(function() {
       $('.paymentSubmit').attr('disabled', true);
@@ -23,4 +23,4 @@ $(document).ready(function(){
 <?php } ?>
   });
 });
-//--></script>
+</script>

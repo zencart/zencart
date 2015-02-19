@@ -9,7 +9,7 @@
  * @version $Id: jscript_main.php 3126 2006-03-07 03:09:40Z drbyte $
  */
 ?>
-<script><!--
+<script>
 var i=0;
 function resize() {
   i=0;
@@ -51,4 +51,4 @@ function resize() {
   }
   self.focus();
 }
-//--></script>
+</script>
