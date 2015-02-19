@@ -84,7 +84,7 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript">
 var form = "";
 var submitted = false;
 var error = false;
@@ -130,7 +130,7 @@ check_select('audience_selected','',"<?php echo ERROR_PLEASE_SELECT_AUDIENCE; ?>
     return true;
   }
 }
-//--></script>
+</script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body>

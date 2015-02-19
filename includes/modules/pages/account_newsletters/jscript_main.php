@@ -9,8 +9,8 @@
  * @version $Id: jscript_main.php 4274 2006-08-26 03:16:53Z drbyte $
  */
 ?>
-<script><!--
+<script>
 function checkBox(object) {
   document.account_newsletter.elements[object].checked = !document.account_newsletter.elements[object].checked;
 }
-//--></script>
+</script>

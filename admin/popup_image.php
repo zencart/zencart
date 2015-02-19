@@ -47,14 +47,14 @@
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <title><?php echo $page_title; ?></title>
-<script language="javascript"><!--
+<script type="text/javascript">
 var i=0;
 
 function resize() {
   if (navigator.appName == 'Netscape') i = 40;
   window.resizeTo(document.images[0].width + 30, document.images[0].height + 60 - i);
 }
-//--></script>
+</script>
 </head>
 <body onload="resize();">
 <?php echo $image_source; ?>

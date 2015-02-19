@@ -9,7 +9,7 @@
  * @version $Id: jscript_form_check.php 17014 2010-07-27 06:17:53Z drbyte $
  */
 ?>
-<script><!--
+<script>
 var selected;
 
 function check_form_optional(form_name) {
@@ -175,4 +175,4 @@ function check_form(form_name) {
     return true;
   }
 }
-//--></script>
+</script>

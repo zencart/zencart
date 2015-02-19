@@ -21,7 +21,7 @@ if (!$adminDirectoryExists && !$installDirectoryExists)
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
 ?>
-<!DOCTYPE html>
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">

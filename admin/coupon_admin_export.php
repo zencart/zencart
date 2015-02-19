@@ -224,7 +224,7 @@ if ($action != '')
           {
             // HTML
 ?>
-<!doctype html>
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta charset="<?php echo CHARSET; ?>">

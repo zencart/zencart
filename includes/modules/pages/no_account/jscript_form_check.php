@@ -9,7 +9,7 @@
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 ?>
-<script><!--
+<script>
 var form = "";
 var submitted = false;
 var error = false;
@@ -145,4 +145,4 @@ function check_form(form_name) {
     return true;
   }
 }
-//--></script>
+</script>

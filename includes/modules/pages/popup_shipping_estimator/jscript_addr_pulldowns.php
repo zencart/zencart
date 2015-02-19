@@ -11,7 +11,7 @@
  * @version $Id: jscript_addr_pulldowns.php 5351 2006-12-22 21:01:55Z drbyte $
  */
 ?>
-<script><!--
+<script>
 
 function update_zone(theForm) {
   // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates
@@ -55,4 +55,4 @@ function update_zone(theForm) {
     document.getElementById("stBreak").className = 'clearBoth visibleField';
     document.getElementById("stBreak").setAttribute('className', 'clearBoth visibleField');
   }
-//--></script>
+</script>
