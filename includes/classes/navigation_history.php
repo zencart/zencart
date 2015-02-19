@@ -21,7 +21,9 @@ class navigationHistory extends base {
   var $path, $snapshot;
 
   function navigationHistory() {
+    global $zcRequest;
     $this->reset();
+    $this->request = $zcRequest;
   }
 
   function reset() {
@@ -30,14 +32,11 @@ class navigationHistory extends base {
   }
 
   function add_current_page() {
-    // check whether there are pages which should be blacklisted against entering navigation history
-    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && zcRequest::readGet('act', '') != '') return;
-
     global $request_type, $cPath;
     $get_vars = "";
 
-    if (count(zcRequest::all('get')) > 0) {
-      $tmp = zcRequest::all('get');
+    if (count($this->request->all('get')) > 0) {
+      $tmp = $this->request->all('get');
       while (list($key, $value) = each($tmp)) {
         if ($key != 'main_page') {
           $get_vars[$key] = $value;
@@ -47,7 +46,7 @@ class navigationHistory extends base {
 
     $set = 'true';
     for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-      if ( ($this->path[$i]['page'] == zcRequest::readGet('main_page')) ) {
+      if ( ($this->path[$i]['page'] == $this->request->readGet('main_page')) ) {
         if (isset($cPath)) {
           if (!isset($this->path[$i]['get']['cPath'])) {
             continue;
@@ -81,8 +80,8 @@ class navigationHistory extends base {
     }
 
     if ($set == 'true') {
-      if (zcRequest::hasGet('main_page')) {
-        $page = zcRequest::readGet('main_page');
+      if ($this->request->has('main_page', 'get')) {
+        $page = $this->request->readGet('main_page');
       } else {
         $page = 'index';
       }
@@ -94,9 +93,8 @@ class navigationHistory extends base {
   }
 
   function remove_current_page() {
-
     $last_entry_position = sizeof($this->path) - 1;
-    if ($this->path[$last_entry_position]['page'] == zcRequest::readGet('main_page')) {
+    if ($this->path[$last_entry_position]['page'] == $this->request->readGet('main_page')) {
       unset($this->path[$last_entry_position]);
     }
   }
@@ -110,14 +108,14 @@ class navigationHistory extends base {
                               'get' => $page['get'],
                               'post' => $page['post']);
     } else {
-      $tmp = zcRequest::all('get');
+      $tmp = $this->request->all('get');
       while (list($key, $value) = each($tmp)) {
         if ($key != 'main_page') {
           $get_vars[$key] = $value;
         }
       }
-      if (zcRequest::hasGet('main_page')) {
-        $page = zcRequest::readGet('main_page');
+      if ($this->request->has('main_page', 'get')) {
+        $page = $this->request->readGet('main_page');
       } else {
         $page = 'index';
       }

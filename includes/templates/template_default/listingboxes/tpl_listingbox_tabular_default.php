@@ -8,6 +8,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  */
+//print_r($tplVars['listingBox']);
 ?>
 <div class="centerBoxWrapper" id="id<?php echo $tplVars['listingBox']['className']; ?>">
 <h2 class="centerBoxHeading"><?php echo $tplVars['listingBox']['title']; ?></h2>

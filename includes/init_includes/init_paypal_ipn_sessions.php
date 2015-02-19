@@ -19,11 +19,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // need to see if we are in test mode. If so then the data is going to come in as a GET string
   if (defined('MODULE_PAYMENT_PAYPAL_TESTING') && MODULE_PAYMENT_PAYPAL_TESTING == 'Test') {
-    foreach (zcRequest::all('get') as $key=>$value) {
-      zcRequest::set($key, $value, 'post');
+    foreach ($zcRequest->all('get') as $key=>$value) {
+        $zcRequest->set($key, $value, 'post');
     }
   }
-  if (count(zcRequest::all('post') == 0)) {
+  if (count($zcRequest->all('post') == 0)) {
     ipn_debug_email('IPN FATAL ERROR :: No POST data available -- Most likely initiated by browser and not PayPal.' . "\n\n\n" . '     *** The rest of this log report can most likely be ignored !! ***' . "\n\n\n\n");
      //if ($show_all_errors) echo 'No POST data. This is not a real IPN transaction. Any "Undefined" errors below can be ignored ...<br />';
   }

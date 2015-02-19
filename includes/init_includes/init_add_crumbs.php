@@ -58,11 +58,11 @@ while (!$get_terms->EOF) {
  * add the products model to the breadcrumb trail
  * NOTE: for query optimization, this query is identical to the query used in the product pages' header_php and main_template_vars files so that it can benefit from caching performance benefits
  */
-if (zcRequest::hasGet('products_id')) {
+if ($zcRequest->has('products_id')) {
   $sql = "select p.*, pd.*
            from   " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
            where  p.products_status = '1'
-           and    p.products_id = '" . (int)zcRequest::readGet('products_id') . "'
+           and    p.products_id = '" . (int)$zcRequest->readGet('products_id') . "'
            and    pd.products_id = p.products_id
            and    pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
   $res = $db->Execute($sql);
@@ -73,6 +73,6 @@ if (zcRequest::hasGet('products_id')) {
     header('HTTP/1.1 404 Not Found');
   }
   if ($res->fields['products_name'] != '') {
-    $breadcrumb->add($res->fields['products_name'], zen_href_link(zen_get_info_page(zcRequest::readGet('products_id')), 'cPath=' . $cPath . '&products_id=' . zcRequest::readGet('products_id')));
+    $breadcrumb->add($res->fields['products_name'], zen_href_link(zen_get_info_page($zcRequest->readGet('products_id')), 'cPath=' . $cPath . '&products_id=' . $zcRequest->readGet('products_id')));
   }
 }

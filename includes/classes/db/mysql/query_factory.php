@@ -685,7 +685,7 @@ class queryFactoryResult implements Countable, Iterator {
       $this->EOF = false;
     } else {
       $this->EOF = true;
-      $db->set_error(mysqli_errno($this->link), mysqli_error($this->link), $db->dieOnErrors);
+//      $db->set_error(mysqli_errno($this->link), mysqli_error($this->link), $db->dieOnErrors);
     }
   }
 }

@@ -12,7 +12,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-if (zcRequest::readGet('main_page', '') != FILENAME_DOWNLOAD && (int)GZIP_LEVEL >= 1 && $ext_zlib_loaded = extension_loaded('zlib') && trim(ini_get('output_handler')) == '') {
+if ($zcRequest->readGet('main_page', '') != FILENAME_DOWNLOAD && (int)GZIP_LEVEL >= 1 && $ext_zlib_loaded = extension_loaded('zlib') && trim(ini_get('output_handler')) == '') {
   if (($ini_zlib_output_compression = (int)ini_get('zlib.output_compression')) < 1) {
     @ini_set('zlib.output_compression', 1);
   }

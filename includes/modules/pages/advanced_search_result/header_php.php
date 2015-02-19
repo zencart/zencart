@@ -131,11 +131,10 @@ if ($error == true) {
 }
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ADVANCED_SEARCH));
 $breadcrumb->add(NAVBAR_TITLE_2);
-require_once(DIR_WS_MODULES . "listingboxes/class.zcListingBoxSearchResults.php");
-$box = new zcListingBoxSearchResults ();
-$box->init();
+$box = new \ZenCart\ListingBox\Build ($zcDiContainer, new \ZenCart\ListingBox\Box\SearchResults());
 $tplVars['listingBox'] = $box->getTemplateVariables ();
-if (!$box->getHasContent()) {
+if ($box->getItemCount() == 0 )
+{
   $messageStack->add_session('search', TEXT_NO_PRODUCTS, 'caution');
   zen_redirect(zen_href_link(FILENAME_ADVANCED_SEARCH, zen_get_all_get_params('action')));
 }

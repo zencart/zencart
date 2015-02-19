@@ -73,8 +73,8 @@ class base {
           $paramArray[$param_n] = $$param_n;
         }
       }
-      global $this_is_home_page, $PHP_SELF;
-      $main_page = (isset($this_is_home_page) && $this_is_home_page) ? 'index-home' : (IS_ADMIN_FLAG) ? basename($PHP_SELF) : zcRequest::readGet('main_page', '');
+      global $this_is_home_page, $PHP_SELF, $zcRequest;
+      $main_page = (isset($this_is_home_page) && $this_is_home_page) ? 'index-home' : (IS_ADMIN_FLAG) ? basename($PHP_SELF) : $zcRequest->readGet('main_page', '');
       $output = '';
       if (count($paramArray)) {
         $output = ', ';

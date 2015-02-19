@@ -12,6 +12,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
+//print_r($tplVars);
 ?>
 <div class="centerColumn" id="indexDefault">
 <h1 id="indexDefaultHeading"><?php echo HEADING_TITLE; ?></h1>

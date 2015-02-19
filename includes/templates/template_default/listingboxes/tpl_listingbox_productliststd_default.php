@@ -8,6 +8,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  */
+//print_r($tplVars);
 ?>
 
 <div class="centerBoxWrapper" id="centerBoxWrapper<?php echo $tplVars['listingBox']['className']; ?>">
@@ -17,8 +18,8 @@
       echo zen_draw_form('multiple_products_cart_quantity', zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
     }
 ?>
-<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showPaginatorTop']) { ?>
-<?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?>
+<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showTop']) { ?>
+<?php require($template->get_template_dir($tplVars['listingBox']['pagination']['scrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['pagination']['scrollerTemplate']); ?>
 <?php } ?>
 <?php
 // only show button when there is something to submit
@@ -71,8 +72,8 @@
   <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit2" name="submit1"'); ?></div>
 <br class="clearBoth">
 <?php } ?>
-<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showPaginatorBottom']) { ?>
-<?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?>
+<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showBottom']) { ?>
+<?php require($template->get_template_dir($tplVars['listingBox']['pagination']['scrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['pagination']['scrollerTemplate']); ?>
 <?php } ?>
 <?php if (isset($tplVars['listingBox']['showForm']) && $tplVars['listingBox']['showForm']) { ?>
 </form>
