@@ -819,7 +819,7 @@ require('includes/admin_html_head.php');
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
 
 <?php } elseif ($action == 'help') { // endif $action != 'help' ?>
-<?php echo '<!DOCTYPE html>'; ?>
+<?php echo '<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">'; ?>
 <html  <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />

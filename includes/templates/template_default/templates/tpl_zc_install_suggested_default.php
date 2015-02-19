@@ -13,7 +13,7 @@ $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) 
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');
 $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists('../docs/index.html') ? '../docs/index.html' : '');
 ?>
-<!DOCTYPE html>
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <!--[if IE 8]>         <html class="no-js lt-ie9" dir="ltr" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" dir="ltr" lang="en"> <!--<![endif]-->
 <head>

@@ -13,7 +13,7 @@
   $cname = zen_get_category_name($_GET['cid'], (int)$_SESSION['languages_id']);
 
 ?>
-<!DOCTYPE html>
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
