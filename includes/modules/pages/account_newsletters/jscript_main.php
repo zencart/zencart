@@ -13,4 +13,4 @@
 function checkBox(object) {
   document.account_newsletter.elements[object].checked = !document.account_newsletter.elements[object].checked;
 }
-//--></script>
+</script>

@@ -51,4 +51,4 @@ function resize() {
   }
   self.focus();
 }
-//--></script>
+</script>

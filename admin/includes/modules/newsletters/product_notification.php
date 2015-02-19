@@ -36,7 +36,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         $products->MoveNext();
       }
 
-$choose_audience_string = '<script language="javascript"><!--
+$choose_audience_string = '<script type="text/javascript">
 function mover(move) {
   if (move == \'remove\') {
     for (x=0; x<(document.notifications.products.length); x++) {
@@ -78,15 +78,15 @@ function selectAll(FormName, SelectBox) {
     return true;
   }
 }
-//--></script>';
+</script>';
 
-      $global_button = '<script language="javascript"><!--' . "\n" .
+      $global_button = '<script type="text/javascript">' . "\n" .
                        'document.write(\'<input type="button" value="' . BUTTON_GLOBAL . '" style="width: 8em;" onclick="document.location=\\\'' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true') . '\\\'">\');' . "\n" .
-                       '//--></script><noscript><a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true') . '">[ ' . BUTTON_GLOBAL . ' ]</a></noscript>';
+                       '</script><noscript><a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true') . '">[ ' . BUTTON_GLOBAL . ' ]</a></noscript>';
 
-      $cancel_button = '<script language="javascript"><!--' . "\n" .
+      $cancel_button = '<script type="text/javascript">' . "\n" .
                        'document.write(\'<input type="button" value="' . BUTTON_CANCEL . '" style="width: 8em;" onclick="document.location=\\\'' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '\\\'">\');' . "\n" .
-                       '//--></script><noscript><a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '">[ ' . BUTTON_CANCEL . ' ]</a></noscript>';
+                       '</script><noscript><a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '">[ ' . BUTTON_CANCEL . ' ]</a></noscript>';
 
       $choose_audience_string .= '<form name="notifications" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onSubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" . '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' . 
                                  '  <tr>' . "\n" .

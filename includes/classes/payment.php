@@ -160,7 +160,7 @@ class payment extends base {
          $js .= '   return collectsCardDataOnsite(payment_value);' . "\n";
        }
        $js .= '    return true;' . "\n";
-       $js .= '  }' . "\n" . '}' . "\n" . '//--></script>' . "\n";
+       $js .= '  }' . "\n" . '}' . "\n" . '</script>' . "\n";
     }
 
     return $js;
