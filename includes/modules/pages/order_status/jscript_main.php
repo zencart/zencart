@@ -9,7 +9,7 @@
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 ?>
-<script><!--
+<script>
 
 function couponpopupWindow(url) {
   window.open(url,'couponpopupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=320,screenX=150,screenY=150,top=150,left=150')

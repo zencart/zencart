@@ -10,7 +10,7 @@
  */
 ?>
 <script src="includes/general.js"></script>
-<script><!--
+<script>
 function check_form() {
   var error_message = "<?php echo JS_ERROR; ?>";
   var error_found = false;

@@ -9,7 +9,7 @@
  * @version $Id: jscript_main.php $
  */
 ?>
-<script><!--
+<script>
 var form = "";
 var submitted = false;
 var error = false;

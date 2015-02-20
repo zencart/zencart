@@ -9,7 +9,7 @@
  * @version $Id: jscript_main.php $
  */
 ?>
-<script><!--
+<script>
 var i=0;
 function resize() {
   if (navigator.appName == 'Netscape') i=10;

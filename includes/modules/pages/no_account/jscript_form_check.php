@@ -9,7 +9,7 @@
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 ?>
-<script><!--
+<script>
 var form = "";
 var submitted = false;
 var error = false;
