@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -54,11 +54,10 @@ if (isset($_POST[zen_session_name()])) {
   zen_session_id($_GET[zen_session_name()]);
 }
 /**
- * need to tidy up $_SERVER['REMOTE_ADDR'] here before we use it anywhere else
- * one problem we don't address here is if $_SERVER['REMOTE_ADDRESS'] is not set to anything at all
+ * Sanitize the IP address, and resolve any proxies.
  */
 $ipAddressArray = explode(',', zen_get_ip_address());
-$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '';
+$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '.';
 $_SERVER['REMOTE_ADDR'] = $ipAddress;
 /**
  * start the session

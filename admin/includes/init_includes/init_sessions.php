@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 8 14:30:54 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: init_sessions.php  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -29,10 +29,10 @@ if (PHP_VERSION >= '5.2.0') {
 }
 
 /**
- * tidy up $_SERVER['REMOTE_ADDR'] before we use it anywhere else
+ * Sanitize the IP address, and resolve any proxies.
  */
 $ipAddressArray = explode(',', zen_get_ip_address());
-$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '';
+$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '.';
 $_SERVER['REMOTE_ADDR'] = $ipAddress;
 
 // lets start our session

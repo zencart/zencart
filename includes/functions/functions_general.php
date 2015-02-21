@@ -771,8 +771,16 @@ if (!defined('IS_ADMIN_FLAG')) {
     setcookie($name, $value, $expire, $path, $domain, $secure);
   }
 
-////
+  /**
+   * Determine visitor's IP address, resolving any proxies where possible.
+   *
+   * @return string
+   */
   function zen_get_ip_address() {
+    $ip = '';
+    /**
+     * resolve any proxies
+     */
     if (isset($_SERVER)) {
       if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -789,7 +797,8 @@ if (!defined('IS_ADMIN_FLAG')) {
       } else {
         $ip = $_SERVER['REMOTE_ADDR'];
       }
-    } else {
+    }
+    if (trim($ip) == '') {
       if (getenv('HTTP_X_FORWARDED_FOR')) {
         $ip = getenv('HTTP_X_FORWARDED_FOR');
       } elseif (getenv('HTTP_CLIENT_IP')) {
@@ -798,6 +807,16 @@ if (!defined('IS_ADMIN_FLAG')) {
         $ip = getenv('REMOTE_ADDR');
       }
     }
+
+    /**
+     * sanitize for validity as an IPv4 or IPv6 address
+     */
+    $ip = preg_replace('~[^a-fA-F0-9.:%/,]~', '', $ip);
+
+    /**
+     *  if it's still blank, set to a single dot
+     */
+    if (trim($ip) == '') $ip = '.';
 
     return $ip;
   }
