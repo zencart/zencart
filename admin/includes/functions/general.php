@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ajeh  Nov 12 2014 Modified in v1.6.0 $
+ * @version GIT: $Id: Modified in v1.6.0 $
  */
 
 ////
@@ -3571,10 +3571,15 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMA
 }
 
 /**
- * Get and sanitize the current IP address, detecting past proxies where possible
- * @return IP address
+ * Determine visitor's IP address, resolving any proxies where possible.
+ *
+ * @return string
  */
 function zen_get_ip_address() {
+  $ip = '';
+  /**
+   * resolve any proxies
+   */
   if (isset($_SERVER)) {
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
       $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -3591,7 +3596,8 @@ function zen_get_ip_address() {
     } else {
       $ip = $_SERVER['REMOTE_ADDR'];
     }
-  } else {
+  }
+  if (trim($ip) == '') {
     if (getenv('HTTP_X_FORWARDED_FOR')) {
       $ip = getenv('HTTP_X_FORWARDED_FOR');
     } elseif (getenv('HTTP_CLIENT_IP')) {
@@ -3601,8 +3607,20 @@ function zen_get_ip_address() {
     }
   }
 
+  /**
+   * sanitize for validity as an IPv4 or IPv6 address
+   */
+  $ip = preg_replace('~[^a-fA-F0-9.:%/]~', '', $ip);
+
+  /**
+   *  if it's still blank, set to a single dot
+   */
+  if (trim($ip) == '') $ip = '.';
+
   return $ip;
 }
+
+
 
 /**
  * Perform an array multisort, based on 1 or 2 columns being passed
