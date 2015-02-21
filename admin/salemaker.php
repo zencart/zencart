@@ -147,7 +147,7 @@ require('includes/admin_html_head.php');
 
   if ( ($action == 'new') || ($action == 'edit') ) {
 ?>
-<script language="JavaScript">
+<script type="text/javascript">
 function session_win() {
   window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
 }
