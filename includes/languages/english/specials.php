@@ -8,3 +8,4 @@
  */
 
 define('NAVBAR_TITLE', 'Specials');
+define('HEADING_TITLE', 'Specials');
