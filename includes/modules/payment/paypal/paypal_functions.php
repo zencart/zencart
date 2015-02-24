@@ -3,11 +3,11 @@
  * functions used by payment module class for Paypal IPN payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
  */
 
 // Functions for paypal processing
@@ -916,7 +916,7 @@
 
     // check subtotals
     if ((strval($optionsST['subtotal']) > 0 && strval($subTotalLI) > 0 && strval($subTotalLI) != strval($optionsST['subtotal'])) || strval($subTotalLI) - strval($sumOfLineItems) != 0) {
-      $ipn_logging('getLineItemDetails 5', 'Line-item subtotals do not add up properly. Line-item-details skipped.' . "\n" . strval($sumOfLineItems) . ' ' . strval($subTotalLI) . ' ' . print_r(array_merge($optionsST, $optionsLI), true));
+      ipn_logging('getLineItemDetails 5', 'Line-item subtotals do not add up properly. Line-item-details skipped.' . "\n" . strval($sumOfLineItems) . ' ' . strval($subTotalLI) . ' ' . print_r(array_merge($optionsST, $optionsLI), true));
       $optionsLI = array();
       $optionsLI["item_name_0"] = MODULE_PAYMENT_PAYPAL_PURCHASE_DESCRIPTION_TITLE;
       $optionsLI["amount_0"]  = $sumOfLineItems = $subTotalLI = $optionsST['subtotal'];
