@@ -4,10 +4,11 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:
+ * @version GIT: $Id    Modified in v1.6.0 $
+ *
  * @todo move the array process to security class
  */
 if (! defined('IS_ADMIN_FLAG')) {
@@ -43,10 +44,6 @@ if (isset($_SESSION) && count($_SESSION) > 0) {
     unset($GLOBALS [$key]);
   }
 }
-/**
- * sanitize $_SERVER vars
- */
-$_SERVER ['REMOTE_ADDR'] = preg_replace('~[^a-fA-F0-9.:%/]~', '', $_SERVER ['REMOTE_ADDR']);
 
 /**
  * validate products_id for search engines and bookmarks, etc.

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_sessions.php 19956 2011-11-07 15:40:25Z wilt $
+ * @version $Id: init_sessions.php  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -24,10 +24,10 @@ $secureFlag = (substr(HTTP_SERVER, 0, 6) == 'https:') ? TRUE : FALSE;
 session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, TRUE);
 
 /**
- * tidy up $_SERVER['REMOTE_ADDR'] before we use it anywhere else
+ * Sanitize the IP address, and resolve any proxies.
  */
 $ipAddressArray = explode(',', zen_get_ip_address());
-$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '';
+$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '.';
 $_SERVER['REMOTE_ADDR'] = $ipAddress;
 
 // lets start our session
