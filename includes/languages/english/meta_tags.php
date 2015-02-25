@@ -10,7 +10,19 @@
 // page title
 if (IS_ADMIN_FLAG) 
 {
-  define('TITLE', 'Admin '. STORE_NAME);
+  $pagename = '';
+  if (isset($_GET['cmd'])) { 
+     $pagename = $_GET['cmd']; 
+     if ($_GET['cmd'] == 'configuration') { 
+         $pagename .= " ". zen_get_configuration_group_value($_GET['gID']); 
+     }
+     $pagename = str_replace("_", " ", $pagename); 
+     $pagename = ucwords($pagename); 
+  }
+  // If you have multiple stores you may wish to add the STORE_NAME
+  // $title = 'Admin '. STORE_NAME . " " . $pagename; 
+  $title = 'Admin '. $pagename; 
+  define('TITLE', $title); 
 } else 
 {
   define('TITLE', STORE_NAME);

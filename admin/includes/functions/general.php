@@ -2666,6 +2666,17 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     return $lookup_value;
   }
 
+  function zen_get_configuration_group_value($lookup) {
+    global $db;
+    $configuration_query= $db->Execute("select configuration_group_title from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id ='" . zen_db_input($lookup) . "'");
+    $lookup_value= $configuration_query->fields['configuration_group_title'];
+    if ( $configuration_query->RecordCount() == 0 ) {
+      $lookup_value='<span class="lookupAttention">' . $lookup . '</span>';
+    }
+    return $lookup_value;
+  }
+
+
 /**
  * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
  */
