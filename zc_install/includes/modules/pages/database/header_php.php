@@ -13,11 +13,20 @@ $sqlCacheType = array(array('id' => 'none', 'text' => TEXT_DATABASE_SETUP_CACHE_
                       array('id' => 'file', 'text' => TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE),
                       array('id' => 'database', 'text' => TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE));
 $sqlCacheTypeOptions = zen_get_select_options($sqlCacheType, isset($sql_cache_method) ? $sql_cache_method : '');
+$db_name_fallback = $configReader->getDefine('DB_DATABASE');
+if (empty($db_name_fallback)) $db_name_fallback = 'zencart';
+$db_user_fallback = $configReader->getDefine('DB_SERVER_USERNAME');
+if (empty($db_user_fallback)) $db_user_fallback = 'zencart';
+$db_password_fallback = $configReader->getDefine('DB_SERVER_PASSWORD');
+if (empty($db_password_fallback)) $db_password_fallback = 'zencart';
 $db_host = isset($db_host) ? $db_host : 'localhost';
-$db_name = isset($db_name) ? $db_name : 'zencart';
+$db_name = isset($db_name) ? $db_name : $db_name_fallback;
 if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
-  $db_user = (isset($db_user)) ? $db_user : 'zencart';
-  $db_password = (isset($db_password)) ? $db_password : 'zencart';
+  $db_user = (isset($db_user)) ? $db_user : $db_user_fallback;
+  $db_password = (isset($db_password)) ? $db_password : $db_password_fallback;
+} else if ($db_user_fallback != 'zencart') {
+    $db_user = $db_user_fallback;
+    $db_password = $db_password_fallback;
 }
 $db_prefix = isset($db_prefix) ? $db_prefix : '';
 

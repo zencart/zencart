@@ -396,7 +396,7 @@ class zcDatabaseInstaller
       $sql = "UPDATE " . $this->dbPrefix . "configuration set configuration_value = '1:1', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
       $this->db->Execute($sql);
     }
-    $sql = "update " . $this->dbPrefix . "admin set admin_name = '" . $options['admin_user'] . "', admin_email = '" . $options['admin_email'] . "', admin_pass = '" . zen_encrypt_password($options['admin_password']) . "', pwd_last_change_date = " . ($request_type == 'SSL' ? 'NOW()' : '0') . ($request_type == 'SSL' ? '' : ", reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password($options['admin_password']) . "'") . " where admin_id = 1";
+    $sql = "update " . $this->dbPrefix . "admin set admin_name = '" . $options['admin_user'] . "', admin_email = '" . $options['admin_email'] . "', admin_pass = '" . zen_encrypt_password($options['admin_password']) . "', pwd_last_change_date = " . ($request_type == 'SSL' ? 'NOW()' : 'timestamp("1970-01-01 00:00:00")') . ($request_type == 'SSL' ? '' : ", reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password($options['admin_password']) . "'") . " where admin_id = 1";
     $this->db->Execute($sql);
 
 // @TODO temporarily disabled
