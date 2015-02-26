@@ -108,7 +108,7 @@ if ($num_images) {
 
 
     // Link Preparation:
-    $script_link = '<script><!--' . "\n" . 'document.write(\'' . ($flag_display_large ? '<a href="' . $js_href . '"' . ($js_rel != '' ? ' rel="' . $js_rel . '"' : '') . ' title="' . addslashes($products_name) . '">' . $thumb_slashes . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>' : $thumb_slashes) . '\');' . "\n" . '//--></script>';
+    $script_link = '<script>' . "\n" . 'document.write(\'' . ($flag_display_large ? '<a href="' . $js_href . '"' . ($js_rel != '' ? ' rel="' . $js_rel . '"' : '') . ' title="' . addslashes($products_name) . '">' . $thumb_slashes . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>' : $thumb_slashes) . '\');' . "\n" . '</script>';
 
     $noscript_link = '<noscript>' . ($flag_display_large ? '<a href="' . zen_href_link(FILENAME_POPUP_IMAGE_ADDITIONAL, 'pID=' . $_GET['products_id'] . '&pos=' . $i . '&img=' . $products_image_large) . '" target="_blank">' . $thumb_regular . '<br /><span class="imgLinkAdditional">' . TEXT_CLICK_TO_ENLARGE . '</span></a>' : $thumb_regular ) . '</noscript>';
 

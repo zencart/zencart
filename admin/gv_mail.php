@@ -159,7 +159,7 @@
   }
 require('includes/admin_html_head.php');
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript">
 var form = "";
 var submitted = false;
 var error = false;
@@ -230,7 +230,7 @@ function check_form(form_name) {
     return true;
   }
 }
-//--></script>
+</script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body>

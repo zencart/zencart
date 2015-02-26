@@ -120,7 +120,7 @@ class payment extends base {
   function javascript_validation() {
     $js = '';
     if (is_array($this->modules) && sizeof($this->selection()) > 0) {
-      $js = '<script><!-- ' . "\n" .
+      $js = '<script> ' . "\n" .
       'function check_form() {' . "\n" .
       '  var error = 0;' . "\n" .
       '  var error_message = "' . JS_ERROR . '";' . "\n" .
@@ -160,7 +160,7 @@ class payment extends base {
          $js .= '   return collectsCardDataOnsite(payment_value);' . "\n";
        }
        $js .= '    return true;' . "\n";
-       $js .= '  }' . "\n" . '}' . "\n" . '//--></script>' . "\n";
+       $js .= '  }' . "\n" . '}' . "\n" . '</script>' . "\n";
     }
 
     return $js;
