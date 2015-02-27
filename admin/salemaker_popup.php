@@ -1,12 +1,12 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: salemaker_popup.php 5498 2007-01-01 04:10:07Z ajeh $
+ * @version $Id: salemaker_popup.php  Modified in v1.6.0 $
  */
-//
+
   require("includes/application_top.php");
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SALEMAKER_POPUP . '.php');
@@ -17,7 +17,7 @@
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
+<title><?php echo ADMIN_TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 </head>
 <body>
@@ -80,4 +80,3 @@
 </html>
 <?php
   require(DIR_WS_INCLUDES . 'application_bottom.php');
-?>

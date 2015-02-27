@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: admin_html_head_index.php $
+ * @version $Id: admin_html_head_index.php  New in v1.6.0 $
  */
 ?>
 <!doctype html>
@@ -13,7 +13,7 @@
 
 <head>
 <meta charset="<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
+<title><?php echo ADMIN_TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />

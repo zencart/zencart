@@ -3,10 +3,10 @@
  * Coupon Exporter
  *
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: coupon_admin_export.php 19537 2013-04-25 04:25:00Z ajeh $
+ * @version $Id: coupon_admin_export.php  Modified in v1.6.0 $
  *
  */
 require ('includes/application_top.php');
@@ -228,7 +228,7 @@ if ($action != '')
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta charset="<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
+<title><?php echo ADMIN_TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 </head>
 <body>

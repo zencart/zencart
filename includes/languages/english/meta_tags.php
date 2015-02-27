@@ -1,38 +1,20 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: meta_tags.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: meta_tags.php  Modified in v1.5.4 $
  */
 
 // page title
-if (IS_ADMIN_FLAG) 
-{
-  $pagename = '';
-  if (isset($_GET['cmd'])) { 
-     $pagename = $_GET['cmd']; 
-     if ($_GET['cmd'] == 'configuration') { 
-         $pagename .= " ". zen_get_configuration_group_value($_GET['gID']); 
-     }
-     $pagename = str_replace("_", " ", $pagename); 
-     $pagename = ucwords($pagename); 
-  }
-  // If you have multiple stores you may wish to add the STORE_NAME
-  // $title = 'Admin '. STORE_NAME . " " . $pagename; 
-  $title = 'Admin '. $pagename; 
-  define('TITLE', $title); 
-} else 
-{
   define('TITLE', STORE_NAME);
-}
 
 // Site Tagline
-define('SITE_TAGLINE', 'The Art of E-commerce');
+  define('SITE_TAGLINE', 'The Art of E-commerce');
 
 // Custom Keywords
-define('CUSTOM_KEYWORDS', 'ecommerce, open source, shop, online shopping, store');
+  define('CUSTOM_KEYWORDS', 'ecommerce, open source, shop, online shopping, store');
 
 // Home Page Only:
   define('HOME_PAGE_META_DESCRIPTION', '');

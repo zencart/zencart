@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
  *
  * @TODO - add jquery validation to the password-reset fields, to show when passwords don't match
  * @TODO - add optional PCI-compliance indicator to password field, to show when password isn't compliant
@@ -75,7 +75,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
+<title><?php echo ADMIN_TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
 <link href="includes/template/css/login.css" rel="stylesheet" type="text/css" />
 <meta name="robots" content="noindex, nofollow" />
