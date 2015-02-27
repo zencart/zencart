@@ -2666,6 +2666,16 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     return $lookup_value;
   }
 
+  function zen_get_configuration_group_value($lookup) {
+    global $db;
+    $configuration_query= $db->Execute("select configuration_group_title from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id ='" . (int)$lookup . "'");
+    if ( $configuration_query->RecordCount() == 0 ) {
+      return (int)$lookup; 
+    }
+    return $configuration_query->fields['configuration_group_title'];
+  }
+
+
 /**
  * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
  */
