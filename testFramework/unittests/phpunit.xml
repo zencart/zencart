@@ -37,6 +37,10 @@
       <file>testAdminLoggingCase.php</file>
     </testsuite>
 
+    <testsuite name="Paginator">
+      <directory suffix="Test.php">paginator</directory>
+    </testsuite>
+
   </testsuites>
 
   <logging>
