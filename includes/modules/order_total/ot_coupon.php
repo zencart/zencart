@@ -110,11 +110,10 @@ class ot_coupon {
    */
   function pre_confirmation_check($order_total) {
     global $order;
+    $od_amount = array('tax'=>0, 'total'=>0);
     if ($order_total > 0) { 
        $od_amount = $this->calculate_deductions();
-    } else { 
-       $od_amount = array('tax'=>0, 'total'=>0);
-    }
+    } 
 //    print_r($od_amount);
     $order->info['total'] = $order->info['total'] - $od_amount['total'];
     if (DISPLAY_PRICE_WITH_TAX != 'true') {
