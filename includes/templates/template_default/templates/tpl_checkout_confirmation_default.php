@@ -40,7 +40,7 @@
 
 <?php if ($messageStack->size('redemptions') > 0) echo $messageStack->output('redemptions'); ?>
 <?php if ($messageStack->size('checkout_confirmation') > 0) echo $messageStack->output('checkout_confirmation'); ?>
-<?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout');
+<?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 
 
 <div id="checkoutShipto" class="back">
