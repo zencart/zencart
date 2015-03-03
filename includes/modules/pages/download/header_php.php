@@ -3,10 +3,10 @@
  * download header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Aug 19 23:55:33 2012 -0400 Modified in v1.5.1 $
+ * @version $Id:  Modified in v1.6.0 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_DOWNLOAD');
@@ -219,7 +219,7 @@ if (DOWNLOAD_BY_REDIRECT == 'true') {
   zen_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
   $tempdir = zen_random_name() . '-' . time();
   umask(0000);
-  mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, DOWNLOAD_CHMOD);
+  mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, octdec(DOWNLOAD_CHMOD));
   $download_link = str_replace(array('/','\\'),'_',$browser_filename);
   $link_create_status = @symlink(DIR_FS_DOWNLOAD . $origin_filename, DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $download_link);
 
