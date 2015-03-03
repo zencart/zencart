@@ -43,10 +43,6 @@
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout');
 
 
-
-// @TODO -- fix inherited COWOA bug where the following line prevents order-confirmations from showing when cart contents is $0 such as all-free-items
- // if ($_SESSION['cart']->show_total() != 0) {  ?>
-
 <div id="checkoutShipto" class="back">
 <h4 id="checkoutConfirmDefaultBillingAddress"><?php echo HEADING_BILLING_ADDRESS; ?></h4>
 <?php if (!$flagDisablePaymentAddressChange) { ?>
@@ -218,6 +214,3 @@
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </div>
-<?php
-  // }
-?>
