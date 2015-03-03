@@ -55,7 +55,6 @@
         $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['start']));
         $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_format_date_raw($_POST['end']));
 
-        $products_id = zen_db_prepare_input($_POST['products_id']);
         $db->Execute("insert into " . TABLE_SPECIALS . "
                     (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
                     values ('" . (int)$products_id . "',
