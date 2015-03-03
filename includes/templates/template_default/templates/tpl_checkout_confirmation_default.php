@@ -6,7 +6,7 @@
  * Displays final checkout details, cart, payment and shipping info details.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_checkout_confirmation_default.php 6247 2007-04-21 21:34:47Z wilt $
@@ -42,10 +42,6 @@
 <?php if ($messageStack->size('checkout_confirmation') > 0) echo $messageStack->output('checkout_confirmation'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout');
 
-
-
-// @TODO -- fix inherited COWOA bug where the following line prevents order-confirmations from showing when cart contents is $0 such as all-free-items
- if ($_SESSION['cart']->show_total() != 0) {  ?>
 
 <div id="checkoutShipto" class="back">
 <h4 id="checkoutConfirmDefaultBillingAddress"><?php echo HEADING_BILLING_ADDRESS; ?></h4>
@@ -218,6 +214,3 @@
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </div>
-<?php
-  }
-?>
