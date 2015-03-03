@@ -19,13 +19,14 @@
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 </head>
 <body>
-<p class="main"><center><h1><?php echo HEADING_TITLE; ?><?php echo zen_draw_separator(); ?></h1></center></p>
-<table width="90%" align="center">
-<p class="main"><h3><?php echo SUBHEADING_TITLE; ?></h3></p>
+<h1 style="text-align: center;"><?php echo HEADING_TITLE; ?><?php echo zen_draw_separator(); ?></h1>
+<div style="width:90%;">
+<h3><?php echo SUBHEADING_TITLE; ?></h3>
 <div class="main">
 <?php echo INFO_TEXT; ?>
 </div>
 <p align="center" class="main"><a href="javascript:window.close();"><?php echo TEXT_CLOSE_WINDOW; ?></a></p>
+</div>
 </body>
 </html>
 <?php
