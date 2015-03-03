@@ -27,6 +27,10 @@ define('HEADER_LOGO_IMAGE', 'logo.gif');
   }
   require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
 
+// used for prefix to browser tabs in admin pages
+define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');
+//define('TEXT_ADMIN_TAB_PREFIX', 'Admin ' . STORE_NAME);  // if you have multiple stores and want the Store Name to be part of the admin title (ie: for browser tabs), swap this line with the one above
+
 // meta tags
 define('ICON_METATAGS_ON', 'Meta Tags Defined');
 define('ICON_METATAGS_OFF', 'Meta Tags Undefined');
