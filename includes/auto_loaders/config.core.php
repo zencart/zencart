@@ -4,7 +4,7 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:
  */
@@ -81,6 +81,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                             'className'=>'\\ZenCart\\Platform\\Request',
+                             'objectName'=>'zcRequest');
 
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcRequest.php');
