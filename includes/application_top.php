@@ -7,7 +7,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:
@@ -124,6 +124,10 @@ if (file_exists('includes/defined_paths.php')) {
   die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
   exit;
 }
+
+// load the default autoload config
+$autoloadNamespaces = require DIR_WS_INCLUDES .  '/autoload_namespaces.php';
+
 /**
  * include the extra_configures files
  */
@@ -139,6 +143,16 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   $za_dir->close();
   unset($za_dir);
 }
+
+require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
+$loader = new \Aura\Autoload\Loader;
+$loader->register();
+
+foreach ($autoloadNamespaces as $autoloadNamespace => $autoloadBaseDir) {
+    $loader->addPrefix($autoloadNamespace, $autoloadBaseDir);
+}
+
+
 $systemContext = 'store';
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
