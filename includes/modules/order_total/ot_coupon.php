@@ -3,7 +3,7 @@
  * ot_coupon order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
@@ -57,10 +57,9 @@ class ot_coupon {
   function process() {
     global $order, $currencies;
     $order_total = $this->get_order_total(isset($_SESSION['cc_id']) ? $_SESSION['cc_id'] : '');
+    $od_amount = array('tax'=>0, 'total'=>0);
     if ($order_total > 0) { 
        $od_amount = $this->calculate_deductions();
-    } else { 
-       $od_amount = array('tax'=>0, 'total'=>0);
     }
     $this->deduction = $od_amount['total'];
     if ($od_amount['total'] > 0) {
