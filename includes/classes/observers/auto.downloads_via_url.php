@@ -177,7 +177,7 @@ class zcObserverDownloadsViaUrl extends base {
   /**
    * return URL for redirect
    *
-   * @param string $bucketAndFilename
+   * @param string $url
    * @return string $url
    */
   private function buildRedirectUrl($url)

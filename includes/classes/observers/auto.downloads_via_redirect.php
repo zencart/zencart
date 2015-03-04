@@ -88,6 +88,7 @@ class zcObserverDownloadsViaRedirect extends base {
    * Returns a random name, 16 to 20 characters long
    * There are more than 10^28 combinations
    * This is used to build a random directory foldername. And, the directory is "hidden", ie: starts with '.'
+   * @return string
    */
   private function generateRandomName()
   {
@@ -107,6 +108,8 @@ class zcObserverDownloadsViaRedirect extends base {
    *
    * Unlinks (deletes) all subdirectories and files in $dir
    * Works only on one subdir level, will not recurse
+   *
+   * @param string $dir folder whose contents will be inspected for cleanup
    */
   private function garbageCollectionUnlinkTempFolders($dir)
   {
