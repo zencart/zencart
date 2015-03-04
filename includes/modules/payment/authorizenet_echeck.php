@@ -673,7 +673,7 @@ class authorizenet_echeck extends base {
       $sql = $db->bindVars($sql, ':respCode', $response[0], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', $response[11], 'string');
-      $sql = $db->bindVars($sql, ':transID', $this->transaction_id, 'string');
+      $sql = $db->bindVars($sql, ':transID', $this->transaction_id, 'integer');
       $sql = $db->bindVars($sql, ':sentData', print_r($this->reportable_submit_data, true), 'string');
       $sql = $db->bindVars($sql, ':recvData', print_r($response, true), 'string');
       $sql = $db->bindVars($sql, ':orderTime', $order_time, 'string');
