@@ -44,7 +44,7 @@
 <?php
   if  ($file['is_downloadable']) {
 ?>
-      <td class=""><?php echo '<a href="' . $file['link_url'] . '">' . $file['products_name'] . '</a>'; ?></td>
+      <td class=""><?php echo '<a href="' . $file['link_url'] . '" download>' . $file['products_name'] . '</a>'; ?></td>
 <?php } else { ?>
       <td class=""><?php echo $file['products_name']; ?></td>
 <?php
@@ -54,7 +54,7 @@
       <td class=""><?php echo $file['filename']; ?></td>
       <td class=""><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED : zen_date_short($file['expiry'])); ?></td>
       <td class="centeredContent"><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED_COUNT : $file['download_count']); ?></td>
-      <td class="centeredContent"><?php echo ($file['is_downloadable']) ? '<a href="' . $file['link_url'] . '">' . zen_image_button(BUTTON_IMAGE_DOWNLOAD, BUTTON_DOWNLOAD_ALT) . '</a>' : '&nbsp;'; ?></td>
+      <td class="centeredContent"><?php echo ($file['is_downloadable']) ? '<a href="' . $file['link_url'] . '" download>' . zen_image_button(BUTTON_IMAGE_DOWNLOAD, BUTTON_DOWNLOAD_ALT) . '</a>' : '&nbsp;'; ?></td>
     </tr>
 <?php
     } // end foreach
