@@ -82,6 +82,9 @@ doCurlTest('https://api-3t.sandbox.paypal.com/nvp');
 echo 'Connecting to PayPal Payflowpro Server ...<br>';
 doCurlTest('https://payflowpro.paypal.com/transaction');
 
+echo 'Connecting to Cardinal Commerce 3D-Secure Server ...<br>';
+doCurlTest('https://paypal.cardinalcommerce.com/maps/processormodule.asp');
+
 echo 'Connecting to AuthorizeNet Production Server ...<br>';
 doCurlTest('https://secure.authorize.net/gateway/transact.dll');
 
