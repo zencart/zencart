@@ -618,7 +618,7 @@ class authorizenet extends base {
       $sql = $db->bindVars($sql, ':respCode', $response['x_response_code'], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', $response['x_type'], 'string');
-      $sql = $db->bindVars($sql, ':transID', $response['x_trans_id'], 'string');
+      $sql = $db->bindVars($sql, ':transID', $response['x_trans_id'], 'integer');
       $sql = $db->bindVars($sql, ':sentData', print_r($this->reportable_submit_data, true), 'string');
       $sql = $db->bindVars($sql, ':recvData', print_r($response, true), 'string');
       $sql = $db->bindVars($sql, ':orderTime', $order_time, 'string');
