@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id:  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -124,15 +124,12 @@ function go_option() {
       $padInfo = new objectInfo($padInfo_array);
     }
 
-// Moved to /admin/includes/configure.php
-  if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
-
-  $filename_is_missing='';
-  if ( !file_exists(DIR_FS_DOWNLOAD . $products_downloads_query->fields['products_attributes_filename']) ) {
-    $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
-  } else {
-    $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
-  }
+    $filename_is_missing='';
+    if ( !zen_orders_products_downloads($products_downloads_query->fields['products_attributes_filename']) ) {
+      $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+    } else {
+      $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
+    }
 ?>
 <?php
       if (isset($padInfo) && is_object($padInfo) && ($products_downloads_query->fields['products_attributes_id'] == $padInfo->products_attributes_id)) {

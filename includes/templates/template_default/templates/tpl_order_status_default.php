@@ -92,7 +92,7 @@ if (isset($_POST['action']) && $_POST['action'] == "process" && ($errorInvalidID
   /**
    * Used to display any downloads associated with the cutomers account
    */
-    if (DOWNLOAD_ENABLED == 'true') require($template->get_template_dir('tpl_modules_os_downloads.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_os_downloads.php');
+    if (DOWNLOAD_ENABLED == 'true') require($template->get_template_dir('tpl_modules_downloads.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_downloads.php');
   ?>
 
 
