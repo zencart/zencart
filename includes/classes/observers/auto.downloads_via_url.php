@@ -14,7 +14,7 @@
  */
 class zcObserverDownloadsViaUrl extends base {
 
-  function __construct() {
+  public function __construct() {
     $this->attach($this, array('NOTIFY_CHECK_DOWNLOAD_HANDLER', 'NOTIFY_DOWNLOAD_READY_TO_START', 'NOTIFY_MODULE_DOWNLOAD_TEMPLATE_DETAILS'));
   }
 
@@ -89,6 +89,7 @@ class zcObserverDownloadsViaUrl extends base {
    * @param string $browser_filename (mutable)
    * @param string $source_directory (mutable)
    * @param boolean $file_exists (mutable)
+   * @param string $service (mutable)
    */
   protected function updateNotifyCheckDownloadHandler(&$class, $eventID, $var, &$fields, &$origin_filename, &$browser_filename, &$source_directory, &$file_exists, &$service)
   {
@@ -114,15 +115,17 @@ class zcObserverDownloadsViaUrl extends base {
    * So, this method parses the passed file, obtains the URL, and does the redirect
    *
    * @param string $eventID name of the observer event fired
-   * @param array $array deprecated BC data
+   * @param string $ipaddress customer IP
+   * @param string $service (mutable)
    * @param string $origin_filename (mutable)
    * @param string $browser_filename (mutable)
    * @param string $source_directory (mutable)
    * @param integer $downloadFilesize (mutable)
-   * @param string $ipaddress customer IP
+   * @param string $mime_type (mutable)
    * @param array $fields  array of data from db query feeding the download page
+   * @param string $browser_headers (mutable)
    */
-  protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $array, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $ipaddress, $fields)
+  protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_headers)
   {
 //     // compatibility for ZC versions older than v1.6.0:
 //     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {
@@ -156,8 +159,8 @@ class zcObserverDownloadsViaUrl extends base {
    * parse file details to determine if its download should be handled by a simple HTTP URL
    * Evidence is the that filename will use colons as delimiters ... http://domain/filename:filesize
    *
-   * @param unknown $filename
-   * @return boolean|multitype:
+   * @param string $filename
+   * @return boolean|array
    */
   private function parseFileParts($filename)
   {
@@ -179,7 +182,6 @@ class zcObserverDownloadsViaUrl extends base {
    */
   private function buildRedirectUrl($url)
   {
-
       return $url;
   }
 

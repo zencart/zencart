@@ -17,7 +17,7 @@ class zcObserverDownloadsViaStreaming extends base {
   /**
    * Class constructor
    */
-  function __construct() {
+  public function __construct() {
     $this->attach($this, array('NOTIFY_DOWNLOAD_READY_TO_STREAM'));
   }
 

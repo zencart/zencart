@@ -38,7 +38,7 @@ class zcObserverDownloadsViaRedirect extends base {
   /**
    * Class constructor
    */
-  function __construct() {
+  public function __construct() {
 
     if (DOWNLOAD_BY_REDIRECT != 'true') return false;
 

@@ -38,7 +38,7 @@ class zcObserverDownloadsViaAws extends base {
   /**
    * Class constructor
    */
-  function __construct() {
+  public function __construct() {
     // read config from constants if available
     if ($this->aws_key == 'MY_AMAZON_S3_ACCESS_KEY' && defined('AMAZON_S3_ACCESS_KEY')) $this->aws_key = AMAZON_S3_ACCESS_KEY;
     if ($this->aws_secret == 'MY_AMAZON_S3_SECRET_XXXXXXXXX' && defined('AMAZON_S3_ACCESS_SECRET')) $this->aws_secret = AMAZON_S3_ACCESS_SECRET;
@@ -146,13 +146,15 @@ class zcObserverDownloadsViaAws extends base {
    * So, this method parses the passed file, obtains the URL, and does the redirect
    *
    * @param string $eventID name of the observer event fired
-   * @param array $array deprecated BC data
+   * @param string $ipaddress customer IP
+   * @param string $service (mutable)
    * @param string $origin_filename (mutable)
    * @param string $browser_filename (mutable)
    * @param string $source_directory (mutable)
    * @param integer $downloadFilesize (mutable)
-   * @param string $ipaddress customer IP
+   * @param string $mime_type (mutable)
    * @param array $fields  array of data from db query feeding the download page
+   * @param string $browser_headers (mutable)
    */
   protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_headers)
   {
@@ -187,8 +189,8 @@ class zcObserverDownloadsViaAws extends base {
    * parse file details to determine if its download should be handled by AWS
    * If AWS, the filename will use colons as delimiters ... aws:bucket/filename:filesize
    *
-   * @param unknown $filename
-   * @return boolean|multitype:
+   * @param string $filename
+   * @return boolean|array
    */
   private function parseFileParts($filename) {
 
