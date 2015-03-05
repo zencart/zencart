@@ -2410,10 +2410,10 @@ class shoppingCart extends base {
       $chk_cat = $category_id; // parent categories_id
       zen_get_subcategories($subcategories_array, $chk_cat);
       for ($i=0, $n=sizeof($subcategories_array); $i<$n; $i++ ) {
-        $chk_cart_weight += in_cart_product_total_weight_category($subcategories_array[$i]);
+        $chk_cart_weight += $this->in_cart_product_total_weight_category($subcategories_array[$i]);
       }
     } else {
-      $chk_cart_weight = in_cart_product_total_weight_category($category_id);
+      $chk_cart_weight = $this->in_cart_product_total_weight_category($category_id);
     }
     return $chk_cart_weight;
   }
@@ -2433,10 +2433,10 @@ class shoppingCart extends base {
       $chk_cat = $category_id; // parent categories_id
       zen_get_subcategories($subcategories_array, $chk_cat);
       for ($i=0, $n=sizeof($subcategories_array); $i<$n; $i++ ) {
-        $chk_cart_price += in_cart_product_total_price_category($subcategories_array[$i]);
+        $chk_cart_price += $this->in_cart_product_total_price_category($subcategories_array[$i]);
       }
     } else {
-      $chk_cart_price = in_cart_product_total_price_category($category_id);
+      $chk_cart_price = $this->in_cart_product_total_price_category($category_id);
     }
     return $chk_cart_price;
   }
@@ -2456,10 +2456,10 @@ class shoppingCart extends base {
       $chk_cat = $category_id; // parent categories_id
       zen_get_subcategories($subcategories_array, $chk_cat);
       for ($i=0, $n=sizeof($subcategories_array); $i<$n; $i++ ) {
-        $chk_cart_quantity += in_cart_product_total_quantity_category($subcategories_array[$i]);
+        $chk_cart_quantity += $this->in_cart_product_total_quantity_category($subcategories_array[$i]);
       }
     } else {
-      $chk_cart_quantity = in_cart_product_total_quantity_category($category_id);
+      $chk_cart_quantity = $this->in_cart_product_total_quantity_category($category_id);
     }
     return $chk_cart_quantity;
   }
