@@ -2337,11 +2337,11 @@ class shoppingCart extends base {
  * USAGE:  $category_total_weight_cat = $this->in_cart_product_total_weight_category(9);
  * USAGE:  $chk_category_cart_total_weight_cat = $_SESSION['cart']->in_cart_product_total_weight_category(9);
  *
- * @param string $category_id
+ * @param integer $category_id
  * @return float
  */
   function in_cart_product_total_weight_category($category_id) {
-    $products = $_SESSION['cart']->get_products();
+    $products = $this->get_products();
     $in_cart_product_weight = 0;
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       if ($products[$i]['category'] == $category_id) {
@@ -2356,11 +2356,11 @@ class shoppingCart extends base {
  * USAGE:  $category_total_price_cat = $this->in_cart_product_total_price_category(9);
  * USAGE:  $chk_category_cart_total_price_cat = $_SESSION['cart']->in_cart_product_total_price_category(9);
  *
- * @param string $category_id
- * @return str
+ * @param integer $category_id
+ * @return float
  */
   function in_cart_product_total_price_category($category_id) {
-    $products = $_SESSION['cart']->get_products();
+    $products = $this->get_products();
 //echo '<pre>'; echo print_r($products); echo '</pre>';
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $productsName = $products[$i]['name'];
@@ -2380,11 +2380,11 @@ class shoppingCart extends base {
  * USAGE:  $category_total_quantity_cat = $this->in_cart_product_total_quantity_category(9);
  * USAGE:  $chk_category_cart_total_quantity_cat = $_SESSION['cart']->in_cart_product_total_quantity_category(9);
  *
- * @param string $category_id
- * @return str
+ * @param integer $category_id
+ * @return float
  */
   function in_cart_product_total_quantity_category($category_id) {
-    $products = $_SESSION['cart']->get_products();
+    $products = $this->get_products();
 //echo '<pre>'; echo print_r($products); echo '</pre>';
     $in_cart_product_quantity = 0;
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
@@ -2400,7 +2400,7 @@ class shoppingCart extends base {
  * USAGE:  $category_total_weight_cat = $this->in_cart_product_total_weight_category_sub(3);
  * USAGE:  $chk_category_cart_total_weight_cat = $_SESSION['cart']->in_cart_product_total_weight_category_sub(3);
  *
- * @param string $category_id
+ * @param integer $category_id
  * @return float
  */
   function in_cart_product_total_weight_category_sub($category_id) {
@@ -2423,8 +2423,8 @@ class shoppingCart extends base {
  * USAGE:  $category_total_price_cat = $this->in_cart_product_total_price_category_sub(3);
  * USAGE:  $chk_category_cart_total_price_cat = $_SESSION['cart']->in_cart_product_total_price_category_sub(3);
  *
- * @param string $category_id
- * @return str
+ * @param integer $category_id
+ * @return float
  */
   function in_cart_product_total_price_category_sub($category_id) {
     $chk_cart_price = 0;
@@ -2446,8 +2446,8 @@ class shoppingCart extends base {
  * USAGE:  $category_total_quantity_cat = $this->in_cart_product_total_quantity_category_sub(3);
  * USAGE:  $chk_category_cart_total_quantity_cat = $_SESSION['cart']->in_cart_product_total_quantity_category_sub(3);
  *
- * @param string $category_id
- * @return str
+ * @param integer $category_id
+ * @return float
  */
   function in_cart_product_total_quantity_category_sub($category_id) {
     $chk_cart_quantity = 0;
