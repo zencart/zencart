@@ -47,7 +47,9 @@ $sql = "SELECT date_format(o.date_purchased, '%Y-%m-%d')
 $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
 $sql = $db->bindVars($sql, ':downloadID', $_GET['id'], 'integer');
 $sql = $db->bindVars($sql, ':ordersID', $_GET['order'], 'integer');
-$sql = $db->bindVars($sql, ':emailAddress', $_SESSION['email_address'], 'string');
+if (isset($_SESSION['email_address'])) {
+  $sql = $db->bindVars($sql, ':emailAddress', $_SESSION['email_address'], 'string');
+}
 $downloads = $db->Execute($sql);
 if ($downloads->RecordCount() <= 0 ) exit(1);
 
@@ -115,25 +117,28 @@ if ($downloadFilesize < 1 && $service == 'local') {
  * Presently only checks for IE-specific cases.
  */
 $detectedBrowser = '';
-if (preg_match('/msie/i', $_SERVER['HTTP_USER_AGENT']))
+preg_match('/msie (.*?)/i', $_SERVER['HTTP_USER_AGENT'], $matches);
+if (sizeof($matches) < 2)
 {
-  $version = explode(' ', stristr($_SERVER['HTTP_USER_AGENT'], 'msie'));
-  if ((int)$version[1] == 5) $detectedBrowser = 'IE5';
-  if ((int)$version[1] == 6) $detectedBrowser = 'IE6';
-  if ((int)$version[1] == 7) $detectedBrowser = 'IE7';
-  if ((int)$version[1] == 8) $detectedBrowser = 'IE8';
-  if ((int)$version[1] == 9) $detectedBrowser = 'IE9';
+  preg_match('/Trident\/\d{1,2}.\d{1,2}; rv:([0-9]*)/', $_SERVER['HTTP_USER_AGENT'], $matches);
+  if (count($matches)) $version = $matches[1];
+  if ($version > 5) {
+    $detectedBrowser = 'IE' . (int)$version;
+  }
 }
 
 $zco_notifier->notify('NOTIFY_DOWNLOAD_BROWSER_DETECTION', array(), $detectedBrowser, $_SERVER['HTTP_USER_AGENT'], $version, $browser_headers_override, $browser_extra_headers);
 
 /**
- * We are ready to begin the actual download. But maybe we need to transform something?
- * An observer class could stamp PDFs or trigger downloading from Amazon S3, etc
- * The second observer hook is simply to allow multiple intercepts if needed
+ * Do we need to transform something?
+ * An observer class could stamp PDFs or do other pre-processing of the download media.
  */
-$zco_notifier->notify('NOTIFY_DOWNLOAD_BEFORE_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers);
-$zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers);
+$zco_notifier->notify('NOTIFY_DOWNLOAD_BEFORE_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_extra_headers);
+/**
+ * We are ready to begin the actual download.
+ * This hook allows observer classes to trigger downloading from Amazon S3, etc
+ */
+$zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_extra_headers);
 
 
 /**
@@ -142,6 +147,7 @@ $zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_hos
 $hfile = $hline = '';
 if (headers_sent($hfile, $hline)) {
   $msg = 'DOWNLOAD PROBLEM: Cannot begin download for ' . $origin_filename . ' because HTTP headers were already sent. This indicates a PHP error, probably in a language file.  Start by checking ' . $hfile . ' on line ' . $hline . '.';
+  error_log($msg);
   zen_mail('', STORE_OWNER_EMAIL_ADDRESS, ERROR_CUSTOMER_DOWNLOAD_FAILURE, $msg, STORE_NAME, EMAIL_FROM);
 }
 
@@ -170,13 +176,7 @@ if ($browser_headers_override != '') {
   header("Last-Modified: " . gmdate("D,d M Y H:i:s") . " GMT");
   switch($detectedBrowser)
   {
-    case 'IE5':
     case 'IE6':
-      header("Pragma: public");
-      header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-      header("Cache-Control: private", FALSE);
-      header("Cache-Control: max-age=1");  // stores for only 1 second, which helps allow SSL downloads to work more reliably in IE
-    break;
     case 'IE7':
     case 'IE8':
     case 'IE9':
