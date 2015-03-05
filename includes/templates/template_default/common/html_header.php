@@ -5,10 +5,10 @@
  * outputs the html header, eg the doctype and the entire [HEAD] section
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 17 16:02:00 2012 -0400 Modified in v1.5.1 $
+ * @version $Id:  Modified in v1.6.0 $
  */
 
 /**
@@ -24,8 +24,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="<?php echo STORE_NAME ?>">
     <meta name="generator" content="shopping cart program by Zen Cart(R), http://www.zen-cart.com eCommerce software">
+<?php if (META_TAG_KEYWORDS != '') { ?>
     <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>">
+<?php } ?>
+<?php if (META_TAG_DESCRIPTION != '') { ?>
     <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>">
+<?php } ?>
 <?php if ($robotsNoIndex === true) { ?>
     <meta name="robots" content="noindex, nofollow"<?php if ($isRobotsMaintenanceMode) echo ' mode="maintenance"'; ?>>
 <?php } ?>
