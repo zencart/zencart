@@ -11,7 +11,8 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$last_order = 0;
+
+$last_order = isset($_GET['order_id']) ? $_GET['order_id'] : 0;
 $customer_lookup_method = 'customerid';
 $show_footer_link_to_my_account = ($current_page != FILENAME_ACCOUNT_HISTORY_INFO);
 

@@ -21,10 +21,13 @@ class zcObserverDownloadsViaAws extends base {
   // and AMAZON_S3_ACCESS_SECRET
   // --------------------------------------------------
   /**
-   * Set your Amazon AWS S3 Access Key and Secret Key here
+   * You may set your Amazon AWS S3 Access Key and Secret Key here, as long as you're not committing this file to a version-control system like git.
    * @var string
    */
   private $aws_key = "MY_AMAZON_S3_ACCESS_KEY";
+  /**
+   * @var string
+   */
   private $aws_secret = "MY_AMAZON_S3_SECRET_XXXXXXXXX";
 
   /**
@@ -90,6 +93,7 @@ class zcObserverDownloadsViaAws extends base {
     $data['filesize_units'] = '';
 
     // could optionally add an AWS SDK call to actually check that the object exists
+    // but for now we're simply assuming that it does
     $data['is_downloadable'] = $data['file_exists'] = true;
 
   }
@@ -154,9 +158,9 @@ class zcObserverDownloadsViaAws extends base {
    * @param integer $downloadFilesize (mutable)
    * @param string $mime_type (mutable)
    * @param array $fields  array of data from db query feeding the download page
-   * @param string $browser_headers (mutable)
+   * @param string $browser_extra_headers (mutable)
    */
-  protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_headers)
+  protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_extra_headers)
   {
 //     // compatibility for ZC versions older than v1.6.0:
 //     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {

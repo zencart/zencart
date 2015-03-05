@@ -123,9 +123,9 @@ class zcObserverDownloadsViaUrl extends base {
    * @param integer $downloadFilesize (mutable)
    * @param string $mime_type (mutable)
    * @param array $fields  array of data from db query feeding the download page
-   * @param string $browser_headers (mutable)
+   * @param string $browser_extra_headers (mutable)
    */
-  protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_headers)
+  protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_extra_headers)
   {
 //     // compatibility for ZC versions older than v1.6.0:
 //     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {
