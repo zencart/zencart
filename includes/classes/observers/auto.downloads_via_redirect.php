@@ -63,19 +63,12 @@ class zcObserverDownloadsViaRedirect extends base {
    */
   protected function updateNotifyDownloadReadyToRedirect(&$class, $eventID, $array, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$link_create_status)
   {
-//     // compatibility for ZC versions older than v1.6.0:
-//     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {
-//       list($origin_filename, $browser_filename, $downloadFilesize, $ipaddress, $fields) = each($array);
-//     }
-//     if (isset($source_directory) && $source_directory != '') $this->source_directory = $source_directory;
-
     $this->garbageCollectionUnlinkTempFolders($this->pubFolder);
     $tempdir = $this->generateRandomName() . '-' . time();
     umask(0000);
     mkdir($this->pubFolder . $tempdir, octdec(DOWNLOAD_CHMOD));
     $download_link = str_replace(array('/','\\'), '_', $browser_filename);
     $link_create_status = @symlink($source_directory . $origin_filename, $this->pubFolder . $tempdir . '/' . $download_link);
-
     if ($link_create_status==true) {
       $this->notify('NOTIFY_DOWNLOAD_VIA_SYMLINK___BEGINS', array($download_link, $origin_filename, $tempdir));
       header("HTTP/1.1 303 See Other");
@@ -117,7 +110,7 @@ class zcObserverDownloadsViaRedirect extends base {
     while ($subdir = readdir($h1)) {
       // Ignore non directories
       if (!is_dir($dir . $subdir)) continue;
-      // Ignore . and .. and .svn
+      // Ignore . and .. and VCS folders
       if ($subdir == '.' || $subdir == '..' || $subdir == '.git' || $subdir == '.svn') continue;
       // Loop and unlink files in subdirectory
       $h2 = opendir($dir . $subdir);

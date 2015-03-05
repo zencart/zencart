@@ -92,10 +92,7 @@ class zcObserverDownloadsViaAws extends base {
     $data['filesize'] = isset($file_parts[2]) ? number_format($file_parts[2], 0) : '';
     $data['filesize_units'] = '';
 
-    // could optionally add an AWS SDK call to actually check that the object exists
-    // but for now we're simply assuming that it does
-    $data['is_downloadable'] = $data['file_exists'] = true;
-
+    $data['is_downloadable'] = $data['file_exists'] = $this->testFileExists($data['filename']);
   }
 
   /**
@@ -128,13 +125,6 @@ class zcObserverDownloadsViaAws extends base {
    */
   protected function updateNotifyCheckDownloadHandler(&$class, $eventID, $var, &$fields, &$origin_filename, &$browser_filename, &$source_directory, &$file_exists, &$service, &$isExpired, &$download_timestamp)
   {
-//     // compatibility for ZC versions older than v1.6.0:
-//     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {
-//       $fields = $var->fields;
-//       $browser_filename = $origin_filename = $fields['orders_products_filename'];
-//       $source_directory = DIR_FS_DOWNLOAD;
-//     }
-
     $file_parts = $this->parseFileParts($origin_filename);
     if ($file_parts[0] == 'aws') {
       $origin_filename  = $file_parts[1];
@@ -162,17 +152,10 @@ class zcObserverDownloadsViaAws extends base {
    */
   protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_extra_headers)
   {
-//     // compatibility for ZC versions older than v1.6.0:
-//     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {
-//       list($origin_filename, $browser_filename, $downloadFilesize, $ipaddress, $fields) = each($array);
-//     }
-//     if (isset($source_directory) && $source_directory != '') $this->source_directory = $source_directory;
-
-
     // verify that the passed file is indeed intended for aws
     if ($source_directory != 'aws') {
       $file_parts = $this->parseFileParts($origin_filename);
-      if ($file_parts[0] != 'aws') return;
+      if ($file_parts[0] != 'aws') return false;
       $origin_filename  = $file_parts[1];
       $browser_filename = substr($origin_filename, strrpos($origin_filename, '/') + 1);
       $source_directory = $file_parts[0];
@@ -234,7 +217,8 @@ class zcObserverDownloadsViaAws extends base {
    */
   private function testFileExists($filename)
   {
-    //@TODO invoke AWS SDK to test whether the bucket+file exists.
+    // @TODO: could optionally add an AWS SDK call to actually check that the object (bucket+file) exists
+    // but for now we're simply assuming that it does
     return true;
   }
 

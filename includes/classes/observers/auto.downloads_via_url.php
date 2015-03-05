@@ -15,9 +15,8 @@
 class zcObserverDownloadsViaUrl extends base {
 
   public function __construct() {
-    $this->attach($this, array('NOTIFY_CHECK_DOWNLOAD_HANDLER', 'NOTIFY_DOWNLOAD_READY_TO_START', 'NOTIFY_MODULE_DOWNLOAD_TEMPLATE_DETAILS'));
+    $this->attach($this, array('NOTIFY_CHECK_DOWNLOAD_HANDLER', 'NOTIFY_DOWNLOAD_READY_TO_START', 'NOTIFY_MODULE_DOWNLOAD_TEMPLATE_DETAILS', 'NOTIFY_MODULE_DOWNLOADABLE_FILE_EXISTS'));
   }
-
 
   /**
    * Parse the file details for display on template page
@@ -56,11 +55,8 @@ class zcObserverDownloadsViaUrl extends base {
     $data['filesize'] = isset($file_parts[2]) ? number_format($file_parts[2], 0) : '';
     $data['filesize_units'] = '';
 
-    // could optionally add an AWS SDK call to actually check that the object exists
-    $data['is_downloadable'] = $data['file_exists'] = true;
-
+    $data['is_downloadable'] = $data['file_exists'] = $this->testFileExists($data['filename']);
   }
-
 
   /**
    * This observer should set $handler to blank if it fails to validate whether $filename exists at the destination URL.
@@ -93,13 +89,6 @@ class zcObserverDownloadsViaUrl extends base {
    */
   protected function updateNotifyCheckDownloadHandler(&$class, $eventID, $var, &$fields, &$origin_filename, &$browser_filename, &$source_directory, &$file_exists, &$service)
   {
-//     // compatibility for ZC versions older than v1.6.0:
-//     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {
-//       $fields = $var->fields;
-//       $browser_filename = $origin_filename = $fields['orders_products_filename'];
-//       $source_directory = DIR_FS_DOWNLOAD;
-//     }
-
     $file_parts = $this->parseFileParts($origin_filename);
     if ($file_parts[0] == 'http' || $file_parts[0] == 'https') {
       $origin_filename  = $file_parts[1];
@@ -127,26 +116,18 @@ class zcObserverDownloadsViaUrl extends base {
    */
   protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_extra_headers)
   {
-//     // compatibility for ZC versions older than v1.6.0:
-//     if (PROJECT_VERSION_MAJOR == '1' && PROJECT_DB_VERSION_MINOR < '6.0') {
-//       list($origin_filename, $browser_filename, $downloadFilesize, $ipaddress, $fields) = each($array);
-//     }
-//     if (isset($source_directory) && $source_directory != '') $this->source_directory = $source_directory;
-
-
-    // verify that the passed file is indeed intended for aws
+    // verify that the passed "file" is an http/https URL
     if ($source_directory != 'http' && $source_directory != 'https') {
       $file_parts = $this->parseFileParts($origin_filename);
-      if ($file_parts[0] == 'http' || $file_parts[0] == 'https') return;
-
+      if ($file_parts[0] != 'http' && $file_parts[0] != 'https') return;
       $origin_filename  = $file_parts[1];
       $browser_filename = substr($origin_filename, strrpos($origin_filename, '/') + 1);
       $source_directory = $file_parts[0];
       $downloadFilesize = $file_parts[2];
     }
 
-    // prepare AWS URL
-    $url = $this->buildRedirectUrl($service . $origin_filename);
+    // prepare redirect URL
+    $url = $this->buildRedirectUrl($service . ':' . $origin_filename);
 
     // redirect to external download script
     header("HTTP/1.1 303 See Other");
@@ -158,6 +139,7 @@ class zcObserverDownloadsViaUrl extends base {
   /**
    * parse file details to determine if its download should be handled by a simple HTTP URL
    * Evidence is the that filename will use colons as delimiters ... http://domain/filename:filesize
+   * (filesize is optional)
    *
    * @param string $filename
    * @return boolean|array
