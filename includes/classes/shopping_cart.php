@@ -20,12 +20,12 @@ class shoppingCart extends base {
   var $contents;
   /**
    * shopping cart total price
-   * @var decimal
+   * @var float
    */
   var $total;
   /**
    * shopping cart total weight
-   * @var decimal
+   * @var float
    */
   var $weight;
   /**
@@ -40,33 +40,33 @@ class shoppingCart extends base {
   var $content_type;
   /**
    * number of free shipping items in cart
-   * @var decimal
+   * @var float
    */
   var $free_shipping_item;
   /**
    * total price of free shipping items in cart
-   * @var decimal
+   * @var float
    */
   var $free_shipping_weight;
   /**
    * total weight of free shipping items in cart
-   * @var decimal
+   * @var float
    */
   var $free_shipping_price;
   /**
    * total downloads in cart
-   * @var decimal
+   * @var float
    */
   var $download_count;
   /**
    * shopping cart total price before Specials, Sales and Discounts
-   * @var decimal
+   * @var float
    */
   var $total_before_discounts;
   /**
    * set to TRUE to see debug messages for developer use when troubleshooting add/update cart
    * Then, Logout/Login to reset cart for change
-   * @var string
+   * @var boolean
    */
   var $display_debug_messages = FALSE;
   var $flag_duplicate_msgs_set = FALSE;
@@ -244,7 +244,7 @@ class shoppingCart extends base {
    * cart.
    *
    * @param integer the product ID of the item to be added
-   * @param decimal the quantity of the item to be added
+   * @param float the quantity of the item to be added
    * @param array any attributes that are attache to the product
    * @param boolean whether to add the product to the notify list
    * @return void
@@ -361,7 +361,7 @@ class shoppingCart extends base {
    * logged in.
    *
    * @param mixed product ID of item to update
-   * @param decimal the quantity to update the item to
+   * @param float the quantity to update the item to
    * @param array product atributes attached to the item
    * @return void
    * @global object access to the db object
@@ -531,7 +531,7 @@ class shoppingCart extends base {
    * To lookup based only on 12 regardless of the attribute hash, use another method: in_cart_product_total_quantity()
    *
    * @param mixed product ID of item to check
-   * @return decimal the quantity of the item
+   * @return float the quantity of the item
    */
   function get_quantity($products_id) {
     $this->notify('NOTIFIER_CART_GET_QUANTITY_START', array(), $products_id);
@@ -958,7 +958,7 @@ class shoppingCart extends base {
    * Method to calculate price of attributes for a given item
    *
    * @param mixed the product ID of the item to check
-   * @return decimal the pice of the items attributes
+   * @return float the price of the items attributes
    * @global object access to the db object
    */
   function attributes_price($products_id) {
@@ -1061,8 +1061,8 @@ class shoppingCart extends base {
    * Method to calculate one time price of attributes for a given item
    *
    * @param mixed the product ID of the item to check
-   * @param decimal item quantity
-   * @return decimal the pice of the items attributes
+   * @param float item quantity
+   * @return float the price of the items attributes
    * @global object access to the db object
    */
   function attributes_price_onetime_charges($products_id, $qty) {
@@ -1134,7 +1134,7 @@ class shoppingCart extends base {
    * Method to calculate weight of attributes for a given item
    *
    * @param mixed the product ID of the item to check
-   * @return decimal the weight of the items attributes
+   * @return float the weight of the items attributes
    */
   function attributes_weight($products_id) {
     global $db;
@@ -1379,7 +1379,7 @@ class shoppingCart extends base {
   /**
    * Method to calculate total price of items in cart
    *
-   * @return decimal Total Price
+   * @return float Total Price
    */
   function show_total() {
     $this->notify('NOTIFIER_CART_SHOW_TOTAL_START');
@@ -1391,7 +1391,7 @@ class shoppingCart extends base {
   /**
    * Method to calculate total price of items in cart before Specials, Sales, Discounts
    *
-   * @return decimal Total Price before Specials, Sales, Discounts
+   * @return float Total Price before Specials, Sales, Discounts
    */
   function show_total_before_discounts() {
     $this->notify('NOTIFIER_CART_SHOW_TOTAL_BEFORE_DISCOUNT_START');
@@ -1403,7 +1403,7 @@ class shoppingCart extends base {
   /**
    * Method to calculate total weight of items in cart
    *
-   * @return decimal Total Weight
+   * @return float Total Weight
    */
   function show_weight() {
     $this->calculate();
@@ -1412,7 +1412,7 @@ class shoppingCart extends base {
   /**
    * Method to generate a cart ID
    *
-   * @param length of ID to generate
+   * @param integer length of ID to generate
    * @return string cart ID
    */
   function generate_cart_id($length = 5) {
@@ -1571,8 +1571,8 @@ class shoppingCart extends base {
   /**
    * Method to calculate item quantity, bounded the mixed/min units settings
    *
-   * @param boolean product id of item to check
-   * @return deciaml
+   * @param mixed product id of item to check
+   * @return float
    */
   function in_cart_mixed($products_id) {
     global $db;
@@ -1613,8 +1613,8 @@ class shoppingCart extends base {
   /**
    * Method to calculate item quantity, bounded the mixed/min units settings
    *
-   * @param boolean product id of item to check
-   * @return deciaml
+   * @param mixed product id of item to check
+   * @return float
    */
   function in_cart_mixed_discount_quantity($products_id) {
     global $db;
@@ -1652,9 +1652,9 @@ class shoppingCart extends base {
    * $check_value is the value being tested for - default is 1
    * Syntax: $_SESSION['cart']->in_cart_check('product_is_free','1');
    *
-   * @param string product field to check
+   * @param mixed product field to check
    * @param mixed value to check for
-   * @return integer number of items matching restraint
+   * @return float number of items matching restraint
    */
   function in_cart_check($check_what, $check_value='1') {
     global $db;
@@ -1687,7 +1687,7 @@ class shoppingCart extends base {
   /**
    * Method to return the number of free shipping items in the cart
    *
-   * @return decimal
+   * @return float
    */
   function free_shipping_items() {
     $this->calculate();
@@ -1696,7 +1696,7 @@ class shoppingCart extends base {
   /**
    * Method to return the total price of free shipping items in the cart
    *
-   * @return decimal
+   * @return float
    */
   function free_shipping_prices() {
     $this->calculate();
@@ -1706,7 +1706,7 @@ class shoppingCart extends base {
   /**
    * Method to return the total weight of free shipping items in the cart
    *
-   * @return decimal
+   * @return float
    */
   function free_shipping_weight() {
     $this->calculate();
@@ -1717,7 +1717,7 @@ class shoppingCart extends base {
   /**
    * Method to return the total number of downloads in the cart
    *
-   * @return decimal
+   * @return float
    */
   function download_counts() {
     $this->calculate();
@@ -2208,7 +2208,7 @@ class shoppingCart extends base {
  * USAGE:  $qty = $this->adjust_quantity($qty, (int)$products_id, 'shopping_cart');
  *
  * @param float $check_qty
- * @param int $products
+ * @param integer $products
  * @param string $message
  */
   function adjust_quantity($check_qty, $products, $stack = 'shopping_cart') {
@@ -2241,10 +2241,9 @@ class shoppingCart extends base {
  * USAGE:  $chk_attrib_1_16 = $this->in_cart_check_attrib_quantity(1, 16);
  * USAGE:  $chk_attrib_1_16 = $_SESSION['cart']->in_cart_check_attrib_quantity(1, 16);
  *
- * @param float $check_qty
- * @param int $check_option_id
- * @param int $check_option_values_id
- * @param string $message
+ * @param integer $check_option_id
+ * @param integer $check_option_values_id
+ * @return float
  */
   function in_cart_check_attrib_quantity($check_option_id, $check_option_values_id) {
     // if nothing is in cart return 0
@@ -2271,7 +2270,7 @@ class shoppingCart extends base {
  * USAGE:  $product_total_price = $this->in_cart_product_total_price(12);
  * USAGE:  $chk_product_cart_total_price = $_SESSION['cart']->in_cart_product_total_price(12);
  *
- * @param str $product_id
+ * @param mixed $product_id
  */
   function in_cart_product_total_price($product_id) {
     $products = $this->get_products();
@@ -2296,7 +2295,7 @@ class shoppingCart extends base {
  * USAGE:  $product_total_quantity = $this->in_cart_product_total_quantity(12);
  * USAGE:  $chk_product_cart_total_quantity = $_SESSION['cart']->in_cart_product_total_quantity(12);
  *
- * @param str $product_id
+ * @param mixed $product_id
  */
   function in_cart_product_total_quantity($product_id) {
     $products = $this->get_products();
@@ -2318,7 +2317,7 @@ class shoppingCart extends base {
  * USAGE:  $product_total_weight = $this->in_cart_product_total_weight(12);
  * USAGE:  $chk_product_cart_total_weight = $_SESSION['cart']->in_cart_product_total_weight(12);
  *
- * @param string $product_id
+ * @param mixed $product_id
  * @return float
  */
   function in_cart_product_total_weight($product_id) {
