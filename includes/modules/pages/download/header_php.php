@@ -140,7 +140,6 @@ $zco_notifier->notify('NOTIFY_DOWNLOAD_BEFORE_START', $_SESSION['customers_host_
  */
 $zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_extra_headers);
 
-
 /**
  * Check whether any headers have already been set, because that will cause download problems:
  */
@@ -151,7 +150,7 @@ if (headers_sent($hfile, $hline)) {
   zen_mail('', STORE_OWNER_EMAIL_ADDRESS, ERROR_CUSTOMER_DOWNLOAD_FAILURE, $msg, STORE_NAME, EMAIL_FROM);
 }
 
-if ($browser_headers_override != '') {
+if ($browser_headers_override == '') {
   /**
    * Now send the file with header() magic
    * The "must-revalidate" and expiry times are used to prevent caching and fraudulent re-acquiring of files w/o redownloading.
@@ -196,11 +195,12 @@ if ($browser_headers_override != '') {
   header($browser_headers_override);
 }
 
-header($browser_extra_headers);
+if ($browser_extra_headers != '') header($browser_extra_headers);
 
 // Attempt to do download-by-redirect. It won't fire if not enabled. If it's disabled or fails setup we will cascade to streaming instead.
 $link_create_status = false;
 $zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_REDIRECT', array(), $service, $origin_filename, $browser_filename, $source_directory, $link_create_status);
+
 
 // We don't get here unless not downloading by redirect; instead, we stream it to the browser.
 // This happens if the symlink couldn't happen, or if set as default in Admin

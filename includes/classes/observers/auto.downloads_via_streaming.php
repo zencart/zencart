@@ -38,30 +38,41 @@ class zcObserverDownloadsViaStreaming extends base {
     if ((int)$downloadFilesize > 0) header("Content-Length: " . (string) $downloadFilesize);
 
     $disabled_funcs = @ini_get("disable_functions");
+
     if (DOWNLOAD_IN_CHUNKS != 'true' && !strstr($disabled_funcs,'readfile')) {
       $this->notify('NOTIFY_DOWNLOAD_WITHOUT_REDIRECT___COMPLETED', $origin_filename);
+
       // close the session, since it is not needed for streaming the file contents
       session_write_close();
+
       // Dump the file to the browser. This will work on all systems, but will need considerable resources
       readfile($source_directory . $origin_filename);
+
     } else {
       // override PHP timeout to 25 minutes, if allowed
       @set_time_limit(1500);
+
       $this->notify('NOTIFY_DOWNLOAD_IN_CHUNKS___COMPLETED', $origin_filename);
+
       // loop with fread($fp, xxxx) to allow streaming in chunk sizes below the PHP memory_limit
       $handle = @fopen($source_directory . $origin_filename, "rb");
       if ($handle) {
+
         // close the session, since it is not needed for streaming the file contents
         session_write_close();
+
         // stream the file in 4K chunks
         while (!@feof($handle)) {
           echo(fread($handle, 4096));
           @flush();
         }
         fclose($handle);
+
       } else {
         // Throw error condition -- this should never happen!
-        $messageStack->add_session('default', 'Please contact store owner.  ERROR: Cannot read file: ' . $origin_filename, 'error');
+        $msg = 'Please contact store owner.  ERROR: Cannot read file: ' . $origin_filename;
+        $messageStack->add_session('default', $msg, 'error');
+        error_log($msg);
         zen_mail('', STORE_OWNER_EMAIL_ADDRESS, ERROR_CUSTOMER_DOWNLOAD_FAILURE, "Unable to open file '" . $origin_filename . " for reading.  Check the file permissions.", STORE_NAME, EMAIL_FROM);
       }
       $this->notify('NOTIFY_DOWNLOAD_WITHOUT_REDIRECT_VIA_CHUNKS___COMPLETED');
