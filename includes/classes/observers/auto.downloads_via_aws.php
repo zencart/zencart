@@ -39,6 +39,12 @@ class zcObserverDownloadsViaAws extends base {
   protected $link_expiry_time = 30;
 
   /**
+   * URL to Amazon S3 server
+   * @var string URL
+   */
+  protected $aws_server = "https://s3.amazonaws.com";
+
+  /**
    * Class constructor
    */
   public function __construct() {
@@ -195,7 +201,6 @@ class zcObserverDownloadsViaAws extends base {
    * @return string $url
    */
   private function buildRedirectUrl($bucketAndFilename) {
-    $aws_server = "s3.amazonaws.com";
 
     // this calculates a link that's good for 30 seconds, which is plenty of time for it to get started, and prevents theft
     $expires = time() + $this->link_expiry_time;
@@ -205,7 +210,7 @@ class zcObserverDownloadsViaAws extends base {
 
     $params = 'AWSAccessKeyId=' . $this->aws_key . '&Expires=' . $expires . '&Signature=' . $sig;
 
-    return 'http://' . $aws_server . '/' . $bucketAndFilename . '?' . $params;
+    return $this->aws_server . '/' . $bucketAndFilename . '?' . $params;
   }
 
   /**
