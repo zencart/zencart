@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Jul 21 17:10:54 2012 -0400 Modified in v1.6.0 $
+ * @version $Id:  Modified in v1.6.0 $
  */
   require('includes/application_top.php');
 
@@ -1535,11 +1535,8 @@ if ($action == '') {
         $download_display = $db->Execute($download_display_query_raw);
         if ($download_display->RecordCount() > 0) {
 
-// Moved to /admin/includes/configure.php
-  if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
-
   $filename_is_missing='';
-  if ( !file_exists(DIR_FS_DOWNLOAD . $download_display->fields['products_attributes_filename']) ) {
+  if ( !zen_orders_products_downloads($download_display->fields['products_attributes_filename']) ) {
     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
   } else {
     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
