@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: orders_download.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: orders_download.php drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -64,7 +64,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       }
 
 // if not on server show red
-      if (!zen_orders_products_downloads($orders_download->fields['orders_products_filename'])) {
+      if (!zen_verify_download_file_is_valid($orders_download->fields['orders_products_filename'])) {
         $zc_file_status = zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF);
       }
 ?>

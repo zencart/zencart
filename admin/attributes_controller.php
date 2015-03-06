@@ -1536,7 +1536,7 @@ if ($action == '') {
         if ($download_display->RecordCount() > 0) {
 
   $filename_is_missing='';
-  if ( !zen_orders_products_downloads($download_display->fields['products_attributes_filename']) ) {
+  if ( !zen_verify_download_file_is_valid($download_display->fields['products_attributes_filename']) ) {
     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
   } else {
     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');

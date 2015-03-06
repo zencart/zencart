@@ -2516,7 +2516,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       if ($check_valid == true) {
         $valid_downloads = '';
         while (!$download_display->EOF) {
-          if (!file_exists(zen_get_download_handler($download_display->fields['products_attributes_filename']))) {
+          if (!zen_verify_download_file_is_valid($download_display->fields['products_attributes_filename'])) {
             $valid_downloads .= '<br />&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . ' Invalid: ' . $download_display->fields['products_attributes_filename'];
             // break;
           } else {
@@ -2670,7 +2670,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     global $db;
     $configuration_query= $db->Execute("select configuration_group_title from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id ='" . (int)$lookup . "'");
     if ( $configuration_query->RecordCount() == 0 ) {
-      return (int)$lookup; 
+      return (int)$lookup;
     }
     return $configuration_query->fields['configuration_group_title'];
   }
@@ -3263,7 +3263,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 /**
  * check that the specified download filename exists on the filesystem
  */
-  function zen_orders_products_downloads($check_filename) {
+  function zen_verify_download_file_is_valid($check_filename) {
     global $zco_notifier;
 
     $handler = zen_get_download_handler($check_filename);
