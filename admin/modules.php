@@ -181,32 +181,31 @@ require('includes/admin_html_head.php');
       include($module_directory . $file);
       $class = substr($file, 0, strrpos($file, '.'));
       if (class_exists($class)) {
-          $module = new $class;
-          $check = $module->check();
-          if ($check > 0) {
-              if ($module->sort_order > 0) {
-                  if (isset($installed_modules[$module->sort_order]) && $installed_modules[$module->sort_order] != '') {
-                      $zc_valid = false;
-                  }
-                  $installed_modules[$module->sort_order] = $file;
-              } else {
-                  $installed_modules[] = $file;
-              }
-              if (method_exists($module, 'check_enabled_for_zone') && $module->enabled) $module->check_enabled_for_zone();
-              if (method_exists($module, 'check_enabled') && $module->enabled) $module->check_enabled_for_zone();
+        $module = new $class;
+        $check = $module->check();
+        if ($check > 0) {
+          if ($module->sort_order > 0) {
+            if (isset($installed_modules[$module->sort_order]) && $installed_modules[$module->sort_order] != '') {
+              $zc_valid = false;
+            }
+            $installed_modules[$module->sort_order] = $file;
+          } else {
+            $installed_modules[] = $file;
           }
+          if (method_exists($module, 'check_enabled_for_zone') && $module->enabled) $module->check_enabled_for_zone();
+          if (method_exists($module, 'check_enabled') && $module->enabled) $module->check_enabled_for_zone();
+        }
 
-          //test for missing keys
-          $error = FALSE;
-          if ($module->enabled) {
-            foreach ($module->keys() as $test) {
-              if (!defined($test)) {
-                  $error = TRUE;
-                  break;
-              }
+        //test for missing keys
+        $error = FALSE;
+        if ($module->enabled) {
+          foreach ($module->keys() as $test) {
+            if (!defined($test)) {
+              $error = TRUE;
+              break;
             }
           }
-
+        }
         if ($error) $module->title .= ' ' . WARNING_MODULES_MISSING_KEYS;
 
         if (in_array($set, array('payment', 'shipping'))) {
@@ -224,7 +223,6 @@ require('includes/admin_html_head.php');
                                'status' => $check);
           $module_keys = $module->keys();
           $keys_extra = array();
-          $key_missing = false; 
           for ($j=0, $k=sizeof($module_keys); $j<$k; $j++) {
             $key_value = $db->Execute("select configuration_title, configuration_value, configuration_key,
                                           configuration_description, use_function, set_function
@@ -236,8 +234,6 @@ require('includes/admin_html_head.php');
               $keys_extra[$module_keys[$j]]['description'] = $key_value->fields['configuration_description'];
               $keys_extra[$module_keys[$j]]['use_function'] = $key_value->fields['use_function'];
               $keys_extra[$module_keys[$j]]['set_function'] = $key_value->fields['set_function'];
-            } else { 
-              $key_missing = true; 
             }
           }
           $module_info['keys'] = $keys_extra;
