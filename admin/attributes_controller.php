@@ -850,8 +850,8 @@ function popupWindow(url) {
                 <td class="main" align="left"><?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_delete', true) . ' ' . TEXT_COPY_ATTRIBUTES_DELETE . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_update') . ' ' . TEXT_COPY_ATTRIBUTES_UPDATE . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_ignore') . ' ' . TEXT_COPY_ATTRIBUTES_IGNORE; ?></td>
               </tr>
               <tr>
-                <td class="alert" align="center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO . '<br />' . zen_draw_products_pull_down('products_update_id', 'size="15"', $products_exclude_array, true, '', true); ?><br />
-                <?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO_MANUAL; ?><br /><input type="text" name="products_update_id_manual" value="<?php echo zen_output_string_protected($_POST['products_update_id_manual']); ?>" size="4">&nbsp;</td>
+                <td class="main" align="center"><?php echo '<span class="alert">' . TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO . '</span>' . '<br />' . zen_draw_products_pull_down('products_update_id', 'size="15"', $products_exclude_array, true, '', true); ?><br />
+                <span class="alert"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO_MANUAL; ?></span><br /><input type="text" name="products_update_id_manual" value="<?php echo zen_output_string_protected($_POST['products_update_id_manual']); ?>" size="6"><br /><br /></td>
                 </td>
                 <td class="main" align="center"><?php echo zen_image_submit('button_copy.gif', IMAGE_COPY) . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
               </tr>
@@ -875,8 +875,8 @@ function popupWindow(url) {
                 <td class="main" align="left"><?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_delete', true) . ' ' . TEXT_COPY_ATTRIBUTES_DELETE . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_update') . ' ' . TEXT_COPY_ATTRIBUTES_UPDATE . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_ignore') . ' ' . TEXT_COPY_ATTRIBUTES_IGNORE; ?></td>
               </tr>
               <tr>
-                <td class="alert" align="center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO . '<br />' . zen_draw_products_pull_down_categories('categories_update_id', 'size="5"', '', true, true); ?><br />
-                <?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO_MANUAL; ?><br /><input type="text" name="categories_update_id_manual" value="<?php echo zen_output_string_protected($_POST['categories_update_id_manual']); ?>" size="4">&nbsp;</td>
+                <td class="main" align="center"><?php echo '<span class="alert">' . TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO . '</span>' . '<br />' . zen_draw_products_pull_down_categories('categories_update_id', 'size="5"', '', true, true); ?><br />
+                <span class="alert"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO_MANUAL; ?></span><br /><input type="text" name="categories_update_id_manual" value="<?php echo zen_output_string_protected($_POST['categories_update_id_manual']); ?>" size="6"><br /><br /></td>
                 <td class="main" align="center"><?php echo zen_image_submit('button_copy.gif', IMAGE_COPY) . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
               </tr>
             </table></td>
