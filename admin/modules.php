@@ -197,16 +197,15 @@ require('includes/admin_html_head.php');
         }
 
         //test for missing keys
-        $error = FALSE;
-        if ($module->enabled) {
-          foreach ($module->keys() as $test) {
-            if (!defined($test)) {
-              $error = TRUE;
-              break;
-            }
+        $keycount = 0; 
+        foreach ($module->keys() as $test) {
+          if (defined($test)) {
+            $keycount++; 
           }
         }
-        if ($error) $module->title .= ' ' . WARNING_MODULES_MISSING_KEYS;
+        if ($keycount > 0 && $keycount != sizeof($module->keys())) { 
+           $module->title .= ' ' . WARNING_MODULES_MISSING_KEYS;
+        } 
 
         if (in_array($set, array('payment', 'shipping'))) {
           $moduleStatusIcon = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
