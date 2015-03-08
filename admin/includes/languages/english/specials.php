@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: specials.php ajeh  Modified in v1.6.0 $
  */
 
 define('HEADING_TITLE', 'Specials');
@@ -99,3 +99,14 @@ define('SUCCESS_SPECIALS_REMOVED_MANUFACTURER', 'Specials removed for Manufactur
 
 define('SUCCESS_SPECIALS_UPDATED_MANUFACTURER', 'Specials updated for Manufacturer: ');
 define('SUCCESS_SPECIALS_PRICE_SET', 'Specials set to: ');
+
+define('TEXT_SORT_SPECIALS_TITLE_INFO', 'Sort Specials by:');
+define('TEXT_SORT_PRODUCTS_ID', 'Products ID#');
+define('TEXT_SORT_MODEL_NAME', 'Model #, Product Name');
+define('TEXT_SORT_NAME_MODEL', 'Product Name, Model #');
+define('TEXT_SORT_AVAILABLE_DESC_NAME', 'Available Desc, Product Name');
+define('TEXT_SORT_AVAILABLE_ASC_NAME', 'Available Asc, Product Name');
+define('TEXT_SORT_EXPIRE_DESC_NAME', 'Expires Desc, Product Name');
+define('TEXT_SORT_EXPIRE_ASC_NAME', 'Expires Asc, Product Name');
+define('TEXT_SORT_STATUS_NAME_DESC_NAME', 'Status Desc, Product Name');
+define('TEXT_SORT_STATUS_NAME_ASC_NAME', 'Status Asc, Product Name');
