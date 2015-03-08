@@ -40,4 +40,3 @@ filter:
         - 'includes/classes/class.phpbb.php'
         - 'includes/library/aura/*'
         - 'includes/modules/debug_blocks/*'
-        - 'includes/templates/*'
