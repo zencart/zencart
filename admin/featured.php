@@ -23,7 +23,7 @@
       case 'set_featured_sort_order':
         $_SESSION['featured_sort_order'] = $_GET['reset_featured_sort_order'];
         $action='';
-        zen_redirect(zen_href_link(FILENAME_FEATURED, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) && $_GET['sID'] > 0 ? 'sID=' . $_GET['sID'] : '') . (isset($_GET['search']) && trim($_GET['search']) != ''  ? '&search=' . $_GET['search'] : '')));
+        zen_redirect(zen_href_link(FILENAME_FEATURED, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['fID']) && $_GET['fID'] > 0 ? 'fID=' . $_GET['fID'] : '') . (isset($_GET['search']) && trim($_GET['search']) != ''  ? '&search=' . $_GET['search'] : '')));
         break;
       case 'setflag':
         if (isset($_POST['flag']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0))
@@ -181,7 +181,7 @@ require('includes/admin_html_head.php');
                               array('id' => '8', 'text' => TEXT_SORT_STATUS_NAME_ASC_NAME)
                               );
         echo TEXT_SORT_FEATURED_TITLE_INFO . zen_draw_form('set_featured_sort_order_form', FILENAME_FEATURED, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('reset_featured_sort_order', $featured_sort_order_array, $reset_featured_sort_order, 'onChange="this.form.submit();"') . zen_hide_session_id() .
-        ($_GET['sID'] != '' ? zen_draw_hidden_field('sID', $_GET['sID']) : '') .
+        ($_GET['fID'] != '' ? zen_draw_hidden_field('fID', $_GET['fID']) : '') .
         zen_draw_hidden_field('action', 'set_featured_sort_order') .
         '</form>';
 ?>
