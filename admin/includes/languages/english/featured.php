@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- *  $Id: featured.php 18695 2011-05-04 05:24:19Z drbyte $
+ *  $Id: featured.php ajeh  Modified in v1.6.0 $
  */
 
 define('HEADING_TITLE', 'Featured Products');
@@ -43,4 +43,14 @@ define('TEXT_INFO_HEADING_PRE_ADD_FEATURED', 'Manually add new Featured by Produ
 define('TEXT_INFO_PRE_ADD_INTRO', 'On large databases, you may Manually Add a Featured by the Product ID<br /><br />This is best used when the page takes too long to render and trying to select a Product from the dropdown becomes difficult due to too many Products from which to choose.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Please enter the Product ID to be Pre-Added: ');
 define('TEXT_INFO_MANUAL', 'Product ID to be Manually Added as a Featured');
-?>
+
+define('TEXT_SORT_FEATURED_TITLE_INFO', 'Sort Featured by:');
+define('TEXT_SORT_PRODUCTS_ID', 'Products ID#');
+define('TEXT_SORT_MODEL_NAME', 'Model #, Product Name');
+define('TEXT_SORT_NAME_MODEL', 'Product Name, Model #');
+define('TEXT_SORT_AVAILABLE_DESC_NAME', 'Available Desc, Product Name');
+define('TEXT_SORT_AVAILABLE_ASC_NAME', 'Available Asc, Product Name');
+define('TEXT_SORT_EXPIRE_DESC_NAME', 'Expires Desc, Product Name');
+define('TEXT_SORT_EXPIRE_ASC_NAME', 'Expires Asc, Product Name');
+define('TEXT_SORT_STATUS_NAME_DESC_NAME', 'Status Desc, Product Name');
+define('TEXT_SORT_STATUS_NAME_ASC_NAME', 'Status Asc, Product Name');
