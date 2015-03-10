@@ -170,8 +170,8 @@ require('includes/admin_html_head.php');
 // $_SESSION['featured_sort_order']
 // toggle switch for display sort order
 // order of display
-        $featured_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_PRODUCTS_ID),
-                              array('id' => '1', 'text' => TEXT_SORT_NAME_MODEL),
+        $featured_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_NAME_MODEL),
+                              array('id' => '1', 'text' => TEXT_SORT_PRODUCTS_ID),
                               array('id' => '2', 'text' => TEXT_SORT_MODEL_NAME),
                               array('id' => '3', 'text' => TEXT_SORT_AVAILABLE_DESC_NAME),
                               array('id' => '4', 'text' => TEXT_SORT_AVAILABLE_ASC_NAME),
@@ -296,10 +296,10 @@ require('includes/admin_html_head.php');
 //$_SESSION['featured_sort_order'] = 2;
 switch ((int)$_SESSION['featured_sort_order']) {
   case (0):
-    $order_by = " order by p.products_id ";
+    $order_by = " order by pd.products_name, p.products_model ";
     break;
   case (1):
-    $order_by = " order by pd.products_name, p.products_model ";
+    $order_by = " order by p.products_id ";
     break;
   case (2):
     $order_by = " order by p.products_model, pd.products_name ";
