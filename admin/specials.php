@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: specials.php 19294 2011-07-28 18:15:46Z drbyte $
+ * @version $Id: specials.php ajeh  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -12,11 +12,19 @@
   $currencies = new currencies();
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  if (!isset($_GET['reset_specials_sort_order'])) {
+    $reset_specials_sort_order = $_SESSION['specials_sort_order'];
+  }
 
   zen_set_time_limit(900);
 
   if (zen_not_null($action)) {
     switch ($action) {
+      case 'set_specials_sort_order':
+        $_SESSION['specials_sort_order'] = $_GET['reset_specials_sort_order'];
+        $action='';
+        zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) && $_GET['sID'] > 0 ? 'sID=' . $_GET['sID'] : '') . (isset($_GET['search']) && trim($_GET['search']) != ''  ? '&search=' . $_GET['search'] : '')));
+        break;
       case 'setflag':
         if (isset($_POST['flag']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0))
         {
@@ -463,6 +471,28 @@ require('includes/admin_html_head.php');
   }
 ?>
             </td>
+            <td class="smallText" align="right">
+<?php
+// add Sort Order here
+// $_SESSION['specials_sort_order']
+// toggle switch for display sort order
+// order of display
+        $specials_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_NAME_MODEL),
+                              array('id' => '1', 'text' => TEXT_SORT_PRODUCTS_ID),
+                              array('id' => '2', 'text' => TEXT_SORT_MODEL_NAME),
+                              array('id' => '3', 'text' => TEXT_SORT_AVAILABLE_DESC_NAME),
+                              array('id' => '4', 'text' => TEXT_SORT_AVAILABLE_ASC_NAME),
+                              array('id' => '5', 'text' => TEXT_SORT_EXPIRE_DESC_NAME),
+                              array('id' => '6', 'text' => TEXT_SORT_EXPIRE_ASC_NAME),
+                              array('id' => '7', 'text' => TEXT_SORT_STATUS_NAME_DESC_NAME),
+                              array('id' => '8', 'text' => TEXT_SORT_STATUS_NAME_ASC_NAME)
+                              );
+        echo TEXT_SORT_SPECIALS_TITLE_INFO . zen_draw_form('set_specials_sort_order_form', FILENAME_SPECIALS, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('reset_specials_sort_order', $specials_sort_order_array, $reset_specials_sort_order, 'onChange="this.form.submit();"') . zen_hide_session_id() .
+        ($_GET['sID'] != '' ? zen_draw_hidden_field('sID', $_GET['sID']) : '') .
+        zen_draw_hidden_field('action', 'set_specials_sort_order') .
+        '</form>';
+?>
+            </td>
           </form></tr>
           <tr>
             <td colspan="3" class="main"><?php echo TEXT_STATUS_WARNING; ?></td>
@@ -589,8 +619,39 @@ require('includes/admin_html_head.php');
     $search = " and (pd.products_name like '%" . $keywords . "%' or pd.products_description like '%" . $keywords . "%' or p.products_model like '%" . $keywords . "%')";
   }
 
-// order of display
-  $order_by = " order by pd.products_name ";
+//$_SESSION['specials_sort_order'] = 2;
+switch ((int)$_SESSION['specials_sort_order']) {
+  case (0):
+    $order_by = " order by pd.products_name, p.products_model ";
+    break;
+  case (1):
+    $order_by = " order by p.products_id ";
+    break;
+  case (2):
+    $order_by = " order by p.products_model, pd.products_name ";
+    break;
+  case (3):
+    $order_by = " order by s.specials_date_available DESC, pd.products_name ";
+    break;
+  case (4):
+    $order_by = " order by s.specials_date_available ASC, pd.products_name ";
+    break;
+  case (5):
+    $order_by = " order by s.expires_date DESC, pd.products_name ";
+    break;
+  case (6):
+    $order_by = " order by s.expires_date ASC, pd.products_name ";
+    break;
+  case (7):
+    $order_by = " order by s.status DESC, pd.products_name ";
+    break;
+  case (8):
+    $order_by = " order by s.status ASC, pd.products_name ";
+    break;
+  default:
+    $order_by = " order by pd.products_name, p.products_model ";
+    break;
+}
   $specials_query_raw = "select p.products_id, pd.products_name, p.products_model, p.products_price, p.products_priced_by_attribute, s.specials_id, s.specials_new_products_price, s.specials_date_added, s.specials_last_modified, s.expires_date, s.date_status_change, s.status, s.specials_date_available from " . TABLE_PRODUCTS . " p, " . TABLE_SPECIALS . " s, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p.products_id = s.products_id" . $search . $order_by;
 
 // Split Page
