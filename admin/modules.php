@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
@@ -197,16 +197,15 @@ require('includes/admin_html_head.php');
         }
 
         //test for missing keys
-        $error = FALSE;
-        if (is_numeric($module->sort_order)) {
-          foreach ($module->keys() as $test) {
-            if (!defined($test)) {
-              $error = TRUE;
-              break;
-            }
+        $keycount = 0; 
+        foreach ($module->keys() as $test) {
+          if (defined($test)) {
+            $keycount++; 
           }
         }
-        if ($error) $module->title .= ' ' . WARNING_MODULES_MISSING_KEYS;
+        if ($keycount > 0 && $keycount != sizeof($module->keys())) { 
+           $module->title .= ' ' . WARNING_MODULES_MISSING_KEYS;
+        } 
 
         if (in_array($set, array('payment', 'shipping'))) {
           $moduleStatusIcon = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
