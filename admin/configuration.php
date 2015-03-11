@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
@@ -21,7 +21,9 @@
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
           zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
         }
+        
         $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
+        require("includes/configuration_checks.php"); 
 
         $db->Execute("update " . TABLE_CONFIGURATION . "
                       set configuration_value = '" . zen_db_input($configuration_value) . "',
