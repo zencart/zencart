@@ -37,9 +37,11 @@ class zcActionAdminIndex extends zcActionAdminBase
     {
         $widgetProfileList = WidgetManager::getInstallableWidgetsList($_SESSION ['admin_id'], $_SESSION ['languages_id']);
         $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
-        $this->templateVariables ['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
-        $this->templateVariables ['widgets'] = WidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
-        $this->templateVariables ['widgetInfoList'] = $widgetInfoList;
+        if (sizeof($widgetInfoList) > 0) { 
+           $this->templateVariables ['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
+           $this->templateVariables ['widgets'] = WidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
+           $this->templateVariables ['widgetInfoList'] = $widgetInfoList;
+        }
     }
 
     public function doStartWizardDisplay()
