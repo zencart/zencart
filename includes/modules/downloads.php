@@ -88,10 +88,8 @@ if ($downloadsOnThisOrder) {
 
     // calculate filesize/units
     $zv_filesize_units = '';
-    $zv_filesize = 0;
-    if ($data['filesize'] == 0) {
-      $zv_filesize = TEXT_FILESIZE_UNKNOWN;
-    } else {
+    $zv_filesize = TEXT_FILESIZE_UNKNOWN;
+    if ($data['filesize'] > 0) {
       $zv_filesize = $data['filesize'];
       if ($zv_filesize >= 11000) {
         $zv_filesize = number_format($zv_filesize/1024/1024,1);
