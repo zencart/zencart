@@ -35,7 +35,7 @@
 <script>
 var intervalTimers = new Array();
 $(function() {
-  <?php if (isset($tplVars['widgetList']) && (sizeof($tplVars['widgetList'] == 0))) { ?> 
+  <?php if (isset($tplVars['widgetList']) && sizeof($tplVars['widgetList']) == 0) { ?> 
   <?php foreach ($tplVars['widgetList'] as $widgetObject) { ?>
     <?php $widget = $widgetObject->getWidgetInfo(); ?>
     <?php if ($widget['widget_refresh'] != 0) { ?>
