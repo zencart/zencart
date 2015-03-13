@@ -7,14 +7,11 @@
  * @version 
  */
 
-  $gID=(int) zen_db_prepare_input($_GET['gID']);
-  $cID=(int) zen_db_prepare_input($_GET['cID']);
-
-  if ($gID == 2 && $cID == 59) { 
-    // Admin Usernames.  Must be >= 4
-    if ($configuration_value < 4) { 
-          $_GET['action']= '';
-          $messageStack->add_session(TEXT_ADMIN_USERNAME_LENGTH, 'caution');
-          zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
-    }
+  // Function used for configuration checks only
+  function check_configuration($variable, $check_string) { 
+     $parts = explode(",", $check_string, 2); 
+     eval('$id = ' . $parts[0] . ';'); 
+     eval('$options = ' . $parts[1] . ';'); 
+     $result = filter_var($variable, $id, $options); 
+     return $result; 
   }

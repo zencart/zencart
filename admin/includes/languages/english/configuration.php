@@ -16,5 +16,5 @@ define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 
 // Configuration checks
-define('TEXT_ADMIN_USERNAME_LENGTH', 'Admin usernames must be 4 or greater'); 
+define('TEXT_ADMIN_VALUE_OUT_OF_RANGE', 'Value out of range'); 
 ?>

@@ -23,7 +23,15 @@
         }
         
         $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
-        require("includes/configuration_checks.php"); 
+        // See if there are any configuration checks 
+        $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = '" . (int)$cID . "'");
+       if (!$checks->EOF) { 
+           require_once("includes/configuration_checks.php"); 
+           if (check_configuration($configuration_value, $checks->fields['val_function']) === false) {
+                $messageStack->add_session(TEXT_ADMIN_VALUE_OUT_OF_RANGE, 'caution');
+                zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
+              } 
+       }
 
         $db->Execute("update " . TABLE_CONFIGURATION . "
                       set configuration_value = '" . zen_db_input($configuration_value) . "',
