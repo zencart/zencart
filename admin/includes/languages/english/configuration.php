@@ -16,5 +16,5 @@ define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 
 // Configuration checks
-define('TEXT_ADMIN_VALUE_OUT_OF_RANGE', 'Value out of range'); 
+define('TEXT_MIN_ADMIN_USER_LENGTH', 'Value must be greater than 3.'); 
 ?>

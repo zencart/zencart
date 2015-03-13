@@ -9,9 +9,15 @@
 
   // Function used for configuration checks only
   function check_configuration($variable, $check_string) { 
-     $parts = explode(",", $check_string, 2); 
-     eval('$id = ' . $parts[0] . ';'); 
-     eval('$options = ' . $parts[1] . ';'); 
+     global $messageStack; 
+     $parts = explode(",", $check_string, 3); 
+     eval('$error_msg = ' . $parts[0] . ';'); 
+     eval('$id = ' . $parts[1] . ';'); 
+     eval('$options = ' . $parts[2] . ';'); 
      $result = filter_var($variable, $id, $options); 
-     return $result; 
+     if ($result === false) { 
+        $messageStack->add_session($error_msg, 'error');
+        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
+     }
+     return; 
   }
