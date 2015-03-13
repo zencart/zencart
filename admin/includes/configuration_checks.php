@@ -10,10 +10,15 @@
   // Function used for configuration checks only
   function check_configuration($variable, $check_string) { 
      global $messageStack; 
-     $parts = explode(",", $check_string, 3); 
-     eval('$error_msg = ' . $parts[0] . ';'); 
-     eval('$id = ' . $parts[1] . ';'); 
-     eval('$options = ' . $parts[2] . ';'); 
+     $data = json_decode($check_string, true); 
+     if (!empty($data['error']) && defined($data['error'])) { 
+        $error_msg = constant($data['error']); 
+     } else {
+        $error_msg = 'Validation error'; 
+     }
+     $id = $data['id']; 
+     $options = $data['options']; 
+     // $options = array('options' => array('min_range' => 4));
      $result = filter_var($variable, $id, $options); 
      if ($result === false) { 
         $messageStack->add_session($error_msg, 'error');

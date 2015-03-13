@@ -16,5 +16,6 @@ define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 
 // Configuration checks
+define('TEXT_VALIDATION_ERROR', 'Validation error.'); 
 define('TEXT_MIN_ADMIN_USER_LENGTH', 'Value must be greater than 3.'); 
 ?>
