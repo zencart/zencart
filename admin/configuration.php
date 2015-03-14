@@ -25,7 +25,7 @@
         $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
         // See if there are any configuration checks 
         $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = '" . (int)$cID . "'");
-       if (!$checks->EOF) { 
+       if (!$checks->EOF && $checks->fields['val_function'] != NULL) { 
            require_once("includes/configuration_checks.php"); 
            check_configuration($configuration_value, $checks->fields['val_function']); 
        }
