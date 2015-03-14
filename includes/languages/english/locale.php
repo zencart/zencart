@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id$
+ * @version $Id:  New in v1.6.0 $
  */
 
 // look in your $PATH_LOCALE/locale directory for available locales..
@@ -61,7 +61,9 @@
   define('TEXT_NUMBER_SYMBOL', '# ');
 
   define('TEXT_FILESIZE_BYTES', ' bytes');
+  define('TEXT_FILESIZE_KBS', ' KB');
   define('TEXT_FILESIZE_MEGS', ' MB');
+  define('TEXT_FILESIZE_UNKNOWN', 'Unknown');
 
 // misc
   define('COLON_SPACER', ':&nbsp;&nbsp;');

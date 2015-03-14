@@ -85,13 +85,18 @@ if ($downloadsOnThisOrder) {
     $data['link_url'] = zen_href_link(FILENAME_DOWNLOAD, 'order=' . $last_order . '&id=' . $data['orders_products_download_id']);
 
     $data['filesize'] = ($data['file_exists']) ? filesize(DIR_FS_DOWNLOAD . $data['orders_products_filename']) : 0;
-    if ($data['filesize'] == 0) {
-      $zv_filesize_units = 'Unknown';
-    } else {
+
+    // calculate filesize/units
+    $zv_filesize_units = '';
+    $zv_filesize = TEXT_FILESIZE_UNKNOWN;
+    if ($data['filesize'] > 0) {
       $zv_filesize = $data['filesize'];
-      if ($zv_filesize >= 1024) {
+      if ($zv_filesize >= 11000) {
         $zv_filesize = number_format($zv_filesize/1024/1024,1);
         $zv_filesize_units = TEXT_FILESIZE_MEGS;
+      } else if ($zv_filesize >= 1024) {
+        $zv_filesize = number_format($zv_filesize/1024,1);
+        $zv_filesize_units = TEXT_FILESIZE_KBS;
       } else {
         $zv_filesize = number_format($zv_filesize);
         $zv_filesize_units = TEXT_FILESIZE_BYTES;
