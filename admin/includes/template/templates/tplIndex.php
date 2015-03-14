@@ -3,7 +3,7 @@
  * Admin Home Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
@@ -35,6 +35,7 @@
 <script>
 var intervalTimers = new Array();
 $(function() {
+  <?php if (isset($tplVars['widgetList']) && sizeof($tplVars['widgetList']) == 0) { ?> 
   <?php foreach ($tplVars['widgetList'] as $widgetObject) { ?>
     <?php $widget = $widgetObject->getWidgetInfo(); ?>
     <?php if ($widget['widget_refresh'] != 0) { ?>
@@ -42,6 +43,7 @@ $(function() {
     <?php } ?>
   <?php } ?>
 
+  <?php } ?>
   createSortables();
 
 
