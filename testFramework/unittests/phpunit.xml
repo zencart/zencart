@@ -7,6 +7,10 @@
 >
   <testsuites>
 
+      <testsuite name="issetorArray">
+          <file>testIssetorArrayCase.php</file>
+      </testsuite>
+
       <testsuite name="Discount Coupons">
           <file>testDiscountCoupons.php</file>
       </testsuite>
