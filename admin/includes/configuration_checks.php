@@ -6,14 +6,17 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version 
  */
-
-  // Function used for configuration checks only
+ 
+  /**
+  *   Function used for configuration checks only.
+  *   @param $variable - variable to be checked
+  *   @param $check_string - a json encoded array containing: 
+  *     error: defined constant containing error message
+  *     id: id of the filter to apply. (May be mnemonic value of int.)
+  *     options: per http://php.net/manual/en/function.filter-var.php
+  *   @return - NULL; failure results in redirection inline.
+  */ 
   function check_configuration($variable, $check_string) { 
-     // Expected format of $check string is a json encoded array 
-     // with the following paramters: 
-     // error: defined constant with error message
-     // id: id of the filter to apply.   
-     // options: per http://php.net/manual/en/function.filter-var.php
      global $messageStack; 
      $data = json_decode($check_string, true); 
      // check inputs - error should be a defined constant
@@ -23,7 +26,9 @@
         $error_msg = 'Validation error - bad error field'; 
         return; 
      }
-     if (is_integer($data['id'])) { 
+     if (defined($data['id'])) { 
+        $id = constant($data['id']); 
+     } else if (is_integer($data['id'])) { 
         $id = $data['id']; 
      } else { 
         $error_msg = 'Validation error - bad id field'; 
