@@ -4,7 +4,7 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Wed Feb 19 15:57:35 2014 +0000 Modified in v1.5.3 $
@@ -1634,6 +1634,19 @@ if (!defined('IS_ADMIN_FLAG')) {
     $sql = $db->bindVars($sql, ':rcId:', $recordCompanyId, 'integer');
     $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
     $db->execute($sql);
+  }
+  /**
+   * function issetorArray
+   *
+   * returns an array[key] or default value if key does not exist
+   *
+   * @param array $array
+   * @param $key
+   * @param null $default
+   * @return mixed
+   */
+  function issetorArray(array $array, $key, $default = null) {
+      return isset($array[$key]) ? $array[$key] : $default;
   }
   /////////////////////////////////////////////
 ////
