@@ -9,16 +9,33 @@
 
   // Function used for configuration checks only
   function check_configuration($variable, $check_string) { 
+     // Expected format of $check string is a json encoded array 
+     // with the following paramters: 
+     // error: defined constant with error message
+     // id: id of the filter to apply.   
+     // options: per http://php.net/manual/en/function.filter-var.php
      global $messageStack; 
      $data = json_decode($check_string, true); 
+     // check inputs - error should be a defined constant
      if (!empty($data['error']) && defined($data['error'])) { 
         $error_msg = constant($data['error']); 
      } else {
-        $error_msg = 'Validation error'; 
+        $error_msg = 'Validation error - bad error field'; 
+        return; 
      }
-     $id = $data['id']; 
-     $options = $data['options']; 
-     // $options = array('options' => array('min_range' => 4));
+     if (is_integer($data['id'])) { 
+        $id = $data['id']; 
+     } else { 
+        $error_msg = 'Validation error - bad id field'; 
+        return; 
+     }
+     if (is_array($data['options'])) { 
+        $options = $data['options']; 
+     } else { 
+        // example: $options = array('options' => array('min_range' => 4));
+        $error_msg = 'Validation error - bad options field'; 
+        return; 
+     }
      $result = filter_var($variable, $id, $options); 
      if ($result === false) { 
         $messageStack->add_session($error_msg, 'error');
