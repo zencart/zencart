@@ -45,25 +45,22 @@ abstract class AbstractScroller extends \base
      */
     abstract protected function process(array $data, array $params);
 
+
     /**
-     * buildLink method
-     *
-     * @param $params
+     * @param array $params
      * @return string
      */
-    public function buildLink($params)
+    protected function buildLink(array $params)
     {
         $link = zen_href_link($params['cmd'], $params['linkParams']);
         return $link;
     }
 
     /**
-     * getCurrentLinkParams method
-     *
-     * @param $params
+     * @param array $params
      * @return mixed|string
      */
-    public function getRequestParams($params)
+    protected function getRequestParams(array $params)
     {
         $linkParams = zen_get_all_get_params($params['exclude'], $params['linkParams']);
         return $linkParams;

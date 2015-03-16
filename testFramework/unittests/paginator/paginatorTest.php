@@ -17,6 +17,9 @@ class testPaginationCase extends zcPaginatorTestCase
     public function setUp()
     {
         parent::setUp();
+        require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'sessions.php');
+        require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'html_output.php');
+        define('SEARCH_ENGINE_FRIENDLY_URLS', false);
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
         require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
         $loader = new \Aura\Autoload\Loader;
@@ -36,9 +39,12 @@ class testPaginationCase extends zcPaginatorTestCase
         $db->method('execute')
             ->will($this->onConsecutiveCalls($db0, $db1));
 
-        $adapterData = array('dbConn'=>$db, 'sqlQueries'=>array('main'=>'', 'count'=>''));
+        $adapterData = array('dbConn'=>$db, 'mainSql'=>'', 'countSql'=>'');
         $scrollerParams = array('cmd'=>'index');
-        $p = new Paginator($r, 'QueryFactory', 'Standard', $adapterData, array(), $scrollerParams);
+        $p = new Paginator($r);
+        $p->setScrollerParams($scrollerParams);
+        $p->setAdapterParams(array());
+        $p->doPagination($adapterData, 'QueryFactory', 'Standard');
         $a = $p->getAdapter();
         $s = $p->getScroller();
     }

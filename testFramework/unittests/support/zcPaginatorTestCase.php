@@ -23,7 +23,7 @@ abstract class zcPaginatorTestCase extends PHPUnit_Framework_TestCase
     {
         // Define some pre-requisites
         global $zco_notifier;
-        define('IS_ADMIN_FLAG', 'TRUE');
+        define('IS_ADMIN_FLAG', false);
         if(!defined('TESTCWD')) define('TESTCWD', realpath(__DIR__ . '/../') . '/');
         if(!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(__DIR__ . '/../../../') . '/');
         if(!defined('DIR_FS_INCLUDES')) define('DIR_FS_INCLUDES', DIR_FS_CATALOG . 'includes/');

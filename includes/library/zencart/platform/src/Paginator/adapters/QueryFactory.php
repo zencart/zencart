@@ -17,15 +17,16 @@ use ZenCart\Platform\Paginator\AbstractAdapter;
  */
 class QueryFactory extends AbstractAdapter implements AdapterInterface
 {
+
     /**
-     * getResultList method
-     *
-     * @return array|mixed
+     * @param $data
+     * @param array $params
+     * @return array
      */
-    public function getResultList($data, $params)
+    public function getResultList($data, array $params)
     {
         $limit = $params['currentItem'] - 1 . ',' . $params['itemsPerPage'];
-        $results = $data['dbConn']->execute($data['sqlQueries']['main'], $limit);
+        $results = $data['dbConn']->execute($data['mainSql'], $limit);
         $resultList = array();
         foreach ($results as $result) {
             $resultList[] = $result;
@@ -34,13 +35,12 @@ class QueryFactory extends AbstractAdapter implements AdapterInterface
     }
 
     /**
-     * getTotalItemCount method
-     *
-     * @return integer
+     * @param $data
+     * @return mixed
      */
     public function getTotalItemCount($data)
     {
-        $result = $data['dbConn']->execute($data['sqlQueries']['count']);
+        $result = $data['dbConn']->execute($data['countSql']);
         return $result->fields['total'];
     }
 } 

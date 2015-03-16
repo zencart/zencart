@@ -32,7 +32,7 @@ class testPaginationAdapterCase extends zcPaginatorTestCase
         $db0->fields = array('total'=>'2');
         $db->method('execute')
             ->will($this->onConsecutiveCalls($db0, $db1));
-        $data = array('sqlQueries'=>array('main'=>'', 'count'=>''), 'dbConn'=>$db);
+        $data = array('mainSql'=>'', 'countSql'=>'', 'dbConn'=>$db);
         $parameters = array('pagingVarName'=>'page', 'currentItem'=>1, 'itemsPerPage'=>2);
         $ds = new QueryFactory($data, $parameters);
         $dsr = $ds->getResults();
