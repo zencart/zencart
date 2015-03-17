@@ -62,7 +62,7 @@ class Paginator extends \base
     }
 
     /**
-     * @param $adapterType
+     * @param string $adapterType
      * @param array $adapterData
      * @param array $adapterParams
      * @return mixed
@@ -75,7 +75,7 @@ class Paginator extends \base
     }
 
     /**
-     * @param $scrollerType
+     * @param string $scrollerType
      * @param AdapterInterface $adapter
      * @param array $scrollerParams
      * @return mixed
