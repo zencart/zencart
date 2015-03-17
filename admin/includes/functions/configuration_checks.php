@@ -16,7 +16,7 @@
   *     options: per http://php.net/manual/en/function.filter-var.php
   *   @return - NULL; failure results in redirection inline.
   */ 
-  function check_configuration($variable, $check_string) { 
+  function zen_validate_configuration_entry($variable, $check_string) { 
      global $messageStack; 
      $data = json_decode($check_string, true); 
      // check inputs - error should be a defined constant in the language files
