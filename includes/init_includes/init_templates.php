@@ -8,7 +8,7 @@
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: init_templates.php 3123 2006-03-06 23:36:46Z drbyte $
@@ -37,7 +37,7 @@
     }
     $template_query->MoveNext();
   }
-  if ($template_dir == '') $template_dir = 'template_default';
+  if ($template_dir == '') $template_dir = 'shared';
 
   // notifier hook -- usually fires at breakpoint 110, so observer must be instantiated before then
   $zco_notifier->notify('NOTIFY_INIT_TEMPLATES_SELECT', NULL, $template_dir);
@@ -73,6 +73,10 @@
 
   if (file_exists(DIR_WS_LANGUAGES . $template_dir . '/' . $_SESSION['language'] . '.php')) {
     $template_dir_select = $template_dir . '/';
+    include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
+  }
+  if (file_exists(DIR_WS_LANGUAGES . 'shared' . '/' . $_SESSION['language'] . '.php')) {
+    $template_dir_select = 'shared' . '/';
     include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
   }
 /**

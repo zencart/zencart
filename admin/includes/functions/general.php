@@ -3135,6 +3135,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
     if (file_exists($check_directory . $template_dir . '/' . $zv_filename)) {
       $zv_directory = $check_directory . $template_dir . '/';
+    } else if (file_exists($check_directory . 'shared' . '/' . $zv_filename)) {
+      $zv_directory = $check_directory . 'shared' . '/';
     } else {
       $zv_directory = $check_directory;
     }
