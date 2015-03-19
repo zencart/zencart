@@ -8,8 +8,6 @@
  */
 namespace ZenCart\Platform\Paginator;
 
-use Instantiator\Exception\InvalidArgumentException;
-
 /**
  * Class Paginator
  * @package ZenCart\Platform\Paginator
@@ -20,33 +18,51 @@ class Paginator extends \base
      * @var mixed
      */
     protected $adapter;
-    
+
     /**
      * @var mixed
      */
     protected $scroller;
+    /**
+     * @var array
+     */
+    protected $scrollerParams = array();
+    /**
+     * @var array
+     */
+    protected $adapterParams = array();
+
+    /**
+     * @var \ZenCart\Platform\Request
+     */
+    protected $request;
 
     /**
      * @param \ZenCart\Platform\Request $request
-     * @param $adapterType
-     * @param $scrollerType
-     * @param $adapterData
-     * @param $adapterParams
-     * @param $scrollerParams
      */
-    public function __construct(\ZenCart\Platform\Request $request, $adapterType, $scrollerType, $adapterData, $adapterParams, $scrollerParams)
+    public function __construct(\ZenCart\Platform\Request $request)
     {
-        $pagingVarName = isset($scrollerParams['pagingVarName']) ? $scrollerParams['pagingVarName'] : 'page';
-        $pagingVarSrc = isset($scrollerParams['pagingVarSrc']) ? $scrollerParams['pagingVarSrc'] : 'get';
-        $currentPage = $request->get($pagingVarName, 1, $pagingVarSrc);
-        $adapterParams['currentPage'] = $currentPage;
-        $scrollerParams['currentPage'] = $currentPage;
-        $this->adapter = $this->buildAdapter($adapterType, $adapterData, $adapterParams);
-        $this->scroller = $this->buildScroller($scrollerType, $this->adapter, $scrollerParams);
+        $this->request = $request;
     }
 
     /**
-     * @param $adapterType
+     * @param $adapterData
+     * @param string $adapterType
+     * @param string $scrollerType
+     */
+    public function doPagination($adapterData, $adapterType = 'QueryFactory', $scrollerType = 'Standard')
+    {
+        $pagingVarName = issetorArray($this->scrollerParams, 'pagingVarName', 'page');
+        $pagingVarSrc = issetorArray($this->scrollerParams, 'pagingVarSrc', 'get');
+        $currentPage = $this->request->get($pagingVarName, 1, $pagingVarSrc);
+        $this->adapterParams['currentPage'] = $currentPage;
+        $this->scrollerParams['currentPage'] = $currentPage;
+        $this->adapter = $this->buildAdapter($adapterType, $adapterData, $this->adapterParams);
+        $this->scroller = $this->buildScroller($scrollerType, $this->adapter, $this->scrollerParams);
+    }
+
+    /**
+     * @param string $adapterType
      * @param array $adapterData
      * @param array $adapterParams
      * @return mixed
@@ -59,8 +75,8 @@ class Paginator extends \base
     }
 
     /**
-     * @param $scrollerType
-     * @param array $adapter
+     * @param string $scrollerType
+     * @param AdapterInterface $adapter
      * @param array $scrollerParams
      * @return mixed
      */
@@ -85,5 +101,21 @@ class Paginator extends \base
     public function getScroller()
     {
         return $this->scroller;
+    }
+
+    /**
+     * @param $params
+     */
+    public function setScrollerParams(array $params)
+    {
+        $this->scrollerParams = $params;
+    }
+
+    /**
+     * @param $params
+     */
+    public function setAdapterParams(array $params)
+    {
+        $this->adapterParams = $params;
     }
 }

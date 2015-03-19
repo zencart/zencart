@@ -13,16 +13,17 @@ namespace ZenCart\Platform\Paginator;
  */
 interface AdapterInterface
 {
-    /**
-     * getResultList method
-     * @return array
-     */
-    public function getResultList($data, $params);
 
     /**
-     * getTotalItemCount method
-     *
-     * @return integer
+     * @param $data
+     * @param array $params
+     * @return mixed
+     */
+    public function getResultList($data, array $params);
+
+    /**
+     * @param $data
+     * @return mixed
      */
     public function getTotalItemCount($data);
 }

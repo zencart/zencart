@@ -18,7 +18,8 @@ class testPaginationScrollerCase extends zcPaginatorTestCase
     {
         parent::setUp();
         require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'sessions.php');
-        require_once(DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'html_output.php');
+        require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'html_output.php');
+        define('SEARCH_ENGINE_FRIENDLY_URLS', false);
         require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
