@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Apr 15 17:08:43 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author:Ian Wilson Modified in v1.5.4 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -121,6 +121,10 @@ class paypaldp extends base {
   var $fmfResponse = '';
   var $fmfErrors = array();
   /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
+  /**
    * class constructor
    */
   function paypaldp() {
@@ -128,7 +132,7 @@ class paypaldp extends base {
     global $order;
     $this->code = 'paypaldp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
-    $this->codeVersion = '1.5.3';
+    $this->codeVersion = '1.5.4';
     $this->enableDirectPayment = true;
     $this->enabled = (MODULE_PAYMENT_PAYPALDP_STATUS == 'True');
     // Set the title & description text based on the mode we're in
@@ -166,7 +170,7 @@ class paypaldp extends base {
     $this->zone = (int)MODULE_PAYMENT_PAYPALDP_ZONE;
     if (is_object($order)) $this->update_status();
 
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.3') $this->enabled = false;
+    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.4') $this->enabled = false;
 
     // offer credit card choices for pull-down menu -- only needed for UK version
     $this->cards = array();
@@ -570,6 +574,20 @@ class paypaldp extends base {
         zen_draw_hidden_field('wpp_payer_lastname', $_POST['paypalwpp_cc_lastname']) . "\n";
     $process_button_string .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
     return $process_button_string;
+  }
+  function process_button_ajax() {
+    $processButton = array('ccFields'=>array('wpp_cc_type'=>'paypalwpp_cc_type',
+        'wpp_cc_expdate_month'=>'paypalwpp_cc_expires_month',
+        'wpp_cc_expdate_year'=>'paypalwpp_cc_expires_year',
+        'wpp_cc_issuedate_month'=>'paypalwpp_cc_issue_year',
+        'wpp_cc_issuedate_year'=>'paypalwpp_cc_issue_year',
+        'wpp_cc_issuenumber'=>'paypalwpp_cc_issuenumber',
+        'wpp_cc_number'=>'paypalwpp_cc_number',
+        'wpp_cc_checkcode'=>'paypalwpp_cc_checkcode',
+        'wpp_payer_firstname'=>'paypalwpp_cc_firstname',
+        'wpp_payer_lastname'=>'paypalwpp_cc_lastname',
+    ), 'extraFields'=>array(zen_session_name()=>zen_session_id()));
+    return $processButton;
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured
@@ -1418,6 +1436,7 @@ class paypaldp extends base {
       case 'CH':
       $info['state'] = '';
       break;
+      case 'MX':
       case 'GB':
       break;
       default:
@@ -2321,7 +2340,6 @@ class paypaldp extends base {
 //   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
       curl_setopt($ch, CURLOPT_TIMEOUT, 8);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
-      curl_setopt($ch, CURLOPT_SSLVERSION, 3);
 
       // Execute the request.
       $result = curl_exec($ch);

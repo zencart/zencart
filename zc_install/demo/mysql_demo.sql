@@ -390,7 +390,7 @@ INSERT INTO products (products_id, products_type, products_quantity, products_mo
 (168, 1, '1000', 'PGT', 'samples/1_small.jpg', '3.9500', 0, '2004-07-12 15:25:32', '2004-07-12 16:26:08', NULL, '1.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 10, 0, 0, '3.9500', 64, 1),
 (169, 2, '1000', 'PMT', 'samples/2_small.jpg', '3.9500', 0, '2004-07-12 15:27:50', '2004-07-12 16:29:01', NULL, '1.00', 1, 1, NULL, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 20, 0, 0, '3.9500', 64, 1),
 (170, 3, '0', '', 'samples/3_small.jpg', '0.0000', 0, '2004-07-12 15:29:23', '2004-09-27 23:11:25', NULL, '0.00', 1, 0, 0, '0', '1', '1', 0, 0, 0, 0, 0, 0, '0', 30, 0, 0, '0.0000', 64, 1),
-(171, 4, '1000', 'DPT', 'samples/4_small.jpg', '0.9346', 0, '2004-07-12 15:32:40', '2004-07-12 17:46:49', NULL, '0.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 40, 0, 0, '3.9500', 64, 1),
+(171, 4, '1000', 'DPT', 'samples/4_small.jpg', '0.9346', 0, '2004-07-12 15:32:40', '2004-07-12 17:46:49', NULL, '0.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 40, 0, 0, '0.9300', 64, 1),
 (172, 5, '1000', 'PFS', 'samples/5_small.jpg', '3.9500', 0, '2004-07-12 15:39:18', '2004-07-12 23:08:43', NULL, '5.00', 1, 0, 0, '0', '1', '1', 0, 0, 0, 1, 1, 1, '0', 50, 0, 0, '3.9500', 64, 1),
 (173, 1, '1000', 'Book', 'b_g_grid.gif', '0.0000', 0, '2004-09-24 23:54:34', '2004-09-26 02:50:59', NULL, '0.00', 1, 1, 0, '0', '1', '1', 1, 0, 0, 1, 0, 1, '0', 0, 0, 0, '52.5000', 61, 1),
 (174, 1, '999', 'TESTCALL', 'call_for_price.jpg', '0.0000', 0, '2004-09-27 13:25:44', '2004-09-27 13:28:54', '2008-02-21 00:00:00', '1.00', 1, 1, 0, '0', '1', '1', 0, 0, 1, 1, 0, 1, '0', 0, 0, 0, '0.0000', 24, 0),
@@ -399,6 +399,20 @@ INSERT INTO products (products_id, products_type, products_quantity, products_mo
 (177, 1, '1000', 'Special', '2_small.jpg', '100.0000', 0, '2004-10-05 16:47:45', '2004-10-06 00:05:48', NULL, '2.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 0, 1, 1, '75.0000', 55, 1),
 (179, 1, '1000', 'DOWNLOAD1', '1_small.jpg', '39.0000', 0, '2004-10-06 00:08:33', '2004-10-06 00:18:51', NULL, '0.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 0, 0, 0, '39.0000', 60, 1),
 (178, 1, '1000', 'Normal', '1_small.jpg', '60.0000', 0, '2004-10-05 16:54:52', '2004-10-05 17:15:02', NULL, '2.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 0, 0, 1, '0', 0, 1, 0, '50.0000', 55, 1);
+
+#New Products
+UPDATE products SET products_date_added = NOW() WHERE products_id = 168 or products_id = 169 or products_id = 170;
+UPDATE products SET products_date_added = NOW() - INTERVAL 7 DAY WHERE products_id = 171 or products_id = 172 or products_id = 166 or products_id = 133;
+UPDATE products SET products_date_added = NOW() - INTERVAL 20 DAY WHERE products_id = 126 or products_id = 47 or products_id = 34;
+UPDATE products SET products_date_added = NOW() - INTERVAL 50 DAY WHERE products_id = 134 or products_id = 131 or products_id = 160;
+UPDATE products SET products_date_added = NOW() - INTERVAL 70 DAY WHERE products_id = 57 or products_id = 174;
+UPDATE products SET products_date_added = NOW() - INTERVAL 100 DAY WHERE products_id = 6 or products_id = 19;
+
+#Upcoming Products
+UPDATE products SET products_date_available = NOW() + INTERVAL 12 DAY WHERE products_id = 16;
+UPDATE products SET products_date_available = NOW() + INTERVAL 17 DAY WHERE products_id = 174;
+UPDATE products SET products_date_available = NOW() + INTERVAL 27 DAY WHERE products_id = 40;
+UPDATE products SET products_date_available = NOW() + INTERVAL 33 DAY WHERE products_id = 34;
 
 #
 # Dumping data for table `products_attributes`
@@ -1449,7 +1463,7 @@ INSERT INTO record_artists (artists_id, artists_name, artists_image, date_added,
 # Dumping data for table `record_artists_info`
 #
 
-INSERT INTO record_artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'russtippinsband.users.btopenworld.com/', 0, NULL);
+INSERT INTO record_artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'www.russtippins.com/', 0, NULL);
 
 #
 # Dumping data for table `record_company`

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Mon Mar 24 12:44:20 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -1340,7 +1340,8 @@ class shoppingCart extends base {
           $new_qty = round($new_qty, 0);
         }
 
-        if ($new_qty == (int)$new_qty) {
+//@@TODO - should be okay to remove
+        if (false && $new_qty == (int)$new_qty) {
           $new_qty = (int)$new_qty;
         }
         $products_array[] = array('id' => $products_id,

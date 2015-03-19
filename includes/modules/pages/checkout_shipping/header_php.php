@@ -3,10 +3,10 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 16:20:00 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
@@ -224,6 +224,9 @@ if (isset($_SESSION['cart']->cartID)) {
       $displayAddressEdit = true;
     }
   }
+
+  require(DIR_WS_CLASSES . 'payment.php');
+  $payment_modules = new payment;
 
   $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);

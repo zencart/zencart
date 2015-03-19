@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Aug 31 18:50:16 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -56,11 +56,13 @@
         } elseif ($action == 'save') {
           zen_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
         }
+        zen_record_admin_activity('Currency code ' . $code . ' added/updated.', 'info');
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
           $db->Execute("update " . TABLE_CONFIGURATION . "
                         set configuration_value = '" . zen_db_input($code) . "'
                         where configuration_key = 'DEFAULT_CURRENCY'");
+          zen_record_admin_activity('Default currency code changed to ' . $code, 'info');
         }
 
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id));
@@ -85,6 +87,7 @@
         $db->Execute("delete from " . TABLE_CURRENCIES . "
                       where currencies_id = '" . (int)$currencies_id . "'");
 
+        zen_record_admin_activity('Deleted currency with currencies_id of ' . $currencies_id, 'notice');
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
         break;
       case 'update_currencies':
@@ -123,7 +126,7 @@
           }
           $currency->MoveNext();
         }
-
+        zen_record_admin_activity('Currency exchange rates updated via the Update button in the admin console.', 'info');
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
         break;
       case 'delete':

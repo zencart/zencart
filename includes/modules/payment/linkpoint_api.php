@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2003 Jason LeBaron
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Apr 15 17:08:43 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
  */
   if (!defined('TABLE_LINKPOINT_API')) define('TABLE_LINKPOINT_API', DB_PREFIX . 'linkpoint_api');
   @define('MODULE_PAYMENT_LINKPOINT_API_CODE_DEBUG' ,'off'); // debug for programmer use only
@@ -15,6 +15,10 @@
 class linkpoint_api {
   var $code, $title, $description, $enabled, $payment_status, $auth_code, $transaction_id;
   var $_logDir = DIR_FS_SQL_CACHE;
+  /**
+   * this module collects card-info onsite
+   */
+  var $collectsCardDataOnsite = TRUE;
 
   // class constructor
   function linkpoint_api() {
@@ -251,18 +255,26 @@ class linkpoint_api {
   /**
    * Prepare the hidden fields comprising the parameters for the Submit button on the checkout confirmation page
    */
+  function process_button_ajax() {
+    $processButton = array('ccFields'=>array('cc_owner'=>'linkpoint_api_cc_owner',
+        'cc_cvv'=>'linkpoint_api_cc_cvv',
+        'cc_number'=>'linkpoint_api_cc_number',
+        'cc_expires_month'=>'linkpoint_api_cc_expires_month',
+        'cc_expires_year'=>'linkpoint_api_cc_expires_year'),
+        'extraFields'=>array(zen_session_name()=>zen_session_id()));
+    return $processButton;
+  }
   function process_button() {
-    // These are hidden fields on the checkout confirmation page
-    $process_button_string = zen_draw_hidden_field('cc_owner', $_POST['linkpoint_api_cc_owner']) .
-                             zen_draw_hidden_field('cc_expires', $this->cc_expiry_month . substr($this->cc_expiry_year, -2)) .
-                             zen_draw_hidden_field('cc_expires_month', $this->cc_expiry_month) .
-                             zen_draw_hidden_field('cc_expires_year', substr($this->cc_expiry_year, -2)) .
-                             zen_draw_hidden_field('cc_type', $this->cc_card_type) .
-                             zen_draw_hidden_field('cc_number', $this->cc_card_number) .
-                             zen_draw_hidden_field('cc_cvv', $_POST['linkpoint_api_cc_cvv']);
-    $process_button_string .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
+        $process_button_string = zen_draw_hidden_field('cc_owner', $_POST['linkpoint_api_cc_owner']) .
+                                 zen_draw_hidden_field('cc_expires', $this->cc_expiry_month . substr($this->cc_expiry_year, -2)) .
+                                 zen_draw_hidden_field('cc_expires_month', $this->cc_expiry_month) .
+                                 zen_draw_hidden_field('cc_expires_year', substr($this->cc_expiry_year, -2)) .
+                                 zen_draw_hidden_field('cc_type', $this->cc_card_type) .
+                                 zen_draw_hidden_field('cc_number', $this->cc_card_number) .
+                                 zen_draw_hidden_field('cc_cvv', $_POST['linkpoint_api_cc_cvv']);
+        $process_button_string .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
 
-    return $process_button_string;
+        return $process_button_string;
   }
 
   /**

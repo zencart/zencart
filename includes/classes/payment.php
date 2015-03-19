@@ -3,10 +3,10 @@
  * Payment Class.
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Mon Oct 28 17:54:33 2013 +0000 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: Ian Wilson   Modified in v1.5.4 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -18,11 +18,12 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @package classes
  */
 class payment extends base {
-  var $modules, $selected_module;
+  var $modules, $selected_module, $doesCollectsCardDataOnsite;
 
   // class constructor
   function payment($module = '') {
     global $PHP_SELF, $language, $credit_covers, $messageStack;
+    $this->doesCollectsCardDataOnsite = false;
 
     if (defined('MODULE_PAYMENT_INSTALLED') && zen_not_null(MODULE_PAYMENT_INSTALLED)) {
       $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
@@ -76,6 +77,9 @@ class payment extends base {
         if ($this->paymentClass->enabled)
         {
           $GLOBALS[$include_modules[$i]['class']] = $this->paymentClass;
+          if (isset($this->paymentClass->collectsCardDataOnsite) && $this->paymentClass->collectsCardDataOnsite == true) {
+            $this->doesCollectsCardDataOnsite = true;
+          }
         } else {
           unset($include_modules[$i]);
         }
@@ -143,20 +147,20 @@ class payment extends base {
         }
       }
 
-      $js .= "\n" . '  if (payment_value == null && submitter != 1) {' . "\n" .
-      '    error_message = error_message + "' . JS_ERROR_NO_PAYMENT_MODULE_SELECTED . '";' . "\n" .
-      '    error = 1;' . "\n" .
-      '  }' . "\n\n" .
-      '  if (error == 1 && submitter != 1) {' . "\n" .
-      '    alert(error_message);' . "\n" .
-      '    return false;' . "\n" .
-      '  } else {' . "\n" .
-      '    return true;' . "\n" .
-      '  }' . "\n" .
-      '}' . "\n" .
-      '//--></script>' . "\n";
+       $js =  $js . "\n" . '  if (payment_value == null && submitter != 1) {' . "\n";
+       $js =  $js .'    error_message = error_message + "' . JS_ERROR_NO_PAYMENT_MODULE_SELECTED . '";' . "\n";
+       $js =  $js .'    error = 1;' . "\n";
+       $js =  $js .'  }' . "\n\n";
+       $js =  $js .'  if (error == 1 && submitter != 1) {' . "\n";
+       $js =  $js .'    alert(error_message);' . "\n";
+       $js =  $js . '    return false;' . "\n";
+       $js =  $js .'  } else {' . "\n";
+       if ($this->doesCollectsCardDataOnsite == true && PADSS_AJAX_CHECKOUT == '1') {
+         $js .= '   return collectsCardDataOnsite(payment_value);' . "\n";
+       }
+       $js =  $js .'    return true;' . "\n";
+       $js =  $js .'  }' . "\n" . '}' . "\n" . '//--></script>' . "\n";
     }
-
     return $js;
   }
 
@@ -212,6 +216,13 @@ class payment extends base {
     }
   }
 
+  function process_button_ajax() {
+    if (is_array($this->modules)) {
+      if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+        return $GLOBALS[$this->selected_module]->process_button_ajax();
+      }
+    }
+  }
   function process_button() {
     if (is_array($this->modules)) {
       if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {

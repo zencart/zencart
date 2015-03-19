@@ -5,7 +5,7 @@
  * @package classes
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon May 5 12:49 2014 -0400 New in v1.5.3 $
+ * @version GIT: $Id: Author: wilt  Modified in v1.5.4 $
  */
 /**
  * class zcPassword
@@ -47,9 +47,9 @@ class zcPassword extends base
   public function __construct($phpVersion = PHP_VERSION)
   {
     if (version_compare($phpVersion, '5.3.7', '<')) {
-      require_once (DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_compat.php');
+      require_once (realpath(dirname(__FILE__)) . '/../functions/password_compat.php');
     } elseif (version_compare($phpVersion, '5.5.0', '<')) {
-      require_once (DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/password_compat-master/lib/password.php');
+      require_once (realpath(dirname(__FILE__)) . '/vendors/password_compat-master/lib/password.php');
     }
   }
   /**

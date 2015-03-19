@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Tue Jun 11 11:17:56 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -43,6 +43,7 @@
           $all_products_attributes->MoveNext();
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_ALL, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products attributes sort order]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -61,6 +62,7 @@
           $update_prices->MoveNext();
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_PRICE_SORTER, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products price sorter]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -74,6 +76,7 @@
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -87,6 +90,7 @@
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_ORDERED, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products ordered]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -98,6 +102,7 @@
     $update_counter = $db->Execute($sql);
 
     $messageStack->add_session(SUCCESS_UPDATE_COUNTER . (int)$_POST['new_counter'], 'success');
+    zen_record_admin_activity('Store Manager executed [update counter], set to ' . (int)$_POST['new_counter'], 'info');
     $action='';
     zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
@@ -125,6 +130,7 @@
           $tables->MoveNext();
         }
         $messageStack->add_session(SUCCESS_DB_OPTIMIZE . ' ' . $i, 'success');
+        zen_record_admin_activity('Store Manager executed [optimize database tables]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -148,6 +154,7 @@
         unset($dir);
       }
       $messageStack->add_session(SUCCESS_CLEAN_DEBUG_FILES, 'success');
+      zen_record_admin_activity('Store Manager executed [clean debug/log files]', 'info');
       zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
 
@@ -170,6 +177,7 @@
         }
 
         $messageStack->add_session(SUCCESS_UPDATE_ALL_MASTER_CATEGORIES_ID, 'success');
+        zen_record_admin_activity('Store Manager executed [update all master categories id]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -191,6 +199,7 @@
       } else {
         $db->Execute("ALTER TABLE " . TABLE_ORDERS . " AUTO_INCREMENT = " . $new_orders_id);
         $messageStack->add_session(sprintf(TEXT_MSG_NEXT_ORDER, $new_orders_id), 'success');
+        zen_record_admin_activity('Store Manager executed [update next order id], set to ' . $new_orders_id, 'info');
       }
       zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;

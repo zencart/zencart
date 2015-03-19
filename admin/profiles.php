@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson   Modified in v1.5.4 $
  */
 
 require('includes/application_top.php');
 
 // determine whether an action has been requested
-if (isset($_POST['action']) && in_array($_POST['action'], array('insert','update','update_name')))
+if (isset($_POST['action']) && in_array($_POST['action'], array('insert','update','update_name', 'deleteconfirm')))
 {
   $action = $_POST['action'];
 } elseif (isset($_GET['action']) && in_array($_GET['action'], array('add','edit','rename','delete'))) {
@@ -20,7 +20,7 @@ if (isset($_POST['action']) && in_array($_POST['action'], array('insert','update
 }
 
 // if needed, check that a valid profile id has been passed
-if (isset($action) && ($action == 'update' || $action == 'update_name') && $_POST['profile'])
+if (isset($action) && ($action == 'update' || $action == 'update_name' || $action == 'deleteconfirm') && $_POST['profile'])
 {
   $profile = $_POST['profile'];
 }
@@ -28,7 +28,7 @@ elseif (isset($action) && ($action == 'edit' || $action == 'delete') && $_GET['p
 {
   $profile = $_GET['profile'];
 }
-elseif (in_array($action, array('edit','delete','update','update-name')))
+elseif (in_array($action, array('edit','delete','deleteconfirm','update','update-name')))
 {
   $messageStack->add_session(ERROR_NO_PROFILE_DEFINED, 'error');
   zen_redirect(zen_href_link(FILENAME_PROFILES));
@@ -46,19 +46,17 @@ switch ($action) {
     $profileName = zen_get_profile_name($profile);
     $permittedPages = zen_get_permitted_pages_for_profile($profile);
     break;
-  case 'delete':
+  case 'deleteconfirm':
     $error = zen_delete_profile($profile);
     if ($error != '')
     {
       $messageStack->add_session($error, 'error');
-      zen_redirect(zen_href_link(FILENAME_PROFILES));
     }
     else
     {
-      $messageStack->add(SUCCESS_PROFILE_DELETED, 'success');
-      unset($action);
-      $profileList = zen_get_profiles(TRUE);
+      $messageStack->add_session(SUCCESS_PROFILE_DELETED, 'success');
     }
+      zen_redirect(zen_href_link(FILENAME_PROFILES));
     break;
   case 'insert':
     $error = zen_create_profile($_POST);
@@ -139,7 +137,7 @@ switch ($action) {
 <!-- body //-->
 <div id="pageWrapper">
 
-<?php if (!isset($action) || $action == '' || $action == 'rename') { ?>
+<?php if (!isset($action) || $action == '' || $action == 'rename' || $action == 'delete') { ?>
 
   <h1><?php echo HEADING_TITLE_ALL_PROFILES ?></h1>
 
@@ -153,7 +151,7 @@ switch ($action) {
       </tr>
     </thead>
 
-<?php if ($action != 'rename') { ?>
+<?php if ($action != 'rename' && $action != 'delete') { ?>
     <tfoot>
       <tr>
         <td colspan="4"><a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=add') ?>"><?php echo zen_image_button('button_add_profile.gif', IMAGE_ADD_PROFILE) ?></a></td>
@@ -176,6 +174,22 @@ switch ($action) {
             <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
           </form>
         </td>
+<?php } elseif($action == 'delete' && $_GET['profile'] == $profileDetails['id']) { ?>
+            <td>
+                <?php echo htmlspecialchars($profileDetails['name'], ENT_COMPAT, CHARSET, TRUE); ?>
+            </td>
+            <td>
+                <?php echo TEXT_CONFIRM_DELETE; ?>
+
+            </td>
+            <td>
+                <?php echo zen_draw_form('profileDelete', FILENAME_PROFILES, '', 'post', 'id="profile-delete"') ?>
+                <?php echo zen_draw_hidden_field('action', 'deleteconfirm'); ?>
+                <?php echo zen_draw_hidden_field('profile', $profileDetails['id']); ?>
+                <?php echo zen_image_submit('button_delete.gif', IMAGE_UPDATE) ?>
+                </form>
+            </td>
+
 <?php } else { ?>
         <td class="name"><?php echo zen_output_string($profileDetails['name'], FALSE, TRUE); ?></td>
         <td class="users"><?php echo zen_output_string($profileDetails['users'], FALSE, TRUE) ?></td>
@@ -258,7 +272,6 @@ switch ($action) {
     </div>
   </form>
 <?php } ?>
-
 </div>
 <!-- body_eof //-->
 

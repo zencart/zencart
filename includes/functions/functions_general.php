@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Feb 19 15:57:35 2014 +0000 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -900,7 +900,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 ////
   function zen_db_input($string) {
-    return addslashes($string);
+    global $db;
+    return $db->prepareInput($string);
   }
 
 ////
@@ -1340,15 +1341,15 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $zp_result;
   }
 
-// replacement for fmod to manage values < 1
+  // replacement for fmod to manage values < 1
   function fmod_round($x, $y) {
     $x = strval($x);
     $y = strval($y);
     $zc_round = ($x*1000)/($y*1000);
-    $zc_round_ceil = (int)($zc_round);
+    $zc_round_ceil = round($zc_round,0);
     $multiplier = $zc_round_ceil * $y;
     $results = abs(round($x - $multiplier, 6));
-     return $results;
+    return $results;
   }
 
 ////

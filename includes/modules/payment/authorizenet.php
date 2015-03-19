@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Tue Sep 9 2014 -0500 Modified in v1.5.4 $
  */
 /**
  * authorize.net SIM payment method class
@@ -94,7 +94,7 @@ class authorizenet extends base {
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
     // Determine default/supported currencies
-    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR'))) {
+    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD'))) {
       $this->gateway_currency = DEFAULT_CURRENCY;
     } else {
       $this->gateway_currency = 'USD';
@@ -134,7 +134,7 @@ class authorizenet extends base {
     // RFC 2104 HMAC implementation for php.
     // Creates an md5 HMAC.
     // Eliminates the need to install mhash to compute a HMAC
-    // Hacked by Lance Rushing
+    // by Lance Rushing
 
     $b = 64; // byte length for md5
     if (strlen($key) > $b) {
@@ -255,7 +255,7 @@ class authorizenet extends base {
                          'module' => $this->title,
                          'fields' => array(array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_OWNER,
                                                  'field' => zen_draw_input_field('authorizenet_cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'], 'id="'.$this->code.'-cc-owner"' . $onFocus . ' autocomplete="off"'),
-                                               'tag' => $this->code.'-cc-owner'),
+                                                 'tag' => $this->code.'-cc-owner'),
                                          array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_NUMBER,
                                                'field' => zen_draw_input_field('authorizenet_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
                                                'tag' => $this->code.'-cc-number'),
@@ -341,7 +341,6 @@ class authorizenet extends base {
       'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
       'x_amount' => number_format($order->info['total'], 2),
       'x_currency_code' => $_SESSION['currency'],
-      'x_version' => '3.1',
       'x_method' => ((MODULE_PAYMENT_AUTHORIZENET_METHOD == 'Credit Card') ? 'CC' : 'ECHECK'),
       'x_type' => MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
       'x_cust_ID' => $_SESSION['customer_id'],
@@ -365,6 +364,8 @@ class authorizenet extends base {
       'x_ship_to_state' => $order->delivery['state'],
       'x_ship_to_zip' => $order->delivery['postcode'],
       'x_ship_to_country' => $order->delivery['country']['title'],
+      'x_solution_id' => 'A1000003', // used by authorize.net
+      'x_version' => '3.1',
       'x_Customer_IP' => zen_get_ip_address(),
       'x_relay_response' => 'TRUE',
       'x_relay_URL' => zen_href_link(FILENAME_CHECKOUT_PROCESS, 'action=confirm', 'SSL', true, false),
@@ -374,15 +375,14 @@ class authorizenet extends base {
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
     );
 
-    // force conversion to supported currencies: USD, GBP, CAD, EUR
-    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', $this->gateway_currency))) {
+    // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
+    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD', $this->gateway_currency))) {
       global $currencies;
       $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data_core['x_currency_code'] = $this->gateway_currency;
     }
 
-
-    $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, number_format($order->info['total'], 2), $sequence);
+    $submit_data_security = $this->InsertFP(MODULE_PAYMENT_AUTHORIZENET_LOGIN, MODULE_PAYMENT_AUTHORIZENET_TXNKEY, $submit_data_core['x_amount'], $sequence, $submit_data_core['x_currency_code']);
 
     $submit_data_offline = array(
       'x_show_form' => 'PAYMENT_FORM',

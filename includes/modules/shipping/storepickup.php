@@ -1,10 +1,10 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Feb 14 23:03:50 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  */
 /**
  * Store-Pickup / Will-Call shipping method
@@ -55,10 +55,17 @@ class storepickup extends base {
     $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
     $this->enabled = ((MODULE_SHIPPING_STOREPICKUP_STATUS == 'True') ? true : false);
+    $this->update_status();
   }
+  /**
+   * Perform various checks to see whether this module should be visible
+   */
   function update_status() {
     global $order, $db;
-    if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) ) {
+    if (!$this->enabled) return;
+    if (IS_ADMIN_FLAG === true) return;
+
+    if (isset($order->delivery) && (int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0 ) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_STOREPICKUP_ZONE . "'

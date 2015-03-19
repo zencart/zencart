@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Mar 4 14:33:25 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  */
   require('includes/application_top.php');
 
@@ -921,6 +921,7 @@ if ($action == 'attributes_preview') {
 // preview shot of attributes
 if ($action == 'attributes_preview') {
   $_GET['products_id'] = $products_filter;
+  $pInfo = new stdClass();
   $pInfo->products_id = $products_filter;
 
   include(DIR_WS_INCLUDES . 'attributes_preview.php');

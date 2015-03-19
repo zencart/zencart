@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: gv_queue.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -50,7 +50,7 @@
       if ($gv_resulta->RecordCount() > 0) {
       $gv_amount = $gv_resulta->fields['amount'];
 
-	// Begin composing email content
+  // Begin composing email content
 //      //Let's build a message object using the email class
       $mail = $db->Execute("select customers_firstname, customers_lastname, customers_email_address
                            from " . TABLE_CUSTOMERS . "
@@ -61,7 +61,7 @@
       $message .= TEXT_REDEEM_GV_MESSAGE_THANKS . "\n" . STORE_OWNER . "\n\n" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       $message .= TEXT_REDEEM_GV_MESSAGE_BODY;
       $message .= TEXT_REDEEM_GV_MESSAGE_FOOTER;
-	  $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
+      $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
 
       $html_msg['EMAIL_FIRST_NAME'] = $mail->fields['customers_firstname'];
       $html_msg['EMAIL_LAST_NAME']  = $mail->fields['customers_lastname'];
@@ -74,9 +74,9 @@
       $html_msg['TEXT_REDEEM_GV_MESSAGE_FOOTER'] = TEXT_REDEEM_GV_MESSAGE_FOOTER;
 
 //send the message
-      	zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
+        zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
 
-
+      zen_record_admin_activity('GV Queue entry released in the amount of ' . $gv_amount . ' for ' . $mail->fields['customers_email_address'], 'info');
 
       $gv_amount=$gv_resulta->fields['amount'];
       $gv_result=$db->Execute("select amount

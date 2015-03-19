@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tax_classes.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version $Id: tax_classes.php  drbyte Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -37,7 +37,7 @@
                           last_modified = now()
                       where tax_class_id = '" . (int)$tax_class_id . "'");
 
-        zen_redirect(zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tax_class_id));
+        zen_redirect(zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . (int)$tax_class_id));
         break;
       case 'deleteconfirm':
         // demo active test
@@ -46,15 +46,15 @@
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
           zen_redirect(zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']));
         }
-        $tax_class_id = zen_db_prepare_input($_POST['tID']);
+        $tax_class_id = (int)$_POST['tID'];
 
-        $sql = "select tax_class_id from " . TABLE_TAX_RATES . " where tax_class_id='" . $tax_class_id . "'";
+        $sql = "select tax_class_id from " . TABLE_TAX_RATES . " where tax_class_id='" . (int)$tax_class_id . "'";
         $result = $db->Execute($sql);
         if ($result->RecordCount() > 0) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_TAX_RATE_EXISTS_FOR_CLASS, 'error');
         }
-        $sql = "select count(*) as count from " . TABLE_PRODUCTS . " where products_tax_class_id='" . $tax_class_id . "'";
+        $sql = "select count(*) as count from " . TABLE_PRODUCTS . " where products_tax_class_id='" . (int)$tax_class_id . "'";
         $result = $db->Execute($sql);
         if ($result->fields['count'] > 0) {
           $_GET['action']= '';

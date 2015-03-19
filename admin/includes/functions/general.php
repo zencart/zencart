@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Sat Apr 19 10:20:14 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
  */
 
 ////
@@ -1413,7 +1413,7 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
                   where category_id = '" . (int)$category_id . "'");
 
-
+    zen_record_admin_activity('Deleted category ' . (int)$category_id . ' from database via admin console.', 'warning');
   }
 
   function zen_remove_product($product_id, $ptc = 'true') {
@@ -1495,6 +1495,7 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
                   where product_id = '" . (int)$product_id . "'");
 
+    zen_record_admin_activity('Deleted product ' . (int)$product_id . ' from database via admin console.', 'warning');
   }
 
   function zen_products_attributes_download_delete($product_id) {
@@ -1539,6 +1540,8 @@ while (!$chk_sale_categories_all->EOF) {
 
     $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
                   where order_id = '" . (int)$order_id . "' and release_flag = 'N'");
+
+    zen_record_admin_activity('Deleted order ' . (int)$order_id . ' from database via admin console.', 'warning');
   }
 
   function zen_get_file_permissions($mode) {
@@ -1604,6 +1607,7 @@ while (!$chk_sale_categories_all->EOF) {
 
       if (is_writeable($source)) {
         rmdir($source);
+        zen_record_admin_activity('Removed directory from server: [' . $source . ']', 'notice');
       } else {
         $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
         $zen_remove_error = true;
@@ -1611,6 +1615,7 @@ while (!$chk_sale_categories_all->EOF) {
     } else {
       if (is_writeable($source)) {
         unlink($source);
+        zen_record_admin_activity('Deleted file from server: [' . $source . ']', 'notice');
       } else {
         $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
         $zen_remove_error = true;

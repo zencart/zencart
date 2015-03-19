@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 21:04:33 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -52,7 +52,7 @@
     if ($orders->RecordCount() <= 0) {
       $order_exists = false;
       if ($action != '') $messageStack->add_session(ERROR_ORDER_DOES_NOT_EXIST . ' ' . $oID, 'error');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
+      zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
     }
   }
 
@@ -73,7 +73,7 @@
           $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
           WHERE pa.products_attributes_id = pad.products_attributes_id
-          and pad.products_attributes_filename = '" . $chk_products_download->fields['orders_products_filename'] . "'
+          and pad.products_attributes_filename = '" . $db->prepare_input($chk_products_download->fields['orders_products_filename']) . "'
           and pa.products_id = '" . (int)$chk_products_download->fields['products_prid'] . "'";
 
           $chk_products_download_time = $db->Execute($chk_products_download_time_query);
@@ -211,7 +211,7 @@
               $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
                                                     from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                                     WHERE pa.products_attributes_id = pad.products_attributes_id
-                                                    and pad.products_attributes_filename = '" . $chk_downloads->fields['orders_products_filename'] . "'
+                                                    and pad.products_attributes_filename = '" . $db->prepare_input($chk_downloads->fields['orders_products_filename']) . "'
                                                     and pa.products_id = '" . $chk_downloads->fields['products_id'] . "'";
 
               $chk_products_download_time = $db->Execute($chk_products_download_time_query);
@@ -230,6 +230,7 @@
             }
           }
           $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
+          zen_record_admin_activity('Order ' . $oID . ' updated.', 'info');
         } else {
           $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
@@ -272,6 +273,7 @@
             }
           }
         }
+        zen_record_admin_activity('Order ' . $oID . ' refund processed. See order comments for details.', 'info');
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
       case 'doAuth':
@@ -314,6 +316,7 @@
             }
           }
         }
+        zen_record_admin_activity('Order ' . $oID . ' void processed. See order comments for details.', 'info');
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
     }
@@ -972,7 +975,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
 
       $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
       $order = new order($oInfo->orders_id);
-      $contents[] = array('text' => 'Products Ordered: ' . sizeof($order->products) );
+      $contents[] = array('text' => TABLE_HEADING_PRODUCTS . ': ' . sizeof($order->products) );
       for ($i=0; $i<sizeof($order->products); $i++) {
         $contents[] = array('text' => $order->products[$i]['qty'] . '&nbsp;x&nbsp;' . $order->products[$i]['name']);
 

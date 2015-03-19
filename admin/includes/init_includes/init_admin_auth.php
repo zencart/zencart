@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Mar 14 20:41:52 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte   Modified in v1.5.4 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
@@ -51,6 +51,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) != FILENAME_ALERT_PAGE . '.php')
     {
       if (check_page($page, $_GET) == FALSE)
       {
+        zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
       }
     }

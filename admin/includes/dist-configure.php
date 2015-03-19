@@ -1,5 +1,6 @@
 <?php
 /**
+ * dist-configure.php
  * SAMPLE (but NOT FUNCTIONAL) file
  *
  * @package Configuration Settings
@@ -7,7 +8,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  May 24 2014 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
  * @private
  */
 /**
@@ -46,7 +47,7 @@
   define('DIR_WS_CATALOG_LANGUAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/languages/');
 
 // * DIR_FS_* = Filesystem directories (local/physical)
-  define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(dirname(__FILE__) . '/../') . '/'));
+  define('DIR_FS_ADMIN', preg_replace('#.includes$#', '', realpath(dirname(__FILE__) . '/../') . '/'));
 
   define('DIR_FS_CATALOG', '/');
 

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: DrByte  Dec 12 2014  New in v1.5.4 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+td.plainbox, div.callout {border: 1px dashed;border-color: #C96E29;margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:10px ;}
+.error {color:#FF0000; }
+.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color:#c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.style1 {
+  font-size: 18px;
+  font-weight: bold;
+}
+.emphasize {
+  color: #336600;
+}
+fieldset {max-width: 748px; margin: auto}
+.center {text-align: center}
+
+
+-->
+</style>
+<title>What's New in Zen Cart(R) v1.5.4</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro" style="text-align: center;">Welcome to Zen Cart&reg;</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="small center">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.
+</p>
+</fieldset>
+<br>
+
+<fieldset>
+<h1>About PHP versions</h1>
+<p>Zen Cart&reg; v1.5.4 is compatible with PHP 5.2.10 through PHP 5.6, and MySQL 5.1 thru 5.6</p>
+<p class="small"><em>(Note: security features are stronger when using PHP 5.3.7 or newer.)</em></p>
+<p class="small"><em>(Note: PHP 5.2.x and PHP 5.3.x are deprecated and no longer supported by www.php.net ... You REALLY should be using PHP 5.5 if possible, for both security and speed benefits.)</em></p>
+
+<h1>Upgrade Instructions</h1>
+This document only mentions the actual changes specific to 1.5.4. If you want to see the long list of 1.5.2-specific and 1.5.3-specific improvements, see the <a href="whatsnew_1-5-2.html" target="_blank">whatsnew_1.5.2.html</a> and <a href="whatsnew_1-5-3.html" target="_blank">whatsnew_1.5.3.html</a> files.</p>
+<h2>From v1.5.3</h2>
+<p>Simple: if you are using v1.5.3 already and have not customized any of the files listed in the changed_files-v1-5-4.html document, then simply replace those files with the new files as listed.</p>
+<p>If you HAVE customized or altered certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.</p>
+<p>If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original Zen Cart files for the version those plugins were built for, and see what changes were there ... and then re-build those changes in the v1.5.4 file.</p>
+<h2>To v1.5.4 from v1.5.2 or older</h2>
+<p>If you are upgrading from a version OLDER than v1.5.3, then please do a <a href="http://www.zen-cart.com/upgrades">standard complete site upgrade</a>.</p>
+
+<h1>CHANGELOG - List of Changed Files </h1>
+<p>For a list of files that have been changed since v1.5.3, see the <a href="changed_files-v1-5-4.html" target="_blank">changed_files-v1-5-4.html</a> document.</p>
+
+<h1>Whats New ... Changes from v1.5.3 to v1.5.4 </h1>
+<h3><strong>The following improvements and bugfixes are included in v1.5.4 since v1.5.3: </strong></h3>
+Improvements:
+<ul>
+<li>CHANGE-714 - Add progressive-enhancement to checkout flow for PCI compliance when card details collected onsite (added ajax infrastructure, and jQuery)</li>
+<li>CHANGE-724 - Fix init_cache_key_check.php redirect loop which occurred when the user deletes the /cache/ folder</li>
+<li>CHANGE-423 - PayPal Express Checkout - recover funding failure (10486) with "retry" if card is declined</li>
+<li>CHANGE-725 - Authorizenet SIM module now hashes x_currency_code</li>
+<li>CHANGE-730 - Linkpoint CURL SSL bug triggers PHP Warning: Illegal string offset</li>
+<li>CHANGE-731 - Update Authorize.net SIM and AIM to add support for AUD,NZD currencies (now supports USD CAD GBP EUR AUD NZD)</li>
+<li>CHANGE-732 - Update Authorize.net SIM and AIM to set defaults for merchant accounts capable of doing POS and Web transactions in one account</li>
+<li>CHANGE-733 - Store-pickup module not activating properly for zone restrictions</li>
+<li>CHANGE-311 - Data sanity check in admin/customers.php</li>
+<li>CHANGE-709 - Refactor logging infrastructure</li>
+<li>CHANGE-735 - Fix CSRF in admin profiles for action=delete</li>
+<li>CHANGE-736 - Fix CSRF in layout_controllers for action=reset_defaults</li>
+<li>CHANGE-737 - Replace hard-coded language text in /admin/orders.php</li>
+<li>Fix #136 - Error in html syntax in admin_activity and CSS comment syntax in who's online</li>
+<li>Fix #152 - Page not found when incorrect EZPage link remove status</li>
+<li>Fix #188 - Remove code comment causing false-positive in security scan</li>
+<li>Fix #209 - POODLE protection - Remove SSLv3 mode, to allow autonegotiation</li>
+<li>Fix #210 - Fix code dealing with apostrophes in filenames</li>
+<li>Fix #215 - Added additional common destinations to curltester script</li>
+<li>Fix #221 - Fix Discount Coupon and Shipping Cost</li>
+<li>Fix #246 - Fix errors about passwords during zc_install upgrade</li>
+<li>ISSUE-82 - (continuation of) Fix odd PHP quirk which triggers fatal error "Allowed memory size of --- bytes exhausted" when accessing SID constant</li>
+<li>Optimizations and improvements to various database queries</li>
+<li>Fix queries in class.phpbb.php</li>
+<li>Fix fmod_round and shopping_cart using (int) on quantity</li>
+<li>Backported a PHP 5.4 fix to attributes_controller</li>
+<li>zc_install - Fix email validation in zc_install to allow for new domain name TLDs</li>
+<li>Fix override of mexico addresses with paypal pro</li>
+<li>Substitute gethostname for shell_exec since some hosts disable shell_exec</li>
+ 
+</ul>
+
+
+</fieldset>
+<br><br>
+<p class="center"><em>Copyright 2003 - 2014 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: languages.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -17,7 +17,7 @@
         $image = zen_db_prepare_input($_POST['image']);
         $directory = zen_db_prepare_input($_POST['directory']);
         $sort_order = zen_db_prepare_input((int)$_POST['sort_order']);
-        $check = $db->Execute("select * from " . TABLE_LANGUAGES . " where code = '" . $code . "'");
+        $check = $db->Execute("select * from " . TABLE_LANGUAGES . " where code = '" . zen_db_input($code) . "'");
         if ($check->RecordCount() > 0) {
           $messageStack->add(ERROR_DUPLICATE_LANGUAGE_CODE, 'error');
         } else {
@@ -27,6 +27,7 @@
                         values ('" . zen_db_input($name) . "', '" . zen_db_input($code) . "',
                                 '" . zen_db_input($image) . "', '" . zen_db_input($directory) . "',
                                 '" . zen_db_input($sort_order) . "')");
+          zen_record_admin_activity('Language [' . $code . '] added', 'info');
 
           $insert_id = $db->Insert_ID();
 
@@ -231,6 +232,7 @@
                         set configuration_value = '" . zen_db_input(substr($code,0,2)) . "'
                         where configuration_key = 'DEFAULT_LANGUAGE'");
         }
+        zen_record_admin_activity('Language entry updated for language code ' . $code, 'info');
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']));
         break;
       case 'deleteconfirm':
@@ -243,13 +245,14 @@
         $lID = zen_db_prepare_input($_POST['lID']);
         $lng = $db->Execute("select languages_id
                              from " . TABLE_LANGUAGES . "
-                             where code = '" . DEFAULT_LANGUAGE . "'");
+                             where code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
 
         if ($lng->fields['languages_id'] == $lID) {
           $db->Execute("update " . TABLE_CONFIGURATION . "
                         set configuration_value = ''
                         where configuration_key = 'DEFAULT_LANGUAGE'");
         }
+        zen_record_admin_activity('Language with ID ' . $lID . ' deleted.', 'info');
         $db->Execute("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
         $db->Execute("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
         $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lID . "'");
@@ -262,7 +265,7 @@
         $db->Execute("delete from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
 
         // if we just deleted our currently-selected language, need to switch to default lang:
-        $lng = $db->Execute("select languages_id from " . TABLE_LANGUAGES . " where code = '" . DEFAULT_LANGUAGE . "'");
+        $lng = $db->Execute("select languages_id from " . TABLE_LANGUAGES . " where code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
         if ((int)$_SESSION['languages_id'] == (int)$_POST['lID'])  $_SESSION['languages_id'] = $lng->fields['languages_id'];
 
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));

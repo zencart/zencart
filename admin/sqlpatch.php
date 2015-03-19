@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Jul 1 16:59:57 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
  */
 
   require('includes/application_top.php');
@@ -186,7 +186,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
           case (substr($line_upper, 0, 19) == 'INSERT IGNORE INTO '):
             //check to see if table prefix is going to match
             if (!$tbl_exists = zen_table_exists($param[3])) {
-	    $result=sprintf(REASON_TABLE_NOT_FOUND,$param[3]).' CHECK PREFIXES!';
+              $result=sprintf(REASON_TABLE_NOT_FOUND,$param[3]).' CHECK PREFIXES!';
               zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
               $ignore_line=true;
               break;
@@ -330,6 +330,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 
       } //endif ! # or -
     } // end foreach $lines
+    zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
    return array('queries'=> $results, 'string'=>$string, 'output'=>$return_output, 'ignored'=>($ignored_count), 'errors'=>$errors);
   } //end function
 

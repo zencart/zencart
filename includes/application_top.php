@@ -107,7 +107,7 @@ if (file_exists('includes/configure.php')) {
    * load the main configure file.
    */
   include('includes/configure.php');
-} else {
+} else if (!defined('DIR_FS_CATALOG') && !defined('HTTP_SERVER') && !defined('DIR_WS_CATALOG') && !defined('DIR_WS_INCLUDES')) {
   $problemString = 'includes/configure.php not found';
   require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
   exit;

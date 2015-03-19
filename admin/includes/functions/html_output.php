@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php 19356 2011-08-22 05:22:42Z drbyte $
+ * @version $Id: html_output.php drbyte Modified in v1.5.4 $
  */
 
 ////
@@ -40,7 +40,7 @@
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( ($add_session_id == true) && ($session_started == true) ) {
       if (defined('SID') && zen_not_null(constant('SID'))) {
-        $sid = SID;
+        $sid = constant('SID');
       } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL_ADMIN == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
 //die($connection);
         if ($http_domain != $https_domain) {
