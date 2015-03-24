@@ -56,7 +56,7 @@ script:
 
 after_script:
   #- vendor/bin/phpcs --standard=PSR2 includes/ testFramework/
-  - php vendor/bin/coveralls
+  #- php vendor/bin/coveralls
   #- vendor/bin/phpmd includes/ text cleancode,codesize,controversial,design,naming,unusedcode
 
 notifications:
