@@ -377,8 +377,6 @@ class zcDatabaseInstaller
   }
   public function updateConfigKeys()
   {
-    $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". $this->sqlCacheDir ."' where configuration_key = 'SESSION_WRITE_DIRECTORY'";
-    $this->db->Execute($sql);
     $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". preg_replace('~/cache$~', '/logs', $this->sqlCacheDir) ."/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
     $this->db->Execute($sql);
     if (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] != '') {
