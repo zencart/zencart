@@ -16,7 +16,7 @@ $links_list = array();
 if (!defined('TOPMOST_CATEGORY_PARENT_ID')) define('TOPMOST_CATEGORY_PARENT_ID', 0);
 
 // 0 is the top-most category level. Use an observer class to intercept this if changes are desired.
-$parent_category_id = TOPMOST_CATEGORY_PARENT_ID;
+$parent_category_id = (int)TOPMOST_CATEGORY_PARENT_ID;
 $zco_notifier->notify('NOTIFY_MODULE_CATEGORIES_TABS_START', CATEGORIES_TABS_STATUS, $links_list, $parent_category_id);
 
 if (CATEGORIES_TABS_STATUS == '1') {
@@ -33,7 +33,7 @@ if (CATEGORIES_TABS_STATUS == '1') {
 
   while (!$result->EOF) {
     $this_cat_id = $href_cPath = (int)$result->fields['categories_id'];
-    if ($parent_category_id != TOPMOST_CATEGORY_PARENT_ID) $href_cPath = str_replace('cPath=', '', zen_get_path($this_cat_id));
+    if ($parent_category_id != (int)TOPMOST_CATEGORY_PARENT_ID) $href_cPath = str_replace('cPath=', '', zen_get_path($this_cat_id));
     $href = zen_href_link(FILENAME_DEFAULT, 'cPath=' . $href_cPath);
     $current = (bool)((int)$cPath == $result->fields['categories_id']);
     $link_text = $name = $result->fields['categories_name'];

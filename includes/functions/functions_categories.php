@@ -180,7 +180,7 @@
     $parent_categories = $db->Execute($parent_categories_query);
 
     while (!$parent_categories->EOF) {
-      if ($parent_categories->fields['parent_id'] == TOPMOST_CATEGORY_PARENT_ID) return true;
+      if ($parent_categories->fields['parent_id'] == (int)TOPMOST_CATEGORY_PARENT_ID) return true;
       $categories[sizeof($categories)] = $parent_categories->fields['parent_id'];
       if ($parent_categories->fields['parent_id'] != $categories_id) {
         zen_get_parent_categories($categories, $parent_categories->fields['parent_id']);
@@ -255,7 +255,7 @@
 //echo 'cat='.$category->fields['categories_id'].'#'. $cat_id;
 
         while (!$parent_categories->EOF) {
-          if (($parent_categories->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) ) {
+          if (($parent_categories->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID) ) {
             if (!$in_cat) $in_cat = zen_product_in_parent_category($product_id, $cat_id, $parent_categories->fields['parent_id']);
           }
           $parent_categories->MoveNext();
@@ -278,7 +278,7 @@
       $parent_categories = $db->Execute($parent_categories_query);
 
       while (!$parent_categories->EOF) {
-        if ($parent_categories->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID && !$in_cat) {
+        if ($parent_categories->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID && !$in_cat) {
           $in_cat = zen_product_in_parent_category($product_id, $cat_id, $parent_categories->fields['parent_id']);
         }
         $parent_categories->MoveNext();
@@ -483,7 +483,7 @@
     global $categories_products_id_list;
     $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
 
-    $current_cPath = ($parent_category != TOPMOST_CATEGORY_PARENT_ID ? $parent_category . '_' : '') . $categories_id;
+    $current_cPath = ($parent_category != (int)TOPMOST_CATEGORY_PARENT_ID ? $parent_category . '_' : '') . $categories_id;
 
     $sql = "select p.products_id
             from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
@@ -525,8 +525,8 @@
                                   where products_id = '" . (int)$id . "'");
 
       while (!$categories->EOF) {
-        if ($categories->fields['categories_id'] == TOPMOST_CATEGORY_PARENT_ID) {
-          $categories_array[$index][] = array('id' => TOPMOST_CATEGORY_PARENT_ID, 'text' => TEXT_TOP);
+        if ($categories->fields['categories_id'] == (int)TOPMOST_CATEGORY_PARENT_ID) {
+          $categories_array[$index][] = array('id' => (int)TOPMOST_CATEGORY_PARENT_ID, 'text' => TEXT_TOP);
         } else {
           $category = $db->Execute("select cd.categories_name, c.parent_id
                                     from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
@@ -535,7 +535,7 @@
                                     and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
           $categories_array[$index][] = array('id' => $categories->fields['categories_id'], 'text' => $category->fields['categories_name']);
-          if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
+          if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID) {
             $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
           }
           $categories_array[$index] = array_reverse($categories_array[$index]);
@@ -551,7 +551,7 @@
                                 and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
       $categories_array[$index][] = array('id' => $id, 'text' => $category->fields['categories_name']);
-      if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
+      if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID) {
         $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
       }
     }

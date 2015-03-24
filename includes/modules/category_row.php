@@ -32,7 +32,7 @@ if ($num_categories > 0) {
     $cPath_new = zen_get_path($categories->fields['categories_id']);
 
     // strip out 0_ from top level cats
-    $cPath_new = str_replace('=' . TOPMOST_CATEGORY_PARENT_ID . '_', '=', $cPath_new);
+    $cPath_new = str_replace('=' . (int)TOPMOST_CATEGORY_PARENT_ID . '_', '=', $cPath_new);
 
     //    $categories->fields['products_name'] = zen_get_products_name($categories->fields['products_id']);
 

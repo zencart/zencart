@@ -24,5 +24,5 @@ if (!defined('IS_ADMIN_FLAG')) {
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
   } else {
-    $current_category_id = TOPMOST_CATEGORY_PARENT_ID;
+    $current_category_id = (int)TOPMOST_CATEGORY_PARENT_ID;
   }
