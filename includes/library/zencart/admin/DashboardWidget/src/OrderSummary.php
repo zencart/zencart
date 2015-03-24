@@ -31,7 +31,7 @@ class OrderSummary extends AbstractWidget
     {
       $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . $orders_status->fields['orders_status_id'] . "'");
 
-      $tplVars['content'][] = array('text'=> '<a href="' . \zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $orders_status->fields['orders_status_id'], 'NONSSL') . '">' . $orders_status->fields['orders_status_name'] . '</a>', 'value'=>$orders_pending->fields['count']);
+      $tplVars['content'][] = array('text'=> '<a href="' . \zen_href_link(FILENAME_ORDERS, 'status=' . $orders_status->fields['orders_status_id'], 'NONSSL') . '">' . $orders_status->fields['orders_status_name'] . '</a>', 'value'=>$orders_pending->fields['count']);
       $orders_status->MoveNext();
     }
     return $tplVars;

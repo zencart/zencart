@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.6.0 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -127,14 +127,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
-/**
- * Breakpoint 50.
- *
- * require('includes/init_includes/init_cache_key_check.php');
- *
- */
-  $autoLoadConfig[50][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_cache_key_check.php');
 /**
  * Breakpoint 60.
  *

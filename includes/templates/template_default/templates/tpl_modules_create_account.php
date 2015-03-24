@@ -6,10 +6,10 @@
  * Displays Create Account form.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Aug 19 09:47:29 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id:  Modified in v1.6.0 $
  */
 ?>
 
@@ -153,7 +153,7 @@
 <br class="clearBoth" />
 
 <?php
-  if ($phpBB->phpBB['installed'] == true) {
+  if ($display_nick_field == true) {
 ?>
 <label class="inputLabel" for="nickname"><?php echo ENTRY_NICK; ?></label>
 <?php echo zen_draw_input_field('nick','','id="nickname"') . (zen_not_null(ENTRY_NICK_TEXT) ? '<span class="alert">' . ENTRY_NICK_TEXT . '</span>': ''); ?>
