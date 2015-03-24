@@ -6,7 +6,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:
+ * @version GIT: $Id: Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
@@ -58,8 +58,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=>'cache.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'sniffer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'class.phpbb.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'shopping_cart.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -178,7 +176,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * $sniffer = new sniffer();
  * require('includes/init_includes/init_gzip.php');
  * require('includes/init_includes/init_sefu.php');
- * $phpBB = new phpBB();
  */
   $autoLoadConfig[50][] = array('autoType'=>'classInstantiate',
                                 'className'=>'sniffer',
@@ -187,9 +184,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_gzip.php');
   $autoLoadConfig[50][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sefu.php');
-  $autoLoadConfig[50][] = array('autoType'=>'classInstantiate',
-                                'className'=>'phpBB',
-                                'objectName'=>'phpBB');
 /**
  * Breakpoint 60.
  *

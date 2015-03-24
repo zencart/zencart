@@ -3,10 +3,10 @@
  * Header code file for the customer's Account-Edit page
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 4825 2006-10-23 22:25:11Z drbyte $
+ * @version $Id: header_php.php  Modified in v1.6.0 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_EDIT');
@@ -21,6 +21,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
   $firstname = zen_db_prepare_input($_POST['firstname']);
   $lastname = zen_db_prepare_input($_POST['lastname']);
+  $nick = (!empty($_POST['nick']) ? zen_db_prepare_input($_POST['nick']) : '');
   if (ACCOUNT_DOB == 'true') $dob = (empty($_POST['dob']) ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['dob']));
   $email_address = zen_db_prepare_input($_POST['email_address']);
   $telephone = zen_db_prepare_input($_POST['telephone']);
@@ -79,27 +80,29 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if ($check_email->fields['total'] > 0) {
     $error = true;
     $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
-
-    // check phpBB for duplicate email address
-    if ($phpBB->phpbb_check_for_duplicate_email(zen_db_input($email_address)) == 'already_exists' ) {
-      $error = true;
-      $messageStack->add('account_edit', 'phpBB-'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
-    }
   }
+
+  // check external hook for duplicate email address, so we can reject the change if duplicates aren't allowed externally
+  // (the observers should set any messageStack output as needed)
+  $nick_error = false;
+  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error);
+  if ($nick_error) $error = true;
+  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_DUPLICATE', $nick, $nick_error);
+  if ($nick_error) $error = true;
 
 
   if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
     $error = true;
-
     $messageStack->add('account_edit', ENTRY_TELEPHONE_NUMBER_ERROR);
   }
 
   $zco_notifier->notify('NOTIFY_HEADER_ACCOUNT_EDIT_VERIFY_COMPLETE');
-  if ($error == false) {
-    //update phpBB with new email address
-    $old_addr_check=$db->Execute("select customers_email_address from ".TABLE_CUSTOMERS." where customers_id='".(int)$_SESSION['customer_id']."'");
-    $phpBB->phpbb_change_email(zen_db_input($old_addr_check->fields['customers_email_address']),zen_db_input($email_address));
 
+  if ($error == false) {
+    //update external bb system with new email address
+    $zco_notifier->notify('NOTIFY_NICK_UPDATE_EMAIL_ADDRESS', $nick, $db->prepareInput($email_address));
+
+    // build array of data to store the requested changes
     $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'string'),
                             array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'string'),
                             array('fieldName'=>'customers_email_address', 'value'=>$email_address, 'type'=>'string'),
@@ -155,7 +158,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 }
 
 $account_query = "SELECT customers_gender, customers_firstname, customers_lastname,
-                         customers_dob, customers_email_address, customers_telephone,
+                         customers_dob, customers_email_address, customers_telephone, customers_nick,
                          customers_fax, customers_email_format, customers_referral
                   FROM   " . TABLE_CUSTOMERS . "
                   WHERE  customers_id = :customersID";
