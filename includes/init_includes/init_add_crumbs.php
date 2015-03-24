@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -23,13 +23,14 @@ if (isset($cPath_array) && isset($cPath)) {
     $categories_query = "select categories_name
                            from " . TABLE_CATEGORIES_DESCRIPTION . "
                            where categories_id = '" . (int)$cPath_array[$i] . "'
+                           and categories_id != ' . (int)TOPMOST_CATEGORY_PARENT_ID . '
                            and language_id = '" . (int)$_SESSION['languages_id'] . "'";
-
     $categories = $db->Execute($categories_query);
+
 //echo 'I SEE ' . (int)$cPath_array[$i] . '<br>';
     if ($categories->RecordCount() > 0) {
       $breadcrumb->add($categories->fields['categories_name'], zen_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
-    } elseif(SHOW_CATEGORIES_ALWAYS == 0) {
+    } elseif (SHOW_CATEGORIES_ALWAYS == 0) {
       // if invalid, set the robots noindex/nofollow for this page
       $robotsNoIndex = true;
       break;

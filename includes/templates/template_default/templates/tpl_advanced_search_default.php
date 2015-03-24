@@ -6,7 +6,7 @@
  * Displays options fields upon which a product search will be run
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_advanced_search_default.php 18695 2011-05-04 05:24:19Z drbyte $
@@ -31,7 +31,7 @@
 
 <fieldset class="floatingBox back">
     <legend><?php echo ENTRY_CATEGORIES; ?></legend>
-    <div class="floatLeft"><?php echo zen_draw_pull_down_menu('categories_id', zen_get_categories(array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES)), '0' ,'', '1'), $sData['categories_id']); ?></div>
+    <div class="floatLeft"><?php echo zen_draw_pull_down_menu('categories_id', zen_get_categories(array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES)), (int)TOPMOST_CATEGORY_PARENT_ID ,'', '1'), $sData['categories_id']); ?></div>
 <?php echo zen_draw_checkbox_field('inc_subcat', '1', $sData['inc_subcat'], 'id="inc-subcat"'); ?><label class="checkboxLabel" for="inc-subcat"><?php echo ENTRY_INCLUDE_SUBCATEGORIES; ?></label>
 <br class="clearBoth" />
 </fieldset>

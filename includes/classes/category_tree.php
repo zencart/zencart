@@ -3,10 +3,10 @@
  * category_tree Class.
  *
  * @package classes
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: category_tree.php 3041 2006-02-15 21:56:45Z wilt $
+ * @version $Id: category_tree.php  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -31,7 +31,7 @@ class category_tree extends base {
     if ($product_type == 'all') {
       $categories_query = "select c.categories_id, cd.categories_name, c.parent_id, c.categories_image
                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                             where c.parent_id = 0
+                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
                              and c.categories_id = cd.categories_id
                              and cd.language_id='" . (int)$_SESSION['languages_id'] . "'
                              and c.categories_status= 1
@@ -39,7 +39,7 @@ class category_tree extends base {
     } else {
       $categories_query = "select ptc.category_id as categories_id, cd.categories_name, c.parent_id, c.categories_image
                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
-                             where c.parent_id = 0
+                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
                              and ptc.category_id = cd.categories_id
                              and ptc.product_type_id = " . $master_type . "
                              and c.categories_id = ptc.category_id
@@ -49,12 +49,14 @@ class category_tree extends base {
     }
     $categories = $db->Execute($categories_query, '', true, 150);
     while (!$categories->EOF)  {
-      $this->tree[$categories->fields['categories_id']] = array('name' => $categories->fields['categories_name'],
-      'parent' => $categories->fields['parent_id'],
-      'level' => 0,
-      'path' => $categories->fields['categories_id'],
-      'image' => $categories->fields['categories_image'],
-      'next_id' => false);
+      $this->tree[$categories->fields['categories_id']] = array(
+              'name' => $categories->fields['categories_name'],
+              'parent' => $categories->fields['parent_id'],
+              'level' => 0,
+              'path' => $categories->fields['categories_id'],
+              'image' => $categories->fields['categories_image'],
+              'next_id' => false,
+              );
 
       if (isset($parent_id)) {
         $this->tree[$parent_id]['next_id'] = $categories->fields['categories_id'];
@@ -101,7 +103,6 @@ class category_tree extends base {
                              and cd.language_id=" . (int)$_SESSION['languages_id'] ."
                              and c.categories_status= 1
                              order by sort_order, cd.categories_name";
-
         }
 
         $rows = $db->Execute($categories_query);
@@ -140,19 +141,20 @@ class category_tree extends base {
     return $this->zen_show_category($first_element, $row);
   }
 
+
   function zen_show_category($counter,$ii) {
     global $cPath_array;
 
     $this->categories_string = "";
 
     for ($i=0; $i<$this->tree[$counter]['level']; $i++) {
-      if ($this->tree[$counter]['parent'] != 0) {
+      if ($this->tree[$counter]['parent'] != (int)TOPMOST_CATEGORY_PARENT_ID) {
         $this->categories_string .= CATEGORIES_SUBCATEGORIES_INDENT;
       }
     }
 
 
-    if ($this->tree[$counter]['parent'] == 0) {
+    if ($this->tree[$counter]['parent'] == (int)TOPMOST_CATEGORY_PARENT_ID) {
       $cPath_new = 'cPath=' . $counter;
       $this->box_categories_array[$ii]['top'] = 'true';
     } else {
@@ -196,4 +198,3 @@ class category_tree extends base {
     return $this->box_categories_array;
   }
 }
-?>

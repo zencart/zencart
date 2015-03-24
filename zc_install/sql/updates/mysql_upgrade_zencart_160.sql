@@ -64,6 +64,8 @@ UPDATE configuration SET val_function = '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","
 
 DELETE FROM configuration WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID';
 
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Topmost Category Parent ID', 'TOPMOST_CATEGORY_PARENT_ID', '0', 'DEFAULT: 0<br>This is the top-most "parent" category ID. In default installs, this is always 0.  Very advanced customizations might require this to be adjusted. <br>WARNING: Changing this to something other than 0 could result in unpredictable behavior!!', '6', '80', now());
+
 ALTER TABLE configuration DROP PRIMARY KEY, ADD PRIMARY KEY (configuration_key), DROP INDEX unq_config_key_zen, ADD UNIQUE unq_config_id_zen (configuration_id);
 ALTER TABLE product_type_layout DROP PRIMARY KEY, ADD PRIMARY KEY (configuration_key), DROP INDEX unq_config_key_zen, ADD UNIQUE unq_config_id_zen (configuration_id);
 
