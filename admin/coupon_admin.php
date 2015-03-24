@@ -1,18 +1,13 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: Ajeh  Modified in v1.6.0 $
  */
   require('includes/application_top.php');
   $currencies = new currencies();
-
-  if ($_GET['selected_box']) {
-    $_GET['action']='';
-    $_GET['old_action']='';
-  }
 
   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
     $sql = "SELECT coupon_id, coupon_active from " . TABLE_COUPONS . " WHERE coupon_code = :couponCode:";

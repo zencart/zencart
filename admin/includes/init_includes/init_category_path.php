@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_category_path.php 14887 2009-11-21 21:18:00Z wilt $
+ * @version $Id: init_category_path.php  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -25,13 +25,4 @@ define('TOP_MOST_CATEGORY_PARENT_ID', 0);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
   } else {
     $current_category_id = 0;
-  }
-
-// default open navigation box
-  if (!isset($_SESSION['selected_box'])) {
-    $_SESSION['selected_box'] = 'configuration';
-  }
-
-  if (isset($_GET['selected_box'])) {
-    $_SESSION['selected_box'] = $_GET['selected_box'];
   }
