@@ -3,9 +3,9 @@
  * zcListingBoxFormatterListStandard
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: wilt  New in v1.6.0 $
  */
 /**
  * class zcListingBoxFormatterListStandard
@@ -89,7 +89,7 @@ class zcListingBoxFormatterListStandard extends base
         }
 
         if (! defined($definePrefix . 'BUY_NOW') || (defined($definePrefix . 'BUY_NOW') && constant($definePrefix . 'BUY_NOW') != '0' and zen_get_products_allow_add_to_cart($item ['products_id']) == 'Y')) {
-          if (zen_has_product_attributes($item ['products_id'])) {
+          if (zen_has_product_attributes($item ['products_id'], false, true) > (constant($definePrefix . 'LISTING_MULTIPLE_ADD_TO_CART') > 0 ? 0 : 1)) {
             $link = '<a href="' . zen_href_link(zen_get_info_page($item ['products_id']), 'cPath=' . $item ['mproductCpath'] . '&products_id=' . $item ['products_id']) . '">' . MORE_INFO_TEXT . '</a>';
           } else {
             if (constant($definePrefix . 'LISTING_MULTIPLE_ADD_TO_CART') > 0 && $item ['products_qty_box_status'] != 0) {

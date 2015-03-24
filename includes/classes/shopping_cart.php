@@ -685,7 +685,7 @@ class shoppingCart extends base {
         }
 
         // adjust price for discounts when priced by attribute
-        if ($product->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($product->fields['products_id'], 'false')) {
+        if ($product->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($product->fields['products_id'], false)) {
           // reset for priced by attributes
           //            $products_price = $products->fields['products_price'];
           if ($special_price) {
@@ -1225,7 +1225,7 @@ class shoppingCart extends base {
         }
 
         // adjust price for discounts when priced by attribute
-        if ($products->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($products->fields['products_id'], 'false')) {
+        if ($products->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($products->fields['products_id'], false)) {
           // reset for priced by attributes
           //            $products_price = $products->fields['products_price'];
           if ($special_price) {
@@ -1838,6 +1838,28 @@ class shoppingCart extends base {
     if ($this->display_debug_messages) $messageStack->add_session('header', 'A: FUNCTION ' . __FUNCTION__, 'caution');
 
     if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
+
+      // Add default attribute if not specified and only one attrib exists for this product
+      if (!isset($_POST['id']) && zen_has_product_attributes($_POST['products_id'], true, true) == 1) {
+        $sql = "select distinct popt.products_options_id, popt.products_options_name
+              from        " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
+              where           patrib.products_id='" . (int)$_POST['products_id'] . "'
+              and             patrib.options_id = popt.products_options_id
+              and             popt.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 1";
+        $products_options_names = $db->Execute($sql);
+
+        $sql = "select    pov.products_options_values_id, pov.products_options_values_name
+              from      " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
+              where     pa.products_id = '" . (int)$_POST['products_id'] . "'
+              and       pa.options_id = '" . (int)$products_options_names->fields['products_options_id'] . "'
+              and       pa.options_values_id = pov.products_options_values_id
+              and       pov.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 1 ";
+        $products_options = $db->Execute($sql);
+        if ($products_options->RecordCount() == 1) {
+          $_POST['id'][$products_options_names->fields['products_options_id']] = $products_options->fields['products_options_values_id'];
+        }
+      }
+
       // verify attributes and quantity first
       if ($this->display_debug_messages) $messageStack->add_session('header', 'A2: FUNCTION ' . __FUNCTION__, 'caution');
       $the_list = '';
@@ -1973,10 +1995,19 @@ class shoppingCart extends base {
     global $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' $_GET[products_id]: ' . $_GET['products_id'], 'caution');
 
-    $this->flag_duplicate_msgs_set = FALSE;
+    $this->flag_duplicate_msgs_set = false;
     if (isset($_GET['products_id'])) {
-      if (zen_has_product_attributes($_GET['products_id'])) {
+      $attribCount = zen_has_product_attributes($_GET['products_id'], false, true);
+      // if product has more than one attrib, go to product page. If has only one, treat as a regular actionAddProduct call
+      if ($attribCount > 1) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['products_id']), 'products_id=' . $_GET['products_id']));
+      } elseif ($attribCount == 1) {
+        $_GET['action'] = 'add_product';
+        $_POST['products_id'] = $_GET['products_id'];
+        $_POST['cart_quantity'] = 1;
+        $this->actionAddProduct($goto, $parameters);
+        return false;
+
       } else {
         $add_max = zen_get_products_quantity_order_max($_GET['products_id']);
         $cart_qty = $this->in_cart_mixed($_GET['products_id']);

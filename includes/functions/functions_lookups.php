@@ -213,24 +213,38 @@
 /*
  *  Check if product has attributes
  */
-  function zen_has_product_attributes($products_id, $not_readonly = 'true') {
+  function zen_has_product_attributes($products_id, $not_readonly = true, $returnCount = false) {
     global $db;
 
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' and $not_readonly == 'true') {
+    // this line is for legacy support; remove after v1.6.x series
+    if ($not_readonly === 'false') $not_readonly = false;
+
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' and $not_readonly === true) {
       // don't include READONLY attributes to determine if attributes must be selected to add to cart
       $attributes_query = "select pa.products_attributes_id
-                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
-                           where pa.products_id = '" . (int)$products_id . "' and po.products_options_type != '" . PRODUCTS_OPTIONS_TYPE_READONLY . "' limit 1";
+                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                           left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
+                           where pa.products_id = '" . (int)$products_id . "'
+                           and po.products_options_type != '" . PRODUCTS_OPTIONS_TYPE_READONLY . "'";
     } else {
       // regardless of READONLY attributes no add to cart buttons
       $attributes_query = "select pa.products_attributes_id
                            from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                           where pa.products_id = '" . (int)$products_id . "' limit 1";
+                           where pa.products_id = '" . (int)$products_id . "'";
+    }
+    if ($returnCount == false) {
+      $attributes_query .= " limit 1";
+    } else {
+      $attributes_query = str_replace('select pa.products_attributes_id', 'select count(pa.products_attributes_id) as count', $attributes_query);
     }
 
     $attributes = $db->Execute($attributes_query);
-    return !($attributes->EOF);
+
+    if ($returnCount) return $attributes->fields['count'];
+
+    return ($attributes->recordCount() > 0 && $attributes->fields['products_attributes_id'] > 0);
   }
+
 
 /*
  *  Check if product has attributes values

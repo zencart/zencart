@@ -3,9 +3,9 @@
  * zcListingBoxFormatterTabularProduct
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: class.base.php 14535 2009-10-07 22:16:19Z wilt $
+ * @version $Id: wilt  New in v1.6.0 $
  */
 /**
  * class zcListingBoxFormatterTabularProduct
@@ -101,7 +101,7 @@ class zcListingBoxFormatterTabularProduct extends base
 
               // more info in place of buy now
               $lc_button = '';
-              if (zen_has_product_attributes($item ['products_id']) or PRODUCT_LIST_PRICE_BUY_NOW == '0') {
+              if (zen_has_product_attributes($item ['products_id'], false, true) > (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 ? 0 : 1) or PRODUCT_LIST_PRICE_BUY_NOW == '0') {
                 $lc_button = '<a href="' . zen_href_link(zen_get_info_page($item ['products_id']), 'cPath=' . ((zcRequest::readGet('manufacturers_id', 0) > 0 and zcRequest::readGet('filter_id', 0)) > 0 ? zen_get_generated_category_path_rev(zcRequest::readGet('filter_id')) : (zcRequest::readGet('cPath', '') != '' ? zcRequest::readGet('cPath') : zen_get_generated_category_path_rev($item ['master_categories_id']))) . '&products_id=' . $item ['products_id']) . '">' . MORE_INFO_TEXT . '</a>';
               } else {
                 if (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0) {
