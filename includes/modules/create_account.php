@@ -3,10 +3,11 @@
  * create_account header_php.php
  *
  * @package modules
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: create_account.php 17018 2010-07-27 07:25:41Z drbyte $
+ * @version $Id: create_account.php  Modified in v1.6.0 $
+ *
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 // This should be first line of the script:
@@ -27,6 +28,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   $error = false;
   $email_format = (ACCOUNT_EMAIL_PREFERENCE == '1' ? 'HTML' : 'TEXT');
   $newsletter = (ACCOUNT_NEWSLETTER_STATUS == '1' || ACCOUNT_NEWSLETTER_STATUS == '0' ? false : true);
+  $extra_welcome_text = '';
+
 /**
  * Process form contents
  */
@@ -144,28 +147,31 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if ($check_email->fields['total'] > 0) {
       $error = true;
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
+    } else {
+      $nick_error = false;
+      $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error);
+      if ($nick_error) {
+        $error = true;
+      }
+
     }
   }
 
-  if ($phpBB && $phpBB->phpBB['installed'] == true) {
-    if (strlen($nick) < ENTRY_NICK_MIN_LENGTH)  {
+  $nick_error = false;
+  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_MIN_LENGTH', $nick, $nick_error, ENTRY_NICK_MIN_LENGTH);
+  if ($nick_error) $error = true;
+  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_DUPLICATE', $nick, $nick_error);
+  if ($nick_error) $error = true;
+
+  // check Zen Cart for duplicate nickname
+  if (!$error && zen_not_null($nick)) {
+    $sql = "select * from " . TABLE_CUSTOMERS  . "
+                         where customers_nick = :nick:";
+    $check_nick_query = $db->bindVars($sql, ':nick:', $nick, 'string');
+    $check_nick = $db->Execute($check_nick_query);
+    if ($check_nick->RecordCount() > 0 ) {
       $error = true;
-      $messageStack->add('create_account', ENTRY_NICK_LENGTH_ERROR);
-    } else {
-      // check Zen Cart for duplicate nickname
-      $sql = "select * from " . TABLE_CUSTOMERS  . "
-                           where customers_nick = :nick:";
-      $check_nick_query = $db->bindVars($sql, ':nick:', $nick, 'string');
-      $check_nick = $db->Execute($check_nick_query);
-      if ($check_nick->RecordCount() > 0 ) {
-        $error = true;
-        $messageStack->add('create_account', ENTRY_NICK_DUPLICATE_ERROR);
-      }
-      // check phpBB for duplicate nickname
-      if ($phpBB->phpbb_check_for_duplicate_nick($nick) == 'already_exists' ) {
-        $error = true;
-        $messageStack->add('create_account', ENTRY_NICK_DUPLICATE_ERROR . ' (phpBB)');
-      }
+      $messageStack->add('create_account', ENTRY_NICK_DUPLICATE_ERROR);
     }
   }
 
@@ -369,11 +375,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     $db->Execute($sql);
 
-    // phpBB create account
-    if ($phpBB->phpBB['installed'] == true) {
-      $phpBB->phpbb_create_account($nick, $password, $email_address);
-    }
-    // End phppBB create account
+    // do any 3rd-party nick creation
+    $nick_email = $email_address;
+    $zco_notifier->notify('NOTIFY_NICK_CREATE_NEW', $nick, $password, $nick_email, $extra_welcome_text);
 
     if (SESSION_RECREATE == 'True') {
       zen_session_recreate();
@@ -390,7 +394,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['cart']->restore_contents();
 
     // hook notifier class
-    $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT');
+    $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT', $email_address, $extra_welcome_text);
+
+
 /* IF IT IS  A COWOA ACCOUNT DO NOT SEND A WELCOME E-MAIL  */
 if ($_SESSION['COWOA']!= true) {
     // build the message content
@@ -410,8 +416,8 @@ if ($_SESSION['COWOA']!= true) {
     $html_msg['EMAIL_LAST_NAME']  = $lastname;
 
     // initial welcome
-    $email_text .=  EMAIL_WELCOME;
-    $html_msg['EMAIL_WELCOME'] = str_replace('\n','',EMAIL_WELCOME);
+    $email_text .=  EMAIL_WELCOME . $extra_welcome_text;
+    $html_msg['EMAIL_WELCOME'] = str_replace('\n','',EMAIL_WELCOME . $extra_welcome_text);
 
     if (NEW_SIGNUP_DISCOUNT_COUPON != '' and NEW_SIGNUP_DISCOUNT_COUPON != '0') {
       $coupon_id = NEW_SIGNUP_DISCOUNT_COUPON;
@@ -494,6 +500,9 @@ if ($_SESSION['COWOA']!= true) {
   $flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN == 'true' || $error_state_input) ? true : false;
   $state = ($flag_show_pulldown_states) ? ($state == '' ? '&nbsp;' : $state) : $zone_name;
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
+
+  $display_nick_field = false;
+  $zco_notifier->notify('NOTIFY_NICK_SET_TEMPLATE_FLAG', 0, $display_nick_field);
 
 
 // This should be last line of the script:
