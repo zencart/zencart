@@ -3,7 +3,7 @@
  * paypaldp.php payment module class for Paypal Payments Pro (aka Website Payments Pro)
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -2153,7 +2153,7 @@ class paypaldp extends base {
     // determine the appropriate product code for submission
     $prodCode = FALSE;
     if (isset($_SESSION['cart'])) {
-      if ($_SESSION['cart']->get_cart_type == 'virtual') {
+      if ($_SESSION['cart']->get_content_type == 'virtual') {
         $prodCode = 'DIG';
       } else {
         $prodCode = 'PHY';
