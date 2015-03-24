@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
@@ -12,7 +12,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-define('TOP_MOST_CATEGORY_PARENT_ID', 0);
+if (!defined('TOPMOST_CATEGORY_PARENT_ID')) define('TOPMOST_CATEGORY_PARENT_ID', 0);
 
 $show_welcome = false;
 if (zcRequest::hasGet('cPath')) {
@@ -33,7 +33,7 @@ if (zen_not_null($cPath)) {
   $cPath = implode('_', $cPath_array);
   $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
 } else {
-  $current_category_id = 0;
+  $current_category_id = TOPMOST_CATEGORY_PARENT_ID;
   $cPath_array = array();
 }
 

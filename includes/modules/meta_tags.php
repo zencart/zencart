@@ -3,10 +3,10 @@
  * meta_tags module
  *
  * @package modules
- * @copyright Copyright 2003-2008 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: meta_tags.php 11202 2008-11-23 09:18:34Z drbyte $
+ * @version $Id: meta_tags.php 11202 2008-11-23 09:18:34Z drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -27,7 +27,7 @@ $meta_tags_over_ride = false;
 if (!defined('METATAGS_DIVIDER')) define('METATAGS_DIVIDER', ', ');
 
 // Get all top category names for use with web site keywords
-$sql = "select cd.categories_name from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = 0 and c.categories_id = cd.categories_id and cd.language_id='" . (int)$_SESSION['languages_id'] . "' and c.categories_status=1";
+$sql = "select cd.categories_name from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . " and c.categories_id = cd.categories_id and cd.language_id='" . (int)$_SESSION['languages_id'] . "' and c.categories_status=1";
 $keywords_metatags = $db->Execute($sql);
 while (!$keywords_metatags->EOF) {
   $keywords_string_metatags .= zen_clean_html($keywords_metatags->fields['categories_name']) . METATAGS_DIVIDER;
@@ -333,4 +333,3 @@ if ($meta_tags_over_ride == true) {
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_END_META_TAGS');
-?>

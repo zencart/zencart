@@ -3,21 +3,20 @@
  * categories_tabs.php module
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: categories_tabs.php 3018 2006-02-12 21:04:04Z wilt $
+ * @version $Id: categories_tabs.php  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $links_list = array();
 
-if (!defined('TOP_MOST_CATEGORY_PARENT_ID')) define('TOP_MOST_CATEGORY_PARENT_ID', 0);
+if (!defined('TOPMOST_CATEGORY_PARENT_ID')) define('TOPMOST_CATEGORY_PARENT_ID', 0);
 
 // 0 is the top-most category level. Use an observer class to intercept this if changes are desired.
-$parent_category_id = TOP_MOST_CATEGORY_PARENT_ID;
-
+$parent_category_id = TOPMOST_CATEGORY_PARENT_ID;
 $zco_notifier->notify('NOTIFY_MODULE_CATEGORIES_TABS_START', CATEGORIES_TABS_STATUS, $links_list, $parent_category_id);
 
 if (CATEGORIES_TABS_STATUS == '1') {
@@ -34,7 +33,7 @@ if (CATEGORIES_TABS_STATUS == '1') {
 
   while (!$result->EOF) {
     $this_cat_id = $href_cPath = (int)$result->fields['categories_id'];
-    if ($parent_category_id != TOP_MOST_CATEGORY_PARENT_ID) $href_cPath = str_replace('cPath=', '', zen_get_path($this_cat_id));
+    if ($parent_category_id != TOPMOST_CATEGORY_PARENT_ID) $href_cPath = str_replace('cPath=', '', zen_get_path($this_cat_id));
     $href = zen_href_link(FILENAME_DEFAULT, 'cPath=' . $href_cPath);
     $current = (bool)((int)$cPath == $result->fields['categories_id']);
     $link_text = $name = $result->fields['categories_name'];
