@@ -158,7 +158,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   $nick_error = false;
-  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_MIN_LENGTH', $nick, $nick_error, ENTRY_NICK_MIN_LENGTH);
+  $nick_length_min = ENTRY_NICK_MIN_LENGTH;
+  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_MIN_LENGTH', $nick, $nick_error, $nick_length_min);
   if ($nick_error) $error = true;
   $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_DUPLICATE', $nick, $nick_error);
   if ($nick_error) $error = true;

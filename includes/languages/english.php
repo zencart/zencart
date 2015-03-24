@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: english.php 19690 2011-10-04 16:41:45Z drbyte $
+ * @version $Id: english.php  Modified in v1.6.0 $
  */
 
   define('CONNECTION_TYPE_UNKNOWN', '\'%s\' is not a valid connection type for generating URLs' . PHP_EOL . '%s' . PHP_EOL);
@@ -100,7 +100,6 @@
   define('BOX_INFORMATION_CONDITIONS', 'Conditions of Use');
   define('BOX_INFORMATION_SHIPPING', 'Shipping &amp; Returns');
   define('BOX_INFORMATION_CONTACT', 'Contact Us');
-  define('BOX_BBINDEX', 'Forum');
   define('BOX_INFORMATION_UNSUBSCRIBE', 'Newsletter Unsubscribe');
 
   define('BOX_INFORMATION_SITE_MAP', 'Site Map');
