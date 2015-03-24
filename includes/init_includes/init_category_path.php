@@ -22,7 +22,9 @@ if (zcRequest::hasGet('cPath')) {
 } else {
   if (SHOW_CATEGORIES_ALWAYS == '1' && !zen_check_url_get_terms()) {
     $show_welcome = true;
-    $cPath = (defined('CATEGORIES_START_MAIN') ? CATEGORIES_START_MAIN : '');
+    $starting_default_category = (int)TOPMOST_CATEGORY_PARENT_ID;
+    if (defined('CATEGORIES_START_MAIN') && trim(CATEGORIES_START_MAIN) != '') $starting_default_category = trim(CATEGORIES_START_MAIN);
+    $cPath = $starting_default_category;
   } else {
     $show_welcome = false;
     $cPath = '';
