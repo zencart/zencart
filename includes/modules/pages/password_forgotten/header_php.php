@@ -3,10 +3,11 @@
  * Password Forgotten
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 31 18:47:04 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
+ *
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 
@@ -62,13 +63,17 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
     // send the email
     zen_mail($check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'], $email_address, EMAIL_PASSWORD_REMINDER_SUBJECT, sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password), STORE_NAME, EMAIL_FROM, $html_msg,'password_forgotten');
+
+    // handle 3rd-party integrations
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_CHANGED', $email_address, $check_customer->fields['customers_id'], $new_password);
+
   } else {
     $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address);
   }
 
-    $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
+  $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
 
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+  zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -76,4 +81,3 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_PASSWORD_FORGOTTEN');
-// eof
