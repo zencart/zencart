@@ -7,6 +7,10 @@
 >
   <testsuites>
 
+      <testsuite name="Listing Box">
+          <directory suffix="Test.php">listingBox</directory>
+      </testsuite>
+
       <testsuite name="issetorArray">
           <file>testIssetorArrayCase.php</file>
       </testsuite>
