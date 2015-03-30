@@ -625,8 +625,10 @@ class queryFactoryResult implements Countable, Iterator {
    * @see Iterator::rewind()
    */
   public function rewind() {
-    $this->Move(0);
-    $this->EOF = ($this->RecordCount() == 0);
+      $this->EOF = ($this->RecordCount() == 0);
+      if ($this->RecordCount() !== 0) {
+          $this->Move(0);
+      }
   }
 
   /* (non-PHPdoc)
