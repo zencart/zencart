@@ -589,6 +589,9 @@
 
 ///////////////////////////////////////////////////////////
 // include email extras
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_EMAIL_EXTRAS)) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_EMAIL_EXTRAS); 
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/' . FILENAME_EMAIL_EXTRAS)) {
     $template_dir_select = $template_dir . '/';
   } else {
@@ -597,6 +600,9 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . FILENAME_EMAIL_EXTRAS);
 
 // include template specific header defines
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_HEADER)) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_HEADER);
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/' . FILENAME_HEADER)) {
     $template_dir_select = $template_dir . '/';
   } else {
@@ -605,6 +611,9 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . FILENAME_HEADER);
 
 // include template specific button name defines
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_BUTTON_NAMES)) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_BUTTON_NAMES);
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/' . FILENAME_BUTTON_NAMES)) {
     $template_dir_select = $template_dir . '/';
   } else {
@@ -613,6 +622,9 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . FILENAME_BUTTON_NAMES);
 
 // include template specific icon name defines
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/' . FILENAME_ICON_NAMES)) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/' . FILENAME_ICON_NAMES); 
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/' . FILENAME_ICON_NAMES)) {
     $template_dir_select = $template_dir . '/';
   } else {
@@ -621,6 +633,9 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . FILENAME_ICON_NAMES);
 
 // include template specific other image name defines
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/' . FILENAME_OTHER_IMAGES_NAMES)) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/' . FILENAME_OTHER_IMAGES_NAMES); 
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/' . FILENAME_OTHER_IMAGES_NAMES)) {
     $template_dir_select = $template_dir . '/';
   } else {
@@ -629,6 +644,9 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . FILENAME_OTHER_IMAGES_NAMES);
 
 // credit cards
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_CREDIT_CARDS)) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/' . FILENAME_CREDIT_CARDS);
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/' . FILENAME_CREDIT_CARDS)) {
     $template_dir_select = $template_dir . '/';
   } else {
@@ -637,6 +655,9 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select. FILENAME_CREDIT_CARDS);
 
 // include template specific whos_online sidebox defines
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/' . FILENAME_WHOS_ONLINE . '.php')) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/' . FILENAME_WHOS_ONLINE . '.php'); 
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/' . FILENAME_WHOS_ONLINE . '.php')) {
     $template_dir_select = $template_dir . '/';
   } else {
@@ -645,6 +666,9 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . FILENAME_WHOS_ONLINE . '.php');
 
 // include template specific meta tags defines
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/meta_tags.php')) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/meta_tags.php'); 
+  }
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
     $template_dir_select = $template_dir . '/';
   } else {
