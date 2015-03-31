@@ -1,11 +1,12 @@
 <?php
 /**
- * template_func Class.
+ * template_func class.
  *
- * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @package initSystem
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: template_func.php 14141 2009-08-10 19:34:47Z wilt $
+ * @version GIT: $Id:
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -42,6 +43,8 @@ class template_func extends base {
     //	echo 'template_default/' . $template_dir . '=' . $template_code;
     if ($this->file_exists($current_template . $current_page, $template_code, $debug)) {
       return $current_template . $current_page . '/';
+    } elseif ($this->file_exists(DIR_WS_TEMPLATES . 'shared/' . $template_dir , preg_replace('/\//', '', $template_code), $debug)) {
+      return DIR_WS_TEMPLATES . 'shared/' . $template_dir;
     } elseif ($this->file_exists(DIR_WS_TEMPLATES . 'template_default/' . $current_page, preg_replace('/\//', '', $template_code), $debug)) {
       return DIR_WS_TEMPLATES . 'template_default/' . $current_page;
     } elseif ($this->file_exists($current_template . $template_dir, preg_replace('/\//', '', $template_code), $debug)) {

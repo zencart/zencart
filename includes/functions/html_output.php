@@ -4,7 +4,7 @@
  * HTML-generating functions used throughout the core
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: html_output.php 19355 2011-08-21 21:12:09Z drbyte $
@@ -200,7 +200,10 @@
 
     // if not in current template switch to template_default
     if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'shared', $src);
+      if (!file_exists($src)) { 
+        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      }
     }
 
 // alt is added to the img tag even if it is null to prevent browsers from outputting
@@ -268,7 +271,10 @@
 
     // if not in current template switch to template_default
     if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'shared', $src);
+      if (!file_exists($src)) { 
+        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      }
     }
 
     // hook for handle_image() function such as Image Handler etc

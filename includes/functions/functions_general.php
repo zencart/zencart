@@ -1328,6 +1328,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     if (file_exists(DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
       $template_dir_select = $template_dir . '/';
+    } else if (file_exists(DIR_WS_MODULES . 'shared' . '/' . $zv_filename)) {
+      $template_dir_select = 'shared/'; 
     } else {
       $template_dir_select = '';
     }
@@ -1350,6 +1352,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     if (file_exists($check_directory . $template_dir . '/' . $zv_filename)) {
       $zv_directory = $check_directory . $template_dir . '/';
+    } else if (file_exists($check_directory . 'shared' . '/' . $zv_filename)) {
+      $zv_directory = $check_directory . 'shared' . '/';
     } else {
       $zv_directory = $check_directory;
     }
