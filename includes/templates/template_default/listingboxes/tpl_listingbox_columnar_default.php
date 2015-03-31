@@ -3,17 +3,18 @@
  * Module Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
+//print_r($tplVars);
 ?>
 
 <div class="centerBoxWrapper" id="id<?php echo $tplVars['listingBox']['className']; ?>">
 <h2 class="centerBoxHeading"><?php echo $tplVars['listingBox']['title']; ?></h2>
-<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showPaginatorTop']) { ?>
-<?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?>
+<?php if (isset($tplVars['listingBox']['paginator']) && $tplVars['listingBox']['paginator']['show'] && $tplVars['listingBox']['paginator']['showTop']) { ?>
+<?php require($template->get_template_dir($tplVars['listingBox']['paginator']['scrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginator']['scrollerTemplate']); ?>
 <?php } ?>
 <?php if ($tplVars['listingBox']['hasFormattedItems']) { ?>
 <?php for($row=0;$row<sizeof($tplVars['listingBox']['formattedItems']);$row++) { ?>

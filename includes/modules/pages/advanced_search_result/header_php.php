@@ -3,7 +3,7 @@
  * Header code file for the Advanced Search Results page
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -131,11 +131,15 @@ if ($error == true) {
 }
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ADVANCED_SEARCH));
 $breadcrumb->add(NAVBAR_TITLE_2);
-require_once(DIR_WS_MODULES . "listingboxes/class.zcListingBoxSearchResults.php");
-$box = new zcListingBoxSearchResults ();
-$box->init();
-$tplVars['listingBox'] = $box->getTemplateVariables ();
-if (!$box->getHasContent()) {
+$qb = new ZenCart\Platform\QueryBuilder($db);
+$box = new ZenCart\Platform\listingBox\boxes\SearchResults($zcRequest);
+$paginator = new ZenCart\Platform\Paginator\Paginator($zcRequest);
+$builder = new ZenCart\Platform\listingBox\PaginatorBuilder($zcRequest, $box, $paginator);
+$box->buildResults($qb, $db, new ZenCart\Platform\listingBox\DerivedItemManager, $builder->getPaginator());
+$tplVars['listingBox'] = $box->getTplVars();
+//print_r($qb->getQuery());
+//die();
+if ($box->getTotalItemCount() === 0) {
   $messageStack->add_session('search', TEXT_NO_PRODUCTS, 'caution');
   zen_redirect(zen_href_link(FILENAME_ADVANCED_SEARCH, zen_get_all_get_params('action')));
 }

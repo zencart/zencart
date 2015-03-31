@@ -3,11 +3,12 @@
  * Module Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  */
+//print_r($tplVars['listingBox']);
 ?>
 <div class="centerBoxWrapper" id="id<?php echo $tplVars['listingBox']['className']; ?>">
 <h2 class="centerBoxHeading"><?php echo $tplVars['listingBox']['title']; ?></h2>
@@ -16,8 +17,8 @@
       echo zen_draw_form('multiple_products_cart_quantity', zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
     }
 ?>
-<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showPaginatorTop']) { ?>
-<div><?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?></div>
+<?php if (isset($tplVars['listingBox']['paginator']) && $tplVars['listingBox']['paginator']['show'] && $tplVars['listingBox']['paginator']['showTop']) { ?>
+<?php require($template->get_template_dir($tplVars['listingBox']['paginator']['scrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginator']['scrollerTemplate']); ?>
 <?php } ?>
 <?php
 // only show button when there is something to submit
@@ -35,7 +36,7 @@
 <?php } ?>
 <thead>
 <tr>
-<?php foreach ($tplVars['listingBox']['headers'] as $header) { ?>
+<?php foreach ($tplVars['listingBox']['formatter']['headers'] as $header) { ?>
 <th <?php echo $header['col_params']; ?>><?php echo $header['title']; ?></th>
 <?php } ?>
 </tr>

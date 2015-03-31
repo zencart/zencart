@@ -106,16 +106,13 @@ class Paginator extends \base
     /**
      * @param $params
      */
-    public function setScrollerParams(array $params)
+    public function setScrollerParams($params)
     {
-        $this->scrollerParams = $params;
+        $this->scrollerParams = array_merge($this->scrollerParams, $params);
     }
 
-    /**
-     * @param $params
-     */
-    public function setAdapterParams(array $params)
+    public function setAdapterParams($params)
     {
-        $this->adapterParams = $params;
+        $this->adapterParams = array_merge($this->adapterParams, $params);
     }
 }

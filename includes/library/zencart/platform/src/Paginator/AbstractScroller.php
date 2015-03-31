@@ -34,7 +34,8 @@ abstract class AbstractScroller extends \base
         $params['maxPageLinks'] = isset($params['maxPageLinks']) ? $params['maxPageLinks'] : 5;
         $this->notify('NOTIFY_PAGINATOR_SCROLLER_BEFORE_PROCESS', $params);
         $this->process($adapter->getResults(), $params);
-        $this->results['resultList'] = $adapter->getResults()['resultList'];
+        $this->results = array_merge($this->results, $adapter->getResults());
+        $this->results['scrollerTemplate'] = $this->scrollerTemplate;
         $this->notify('NOTIFY_PAGINATOR_SCROLLER_CONSTRUCT_END');
     }
 

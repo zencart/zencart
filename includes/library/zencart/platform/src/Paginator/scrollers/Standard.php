@@ -17,6 +17,8 @@ use ZenCart\Platform\Paginator\AbstractScroller;
  */
 class Standard extends AbstractScroller
 {
+    protected $scrollerTemplate = 'tpl_paginator_standard.php';
+
     /**
      * process method
      *
@@ -45,7 +47,7 @@ class Standard extends AbstractScroller
         $results['prevPage'] = $params['currentPage'] - 1;
         $results['fromItem'] = $data['currentItem'];
         $results['toItem'] = $data['currentItem'] + $data['itemsPerPage'] - 1;
-        $results['flagHasPrevious'] = $data['currentItem'] > 1 ? true : false;
+        $results['flagHasPrevious'] = $params['currentPage'] > 1 ? true : false;
         $results['flagHasNext'] = $params['currentPage'] < $data['totalPages'] ? true : false;
 
         $buildLinkParams = array('cmd' => $cmd,
@@ -55,6 +57,7 @@ class Standard extends AbstractScroller
                                  'linkParams' => $linkParams . $pageVarName . '=' . ($params['currentPage'] + 1));
         $results['nextLink'] = $this->buildLink($buildLinkParams);
         $this->results = $results;
+
     }
 
     /**
