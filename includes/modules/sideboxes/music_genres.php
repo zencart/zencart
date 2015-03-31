@@ -3,10 +3,10 @@
  * music_genres sidebox - displays list of available music genres to filter on
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: music_genres.php 18922 2011-06-13 03:23:35Z drbyte $
+ * @version $Id: music_genres.php  Modified in v1.6.0 $
  */
 
   $music_genres_query = "select music_genre_id, music_genre_name
@@ -26,14 +26,15 @@
       $music_genres_array[] = array('id' => '', 'text' => PULL_DOWN_MUSIC_GENRES);
     }
 
-    while (!$music_genres->EOF) {
-      $music_genre_name = ((strlen($music_genres->fields['music_genre_name']) > (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) ? substr($music_genres->fields['music_genre_name'], 0, (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) . '..' : $music_genres->fields['music_genre_name']);
-      $music_genres_array[] = array('id' => $music_genres->fields['music_genre_id'],
-                                       'text' => $music_genre_name);
+    foreach($music_genres as $result) {
+      $elipsis = (strlen($result['music_genre_name']) > (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) ? '..' : '';
+      $music_genre_name = substr($result['music_genre_name'], 0, (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) . $elipsis;
 
-      $music_genres->MoveNext();
+      $music_genres_array[] = array('id' => $result['music_genre_id'],
+                                    'text' => $music_genre_name);
     }
-      require($template->get_template_dir('tpl_music_genres_select.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_music_genres_select.php');
+
+    require($template->get_template_dir('tpl_music_genres_select.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_music_genres_select.php');
 
     $title = '<label>' . BOX_HEADING_MUSIC_GENRES . '</label>';
     $title_link = false;
