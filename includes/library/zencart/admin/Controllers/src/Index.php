@@ -1,20 +1,29 @@
 <?php
 /**
- * zcActionAdminIndex Class.
+ * Class Index
  *
- * @package classes
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:$
  */
+namespace ZenCart\Admin\Controllers;
+
 use ZenCart\Admin\DashboardWidget\WidgetManager;
 
-require_once __DIR__ . '/../class.zcActionAdminBase.php';
-
-class zcActionAdminIndex extends zcActionAdminBase
+/**
+ * Class Index
+ * @package ZenCart\Admin\Controllers
+ */
+class Index extends AbstractController
 {
-    public $useFoundation = TRUE;
+    /**
+     * @var bool
+     */
+    public $useFoundation = true;
 
+    /**
+     *
+     */
     public function initDefinitions()
     {
         $this->templateVariables ['cssList'] [] = array(
@@ -23,27 +32,32 @@ class zcActionAdminIndex extends zcActionAdminBase
         );
     }
 
+    /**
+     *
+     */
     public function mainExecute()
     {
-        global $hasDoneStartWizard;
-        if ($hasDoneStartWizard == FALSE) {
+        if (STORE_NAME == '' || STORE_OWNER == '') {
             $this->doStartWizardDisplay();
         } else {
             $this->doWidgetsDisplay();
         }
     }
 
+    /**
+     *
+     */
     public function doWidgetsDisplay()
     {
-        $widgetProfileList = WidgetManager::getInstallableWidgetsList($_SESSION ['admin_id'], $_SESSION ['languages_id']);
         $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
-        if (sizeof($widgetInfoList) > 0) { 
-           $this->templateVariables ['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
-           $this->templateVariables ['widgets'] = WidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
-           $this->templateVariables ['widgetInfoList'] = $widgetInfoList;
-        }
+        $this->templateVariables ['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
+        $this->templateVariables ['widgets'] = WidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
+        $this->templateVariables ['widgetInfoList'] = $widgetInfoList;
     }
 
+    /**
+     *
+     */
     public function doStartWizardDisplay()
     {
         $this->mainTemplate = 'tplIndexStartWizard.php';
@@ -63,20 +77,23 @@ class zcActionAdminIndex extends zcActionAdminBase
         $this->templateVariables ['zoneString'] = $zone_string;
     }
 
+    /**
+     *
+     */
     public function setupWizardExecute()
     {
-        global $db;
+//        $db = $this->diContainer->get('dbConn');
         if ($this->request->readPost('store_name', '') != '') {
             $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
                     WHERE configuration_key = 'STORE_NAME'";
-            $sql = $db->bindVars($sql, ':configValue:', $this->request->readPost('store_name'), 'string');
-            $db->execute($sql);
+            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_name'), 'string');
+            $this->dbConn->execute($sql);
         }
         if ($this->request->readPost('store_owner', '') != '') {
             $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
                     WHERE configuration_key = 'STORE_OWNER'";
-            $sql = $db->bindVars($sql, ':configValue:', $this->request->readPost('store_owner'), 'string');
-            $db->execute($sql);
+            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_owner'), 'string');
+            $this->dbConn->execute($sql);
         }
         if ($this->request->readPost('store_owner_email', '') != '') {
             $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
@@ -86,26 +103,26 @@ class zcActionAdminIndex extends zcActionAdminBase
                                                 'SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO',
                                                 'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO',
                                                 'SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', 'MODULE_PAYMENT_CC_EMAIL')";
-            $sql = $db->bindVars($sql, ':configValue:', $this->request->readPost('store_owner_email'), 'string');
-            $db->execute($sql);
+            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_owner_email'), 'string');
+            $this->dbConn->execute($sql);
         }
         if ($this->request->readPost('store_country', '') != '') {
             $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
                     WHERE configuration_key in ('STORE_COUNTRY', 'SHIPPING_ORIGIN_COUNTRY')";
-            $sql = $db->bindVars($sql, ':configValue:', $this->request->readPost('store_country'), 'integer');
-            $db->execute($sql);
+            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_country'), 'integer');
+            $this->dbConn->execute($sql);
         }
         if ($this->request->readPost('store_zone', '') != '') {
             $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
                     WHERE configuration_key = 'STORE_ZONE'";
-            $sql = $db->bindVars($sql, ':configValue:', $this->request->readPost('store_zone'), 'integer');
-            $db->execute($sql);
+            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_zone'), 'integer');
+            $this->dbConn->execute($sql);
         }
         if ($this->request->readPost('store_address', '') != '') {
             $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
                     WHERE configuration_key = 'STORE_NAME_ADDRESS'";
-            $sql = $db->bindVars($sql, ':configValue:', $this->request->readPost('store_address'), 'string');
-            $db->execute($sql);
+            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_address'), 'string');
+            $this->dbConn->execute($sql);
         }
         zen_redirect(zen_href_link(FILENAME_DEFAULT));
     }
