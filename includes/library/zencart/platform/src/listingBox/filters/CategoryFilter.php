@@ -21,7 +21,7 @@ class CategoryFilter extends AbstractFilter implements FilterInterface
     {
         $manufacturers_id = $this->request->readGet('manufacturers_id', 0);
         $new_products_category_id = $this->params['new_products_category_id'];
-        $cPath = $this->params['cPath'];
+        $cPath = $this->request->readGet('cPath');
         $categoryId = null;
         if (!$this->canBuildCategoryFilter($manufacturers_id, $new_products_category_id)) {
             return $productQuery;

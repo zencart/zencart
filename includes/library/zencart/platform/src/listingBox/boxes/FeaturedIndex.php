@@ -29,7 +29,7 @@ class FeaturedIndex extends AbstractListingBox
             'filters' => array(
                 array(
                     'name' => 'CategoryFilter',
-                    'parameters' => array('cPath'=>$this->request->readGet('cPath'))
+                    'parameters' => array()
                 ),
             ),
             'queryLimit' => MAX_DISPLAY_SEARCH_RESULTS_FEATURED,
