@@ -25,7 +25,7 @@
 <div id="indexProductListCatDescription" class="content"><?php echo $current_categories_description;  ?></div>
 <?php } ?>
 <?php
-if ($tplVars['listingBox']['showFiltersForm'])
+if ($tplVars['listingBox']['showForm'])
 {
   echo zen_draw_form ( 'filter', zen_href_link ( FILENAME_DEFAULT ), 'get' ) . '<label class="inputLabel">' . TEXT_SHOW . '</label>';
   echo zen_draw_hidden_field ( 'main_page', FILENAME_DEFAULT );
