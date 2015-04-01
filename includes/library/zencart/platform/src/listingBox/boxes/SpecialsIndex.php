@@ -32,7 +32,7 @@ class SpecialsIndex extends AbstractListingBox
             'filters' => array(
                 array(
                     'name' => 'CategoryFilter',
-                    'parameters' => array()
+                    'parameters' => array('cPath'=>$this->request->readGet('cPath'))
                 ),
             ),
             'queryLimit' => MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX,

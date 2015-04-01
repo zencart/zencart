@@ -51,7 +51,7 @@ class UpcomingIndex extends AbstractListingBox
                     'name' => 'CategoryFilter',
                     'parameters' => array(
                         'new_products_category_id' => $GLOBALS['new_products_category_id'],
-                        'cPath' => $this->request->readGet('cPath', '')
+                        'cPath' => $this->request->readGet('cPath')
                     )
                 ),
             ),
