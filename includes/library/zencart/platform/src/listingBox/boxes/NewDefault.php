@@ -21,7 +21,7 @@ class NewDefault extends AbstractListingBox
         $this->productQuery = array(
             'isRandom' => false,
             'isPaginated' => true,
-            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_NEW_PRODUCTS)),
+            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_NEW)),
             'filters' => array(
                 array(
                     'name' => 'DisplayOrderSorter',

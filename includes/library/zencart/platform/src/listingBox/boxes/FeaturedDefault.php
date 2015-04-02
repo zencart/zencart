@@ -20,6 +20,7 @@ class FeaturedDefault extends AbstractListingBox
     {
         $this->productQuery = array(
             'isPaginated' => true,
+            'pagination' => array('adapterParams'=>array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS )),
             'filters' => array(
                 array(
                     'name' => 'DisplayOrderSorter',
