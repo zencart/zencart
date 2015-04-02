@@ -3,10 +3,10 @@
  * boxes (tableBox) Class.
  *
  * @package classes
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: boxes.php 3039 2006-02-15 00:29:28Z wilt $
+ * @version $Id: boxes.php 3039 2006-02-15 00:29:28Z wilt  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -26,7 +26,7 @@ class tableBox extends base {
   var $table_data_parameters = '';
 
   // class constructor
-  function tableBox($contents, $direct_output = false) {
+  function __construct($contents, $direct_output = false) {
     $tableBox_string = '<table border="' . zen_output_string($this->table_border) . '" width="' . zen_output_string($this->table_width) . '" cellspacing="' . zen_output_string($this->table_cellspacing) . '" cellpadding="' . zen_output_string($this->table_cellpadding) . '"';
     if (zen_not_null($this->table_parameters)) $tableBox_string .= ' ' . $this->table_parameters;
     $tableBox_string .= '>' . "\n";

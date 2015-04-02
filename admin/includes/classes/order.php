@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: order.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: order.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.6.0 $
  */
 
   class order {
     var $info, $totals, $products, $customer, $delivery;
 
-    function order($order_id) {
+    function __construct($order_id) {
       $this->info = array();
       $this->totals = array();
       $this->products = array();

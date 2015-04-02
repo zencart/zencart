@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: table_block.php 1969 2005-09-13 06:57:21Z drbyte $
+ * @version $Id: table_block.php 1969 2005-09-13 06:57:21Z drbyte  Modified in v1.6.0 $
  */
 
   class tableBlock {
@@ -16,7 +16,7 @@
     var $table_row_parameters = '';
     var $table_data_parameters = '';
 
-    function tableBlock($contents) {
+    function __construct($contents) {
       $tableBox_string = '';
 
       $form_set = false;

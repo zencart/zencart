@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: newsletter.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: newsletter.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   class newsletter {
     var $show_choose_audience, $title, $content, $content_html, $queryname;
 
-    function newsletter($title, $content, $content_html, $queryname='') {
+    function __construct($title, $content, $content_html, $queryname='') {
       $this->show_choose_audience = true;
 //      $this->show_choose_audience = (count(get_audiences_list('newsletters')) > 1 );    //if only 1 list of newsletters, don't offer selection
       $this->title = $title;
@@ -24,7 +24,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     function choose_audience() {
       global $_GET;
 
-      $choose_audience_string = '<form name="audience" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') .'" method="post" onsubmit="return check_form(audience);">' . 
+      $choose_audience_string = '<form name="audience" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') .'" method="post" onsubmit="return check_form(audience);">' .
                  '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' .
                  ' <table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                                  '  <tr>' . "\n" .
