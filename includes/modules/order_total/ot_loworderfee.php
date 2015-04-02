@@ -6,12 +6,12 @@
  * @copyright Copyright 2003-2007 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_loworderfee.php 6101 2007-04-01 10:30:22Z wilt $
+ * @version $Id: ot_loworderfee.php wilt  Modified in v1.6.0 $
  */
   class ot_loworderfee {
     var $title, $output;
 
-    function ot_loworderfee() {
+    function __construct() {
       $this->code = 'ot_loworderfee';
       $this->title = MODULE_ORDER_TOTAL_LOWORDERFEE_TITLE;
       $this->description = MODULE_ORDER_TOTAL_LOWORDERFEE_DESCRIPTION;

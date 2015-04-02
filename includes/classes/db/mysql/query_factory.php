@@ -589,7 +589,7 @@ class queryFactoryResult {
 
 class queryFactoryMeta {
 
-  function queryFactoryMeta($zp_field) {
+  function __construct($zp_field) {
     $type = $zp_field['Type'];
     $rgx = preg_match('/^[a-z]*/', $type, $matches);
     $this->type = $matches[0];

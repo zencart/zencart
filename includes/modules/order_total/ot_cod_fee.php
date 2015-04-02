@@ -3,11 +3,11 @@
  * ot_cod_fee order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2002 Thomas Plänkers http://www.oscommerce.at
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Apr 5 19:06:27 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: ot_cod_fee.php ajeh  Modified in v1.5.5 $
  */
 /**
  * COD-FEE Order Totals Module
@@ -17,7 +17,7 @@
   class ot_cod_fee {
     var $title, $output;
 
-    function ot_cod_fee() {
+    function __construct() {
       $this->code = 'ot_cod_fee';
       $this->title = MODULE_ORDER_TOTAL_COD_TITLE;
       $this->description = MODULE_ORDER_TOTAL_COD_DESCRIPTION;

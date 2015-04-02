@@ -3,10 +3,10 @@
  * File contains the order-totals-processing class ("order-total")
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: order_total.php 19103 2011-07-13 18:10:46Z wilt $
+ * @version $Id: order_total.php 19103 2011-07-13 18:10:46Z wilt  Modified in v1.6.0 $
  */
 /**
  * order-total class
@@ -22,7 +22,7 @@ class order_total extends base {
   var $modules = array();
 
   // class constructor
-  function order_total() {
+  function __construct() {
     global $messageStack;
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && zen_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);

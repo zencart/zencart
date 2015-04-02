@@ -30,7 +30,7 @@ class ot_coupon {
    *
    * @return ot_coupon
    */
-  function ot_coupon() {
+  function __construct() {
     $this->code = 'ot_coupon';
     $this->header = MODULE_ORDER_TOTAL_COUPON_HEADER;
     $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
