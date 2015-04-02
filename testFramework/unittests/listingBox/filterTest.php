@@ -61,6 +61,13 @@ class testFilterCase extends zcListingBoxTestCase
     }
     public function testCategoryFilterFilterId()
     {
+        $qfr = $this->getMockBuilder('queryFactoryResult')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $db = $this->getMockBuilder('queryFactory')
+            ->getMock();
+        $GLOBALS['db'] = $db;
+        $db->method('Execute')->willReturn($qfr);
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $request->method('readGet')
             ->will($this->onConsecutiveCalls(2, 1, 1, 1));
