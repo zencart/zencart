@@ -76,7 +76,7 @@ class shoppingCart extends base {
    * Simply resets the users cart.
    * @return void
    */
-  function shoppingCart() {
+  function __construct() {
     $this->notify('NOTIFIER_CART_INSTANTIATE_START');
     $this->reset();
     $this->notify('NOTIFIER_CART_INSTANTIATE_END');
