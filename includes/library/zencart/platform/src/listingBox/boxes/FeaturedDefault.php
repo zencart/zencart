@@ -85,7 +85,7 @@ class FeaturedDefault extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => TABLE_HEADING_FEATURED_PRODUCTS,
             'formatter' => array('class' => 'ListStandard',
-                                 'template' => 'tpl_listingbox_productliststd_default.php',
+                                 'template' => 'tpl_listingbox_productliststd.php',
                                  'params' => array(
                                      'imageListingWidth' => IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH,
                                      'imageListingHeight' => IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT,

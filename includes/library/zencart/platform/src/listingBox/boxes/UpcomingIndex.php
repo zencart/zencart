@@ -85,7 +85,10 @@ class UpcomingIndex extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => TABLE_HEADING_UPCOMING_PRODUCTS,
             'formatter' => array('class' => 'TabularCustom',
-                                 'template' => 'tpl_listingbox_tabular_default.php',
+                                 'template' => 'tpl_listingbox_tabular_basic.php',
+                                 'params' => array(
+                                     'ignoreMultiAddToCart' => true,
+                                 ),
             ),
             'columns' => array(
                 'products_name' => array(

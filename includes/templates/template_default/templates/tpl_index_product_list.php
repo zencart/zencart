@@ -62,7 +62,7 @@ if ($tplVars['listingBox']['showForm'])
 /**
  * require the code for listing products
  */
-require ($template->get_template_dir ( 'tpl_listingbox_tabular_default.php', DIR_WS_TEMPLATE, $current_page_base, 'listingboxes' ) . '/' . 'tpl_listingbox_tabular_default.php');
+require ($template->get_template_dir ( 'tpl_listingbox_tabular.php', DIR_WS_TEMPLATE, $current_page_base, 'listingboxes' ) . '/' . 'tpl_listingbox_tabular.php');
 ?>
 <?php } else { ?>
 <h2><?php echo TEXT_NO_PRODUCTS; ?></h2>

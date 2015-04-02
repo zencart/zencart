@@ -77,7 +77,7 @@ class NewDefault extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')),
             'formatter' => array('class' => 'ListStandard',
-                                 'template' => 'tpl_listingbox_productliststd_default.php',
+                                 'template' => 'tpl_listingbox_productliststd.php',
                                  'params' => array(
                                      'imageListingWidth' => IMAGE_PRODUCT_NEW_LISTING_WIDTH,
                                      'imageListingHeight' => IMAGE_PRODUCT_NEW_LISTING_HEIGHT,

@@ -86,7 +86,7 @@ class SpecialsDefault extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => BOX_HEADING_SPECIALS,
             'formatter' => array('class' => 'Columnar',
-                                 'template' => 'tpl_listingbox_columnar_default.php',
+                                 'template' => 'tpl_listingbox_columnar.php',
                                  'params' => array(
                                      'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS),
             ),

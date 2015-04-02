@@ -76,7 +76,7 @@ class SearchResults extends AbstractListingBox
         );
         $this->outputLayout = array(
             'formatter' => array('class' => 'TabularProduct',
-                                 'template' => 'tpl_listingbox_tabular_default.php',
+                                 'template' => 'tpl_listingbox_tabular.php',
             )
         );
     }

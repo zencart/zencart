@@ -86,7 +86,7 @@ class SpecialsIndex extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => sprintf(TABLE_HEADING_SPECIALS_INDEX, strftime('%B')),
             'formatter' => array('class' => 'Columnar',
-                                 'template' => 'tpl_listingbox_columnar_default.php',
+                                 'template' => 'tpl_listingbox_columnar.php',
                                  'params' => array(
                                      'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS),
             ),

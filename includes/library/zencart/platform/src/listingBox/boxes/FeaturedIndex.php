@@ -78,7 +78,7 @@ class FeaturedIndex extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => TABLE_HEADING_FEATURED_PRODUCTS,
             'formatter' => array('class' => 'Columnar',
-                                 'template' => 'tpl_listingbox_columnar_default.php',
+                                 'template' => 'tpl_listingbox_columnar.php',
                                  'params' => array(
                                      'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS),
             ),

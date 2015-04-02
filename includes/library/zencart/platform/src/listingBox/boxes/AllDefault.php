@@ -82,7 +82,7 @@ class AllDefault extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => TABLE_HEADING_ALL_PRODUCTS,
             'formatter' => array('class' => 'ListStandard',
-                                 'template' => 'tpl_listingbox_productliststd_default.php',
+                                 'template' => 'tpl_listingbox_productliststd.php',
                                  'params' => array(
                                      'imageListingWidth' => IMAGE_PRODUCT_ALL_LISTING_WIDTH,
                                      'imageListingHeight' => IMAGE_PRODUCT_ALL_LISTING_HEIGHT,

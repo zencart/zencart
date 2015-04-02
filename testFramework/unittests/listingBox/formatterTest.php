@@ -166,7 +166,7 @@ class testFormatterCase extends zcListingBoxTestCase
 
         $outputLayout = array(
             'formatter' => array('class' => 'TabularCustom',
-                                 'template' => 'tpl_listingbox_tabular_default.php',
+                                 'template' => 'tpl_listingbox_tabular.php',
             ),
             'columns' => array(
                 'products_name' => array(
