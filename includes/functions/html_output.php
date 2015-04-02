@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php 19355 2011-08-21 21:12:09Z drbyte $
+ * @version $Id: html_output.php 19355 2011-08-21 21:12:09Z drbyte  Modified in v1.6.0 $
  */
 
   /**
@@ -200,9 +200,12 @@
 
     // if not in current template switch to template_default
     if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'shared', $src);
-      if (!file_exists($src)) { 
-        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      $shared_src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'shared', $src);
+      $default_src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      if (file_exists($shared_src)) {
+        $src = $shared_src;
+      } else {
+        $src = $default_src;
       }
     }
 
@@ -271,9 +274,12 @@
 
     // if not in current template switch to template_default
     if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'shared', $src);
-      if (!file_exists($src)) { 
-        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      $shared_src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'shared', $src);
+      $default_src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+      if (file_exists($shared_src)) {
+        $src = $shared_src;
+      } else {
+        $src = $default_src;
       }
     }
 
