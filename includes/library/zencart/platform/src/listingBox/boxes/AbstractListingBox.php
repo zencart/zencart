@@ -93,9 +93,10 @@ abstract class AbstractListingBox extends \base
     public function doMultiFormSubmit($listBoxContents)
     {
         $showSubmit = zen_run_normal();
-        $showTopSubmit = false;
         $showBottomSubmit = false;
-        if ($this->showTopBottomSubmit($showSubmit, $listBoxContents)) {
+        $showForm = $this->showTopBottomSubmit($showSubmit, $listBoxContents);
+        $showTopSubmit = $showForm;
+        if (!$showForm) {
             $showTopSubmit = (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 1 || PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 3) ? true : false;
             $showBottomSubmit = (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 2) ? true : false;
         }

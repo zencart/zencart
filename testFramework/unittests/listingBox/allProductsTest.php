@@ -15,6 +15,7 @@ class testAllDefaultCase extends zcListingBoxTestCase
     public function setup()
     {
         parent::setup();
+        define('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART', 0);
         define('PRODUCT_ALL_LIST_SORT_DEFAULT', 0);
         define('MAX_DISPLAY_PRODUCTS_ALL', 0);
         define('IMAGE_PRODUCT_ALL_LISTING_WIDTH', '');
