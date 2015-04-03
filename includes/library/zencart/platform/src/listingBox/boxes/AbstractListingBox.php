@@ -75,6 +75,11 @@ abstract class AbstractListingBox extends \base
      */
     protected function normalizeTplVars($paginator)
     {
+        $showFilterForm = false;
+        if (isset($this->tplVars['filter'])) {
+            $showFilterForm = count($this->tplVars['filter'] > 0);
+        }
+        $this->tplVars ['showFilterForm'] = $showFilterForm;
         $this->tplVars ['title'] = issetorArray($this->outputLayout, 'boxTitle', '');
         $this->tplVars ['formattedItemsCount'] = count($this->tplVars['formattedItems']);
         $this->tplVars ['hasFormattedItems'] = (count($this->tplVars['formattedItems']) > 0) ? true : false;
@@ -101,9 +106,9 @@ abstract class AbstractListingBox extends \base
             $showBottomSubmit = (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 2) ? true : false;
         }
         $showForm = ($showTopSubmit || $showBottomSubmit);
-        $this->tplVars['showTopSubmit'] = $showTopSubmit;
-        $this->tplVars['showBottomSubmit'] = $showBottomSubmit;
-        $this->tplVars['showForm'] = $showForm;
+        $this->tplVars['showMultiTopSubmit'] = $showTopSubmit;
+        $this->tplVars['showMultiBottomSubmit'] = $showBottomSubmit;
+        $this->tplVars['showMultiForm'] = $showForm;
 
     }
 
