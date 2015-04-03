@@ -1,17 +1,17 @@
 <?php
 /**
- * Class FeaturedDefault
+ * Class NewProductsPage
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: currencies.php 15880 2010-04-11 16:24:30Z wilt $
+ * @version $Id:
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class FeaturedDefault
+ * Class NewProductsPage
  * @package ZenCart\Platform\listingBox\boxes
  */
-class FeaturedDefault extends AbstractListingBox
+class NewProductsPage extends AbstractListingBox
 {
     /**
      *
@@ -19,13 +19,14 @@ class FeaturedDefault extends AbstractListingBox
     public function initQueryAndLayout()
     {
         $this->productQuery = array(
+            'isRandom' => false,
             'isPaginated' => true,
-            'pagination' => array('adapterParams'=>array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS )),
+            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_NEW)),
             'filters' => array(
                 array(
                     'name' => 'DisplayOrderSorter',
                     'parameters' => array(
-                        'defaultSortOrder' => PRODUCT_FEATURED_LIST_SORT_DEFAULT
+                        'defaultSortOrder' => PRODUCT_NEW_LIST_SORT_DEFAULT
                     )
                 )
             ),
@@ -40,10 +41,11 @@ class FeaturedDefault extends AbstractListingBox
                 )
             ),
             'joinTables' => array(
-                'TABLE_FEATURED' => array(
-                    'table' => TABLE_FEATURED,
-                    'alias' => 'f',
+                'TABLE_PRODUCTs_DESCRIPTION' => array(
+                    'table' => TABLE_PRODUCTS_DESCRIPTION,
+                    'alias' => 'pd',
                     'type' => 'left',
+                    'fkeyFieldLeft' => 'products_id',
                     'addColumns' => true
                 ),
                 'TABLE_MANUFACTURERS' => array(
@@ -52,20 +54,13 @@ class FeaturedDefault extends AbstractListingBox
                     'type' => 'left',
                     'fkeyFieldLeft' => 'manufacturers_id',
                     'addColumns' => true
-                ),
-                'TABLE_PRODUCTs_DESCRIPTION' => array(
-                    'table' => TABLE_PRODUCTS_DESCRIPTION,
-                    'alias' => 'pd',
-                    'type' => 'left',
-                    'fkeyFieldLeft' => 'products_id',
-                    'addColumns' => true
                 )
             ),
             'whereClauses' => array(
                 array(
-                    'table' => TABLE_FEATURED,
-                    'field' => 'status',
-                    'value' => 1,
+                    'table' => TABLE_PRODUCTS_DESCRIPTION,
+                    'field' => 'language_id',
+                    'value' => $_SESSION ['languages_id'],
                     'type' => 'AND'
                 ),
                 array(
@@ -75,21 +70,18 @@ class FeaturedDefault extends AbstractListingBox
                     'type' => 'AND'
                 ),
                 array(
-                    'table' => TABLE_PRODUCTS_DESCRIPTION,
-                    'field' => 'language_id',
-                    'value' => $_SESSION ['languages_id'],
-                    'type' => 'AND'
+                    'custom' => zen_get_new_date_range()
                 )
             )
         );
         $this->outputLayout = array(
-            'boxTitle' => TABLE_HEADING_FEATURED_PRODUCTS,
+            'boxTitle' => sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')),
             'formatter' => array('class' => 'ListStandard',
                                  'template' => 'tpl_listingbox_productliststd.php',
                                  'params' => array(
-                                     'imageListingWidth' => IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH,
-                                     'imageListingHeight' => IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT,
-                                     'definePrefix' => 'PRODUCT_FEATURED_')),
+                                     'imageListingWidth' => IMAGE_PRODUCT_NEW_LISTING_WIDTH,
+                                     'imageListingHeight' => IMAGE_PRODUCT_NEW_LISTING_HEIGHT,
+                                     'definePrefix' => 'PRODUCT_NEW_')),
         );
     }
 }

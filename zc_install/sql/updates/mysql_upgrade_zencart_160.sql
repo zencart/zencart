@@ -328,10 +328,10 @@ INSERT INTO listingboxgroups_to_locations (group_id, location_key, sort_order) V
 (1, 'EMPTY_CART', 0);
 
 INSERT INTO listingboxes_to_listingboxgroups (listingbox, group_id, sort_order) VALUES
-('FeaturedIndex', 1, 0),
-('NewIndex', 1, 3),
-('SpecialsIndex', 1, 2),
-('UpcomingIndex', 1, 4);
+('FeaturedProductsCenter', 1, 0),
+('NewProductsCenter', 1, 3),
+('SpecialsProductsCenter', 1, 2),
+('UpcomingProductsCenter', 1, 4);
 
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
 ## CHANGE-411 increase size of fileds in admin profile related tables

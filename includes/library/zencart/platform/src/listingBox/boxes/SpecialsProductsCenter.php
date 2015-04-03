@@ -1,6 +1,6 @@
 <?php
 /**
- * Class FeaturedIndex
+ * Class SpecialsProductsCenter
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,11 +8,14 @@
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class FeaturedIndex
+ * Class SpecialsProductsCenter
  * @package ZenCart\Platform\listingBox\boxes
  */
-class FeaturedIndex extends AbstractListingBox
+class SpecialsProductsCenter extends AbstractListingBox
 {
+    /**
+     *
+     */
     public function initQueryAndLayout()
     {
         $this->productQuery = array(
@@ -32,11 +35,11 @@ class FeaturedIndex extends AbstractListingBox
                     'parameters' => array()
                 ),
             ),
-            'queryLimit' => MAX_DISPLAY_SEARCH_RESULTS_FEATURED,
+            'queryLimit' => MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX,
             'joinTables' => array(
-                'TABLE_FEATURED' => array(
-                    'table' => TABLE_FEATURED,
-                    'alias' => 'f',
+                'TABLE_SPECIALS' => array(
+                    'table' => TABLE_SPECIALS,
+                    'alias' => 's',
                     'type' => 'left',
                     'addColumns' => true
                 ),
@@ -56,7 +59,7 @@ class FeaturedIndex extends AbstractListingBox
                     'type' => 'AND'
                 ),
                 array(
-                    'table' => TABLE_FEATURED,
+                    'table' => TABLE_SPECIALS,
                     'field' => 'status',
                     'value' => 1,
                     'type' => 'AND'
@@ -64,7 +67,7 @@ class FeaturedIndex extends AbstractListingBox
                 array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
                     'field' => 'language_id',
-                    'value' => $_SESSION ['languages_id'],
+                    'value' => $_SESSION['languages_id'],
                     'type' => 'AND'
                 )
             ),
@@ -73,15 +76,21 @@ class FeaturedIndex extends AbstractListingBox
                     'field' => 'RAND()',
                     'type' => 'mysql'
                 ),
+                array(
+                    'field' => 'specials_date_added DESC',
+                    'table' => TABLE_SPECIALS,
+                    'type' => 'custom'
+                )
             )
         );
         $this->outputLayout = array(
-            'boxTitle' => TABLE_HEADING_FEATURED_PRODUCTS,
+            'boxTitle' => sprintf(TABLE_HEADING_SPECIALS_INDEX, strftime('%B')),
             'formatter' => array('class' => 'Columnar',
                                  'template' => 'tpl_listingbox_columnar.php',
                                  'params' => array(
-                                     'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS),
+                                     'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS),
             ),
         );
     }
+
 }

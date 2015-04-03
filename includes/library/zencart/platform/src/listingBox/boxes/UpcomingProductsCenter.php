@@ -1,6 +1,6 @@
 <?php
 /**
- * Class UpcomingIndex
+ * Class UpcomingProductsCenter
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,10 +8,10 @@
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class UpcomingIndex
+ * Class UpcomingProductsCenter
  * @package ZenCart\Platform\listingBox\boxes
  */
-class UpcomingIndex extends AbstractListingBox
+class UpcomingProductsCenter extends AbstractListingBox
 {
     /**
      *

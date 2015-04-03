@@ -45,7 +45,7 @@ class testAllDefaultCase extends zcListingBoxTestCase
             ->setMethods(array('processQuery', 'getQuery'))
             ->getMock();
         $qb->method('getQuery')->willReturn(array('mainSql'=>'', 'countSql'=>''));
-        $lb = new ZenCart\Platform\listingBox\boxes\AllDefault($r);
+        $lb = new ZenCart\Platform\listingBox\boxes\AllProductsPage($r);
         $lb->buildResults($qb, $db, $paginator);
     }
 }
