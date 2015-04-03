@@ -101,7 +101,7 @@ abstract class AbstractListingBox extends \base
         $showBottomSubmit = false;
         $showForm = $this->showTopBottomSubmit($showSubmit, $listBoxContents);
         $showTopSubmit = $showForm;
-        if (!$showForm) {
+        if ($showForm) {
             $showTopSubmit = (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 1 || PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 3) ? true : false;
             $showBottomSubmit = (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 2) ? true : false;
         }
