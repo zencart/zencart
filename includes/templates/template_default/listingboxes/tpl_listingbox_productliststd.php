@@ -75,7 +75,7 @@
 <?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showPaginatorBottom']) { ?>
 <?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?>
 <?php } ?>
-<?php if (isset($tplVars['listingBox']['showMultiForm']) && $tplVars['listingBox']['showForm']) { ?>
+<?php if (isset($tplVars['listingBox']['showMultiForm']) && $tplVars['listingBox']['showMultiForm']) { ?>
 </form>
 <?php } ?>
 
