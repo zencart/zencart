@@ -4,9 +4,10 @@
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: $
+ * @version $Id:  Modified in v1.6.0 $
  */
 namespace ZenCart\Admin\Controllers;
+
 /**
  * Class AbstractController
  * @package ZenCart\Admin\Controllers
@@ -51,7 +52,6 @@ abstract class AbstractController extends \base
         $this->prepareDefaultCss();
         $this->prepareCommonTplVars();
         $this->preCheck();
-        $this->initDefinitions();
     }
 
     /**
@@ -117,7 +117,7 @@ abstract class AbstractController extends \base
     /**
      *
      */
-    public function doOutput()
+    protected function doOutput()
     {
         if (!$this->useView) {
             $this->doNonViewOutput();
@@ -129,8 +129,12 @@ abstract class AbstractController extends \base
     /**
      *
      */
-    public function doViewOutput()
+    protected function doViewOutput()
     {
+        if (isset($this->response['redirect'])) {
+            $this->notify('NOTIFIER_ADMIN_BASE_DO_VIEW_OUTPUT_REDIRECT_BEFORE');
+            zen_redirect($this->response['redirect']);
+        }
         $tplVars = $this->tplVars;
         require('includes/template/common/tplAdminHtmlHead.php');
         echo "\n" . "</head>";
@@ -146,7 +150,7 @@ abstract class AbstractController extends \base
     /**
      * @return null|string
      */
-    public function getMainTemplate()
+    protected function getMainTemplate()
     {
         if (isset($this->mainTemplate)) {
             return ('includes/template/templates/' . $this->mainTemplate);
@@ -155,13 +159,14 @@ abstract class AbstractController extends \base
         if (file_exists('includes/template/templates/' . $tryTemplate)) {
             return ('includes/template/templates/' . $tryTemplate);
         }
+
         return null;
     }
 
     /**
      *
      */
-    public function doNonViewOutput()
+    protected function doNonViewOutput()
     {
         echo json_encode($this->response);
     }
@@ -171,12 +176,13 @@ abstract class AbstractController extends \base
      * @param $tplVars
      * @return string
      */
-    public function loadTemplateAsString($template, $tplVars)
+    protected function loadTemplateAsString($template, $tplVars)
     {
         ob_start();
         require_once($template);
         $result = ob_get_clean();
         ob_flush();
+
         return $result;
     }
 
@@ -184,9 +190,25 @@ abstract class AbstractController extends \base
      * @param $key
      * @param $value
      */
-    public function setTplVars($key, $value)
+    public function setTplVar($key, $value)
     {
         $this->tplVars[$key] = $value;
+    }
+
+    /**
+     * @param $tplVars
+     */
+    public function setTplVars($tplVars)
+    {
+        $this->tplVars = $tplVars;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTplVars()
+    {
+        return $this->tplVars;
     }
 
     /**
@@ -201,13 +223,6 @@ abstract class AbstractController extends \base
      *
      */
     protected function preCheck()
-    {
-    }
-
-    /**
-     *
-     */
-    protected function initDefinitions()
     {
     }
 }

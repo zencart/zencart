@@ -58,11 +58,12 @@ $(function(){
   }) );
 });
 </script>
+    <link rel="stylesheet" type="text/css" href="includes/template/javascript/select2-master/select2.css" id="swlect2CSS">
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
 <link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
 <script src="includes/menu.js"></script>
-<!--<script src="includes/template/javascript/select2-master/select2.js"></script>-->
+<script src="includes/template/javascript/select2-master/select2.js"></script>
 <script>
   $(document).ready(function(){ cssjsmenuinit(); });
 </script>

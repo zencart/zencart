@@ -8,7 +8,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: filenames.php  Modified in v1.6.0 $
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
+ * @version $Id:  Modified in v1.6.0 $
  * @private
  */
 /**
@@ -82,6 +82,7 @@ define('FILENAME_DOWNLOADS_MANAGER','downloads_manager');
 define('FILENAME_EZPAGES', 'page');
 define('FILENAME_EZPAGES_ADMIN', 'ezpages');
 define('FILENAME_GEO_ZONES', 'geo_zones');
+define('FILENAME_GEO_ZONES_DETAIL', 'geo_zones_detail');
 define('FILENAME_GROUP_PRICING', 'group_pricing');
 define('FILENAME_GV_FAQ', 'gv_faq');
 define('FILENAME_GV_REDEEM', 'gv_redeem');
