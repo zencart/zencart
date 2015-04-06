@@ -14,10 +14,10 @@ namespace ZenCart\Platform\listingBox\filters;
 class TypeFilter extends AbstractFilter implements FilterInterface
 {
     /**
-     * @param array $productQuery
+     * @param array $listingQuery
      * @return array
      */
-    public function filterItem(array $productQuery)
+    public function filterItem(array $listingQuery)
     {
         $typeFilter = 'default';
         if ($this->request->has('typefilter') && !$this->request->has('keyword')) {
@@ -28,8 +28,8 @@ class TypeFilter extends AbstractFilter implements FilterInterface
         if (isset($this->dbConn)) {
             $typeFilterClass->setDBConnection($this->dbConn);
         }
-        $productQuery = $typeFilterClass->filterItem($productQuery);
+        $listingQuery = $typeFilterClass->filterItem($listingQuery);
         $this->tplVars = $typeFilterClass->getTplVars();
-        return $productQuery;
+        return $listingQuery;
     }
 }

@@ -22,9 +22,9 @@ class testFilterCase extends zcListingBoxTestCase
     {
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $params = array();
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\AlphaFilter($request, $params);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
     public function testAlphaFilterWithRequestParams()
     {
@@ -32,19 +32,19 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('has')->willReturn(true);
         $request->method('readGet')->willReturn(1);
         $params = array();
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\AlphaFilter($request, $params);
-        $pq = $f->filterItem($productQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq['whereClauses']) == 1);
     }
     public function testCategoryFilterNoRequestParams()
     {
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $params = array('new_products_category_id'=>0, 'cPath'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\CategoryFilter($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 0);
     }
     public function testCategoryFilterManufacturers()
@@ -53,10 +53,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->onConsecutiveCalls(2));
         $params = array('new_products_category_id'=>0, 'cPath'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\CategoryFilter($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 0);
     }
     public function testCategoryFilterFilterId()
@@ -72,10 +72,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->onConsecutiveCalls(2, 1, 1, 1));
         $params = array('new_products_category_id'=>0, 'cPath'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\CategoryFilter($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 0);
     }
     public function testCategoryFilterCPath()
@@ -91,19 +91,19 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->onConsecutiveCalls(2, 1, 1, 1));
         $params = array('new_products_category_id'=>0, 'cPath'=>'1_3');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\CategoryFilter($request, $params);
-        $pq = $f->filterItem($productQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 3);
     }
     public function testDisplaySorterNoRequestParams()
     {
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $params = array('defaultSortOrder'=>0);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\DisplayOrderSorter($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 1);
     }
     public function testSearchResultsNoRequestParams()
@@ -111,10 +111,10 @@ class testFilterCase extends zcListingBoxTestCase
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
     }
     public function testSearchResultsHandleTaxRates()
@@ -137,10 +137,10 @@ class testFilterCase extends zcListingBoxTestCase
         $_SESSION ['customer_zone_id'] = 1;
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>$currencies);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 3);
     }
     public function testSearchResultsHandleTaxRatesPriceFail()
@@ -160,10 +160,10 @@ class testFilterCase extends zcListingBoxTestCase
         $_SESSION ['customer_zone_id'] = 1;
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>$currencies);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         //print_r($pq);
         $this->assertTrue(count($pq) === 2);
     }
@@ -185,10 +185,10 @@ class testFilterCase extends zcListingBoxTestCase
             ->will($this->returnValueMap($map));
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>$currencies);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 3);
     }
     public function testSearchResultsHandleCategories()
@@ -208,10 +208,10 @@ class testFilterCase extends zcListingBoxTestCase
             ->will($this->returnValueMap($map));
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
     }
     public function testSearchResultsHandleCategoriesNoIncSubcat()
@@ -231,10 +231,10 @@ class testFilterCase extends zcListingBoxTestCase
             ->will($this->returnValueMap($map));
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         //print_r($pq);
         $this->assertTrue(count($pq) === 2);
     }
@@ -247,10 +247,10 @@ class testFilterCase extends zcListingBoxTestCase
             ->will($this->returnValueMap($map));
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
     }
     public function testSearchResultsHandleKeywordsNoKeyword()
@@ -259,10 +259,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
     }
     public function testSearchResultsHandleKeywords()
@@ -274,10 +274,10 @@ class testFilterCase extends zcListingBoxTestCase
             ->will($this->returnValueMap($map));
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
     }
     public function testSearchResultsHandleKeywordsWithAnd()
@@ -289,10 +289,10 @@ class testFilterCase extends zcListingBoxTestCase
             ->will($this->returnValueMap($map));
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
     }
     public function testSearchResultsHandleKeywordsSearchDescription()
@@ -304,10 +304,10 @@ class testFilterCase extends zcListingBoxTestCase
             ->will($this->returnValueMap($map));
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder'=>0, 'currencies'=>'');
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\SearchResults($request, $params);
-        $f->filterItem($productQuery);
-        $pq = $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
+        $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
     }
     public function testTypeFilterNoRequestParams()
@@ -322,10 +322,10 @@ class testFilterCase extends zcListingBoxTestCase
         $db->method('Execute')->willReturn($qfr);
         $request = $this->getMock('\\ZenCart\\Platform\\Request');
         $params = array('currentCategoryId'=>1);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
     public function testTypeFilterWithManufacturers()
     {
@@ -342,10 +342,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId'=>1);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
     public function testTypeFilterWithFilterId()
     {
@@ -362,10 +362,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId'=>1);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
     public function testTypeFilterMusicGenre()
     {
@@ -386,10 +386,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId'=>1);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
     public function testTypeFilterMusicGenreWithId()
     {
@@ -410,10 +410,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId'=>1);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
     public function testTypeFilterRecordCompany()
     {
@@ -434,10 +434,10 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId'=>1);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
     public function testTypeFilterRecordCompanyWithId()
     {
@@ -458,9 +458,9 @@ class testFilterCase extends zcListingBoxTestCase
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId'=>1);
-        $productQuery = array();
+        $listingQuery = array();
         $f = new \ZenCart\Platform\listingBox\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
-        $f->filterItem($productQuery);
+        $f->filterItem($listingQuery);
     }
 }

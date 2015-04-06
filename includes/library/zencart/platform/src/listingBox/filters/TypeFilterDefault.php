@@ -14,34 +14,34 @@ namespace ZenCart\Platform\listingBox\filters;
 class TypeFilterDefault extends AbstractTypeFilter
 {
     /**
-     * @param $productQuery
+     * @param $listingQuery
      * @return mixed
      */
-    public function handleParameterFilters($productQuery)
+    public function handleParameterFilters($listingQuery)
     {
-        $productQuery['selectList'] [] = "m.manufacturers_name";
+        $listingQuery['selectList'] [] = "m.manufacturers_name";
 
-        $productQuery['joinTables'] ['TABLE_MANUFACTURERS'] = array(
+        $listingQuery['joinTables'] ['TABLE_MANUFACTURERS'] = array(
             'table' => TABLE_MANUFACTURERS,
             'alias' => 'm',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'manufacturers_id'
         );
         if ($this->request->readGet('manufacturers_id', '') != '') {
-            $productQuery ['whereClauses'] [] = array(
+            $listingQuery ['whereClauses'] [] = array(
                 'table' => TABLE_MANUFACTURERS,
                 'field' => 'manufacturers_id',
                 'value' => (int)$this->request->readGet('manufacturers_id'),
                 'type' => 'AND'
             );
             if ($this->request->readGet('filter_id', '') != '') {
-                $productQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
+                $listingQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                     'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                     'alias' => 'p2c',
                     'type' => 'LEFT',
                     'fkeyFieldLeft' => 'products_id'
                 );
-                $productQuery['whereClauses'] [] = array(
+                $listingQuery['whereClauses'] [] = array(
                     'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                     'field' => 'categories_id',
                     'value' => (int)$this->request->readGet('filter_id'),
@@ -49,20 +49,20 @@ class TypeFilterDefault extends AbstractTypeFilter
                 );
             }
         } else {
-            $productQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
+            $listingQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                 'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                 'alias' => 'p2c',
                 'type' => 'LEFT',
                 'fkeyFieldLeft' => 'products_id'
             );
-            $productQuery['whereClauses'] [] = array(
+            $listingQuery['whereClauses'] [] = array(
                 'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                 'field' => 'categories_id',
                 'value' => (int)$this->params['currentCategoryId'],
                 'type' => 'AND'
             );
             if ($this->request->readGet('filter_id', '') != '') {
-                $productQuery['whereClauses'] [] = array(
+                $listingQuery['whereClauses'] [] = array(
                     'table' => TABLE_MANUFACTURERS,
                     'field' => 'manufacturers_id',
                     'value' => (int)$this->request->readGet('filter_id'),
@@ -70,7 +70,7 @@ class TypeFilterDefault extends AbstractTypeFilter
                 );
             }
         }
-        return $productQuery;
+        return $listingQuery;
     }
 
     /**

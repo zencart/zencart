@@ -14,16 +14,16 @@ namespace ZenCart\Platform\listingBox\filters;
 abstract class AbstractTypeFilter extends AbstractFilter
 {
     /**
-     * @param array $productQuery
+     * @param array $listingQuery
      * @return array
      */
-    public function filterItem(array $productQuery)
+    public function filterItem(array $listingQuery)
     {
         if (!$this->request->has('keyword')) {
-            $productQuery = $this->handleParameterFilters($productQuery);
+            $listingQuery = $this->handleParameterFilters($listingQuery);
         }
         $this->buildOptionFilterVars();
-        return $productQuery;
+        return $listingQuery;
     }
 
     /**
@@ -86,10 +86,10 @@ abstract class AbstractTypeFilter extends AbstractFilter
     }
 
     /**
-     * @param $productQuery
+     * @param $listingQuery
      * @return mixed
      */
-    abstract protected function handleParameterFilters($productQuery);
+    abstract protected function handleParameterFilters($listingQuery);
 
     /**
      * @return mixed

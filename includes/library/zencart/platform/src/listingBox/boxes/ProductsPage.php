@@ -18,7 +18,7 @@ class ProductsPage extends AbstractListingBox
      */
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'isRandom' => false,
             'isPaginated' => true,
             'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_LISTING)),

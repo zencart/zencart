@@ -18,7 +18,7 @@ class FeaturedProductsPage extends AbstractListingBox
      */
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'isPaginated' => true,
             'pagination' => array('adapterParams'=>array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS )),
             'filters' => array(

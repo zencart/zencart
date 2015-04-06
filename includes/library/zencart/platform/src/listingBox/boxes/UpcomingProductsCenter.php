@@ -28,7 +28,7 @@ class UpcomingProductsCenter extends AbstractListingBox
             return $link;
         };
 
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'isDistinct' => false,
             'queryLimit' => MAX_DISPLAY_UPCOMING_PRODUCTS,
             'derivedItems' => array(

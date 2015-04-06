@@ -14,7 +14,7 @@ class SearchResults extends AbstractListingBox
      */
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'isRandom' => false,
             'isDistinct' => true,
             'isPaginated' => true,

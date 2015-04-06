@@ -7,7 +7,6 @@
  * @version $Id: $
  */
 namespace ZenCart\Platform\listingBox;
-use ZenCart\Platform\listingBox\boxes\AbstractListingBox as AbstractListingBox;
 use ZenCart\Platform\Paginator\Paginator as Paginator;
 
 /**
@@ -19,35 +18,35 @@ class PaginatorBuilder
     protected $paginator;
 
     /**
-     * @param AbstractListingBox $listingBox
+     * @param $request
+     * @param array $listingQuery
      * @param Paginator $paginator
      */
-    public function __construct($request, AbstractListingBox $listingBox, Paginator $paginator)
+    public function __construct($request, array $listingQuery, Paginator $paginator)
     {
         $this->paginator = $paginator;
-        $productQuery = $listingBox->getProductQuery();
-        if (!issetorArray($productQuery, 'isPaginated', false)) {
+        if (!issetorArray($listingQuery, 'isPaginated', false)) {
             $this->paginator = null;
             return;
         }
-        $this->buildPaginator($request, $paginator, $productQuery);
+        $this->buildPaginator($request, $paginator, $listingQuery);
     }
 
     /**
      * @param Paginator $paginator
-     * @param array $productQuery
+     * @param array $listingQuery
      */
-    protected function buildPaginator($request, Paginator $paginator, array $productQuery)
+    protected function buildPaginator($request, Paginator $paginator, array $listingQuery)
     {
         $this->setDefaultParams($request, $paginator);
-        if (!isset($productQuery['pagination'])) {
+        if (!isset($listingQuery['pagination'])) {
             return;
         }
-        if (isset($productQuery['pagination']['scrollerParams'])) {
-            $paginator->setScrollerParams($productQuery['pagination']['scrollerParams']);
+        if (isset($listingQuery['pagination']['scrollerParams'])) {
+            $paginator->setScrollerParams($listingQuery['pagination']['scrollerParams']);
         }
-        if (isset($productQuery['pagination']['adapterParams'])) {
-            $paginator->setAdapterParams($productQuery['pagination']['adapterParams']);
+        if (isset($listingQuery['pagination']['adapterParams'])) {
+            $paginator->setAdapterParams($listingQuery['pagination']['adapterParams']);
         }
     }
 

@@ -15,7 +15,7 @@ class FeaturedProductsCenter extends AbstractListingBox
 {
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'derivedItems' => array(
                 array(
                     'field' => 'displayPrice',

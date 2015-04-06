@@ -14,7 +14,7 @@ if (MAX_DISPLAY_PRODUCTS_NEW > 0 )
     $box = new ZenCart\Platform\listingBox\boxes\NewProductsPage($zcRequest);
     $paginator = new ZenCart\Platform\Paginator\Paginator($zcRequest);
  //   $paginator->setScrollerParams(array('cmd'=>'index'));
-    $builder = new ZenCart\Platform\listingBox\PaginatorBuilder($zcRequest, $box, $paginator);
+    $builder = new ZenCart\Platform\listingBox\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
     $box->buildResults($qb, $db, new ZenCart\Platform\listingBox\DerivedItemManager, $builder->getPaginator());
     $tplVars['listingBox'] = $box->getTplVars();
     require($template->get_template_dir('tpl_product_listing_standard.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_product_listing_standard.php');

@@ -13,5 +13,5 @@ namespace ZenCart\Platform\listingBox\filters;
  */
 Interface FilterInterface
 {
-    public function filterItem(array $productQuery);
+    public function filterItem(array $listingQuery);
 }

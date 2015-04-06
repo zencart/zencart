@@ -16,7 +16,7 @@ abstract class AbstractListingBox extends \base
     /**
      * @var array
      */
-    protected $productQuery;
+    protected $listingQuery;
     /**
      * @var array
      */
@@ -45,7 +45,7 @@ abstract class AbstractListingBox extends \base
     public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null)
     {
         $this->tplVars['filter'] = $this->doFilters($db);
-        $queryBuilder->processQuery($this->productQuery);
+        $queryBuilder->processQuery($this->listingQuery);
         $query = $queryBuilder->getQuery();
         $query['dbConn'] = $db;
         if (isset($paginator)) {
@@ -57,7 +57,7 @@ abstract class AbstractListingBox extends \base
             $resultItems = $this->getResultItems($query, $db);
         }
         $finalItems = [];
-        $derivedItems = issetorArray($this->productQuery, 'derivedItems', array());
+        $derivedItems = issetorArray($this->listingQuery, 'derivedItems', array());
         foreach ($resultItems as $resultItem) {
             $resultItem = $derivedItemsManager->manageDerivedItems($derivedItems, $resultItem);
             $finalItems [] = $resultItem;
@@ -149,7 +149,7 @@ abstract class AbstractListingBox extends \base
     protected function getResultItems($query, $db)
     {
         $resultItems = [];
-        $queryLimit = issetorArray($this->productQuery, 'queryLimit', '');
+        $queryLimit = issetorArray($this->listingQuery, 'queryLimit', '');
         $results = $db->execute($query['mainSql'], $queryLimit);
         foreach ($results as $result) {
             $resultItems [] = $result;
@@ -184,16 +184,16 @@ abstract class AbstractListingBox extends \base
     protected function doFilters($db)
     {
         $filterVars = [];
-        if (!isset($this->productQuery['filters'])) {
+        if (!isset($this->listingQuery['filters'])) {
             return $filterVars;
         }
 
-        foreach ($this->productQuery['filters'] as $filter) {
+        foreach ($this->listingQuery['filters'] as $filter) {
             $params = issetorArray($filter, 'parameters', array());
             $filter = '\\ZenCart\\Platform\\listingBox\\filters\\' . $filter['name'];
             $filter = new $filter($this->request, $params);
             $filter->setDBConnection($db);
-            $this->productQuery = $filter->filterItem($this->productQuery);
+            $this->listingQuery = $filter->filterItem($this->listingQuery);
             $filterVars = array_merge($filterVars, $filter->getTplVars());
         }
         return $filterVars;
@@ -227,8 +227,8 @@ abstract class AbstractListingBox extends \base
     /**
      * @return array
      */
-    public function getProductQuery()
+    public function getListingQuery()
     {
-        return $this->productQuery;
+        return $this->listingQuery;
     }
 }
