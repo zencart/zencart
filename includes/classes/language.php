@@ -21,7 +21,7 @@ class language extends base {
   /**
    * @var Array of all available languages in the store
    */
-  public $catalog_languages = array();
+  protected $available_languages = array();
   /**
    * @var string comma-delimited list of languages supported by the user's browser
    */
@@ -29,21 +29,21 @@ class language extends base {
   /**
    * @var string The currently selected language (which is separately set into a session var in init_languages)
    */
-  public $language = '';
+  protected $language = '';
 
   /**
    * @param string $lng The language we'd like to set the site to, as long as it exists in the db
+   * @return string
    */
   public function __construct($lng = '') {
     global $db;
-
     $languages_query = "select languages_id, name, code, image, directory
                           from " . TABLE_LANGUAGES . "
                           order by sort_order";
     $result = $db->Execute($languages_query);
 
     foreach ($result as $val) {
-      $this->catalog_languages[$val['code']] = array(
+      $this->available_languages[$val['code']] = array(
               'id' => $val['languages_id'],
               'name' => $val['name'],
               'image' => $val['image'],
@@ -52,25 +52,56 @@ class language extends base {
               );
     }
 
-    $this->set_language($lng);
+    if (!sizeof($this->available_languages)) {
+      // if none were found, there's gonna be trouble, but here we set a default, so we can avoid having to test for it later
+      $this->available_languages['en'] = array('id' => 1, 'name' => 'english', 'image' => 'en.gif', 'code' => 'en', 'directory' => 'english');
+    }
+
+    return $this->set_language($lng);
   }
 
   /**
    * @param string $language The language we want to set the site to, as long as it exists in the db
+   * @return array
    */
   public function set_language($language = DEFAULT_LANGUAGE) {
     if (empty($language)) $language = DEFAULT_LANGUAGE;
 
-    if (isset($this->catalog_languages[$language])) {
-      $this->language = $this->catalog_languages[$language];
-      return true;
+    if (isset($this->available_languages[$language])) {
+      $this->language = $this->available_languages[$language];
     }
-    return false;
+    return $this->language;
+  }
+
+  /**
+   * Returns array of languages installed and configured in the site
+   * @return array
+   */
+  public function get_available_languages()
+  {
+    return $this->available_languages;
+  }
+
+  /**
+   * Lookup language details by language ID number
+   * (mainly used in admin for displaying language-icons on attribute option-name pages
+   * @param integer $lang_id
+   * @return array|boolean
+   */
+  public function get_language_data_by_id($lang_id = 0) {
+    if ($lang_id == 0) return false;
+
+    foreach ($this->available_languages as $code => $val) {
+      if ($val['id'] == (int)$lang_id) {
+        return $val;
+      }
+    }
   }
 
   /**
    * Determine languages supported by the browser, and set the site to use a corresponding language
    * Matching is attempted according to the order of browser preference, as long as the store supports at least one. Else it aborts.
+   * @return array|boolean
    */
   public function get_browser_language() {
     if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -84,8 +115,8 @@ class language extends base {
         } else {
           continue;
         }
-        if ($this->set_language($code)) {
-          return true;
+        if (isset($this->available_languages[$code])) {
+          return $this->set_language($code);
         }
       }
     }

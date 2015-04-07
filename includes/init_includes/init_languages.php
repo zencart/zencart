@@ -15,15 +15,15 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (!isset($_SESSION['language']) || isset($_GET['language'])) {
   $lng = new language();
   if (isset($_GET['language']) && zen_not_null($_GET['language'])) {
-    $lng->set_language($_GET['language']);
+    $val = $lng->set_language($_GET['language']);
   } else {
     if (LANGUAGE_DEFAULT_SELECTOR=='Browser') {
-      $lng->get_browser_language();
+      $val = $lng->get_browser_language();
     } else {
-      $lng->set_language(DEFAULT_LANGUAGE);
+      $val = $lng->set_language(DEFAULT_LANGUAGE);
     }
   }
-  $_SESSION['language'] = (zen_not_null($lng->language['directory']) ? $lng->language['directory'] : 'english');
-  $_SESSION['languages_id'] = (zen_not_null($lng->language['id']) ? $lng->language['id'] : 1);
-  $_SESSION['languages_code'] = (zen_not_null($lng->language['code']) ? $lng->language['code'] : 'en');
+  $_SESSION['language'] = $val['directory'];
+  $_SESSION['languages_id'] = $val['id'];
+  $_SESSION['languages_code'] = $val['code'];
 }
