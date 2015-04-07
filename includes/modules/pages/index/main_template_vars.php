@@ -3,7 +3,7 @@
  * index main_template_vars.php
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -158,8 +158,7 @@ if ($category_depth == 'nested')
   // //////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-$listingBoxManager = zcListingBoxManager::getInstance ('INDEX_DEFAULT');
-$listingBoxManager->buildListingBoxes ();
+$listingBoxManager = new ZenCart\Platform\listingBox\Manager('INDEX_DEFAULT', $db, $zcRequest);
 $listingBoxes = $listingBoxManager->getListingBoxes ();
 $tplVars['listingBoxes'] = $listingBoxes;
 

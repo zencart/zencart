@@ -448,6 +448,7 @@
   define('ERROR_CUSTOMERS_ID_INVALID', 'Customer information cannot be validated!<br />Please login or recreate your account ...');
 
   define('TABLE_HEADING_FEATURED_PRODUCTS','Featured Products');
+  define('TABLE_HEADING_ALL_PRODUCTS','All Products');
 
   define('TABLE_HEADING_NEW_PRODUCTS', 'New Products For %s');
   define('TABLE_HEADING_UPCOMING_PRODUCTS', 'Upcoming Products');
