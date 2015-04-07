@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
@@ -12,7 +12,7 @@ if (! defined('IS_ADMIN_FLAG')) {
 // set the language
 if (! isset($_SESSION ['language']) || isset($_GET ['language'])) {
 
-  include (DIR_WS_CLASSES . 'language.php');
+  require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php');
   $lng = new language();
 
   if (isset($_GET ['language']) && zen_not_null($_GET ['language'])) {
