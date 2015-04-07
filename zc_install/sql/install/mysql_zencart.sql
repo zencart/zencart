@@ -3417,10 +3417,10 @@ INSERT INTO listingboxgroups_to_locations (group_id, location_key, sort_order) V
 (1, 'EMPTY_CART', 0);
 
 INSERT INTO listingboxes_to_listingboxgroups (listingbox, group_id, sort_order) VALUES
-('zcListingBoxFeaturedIndex', 1, 0),
-('zcListingBoxNewIndex', 1, 3),
-('zcListingBoxSpecialsIndex', 1, 2),
-('zcListingBoxUpcomingIndex', 1, 4);
+('FeaturedProductsCenter', 1, 0),
+('NewProductsCenter', 1, 3),
+('SpecialsProductsCenter', 1, 2),
+('UpcomingProductsCenter', 1, 4);
 
 
 ### THE FOLLOWING SHOULD BE AT THE END OF THE FILE -- ALL NEW SQL SHOULD GO ABOVE THIS LINE

@@ -76,6 +76,6 @@ abstract class zcPaginatorTestCase extends PHPUnit_Framework_TestCase
         require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
         require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
 
-
+        define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', '');
     }
 }

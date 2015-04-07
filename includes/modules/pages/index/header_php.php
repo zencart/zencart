@@ -3,12 +3,11 @@
  * index header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
-
 // This should be first line of the script:
 $zco_notifier->notify ( 'NOTIFY_HEADER_START_INDEX' );
 
@@ -61,17 +60,21 @@ require (DIR_WS_MODULES . zen_get_module_directory ( 'require_languages.php' ));
 
 if (true)
 {
-  require_once (DIR_WS_MODULES . "listingboxes/class.zcListingBoxProductsDefault.php");
-  $box = new zcListingBoxProductsDefault ();
-  $box->init ();
-  $tplVars['listingBox'] = $box->getTemplateVariables ();
-  if ($category_depth == 'products' && !$box->getHasContent ()) $robotsNoIndex = true;
-  if (SKIP_SINGLE_PRODUCT_CATEGORIES == 'True' and (! isset ( $_GET['filter_id'] ) and ! isset ( $_GET['alpha_filter'] )))
-  {
+  $qb = new ZenCart\Platform\QueryBuilder($db);
+  $box = new ZenCart\Platform\listingBox\boxes\ProductsPage($zcRequest);
+  $paginator = new ZenCart\Platform\Paginator\Paginator($zcRequest);
+  $builder = new ZenCart\Platform\listingBox\PaginatorBuilder($zcRequest,$box->getListingQuery(), $paginator);
+  $box->buildResults($qb, $db, new ZenCart\Platform\listingBox\DerivedItemManager, $builder->getPaginator());
+  $tplVars['listingBox'] = $box->getTplVars();
+
+  if ($category_depth == 'products' && $box->getTotalItemCount () == 0) $robotsNoIndex = true;
+  if (SKIP_SINGLE_PRODUCT_CATEGORIES == 'True' and (! isset ( $_GET['filter_id'] ) and ! isset ( $_GET['alpha_filter'] ))) {
     // If there is only one item in the list, and the total items available including pagination is still only 1, redirect directly to the product page
-    if ($box->getFormattedItemsCount () == 1 && $box->paginator->getAdapter()->getTotalItems() < 2)
-    {
-      zen_redirect ( zen_href_link ( zen_get_info_page ( $tplVars['listingBox']['items'][0]['products_id'] ), ($cPath ? 'cPath=' . $tplVars['listingBox']['items'][0]['productCpath'] . '&' : '') . 'products_id=' . $tplVars['listingBox']['items'][0]['products_id'] ) );
+
+    if ($category_depth == 'products' && $box->getFormattedItemsCount () == 1 && $box->getTotalItemCount() < 2)  {
+        $productsId = $tplVars['listingBox']['paginator']['resultList'][0]['products_id'];
+        $productsCpath = $zcRequest->readGet('cPath', '');
+        zen_redirect ( zen_href_link ( zen_get_info_page ( $productsId ), ($cPath ? 'cPath=' . $productsCpath . '&' : '') . 'products_id=' . $productsId ) );
     }
   }
 }

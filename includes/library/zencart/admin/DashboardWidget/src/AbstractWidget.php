@@ -3,7 +3,7 @@
  * Abstract Dashboard Widget
  *
  * @package   ZenCart\Admin\DashboardWidget
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version   GIT: $Id: $
  */
@@ -93,6 +93,6 @@ abstract class AbstractWidget
   public function getFormDefaults($item, $handler)
   {
       $result = WidgetManager::getWidgetRefresh($item, $_SESSION['admin_id']);
-      $handler->templateVariables['widget-refresh'] = $result;
+      $handler->setTplVars('widget-refresh', $result);
   }
 }

@@ -5,7 +5,7 @@
  * Displays simple "product not found" message if the selected product's details cannot be located in the database
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
@@ -20,7 +20,7 @@
 <br class="clearBoth" />
 
 <?php foreach ($tplVars['listingBoxes'] as $tplVars['listingBox']) { ?>
-<?php require($tplVars['listingBox']['template']); ?>
+<?php require($template->get_template_dir($tplVars['listingBox']['formatter']['template'], DIR_WS_TEMPLATE, $current_page_base, 'listingboxes') . '/' . $tplVars['listingBox']['formatter']['template']); ?>
 <?php } ?>
 
 </div>
