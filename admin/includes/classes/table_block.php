@@ -7,7 +7,7 @@
  * @version GIT: $Id: Author: DrByte  Mon Mar 18 12:55:13 2013 -0400 Modified in v1.5.2 $
  */
 
-  class tableBlock {
+  class boxTableBlock {
     var $table_border = '0';
     var $table_width = '100%';
     var $table_cellspacing = '0';
