@@ -7,7 +7,7 @@
  * @version $Id: table_block.php 1969 2005-09-13 06:57:21Z drbyte  Modified in v1.6.0 $
  */
 
-  class tableBlock {
+  class boxTableBlock {
     var $table_border = '0';
     var $table_width = '100%';
     var $table_cellspacing = '0';
@@ -16,7 +16,7 @@
     var $table_row_parameters = '';
     var $table_data_parameters = '';
 
-    function __construct($contents) {
+    function tableBlock($contents) {
       $tableBox_string = '';
 
       $form_set = false;

@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   if ($messageStack->size > 0) echo $messageStack->output();
 */
 
-  class messageStack extends tableBlock {
+  class messageStack extends boxTableBlock {
     var $size = 0;
 
     function __construct() {
