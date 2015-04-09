@@ -40,9 +40,9 @@ class AjaxDashboardWidget extends AbstractAjaxController
     public function getWidgetEditExecute()
     {
         if (isset($_POST['id'])) {
-            $this->templateVariables['id'] = $_POST['id'];
+            $this->tplVars['id'] = $_POST['id'];
             $this->getFormDefaults();
-            $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplWidgetEditForm.php', $this->templateVariables);
+            $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplWidgetEditForm.php', $this->tplVars);
             $this->response = array('html' => $html);
         }
     }
@@ -115,9 +115,9 @@ class AjaxDashboardWidget extends AbstractAjaxController
     public function getInstallableWidgetsExecute()
     {
         $widgets = WidgetManager::getInstallableWidgets($_SESSION['admin_id']);
-        $this->templateVariables['widgets'] = $widgets;
-        $this->templateVariables['flagHasWidgets'] = (count($widgets) > 0) ? TRUE : FALSE;
-        $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplWidgetInstallableList.php', $this->templateVariables);
+        $this->tplVars['widgets'] = $widgets;
+        $this->tplVars['flagHasWidgets'] = (count($widgets) > 0) ? TRUE : FALSE;
+        $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplWidgetInstallableList.php', $this->tplVars);
         $this->response = array('html' => $html);
     }
 
