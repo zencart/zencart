@@ -24,7 +24,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   echo $box->infoBox($heading, $contents);
 */
 
-  class box extends tableBlock {
+  class box extends boxTableBlock {
     function __construct() {
       $this->heading = array();
       $this->contents = array();
