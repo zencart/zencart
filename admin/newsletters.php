@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: newsletters.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -204,9 +204,9 @@ check_select('audience_selected','',"<?php echo ERROR_PLEASE_SELECT_AUDIENCE; ?>
                                   from " . TABLE_NEWSLETTERS . "
                                   where newsletters_id = '" . (int)$nID . "'");
 
-      $nInfo->objectInfo($newsletter->fields);
+      $nInfo->updateObjectInfo($newsletter->fields);
     } elseif ($_POST) {
-      $nInfo->objectInfo($_POST);
+      $nInfo->updateObjectInfo($_POST);
     }
 
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));

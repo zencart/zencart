@@ -306,9 +306,9 @@ function popupImageWindow(url) {
                                      from " . TABLE_BANNERS . "
                                      where banners_id = '" . (int)$bID . "'");
 
-      $bInfo->objectInfo($banner->fields);
+      $bInfo->updateObjectInfo($banner->fields);
     } elseif (zen_not_null($_POST)) {
-      $bInfo->objectInfo($_POST);
+      $bInfo->updateObjectInfo($_POST);
     }
 
     if (!isset($bInfo->status)) $bInfo->status = '1';
