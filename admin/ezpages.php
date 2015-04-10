@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
@@ -252,9 +252,9 @@ require('includes/admin_html_head.php');
 
       $page_query = "select * from " . TABLE_EZPAGES . " where pages_id = '" . (int)$_GET['ezID'] . "'";
       $page = $db->Execute($page_query);
-      $ezInfo->objectInfo($page->fields);
+      $ezInfo->updateObjectInfo($page->fields);
     } elseif (zen_not_null($_POST)) {
-      $ezInfo->objectInfo($_POST);
+      $ezInfo->updateObjectInfo($_POST);
     }
 
 // set all status settings and switches
