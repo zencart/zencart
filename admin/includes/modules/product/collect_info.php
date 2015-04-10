@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: collect_info.php 19330 2011-08-07 06:32:56Z drbyte $
@@ -63,9 +63,9 @@ if (!defined('IS_ADMIN_FLAG')) {
                               and p.products_id = pd.products_id
                               and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
-      $pInfo->objectInfo($product->fields);
+      $pInfo->updateObjectInfo($product->fields);
     } elseif (zen_not_null($_POST)) {
-      $pInfo->objectInfo($_POST);
+      $pInfo->updateObjectInfo($_POST);
       $products_name = $_POST['products_name'];
       $products_description = $_POST['products_description'];
       $products_url = $_POST['products_url'];
