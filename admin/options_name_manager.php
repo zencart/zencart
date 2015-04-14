@@ -110,7 +110,7 @@
                                   where language_id= '" . (int)$languages[$i]['id'] . "'
                                   and products_options_name='" . zen_db_input($option_name) . "'");
             if ($check->fields['count'] > 1) {
-              $duplicate_option .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $option_name;
+              $duplicate_option .= ' <b>' . strtoupper($languages[$i]['name']) . '</b> : ' . $option_name;
             }
           }
         }
@@ -184,7 +184,7 @@
                                 and products_options_name='" . zen_db_input($option_name) . "'");
 
           if ($check->RecordCount() > 1 and !empty($option_name)) {
-            $duplicate_option .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $option_name;
+            $duplicate_option .= ' <b>' . strtoupper($languages[$i]['name']) . '</b> : ' . $option_name;
           }
         }
         if (!empty($duplicate_option)) {

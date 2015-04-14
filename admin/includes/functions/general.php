@@ -631,24 +631,17 @@
     return $pieces[0];
   }
 
-
+  /**
+   * helper function to access language::available_languages object
+   * @return array
+   */
   function zen_get_languages() {
-    global $db;
-    $languages = $db->Execute("select languages_id, name, code, image, directory
-                               from " . TABLE_LANGUAGES . " order by sort_order");
-
-    while (!$languages->EOF) {
-      $languages_array[] = array('id' => $languages->fields['languages_id'],
-                                 'name' => $languages->fields['name'],
-                                 'code' => $languages->fields['code'],
-                                 'image' => $languages->fields['image'],
-                                 'directory' => $languages->fields['directory']);
-      $languages->MoveNext();
+    global $lng;
+    if (!isset($lng)) {
+      $lng = new language();
     }
-
-    return $languages_array;
+    return $lng->get_available_languages();
   }
-
 
   function zen_get_category_name($category_id, $language_id) {
     global $db;
@@ -2282,17 +2275,6 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
 
 /**
- * Lookup Languages Icon
- */
-  function zen_get_language_icon($lookup) {
-    global $db;
-    $languages_icon = $db->Execute("select directory, image from " . TABLE_LANGUAGES . " where languages_id = '" . zen_db_input($lookup) . "'");
-    if ($languages_icon->EOF) return '';
-    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image']);
-    return $icon;
-  }
-
-/**
  * Get the Option Name for a particular language
  */
   function zen_get_option_name_language($option, $language) {
@@ -2313,17 +2295,6 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * lookup attributes model
- */
-  function zen_get_language_name($lookup) {
-    global $db;
-    $check_language= $db->Execute("select directory from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lookup . "'");
-    if ($check_language->EOF) return '';
-    return $check_language->fields['directory'];
-  }
-
-
-/**
  * Delete all product attributes
  */
   function zen_delete_products_attributes($delete_product_id) {
@@ -2339,7 +2310,6 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
     $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$delete_product_id . "'");
 }
-
 
 /**
  * Set Product Attributes Sort Order to Products Option Value Sort Order

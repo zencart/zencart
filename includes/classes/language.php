@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: language.php 14141 2009-08-10 19:34:47Z wilt  Modified in v1.6.0 $
+ * @version $Id: language.php drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -18,43 +18,92 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @package classes
  */
 class language extends base {
-  var $languages, $catalog_languages, $browser_languages, $language;
+  /**
+   * @var Array of all available languages in the store
+   */
+  protected $available_languages = array();
+  /**
+   * @var string comma-delimited list of languages supported by the user's browser
+   */
+  protected $browser_languages = '';
+  /**
+   * @var string The currently selected language (which is separately set into a session var in init_languages)
+   */
+  protected $language = '';
 
-  function __construct($lng = '') {
+  /**
+   * @param string $lng The language we'd like to set the site to, as long as it exists in the db
+   * @return string
+   */
+  public function __construct($lng = '') {
     global $db;
-
-    $this->catalog_languages = array();
     $languages_query = "select languages_id, name, code, image, directory
                           from " . TABLE_LANGUAGES . "
                           order by sort_order";
+    $result = $db->Execute($languages_query);
 
-    $languages = $db->Execute($languages_query);
-
-    while (!$languages->EOF) {
-      $this->catalog_languages[$languages->fields['code']] = array(
-              'id' => $languages->fields['languages_id'],
-              'name' => $languages->fields['name'],
-              'image' => $languages->fields['image'],
-              'code' => $languages->fields['code'],
-              'directory' => $languages->fields['directory'],
+    foreach ($result as $val) {
+      $this->available_languages[$val['code']] = array(
+              'id' => $val['languages_id'],
+              'name' => $val['name'],
+              'image' => $val['image'],
+              'code' => $val['code'],
+              'directory' => $val['directory'],
               );
-      $languages->MoveNext();
     }
-    $this->browser_languages = '';
-    $this->language = '';
 
-    $this->set_language($lng);
+    if (!sizeof($this->available_languages)) {
+      // if none were found, there's gonna be trouble, but here we set a default, so we can avoid having to test for it later
+      $this->available_languages['en'] = array('id' => 1, 'name' => 'english', 'image' => 'en.gif', 'code' => 'en', 'directory' => 'english');
+    }
+
+    return $this->set_language($lng);
   }
 
-  function set_language($language) {
-    if ( (zen_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
-      $this->language = $this->catalog_languages[$language];
-    } else {
-      $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
+  /**
+   * @param string $language The language we want to set the site to, as long as it exists in the db
+   * @return array
+   */
+  public function set_language($language = DEFAULT_LANGUAGE) {
+    if (empty($language)) $language = DEFAULT_LANGUAGE;
+
+    if (isset($this->available_languages[$language])) {
+      $this->language = $this->available_languages[$language];
+    }
+    return $this->language;
+  }
+
+  /**
+   * Returns array of languages installed and configured in the site
+   * @return array
+   */
+  public function get_available_languages()
+  {
+    return $this->available_languages;
+  }
+
+  /**
+   * Lookup language details by language ID number
+   * (mainly used in admin for displaying language-icons on attribute option-name pages
+   * @param integer $lang_id
+   * @return array|boolean
+   */
+  public function get_language_data_by_id($lang_id = 0) {
+    if ($lang_id == 0) return false;
+
+    foreach ($this->available_languages as $code => $val) {
+      if ($val['id'] == (int)$lang_id) {
+        return $val;
+      }
     }
   }
 
-  function get_browser_language() {
+  /**
+   * Determine languages supported by the browser, and set the site to use a corresponding language
+   * Matching is attempted according to the order of browser preference, as long as the store supports at least one. Else it aborts.
+   * @return array|boolean
+   */
+  public function get_browser_language() {
     if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
       $this->browser_languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
       for ($i=0, $n=sizeof($this->browser_languages); $i<$n; $i++) {
@@ -66,9 +115,8 @@ class language extends base {
         } else {
           continue;
         }
-        if (isset($this->catalog_languages[$code])) {
-          $this->language = $this->catalog_languages[$code];
-          break;
+        if (isset($this->available_languages[$code])) {
+          return $this->set_language($code);
         }
       }
     }

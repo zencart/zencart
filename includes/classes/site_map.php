@@ -32,7 +32,7 @@ if (!defined('IS_ADMIN_FLAG')) {
        $spacer_multiplier = 1;
 
    function __construct($load_from_database = true) {
-     global $languages_id, $db;
+     global $db;
      $this->data = array();
      $categories_query = "select c.categories_id, cd.categories_name, c.parent_id
                           from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd

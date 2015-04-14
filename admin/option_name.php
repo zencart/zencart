@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: option_name.php  $
+ * @version $Id: option_name.php  Modified in v1.6.0 $
  */
 ?>
 <?php
@@ -27,7 +27,7 @@
                                'text' => $languages[$i]['name']);
     if ($languages[$i]['id'] == $specified_language) $lang_exists = true;
   }
-  if (! $lang_exists) $specified_language = (int)$_SESSION['languages_id'];
+  if (!$lang_exists) $specified_language = (int)$_SESSION['languages_id'];
 
 
   if (isset($_GET['action']) && $_GET['action'] == 'update_sort_order') {
@@ -72,8 +72,11 @@ require('includes/admin_html_head.php');
             </tr>
             <tr class="dataTableHeadingRow">
               <td colspan="3" align="center" class="dataTableHeadingContent"><?php echo (!$usingDefaultLanguage ? 'Current Language' : '&nbsp;'); ?></td>
-              <?php echo zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get'); ?>
-              <td colspan="<?php echo ($usingDefaultLanguage ? '2' : '5'); ?>" class="dataTableHeadingContent" align="center" valign="top"><?php echo  TEXT_SELECTED_LANGUAGE . zen_get_language_icon($specified_language); ?>&nbsp;&nbsp;&nbsp;<?php echo zen_draw_pull_down_menu('lng_id', $languages_array, $specified_language, 'onChange="this.form.submit();"'); ?></td>
+              <?php echo zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get');
+                $lang_data = $lng->get_language_data_by_id($specified_language);
+                $icon = $lang_data === false ? '' : zen_image(DIR_WS_CATALOG_LANGUAGES . $lang_data['directory'] . '/images/' . $lang_data['image']);
+              ?>
+              <td colspan="<?php echo ($usingDefaultLanguage ? '2' : '5'); ?>" class="dataTableHeadingContent" align="center" valign="top"><?php echo TEXT_SELECTED_LANGUAGE . $icon; ?>&nbsp;&nbsp;&nbsp;<?php echo zen_draw_pull_down_menu('lng_id', $languages_array, $specified_language, 'onChange="this.form.submit();"'); ?></td>
               </form>
             </tr>
             <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_NAME, 'action=update_sort_order&lng_id=' . (int)$specified_language, 'post'); ?>
@@ -113,11 +116,16 @@ require('includes/admin_html_head.php');
       }
 
       if (!$usingDefaultLanguage) {
-        echo '<td align="center" class="dataTableContent">' . zen_get_language_icon($_SESSION['languages_id']) . '</td>' . "\n";
+        $lang_data = $lng->get_language_data_by_id($_SESSION['languages_id']);
+        $icon = $lang_data === false ? '' : zen_image(DIR_WS_CATALOG_LANGUAGES . $lang_data['directory'] . '/images/' . $lang_data['image']);
+
+        echo '<td align="center" class="dataTableContent">' . $icon . '</td>' . "\n";
         echo '<td align="left" class="dataTableContent">' . zen_get_option_name_language($row->fields['products_options_id'], $_SESSION['languages_id']) . '</td>' . "\n";
         echo '<td align="right" class="dataTableContent">' . zen_get_option_name_language_sort_order($row->fields['products_options_id'], $_SESSION['languages_id']) . '&nbsp;&nbsp;</td>' . "\n";
       }
-      echo '<td align="center" class="dataTableContent">' . zen_get_language_icon($specified_language) . '</td>' . "\n";
+      $lang_data = $lng->get_language_data_by_id($specified_language);
+      $icon = $lang_data === false ? '' : zen_image(DIR_WS_CATALOG_LANGUAGES . $lang_data['directory'] . '/images/' . $lang_data['image']);
+      echo '<td align="center" class="dataTableContent">' . $icon . '</td>' . "\n";
       echo '<td align="right" class="dataTableContent">' . $row->fields['products_options_id'] . '</td>' . "\n";
       echo '<td class="dataTableContent" align="center">' . $the_attributes_type . '</td>' . "\n";
       echo '<td class="dataTableContent">' . $row->fields['products_options_name'] . '</td>' . "\n";
