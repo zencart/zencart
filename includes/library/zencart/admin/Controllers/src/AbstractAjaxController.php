@@ -16,7 +16,7 @@ class AbstractAjaxController extends \base
     /**
      * @var array
      */
-    protected $templateVariables;
+    protected $tplVars;
     /**
      * @var array
      */
@@ -27,7 +27,7 @@ class AbstractAjaxController extends \base
      */
     public function __construct($request)
     {
-        $this->templateVariables = array();
+        $this->tplVars = array();
         $this->response = array('data' => NULL);
         $this->request = $request;
     }
@@ -69,8 +69,13 @@ class AbstractAjaxController extends \base
         ob_flush();
         return $result;
     }
+
+    /**
+     * @param $key
+     * @param $value
+     */
     public function setTplVars($key, $value)
     {
-        $this->templateVariables[$key] = $value;
+        $this->tplVars[$key] = $value;
     }
 }

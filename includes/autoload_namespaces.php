@@ -17,6 +17,7 @@ if (!defined('DIR_CATALOG_LIBRARY')) {
  * An array of namespace => basedir configurations
  */
 return array(
+    '\ZenCart\Admin\Services' => DIR_CATALOG_LIBRARY . 'zencart/admin/Services/src',
     '\ZenCart\Admin\Controllers' => DIR_CATALOG_LIBRARY . 'zencart/admin/Controllers/src',
     '\ZenCart\Admin\AjaxDispatch' => DIR_CATALOG_LIBRARY . 'zencart/admin/AjaxDispatch/src',
     '\ZenCart\Admin\DashboardWidget' => DIR_CATALOG_LIBRARY . 'zencart/admin/DashboardWidget/src',

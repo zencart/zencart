@@ -16,7 +16,7 @@ abstract class AbstractController extends \base
     /**
      * @var array
      */
-    protected $templateVariables;
+    protected $tplVars;
     /**
      * @var
      */
@@ -36,19 +36,20 @@ abstract class AbstractController extends \base
 
     /**
      * @param $controllerCommand
-     * @param $diContainer
+     * @param $request
+     * @param $db
      */
     public function __construct($controllerCommand, $request, $db)
     {
         $this->request = $request;
         $this->dbConn = $db;
         $this->controllerCommand = $controllerCommand;
-        $this->templateVariables = array();
+        $this->tplVars = array();
         $this->response = array(
             'data' => null
         );
         $this->prepareDefaultCss();
-        $this->prepareCommonTemplateVariables();
+        $this->prepareCommonTplVars();
         $this->preCheck();
         $this->initDefinitions();
     }
@@ -56,20 +57,16 @@ abstract class AbstractController extends \base
     /**
      *
      */
-    public function prepareCommonTemplateVariables()
+    protected function prepareCommonTplVars()
     {
-        $this->templateVariables['cmd'] = $this->request->readGet('cmd');
-//        $globalRegistry = $this->diContainer->get('globalRegistry');
-//        foreach ($globalRegistry as $key => $value) {
-//            $this->templateVariables [$key] = $value;
-//        }
-        $this->templateVariables ['useFoundation'] = $this->useFoundation;
+        $this->tplVars['cmd'] = $this->request->readGet('cmd');
+        $this->tplVars['useFoundation'] = $this->useFoundation;
     }
 
     /**
      *
      */
-    public function prepareDefaultCSS()
+    protected function prepareDefaultCSS()
     {
         if ($this->useView) {
             $cssList [] = array(
@@ -98,7 +95,7 @@ abstract class AbstractController extends \base
                 );
             }
         }
-        $this->templateVariables ['cssList'] = $cssList;
+        $this->tplVars ['cssList'] = $cssList;
     }
 
     /**
@@ -134,7 +131,7 @@ abstract class AbstractController extends \base
      */
     public function doViewOutput()
     {
-        $tplVars = $this->templateVariables;
+        $tplVars = $this->tplVars;
         require('includes/template/common/tplAdminHtmlHead.php');
         echo "\n" . "</head>";
         echo "\n" . "<body>";
@@ -184,16 +181,33 @@ abstract class AbstractController extends \base
     }
 
     /**
+     * @param $key
+     * @param $value
+     */
+    public function setTplVars($key, $value)
+    {
+        $this->tplVars[$key] = $value;
+    }
+
+    /**
+     * @param $templateName
+     */
+    public function setMainTemplate($templateName)
+    {
+        $this->mainTemplate = $templateName;
+    }
+
+    /**
      *
      */
-    public function preCheck()
+    protected function preCheck()
     {
     }
 
     /**
      *
      */
-    public function initDefinitions()
+    protected function initDefinitions()
     {
     }
 }
