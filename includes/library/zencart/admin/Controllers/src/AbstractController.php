@@ -49,7 +49,7 @@ abstract class AbstractController extends \base
             'data' => null
         );
         $this->prepareDefaultCss();
-        $this->prepareCommontplVars();
+        $this->prepareCommonTplVars();
         $this->preCheck();
         $this->initDefinitions();
     }
