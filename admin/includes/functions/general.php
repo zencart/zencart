@@ -637,9 +637,15 @@
    */
   function zen_get_languages() {
     global $lng;
+
+    if (!class_exists('language')) {
+      require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php');
+    }
+
     if (!isset($lng)) {
       $lng = new language();
     }
+
     return $lng->get_available_languages();
   }
 
