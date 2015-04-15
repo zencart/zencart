@@ -60,6 +60,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'loadFile'=>'split_page_results.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=> 'language.php',
+                               'classPath'=>DIR_FS_CATALOG . DIR_WS_CLASSES);
+  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'object_info.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
