@@ -787,7 +787,7 @@ class shoppingCart extends base {
         // adjust for downloads
             // adjust products price
               $check_attribute = $attribute_price->fields['products_attributes_id'];
-              $sql = "select *
+              $sql = "select products_attributes_id
                       from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                       where products_attributes_id = '" . $check_attribute . "'";
               $check_download = $db->Execute($sql);
