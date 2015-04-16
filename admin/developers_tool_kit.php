@@ -203,7 +203,7 @@
             $show_file .= '<br>Line #<span class="dtk-linenum">' . number_pad_with_spaces($line_numpos, $padding_length) . '</span> : ';
 
             if ($max_context_lines_before > 0) $show_file .= '<strong>';
-            $show_file .= '<span class="dtk-foundline">';
+            $show_file .= '<span class="dtk-foundline' . ($max_context_lines_before > 0 ? '-multi' : '') . '">';
             $show_file .= cleanup_dtk_output_text($line, $configuration_key_lookup, $case_sensitive);
             $show_file .= '</span>';
             if ($max_context_lines_before > 0) $show_file .= '</strong>';
@@ -236,8 +236,12 @@
 
 
   /**
+   * Strip out dangerous content, run htmlspecialchars, and insert highlighting of "found" text
+   *
    * @param string $input
    * @param string $highlight
+   * @param boolean $case_sensitive
+   * @return string
    */
   function cleanup_dtk_output_text($input = '', $highlight = '', $case_sensitive = false)
   {
@@ -264,6 +268,13 @@
     return $input;
   }
 
+  /**
+   * Left-pad input "number" string with spaces
+   *
+   * @param string $number The number string to pad
+   * @param int $n The number of padding characters to accommodate
+   * @return string
+   */
   function number_pad_with_spaces($number, $n = 0) {
     return str_replace(' ', '&nbsp;', str_pad((int)$number, $n, ' ', STR_PAD_LEFT));
   }

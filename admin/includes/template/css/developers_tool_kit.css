@@ -6,6 +6,7 @@
  */
 
 .dtk-highlite {font-weight: bold; color: rgb(255, 10, 5);}
-.dtk-foundline {font-family: courier; background-color: rgba(4, 211, 216, 0.12);}
+.dtk-foundline, .dtk-foundline-multi {font-family: courier;}
+.dtk-foundline-multi {background-color: rgba(4, 211, 216, 0.12);}
 .dtk-contextline {font-family: courier;}
 .dtk-linenum {font-family: courier;}
