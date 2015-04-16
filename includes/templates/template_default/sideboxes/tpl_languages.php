@@ -13,7 +13,7 @@
 
   $lng_cnt = 0;
   while (list($key, $value) = each($language_list)) {
-    $content .= '<a href="' . zen_href_link($current_page_base, zen_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . zen_image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name']) . '</a>&nbsp;&nbsp;';
+    $content .= '<a href="' . zen_href_link($current_page_base, zen_get_all_get_params(array('language', 'currency')) . 'language=' . $value['code'], $request_type) . '">' . zen_image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name']) . '</a>&nbsp;&nbsp;';
     $lng_cnt ++;
     if ($lng_cnt >= MAX_LANGUAGE_FLAGS_COLUMNS) {
       $lng_cnt = 0;

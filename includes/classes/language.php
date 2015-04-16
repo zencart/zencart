@@ -54,7 +54,7 @@ class language extends base {
 
     if (!sizeof($this->available_languages)) {
       // if none were found, there's gonna be trouble, but here we set a default, so we can avoid having to test for it later
-      $this->available_languages['en'] = array('id' => 1, 'name' => 'english', 'image' => 'en.gif', 'code' => 'en', 'directory' => 'english');
+      $this->available_languages['en'] = array('id' => 1, 'name' => 'english', 'image' => 'icon.gif', 'code' => 'en', 'directory' => 'english');
     }
 
     return $this->set_language($lng);
@@ -79,7 +79,7 @@ class language extends base {
    */
   public function get_available_languages()
   {
-    return $this->available_languages;
+    return array_values($this->available_languages);
   }
 
   /**
