@@ -53,8 +53,7 @@
   function zen_display_files($include_root = false, $filetypesincluded = 1) {
     global $check_directory, $found, $configuration_key_lookup;
     global $db;
-    $max_context_lines_before = 3;
-    $max_context_lines_after = 3;
+    $max_context_lines_before = $max_context_lines_after = abs((int)$_POST['context_lines']);
 
     $directory_array = array();
     for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
@@ -197,9 +196,9 @@
 
             //prevent db pwd from being displayed, for sake of security
             $show_file .= "<br>Line #<strong>{$line_numpos}</strong> : " ;
-            $show_file .= '<strong>';
+            if ($max_context_lines_before > 0) $show_file .= '<strong>';
             $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($line, ENT_QUOTES, CHARSET);
-            $show_file .= '</strong>';
+            if ($max_context_lines_before > 0) $show_file .= '</strong>';
 
             for($j=1; $j < $max_context_lines_after+1; $j++) {
               $show_file .= "<br>Line #<strong>" . ($line_numpos+$j) . "</strong> : ";
@@ -568,7 +567,8 @@
           }
           break;
         }
-          zen_display_files($zv_check_root, $zv_filestype_group);
+
+        zen_display_files($zv_check_root, $zv_filestype_group);
 
       break;
     } // eof: action
@@ -936,6 +936,7 @@ if ($action == 'search_config_keys') {
 
                 echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);
                 echo '<label for="locate-cs">' . TEXT_CASE_SENSITIVE . ' </label>' . zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');
+                echo '<label for="context_lines"> ' . TEXT_CONTEXT_LINES . ' </label>' . zen_draw_input_field('context_lines', '3', 'id="context_lines" size="1"');
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
