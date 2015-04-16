@@ -169,7 +169,7 @@
 
         // put file into an array to be scanned
         $lines = file($file);
-        $found_line = 'false';
+        $found_line = false;
         // loop through the array, show line and line numbers
         $cnt_lines = 0;
         foreach ($lines as $line_num => $line) {
@@ -185,8 +185,8 @@
             $check_case = false;
           }
           if ($check_case) {
-            $found_line= 'true';
-            $found = 'true';
+            $found_line = true;
+            $found = true;
             $cnt_found++;
             $line_numpos = $line_num + 1;
 
@@ -217,7 +217,7 @@
       $show_file .= '</td></tr></table>' . "\n";
 
       // if there was a match, show lines
-      if ($found_line == 'true') {
+      if ($found_line == true) {
         echo $show_file . '<table><tr><td>&nbsp;</td></tr></table>';
       } // show file
     }
@@ -230,7 +230,7 @@
   // don't do any 'action' if clicked on the Check for Updates button
   if (isset($_GET['vcheck']) && $_GET['vcheck']=='yes') $action = '';
 
-  $found= 'true';
+  $found= true;
 
   $search = (isset($_POST['search']) ? $_POST['search'] : '');
   $flags =  (isset($_GET['v']) ? '&v=' : '') . (isset($_GET['s']) ? '&s=' . preg_replace('/[^a-z]/', '', $_GET['s']) : '');
@@ -281,7 +281,7 @@
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
         zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
-      $found = 'false';
+      $found = false;
       $zv_files_group = $_POST['zv_files'];
 
       $sql = "select *, (case when use_function = 'zen_cfg_password_display' then '********' else configuration_value end) as configuration_value from " . TABLE_CONFIGURATION . " where configuration_key=:zcconfigkey:";
@@ -337,14 +337,14 @@
               zen_display_files();
 
         } else {
-          $show_products_type_layout = 'true';
-          $show_configuration_info = 'true';
-          $found = 'true';
+          $show_products_type_layout = true;
+          $show_configuration_info = true;
+          $found = true;
         }
       } else {
-        $show_products_type_layout = 'false';
-        $show_configuration_info = 'true';
-        $found = 'true';
+        $show_products_type_layout = false;
+        $show_configuration_info = true;
+        $found = true;
       }
 
       break;
@@ -354,7 +354,7 @@
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
         zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
-      $found = 'false';
+      $found = false;
       $zv_files_group = $_POST['zv_files'];
 
           // build filenames to search
@@ -392,7 +392,7 @@
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
         zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
-      $found = 'false';
+      $found = false;
       $zv_files_group = $_POST['zv_files'];
 
           // build filenames to search
@@ -426,7 +426,7 @@
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
         zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
-      $found = 'false';
+      $found = false;
       $zv_files_group = $_POST['zv_files'];
 
           // build filenames to search
@@ -492,7 +492,7 @@
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
         zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
-      $found = 'false';
+      $found = false;
       $zv_files_group = $_POST['zv_files'];
       $zv_filestype_group = $_POST['zv_filestype'];
 //echo 'settings: ' . '$zv_files_group: ' . $zv_files_group . '$zv_filestype_group: ' . $zv_filestype_group . '<br>';
@@ -574,7 +574,7 @@
     } // eof: action
 
     // if no matches in either databases or selected language directory give an error
-    if ($found == 'false') {
+    if ($found == false) {
       $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND . ' ' . zen_output_string_protected($configuration_key_lookup), 'caution');
     } elseif (substr($action, 0, 7) == 'locate_') {
       echo '<table width="90%" align="center"><tr><td>' . zen_draw_separator('pixel_black.gif', '100%', '2') . '</td></tr><tr><td>&nbsp;</td></tr></table>' . "\n";
@@ -600,8 +600,8 @@ require('includes/admin_html_head.php');
       </tr>
 
 <?php
-if (isset($show_configuration_info) && $show_configuration_info == 'true') {
-  $show_configuration_info = 'false';
+if (isset($show_configuration_info) && $show_configuration_info == true) {
+  $show_configuration_info = false;
 ?>
       <tr><td colspan="2">
         <table border="3" cellspacing="4" cellpadding="4">
@@ -621,7 +621,7 @@ if (isset($show_configuration_info) && $show_configuration_info == 'true') {
             <td class="dataTableHeadingContentWhois"><?php echo $check_configure->fields['configuration_description']; ?></td>
           </tr>
 <?php
-  if ($show_products_type_layout == 'true') {
+  if ($show_products_type_layout == true) {
     $check_configure_group = $db->Execute("select * from " . TABLE_PRODUCT_TYPES . " where type_id='" . (int)$check_configure->fields['product_type_id'] . "'");
   } else {
     $check_configure_group = $db->Execute("select * from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id='" . (int)$check_configure->fields['configuration_group_id'] . "'");
@@ -629,7 +629,7 @@ if (isset($show_configuration_info) && $show_configuration_info == 'true') {
 ?>
 
 <?php
-  if ($show_products_type_layout == 'true') {
+  if ($show_products_type_layout == true) {
 ?>
           <tr>
             <td class="infoBoxHeading"><?php echo TABLE_TITLE_GROUP; ?></td>
@@ -656,7 +656,7 @@ if (isset($show_configuration_info) && $show_configuration_info == 'true') {
           <tr>
             <td class="main" align="center" valign="middle">
               <?php
-                if ($show_products_type_layout == 'false' and ($check_configure->fields['configuration_id'] != 0 and $check_configure_group->fields['visible'] != 0)) {
+                if ($show_products_type_layout == false and ($check_configure->fields['configuration_id'] != 0 and $check_configure_group->fields['visible'] != 0)) {
                   echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
                 } else {
                   $page= '';
@@ -664,7 +664,7 @@ if (isset($show_configuration_info) && $show_configuration_info == 'true') {
                   if (strstr($check_configure->fields['configuration_key'], 'MODULE_PAYMENT')) $page .= 'payment';
                   if (strstr($check_configure->fields['configuration_key'], 'MODULE_ORDER_TOTAL')) $page .= 'ordertotal';
 
-                  if ($show_products_type_layout == 'true') {
+                  if ($show_products_type_layout == true) {
                     echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
                   } else {
                     if ($page != '') {
