@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Mar 4 16:45:41 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -131,21 +131,15 @@
 
           $sql = "UPDATE " . TABLE_BANNERS . "
                   SET
-                    date_scheduled = :scheduledDate,
+                    date_scheduled = DATE_ADD(:scheduledDate, INTERVAL '00:00:00' HOUR_SECOND),
                     expires_date = DATE_ADD(:expiresDate, INTERVAL '23:59:59' HOUR_SECOND),
                     expires_impressions = " . ($expires_impressions == 0 ? "null" : ":expiresImpressions") . "
                     WHERE banners_id = :bannersID";
-          if ($expires_impressions > 0) {
-            $sql = $db->bindVars($sql, ':expiresImpressions', $expires_impressions, 'integer');
-          }
-          if ($date_scheduled != '') {
-            $sql = $db->bindVars($sql, ':scheduledDate', $date_scheduled, 'date');
-          }
-          if ($expires_date != '') {
-            $sql = $db->bindVars($sql, ':expiresDate', $expires_date, 'date');
-          }
-            $sql = $db->bindVars($sql, ':bannersID', $banners_id, 'integer');
-            $db->Execute($sql);
+          $sql = $db->bindVars($sql, ':expiresImpressions', $expires_impressions, 'integer');
+          $sql = $db->bindVars($sql, ':scheduledDate', $date_scheduled, 'date');
+          $sql = $db->bindVars($sql, ':expiresDate', $expires_date, 'date');
+          $sql = $db->bindVars($sql, ':bannersID', $banners_id, 'integer');
+          $db->Execute($sql);
 
           zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id));
         } else {

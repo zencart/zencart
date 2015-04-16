@@ -3,10 +3,10 @@
  * banner functions
  *
  * @package functions
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: banner.php 15580 2010-02-25 15:53:36Z ajeh $
+ * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.5.5 $
  */
 
 ////
@@ -38,8 +38,7 @@
     global $db;
     $banners_query = "select banners_id, date_scheduled
                       from " . TABLE_BANNERS . "
-                      where date_scheduled != 'NULL'";
-
+                      where date_scheduled IS NOT NULL";
     $banners = $db->Execute($banners_query);
 
     if ($banners->RecordCount() > 0) {
