@@ -174,6 +174,7 @@
         // loop through the array, show line and line numbers
         $cnt_lines = 0;
         foreach ($lines as $line_num => $line) {
+          $padding_length = strlen(strval(sizeof($lines)));
           $cnt_lines++;
           if (isset($_POST['case_sensitive']) && $_POST['case_sensitive']) {
             $check_case = strstr($line, $configuration_key_lookup);
@@ -192,19 +193,25 @@
             $line_numpos = $line_num + 1;
 
             for($j=min($max_context_lines_before, $line_num); $j > 0; $j--) {
-              $show_file .= "<br />Line #<strong>" . ($line_numpos-$j) . "</strong> : ";
-              $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($lines[($line_num-$j)], ENT_QUOTES, CHARSET);
+              $show_file .= '<br>Line #<span class="dtk-linenum">' . number_pad_with_spaces($line_numpos-$j, $padding_length) . '</span> : ';
+              $show_file .= '<span class="dtk-contextline">';
+              $show_file .= cleanup_dtk_output_text($lines[($line_num-$j)]);
+              $show_file .= '</span>';
             }
 
-            //prevent db pwd from being displayed, for sake of security
-            $show_file .= "<br>Line #<strong>{$line_numpos}</strong> : " ;
+            $show_file .= '<br>Line #<span class="dtk-linenum">' . number_pad_with_spaces($line_numpos, $padding_length) . '</span> : ';
+
             if ($max_context_lines_before > 0) $show_file .= '<strong>';
-            $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($line, ENT_QUOTES, CHARSET);
+            $show_file .= '<span class="dtk-foundline">';
+            $show_file .= cleanup_dtk_output_text($line);
+            $show_file .= '</span>';
             if ($max_context_lines_before > 0) $show_file .= '</strong>';
 
             for($j=1, $m = min($max_context_lines_after, sizeof($lines)-$line_num); $j < $m+1; $j++) {
-              $show_file .= "<br>Line #<strong>" . ($line_numpos+$j) . "</strong> : ";
-              $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($lines[($line_num+$j)], ENT_QUOTES, CHARSET);
+              $show_file .= '<br>Line #<span class="dtk-linenum">' . number_pad_with_spaces($line_numpos+$j, $padding_length) . '</span> : ';
+              $show_file .= '<span class="dtk-contextline">';
+              $show_file .= cleanup_dtk_output_text($lines[($line_num+$j)]);
+              $show_file .= '</span>';
             }
             $show_file .= "<br>\n";
           } else {
@@ -225,6 +232,28 @@
     echo '<table border="0" width="100%" cellspacing="2" cellpadding="1" align="center"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
 
   } // zen_display_files
+
+
+  /**
+   * @param string $input
+   * @param string $highlight
+   */
+  function cleanup_dtk_output_text($input, $highlight)
+  {
+    //prevent db pwd from being displayed, for sake of security
+    $input = (substr_count($input,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : $input;
+    // highlight the selected text
+    $input = str_replace($highlight, '<span class="dtk-highlite">' . $highlight . '</span>', $input);
+    // sanitize output
+    $input = htmlspecialchars($input, ENT_QUOTES, CHARSET);
+    // keep original "spaces" (doesn't account for tabs)
+    $input = str_replace(' ', '&nbsp;', $input);
+    return $input;
+  }
+
+  function number_pad_with_spaces($number, $n) {
+    return str_replace(' ', '&nbsp;', str_pad((int)$number, $n, ' ', STR_PAD_LEFT));
+  }
 
   /* ==================================================================== */
 
@@ -585,6 +614,7 @@
 
 require('includes/admin_html_head.php');
 ?>
+<link rel="stylesheet" type="text/css" href="includes/template/css/developers_tool_kit.css" />
 <style>.dataTableGroupChange {border-top: 2px solid black;}</style>
 </head>
 <body>
