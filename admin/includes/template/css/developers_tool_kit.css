@@ -5,7 +5,7 @@
  * @version $Id: Author: DrByte  Modified in v1.6.0 $
  */
 
-.dtk-highlite {font-weight: bold}
-.dtk-foundline {font-family: courier; background-color: rgba(255, 255, 0, 0.21);}
-.dtk-contextline {font-family: courier}
-.dtk-linenum {font-family: courier}
+.dtk-highlite {font-weight: bold; color: rgb(255, 10, 5);}
+.dtk-foundline {font-family: courier; background-color: rgba(4, 211, 216, 0.12);}
+.dtk-contextline {font-family: courier;}
+.dtk-linenum {font-family: courier;}

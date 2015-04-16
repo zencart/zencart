@@ -152,6 +152,7 @@
 // check all files located
     $file_cnt = 0;
     $cnt_found=0;
+    $case_sensitive = (isset($_POST['case_sensitive']) && $_POST['case_sensitive']);
     for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
     // build file content of matching lines
       $file_cnt++;
@@ -176,7 +177,7 @@
         foreach ($lines as $line_num => $line) {
           $padding_length = strlen(strval(sizeof($lines)));
           $cnt_lines++;
-          if (isset($_POST['case_sensitive']) && $_POST['case_sensitive']) {
+          if ($case_sensitive) {
             $check_case = strstr($line, $configuration_key_lookup);
           } else {
             $check_case = strstr(strtoupper($line), strtoupper($configuration_key_lookup));
@@ -203,7 +204,7 @@
 
             if ($max_context_lines_before > 0) $show_file .= '<strong>';
             $show_file .= '<span class="dtk-foundline">';
-            $show_file .= cleanup_dtk_output_text($line);
+            $show_file .= cleanup_dtk_output_text($line, $configuration_key_lookup, $case_sensitive);
             $show_file .= '</span>';
             if ($max_context_lines_before > 0) $show_file .= '</strong>';
 
@@ -238,20 +239,32 @@
    * @param string $input
    * @param string $highlight
    */
-  function cleanup_dtk_output_text($input, $highlight)
+  function cleanup_dtk_output_text($input = '', $highlight = '', $case_sensitive = false)
   {
+    if ($input == '') return $input;
     //prevent db pwd from being displayed, for sake of security
     $input = (substr_count($input,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : $input;
-    // highlight the selected text
-    $input = str_replace($highlight, '<span class="dtk-highlite">' . $highlight . '</span>', $input);
+
+    // mark the selected text, for highlighting
+    if ($highlight != '') {
+      $input = preg_replace('#(' . preg_quote($highlight, '#') . ')#' . (!$case_sensitive ? 'i' : ''), '~~!~~!~~\1~!!~!!~', $input);
+    }
     // sanitize output
     $input = htmlspecialchars($input, ENT_QUOTES, CHARSET);
+
     // keep original "spaces" (doesn't account for tabs)
     $input = str_replace(' ', '&nbsp;', $input);
+
+    // highlight the selected text
+    if ($highlight != '') {
+      $input = str_replace('~~!~~!~~', '<span class="dtk-highlite">', $input);
+      $input = str_replace('~!!~!!~', '</span>', $input);
+    }
+
     return $input;
   }
 
-  function number_pad_with_spaces($number, $n) {
+  function number_pad_with_spaces($number, $n = 0) {
     return str_replace(' ', '&nbsp;', str_pad((int)$number, $n, ' ', STR_PAD_LEFT));
   }
 
