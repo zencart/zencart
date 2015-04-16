@@ -9,6 +9,8 @@
 
   require('includes/application_top.php');
 
+  $default_context_lines = 0;
+
   $configuration_key_lookup = (isset($_POST['configuration_key'])) ? zen_db_prepare_input($_POST['configuration_key'], false) : '';
   if (isset($_GET['configuration_key_lookup']) && $_GET['configuration_key_lookup'] != '') {
     $configuration_key_lookup = zen_db_prepare_input(strtoupper($_GET['configuration_key_lookup']), false);
@@ -189,7 +191,7 @@
             $cnt_found++;
             $line_numpos = $line_num + 1;
 
-            for($j=$max_context_lines_before; $j > 0; $j--) {
+            for($j=min($max_context_lines_before, $line_num); $j > 0; $j--) {
               $show_file .= "<br />Line #<strong>" . ($line_numpos-$j) . "</strong> : ";
               $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($lines[($line_num-$j)], ENT_QUOTES, CHARSET);
             }
@@ -200,7 +202,7 @@
             $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($line, ENT_QUOTES, CHARSET);
             if ($max_context_lines_before > 0) $show_file .= '</strong>';
 
-            for($j=1; $j < $max_context_lines_after+1; $j++) {
+            for($j=1, $m = min($max_context_lines_after, sizeof($lines)-$line_num); $j < $m+1; $j++) {
               $show_file .= "<br>Line #<strong>" . ($line_numpos+$j) . "</strong> : ";
               $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($lines[($line_num+$j)], ENT_QUOTES, CHARSET);
             }
@@ -220,7 +222,8 @@
         echo $show_file . '<table><tr><td>&nbsp;</td></tr></table>';
       } // show file
     }
-    echo '<table border="0" width="100%" cellspacing="2" cellpadding="1" align="center"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . '</td></tr></table>';
+    echo '<table border="0" width="100%" cellspacing="2" cellpadding="1" align="center"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
+
   } // zen_display_files
 
   /* ==================================================================== */
@@ -936,7 +939,7 @@ if ($action == 'search_config_keys') {
 
                 echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);
                 echo '<label for="locate-cs">' . TEXT_CASE_SENSITIVE . ' </label>' . zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');
-                echo '<label for="context_lines"> ' . TEXT_CONTEXT_LINES . ' </label>' . zen_draw_input_field('context_lines', '3', 'id="context_lines" size="1"');
+                echo '<label for="context_lines"> ' . TEXT_CONTEXT_LINES . ' </label>' . zen_draw_input_field('context_lines', (int)$default_context_lines, 'id="context_lines" size="1"');
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
