@@ -637,9 +637,11 @@
    */
   function zen_get_languages() {
     global $lng;
+
     if (!isset($lng)) {
       $lng = new language();
     }
+
     return $lng->get_available_languages();
   }
 
