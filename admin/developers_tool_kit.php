@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jun 3 2014 -0500 Modified in v1.5.3 $
+ * @version GIT: $Id: developers_tool_kit.php Author: DrByte  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -53,6 +53,9 @@
   function zen_display_files($include_root = false, $filetypesincluded = 1) {
     global $check_directory, $found, $configuration_key_lookup;
     global $db;
+    $max_context_lines_before = 3;
+    $max_context_lines_after = 3;
+
     $directory_array = array();
     for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
 //echo 'I SEE ' . $check_directory[$i] . '<br>';
@@ -186,10 +189,23 @@
             $found = 'true';
             $cnt_found++;
             $line_numpos = $line_num + 1;
-            $show_file .= "<br />Line #<strong>{$line_numpos}</strong> : " ;
+
+            for($j=$max_context_lines_before; $j > 0; $j--) {
+              $show_file .= "<br />Line #<strong>" . ($line_numpos-$j) . "</strong> : ";
+              $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($lines[($line_num-$j)], ENT_QUOTES, CHARSET);
+            }
+
             //prevent db pwd from being displayed, for sake of security
+            $show_file .= "<br>Line #<strong>{$line_numpos}</strong> : " ;
+            $show_file .= '<strong>';
             $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($line, ENT_QUOTES, CHARSET);
-            $show_file .= "<br />\n";
+            $show_file .= '</strong>';
+
+            for($j=1; $j < $max_context_lines_after+1; $j++) {
+              $show_file .= "<br>Line #<strong>" . ($line_numpos+$j) . "</strong> : ";
+              $show_file .= (substr_count($line,"'DB_SERVER_PASSWORD'")) ? '***HIDDEN***' : htmlspecialchars($lines[($line_num+$j)], ENT_QUOTES, CHARSET);
+            }
+            $show_file .= "<br>\n";
           } else {
             if ($cnt_lines >= 5) {
 //            $show_file .= ' .';
