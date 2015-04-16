@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: banner_manager.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -130,7 +130,7 @@
 
           $sql = "UPDATE " . TABLE_BANNERS . "
                   SET
-                    date_scheduled = :scheduledDate,
+                    date_scheduled = DATE_ADD(:scheduledDate, INTERVAL '00:00:00' HOUR_SECOND),
                     expires_date = DATE_ADD(:expiresDate, INTERVAL '23:59:59' HOUR_SECOND),
                     expires_impressions = " . ($expires_impressions == 0 ? "null" : ":expiresImpressions") . "
                     WHERE banners_id = :bannersID";
