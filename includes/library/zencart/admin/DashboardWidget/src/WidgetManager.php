@@ -3,7 +3,7 @@
  * Dashboard Widget Manager
  *
  * @package   ZenCart\Admin\DashboardWidget
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version   GIT: $Id: $
  */
@@ -90,6 +90,7 @@ final class WidgetManager
             ORDER BY widget_column, widget_row";
     $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
     $result = $db->execute($sql);
+    $widgets = array();
     while (!$result->EOF)
     {
       $widgets[$result->fields['widget_column']][$result->fields['widget_row']] = $result->fields;
