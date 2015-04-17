@@ -134,15 +134,9 @@
                     expires_date = DATE_ADD(:expiresDate, INTERVAL '23:59:59' HOUR_SECOND),
                     expires_impressions = " . ($expires_impressions == 0 ? "null" : ":expiresImpressions") . "
                     WHERE banners_id = :bannersID";
-          if ($expires_impressions > 0) {
             $sql = $db->bindVars($sql, ':expiresImpressions', $expires_impressions, 'integer');
-          }
-          if ($date_scheduled != '') {
             $sql = $db->bindVars($sql, ':scheduledDate', $date_scheduled, 'date');
-          }
-          if ($expires_date != '') {
             $sql = $db->bindVars($sql, ':expiresDate', $expires_date, 'date');
-          }
             $sql = $db->bindVars($sql, ':bannersID', $banners_id, 'integer');
             $db->Execute($sql);
 
