@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: developers_tool_kit.php 18698 2011-05-04 14:50:06Z wilt $
+ * @version $Id: developers_tool_kit.php DrByte  Modified in v1.6.0 $
  */
   define('HEADING_TITLE', 'Developers Tool Kit');
   define('TABLE_CONFIGURATION_TABLE', 'Lookup CONSTANT Definitions');
@@ -79,6 +79,7 @@
   define('TEXT_ALL_FILES_LOOKUP_JS', '.js only');
 
   define('TEXT_CASE_SENSITIVE', 'Case Sensitive?');
+  define('TEXT_CONTEXT_LINES', 'Context lines: ');
 
   //Search Configuration Keys
   define('SEARCH_CFG_KEYS_HEADING_TITLE','<strong>Search in Configuration Settings/Keys</strong>');
