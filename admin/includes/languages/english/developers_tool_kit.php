@@ -77,9 +77,11 @@
   define('TEXT_ALL_FILES_LOOKUP_CSS', '.css only');
   define('TEXT_ALL_FILES_LOOKUP_HTMLTXT', '.html and .txt');
   define('TEXT_ALL_FILES_LOOKUP_JS', '.js only');
+  define('TEXT_ALL_FILES_LOOKUP_ALL_TYPES', 'Everything');
 
   define('TEXT_CASE_SENSITIVE', 'Case Sensitive?');
   define('TEXT_CONTEXT_LINES', 'Context lines: ');
+  define('TEXT_USE_REGEX', 'Use regex pattern?');
 
   //Search Configuration Keys
   define('SEARCH_CFG_KEYS_HEADING_TITLE','<strong>Search in Configuration Settings/Keys</strong>');
@@ -98,4 +100,3 @@
   define('SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY', 'Search (sorted by key)');
   define('SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL', 'View All');
   define('SEARCH_CFG_KEYS_FORM_BUTTON_RESET', 'Reset');
-

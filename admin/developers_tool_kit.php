@@ -79,6 +79,9 @@
         case(5):
           $file_extensions = array('.js');
           break;
+        case(6):
+          $file_extensions = array('.*');
+          break;
         default:
           $file_extensions = array('.php', '.css');
           break;
@@ -177,17 +180,28 @@
         foreach ($lines as $line_num => $line) {
           $padding_length = strlen(strval(sizeof($lines)));
           $cnt_lines++;
-          if ($case_sensitive) {
-            $check_case = strstr($line, $configuration_key_lookup);
-          } else {
-            $check_case = strstr(strtoupper($line), strtoupper($configuration_key_lookup));
+
+          // determine correct search pattern rule
+          // uses '#' as regex delimeter
+          $search_pattern = preg_quote($configuration_key_lookup, '#');
+          if (isset($_POST['use_regex']) && $_POST['use_regex'] != '') {
+            // escape the delimeter character:
+            $search_pattern = str_replace('#', '\#', $configuration_key_lookup);
           }
-// use to debug for UTF-8 NO BOM on files: test search on a, e, s change if below to true
+
+          // do actual search
+          $search_found = preg_match('#' . $search_pattern . '#' . (!$case_sensitive ? 'i' : ''), $line);
+
+
+          // use to debug for UTF-8 NO BOM on files: test search on a, e, s change if below to true
           if (false && htmlspecialchars($line, ENT_QUOTES, CHARSET) == '') {
             echo '<br>SOMETHING BROKE in: ' . $file . '<br>on: ' . $line_num . ' - ' . $line . '<br>';
-            $check_case = false;
+            $search_found = false;
           }
-          if ($check_case) {
+
+
+
+          if ($search_found) {
             $found_line = true;
             $found = true;
             $cnt_found++;
@@ -204,7 +218,7 @@
 
             if ($max_context_lines_before > 0) $show_file .= '<strong>';
             $show_file .= '<span class="dtk-foundline' . ($max_context_lines_before > 0 ? '-multi' : '') . '">';
-            $show_file .= cleanup_dtk_output_text($line, $configuration_key_lookup, $case_sensitive);
+            $show_file .= cleanup_dtk_output_text($line, $search_pattern, $case_sensitive);
             $show_file .= '</span>';
             if ($max_context_lines_before > 0) $show_file .= '</strong>';
 
@@ -251,7 +265,7 @@
 
     // mark the selected text, for highlighting
     if ($highlight != '') {
-      $input = preg_replace('#(' . preg_quote($highlight, '#') . ')#' . (!$case_sensitive ? 'i' : ''), '~~!~~!~~\1~!!~!!~', $input);
+      $input = preg_replace('#(' . $highlight . ')#' . (!$case_sensitive ? 'i' : ''), '~~!~~!~~\1~!!~!!~', $input);
     }
     // sanitize output
     $input = htmlspecialchars($input, ENT_QUOTES, CHARSET);
@@ -988,12 +1002,14 @@ if ($action == 'search_config_keys') {
                                               array('id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_PHPCSS),
                                               array('id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CSS),
                                               array('id' => '4', 'text' => TEXT_ALL_FILES_LOOKUP_HTMLTXT),
-                                              array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_JS)
+                                              array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_JS),
+                                              array('id' => '6', 'text' => TEXT_ALL_FILES_LOOKUP_ALL_TYPES),
                                                     );
 
                 echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);
                 echo '<label for="locate-cs">' . TEXT_CASE_SENSITIVE . ' </label>' . zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');
-                echo '<label for="context_lines"> ' . TEXT_CONTEXT_LINES . ' </label>' . zen_draw_input_field('context_lines', (int)$default_context_lines, 'id="context_lines" size="1"');
+                echo '<label for="context_lines"> ' . TEXT_CONTEXT_LINES . ' </label>' . zen_draw_input_field('context_lines', strval((int)$default_context_lines), 'id="context_lines" size="1"');
+                echo '<label for="locate-regex">' . TEXT_USE_REGEX . ' </label>' . zen_draw_checkbox_field('use_regex', true, false, '', 'id="locate-regex"');
               ?>
             </td>
             <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
