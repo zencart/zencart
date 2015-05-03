@@ -11,15 +11,14 @@
 
   $default_context_lines = 0;
 
-  $configuration_key_lookup = (isset($_POST['configuration_key'])) ? zen_db_prepare_input($_POST['configuration_key'], false) : '';
   if (isset($_GET['configuration_key_lookup']) && $_GET['configuration_key_lookup'] != '') {
-    $configuration_key_lookup = zen_db_prepare_input(strtoupper($_GET['configuration_key_lookup']), false);
     $_POST['configuration_key'] = strtoupper($_GET['configuration_key_lookup']);
     $_POST['zv_files'] = 1;
     $_POST['zv_filestype'] = $_POST['zv_filestype'];
     $_POST['case_sensitive'] = $_POST['case_sensitive'];
   }
-
+  $configuration_key_lookup = (isset($_POST['configuration_key'])) ? $_POST['configuration_key'] : '';
+ 
   function getDirList ($dirName, $filetypes = 1) {
     global $directory_array, $sub_dir_files;
 // add directory name to the sub_dir_files list;
