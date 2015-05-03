@@ -81,7 +81,13 @@
 
   define('TEXT_CASE_SENSITIVE', 'Case Sensitive?');
   define('TEXT_CONTEXT_LINES', 'Context lines: ');
-  define('TEXT_USE_REGEX', 'Use regex pattern?');
+  define('TEXT_SEARCH_LOOKUP_PLACEHOLDER', 'Enter search phrase or pattern');
+  define('TEXT_SEARCH_KEY_PLACEHOLDER', 'Enter key name or phrase to search for');
+  define('TEXT_SEARCH_PHRASE_PLACEHOLDER', 'Enter search phrase');
+  define('TEXT_BUTTON_SEARCH', 'Search');
+  define('TEXT_BUTTON_SEARCH_ALT', 'Execute Search');
+  define('TEXT_BUTTON_REGEX_SEARCH', 'Grep');
+  define('TEXT_BUTTON_REGEX_SEARCH_ALT', 'Search using Regex pattern');
 
   //Search Configuration Keys
   define('SEARCH_CFG_KEYS_HEADING_TITLE','<strong>Search in Configuration Settings/Keys</strong>');
@@ -95,8 +101,9 @@
   define('SEARCH_CFG_KEYS_TABLE_EDIT','Edit');
   define('SEARCH_CFG_KEYS_NOT_FOUND_KEYS', 'No configuration key(s) found.');
   define('SEARCH_CFG_KEYS_FOUND_KEYS', 'configuration key(s) found.');
-  define('SEARCH_CFG_KEYS_FORM_PLACEHOLDER', 'Enter words to find in settings');
+  define('SEARCH_CFG_KEYS_FORM_PLACEHOLDER', 'Enter words to find in configuration settings');
   define('SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP', 'Search');
   define('SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY', 'Search (sorted by key)');
-  define('SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL', 'View All');
+  define('SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL', 'View All (Every setting)');
   define('SEARCH_CFG_KEYS_FORM_BUTTON_RESET', 'Reset');
+  define('TEXT_RESET_BUTTON_ALT', 'Clear all search fields, to start over.');

@@ -18,7 +18,7 @@
     $_POST['case_sensitive'] = $_POST['case_sensitive'];
   }
   $configuration_key_lookup = (isset($_POST['configuration_key'])) ? $_POST['configuration_key'] : '';
- 
+
   function getDirList ($dirName, $filetypes = 1) {
     global $directory_array, $sub_dir_files;
 // add directory name to the sub_dir_files list;
@@ -183,7 +183,7 @@
           // determine correct search pattern rule
           // uses '#' as regex delimeter
           $search_pattern = preg_quote($configuration_key_lookup, '#');
-          if (isset($_POST['use_regex']) && $_POST['use_regex'] != '') {
+          if (isset($_GET['action']) && $_GET['action'] == 'locate_all_files' && isset($_GET['m']) && $_GET['m'] != '') {
             // escape the delimeter character:
             $search_pattern = str_replace('#', '\#', $configuration_key_lookup);
           }
@@ -786,7 +786,7 @@ if (false) {
           </tr>
 
           <tr><form name = "locate_configure" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_configuration', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_KEY_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
@@ -801,7 +801,7 @@ if (false) {
                 echo '<strong>' . TEXT_LANGUAGE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, '0');
               ?>
             </td>
-            <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
+            <td class="main" align="right" valign="bottom"><input type="submit" value="<?php echo TEXT_BUTTON_SEARCH;?>" title="<?php echo TEXT_BUTTON_SEARCH_ALT;?>"></td>
           </form></tr>
           <tr>
             <td colspan="4" class="main" align="left" valign="top"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></td>
@@ -822,7 +822,7 @@ if (false) {
             <input type="submit" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>">
             <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&s=k' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>">
             <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&t=all' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>">
-            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, '') ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET;?>">
+            <button title="<?php echo TEXT_RESET_BUTTON_ALT; ?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT); ?>';document.search_keys.search='';document.search_keys.submit();"><?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET; ?></button>
             </td>
           </form>
           </tr>
@@ -906,7 +906,7 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_function" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
@@ -917,7 +917,7 @@ if ($action == 'search_config_keys') {
                 echo '<strong>' . TEXT_FUNCTION_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
-            <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
+            <td class="main" align="right" valign="bottom"><input type="submit" value="<?php echo TEXT_BUTTON_SEARCH;?>" title="<?php echo TEXT_BUTTON_SEARCH_ALT;?>"></td>
           </form></tr>
         </table></td>
       </tr>
@@ -931,7 +931,7 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_class" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
@@ -942,7 +942,7 @@ if ($action == 'search_config_keys') {
                 echo '<strong>' . TEXT_CLASS_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
-            <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
+            <td class="main" align="right" valign="bottom"><input type="submit" value="<?php echo TEXT_BUTTON_SEARCH;?>" title="<?php echo TEXT_BUTTON_SEARCH_ALT;?>"></td>
           </form></tr>
         </table></td>
       </tr>
@@ -956,7 +956,7 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_template" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
@@ -968,7 +968,7 @@ if ($action == 'search_config_keys') {
                 echo '<strong>' . TEXT_TEMPLATE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_files', $za_lookup, 1);
               ?>
             </td>
-            <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
+            <td class="main" align="right" valign="bottom"><input type="submit" value="<?php echo TEXT_BUTTON_SEARCH;?>" title="<?php echo TEXT_BUTTON_SEARCH_ALT;?>"></td>
           </form></tr>
         </table></td>
       </tr>
@@ -983,7 +983,8 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_all_files" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" '); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo TEXT_SEARCH_LOOKUP_PLACEHOLDER . '<br>' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_LOOKUP_PLACEHOLDER . '"');?></td>
+
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
@@ -1004,14 +1005,17 @@ if ($action == 'search_config_keys') {
                                               array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_JS),
                                               array('id' => '6', 'text' => TEXT_ALL_FILES_LOOKUP_ALL_TYPES),
                                                     );
-
-                echo '<strong>' . TEXT_ALL_FILESTYPE_LOOKUPS . '</strong>' . '<br />' . zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);
-                echo '<label for="locate-cs">' . TEXT_CASE_SENSITIVE . ' </label>' . zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');
-                echo '<label for="context_lines"> ' . TEXT_CONTEXT_LINES . ' </label>' . zen_draw_input_field('context_lines', strval((int)$default_context_lines), 'id="context_lines" size="1"');
-                echo '<label for="locate-regex">' . TEXT_USE_REGEX . ' </label>' . zen_draw_checkbox_field('use_regex', true, false, '', 'id="locate-regex"');
               ?>
+
+              <strong><?php echo TEXT_ALL_FILESTYPE_LOOKUPS;?></strong><br><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);?>
+              <label for="context_lines"><?php echo TEXT_CONTEXT_LINES; ?> </label><?php echo zen_draw_input_field('context_lines', strval((int)$default_context_lines), 'id="context_lines" size="1"');?>
+              <label for="locate-cs"><?php echo TEXT_CASE_SENSITIVE; ?> </label><?php echo zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');?>
             </td>
-            <td class="main" align="right" valign="bottom"><?php echo zen_image_submit('button_search.gif', IMAGE_SEARCH); ?></td>
+            <td class="main" align="right" valign="bottom">
+              <input type="submit" value="<?php echo TEXT_BUTTON_SEARCH;?>" title="<?php echo TEXT_BUTTON_SEARCH_ALT;?>">
+              <input type="button" value="<?php echo TEXT_BUTTON_REGEX_SEARCH;?>" onClick="document.locate_all_files.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files&m=r') ?>';document.locate_all_files.submit();" title="<?php echo TEXT_BUTTON_REGEX_SEARCH_ALT;?>">
+              <button title="<?php echo TEXT_RESET_BUTTON_ALT; ?>" onClick="document.locate_all_files.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT); ?>';document.locate_all_files.submit();"><?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET; ?></button>
+            </td>
           </form></tr>
         </table></td>
       </tr>
