@@ -229,7 +229,6 @@ class order_total extends base {
   // Called in checkout process to clear session variables created by each credit class module.
   //
   function clear_posts() {
-    global $_POST;
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
       while (list(, $value) = each($this->modules)) {
