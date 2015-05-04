@@ -191,6 +191,9 @@
           // do actual search
           $search_found = preg_match('#' . $search_pattern . '#' . (!$case_sensitive ? 'i' : ''), $line);
 
+          if ($search_found === false) {
+            return false;
+          }
 
           // use to debug for UTF-8 NO BOM on files: test search on a, e, s change if below to true
           if (false && htmlspecialchars($line, ENT_QUOTES, CHARSET) == '') {
@@ -637,7 +640,10 @@
           break;
         }
 
-        zen_display_files($zv_check_root, $zv_filestype_group);
+        $result = zen_display_files($zv_check_root, $zv_filestype_group);
+        if ($result === false ) {
+          $messageStack->add(TEXT_ERROR_REGEX_FAIL, 'caution');
+        }
 
       break;
     } // eof: action

@@ -88,6 +88,7 @@
   define('TEXT_BUTTON_SEARCH_ALT', 'Execute Search');
   define('TEXT_BUTTON_REGEX_SEARCH', 'Grep');
   define('TEXT_BUTTON_REGEX_SEARCH_ALT', 'Search using Regex pattern');
+  define('TEXT_ERROR_REGEX_FAIL', 'ALERT: An error occurred during search. If you were doing a regex/grep search, please inspect your regex pattern for syntax errors.');
 
   //Search Configuration Keys
   define('SEARCH_CFG_KEYS_HEADING_TITLE','<strong>Search in Configuration Settings/Keys</strong>');
