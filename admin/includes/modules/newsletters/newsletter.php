@@ -18,33 +18,31 @@ if (!defined('IS_ADMIN_FLAG')) {
       $this->title = $title;
       $this->content = $content;
       $this->content_html = $content_html;
-    $this->query_name = $queryname;
+      $this->query_name = $queryname;
     }
 
     function choose_audience() {
-      global $_GET;
-
       $choose_audience_string = '<form name="audience" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') .'" method="post" onsubmit="return check_form(audience);">' .
                  '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' .
                  ' <table border="0" cellspacing="0" cellpadding="2">' . "\n" .
-                                 '  <tr>' . "\n" .
+                 '  <tr>' . "\n" .
                  '<td class="main">' . TEXT_PLEASE_SELECT_AUDIENCE .'<br />' .
-                         '' . zen_draw_pull_down_menu('audience_selected', get_audiences_list('newsletters'), $this->query_name) . '</td>' .
-                                 '  </tr>' . "\n" .
-                                 '  <tr>' . "\n" .
-                                 '   <td colspan="2" align="right">' . zen_image_submit('button_select.gif', IMAGE_SELECT) . '</td>' .
-                                 '  </tr>' . "\n" .
-                                 '</table></form>';
+                 zen_draw_pull_down_menu('audience_selected', get_audiences_list('newsletters'), $this->query_name) . '</td>' .
+                 '  </tr>' . "\n" .
+                 '  <tr>' . "\n" .
+                 '   <td colspan="2" align="right">' . zen_image_submit('button_select.gif', IMAGE_SELECT) . '</td>' .
+                 '  </tr>' . "\n" .
+                 '</table></form>';
 
       return $choose_audience_string;
     }
 
 
     function confirm() {
-      global $_GET, $_POST, $db;
+      global $db;
 
     if ($_POST['audience_selected']) {
-          $this->query_name=$_POST['audience_selected'];
+        $this->query_name=$_POST['audience_selected'];
         if (is_array($_POST['audience_selected']))  $this->query_name=$_POST['audience_selected']['text'];
       }
 
@@ -76,11 +74,11 @@ if (!defined('IS_ADMIN_FLAG')) {
                         '    <td>' . zen_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-            '<form name="ready_to_send" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send') .'" method="post" >' .
-                 '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' .
-      '    <td align="right"> ' . zen_draw_hidden_field('audience_selected',$this->query_name).
-            zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL) .
-            '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a></td>' . "\n" .
+                        '<form name="ready_to_send" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send') .'" method="post" >' .
+                        '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' .
+                        '    <td align="right"> ' . zen_draw_hidden_field('audience_selected',$this->query_name).
+                        zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL) .
+                        '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a></td>' . "\n" .
                         '</form>' .
                         '  </tr>' . "\n" .
                         '</table>';
@@ -94,21 +92,21 @@ if (!defined('IS_ADMIN_FLAG')) {
       $audience = $db->Execute($audience_select['query_string']);
       $records = $audience->RecordCount();
       if ($records==0) return 0;
-    $i=0;
+      $i=0;
 
       while (!$audience->EOF) {
-    $i++;
-      $html_msg['EMAIL_FIRST_NAME'] = $audience->fields['customers_firstname'];
-      $html_msg['EMAIL_LAST_NAME']  = $audience->fields['customers_lastname'];
-      $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
-      zen_mail($audience->fields['customers_firstname'] . ' ' . $audience->fields['customers_lastname'], $audience->fields['customers_email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'newsletters');
-      echo zen_image(DIR_WS_ICONS . 'tick.gif', $audience->fields['customers_email_address']);
+        $i++;
+        $html_msg['EMAIL_FIRST_NAME'] = $audience->fields['customers_firstname'];
+        $html_msg['EMAIL_LAST_NAME']  = $audience->fields['customers_lastname'];
+        $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
+        zen_mail($audience->fields['customers_firstname'] . ' ' . $audience->fields['customers_lastname'], $audience->fields['customers_email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'newsletters');
+        echo zen_image(DIR_WS_ICONS . 'tick.gif', $audience->fields['customers_email_address']);
 
-      //force output to the screen to show status indicator each time a message is sent...
-      if (function_exists('ob_flush')) @ob_flush();
-      @flush();
+        //force output to the screen to show status indicator each time a message is sent...
+        if (function_exists('ob_flush')) @ob_flush();
+        @flush();
 
-      $audience->MoveNext();
+        $audience->MoveNext();
       }
 
       $newsletter_id = zen_db_prepare_input($newsletter_id);
@@ -116,6 +114,5 @@ if (!defined('IS_ADMIN_FLAG')) {
                     set date_sent = now(), status = '1'
                     where newsletters_id = '" . zen_db_input($newsletter_id) . "'");
      return $records;  //return number of records processed whether successful or not
+    }
   }
-  }
-?>

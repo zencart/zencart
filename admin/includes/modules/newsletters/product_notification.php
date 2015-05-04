@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
     function choose_audience() {
-      global $_GET, $db;
+      global $db;
 
       $products_array = array();
       $products = $db->Execute("select pd.products_id, pd.products_name
@@ -100,7 +100,7 @@ function selectAll(FormName, SelectBox) {
     }
 
     function confirm() {
-      global $_GET, $_POST, $db;
+      global $db;
 
       $audience = array();
 
@@ -190,7 +190,7 @@ function selectAll(FormName, SelectBox) {
     }
 
     function send($newsletter_id) {
-      global $_POST, $db;
+      global $db;
 
       $audience = array();
 
@@ -254,18 +254,18 @@ function selectAll(FormName, SelectBox) {
 
 //send emails
       reset($audience);
-    $i=0;
+      $i=0;
       while (list($key, $value) = each ($audience)) {
-    $i++;
-      $html_msg['EMAIL_FIRST_NAME'] = $value['firstname'];
-      $html_msg['EMAIL_LAST_NAME']  = $value['lastname'];
-      $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
-      zen_mail($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'product_notification','');
-      echo zen_image(DIR_WS_ICONS . 'tick.gif', $value['email_address']);
+        $i++;
+        $html_msg['EMAIL_FIRST_NAME'] = $value['firstname'];
+        $html_msg['EMAIL_LAST_NAME']  = $value['lastname'];
+        $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
+        zen_mail($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'product_notification','');
+        echo zen_image(DIR_WS_ICONS . 'tick.gif', $value['email_address']);
 
-      //force output to the screen to show status indicator each time a message is sent...
-      if (function_exists('ob_flush')) @ob_flush();
-      @flush();
+        //force output to the screen to show status indicator each time a message is sent...
+        if (function_exists('ob_flush')) @ob_flush();
+        @flush();
       }
 
       $newsletter_id = zen_db_prepare_input($newsletter_id);
