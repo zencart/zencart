@@ -75,7 +75,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * $sniffer = new sniffer();
  * require('includes/init_includes/init_sefu.php');
- * $phpBB = new phpBB();
  */
   $autoLoadConfig[50][] = array('autoType'=>'classInstantiate',
                                 'className'=>'sniffer',

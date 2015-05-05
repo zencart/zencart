@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id:  New in v1.6.0 $
  */
 ?>
 
@@ -24,7 +24,7 @@
         <label class="inline" for="admin_user"><a href="#" class="hasHelpText" id="ADMINUSER"><?php echo TEXT_ADMIN_SETUP_USER_NAME; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_user" id="admin_user" value="" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_USERNAME; ?>" required>
+        <input type="text" name="admin_user" id="admin_user" value="" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_USERNAME; ?>" required autocomplete="off">
         <small class="error">A unique admin username is required</small>
       </div>
     </div>
@@ -33,7 +33,7 @@
         <label class="inline" for="admin_email"><a href="#" class="hasHelpText" id="ADMINEMAIL"><?php echo TEXT_ADMIN_SETUP_USER_EMAIL; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_email" id="admin_email" value="" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email">
+        <input type="text" name="admin_email" id="admin_email" value="" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" autocomplete="off">
         <small class="error">A valid email address is required</small>
       </div>
     </div>
@@ -42,7 +42,7 @@
         <label class="inline" for="admin_email2"><a href="#" class="hasHelpText" id="ADMINEMAIL2"><?php echo TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" data-equalto="admin_email">
+        <input type="text" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?php echo TEXT_EXAMPLE_EMAIL; ?>" required pattern="email" data-equalto="admin_email" autocomplete="off">
         <small class="error">A matching valid email address is required.</small>
       </div>
     </div>
@@ -54,7 +54,7 @@
         <label class="inline" for="admin_password"><a href="#" class="hasHelpText" id="ADMINPASSWORD"><?php echo TEXT_ADMIN_SETUP_USER_PASSWORD; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" readonly="readonly" tabindex="4">
+        <input type="text" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" readonly="readonly" tabindex="4" autocomplete="off">
       </div>
     </div>
     <div class="row">
@@ -71,7 +71,7 @@
         <label class="inline" for="admin_directory"><a href="#" class="hasHelpText" id="ADMINDIRECTORY"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_directory" id="admin_directory" value="<?php echo $adminDir; ?>" readonly="readonly" tabindex="5">
+        <input type="text" name="admin_directory" id="admin_directory" value="<?php echo $adminDir; ?>" readonly="readonly" tabindex="5" autocomplete="off">
       </div>
     </div>
   </fieldset>

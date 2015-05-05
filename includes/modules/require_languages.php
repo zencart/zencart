@@ -3,7 +3,7 @@
  * loads template specific language override files
  *
  * @package initSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: require_languages.php 4274 2006-08-26 03:16:53Z drbyte $
  */
@@ -17,6 +17,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 // determine language or template language file
 if (file_exists($language_page_directory . $template_dir . '/' . $current_page_base . '.php')) {
   $template_dir_select = $template_dir . '/';
+} else if (file_exists($language_page_directory . 'shared' . '/' . $current_page_base . '.php')) {
+  $template_dir_select = 'shared' . '/';
 } else {
   $template_dir_select = '';
 }

@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   $heading = array();
   $heading[] = array('params' => 'class="menuBoxHeading"',
                      'text'  => BOX_HEADING_TOOLS,
-                     'link'  => zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('selected_box')) . 'selected_box=tools'));
+                     'link'  => zen_href_link(basename($PHP_SELF), ''));
 
   $contents = array();
   $contents[] = array('text'  => SOME_TEXT);

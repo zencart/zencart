@@ -4,7 +4,7 @@
  * Lookup Functions for various Zen Cart activities such as countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: functions_lookups.php 19352 2011-08-19 16:13:43Z ajeh $
@@ -814,6 +814,7 @@
     if (!strstr($zv_filename, '.php')) $zv_filename .= '.php';
     $checkArray = array();
     $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $template_dir . '/' . $zv_filename;
+    $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . 'shared' . '/' . $zv_filename;
     $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $zv_filename;
     $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $template_dir . '/' . 'default_filter.php';
     foreach($checkArray as $key => $val) {

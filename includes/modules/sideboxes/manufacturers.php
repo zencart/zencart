@@ -3,10 +3,10 @@
  * manufacturers sidebox - displays a list of manufacturers so customer can choose to filter on their products only
  *
  * @package templateSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Jul 12 12:27:04 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id:  Modified in v1.6.0 $
  */
 
 // test if manufacturers sidebox should show
@@ -49,14 +49,14 @@ if ($show_manufacturers) {
       $manufacturer_sidebox_array[] = array('id' => '', 'text' => PULL_DOWN_MANUFACTURERS);
     }
 
-    while (!$manufacturer_sidebox->EOF) {
-      $manufacturer_sidebox_name = zen_output_string(((strlen($manufacturer_sidebox->fields['manufacturers_name']) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturer_sidebox->fields['manufacturers_name'], 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturer_sidebox->fields['manufacturers_name']), false, true);
-      $manufacturer_sidebox_array[] = array('id' => $manufacturer_sidebox->fields['manufacturers_id'],
-                                       'text' => $manufacturer_sidebox_name);
-
-      $manufacturer_sidebox->MoveNext();
+    foreach($manufacturer_sidebox as $result) {
+      $elipsis = (strlen($result['manufacturers_name']) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? '..' : '';
+      $manufacturer_sidebox_name = substr($result['manufacturers_name'], 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . $elipsis;
+      $manufacturer_sidebox_array[] = array('id' => $result['manufacturers_id'],
+                                            'text' => $manufacturer_sidebox_name);
     }
-      require($template->get_template_dir('tpl_manufacturers_select.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_manufacturers_select.php');
+
+    require($template->get_template_dir('tpl_manufacturers_select.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_manufacturers_select.php');
 
     $title = BOX_HEADING_MANUFACTURERS;
     $title_link = false;

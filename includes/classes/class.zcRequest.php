@@ -3,7 +3,7 @@
  * File contains just the request class
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -654,7 +654,6 @@ class zcRequest extends base
         'rID',
         's',
         'saction',
-        'selected_box',
         'set',
         'set_display_categories_dropdown',
         'sID',

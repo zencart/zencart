@@ -1959,8 +1959,13 @@ class shoppingCart extends base {
                 $real_ids[TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] = $_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i];
               }
             }
+
+            // remove helper param from URI of the upcoming redirect
+            $parameters[] = 'number_of_uploads';
+            unset($_GET['number_of_uploads']);
           }
 
+          // do the actual add to cart
           $this->add_cart($_POST['products_id'], $this->get_quantity(zen_get_uprid($_POST['products_id'], $real_ids))+($new_qty), $real_ids);
           // iii 030813 end of changes.
         } // eof: set error message

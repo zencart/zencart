@@ -37,7 +37,6 @@ filter:
         - 'includes/classes/class.phpmailer.php'
         - 'includes/classes/class.smtp.php'
         - 'includes/classes/http_client.php'
-        - 'includes/classes/class.phpbb.php'
         - 'includes/library/aura/*'
         - 'includes/modules/debug_blocks/*'
         - 'includes/modules/payment/linkpoint_api/*'
