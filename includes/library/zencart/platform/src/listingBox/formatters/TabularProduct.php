@@ -127,7 +127,7 @@ class TabularProduct extends AbstractFormatter implements FormatterInterface
             'PRODUCT_LIST_PRICE' => function () use ($item, $prodLink) {
                 $lc_text = zen_get_products_display_price($item ['products_id']) . '<br />';
                 $lc_button = '<a href="' . $prodLink . '">' . MORE_INFO_TEXT . '</a>';
-                if (!(zen_has_product_attributes($item ['products_id']) > 1 || PRODUCT_LIST_PRICE_BUY_NOW == '0')) {
+                if (!(zen_has_product_attributes($item ['products_id']) > (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 ? 0 : 1) || PRODUCT_LIST_PRICE_BUY_NOW == '0')) {
                     $lc_button = $this->buildLcButton($item);
                 }
                 $the_button = $lc_button;
