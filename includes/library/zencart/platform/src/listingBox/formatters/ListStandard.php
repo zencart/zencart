@@ -261,7 +261,7 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
      */
     protected function processorBuyNow($item, $key)
     {
-        $hasAttributes = zen_has_product_attributes($item ['products_id']);
+        $hasAttributes = zen_has_product_attributes($item ['products_id']) > 1;
         $allowAddCart = (zen_get_products_allow_add_to_cart($item ['products_id']) == 'Y');
         $multiAddCart = (constant($this->prefix . 'LISTING_MULTIPLE_ADD_TO_CART') > 0 && $item ['products_qty_box_status'] != 0);
 
