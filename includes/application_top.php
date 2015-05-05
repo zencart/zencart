@@ -177,7 +177,6 @@ if (( (!file_exists('includes/configure.php') && !file_exists('includes/local/co
 require('includes/autoload_func.php');
 
 // get customer's unique IP that external gateway does not touch
-$customers_ip_address = $_SERVER['REMOTE_ADDR'];
 if (!isset($_SESSION['customers_ip_address'])) {
-  $_SESSION['customers_ip_address'] = $customers_ip_address;
+  $_SESSION['customers_ip_address'] = $_SERVER['REMOTE_ADDR'];
 }
