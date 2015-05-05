@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_lookups.php 19352 2011-08-19 16:13:43Z ajeh $
+ * @version $Id: functions_lookups.php ajeh  Modified in v1.6.0 $
  */
 
 /**
@@ -210,39 +210,50 @@
     return $manufacturers_array;
   }
 
-/*
- *  Check if product has attributes
+/**
+ *  Check if specified product has attributes which require selection before adding product to the cart.
+ *  This is used by various parts of the code to determine whether to allow for add-to-cart actions
+ *  since adding a product without selecting attributes could lead to undesired basket contents.
+ *
+ *  @param integer $products_id       The product to inspect
+ *  @param boolean $selectionRequired Whether to include attributes which require "selection" by the user
+ *  @return boolean
  */
-  function zen_has_product_attributes($products_id, $not_readonly = true, $returnCount = false) {
+  function zen_has_product_attributes($products_id, $selectionRequired = true) {
     global $db;
 
-    // this line is for legacy support; remove after v1.6.x series
-    if ($not_readonly === 'false') $not_readonly = false;
+    // this line is for legacy support for contributed addons; remove after v1.6.x series
+    if ($selectionRequired === 'false') $selectionRequired = false;
 
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' and $not_readonly === true) {
-      // don't include READONLY attributes to determine if attributes must be selected to add to cart
-      $attributes_query = "select pa.products_attributes_id
-                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                           left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
-                           where pa.products_id = '" . (int)$products_id . "'
-                           and po.products_options_type != '" . PRODUCTS_OPTIONS_TYPE_READONLY . "'";
-    } else {
-      // regardless of READONLY attributes no add to cart buttons
-      $attributes_query = "select pa.products_attributes_id
-                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                           where pa.products_id = '" . (int)$products_id . "'";
-    }
-    if ($returnCount == false) {
-      $attributes_query .= " limit 1";
-    } else {
-      $attributes_query = str_replace('select pa.products_attributes_id', 'select count(pa.products_attributes_id) as count', $attributes_query);
+    $selectionTypes = array();
+    $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_RADIO;
+    $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_CHECKBOX;
+    $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_SELECT;
+
+    // ignore/include READONLY attributes when determining if attribute selection must be offered for add-to-cart
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '0') {
+      $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_READONLY;
     }
 
-    $attributes = $db->Execute($attributes_query);
+    $joins = $wheres = '';
+    if ($selectionRequired === true) {
+      $joins = " left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id ";
+      $wheres = " and po.products_options_type in (" . implode(',', $selectionTypes) . ")";
+    }
 
-    if ($returnCount) return $attributes->fields['count'];
+    $query = "select pa.products_attributes_id
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa" .
+              $joins . "
+              where pa.products_id = " . (int)$products_id . "
+              and pa.products_attributes_id > 0 " .
+              $wheres;
 
-    return ($attributes->recordCount() > 0 && $attributes->fields['products_attributes_id'] > 0);
+    // set limit to 2 since we're only interested in 0=no attribs, 1=has only 1 required attrib, 2=has more than 1 required attrib
+    $query .= " limit 2";
+
+    $result = $db->Execute($query);
+
+    return $result->recordCount();
   }
 
 
