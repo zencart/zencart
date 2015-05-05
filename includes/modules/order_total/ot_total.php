@@ -3,15 +3,15 @@
  * ot_total order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_total.php 6725 2007-08-19 03:48:28Z drbyte $
+ * @version $Id: ot_total.php 6725 drbyte  Modified in v1.6.0 $
  */
   class ot_total {
     var $title, $output;
 
-    function ot_total() {
+    function __construct() {
       $this->code = 'ot_total';
       $this->title = MODULE_ORDER_TOTAL_TOTAL_TITLE;
       $this->description = MODULE_ORDER_TOTAL_TOTAL_DESCRIPTION;

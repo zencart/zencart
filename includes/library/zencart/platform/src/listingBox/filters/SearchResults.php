@@ -16,15 +16,15 @@ class SearchResults extends AbstractFilter implements FilterInterface
     /**
      * @var array
      */
-    protected $productQuery;
+    protected $listingQuery;
 
     /**
-     * @param array $productQuery
+     * @param array $listingQuery
      * @return array
      */
-    public function filterItem(array $productQuery)
+    public function filterItem(array $listingQuery)
     {
-        $this->productQuery = $productQuery;
+        $this->listingQuery = $listingQuery;
         $this->handleTaxRates();
         $this->startWhereClauses();
         $this->handleCategories();
@@ -32,7 +32,7 @@ class SearchResults extends AbstractFilter implements FilterInterface
         $this->handleKeywords();
         $this->handleDates();
         $this->handleTaxWhereClauses();
-        return $this->productQuery;
+        return $this->listingQuery;
     }
 
     /**
@@ -53,7 +53,7 @@ class SearchResults extends AbstractFilter implements FilterInterface
             $_SESSION ['customer_country_id'] = STORE_COUNTRY;
             $_SESSION ['customer_zone_id'] = STORE_ZONE;
         }
-        $this->productQuery['joinTables'] ['TABLE_TAX_RATES'] = array(
+        $this->listingQuery['joinTables'] ['TABLE_TAX_RATES'] = array(
             'table' => TABLE_TAX_RATES,
             'alias' => 'tr',
             'type' => 'left',
@@ -61,7 +61,7 @@ class SearchResults extends AbstractFilter implements FilterInterface
             'fkeyFieldRight' => 'tax_class_id',
             'addColumns' => FALSE
         );
-        $this->productQuery['joinTables'] ['TABLE_ZONES_TO_GEO_ZONES'] = array(
+        $this->listingQuery['joinTables'] ['TABLE_ZONES_TO_GEO_ZONES'] = array(
             'table' => TABLE_ZONES_TO_GEO_ZONES,
             'alias' => 'gz',
             'type' => 'left',
@@ -72,12 +72,12 @@ class SearchResults extends AbstractFilter implements FilterInterface
             'addColumns' => FALSE
         );
 
-        $this->productQuery['bindVars'] [] = array(
+        $this->listingQuery['bindVars'] [] = array(
             ':zoneCountryId:',
             $_SESSION ['customer_country_id'],
             'integer'
         );
-        $this->productQuery['bindVars'] [] = array(
+        $this->listingQuery['bindVars'] [] = array(
             ':zoneId:',
             $_SESSION ['customer_zone_id'],
             'integer'
@@ -89,13 +89,13 @@ class SearchResults extends AbstractFilter implements FilterInterface
      */
     protected function startWhereClauses()
     {
-        $this->productQuery['whereClauses'] [] = array(
+        $this->listingQuery['whereClauses'] [] = array(
             'custom' => ' AND (p.products_status = 1 '
         );
-        $this->productQuery ['whereClauses'] [] = array(
+        $this->listingQuery ['whereClauses'] [] = array(
             'custom' => ' AND pd.language_id = :languageId: '
         );
-        $this->productQuery['bindVars'] [] = array(
+        $this->listingQuery['bindVars'] [] = array(
             ':languageId:',
             $_SESSION ['languages_id'],
             'integer'
@@ -138,9 +138,9 @@ class SearchResults extends AbstractFilter implements FilterInterface
             );
             unset($bindVars);
         }
-        $this->productQuery['whereClauses'][] = $whereClause;
+        $this->listingQuery['whereClauses'][] = $whereClause;
         if (isset($bindVars)) {
-            $this->productQuery['bindVars'][] = $bindVars;
+            $this->listingQuery['bindVars'][] = $bindVars;
         }
     }
 
@@ -153,13 +153,13 @@ class SearchResults extends AbstractFilter implements FilterInterface
         if (!zen_not_null($manufacturersId)) {
             return;
         }
-        $this->productQuery ['whereClauses'] [] = array(
+        $this->listingQuery ['whereClauses'] [] = array(
             'table' => TABLE_MANUFACTURERS,
             'field' => 'manufacturers_id',
             'value' => ':manufacturersId:',
             'type' => 'AND'
         );
-        $this->productQuery ['bindVars'] [] = array(
+        $this->listingQuery ['bindVars'] [] = array(
             ':manufacturersId:',
             $manufacturersId,
             'integer'
@@ -175,7 +175,7 @@ class SearchResults extends AbstractFilter implements FilterInterface
         $search_keywords = '';
         $keyword = $this->request->readGet('keyword');
         if (!isset($keyword) || $keyword == "") {
-            $this->productQuery['whereClauses'] [] = array(
+            $this->listingQuery['whereClauses'] [] = array(
                 'custom' => ")"
             );
             return;
@@ -183,13 +183,13 @@ class SearchResults extends AbstractFilter implements FilterInterface
         if (!zen_parse_search_string(stripslashes($keyword), $search_keywords)) {
             return;
         }
-        $this->productQuery['whereClauses'] [] = array(
+        $this->listingQuery['whereClauses'] [] = array(
             'custom' => ' AND ('
         );
         for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i++) {
             $this->processSearchKeywords($search_keywords, $i, $searchDescription);
         }
-        $this->productQuery ['whereClauses'] [] = array(
+        $this->listingQuery ['whereClauses'] [] = array(
             'custom' => " ))"
         );
     }
@@ -201,30 +201,30 @@ class SearchResults extends AbstractFilter implements FilterInterface
     protected function processSearchKeywords($searchKeywords, $ptr, $searchDescription)
     {
         if (in_array($searchKeywords [$ptr], array('(', ')', 'and', 'or'))) {
-            $this->productQuery['whereClauses'] [] = array(
+            $this->listingQuery['whereClauses'] [] = array(
                 'custom' => $searchKeywords [$ptr]
             );
         } else {
-            $this->productQuery ['whereClauses'] [] = array(
+            $this->listingQuery ['whereClauses'] [] = array(
                 'custom' => "(pd.products_name LIKE '%:keywords" . $ptr . ":%' OR p.products_model LIKE '%:keywords" . $ptr . ":%' OR m.manufacturers_name LIKE '%:keywords" . $ptr . ":%'"
             );
-            $this->productQuery['bindVars'] [] = array(
+            $this->listingQuery['bindVars'] [] = array(
                 ':keywords' . $ptr . ':',
                 $searchKeywords [$ptr],
                 'noquotestring'
             );
-            $this->productQuery['whereClauses'] [] = array(
+            $this->listingQuery['whereClauses'] [] = array(
                 'custom' => " OR (mtpd.metatags_keywords LIKE '%:keywords" . $ptr . ":%' AND mtpd.metatags_keywords !='')"
             );
-            $this->productQuery ['whereClauses'] [] = array(
+            $this->listingQuery ['whereClauses'] [] = array(
                 'custom' => " OR (mtpd.metatags_description LIKE '%:keywords" . $ptr . ":%' AND mtpd.metatags_description !='')"
             );
             if ($searchDescription == '1') {
-                $this->productQuery['whereClauses'] [] = array(
+                $this->listingQuery['whereClauses'] [] = array(
                     'custom' => " OR pd.products_description LIKE '%:keywords" . $ptr . ":%'"
                 );
             }
-            $this->productQuery['whereClauses'] [] = array(
+            $this->listingQuery['whereClauses'] [] = array(
                 'custom' => ")"
             );
         }
@@ -268,8 +268,8 @@ class SearchResults extends AbstractFilter implements FilterInterface
     {
         $whereClause['test'] = $test;
         $whereClause['value'] = $bindVarString;
-        $this->productQuery['whereClauses'] [] = $whereClause;
-        $this->productQuery['bindVars'] [] = array($bindVarString,
+        $this->listingQuery['whereClauses'] [] = $whereClause;
+        $this->listingQuery['bindVars'] [] = array($bindVarString,
             zen_date_raw($bindVarValue),
             'date'
         );
@@ -313,7 +313,7 @@ class SearchResults extends AbstractFilter implements FilterInterface
             return;
         }
         if (((zen_not_null($priceFrom))) || (zen_not_null($priceTo))) {
-            $this->productQuery ['whereClauses'] [] = array(
+            $this->listingQuery ['whereClauses'] [] = array(
                 'custom' => "   GROUP BY p.products_id, tr.tax_priority"
             );
         }
@@ -330,10 +330,10 @@ class SearchResults extends AbstractFilter implements FilterInterface
             }
             $whereClause = $mapEntry[3];
             $whereClause = str_replace(':insert:', $mapEntry[2], $whereClause);
-            $this->productQuery ['whereClauses'] [] = array(
+            $this->listingQuery ['whereClauses'] [] = array(
                 'custom' => $whereClause
             );
-            $this->productQuery['bindVars'] [] = array(
+            $this->listingQuery['bindVars'] [] = array(
                 $mapEntry[2],
                 $mapEntry[1],
                 'float'

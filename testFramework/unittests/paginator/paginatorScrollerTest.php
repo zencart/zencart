@@ -31,7 +31,7 @@ class testPaginationScrollerCase extends zcPaginatorTestCase
         $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\adapters\\QueryFactory')
             ->disableOriginalConstructor()
             ->getMock();
-        $ds->method('getResults')->willReturn(array('totalPages'=>10, 'currentItem'=>1, 'itemsPerPage'=>10, 'resultList'=>array()));
+        $ds->method('getResults')->willReturn(array('totalItemCount'=>100,'totalPages'=>10, 'currentItem'=>1, 'itemsPerPage'=>10, 'resultList'=>array()));
         $params = array('pagingVarName'=>'page', 'scrollerLinkParams'=>'', 'itemsPerPage'=>'10', 'currentItem'=>'1', 'currentPage'=>'1', 'maxPageLinks'=>'10', 'cmd'=>'countries');
         $scroller = new Standard($ds, $params);
         $dsr = $scroller->getResults();
@@ -46,7 +46,7 @@ class testPaginationScrollerCase extends zcPaginatorTestCase
         $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\adapters\\QueryFactory')
             ->disableOriginalConstructor()
             ->getMock();
-        $ds->method('getResults')->willReturn(array('totalPages'=>0, 'currentItem'=>1, 'itemsPerPage'=>10, 'resultList'=>array()));
+        $ds->method('getResults')->willReturn(array('totalItemCount'=>0, 'totalPages'=>0, 'currentItem'=>1, 'itemsPerPage'=>10, 'resultList'=>array()));
         $params = array('pagingVarName'=>'page', 'scrollerLinkParams'=>'', 'itemsPerPage'=>'10', 'currentItem'=>'0', 'currentPage'=>'0', 'maxPageLinks'=>'10', 'totalPages'=>'0', 'cmd'=>'countries');
         $scroller = new Standard($ds, $params);
         $dsr = $scroller->getResults();

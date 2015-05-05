@@ -30,7 +30,7 @@ class ot_coupon {
    *
    * @return ot_coupon
    */
-  function ot_coupon() {
+  function __construct() {
     $this->code = 'ot_coupon';
     $this->header = MODULE_ORDER_TOTAL_COUPON_HEADER;
     $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
@@ -58,7 +58,7 @@ class ot_coupon {
     global $order, $currencies;
     $order_total = $this->get_order_total(isset($_SESSION['cc_id']) ? $_SESSION['cc_id'] : '');
     $od_amount = array('tax'=>0, 'total'=>0);
-    if ($order_total > 0) { 
+    if ($order_total > 0) {
        $od_amount = $this->calculate_deductions();
     }
     $this->deduction = $od_amount['total'];
@@ -111,9 +111,9 @@ class ot_coupon {
   function pre_confirmation_check($order_total) {
     global $order;
     $od_amount = array('tax'=>0, 'total'=>0);
-    if ($order_total > 0) { 
+    if ($order_total > 0) {
        $od_amount = $this->calculate_deductions();
-    } 
+    }
 //    print_r($od_amount);
     $order->info['total'] = $order->info['total'] - $od_amount['total'];
     if (DISPLAY_PRICE_WITH_TAX != 'true') {

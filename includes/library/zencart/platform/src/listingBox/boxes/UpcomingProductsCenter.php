@@ -1,6 +1,6 @@
 <?php
 /**
- * Class UpcomingIndex
+ * Class UpcomingProductsCenter
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,10 +8,10 @@
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class UpcomingIndex
+ * Class UpcomingProductsCenter
  * @package ZenCart\Platform\listingBox\boxes
  */
-class UpcomingIndex extends AbstractListingBox
+class UpcomingProductsCenter extends AbstractListingBox
 {
     /**
      *
@@ -28,7 +28,7 @@ class UpcomingIndex extends AbstractListingBox
             return $link;
         };
 
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'isDistinct' => false,
             'queryLimit' => MAX_DISPLAY_UPCOMING_PRODUCTS,
             'derivedItems' => array(
@@ -51,7 +51,6 @@ class UpcomingIndex extends AbstractListingBox
                     'name' => 'CategoryFilter',
                     'parameters' => array(
                         'new_products_category_id' => $GLOBALS['new_products_category_id'],
-                        'cPath' => $this->request->readGet('cPath', '')
                     )
                 ),
             ),
@@ -86,7 +85,10 @@ class UpcomingIndex extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => TABLE_HEADING_UPCOMING_PRODUCTS,
             'formatter' => array('class' => 'TabularCustom',
-                                 'template' => 'tpl_listingbox_tabular_default.php',
+                                 'template' => 'tpl_listingbox_tabular_basic.php',
+                                 'params' => array(
+                                     'ignoreMultiAddToCart' => true,
+                                 ),
             ),
             'columns' => array(
                 'products_name' => array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class AllDefault
+ * Class SpecialsProductsPage
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,32 +8,25 @@
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class AllDefault
- * @package ZenCart\Platform\listingBox\boxes
+ * Class SpecialsProductsPage
+ * @package ZenCart\ListingBox\Box
  */
-class AllDefault extends AbstractListingBox
+class SpecialsProductsPage extends AbstractListingBox
 {
     /**
      *
      */
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'isRandom' => false,
             'isPaginated' => true,
-            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_ALL)),
+            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX)),
             'filters' => array(
                 array(
                     'name' => 'DisplayOrderSorter',
                     'parameters' => array(
-                        'defaultSortOrder' => PRODUCT_ALL_LIST_SORT_DEFAULT
-                    )
-                ),
-                array(
-                    'name' => 'CategoryFilter',
-                    'parameters' => array(
-                        'new_products_category_id' => $GLOBALS['new_products_category_id'],
-                        'cPath' => $this->request->readGet('cPath', '')
+                        'defaultSortOrder' => PRODUCT_SPECIALS_LIST_SORT_DEFAULT
                     )
                 )
             ),
@@ -48,7 +41,13 @@ class AllDefault extends AbstractListingBox
                 )
             ),
             'joinTables' => array(
-                'TABLE_PRODUCTS_DESCRIPTION' => array(
+                'TABLE_SPECIALS' => array(
+                    'table' => TABLE_SPECIALS,
+                    'alias' => 's',
+                    'type' => 'left',
+                    'addColumns' => true
+                ),
+                'TABLE_PRODUCTs_DESCRIPTION' => array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
                     'alias' => 'pd',
                     'type' => 'left',
@@ -65,28 +64,32 @@ class AllDefault extends AbstractListingBox
             ),
             'whereClauses' => array(
                 array(
-                    'table' => TABLE_PRODUCTS_DESCRIPTION,
-                    'field' => 'language_id',
-                    'value' => $_SESSION ['languages_id'],
-                    'type' => 'AND'
-                ),
-                array(
                     'table' => TABLE_PRODUCTS,
                     'field' => 'products_status',
                     'value' => 1,
                     'type' => 'AND'
+                ),
+                array(
+                    'table' => TABLE_SPECIALS,
+                    'field' => 'status',
+                    'value' => 1,
+                    'type' => 'AND'
+                ),
+                array(
+                    'table' => TABLE_PRODUCTS_DESCRIPTION,
+                    'field' => 'language_id',
+                    'value' => $_SESSION ['languages_id'],
+                    'type' => 'AND'
                 )
-            )
+            ),
         );
-
         $this->outputLayout = array(
-            'boxTitle' => TABLE_HEADING_ALL_PRODUCTS,
-            'formatter' => array('class' => 'ListStandard',
-                                 'template' => 'tpl_listingbox_productliststd_default.php',
+            'boxTitle' => BOX_HEADING_SPECIALS,
+            'formatter' => array('class' => 'Columnar',
+                                 'template' => 'tpl_listingbox_columnar.php',
                                  'params' => array(
-                                     'imageListingWidth' => IMAGE_PRODUCT_ALL_LISTING_WIDTH,
-                                     'imageListingHeight' => IMAGE_PRODUCT_ALL_LISTING_HEIGHT,
-                                     'definePrefix' => 'PRODUCT_ALL_')),
+                                     'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS),
+            ),
         );
     }
 }

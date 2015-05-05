@@ -14,7 +14,7 @@
 <div class="centerBoxWrapper" id="centerBoxWrapper<?php echo $tplVars['listingBox']['className']; ?>">
   <h2 class="centerBoxHeading"><?php echo $tplVars['listingBox']['title']; ?></h2>
 <?php
-    if (isset($tplVars['listingBox']['showForm']) && $tplVars['listingBox']['showForm']) {
+    if (isset($tplVars['listingBox']['showMultiForm']) && $tplVars['listingBox']['showMultiForm']) {
       echo zen_draw_form('multiple_products_cart_quantity', zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
     }
 ?>
@@ -23,7 +23,7 @@
 <?php } ?>
 <?php
 // only show button when there is something to submit
-  if (isset($tplVars['listingBox']['showTopSubmit']) && $tplVars['listingBox']['showTopSubmit']) {
+  if (isset($tplVars['listingBox']['showMultiTopSubmit']) && $tplVars['listingBox']['showMultiTopSubmit']) {
 ?>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit1" name="submit1"'); ?></div>
 <br class="clearBoth">
@@ -68,14 +68,14 @@
 </table>
 <?php } ?>
 
-<?php if (isset($tplVars['listingBox']['showBottomSubmit']) && $tplVars['listingBox']['showBottomSubmit']) { ?>
+<?php if (isset($tplVars['listingBox']['showMultiBottomSubmit']) && $tplVars['listingBox']['showMultiBottomSubmit']) { ?>
   <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit2" name="submit1"'); ?></div>
 <br class="clearBoth">
 <?php } ?>
 <?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showPaginatorBottom']) { ?>
 <?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?>
 <?php } ?>
-<?php if (isset($tplVars['listingBox']['showForm']) && $tplVars['listingBox']['showForm']) { ?>
+<?php if (isset($tplVars['listingBox']['showMultiForm']) && $tplVars['listingBox']['showMultiForm']) { ?>
 </form>
 <?php } ?>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class SpecialsDefault
+ * Class FeaturedProductsCenter
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,28 +8,14 @@
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class SpecialsDefault
- * @package ZenCart\ListingBox\Box
+ * Class FeaturedProductsCenter
+ * @package ZenCart\Platform\listingBox\boxes
  */
-class SpecialsDefault extends AbstractListingBox
+class FeaturedProductsCenter extends AbstractListingBox
 {
-    /**
-     *
-     */
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
-            'isRandom' => false,
-            'isPaginated' => true,
-            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX)),
-            'filters' => array(
-                array(
-                    'name' => 'DisplayOrderSorter',
-                    'parameters' => array(
-                        'defaultSortOrder' => PRODUCT_SPECIALS_LIST_SORT_DEFAULT
-                    )
-                )
-            ),
+        $this->listingQuery = array(
             'derivedItems' => array(
                 array(
                     'field' => 'displayPrice',
@@ -40,10 +26,17 @@ class SpecialsDefault extends AbstractListingBox
                     'handler' => 'productCpathBuilder'
                 )
             ),
+            'filters' => array(
+                array(
+                    'name' => 'CategoryFilter',
+                    'parameters' => array()
+                ),
+            ),
+            'queryLimit' => MAX_DISPLAY_SEARCH_RESULTS_FEATURED,
             'joinTables' => array(
-                'TABLE_SPECIALS' => array(
-                    'table' => TABLE_SPECIALS,
-                    'alias' => 's',
+                'TABLE_FEATURED' => array(
+                    'table' => TABLE_FEATURED,
+                    'alias' => 'f',
                     'type' => 'left',
                     'addColumns' => true
                 ),
@@ -52,13 +45,6 @@ class SpecialsDefault extends AbstractListingBox
                     'alias' => 'pd',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'products_id',
-                    'addColumns' => true
-                ),
-                'TABLE_MANUFACTURERS' => array(
-                    'table' => TABLE_MANUFACTURERS,
-                    'alias' => 'm',
-                    'type' => 'left',
-                    'fkeyFieldLeft' => 'manufacturers_id',
                     'addColumns' => true
                 )
             ),
@@ -70,7 +56,7 @@ class SpecialsDefault extends AbstractListingBox
                     'type' => 'AND'
                 ),
                 array(
-                    'table' => TABLE_SPECIALS,
+                    'table' => TABLE_FEATURED,
                     'field' => 'status',
                     'value' => 1,
                     'type' => 'AND'
@@ -82,13 +68,19 @@ class SpecialsDefault extends AbstractListingBox
                     'type' => 'AND'
                 )
             ),
+            'orderBys' => array(
+                array(
+                    'field' => 'RAND()',
+                    'type' => 'mysql'
+                ),
+            )
         );
         $this->outputLayout = array(
-            'boxTitle' => BOX_HEADING_SPECIALS,
+            'boxTitle' => TABLE_HEADING_FEATURED_PRODUCTS,
             'formatter' => array('class' => 'Columnar',
-                                 'template' => 'tpl_listingbox_columnar_default.php',
+                                 'template' => 'tpl_listingbox_columnar.php',
                                  'params' => array(
-                                     'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS),
+                                     'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS),
             ),
         );
     }

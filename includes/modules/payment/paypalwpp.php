@@ -3,10 +3,10 @@
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 14:21:34 2012 -0400 Modified in v1.6.0 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
  */
 /**
  * load the communications layer code
@@ -96,7 +96,7 @@ class paypalwpp extends base {
   /**
    * class constructor
    */
-  function paypalwpp() {
+  function __construct() {
     include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', 'paypalwpp.php', 'false'));
     global $order;
     $this->code = 'paypalwpp';

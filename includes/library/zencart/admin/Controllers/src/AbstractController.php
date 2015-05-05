@@ -1,75 +1,72 @@
 <?php
 /**
- * zcActionAdminBase Class.
+ * Class AbstractController
  *
- * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
-
-if (!defined('IS_ADMIN_FLAG')) {
-    die('Illegal Access');
-}
-
+namespace ZenCart\Admin\Controllers;
 /**
- * zcActionAdminBase Class
- *
- * @package classes
+ * Class AbstractController
+ * @package ZenCart\Admin\Controllers
  */
-abstract class zcActionAdminBase extends base
+abstract class AbstractController extends \base
 {
-    public $templateVariables;
+    /**
+     * @var array
+     */
+    protected $tplVars;
+    /**
+     * @var
+     */
     protected $controllerCommand;
+    /**
+     * @var
+     */
     protected $controllerAction;
+    /**
+     * @var bool
+     */
     protected $useView = true;
+    /**
+     * @var bool
+     */
     protected $useFoundation = false;
 
-    public function __construct($controllerCommand, $request)
+    /**
+     * @param $controllerCommand
+     * @param $request
+     * @param $db
+     */
+    public function __construct($controllerCommand, $request, $db)
     {
         $this->request = $request;
+        $this->dbConn = $db;
         $this->controllerCommand = $controllerCommand;
-        $this->templateVariables = array();
+        $this->tplVars = array();
         $this->response = array(
             'data' => null
         );
         $this->prepareDefaultCss();
-        $this->prepareCommonTemplateVariables();
+        $this->prepareCommonTplVars();
         $this->preCheck();
         $this->initDefinitions();
     }
 
-    public function prepareCommonTemplateVariables()
+    /**
+     *
+     */
+    protected function prepareCommonTplVars()
     {
-        global $extraCss, $PHP_SELF, $messageStack, $new_gv_queue_cnt, $goto_gv, $new_version;
-        global $hide_languages, $languages, $languages_array, $languages_selected;
-        $this->templateVariables['cmd'] = $this->request->readGet('cmd');
-        if ($this->useView) {
-            if (isset($extraCss))
-                $this->templateVariables ['extraCss'] = $extraCss;
-            if (isset($messageStack))
-                $this->templateVariables ['messageStack'] = $messageStack;
-            if (isset($PHP_SELF))
-                $this->templateVariables ['PHP_SELF'] = $PHP_SELF;
-            if (isset($new_gv_queue_cnt))
-                $this->templateVariables ['new_gv_queue_cnt'] = $new_gv_queue_cnt;
-            if (isset($goto_gv))
-                $this->templateVariables ['goto_gv'] = $goto_gv;
-            if (isset($new_version))
-                $this->templateVariables ['new_version'] = $new_version;
-            if (isset($hide_languages))
-                $this->templateVariables ['hide_languages'] = $hide_languages;
-            if (isset($languages))
-                $this->templateVariables ['languages'] = $languages;
-            if (isset($languages_array))
-                $this->templateVariables ['languages_array'] = $languages_array;
-            if (isset($languages_selected))
-                $this->templateVariables ['languages_selected'] = $languages_selected;
-            $this->templateVariables ['useFoundation'] = $this->useFoundation;
-        }
+        $this->tplVars['cmd'] = $this->request->readGet('cmd');
+        $this->tplVars['useFoundation'] = $this->useFoundation;
     }
 
-    public function prepareDefaultCSS()
+    /**
+     *
+     */
+    protected function prepareDefaultCSS()
     {
         if ($this->useView) {
             $cssList [] = array(
@@ -86,10 +83,6 @@ abstract class zcActionAdminBase extends base
                 'href' => 'includes/template/css/stylesheet.css',
                 'id' => 'stylesheetCSS'
             );
-//       $cssList [] = array(
-//           'href' => 'includes/template/javascript/select2-master/select2.css',
-//           'id' => 'stylesheetCSS'
-//       );
             $cssList [] = array(
                 'href' => 'includes/template/css/stylesheet_print.css',
                 'media' => 'print',
@@ -102,9 +95,12 @@ abstract class zcActionAdminBase extends base
                 );
             }
         }
-        $this->templateVariables ['cssList'] = $cssList;
+        $this->tplVars ['cssList'] = $cssList;
     }
 
+    /**
+     *
+     */
     public function invoke()
     {
         $this->controllerAction = 'main';
@@ -118,6 +114,9 @@ abstract class zcActionAdminBase extends base
         $this->doOutput();
     }
 
+    /**
+     *
+     */
     public function doOutput()
     {
         if (!$this->useView) {
@@ -126,9 +125,13 @@ abstract class zcActionAdminBase extends base
             $this->doViewOutput();
         }
     }
+
+    /**
+     *
+     */
     public function doViewOutput()
     {
-        $tplVars = $this->templateVariables;
+        $tplVars = $this->tplVars;
         require('includes/template/common/tplAdminHtmlHead.php');
         echo "\n" . "</head>";
         echo "\n" . "<body>";
@@ -140,6 +143,9 @@ abstract class zcActionAdminBase extends base
         require('includes/template/common/tplFooter.php');
     }
 
+    /**
+     * @return null|string
+     */
     public function getMainTemplate()
     {
         if (isset($this->mainTemplate)) {
@@ -152,11 +158,19 @@ abstract class zcActionAdminBase extends base
         return null;
     }
 
+    /**
+     *
+     */
     public function doNonViewOutput()
     {
         echo json_encode($this->response);
     }
 
+    /**
+     * @param $template
+     * @param $tplVars
+     * @return string
+     */
     public function loadTemplateAsString($template, $tplVars)
     {
         ob_start();
@@ -166,11 +180,34 @@ abstract class zcActionAdminBase extends base
         return $result;
     }
 
-    public function preCheck()
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function setTplVars($key, $value)
+    {
+        $this->tplVars[$key] = $value;
+    }
+
+    /**
+     * @param $templateName
+     */
+    public function setMainTemplate($templateName)
+    {
+        $this->mainTemplate = $templateName;
+    }
+
+    /**
+     *
+     */
+    protected function preCheck()
     {
     }
 
-    public function initDefinitions()
+    /**
+     *
+     */
+    protected function initDefinitions()
     {
     }
 }

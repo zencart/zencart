@@ -1,6 +1,6 @@
 <?php
 /**
- * Class NewIndex
+ * Class ProductsPage
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,17 +8,30 @@
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class NewIndex
+ * Class ProductsPage
  * @package ZenCart\Platform\listingBox\boxes
  */
-class NewIndex extends AbstractListingBox
+class ProductsPage extends AbstractListingBox
 {
     /**
      *
      */
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
+        $this->listingQuery = array(
+            'isRandom' => false,
+            'isPaginated' => true,
+            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_LISTING)),
+            'filters' => array(
+                array(
+                    'name' => 'AlphaFilter',
+                    'parameters' => array()
+                ),
+                array(
+                    'name' => 'TypeFilter',
+                    'parameters' => array('currentCategoryId' => $GLOBALS['current_category_id'])
+                )
+            ),
             'derivedItems' => array(
                 array(
                     'field' => 'displayPrice',
@@ -29,15 +42,8 @@ class NewIndex extends AbstractListingBox
                     'handler' => 'productCpathBuilder'
                 )
             ),
-            'filters' => array(
-                array(
-                    'name' => 'CategoryFilter',
-                    'parameters' => array()
-                ),
-            ),
-            'queryLimit' => MAX_DISPLAY_NEW_PRODUCTS,
             'joinTables' => array(
-                'TABLE_PRODUCTs_DESCRIPTION' => array(
+                'TABLE_PRODUCTS_DESCRIPTION' => array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
                     'alias' => 'pd',
                     'type' => 'left',
@@ -47,34 +53,22 @@ class NewIndex extends AbstractListingBox
             ),
             'whereClauses' => array(
                 array(
-                    'table' => TABLE_PRODUCTS,
-                    'field' => 'products_status',
-                    'value' => 1,
-                    'type' => 'AND'
-                ),
-                array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
                     'field' => 'language_id',
                     'value' => $_SESSION ['languages_id'],
                     'type' => 'AND'
                 ),
                 array(
-                    'custom' => zen_get_new_date_range()
+                    'table' => TABLE_PRODUCTS,
+                    'field' => 'products_status',
+                    'value' => 1,
+                    'type' => 'AND'
                 )
-            ),
-            'orderBys' => array(
-                array(
-                    'field' => 'RAND()',
-                    'type' => 'mysql'
-                ),
             )
         );
         $this->outputLayout = array(
-            'boxTitle' => sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')),
-            'formatter' => array('class' => 'Columnar',
-                                 'template' => 'tpl_listingbox_columnar_default.php',
-                                 'params' => array(
-                                     'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS),
+            'formatter' => array('class' => 'TabularProduct',
+                                 'template' => 'tpl_listingbox_tabular.php',
             ),
         );
     }

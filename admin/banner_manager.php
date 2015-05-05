@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: banner_manager.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -130,19 +130,13 @@
 
           $sql = "UPDATE " . TABLE_BANNERS . "
                   SET
-                    date_scheduled = :scheduledDate,
+                    date_scheduled = DATE_ADD(:scheduledDate, INTERVAL '00:00:00' HOUR_SECOND),
                     expires_date = DATE_ADD(:expiresDate, INTERVAL '23:59:59' HOUR_SECOND),
                     expires_impressions = " . ($expires_impressions == 0 ? "null" : ":expiresImpressions") . "
                     WHERE banners_id = :bannersID";
-          if ($expires_impressions > 0) {
             $sql = $db->bindVars($sql, ':expiresImpressions', $expires_impressions, 'integer');
-          }
-          if ($date_scheduled != '') {
             $sql = $db->bindVars($sql, ':scheduledDate', $date_scheduled, 'date');
-          }
-          if ($expires_date != '') {
             $sql = $db->bindVars($sql, ':expiresDate', $expires_date, 'date');
-          }
             $sql = $db->bindVars($sql, ':bannersID', $banners_id, 'integer');
             $db->Execute($sql);
 
@@ -255,9 +249,9 @@ function popupImageWindow(url) {
                                      from " . TABLE_BANNERS . "
                                      where banners_id = '" . (int)$bID . "'");
 
-      $bInfo->objectInfo($banner->fields);
+      $bInfo->updateObjectInfo($banner->fields);
     } elseif (zen_not_null($_POST)) {
-      $bInfo->objectInfo($_POST);
+      $bInfo->updateObjectInfo($_POST);
     }
 
     if (!isset($bInfo->status)) $bInfo->status = '1';

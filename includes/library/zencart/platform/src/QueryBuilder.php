@@ -32,33 +32,33 @@ class QueryBuilder extends \base
     protected $query;
 
     /**
-     * @param array $productQuery
+     * @param array $listingQuery
      */
-    public function __construct($dbConn, array $productQuery = array())
+    public function __construct($dbConn, array $listingQuery = array())
     {
         $this->dbConn = $dbConn;
         $this->parts = null;
-        if (count($productQuery) > 0) {
-            $this->initParts($productQuery);
+        if (count($listingQuery) > 0) {
+            $this->initParts($listingQuery);
         }
     }
-    public function initParts(array $productQuery)
+    public function initParts(array $listingQuery)
     {
         $this->notify('NOTIFY_QUERY_BUILDER_INIT_START');
-        $this->parts ['bindVars'] = issetorArray($productQuery, 'bindVars', array());
-        $this->parts ['selectList'] = issetorArray($productQuery, 'selectList', array());
-        $this->parts ['orderBys'] = issetorArray($productQuery, 'orderBys', array());
-        $this->parts ['filters'] = issetorArray($productQuery, 'filters', array());
-        $this->parts ['derivedItems'] = issetorArray($productQuery, 'derivedItems', array());
-        $this->parts ['joinTables'] = issetorArray($productQuery, 'joinTables', array());
-        $this->parts ['whereClauses'] = issetorArray($productQuery, 'whereClauses', array());
+        $this->parts ['bindVars'] = issetorArray($listingQuery, 'bindVars', array());
+        $this->parts ['selectList'] = issetorArray($listingQuery, 'selectList', array());
+        $this->parts ['orderBys'] = issetorArray($listingQuery, 'orderBys', array());
+        $this->parts ['filters'] = issetorArray($listingQuery, 'filters', array());
+        $this->parts ['derivedItems'] = issetorArray($listingQuery, 'derivedItems', array());
+        $this->parts ['joinTables'] = issetorArray($listingQuery, 'joinTables', array());
+        $this->parts ['whereClauses'] = issetorArray($listingQuery, 'whereClauses', array());
         $this->parts ['mainTableName'] = TABLE_PRODUCTS;
         $this->parts ['mainTableAlias'] = 'p';
         $this->parts ['mainTableFkeyField'] = 'products_id';
-        if (isset($productQuery['mainTable'])) {
-            $this->parts ['mainTableName'] = $productQuery['mainTable'] ['table'];
-            $this->parts ['mainTableAlias'] = $productQuery['mainTable'] ['alias'];
-            $this->parts ['mainTableFkeyField'] = $productQuery['mainTable'] ['fkeyFieldLeft'];
+        if (isset($listingQuery['mainTable'])) {
+            $this->parts ['mainTableName'] = $listingQuery['mainTable'] ['table'];
+            $this->parts ['mainTableAlias'] = $listingQuery['mainTable'] ['alias'];
+            $this->parts ['mainTableFkeyField'] = $listingQuery['mainTable'] ['fkeyFieldLeft'];
         }
         $this->parts ['tableAliases'] [$this->parts ['mainTableName']] = $this->parts ['mainTableAlias'];
         $this->notify('NOTIFY_QUERY_BUILDER_INIT_END');
@@ -68,13 +68,13 @@ class QueryBuilder extends \base
      * process query
      *
      */
-    public function processQuery($productQuery)
+    public function processQuery($listingQuery)
     {
         if (!isset($this->parts)) {
-            $this->initParts($productQuery);
+            $this->initParts($listingQuery);
         }
         $this->notify('NOTIFY_QUERY_BUILDER_PROCESSQUERY_START');
-        $this->query ['select'] = "SELECT " . (issetorArray($productQuery, 'isDistinct', false) ? ' DISTINCT ' : '') . $this->parts ['mainTableAlias'] . ".*";
+        $this->query ['select'] = "SELECT " . (issetorArray($listingQuery, 'isDistinct', false) ? ' DISTINCT ' : '') . $this->parts ['mainTableAlias'] . ".*";
         $this->preProcessJoins();
         $this->query ['joins'] = '';
         $this->query ['table'] = ' FROM ';
@@ -83,17 +83,17 @@ class QueryBuilder extends \base
         $this->processWhereClause();
         $this->processOrderBys();
         $this->processSelectList();
-        $this->setFinalQuery($productQuery);
+        $this->setFinalQuery($listingQuery);
         $this->processBindVars();
         $this->notify('NOTIFY_QUERY_BUILDER_PROCESSQUERY_END');
     }
 
-    protected function setFinalQuery($productQuery)
+    protected function setFinalQuery($listingQuery)
     {
         $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .
             $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'];
         if (!isset($this->query['countSql'])) {
-            $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($productQuery, 'isDistinct', false) ? "DISTINCT " : '') .
+            $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($listingQuery, 'isDistinct', false) ? "DISTINCT " : '') .
                 $this->parts ['mainTableAlias'] . "." . $this->parts ['mainTableFkeyField'] . ")
                                  AS total " . $this->query ['table'] . $this->query ['joins'] .
                 $this->query ['where'];;

@@ -25,7 +25,7 @@
 <div id="indexProductListCatDescription" class="content"><?php echo $current_categories_description;  ?></div>
 <?php } ?>
 <?php
-if ($tplVars['listingBox']['showFiltersForm'])
+if ($tplVars['listingBox']['showFilterForm'])
 {
   echo zen_draw_form ( 'filter', zen_href_link ( FILENAME_DEFAULT ), 'get' ) . '<label class="inputLabel">' . TEXT_SHOW . '</label>';
   echo zen_draw_hidden_field ( 'main_page', FILENAME_DEFAULT );
@@ -62,7 +62,7 @@ if ($tplVars['listingBox']['showFiltersForm'])
 /**
  * require the code for listing products
  */
-require ($template->get_template_dir ( 'tpl_listingbox_tabular_default.php', DIR_WS_TEMPLATE, $current_page_base, 'listingboxes' ) . '/' . 'tpl_listingbox_tabular_default.php');
+require ($template->get_template_dir ( 'tpl_listingbox_tabular.php', DIR_WS_TEMPLATE, $current_page_base, 'listingboxes' ) . '/' . 'tpl_listingbox_tabular.php');
 ?>
 <?php } else { ?>
 <h2><?php echo TEXT_NO_PRODUCTS; ?></h2>

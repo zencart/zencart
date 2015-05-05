@@ -3,10 +3,10 @@
  * Temporary cache for sql
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Created by Data-Diggers.com http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 New in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Wed Jul 4 14:44:03 2012 +0100 New in v1.6.0 $
  *
  */
 /**
@@ -15,7 +15,7 @@
  */
  class QueryCache {
 
-    function QueryCache() {
+    function __construct() {
         $this->queries = array();
     }
 
@@ -55,4 +55,3 @@
       unset ($this->queries[$query]);
     }
 }
-

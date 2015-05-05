@@ -1,6 +1,6 @@
 <?php
 /**
- * Class NewDefault
+ * Class NewProductsPage
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,20 +8,20 @@
  */
 namespace ZenCart\Platform\listingBox\boxes;
 /**
- * Class NewDefault
+ * Class NewProductsPage
  * @package ZenCart\Platform\listingBox\boxes
  */
-class NewDefault extends AbstractListingBox
+class NewProductsPage extends AbstractListingBox
 {
     /**
      *
      */
     public function initQueryAndLayout()
     {
-        $this->productQuery = array(
+        $this->listingQuery = array(
             'isRandom' => false,
             'isPaginated' => true,
-            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_NEW_PRODUCTS)),
+            'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_NEW)),
             'filters' => array(
                 array(
                     'name' => 'DisplayOrderSorter',
@@ -77,7 +77,7 @@ class NewDefault extends AbstractListingBox
         $this->outputLayout = array(
             'boxTitle' => sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')),
             'formatter' => array('class' => 'ListStandard',
-                                 'template' => 'tpl_listingbox_productliststd_default.php',
+                                 'template' => 'tpl_listingbox_productliststd.php',
                                  'params' => array(
                                      'imageListingWidth' => IMAGE_PRODUCT_NEW_LISTING_WIDTH,
                                      'imageListingHeight' => IMAGE_PRODUCT_NEW_LISTING_HEIGHT,

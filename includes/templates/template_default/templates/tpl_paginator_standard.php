@@ -7,7 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
-//print_r($tplVars['listingBox']);
+//print_r($tplVars['listingBox']['paginator']);
 ?>
 <ul class="pagination">
 <?php if ($tplVars['listingBox']['paginator']['flagHasPrevious']) { ?>

@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Jun 1 14:21:21 2012 +0000 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
  * @version GIT: Integrated COWOA v2.2 - 2007 - 2012
  */
 /**
@@ -770,14 +770,14 @@ class order extends base {
           }
           $stock_values = $db->Execute($stock_query_raw, false, false, 0, true);
         } else {
-          $stock_values = $db->Execute("select * from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'", false, false, 0, true);
+          $stock_values = $db->Execute("select products_quantity, '' as products_attributes_filename, product_is_always_free_shipping from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'", false, false, 0, true);
         }
 
         $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN', $i, $stock_values);
 
         if ($stock_values->RecordCount() > 0) {
           // do not decrement quantities if products_attributes_filename exists
-          if ((DOWNLOAD_ENABLED != 'true') || $stock_values->fields['product_is_always_free_shipping'] == 2 || (!$stock_values->fields['products_attributes_filename']) ) {
+          if (DOWNLOAD_ENABLED != 'true' || $stock_values->fields['product_is_always_free_shipping'] == 2 || $stock_values->fields['products_attributes_filename'] != '') {
             $stock_left = $stock_values->fields['products_quantity'] - $this->products[$i]['qty'];
             $this->products[$i]['stock_reduce'] = $this->products[$i]['qty'];
           } else {

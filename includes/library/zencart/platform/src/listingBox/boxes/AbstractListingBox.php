@@ -16,7 +16,7 @@ abstract class AbstractListingBox extends \base
     /**
      * @var array
      */
-    protected $productQuery;
+    protected $listingQuery;
     /**
      * @var array
      */
@@ -45,7 +45,7 @@ abstract class AbstractListingBox extends \base
     public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null)
     {
         $this->tplVars['filter'] = $this->doFilters($db);
-        $queryBuilder->processQuery($this->productQuery);
+        $queryBuilder->processQuery($this->listingQuery);
         $query = $queryBuilder->getQuery();
         $query['dbConn'] = $db;
         if (isset($paginator)) {
@@ -57,7 +57,7 @@ abstract class AbstractListingBox extends \base
             $resultItems = $this->getResultItems($query, $db);
         }
         $finalItems = [];
-        $derivedItems = issetorArray($this->productQuery, 'derivedItems', array());
+        $derivedItems = issetorArray($this->listingQuery, 'derivedItems', array());
         foreach ($resultItems as $resultItem) {
             $resultItem = $derivedItemsManager->manageDerivedItems($derivedItems, $resultItem);
             $finalItems [] = $resultItem;
@@ -75,6 +75,11 @@ abstract class AbstractListingBox extends \base
      */
     protected function normalizeTplVars($paginator)
     {
+        $showFilterForm = false;
+        if (isset($this->tplVars['filter'])) {
+            $showFilterForm = count($this->tplVars['filter'] > 0);
+        }
+        $this->tplVars ['showFilterForm'] = $showFilterForm;
         $this->tplVars ['title'] = issetorArray($this->outputLayout, 'boxTitle', '');
         $this->tplVars ['formattedItemsCount'] = count($this->tplVars['formattedItems']);
         $this->tplVars ['hasFormattedItems'] = (count($this->tplVars['formattedItems']) > 0) ? true : false;
@@ -93,16 +98,17 @@ abstract class AbstractListingBox extends \base
     public function doMultiFormSubmit($listBoxContents)
     {
         $showSubmit = zen_run_normal();
-        $showTopSubmit = false;
         $showBottomSubmit = false;
-        if ($this->showTopBottomSubmit($showSubmit, $listBoxContents)) {
+        $showForm = $this->showTopBottomSubmit($showSubmit, $listBoxContents);
+        $showTopSubmit = $showForm;
+        if ($showForm) {
             $showTopSubmit = (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 1 || PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 3) ? true : false;
             $showBottomSubmit = (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART == 2) ? true : false;
         }
         $showForm = ($showTopSubmit || $showBottomSubmit);
-        $this->tplVars['showTopSubmit'] = $showTopSubmit;
-        $this->tplVars['showBottomSubmit'] = $showBottomSubmit;
-        $this->tplVars['showForm'] = $showForm;
+        $this->tplVars['showMultiTopSubmit'] = $showTopSubmit;
+        $this->tplVars['showMultiBottomSubmit'] = $showBottomSubmit;
+        $this->tplVars['showMultiForm'] = $showForm;
 
     }
 
@@ -143,7 +149,7 @@ abstract class AbstractListingBox extends \base
     protected function getResultItems($query, $db)
     {
         $resultItems = [];
-        $queryLimit = issetorArray($this->productQuery, 'queryLimit', '');
+        $queryLimit = issetorArray($this->listingQuery, 'queryLimit', '');
         $results = $db->execute($query['mainSql'], $queryLimit);
         foreach ($results as $result) {
             $resultItems [] = $result;
@@ -178,16 +184,16 @@ abstract class AbstractListingBox extends \base
     protected function doFilters($db)
     {
         $filterVars = [];
-        if (!isset($this->productQuery['filters'])) {
+        if (!isset($this->listingQuery['filters'])) {
             return $filterVars;
         }
 
-        foreach ($this->productQuery['filters'] as $filter) {
+        foreach ($this->listingQuery['filters'] as $filter) {
             $params = issetorArray($filter, 'parameters', array());
             $filter = '\\ZenCart\\Platform\\listingBox\\filters\\' . $filter['name'];
             $filter = new $filter($this->request, $params);
             $filter->setDBConnection($db);
-            $this->productQuery = $filter->filterItem($this->productQuery);
+            $this->listingQuery = $filter->filterItem($this->listingQuery);
             $filterVars = array_merge($filterVars, $filter->getTplVars());
         }
         return $filterVars;
@@ -221,8 +227,8 @@ abstract class AbstractListingBox extends \base
     /**
      * @return array
      */
-    public function getProductQuery()
+    public function getListingQuery()
     {
-        return $this->productQuery;
+        return $this->listingQuery;
     }
 }

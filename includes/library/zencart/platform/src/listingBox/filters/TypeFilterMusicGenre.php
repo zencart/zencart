@@ -14,20 +14,20 @@ namespace ZenCart\Platform\listingBox\filters;
 class TypeFilterMusicGenre extends AbstractTypeFilter
 {
     /**
-     * @param $productQuery
+     * @param $listingQuery
      * @return mixed
      */
-    public function handleParameterFilters($productQuery)
+    public function handleParameterFilters($listingQuery)
     {
-        $productQuery['selectList'] [] = "m.music_genre_name as manufacturers_name";
+        $listingQuery['selectList'] [] = "m.music_genre_name as manufacturers_name";
 
-        $productQuery['joinTables'] ['TABLE_PRODUCT_MUSIC_EXTRA'] = array(
+        $listingQuery['joinTables'] ['TABLE_PRODUCT_MUSIC_EXTRA'] = array(
             'table' => TABLE_PRODUCT_MUSIC_EXTRA,
             'alias' => 'pme',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'products_id'
         );
-        $productQuery['joinTables'] ['TABLE_MUSIC_GENRE'] = array(
+        $listingQuery['joinTables'] ['TABLE_MUSIC_GENRE'] = array(
             'table' => TABLE_MUSIC_GENRE,
             'alias' => 'm',
             'type' => 'LEFT',
@@ -35,20 +35,20 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
             'fkeyTable' => 'TABLE_PRODUCT_MUSIC_EXTRA'
         );
         if ($this->request->readGet('music_genre_id')) {
-            $productQuery['whereClauses'] [] = array(
+            $listingQuery['whereClauses'] [] = array(
                 'table' => TABLE_MUSIC_GENRE,
                 'field' => 'music_genre_id',
                 'value' => (int)$this->request->readGet('music_genre_id'),
                 'type' => 'AND'
             );
             if ($this->request->readGet('filter_id')) {
-                $productQuery ['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
+                $listingQuery ['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                     'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                     'alias' => 'p2c',
                     'type' => 'LEFT',
                     'fkeyFieldLeft' => 'products_id'
                 );
-                $productQuery ['whereClauses'] [] = array(
+                $listingQuery ['whereClauses'] [] = array(
                     'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                     'field' => 'categories_id',
                     'value' => (int)$this->request->readGet('filter_id'),
@@ -56,20 +56,20 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
                 );
             }
         } else {
-            $productQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
+            $listingQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                 'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                 'alias' => 'p2c',
                 'type' => 'LEFT',
                 'fkeyFieldLeft' => 'products_id'
             );
-            $productQuery['whereClauses'] [] = array(
+            $listingQuery['whereClauses'] [] = array(
                 'table' => TABLE_PRODUCTS_TO_CATEGORIES,
                 'field' => 'categories_id',
                 'value' => (int)$this->params['currentCategoryId'],
                 'type' => 'AND'
             );
             if ($this->request->readGet('filter_id')) {
-                $productQuery['whereClauses'] [] = array(
+                $listingQuery['whereClauses'] [] = array(
                     'table' => TABLE_MUSIC_GENRE,
                     'field' => 'music_genre_id',
                     'value' => (int)$this->request->readGet('filter_id'),
@@ -77,7 +77,7 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
                 );
             }
         }
-        return $productQuery;
+        return $listingQuery;
     }
 
     /**

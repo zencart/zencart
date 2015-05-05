@@ -14,10 +14,10 @@ namespace ZenCart\Platform\listingBox\filters;
 class DisplayOrderSorter extends AbstractFilter implements FilterInterface
 {
     /**
-     * @param array $productQuery
+     * @param array $listingQuery
      * @return array
      */
-    public function filterItem(array $productQuery)
+    public function filterItem(array $listingQuery)
     {
         $dispOrder = $this->request->readGet('disp_order', 0);
         $this->tplVars  ['displayOrderDefault'] = $this->params ['defaultSortOrder'];
@@ -35,11 +35,11 @@ class DisplayOrderSorter extends AbstractFilter implements FilterInterface
         if (isset($map[$dispOrder])) {
             $orderBy = $map[$dispOrder];
         }
-        $productQuery['orderBys'] [] = array(
+        $listingQuery['orderBys'] [] = array(
             'type' => 'custom',
             'field' => $orderBy
         );
-        return $productQuery;
+        return $listingQuery;
     }
 
     /**

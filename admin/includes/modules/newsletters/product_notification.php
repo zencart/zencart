@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: product_notification.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: product_notification.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   class product_notification {
     var $show_choose_audience, $title, $content, $content_html;
 
-    function product_notification($title, $content, $content_html, $queryname='') {
+    function __construct($title, $content, $content_html, $queryname='') {
       $this->show_choose_audience = true;
       $this->title = $title;
       $this->content = $content;
@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
     function choose_audience() {
-      global $_GET, $db;
+      global $db;
 
       $products_array = array();
       $products = $db->Execute("select pd.products_id, pd.products_name
@@ -88,7 +88,7 @@ function selectAll(FormName, SelectBox) {
                        'document.write(\'<input type="button" value="' . BUTTON_CANCEL . '" style="width: 8em;" onclick="document.location=\\\'' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '\\\'">\');' . "\n" .
                        '</script><noscript><a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '">[ ' . BUTTON_CANCEL . ' ]</a></noscript>';
 
-      $choose_audience_string .= '<form name="notifications" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onSubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" . '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' . 
+      $choose_audience_string .= '<form name="notifications" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onSubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" . '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' .
                                  '  <tr>' . "\n" .
                                  '    <td align="center" class="main"><b>' . TEXT_PRODUCTS . '</b><br />' . zen_draw_pull_down_menu('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
                                  '    <td align="center" class="main">&nbsp;<br />' . $global_button . '<br /><br /><br /><input type="button" value="' . BUTTON_SELECT . '" style="width: 8em;" onClick="mover(\'remove\');"><br /><br /><input type="button" value="' . BUTTON_UNSELECT . '" style="width: 8em;" onClick="mover(\'add\');"><br /><br /><br /><input type="submit" value="' . BUTTON_SUBMIT . '" style="width: 8em;"><br /><br />' . $cancel_button . '</td>' . "\n" .
@@ -100,7 +100,7 @@ function selectAll(FormName, SelectBox) {
     }
 
     function confirm() {
-      global $_GET, $_POST, $db;
+      global $db;
 
       $audience = array();
 
@@ -190,7 +190,7 @@ function selectAll(FormName, SelectBox) {
     }
 
     function send($newsletter_id) {
-      global $_POST, $db;
+      global $db;
 
       $audience = array();
 
@@ -254,18 +254,18 @@ function selectAll(FormName, SelectBox) {
 
 //send emails
       reset($audience);
-    $i=0;
+      $i=0;
       while (list($key, $value) = each ($audience)) {
-    $i++;
-      $html_msg['EMAIL_FIRST_NAME'] = $value['firstname'];
-      $html_msg['EMAIL_LAST_NAME']  = $value['lastname'];
-      $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
-      zen_mail($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'product_notification','');
-      echo zen_image(DIR_WS_ICONS . 'tick.gif', $value['email_address']);
+        $i++;
+        $html_msg['EMAIL_FIRST_NAME'] = $value['firstname'];
+        $html_msg['EMAIL_LAST_NAME']  = $value['lastname'];
+        $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
+        zen_mail($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'product_notification','');
+        echo zen_image(DIR_WS_ICONS . 'tick.gif', $value['email_address']);
 
-      //force output to the screen to show status indicator each time a message is sent...
-      if (function_exists('ob_flush')) @ob_flush();
-      @flush();
+        //force output to the screen to show status indicator each time a message is sent...
+        if (function_exists('ob_flush')) @ob_flush();
+        @flush();
       }
 
       $newsletter_id = zen_db_prepare_input($newsletter_id);

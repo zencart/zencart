@@ -3,7 +3,7 @@
  * dashboard widget  Edit Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
@@ -12,6 +12,7 @@ use ZenCart\Admin\DashboardWidget\WidgetManager;
 ?>
 <div>
 <form name="widget-edit" action="#" method="post" class="widget-edit-form">
+  <input type="hidden" name="ajaxSecurityToken" value="<?php echo $_SESSION['ajaxSecurityToken']; ?>">
   <input type="hidden" name="id" value="<?php echo $tplVars['id']; ?>">
   <fieldset>
     <legend><?php echo 'Widget Settings'; ?></legend>
@@ -44,11 +45,11 @@ $(function() {
       });
   });
   $('.widget-edit-form').submit(function(f) {
-    var str = $(this).serialize();
+    var str = $(this).serialize()
     var id =  $(this).find("input[name='id']").val()
     zcJS.ajax({
         url: "zcAjaxHandler.php?act=dashboardWidget&method=submitWidgetEdit",
-        data: {form: str}
+        data: str
       }).done(function( response ) {
         if (response && response.timerKey)
         {

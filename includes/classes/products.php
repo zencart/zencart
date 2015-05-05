@@ -3,10 +3,10 @@
  * products class
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: products.php 4265 2006-08-25 08:09:36Z drbyte $
+ * @version $Id: products.php 4265 2006-08-25 08:09:36Z drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -21,7 +21,7 @@ class products extends base {
   var $modules, $selected_module;
 
   // class constructor
-  function products($module = '') {
+  function __construct() {
   }
 
   function get_products_in_category($zf_category_id, $zf_recurse=true, $zf_product_ids_only=false) {

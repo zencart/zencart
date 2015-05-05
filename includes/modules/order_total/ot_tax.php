@@ -3,15 +3,15 @@
  * ot_tax order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_tax.php 17018 2010-07-27 07:25:41Z drbyte $
+ * @version $Id: ot_tax.php 17018 drbyte  Modified in v1.6.0 $
  */
   class ot_tax {
     var $title, $output;
 
-    function ot_tax() {
+    function __construct() {
       $this->code = 'ot_tax';
       $this->title = MODULE_ORDER_TOTAL_TAX_TITLE;
       $this->description = MODULE_ORDER_TOTAL_TAX_DESCRIPTION;

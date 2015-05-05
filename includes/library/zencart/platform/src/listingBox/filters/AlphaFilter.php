@@ -14,25 +14,25 @@ namespace ZenCart\Platform\listingBox\filters;
 class AlphaFilter extends AbstractFilter implements FilterInterface
 {
     /**
-     * @param array $productQuery
+     * @param array $listingQuery
      * @return array
      */
-    public function filterItem(array $productQuery)
+    public function filterItem(array $listingQuery)
     {
         if ((int)$this->request->readGet('alpha_filter_id', 0) == 0) {
-            return $productQuery;
+            return $listingQuery;
         }
         $alphaSortListSearch = explode(';', '0:reset_placeholder;' . PRODUCT_LIST_ALPHA_SORTER_LIST);
         for ($j = 0, $n = sizeof($alphaSortListSearch); $j < $n; $j++) {
             if ((int)$this->request->readGet('alpha_filter_id') == $j) {
                 $elements = explode(':', $alphaSortListSearch [$j]);
                 $pattern = str_replace(',', '', $elements [1]);
-                $productQuery ['whereClauses'] [] = array(
+                $listingQuery ['whereClauses'] [] = array(
                     'custom' => " AND pd.products_name REGEXP '^[" . $pattern . "]' "
                 );
                 break;
             }
         }
-        return $productQuery;
+        return $listingQuery;
     }
 }

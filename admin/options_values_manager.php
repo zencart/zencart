@@ -94,7 +94,7 @@
                 $check_dups .= ' - ' . $check->fields['products_options_values_id'];
                 $check->MoveNext();
               }
-              $duplicate_option_values .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $check_dups;
+              $duplicate_option_values .= ' <b>' . strtoupper($languages[$i]['name']) . '</b> : ' . $check_dups;
             }
           }
         }
@@ -144,7 +144,7 @@
                 $check_dups .= ' - ' . $check->fields['products_options_values_id'];
                 $check->MoveNext();
               }
-              $duplicate_option_values .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $check_dups;
+              $duplicate_option_values .= ' <b>' . strtoupper($languages[$i]['id']) . '</b> : ' . $check_dups;
             }
           }
         }
