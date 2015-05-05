@@ -3,7 +3,7 @@
  *  product_info main_template_vars.php
  *
  * @package productTypes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
@@ -32,10 +32,9 @@
 
     $tpl_page_body = '/tpl_product_info_noproduct.php';
     if (!$flagHasCartContents) {
-      $listingBoxManager = zcListingBoxManager::getInstance ('MISSING_PRODUCT');
-      $listingBoxManager->buildListingBoxes ();
-      $listingBoxes = $listingBoxManager->getListingBoxes ();
-      $tplVars['listingBoxes'] = $listingBoxes;
+        $listingBoxManager = new ZenCart\Platform\listingBox\Manager('MISSING_PRODUCT', $db, $zcRequest);
+        $listingBoxes = $listingBoxManager->getListingBoxes ();
+        $tplVars['listingBoxes'] = $listingBoxes;
     }
 
   } else {
