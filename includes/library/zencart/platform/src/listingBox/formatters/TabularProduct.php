@@ -170,12 +170,12 @@ class TabularProduct extends AbstractFormatter implements FormatterInterface
                         'action'
                     )) . 'action=buy_now&products_id=' . $item ['products_id']) . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT, 'class="listingBuyNowButton"') . '</a>';
         }
-        if ($this->testShowBuyNow($item)) {
+        if ($this->testShowAddProduct($item)) {
             $result = zen_draw_form('cart_quantity', zen_href_link($this->request->readGet('main_page'), zen_get_all_get_params(array(
                         'action'
                     )) . 'action=add_product&products_id=' . $item ['products_id']), 'post', 'enctype="multipart/form-data"') . '<input type="text" name="cart_quantity" value="' . (zen_get_buy_now_qty($item ['products_id'])) . '" maxlength="6" size="4" /><br />' . zen_draw_hidden_field('products_id', $item ['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT) . '</form>';
         }
-        if ($this->testShowAddProduct($item)) {
+        if ($this->testShowBuyNow($item)) {
 
             $result = '<a href="' . zen_href_link($this->request->readGet('main_page'), zen_get_all_get_params(array(
                         'action'
