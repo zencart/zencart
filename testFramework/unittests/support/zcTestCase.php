@@ -66,6 +66,13 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
     require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
     require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
 
+    // Constants for attribute dependencies
+    if (!defined('PRODUCTS_OPTIONS_TYPE_SELECT')) define('PRODUCTS_OPTIONS_TYPE_SELECT', '0');
+    if (!defined('PRODUCTS_OPTIONS_TYPE_TEXT')) define('PRODUCTS_OPTIONS_TYPE_TEXT', '1');
+    if (!defined('PRODUCTS_OPTIONS_TYPE_RADIO')) define('PRODUCTS_OPTIONS_TYPE_RADIO', '2');
+    if (!defined('PRODUCTS_OPTIONS_TYPE_CHECKBOX')) define('PRODUCTS_OPTIONS_TYPE_CHECKBOX', '3');
+    if (!defined('PRODUCTS_OPTIONS_TYPE_FILE')) define('PRODUCTS_OPTIONS_TYPE_FILE', '4');
+    if (!defined('PRODUCTS_OPTIONS_TYPE_READONLY')) define('PRODUCTS_OPTIONS_TYPE_READONLY', '5');
 
   }
 }
