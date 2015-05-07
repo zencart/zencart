@@ -1,7 +1,7 @@
 <?php
 /**
  * functions_lookups.php
- * Lookup Functions for various Zen Cart activities such as countries, prices, products, product types, etc
+ * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
  * @copyright Copyright 2003-2015 Zen Cart Development Team
@@ -969,4 +969,3 @@
     return $new_range;
   }
 
-?>

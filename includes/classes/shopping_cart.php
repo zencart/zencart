@@ -1833,7 +1833,7 @@ class shoppingCart extends base {
    * @param string forward destination
    * @param url parameters
    */
-  function actionAddProduct($goto, $parameters) {
+  function actionAddProduct($goto, $parameters, $allowRedirect = true) {
     global $db, $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'A: FUNCTION ' . __FUNCTION__, 'caution');
 
@@ -1983,9 +1983,9 @@ class shoppingCart extends base {
 // display message if all is good and not on shopping_cart page
       if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {
         $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
-        zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
+        if ($allowRedirect) zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
       } else {
-        zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+        if ($allowRedirect) zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
       }
     } else {
       // errors found with attributes - perhaps display an additional message here, using an observer class to add to the messageStack
@@ -2074,7 +2074,8 @@ class shoppingCart extends base {
     $addCount = 0;
     if (is_array($_POST['products_id']) && sizeof($_POST['products_id']) > 0) {
 //echo '<pre>'; echo var_dump($_POST['products_id']); echo '</pre>';
-      while ( list( $key, $val ) = each($_POST['products_id']) ) {
+      $products_list = $_POST['products_id'];
+      while ( list( $key, $val ) = each($products_list) ) {
         $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
         if (is_numeric($val) && $val > 0) {
 
@@ -2088,7 +2089,8 @@ class shoppingCart extends base {
             $_GET['action'] = 'add_product';
             $_POST['products_id'] = $prodId;
             $_POST['cart_quantity'] = 1;
-            $this->actionAddProduct($goto, $parameters);
+            unset($_POST['id']);
+            $this->actionAddProduct($goto, $parameters, false);
             continue;
           }
 
