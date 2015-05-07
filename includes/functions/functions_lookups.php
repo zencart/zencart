@@ -239,38 +239,49 @@
   function zen_requires_attribute_selection($products_id) {
     global $db;
 
-    // this line is for legacy support for contributed addons; remove after v1.6.x series
-    if ($selectionRequired === 'false') $selectionRequired = false;
+    $noDoubles = array();
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_SELECT;
 
-    $selectionTypes = array();
-    $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_RADIO;
-    $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_CHECKBOX;
-    $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_SELECT;
-
-    // ignore/include READONLY attributes when determining if attribute selection must be offered for add-to-cart
+    $noSingles = array();
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_CHECKBOX;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_FILE;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_TEXT;
     if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '0') {
-      $selectionTypes[] = PRODUCTS_OPTIONS_TYPE_READONLY;
+      $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
     }
 
-    $joins = $wheres = '';
-    if ($selectionRequired === true) {
-      $joins = " left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id ";
-      $wheres = " and po.products_options_type in (" . implode(',', $selectionTypes) . ")";
-    }
-
-    $query = "select pa.products_attributes_id
-              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa" .
-              $joins . "
+    // advanced query
+    $query = "select pa.products_attributes_id, pa.options_id, count(pa.options_values_id) as number_of_choices, po.products_options_type as options_type
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
               where pa.products_id = " . (int)$products_id . "
-              and pa.products_attributes_id > 0 " .
-              $wheres;
-
-    // set limit to 2 since we're only interested in 0=no attribs, 1=has only 1 required attrib, 2=has more than 1 required attrib
-    $query .= " limit 2";
-
+              group by pa.options_id";
     $result = $db->Execute($query);
 
-    return $result->recordCount();
+    // if no attributes found, return 0
+    if ($result->RecordCount() == 0) return 0;
+
+    // loop through the results, auditing for whether each kind of attribute requires "selection" or not
+    $fail = false;
+    foreach($result as $row=>$field) {
+      // if there's more than 1 for any $noDoubles type, we fail
+      if (in_array($field['options_type'], $noDoubles) && $field['number_of_choices'] > 1) {
+        $fail = true;
+        break;
+      }
+      // if there's any type from $noSingles, we fail
+      if (in_array($field['options_type'], $noSingles)) {
+        $fail = true;
+        break;
+      }
+    }
+
+    // return 1 to indicate selections must be made, so a more-info button needs to be presented
+    if ($fail) return 1;
+
+    // return -1 to indicate that defaults can be automatically added by just using a buy-now button
+    return -1;
   }
 
 

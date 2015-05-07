@@ -263,11 +263,11 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
     {
         $allowAddCart = (zen_get_products_allow_add_to_cart($item ['products_id']) == 'Y');
         $multiAddCart = (constant($this->prefix . 'LISTING_MULTIPLE_ADD_TO_CART') > 0 && $item ['products_qty_box_status'] != 0);
-        $hasAttributes = zen_has_product_attributes($item ['products_id']) > ($multiAddCart ? 0 : 1);
+        $requiresAttributeChoices = zen_requires_attribute_selection($item ['products_id']) == 1;
 
         $link = '<a href="' . zen_href_link($item['product_info_page'], 'cPath=' . $item ['productCpath'] . '&products_id=' . $item ['products_id']) . '">' . MORE_INFO_TEXT . '</a>';
 
-        $link = $this->buildBuyNowLink($link, $allowAddCart, $hasAttributes, $multiAddCart, $item);
+        $link = $this->buildBuyNowLink($link, $allowAddCart, $requiresAttributeChoices, $multiAddCart, $item);
 
         $productsLink = '<a href="' . zen_href_link($item['product_info_page'], 'cPath=' . $item ['productCpath']) . '&products_id=' . $item ['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
         $itemEntry = zen_get_buy_now_button($item ['products_id'], $link, $productsLink) . '<br />' . zen_get_products_quantity_min_units_display($item ['products_id']) . str_repeat('<br clear="all" />', substr(constant($this->prefix . $key), 3, 1));
@@ -282,13 +282,13 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
      * @param $item
      * @return string
      */
-    protected function buildBuyNowLink($link, $allowAddCart, $hasAttributes, $multiAddCart, $item)
+    protected function buildBuyNowLink($link, $allowAddCart, $requiresAttributeChoices, $multiAddCart, $item)
     {
-        if ($allowAddCart && !$hasAttributes && $multiAddCart) {
+        if ($allowAddCart && !$requiresAttributeChoices && $multiAddCart) {
             $link = constant('TEXT_' . $this->prefix . 'LISTING_MULTIPLE_ADD_TO_CART') . "<input type=\"text\" name=\"products_id[" . $item ['products_id'] . "]\" value=\"0\" size=\"4\" />";
             $this->countQtyBoxItems++;
         }
-        if ($allowAddCart && !$hasAttributes && !$multiAddCart) {
+        if ($allowAddCart && !$requiresAttributeChoices && !$multiAddCart) {
             $link = '<a href="' . zen_href_link($this->request->readGet('main_page'), zen_get_all_get_params(array(
                         'action'
                     )) . 'action=buy_now&products_id=' . $item ['products_id']) . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT) . '</a>&nbsp;';

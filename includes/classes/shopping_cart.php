@@ -1839,24 +1839,26 @@ class shoppingCart extends base {
 
     if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
 
-      // Add default attribute if not specified and only one selectable attrib exists for this product
-      if (!isset($_POST['id']) && zen_has_product_attributes($_POST['products_id']) == 1) {
+      // Add default attributes if none specified and only one selectable attrib exists for each of this product's option-names
+      if (!isset($_POST['id']) && zen_requires_attribute_selection($_POST['products_id']) == -1) {
         $sql = "select distinct popt.products_options_id, popt.products_options_name
               from        " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
               where           patrib.products_id='" . (int)$_POST['products_id'] . "'
               and             patrib.options_id = popt.products_options_id
-              and             popt.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 1";
+              and             popt.language_id = " . (int)$_SESSION['languages_id'];
         $products_options_names = $db->Execute($sql);
 
+        foreach($products_options_names as $row => $option) {
           $sql = "select pov.products_options_values_id, pov.products_options_values_name
                   from   " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                   where  pa.products_id = '" . (int)$_POST['products_id'] . "'
-              and       pa.options_id = '" . (int)$products_options_names->fields['products_options_id'] . "'
+                  and    pa.options_id = '" . (int)$option['products_options_id'] . "'
                   and    pa.options_values_id = pov.products_options_values_id
-              and       pov.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 1 ";
+                  and    pov.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 2 ";
           $products_options = $db->Execute($sql);
           if ($products_options->RecordCount() == 1) {
-          $_POST['id'][$products_options_names->fields['products_options_id']] = $products_options->fields['products_options_values_id'];
+            $_POST['id'][$option['products_options_id']] = $products_options->fields['products_options_values_id'];
+          }
         }
       }
 
@@ -2003,14 +2005,14 @@ class shoppingCart extends base {
     $this->flag_duplicate_msgs_set = false;
     if (isset($_GET['products_id'])) {
 
-      $attribCount = zen_has_product_attributes($_GET['products_id']);
+      $requiresAttributeChoices = zen_requires_attribute_selection($_GET['products_id']);
 
-      // if product has more than one attrib, go to product page.
-      if ($attribCount > 1) {
+      // if product has attributes requiring the user to make a choice, go to product page.
+      if ($requiresAttributeChoices == 1) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['products_id']), 'products_id=' . $_GET['products_id']));
 
-      // If has only one user-selectable attribute, treat as a regular actionAddProduct call
-      } elseif ($attribCount == 1) {
+      // If has only single default attributes, treat as a regular actionAddProduct call
+      } elseif ($requiresAttributeChoices == -1) {
         $_GET['action'] = 'add_product';
         $_POST['products_id'] = $_GET['products_id'];
         $_POST['cart_quantity'] = 1;
@@ -2075,6 +2077,22 @@ class shoppingCart extends base {
       while ( list( $key, $val ) = each($_POST['products_id']) ) {
         $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
         if (is_numeric($val) && $val > 0) {
+
+          // check whether any attribute choices should have been made for this product
+          $requiresAttributeChoices = zen_requires_attribute_selection($prodId);
+          if ($requiresAttributeChoices == 1) {
+            zen_redirect(zen_href_link(zen_get_info_page($prodId), 'products_id=' . $prodId));
+
+          // apply default attributes where no selections are required
+          } elseif ($requiresAttributeChoices == -1) {
+            $_GET['action'] = 'add_product';
+            $_POST['products_id'] = $prodId;
+            $_POST['cart_quantity'] = 1;
+            $this->actionAddProduct($goto, $parameters);
+            continue;
+          }
+
+          // else carry on as usual
           $adjust_max = false;
           $qty = $val;
           $add_max = zen_get_products_quantity_order_max($prodId);
