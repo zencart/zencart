@@ -26,6 +26,7 @@ class testFormatterCase extends zcListingBoxTestCase
         define('TEST_LIST_PRICE', 1);
         define('TEST_LISTING_MULTIPLE_ADD_TO_CART', 1);
         define('TOPMOST_CATEGORY_PARENT_ID', 0);
+        if (!defined('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART')) define('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART', 0);
 
 
     }

@@ -61,6 +61,7 @@ abstract class zcListingBoxTestCase extends zcCatalogTestCase
         define('TABLE_PRODUCT_TYPES', '');
         define('TABLE_PRODUCT_TYPE_LAYOUT', '');
         define('TABLE_PRODUCTS_ATTRIBUTES', '');
+        define('TABLE_PRODUCTS_OPTIONS', '');
 //
         define('TABLE_HEADING_PRODUCTS', 'TABLE_HEADING_PRODUCTS');
         define('TABLE_HEADING_MODEL', 'TABLE_HEADING_MODEL');
@@ -98,9 +99,12 @@ abstract class zcListingBoxTestCase extends zcCatalogTestCase
         define('PRODUCT_LIST_IMAGE', 1);
         define('PRODUCT_LIST_FILTER', 1);
 //
+        if (!defined('PRODUCT_LIST_PRICE_BUY_NOW')) define('PRODUCT_LIST_PRICE_BUY_NOW', 0);
+        if (!defined('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART')) define('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART', 0);
+//
         define('PRODUCT_LIST_ALPHA_SORTER', 1);
         define('FILENAME_DEFAULT', 1);
-//
+        define('TEXT_PRODUCT_LISTING_MULTIPLE_ADD_TO_CART', 'Add');
 //
 //        define('TABLE_PRODUCT_MUSIC_EXTRA', 'product_music_extra');
         define('PRODUCT_LIST_ALPHA_SORTER_LIST', 'A - C:A,B,C;D - F:D,E,F;G - I:G,H,I;J - L:J,K,L;M - N:M,N;O - Q:O,P,Q;R - T:R,S,T;U - W:U,V,W;X - Z:X,Y,Z;#:0,1,2,3,4,5,6,7,8,9');
