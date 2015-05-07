@@ -187,7 +187,6 @@ define('FILENAME_NEW_PRODUCTS', 'new_products.php');
 define('FILENAME_OTHER_IMAGES_NAMES','other_images_names.php');
 define('FILENAME_PREV_NEXT', 'products_previous_next.php');
 define('FILENAME_PREV_NEXT_DISPLAY', 'products_previous_next_display.php');
-define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
 define('FILENAME_PRODUCTS_DISCOUNT_PRICES','products_discount_prices.php');
 define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
