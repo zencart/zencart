@@ -210,6 +210,23 @@
     return $manufacturers_array;
   }
 
+  /**
+   * check how many attributes are defined for the specified product
+   *
+   * @param integer $products_id
+   * @return integer
+   */
+  function zen_has_product_attributes($products_id) {
+    global $db;
+    $query = "select pa.products_attributes_id
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              where pa.products_id = " . (int)$products_id . "
+              limit 2";
+    $result = $db->Execute($query);
+
+    return $result->RecordCount();
+  }
+
 /**
  *  Check if specified product has attributes which require selection before adding product to the cart.
  *  This is used by various parts of the code to determine whether to allow for add-to-cart actions
@@ -217,9 +234,9 @@
  *
  *  @param integer $products_id       The product to inspect
  *  @param boolean $selectionRequired Whether to include attributes which require "selection" by the user
- *  @return boolean
+ *  @return integer
  */
-  function zen_has_product_attributes($products_id, $selectionRequired = true) {
+  function zen_requires_attribute_selection($products_id) {
     global $db;
 
     // this line is for legacy support for contributed addons; remove after v1.6.x series

@@ -685,7 +685,7 @@ class shoppingCart extends base {
         }
 
         // adjust price for discounts when priced by attribute
-        if ($product->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($product->fields['products_id'], false)) {
+        if ($product->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($product->fields['products_id'])) {
           // reset for priced by attributes
           //            $products_price = $products->fields['products_price'];
           if ($special_price) {
@@ -1225,7 +1225,7 @@ class shoppingCart extends base {
         }
 
         // adjust price for discounts when priced by attribute
-        if ($products->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($products->fields['products_id'], false)) {
+        if ($products->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($products->fields['products_id'])) {
           // reset for priced by attributes
           //            $products_price = $products->fields['products_price'];
           if ($special_price) {
@@ -1848,14 +1848,14 @@ class shoppingCart extends base {
               and             popt.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 1";
         $products_options_names = $db->Execute($sql);
 
-        $sql = "select    pov.products_options_values_id, pov.products_options_values_name
-              from      " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
-              where     pa.products_id = '" . (int)$_POST['products_id'] . "'
+          $sql = "select pov.products_options_values_id, pov.products_options_values_name
+                  from   " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
+                  where  pa.products_id = '" . (int)$_POST['products_id'] . "'
               and       pa.options_id = '" . (int)$products_options_names->fields['products_options_id'] . "'
-              and       pa.options_values_id = pov.products_options_values_id
+                  and    pa.options_values_id = pov.products_options_values_id
               and       pov.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 1 ";
-        $products_options = $db->Execute($sql);
-        if ($products_options->RecordCount() == 1) {
+          $products_options = $db->Execute($sql);
+          if ($products_options->RecordCount() == 1) {
           $_POST['id'][$products_options_names->fields['products_options_id']] = $products_options->fields['products_options_values_id'];
         }
       }
@@ -2209,11 +2209,11 @@ class shoppingCart extends base {
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
     if ($_SESSION['customer_id'] && isset($_GET['pid'])) {
-      $attribCount = zen_has_product_attributes($_GET['pid']);
-      if ($attribCount > 1) {
+      $requiresAttributeChoices = zen_requires_attribute_selection($_GET['pid']);
+      if ($requiresAttributeChoices == 1) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['pid']), 'products_id=' . $_GET['pid']));
 
-      } elseif ($attribCount == 1) {
+      } elseif ($requiresAttributeChoices == -1) {
         $_GET['action'] = 'add_product';
         $_POST['products_id'] = $_GET['pid'];
         $_POST['cart_quantity'] = 1;
