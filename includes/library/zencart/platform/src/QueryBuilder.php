@@ -4,10 +4,9 @@
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: New in v1.6.0 $
  */
 namespace ZenCart\Platform;
-//use ZenCart\ListingBox\DerivedItems;
 /**
  * Class QueryBuilder
  * @package ZenCart\Platform
@@ -44,7 +43,7 @@ class QueryBuilder extends \base
     }
     public function initParts(array $listingQuery)
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_INIT_START');
+        $this->notify('NOTIFY_QUERYBUILDER_INIT_START');
         $this->parts ['bindVars'] = issetorArray($listingQuery, 'bindVars', array());
         $this->parts ['selectList'] = issetorArray($listingQuery, 'selectList', array());
         $this->parts ['orderBys'] = issetorArray($listingQuery, 'orderBys', array());
@@ -61,7 +60,7 @@ class QueryBuilder extends \base
             $this->parts ['mainTableFkeyField'] = $listingQuery['mainTable'] ['fkeyFieldLeft'];
         }
         $this->parts ['tableAliases'] [$this->parts ['mainTableName']] = $this->parts ['mainTableAlias'];
-        $this->notify('NOTIFY_QUERY_BUILDER_INIT_END');
+        $this->notify('NOTIFY_QUERYBUILDER_INIT_END');
     }
 
     /**
@@ -73,7 +72,7 @@ class QueryBuilder extends \base
         if (!isset($this->parts)) {
             $this->initParts($listingQuery);
         }
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSQUERY_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSQUERY_START');
         $this->query ['select'] = "SELECT " . (issetorArray($listingQuery, 'isDistinct', false) ? ' DISTINCT ' : '') . $this->parts ['mainTableAlias'] . ".*";
         $this->preProcessJoins();
         $this->query ['joins'] = '';
@@ -85,11 +84,12 @@ class QueryBuilder extends \base
         $this->processSelectList();
         $this->setFinalQuery($listingQuery);
         $this->processBindVars();
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSQUERY_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSQUERY_END');
     }
 
     protected function setFinalQuery($listingQuery)
     {
+        $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_START');
         $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .
             $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'];
         if (!isset($this->query['countSql'])) {
@@ -98,6 +98,7 @@ class QueryBuilder extends \base
                                  AS total " . $this->query ['table'] . $this->query ['joins'] .
                 $this->query ['where'];;
         }
+        $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_END');
     }
     /**
      * preprocess joins
@@ -105,7 +106,7 @@ class QueryBuilder extends \base
      */
     protected function preProcessJoins()
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PREPROCESSJOINS_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PREPROCESSJOINS_START');
         if (count($this->parts ['joinTables']) == 0) {
             return;
         }
@@ -113,7 +114,7 @@ class QueryBuilder extends \base
             $this->parts ['tableAliases'] [$joinTable ['table']] = $joinTable ['alias'];
         }
         $this->query ['joins'] = '';
-        $this->notify('NOTIFY_QUERY_BUILDER_PREPROCESSJOINS_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PREPROCESSJOINS_END');
     }
 
     /**
@@ -122,7 +123,7 @@ class QueryBuilder extends \base
      */
     protected function processJoins()
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINS_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINS_START');
         if (count($this->parts ['joinTables']) == 0) {
             return;
         }
@@ -134,7 +135,7 @@ class QueryBuilder extends \base
         }
         $this->query ['table'] .= "(";
         $this->query ['joins'] .= ")";
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINS_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINS_END');
     }
 
     /**
@@ -144,11 +145,11 @@ class QueryBuilder extends \base
      */
     protected function processJoinCustomAnd($joinTable)
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINSCUSTOMAND_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINSCUSTOMAND_START');
         if (isset($joinTable ['customAnd'])) {
             $this->query ['joins'] .= " " . $joinTable ['customAnd'] . " ";
         }
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINSCUSTOMAND_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINSCUSTOMAND_END');
     }
 
     /**
@@ -158,11 +159,15 @@ class QueryBuilder extends \base
      */
     protected function processJoinAddColumns($joinTable)
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINADDCOLUMN_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINADDCOLUMN_START');
         if (isset($joinTable ['addColumns']) && $joinTable ['addColumns']) {
             $this->query ['select'] .= ", " . $joinTable ['alias'] . ".*";
         }
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINADDCOLUMN_ENDT');
+        if (isset($joinTable ['selectColumns'])) {
+            foreach ($joinTable ['selectColumns'] as $column)
+            $this->query ['select'] .= ", " . $joinTable ['alias'] . "." . $column;
+        }
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINADDCOLUMN_ENDT');
     }
 
     /**
@@ -172,7 +177,7 @@ class QueryBuilder extends \base
      */
     protected function processJoinFkeyField($joinTable)
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINFKEYFIELD_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINFKEYFIELD_START');
         $fkeyFieldLeft = $this->parts ['mainTableAlias'] . '.' . $this->parts ['mainTableFkeyField'];
         $fkeyFieldRight = $joinTable ['alias'] . '.' . $this->parts ['mainTableFkeyField'];
         if (!isset($joinTable ['fkeyFieldLeft'])) {
@@ -189,7 +194,7 @@ class QueryBuilder extends \base
             $fkeyFieldRight = $joinTable ['alias'] . '.' . $joinTable ['fkeyFieldRight'];
         }
         $this->query ['joins'] .= " ON " . $fkeyFieldLeft . " = " . $fkeyFieldRight . " ";
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINFKEYFIELD_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINFKEYFIELD_END');
     }
 
     /**
@@ -197,7 +202,7 @@ class QueryBuilder extends \base
      */
     protected function processWhereClause()
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSWHERECLAUSE_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSE_START');
         $this->query ['where'] = ' WHERE 1';
         if (count($this->parts ['whereClauses']) == 0) {
             return;
@@ -209,7 +214,7 @@ class QueryBuilder extends \base
             }
             $this->processWhereClauseTest($whereClause);
         }
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSWHERECLAUSE_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSE_END');
     }
 
     /**
@@ -219,7 +224,7 @@ class QueryBuilder extends \base
      */
     protected function processWhereClauseTest($whereClause)
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSWHERECLAUSETEST_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSETEST_START');
         if (!isset($whereClause ['test'])) {
             $whereClause ['test'] = '=';
         }
@@ -229,7 +234,7 @@ class QueryBuilder extends \base
 
         $addTest = (isset($hashMap[strtoupper($whereClause ['test'])])) ? $hashMap[strtoupper($whereClause ['test'])] : $default;
         $this->query['where'] .= " " . $whereClause ['type'] . " " . $this->parts ['tableAliases'] [$whereClause ['table']] . "." . $whereClause ['field'] . $addTest;
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSWHERECLAUSETEST_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSETEST_END');
     }
 
     /**
@@ -237,7 +242,7 @@ class QueryBuilder extends \base
      */
     protected function processOrderBys()
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSORDERBYS_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSORDERBYS_START');
         $this->query ['orderBy'] = "";
         if (count($this->parts ['orderBys']) == 0) {
             return;
@@ -252,7 +257,7 @@ class QueryBuilder extends \base
         if (substr($this->query ['orderBy'], strlen($this->query ['orderBy']) - 2) == ', ') {
             $this->query ['orderBy'] = substr($this->query ['orderBy'], 0, strlen($this->query ['orderBy']) - 2) . " ";
         }
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSORDERBYS_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSORDERBYS_END');
     }
 
     protected function processOrderByEntry($orderBy)
@@ -273,14 +278,14 @@ class QueryBuilder extends \base
      */
     protected function processSelectList()
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSSELECTLIST_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSSELECTLIST_START');
         if (count($this->parts ['selectList']) == 0) {
             return;
         }
         foreach ($this->parts ['selectList'] as $selectList) {
             $this->query ['select'] .= ", " . $selectList;
         }
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSSELECTLIST_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSSELECTLIST_END');
     }
 
     /**
@@ -288,7 +293,7 @@ class QueryBuilder extends \base
      */
     protected function processBindVars()
     {
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSBINDVARS_START');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSBINDVARS_START');
         if (count($this->parts ['bindVars']) == 0) {
             return;
         }
@@ -298,7 +303,7 @@ class QueryBuilder extends \base
                 $this->query['countSql'] = $this->dbConn->bindVars($this->query['countSql'], $bindVars [0], $bindVars [1], $bindVars [2]);
             }
         }
-        $this->notify('NOTIFY_QUERY_BUILDER_PROCESSBINDVARS_END');
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSBINDVARS_END');
     }
 
     /**
@@ -339,6 +344,6 @@ class QueryBuilder extends \base
     public function setParts($value)
     {
         $this->parts = $value;
-        $this->notify('NOTIFY_QUERY_BUILDER_SETPARTS_START');
+        $this->notify('NOTIFY_QUERYBUILDER_SETPARTS_START');
     }
 }
