@@ -32,7 +32,7 @@ abstract class AbstractScroller extends \base
         $params['currentPage'] = isset($params['currentPage']) ? $params['currentPage'] : 1;
         $params['scrollerLinkParams'] = isset($params['scrollerLinkParams']) ? $params['scrollerLinkParams'] : '';
         $params['maxPageLinks'] = isset($params['maxPageLinks']) ? $params['maxPageLinks'] : 5;
-        $params['navLinkText'] = isset($params['navLinkText']) ? $params['maxPageLinks'] : TEXT_DISPLAY_NUMBER_OF_PRODUCTS;
+        $params['navLinkText'] = isset($params['navLinkText']) ? $params['navLinkText'] : TEXT_DISPLAY_NUMBER_OF_PRODUCTS;
         $this->notify('NOTIFY_PAGINATOR_SCROLLER_BEFORE_PROCESS', $params);
         $this->process($adapter->getResults(), $params);
         $this->results = array_merge($this->results, $adapter->getResults());

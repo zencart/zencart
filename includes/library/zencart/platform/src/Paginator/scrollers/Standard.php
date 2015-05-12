@@ -29,11 +29,11 @@ class Standard extends AbstractScroller
         $results = array();
         $linkParams = $params['scrollerLinkParams'];
         $maxPageLinks = $params['maxPageLinks'];
-        $pageVarName = $params['pagingVarName'];
+        $pagingVarName = $params['pagingVarName'];
         $cmd = $params['cmd'];
 
         if (!isset ($params['disableZenGetAllGetParams'])) {
-            $linkParams = $this->getRequestParams(array('exclude' => array($pageVarName, 'action'),
+            $linkParams = $this->getRequestParams(array('exclude' => array($pagingVarName, 'action'),
                                                         'linkParams' => $linkParams));
         }
         $pageNumber = intval($params['currentPage'] / $maxPageLinks);
@@ -42,6 +42,7 @@ class Standard extends AbstractScroller
         }
         $linkList = $this->buildLinkList($pageNumber, $linkParams, $data, $params);
         $results['linkList'] = $linkList;
+        $results['pagingVarName'] = $pagingVarName;
         $results['hasItems'] = (count($linkList) > 0);
         $results['nextPage'] = $params['currentPage'] + 1;
         $results['totalItems'] = $data['totalItemCount'];
@@ -52,10 +53,10 @@ class Standard extends AbstractScroller
         $results['flagHasNext'] = $params['currentPage'] < $data['totalPages'] ? true : false;
 
         $buildLinkParams = array('cmd' => $cmd,
-                                 'linkParams' => $linkParams . $pageVarName . '=' . ($params['currentPage'] - 1));
+                                 'linkParams' => $linkParams . $pagingVarName . '=' . ($params['currentPage'] - 1));
         $results['previousLink'] = $this->buildLink($buildLinkParams);
         $buildLinkParams = array('cmd' => $cmd,
-                                 'linkParams' => $linkParams . $pageVarName . '=' . ($params['currentPage'] + 1));
+                                 'linkParams' => $linkParams . $pagingVarName . '=' . ($params['currentPage'] + 1));
         $results['nextLink'] = $this->buildLink($buildLinkParams);
         $this->results = $results;
 
