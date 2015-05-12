@@ -685,7 +685,7 @@ class shoppingCart extends base {
         }
 
         // adjust price for discounts when priced by attribute
-        if ($product->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($product->fields['products_id'], 'false')) {
+        if ($product->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($product->fields['products_id'])) {
           // reset for priced by attributes
           //            $products_price = $products->fields['products_price'];
           if ($special_price) {
@@ -1225,7 +1225,7 @@ class shoppingCart extends base {
         }
 
         // adjust price for discounts when priced by attribute
-        if ($products->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($products->fields['products_id'], 'false')) {
+        if ($products->fields['products_priced_by_attribute'] == '1' and zen_has_product_attributes($products->fields['products_id'])) {
           // reset for priced by attributes
           //            $products_price = $products->fields['products_price'];
           if ($special_price) {
@@ -1833,11 +1833,35 @@ class shoppingCart extends base {
    * @param string forward destination
    * @param url parameters
    */
-  function actionAddProduct($goto, $parameters) {
+  function actionAddProduct($goto, $parameters, $allowRedirect = true) {
     global $db, $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'A: FUNCTION ' . __FUNCTION__, 'caution');
 
     if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
+
+      // Add default attributes if none specified and only one selectable attrib exists for each of this product's option-names
+      if (!isset($_POST['id']) && zen_requires_attribute_selection($_POST['products_id']) == -1) {
+        $sql = "select distinct popt.products_options_id, popt.products_options_name
+              from        " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
+              where           patrib.products_id='" . (int)$_POST['products_id'] . "'
+              and             patrib.options_id = popt.products_options_id
+              and             popt.language_id = " . (int)$_SESSION['languages_id'];
+        $products_options_names = $db->Execute($sql);
+
+        foreach($products_options_names as $row => $option) {
+          $sql = "select pov.products_options_values_id, pov.products_options_values_name
+                  from   " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
+                  where  pa.products_id = '" . (int)$_POST['products_id'] . "'
+                  and    pa.options_id = '" . (int)$option['products_options_id'] . "'
+                  and    pa.options_values_id = pov.products_options_values_id
+                  and    pov.language_id = '" . (int)$_SESSION['languages_id'] . "' LIMIT 2 ";
+          $products_options = $db->Execute($sql);
+          if ($products_options->RecordCount() == 1) {
+            $_POST['id'][$option['products_options_id']] = $products_options->fields['products_options_values_id'];
+          }
+        }
+      }
+
       // verify attributes and quantity first
       if ($this->display_debug_messages) $messageStack->add_session('header', 'A2: FUNCTION ' . __FUNCTION__, 'caution');
       $the_list = '';
@@ -1959,9 +1983,9 @@ class shoppingCart extends base {
 // display message if all is good and not on shopping_cart page
       if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {
         $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
-        zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
+        if ($allowRedirect) zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
       } else {
-        zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+        if ($allowRedirect) zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
       }
     } else {
       // errors found with attributes - perhaps display an additional message here, using an observer class to add to the messageStack
@@ -1978,10 +2002,24 @@ class shoppingCart extends base {
     global $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' $_GET[products_id]: ' . $_GET['products_id'], 'caution');
 
-    $this->flag_duplicate_msgs_set = FALSE;
+    $this->flag_duplicate_msgs_set = false;
     if (isset($_GET['products_id'])) {
-      if (zen_has_product_attributes($_GET['products_id'])) {
+
+      $requiresAttributeChoices = zen_requires_attribute_selection($_GET['products_id']);
+
+      // if product has attributes requiring the user to make a choice, go to product page.
+      if ($requiresAttributeChoices == 1) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['products_id']), 'products_id=' . $_GET['products_id']));
+
+      // If has only single default attributes, treat as a regular actionAddProduct call
+      } elseif ($requiresAttributeChoices == -1) {
+        $_GET['action'] = 'add_product';
+        $_POST['products_id'] = $_GET['products_id'];
+        $_POST['cart_quantity'] = 1;
+        $this->actionAddProduct($goto, $parameters);
+        return false;
+
+      // if has no attributes, add directly
       } else {
         $add_max = zen_get_products_quantity_order_max($_GET['products_id']);
         $cart_qty = $this->in_cart_mixed($_GET['products_id']);
@@ -2036,9 +2074,27 @@ class shoppingCart extends base {
     $addCount = 0;
     if (is_array($_POST['products_id']) && sizeof($_POST['products_id']) > 0) {
 //echo '<pre>'; echo var_dump($_POST['products_id']); echo '</pre>';
-      while ( list( $key, $val ) = each($_POST['products_id']) ) {
+      $products_list = $_POST['products_id'];
+      while ( list( $key, $val ) = each($products_list) ) {
         $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
         if (is_numeric($val) && $val > 0) {
+
+          // check whether any attribute choices should have been made for this product
+          $requiresAttributeChoices = zen_requires_attribute_selection($prodId);
+          if ($requiresAttributeChoices == 1) {
+            zen_redirect(zen_href_link(zen_get_info_page($prodId), 'products_id=' . $prodId));
+
+          // apply default attributes where no selections are required
+          } elseif ($requiresAttributeChoices == -1) {
+            $_GET['action'] = 'add_product';
+            $_POST['products_id'] = $prodId;
+            $_POST['cart_quantity'] = 1;
+            unset($_POST['id']);
+            $this->actionAddProduct($goto, $parameters, false);
+            continue;
+          }
+
+          // else carry on as usual
           $adjust_max = false;
           $qty = $val;
           $add_max = zen_get_products_quantity_order_max($prodId);
@@ -2173,8 +2229,17 @@ class shoppingCart extends base {
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
     if ($_SESSION['customer_id'] && isset($_GET['pid'])) {
-      if (zen_has_product_attributes($_GET['pid'])) {
+      $requiresAttributeChoices = zen_requires_attribute_selection($_GET['pid']);
+      if ($requiresAttributeChoices == 1) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['pid']), 'products_id=' . $_GET['pid']));
+
+      } elseif ($requiresAttributeChoices == -1) {
+        $_GET['action'] = 'add_product';
+        $_POST['products_id'] = $_GET['pid'];
+        $_POST['cart_quantity'] = 1;
+        $this->actionAddProduct($goto, $parameters);
+        return false;
+
       } else {
         $this->add_cart($_GET['pid'], $this->get_quantity($_GET['pid'])+1);
       }

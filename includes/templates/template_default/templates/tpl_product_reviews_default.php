@@ -3,10 +3,10 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_product_reviews_default.php 4852 2006-10-28 06:47:45Z drbyte $
+ * @version $Id: tpl_product_reviews_default.php drbyte  Modified in v1.6.0 $
  */
 ?>
 <div class="centerColumn" id="reviewsDefault">
@@ -24,7 +24,7 @@
 <div class="buttonRow">
 <?php
         // more info in place of buy now
-        if (zen_has_product_attributes($review->fields['products_id'] )) {
+        if (zen_requires_attribute_selection($review->fields['products_id']) == 1) {
           //   $link = '<p>' . '<a href="' . zen_href_link(zen_get_info_page($review->fields['products_id']), 'products_id=' . $review->fields['products_id'] ) . '">' . MORE_INFO_TEXT . '</a>' . '</p>';
           $link = '';
         } else {

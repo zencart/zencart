@@ -1,13 +1,13 @@
 <?php
 /**
  * functions_lookups.php
- * Lookup Functions for various Zen Cart activities such as countries, prices, products, product types, etc
+ * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_lookups.php 19352 2011-08-19 16:13:43Z ajeh $
+ * @version $Id: functions_lookups.php ajeh  Modified in v1.6.0 $
  */
 
 /**
@@ -210,27 +210,81 @@
     return $manufacturers_array;
   }
 
-/*
- *  Check if product has attributes
+  /**
+   * check how many attributes are defined for the specified product
+   *
+   * @param integer $products_id
+   * @return integer
+   */
+  function zen_has_product_attributes($products_id) {
+    global $db;
+    $query = "select pa.products_attributes_id
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              where pa.products_id = " . (int)$products_id . "
+              limit 2";
+    $result = $db->Execute($query);
+
+    return $result->RecordCount();
+  }
+
+/**
+ *  Check if specified product has attributes which require selection before adding product to the cart.
+ *  This is used by various parts of the code to determine whether to allow for add-to-cart actions
+ *  since adding a product without selecting attributes could lead to undesired basket contents.
+ *
+ *  @param integer $products_id       The product to inspect
+ *  @param boolean $selectionRequired Whether to include attributes which require "selection" by the user
+ *  @return integer
  */
-  function zen_has_product_attributes($products_id, $not_readonly = 'true') {
+  function zen_requires_attribute_selection($products_id) {
     global $db;
 
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' and $not_readonly == 'true') {
-      // don't include READONLY attributes to determine if attributes must be selected to add to cart
-      $attributes_query = "select pa.products_attributes_id
-                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
-                           where pa.products_id = '" . (int)$products_id . "' and po.products_options_type != '" . PRODUCTS_OPTIONS_TYPE_READONLY . "' limit 1";
-    } else {
-      // regardless of READONLY attributes no add to cart buttons
-      $attributes_query = "select pa.products_attributes_id
-                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                           where pa.products_id = '" . (int)$products_id . "' limit 1";
+    $noDoubles = array();
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_SELECT;
+
+    $noSingles = array();
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_CHECKBOX;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_FILE;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_TEXT;
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '0') {
+      $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
     }
 
-    $attributes = $db->Execute($attributes_query);
-    return !($attributes->EOF);
+    // advanced query
+    $query = "select pa.products_attributes_id, pa.options_id, count(pa.options_values_id) as number_of_choices, po.products_options_type as options_type
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
+              where pa.products_id = " . (int)$products_id . "
+              and po.language_id = " . (int)$_SESSION['languages_id'] . "
+              group by pa.options_id";
+    $result = $db->Execute($query);
+
+    // if no attributes found, return 0
+    if ($result->RecordCount() == 0) return 0;
+
+    // loop through the results, auditing for whether each kind of attribute requires "selection" or not
+    $fail = false;
+    foreach($result as $row=>$field) {
+      // if there's more than 1 for any $noDoubles type, we fail
+      if (in_array($field['options_type'], $noDoubles) && $field['number_of_choices'] > 1) {
+        $fail = true;
+        break;
+      }
+      // if there's any type from $noSingles, we fail
+      if (in_array($field['options_type'], $noSingles)) {
+        $fail = true;
+        break;
+      }
+    }
+
+    // return 1 to indicate selections must be made, so a more-info button needs to be presented
+    if ($fail) return 1;
+
+    // return -1 to indicate that defaults can be automatically added by just using a buy-now button
+    return -1;
   }
+
 
 /*
  *  Check if product has attributes values
@@ -916,4 +970,3 @@
     return $new_range;
   }
 
-?>
