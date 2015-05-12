@@ -30,7 +30,7 @@
 <?php } ?><br class="clearBoth" />
 <?php } ?>
 <?php } ?>
-<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show']  && $tplVars['listingBox']['pagination']['showPaginatorBottom']) { ?>
-<?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?>
+<?php if (isset($tplVars['listingBox']['paginator']) && $tplVars['listingBox']['paginator']['show']  && $tplVars['listingBox']['paginator']['showBottom']) { ?>
+<?php require($template->get_template_dir($tplVars['listingBox']['paginator']['scrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginator']['scrollerTemplate']); ?>
 <?php } ?>
 </div>
