@@ -33,6 +33,7 @@ abstract class AbstractListingBox extends \base
     {
         $this->request = $request;
         $this->initQueryAndLayout();
+        $this->notify('NOTIFY_LISTINGBOX_CONSTRUCT_END');
     }
 
     /**
@@ -44,10 +45,30 @@ abstract class AbstractListingBox extends \base
      */
     public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null)
     {
+
+        $this->notify('NOTIFY_LISTINGBOX_BUILDRESULTS_START');
         $this->tplVars['filter'] = $this->doFilters($db);
         $queryBuilder->processQuery($this->listingQuery);
         $query = $queryBuilder->getQuery();
         $query['dbConn'] = $db;
+        $resultItems = $this->processPaginatorResults($paginator, $query, $db);
+        $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);
+        $formatter = $this->doFormatter($finalItems, $db);
+        $this->tplVars['formatter'] = $formatter->getTplVars();
+        $this->tplVars['formattedItems'] = $formatter->getFormattedResults();
+        $this->doMultiFormSubmit($finalItems);
+        $this->normalizeTplVars($paginator);
+        $this->notify('NOTIFY_LISTINGBOX_BUILDRESULTS_END');
+    }
+
+    /**
+     * @param $paginator
+     * @param $query
+     * @param $db
+     * @return array
+     */
+    protected function processPaginatorResults($paginator, $query, $db)
+    {
         if (isset($paginator)) {
             $resultItems = $this->getPaginatedResultItems($query, $db, $paginator);
             $this->tplVars['paginator'] = $resultItems;
@@ -56,20 +77,24 @@ abstract class AbstractListingBox extends \base
         if (!isset($paginator)) {
             $resultItems = $this->getResultItems($query, $db);
         }
+        return $resultItems;
+    }
+
+    /**
+     * @param $resultItems
+     * @param $derivedItemsManager
+     * @return array
+     */
+    protected function processDerivedItems($resultItems, $derivedItemsManager)
+    {
         $finalItems = [];
         $derivedItems = issetorArray($this->listingQuery, 'derivedItems', array());
         foreach ($resultItems as $resultItem) {
             $resultItem = $derivedItemsManager->manageDerivedItems($derivedItems, $resultItem);
             $finalItems [] = $resultItem;
         }
-
-        $formatter = $this->doFormatter($finalItems, $db);
-        $this->tplVars['formatter'] = $formatter->getTplVars();
-        $this->tplVars['formattedItems'] = $formatter->getFormattedResults();
-        $this->doMultiFormSubmit($finalItems);
-        $this->normalizeTplVars($paginator);
+        return $finalItems;
     }
-
     /**
      * @param $paginator
      */
@@ -90,6 +115,7 @@ abstract class AbstractListingBox extends \base
             $this->tplVars ['paginator']['showTop'] = ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'));
             $this->tplVars ['paginator']['showBottom'] = ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'));
         }
+        $this->notify('NOTIFY_LISTINGBOX_NORMALIZETPLVARS_END');
     }
 
     /**
@@ -109,7 +135,7 @@ abstract class AbstractListingBox extends \base
         $this->tplVars['showMultiTopSubmit'] = $showTopSubmit;
         $this->tplVars['showMultiBottomSubmit'] = $showBottomSubmit;
         $this->tplVars['showMultiForm'] = $showForm;
-
+        $this->notify('NOTIFY_LISTINGBOX_DOMULTIFORMSUBMIT_END');
     }
 
     /**
@@ -204,7 +230,7 @@ abstract class AbstractListingBox extends \base
      */
     public function getTplVars()
     {
-        $this->notify('NOTIFY_LISTING_BOX_GETTEMPLATEVARIABLES_START');
+        $this->notify('NOTIFY_LISTINGBOX_GETTEMPLATEVARIABLES_START');
         return $this->tplVars;
     }
 
@@ -230,5 +256,20 @@ abstract class AbstractListingBox extends \base
     public function getListingQuery()
     {
         return $this->listingQuery;
+    }
+    /**
+     * @return array
+     */
+    public function getOutputLayout()
+    {
+        return $this->outputLayout;
+    }
+
+    /**
+     * @param array $listingQuery
+     */
+    public function setListingQuery(array $listingQuery)
+    {
+        $this->listingQuery = $listingQuery;;
     }
 }
