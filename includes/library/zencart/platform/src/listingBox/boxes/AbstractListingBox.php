@@ -270,6 +270,6 @@ abstract class AbstractListingBox extends \base
      */
     public function setListingQuery(array $listingQuery)
     {
-        $this->listingQuery = $listingQuery;;
+        $this->listingQuery = $listingQuery;
     }
 }
