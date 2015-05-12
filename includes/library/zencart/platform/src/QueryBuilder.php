@@ -4,10 +4,9 @@
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: New in v1.6.0 $
  */
 namespace ZenCart\Platform;
-//use ZenCart\ListingBox\DerivedItems;
 /**
  * Class QueryBuilder
  * @package ZenCart\Platform
@@ -90,6 +89,7 @@ class QueryBuilder extends \base
 
     protected function setFinalQuery($listingQuery)
     {
+        $this->notify('NOTIFY_QUERY_BUILDER_SETFINALQUERY_START');
         $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .
             $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'];
         if (!isset($this->query['countSql'])) {
@@ -98,6 +98,7 @@ class QueryBuilder extends \base
                                  AS total " . $this->query ['table'] . $this->query ['joins'] .
                 $this->query ['where'];;
         }
+        $this->notify('NOTIFY_QUERY_BUILDER_SETFINALQUERY_END');
     }
     /**
      * preprocess joins
@@ -161,6 +162,10 @@ class QueryBuilder extends \base
         $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINADDCOLUMN_START');
         if (isset($joinTable ['addColumns']) && $joinTable ['addColumns']) {
             $this->query ['select'] .= ", " . $joinTable ['alias'] . ".*";
+        }
+        if (isset($joinTable ['selectColumns'])) {
+            foreach ($joinTable ['selectColumns'] as $column)
+            $this->query ['select'] .= ", " . $joinTable ['alias'] . "." . $column;
         }
         $this->notify('NOTIFY_QUERY_BUILDER_PROCESSJOINADDCOLUMN_ENDT');
     }
