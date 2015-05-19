@@ -84,7 +84,7 @@ UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE');
 UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
 UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
-UPDATE countries set countries_name = 'Côte d'Ivoire' where countries_iso_code_3 = 'CIV';
+UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
 
 ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
 
