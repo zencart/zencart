@@ -242,18 +242,18 @@ class testPasswordHash extends zcTestCase
 
     public function testPasswordHashing()
     {
-        $hashLength = strlen(password_hash("foo", PASSWORD_BCRYPT));
-        $passwordHash1 = password_hash("rasmuslerdorf", PASSWORD_BCRYPT, array(
-            "cost" => 7,
-            "salt" => "usesomesillystringforsalt"
-        ));
-        $passwordHash2 = password_hash("test", PASSWORD_BCRYPT, array(
-            "salt" => "123456789012345678901" . chr(0)
-        ));
-        $this->assertTrue($hashLength == 60);
-        $this->assertTrue($passwordHash1 === '$2y$07$usesomesillystringfore2uDLvp1Ii2e./U9C8sBjqp8I90dH6hi');
-        $this->assertTrue($passwordHash2 === '$2y$10$MTIzNDU2Nzg5MDEyMzQ1Nej0NmcAWSLR.oP7XOR9HD/vjUuOj100y');
+        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+            $hashLength = strlen(password_hash("foo", PASSWORD_BCRYPT));
+            $passwordHash1 = password_hash("rasmuslerdorf", PASSWORD_BCRYPT, array(
+                "cost" => 7,
+                "salt" => "usesomesillystringforsalt"
+            ));
+            $passwordHash2 = password_hash("test", PASSWORD_BCRYPT, array(
+                "salt" => "123456789012345678901" . chr(0)
+            ));
+            $this->assertTrue($hashLength == 60);
+            $this->assertTrue($passwordHash1 === '$2y$07$usesomesillystringfore2uDLvp1Ii2e./U9C8sBjqp8I90dH6hi');
+            $this->assertTrue($passwordHash2 === '$2y$10$MTIzNDU2Nzg5MDEyMzQ1Nej0NmcAWSLR.oP7XOR9HD/vjUuOj100y');
+        }
     }
-
-
 }
