@@ -72,8 +72,8 @@
   <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit2" name="submit1"'); ?></div>
 <br class="clearBoth">
 <?php } ?>
-<?php if (isset($tplVars['listingBox']['pagination']) && $tplVars['listingBox']['pagination']['show'] && $tplVars['listingBox']['pagination']['showPaginatorBottom']) { ?>
-<?php require($template->get_template_dir($tplVars['listingBox']['paginatorScrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginatorScrollerTemplate']); ?>
+<?php if (isset($tplVars['listingBox']['paginator']) && $tplVars['listingBox']['paginator']['show'] && $tplVars['listingBox']['paginator']['showBottom']) { ?>
+<?php require($template->get_template_dir($tplVars['listingBox']['paginator']['scrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginator']['scrollerTemplate']); ?>
 <?php } ?>
 <?php if (isset($tplVars['listingBox']['showMultiForm']) && $tplVars['listingBox']['showMultiForm']) { ?>
 </form>
