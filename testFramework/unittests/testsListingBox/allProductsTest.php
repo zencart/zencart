@@ -38,6 +38,11 @@ class testAllDefaultCase extends zcTestCase
         $_SESSION['languages_id'] = 1;
         $_SESSION['customer_id'] = 1;
         $_SESSION['customers_authorization'] = 1;
+        $loader = new \Aura\Autoload\Loader;
+        $loader->register();
+        $loader->addPrefix('\ZenCart\ListingBox', DIR_CATALOG_LIBRARY . 'zencart/listingBox/src');
+        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
     }
 
     public function testInstantiate()
@@ -46,7 +51,7 @@ class testAllDefaultCase extends zcTestCase
         $scroller->method('getResults')->willReturn(array('resultList' => array()));
         $paginator = $this->getMock('paginator', array('doPagination', 'getScroller'));
         $paginator->method('getScroller')->willReturn($scroller);
-        $r = $this->getMock('\\ZenCart\\Platform\\Request');
+        $r = $this->getMock('\\ZenCart\\Request\\Request');
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
             ->getMock();
@@ -59,7 +64,7 @@ class testAllDefaultCase extends zcTestCase
             ->setMethods(array('processQuery', 'getQuery'))
             ->getMock();
         $qb->method('getQuery')->willReturn(array('mainSql' => '', 'countSql' => ''));
-        $lb = new \ZenCart\Platform\listingBox\boxes\AllProductsPage($r);
+        $lb = new \ZenCart\ListingBox\boxes\AllProductsPage($r);
         $lb->buildResults($qb, $db, $paginator);
     }
 }

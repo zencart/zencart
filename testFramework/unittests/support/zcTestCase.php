@@ -117,12 +117,6 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
 
 
         require_once DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
-        $loader = new \Aura\Autoload\Loader;
-        $loader->register();
-        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/di/src');
-        $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
-
     }
 
 

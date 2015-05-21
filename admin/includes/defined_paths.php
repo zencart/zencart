@@ -5,7 +5,7 @@
  * -- ADMIN version --
  *
  * @package initSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: defined_paths.php$
@@ -66,3 +66,6 @@ if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'dow
 
 if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 
+if (!defined('DIR_CATALOG_LIBRARY')) {
+    define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
+}

@@ -12,7 +12,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: autoload_func.php 14141 2009-08-10 19:34:47Z wilt $
  */
-use ZenCart\Platform\Request;
+use ZenCart\Request\Request;
 
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

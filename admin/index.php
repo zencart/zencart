@@ -28,8 +28,8 @@ if ($controllerCommand != $_GET['cmd'])
 {
     $controllerCommand = 'index';
 }
-$controllerName = 'ZenCart\\Admin\\Controllers\\'. ucfirst(zcCamelize($controllerCommand, true));
-$controllerFile =  DIR_FS_CATALOG . 'includes/library/zencart/admin/Controllers/src/' . ucfirst(zcCamelize($controllerCommand, true)) . '.php';
+$controllerName = 'ZenCart\\Controllers\\'. ucfirst(zcCamelize($controllerCommand, true));
+$controllerFile =  DIR_CATALOG_LIBRARY . URL_CONTROLLERS . '/admin/' . ucfirst(zcCamelize($controllerCommand, true)) . '.php';
 if (file_exists($controllerFile))
 {
     require('includes/application_top.php');

@@ -73,7 +73,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
-                             'className'=>'\\ZenCart\\Platform\\Request',
+                             'className'=>'\\ZenCart\\Request\\Request',
                              'objectName'=>'zcRequest');
 
 /**

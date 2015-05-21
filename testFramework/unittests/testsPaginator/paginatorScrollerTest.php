@@ -8,7 +8,7 @@
  * @version $Id$
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
-use ZenCart\Platform\Paginator\scrollers\Standard;
+use ZenCart\Paginator\scrollers\Standard;
 
 /**
  * Testing Library
@@ -23,15 +23,14 @@ class testPaginationScrollerCase extends zcTestCase
         require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'html_output.php');
         define('SEARCH_ENGINE_FRIENDLY_URLS', false);
         define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', '');
-//        require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
-//        $loader = new \Aura\Autoload\Loader;
-//        $loader->register();
-//        $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
+        $loader = new \Aura\Autoload\Loader;
+        $loader->register();
+        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/Paginator/src');
     }
 
     public function testRunScrollerWithResults()
     {
-        $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\adapters\\QueryFactory')
+        $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\adapters\\QueryFactory')
             ->disableOriginalConstructor()
             ->getMock();
         $ds->method('getResults')->willReturn(array(
@@ -61,7 +60,7 @@ class testPaginationScrollerCase extends zcTestCase
 
     public function testRunScrollerWithNoResults()
     {
-        $ds = $this->getMockBuilder('\\ZenCart\\Platform\\Paginator\\adapters\\QueryFactory')
+        $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\adapters\\QueryFactory')
             ->disableOriginalConstructor()
             ->getMock();
         $ds->method('getResults')->willReturn(array(

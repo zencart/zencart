@@ -8,6 +8,8 @@
  * @version $Id$
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
+use ZenCart\Request\Request;
+
 //use ZenCart\Platform\Paginator\adapters\QueryFactory;
 /**
  * Testing Library
@@ -34,13 +36,18 @@ class testFormatterCase extends zcTestCase
         require DIR_FS_CATALOG . 'includes/functions/functions_general.php';
 //        require DIR_FS_CATALOG . 'includes/functions/functions_lookups.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
+        $loader = new \Aura\Autoload\Loader;
+        $loader->register();
+        $loader->addPrefix('\ZenCart\ListingBox', DIR_CATALOG_LIBRARY . 'zencart/listingBox/src');
+        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
     }
 
     public function testColumnarFormatterNoItems()
     {
         $outputLayout = array('formatter' => array('params' => array('columnCount' => 1, 'PRODUCTS_IMAGE_NO_IMAGE_STATUS' => 0)));
         $itemList = array();
-        $f = new \ZenCart\Platform\listingBox\formatters\Columnar($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\Columnar($itemList, $outputLayout);
         $f->format();
         $r = $f->getFormattedResults();
         $this->assertTrue(count($r) === 0);
@@ -50,7 +57,7 @@ class testFormatterCase extends zcTestCase
     {
         $outputLayout = array('formatter' => array('params' => array('columnCount' => 2, 'PRODUCTS_IMAGE_NO_IMAGE_STATUS' => 0)));
         $itemList = array(array('products_image' => ''), array('products_image' => ''), array('products_image' => ''));
-        $f = new \ZenCart\Platform\listingBox\formatters\Columnar($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\Columnar($itemList, $outputLayout);
         $f->format();
         $r = $f->getFormattedResults();
         $this->assertTrue(count($r) === 2);
@@ -60,7 +67,7 @@ class testFormatterCase extends zcTestCase
     {
         $outputLayout = array('formatter' => array('params' => array('columnCount' => 2, 'PRODUCTS_IMAGE_NO_IMAGE_STATUS' => 0)));
         $itemList = array(array('products_image' => ''));
-        $f = new \ZenCart\Platform\listingBox\formatters\Columnar($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\Columnar($itemList, $outputLayout);
         $f->format();
         $r = $f->getFormattedResults();
         $this->assertTrue(count($r) === 1);
@@ -88,7 +95,7 @@ class testFormatterCase extends zcTestCase
             )
         );
         $itemList = array();
-        $f = new \ZenCart\Platform\listingBox\formatters\ListStandard($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\ListStandard($itemList, $outputLayout);
         $f->setDBConnection($db);
         $f->format();
         $r = $f->getFormattedResults();
@@ -171,7 +178,7 @@ class testFormatterCase extends zcTestCase
                 'products_qty_box_status' => ''
             )
         );
-        $f = new \ZenCart\Platform\listingBox\formatters\ListStandard($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\ListStandard($itemList, $outputLayout);
         $f->setDBConnection($db);
         $f->format();
         $r = $f->getFormattedResults();
@@ -254,7 +261,7 @@ class testFormatterCase extends zcTestCase
                 'products_qty_box_status' => ''
             )
         );
-        $f = new \ZenCart\Platform\listingBox\formatters\ListStandard($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\ListStandard($itemList, $outputLayout);
         $f->setDBConnection($db);
         $f->format();
         $r = $f->getFormattedResults();
@@ -274,7 +281,7 @@ class testFormatterCase extends zcTestCase
             )
         );
         $itemList = array();
-        $f = new \ZenCart\Platform\listingBox\formatters\TabularCustom($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\TabularCustom($itemList, $outputLayout);
         $f->format();
         $r = $f->getFormattedResults();
         $this->assertTrue(count($r) === 0);
@@ -310,7 +317,7 @@ class testFormatterCase extends zcTestCase
             array('products_name' => '', 'products_date_available' => ''),
             array('products_name' => '', 'products_date_available' => '')
         );
-        $f = new \ZenCart\Platform\listingBox\formatters\TabularCustom($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\TabularCustom($itemList, $outputLayout);
         $f->format();
         $r = $f->getFormattedResults();
         $this->assertTrue(count($r) === 3);
@@ -374,7 +381,8 @@ class testFormatterCase extends zcTestCase
         define('PRODUCTS_QUANTITY_MIN_TEXT_LISTING', 0);
         define('PRODUCTS_QUANTITY_UNIT_TEXT_LISTING', 0);
         define('TEXT_PRODUCTS_MIX_ON', 'TEXT_PRODUCTS_MIX_ON');
-        $request = $this->getMock('\\ZenCart\\Platform\\Request');
+        $request = $this->getMock('\\ZenCart\\Request\\Request');
+        $request->method('readGet')->willReturn(1);
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
             ->getMock();
@@ -441,7 +449,7 @@ class testFormatterCase extends zcTestCase
                 'manufacturers_id' => ''
             )
         );
-        $f = new \ZenCart\Platform\listingBox\formatters\TabularProduct($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\TabularProduct($itemList, $outputLayout);
         $f->setRequest($request);
         $f->format();
         $r = $f->getFormattedResults();
@@ -458,7 +466,7 @@ class testFormatterCase extends zcTestCase
         define('PRODUCT_LIST_WEIGHT', 1);
         define('PRODUCT_LIST_IMAGE', 1);
         define('TEXT_NO_PRODUCTS', 0);
-        $request = $this->getMock('\\ZenCart\\Platform\\Request');
+        $request = $this->getMock('\\ZenCart\\Request\\Request');
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
             ->getMock();
@@ -476,7 +484,7 @@ class testFormatterCase extends zcTestCase
             )
         );
         $itemList = array();
-        $f = new \ZenCart\Platform\listingBox\formatters\TabularProduct($itemList, $outputLayout);
+        $f = new \ZenCart\ListingBox\formatters\TabularProduct($itemList, $outputLayout);
         $f->setRequest($request);
         $f->format();
         $r = $f->getFormattedResults();

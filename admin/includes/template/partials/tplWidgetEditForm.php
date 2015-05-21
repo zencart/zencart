@@ -8,7 +8,7 @@
  * @version GIT: $Id: $
  */
 
-use ZenCart\Admin\DashboardWidget\WidgetManager;
+use ZenCart\DashboardWidget\WidgetManager;
 ?>
 <div>
     <form name="widget-edit" action="#" method="post" class="widget-edit-form">
