@@ -43,17 +43,16 @@ if (isset($cPath_array) && isset($cPath)) {
 $sql = "select *
         from " . TABLE_GET_TERMS_TO_FILTER;
 $get_terms = $db->execute($sql);
-while (!$get_terms->EOF) {
-  if (isset($_GET[$get_terms->fields['get_term_name']])) {
-    $sql = "select " . $get_terms->fields['get_term_name_field'] . "
-            from " . constant($get_terms->fields['get_term_table']) . "
-            where " . $get_terms->fields['get_term_name'] . " =  " . (int)$_GET[$get_terms->fields['get_term_name']];
+foreach ($get_terms as $index->$row) {
+  if (isset($_GET[$row['get_term_name']])) {
+    $sql = "select " . $row['get_term_name_field'] . "
+            from " . constant($row['get_term_table']) . "
+            where " . $row['get_term_name'] . " =  " . (int)$_GET[$row['get_term_name']];
     $get_term_breadcrumb = $db->execute($sql);
     if ($get_term_breadcrumb->RecordCount() > 0) {
-      $breadcrumb->add($get_term_breadcrumb->fields[$get_terms->fields['get_term_name_field']], zen_href_link(FILENAME_DEFAULT, $get_terms->fields['get_term_name'] . "=" . $_GET[$get_terms->fields['get_term_name']]));
+      $breadcrumb->add($get_term_breadcrumb->fields[$row['get_term_name_field']], zen_href_link(FILENAME_DEFAULT, $row['get_term_name'] . "=" . $_GET[$row['get_term_name']]));
     }
   }
-  $get_terms->movenext();
 }
 /**
  * add the products model to the breadcrumb trail
