@@ -27,13 +27,12 @@ while (!$configuration->EOF) {
 $configuration = $db->Execute('select configuration_key as cfgkey, configuration_value as cfgvalue
                                from ' . TABLE_PRODUCT_TYPE_LAYOUT, '', $use_cache, 150);
 
-while (!$configuration->EOF) {
+foreach ($configuration as $index->$row) {
   /**
  * dynamic define based on info read from DB
  * @ignore
  */
-  define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
-  $configuration->movenext();
+  define(strtoupper($row['cfgkey']), $row['cfgvalue']);
 }
 unset($configuration);
 if (file_exists(DIR_WS_CLASSES . 'db/' . DB_TYPE . '/define_queries.php')) {
