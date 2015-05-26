@@ -9,7 +9,7 @@ Zen Cart&reg; v1.5.0 was the first Open Source e-Commerce web application to be 
 
 Zen Cart&reg; v1.6.0 brings improved templating and responsive design, in addition to increased flexibility for customizing to each storeowner's own preferences.
 
-It's free software, with free support available 24/7 on the Zen Cart® Support Site forums at <https://www.zen-cart.com/forum.php> provided by our enthusiastic community of actual Zen Cart&reg; users, integrators, and the developers themselves.
+It's free software, with free support available 24/7 on the Zen Cart&reg; Support Site forums at <https://www.zen-cart.com/forum.php> provided by our enthusiastic community of actual Zen Cart&reg; users, integrators, and the developers themselves.
 
 --------------------
 
@@ -17,7 +17,7 @@ It's free software, with free support available 24/7 on the Zen Cart® Support S
 Zen Cart&reg; v1.6.0
 --------------------
 
-[![Download Latest Official Zen Cart® Release](https://a.fsdn.com/con/app/sf-download-button)<br>Download Latest Official Zen Cart® Release](http://sourceforge.net/projects/zencart/files/latest/download)
+[![Download Latest Official Zen Cart&reg; Release](https://a.fsdn.com/con/app/sf-download-button)<br>Download Latest Official Zen Cart&reg; Release](http://sourceforge.net/projects/zencart/files/latest/download)
 
 or
 [Download latest in-development version from github](https://github.com/zencart/zc-v1-series/archive/v160.zip)
