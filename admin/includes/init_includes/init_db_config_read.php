@@ -32,6 +32,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 
   while (!$configuration->EOF) {
     define($configuration->fields['cfgKey'], $configuration->fields['cfgValue']);
-    $configuration->movenext();
+    $configuration->MoveNext();
   }
 unset($configuration);
