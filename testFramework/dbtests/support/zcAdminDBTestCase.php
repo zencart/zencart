@@ -3,15 +3,15 @@
  * File contains framework test cases
  *
  * @package tests
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
-require_once('zcTestCase.php');
+require_once('zcDBTestCase.php');
 /**
  * Testing Library
  */
-abstract class zcAdminTestCase extends zcTestCase
+abstract class zcAdminDBTestCase extends zcDBTestCase
 {
   public function setUp()
   {
