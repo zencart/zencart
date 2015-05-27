@@ -18,3 +18,5 @@ define('TEXT_ENTRY_COUNTRY_STATUS', 'Country Status');
 
 define('TEXT_LEAD_ACTION_LIST', 'List Countries');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Country');
+define('TEXT_ISO_LIST', 'ISO Countries Codes');
+define('ISO_COUNTRY_CODES_LINK', 'http://www.iso.org/iso/country_codes/country_codes');

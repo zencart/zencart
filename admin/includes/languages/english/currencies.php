@@ -24,3 +24,4 @@ define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Error: The default currency can not be 
 define('ERROR_REMOVE_DEFAULT_CURRENCY_MULTI', 'Error: The default currency can not be removed. Please set another currency as default, and try again.');
 define('TEXT_LEAD_ACTION_LIST', 'List Currencies');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Currency');
+define('ISO_CURRENCY_CODES_LINK', 'https://en.wikipedia.org/wiki/ISO_4217');

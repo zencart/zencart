@@ -53,6 +53,11 @@ class LeadCountries extends AbstractLeadListingBox
                 array(
                     'text' => BOX_TAXES_TAX_RATES,
                     'href' => zen_href_link(FILENAME_TAX_RATES)
+                ),
+                array(
+                    'text' => TEXT_ISO_LIST,
+                    'href' => ISO_COUNTRY_CODES_LINK,
+                    'target' => '_blank'
                 )
             ),
             'listMap' => array(

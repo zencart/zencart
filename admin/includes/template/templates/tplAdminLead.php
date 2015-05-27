@@ -43,7 +43,8 @@
           <h1><?php echo TEXT_LEAD_RELATED; ?></h1>
           <?php foreach ($tplVars['leadDefinition']['relatedLinks'] as $relatedLink) { ?>
           <a href="<?php echo $relatedLink['href']; ?>"
-            class="button expand radius lead"><?php echo $relatedLink['text']; ?></a>
+            class="button expand radius lead" <?php if (isset($relatedLink['target'])) {?> target="<?php echo $relatedLink['target']; ?>" <?php } ?>>
+              <?php echo $relatedLink['text']; ?></a>
           <?php }?>
         </div>
         <?php } ?>

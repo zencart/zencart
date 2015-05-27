@@ -56,14 +56,8 @@ class LeadCurrencies extends AbstractLeadListingBox
                 ),
                 array(
                     'text' => BOX_LOCALIZATION_LANGUAGES,
-                    'href' => ISO_CURRENCY_CODES_LINK,
-                    'target' => '_blank'
+                    'href' => zen_href_link(FILENAME_LANGUAGES),
                 ),
-                array(
-                    'text' => BOX_LOCALIZATION_ORDERS_STATUS,
-                    'href' => ISO_CURRENCY_CODES_LINK,
-                    'target' => '_blank'
-                )
             ),
             'listMap' => array(
                 'title',
