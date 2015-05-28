@@ -3,10 +3,10 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -398,9 +398,6 @@ class authorizenet_aim extends base {
     $this->ccv_response= $response[38];
     $response_msg_to_customer = $response_text . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
 
-    $response['Expected-MD5-Hash'] = $this->calc_md5_response($response[6], $response[9]);
-    $response['HashMatchStatus'] = ($response[37] == $response['Expected-MD5-Hash']) ? 'PASS' : 'FAIL';
-
     if ($response[0] == '3' && $response[2] == '103') $response['ErrorDetails'] = 'Invalid Transaction Key in AIM configuration.';
     if ($response[0] == '2' && $response[2] == '44') $response['ErrorDetails'] = 'Declined due to CVV refusal by issuing bank.';
     if ($response[0] == '2' && $response[2] == '45') $response['ErrorDetails'] = 'Declined due to AVS/CVV filters.';
@@ -415,11 +412,21 @@ class authorizenet_aim extends base {
       $response['ErrorDetails'] = 'Transaction held for review by merchant or fraud detection suite.';
     }
 
+    if (isset($response[6])) {
+      $response['Expected-MD5-Hash'] = $this->calc_md5_response($response[6], $response[9]);
+      $response['HashMatchStatus'] = ($response[37] == $response['Expected-MD5-Hash']) ? 'PASS' : 'FAIL';
+    }
+
     $this->_debugActions($response, $order_time, $sessID);
+
+    if ($this->commError != '') {
+      $messageStack->add_session('checkout_payment', MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_COMM_ERROR . ' (' . $this->commErrNo . ')', 'caution');
+      zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+    }
 
     // If the MD5 hash doesn't match, then this transaction's authenticity cannot be verified.
     // Thus, order will be placed in Pending status
-    if ($response['HashMatchStatus'] != 'PASS' && defined('MODULE_PAYMENT_AUTHORIZENET_AIM_MD5HASH') && MODULE_PAYMENT_AUTHORIZENET_AIM_MD5HASH != '') {
+    if (isset($response['HashMatchStatus']) && $response['HashMatchStatus'] != 'PASS' && defined('MODULE_PAYMENT_AUTHORIZENET_AIM_MD5HASH') && MODULE_PAYMENT_AUTHORIZENET_AIM_MD5HASH != '') {
       $this->order_status = 1;
       $messageStack->add_session('header', MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_AUTHENTICITY_WARNING, 'caution');
     }
