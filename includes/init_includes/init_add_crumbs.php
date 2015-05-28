@@ -43,7 +43,7 @@ if (isset($cPath_array) && isset($cPath)) {
 $sql = "select *
         from " . TABLE_GET_TERMS_TO_FILTER;
 $get_terms = $db->execute($sql);
-foreach ($get_terms as $index->$row) {
+foreach ($get_terms as $row) {
   if (isset($_GET[$row['get_term_name']])) {
     $sql = "select " . $row['get_term_name_field'] . "
             from " . constant($row['get_term_table']) . "
