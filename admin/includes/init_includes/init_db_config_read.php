@@ -22,13 +22,13 @@ if (!defined('IS_ADMIN_FLAG')) {
   $configuration = $db->Execute('select configuration_key as cfgKey, configuration_value as cfgValue
                                  from ' . TABLE_CONFIGURATION);
   foreach ($configuration as $row) {
-    define($row['cfgKey'], $row['cfgValue']);
+    define(strtoupper($row['cfgKey']), $row['cfgValue']);
   }
 
 // set product type layout paramaters
   $configuration = $db->Execute('select configuration_key as cfgKey, configuration_value as cfgValue
-                          from ' . TABLE_PRODUCT_TYPE_LAYOUT);
+                                 from ' . TABLE_PRODUCT_TYPE_LAYOUT);
   foreach ($configuration as $row) {
-    define($row['cfgKey'], $row['cfgValue']);
+    define(strtoupper($row['cfgKey']), $row['cfgValue']);
   }
 unset($configuration);
