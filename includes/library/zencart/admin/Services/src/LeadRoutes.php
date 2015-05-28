@@ -195,12 +195,7 @@ class LeadRoutes extends LeadService
             list ($deleteCheck, $errorMessage) = $this->deleteCheck();
         }
         if (!$deleteCheck) {
-            $retVal = array(
-                'error' => true,
-                'errorType' => "CUSTOM_ALERT_ERROR",
-                'errorMessage' => $errorMessage
-            );
-
+            $retVal = array('error' => true, 'errorType' => "CUSTOM_ALERT_ERROR", 'errorMessage' => $errorMessage);
             return $retVal;
         }
         $sql = "DELETE FROM " . $this->listingQuery['mainTable']['table'] . " WHERE " . $this->listingQuery['mainTable']['fkeyFieldLeft'] . " = :id:";
@@ -227,12 +222,7 @@ class LeadRoutes extends LeadService
             list ($deleteCheck, $errorMessage) = $this->multiDeleteCheck();
         }
         if (!$deleteCheck) {
-            $retVal = array(
-                'error' => true,
-                'errorType' => "CUSTOM_ALERT_ERROR",
-                'errorMessage' => $errorMessage
-            );
-
+            $retVal = array('error' => true, 'errorType' => "CUSTOM_ALERT_ERROR", 'errorMessage' => $errorMessage);
             return $retVal;
         }
         $bindVarType = 'inConstruct' . ucfirst($this->outputLayout['fields'][$this->listingQuery['mainTable']['fkeyFieldLeft']]['bindVarsType']);
@@ -274,9 +264,7 @@ class LeadRoutes extends LeadService
         $sql = $this->dbConn->bindVars($sql, ':dataTable:', $dataTable, 'noquotestring');
         $sql = $this->dbConn->bindVars($sql, ':search:', $search, 'noquotestring');
         $dbResults = $this->dbConn->execute($sql);
-        $retVal = array(
-            'results' => array()
-        );
+        $retVal = array('results' => array());
         if ($this->request->has('addAllResponse') && $this->request->readGet('addAllResponse') == true) {
             $retVal['results'][] = array(
                 'text' => $this->request->readGet('addAllResponseText'),
@@ -289,7 +277,6 @@ class LeadRoutes extends LeadService
                 'id' => $result[$dataResponse]
             );
         }
-
         return $retVal;
     }
 }

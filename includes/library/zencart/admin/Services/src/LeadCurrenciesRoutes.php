@@ -41,18 +41,12 @@ class LeadCurrenciesRoutes extends LeadRoutes
      */
     public function deleteCheck()
     {
-        $retVal = array(
-            true,
-            ''
-        );
+        $retVal = array(true, '');
         $sql = "SELECT code FROM " . TABLE_CURRENCIES . " WHERE currencies_id = :id:";
         $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'), 'integer');
         $result = $this->dbConn->execute($sql);
         if ($result->fields ['code'] == DEFAULT_CURRENCY) {
-            $retVal = array(
-                false,
-                ERROR_REMOVE_DEFAULT_CURRENCY
-            );
+            $retVal = array(false, ERROR_REMOVE_DEFAULT_CURRENCY);
         }
         return $retVal;
     }
@@ -62,18 +56,12 @@ class LeadCurrenciesRoutes extends LeadRoutes
      */
     public function multiDeleteCheck()
     {
-        $retVal = array(
-            true,
-            ''
-        );
+        $retVal = array(true, '');
         $sql = "SELECT currencies_id FROM " . TABLE_CURRENCIES . " WHERE code = :code:";
         $sql = $this->dbConn->bindVars($sql, ':code:', DEFAULT_CURRENCY, 'integer');
         $result = $this->dbConn->execute($sql);
         if (in_array($result->fields ['currencies_id'], $this->request->readPost('selected'))) {
-            $retVal = array(
-                false,
-                ERROR_REMOVE_DEFAULT_CURRENCY_MULTI
-            );
+            $retVal = array(false, ERROR_REMOVE_DEFAULT_CURRENCY_MULTI);
         }
         return $retVal;
     }

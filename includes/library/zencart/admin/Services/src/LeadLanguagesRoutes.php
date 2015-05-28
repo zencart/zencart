@@ -19,18 +19,12 @@ class LeadLanguagesRoutes extends LeadRoutes
      */
     public function deleteCheck()
     {
-        $retVal = array(
-            true,
-            ''
-        );
+        $retVal = array(true, '');
         $sql = "SELECT code FROM " . TABLE_LANGUAGES . " WHERE languages_id = :id:";
         $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'), 'integer');
         $result = $this->dbConn->execute($sql);
         if ($result->fields ['code'] == DEFAULT_LANGUAGE) {
-            $retVal = array(
-                false,
-                ERROR_REMOVE_DEFAULT_LANGUAGE
-            );
+            $retVal = array(false, ERROR_REMOVE_DEFAULT_LANGUAGE);
         }
         return $retVal;
     }
@@ -40,18 +34,12 @@ class LeadLanguagesRoutes extends LeadRoutes
      */
     public function multiDeleteCheck()
     {
-        $retVal = array(
-            true,
-            ''
-        );
+        $retVal = array(true, '');
         $sql = "SELECT languages_id FROM " . TABLE_LANGUAGES . " WHERE code = :code:";
         $sql = $this->dbConn->bindVars($sql, ':code:', DEFAULT_LANGUAGE, 'string');
         $result = $this->dbConn->execute($sql);
         if (in_array($result->fields ['languages_id'], $this->request->readPost('selected'))) {
-            $retVal = array(
-                false,
-                ERROR_REMOVE_DEFAULT_LANGUAGE_MULTI
-            );
+            $retVal = array(false, ERROR_REMOVE_DEFAULT_LANGUAGE_MULTI);
         }
         return $retVal;
     }

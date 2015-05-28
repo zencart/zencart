@@ -37,10 +37,7 @@ class LeadOrdersStatusRoutes extends LeadRoutes
      */
     public function deleteCheck()
     {
-        $retVal = array(
-            true,
-            ''
-        );
+        $retVal = array(true, '');
         $sql = "SELECT count(*) AS count FROM " . TABLE_ORDERS . " WHERE orders_status = :id:";
         $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'), 'integer');
         $orderResult = $this->dbConn->execute($sql);
@@ -48,21 +45,12 @@ class LeadOrdersStatusRoutes extends LeadRoutes
         $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'), 'integer');
         $historyResult = $this->dbConn->execute($sql);
         if ($this->request->readPost('id') == DEFAULT_ORDERS_STATUS_ID) {
-            $retVal = array(
-                false,
-                ERROR_REMOVE_DEFAULT_ORDER_STATUS
-            );
+            $retVal = array(false, ERROR_REMOVE_DEFAULT_ORDER_STATUS);
 
         } elseif ($orderResult->fields['count'] > 0) {
-            $retVal = array(
-                false,
-                ERROR_STATUS_USED_IN_ORDERS
-            );
+            $retVal = array(false, ERROR_STATUS_USED_IN_ORDERS);
         } elseif ($historyResult->fields['count'] > 0) {
-            $retVal = array(
-                false,
-                ERROR_STATUS_USED_IN_HISTORY
-            );
+            $retVal = array(false, ERROR_STATUS_USED_IN_HISTORY);
         }
         return $retVal;
     }
@@ -72,40 +60,26 @@ class LeadOrdersStatusRoutes extends LeadRoutes
      */
     public function multiDeleteCheck()
     {
-        $retVal = array(
-            true,
-            ''
-        );
+        $retVal = array(true, '');
         $sql = "SELECT orders_status_id  FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_id = :code:";
         $sql = $this->dbConn->bindVars($sql, ':code:', DEFAULT_ORDERS_STATUS_ID, 'string');
         $result = $this->dbConn->execute($sql);
         if (in_array($result->fields ['orders_status_id'], $this->request->readPost('selected'))) {
-            $retVal = array(
-                false,
-                ERROR_REMOVE_DEFAULT_ORDER_STATUS
-            );
-
+            $retVal = array(false, ERROR_REMOVE_DEFAULT_ORDER_STATUS);
             return $retVal;
         }
         $sql = "SELECT count(*) AS count FROM " . TABLE_ORDERS . " WHERE orders_status = :id:";
         $sql = $this->dbConn->bindVars($sql, ':id:', DEFAULT_ORDERS_STATUS_ID, 'integer');
         $result = $this->dbConn->execute($sql);
         if (in_array($result->fields ['orders_status_id'], $this->request->readPost('selected'))) {
-            $retVal = array(
-                false,
-                ERROR_STATUS_USED_IN_ORDERS
-            );
-
+            $retVal = array(false, ERROR_STATUS_USED_IN_ORDERS);
             return $retVal;
         }
         $sql = "SELECT count(*) AS count FROM " . TABLE_ORDERS_STATUS_HISTORY . " WHERE orders_status_id = :id:";
         $sql = $this->dbConn->bindVars($sql, ':id:', DEFAULT_ORDERS_STATUS_ID, 'integer');
         $result = $this->dbConn->execute($sql);
         if (in_array($result->fields ['orders_status_id'], $this->request->readPost('selected'))) {
-            $retVal = array(
-                false,
-                ERROR_STATUS_USED_IN_HISTORY
-            );
+            $retVal = array(false, ERROR_STATUS_USED_IN_HISTORY);
             return $retVal;
         }
         return $retVal;

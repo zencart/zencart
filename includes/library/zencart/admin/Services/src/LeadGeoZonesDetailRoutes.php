@@ -50,9 +50,7 @@ class LeadGeoZonesDetailRoutes extends LeadRoutes
         $sql = $this->dbConn->bindVars($sql, ':dataTable:', $dataTable, 'noquotestring');
         $sql = $this->dbConn->bindVars($sql, ':search:', $search, 'noquotestring');
         $results = $this->dbConn->execute($sql);
-        $retVal = array(
-            'results' => array()
-        );
+        $retVal = array('results' => array());
         if ($this->request->readGet('addAllResponse') == true) {
             $retVal ['results'] [] = array(
                 'text' => $this->request->readGet('addAllResponseText'),
