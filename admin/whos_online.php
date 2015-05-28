@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: whos_online.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: whos_online.php DrByte  Modified in v1.6.0 $
  */
 
 // Default refresh interval (0=off).  NOTE: Using automated refresh may put you in breach of PCI Compliance
@@ -159,6 +159,22 @@ function zen_check_minutes($the_time_last_click) {
   $sql = $db->bindVars($sql, ':where:', $where, 'passthru');
   $sql = $db->bindVars($sql, ':orderby:', $order, 'passthru');
   $whos_online = $db->Execute($sql);
+
+  // catch the case where we have an invalid session key, and if so default it to first entry
+  $found_entry = false;
+  $candidate_info = '';
+  while(!$whos_online->EOF) {
+    if (!isset($candidate_info)) $candidate_info = $whos_online->fields['session_id']; // get first entry in list
+    if (!$found_entry && isset($_GET['info']) && $_GET['info'] == $whos_online->fields['session_id']) {
+      $found_entry = true;
+      break;
+    }
+    $whos_online->MoveNext();
+  }
+  if (!$found_entry) $_GET['info'] = $candidate_info;
+
+  // rewind query
+  $whos_online->rewind();
   $total_sess = $whos_online->RecordCount();
 
   $optURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('t', 'na', 'ns'));
@@ -317,7 +333,8 @@ require('includes/admin_html_head.php');
   $d=0;
   while (!$whos_online->EOF) {
     $time_online = (time() - $whos_online->fields['time_entry']);
-    if ( ((!$_GET['info']) || (@$_GET['info'] == $whos_online->fields['session_id'])) && (!$info) ) {
+
+    if ( (!$_GET['info'] || $_GET['info'] == $whos_online->fields['session_id']) && !$info) {
       $info = $whos_online->fields['session_id'];
       $ip_address = $whos_online->fields['ip_address'];
       $full_name = $whos_online->fields['full_name'];
