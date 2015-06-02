@@ -14,7 +14,7 @@ define('TEXT_ENTRY_TAX_ZONES', 'Zone Name');
 define('TEXT_ENTRY_TAX_ZONES_DESCRIPTION', 'Zone Description');
 define('TEXT_ENTRY_GEO_ZONES_STATUS', 'Status');
 define('TEXT_ENTRY_ACTION', 'Action');
-define('TEXT_LINK_DETAILS', 'Details');
+define('TEXT_LINK_DETAILS', 'Edit Sub Zones');
 define('TEXT_LEGEND_TAX_AND_ZONES', ': Taxes &amp; Zones Defined');
 define('TEXT_LEGEND_ONLY_ZONES', ': Zones Defined but not Taxes ');
 define('TEXT_LEGEND_NOT_CONF', ': Not Configured ');
