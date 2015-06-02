@@ -1,4 +1,3 @@
-*.php text eol=lf
 /docs export-ignore
 /testFramework export-ignore
 .gitattributes export-ignore
