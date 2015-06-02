@@ -57,6 +57,9 @@ define('ERROR_NO_SUBJECT', 'Error: No subject has been entered.');
 define('COUPON_NAME', 'Coupon Name');
 //define('COUPON_VALUE', 'Coupon Value');
 define('COUPON_AMOUNT', 'Coupon Amount');
+
+define('TEXT_COUPON_PRODUCT_COUNT_PER_ORDER', 'Per Order');
+define('TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT', 'Per Product Quantity');
 define('COUPON_CODE', 'Coupon Code');
 define('COUPON_STARTDATE', 'Start Date');
 define('COUPON_FINISHDATE', 'End Date');

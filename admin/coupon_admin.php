@@ -6,6 +6,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ajeh  Modified in v1.6.0 $
  */
+
+//TODO - add to database
+// ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0';
+
   require('includes/application_top.php');
   $currencies = new currencies();
 
@@ -35,7 +39,7 @@
       $mail_sent_to = $_POST['email_to'];
     }
 
-    $coupon_result = $db->Execute("select coupon_code, coupon_start_date, coupon_expire_date, coupon_total, coupon_is_valid_for_sales
+    $coupon_result = $db->Execute("select coupon_code, coupon_start_date, coupon_expire_date, coupon_total, coupon_is_valid_for_sales, coupon_product_count
                                    from " . TABLE_COUPONS . "
                                    where coupon_id = '" . $_GET['cid'] . "'");
 
@@ -66,6 +70,12 @@
       } else {
         $message .= TEXT_NO_COUPON_IS_VALID_FOR_SALES . "\n\n";
       }
+      if ($coupon_result->fields['coupon_product_count']) {
+        $message .= TEXT_COUPON_PRODUCT_COUNT_PER_QUANTY . "\n\n";
+      } else {
+        $message .= TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . "\n\n";
+      }
+
       $message .= TEXT_REMEMBER . "\n\n";
       $message .=(!empty($coupon_name->fields['coupon_description']) ? $coupon_name->fields['coupon_description'] . "\n\n" : '');
       $message .= sprintf(TEXT_VISIT, HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
@@ -188,6 +198,7 @@
           // make new coupon
             $sql_data_array = array('coupon_code' => zen_db_prepare_input($new_code),
                                     'coupon_amount' => zen_db_prepare_input($check_new_coupon->fields['coupon_amount']),
+                                    'coupon_product_count' => zen_db_prepare_input($check_new_coupon->fields['coupon_product_count']),
                                     'coupon_type' => zen_db_prepare_input($check_new_coupon->fields['coupon_type']),
                                     'uses_per_coupon' => zen_db_prepare_input((int)$check_new_coupon->fields['uses_per_coupon']),
                                     'uses_per_user' => zen_db_prepare_input((int)$check_new_coupon->fields['uses_per_user']),
@@ -267,6 +278,7 @@
       // create duplicate coupon
         $sql_data_array = array('coupon_code' => zen_db_prepare_input($coupon_copy_to),
                                 'coupon_amount' => zen_db_prepare_input($check_new_coupon->fields['coupon_amount']),
+                                'coupon_product_count' => zen_db_prepare_input($check_new_coupon->fields['coupon_product_count']),
                                 'coupon_type' => zen_db_prepare_input($check_new_coupon->fields['coupon_type']),
                                 'uses_per_coupon' => zen_db_prepare_input((int)$check_new_coupon->fields['uses_per_coupon']),
                                 'uses_per_user' => zen_db_prepare_input((int)$check_new_coupon->fields['uses_per_user']),
@@ -390,6 +402,7 @@
         $_POST['coupon_amount'] = preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']);
         $sql_data_array = array('coupon_code' => zen_db_prepare_input($_POST['coupon_code']),
                                 'coupon_amount' => zen_db_prepare_input($_POST['coupon_amount']),
+                                'coupon_product_count' => zen_db_prepare_input((int)$_POST['coupon_product_count']),
                                 'coupon_type' => zen_db_prepare_input($coupon_type),
                                 'uses_per_coupon' => zen_db_prepare_input((int)$_POST['coupon_uses_coupon']),
                                 'uses_per_user' => zen_db_prepare_input((int)$_POST['coupon_uses_user']),
@@ -927,7 +940,7 @@ function check_form(form_name) {
 ?>
       <tr>
         <td align="left"><?php echo COUPON_AMOUNT; ?></td>
-        <td align="left"><?php echo zen_db_prepare_input($_POST['coupon_amount']); ?></td>
+        <td align="left"><?php echo zen_db_prepare_input($_POST['coupon_amount']) . ' ' . ($_POST['coupon_product_count'] == 0 ? TEXT_COUPON_PRODUCT_COUNT_PER_ORDER : TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT); ?></td>
       </tr>
 
       <tr>
@@ -1014,6 +1027,7 @@ function check_form(form_name) {
           echo zen_draw_hidden_field('coupon_desc[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_desc'][$language_id]));
         }
         echo zen_draw_hidden_field('coupon_amount', $_POST['coupon_amount']);
+        echo zen_draw_hidden_field('coupon_product_count', $_POST['coupon_product_count']);
         echo zen_draw_hidden_field('coupon_min_order', $_POST['coupon_min_order']);
         echo zen_draw_hidden_field('coupon_free_ship', $_POST['coupon_free_ship']);
         echo zen_draw_hidden_field('coupon_code', stripslashes($c_code));
@@ -1057,7 +1071,7 @@ function check_form(form_name) {
     $coupon = $db->Execute("select coupon_code, coupon_amount, coupon_type, coupon_minimum_order,
                                    coupon_start_date, coupon_expire_date, uses_per_coupon,
                                    uses_per_user, restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_total, coupon_order_limit,
-                                   coupon_is_valid_for_sales
+                                   coupon_is_valid_for_sales, coupon_product_count
                             from " . TABLE_COUPONS . "
                             where coupon_id = '" . $_GET['cid'] . "'");
 
@@ -1081,6 +1095,7 @@ function check_form(form_name) {
     $_POST['coupon_total'] = $coupon->fields['coupon_total'];
     $_POST['coupon_order_limit'] = $coupon->fields['coupon_order_limit'];
     $_POST['coupon_is_valid_for_sales'] = $coupon->fields['coupon_is_valid_for_sales'];
+    $_POST['coupon_product_count'] = $coupon->fields['coupon_product_count'];
 
   case 'new':
 // set some defaults
@@ -1132,7 +1147,7 @@ function check_form(form_name) {
 ?>
       <tr>
         <td align="left" class="main"><?php echo COUPON_AMOUNT; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_amount', $_POST['coupon_amount']); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_amount', $_POST['coupon_amount']) . ' ' . zen_draw_radio_field('coupon_product_count', '0', ($_POST['coupon_product_count'] == 0)) . '&nbsp;' . TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . ' ' . zen_draw_radio_field('coupon_product_count', '1', ($_POST['coupon_product_count'] ==1)) . '&nbsp;' . TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT; ?></td>
         <td align="left" class="main"><?php echo COUPON_AMOUNT_HELP; ?></td>
       </tr>
       <tr>
@@ -1467,6 +1482,7 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
         if ($uses_coupon == 0 || $uses_coupon == '') $uses_coupon = TEXT_UNLIMITED;
         if ($uses_user == 0 || $uses_user == '') $uses_user = TEXT_UNLIMITED;
         if ($cInfo->coupon_id != '') $contents[] = array('text'=>COUPON_NAME . '&nbsp;::&nbsp; ' . $coupon_name->fields['coupon_name'] . '<br />' .
+                     COUPON_AMOUNT . '&nbsp;::&nbsp; ' . $amount . '<br />' .
                      COUPON_AMOUNT . '&nbsp;::&nbsp; ' . $amount . '<br />' .
                      ($coupon_name->fields['coupon_type'] == 'E' || $coupon_name->fields['coupon_type'] == '0' ? TEXT_FREE_SHIPPING . '<br />' : '') .
                      COUPON_STARTDATE . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->coupon_start_date) . '<br />' .
