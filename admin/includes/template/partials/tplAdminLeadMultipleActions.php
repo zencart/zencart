@@ -15,7 +15,7 @@
             <?php } ?>
             &nbsp;<?php if ($tplVars['leadDefinition']['allowMultiDelete']) { ?>
                 <a href="#">
-                    <i class="fa fa-trash" id="adminLeadMultiDelete" title="<?php echo TEXT_MULTI_DELETE; ?>"</i>
+                    <i class="fa fa-trash" id="adminLeadMultiDelete" title="<?php echo TEXT_MULTI_DELETE; ?>"></i>
                 </a>
             <?php } ?>
         </td>
