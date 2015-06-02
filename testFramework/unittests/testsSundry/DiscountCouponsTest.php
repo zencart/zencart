@@ -88,7 +88,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 10,
-            'coupon_type' => 'P'
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
