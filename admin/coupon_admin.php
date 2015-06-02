@@ -1482,8 +1482,7 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
         if ($uses_coupon == 0 || $uses_coupon == '') $uses_coupon = TEXT_UNLIMITED;
         if ($uses_user == 0 || $uses_user == '') $uses_user = TEXT_UNLIMITED;
         if ($cInfo->coupon_id != '') $contents[] = array('text'=>COUPON_NAME . '&nbsp;::&nbsp; ' . $coupon_name->fields['coupon_name'] . '<br />' .
-                     COUPON_AMOUNT . '&nbsp;::&nbsp; ' . $amount . '<br />' .
-                     COUPON_AMOUNT . '&nbsp;::&nbsp; ' . $amount . '<br />' .
+                     COUPON_AMOUNT . '&nbsp;::&nbsp; ' . $amount . ' ' . ($cInfo->coupon_product_count == 0 ? TEXT_COUPON_PRODUCT_COUNT_PER_ORDER : TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT) . '<br />' .
                      ($coupon_name->fields['coupon_type'] == 'E' || $coupon_name->fields['coupon_type'] == '0' ? TEXT_FREE_SHIPPING . '<br />' : '') .
                      COUPON_STARTDATE . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->coupon_start_date) . '<br />' .
                      COUPON_FINISHDATE . '&nbsp;::&nbsp; ' . zen_date_short($cInfo->coupon_expire_date) . '<br />' .
