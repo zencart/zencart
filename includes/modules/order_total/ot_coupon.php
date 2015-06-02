@@ -485,6 +485,7 @@ class ot_coupon {
         if (strval($coupon_total_minimum) >= $coupon->fields['coupon_minimum_order']) {
 
           // calculate quantity when coupon_per_quantity && coupon_type F amount off || O amount off & Free Shipping
+          $coupon_product_count = 1;
           if ($coupon->fields['coupon_product_count'] && ($coupon->fields['coupon_type'] == 'F' || $coupon->fields['coupon_type'] == 'O')) {
             $products = $_SESSION['cart']->get_products();
             $coupon_product_count = 0;
@@ -494,8 +495,6 @@ class ot_coupon {
               }
             }
           //  $messageStack->add_session('checkout_payment', 'Coupon cont: ' . $coupon_product_count, 'caution');
-          } else {
-            $coupon_product_count = 1;
           }
           switch($coupon->fields['coupon_type'])
           {

@@ -7,9 +7,6 @@
  * @version GIT: $Id: Author: Ajeh  Modified in v1.6.0 $
  */
 
-//TODO - add to database
-// ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0';
-
   require('includes/application_top.php');
   $currencies = new currencies();
 
