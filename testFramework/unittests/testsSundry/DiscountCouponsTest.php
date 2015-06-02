@@ -118,7 +118,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 10,
-            'coupon_type' => 'P'
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
@@ -147,7 +148,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 100,
-            'coupon_type' => 'P'
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
@@ -176,7 +178,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 100,
-            'coupon_type' => 'P'
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
@@ -205,7 +208,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 501,
-            'coupon_type' => 'F'
+            'coupon_type' => 'F',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
@@ -234,7 +238,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 501,
-            'coupon_type' => 'F'
+            'coupon_type' => 'F',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
@@ -263,7 +268,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 501,
-            'coupon_type' => 'F'
+            'coupon_type' => 'F',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
@@ -292,7 +298,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 501,
-            'coupon_type' => 'F'
+            'coupon_type' => 'F',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
@@ -321,7 +328,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 400,
-            'coupon_type' => 'O'
+            'coupon_type' => 'O',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
@@ -350,7 +358,8 @@ class testDiscountCoupons extends zcDiscountCouponTest
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
             'coupon_amount' => 40,
-            'coupon_type' => 'O'
+            'coupon_type' => 'O',
+            'coupon_product_count' => 0,
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
