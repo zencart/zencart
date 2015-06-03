@@ -222,7 +222,7 @@ class LeadService extends AbstractService
                 $queryBuilderParts['whereClauses'][] = array(
                     'table' => $table,
                     'field' => $field,
-                    'value' => "':" . $field . ":%'",
+                    'value' => "'%:" . $field . ":%'",
                     'type' => 'AND',
                     'test' => 'LIKE'
                 );
