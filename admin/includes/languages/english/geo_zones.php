@@ -20,4 +20,4 @@ define('TEXT_LEGEND_ONLY_ZONES', ': Zones Defined but not Taxes ');
 define('TEXT_LEGEND_NOT_CONF', ': Not Configured ');
 define('TEXT_LEAD_ACTION_LIST', 'List Zone Definitions');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Zone Definition');
-
+define('TEXT_LEAD_EDIT_GEO_ZONE', 'Edit Name');

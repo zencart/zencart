@@ -67,18 +67,39 @@ class LeadGeoZones extends AbstractLeadListingBox
             ),
             'headerTemplate' => 'tplAdminLeadGeoZonesHeader.php',
             'extraRowActions' => array(
-                array(
+                    array(
+                        'key' => 'edit',
+                        'link' => array(
+                            'cmd' => FILENAME_GEO_ZONES,
+                            'params' => array(
+                                array(
+                                    'type' => 'text',
+                                    'name' => 'action',
+                                    'value' => 'edit'
+                                ),
+                                array(
+                                    'type' => 'item',
+                                    'name' => 'geo_zone_id',
+                                    'value' => 'geo_zone_id'
+                                )
+                            )
+                        ),
+                        'linkText' => TEXT_LEAD_EDIT_GEO_ZONE
+                    ),
+                    array(
+                    'key' => 'edit_sub_zone',
                     'link' => array(
                         'cmd' => FILENAME_GEO_ZONES_DETAIL,
                         'params' => array(
                             array(
-                                'paramName' => 'geo_zone_id',
-                                'paramValue' => 'item-geo_zone_id'
+                                'type' => 'item',
+                                'name' => 'geo_zone_id',
+                                'value' => 'geo_zone_id'
                             )
                         )
                     ),
                     'linkText' => TEXT_LINK_DETAILS
-                )
+                ),
             ),
             'fields' => array(
                 'geo_zone_id' => array(

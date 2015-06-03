@@ -64,7 +64,7 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
             $row = $this->processItemCallables($row, $item);
             $row ['rowActions'] = array();
             if ($this->leadDefinition ['allowEdit']) {
-                $row ['rowActions'] [] = array(
+                $row ['rowActions'] ['edit'] = array(
                     'link' => zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array(
                             'action'
                         )) . 'action=edit&' . $this->listingQuery ['mainTable']['fkeyFieldLeft'] . '=' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']]),
@@ -73,7 +73,7 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
                 );
             }
             if ($this->leadDefinition ['allowDelete']) {
-                $row ['rowActions'] [] = array(
+                $row ['rowActions'] ['delete'] = array(
                     'link' => '#',
                     'linkText' => TEXT_LEAD_DELETE,
                     'linkParameters' => 'class="rowDelete" data-item="' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']] . '"'
@@ -95,7 +95,7 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     protected function processItemExtraRowActions($row, $item)
     {
         foreach ($this->leadDefinition ['extraRowActions'] as $extraRowActions) {
-            $row ['rowActions'] [] = array(
+            $row ['rowActions'] [$extraRowActions ['key']] = array(
                 'link' => $this->buildExtraActionLink($extraRowActions ['link'], $item),
                 'linkText' => $extraRowActions ['linkText'],
                 'linkParameters' => isset($extraRowActions ['linkParameters']) ? $extraRowActions ['linkParameters'] : ''
@@ -112,9 +112,15 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     public function buildExtraActionLink($parameters, $item)
     {
         $actions = '';
-        if (isset($parameters ['params'])) {
-            foreach ($parameters ['params'] as $param) {
-                $actions .= $param ['paramName'] . '=' . $item [str_replace('item-', '', $param ['paramValue'])] . '&';
+        if (!isset($parameters ['params'])) {
+            return zen_href_link($parameters ['cmd']);
+        }
+        foreach ($parameters ['params'] as $param) {
+            if ($param['type'] == 'item') {
+                $actions .= $param ['name'] . '=' . $item [$param ['value']] . '&';
+            }
+            if ($param['type'] == 'text') {
+                $actions .= $param ['name'] . '=' . $param ['value'] . '&';
             }
         }
         $result = zen_href_link($parameters ['cmd'], $actions);
