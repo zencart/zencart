@@ -10,7 +10,7 @@
 define('HEADING_TITLE', 'Tax Classes');
 define('TEXT_ENTRY_TAX_CLASS_ID', 'Tax Class Id');
 define('TEXT_ENTRY_TAX_CLASSES', 'Tax Class');
-define('TEXT_INFO_CLASS_TITLE', 'Tax Class Title');
+define('TEXT_INFO_CLASS_TITLE', 'Tax Class');
 define('TEXT_INFO_CLASS_DESCRIPTION', 'Tax Class Description');
 define('TEXT_LEAD_ACTION_LIST', 'List Tax Classes');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Tax Class');

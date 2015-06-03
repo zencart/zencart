@@ -56,7 +56,8 @@ class LeadTaxClasses extends AbstractLeadListingBox
             ),
             'listMap' => array(
                 'tax_class_id',
-                'tax_class_title'
+                'tax_class_title',
+                'tax_class_description',
             ),
             'editMap' => array(
                 'tax_class_title',
@@ -90,6 +91,11 @@ class LeadTaxClasses extends AbstractLeadListingBox
                     'bindVarsType' => 'string',
                     'align' => 'right',
                     'layout' => array(
+                        'list' => array(
+                            'title' => TEXT_INFO_CLASS_DESCRIPTION,
+                            'type' => 'text',
+                            'size' => '40'
+                        ),
                         'edit' => array(
                             'title' => TEXT_INFO_CLASS_DESCRIPTION,
                             'type' => 'text',

@@ -9,7 +9,7 @@
 
 define('HEADING_TITLE', 'Tax Rates');
 define('TEXT_ENTRY_TAX_RATE_PRIORITY', 'Priority');
-define('TEXT_ENTRY_TAX_CLASS_TITLE', 'Tax Class Title');
+define('TEXT_ENTRY_TAX_CLASS_TITLE', 'Tax Class');
 define('TEXT_ENTRY_ZONE', 'Tax Zone');
 define('TEXT_ENTRY_TAX_RATE', 'Tax Rate');
 define('TEXT_ENTRY_TAX_DESCRIPTION', 'Tax Rate Description');
