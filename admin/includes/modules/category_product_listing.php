@@ -115,6 +115,9 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
                                   and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'" .
                                   $order_by);
     }
+    // calculate product totals
+    $grand_total_products = 0;
+    $grand_total_products_on = 0;
     while (!$categories->EOF) {
       $categories_count++;
       $rows++;
@@ -144,13 +147,17 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
                 <td class="dataTableContent" align="center">&nbsp;</td>
                 <td class="dataTableContent" align="right" valign="bottom">
                   <?php
-                  if (SHOW_COUNTS_ADMIN == 'false') {
+                  if (SHOW_COUNTS_ADMIN == '0') {
                     // don't show counts
                   } else {
-                    // show counts
-                    $total_products = zen_get_products_to_categories($categories->fields['categories_id'], true);
-                    $total_products_on = zen_get_products_to_categories($categories->fields['categories_id'], false);
-                    echo $total_products_on . TEXT_PRODUCTS_STATUS_ON_OF . $total_products . TEXT_PRODUCTS_STATUS_ACTIVE;
+                    if (SHOW_COUNTS_ADMIN == '1' || (SHOW_COUNTS_ADMIN == '2' && $categories->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID)) {
+                      // show counts
+                      $total_products = zen_get_products_to_categories($categories->fields['categories_id'], true);
+                      $total_products_on = zen_get_products_to_categories($categories->fields['categories_id'], false);
+                      echo $total_products_on . TEXT_PRODUCTS_STATUS_ON_OF . $total_products . TEXT_PRODUCTS_STATUS_ACTIVE;
+                      $grand_total_products += $total_products;
+                      $grand_total_products_on += $total_products_on;
+                    }
                   }
                   ?>
                   &nbsp;&nbsp;
@@ -162,7 +169,7 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
       } else {
         echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=setflag_categories&flag=1&cID=' . $categories->fields['categories_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>';
       }
-      if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true')
+      if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == '1' || (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == '2' && $categories->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID))
       {
         if (zen_get_products_to_categories($categories->fields['categories_id'], true, 'products_active') == 'true') {
           echo '&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED);
@@ -194,7 +201,15 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
       $categories->MoveNext();
     }
 
-
+    if (SHOW_COUNTS_ADMIN != '0' && $categories->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID) {
+?>
+              <tr class="dataTableHeadingRow">
+                <td class="dataTableContent" colspan = "5" align="right">&nbsp;</td>
+                <td class="dataTableContent" align="right" valign="bottom"><?php echo $grand_total_products_on . TEXT_PRODUCTS_STATUS_ON_OF . $grand_total_products . TEXT_PRODUCTS_STATUS_ACTIVE; ?>&nbsp;&nbsp;</td>
+                <td class="dataTableContent" colspan = "3" align="right">&nbsp;</td>
+              </tr>
+<?php
+    }
     switch ($_SESSION['categories_products_sort_order']) {
       case (0):
         $order_by = " order by p.products_sort_order, pd.products_name";
