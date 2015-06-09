@@ -139,10 +139,9 @@ UPDATE query_builder set query_string = 'select max(o.date_purchased) as date_pu
 UPDATE query_builder set query_string = 'select c.customers_email_address, c.customers_lastname, c.customers_firstname from TABLE_CUSTOMERS c, TABLE_ORDERS o where c.customers_newsletter = \'1\' AND c.customers_id = o.customers_id and o.date_purchased > subdate(now(),INTERVAL 3 MONTH) GROUP BY c.customers_email_address, c.customers_lastname, c.customers_firstname order by c.customers_lastname, c.customers_firstname ASC' where query_name='Active customers in past 3 months (Subscribers)';
 UPDATE query_builder set query_string = 'select c.customers_email_address, c.customers_lastname, c.customers_firstname from TABLE_CUSTOMERS c, TABLE_ORDERS o WHERE c.customers_id = o.customers_id and o.date_purchased > subdate(now(),INTERVAL 3 MONTH) GROUP BY c.customers_email_address, c.customers_lastname, c.customers_firstname order by c.customers_lastname, c.customers_firstname ASC' where query_name='Active customers in past 3 months (Regardless of subscription status)';
 
-<<<<<<< HEAD
+
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
-=======
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_COUNTS_ADMIN';
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS';
 UPDATE configuration set set_function = "'zen_cfg_select_option(array(\'0\', \'1\', \'2\'" WHERE configuration_key = 'SHOW_COUNTS_ADMIN';
@@ -151,7 +150,6 @@ UPDATE configuration set configuration_value = '0' WHERE configuration_key = 'SH
 UPDATE configuration set configuration_value = '1' WHERE configuration_key = 'SHOW_COUNTS_ADMIN' && configuration_value = 'true';
 UPDATE configuration set configuration_value = '0' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS' && configuration_value = 'false';
 UPDATE configuration set configuration_value = '1' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS' && configuration_value = 'true';
->>>>>>> v160
 
 
 ##@TODO
