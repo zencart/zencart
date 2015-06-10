@@ -57,6 +57,9 @@ define('ERROR_NO_SUBJECT', 'Error: No subject has been entered.');
 define('COUPON_NAME', 'Coupon Name');
 //define('COUPON_VALUE', 'Coupon Value');
 define('COUPON_AMOUNT', 'Coupon Amount');
+
+define('TEXT_COUPON_PRODUCT_COUNT_PER_ORDER', 'Per Order');
+define('TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT', 'Per Qualifying Item');
 define('COUPON_CODE', 'Coupon Code');
 define('COUPON_STARTDATE', 'Start Date');
 define('COUPON_FINISHDATE', 'End Date');
@@ -98,7 +101,7 @@ define('ERROR_COUPON_EXISTS', 'A coupon with that code already exists');
 
 
 define('COUPON_NAME_HELP', 'A short name for the coupon');
-define('COUPON_AMOUNT_HELP', 'The value of the discount for the coupon, either fixed or add a % on the end for a percentage discount.');
+define('COUPON_AMOUNT_HELP', 'The value of the discount for the coupon, either fixed or add a % on the end for a percentage discount.<br />Per Order or Per Qualifying Item applies only when amount is used.');
 define('COUPON_CODE_HELP', 'You can enter your own code here, or leave blank for an auto generated one.');
 define('COUPON_STARTDATE_HELP', 'The date the coupon will be valid from');
 define('COUPON_FINISHDATE_HELP', 'The date the coupon expires');

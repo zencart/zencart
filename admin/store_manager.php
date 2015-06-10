@@ -136,7 +136,7 @@
       $cleaningPatterns[] = 'AIM_Debug_';
       $cleaningPatterns[] = 'SIM_Debug_';
       $cleaningPatterns[] = 'FirstData_Debug_';
-      $cleaningPatterns[] = 'Linkpoint_Debug_';
+      $cleaningPatterns[] = 'Linkpoint_Debug_'; // keep until v1.7.0
       $cleaningPatterns[] = 'Paypal|paypal|ipn_';
       $cleaningPatterns[] = 'zcInstall';
       $cleaningPatterns[] = 'SHIP_';

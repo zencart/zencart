@@ -3,11 +3,11 @@
  * File contains framework test cases
  *
  * @package tests
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
-require_once('support/zcAdminTestCase.php');
+require_once('support/zcAdminDBTestCase.php');
 
 /**
  * Test Dummy
@@ -19,7 +19,7 @@ if (!function_exists('zen_get_admin_name')) {
 /**
  * Testing Library
  */
-class testDbLogging extends zcAdminTestCase
+class testDbLogging extends zcAdminDBTestCase
 {
 
   function setUp()

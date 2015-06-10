@@ -39,4 +39,3 @@ filter:
         - 'includes/classes/http_client.php'
         - 'includes/library/aura/*'
         - 'includes/modules/debug_blocks/*'
-        - 'includes/modules/payment/linkpoint_api/*'

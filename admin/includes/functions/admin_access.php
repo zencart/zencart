@@ -715,11 +715,6 @@ function zen_get_admin_pages($menu_only)
   /**
    * Then we'll deal with the exceptions
    */
-  // Include Linkpoint review only if the payment mod is enabled
-  if (!defined('MODULE_PAYMENT_LINKPOINT_API_STATUS') || MODULE_PAYMENT_LINKPOINT_API_STATUS != 'True')
-  {
-    unset ($retVal['customers']['linkpointReview']);
-  }
   // Include paypal ipn menu only if the payment mod is enabled
   if (!(defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS == 'True') &&
       !(defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True') &&
