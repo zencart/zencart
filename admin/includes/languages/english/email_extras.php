@@ -30,6 +30,7 @@
   define('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_SUBJECT','[DISCOUNT COUPONS]');
   define('SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT','[ORDERS STATUS]');
   define('TEXT_UNSUBSCRIBE', "\n\nTo unsubscribe from future newsletter and promotional mailings, simply click on the following link: \n");
+  define('SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO_SUBJECT','[' . TEXT_GV_NAME . ' QUEUE]');
 
 // for whos_online when gethost is off
   define('OFFICE_IP_TO_HOST_ADDRESS', 'Disabled');

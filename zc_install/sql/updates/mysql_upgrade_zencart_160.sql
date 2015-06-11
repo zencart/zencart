@@ -77,6 +77,9 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 UPDATE configuration set configuration_group_id = 6 where configuration_key in ('PRODUCTS_OPTIONS_TYPE_SELECT', 'UPLOAD_PREFIX', 'TEXT_PREFIX');
 
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Send Copy of Admin GV Queued Emails To - Status', 'SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO_STATUS', '0', 'Send copy of Admin GV Queued Mail Status<br />0= off 1= on', '12', '20', 'zen_cfg_select_option(array(\'0\', \'1\'),', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Send Copy of Customer Admin GV Queued Mail Emails To', 'SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO', '', 'Send copy of Admin GV Queued Mail emails to the following email addresses, in this format: Name 1 &lt;email@address1&gt;, Name 2 &lt;email@address2&gt;', '12', '20', now());
+
 DELETE FROM configuration where configuration_key = 'PHPBB_LINKS_ENABLED' && configuration_value != 'true';
 
 
