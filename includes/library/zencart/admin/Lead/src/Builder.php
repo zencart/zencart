@@ -16,16 +16,35 @@ class Builder extends \base
 {
 
     /**
+     * @var
+     */
+    protected $request;
+    /**
+     * @var
+     */
+    protected $outputLayout;
+    /**
+     * @var
+     */
+    protected $listingQuery;
+    /**
+     * @var array
+     */
+    protected $leadDefinition;
+
+    /**
      * @param $listingBox
      * @param $request
      */
     public function __construct($listingBox, $request)
     {
+        $this->notify('NOTIFY_LEADBUILDER_CONSTRUCTOR_START');
         $this->request = $request;
         $this->outputLayout = $listingBox->getOutputLayout();
         $this->listingQuery = $listingBox->getListingQuery();
         $this->leadDefinition = array();
         $this->buildLeadDefinition();
+        $this->notify('NOTIFY_LEADBUILDER_CONSTRUCTOR_END');
     }
 
     /**
@@ -33,10 +52,12 @@ class Builder extends \base
      */
     public function buildLeadDefinition()
     {
+        $this->notify('NOTIFY_LEADBUILDER_BUILDLEADDEFINITION_START');
         $this->setActionFromRequest();
         $this->setLeadDefinitionDefaults();
         $this->mergeInOutputDefinitions();
         $this->buildFieldDefinitions();
+        $this->notify('NOTIFY_LEADBUILDER_BUILDLEADDEFINITION_END');
     }
 
     /**
@@ -44,9 +65,11 @@ class Builder extends \base
      */
     protected function setActionFromRequest()
     {
+        $this->notify('NOTIFY_LEADBUILDER_SETACTIONFROMREQUEST_START');
         $this->leadDefinition['action'] = 'list';
         $actionMap = array('edit', 'add');
         $requestAction = $this->request->readGet('action');
+        $this->notify('NOTIFY_LEADBUILDER_SETACTIONFROMREQUEST_PRE_GUARD', array(), $requestAction, $actionMap);
         if (!isset($requestAction)) {
             return;
         }
@@ -54,6 +77,7 @@ class Builder extends \base
             return;
         }
         $this->leadDefinition['action'] = $requestAction;
+        $this->notify('NOTIFY_LEADBUILDER_SETACTIONFROMREQUEST_END');
     }
 
     /**
@@ -61,6 +85,7 @@ class Builder extends \base
      */
     protected function setLeadDefinitionDefaults()
     {
+        $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONDEFAULTS_START');
         $this->processDefaults($this->getDefaultMap());
         $paginationSessKey = $this->leadDefinition['paginationSessKey'];
         $paginationQueryLimit = isset($_SESSION [$paginationSessKey]) ? $_SESSION [$paginationSessKey] : 20;
@@ -72,8 +97,10 @@ class Builder extends \base
             'rowActions' => array(),
             ''
         );
+        $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONDEFAULTS_SETMAP', array(), $paginationSessKey, $paginationQueryLimit, $map);
         $this->processDefaults($map);
         $this->setLeadDefinitionActionLinks();
+        $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONDEFAULTS_END');
     }
 
     /**
@@ -81,6 +108,7 @@ class Builder extends \base
      */
     protected function  processDefaults($defaultMap)
     {
+        $this->notify('NOTIFY_LEADBUILDER_PROCESSDEFAULTS_START', array(), $defaultMap);
         foreach ($defaultMap as $key => $value) {
             $setVal = $value;
             if (isset($this->outputLayout[$key])) {
@@ -88,6 +116,7 @@ class Builder extends \base
             }
             $this->leadDefinition[$key] = $setVal;
         }
+        $this->notify('NOTIFY_LEADBUILDER_PROCESSDEFAULTS_END');
     }
 
     /**
@@ -116,7 +145,7 @@ class Builder extends \base
                 $this->listingQuery['mainTable']['table'] . '_pql'),
             'enctype' => isset($this->outputLayout['hasImageUpload']) ? "enctype='multipart/form-data'" : ''
         );
-
+        $this->notify('NOTIFY_LEADBUILDER_GETDEFAULTMAP_END', array(), $defaultMap);
         return $defaultMap;
     }
 
@@ -125,6 +154,7 @@ class Builder extends \base
      */
     protected function mergeInOutputDefinitions()
     {
+        $this->notify('NOTIFY_LEADBUILDER_MERGEINOUTPUTDEFINITIONS_START');
         foreach ($this->outputLayout as $key => $value) {
             if ($key != 'actionLinksList') {
                 $this->leadDefinition [$key] = $value;
@@ -137,6 +167,7 @@ class Builder extends \base
             $this->leadDefinition ['allowMultiDelete'] = false;
         }
         $this->leadDefinition ['showMultiActions'] = $this->leadDefinition ['multiEdit'] || $this->leadDefinition ['allowMultiDelete'];
+        $this->notify('NOTIFY_LEADBUILDER_MERGEINOUTPUTDEFINITIONS_END');
     }
 
     /**
@@ -144,14 +175,17 @@ class Builder extends \base
      */
     protected function buildRealActionLinks()
     {
+        $this->notify('NOTIFY_LEADBUILDER_BUILDREALACTIONLINKS_START');
         $this->leadDefinition ['actionLinks'] = array();
         foreach ($this->leadDefinition ['actionLinksList'] as $actionLink) {
             $this->processActionLinks($actionLink);
         }
+        $this->notify('NOTIFY_LEADBUILDER_BUILDREALACTIONLINKS_END');
     }
 
     protected function processActionLinks($actionLink)
     {
+        $this->notify('NOTIFY_LEADBUILDER_PROCESSACTIONLINKS_START');
         $linkParameters = '';
         if ($actionLink ['linkGetAllGetParams']) {
             $linkParameters = zen_get_all_get_params($actionLink ['linkGetAllGetParamsIgnore']);
@@ -166,7 +200,7 @@ class Builder extends \base
             'href' => $link,
             'text' => $actionLink ['linkTitle']
         );
-
+        $this->notify('NOTIFY_LEADBUILDER_PROCESSACTIONLINKS_END');
     }
 
     /**
@@ -174,11 +208,13 @@ class Builder extends \base
      */
     protected function mergeinActionLinks($value)
     {
+        $this->notify('NOTIFY_LEADBUILDER_MERGEINACTIONLINKS_START');
         foreach ($value as $key => $actionEntry) {
             foreach ($actionEntry as $actionKey => $actionValue) {
                 $this->leadDefinition ['actionLinksList'] [$key] [$actionKey] = $actionValue;
             }
         }
+        $this->notify('NOTIFY_LEADBUILDER_MERGEINACTIONLINKS_END');
     }
 
     /**
@@ -186,6 +222,7 @@ class Builder extends \base
      */
     protected function setLeadDefinitionActionLinks()
     {
+        $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONACTIONLINKS_START');
         $this->leadDefinition ['actionLinksList'] ['listView'] = array(
             'linkTitle' => TEXT_LEAD_ACTION_LIST,
             'linkCmd' => $this->request->readGet('cmd'),
@@ -208,6 +245,7 @@ class Builder extends \base
                 )
             )
         );
+        $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONACTIONLINKS_END');
     }
 
     /**
@@ -215,6 +253,7 @@ class Builder extends \base
      */
     protected function buildFieldDefinitions()
     {
+        $this->notify('NOTIFY_LEADBUILDER_BUILDFIELDDEFINITIONS_START');
         foreach ($this->outputLayout ['fields'] as $field => $options) {
             $layout = $this->buildActualLayoutFromContext($options);
             if (isset($layout ['uploadOptions'] ['imageDirectorySelector']) && $layout ['uploadOptions'] ['imageDirectorySelector'] === true) {
@@ -234,6 +273,7 @@ class Builder extends \base
             $this->leadDefinition ['fields'] [$field] ['field'] = 'entry_field_' . $field;
             $this->leadDefinition ['fields'] [$field] ['autocomplete'] = isset($options ['autocomplete']) ? $options ['autocomplete'] : false;
         }
+        $this->notify('NOTIFY_LEADBUILDER_BUILDFIELDDEFINITIONS_END');
     }
 
     /**
@@ -242,10 +282,11 @@ class Builder extends \base
      */
     protected function buildActualLayoutFromContext($options)
     {
+        $this->notify('NOTIFY_LEADBUILDER_BUILDACTIONLAYOUTFROMCONTEXT_START', array(), $options);
         $defaultLayout = isset($options ['layout'] ['common']) ? $options ['layout'] ['common'] : array();
         $actualLayout = isset($options ['layout'] [$this->leadDefinition['action']]) ? $options ['layout'] [$this->leadDefinition ['action']] : array();
         $layout = array_merge($defaultLayout, $actualLayout);
-
+        $this->notify('NOTIFY_LEADBUILDER_BUILDACTIONLAYOUTFROMCONTEXT_END', array(), $layout);
         return $layout;
     }
 
@@ -255,6 +296,7 @@ class Builder extends \base
      */
     protected function buildImageDirectorySelector($baseDirectory = DIR_FS_CATALOG_IMAGES)
     {
+        $this->notify('NOTIFY_LEADBUILDER_BUILDIMAGEDIRECTORYSELECTOR_START', array(), $baseDirectory);
         $selectList = array();
         $selectList [] = array(
             'id' => '',
@@ -271,7 +313,7 @@ class Builder extends \base
         }
         $dir->close();
         unset($dir);
-
+        $this->notify('NOTIFY_LEADBUILDER_BUILDIMAGEDIRECTORYSELECTOR_END', array(), $selectList);
         return $selectList;
     }
 
@@ -306,39 +348,71 @@ class Builder extends \base
                 'text' => 50
             )
         );
-        $this->notify('NOTIFY_LEADBUILDER_PAGINATIONLIMITOPTIONS_END', $paginationLimitOptions);
+        $this->notify('NOTIFY_LEADBUILDER_PAGINATIONLIMITOPTIONS_END', array(), $paginationLimitOptions);
         return $paginationLimitOptions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @param mixed $request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOutputLayout()
+    {
+        return $this->outputLayout;
+    }
+
+    /**
+     * @param mixed $outputLayout
+     */
+    public function setOutputLayout($outputLayout)
+    {
+        $this->outputLayout = $outputLayout;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getListingQuery()
+    {
+        return $this->listingQuery;
+    }
+
+    /**
+     * @param mixed $listingQuery
+     */
+    public function setListingQuery($listingQuery)
+    {
+        $this->listingQuery = $listingQuery;
     }
 
     /**
      * @return array
      */
-    public function getleadDefinition()
+    public function getLeadDefinition()
     {
         return $this->leadDefinition;
     }
 
     /**
-     * @return mixed
+     * @param array $leadDefinition
      */
-    public function getTableRows()
+    public function setLeadDefinition($leadDefinition)
     {
-        return $this->tableRows;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getresultItems()
-    {
-        return $this->resultItems;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPaginator()
-    {
-        return $this->paginator;
+        $this->leadDefinition = $leadDefinition;
     }
 }
