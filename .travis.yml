@@ -30,7 +30,7 @@ before_install:
   - git submodule update --init --recursive
 
 install:
-  - composer install --no-interaction
+  - travis_wait composer install --no-interaction
 
 branches:
   except:
