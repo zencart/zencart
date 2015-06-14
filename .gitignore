@@ -19,7 +19,6 @@ testFramework/webtests/config/*
 devtools.php
 dev-*.*
 includes/local
-composer.lock
 vendor
 bin
 build
