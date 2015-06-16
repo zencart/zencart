@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: gv_queue.php ajeh  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -74,6 +74,10 @@
 
 //send the message
         zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
+      // send copy to Admin if enabled
+      if (SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO_STATUS== '1' and SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO != '') {
+        zen_mail('', SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO, SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO_SUBJECT . ' ' . TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
+      }
 
       zen_record_admin_activity('GV Queue entry released in the amount of ' . $gv_amount . ' for ' . $mail->fields['customers_email_address'], 'info');
 
