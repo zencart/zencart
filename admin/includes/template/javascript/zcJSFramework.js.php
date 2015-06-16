@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:$
+ * @version $Id:   Modified in v1.6.0 $
  */
 ?>
 <script>
@@ -12,16 +12,16 @@ if (typeof zcJS == "undefined" || !zcJS) {
 };
 
 zcJS.ajax = function (options) {
-  options.url = options.url.replace("&amp;", "&");
+  options.url = options.url.replace(/&amp;/g, '&');
   var deferred = $.Deferred(function (d) {
-      var ajaxSecurityToken = '<?php echo $_SESSION['ajaxSecurityToken']; ?>';
+      var securityToken = '<?php echo $_SESSION['securityToken']; ?>';
       var defaults = {
           cache: false,
           type: 'POST',
           traditional: true,
           dataType: 'json',
           data: $.extend(true,{
-            ajaxSecurityToken: ajaxSecurityToken
+            securityToken: securityToken
         }, options.data)
       },
       settings = $.extend(true, {}, defaults, options);
@@ -36,8 +36,8 @@ zcJS.ajax = function (options) {
           error: function (jqXHR, textStatus, errorThrown) {
               console.log(jqXHR);
               d.reject(jqXHR, textStatus, errorThrown);
-          },
-          complete: d.resolve
+          }
+          //complete: d.resolve
       });
       $.ajax(jqXHRSettings);
    }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -54,6 +54,9 @@ zcJS.ajax = function (options) {
            case 'AUTH_ERROR':
            break;
            case 'SECURITY_TOKEN':
+           break;
+           case 'CUSTOM_ALERT_ERROR':
+             alert(jsonResponse.errorMessage);
            break;
 
            default:

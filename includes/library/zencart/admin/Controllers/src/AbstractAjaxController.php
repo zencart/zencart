@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
+ * @version $Id:  Modified in v1.6.0 $
  */
 namespace ZenCart\Admin\Controllers;
 /**
@@ -23,9 +23,9 @@ class AbstractAjaxController extends \base
     protected $response;
 
     /**
-     *
+     * @param \ZenCart\Platform\Request $request
      */
-    public function __construct($request)
+    public function __construct(\ZenCart\Platform\Request $request)
     {
         $this->tplVars = array();
         $this->response = array('data' => NULL);
@@ -37,7 +37,7 @@ class AbstractAjaxController extends \base
      */
     public function dispatch()
     {
-        $method = (isset($_GET['method'])) ? $_GET['method'] : 'default';
+        $method = $this->request->readGet('method', 'default');
         $method = $method . 'Execute';
         if (method_exists($this, $method)) {
             $this->$method();
@@ -74,7 +74,7 @@ class AbstractAjaxController extends \base
      * @param $key
      * @param $value
      */
-    public function setTplVars($key, $value)
+    public function setTplVar($key, $value)
     {
         $this->tplVars[$key] = $value;
     }

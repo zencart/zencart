@@ -93,6 +93,6 @@ abstract class AbstractWidget
   public function getFormDefaults($item, $handler)
   {
       $result = WidgetManager::getWidgetRefresh($item, $_SESSION['admin_id']);
-      $handler->setTplVars('widget-refresh', $result);
+      $handler->setTplVar('widget-refresh', $result);
   }
 }

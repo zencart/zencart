@@ -427,6 +427,18 @@ class queryFactory extends base {
     $typeArray = explode(':',$type);
     $type = $typeArray[0];
     switch ($type) {
+        case 'inConstructInteger':
+            $list = explode(',', $value);
+            $newList = array_map(function ($value) { return (int) $value; }, $list);
+            $value = implode($newList, ',');
+
+            return $value;
+        case 'inConstructString':
+            $list = explode(',', $value);
+            $newList = array_map(function ($value) { return '\'' . queryFactory::prepareInput($value) . '\''; }, $list);
+            $value = implode($newList, ',');
+
+            return $value;
       case 'csv':
         return $value;
       break;
