@@ -10,8 +10,8 @@ use Zencart\Controllers\AbstractController as Controller;
 use ZenCart\Request\Request as Request;
 
 /**
- * Class AbstractLeadService
- * @package ZenCart\Admin\Services
+ * Class AbstractService
+ * @package ZenCart\Services
  */
 Abstract class AbstractService extends \base
 {

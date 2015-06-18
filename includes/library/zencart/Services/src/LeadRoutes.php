@@ -8,7 +8,7 @@ namespace ZenCart\Services;
 
 /**
  * Class LeadRoutes
- * @package ZenCart\Admin\Services
+ * @package ZenCart\Services
  */
 class LeadRoutes extends LeadService
 {

@@ -9,8 +9,8 @@
 namespace ZenCart\ListingBox\boxes;
 
 /**
- * Class Index
- * @package ZenCart\Admin\Controllers
+ * Class LeadCountries
+ * @package ZenCart\ListingBox\boxes
  */
 class LeadCountries extends AbstractLeadListingBox
 {

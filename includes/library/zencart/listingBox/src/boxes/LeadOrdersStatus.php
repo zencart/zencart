@@ -9,7 +9,7 @@ namespace ZenCart\ListingBox\boxes;
 
 /**
  * Class LeadOrdersStatus
- * @package ZenCart\Platform\listingBox\boxes
+ * @package ZenCart\ListingBox\boxes
  */
 class LeadOrdersStatus extends AbstractLeadListingBox
 {

@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class OrdersStatus
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class OrdersStatus extends AbstractLeadController
 {

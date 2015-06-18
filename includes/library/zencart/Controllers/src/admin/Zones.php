@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class Zones
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class Zones extends AbstractLeadController
 {

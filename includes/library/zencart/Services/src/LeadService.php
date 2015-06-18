@@ -13,7 +13,7 @@ use ZenCart\Request\Request as Request;
 
 /**
  * Class LeadService
- * @package ZenCart\Admin\Services
+ * @package ZenCart\Services
  */
 class LeadService extends AbstractService
 {

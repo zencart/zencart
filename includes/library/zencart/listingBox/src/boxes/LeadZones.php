@@ -9,7 +9,7 @@ namespace ZenCart\ListingBox\boxes;
 
 /**
  * Class LeadZones
- * @package ZenCart\Platform\listingBox\boxes
+ * @package ZenCart\ListingBox\boxes
  */
 class LeadZones extends AbstractLeadListingBox
 {

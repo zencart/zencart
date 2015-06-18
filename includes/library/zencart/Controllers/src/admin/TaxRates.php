@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class TaxRates
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class TaxRates extends AbstractLeadController
 {

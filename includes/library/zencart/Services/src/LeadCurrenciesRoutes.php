@@ -10,7 +10,7 @@ namespace ZenCart\Services;
 
 /**
  * Class LeadCurrenciesRoutes
- * @package ZenCart\Admin\Services
+ * @package ZenCart\Services
  */
 class LeadCurrenciesRoutes extends LeadRoutes
 {

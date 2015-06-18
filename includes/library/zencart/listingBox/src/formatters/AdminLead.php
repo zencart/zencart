@@ -8,7 +8,7 @@ namespace ZenCart\ListingBox\formatters;
 
 /**
  * Class AdminLead
- * @package ZenCart\Platform\listingBox\formatters
+ * @package ZenCart\ListingBox\formatters
  */
 class AdminLead extends AbstractFormatter implements FormatterInterface
 {

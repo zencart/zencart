@@ -9,7 +9,7 @@ namespace ZenCart\ListingBox\boxes;
 
 /**
  * Class LeadLanguages
- * @package ZenCart\Platform\listingBox\boxes
+ * @package ZenCart\ListingBox\boxes
  */
 class LeadLanguages extends AbstractLeadListingBox
 {

@@ -9,7 +9,7 @@ namespace ZenCart\ListingBox\boxes;
 
 /**
  * Class LeadRecordArtists
- * @package ZenCart\Platform\listingBox\boxes
+ * @package ZenCart\ListingBox\boxes
  */
 class LeadRecordArtists extends AbstractLeadListingBox
 {

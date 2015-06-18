@@ -15,7 +15,7 @@ use ZenCart\Services\LeadRoutes as LeadService;
 
 /**
  * Class AbstractLeadController
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 abstract class AbstractLeadController extends AbstractController
 {

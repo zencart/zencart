@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class Countries
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class Countries extends AbstractLeadController
 {

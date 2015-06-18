@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class Currencies
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class Currencies extends AbstractLeadController
 {

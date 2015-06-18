@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class Languages
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class Languages extends AbstractLeadController
 {

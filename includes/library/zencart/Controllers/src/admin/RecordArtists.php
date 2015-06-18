@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class RecordArtists
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class RecordArtists extends AbstractLeadController
 {

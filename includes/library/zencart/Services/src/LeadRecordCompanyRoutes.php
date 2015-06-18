@@ -10,7 +10,7 @@ namespace ZenCart\Services;
 
 /**
  * Class LeadRecordCompanyRoutes
- * @package ZenCart\Admin\Services
+ * @package ZenCart\Services
  */
 class LeadRecordCompanyRoutes extends LeadRoutes
 {

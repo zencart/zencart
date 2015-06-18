@@ -8,7 +8,7 @@ namespace ZenCart\Controllers;
 
 /**
  * Class GeoZones
- * @package ZenCart\Admin\Controllers
+ * @package ZenCart\Controllers
  */
 class GeoZones extends AbstractLeadController
 {
