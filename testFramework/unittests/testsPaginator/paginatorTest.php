@@ -8,7 +8,8 @@
  * @version $Id$
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
-use ZenCart\Platform\Paginator\Paginator;
+use ZenCart\Paginator\Paginator;
+use ZenCart\Request\Request;
 
 /**
  * Testing Library
@@ -23,13 +24,19 @@ class testPaginationCase extends zcTestCase
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
         require DIR_FS_CATALOG . 'includes/functions/functions_general.php';
         define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', '');
+        $loader = new \Aura\Autoload\Loader;
+        $loader->register();
+        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/Paginator/src');
+        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
     }
 
     public function testMain()
     {
-        $r = $this->getMockBuilder('\\ZenCart\\Platform\\Request')
+        $r = $this->getMockBuilder('\\ZenCart\\Request\\Request')
             ->disableOriginalConstructor()
             ->getMock();
+        $r->method('get')->willReturn(1);
         $db = $this->getMock('queryFactory');
         $db0 = clone($db);
         $db1 = array(array('foo' => 'bar'), array('foo' => 'bar1'));

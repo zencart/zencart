@@ -131,11 +131,11 @@ if ($error == true) {
 }
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ADVANCED_SEARCH));
 $breadcrumb->add(NAVBAR_TITLE_2);
-$qb = new ZenCart\Platform\QueryBuilder($db);
-$box = new ZenCart\Platform\listingBox\boxes\SearchResults($zcRequest);
-$paginator = new ZenCart\Platform\Paginator\Paginator($zcRequest);
-$builder = new ZenCart\Platform\listingBox\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
-$box->buildResults($qb, $db, new ZenCart\Platform\listingBox\DerivedItemManager, $builder->getPaginator());
+$qb = new ZenCart\QueryBuilder\QueryBuilder($db);
+$box = new ZenCart\ListingBox\boxes\SearchResults($zcRequest);
+$paginator = new ZenCart\Paginator\Paginator($zcRequest);
+$builder = new ZenCart\ListingBox\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
+$box->buildResults($qb, $db, new ZenCart\ListingBox\DerivedItemManager, $builder->getPaginator());
 $tplVars['listingBox'] = $box->getTplVars();
 //print_r($qb->getQuery());
 //die();

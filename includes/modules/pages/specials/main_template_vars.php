@@ -10,11 +10,11 @@
  */
 if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 )
 {
-    $qb = new ZenCart\Platform\QueryBuilder($db);
-    $box = new ZenCart\Platform\listingBox\boxes\SpecialsProductsPage($zcRequest);
-    $paginator = new ZenCart\Platform\Paginator\Paginator($zcRequest);
-    $builder = new ZenCart\Platform\listingBox\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
-    $box->buildResults($qb, $db, new ZenCart\Platform\listingBox\DerivedItemManager, $builder->getPaginator());
+    $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
+    $box = new ZenCart\ListingBox\boxes\SpecialsProductsPage($zcRequest);
+    $paginator = new ZenCart\Paginator\Paginator($zcRequest);
+    $builder = new ZenCart\ListingBox\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
+    $box->buildResults($qb, $db, new ZenCart\ListingBox\DerivedItemManager, $builder->getPaginator());
     $tplVars['listingBox'] = $box->getTplVars();
     require($template->get_template_dir('tpl_product_listing_standard.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_product_listing_standard.php');
 }
