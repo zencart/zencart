@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
+ * @version $Id:  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -392,11 +392,13 @@ define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Displaying <b>%d</b> to <b>%d</b> (of
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCT_TYPES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> product types)');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> products expected)');
 define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> product reviews)');
+define('TEXT_DISPLAY_NUMBER_OF_RECORD_ARTISTS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> record artists)');
+define('TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> record companies)');
 define('TEXT_DISPLAY_NUMBER_OF_SALES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> sales)');
 define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> products on special)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax classes)');
 define('TEXT_DISPLAY_NUMBER_OF_TEMPLATES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> template associations)');
-define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax zones)');
+define('TEXT_DISPLAY_NUMBER_OF_GEO_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> zone definitions)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax rates)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> zones)');
 
@@ -709,4 +711,23 @@ define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="http://www.zen-cart.com/co
 define('DEBUG_LOGS_DISCOVERED', 'Debug log file(s) discovered. Found: ');
 define('DEBUG_LOGS_WARNING', '*** WARNING *** .log files may indicate problems that need to be resolved. Read the .log file(s) to resolve any errors, then delete them manually or via Tools->Store Manager.');
 
+// common LEAD stuff
 
+define('TEXT_LEAD_RELATED', 'Related');
+define('TEXT_LEAD_EDIT', 'Edit');
+define('TEXT_LEAD_DELETE', 'Delete');
+define('TEXT_LEAD_ADD_ENTRY', 'Add Entry');
+define('TEXT_LEAD_EDIT_ENTRY', 'Edit Entry');
+define('TEXT_PAGINATION_LIMIT_SELECT', 'Select Pagination Items');
+define('TEXT_LEAD_ACTION', 'Action');
+define('TEXT_ALL', 'All');
+define('TEXT_ENABLED', 'Enabled');
+define('TEXT_DISABLED', 'Disabled');
+define('TEXT_MULTIPLE_CHECKBOX_TEXT', ' <-- Select All or Select individually then ');
+define('TEXT_MULTI_DELETE', 'Delete checked items');
+define('TEXT_CONFIRM_DELETE', 'Confirm Delete');
+define('TEXT_CONFIRM_DELETE_TEXT', 'Do you want to delete the selected items');
+define('TEXT_CONFIRM', 'Confirm');
+define('TEXT_ITEM_DEFAULT', '<strong>(Default)</strong>');
+define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
+define('TEXT_AUTOCOMPLETE_DEFAULT_PLACEHOLDER', 'Search or Select below');

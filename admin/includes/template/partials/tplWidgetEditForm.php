@@ -11,23 +11,26 @@
 use ZenCart\Admin\DashboardWidget\WidgetManager;
 ?>
 <div>
-<form name="widget-edit" action="#" method="post" class="widget-edit-form">
-  <input type="hidden" name="ajaxSecurityToken" value="<?php echo $_SESSION['ajaxSecurityToken']; ?>">
-  <input type="hidden" name="id" value="<?php echo $tplVars['id']; ?>">
-  <fieldset>
-    <legend><?php echo 'Widget Settings'; ?></legend>
-    <div class="row">
-      <div class="small-3 columns">
-        <label class="inline" for="widget-refresh"><?php echo 'Refresh'; ?></label>
-      </div>
-      <div class="small-9 columns">
-        <?php echo zen_draw_pull_down_menu('widget-refresh', WidgetManager::getWidgetTimerSelect($tplVars['id']), $tplVars['widget-refresh']); ?>
-      </div>
-    </div>
-  </fieldset>
-<input type="submit" value="<?php echo TEXT_UPDATE; ?>" class="radius button" id="widget-edit-submit-<?php echo $tplVars['id']; ?>">
-<a class="secondary button right widget-edit-dismiss" id="widget-edit-dismiss-<?php echo $tplVars['id']; ?>" href="#"><?php echo TEXT_CANCEL; ?></a>
-</form>
+    <form name="widget-edit" action="#" method="post" class="widget-edit-form">
+        <input type="hidden" name="ajaxSecurityToken" value="<?php echo $_SESSION['ajaxSecurityToken']; ?>">
+        <input type="hidden" name="id" value="<?php echo $tplVars['id']; ?>">
+        <fieldset>
+            <legend><?php echo 'Widget Settings'; ?></legend>
+            <div class="row">
+                <div class="small-3 columns">
+                    <label class="inline" for="widget-refresh"><?php echo 'Refresh'; ?></label>
+                </div>
+                <div class="small-9 columns">
+                    <?php echo zen_draw_pull_down_menu('widget-refresh', WidgetManager::getWidgetTimerSelect($tplVars['id']),
+                        $tplVars['widget-refresh']); ?>
+                </div>
+            </div>
+        </fieldset>
+        <input type="submit" value="<?php echo TEXT_UPDATE; ?>" class="radius button"
+               id="widget-edit-submit-<?php echo $tplVars['id']; ?>">
+        <a class="secondary button right widget-edit-dismiss" id="widget-edit-dismiss-<?php echo $tplVars['id']; ?>"
+           href="#"><?php echo TEXT_CANCEL; ?></a>
+    </form>
 </div>
 <script>
 $(function() {

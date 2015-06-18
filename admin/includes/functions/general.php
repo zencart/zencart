@@ -3710,3 +3710,16 @@ function get_logs_data($maxToList = 'count') {
   $logs = zen_sort_array($logs, 'unixtime', SORT_DESC);
   return $logs;
 }
+/**
+ * function issetorArray
+ *
+ * returns an array[key] or default value if key does not exist
+ *
+ * @param array $array
+ * @param $key
+ * @param null $default
+ * @return mixed
+ */
+function issetorArray(array $array, $key, $default = null) {
+    return isset($array[$key]) ? $array[$key] : $default;
+}

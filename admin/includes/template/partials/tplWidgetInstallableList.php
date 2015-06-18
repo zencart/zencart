@@ -9,18 +9,19 @@
  */
 ?>
 <?php if ($tplVars['flagHasWidgets']) { ?>
-  <?php foreach ($tplVars['widgets'] as $widget)  { ?>
-<div class="add-widget-list">
-  <p class=""><?php echo $widget['widget_name']; ?></p>
-  <p class="">
-<?php echo (defined($widget['widget_description']) ? constant($widget['widget_description']) : $widget['widget_description']) ; ?>
-  </p>
-  <a class="button tiny add-widget-button" id="add-widget-<?php echo $widget['widget_key']; ?>" href="#">Add Widget</a>
-</div>
-<br class="clear">
-<?php } ?>
-  <?php } else { ?>
-<p><?php echo TEXT_NO_WIDGETS_TO_INSTALL; ?><p>
+    <?php foreach ($tplVars['widgets'] as $widget) { ?>
+        <div class="add-widget-list">
+            <p class=""><?php echo $widget['widget_name']; ?></p>
+            <p class="">
+                <?php echo(defined($widget['widget_description']) ? constant($widget['widget_description']) : $widget['widget_description']); ?>
+            </p>
+            <a class="button tiny add-widget-button" id="add-widget-<?php echo $widget['widget_key']; ?>" href="#">Add Widget</a>
+        </div>
+        <br class="clear">
+    <?php } ?>
+<?php } else { ?>
+<p><?php echo TEXT_NO_WIDGETS_TO_INSTALL; ?>
+<p>
 <?php } ?>
 <script>
 $(function() {

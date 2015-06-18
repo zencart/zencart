@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php 19356 2011-08-22 05:22:42Z drbyte $
+ * @version $Id:  Modified in v1.6.0 $
  */
 
   /**
@@ -569,4 +569,17 @@
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
-?>
+
+/**
+ * @param string $page
+ * @param string $parameters
+ * @param string $connection
+ * @param bool $add_session_id
+ * @return mixed|string
+ */
+function zen_ajax_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
+    $link = zen_admin_href_link($page, $parameters, $add_session_id);
+    $link = str_replace('&amp;', '&', $link);
+    return $link;
+}
+

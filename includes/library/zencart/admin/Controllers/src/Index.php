@@ -1,13 +1,10 @@
 <?php
 /**
- * Class Index
- *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:$
+ * @version $Id:  New in v1.6.0 $
  */
 namespace ZenCart\Admin\Controllers;
-
 use ZenCart\Admin\Services\IndexRoute;
 
 /**
@@ -37,11 +34,10 @@ class Index extends AbstractController
         $this->service = new IndexRoute($this, $request, $db);
     }
 
-
     /**
      *
      */
-    public function initDefinitions()
+    public function preCheck()
     {
         $this->tplVars['cssList'] [] = array(
             'href' => 'includes/template/css/index.css',

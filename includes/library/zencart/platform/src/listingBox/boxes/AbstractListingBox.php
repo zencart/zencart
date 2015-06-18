@@ -1,12 +1,11 @@
 <?php
 /**
- * Class AbstractListingBox
- *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: wilt  New in v1.6.0 $
  */
 namespace ZenCart\Platform\listingBox\boxes;
+
 /**
  * Class AbstractListingBox
  * @package ZenCart\ListingBox\Box
@@ -77,6 +76,7 @@ abstract class AbstractListingBox extends \base
         if (!isset($paginator)) {
             $resultItems = $this->getResultItems($query, $db);
         }
+
         return $resultItems;
     }
 
@@ -93,8 +93,10 @@ abstract class AbstractListingBox extends \base
             $resultItem = $derivedItemsManager->manageDerivedItems($derivedItems, $resultItem);
             $finalItems [] = $resultItem;
         }
+
         return $finalItems;
     }
+
     /**
      * @param $paginator
      */
@@ -150,6 +152,7 @@ abstract class AbstractListingBox extends \base
         if ($countQtyBoxItems > 0 and $showSubmit == true and count($listBoxContents) > 0) {
             $retVal = true;
         }
+
         return $retVal;
     }
 
@@ -163,6 +166,7 @@ abstract class AbstractListingBox extends \base
     {
         $paginator->doPagination($query);
         $resultItems = $paginator->getScroller()->getResults();
+
         return $resultItems;
 
     }
@@ -180,6 +184,7 @@ abstract class AbstractListingBox extends \base
         foreach ($results as $result) {
             $resultItems [] = $result;
         }
+
         return $resultItems;
     }
 
@@ -200,6 +205,7 @@ abstract class AbstractListingBox extends \base
         $f->setDbConnection($db);
         $f->setRequest($this->request);
         $f->format();
+
         return $f;
     }
 
@@ -222,7 +228,13 @@ abstract class AbstractListingBox extends \base
             $this->listingQuery = $filter->filterItem($this->listingQuery);
             $filterVars = array_merge($filterVars, $filter->getTplVars());
         }
+
         return $filterVars;
+    }
+
+    public function transformPaginationItems($items)
+    {
+        return $items;
     }
 
     /**
@@ -231,6 +243,7 @@ abstract class AbstractListingBox extends \base
     public function getTplVars()
     {
         $this->notify('NOTIFY_LISTINGBOX_GETTEMPLATEVARIABLES_START');
+
         return $this->tplVars;
     }
 
@@ -257,6 +270,7 @@ abstract class AbstractListingBox extends \base
     {
         return $this->listingQuery;
     }
+
     /**
      * @return array
      */
