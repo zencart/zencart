@@ -3,7 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version  $Id: New in v1.6.0 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -132,8 +132,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sessions.php');
-  $autoLoadConfig[60][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_ajax_security_token.php');
 /**
  * Breakpoint 70.
  *
