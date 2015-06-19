@@ -249,8 +249,8 @@ class testPasswordHash extends zcTestCase
             ));
             $passwordHash2 = password_hash("test", PASSWORD_BCRYPT);
             $this->assertTrue($hashLength == 60);
-            $this->assertTrue(password_verify($passwordHash1));
-            $this->assertTrue(password_verify($passwordHash2));
+            $this->assertTrue(password_verify("rasmuslerdorf", $passwordHash1));
+            $this->assertTrue(password_verify("test", $passwordHash2));
         }
     }
 }
