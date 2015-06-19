@@ -38,7 +38,6 @@ class PaginatorBuilder
      */
     protected function buildPaginator($request, Paginator $paginator, array $listingQuery)
     {
-        $this->setDefaultParams($request, $paginator);
         if (!isset($listingQuery['pagination'])) {
             return;
         }
@@ -48,11 +47,6 @@ class PaginatorBuilder
         if (isset($listingQuery['pagination']['adapterParams'])) {
             $paginator->setAdapterParams($listingQuery['pagination']['adapterParams']);
         }
-    }
-
-    protected function setDefaultParams($request, Paginator $paginator)
-    {
-       $paginator->setScrollerParams(array('cmd'=>$request->readGet('main_page')));
     }
 
     /**

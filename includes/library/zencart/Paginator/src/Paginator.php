@@ -52,6 +52,8 @@ class Paginator extends \base
      */
     public function doPagination($adapterData, $adapterType = 'QueryFactory', $scrollerType = 'Standard')
     {
+        $mvcCmdName = issetorArray($this->scrollerParams, 'mvcCmdName', 'main_page');
+        $this->scrollerParams['cmd'] = $this->request->readGet($mvcCmdName);
         $pagingVarName = issetorArray($this->scrollerParams, 'pagingVarName', 'page');
         $pagingVarSrc = issetorArray($this->scrollerParams, 'pagingVarSrc', 'get');
         $currentPage = $this->request->get($pagingVarName, 1, $pagingVarSrc);

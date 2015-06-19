@@ -43,6 +43,7 @@ abstract class AbstractLeadController extends AbstractController
         $this->queryBuilder = new QueryBuilder($this->dbConn, $this->listingBox->getListingQuery());
         $leadDef = $this->leadDefinitionBuilder->getleadDefinition();
         $this->paginator = new Paginator($request);
+        $this->paginator->setScrollerParams(array('mvcCmdName' => 'cmd'));
         $this->paginatortBuilder = new PaginatorBuilder($request, $this->listingBox->getListingQuery(),
             $this->paginator);
         $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
