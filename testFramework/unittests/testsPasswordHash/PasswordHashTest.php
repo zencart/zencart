@@ -3,7 +3,7 @@
  * @package tests
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id$
+ * @version v1.6.0
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
 
@@ -246,14 +246,11 @@ class testPasswordHash extends zcTestCase
             $hashLength = strlen(password_hash("foo", PASSWORD_BCRYPT));
             $passwordHash1 = password_hash("rasmuslerdorf", PASSWORD_BCRYPT, array(
                 "cost" => 7,
-                // "salt" => "usesomesillystringforsalt"
             ));
-            $passwordHash2 = password_hash("test", PASSWORD_BCRYPT, array(
-                // "salt" => "123456789012345678901" . chr(0)
-            ));
+            $passwordHash2 = password_hash("test", PASSWORD_BCRYPT);
             $this->assertTrue($hashLength == 60);
-            $this->assertTrue($passwordHash1 === '$2y$07$usesomesillystringfore2uDLvp1Ii2e./U9C8sBjqp8I90dH6hi');
-            $this->assertTrue($passwordHash2 === '$2y$10$MTIzNDU2Nzg5MDEyMzQ1Nej0NmcAWSLR.oP7XOR9HD/vjUuOj100y');
+            $this->assertTrue(password_verify($passwordHash1));
+            $this->assertTrue(password_verify($passwordHash2));
         }
     }
 }
