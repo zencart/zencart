@@ -12,7 +12,7 @@ use ZenCart\DashboardWidget\WidgetManager;
 ?>
 <div>
     <form name="widget-edit" action="#" method="post" class="widget-edit-form">
-        <input type="hidden" name="ajaxSecurityToken" value="<?php echo $_SESSION['ajaxSecurityToken']; ?>">
+        <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>">
         <input type="hidden" name="id" value="<?php echo $tplVars['id']; ?>">
         <fieldset>
             <legend><?php echo 'Widget Settings'; ?></legend>

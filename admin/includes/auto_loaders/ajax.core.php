@@ -132,8 +132,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sessions.php');
-  $autoLoadConfig[60][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_ajax_security_token.php');
 /**
  * Breakpoint 70.
  *
