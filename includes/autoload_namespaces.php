@@ -7,21 +7,38 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version  $Id: New in v1.6.0 $
  */
+define('NAMESPACE_LISTINGBOX', 'ZenCart\ListingBox');
+define('NAMESPACE_PAGINATOR', 'ZenCart\Paginator');
+define('NAMESPACE_QUERYBUILDER', 'ZenCart\QueryBuilder');
+define('NAMESPACE_REQUEST', 'ZenCart\Request');
+define('NAMESPACE_DASHBOARDWIDGETS', 'ZenCart\DashboardWidget');
+define('NAMESPACE_CONTROLLERS', 'ZenCart\Controllers');
+define('NAMESPACE_SERVICES', 'ZenCart\Services');
+define('NAMESPACE_AJAXDISPATCH', 'ZenCart\AjaxDispatch');
+define('NAMESPACE_LEAD', 'ZenCart\Lead');
 
-// ensure library directory constants are set to rational defaults
-if (!defined('DIR_CATALOG_LIBRARY')) {
-  define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
-}
+define('URL_SERVICES', 'zencart/Services/src/');
+define('URL_CONTROLLERS', 'zencart/Controllers/src/');
+define('URL_AJAXDISPATCH', 'zencart/AjaxDispatch/src/');
+define('URL_DASHBOARDWIDGETS', 'zencart/DashboardWidget/src/');
+define('URL_LISTINGBOX', 'zencart/listingBox/src/');
+define('URL_PAGINATOR', 'zencart/Paginator/src/');
+define('URL_QUERYBUILDER', 'zencart/QueryBuilder/src/');
+define('URL_REQUEST', 'zencart/Request/src/');
+define('URL_LEAD', 'zencart/Lead/src/');
 
 /**
  * An array of namespace => basedir configurations
  */
 return array(
-    '\ZenCart\Admin\Services' => DIR_CATALOG_LIBRARY . 'zencart/admin/Services/src',
-    '\ZenCart\Admin\Lead' => DIR_CATALOG_LIBRARY . 'zencart/admin/Lead/src',
-    '\ZenCart\Admin\Controllers' => DIR_CATALOG_LIBRARY . 'zencart/admin/Controllers/src',
-    '\ZenCart\Admin\AjaxDispatch' => DIR_CATALOG_LIBRARY . 'zencart/admin/AjaxDispatch/src',
-    '\ZenCart\Admin\DashboardWidget' => DIR_CATALOG_LIBRARY . 'zencart/admin/DashboardWidget/src',
     '\Aura\Web' => DIR_CATALOG_LIBRARY . 'aura/web/src',
-    'ZenCart\Platform' => DIR_CATALOG_LIBRARY. 'zencart/platform/src/',
+    NAMESPACE_SERVICES => DIR_CATALOG_LIBRARY . URL_SERVICES,
+    NAMESPACE_CONTROLLERS => DIR_CATALOG_LIBRARY . URL_CONTROLLERS,
+    NAMESPACE_AJAXDISPATCH => DIR_CATALOG_LIBRARY . URL_AJAXDISPATCH,
+    NAMESPACE_DASHBOARDWIDGETS => DIR_CATALOG_LIBRARY . URL_DASHBOARDWIDGETS,
+    NAMESPACE_LISTINGBOX => DIR_CATALOG_LIBRARY. URL_LISTINGBOX,
+    NAMESPACE_PAGINATOR => DIR_CATALOG_LIBRARY. URL_PAGINATOR,
+    NAMESPACE_QUERYBUILDER => DIR_CATALOG_LIBRARY. URL_QUERYBUILDER,
+    NAMESPACE_REQUEST => DIR_CATALOG_LIBRARY. URL_REQUEST,
+    NAMESPACE_LEAD => DIR_CATALOG_LIBRARY. URL_LEAD,
 );

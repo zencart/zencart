@@ -6,7 +6,7 @@
  * @version $Id$
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
-use ZenCart\Platform\Request;
+use ZenCart\Request\Request;
 
 /**
  * Testing Library
@@ -16,11 +16,10 @@ class testRequest extends zcTestCase
     public function setUp()
     {
         parent::setUp();
-//        require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
-//        $loader = new \Aura\Autoload\Loader;
-//        $loader->register();
-//        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-//        $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
+        $loader = new \Aura\Autoload\Loader;
+        $loader->register();
+        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
     }
 
     public function testRequestInitEmpty()

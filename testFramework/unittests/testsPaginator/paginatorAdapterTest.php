@@ -8,7 +8,7 @@
  * @version $Id$
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
-use ZenCart\Platform\Paginator\adapters\QueryFactory;
+use ZenCart\Paginator\adapters\QueryFactory;
 
 /**
  * Testing Library
@@ -19,10 +19,9 @@ class testPaginationAdapterCase extends zcTestCase
     {
         parent::setUp();
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
-//        require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
-//        $loader = new \Aura\Autoload\Loader;
-//        $loader->register();
-//        $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
+        $loader = new \Aura\Autoload\Loader;
+        $loader->register();
+        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/Paginator/src');
     }
 
     public function testRunAdapter()

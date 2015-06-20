@@ -5,14 +5,14 @@
  * @package templateSystem
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: $
+ * @version  $Id: New in v1.6.0 $
  */
 
-use ZenCart\Admin\DashboardWidget\WidgetManager;
+use ZenCart\DashboardWidget\WidgetManager;
 ?>
 <div>
     <form name="widget-edit" action="#" method="post" class="widget-edit-form">
-        <input type="hidden" name="ajaxSecurityToken" value="<?php echo $_SESSION['ajaxSecurityToken']; ?>">
+        <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>">
         <input type="hidden" name="id" value="<?php echo $tplVars['id']; ?>">
         <fieldset>
             <legend><?php echo 'Widget Settings'; ?></legend>

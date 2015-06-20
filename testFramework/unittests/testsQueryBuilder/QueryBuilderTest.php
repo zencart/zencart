@@ -16,22 +16,21 @@ class testQueryBuilder extends zcTestCase
     {
         parent::setUp();
         require DIR_FS_CATALOG . 'includes/functions/functions_general.php';
-//        require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
-//        $loader = new \Aura\Autoload\Loader;
-//        $loader->register();
-//        $loader->addPrefix('\ZenCart\Platform', DIR_CATALOG_LIBRARY . 'zencart/platform/src');
+        $loader = new \Aura\Autoload\Loader;
+        $loader->register();
+        $loader->addPrefix('\ZenCart\QueryBuilder', DIR_CATALOG_LIBRARY . 'zencart/QueryBuilder/src');
     }
 
     public function testInstantiate()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null);
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null);
         $p = $o->getParts();
         $this->assertTrue(!isset($p));
     }
 
     public function testSimpleProcessQuery()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null, array());
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array());
         $o->processQuery(array());
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
@@ -39,7 +38,7 @@ class testQueryBuilder extends zcTestCase
 
     public function testPaginatedProcessQuery()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null, array('isPaginated' => true));
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array('isPaginated' => true));
         $o->processQuery(array('isPaginated' => true));
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
@@ -47,7 +46,7 @@ class testQueryBuilder extends zcTestCase
 
     public function testMainTableProcessQuery()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null, array('mainTable' => true));
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array('mainTable' => true));
         $o->processQuery(array('isPaginated' => true));
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
@@ -55,7 +54,7 @@ class testQueryBuilder extends zcTestCase
 
     public function testJoinTableProcessQuery()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null, array(
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array(
             'joinTables' => array(
                 array(
                     'table' => 'join',
@@ -73,7 +72,7 @@ class testQueryBuilder extends zcTestCase
 
     public function testWhereProcessQuery()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null, array(
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array(
             'whereClauses' => array(
                 array(
                     'test' => '=',
@@ -93,7 +92,7 @@ class testQueryBuilder extends zcTestCase
 
     public function testOrderBysProcessQuery()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null, array('orderBys' => array(array('type' => 'asc', 'field' => 'id'))));
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array('orderBys' => array(array('type' => 'asc', 'field' => 'id'))));
         $o->processQuery(array());
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
@@ -101,7 +100,7 @@ class testQueryBuilder extends zcTestCase
 
     public function testSelectListProcessQuery()
     {
-        $o = new ZenCart\Platform\QueryBuilder(null, array('selectList' => array('id')));
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array('selectList' => array('id')));
         $o->processQuery(array());
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
