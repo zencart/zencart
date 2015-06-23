@@ -34,6 +34,7 @@ class testQueryBuilder extends zcTestCase
         $o->processQuery(array());
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
+        $this->assertTrue(count($o->getQuery()) == 7);
     }
 
     public function testPaginatedProcessQuery()
@@ -70,6 +71,28 @@ class testQueryBuilder extends zcTestCase
         $this->assertTrue(count($p) == 11);
     }
 
+    public function testJoinTableProcessQueryWithFkeyTable()
+    {
+        define('main', 'products');
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array(
+            'joinTables' => array(
+                array(
+                    'table' => 'join',
+                    'alias' => 'j',
+                    'type' => 'left',
+                    'customAnd' => '',
+                    'addColumns' => 'id',
+                    'fkeyTable' => 'main',
+                    'fkeyFieldLeft' => 'id',
+                    'fkeyFieldRight' => 'id'
+                )
+            )
+        ));
+        $o->processQuery(array('isPaginated' => true));
+        $p = $o->getParts();
+        $this->assertTrue(count($p) == 11);
+    }
+
     public function testWhereProcessQuery()
     {
         $o = new ZenCart\QueryBuilder\QueryBuilder(null, array(
@@ -84,7 +107,35 @@ class testQueryBuilder extends zcTestCase
                 )
             )
         ));
-        $o->processQuery(array('whereClauses' => array('test' => '=')));
+        $o->processQuery(array());
+        $p = $o->getParts();
+        $this->assertTrue(count($p) == 11);
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array(
+            'whereClauses' => array(
+                array(
+                    'value' => 1,
+                    'type' => '',
+                    'table' => 'products',
+                    'index' => '',
+                    'field' => 'id'
+                )
+            )
+        ));
+        $o->processQuery(array());
+        $p = $o->getParts();
+        $this->assertTrue(count($p) == 11);
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array(
+            'whereClauses' => array(
+                array(
+                    'custom' => ' AND 1 = 1',
+                    'value' => 1,
+                    'type' => '',
+                    'table' => 'products',
+                    'index' => '',
+                    'field' => 'id'
+                )
+            )
+        ));
         $o->processQuery(array());
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
@@ -93,6 +144,14 @@ class testQueryBuilder extends zcTestCase
     public function testOrderBysProcessQuery()
     {
         $o = new ZenCart\QueryBuilder\QueryBuilder(null, array('orderBys' => array(array('type' => 'asc', 'field' => 'id'))));
+        $o->processQuery(array());
+        $p = $o->getParts();
+        $this->assertTrue(count($p) == 11);
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array('orderBys' => array(array('type' => 'mysql', 'field' => 'id'))));
+        $o->processQuery(array());
+        $p = $o->getParts();
+        $this->assertTrue(count($p) == 11);
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null, array('orderBys' => array(array('type' => 'asc', 'field' => 'id', 'table' =>'products'))));
         $o->processQuery(array());
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
@@ -105,11 +164,25 @@ class testQueryBuilder extends zcTestCase
         $p = $o->getParts();
         $this->assertTrue(count($p) == 11);
     }
-//    public function testBindVarsProcessQuery()
-//    {
-//        $o = new ZenCart\Platform\QueryBuilder(null, array('bindVars'=>array(array(':id:', 0, 'string'))));
-//        $o->processQuery(array());
-//        $p = $o->getParts();
-//        $this->assertTrue(count($p) == 11);
-//    }
+
+    public function testProcessBindVars()
+    {
+        $qf = $this->getMock('queryFactory');
+        $o = new ZenCart\QueryBuilder\QueryBuilder($qf, array('bindVars' => array(array('id', 1, 'integer'))));
+        $o->processQuery(array());
+        $p = $o->getParts();
+        $this->assertTrue(count($p) == 11);
+
+    }
+
+    public function testSetParts()
+    {
+        $o = new ZenCart\QueryBuilder\QueryBuilder(null);
+        $p = $o->getParts();
+        $this->assertTrue(!isset($p));
+        $o->setParts(array('test' => 1));
+        $p = $o->getParts();
+        $this->assertTrue($p['test'] == 1);
+    }
+
 }
