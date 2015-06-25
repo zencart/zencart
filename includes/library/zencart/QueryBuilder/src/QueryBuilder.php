@@ -322,16 +322,6 @@ class QueryBuilder extends \base
      *
      * @return mixed
      */
-    public function getResultItems()
-    {
-        return $this->resultItems;
-    }
-
-    /**
-     * getter
-     *
-     * @return mixed
-     */
     public function getQuery()
     {
         return $this->query;
