@@ -169,9 +169,8 @@ $breadcrumb->add(NAVBAR_TITLE);
 
 // Check for PayPal express checkout button suitability:
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True' && defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') && MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON == 'On');
-// Check for express checkout button suitability (must have cart contents, value > 0, and value < 10000USD or 5500GBP):
-$ec_button_enabled = ($paypalec_enabled && ($_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0));
-if ( ($_SESSION['currency'] == 'USD' && $currencies->value($_SESSION['cart']->total, true, 'USD') > 10000) || ($_SESSION['currency'] == 'GBP' && $currencies->value($_SESSION['cart']->total, true, 'GBP') > 5500) ) $ec_button_enabled = false;
+// Check for express checkout button suitability (must have cart contents, value > 0, and value < 10000USD):
+$ec_button_enabled = ($paypalec_enabled && $_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0 && $currencies->value($_SESSION['cart']->total, true, 'USD') <= 10000);
 
 
 // This should be last line of the script:

@@ -237,8 +237,8 @@ class paypaldp extends base {
 
     // Purchase amount
     if ($this->enabled) {
-      // module cannot be used for purchase > $10,000 USD
-      $order_amount = $this->calc_order_amount($order->info['total'], 'USD');
+      // module cannot be used for purchase > $10,000 USD equiv
+      $order_amount = $this->calc_order_amount($order->info['total'], 'USD', false);
       if ($order_amount > 10000) {
         $this->enabled = false;
         $this->zcLog('update_status', 'Module disabled because purchase price (' . $order_amount . ') exceeds PayPal-imposed maximum limit of 10,000 USD.');
