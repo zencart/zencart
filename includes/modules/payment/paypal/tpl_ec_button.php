@@ -3,9 +3,9 @@
  * paypal EC button display template
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_ec_button.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: tpl_ec_button.php drbyte  Modified in v1.6.0 $
  */
 
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
@@ -43,9 +43,8 @@ if ($paypalec_enabled) {
     $paypalec_enabled = false;
   }
 
-  // PayPal module cannot be used for purchase > $10,000 USD or 5500 GBP
-  if ( ($_SESSION['currency'] == 'USD' && $currencies->value($_SESSION['cart']->total, true, 'USD') > 10000)
-    || ($_SESSION['currency'] == 'GBP' && $currencies->value($_SESSION['cart']->total, true, 'GBP') > 5500) ) {
+  // PayPal module cannot be used for purchase > $10,000 USD equiv
+  if ($currencies->value($_SESSION['cart']->total, true, 'USD') > 10000) {
     $paypalec_enabled = false;
   }
 }
