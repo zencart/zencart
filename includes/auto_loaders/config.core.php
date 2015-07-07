@@ -15,67 +15,18 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  *
  * require(DIR_WS_INCLUDES . 'version.php');
- * require(DIR_WS_CLASSES . 'class.base.php');
- * require(DIR_WS_CLASSES . 'class.notifier.php');
- * $zco_notifier = new notifier()'
- * require(DIR_WS_CLASSES . 'class.phpmailer.php');
- * require(DIR_WS_CLASSES . 'boxes.php');
- * require(DIR_WS_CLASSES . 'category_tree.php');
- * require(DIR_WS_CLASSES . 'cache.php');
- * require(DIR_WS_CLASSES . 'sniffer.php');
- * require(DIR_WS_CLASSES . 'shopping_cart.php');
- * require(DIR_WS_CLASSES . 'navigation_history.php');
- * require(DIR_WS_CLASSES . 'currencies.php');
- * require(DIR_WS_CLASSES . 'message_stack.php');
- * require(DIR_WS_CLASSES . 'template_func.php');
- * require(DIR_WS_CLASSES . 'split_page_results.php');
- * require(DIR_WS_CLASSES . 'breadcrumb.php');
- * require(DIR_WS_CLASSES . 'language.php');
+ * $zco_notifier = new notifier();
  *
  */
   $autoLoadConfig[0][] = array('autoType'=>'include',
                                'loadFile'=> DIR_WS_INCLUDES . 'version.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'class.base.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'class.notifier.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                 'className'=>'notifier',
                                 'objectName'=>'zco_notifier');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=> 'class.phpmailer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=> 'boxes.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'category_tree.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'template_func.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'split_page_results.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'language.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'cache.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'sniffer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'shopping_cart.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'navigation_history.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'currencies.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'message_stack.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'breadcrumb.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'query_cache.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'QueryCache',
                                'objectName'=>'queryCache',
                                'checkInstantiated'=>true);
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.zcPassword.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
@@ -83,64 +34,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                              'className'=>'\\ZenCart\\Request\\Request',
                              'objectName'=>'zcRequest');
 
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.zcRequest.php');
-
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcQueryBuilderManager.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcAbstractTypeFilter.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcQueryBuilder.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcAbstractQueryBuilderFilterBase.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcListingBoxManager.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcAbstractListingBoxBase.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcListingBoxFormatterColumnar.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcListingBoxFormatterTabularProduct.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcListingBoxFormatterTabularCustom.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'loadFile' => 'class.zcListingBoxFormatterListStandard.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'classPath' => DIR_WS_CLASSES . 'paginator/',
-      'loadFile' => 'class.zcPaginator.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'classPath' => DIR_WS_CLASSES . 'paginator/',
-      'loadFile' => 'class.zcPaginatorAdapter.php'
-  );
-  $autoLoadConfig [0] [] = array(
-      'autoType' => 'class',
-      'classPath' => DIR_WS_CLASSES . 'paginator/',
-      'loadFile' => 'class.zcPaginatorScroller.php'
-  );
 
 /**
  * Breakpoint 10.
