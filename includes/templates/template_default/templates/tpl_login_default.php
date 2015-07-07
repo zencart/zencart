@@ -22,9 +22,6 @@
 <fieldset class="floatingBox back">
 <legend><?php echo HEADING_NEW_CUSTOMER_SPLIT; ?></legend>
 
-<?php //  Paypal doesn't allow over 10k in a single transaction,  This hides the introduction. ?>
-<?php if ( ($_SESSION['currency'] == 'USD' && $currencies->value($_SESSION['cart']->total, true, 'USD') > 10000) || ($_SESSION['currency'] == 'GBP' && $currencies->value($_SESSION['cart']->total, true, 'GBP') > 5500) ) $ec_button_enabled = false; ?>
-
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT ** ?>
 <?php if ($ec_button_enabled) { ?>
 <div class="information"><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION_SPLIT; ?></div>

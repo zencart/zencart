@@ -146,6 +146,25 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
 
 require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
 $loader = new \Aura\Autoload\Loader;
+$loader->setClassFiles(array(
+    'base'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php',
+    'notifier'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.notifier.php',
+    'PHPMailer'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.phpmailer.php',
+    'category_tree'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'category_tree.php',
+    'template_func'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'template_func.php',
+    'language'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php',
+    'cache'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'cache.php',
+    'sniffer'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'sniffer.php',
+    'shoppingCart'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'shopping_cart.php',
+    'currencies'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'currencies.php',
+    'navigationHistory'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'navigation_history.php',
+    'messageStack'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'message_stack.php',
+    'breadcrumb'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'breadcrumb.php',
+    'QueryCache'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'query_cache.php',
+    'zcPassword'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php',
+    'zcRequest'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcRequest.php',
+
+));
 $loader->register();
 
 foreach ($autoloadNamespaces as $autoloadNamespace => $autoloadBaseDir) {
