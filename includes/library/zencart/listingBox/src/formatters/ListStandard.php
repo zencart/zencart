@@ -100,10 +100,10 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
         foreach ($displayEntities as $key => $value) {
             $this->displayValues[$key] = '';
             if ((defined($this->prefix . $key) && constant($this->prefix . $key) == 0)) {
-                break;
+                continue;
             }
             if ($this->productSwitchTest($value, $item)) {
-                break;
+                continue;
             }
             if (!isset($value['processor'])) {
                 $method = 'processor' . self::camelize(strtolower($key), true);
