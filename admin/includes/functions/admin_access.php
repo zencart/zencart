@@ -110,7 +110,7 @@ function zen_delete_user($id)
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     $alertText = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname);
     zen_record_admin_activity($alertText, 'warning');
-    $alertText .= "\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
+    $alertText .= "\n\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
     zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, $alertText, STORE_NAME, EMAIL_FROM, array(), 'admin_settings_changed');
   }
 }
@@ -180,7 +180,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile, $mobile)
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     $alertText = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname);
     zen_record_admin_activity($alertText, 'warning');
-    $alertText .= "\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
+    $alertText .= "\n\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
     zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, $alertText, STORE_NAME, EMAIL_FROM, array(), 'admin_settings_changed');
   }
   return $errors;
