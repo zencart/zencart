@@ -150,8 +150,8 @@ DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_COUNTS_ADMIN';
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS';
-UPDATE configuration set set_function = "'zen_cfg_select_option(array(\'0\', \'1\', \'2\'" WHERE configuration_key = 'SHOW_COUNTS_ADMIN';
-UPDATE configuration set set_function = "'zen_cfg_select_option(array(\'0\', \'1\', \'2\'" WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS';
+UPDATE configuration set set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\'), ' WHERE configuration_key = 'SHOW_COUNTS_ADMIN';
+UPDATE configuration set set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\'), ' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS';
 UPDATE configuration set configuration_value = '0' WHERE configuration_key = 'SHOW_COUNTS_ADMIN' && configuration_value = 'false';
 UPDATE configuration set configuration_value = '1' WHERE configuration_key = 'SHOW_COUNTS_ADMIN' && configuration_value = 'true';
 UPDATE configuration set configuration_value = '0' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS' && configuration_value = 'false';
