@@ -105,6 +105,8 @@ class testFormatterCase extends zcTestCase
     public function testListStandardFormatterMultiRow()
     {
         define('TEST_BUY_NOW', 1);
+        define('STORE_STATUS', 1);
+        define('ENABLE_SSL', 1);
         define('SEARCH_ENGINE_FRIENDLY_URLS', 0);
         define('PROPORTIONAL_IMAGES_STATUS', 0);
         define('IMAGE_REQUIRED', 0);
@@ -115,6 +117,19 @@ class testFormatterCase extends zcTestCase
         define('TEST_LIST_WEIGHT', 1);
         define('TEST_LIST_DATE_ADDED', 1);
         define('TEST_LIST_PRICE', 1);
+        define('TEXT_PRICE', 'TEXT_PRICE');
+        define('TEXT_SHOWCASE_ONLY', 'TEXT_SHOWCASE_ONLY');
+        define('PRODUCTS_QUANTITY_MIN_TEXT_LISTING', 'PRODUCTS_QUANTITY_MIN_TEXT_LISTING');
+        define('PRODUCTS_QUANTITY_UNIT_TEXT_LISTING', 'PRODUCTS_QUANTITY_UNIT_TEXT_LISTING');
+        define('MORE_INFO_TEXT', 'MORE_INFO_TEXT');
+        define('TEST_LISTING_MULTIPLE_ADD_TO_CART', 1);
+        define('PRODUCTS_OPTIONS_TYPE_RADIO', 1);
+        define('PRODUCTS_OPTIONS_TYPE_SELECT', 1);
+        define('PRODUCTS_OPTIONS_TYPE_CHECKBOX', 1);
+        define('PRODUCTS_OPTIONS_TYPE_FILE', 1);
+        define('PRODUCTS_OPTIONS_TYPE_TEXT', 1);
+        define('PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED', 1);
+        $_SESSION['languages_id'] = 1;
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
             ->getMock();
@@ -150,7 +165,7 @@ class testFormatterCase extends zcTestCase
                 'products_qty_box_status' => ''
             ),
             array(
-                'products_id' => '1',
+                'products_id' => '2',
                 'products_image' => '',
                 'productCpath' => '',
                 'products_name' => '',
@@ -164,7 +179,7 @@ class testFormatterCase extends zcTestCase
                 'products_qty_box_status' => ''
             ),
             array(
-                'products_id' => '1',
+                'products_id' => '3',
                 'products_image' => '',
                 'productCpath' => '',
                 'products_name' => '',
@@ -198,6 +213,7 @@ class testFormatterCase extends zcTestCase
         define('TEST_LIST_WEIGHT', 1);
         define('TEST_LIST_DATE_ADDED', 1);
         define('TEST_LIST_PRICE', 1);
+        define('TEXT_PRICE', 'TEXT_PRICE');
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
             ->getMock();
@@ -233,7 +249,7 @@ class testFormatterCase extends zcTestCase
                 'products_qty_box_status' => ''
             ),
             array(
-                'products_id' => '1',
+                'products_id' => '2',
                 'products_image' => '',
                 'productCpath' => '',
                 'products_name' => '',
@@ -247,7 +263,7 @@ class testFormatterCase extends zcTestCase
                 'products_qty_box_status' => ''
             ),
             array(
-                'products_id' => '1',
+                'products_id' => '3',
                 'products_image' => '',
                 'productCpath' => '',
                 'products_name' => '',

@@ -5,7 +5,7 @@
 
 ===============
 
-Zen Cart&reg; v1.5.0 was the first Open Source e-Commerce web application to be fully PA-DSS Certified. The latest stable version is currently v1.5.4 and also carries PA-DSS certification.
+Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified (starting with v1.5.0). The latest stable version is currently v1.5.4 and also carries PA-DSS certification.
 
 Zen Cart&reg; v1.6.0 brings improved templating and responsive design, in addition to increased flexibility for customizing to each storeowner's own preferences.
 
@@ -21,6 +21,19 @@ Zen Cart&reg; v1.6.0
 
 or
 [Download latest in-development version from github](https://github.com/zencart/zc-v1-series/archive/v160.zip)
+
+Requirements
+------------
+Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP)
+
+- Compatible with PHP 5.4 thru PHP 5.6, and PHP 7
+- Compatible with MySQL 5.1 to 5.6, via the PHP mysqli client
+- CURL (via PHP) is used to communication with payment/shipping services
+- Compatible with with Apache 2.2, (or Apache 2.4 with the backward-compatibility mode enabled for v2.2 .htaccess rules support.)
+- Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, php5, rewrite (in addition to other common modules)
+
+Zen Cart&reg; "can" run on IIS, but with some limitations, namely the need to manually secure various folders with IIS equivalents to .htaccess rules.
+
 
 Installation
 ------------

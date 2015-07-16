@@ -3,10 +3,10 @@
  * authorize.net echeck payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.6.0 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
  */
 /**
  * Authorize.net echeck Payment Module
@@ -561,7 +561,7 @@ class authorizenet_echeck extends base {
     }
 
     // set URL
-    $url = 'https://secure.authorize.net/gateway/transact.dll';
+    $url = 'https://secure2.authorize.net/gateway/transact.dll';
     $devurl = 'https://test.authorize.net/gateway/transact.dll';
     $dumpurl = 'https://developer.authorize.net/param_dump.asp';
     $certurl = 'https://certification.authorize.net/gateway/transact.dll';
