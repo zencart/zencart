@@ -6,9 +6,9 @@
  *   r=1 -- show Response obtained from destination server -- this may contain an error message, but usually means communication was okay
  *
  * @package utilities
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte Wed Oct 22 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
  */
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');
@@ -86,7 +86,7 @@ echo 'Connecting to Cardinal Commerce 3D-Secure Server ...<br>';
 doCurlTest('https://paypal.cardinalcommerce.com/maps/processormodule.asp');
 
 echo 'Connecting to AuthorizeNet Production Server ...<br>';
-doCurlTest('https://secure.authorize.net/gateway/transact.dll');
+doCurlTest('https://secure2.authorize.net/gateway/transact.dll');
 
 echo 'Connecting to AuthorizeNet Developer/Sandbox Server ...<br>';
 doCurlTest('https://test.authorize.net/gateway/transact.dll');
