@@ -30,6 +30,7 @@ class testPaginationScrollerCase extends zcTestCase
 
     public function testRunScrollerWithResults()
     {
+        $GLOBALS['request_type'] = 'NONSSL';
         $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\adapters\\QueryFactory')
             ->disableOriginalConstructor()
             ->getMock();
@@ -60,6 +61,7 @@ class testPaginationScrollerCase extends zcTestCase
 
     public function testRunScrollerWithNoResults()
     {
+        $GLOBALS['request_type'] = 'NONSSL';
         $ds = $this->getMockBuilder('\\ZenCart\\Paginator\\adapters\\QueryFactory')
             ->disableOriginalConstructor()
             ->getMock();
