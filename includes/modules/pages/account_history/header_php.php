@@ -3,10 +3,10 @@
  * Header code file for the Account History page
  *
  * @package page
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 3160 2006-03-11 01:37:18Z drbyte $
+ * @version $Id: modified in v1.6.0 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_HISTORY');
@@ -36,35 +36,53 @@ if ($orders_total > 0) {
 
   $history_query_raw = $db->bindVars($history_query_raw, ':customersID', $_SESSION['customer_id'], 'integer');
   $history_query_raw = $db->bindVars($history_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
-  $history_split = new splitPageResults($history_query_raw, MAX_DISPLAY_ORDER_HISTORY);
-  $history = $db->Execute($history_split->sql_query);
+
+    $history_query_count = "SELECT COUNT(*) as total
+                        FROM   " . TABLE_ORDERS . " o, " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS_STATUS . " s
+                        WHERE      o.customers_id = :customersID
+                        AND        o.orders_id = ot.orders_id
+                        AND        ot.class = 'ot_total'
+                        AND        o.orders_status = s.orders_status_id
+                        AND        s.language_id = :languagesID";
+
+    $history_query_count = $db->bindVars($history_query_count, ':customersID', $_SESSION['customer_id'], 'integer');
+    $history_query_count = $db->bindVars($history_query_count, ':languagesID', $_SESSION['languages_id'], 'integer');
+
+    $class = NAMESPACE_PAGINATOR . '\\Paginator';
+    $paginator = new $class($zcRequest);
+    $paginator->setAdapterParams(array('itemsPerPage'=>MAX_DISPLAY_ORDER_HISTORY));
+    $paginator->setScrollerParams(array('navLinkText'=>TEXT_DISPLAY_NUMBER_OF_ORDERS));
+    $adapterDate = array('dbConn'=>$db, 'mainSql'=>$history_query_raw, 'countSql'=>$history_query_count);
+    $paginator->doPagination($adapterDate);
+    $result = $paginator->getScroller()->getResults();
+    $tplVars['listingBox']['paginator'] = $result;
 
   $accountHistory = array();
   $accountHasHistory = true;
-  while (!$history->EOF) {
+  foreach($result['resultList'] as $history) {
     $products_query = "SELECT count(*) AS count
                        FROM   " . TABLE_ORDERS_PRODUCTS . "
                        WHERE  orders_id = :ordersID";
 
-    $products_query = $db->bindVars($products_query, ':ordersID', $history->fields['orders_id'], 'integer');
+    $products_query = $db->bindVars($products_query, ':ordersID', $history['orders_id'], 'integer');
     $products = $db->Execute($products_query);
 
-    if (zen_not_null($history->fields['delivery_name'])) {
+    if (zen_not_null($history['delivery_name'])) {
       $order_type = TEXT_ORDER_SHIPPED_TO;
-      $order_name = $history->fields['delivery_name'];
+      $order_name = $history['delivery_name'];
     } else {
       $order_type = TEXT_ORDER_BILLED_TO;
-      $order_name = $history->fields['billing_name'];
+      $order_name = $history['billing_name'];
     }
     $extras = array('order_type'=>$order_type,
     'order_name'=>$order_name,
     'product_count'=>$products->fields['count']);
-    $accountHistory[] = array_merge($history->fields, $extras);
-    $history->moveNext();
+    $accountHistory[] = array_merge($history, $extras);
+//    $history->moveNext();
   }
 } else {
   $accountHasHistory = false;
 }
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_ACCOUNT_HISTORY');
-?>
+

@@ -3,10 +3,10 @@
  * Product Reviews
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 3117 2006-03-05 20:38:44Z ajeh $
+ * @version $Id: modified in v1.6.0 $
  */
 
   // This should be first line of the script:
@@ -66,20 +66,34 @@
 
   $reviews_query_raw = $db->bindVars($reviews_query_raw, ':productsID', $_GET['products_id'], 'integer');
   $reviews_query_raw = $db->bindVars($reviews_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
-  $reviews_split = new splitPageResults($reviews_query_raw, MAX_DISPLAY_NEW_REVIEWS);
-  $reviews = $db->Execute($reviews_split->sql_query);
+
+
+$reviews_query_count = "SELECT count(*) as total
+                        FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
+                        WHERE r.products_id = :productsID
+                        AND r.reviews_id = rd.reviews_id
+                        AND rd.languages_id = :languagesID " . $review_status;
+
+$reviews_query_count = $db->bindVars($reviews_query_count, ':productsID', $_GET['products_id'], 'integer');
+$reviews_query_count = $db->bindVars($reviews_query_count, ':languagesID', $_SESSION['languages_id'], 'integer');
+
+$class = NAMESPACE_PAGINATOR . '\\Paginator';
+$paginator = new $class($zcRequest);
+$paginator->setAdapterParams(array('itemsPerPage'=>MAX_DISPLAY_NEW_REVIEWS));
+$paginator->setScrollerParams(array('navLinkText'=>TEXT_DISPLAY_NUMBER_OF_REVIEWS));
+$adapterDate = array('dbConn'=>$db, 'mainSql'=>$reviews_query_raw, 'countSql'=>$reviews_query_count);
+$paginator->doPagination($adapterDate);
+$result = $paginator->getScroller()->getResults();
+$tplVars['listingBox']['paginator'] = $result;
+
   $reviewsArray = array();
-  while (!$reviews->EOF) {
-    $reviewsArray[] = array('id'=>$reviews->fields['reviews_id'],
-                            'customersName'=>$reviews->fields['customers_name'],
-                            'dateAdded'=>$reviews->fields['date_added'],
-                            'reviewsText'=>$reviews->fields['reviews_text'],
-                            'reviewsRating'=>$reviews->fields['reviews_rating']);
-    $reviews->MoveNext();
+  foreach ($result['resultList'] as $reviews) {
+    $reviewsArray[] = array('id'=>$reviews['reviews_id'],
+                            'customersName'=>$reviews['customers_name'],
+                            'dateAdded'=>$reviews['date_added'],
+                            'reviewsText'=>$reviews['reviews_text'],
+                            'reviewsRating'=>$reviews['reviews_rating']);
   }
-
-
-
 
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
   $breadcrumb->add(NAVBAR_TITLE);

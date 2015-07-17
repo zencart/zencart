@@ -56,7 +56,8 @@ abstract class AbstractScroller extends \base
      */
     protected function buildLink(array $params)
     {
-        $link = zen_href_link($params['cmd'], $params['linkParams']);
+        global $request_type; //@todo icw
+        $link = zen_href_link($params['cmd'], $params['linkParams'], $request_type);
         return $link;
     }
 
