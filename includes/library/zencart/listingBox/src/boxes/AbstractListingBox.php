@@ -108,6 +108,8 @@ abstract class AbstractListingBox extends \base
         }
         $this->tplVars ['showFilterForm'] = $showFilterForm;
         $this->tplVars ['title'] = issetorArray($this->outputLayout, 'boxTitle', '');
+        $classname = (new \ReflectionClass($this))->getShortName();
+        $this->tplVars ['cssElement'] = issetorArray($this->outputLayout, 'cssElement', $classname);
         $this->tplVars ['formattedItemsCount'] = count($this->tplVars['formattedItems']);
         $this->tplVars ['hasFormattedItems'] = (count($this->tplVars['formattedItems']) > 0) ? true : false;
         $this->tplVars ['paginator']['show'] = false;
