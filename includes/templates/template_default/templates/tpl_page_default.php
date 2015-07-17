@@ -10,6 +10,12 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_page_default.php  Modified in v1.6.0 $
  */
+
+if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
+  $previous_button = '<i class="fa fa-arrow-left"></i>' . $previous_button;
+  $next_item_button .= '<i class="fa fa-arrow-right"></i>';
+  $home_button = '<i class="fa fa-2x fa-home"></i>' . $home_button;
+}
 ?>
 <div class="centerColumn" id="ezPageDefault">
 <h1 id="ezPagesHeading"><?php echo $var_pageDetails->fields['pages_title']; ?></h1>

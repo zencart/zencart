@@ -722,35 +722,79 @@ LABEL#textAreaReviews {
 /* added padding to prevent CSS buttons from touching product image */
 .navNextPrevWrapper {padding-bottom: 5px;}
 
-/* Default Pagination */
-ul.pagination {
+/* ==== bof pagination css ==== */
+.item-list {
+  border-width: 1px 0px;
+  border-style: solid;
+  padding: 4px 0px;
+  overflow: hidden;
+  border-color: #bebebe; }
+
+.pagination-top {
+  margin-bottom: 8px; }
+
+.pagination-bottom {
+  margin-top: 8px; }
+
+.item-list ul.pager {
+  margin-bottom: 0px;
+  margin-top: 0px;
+  padding-left: 0;
+  text-align: center;
+  width: 100%;
+  list-style: inside none; }
+
+.item-list ul.pager li a,
+.item-list .pager li a.current,
+.item-list select {
+  background-color: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 3px;
+  color: #91908f;
   display: block;
-  height: 1.5em;
-  margin-left: -0.3125em; }
-  ul.pagination li {
-    height: 1.5em;
-    color: #222222;
-    font-size: 0.875em;
-    margin-left: 0.3125em; }
-    ul.pagination li a {
-      display: block;
-      padding: 0.0625em 0.4375em 0.0625em;
-      color: #999999; }
-    ul.pagination li:hover a,
-    ul.pagination li a:focus {
-      background: #e6e6e6; }
-    ul.pagination li.unavailable a {
-      cursor: default;
-      color: #999999; }
-    ul.pagination li.unavailable:hover a, ul.pagination li.unavailable a:focus {
-      background: transparent; }
-    ul.pagination li.current a {
-      background: #2ba6cb;
-      color: white;
-      font-weight: bold;
-      cursor: default; }
-      ul.pagination li.current a:hover, ul.pagination li.current a:focus {
-        background: #2ba6cb; }
-  ul.pagination li {
-    float: left;
-    display: block; }
+  white-space: nowrap;
+  padding: 2px;
+  margin: 0px !important; }
+
+.item-list ul.pager li a span {
+  padding: 0px;
+  border: 0px;
+  box-shadow: none;
+  background: none;}
+
+.item-list select {
+  width: 50px;
+  line-height: 14px;
+  height: 24px;
+  padding-left: 2px;
+  padding-right: 2px; }
+
+.item-list ul.pager li {
+  font-size: 1.0em;
+  color: #b4b4b3;
+  display: inline-block;
+  margin-right: 0.3%; }
+
+.item-list .pager li a.current {
+  background-color: #ededed;
+  font-weight: bold;
+  color: #686764; }
+
+.item-list ul.pager li:first-child {
+  float: left; }
+
+.item-list ul.pager li:last-child {
+  float: right;
+  margin-right: 0%; }
+
+.item-list ul.pager li:first-child a,
+.item-list ul.pager li:last-child a {
+  line-height: 22px;
+  font-size: 20px;
+  font-weight: normal;
+  min-width: 50px;
+  padding: 0px 0px 1px !important; }
+
+.item-list ul.pager li:first-child a .inactive,
+.item-list ul.pager li:last-child a .inactive {
+  color: #b4b4b3; }
