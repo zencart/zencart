@@ -3723,3 +3723,13 @@ function get_logs_data($maxToList = 'count') {
 function issetorArray(array $array, $key, $default = null) {
     return isset($array[$key]) ? $array[$key] : $default;
 }
+
+function zen_pull_language_file($file) { 
+    if (file_exists(DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file)) {
+        include (DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file);
+    } else { 
+        if (file_exists(DIR_WS_LANGUAGES . 'english' . '/' . $file)) { 
+           include (DIR_WS_LANGUAGES . 'english' . '/' . $file);
+        }
+    }
+}

@@ -33,6 +33,7 @@ class testPaginationCase extends zcTestCase
 
     public function testMain()
     {
+        $GLOBALS['request_type'] = 'NONSSL';
         $r = $this->getMockBuilder('\\ZenCart\\Request\\Request')
             ->disableOriginalConstructor()
             ->getMock();
