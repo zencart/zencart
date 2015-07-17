@@ -10,7 +10,7 @@
  */
 //print_r($tplVars['listingBox']);
 ?>
-<div class="centerBoxWrapper" id="id<?php echo $tplVars['listingBox']['className']; ?>">
+<div class="centerBoxWrapper" id="id<?php echo $tplVars['listingBox']['cssElement']; ?>">
 <h2 class="centerBoxHeading"><?php echo $tplVars['listingBox']['title']; ?></h2>
 <?php if ($tplVars['listingBox']['hasFormattedItems']) { ?>
 <table width="100%">
