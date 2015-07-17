@@ -30,7 +30,7 @@
 <script src="includes/template/javascript/foundation/modernizr.js"></script>
 
 <?php /** CDN for jQuery core **/ ?>
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 <script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.min.js"><\/script>');</script>
 
 <?php /** Load Foundation framework core**/ ?>
