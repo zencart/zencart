@@ -6,12 +6,11 @@
  * Displays details of a typical product
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  $
+ * @version $Id: tpl_product_info_display.php drbyte Modified in v1.6.0 $
  */
- //require(DIR_WS_MODULES . '/debug_blocks/product_info_prices.php');
 ?>
 <div class="centerColumn" id="productGeneral" itemscope itemtype="http://data-vocabulary.org/Product">
 
