@@ -33,9 +33,7 @@
     }
 ?>
   <?php require($template->get_template_dir($tplVars['listingBox']['paginator']['scrollerTemplate'],DIR_WS_TEMPLATE, $current_page_base,'templates'). '/'.$tplVars['listingBox']['paginator']['scrollerTemplate']); ?>
-  <?php
-  } else {
-?>
+  <?php } else { ?>
 <div class="centerColumn" id="noAcctHistoryDefault">
 <?php echo TEXT_NO_PURCHASES; ?>
 </div>

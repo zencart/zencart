@@ -9,66 +9,66 @@
  * @version $Id: modified in v1.6.0 $
  */
 
-  // This should be first line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_REVIEWS');
+// This should be first line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_REVIEWS');
 
 // check product exists and current
 // if product does not exist or is status 0 send to _info page
-    $products_reviews_check_query = "SELECT count(*) AS count
+$products_reviews_check_query = "SELECT count(*) AS count
                                      FROM " . TABLE_PRODUCTS . " p
                                      WHERE p.products_id= :productsID
                                      AND p.products_status = 1";
 
-    $products_reviews_check_query = $db->bindVars($products_reviews_check_query, ':productsID', $_GET['products_id'], 'integer');
-    $products_reviews_check = $db->Execute($products_reviews_check_query);
+$products_reviews_check_query = $db->bindVars($products_reviews_check_query, ':productsID', $_GET['products_id'], 'integer');
+$products_reviews_check = $db->Execute($products_reviews_check_query);
 
-    if ($products_reviews_check->fields['count'] < 1) {
-      zen_redirect(zen_href_link(zen_get_info_page((int)$_GET['products_id']), 'products_id=' . (int)$_GET['products_id']));
-    }
+if ($products_reviews_check->fields['count'] < 1) {
+    zen_redirect(zen_href_link(zen_get_info_page((int)$_GET['products_id']), 'products_id=' . (int)$_GET['products_id']));
+}
 
-  $review_query_raw = "SELECT p.products_id, p.products_price, p.products_tax_class_id, p.products_image, p.products_model, pd.products_name
+$review_query_raw = "SELECT p.products_id, p.products_price, p.products_tax_class_id, p.products_image, p.products_model, pd.products_name
                        FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                        WHERE p.products_id = :productsID
                        AND p.products_status = 1
                        AND p.products_id = pd.products_id
                        AND pd.language_id = :languagesID";
 
-  $review_query_raw = $db->bindVars($review_query_raw, ':productsID', $_GET['products_id'], 'integer');
-  $review_query_raw = $db->bindVars($review_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
-  $review = $db->Execute($review_query_raw);
+$review_query_raw = $db->bindVars($review_query_raw, ':productsID', $_GET['products_id'], 'integer');
+$review_query_raw = $db->bindVars($review_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
+$review = $db->Execute($review_query_raw);
 
-  $products_price = zen_get_products_display_price($review->fields['products_id']);
-  $products_name = $review->fields['products_name'];
+$products_price = zen_get_products_display_price($review->fields['products_id']);
+$products_name = $review->fields['products_name'];
 
-  if (zen_get_show_product_switch((int)$review->fields['products_id'], 'model') == 1 && $review->fields['products_model'] != '') {
+if (zen_get_show_product_switch((int)$review->fields['products_id'], 'model') == 1 && $review->fields['products_model'] != '') {
     $products_model = '<br /><span class="smallText">[' . $review->fields['products_model'] . ']</span>';
-  } else {
+} else {
     $products_model = '';
-  }
+}
 
 
 // set image
 //  $products_image = $review->fields['products_image'];
-  if ($review->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
+if ($review->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
-  } else {
+} else {
     $products_image = $review->fields['products_image'];
-  }
+}
 
-  $review_status = " and r.status = 1";
+$review_status = " and r.status = 1";
 
-  $reviews_query_raw = "SELECT r.reviews_id, left(rd.reviews_text, 100) as reviews_text, r.reviews_rating, r.date_added, r.customers_name
+$reviews_query_raw = "SELECT r.reviews_id, left(rd.reviews_text, 100) AS reviews_text, r.reviews_rating, r.date_added, r.customers_name
                         FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
                         WHERE r.products_id = :productsID
                         AND r.reviews_id = rd.reviews_id
                         AND rd.languages_id = :languagesID " . $review_status . "
-                        ORDER BY r.reviews_id desc";
+                        ORDER BY r.reviews_id DESC";
 
-  $reviews_query_raw = $db->bindVars($reviews_query_raw, ':productsID', $_GET['products_id'], 'integer');
-  $reviews_query_raw = $db->bindVars($reviews_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
+$reviews_query_raw = $db->bindVars($reviews_query_raw, ':productsID', $_GET['products_id'], 'integer');
+$reviews_query_raw = $db->bindVars($reviews_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
 
 
-$reviews_query_count = "SELECT count(*) as total
+$reviews_query_count = "SELECT count(*) AS total
                         FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
                         WHERE r.products_id = :productsID
                         AND r.reviews_id = rd.reviews_id
@@ -79,24 +79,26 @@ $reviews_query_count = $db->bindVars($reviews_query_count, ':languagesID', $_SES
 
 $class = NAMESPACE_PAGINATOR . '\\Paginator';
 $paginator = new $class($zcRequest);
-$paginator->setAdapterParams(array('itemsPerPage'=>MAX_DISPLAY_NEW_REVIEWS));
-$paginator->setScrollerParams(array('navLinkText'=>TEXT_DISPLAY_NUMBER_OF_REVIEWS));
-$adapterDate = array('dbConn'=>$db, 'mainSql'=>$reviews_query_raw, 'countSql'=>$reviews_query_count);
+$paginator->setAdapterParams(array('itemsPerPage' => MAX_DISPLAY_NEW_REVIEWS));
+$paginator->setScrollerParams(array('navLinkText' => TEXT_DISPLAY_NUMBER_OF_REVIEWS));
+$adapterDate = array('dbConn' => $db, 'mainSql' => $reviews_query_raw, 'countSql' => $reviews_query_count);
 $paginator->doPagination($adapterDate);
 $result = $paginator->getScroller()->getResults();
 $tplVars['listingBox']['paginator'] = $result;
 
-  $reviewsArray = array();
-  foreach ($result['resultList'] as $reviews) {
-    $reviewsArray[] = array('id'=>$reviews['reviews_id'],
-                            'customersName'=>$reviews['customers_name'],
-                            'dateAdded'=>$reviews['date_added'],
-                            'reviewsText'=>$reviews['reviews_text'],
-                            'reviewsRating'=>$reviews['reviews_rating']);
-  }
+$reviewsArray = array();
+foreach ($result['resultList'] as $reviews) {
+    $reviewsArray[] = array(
+        'id' => $reviews['reviews_id'],
+        'customersName' => $reviews['customers_name'],
+        'dateAdded' => $reviews['date_added'],
+        'reviewsText' => $reviews['reviews_text'],
+        'reviewsRating' => $reviews['reviews_rating']
+    );
+}
 
-  require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-  $breadcrumb->add(NAVBAR_TITLE);
+require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+$breadcrumb->add(NAVBAR_TITLE);
 
-  // This should be last line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_END_PRODUCT_REVIEWS');
+// This should be last line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_END_PRODUCT_REVIEWS');

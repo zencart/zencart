@@ -1,6 +1,6 @@
 <?php
 /**
- * reviews header_php.php 
+ * reviews header_php.php
  *
  * @package page
  * @copyright Copyright 2003-2015 Zen Cart Development Team
@@ -27,7 +27,7 @@ $reviews_query_raw = "SELECT r.reviews_id, left(rd.reviews_text, 100) AS reviews
 $reviews_query_raw = $db->bindVars($reviews_query_raw, ':languageID', $_SESSION['languages_id'], 'integer');
 $reviews_query_raw = $db->bindVars($reviews_query_raw, ':languageID', $_SESSION['languages_id'], 'integer');
 
-$reviews_query_count = "SELECT COUNT(*) as total
+$reviews_query_count = "SELECT COUNT(*) AS total
                       FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd, " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                       WHERE p.products_status = '1'
                       AND p.products_id = r.products_id
@@ -41,9 +41,9 @@ $reviews_query_count = $db->bindVars($reviews_query_count, ':languageID', $_SESS
 
 $class = NAMESPACE_PAGINATOR . '\\Paginator';
 $paginator = new $class($zcRequest);
-$paginator->setAdapterParams(array('itemsPerPage'=>MAX_DISPLAY_NEW_REVIEWS));
-$paginator->setScrollerParams(array('navLinkText'=>TEXT_DISPLAY_NUMBER_OF_REVIEWS));
-$adapterDate = array('dbConn'=>$db, 'mainSql'=>$reviews_query_raw, 'countSql'=>$reviews_query_count);
+$paginator->setAdapterParams(array('itemsPerPage' => MAX_DISPLAY_NEW_REVIEWS));
+$paginator->setScrollerParams(array('navLinkText' => TEXT_DISPLAY_NUMBER_OF_REVIEWS));
+$adapterDate = array('dbConn' => $db, 'mainSql' => $reviews_query_raw, 'countSql' => $reviews_query_count);
 $paginator->doPagination($adapterDate);
 $result = $paginator->getScroller()->getResults();
 $tplVars['listingBox']['paginator'] = $result;
