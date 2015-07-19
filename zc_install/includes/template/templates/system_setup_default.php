@@ -105,7 +105,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_syste
 
 <script>
 $().ready(function() {
-  $("#system_setup").on('valid', function() {
+  $("#system_setup").on('valid.fndtn.abide', function() {
 
    var str = $(this).serialize();
    var myform = this;
