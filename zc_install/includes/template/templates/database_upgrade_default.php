@@ -73,7 +73,7 @@
 
 <script>
 $().ready(function() {
-  $("#db_upgrade").on('valid', function(){
+  $("#db_upgrade").on('valid.fndtn.abide', function(){
     var errorElement = 'span';
     var errorClass = 'help-inline invalid';
     $('#upgradeResponsesHolder').html('');
@@ -156,7 +156,7 @@ function doAjaxUpdateSql(form)
     if (length == 0) {
       $('#availableUpgradeSteps').hide();
       $('.upgrade-continue-button').show();
-      $("#db_upgrade").off('valid');
+      $("#db_upgrade").off('valid.fndtn.abide');
     }
     if (!error && length == 0)
     {
