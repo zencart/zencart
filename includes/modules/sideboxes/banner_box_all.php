@@ -3,10 +3,10 @@
  * banner_box_all sidebox - used to display "square" banners in sideboxes
  *
  * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: banner_box_all.php ajeh  Modified in v1.6.0 $
+ * @version $Id: banner_box_all.php drbyte  Modified in v1.6.0 $
  */
 
 // For building custom banner sideboxes, this SQL may be useful as an example to modify
@@ -20,16 +20,11 @@ if (SHOW_BANNERS_GROUP_SET_ALL != '') {
   // select banners_group to be used
   $new_banner_search = zen_build_banners_group($banner_box_group);
 
-  // test for displaying on secure pages
-  switch ($request_type) {
-    case ('SSL'):
-      $my_banner_filter = " and banners_on_ssl= 1 ";
-      break;
-    case ('NONSSL'):
-      $my_banner_filter = '';
-      break;
-  }
-  $sql = "select banners_id from " . TABLE_BANNERS . " where status = 1 " . $new_banner_search . $my_banner_filter . " order by banners_sort_order";
+  $sql = "select banners_id from " . TABLE_BANNERS . "
+          where status = 1 " .
+          $new_banner_search .
+          ($request_type == 'SSL' ? " and banners_on_ssl= 1 " : '') . "
+          order by banners_sort_order";
   $banners_all = $db->Execute($sql);
 
   require($template->get_template_dir('tpl_banner_box_all.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_banner_box_all.php');
