@@ -31,7 +31,7 @@ DirectoryIndex index.php
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(php|js|css|html?|ico|otf|jpe?g|gif|webp|png|swf|flv|xml|xsl)$">
+<FilesMatch "(?i).*\.(php|js|css|html?|ico|otf|jpe?g|gif|webp|png|swf|flv|xml|xsl|woff|woff2)$">
   Order Allow,Deny
   Allow from all
 </FilesMatch>
