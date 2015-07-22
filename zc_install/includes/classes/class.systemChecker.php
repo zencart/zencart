@@ -349,8 +349,8 @@ class systemChecker
     $result = @session_start();
     if (!$result)
       RETURN FALSE;
-    if (defined('SID') && constant('SID') != "")
-      return FALSE;
+//    if (defined('SID') && constant('SID') != "")
+//      return FALSE;
 //    if (session_status() == PHP_SESSION_DISABLED)
 //      return FALSE;
     $_SESSION['testSession'] = 'testSession';
