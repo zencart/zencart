@@ -8,34 +8,23 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_banner_box_all.php 2982 2006-02-07 07:56:41Z birdbrain $
  */
+
+  // if no active banner in the specified banner group then the box will not show
+
   $content = '';
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent centeredContent">';
-// select banners_group to be used
-  $new_banner_search = zen_build_banners_group(SHOW_BANNERS_GROUP_SET_ALL);
 
-  // secure pages
-  switch ($request_type) {
-    case ('SSL'):
-      $my_banner_filter=" and banners_on_ssl= 1 ";
-      break;
-    case ('NONSSL'):
-      $my_banner_filter='';
-      break;
-  }
+  $banners_counter = 0;
+  foreach($banners_all as $banner) {
+    $content .= '<section class="info-promowrapper b-all">';
+    $content .= zen_display_banner('static', $banner['banners_id']);
+    $content .= '</section>';
 
-  $sql = "select banners_id from " . TABLE_BANNERS . " where status = 1 " . $new_banner_search . $my_banner_filter . " order by banners_sort_order";
-  $banners_all = $db->Execute($sql);
-
-
-// if no active banner in the specified banner group then the box will not show
-  $banner_cnt = 0;
-  while (!$banners_all->EOF) {
-    $banner_cnt++;
-    $content .= zen_display_banner('static', $banners_all->fields['banners_id']);
-// add spacing between banners
-    if ($banner_cnt < $banners_all->RecordCount()) {
-      $content .= '<br /><br />';
+    // add spacing between banners
+    $banners_counter++;
+    if ($banners_counter < sizeof($banners_all)) {
+      $content .= '<br class="banner-padding>';
     }
-    $banners_all->MoveNext();
   }
+
   $content .= '</div>';

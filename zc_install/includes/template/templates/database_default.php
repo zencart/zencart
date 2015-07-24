@@ -103,7 +103,7 @@
 </form>
 <script>
 $().ready(function() {
-  $("#db_setup").on('valid', function(form){
+  $("#db_setup").on('valid.fndtn.abide', function(form){
       ajaxTestDBConnection(this);
   });
 });

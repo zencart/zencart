@@ -3,7 +3,7 @@
  * banner functions
  *
  * @package functions
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.6.0 $
@@ -229,17 +229,18 @@
 
 /**
  * Build banner group SQL queries
- * @param string $selected_banners (colon-separated list of banner groups
+ * @param string $selected_banners (colon-separated list of banner groups)
  * @return string SQL where clause
  */
   function zen_build_banners_group($selected_banners) {
+    global $db;
     $selected_banners = explode(':', $selected_banners);
     $size = sizeof($selected_banners);
     if ($size == 1) {
-      $new_banner_search = " banners_group = '" . $selected_banners[0] . "'";
+      $new_banner_search = " banners_group = '" . $db->prepare_input($selected_banners[0]) . "'";
     } else {
       for ($i=0, $n=$size; $i<$n; $i+=1) {
-        $new_banner_search .= " banners_group = '" . $selected_banners[$i] . "'";
+        $new_banner_search .= " banners_group = '" . $db->prepare_input($selected_banners[$i]) . "'";
         if ($i+1 < $n) {
           $new_banner_search .= ' or ';
         }

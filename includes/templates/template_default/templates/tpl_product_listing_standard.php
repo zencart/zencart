@@ -9,7 +9,7 @@
  * @version $Id: $
  */
 ?>
-<div class="centerColumn" id="<?php echo $tplVars['listingBox']['className']; ?>Listing">
+<div class="centerColumn" id="<?php echo $tplVars['listingBox']['cssElement']; ?>Listing">
 
 <?php  require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php'); ?>
 
