@@ -747,7 +747,6 @@ class shoppingCart extends base {
           $sale_maker_discount = '';
 
           // bottom total
-          //            if ($attribute_price->fields['product_attribute_is_free']) {
           if ($attribute_price->fields['product_attribute_is_free'] == '1' and zen_get_products_price_is_free((int)$prid)) {
             // no charge for attribute
           } else {
@@ -984,7 +983,6 @@ class shoppingCart extends base {
         $discount_type_id = '';
         $sale_maker_discount = '';
 
-        //          if ($attribute_price->fields['product_attribute_is_free']) {
         if ($attribute_price->fields['product_attribute_is_free'] == '1' and zen_get_products_price_is_free((int)$products_id)) {
           // no charge
         } else {
@@ -1087,7 +1085,6 @@ class shoppingCart extends base {
         $discount_type_id = '';
         $sale_maker_discount = '';
 
-        //          if ($attribute_price->fields['product_attribute_is_free']) {
         if ($attribute_price->fields['product_attribute_is_free'] == '1' and zen_get_products_price_is_free((int)$products_id)) {
           // no charge
         } else {
@@ -1430,7 +1427,6 @@ class shoppingCart extends base {
     $this->content_type = false;
     $gift_voucher = 0;
 
-    //      if ( (DOWNLOAD_ENABLED == 'true') && ($this->count_contents() > 0) ) {
     if ( $this->count_contents() > 0 ) {
       reset($this->contents);
       while (list($products_id, ) = each($this->contents)) {
