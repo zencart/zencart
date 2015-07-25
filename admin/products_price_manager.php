@@ -945,7 +945,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
             <td class="main"><?php echo zen_draw_input_field('discount_qty[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_qty']); ?></td>
             <td class="main"><?php echo zen_draw_input_field('discount_price[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price']); ?></td>
 <?php
-  if (DISPLAY_PRICE_WITH_TAX == 'true') {
+  if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
 ?>
             <td class="main" align="right"><?php echo $currencies->display_price($discounted_price, '', 1) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), 1); ?></td>
             <td class="main" align="right"><?php echo ' x ' . number_format($discount_name[$i]['discount_qty']) . ' = ' . $currencies->display_price($discounted_price, '', $discount_name[$i]['discount_qty']) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), $discount_name[$i]['discount_qty']); ?></td>
