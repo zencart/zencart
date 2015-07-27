@@ -29,7 +29,7 @@
 
 <?php if ($messageStack->size('shopping_cart') > 0) echo $messageStack->output('shopping_cart'); ?>
 
-<?php echo zen_draw_form('cart_quantity', zen_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type)); ?>
+<?php echo zen_draw_form('cart_quantity', zen_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type), 'post', 'id="shoppingCartForm"'); ?>
 <div id="cartInstructionsDisplay" class="content"><?php echo TEXT_INFORMATION; ?></div>
 
 <?php if (!empty($totalsDisplay)) { ?>
