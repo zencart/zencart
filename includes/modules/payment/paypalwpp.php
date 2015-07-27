@@ -747,7 +747,7 @@ class paypalwpp extends base {
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
-                                        'version' => '104.0',
+                                        'version' => '109.0',
                                         'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
@@ -1092,6 +1092,8 @@ class paypalwpp extends base {
   }
   /**
    * Set the state field depending on what PayPal requires for that country.
+   * The shipping address state or province is required if the address is in one of the following countries: Argentina, Brazil, Canada, China, Indonesia, India, Japan, Mexico, Thailand, USA
+   * https://developer.paypal.com/docs/classic/api/state_codes/
    */
   function setStateAndCountry(&$info) {
     global $db, $messageStack;
@@ -1524,8 +1526,10 @@ class paypalwpp extends base {
     if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
 
     $options['ALLOWNOTE'] = 1;  // allow customer to enter a note on the PayPal site, which will be copied to order comments upon return to store.
-    $options['SOLUTIONTYPE'] = 'Sole';  // Use 'Mark' for normal Express Checkout, 'Sole' for auctions or alternate flow
+    $options['SOLUTIONTYPE'] = 'Sole';  // Use 'Mark' for normal Express Checkout (where customer has a PayPal account), 'Sole' for Account-Optional. But Account-Optional must be enabled in your PayPal account under Selling Preferences.
+
     $options['LANDINGPAGE'] = 'Billing';  // "Billing" or "Login" selects the style of landing page on PayPal site during checkout
+    //$options['USERSELECTEDFUNDINGSOURCE'] = 'Finance';  // 'Finance' is for PayPal BillMeLater.  Requires LANDINGPAGE=Billing.
 
     // Set the return URL if they click "Submit" on PayPal site
     $return_url = str_replace('&amp;', '&', zen_href_link('ipn_main_handler.php', 'type=ec', 'SSL', true, true, true));
