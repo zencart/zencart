@@ -1797,7 +1797,7 @@ class paypalwpp extends base {
       $order_totals = $order_total_modules->process();
       $this->zcLog('ec_step2 ', 'Instantiated $order object contents: ' . print_r($order, true));
     }
-    $order->info['total'] = urldecode($response['AMT']);
+    if ($order->info['total'] < 0.01 && urldecode($response['PAYMENTREQUEST_0_AMT']) > 0) $order->info['total'] = urldecode($response['PAYMENTREQUEST_0_AMT']);
     //$this->zcLog('ec_step2 - processed info', print_r(array_merge($step2_payerinfo, $step2_shipto), true));
 
     // send data off to build account, log in, set addresses, place order
