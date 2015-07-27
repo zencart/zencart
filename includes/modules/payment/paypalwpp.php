@@ -1586,7 +1586,7 @@ class paypalwpp extends base {
           $options['ADDROVERRIDE'] = 1;
 
           // set the address info
-          $options['PAYMENTREQUEST_0_SHIPTONAME']    = substr($address_arr['entry_firstname'] . ' ' . $address_arr['entry_lastname'], 0, 32);
+          $options['PAYMENTREQUEST_0_SHIPTONAME']    = substr($address_arr['entry_firstname'] . ' ' . $address_arr['entry_lastname'], 0, 128);
           $options['PAYMENTREQUEST_0_SHIPTOSTREET']  = substr($address_arr['entry_street_address'], 0, 100);
           if ($address_arr['entry_suburb'] != '') $options['PAYMENTREQUEST_0_SHIPTOSTREET2'] = substr($address_arr['entry_suburb'], 0, 100);
           $options['PAYMENTREQUEST_0_SHIPTOCITY']    = substr($address_arr['entry_city'], 0, 40);
@@ -1760,22 +1760,12 @@ class paypalwpp extends base {
     $_SESSION['paypal_ec_payer_id'] = $response['PAYERID'];
     $this->notify('NOTIFY_PAYPAL_EXPRESS_CHECKOUT_PAYERID_DETERMINED', $response['PAYERID']);
 
-    $gender = '';
-    $salutation = '';
-    if (isset($response['SALUTATION'])) {
-      $salutation = urldecode($response['SALUTATION']);
-      if ($salutation == 'Mr') {
-        $gender = 'm';
-      } elseif (in_array($salutation, array('Ms', 'Mrs'))) {
-        $gender = 'f';
-      }
-    }
 
     // prepare the information to pass to the ec_step2_finish() function, which does the account creation, address build, etc
     $step2_payerinfo = array('payer_id'        => $response['PAYERID'],
                              'payer_email'     => urldecode($response['EMAIL']),
                              'payer_salutation'=> $salutation,
-                             'payer_gender'    => $gender,
+                             'payer_gender'    => '',
                              'payer_firstname' => urldecode($response['FIRSTNAME']),
                              'payer_lastname'  => urldecode($response['LASTNAME']),
                              'payer_business'  => urldecode($response['BUSINESS']),
