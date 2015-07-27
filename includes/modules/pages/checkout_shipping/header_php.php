@@ -92,8 +92,10 @@ if (isset($_SESSION['cart']->cartID)) {
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
+    $_SESSION['shipping'] = array();
     $_SESSION['shipping']['id'] = 'free_free';
     $_SESSION['shipping']['title'] = 'free_free';
+    $_SESSION['shipping']['cost'] = 0;
     $_SESSION['sendto'] = false;
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
