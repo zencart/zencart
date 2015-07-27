@@ -376,3 +376,7 @@ UPDATE project_version SET project_version_major='1', project_version_minor='6.0
 
 #####  END OF UPGRADE SCRIPT
 
+## BOF Add Admin Page for modules/plugins
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+       ('plugins', 'BOX_MODULES_PLUGINS', 'FILENAME_MODULES', 'set=plugins', 'modules', 'Y', 4);
+## EOF Add Admin Page for modules/plugins

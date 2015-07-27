@@ -42,6 +42,12 @@
         $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
         break;
+      case 'plugins':
+        $module_type = 'plugins';
+        $module_directory = DIR_FS_CATALOG_MODULES . 'plugins/';
+        $module_key = 'MODULE_PLUGIN_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_PLUGINS);
+        break;
       case 'payment':
       default:
         $module_type = 'payment';

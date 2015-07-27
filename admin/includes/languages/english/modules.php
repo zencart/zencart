@@ -10,6 +10,7 @@
 define('HEADING_TITLE_MODULES_PAYMENT', 'Payment Modules');
 define('HEADING_TITLE_MODULES_SHIPPING', 'Shipping Modules');
 define('HEADING_TITLE_MODULES_ORDER_TOTAL', 'Order Total Modules');
+define('HEADING_TITLE_MODULES_PLUGINS', 'Plugins');
 define('HEADING_TITLE_MODULES_PRODUCT_TYPES', 'Product Type Modules');
 
 define('TABLE_HEADING_MODULES', 'Modules');
