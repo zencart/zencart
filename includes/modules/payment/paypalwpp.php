@@ -1579,9 +1579,9 @@ class paypalwpp extends base {
     } else {
       $this->zcLog('ec-step1-addr_check', "cart content is not all virtual (or customer is not logged in) ... therefore will be submitting address details");
       $options['NOSHIPPING'] = 0;
-      // If we are in a "mark" flow and the customer has a usable address, set the addressoverride variable to 1. This will
-      // override the shipping address in PayPal with the shipping address that is selected in Zen Cart.
-      // @TODO: consider using address-validation against Paypal's addresses via API
+      // If we are in a "mark" flow and the customer has a usable address, set the addressoverride variable to 1.
+      // This will override the shipping address in PayPal with the shipping address that is selected in Zen Cart.
+      // @TODO: consider using address-validation against Paypal's addresses via API to help customers understand why they may be having difficulties during checkout
       if (MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS != 'Yes' && ($address_arr = $this->getOverrideAddress()) !== false) {
         $address_error = false;
         foreach(array('entry_firstname','entry_lastname','entry_street_address','entry_city','entry_postcode','zone_code','countries_iso_code_2') as $val) {
