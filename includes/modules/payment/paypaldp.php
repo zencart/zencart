@@ -8,6 +8,9 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte   Modified in v1.6.0 $
+ *
+ * Optional @TODO: merchant coupons, loyalty program support. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_113/
+ * Optional @TODO: card verification instead of auth/capt. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_109/
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -793,6 +796,10 @@ class paypaldp extends base {
       // send the store name as transaction identifier, to help distinguish payments between multiple stores:
       $optionsAll['INVNUM'] = (int)$_SESSION['customer_id'] . '-' . time() . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', STORE_NAME), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
 
+//       This feature must be enabled in your PayPal account, by contacting PayPal Support:
+//       $optionsAll['SOFTDESCRIPTOR'] = substr(preg_replace('/[^a-zA-Z0-9. ]/', '', STORE_NAME), 0, 23);
+//       $optionsAll['SOFTDESCRIPTORCITY'] = substr(preg_replace('/[^a-zA-Z0-9. !,' . preg_quote('"$%&\'()+-*/:;<=>?@') . ']/', '', STORE_TELEPHONE_CUSTSERVICE), 0, 23);
+
       if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD != '')) { // Payflow params required
         if (isset($optionsAll['COUNTRYCODE'])) {
           $optionsAll['COUNTRY'] = $optionsAll['COUNTRYCODE'];
@@ -1175,7 +1182,7 @@ class paypaldp extends base {
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
-                                        'version' => '61.0',
+                                        'version' => '124.0',
                                         'server' => MODULE_PAYMENT_PAYPALDP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
@@ -1233,6 +1240,7 @@ class paypaldp extends base {
   }
   /**
    * Used to submit a refund for a given transaction.  FOR FUTURE USE.
+   * @TODO: Add option to specify shipping/tax amounts for refund instead of just total. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_119/
    */
   function _doRefund($oID, $amount = 'Full', $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -1411,7 +1419,7 @@ class paypaldp extends base {
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
    */
   function selectCurrency($val = '') {
-    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY');
+    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB');
     $dp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD');
     $dpus_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD');
 

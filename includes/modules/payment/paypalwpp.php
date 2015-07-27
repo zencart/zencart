@@ -7,6 +7,8 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
+ *
+ * Optional @TODO: merchant coupons, loyalty program support. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_113/
  */
 /**
  * load the communications layer code
@@ -751,7 +753,7 @@ class paypalwpp extends base {
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
-                                        'version' => '109.0',
+                                        'version' => '124.0',
                                         'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
@@ -809,6 +811,7 @@ class paypalwpp extends base {
   }
   /**
    * Used to submit a refund for a given transaction.  FOR FUTURE USE.
+   * @TODO: Add option to specify shipping/tax amounts for refund instead of just total. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_119/
    */
   function _doRefund($oID, $amount = 'Full', $note = '') {
     global $db, $doPayPal, $messageStack;
