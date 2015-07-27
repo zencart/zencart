@@ -1735,7 +1735,7 @@ class paypalwpp extends base {
     // prepare the information to pass to the ec_step2_finish() function, which does the account creation, address build, etc
     $step2_payerinfo = array('payer_id'        => $response['PAYERID'],
                              'payer_email'     => urldecode($response['EMAIL']),
-                             'payer_salutation'=> $salutation,
+                             'payer_salutation'=> '',
                              'payer_gender'    => '',
                              'payer_firstname' => urldecode($response['FIRSTNAME']),
                              'payer_lastname'  => urldecode($response['LASTNAME']),
