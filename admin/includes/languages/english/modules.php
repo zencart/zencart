@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: modules.php 19287 2011-07-28 15:51:25Z drbyte $
+ * @version $Id: modules.php bislewl  Modified in v1.6.0 $
  */
 
 define('HEADING_TITLE_MODULES_PAYMENT', 'Payment Modules');
