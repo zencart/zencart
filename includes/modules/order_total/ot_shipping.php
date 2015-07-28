@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_shipping.php 19002 wilt  Modified in v1.5.5 $
+ * @version $Id: ot_shipping.php 19002 wilt  Modified in v1.6.0 $
  */
 
   class ot_shipping {
@@ -74,7 +74,7 @@
           if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
         }
 
-        if ($_SESSION['shipping']['id'] == 'free_free') {
+        if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free') {
           $order->info['shipping_method'] = FREE_SHIPPING_TITLE;
           $order->info['shipping_cost'] = 0;
         }
