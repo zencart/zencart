@@ -157,6 +157,7 @@ UPDATE configuration set configuration_value = '1' WHERE configuration_key = 'SH
 UPDATE configuration set configuration_value = '0' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS' && configuration_value = 'false';
 UPDATE configuration set configuration_value = '1' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS' && configuration_value = 'true';
 
+UPDATE configuration SET configuration_title='Credit Card Enable Status - Debit', configuration_key = 'CC_ENABLED_DEBIT', configuration_value ='0', configuration_description='Accept Debit Cards 0= off 1= on<br>NOTE: This is not deeply integrated at this time, and this setting may be redundant if your payment modules do not yet specifically have code to honour this switch.', date_added=now() WHERE configuration_key='CC_ENABLED_SWITCH';
 
 ##@TODO
 ## COWOA CHANGES - Although need to allow for a current cowoa installation

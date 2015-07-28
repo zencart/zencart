@@ -3,10 +3,10 @@
  * cc_validation Class.
  *
  * @package classes
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: cc_validation.php 16435 2010-05-28 09:34:32Z drbyte $
+ * @version $Id: cc_validation.php drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -25,9 +25,9 @@ class cc_validation extends base {
     // NOTE: We check Solo before Maestro, and Maestro/Switch *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
     if (preg_match('/^(6334[5-9][0-9]|6767[0-9]{2})[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && CC_ENABLED_SOLO=='1') {
       $this->cc_type = "Solo"; // is also a Maestro product
-    } else if (preg_match('/^(49369[8-9]|490303|6333[0-4][0-9]|6759[0-9]{2}|5[0678][0-9]{4}|6[0-9][02-9][02-9][0-9]{2})[0-9]{6,13}?$/', $this->cc_number) && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SWITCH=='1')) {
+    } else if (preg_match('/^(49369[8-9]|490303|6333[0-4][0-9]|6759[0-9]{2}|5[0678][0-9]{4}|6[0-9][02-9][02-9][0-9]{2})[0-9]{6,13}?$/', $this->cc_number) && CC_ENABLED_MAESTRO=='1') {
       $this->cc_type = "Maestro";
-    } else if (preg_match('/^(49030[2-9]|49033[5-9]|4905[0-9]{2}|49110[1-2]|49117[4-9]|49918[0-2]|4936[0-9]{2}|564182|6333[0-4][0-9])[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SWITCH=='1')) {
+    } else if (preg_match('/^(49030[2-9]|49033[5-9]|4905[0-9]{2}|49110[1-2]|49117[4-9]|49918[0-2]|4936[0-9]{2}|564182|6333[0-4][0-9])[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && CC_ENABLED_MAESTRO=='1') {
       $this->cc_type = "Maestro"; // SWITCH is now Maestro
     } elseif (preg_match('/^4[0-9]{12}([0-9]{3})?$/', $this->cc_number) && CC_ENABLED_VISA=='1') {
       $this->cc_type = 'Visa';
