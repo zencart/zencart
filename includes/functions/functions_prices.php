@@ -24,7 +24,6 @@
 
     $specials = $db->Execute("select specials_new_products_price from " . TABLE_SPECIALS . " where products_id = '" . (int)$product_id . "' and status='1'");
     if ($specials->RecordCount() > 0) {
-//      if ($product->fields['products_priced_by_attribute'] == 1) {
         $special_price = $specials->fields['specials_new_products_price'];
     } else {
       $special_price = false;

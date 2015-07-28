@@ -23,7 +23,7 @@
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(js|css|jpg|gif|png|otf|cur|woff|ttf|svg|eot)$">
+<FilesMatch "(?i).*\.(js|css|jpg|gif|png|otf|cur|woff|woff2|ttf|svg|eot)$">
   Order Allow,Deny
   Allow from all
 </FilesMatch>

@@ -5,6 +5,8 @@
 #
 
 ## the following line is needed to allow Download-By-Redirect to work
+## If your web host doesn't allow the FollowSymlinks option, consider replacing +FollowSymLinks with +SymLinksIfOwnerMatch
+
   Options +FollowSymLinks
 
 #

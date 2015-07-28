@@ -149,8 +149,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
         if (sizeof($_SESSION['navigation']->snapshot) > 0) {
           //    $back = sizeof($_SESSION['navigation']->path)-2;
-          //if (isset($_SESSION['navigation']->path[$back]['page'])) {
-          //    if (sizeof($_SESSION['navigation']->path)-2 > 0) {
           $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], array(zen_session_name())), $_SESSION['navigation']->snapshot['mode']);
           //            $origin_href = zen_back_link_only(true);
           $_SESSION['navigation']->clear_snapshot();
