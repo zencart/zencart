@@ -548,7 +548,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     global $db, $messageStack, $doPayPal;
     $doPayPal = $this->paypal_init();
     // look up history on this order from PayPal table
-    $sql = "select * from " . TABLE_PAYPAL . " where order_id = :orderID order by last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id " . ($last_txn) ? "DESC " : "ASC ";
+    $sql = "select * from " . TABLE_PAYPAL . " where order_id = :orderID order by last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id " . ($last_txn ? "DESC " : "ASC ");
     $sql = $db->bindVars($sql, ':orderID', $oID, 'integer');
     $zc_ppHist = $db->Execute($sql);
     if ($zc_ppHist->RecordCount() == 0) return false;
