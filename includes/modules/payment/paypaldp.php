@@ -1572,7 +1572,7 @@ class paypaldp extends base {
       } // endif attribute-info
 
       // PayPal can't handle fractional-quantity values, so convert it to qty 1 here
-      if ($order->products[$i]['qty'] > 1 && ($order->products[$i]['qty'] != (int)$order->products[$i]['qty'] || $flag_treat_as_partial)) {
+      if (is_float($order->products[$i]['qty']) && ($order->products[$i]['qty'] != (int)$order->products[$i]['qty'] || $flag_treat_as_partial)) {
         $optionsLI["L_NAME$k"] = '('.$order->products[$i]['qty'].' x ) ' . $optionsLI["L_NAME$k"];
         // zen_add_tax already handles whether DISPLAY_PRICES_WITH_TAX is set
         $optionsLI["L_AMT$k"] = zen_round(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $decimals) * $order->products[$i]['qty'], $decimals);
