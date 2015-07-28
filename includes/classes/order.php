@@ -634,7 +634,7 @@ class order extends base {
     }
     $this->notify('NOTIFY_ORDER_CART_ORDERSTATUS');
 
-    if ($_SESSION['shipping']['id'] == 'free_free') {
+    if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free') {
       $this->info['shipping_module_code'] = $_SESSION['shipping']['id'];
     }
 
