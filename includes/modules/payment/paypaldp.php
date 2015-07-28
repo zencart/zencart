@@ -9,7 +9,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte   Modified in v1.6.0 $
  *
- * Optional @TODO: merchant coupons, loyalty program support. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_113/
  * Optional @TODO: card verification instead of auth/capt. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_109/
  */
 /**
