@@ -356,6 +356,26 @@ class paypalwpp extends base {
       if (isset($options['PAYMENTREQUEST_0_DESC']) && $options['PAYMENTREQUEST_0_DESC'] == '') unset($options['PAYMENTREQUEST_0_DESC']);
       if (!isset($options['PAYMENTREQUEST_0_AMT'])) $options['PAYMENTREQUEST_0_AMT'] = number_format($order_amount, 2, '.', '');
 
+
+if (false) { // disabled until clarification is received about coupons in PayPal Wallet
+      // report details of coupons used
+      $coupons_list = array();
+      $j=0;
+      global $order_totals;
+      if (sizeof($order_totals)) {
+        for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
+          if (in_array($order_totals[$i]['code'], array('ot_coupon','ot_gv'))) {
+            $j++;
+            $options["L_PAYMENTREQUEST_0_REDEEMEDOFFERTYPE$j"] = 'MERCHANT_COUPON';
+            $options["L_PAYMENTREQUEST_0_REDEEMEDOFFERNAME$j"] = substr($order_totals[$i]['title'], 0, 127);
+            $options["L_PAYMENTREQUEST_0_REDEEMEDOFFERDESCRIPTION$j"] = substr($order_totals[$i]['title'], 0, 127);
+            $options["L_PAYMENTREQUEST_0_REDEEMEDOFFERAMOUNT$j"] = $order_totals[$i]['value'];
+          }
+        }
+      }
+      // end coupons
+}
+
       // debug output
       $this->zcLog('before_process - EC-4', 'info being submitted:' . "\n" . $_SESSION['paypal_ec_token'] . ' ' . $_SESSION['paypal_ec_payer_id'] . ' ' . number_format($order_amount, 2) .  "\n" . print_r($options, true));
 
