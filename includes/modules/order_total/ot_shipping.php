@@ -74,7 +74,7 @@
           if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
         }
 
-        if ($_SESSION['shipping']['id'] == 'free_free') {
+        if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free') {
           $order->info['shipping_method'] = FREE_SHIPPING_TITLE;
           $order->info['shipping_cost'] = 0;
         }

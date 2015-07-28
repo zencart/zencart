@@ -8,6 +8,8 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte   Modified in v1.6.0 $
+ *
+ * Optional @TODO: card verification instead of auth/capt. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_109/
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -178,7 +180,6 @@ class paypaldp extends base {
       if (CC_ENABLED_VISA=='1')    $this->cards[] = array('id' => 'Visa', 'text' => 'Visa');
       if (CC_ENABLED_MC=='1')      $this->cards[] = array('id' => 'MasterCard', 'text' => 'MasterCard');
       if (CC_ENABLED_MAESTRO=='1') $this->cards[] = array('id' => 'Maestro', 'text' => 'Maestro');
-      if (CC_ENABLED_SWITCH=='1')  $this->cards[] = array('id' => 'Switch', 'text' => 'Switch');
       if (CC_ENABLED_SOLO=='1')    $this->cards[] = array('id' => 'Solo', 'text' => 'Solo');
     }
 
@@ -284,7 +285,7 @@ class paypaldp extends base {
     global $order;
     $this->cc_type_check =
             'var value = document.checkout_payment.paypalwpp_cc_type.value;' .
-            'if (value == "Solo" || value == "Maestro" || value == "Switch") {' .
+            'if (value == "Solo" || value == "Maestro") {' .
             '    document.checkout_payment.paypalwpp_cc_issue_month.disabled = false;' .
             '    document.checkout_payment.paypalwpp_cc_issue_year.disabled = false;' .
             '    document.checkout_payment.paypalwpp_cc_checkcode.disabled = false;' .
@@ -339,8 +340,8 @@ class paypaldp extends base {
                        'module' => MODULE_PAYMENT_PAYPALDP_TEXT_TITLE,
                        'fields' => $fieldsArray);
 
-    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SWITCH=='1' || CC_ENABLED_SOLO=='1')) {
-      // add extra fields for Switch/Solo cards
+    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SOLO=='1')) {
+      // add extra fields for UK cards
       for ($i = $today['year'] - 10; $i <= $today['year']; $i++) {
         $issue_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
       }
@@ -649,7 +650,7 @@ class paypaldp extends base {
         $messageStack->add_session('checkout_payment', $error . '<!-- ['.$this->code.'] -->' . '<!-- result: ' . $response . ' -->', 'error');
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
       }
-      if (!in_array($cc_validation->cc_type, array('Visa', 'MasterCard', 'Switch', 'Solo', 'Discover', 'American Express', 'Maestro'))) {
+      if (!in_array($cc_validation->cc_type, array('Visa', 'MasterCard', 'Solo', 'Discover', 'American Express', 'Maestro'))) {
 //        $this->zcLog('before_process - DP-3', 'CC info: ' . $cc_validation->cc_type . ' ' . substr($cc_validation->cc_number, 0, 4) . str_repeat('X', (strlen($cc_validation->cc_number) - 8)) . substr($cc_validation->cc_number, -4) . ' ' . $error);
         $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYPALDP_TEXT_BAD_CARD . '<!-- [' . $this->code . ' ' . $cc_validation->cc_type . '] -->', 'error');
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
@@ -678,8 +679,8 @@ class paypaldp extends base {
       // Set currency
       $my_currency = $this->selectCurrency($order->info['currency'], 'DP');
 
-      // if CC is switch or solo, must be GBP
-      if (in_array($cc_type, array('Switch', 'Solo', 'Maestro'))) {
+      // if CC is maestro or solo, must be GBP
+      if (in_array($cc_type, array('Solo', 'Maestro'))) {
         $my_currency = 'GBP';
       }
 
@@ -774,9 +775,6 @@ class paypaldp extends base {
       $optionsNVP['PAYMENTACTION'] = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Sale';
       if (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') $this->order_status = $this->order_pending_status;
 
-//      if (in_array($cc_type, array('Switch', 'Solo'))) {
-//        $optionsNVP['PAYMENTACTION'] = 'Authorization';
-//      }
       $optionsAll['BUTTONSOURCE'] = $this->buttonSource;
       $optionsAll['CURRENCY']     = $my_currency;
       if (strlen($cc_owner_ip) > 7) {
@@ -792,6 +790,10 @@ class paypaldp extends base {
 
       // send the store name as transaction identifier, to help distinguish payments between multiple stores:
       $optionsAll['INVNUM'] = (int)$_SESSION['customer_id'] . '-' . time() . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', STORE_NAME), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
+
+//       This feature must be enabled in your PayPal account, by contacting PayPal Support:
+//       $optionsAll['SOFTDESCRIPTOR'] = substr(preg_replace('/[^a-zA-Z0-9. ]/', '', STORE_NAME), 0, 23);
+//       $optionsAll['SOFTDESCRIPTORCITY'] = substr(preg_replace('/[^a-zA-Z0-9. !,' . preg_quote('"$%&\'()+-*/:;<=>?@') . ']/', '', STORE_TELEPHONE_CUSTSERVICE), 0, 23);
 
       if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD != '')) { // Payflow params required
         if (isset($optionsAll['COUNTRYCODE'])) {
@@ -1175,7 +1177,7 @@ class paypaldp extends base {
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
-                                        'version' => '61.0',
+                                        'version' => '124.0',
                                         'server' => MODULE_PAYMENT_PAYPALDP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
@@ -1233,6 +1235,7 @@ class paypaldp extends base {
   }
   /**
    * Used to submit a refund for a given transaction.  FOR FUTURE USE.
+   * @TODO: Add option to specify shipping/tax amounts for refund instead of just total. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_119/
    */
   function _doRefund($oID, $amount = 'Full', $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -1411,7 +1414,7 @@ class paypaldp extends base {
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
    */
   function selectCurrency($val = '') {
-    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY');
+    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB');
     $dp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD');
     $dpus_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD');
 
@@ -1605,7 +1608,7 @@ class paypaldp extends base {
       } // endif attribute-info
 
       // PayPal can't handle fractional-quantity values, so convert it to qty 1 here
-      if ($order->products[$i]['qty'] > 1 && ($order->products[$i]['qty'] != (int)$order->products[$i]['qty'] || $flag_treat_as_partial)) {
+      if (is_float($order->products[$i]['qty']) && ($order->products[$i]['qty'] != (int)$order->products[$i]['qty'] || $flag_treat_as_partial)) {
         $optionsLI["L_NAME$k"] = '('.$order->products[$i]['qty'].' x ) ' . $optionsLI["L_NAME$k"];
         // zen_add_tax already handles whether DISPLAY_PRICES_WITH_TAX is set
         $optionsLI["L_AMT$k"] = zen_round(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $decimals) * $order->products[$i]['qty'], $decimals);
@@ -2566,7 +2569,7 @@ class paypaldp extends base {
 
   function determineCardType($cardNumber) {
     $cardNumber = preg_replace('/[^0-9]/', '', $cardNumber);
-    // NOTE: We check Solo before Maestro, and Maestro/Switch *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
+    // NOTE: We check Solo before Maestro, and Maestro *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
     if (preg_match('/^(6334[5-9][0-9]|6767[0-9]{2})[0-9]{10}([0-9]{2,3}?)?$/', $cardNumber)) {
       $cardType = "SOLO";
     } else if (preg_match('/^(49369[8-9]|490303|6333[0-4][0-9]|6759[0-9]{2}|5[0678][0-9]{4}|6[0-9][02-9][02-9][0-9]{2})[0-9]{6,13}?$/', $cardNumber)) {

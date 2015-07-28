@@ -484,7 +484,7 @@ class order extends base {
                                       'products_mixed_discount_quantity' => $products[$i]['products_mixed_discount_quantity']
                                       );
 
-      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
+      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
       {
         $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
         $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
@@ -634,7 +634,7 @@ class order extends base {
     }
     $this->notify('NOTIFY_ORDER_CART_ORDERSTATUS');
 
-    if ($_SESSION['shipping']['id'] == 'free_free') {
+    if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free') {
       $this->info['shipping_module_code'] = $_SESSION['shipping']['id'];
     }
 
@@ -787,7 +787,6 @@ class order extends base {
           //            $this->products[$i]['stock_value'] = $stock_values->fields['products_quantity'];
 
           $db->Execute("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
-          //        if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
           if ($stock_left <= 0) {
             // only set status to off when not displaying sold out
             if (SHOW_PRODUCTS_SOLD_OUT == '0') {
