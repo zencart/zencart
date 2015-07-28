@@ -556,7 +556,7 @@ class paypal_curl extends base {
     }
 
     $this->lastParamList = implode('&', $string);
-    $this->notify('NOTIFY_PAYPAL_CURL_BUILDNAMEVALUELIST', array ( 'stringArray' => $strings ));
+    $this->notify('NOTIFY_PAYPAL_CURL_BUILDNAMEVALUELIST', $string);
     return $this->lastParamList;
   }
 
