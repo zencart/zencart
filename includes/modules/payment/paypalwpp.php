@@ -359,7 +359,6 @@ class paypalwpp extends base {
 
 if (false) { // disabled until clarification is received about coupons in PayPal Wallet
       // report details of coupons used
-      $coupons_list = array();
       $j=0;
       global $order_totals;
       if (sizeof($order_totals)) {
@@ -426,7 +425,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->numitems = sizeof($order->products);
       $this->amt = urldecode($response['PAYMENTINFO_0_AMT'] . ' ' . $response['PAYMENTINFO_0_CURRENCYCODE']);
       $this->auth_code = (isset($this->response['AUTHCODE'])) ? $this->response['AUTHCODE'] : $this->response['TOKEN'];
-      
+
       $this->notify('NOTIFY_PAYPALWPP_BEFORE_PROCESS_FINISHED', $response);
   }
   /**
@@ -870,9 +869,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      */
     if ($proceedToRefund) {
        $response = $doPayPal->RefundTransaction($oID, $txnID, $refundAmt, $refundNote, $curCode);
-      
+
       //$this->zcLog("_doRefund($oID, $amount, $note):", print_r($response, true));
-      
+
       $error = $this->_errorHandler($response, 'DoRefund');
       $new_order_status = ($new_order_status > 0 ? $new_order_status : 1);
       if (!$error) {
@@ -928,9 +927,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      */
     if ($proceedToAuth) {
       $response = $doPayPal->DoAuthorization($txnID, $authAmt, $currency);
-      
+
       //$this->zcLog("_doAuth($oID, $amt, $currency):", print_r($response, true));
-      
+
       $error = $this->_errorHandler($response, 'DoAuthorization');
       $new_order_status = ($new_order_status > 0 ? $new_order_status : 1);
       if (!$error) {
@@ -993,9 +992,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      */
     if ($proceedToCapture) {
       $response = $doPayPal->DoCapture($txnID, $captureAmt, $currency, $captureType, '', $captureNote);
-      
+
       //$this->zcLog("_doCapt($oID, $captureType, $amt, $currency, $note):", print_r($response, true));
-      
+
       $error = $this->_errorHandler($response, 'DoCapture');
       $new_order_status = ($new_order_status > 0 ? $new_order_status : 1);
       if (!$error) {
@@ -1047,9 +1046,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      */
     if ($proceedToVoid) {
       $response = $doPayPal->DoVoid($voidAuthID, $voidNote);
-      
+
       //$this->zcLog("_doVoid($oID, $note):", print_r($response, true));
-      
+
       $error = $this->_errorHandler($response, 'DoVoid');
       $new_order_status = ($new_order_status > 0 ? $new_order_status : 1);
       if (!$error) {
@@ -1327,9 +1326,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 //        $subTotalTax += $optionsLI["L_PAYMENTREQUEST_0_TAXAMT$k"];
       }
       $numberOfLineItemsProcessed = $k;
-      
+
       $this->notify('NOTIFY_PAYPALWPP_GETLINEITEMDETAILS', $numberOfLineItemsProcessed, $optionsLI);
-      
+
     }  // end for loopthru all products
 
     // add line items for any surcharges added by order-total modules
