@@ -2790,7 +2790,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $messageStack->add_session($errorText, 'error');
     }
     /** Handle FMF Scenarios **/
-    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending' && $response['L_ERRORCODE0'] == 11610) {
+    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && ($response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending' || $response['PAYMENTSTATUS'] == 'Pending') && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
       $this->fmfErrors = array();
       if ($response['ACK'] == 'SuccessWithWarning' && isset($response['L_PAYMENTINFO_0_FMFPENDINGID0'])) {
@@ -2807,6 +2807,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
     //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
     $errorInfo = "\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with PayPal Express Checkout.';
+
+    $this->notify('NOTIFY_PAYPALWPP_ERROR_HANDLER', $response, $operation, $basicError, $ignoreList, $errorInfo);
 
     switch($operation) {
       case 'SetExpressCheckout':
@@ -2958,10 +2960,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         break;
 
       default:
-        global $errorHandled;
-        $errorHandled = false;
-        $this->notify('NOTIFY_PAYPALWPP_ERROR_HANDLER', array ( 'operation' => $operation, 'basicError' => $basicError ));
-        if ($basicError && !$errorHandled) {
+        if ($basicError) {
           // if error, display error message. If debug options enabled, email dump to store owner
           if ($this->enableDebugging) {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
