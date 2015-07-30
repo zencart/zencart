@@ -495,7 +495,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'mc_gross' => (float)$this->amt,
                           'mc_fee' => (float)urldecode($this->feeamt),
                           'mc_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
-                          'settle_amount' => (float)urldecode($this->responsedata['PAYMENT_INFO_0_SETTLEAMT']),
+                          'settle_amount' => (float)urldecode($this->responsedata['PAYMENTINFO_0_SETTLEAMT']),
                           'settle_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
                           'exchange_rate' => (urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) > 0 ? urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) : 1.0),
                           'notify_version' => '0',
