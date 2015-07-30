@@ -147,7 +147,7 @@ Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest
 define('TEXT_ERROR_PHP53_CGI_BUG', 'PHP Versions PHP 5.4.0 and 5.4.1 have a <a href="http://arstechnica.com/security/2014/03/php-bug-allowing-site-hijacking" target="_blank">security flaw in CGI mode</a>. Your server has that flaw. You need to upgrade your PHP version to a modern safe version, or stop running in CGI mode.');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
-define('TEXT_ERROR_MYSQL_SUPPPORT', 'Problems with your MySQL (mysqli) support');
+define('TEXT_ERROR_MYSQL_SUPPORT', 'Problems with your MySQL (mysqli) support');
 define('TEXT_ERROR_LOG_FOLDER', DIR_FS_LOGS . ' folder is not writeable');
 define('TEXT_ERROR_CACHE_FOLDER', DIR_FS_SQL_CACHE . ' folder is not writeable');
 define('TEXT_ERROR_IMAGES_FOLDER', '/images/ folder is not writeable');
@@ -155,10 +155,10 @@ define('TEXT_ERROR_DEFINEPAGES_FOLDER', '/includes/languages/english/html_includ
 define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
 define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable');
 
-define('TEXT_ERROR_HTACCESS_SUPPPORT', 'Problems with .htaccess support');
-define('TEXT_ERROR_SESSION_SUPPPORT', 'Problems with session support');
-define('TEXT_ERROR_SESSION_SUPPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
-define('TEXT_ERROR_SESSION_SUPPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
+define('TEXT_ERROR_HTACCESS_SUPPORT', 'Problems with .htaccess support');
+define('TEXT_ERROR_SESSION_SUPPORT', 'Problems with session support');
+define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
+define('TEXT_ERROR_SESSION_SUPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
 define('TEXT_ERROR_DB_CONNECTION', 'Problems with Database Connection');
 define('TEXT_ERROR_DB_CONNECTION_DEFAULT', 'Possible problems with database connection');
 define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Probems with database connection based on the entries in your current configure.php');
