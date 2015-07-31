@@ -97,7 +97,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('dc_redeem_code')->value('test100percent');
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('534.99'); //net price
-        $this->assertTextPresent('-$534.9*'); //coupon discount
+        $this->assertTextPresent('-$534.99'); //coupon discount
         $this->assertTextPresent('2.50'); //total
         $this->byId('btn_submit')->click();
 
@@ -173,7 +173,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->assertTextPresent('-$10.00'); //coupon discount
         $this->assertTextPresent('34.37'); //tax
         $this->assertTextPresent('2.50'); //shipping
-        $this->assertTextPresent('526.96*'); //total
+        $this->assertTextPresent('526.96'); //total
         $this->byId('btn_submit')->click();
     }
 

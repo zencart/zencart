@@ -16,9 +16,4 @@ class postInstallDatabaseChangesTest extends CommonTestResources
         $sql = "INSERT INTO currencies VALUES ('','Swedish Krona','SEK','SEK','',',','','2','1', now());";
         $this->doDbQuery($sql);
     }
-
-    public function testSetupCompoundTaxes()
-    {
-        $this->setupCompoundTaxes();
-    }
 }
