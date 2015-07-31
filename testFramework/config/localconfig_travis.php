@@ -1,6 +1,10 @@
 <?php
-if (isset($_SERVER['CI'])) define('CI', $_SERVER['CI']);
-if (isset($_SERVER['TRAVIS'])) define('TRAVIS', $_SERVER['TRAVIS']);
+/**
+ * @package tests
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: $
+ */
 
 define('SERVER_NAME', 'localhost');
 define('BASE_URL', 'localhost:4445');
@@ -40,13 +44,3 @@ define('WEBTEST_EMAIL_SMTPAUTH_MAIL_SERVER', '');
 define('WEBTEST_EMAIL_SMTPAUTH_PASSWORD', '');
 define('WEBTEST_EMAIL_SMTPAUTH_MAIL_SERVER_PORT', '');
 define('WEBTEST_EMAIL_LINEFEED', 'CRLF');
-
-$file_contents = file_get_contents(CWD . '/includes/dist-configure.php');
-chmod(CWD . '/admin/includes/configure.php', 0777);
-chmod(CWD . '/includes/configure.php', 0777);
-$fp = fopen(CWD . '/includes/configure.php', 'w');
-if ($fp)
-{
-  fputs($fp, $file_contents);
-  fclose($fp);
-}
