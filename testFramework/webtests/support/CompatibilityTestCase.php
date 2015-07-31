@@ -10,8 +10,7 @@ trait CompatibilityTestCase
     public function assertTextPresent($text, \PHPUnit_Extensions_Selenium2TestCase_Element $element = NULL)
     {
         $element = $element ?: $this->byCssSelector('body');
-        $el_text = str_replace("\n", " ", $element->text());
-        return strpos($el_text, $text) !== false;
+        $this->assertTrue(stripos($element->text(), $text) !== false, "$text not found");
     }
 
     public static function SpinAssertTest($msg, $test, $args=array(), $timeout=10)

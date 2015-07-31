@@ -45,7 +45,6 @@ class installerNoErrorsTest extends CommonTestResources
         $continue = $this->byId('btnsubmit');
         $continue->click();
 
-        $this->assertTextPresent('Admin Superuser Name');
         $this->byId('admin_user')->clear();
         $this->byId('admin_user')->value(WEBTEST_ADMIN_NAME_INSTALL);
         $this->byId('admin_email')->clear();

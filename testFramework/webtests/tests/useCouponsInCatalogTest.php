@@ -171,7 +171,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('-$10.00'); //coupon discount
-        $this->assertTextPresent('34.37'); //tax
+        $this->assertTextPresent('34.47'); //tax
         $this->assertTextPresent('2.50'); //shipping
         $this->assertTextPresent('526.96'); //total
         $this->byId('btn_submit')->click();
