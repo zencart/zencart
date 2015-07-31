@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id:  wilt  New in v1.6.0 $
  */
 namespace ZenCart\ListingBox\boxes;
 /**
@@ -41,7 +41,7 @@ class NewProductsPage extends AbstractListingBox
                 )
             ),
             'joinTables' => array(
-                'TABLE_PRODUCTs_DESCRIPTION' => array(
+                'TABLE_PRODUCTS_DESCRIPTION' => array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
                     'alias' => 'pd',
                     'type' => 'left',
