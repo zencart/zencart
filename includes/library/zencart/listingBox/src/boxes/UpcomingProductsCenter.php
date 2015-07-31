@@ -24,7 +24,7 @@ class UpcomingProductsCenter extends AbstractListingBox
         };
 
         $productHreflink = function ($parameters) {
-            $link = zen_href_link(zen_get_info_page($parameters['item'][$parameters['field']]), 'cpath=' . $parameters['item']['productCpath'] . '&products_id=' . $parameters['item']['products_id']);
+            $link = zen_href_link(zen_get_info_page($parameters['item']['products_id']), 'cpath=' . $parameters['item']['productCpath'] . '&products_id=' . $parameters['item']['products_id']);
             $link = '<a href="' . $link . '">' . $parameters['item']['products_name'] . '</a>';
             return $link;
         };
