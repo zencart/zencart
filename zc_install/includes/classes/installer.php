@@ -231,7 +231,7 @@
         $this->setError(ERROR_TEXT_CURL_NOT_COMPILED, ERROR_CODE_CURL_SUPPORT, false);
         return ERROR_TEXT_CURL_NOT_COMPILED;
       }
-      $url = ($mode == 'NONSSL') ? "http://www.zen-cart.com/testcurl.php" : "https://www.zen-cart.com/testcurl.php";
+      $url = ($mode == 'NONSSL') ? "http://s3.amazonaws.com/zencart-curltest/endpoint" : "https://s3.amazonaws.com/zencart-curltest/endpoint";
       $data = "installertest=checking";
       if ($proxy) return false;
 
@@ -239,8 +239,8 @@
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_VERBOSE, 0);
-      curl_setopt($ch, CURLOPT_POST, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+      // curl_setopt($ch, CURLOPT_POST, 1);
+      // curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_TIMEOUT, 11);
       if ($proxy) {

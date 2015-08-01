@@ -6,9 +6,9 @@
  *   r=1 -- show Response obtained from destination server -- this may contain an error message, but usually means communication was okay
  *
  * @package utilities
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte Wed Oct 22 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  */
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');
@@ -26,8 +26,11 @@ set_time_limit(500);
 $errorMessage = '<span style="color:red;font-weight:bold">Error </span>';
 $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
 
-echo 'Connecting to Zen Cart Support Server (http) ...<br>';
-doCurlTest('http://www.zen-cart.com/testcurl.php');
+echo 'Connecting to Zen Cart Version Server (http) ...<br>';
+doCurlTest('http://s3.amazonaws.com/zencart-curltest/endpoint');
+
+echo 'Connecting to Zen Cart Version Server (https) ...<br>';
+doCurlTest('https://s3.amazonaws.com/zencart-curltest/endpoint');
 
 echo 'Connecting to Zen Cart Support Server (https) ...<br>';
 doCurlTest('https://www.zen-cart.com/testcurl.php');
@@ -107,7 +110,7 @@ doCurlTest('https://secure.linkpt.net/LSGSXML:1129');
 die();
 //////// Processing logic ///////
 
-function doCurlTest($url = 'http://www.zen-cart.com/testcurl.php', $postdata = "field1=This is a test&statuskey=ready") {
+function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', $postdata = "field1=This is a test&statuskey=ready") {
   global $goodMessage, $errorMessage, $showDetails;
   $extraMessage = '';
   $showResult = FALSE;
@@ -175,7 +178,7 @@ function doCurlTest($url = 'http://www.zen-cart.com/testcurl.php', $postdata = "
 
 }
 
-function dofsockTest($url = 'www.zen-cart.com/testcurl.php', $port = 80, $timeout = 5) {
+function dofsockTest($url = 's3.amazonaws.com/zencart-curltest/endpoint', $port = 80, $timeout = 5) {
   global $goodMessage, $errorMessage, $showDetails;
   /* in case it's not set, set 10-second timeout for fsockopen */
   ini_set("default_socket_timeout", "10");
