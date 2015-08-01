@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package tests
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: $
+ */
+
 define('SERVER_NAME', 'localhost');
 define('BASE_URL', 'localhost');
 define('DB_HOST', 'localhost');
@@ -6,14 +13,11 @@ define('DB_USER', 'dbuser');
 define('DB_PASS', 'password');
 define('DB_DBNAME', 'zencart');
 define('DB_PREFIX', '');
-define('SELENIUM_BROWSER', '*chrome /Applications/Firefox3.app/Contents/MacOS/firefox-bin');
 define('DIR_FS_ROOT', '~/public_html/v15/');
 define('DIR_ADMIN', 'admin');
 define('DIR_WS_ADMIN', BASE_URL . DIR_ADMIN . '/');
 define('DIR_FS_ADMIN', DIR_FS_ROOT. DIR_ADMIN . '/');
 define('DIR_FS_CATALOG', DIR_FS_ROOT);
-define('DO_SCREENSHOT', FALSE);
-define('SCREENSHOT_PATH', '/');
 
 define('WEBTEST_STORE_NAME', 'Selenium Test Store on ' . BASE_URL);
 define('WEBTEST_STORE_OWNER', 'Selenium Test ' . BASE_URL);
@@ -38,13 +42,3 @@ define('WEBTEST_EMAIL_SMTPAUTH_MAIL_SERVER', '');
 define('WEBTEST_EMAIL_SMTPAUTH_PASSWORD', '');
 define('WEBTEST_EMAIL_SMTPAUTH_MAIL_SERVER_PORT', '');
 define('WEBTEST_EMAIL_LINEFEED', 'CRLF');
-
-$file_contents = file_get_contents(realpath(__DIR__ . '/../../../') .'/includes/dist-configure.php');
-chmod(realpath(__DIR__ . '/../../../') . '/admin/includes/configure.php', 0777);
-chmod(realpath(__DIR__ . '/../../../') . '/includes/configure.php', 0777);
-$fp = fopen(realpath(__DIR__ . '/../../../') . '/includes/configure.php', 'w');
-if ($fp)
-{
-  fputs($fp, $file_contents);
-  fclose($fp);
-}

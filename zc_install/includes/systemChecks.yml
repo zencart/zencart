@@ -67,7 +67,7 @@ systemChecks:
     runLevel: always
     errorLevel: FAIL
     criticalError: true
-    mainErrorText: <?php echo TEXT_ERROR_MYSQL_SUPPPORT .PHP_EOL; ?>
+    mainErrorText: <?php echo TEXT_ERROR_MYSQL_SUPPORT .PHP_EOL; ?>
     methods:
       checkExtension:
         parameters:
@@ -129,14 +129,14 @@ systemChecks:
   htaccessSupport:
     runLevel: always
     errorLevel: WARN
-    mainErrorText:  <?php echo TEXT_ERROR_HTACCESS_SUPPPORT .PHP_EOL; ?>
+    mainErrorText:  <?php echo TEXT_ERROR_HTACCESS_SUPPORT .PHP_EOL; ?>
     mainErrorTextHelpId: helpIdHtaccessSupport
     methods:
       checkHtaccessSupport:
   initialSessionCheck:
     runLevel: always
     errorLevel: FAIL
-    mainErrorText: <?php echo TEXT_ERROR_SESSION_SUPPPORT .PHP_EOL; ?>
+    mainErrorText: <?php echo TEXT_ERROR_SESSION_SUPPORT .PHP_EOL; ?>
     methods:
       checkInitialSession:
         parameters:
@@ -146,13 +146,13 @@ systemChecks:
         parameters:
           inigetName: session.use_trans_sid
           expectedValue: FALSE
-        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPPORT_USE_TRANS_SID . PHP_EOL; ?>
+        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID . PHP_EOL; ?>
       checkIniGet2:
         method: checkIniGet
         parameters:
           inigetName: session.auto_start
           expectedValue: FALSE
-        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPPORT_AUTO_START . PHP_EOL; ?>
+        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPORT_AUTO_START . PHP_EOL; ?>
   newDatabaseCheck:
     runLevel: database
     errorLevel: FAIL

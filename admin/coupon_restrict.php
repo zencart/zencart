@@ -238,7 +238,7 @@ require('includes/admin_html_head.php');
                     <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME; ?></td>
                     <td class="smallText" align="left"></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $current_category_id); ?></td>
-                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, $current_category_id); ?></td>
+                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, $current_category_id, 'id="restrict_status_category"'); ?></td>
                     <td class="smallText" align="left"><input type="submit" name="add" value="<?php echo TEXT_SUBMIT_CATEGORY_ADD;?>"></td>
                     <td class="smallText" align="left">&nbsp;</td>
                     <td class="smallText" align="left">&nbsp;</td>
@@ -400,7 +400,7 @@ require('includes/admin_html_head.php');
                     <form name="restrict_category" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_product&info=' . $cInfo->restrict_id . '&build_cat=' . $current_category_id . '&build_man=' . $current_manufacturers_id, 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                     <td class="smallText" valign="top"><?php echo HEADER_PRODUCT_NAME; ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('products_drop', $products_array, $current_category_id); ?></td>
-                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array); ?></td>
+                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, '', 'id="restrict_status_product"'); ?></td>
                     <td class="smallText" align="left"><input type="submit" name="add" value="<?php echo TEXT_SUBMIT_PRODUCT_UPDATE; ?>"></td>
                     <td class="smallText" align="left">&nbsp;</td>
                     <td class="smallText" align="left">&nbsp;</td>
