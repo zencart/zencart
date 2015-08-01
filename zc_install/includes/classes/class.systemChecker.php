@@ -2,9 +2,9 @@
 /**
  * file contains systemChecker Class
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: $
+ * @version GIT: $Id: wilt  New in v1.6.0 $
  *
  */
 /**
@@ -440,10 +440,11 @@ class systemChecker
       $url = (!preg_match('~^http?s:.*~i', $parameters['testUrl'])) ? 'http://' . $parameters['testUrl'] : $parameters['testUrl'];
       $data = $parameters['testData'];
       $ch = curl_init();
+// error_log('CURL Test URL: ' . $url);
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_VERBOSE, 0);
-      curl_setopt($ch, CURLOPT_POST, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+//       curl_setopt($ch, CURLOPT_POST, 1);
+//       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_TIMEOUT, 11);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
@@ -452,6 +453,8 @@ class systemChecker
       $errtext = curl_error($ch);
       $errnum = curl_errno($ch);
       $commInfo = @curl_getinfo($ch);
+// error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" . print_r($commInfo, TRUE));
+// error_log('CURL Response: ' . $result);
       curl_close ($ch);
        if ($errnum != 0 || trim($result) != 'PASS')
       {
