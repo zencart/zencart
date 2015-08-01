@@ -611,19 +611,20 @@ class shoppingCart extends base {
   }
   /**
    * Method return a comma separated list of all products in the cart
+   * NOTE: Not used in core ZC, but some plugins make use of it as a helper function
    *
    * @return string
-   * @todo ICW - is this actually used anywhere?
    */
   function get_product_id_list() {
-    $product_id_list = '';
+    $product_id_list = array();
     if (is_array($this->contents)) {
       reset($this->contents);
       while (list($products_id, ) = each($this->contents)) {
-        $product_id_list .= ', ' . zen_db_input($products_id);
+        $product_id_list[] = $products_id;
       }
+      return implode(',', $product_id_list);
     }
-    return substr($product_id_list, 2);
+    return '';
   }
   /**
    * Method to calculate cart totals(price and weight)
