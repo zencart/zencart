@@ -377,3 +377,8 @@ UPDATE project_version SET project_version_major='1', project_version_minor='6.0
 
 #####  END OF UPGRADE SCRIPT
 
+## BOF Add Admin Page for modules/plugins
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+       ('plugins', 'BOX_MODULES_PLUGINS', 'FILENAME_MODULES', 'set=plugins', 'modules', 'Y', 4);
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Installed Modules', 'MODULE_PLUGIN_INSTALLED', '', 'List of plugin filenames separated by a semi-colon. This is automatically updated. No need to edit.', '6', '0', now());
+## EOF Add Admin Page for modules/plugins

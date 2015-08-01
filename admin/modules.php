@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:  Modified in v1.6.0 $
+ * @version $Id: modules.php bislewl  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -41,6 +41,12 @@
         $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
         $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
+        break;
+      case 'plugins':
+        $module_type = 'plugins';
+        $module_directory = DIR_FS_CATALOG_MODULES . 'plugins/';
+        $module_key = 'MODULE_PLUGIN_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_PLUGINS);
         break;
       case 'payment':
       default:
@@ -251,8 +257,6 @@ require('includes/admin_html_head.php');
         } else {
           echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'">' . "\n";
         }
-//print_r($module) . '<br><BR>';
-//echo (!empty($module->enabled) ? 'ENABLED' : 'NOT ENABLED') . ' vs ' . (is_numeric($module->sort_order) ? 'ON' : 'OFF') . '<BR><BR>' ;
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo (strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>

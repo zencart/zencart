@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.6.0 $
+ * @version $Id: english.php bislewl  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -97,6 +97,7 @@ define('BOX_HEADING_MODULES', 'Modules');
 define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
+define('BOX_MODULES_PLUGINS', 'Plugins');
 define('BOX_MODULES_PRODUCT_TYPES', 'Product Types');
 
 // categories box text
