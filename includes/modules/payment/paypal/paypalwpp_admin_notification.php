@@ -3,11 +3,11 @@
  * paypalwpp_admin_notification.php admin display component
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypalwpp_admin_notification.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: paypalwpp_admin_notification.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.6.0 $
  */
 
   $outputStartBlock = '';
@@ -395,7 +395,7 @@
 //debug
 //$output .= '<pre>' . print_r($response, true) . '</pre>';
 
-  if (isset($response['RESPMSG']) || defined('MODULE_PAYMENT_PAYFLOW_STATUS')) { // payflow
+  if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/) { // payflow
     $output .= $outputPFmain;
     if (method_exists($this, '_doVoid') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on'))) $output .= $outputVoid;
     if (method_exists($this, '_doCapt') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on'))) $output .= $outputCapt;
