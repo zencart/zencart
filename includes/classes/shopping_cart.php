@@ -611,7 +611,7 @@ class shoppingCart extends base {
   }
   /**
    * Method return a comma separated list of all products in the cart
-   * NOTE: Not used in core ZC, but some plugins make use of it as a helper function
+   * NOTE: Not used in core ZC, but some plugins and shipping modules make use of it as a helper function
    *
    * @return string
    */
