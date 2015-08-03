@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: record_artists.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version $Id: record_artists.php drbyte  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -214,15 +214,7 @@ require('includes/admin_html_head.php');
       $contents[] = array('text' => TEXT_NEW_INTRO);
       $contents[] = array('text' => '<br>' . TEXT_RECORD_ARTIST_NAME . '<br>' . zen_draw_input_field('artists_name', '', zen_set_field_length(TABLE_RECORD_ARTISTS, 'artists_name')));
       $contents[] = array('text' => '<br>' . TEXT_RECORD_ARTIST_IMAGE . '<br>' . zen_draw_file_field('artists_image'));
-      $dir = @dir(DIR_FS_CATALOG_IMAGES);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
-
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
       $default_directory = 'artists/';
 
       $contents[] = array('text' => '<BR />' . TEXT_ARTISTS_IMAGE_DIR . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
@@ -244,14 +236,7 @@ require('includes/admin_html_head.php');
       $contents[] = array('text' => TEXT_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_RECORD_ARTIST_NAME . '<br>' . zen_draw_input_field('artists_name', htmlspecialchars($aInfo->artists_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_RECORD_ARTISTS, 'artists_name')));
       $contents[] = array('text' => '<br />' . TEXT_RECORD_ARTIST_IMAGE . '<br>' . zen_draw_file_field('artists_image') . '<br />' . $aInfo->artists_image);
-      $dir = @dir(DIR_FS_CATALOG_IMAGES);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
       $default_directory = substr( $aInfo->artists_image, 0,strpos( $aInfo->artists_image, '/')+1);
       $contents[] = array('text' => '<BR />' . TEXT_ARTISTS_IMAGE_DIR . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
       $contents[] = array('text' => '<br />' . TEXT_ARTISTS_IMAGE_MANUAL . '&nbsp;' . zen_draw_input_field('artists_image_manual'));

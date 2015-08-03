@@ -13,6 +13,5 @@ define('TEXT_ENTRY_RECORD_COMPANY_NAME', 'Record Company Name');
 define('TEXT_ENTRY_RECORD_COMPANY_IMAGE', 'Record Company Image');
 define('TEXT_ENTRY_RECORD_COMPANY_URL', 'Record Company Web Site');
 define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
-define('TEXT_SELECT_MAIN_DIRECTORY', 'Main Image Directory');
 define('TEXT_LEAD_ACTION_LIST', 'List Record Companies');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Record Company');

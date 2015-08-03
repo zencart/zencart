@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: collect_info.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version $Id: collect_info.php drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -457,17 +457,8 @@ updateGross();
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
 <?php
-  $dir = @dir(DIR_FS_CATALOG_IMAGES);
-  $dir_info[] = array('id' => '', 'text' => "Main Directory");
-  while ($file = $dir->read()) {
-    if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $dir_info[] = array('id' => $file . '/', 'text' => $file);
-    }
-  }
-  $dir->close();
-  sort($dir_info);
-
-  $default_directory = substr( $pInfo->products_image, 0,strpos( $pInfo->products_image, '/')+1);
+  $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
+  $default_directory = substr($pInfo->products_image, 0, strpos($pInfo->products_image, '/') + 1);
 ?>
 
           <tr>
