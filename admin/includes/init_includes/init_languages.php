@@ -31,7 +31,7 @@ $template_query = $db->Execute("select template_dir from " . TABLE_TEMPLATE_SELE
 $template_dir = $template_query->fields ['template_dir'];
 
 // include the language translations
-zen_pull_language_file('locale.php'); 
+zen_load_language_file('locale.php'); 
 $ajax = FALSE;
 require (DIR_WS_LANGUAGES . $_SESSION ['language'] . '.php');
 if (! empty($_SERVER ['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER ['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
@@ -48,15 +48,15 @@ if (! empty($_SERVER ['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER ['HTTP_X_
 }
 
 if ($ajax == TRUE) {
-  zen_pull_language_file(FILENAME_DEFAULT . '.php'); 
+  zen_load_language_file(FILENAME_DEFAULT . '.php'); 
 }
 if ($current_page != '') { 
-  zen_pull_language_file($current_page);
+  zen_load_language_file($current_page);
 }
 
 // include additional files:
-zen_pull_language_file(FILENAME_EMAIL_EXTRAS);
-zen_pull_language_file('widgets_default.php');
+zen_load_language_file(FILENAME_EMAIL_EXTRAS);
+zen_load_language_file('widgets_default.php');
 include (zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION ['language'] . '/', FILENAME_OTHER_IMAGES_NAMES, 'false'));
 
 if ($za_dir = @dir(DIR_WS_LANGUAGES . $_SESSION ['language'] . '/extra_definitions')) {
