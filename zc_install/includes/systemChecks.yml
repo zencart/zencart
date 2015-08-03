@@ -212,7 +212,7 @@ systemChecks:
         localErrorText: <?php echo sprintf(TEXT_ERROR_FUNCTION_DOES_NOT_EXIST, 'curl_init') . PHP_EOL; ?>
       checkLiveCurl:
         parameters:
-          testUrl: "www.zen-cart.com/testcurl.php"
+          testUrl: "https://s3.amazonaws.com/zencart-curltest/endpoint"
           testData: "installertest=checking"
         localErrorText: <?php echo TEXT_ERROR_CURL_LIVE_TEST . PHP_EOL; ?>
   checkXML:

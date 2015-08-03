@@ -373,6 +373,9 @@ define('ICON_TICK', 'True');
 //define('ICON_UNLOCKED', 'Unlocked');
 define('ICON_WARNING', 'Warning');
 
+define('BUTTON_TEXT_RESET_TO_DEFAULT', 'Reset all to Defaults');
+define('BUTTON_TEXT_MAKE_DEFAULT', 'Make Default');
+
 // constants for use in zen_prev_next_display function
 define('TEXT_RESULT_PAGE', 'Page %s of %d');
 define('TEXT_DISPLAY_NUMBER_OF_ADMINS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> admins)');
