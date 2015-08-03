@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.6.0 $
+ * @version $Id: drbyte  Modified in v1.6.0 $
  */
   require('includes/application_top.php');
 
@@ -1350,17 +1350,7 @@ if ($action == '') {
 <?php
 // edit
 // attributes images
-  $dir = @dir(DIR_FS_CATALOG_IMAGES);
-  $dir_info[] = array('id' => '', 'text' => "Main Directory");
-  while ($file = $dir->read()) {
-    if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $dir_info[] = array('id' => $file . '/', 'text' => $file);
-    }
-  }
-  $dir->close();
-
-  sort($dir_info);
-
+  $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
   if ($attributes_values->fields['attributes_image'] != '') {
     $default_directory = substr( $attributes_values->fields['attributes_image'], 0,strpos( $attributes_values->fields['attributes_image'], '/')+1);
   } else {
@@ -1832,16 +1822,7 @@ $off_overwrite = false;
 <?php
 // add
 // attributes images
-  $dir = @dir(DIR_FS_CATALOG_IMAGES);
-  $dir_info[] = array('id' => '', 'text' => "Main Directory");
-  while ($file = $dir->read()) {
-    if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $dir_info[] = array('id' => $file . '/', 'text' => $file);
-    }
-  }
-  $dir->close();
-  sort($dir_info);
-
+  $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
   $default_directory = 'attributes/';
 ?>
 

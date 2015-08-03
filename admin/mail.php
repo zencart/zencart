@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson   Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -332,14 +332,7 @@ function check_form(form_name) {
             </tr>
 <?php if (defined('EMAIL_ATTACHMENT_UPLOADS_ENABLED') && EMAIL_ATTACHMENT_UPLOADS_ENABLED === true) { ?>
 <?php
-  $dir = @dir(DIR_WS_ADMIN_ATTACHMENTS);
-  $dir_info[] = array('id' => '', 'text' => "admin-attachments");
-  while ($file = $dir->read()) {
-    if (is_dir(DIR_WS_ADMIN_ATTACHMENTS . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $dir_info[] = array('id' => $file . '/', 'text' => $file);
-    }
-  }
-  $dir->close();
+  $dir_info = zen_build_subdirectories_array(DIR_WS_ADMIN_ATTACHMENTS, 'admin-attachments');
 ?>
             <tr>
               <td class="main" valign="top"><?php echo TEXT_SELECT_ATTACHMENT_TO_UPLOAD; ?></td>
@@ -351,14 +344,7 @@ function check_form(form_name) {
             </tr>
 <?php  } // end uploads-enabled dialog ?>
 <?php
-  $dir = @dir(DIR_WS_ADMIN_ATTACHMENTS);
-  $file_list[] = array('id' => '', 'text' => "(none)");
-  while ($file = $dir->read()) {
-    if (is_file(DIR_WS_ADMIN_ATTACHMENTS . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $file_list[] = array('id' => $file , 'text' => $file);
-    }
-  }
-  $dir->close();
+  $dir_info = zen_build_subdirectories_array(DIR_WS_ADMIN_ATTACHMENTS, '(none)');
 ?>
             <tr>
               <td class="main" valign="top"><?php echo TEXT_SELECT_ATTACHMENT; ?></td>
