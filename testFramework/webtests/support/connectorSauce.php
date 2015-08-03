@@ -20,6 +20,7 @@ class baseSeleniumTestClass extends Sauce\Sausage\WebDriverTestCase
             )
         ),
     );
+
     public function setUpPage()
     {
         $this->timeouts()->implicitWait(15000);

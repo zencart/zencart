@@ -16,5 +16,5 @@ if (defined('CONNECTOR_TYPE')) {
 }
 $connectorFile = 'testFramework/webtests/support/connector' . ucfirst($connectorType) . '.php';
 if (file_exists($connectorFile)) {
-  require_once($connectorFile);
+    require_once($connectorFile);
 }

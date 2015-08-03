@@ -18,6 +18,7 @@ class baseSeleniumTestClass extends PHPUnit_Extensions_Selenium2TestCase
         $this->setBrowser('firefox');
         $this->setBrowserUrl('/');
     }
+
     public function setUpPage()
     {
         $this->timeouts()->implicitWait(15000);
