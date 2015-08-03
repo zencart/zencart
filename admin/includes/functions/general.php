@@ -3721,15 +3721,20 @@ function get_logs_data($maxToList = 'count') {
  * @return mixed
  */
 function issetorArray(array $array, $key, $default = null) {
-    return isset($array[$key]) ? $array[$key] : $default;
+  return isset($array[$key]) ? $array[$key] : $default;
 }
 
-function zen_pull_language_file($file) { 
-    if (file_exists(DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file)) {
-        include (DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file);
-    } else { 
-        if (file_exists(DIR_WS_LANGUAGES . 'english' . '/' . $file)) { 
-           include (DIR_WS_LANGUAGES . 'english' . '/' . $file);
-        }
-    }
+/**
+ * Lookup session-specific language file, and load
+ *
+ * @param string $file filename of language file
+ */
+function zen_load_language_file($file) {
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file)) {
+    include (DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file);
+    return;
+  }
+  if (file_exists(DIR_WS_LANGUAGES . 'english' . '/' . $file)) {
+   include (DIR_WS_LANGUAGES . 'english' . '/' . $file);
+  }
 }
