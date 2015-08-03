@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: layout_controller.php 2014-07-28 drbyte $
+ * @version $Id: layout_controller.php drbyte  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -352,14 +352,14 @@ if ($warning_new_box) {
     <td align="center"><table width="500">
       <tr>
         <td class="alignTop">
-          <?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $bInfo->layout_id . '&action=reset_defaults') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>'; ?>
+          <?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $bInfo->layout_id . '&action=reset_defaults') . '">' . '<button class="radius button">' . BUTTON_TEXT_RESET_TO_DEFAULT . '</button>' . '</a>'; ?>
           <br>
           <?php echo TEXT_INFO_RESET_TEMPLATE_SORT_ORDER; ?>
           <br>
           <?php echo TEXT_INFO_RESET_TEMPLATE_SORT_ORDER_NOTE; ?>
         </td>
         <td style="padding-left: 20px" class="alignTop">
-          <?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $bInfo->layout_id . '&action=save_defaults') . '">' . zen_image_button('button_make_default.gif', IMAGE_SAVE) . '</a>'; ?>
+          <?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $bInfo->layout_id . '&action=save_defaults') . '">' . '<button class="radius button">' . BUTTON_TEXT_MAKE_DEFAULT . '</button>' . '</a>'; ?>
           <br>
           <?php echo TEXT_INFO_SET_AS_DEFAULT . sprintf(TEXT_INFO_THE_ABOVE_SETTINGS_ARE_FOR, $template_dir); ?>
         </td>
