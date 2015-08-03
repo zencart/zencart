@@ -24,23 +24,11 @@
 // add directory name to the sub_dir_files list;
     $sub_dir_files[] = $dirName;
     $d = @dir($dirName);
-    $file_extension = '.php';
     if ($d) {
       while($entry = $d->read()) {
         if ($entry != "." && $entry != "..") {
           if (is_dir($dirName."/".$entry)) {
-            if ($entry == 'CVS') {
-            // skip
-            } else {
-              getDirList($dirName."/".$entry);
-            }
-          } else {
-            if (preg_match('/\\' . $file_extension . '$/', $entry) > 0) {
-//echo 'I AM HERE 2 ' . $dirName."/".$entry . '<br>';
-//            $directory_array[] .= $dirName."/".$entry;
-            } else {
-//echo 'I AM HERE 3 ' . $dirName."/".$entry . '<br>';
-            }
+            getDirList($dirName."/".$entry);
           }
         }
       }

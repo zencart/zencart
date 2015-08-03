@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: template_select.php 19294 2011-07-28 18:15:46Z drbyte $
+ * @version $Id: template_select.php drbyte  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -12,14 +12,17 @@
   $dir = @dir(DIR_FS_CATALOG_TEMPLATES);
   if (!$dir) die('DIR_FS_CATALOG_TEMPLATES NOT SET');
   while ($file = $dir->read()) {
-    if (is_dir(DIR_FS_CATALOG_TEMPLATES . $file) && strtoupper($file) != 'CVS' && $file != 'template_default') {
+    if (is_dir(DIR_FS_CATALOG_TEMPLATES . $file) && $file != 'template_default') {
       if (file_exists(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php')) {
         require(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php');
         $template_info[$file] = array('name' => $template_name,
                                       'version' => $template_version,
                                       'author' => $template_author,
                                       'description' => $template_description,
-                                      'screenshot' => $template_screenshot);
+                                      'screenshot' => $template_screenshot,
+                                      'zencart_version' => $designed_for_zencart_version,
+                                      'framework' => $template_framework,
+        );
       }
     }
   }

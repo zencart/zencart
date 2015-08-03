@@ -291,6 +291,9 @@ class Builder extends \base
     }
 
     /**
+     * Build a list of subdirectories found in the specified $baseDirectory
+     * Returns formatted array in 'id/text' pairs for use in SELECT pulldowns
+     *
      * @param string $baseDirectory
      * @return array
      */
@@ -304,7 +307,7 @@ class Builder extends \base
         );
         $dir = @dir($baseDirectory);
         while ($file = $dir->read()) {
-            if (is_dir($baseDirectory . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
+            if (is_dir($baseDirectory . $file) && $file != "." && $file != "..") {
                 $selectList [] = array(
                     'id' => $file . '/',
                     'text' => $file
@@ -313,6 +316,7 @@ class Builder extends \base
         }
         $dir->close();
         unset($dir);
+        sort($selectList);
         $this->notify('NOTIFY_LEADBUILDER_BUILDIMAGEDIRECTORYSELECTOR_END', array(), $selectList);
         return $selectList;
     }

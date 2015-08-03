@@ -162,12 +162,11 @@ require('includes/admin_html_head.php');
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $directory_array = array();
   if ($dir = @dir($module_directory)) {
     while ($file = $dir->read()) {
       if (!is_dir($module_directory . $file)) {
-        if (substr($file, strrpos($file, '.')) == $file_extension) {
+        if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
           $directory_array[] = $file;
         }
       }

@@ -55,6 +55,9 @@
     <!--[if lt IE 9]>
     <meta http-equiv="imagetoolbar" content="no">
     <![endif]-->
+    <!--[if lt IE 12]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <![endif]-->
 <?php
   // FAVICON markup called from template:
   require($template->get_template_dir('tpl_favicon.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_favicon.php');

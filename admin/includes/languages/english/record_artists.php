@@ -13,6 +13,5 @@ define('TEXT_ENTRY_RECORD_ARTIST_NAME', 'Artists Name');
 define('TEXT_ENTRY_RECORD_ARTIST_IMAGE', 'Artists Image');
 define('TEXT_ENTRY_RECORD_ARTIST_URL', 'Artists Web Site');
 define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
-define('TEXT_SELECT_MAIN_DIRECTORY', 'Main Image Directory');
 define('TEXT_LEAD_ACTION_LIST', 'List Record Artists');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Record Artist');

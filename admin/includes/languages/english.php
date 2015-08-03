@@ -224,6 +224,7 @@ define('JS_COUNTRY', '* The \'Country\' value must be chosen.\n');
 define('JS_TELEPHONE', '* The \'Telephone Number\' entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
 
 define('JS_ORDER_DOES_NOT_EXIST', 'Order Number %s does not exist!');
+define('TEXT_NO_ORDER_HISTORY', 'No Order History Available');
 
 define('CATEGORY_PERSONAL', 'Personal');
 define('CATEGORY_ADDRESS', 'Address');
@@ -372,6 +373,9 @@ define('ICON_SUCCESS', 'Success');
 define('ICON_TICK', 'True');
 //define('ICON_UNLOCKED', 'Unlocked');
 define('ICON_WARNING', 'Warning');
+
+define('BUTTON_TEXT_RESET_TO_DEFAULT', 'Reset all to Defaults');
+define('BUTTON_TEXT_MAKE_DEFAULT', 'Make Default');
 
 // constants for use in zen_prev_next_display function
 define('TEXT_RESULT_PAGE', 'Page %s of %d');
@@ -607,6 +611,7 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
   define('EDITOR_NONE', 'Plain Text');
   define('TEXT_EDITOR_INFO', 'Text Editor');
   define('ERROR_EDITORS_FOLDER_NOT_FOUND', 'You have an HTML editor selected in \'My Store\' but the \'/editors/\' folder cannot be located. Please disable your selection or move your editor files into the \''.DIR_WS_CATALOG.'editors/\' folder');
+
   define('TEXT_CATEGORIES_PRODUCTS_SORT_ORDER_INFO', 'Categories/Product Display Order: ');
   define('TEXT_SORT_PRODUCTS_SORT_ORDER_PRODUCTS_NAME', 'Products Sort Order, Products Name');
   define('TEXT_SORT_PRODUCTS_NAME', 'Products Name');
@@ -618,7 +623,7 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
   define('TEXT_SORT_CATEGORIES_SORT_ORDER_PRODUCTS_NAME', 'Categories Sort Order, Categories Name');
   define('TEXT_SORT_CATEGORIES_NAME', 'Categories Name');
 
-
+  define('TEXT_SELECT_MAIN_DIRECTORY', 'Main Image Directory');
 
   define('TABLE_HEADING_YES','Yes');
   define('TABLE_HEADING_NO','No');
