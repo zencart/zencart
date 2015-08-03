@@ -70,7 +70,6 @@ define('TEXT_PAID', 'Paid');
 define('TEXT_UNPAID', 'Un-paid');
 
 define('TEXT_ALL_ORDERS', 'All Orders');
-define('TEXT_NO_ORDER_HISTORY', 'No Order History Available');
 
 define('EMAIL_SEPARATOR', '------------------------------------------------------');
 define('EMAIL_TEXT_SUBJECT', 'Order Update');

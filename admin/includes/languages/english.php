@@ -224,6 +224,7 @@ define('JS_COUNTRY', '* The \'Country\' value must be chosen.\n');
 define('JS_TELEPHONE', '* The \'Telephone Number\' entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
 
 define('JS_ORDER_DOES_NOT_EXIST', 'Order Number %s does not exist!');
+define('TEXT_NO_ORDER_HISTORY', 'No Order History Available');
 
 define('CATEGORY_PERSONAL', 'Personal');
 define('CATEGORY_ADDRESS', 'Address');
