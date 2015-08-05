@@ -1002,6 +1002,9 @@ function init()
 <?php
 // Split Page
 if ($products_query_numrows > 0) {
+  if (!(isset ($pInfo) && is_object ($pInfo))) {
+    $pInfo = new objectInfo (array ());
+  }
   if (empty($pInfo->products_id)) {
     $pInfo->products_id= $pID;
   }
