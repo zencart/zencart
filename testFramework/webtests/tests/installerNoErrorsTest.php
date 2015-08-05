@@ -8,10 +8,15 @@
 
 /**
  * Class installerNoErrorsTest
+ *
+ * This must be the first webtest that is run
  */
 class installerNoErrorsTest extends CommonTestResources
 {
 
+    /**
+     * runs the installer then the admin setup wizard
+     */
     public function testInstallDo()
     {
         $this->url('https://' . BASE_URL);
@@ -44,7 +49,7 @@ class installerNoErrorsTest extends CommonTestResources
 
         $continue = $this->byId('btnsubmit');
         $continue->click();
-
+        sleep(1);
         $this->byId('admin_user')->clear();
         $this->byId('admin_user')->value(WEBTEST_ADMIN_NAME_INSTALL);
         $this->byId('admin_email')->clear();
@@ -65,7 +70,6 @@ class installerNoErrorsTest extends CommonTestResources
         $continue = $this->byId('btn_submit');
         $continue->click();
 
-
         $this->byId('store_name')->value(WEBTEST_STORE_NAME);
         $this->byId('store_owner')->value(WEBTEST_STORE_OWNER);
         $this->byId('store_owner_email')->value(WEBTEST_STORE_OWNER_EMAIL);
@@ -73,5 +77,24 @@ class installerNoErrorsTest extends CommonTestResources
         $continue->click();
 
         $this->assertTextPresent('Add Widget');
+    }
+
+    /**]
+     * create swedish kroner currency. (used to test , as currency separator)
+     */
+    public function testAddSwedishKroner()
+    {
+        $sql = "INSERT INTO currencies VALUES ('','Swedish Krona','SEK','SEK','',',','','2','1', now());";
+        $this->doDbQuery($sql);
+    }
+
+    /**
+     * enable COD payment module/
+     */
+    public function testEnableCODPayment()
+    {
+        $this->loginStandardAdmin(WEBTEST_ADMIN_NAME_INSTALL, WEBTEST_ADMIN_PASSWORD_INSTALL);
+        $this->url('https://' . DIR_WS_ADMIN . '?cmd=modules&set=payment&module=cod');
+        $this->byName('installButton')->click();
     }
 }
