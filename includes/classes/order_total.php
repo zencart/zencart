@@ -170,22 +170,22 @@ class order_total extends base {
   // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
   // total, we don't want to go to paypal etc.
   //
-  function pre_confirmation_check($returnOrderTotalOnly = FALSE) {
+  function pre_confirmation_check($returnOrderTotalOnly = false) {
     global $order, $credit_covers;
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
       $orderInfoSaved = $order->info;
       while (list(, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-          $GLOBALS[$class]->process();
-          $GLOBALS[$class]->output = array();
+        $GLOBALS[$class]->process();
+        $GLOBALS[$class]->output = array();
       }
-      $calculatedOrderTotal = $order->info['total'];
-      if ( $order->info['total'] <= 0.009 && $_SESSION['payment'] != 'freecharger') {
+      $reCalculatedOrderTotal = $order->info['total'];
+      if ($reCalculatedOrderTotal <= 0.009 && $_SESSION['payment'] != 'freecharger') {
         $credit_covers = true;
       }
-        $order->info = $orderInfoSaved;
-      if ($returnOrderTotalOnly == TRUE) return $calculatedOrderTotal;
+      $order->info = $orderInfoSaved;
+      if ($returnOrderTotalOnly === true) return $reCalculatedOrderTotal;
     }
   }
   // this function is called in checkout process. it tests whether a decision was made at checkout payment to use
