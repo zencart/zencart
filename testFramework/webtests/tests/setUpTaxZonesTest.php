@@ -1,5 +1,6 @@
 <?php
 /**
+ * set up some tax zones
  * @package tests
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -11,6 +12,9 @@
  */
 class setUpTaxZonesTest extends CommonTestResources
 {
+    /**
+     *
+     */
     public function testSetupVAT()
     {
         $this->url('https://' . DIR_WS_ADMIN);
@@ -96,6 +100,10 @@ class setUpTaxZonesTest extends CommonTestResources
         $continue = $this->byId('btnsubmit');
         $continue->click();
     }
+
+    /**
+     *
+     */
     public function testSetupCaliforniaTax()
     {
         $this->url('https://' . DIR_WS_ADMIN);
@@ -160,6 +168,10 @@ class setUpTaxZonesTest extends CommonTestResources
         $continue = $this->byId('btnsubmit');
         $continue->click();
     }
+
+    /**
+     *
+     */
     public function testSetupPostageTax()
     {
         $this->url('https://' . DIR_WS_ADMIN);
@@ -170,11 +182,10 @@ class setUpTaxZonesTest extends CommonTestResources
         $continue->click();
         $this->assertTextPresent('Add Widget');
         $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=tax_classes&action=add');
-        $this->byId("entry_field_tax_class_title")->value( "Taxable Postage");
+        $this->byId("entry_field_tax_class_title")->value("Taxable Postage");
         $this->byId("entry_field_tax_class_description")->value("Taxable Postage");
         $continue = $this->byId('btnsubmit');
         $continue->click();
-
 
         $addTaxRates = $this->byLinkText('Tax Rates');
         $addTaxRates->click();

@@ -471,6 +471,20 @@ class systemChecker
   public function checkHttpsRequest($parameters)
   {
     global $request_type;
+
+    // Take full URI and ping https version of same to see if expected response comes back. If so, redirect install to https.
+    // In case multiple-redirects happen on oddly-configured hosts, this can be bypassed by adding ?noredirect=1 to the URL
+    if ($request_type != 'SSL' && function_exists('curl_init') && !isset($_GET['noredirect']))
+    {
+      $test_uri = 'https://' . str_replace(array('http://', 'https://'), '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+      $resultCurl = self::curlGetUrl($test_uri);
+      //error_log(print_r($resultCurl, true) . print_r($_SERVER, true));
+      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '200') {
+        header('Location: ' . $test_uri);
+        exit();
+      }
+    }
+    // otherwise, return the https status so the inspector can report it along with suggestions
     return ($request_type == 'SSL') ? TRUE : FALSE;
   }
   public function addRunlevel($runLevel)

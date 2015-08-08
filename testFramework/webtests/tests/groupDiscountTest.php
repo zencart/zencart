@@ -1,33 +1,28 @@
 <?php
 /**
  * @package tests
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
 
 /**
- *
- * @package tests
+ * Class groupDiscountTest
  */
 class groupDiscountTest extends CommonTestResources
 {
-    function testGroupDiscountsAdmin()
-    {
-        $this->loginStandardAdmin(WEBTEST_ADMIN_NAME_INSTALL, WEBTEST_ADMIN_PASSWORD_INSTALL);
-        $this->url('https://' . DIR_WS_ADMIN . 'customers.php?page=1&cID=2&action=edit');
-        $this->select($this->byName('customers_group_pricing'))->selectOptionByValue(1);
-        $this->byXpath("//input[@type='image']")->click();
-    }
-
     function testGroupDiscountsDo()
     {
+        $this->setCustomerGroupDiscount(WEBTEST_DEFAULT_CUSTOMER_EMAIL, 1);
+
         $this->switchToTaxNonInclusive();
+        $this->createCoupon('test10percent');
         $this->loginStandardCustomer(WEBTEST_DEFAULT_CUSTOMER_EMAIL, WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-storepickup-storepickup0')->click();
         $this->byCss('input[type="image"]')->click();
+        $this->byId('pmt-cod')->click();
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('-$4.00');//group discount
@@ -40,6 +35,7 @@ class groupDiscountTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-storepickup-storepickup0')->click();
         $this->byCss('input[type="image"]')->click();
+        $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('39.99');//net price
@@ -55,6 +51,7 @@ class groupDiscountTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-storepickup-storepickup0')->click();
         $this->byCss('input[type="image"]')->click();
+        $this->byId('pmt-cod')->click();
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('42.79');//net price
         $this->assertTextPresent('-$4.28');//group discount
@@ -66,6 +63,7 @@ class groupDiscountTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-storepickup-storepickup0')->click();
         $this->byCss('input[type="image"]')->click();
+        $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('42.79');//net price
@@ -81,6 +79,7 @@ class groupDiscountTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-flat-flat')->click();
         $this->byCss('input[type="image"]')->click();
+        $this->byId('pmt-cod')->click();
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('$5.95');//shipping
         $this->assertTextPresent('-$4.28');//group discount
@@ -93,6 +92,7 @@ class groupDiscountTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-flat-flat')->click();
         $this->byCss('input[type="image"]')->click();
+        $this->byId('pmt-cod')->click();
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('42.79');//net price
         $this->assertTextPresent('5.95');//shipping
@@ -104,5 +104,7 @@ class groupDiscountTest extends CommonTestResources
         $this->switchFlatShippingTax('off');
         $this->switchSplitTaxMode('off');
         $this->switchToTaxNonInclusive();
+
+        $this->setCustomerGroupDiscount(WEBTEST_DEFAULT_CUSTOMER_EMAIL, 0);
     }
 }

@@ -39,24 +39,11 @@ $file_contents = file_get_contents(CWD . '/includes/dist-configure.php');
 chmod(CWD . '/admin/includes/configure.php', 0777);
 chmod(CWD . '/includes/configure.php', 0777);
 $fp = fopen(CWD . '/includes/configure.php', 'w');
-if ($fp)
-{
+if ($fp) {
     fputs($fp, $file_contents);
     fclose($fp);
 }
-
 require_once 'support/connector.php';
-require_once 'support/CommonTestResources.php';
-require_once 'tests/installerNoErrorsTest.php';
-require_once 'tests/postInstallCatalogChecksTest.php';
-require_once 'tests/setUpTaxZonesTest.php';
-require_once 'tests/createCouponsTest.php';
-require_once 'tests/createCustomerAccountTest.php';
-require_once 'tests/useCouponsInCatalogTest.php';
-require_once 'tests/postInstallDatabaseChangesTest.php';
-require_once 'tests/giftVoucherPurchasesTest.php';
-require_once 'tests/groupDiscountTest.php';
-
 
 /**
  * Set up test suite
@@ -68,14 +55,15 @@ class allTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Zen Cart v1.6 Web Tests');
         $suite->addTestSuite('installerNoErrorsTest');
-        $suite->addTestSuite('postInstallDatabaseChangesTest');
         $suite->addTestSuite('postInstallCatalogChecksTest');
+        $suite->addTestSuite('setUpTaxZonesTest');
         $suite->addTestSuite('createCustomerAccountTest');
         $suite->addTestSuite('giftVoucherPurchasesTest');
-        $suite->addTestSuite('setUpTaxZonesTest');
         $suite->addTestSuite('createCouponsTest');
         $suite->addTestSuite('useCouponsInCatalogTest');
         $suite->addTestSuite('groupDiscountTest');
+        $suite->addTestSuite('loworderfeeTest');
+
         return $suite;
     }
 }

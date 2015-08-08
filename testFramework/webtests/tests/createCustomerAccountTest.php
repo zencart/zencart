@@ -5,6 +5,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
+
 /**
  * Class createCustomerAccountTest
  */
@@ -31,6 +32,7 @@ class createCustomerAccountTest extends CommonTestResources
         $this->byCss('#createAccountForm > div.buttonRow.forward > input[type="image"]')->click();
         $this->assertTextPresent('Your Account Has Been Created');
     }
+
     public function testCreateAccountUK()
     {
         $this->url('http://' . BASE_URL);
@@ -52,6 +54,7 @@ class createCustomerAccountTest extends CommonTestResources
         $this->byCss('#createAccountForm > div.buttonRow.forward > input[type="image"]')->click();
         $this->assertTextPresent('Your Account Has Been Created');
     }
+
     public function testCreateAccountCanada()
     {
         $this->url('http://' . BASE_URL);

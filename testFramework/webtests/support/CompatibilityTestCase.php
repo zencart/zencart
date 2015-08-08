@@ -1,19 +1,25 @@
 <?php
 /**
+ * File contains common unit/web test resources
  *
+ * @package tests
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:  $
  */
+
 /**
  * Class CompatibilityTestCase
  */
 trait CompatibilityTestCase
 {
-    public function assertTextPresent($text, \PHPUnit_Extensions_Selenium2TestCase_Element $element = NULL)
+    public function assertTextPresent($text, \PHPUnit_Extensions_Selenium2TestCase_Element $element = null)
     {
         $element = $element ?: $this->byCssSelector('body');
         $this->assertTrue(stripos($element->text(), $text) !== false, "$text not found");
     }
 
-    public static function SpinAssertTest($msg, $test, $args=array(), $timeout=10)
+    public static function SpinAssertTest($msg, $test, $args = array(), $timeout = 10)
     {
         $num_tries = 0;
         $result = false;
@@ -24,8 +30,9 @@ trait CompatibilityTestCase
                 $result = false;
             }
 
-            if (!$result)
+            if (!$result) {
                 sleep(1);
+            }
 
             $num_tries++;
         }
@@ -39,16 +46,18 @@ trait CompatibilityTestCase
     {
         return parent::byCssSelector($selector);
     }
-    public function spinAssert($msg, $test, $args=array(), $timeout=10)
+
+    public function spinAssert($msg, $test, $args = array(), $timeout = 10)
     {
         list($result, $msg) = self::SpinAssertTest($msg, $test, $args, $timeout);
         $this->assertTrue($result, $msg);
     }
 
-    public function spinWait($msg, $test, $args=array(), $timeout=10)
+    public function spinWait($msg, $test, $args = array(), $timeout = 10)
     {
         list($result, $msg) = self::SpinAssertTest($msg, $test, $args, $timeout);
-        if (!$result)
+        if (!$result) {
             throw new \Exception($msg);
+        }
     }
 }
