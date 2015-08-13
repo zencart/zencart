@@ -99,7 +99,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
             $dup_products_id = $db->Insert_ID();
 
-            if (isset($_POST['copy_media']) && $_POST['copy_media'] == 'on') {
+            if (isset($_POST['copy_media']) && $_POST['copy_media'] == '1') {
               $product_media = $db->Execute("select media_id from " . TABLE_MEDIA_TO_PRODUCTS . "
                                              where product_id = '" . (int)$products_id . "'");
               while (!$product_media->EOF) {
