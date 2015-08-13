@@ -1109,14 +1109,26 @@
       $indsize += $result->fields['Index_length'];
       $result->MoveNext();
     }
-    $strictmysql = false;
-    $result = $db->Execute("SHOW VARIABLES LIKE 'sql\_mode'");
-    while (!$result->EOF) {
-      if (strstr($result->fields['Value'], 'strict_')) $strictmysql = true;
-      $result->MoveNext();
-    }
 
-    $db_query = $db->Execute("select now() as datetime");
+    $strictmysql = false;
+    $mysql_mode = '';
+    $result = $db->Execute("SHOW VARIABLES LIKE 'sql\_mode'");
+    if (!$result->EOF) {
+      $mysql_mode = $result->fields['Value'];
+      if (strstr($result->fields['Value'], 'strict_')) $strictmysql = true;
+    }
+    $mysql_slow_query_log_status = '';
+    $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log'");
+    if (!$result->EOF) {
+      $mysql_slow_query_log_status = $result->fields['Value'];
+    }
+    $mysql_slow_query_log_file = '';
+    $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log\_file'");
+    if (!$result->EOF) {
+      $mysql_slow_query_log_file = $result->fields['Value'];
+    }
+    $result = $db->Execute("select now() as datetime");
+    $mysql_date = $result->fields['datetime'];
 
     $errnum = 0;
     $system = $host = $kernel = $output = '';
@@ -1156,7 +1168,7 @@
                  'db_server' => DB_SERVER,
                  'db_ip' => gethostbyname(DB_SERVER),
                  'db_version' => 'MySQL ' . $db->get_server_info(),
-                 'db_date' => zen_datetime_short($db_query->fields['datetime']),
+                 'db_date' => zen_datetime_short($mysql_date),
                  'php_memlimit' => @ini_get('memory_limit'),
                  'php_file_uploads' => strtolower(@ini_get('file_uploads')),
                  'php_uploadmaxsize' => @ini_get('upload_max_filesize'),
@@ -1164,6 +1176,9 @@
                  'database_size' => $datsize,
                  'index_size' => $indsize,
                  'mysql_strict_mode' => $strictmysql,
+                 'mysql_mode' => $mysql_mode,
+                 'mysql_slow_query_log_status' => $mysql_slow_query_log_status,
+                 'mysql_slow_query_log_file' => $mysql_slow_query_log_file,
                  );
   }
 
