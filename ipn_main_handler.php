@@ -151,9 +151,9 @@ Processing...
   }
 
   ipn_debug_email('Breakpoint: 2 - Validated transaction components');
-  if ($_POST ['exchange_rate'] == '')  $_POST [exchange_rate] = 1;
-  if ($_POST ['num_cart_items'] == '') $_POST [num_cart_items] = 1;
-  if ($_POST ['settle_amount'] == '')  $_POST [settle_amount] = 0;
+  if ($_POST['exchange_rate'] == '')  $_POST['exchange_rate'] = 1;
+  if ($_POST['num_cart_items'] == '') $_POST['num_cart_items'] = 1;
+  if ($_POST['settle_amount'] == '')  $_POST['settle_amount'] = 0;
 
   /**
    * is this a sandbox transaction?
@@ -360,7 +360,7 @@ Processing...
         $ototal = $order_subtotal = $credits_applied = 0;
         for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
           if ($order_totals[$i]['code'] == 'ot_subtotal') $order_subtotal = $order_totals[$i]['value'];
-          if ($$order_totals[$i]['code']->credit_class == true) $credits_applied += $order_totals[$i]['value'];
+          if (${$order_totals[$i]['code']}->credit_class == true) $credits_applied += $order_totals[$i]['value'];
           if ($order_totals[$i]['code'] == 'ot_total') $ototal = $order_totals[$i]['value'];
         }
         $commissionable_order = ($order_subtotal - $credits_applied);
