@@ -1530,8 +1530,8 @@ class paypaldp extends base {
           //$optionsST['SHIPDISCAMT'] = '';  // Not applicable
         } else {
           // handle other order totals:
-          global $$order_totals[$i]['code'];
-          if ((substr($order_totals[$i]['text'], 0, 1) == '-') || (isset($$order_totals[$i]['code']->credit_class) && $$order_totals[$i]['code']->credit_class == true)) {
+          global ${$order_totals[$i]['code']};
+          if ((substr($order_totals[$i]['text'], 0, 1) == '-') || (isset(${$order_totals[$i]['code']}->credit_class) && ${$order_totals[$i]['code']}->credit_class == true)) {
             // handle credits
             $creditsApplied += round($order_totals[$i]['value'], 2);
           } else {
