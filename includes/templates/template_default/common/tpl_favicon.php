@@ -17,9 +17,10 @@
  *   1. a 32x32 favicon.ico file in the root of your site, to handle all the generic basic needs. (32x32 will automatically downscale to 16x16 for browsers that need that)
  *   2. a 128x128 favicon.png file so that more advanced browsers can use this for various other needs. They will downscale it as needed.
  *
- * Then consider some larger images of various sizes for Apple/Android touch devices.
+ * Then consider some larger images of various sizes for Apple (180x180) and Android (192x192) touch devices.
  *
  * Worthwhile related reading:
+ * - https://mathiasbynens.be/notes/touch-icons
  * - http://www.netmagazine.com/features/create-perfect-favicon
  * - http://www.jonathantneal.com/blog/understand-the-favicon/
  * - http://msdn.microsoft.com/en-us/library/ms537656(v=vs.85).aspx
@@ -43,15 +44,17 @@
  * This section is for Apple Touch Icons -- and will be used on iOS devices for shortcut icons
  * Android devices will use these <link> references too
  *
- * Suggested use: target 57x57 and 144x144. Others are optional.
- * If you use multiple sizes, start with largest sizes first, then progressively smaller
+ * Suggested use: target 57x57 and 180x180. Others are optional.
+ * If you use multiple sizes, start with largest sizes first, then progressively smaller. However, the fewer you use, the less traffic (page load size) will be consumed.
  */
 ?>
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-144x144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-114x114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-72x72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>apple-touch-icon.png">
+    <link rel="icon" sizes="192x192" href="<?php echo DIR_WS_TEMPLATE_ICONS; ?>touch-icon-192x192.png">
 <?php
 /**
  * For IE10 / Windows 8, you can set the tile color and image (best is a transparent 144x144 PNG)
