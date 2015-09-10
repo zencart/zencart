@@ -302,6 +302,7 @@ class authorizenet_aim extends base {
       'cc_expires'=>array('name'=>'concatExpiresFields', 'args'=>"['authorizenet_aim_cc_expires_month','authorizenet_aim_cc_expires_year']"),
       'cc_expires_month'=>'authorizenet_aim_cc_expires_month',
       'cc_expires_year'=>'authorizenet_aim_cc_expires_year'),
+      'cc_type' => $this->cc_card_type,
       'extraFields'=>array(zen_session_name()=>zen_session_id()));
     return $processButton;
   }
