@@ -15,7 +15,7 @@
     "require-dev": {
         "sauce/sausage": ">=0.15.2",
         "sauce/connect": ">=3.0",
-        "phpunit/phpunit": "4.7.*",
+        "phpunit/phpunit": "4.*",
         "phpunit/phpunit-selenium": ">=1.2",
         "phpmd/phpmd": "~2",
         "phpdocumentor/phpdocumentor": "2.*",
