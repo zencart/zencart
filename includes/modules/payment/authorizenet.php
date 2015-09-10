@@ -370,7 +370,6 @@ class authorizenet extends base {
       'x_relay_response' => 'TRUE',
       'x_relay_URL' => zen_href_link(FILENAME_CHECKOUT_PROCESS, 'action=confirm', 'SSL', true, false),
       'x_invoice_num' => '',
-      'x_logo_url' => (defined('MODULE_PAYMENT_AUTHORIZENET_LOGO_URL') ? MODULE_PAYMENT_AUTHORIZENET_LOGO_URL : ''),
       'x_duplicate_window' => '120',
       'x_allow_partial_Auth' => 'FALSE', // unable to accept partial authorizations at this time
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
@@ -400,7 +399,7 @@ class authorizenet extends base {
 //      'x_footer_html_payment_form' => '',
 //      'x_header_html_receipt' => '',
 //      'x_footer_html_receipt' => '',
-//      'x_logo_url' => '',
+        'x_logo_url' => (defined('MODULE_PAYMENT_AUTHORIZENET_LOGO_URL') ? MODULE_PAYMENT_AUTHORIZENET_LOGO_URL : ''),
 //      'x_background_url' => '',
 //      'x_color_link' => '',
 //      'x_color_background' => '',
