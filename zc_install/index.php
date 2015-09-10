@@ -3,10 +3,10 @@
  * index.php -- This is the main hub file for the Zen Cart installer
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Oct 4 22:17:16 2012 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Thu Sep 10 2015 Modified in v1.5.5 $
  */
 
   define('IS_ADMIN_FLAG',false);
@@ -29,7 +29,9 @@
 // }
 if (function_exists('apc_clear_cache')) @apc_clear_cache();
 //XCACHE
-if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+if (function_exists('xcache_clear_cache')) {
+  @ini_set('xcache.cacher', 'OFF');
+}
 //EA
 if (@ini_get('eaccelerator.enable') == 1) {
   @ini_set('eaccelerator.filter', '!*/configure.php');
