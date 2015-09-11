@@ -2,15 +2,35 @@
 /**
  * Very simple error logging to file
  *
- * Sometimes it is difficult to debug PHP background activities
+ * Sometimes it is difficult to debug PHP background activities, especially when most information cannot be safely output to the screen.
  * However, using the PHP error logging facility we can store all PHP errors to a file, and then review separately.
- * Using this method, the debug details are stored at: /cache/myDEBUG-999999-00000000.log
+ * Using this method, the debug details are stored at: /logs/myDEBUG-999999-00000000.log
+ * Credits to @lat9 for adding backtrace functionality
  *
  * @package debug
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  */
+
+function zen_debug_error_handler ($errno, $errstr, $errfile, $errline) {
+  if (!(error_reporting() && $errno)) {
+    return;
+  }
+  ob_start();
+  if (version_compare(PHP_VERSION, '5.3.6') >= 0) {
+    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+  } else {
+    debug_print_backtrace();
+  }
+  $backtrace = ob_get_contents();
+  ob_end_clean();
+  // The following line removes the call to this zen_debug_error_handler function (as it's not relevant)
+  $backtrace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', $backtrace, 1);  
+  error_log('Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . "\n" . $backtrace);
+  
+  return false;  // Let PHP's built-in error handler do its thing.
+}
 
 if (!defined('DIR_FS_LOGS')) {
   $val = realpath(dirname(DIR_FS_SQL_CACHE . '/') . '/logs');
@@ -53,4 +73,5 @@ if (!defined('DIR_FS_LOGS')) {
     @ini_set('display_errors', 0);      // do not output errors to screen/browser/client
     @ini_set('error_log', $debug_logfile_path);  // the filename to log errors into
     @ini_set('error_reporting', $errors_to_log ); // log only errors according to defined rules
+    set_error_handler('zen_debug_error_handler', $errors_to_log);
   }
