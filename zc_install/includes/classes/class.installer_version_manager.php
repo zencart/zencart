@@ -847,6 +847,7 @@
       if (ZC_UPG_DEBUG==true) echo "154a-configtitle_check PADSS_AJAX_CHECKOUT =" . $result->fields['configuration_title'] . '<br>';
       if (!$result->EOF && $result->fields['configuration_title'] == 'PA-DSS Ajax Checkout?') {
         $got_v1_5_4a = true;
+        if (ZC_UPG_DEBUG==true) echo 'OKAY 1.5.4<br><br>';
       }
       if (ZC_UPG_DEBUG==true && !$got_v1_5_4a) echo 'BAD: 1.5.4a<br><br>';
 
@@ -862,6 +863,8 @@
       if (ZC_UPG_DEBUG==true) echo "155a-configtitle_check CC_ENABLED_DEBIT =" . ($result->RecordCount() ? $result->fields['configuration_title'] : ' NOT FOUND ') . '<br>';
       if (!$result->EOF && $result->fields['configuration_title'] == 'Credit Card Enable Status - Debit') {
         $got_v1_5_5a = true;
+        if (ZC_UPG_DEBUG==true) echo 'OKAY 1.5.5<br><br>';
+
       }
       if (ZC_UPG_DEBUG==true && !$got_v1_5_5a) echo 'BAD: 1.5.5a<br><br>';
 

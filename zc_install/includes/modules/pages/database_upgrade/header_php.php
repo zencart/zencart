@@ -82,6 +82,11 @@ $sniffer_text = '';
 
 //display options based on what was found -- THESE SHOULD BE PROCESSED IN REVERSE ORDER, NEWEST VERSION FIRST... !
 //that way only the "earliest-required" upgrade is suggested first.
+    $needs_v1_5_5=false;
+    if (!$dbinfo->version155) {
+      $sniffer_text =  ' upgrade v1.5.4 to v1.5.5';
+      $needs_v1_5_5=true;
+    }
     $needs_v1_5_4=false;
     if (!$dbinfo->version154) {
       $sniffer_text =  ' upgrade v1.5.3 to v1.5.4';
@@ -248,6 +253,7 @@ if (ZC_UPG_DEBUG2==true) {
   echo '<br>152='.$dbinfo->version152;
   echo '<br>153='.$dbinfo->version153;
   echo '<br>154='.$dbinfo->version154;
+  echo '<br>155='.$dbinfo->version155;
   echo '<br>';
   }
 
@@ -440,6 +446,12 @@ if (ZC_UPG_DEBUG2==true) {
             if (ZC_UPG_DEBUG2==true) echo $sniffer_file.'<br>';
             $got_v1_5_4 = true; //after processing this step, this will be the new version-level
             $db_upgraded_to_version='1.5.4';
+            break;
+       case '1.5.4':  // upgrading from v1.5.4 TO 1.5.5
+            $sniffer_file = '_upgrade_zencart_154_to_155.sql';
+            if (ZC_UPG_DEBUG2==true) echo $sniffer_file.'<br>';
+            $got_v1_5_5 = true; //after processing this step, this will be the new version-level
+            $db_upgraded_to_version='1.5.5';
             break;
           default:
             $nothing_to_process=true;
