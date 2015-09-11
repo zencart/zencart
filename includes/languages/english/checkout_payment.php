@@ -1,11 +1,12 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: checkout_payment.php 4087 2006-08-07 04:46:08Z drbyte $
  * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
+ * @version $Id: checkout_payment.php drbyte  Modified in v1.5.5 $
  */
 if($_SESSION['COWOA']) $COWOA=TRUE;
 
@@ -38,9 +39,8 @@ define('TITLE_CONTINUE_CHECKOUT_PROCEDURE', '<strong>Continue to Step 3</strong>
 define('TEXT_CONTINUE_CHECKOUT_PROCEDURE', '- to confirm your order.');
 
 define('TABLE_HEADING_CONDITIONS', '<span class="termsconditions">Terms and Conditions</span>');
-define('TEXT_CONDITIONS_DESCRIPTION', '<span class="termsdescription">Please acknowledge the terms and conditions bound to this order by ticking the following box. The terms and conditions can be read <a href="' . zen_href_link(FILENAME_CONDITIONS, '', 'SSL') . '"><span class="pseudolink">here</span></a>.');
+define('TEXT_CONDITIONS_DESCRIPTION', '<span class="termsdescription">Please acknowledge the terms and conditions bound to this order by ticking the following box. The terms and conditions can be read <a href="' . zen_href_link(FILENAME_CONDITIONS, '', 'SSL') . '" target="_blank"><span class="pseudolink">here</span></a>.');
 define('TEXT_CONDITIONS_CONFIRM', '<span class="termsiagree">I have read and agreed to the terms and conditions bound to this order.</span>');
 
 define('TEXT_CHECKOUT_AMOUNT_DUE', 'Total Amount Due: ');
 define('TEXT_YOUR_TOTAL','Your Total');
-// eof
