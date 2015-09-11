@@ -7,10 +7,11 @@
  * @version $Id: shopping_cart.php 3183 2006-03-14 07:58:59Z birdbrain $
  */
 
+define('TEXT_INFORMATION', 'You may proceed with your purchase by clicking the Checkout button below. Shipping and Taxes and Discounts will be handled on subsequent pages.');
+
 define('NAVBAR_TITLE', 'The Shopping Cart');
 define('HEADING_TITLE', 'Your Shopping Cart Contents');
 define('HEADING_TITLE_EMPTY', 'Your Shopping Cart');
-define('TEXT_INFORMATION', 'You may want to add some instructions for using the shopping cart here. (defined in includes/languages/english/shopping_cart.php)');
 define('TABLE_HEADING_REMOVE', 'Remove');
 define('TABLE_HEADING_QUANTITY', 'Qty.');
 define('TABLE_HEADING_MODEL', 'Model');
@@ -28,4 +29,3 @@ define('TEXT_TOTAL_AMOUNT', '&nbsp;&nbsp;Amount: ');
 
 define('TEXT_VISITORS_CART', '<a href="javascript:session_win();">[help (?)]</a>');
 define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
-?>
