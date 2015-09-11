@@ -40,7 +40,7 @@ TRUNCATE TABLE db_cache;
 
 UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
 UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
-UPDATE countries set countries_name = 'Côte d'Ivoire' where countries_iso_code_3 = 'CIV';
+UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
 
 
 #############
