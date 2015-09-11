@@ -2,6 +2,9 @@ myDEBUG-*.log
 cache/*.sql
 cache/sess_*
 cache/*.log
+pub/.*
+logs/*.txt
+logs/*.log
 includes/modules/payment/paypal/logs/*.log
 local/configure.php
 *.php1
@@ -9,3 +12,5 @@ local/configure.php
 *.old
 devtools.php
 Thumbs.db
+/vendor
+clover.xml
