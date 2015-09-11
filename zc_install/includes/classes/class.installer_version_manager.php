@@ -5,10 +5,10 @@
  * This class is used during the installation and upgrade processes
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Apr 24 13:48:29 2014 -0400 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Thu Sep 10 2015 Modified in v1.5.5 $
  */
 
 
@@ -29,7 +29,7 @@
       /**
        * The version that this edition of the installer is designed to support
        */
-      $this->latest_version = '1.5.4';
+      $this->latest_version = '1.5.5';
 
       /**
        * Check to see if the configuration table can be found...thus validating the installation, in part.
@@ -81,6 +81,7 @@
       $this->version152 = $this->check_version_152();
       $this->version153 = $this->check_version_153();
       $this->version154 = $this->check_version_154();
+      $this->version155 = $this->check_version_155();
 
       if ($this->version110 == true)  $retVal = '1.1.0';
       if ($this->version111 == true)  $retVal = '1.1.1';
@@ -108,6 +109,7 @@
       if ($this->version152 == true) $retVal = '1.5.2';
       if ($this->version153 == true) $retVal = '1.5.3';
       if ($this->version154 == true) $retVal = '1.5.4';
+      if ($this->version155 == true) $retVal = '1.5.5';
 
       return $retVal;
     }
@@ -852,6 +854,19 @@
     } //end of 1.5.4 check
 
 
+    function check_version_155() {
+      global $db_test;
+      $got_v1_5_5a = false;
+      $sql = "select configuration_title from " . DB_PREFIX . "configuration where configuration_key = 'CC_ENABLED_DEBIT'";
+      $result = $db_test->Execute($sql);
+      if (ZC_UPG_DEBUG==true) echo "155a-configtitle_check CC_ENABLED_DEBIT =" . ($result->RecordCount() ? $result->fields['configuration_title'] : ' NOT FOUND ') . '<br>';
+      if (!$result->EOF && $result->fields['configuration_title'] == 'Credit Card Enable Status - Debit') {
+        $got_v1_5_5a = true;
+      }
+      if (ZC_UPG_DEBUG==true && !$got_v1_5_5a) echo 'BAD: 1.5.5a<br><br>';
+
+      return $got_v1_5_5a;
+    } //end of 1.5.5 check
 
 
   } // end class
