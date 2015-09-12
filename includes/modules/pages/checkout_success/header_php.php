@@ -114,7 +114,7 @@ if ($flag_global_notifications != '1') {
 $flag_show_products_notification = (CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS == '1' and sizeof($notificationsArray)>0 and $flag_global_notifications != '1') ? true : false ;
 
 
-$customer_has_gv_balance = FALSE;
+$customer_has_gv_balance = false;
 $gv_query = "SELECT amount
              FROM " . TABLE_COUPON_GV_CUSTOMER . "
              WHERE customer_id = :customersID ";
