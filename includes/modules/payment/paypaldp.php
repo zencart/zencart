@@ -232,6 +232,7 @@ class paypaldp extends base {
         $this->enabled = false;
         $this->zcLog('update_status', 'Module disabled due to zone restriction. Billing address is not within the Payment Zone selected in the module settings.');
       }
+    }
 
     // Purchase amount
     if ($this->enabled) {
