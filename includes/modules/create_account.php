@@ -7,8 +7,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: create_account.php  Modified in v1.6.0 $
- *
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CREATE_ACCOUNT');
@@ -398,8 +396,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT', $email_address, $extra_welcome_text);
 
 
-/* IF IT IS  A COWOA ACCOUNT DO NOT SEND A WELCOME E-MAIL  */
-if ($_SESSION['COWOA']!= true) {
     // build the message content
     $name = $firstname . ' ' . $lastname;
 
@@ -488,9 +484,6 @@ if ($_SESSION['COWOA']!= true) {
     } //endif send extra emails
 }
     zen_redirect(zen_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
-
-
-  } //endif !error
 }
 
 

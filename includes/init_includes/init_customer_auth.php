@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: init_customer_auth.php ajeh  Modified in v1.6 $
+ * @version GIT: $Id: Modified in v1.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -60,7 +60,7 @@ if ((int)$_SESSION['customer_id'] > 0) {
     zen_session_destroy();
     zen_redirect(zen_href_link(FILENAME_LOGIN));
   }
-  if ($_SESSION['customers_authorization'] != 0 && in_array(zcRequest::readGet('main_page'), array(FILENAME_CHECKOUT_SHIPPING, FILENAME_CHECKOUT_PAYMENT, FILENAME_CHECKOUT_CONFIRMATION))) {
+  if ($_SESSION['customers_authorization'] != 0 && in_array(zcRequest::readGet('main_page'), array(FILENAME_CHECKOUT_FLOW))) {
     // this account is not valid for checkout
     global $messageStack;
     $messageStack->add_session('header', TEXT_AUTHORIZATION_PENDING_CHECKOUT, 'caution');

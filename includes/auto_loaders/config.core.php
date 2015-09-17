@@ -34,7 +34,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                              'className'=>'\\ZenCart\\Request\\Request',
                              'objectName'=>'zcRequest');
 
-
 /**
  * Breakpoint 10.
  *
@@ -46,6 +45,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
+  $autoLoadConfig[10][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_checkout_flow_routes.php');
+
 /**
  * Breakpoint 30.
  *

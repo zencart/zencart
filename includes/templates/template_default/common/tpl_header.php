@@ -11,11 +11,10 @@
  * $flag_disable_header = true;<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
+ * @version $Id: Modified in V1.6.0 $
  */
 ?>
 
@@ -47,17 +46,15 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
 <?php if ($_SESSION['customer_id']) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
     <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
-<?php
-      } elseif (STORE_STATUS == '0' && (!$_SESSION['COWOA'])) {
-?>
+<?php } elseif (STORE_STATUS == '0' && (!$_SESSION['customer_id'])) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGIN; ?></a></li>
-<?php }?>
-<?php if (!$_SESSION['customer_id'] && !$_SESSION['COWOA'] && COWOA_ORDER_STATUS == 'true') { ?>
+ <?php }?>
+<?php if (!$_SESSION['customer_id'] &&  COWOA_ORDER_STATUS == 'true') { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_ORDER_STATUS, '', 'SSL'); ?>"><?php echo HEADER_TITLE_ORDER_STATUS; ?></a></li>
 <?php } ?>
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><?php echo HEADER_TITLE_CART_CONTENTS; ?></a></li>
-    <li><a href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><?php echo HEADER_TITLE_CHECKOUT; ?></a></li>
+    <li><a href="<?php echo zen_href_link(FILENAME_CHECKOUT_FLOW, '', 'SSL'); ?>"><?php echo HEADER_TITLE_CHECKOUT; ?></a></li>
 <?php }?>
 </ul>
 </div>

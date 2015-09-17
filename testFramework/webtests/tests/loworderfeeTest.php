@@ -33,7 +33,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
-        $this->assertTextPresent('$2.50'); //shippimg
+        $this->assertTextPresent('$2.50'); //shipping
         $this->assertTextPresent('$2.80'); //tax
         $this->assertTextPresent('$5.00'); //loworder fee
         $this->assertTextPresent('50.29'); //total
@@ -157,7 +157,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
-        $this->assertTextPresent('$2.50'); //shippimg
+        $this->assertTextPresent('$2.50'); //shipping
         $this->assertTextPresent('-$4.00'); //group discount
         $this->assertTextPresent('$2.52'); //tax
         $this->assertTextPresent('$5.00'); //loworder fee
@@ -202,7 +202,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
-        $this->assertTextPresent('$2.50'); //shippimg
+        $this->assertTextPresent('$2.50'); //shipping
         $this->assertTextPresent('-$4.00'); //coupon discount
         $this->assertTextPresent('$2.52'); //tax
         $this->assertTextPresent('$5.00'); //loworder fee

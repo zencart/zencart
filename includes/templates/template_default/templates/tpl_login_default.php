@@ -64,7 +64,7 @@
     <legend>Checkout Without Account</legend>
     <?php echo TEXT_RATHER_COWOA; ?>
     <div class="buttonRow forward">
-    <?php echo "<a href=\"" . zen_href_link(FILENAME_NO_ACCOUNT, '', 'SSL') . "\">"; ?>
+    <?php echo "<a href=\"" . zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=guest', 'SSL') . "\">"; ?>
     <?php echo zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></a></div>
     <br class="clearBoth" />
     </fieldset>
@@ -89,7 +89,7 @@
     <legend>Checkout Without Account</legend>
     <?php echo TEXT_RATHER_COWOA; ?>
     <div class="buttonRow forward">
-    <?php echo "<a href=\"" . zen_href_link(FILENAME_NO_ACCOUNT, '', 'SSL') . "\">"; ?>
+    <?php echo "<a href=\"" . zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=guest', 'SSL') . "\">"; ?>
     <?php echo zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></a></div>
     <br class="clearBoth" />
     </fieldset>
