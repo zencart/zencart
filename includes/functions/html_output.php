@@ -515,7 +515,7 @@
  *  Output a form password field
  */
   function zen_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
-    return zen_draw_input_field($name, $value, $parameters, 'password', true);
+    return zen_draw_input_field($name, $value, $parameters, 'password', false);
   }
 
 /*
