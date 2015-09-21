@@ -45,7 +45,8 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
 }
 
 if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
-$_SESSION['comments'] = $_POST['comments'];
+
+$_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
 
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -170,4 +171,3 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_CONFIRMATION');
-?>
