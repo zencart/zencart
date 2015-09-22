@@ -80,7 +80,7 @@ class authorizenet extends base {
 
     if (is_object($order)) $this->update_status();
 
-    $this->form_action_url = 'https://secure2.authorize.net/gateway/transact.dll';
+    $this->form_action_url = 'https://secure.authorize.net/gateway/transact.dll';
 //     $this->form_action_url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
 
     if (AUTHORIZENET_DEVELOPER_MODE == 'on') $this->form_action_url = 'https://test.authorize.net/gateway/transact.dll';
@@ -410,7 +410,7 @@ class authorizenet extends base {
 //      'x_footer_html_payment_form' => '',
 //      'x_header_html_receipt' => '',
 //      'x_footer_html_receipt' => '',
-//      'x_logo_url' => '',
+        'x_logo_url' => (defined('MODULE_PAYMENT_AUTHORIZENET_LOGO_URL') ? MODULE_PAYMENT_AUTHORIZENET_LOGO_URL : ''),
 //      'x_background_url' => '',
 //      'x_color_link' => '',
 //      'x_color_background' => '',

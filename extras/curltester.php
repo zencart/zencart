@@ -4,6 +4,7 @@
  * Accepted parameters:
  *   d=1 or details=1 -- show CURL connection details -- useful for determining cause of communications problems
  *   r=1 -- show Response obtained from destination server -- this may contain an error message, but usually means communication was okay
+ *   i=1 -- in conjunction with [d] or [r], will show the detailed curlinfo certificate data from the host being connected to. Helpful for advanced debugging.
  *
  * @package utilities
  * @copyright Copyright 2003-2015 Zen Cart Development Team
@@ -89,6 +90,9 @@ echo 'Connecting to Cardinal Commerce 3D-Secure Server ...<br>';
 doCurlTest('https://paypal.cardinalcommerce.com/maps/processormodule.asp');
 
 echo 'Connecting to AuthorizeNet Production Server ...<br>';
+doCurlTest('https://secure.authorize.net/gateway/transact.dll');
+
+echo 'Connecting to AuthorizeNet Akamai Secondary Production Server ...<br>';
 doCurlTest('https://secure2.authorize.net/gateway/transact.dll');
 
 echo 'Connecting to AuthorizeNet Developer/Sandbox Server ...<br>';
@@ -129,7 +133,7 @@ function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', 
     curl_setopt($ch, CURLOPT_URL, $regs[1]);
   }
 
-  curl_setopt($ch, CURLOPT_VERBOSE, 1);
+  curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
   curl_setopt($ch, CURLOPT_HEADER, 0);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -139,6 +143,8 @@ function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', 
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
   curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart(tm) - CURL TEST');
+
+  if (isset($_GET['i'])) curl_setopt($ch, CURLOPT_CERTINFO, TRUE);
 
 //  curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
 //  curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!

@@ -302,6 +302,7 @@ class authorizenet_aim extends base {
       'cc_expires'=>array('name'=>'concatExpiresFields', 'args'=>"['authorizenet_aim_cc_expires_month','authorizenet_aim_cc_expires_year']"),
       'cc_expires_month'=>'authorizenet_aim_cc_expires_month',
       'cc_expires_year'=>'authorizenet_aim_cc_expires_year'),
+      'cc_type' => $this->cc_card_type,
       'extraFields'=>array(zen_session_name()=>zen_session_id()));
     return $processButton;
   }
@@ -626,7 +627,7 @@ class authorizenet_aim extends base {
       default:
       case 'AIM':
         $submit_data['x_solution_id'] = 'A1000003'; // used by authorize.net
-        $url = 'https://secure2.authorize.net/gateway/transact.dll';
+        $url = 'https://secure.authorize.net/gateway/transact.dll';
         if (defined('AUTHORIZENET_DEVELOPER_MODE')) {
           if (AUTHORIZENET_DEVELOPER_MODE == 'on') $url = $devurl;
           if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;

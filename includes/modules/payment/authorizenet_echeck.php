@@ -561,7 +561,7 @@ class authorizenet_echeck extends base {
     }
 
     // set URL
-    $url = 'https://secure2.authorize.net/gateway/transact.dll';
+    $url = 'https://secure.authorize.net/gateway/transact.dll';
     $devurl = 'https://test.authorize.net/gateway/transact.dll';
     $dumpurl = 'https://developer.authorize.net/param_dump.asp';
     $certurl = 'https://certification.authorize.net/gateway/transact.dll';
