@@ -90,6 +90,9 @@ echo 'Connecting to Cardinal Commerce 3D-Secure Server ...<br>';
 doCurlTest('https://paypal.cardinalcommerce.com/maps/processormodule.asp');
 
 echo 'Connecting to AuthorizeNet Production Server ...<br>';
+doCurlTest('https://secure.authorize.net/gateway/transact.dll');
+
+echo 'Connecting to AuthorizeNet Akamai Secondary Production Server ...<br>';
 doCurlTest('https://secure2.authorize.net/gateway/transact.dll');
 
 echo 'Connecting to AuthorizeNet Developer/Sandbox Server ...<br>';
