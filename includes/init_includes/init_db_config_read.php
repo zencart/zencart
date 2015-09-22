@@ -33,7 +33,7 @@ while (!$configuration->EOF) {
  * @ignore
  */
   define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
-  $configuration->movenext();
+  $configuration->MoveNext();
 }
 if (file_exists(DIR_WS_CLASSES . 'db/' . DB_TYPE . '/define_queries.php')) {
   /**
