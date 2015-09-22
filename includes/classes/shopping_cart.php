@@ -300,7 +300,19 @@ class shoppingCart extends base {
               $option = substr($option, strlen(TEXT_PREFIX));
               $attr_value = stripslashes($value);
               $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
-              $this->contents[$products_id]['attributes_values'][$option] = $attr_value;
+              
+              // -----
+              // Check that the length of this TEXT attribute is less than or equal to its "Max Length" definition. While there
+              // is some javascript on a product details' page that limits the number of characters entered, the customer
+              // can choose to disable javascript entirely or circumvent that checking by performing a copy&paste action.
+              //
+              $check = $db->Execute ("SELECT products_options_length FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option . " LIMIT 1");
+              if (!$check->EOF) {
+                if (strlen ($attr_value) > $check->fields['products_options_length']) {
+                  $attr_value = zen_trunc_string ($attr_value, $check->fields['products_options_length'], '');
+                }
+                $this->contents[$products_id]['attributes_values'][$option] = $attr_value;
+              }
             }
           }
 
