@@ -351,8 +351,8 @@ function array_minus_array($a, $b) {
         break;
 
       case 'update_product':
-        $new_categories_sort_array[] = $_POST['current_master_categories_id'];
-        $current_master_categories_id = $_POST['current_master_categories_id'];
+        $new_categories_sort_array[] = (int)$_POST['current_master_categories_id'];
+        $current_master_categories_id = (int)$_POST['current_master_categories_id'];
         // set the linked products master_categories_id product(s)
         for ($i=0, $n=sizeof($_POST['categories_add']); $i<$n; $i++) {
             $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
