@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: products_to_categories.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version GIT: $Id: products_to_categories.php Author: ajeh  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -351,19 +351,11 @@ function array_minus_array($a, $b) {
         break;
 
       case 'update_product':
-        $zv_check_master_categories_id = 'true';
         $new_categories_sort_array[] = $_POST['current_master_categories_id'];
         $current_master_categories_id = $_POST['current_master_categories_id'];
-
         // set the linked products master_categories_id product(s)
         for ($i=0, $n=sizeof($_POST['categories_add']); $i<$n; $i++) {
-          // is current master_categories_id in the list?
-          if ($zv_check_master_categories_id == 'true' and $_POST['categories_add'][$i] == $current_master_categories_id->fields['master_categories_id']) {
-            $zv_check_master_categories_id = 'true';
-            // array is set above to master category
-          } else {
             $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
-          }
         }
 
         // remove existing products_to_categories for current product
@@ -394,22 +386,13 @@ function array_minus_array($a, $b) {
         }
 
         // reset master_categories_id in products table
-        if ($zv_check_master_categories_id == 'true') {
-          // make sure master_categories_id is set to current master_categories_id
-          $db->Execute("update " . TABLE_PRODUCTS . " set master_categories_id='" . (int)$current_master_categories_id . "' where products_id='" . $products_filter . "'");
-        } else {
-          // reset master_categories_id to current_category_id because it was unselected
-          $db->Execute("update " . TABLE_PRODUCTS . " set master_categories_id='" . (int)$reset_master_categories_id . "' where products_id='" . $products_filter . "'");
-        }
+        // make sure master_categories_id is set to current master_categories_id
+        $db->Execute("update " . TABLE_PRODUCTS . " set master_categories_id='" . (int)$current_master_categories_id . "' where products_id='" . $products_filter . "'");
 
         // recalculate price based on new master_categories_id
         zen_update_products_price_sorter($products_filter);
 
-        if ($zv_check_master_categories_id == 'true') {
-          $messageStack->add_session(SUCCESS_MASTER_CATEGORIES_ID, 'success');
-        } else {
-          $messageStack->add_session(WARNING_MASTER_CATEGORIES_ID, 'warning');
-        }
+        $messageStack->add_session(SUCCESS_MASTER_CATEGORIES_ID, 'success');
 
         // if product was removed from current categories_id stay in same category
         if (!$verify_current_category_id) {
