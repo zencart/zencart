@@ -80,7 +80,7 @@ class authorizenet extends base {
 
     if (is_object($order)) $this->update_status();
 
-    $this->form_action_url = 'https://secure2.authorize.net/gateway/transact.dll';
+    $this->form_action_url = 'https://secure.authorize.net/gateway/transact.dll';
 //     $this->form_action_url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
 
     if (AUTHORIZENET_DEVELOPER_MODE == 'on') $this->form_action_url = 'https://test.authorize.net/gateway/transact.dll';
