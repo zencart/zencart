@@ -3,9 +3,9 @@
  * Admin Start Wizard Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: $
+ * @version $Id: Updated in v1.6.0$
  */
 ?>
 <style>
@@ -94,33 +94,11 @@
    </fieldset>
    </form>
 <script>
-   $().ready(function() {
-       $.validator.messages.required = '<?php echo TEXT_FORM_ERROR_REQUIRED; ?>';
-       $("#setup-wizard").validate({
-         errorElement: 'span',
-         errorClass: 'help-inline invalid',
-         submitHandler: function(form) {
-          form.submit();
-         },
-         rules: {
-           store_name: "required",
-           store_owner: "required",
-           store_owner_email: "required email",
-           store_zone: {
-              required: true,
-              min: 0
-            }
-        },
-         messages: {
-            store_zone: '<?php echo TEXT_FORM_ERROR_CHOOSE_ZONE; ?>'
-         }
-       });
-     });
    $(function()
        {
      $('#store_country').change(function(e) {
       zcJS.ajax({
-        url: "zcAjaxHandler.php?act=installWizard&method=getZones",
+        url: "<?php echo zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action')) . "action=getZones"); ?>",
         data: {id: $(this).val()}
       }).done(function( response ) {
         $('#store_zone_container').html(response.html);
