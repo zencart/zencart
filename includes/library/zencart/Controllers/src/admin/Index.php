@@ -63,4 +63,20 @@ class Index extends AbstractController
             zen_redirect(zen_href_link(FILENAME_DEFAULT));
         }
     }
-}
+
+    /**
+     *
+     */
+    public function getZonesExecute()
+    {
+        $this->useView = false;
+        $this->response = array('html'=>'');
+        if ($this->request->readPost('id'))  {
+            $options = zen_get_country_zones((int)$this->request->readPost('id'));
+            if (count($options) == 0) {
+                array_unshift($options, array('id' => 0, 'text' => TEXT_NONE));
+            }
+            $html = zen_draw_pull_down_menu('store_zone', $options, -1, 'id="store_zone"');
+            $this->response = array('html'=>$html);
+        }
+    }}
