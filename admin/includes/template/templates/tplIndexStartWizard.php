@@ -98,7 +98,7 @@
        {
      $('#store_country').change(function(e) {
       zcJS.ajax({
-        url: "<?php echo zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action')) . "action=getZones"); ?>",
+        url: "<?php echo zen_href_link($_GET['cmd'], "action=getZones"); ?>",
         data: {id: $(this).val()}
       }).done(function( response ) {
         $('#store_zone_container').html(response.html);

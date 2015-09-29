@@ -72,7 +72,7 @@ class Index extends AbstractController
         $this->useView = false;
         $this->response = array('html'=>'');
         if ($this->request->readPost('id'))  {
-            $options = zen_get_country_zones((int)$_POST['id']);
+            $options = zen_get_country_zones((int)$this->request->readPost('id'));
             if (count($options) == 0) {
                 array_unshift($options, array('id' => 0, 'text' => TEXT_NONE));
             }
