@@ -39,8 +39,10 @@
                 <?php } ?>
             <?php } ?>
         </fieldset>
-        <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_SUBMIT; ?>"
-               tabindex="10">
+        <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_SUBMIT; ?>" tabindex="10">
+        <a href="<?php echo $tplVars['leadDefinition'] ['cancelButtonAction']; ?>">
+          <input type="button" class="radius button" id="btncancel" name="btncancel" value="<?php echo TEXT_CANCEL; ?>" tabindex="11">
+        </a>
         </form>
     </div>
 </div>
