@@ -56,6 +56,7 @@
             if (preg_match('/'.$ext->fields['type_ext'] . '/', $clip_name)) {
 
               if ($media_upload = new upload('clip_filename')) {
+                $media_upload->set_extensions(array('mp3','mp4','swf','avi','mpg','wma','rm','ra','ram','wmv','epub','flv','ogg','m4v','m4a','webm'));
                 $media_upload->set_destination(DIR_FS_CATALOG_MEDIA . $_POST['media_dir']);
                 if ($media_upload->parse() && $media_upload->save()) {
                   $media_upload_filename = zen_db_prepare_input($_POST['media_dir'] . $media_upload->filename);

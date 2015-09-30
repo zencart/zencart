@@ -75,6 +75,7 @@
     // PROCESS UPLOAD ATTACHMENTS
     if (isset($_FILES['upload_file']) && zen_not_null($_FILES['upload_file']) && ($_POST['upload_file'] != 'none')) {
       if ($attachments_obj = new upload('upload_file')) {
+        $attachments_obj->set_extensions(array('jpg','jpeg','gif','png','zip','gzip','pdf','mp3','wma','wmv','wav','epub','ogg','webm','m4v','m4a'));
         $attachments_obj->set_destination(DIR_WS_ADMIN_ATTACHMENTS . $_POST['attach_dir']);
         if ($attachments_obj->parse() && $attachments_obj->save()) {
           $attachment_file = $_POST['attach_dir'] . $attachments_obj->filename;

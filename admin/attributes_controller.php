@@ -299,6 +299,7 @@
               }
 
               $attributes_image = new upload('attributes_image');
+              $attributes_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
               $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
               if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
                 $attributes_image_name = $_POST['img_dir'] . $attributes_image->filename;
@@ -436,6 +437,7 @@
           }
 
           $attributes_image = new upload('attributes_image');
+          $attributes_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
           $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
           if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
             $attributes_image_name = ($attributes_image->filename != 'none' ? ($_POST['img_dir'] . $attributes_image->filename) : '');
