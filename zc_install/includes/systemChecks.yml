@@ -81,6 +81,7 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_LOGS . PHP_EOL; ?>
+          makeWritable: true
   cacheFolder:
     runLevel: always
     errorLevel: FAIL
@@ -90,6 +91,7 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_SQL_CACHE . PHP_EOL; ?>
+          makeWritable: true
   imagesFolder:
     runLevel: always
     errorLevel: WARN
@@ -99,6 +101,7 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_ROOT . 'images' . PHP_EOL; ?>
+          makeWritable: true
   htmlIncludesFolder:
     runLevel: always
     errorLevel: WARN
@@ -108,6 +111,7 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_ROOT . 'includes/languages/english/html_includes' . PHP_EOL; ?>
+          makeWritable: true
   mediaFolder:
     runLevel: always
     errorLevel: WARN
@@ -117,6 +121,7 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_ROOT . 'media' . PHP_EOL; ?>
+          makeWritable: true
   pubFolder:
     runLevel: always
     errorLevel: WARN
@@ -126,6 +131,7 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_DOWNLOAD_PUBLIC . PHP_EOL; ?>
+          makeWritable: true
   htaccessSupport:
     runLevel: always
     errorLevel: WARN
