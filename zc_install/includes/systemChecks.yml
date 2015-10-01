@@ -40,23 +40,15 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 5.4.0
+          version: 5.4.2
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.4.0') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.4.2') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 5.6.99
-          versionTest: le
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.6.99') . PHP_EOL; ?>
-
-  checkForPhpCgiSecurityBug:
-    runLevel: always
-    errorLevel: FAIL
-    mainErrorText: <?php echo TEXT_ERROR_PHP53_CGI_BUG .PHP_EOL; ?>
-    methods:
-      checkIsPhpSafeFromCgiBug:
-
+          version: 7.1.0
+          versionTest: lt
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.0.x') . PHP_EOL; ?>
   checkZCversion:
     runLevel: always
     errorLevel: WARN

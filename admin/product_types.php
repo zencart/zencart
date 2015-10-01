@@ -72,6 +72,7 @@
         }
 
         $type_image = new upload('default_image');
+        $type_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $type_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $type_image->parse() &&  $type_image->save()) {
           // remove image from database if none
