@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -112,8 +112,9 @@ if (!isset($_GET['cacheignore'])) {
   //APC
   if (function_exists('apc_clear_cache')) @apc_clear_cache();
   //XCACHE
-  //@TODO - find a way to prevent admin login prompts with xcache
-  // if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+  if (function_exists('xcache_clear_cache')) {
+    @ini_set('xcache.cacher', 'OFF');
+  }
   //EA
   if (@ini_get('eaccelerator.enable') == 1) {
     @ini_set('eaccelerator.enable', 0);
