@@ -29,6 +29,8 @@ git:
   submodules: false
 
 before_install:
+  - composer self-update -q
+  - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
   - git submodule update --init --recursive
 
 install:
