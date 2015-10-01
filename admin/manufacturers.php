@@ -44,6 +44,7 @@
                       where manufacturers_id = '" . (int)$manufacturers_id . "'");
       } else {
         $manufacturers_image = new upload('manufacturers_image');
+        $manufacturers_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $manufacturers_image->parse() &&  $manufacturers_image->save()) {
           // remove image from database if none

@@ -218,6 +218,7 @@
                       where categories_id = '" . (int)$categories_id . "'");
       } else {
         if ($categories_image = new upload('categories_image')) {
+          $categories_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
           $categories_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
           if ($categories_image->parse() && $categories_image->save()) {
             $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
