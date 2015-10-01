@@ -46,10 +46,9 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 5.6.99
-          versionTest: le
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '5.6.99') . PHP_EOL; ?>
-
+          version: 7.1.0
+          versionTest: lt
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.0.x') . PHP_EOL; ?>
   checkZCversion:
     runLevel: always
     errorLevel: WARN
