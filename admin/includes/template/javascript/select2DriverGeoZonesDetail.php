@@ -10,8 +10,8 @@
 <script>
 var dependant = '';
  $('#entry_field_countries_name').change(function () {
- $('#entry_field_<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataResponseField']; ?>').val('-1');
- $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').val('-1');
+ $('#entry_field_<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataResponseField']; ?>').val('0');
+ $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').val('0');
  setTimeout(getDependant, 500)
 });
 

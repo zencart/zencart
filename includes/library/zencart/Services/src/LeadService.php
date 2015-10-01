@@ -134,6 +134,7 @@ class LeadService extends AbstractService
         foreach ($_FILES as $uploadKey => $uploadEntry) {
             $destination = DIR_FS_CATALOG_IMAGES . $this->request->readPost($uploadKey . '_file_select');
             $upload = new \upload($uploadKey);
+            $upload->set_extensions(array('jpg','jpeg','gif','png','webp','flv','zip','gzip','pdf','epub','wav','ogg','webm','m4v','m4a','mp3','mp4','swf','avi','mpg','wma','rm','ra','ram','wmv','mobi'));
             $upload->set_destination($destination);
             if (!$upload->parse() || !$upload->save()) {
                 return false;
