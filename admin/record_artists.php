@@ -43,6 +43,7 @@
                       where artists_id = '" . (int)$artists_id . "'");
       } else {
         $artists_image = new upload('artists_image');
+        $artists_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $artists_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $artists_image->parse() &&  $artists_image->save()) {
           // remove image from database if none

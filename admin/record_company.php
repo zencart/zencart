@@ -43,6 +43,7 @@
                       where record_company_id = '" . (int)$record_company_id . "'");
       } else {
         $record_company_image = new upload('record_company_image');
+        $record_company_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $record_company_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $record_company_image->parse() &&  $record_company_image->save()) {
           // remove image from database if none
