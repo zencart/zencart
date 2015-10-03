@@ -18,6 +18,11 @@ class LeadRecordArtists extends AbstractLeadListingBox
      */
     public function initQueryAndLayout()
     {
+        $linkedProducts = function ($item, $key, $pkey) {
+            $count = $this->getLinkedProducts($item[$pkey]);
+            return $count;
+        };
+
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_RECORD_ARTISTS,
@@ -61,7 +66,8 @@ class LeadRecordArtists extends AbstractLeadListingBox
             'listMap' => array(
                 'artists_id',
                 'artists_name',
-                'artists_url'
+                'artists_url',
+                'linked_products',
             ),
             'editMap' => array(
                 'artists_name',
@@ -132,8 +138,33 @@ class LeadRecordArtists extends AbstractLeadListingBox
                             'size' => '30'
                         )
                     )
-                )
+                ),
+                'linked_products' => array(
+                    'bindVarsType' => 'string',
+                    'layout' => array(
+                        'list' => array(
+                            'title' => TEXT_ENTRY_LINKED_PRODUCTS,
+                            'size' => '30'
+                        )
+                    ),
+                    'fieldFormatter' => array(
+                        'callable' => $linkedProducts
+                    )
+                ),
             ),
         );
+    }
+
+    /**
+     * @param $artistsId
+     * @return mixed
+     */
+    protected function getLinkedProducts($artistsId)
+    {
+        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE artists_id = :id:";
+        $sql = $this->dbConn->bindvars($sql, ':id:', $artistsId, 'integer');
+        $result = $this->dbConn->Execute($sql);
+
+        return $result->fields['count'];
     }
 }

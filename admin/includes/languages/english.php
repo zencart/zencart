@@ -732,3 +732,5 @@ define('TEXT_CONFIRM', 'Confirm');
 define('TEXT_ITEM_DEFAULT', '<strong>(Default)</strong>');
 define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
 define('TEXT_AUTOCOMPLETE_DEFAULT_PLACEHOLDER', 'Search or Select below');
+define('TEXT_DELETE_LINKED_ITEMS', 'Delete Linked Products');
+define('TEXT_DELETE_IMAGE', 'Delete Linked Image');

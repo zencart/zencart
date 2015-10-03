@@ -1,42 +1,17 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2004 The zen-cart developers                           |
-// |                                                                      |   
-// | http://www.zen-cart.com/index.php                                    |   
-// |                                                                      |   
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: media_types.php 1105 2005-04-04 22:05:35Z birdbrain $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Modified in v1.6.0 $
+ */
 
 define('HEADING_TITLE', 'Media Types');
+define('TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> media types)');
+define('TEXT_ENTRY_MEDIA_TYPE_ID', 'Media Type Id');
+define('TEXT_ENTRY_TYPE_NAME', 'Media Type Name');
+define('TEXT_ENTRY_TYPE_EXT', 'Media Type Extension');
+define('TEXT_LEAD_ACTION_LIST', 'List Media Types');
+define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Media Type');
 
-define('TABLE_HEADING_MEDIA_TYPE', 'Media Type');
-define('TABLE_HEADING_MEDIA_TYPE_EXT', 'Extension');
-define('TABLE_HEADING_ACTION', 'Action');
-
-define('TEXT_HEADING_NEW_MEDIA_TYPE', 'New Media Type');
-define('TEXT_HEADING_EDIT_MEDIA_TYPE', 'Edit Media Type');
-define('TEXT_HEADING_DELETE_MEDIA_TYPES', 'Delete Media Type');
-
-define('TEXT_MEDIA_TYPE_NAME', 'Media Type Name');
-define('TEXT_MEDIA_TYPE_EXT', 'Media Type Extension');
-define('TEXT_EXTENSION', 'Extension: ');
-
-define('TEXT_NEW_INTRO', 'Please fill out the following information for the new media type');
-define('TEXT_EDIT_INTRO', 'Please make any necessary changes');
-
-define('TEXT_DELETE_INTRO', 'Are you sure you want to delete this media type?');
-define('TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Media Types)');
-?>
