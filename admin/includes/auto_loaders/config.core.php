@@ -245,3 +245,11 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'loadFile'=> 'init_html_editor.php');
 
 
+/**
+ * Breakpoint 190.
+ *
+ * require('includes/init_includes/init_admin_history.php');
+ *
+ */
+  $autoLoadConfig[190][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_check_parms.php');
