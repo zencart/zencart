@@ -88,6 +88,7 @@
         if (empty($banners_html_text)) {
           if (empty($banners_image_local)) {
             $banners_image = new upload('banners_image');
+            $banners_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
             $banners_image->set_destination(DIR_FS_CATALOG_IMAGES . $banners_image_target);
             if ( ($banners_image->parse() == false) || ($banners_image->save() == false) ) {
               $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
