@@ -15,3 +15,4 @@ define('TEXT_ENTRY_RECORD_COMPANY_URL', 'Record Company Web Site');
 define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
 define('TEXT_LEAD_ACTION_LIST', 'List Record Companies');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Record Company');
+define('TEXT_ENTRY_LINKED_PRODUCTS', 'Linked Products');

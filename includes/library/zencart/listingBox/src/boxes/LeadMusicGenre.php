@@ -8,10 +8,10 @@
 namespace ZenCart\ListingBox\boxes;
 
 /**
- * Class LeadRecordCompany
+ * Class LeadMusicGenre
  * @package ZenCart\ListingBox\boxes
  */
-class LeadRecordCompany extends AbstractLeadListingBox
+class LeadMusicGenre extends AbstractLeadListingBox
 {
 
     /**
@@ -19,6 +19,7 @@ class LeadRecordCompany extends AbstractLeadListingBox
      */
     public function initQueryAndLayout()
     {
+
         $linkedProducts = function ($item, $key, $pkey) {
             $count = $this->getLinkedProducts($item[$pkey]);
             return $count;
@@ -26,24 +27,21 @@ class LeadRecordCompany extends AbstractLeadListingBox
 
         $this->listingQuery = array(
             'mainTable' => array(
-                'table' => TABLE_RECORD_COMPANY,
-                'alias' => 'rc',
-                'fkeyFieldLeft' => 'record_company_id',
+                'table' => TABLE_MUSIC_GENRE,
+                'alias' => 'mg',
+                'fkeyFieldLeft' => 'music_genre_id',
             ),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES,
                     'pagingVarSrc' => 'post'
                 )
             ),
-            'language' => true,
-            'languageInfoTable' => TABLE_RECORD_COMPANY_INFO,
-
         );
 
         $this->outputLayout = array(
-            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicType.php',
+            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicGenre.php',
             'allowDelete' => true,
             'relatedLinks' => array(
                 array(
@@ -51,8 +49,8 @@ class LeadRecordCompany extends AbstractLeadListingBox
                     'href' => zen_href_link(FILENAME_RECORD_ARTISTS)
                 ),
                 array(
-                    'text' => BOX_CATALOG_MUSIC_GENRE,
-                    'href' => zen_href_link(FILENAME_MUSIC_GENRE)
+                    'text' => BOX_CATALOG_RECORD_COMPANY,
+                    'href' => zen_href_link(FILENAME_RECORD_COMPANY)
                 ),
                 array(
                     'text' => BOX_CATALOG_MEDIA_MANAGER,
@@ -63,61 +61,29 @@ class LeadRecordCompany extends AbstractLeadListingBox
                     'href' => zen_href_link(FILENAME_MEDIA_TYPES)
                 )
             ),
-            'hasImageUpload' => true,
             'listMap' => array(
-                'record_company_id',
-                'record_company_name',
-                'record_company_url',
+                'music_genre_id',
+                'music_genre_name',
                 'linked_products',
             ),
             'editMap' => array(
-                'record_company_name',
-                'record_company_url',
-                'record_company_image'
+                'music_genre_name',
             ),
             'fields' => array(
-                'record_company_id' => array(
+                'music_genre_id' => array(
                     'bindVarsType' => 'integer',
                     'layout' => array(
                         'list' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_ID,
+                            'title' => TEXT_ENTRY_MUSIC_GENRE_ID,
                             'align' => 'left'
                         )
                     )
                 ),
-                'record_company_name' => array(
+                'music_genre_name' => array(
                     'bindVarsType' => 'string',
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_NAME,
-                            'type' => 'text',
-                            'size' => '30'
-                        )
-                    )
-                ),
-                'record_company_image' => array(
-                    'bindVarsType' => 'string',
-                    'layout' => array(
-                        'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_IMAGE,
-                            'type' => 'file',
-                            'uploadOptions' => array(
-                                'imageDirectorySelector' => true,
-                                'imageDirectoryServer' => false
-                            ),
-                            'size' => '30'
-                        )
-                    ),
-                    'validations' => array(
-                        'required' => false
-                    )
-                ),
-                'record_company_url' => array(
-                    'bindVarsType' => 'string',
-                    'language' => true,
-                    'layout' => array(
-                        'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_URL,
+                            'title' => TEXT_ENTRY_MUSIC_GENRE_NAME,
                             'type' => 'text',
                             'size' => '30'
                         )
@@ -132,7 +98,7 @@ class LeadRecordCompany extends AbstractLeadListingBox
                         )
                     ),
                     'fieldFormatter' => array(
-                        'callable' => $linkedProducts
+                      'callable' => $linkedProducts
                     )
                 ),
             ),
@@ -140,16 +106,15 @@ class LeadRecordCompany extends AbstractLeadListingBox
     }
 
     /**
-     * @param $recordCompanyId
+     * @param $musicGenreId
      * @return mixed
      */
-    protected function getLinkedProducts($recordCompanyId)
+    protected function getLinkedProducts($musicGenreId)
     {
-        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE record_company_id = :id:";
-        $sql = $this->dbConn->bindvars($sql, ':id:', $recordCompanyId, 'integer');
+        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE music_genre_id = :id:";
+        $sql = $this->dbConn->bindvars($sql, ':id:', $musicGenreId, 'integer');
         $result = $this->dbConn->Execute($sql);
 
         return $result->fields['count'];
     }
-
 }
