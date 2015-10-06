@@ -2722,10 +2722,14 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  */
   function zen_get_handler_from_type($product_type) {
     global $db;
-
+    global $messageStack;
+    
     $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$product_type . "'";
     $handler = $db->Execute($sql);
-    if ($handler->EOF) return 'ERROR: Invalid type_handler. Your product_type settings are wrong, incomplete, or damaged.';
+    if ($handler->EOF) { 
+          $messageStack->add('ERROR: Invalid type_handler. Your product_type settings are wrong, incomplete, or damaged.', 'error');
+          return -1;
+    }
     return $handler->fields['type_handler'];
   }
 

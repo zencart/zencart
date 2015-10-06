@@ -9,9 +9,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 if (isset($_GET['product_type'])) { 
-  $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$_GET['product_type'] . "'";
-  $products_type_check = $db->Execute($sql); 
-  if ($products_type_check->EOF) {
+  if (zen_get_handler_from_type((int)$_GET['product_type']) == -1) {
       unset($_GET['product_type']); 
   }
 }
