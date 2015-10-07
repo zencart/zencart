@@ -24,7 +24,7 @@ class zcConfigureFileWriter
     $replaceVars['ENABLE_SSL_CATALOG'] = isset($inputs['enable_ssl_catalog']) ? 'true' : 'false' ;
     $replaceVars['DIR_WS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_http_catalog'], ' /\\') . '/');
     $replaceVars['DIR_WS_HTTPS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_https_catalog'], ' /\\') . '/');
-    $replaceVars['DIR_FS_CATALOG'] = rtrim($inputs['physical_path'], '/\\') . '/ ';
+    $replaceVars['DIR_FS_CATALOG'] = rtrim($inputs['physical_path'], ' /\\') . '/';
     $replaceVars['DB_TYPE'] = trim($inputs['db_type']);
     $replaceVars['DB_PREFIX'] = trim($inputs['db_prefix']);
     $replaceVars['DB_CHARSET'] = trim($inputs['db_charset']);
