@@ -154,7 +154,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
     <br>
     <div>
         <label for="store_address"><?php echo TEXT_STORE_ADDRESS ?></label>
-        <textarea rows="" cols=""  id="store_address" name="store_address" placeholder="<?php echo TEXT_EXAMPLE_STOREADDRESS; ?>"><?php echo $store_address; ?></textarea>
+        <textarea rows="5" cols="50"  id="store_address" name="store_address"><?php echo $store_address; ?></textarea>
     </div>
     <br>
     <div>
