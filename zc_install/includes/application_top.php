@@ -169,10 +169,10 @@ define('ZC_UPG_DEBUG3', (!isset($_GET['debug3']) && !isset($_POST['debug3']) || 
  */
 define('DIR_WS_INSTALL_TEMPLATE', 'includes/template/');
 require (DIR_FS_INSTALL . 'includes/classes/class.systemChecker.php');
-require (DIR_FS_INSTALL . 'includes/classes/vendors/yaml/lib/class.sfYaml.php');
+require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYaml.php');
 require (DIR_FS_INSTALL . 'includes/classes/class.zcRegistry.php');
-require (DIR_FS_INSTALL . 'includes/classes/vendors/yaml/lib/class.sfYamlParser.php');
-require (DIR_FS_INSTALL . 'includes/classes/vendors/yaml/lib/class.sfYamlInline.php');
+require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlParser.php');
+require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlInline.php');
 if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
 $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);
 if ($current_page == '' || !file_exists('includes/modules/pages/' . $current_page)) $_GET['main_page'] = $current_page = 'index';
