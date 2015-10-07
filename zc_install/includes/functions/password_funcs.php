@@ -3,10 +3,10 @@
  * password_funcs functions
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version
+ * @version $Id: Modified in v1.6.0 $
  */
 
 require_once (__DIR__ . '/../../../includes/classes/class.zcPassword.php');
@@ -39,22 +39,37 @@ function zen_validate_password($plain, $encrypted) {
   return false;
 }
 
-////
-// This function makes a new password from a plaintext password.
+/**
+ * This function makes a new password from a plaintext password.
+ * if php >= 5.5.0 we use inbuilt password_hash function.
+ * otherwise we use zen_encrypt_password_sha256 to create a salted sha256 password.
+ * @param $plain
+ * @return string
+ */
 function zen_encrypt_password($plain)
 {
-  $password = '';
+    if (function_exists('password_hash')) {
+        $password = password_hash($plain, PASSWORD_DEFAULT);
+    } else {
+        $password = zen_encrypt_password_sha256($plain);
+    }
+    return $password;
+}
 
-  for ($i = 0; $i < 10; $i++)
-  {
-    $password .= zen_rand();
-  }
-
-  $salt = substr(md5($password), 0, 2);
-
-  $password = md5($salt . $plain) . ':' . $salt;
-
-  return $password;
+/**
+ * this function makes a sha256 password from a plaintext password.
+ * @param $plain
+ * @return string
+ */
+function zen_encrypt_password_sha256($plain)
+{
+    $password = '';
+    for($i = 0; $i < 40; $i ++) {
+        $password .= zen_rand();
+    }
+    $salt = hash('sha256', $password);
+    $password = hash('sha256', $salt . $plain) . ':' . $salt;
+    return $password;
 }
 ////
 function zen_create_random_value($length, $type = 'mixed')
