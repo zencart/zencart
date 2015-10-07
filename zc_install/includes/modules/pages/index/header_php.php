@@ -1,13 +1,64 @@
 <?php
 /**
  * @package Installer
- * @access private
- * @copyright Copyright 2003-2007 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 6981 2007-09-12 18:26:56Z drbyte $
+ * @version $Id: $
  */
 
-// Nothing special to do here.
+$otherConfigErrors = FALSE;
+$hasUpgradeErrors = FALSE;
+$selectedAdminDir = '';
+if (isset($_POST['adminDir']))
+{
+  $selectedAdminDir = zen_output_string_protected($_POST['adminDir']);
+}
+$systemChecker = new systemChecker($selectedAdminDir);
+$dbVersion = $systemChecker->findCurrentDbVersion();
+$currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VERSION_MINOR;
+$isCurrentDb = ($dbVersion == $currentDbVersion) ? TRUE : FALSE;
+$hasSaneConfigFile = $systemChecker->hasSaneConfigFile();
+$hasUpdatedConfigFile = $systemChecker->hasUpdatedConfigFile();
+// echo var_dump($dbVersion);
+// echo var_dump($isCurrentDb);
+// echo var_dump($hasSaneConfigFile);
+// echo var_dump($hasUpdatedConfigFile);
 
-?>
+if ($hasSaneConfigFile)
+{
+  $systemChecker->addRunLevel('upgradeDb');
+}
+$errorList = $systemChecker->runTests();
+list($hasFatalErrors, $listFatalErrors) = $systemChecker->getErrorList();
+list($hasWarnErrors, $listWarnErrors) = $systemChecker->getErrorList('WARN');
+if (isset($listFatalErrors[0]['methods']))
+{
+  $res = key($listFatalErrors[0]['methods']);
+  if ($res == 'CheckWriteableAdminFile') $otherConfigErrors = TRUE;
+}
+if (count($listFatalErrors) == 1)
+{
+  if ($listFatalErrors[0]['runLevel'] == 'upgradeDb')
+  {
+    $hasUpgradeErrors = TRUE;
+  }
+}
+$adminDirectoryList = systemChecker::getAdminDirectoryList();
+$hasMultipleAdmins = FALSE;
+if (count($adminDirectoryList) > 1)
+{
+  $hasMultipleAdmins = TRUE;
+} else
+{
+  $selectedAdminDir = $adminDirectoryList[0];
+}
+$formAction = 'system_setup';
+if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && !$isCurrentDb)
+{
+  $formAction = 'database_upgrade';
+}
+$adminOptionList = array();
+foreach ($adminDirectoryList as $directory)
+{
+  $adminOptionList[] = array('id' => $directory, 'text' => $directory);
+}

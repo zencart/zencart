@@ -1,80 +1,40 @@
 <?php
 /**
- * index.php -- This is the main hub file for the Zen Cart installer
+ * index.php -- This is the main controller file for the Zen Cart installer
  * @package Installer
- * @access private
- * @copyright Copyright 2003-2015 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Sep 10 2015 Modified in v1.5.5 $
+ * @version $Id: $
  */
-
   define('IS_ADMIN_FLAG',false);
+
+/* Debugging
+ *  'silent': suppress all logging
+ *  'screen': display-to-screen and also to the /logs/ folder  (synonyms: TRUE or 'TRUE' or 1)
+ *  'file':   log-to-file-only   (synonyms: anything other than above options)
+ */
+  $debug_logging = 'file';
+
 /*
  * Ensure that the include_path can handle relative paths, before we try to load any files
  */
   if (!strstr(ini_get('include_path'), '.')) ini_set('include_path', '.' . PATH_SEPARATOR . ini_get('include_path'));
 
-/**
- * Bypass PHP file caching systems if active, since it interferes with files changed by zc_install
- */
-//APC
-// if (ini_get('apc.enabled') == 1) {
-//   if (@ini_get('apc.enable') == 1) @ini_set('apc.filters', '-configure\.php$');
-//   $test1 = realpath(dirname(basename(__FILE__)) . '/../includes/configure.php');
-//   $test2 = realpath(dirname(basename(__FILE__)) . '/../admin/includes/configure.php');
-//   if (file_exists($test1)) $filesToDecache[] = $test1;
-//   if (file_exists($test2)) $filesToDecache[] = $test2;
-//   if (sizeof($filesToDecache)) apc_delete_file($filesToDecache);
-// }
-if (function_exists('apc_clear_cache')) @apc_clear_cache();
-//XCACHE
-if (function_exists('xcache_clear_cache')) {
-  @ini_set('xcache.cacher', 'OFF');
-}
-//EA
-if (@ini_get('eaccelerator.enable') == 1) {
-  @ini_set('eaccelerator.filter', '!*/configure.php');
-  $info = eaccelerator_info();
-  //if ($info['version'] < '0.9.5.3')
-   @ini_set('eaccelerator.enable', 0);
-}
-
 /*
  * Initialize system core components
  */
-  require('includes/application_top.php');
+  define('DIR_FS_INSTALL', __DIR__ . DIRECTORY_SEPARATOR);
+  define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR);
 
-  /* This is for debug purposes to run installer from command line. Set to true to enable it:  */
-  if (false) {
-    if ($argc > 0) {
-      for ($i=1;$i<$argc;$i++) {
-        $it = preg_split("/=/",$argv[$i]);
-        $_GET[$it[0]] = $it[1];
-        // parse_str($argv[$i],$tmp);
-        // $_REQUEST = array_merge($_REQUEST, $tmp);
-      }
-    }
-if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
-  for($i=1;$i<$_SERVER["argc"];$i++) {
-    list($key, $val) = explode('=', $_SERVER["argv"][$i]);
-    $_GET[$key] = $_REQUEST[$key] = $val;
-  }
-}
+  require(DIR_FS_INSTALL . 'includes/application_top.php');
+
+  if ($controller == 'cli') {
+    require(DIR_FS_INSTALL . 'includes/cli_controller.php');
+  } else {
+    require(DIR_FS_INSTALL . $page_directory . '/header_php.php');
+    require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/html_header.php');
+    require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/main_template_vars.php');
+    require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/tpl_main_page.php');
   }
 
-  // init vars:
-	$zc_first_field = '';
 
-  // begin processing page-specific actions
-  if (!isset($_GET['main_page']) || !zen_not_null($_GET['main_page'])) $_GET['main_page'] = 'index';
-  $current_page = $_GET['main_page'];
-  $page_directory = 'includes/modules/pages/' . $current_page;
-  $language_page_directory = 'includes/languages/' . $language . '/';
-  require($language_page_directory . $current_page . '.php');
-  require('includes/languages/' . $language . '.php');
-
-  require($page_directory . '/header_php.php');
-  require(DIR_WS_INSTALL_TEMPLATE . 'common/html_header.php');
-  require(DIR_WS_INSTALL_TEMPLATE . 'common/main_template_vars.php');
-  require(DIR_WS_INSTALL_TEMPLATE . 'common/tpl_main_page.php');
