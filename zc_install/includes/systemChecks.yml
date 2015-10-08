@@ -40,9 +40,9 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 5.4.2
+          version: 5.3.7
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.4.2') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.3.7') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
