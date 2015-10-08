@@ -22,7 +22,7 @@ $versionArray[] = '1.5.1';
 $versionArray[] = '1.5.2';
 $versionArray[] = '1.5.3';
 $versionArray[] = '1.5.4';
-$versionArray[] = '1.6.0';
+$versionArray[] = '1.5.5';
 
 //print_r($versionArray);
 $key = array_search($dbVersion, $versionArray);
