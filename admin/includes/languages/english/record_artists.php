@@ -15,3 +15,5 @@ define('TEXT_ENTRY_RECORD_ARTIST_URL', 'Artists Web Site');
 define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
 define('TEXT_LEAD_ACTION_LIST', 'List Record Artists');
 define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Record Artist');
+define('TEXT_CONFIRM_DELETE_INFO', 'Are you sure you want to delete this Record Artist');
+define('TEXT_ENTRY_LINKED_PRODUCTS', 'Linked Products');

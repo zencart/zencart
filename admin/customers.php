@@ -34,15 +34,14 @@
         $addresses_query = $db->bindVars($addresses_query, ':customersID', $_GET['cID'], 'integer');
         $addresses = $db->Execute($addresses_query);
         $addressArray = array();
-        while (!$addresses->EOF) {
-          $format_id = zen_get_address_format_id($addresses->fields['country_id']);
+        foreach ($addresses as $address) { 
+          $format_id = zen_get_address_format_id($address['country_id']);
 
-          $addressArray[] = array('firstname'=>$addresses->fields['firstname'],
-                                  'lastname'=>$addresses->fields['lastname'],
-                                  'address_book_id'=>$addresses->fields['address_book_id'],
+          $addressArray[] = array('firstname'=>$address['firstname'],
+                                  'lastname'=>$address['lastname'],
+                                  'address_book_id'=>$address['address_book_id'],
                                   'format_id'=>$format_id,
-                                  'address'=>$addresses->fields);
-          $addresses->MoveNext();
+                                  'address'=>$address);
         }
 
 // @TODO - use modal box instead
@@ -55,10 +54,10 @@
 /**
  * Used to loop thru and display address book entries
  */
-  foreach ($addressArray as $addresses) {
+  foreach ($addressArray as $address) {
 ?>
-<h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']); ?><?php if ($addresses['address_book_id'] == zen_get_customers_address_primary($_GET['cID'])) echo '&nbsp;' . PRIMARY_ADDRESS ; ?></h3>
-<address><?php echo zen_address_format($addresses['format_id'], $addresses['address'], true, ' ', '<br />'); ?></address>
+<h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($address['firstname'] . ' ' . $address['lastname']); ?><?php if ($address['address_book_id'] == zen_get_customers_address_primary($_GET['cID'])) echo '&nbsp;' . PRIMARY_ADDRESS ; ?></h3>
+<address><?php echo zen_address_format($address['format_id'], $address['address'], true, ' ', '<br />'); ?></address>
 
 <br class="clearBoth" />
 <?php } // end list ?>
@@ -371,10 +370,9 @@
           $reviews = $db->Execute("select reviews_id
                                    from " . TABLE_REVIEWS . "
                                    where customers_id = '" . (int)$customers_id . "'");
-          while (!$reviews->EOF) {
+          foreach ($reviews as $review) {
             $db->Execute("delete from " . TABLE_REVIEWS_DESCRIPTION . "
-                          where reviews_id = '" . (int)$reviews->fields['reviews_id'] . "'");
-            $reviews->MoveNext();
+                          where reviews_id = '" . (int)$review['reviews_id'] . "'");
           }
 
           $db->Execute("delete from " . TABLE_REVIEWS . "
@@ -810,9 +808,8 @@ function check_form() {
                                         where zone_country_id = '" . zen_db_input($cInfo->entry_country_id) . "'
                                         order by zone_name");
 
-          while (!$zones_values->EOF) {
-            $zones_array[] = array('id' => $zones_values->fields['zone_name'], 'text' => $zones_values->fields['zone_name']);
-            $zones_values->MoveNext();
+          foreach ($zones_values as $zone) {
+            $zones_array[] = array('id' => $zone['zone_name'], 'text' => $zone['zone_name']);
           }
           echo zen_draw_pull_down_menu('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
         } else {
@@ -942,9 +939,8 @@ if ($processed == true) {
   } else {
     $group_array_query = $db->execute("select group_id, group_name, group_percentage from " . TABLE_GROUP_PRICING);
     $group_array[] = array('id'=>0, 'text'=>TEXT_NONE);
-    while (!$group_array_query->EOF) {
-      $group_array[] = array('id'=>$group_array_query->fields['group_id'], 'text'=>$group_array_query->fields['group_name'].'&nbsp;'.$group_array_query->fields['group_percentage'].'%');
-      $group_array_query->MoveNext();
+    foreach ($group_array_query as $group) { 
+      $group_array[] = array('id'=>$group['group_id'], 'text'=>$group['group_name'].'&nbsp;'.$group['group_percentage'].'%');
     }
     echo zen_draw_pull_down_menu('customers_group_pricing', $group_array, $cInfo->customers_group_pricing);
   }
@@ -1134,15 +1130,14 @@ if ($processed == true) {
 // Split Page
 // reset page when page is unknown
 if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
-  $check_page = $db->Execute($customers_query_raw);
+  $check_pages = $db->Execute($customers_query_raw);
   $check_count=1;
-  if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) {
-    while (!$check_page->EOF) {
-      if ($check_page->fields['customers_id'] == $_GET['cID']) {
+  if ($check_pages->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) {
+    foreach ($check_pages as $check_page) {
+      if ($check_page['customers_id'] == $_GET['cID']) {
         break;
       }
       $check_count++;
-      $check_page->MoveNext();
     }
     $_GET['page'] = round((($check_count/MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER)+(fmod_round($check_count,MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) !=0 ? .5 : 0)),0);
 //    zen_redirect(zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'NONSSL'));
@@ -1153,39 +1148,39 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
 
     $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER, $customers_query_raw, $customers_query_numrows);
     $customers = $db->Execute($customers_query_raw);
-    while (!$customers->EOF) {
+    foreach ($customers as $customer) {
       $sql = "select customers_info_date_account_created as date_account_created,
                                    customers_info_date_account_last_modified as date_account_last_modified,
                                    customers_info_date_of_last_logon as date_last_logon,
                                    customers_info_number_of_logons as number_of_logons
                             from " . TABLE_CUSTOMERS_INFO . "
-                            where customers_info_id = '" . $customers->fields['customers_id'] . "'";
+                            where customers_info_id = '" . $customer['customers_id'] . "'";
       $info = $db->Execute($sql);
 
       // if no record found, create one to keep database in sync
       if ($info->RecordCount() == 0) {
         $insert_sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id)
-                       values ('" . (int)$customers->fields['customers_id'] . "')";
+                       values ('" . (int)$customer['customers_id'] . "')";
         $db->Execute($insert_sql);
         $info = $db->Execute($sql);
       }
 
-      if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customers->fields['customers_id']))) && !isset($cInfo)) {
+      if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customer['customers_id']))) && !isset($cInfo)) {
         $country = $db->Execute("select countries_name
                                  from " . TABLE_COUNTRIES . "
-                                 where countries_id = '" . (int)$customers->fields['entry_country_id'] . "'");
+                                 where countries_id = '" . (int)$customer['entry_country_id'] . "'");
 
         $reviews = $db->Execute("select count(*) as number_of_reviews
-                                 from " . TABLE_REVIEWS . " where customers_id = '" . (int)$customers->fields['customers_id'] . "'");
+                                 from " . TABLE_REVIEWS . " where customers_id = '" . (int)$customer['customers_id'] . "'");
 
         $customer_info = array_merge($country->fields, $info->fields, $reviews->fields);
 
-        $cInfo_array = array_merge($customers->fields, $customer_info);
+        $cInfo_array = array_merge($customer, $customer_info);
         $cInfo = new objectInfo($cInfo_array);
       }
 
         $group_query = $db->Execute("select group_name, group_percentage from " . TABLE_GROUP_PRICING . " where
-                                     group_id = '" . $customers->fields['customers_group_pricing'] . "'");
+                                     group_id = '" . $customer['customers_group_pricing'] . "'");
 
         if ($group_query->RecordCount() < 1) {
           $group_name_entry = TEXT_NONE;
@@ -1193,47 +1188,46 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
           $group_name_entry = $group_query->fields['group_name'];
         }
 
-      if (isset($cInfo) && is_object($cInfo) && ($customers->fields['customers_id'] == $cInfo->customers_id)) {
+      if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) {
         echo '          <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit', 'NONSSL') . '\'">' . "\n";
       } else {
-        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers->fields['customers_id']) . '\'">' . "\n";
+        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customer['customers_id']) . '\'">' . "\n";
       }
 
-      $zc_address_book_count_list = zen_get_customers_address_book($customers->fields['customers_id']);
+      $zc_address_book_count_list = zen_get_customers_address_book($customer['customers_id']);
       $zc_address_book_count = $zc_address_book_count_list->RecordCount();
 ?>
-                <td class="dataTableContent" align="right"><?php echo $customers->fields['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count : '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customers->fields['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count . '</a>'); ?></td>
-                <td class="dataTableContent"><?php echo $customers->fields['customers_lastname']; ?></td>
-                <td class="dataTableContent"><?php echo $customers->fields['customers_firstname']; ?></td>
-                <td class="dataTableContent"><?php echo $customers->fields['entry_company']; ?></td>
+                <td class="dataTableContent" align="right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count : '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count . '</a>'); ?></td>
+                <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
+                <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
+                <td class="dataTableContent"><?php echo $customer['entry_company']; ?></td>
                 <td class="dataTableContent"><?php echo zen_date_short($info->fields['date_account_created']); ?></td>
-                <td class="dataTableContent"><?php echo zen_date_short($customers->fields['customers_info_date_of_last_logon']); ?></td>
+                <td class="dataTableContent"><?php echo zen_date_short($customer['customers_info_date_of_last_logon']); ?></td>
                 <td class="dataTableContent"><?php echo $group_name_entry; ?></td>
 <?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
-                <td class="dataTableContent" align="right"><?php echo $currencies->format($customers->fields['amount']); ?></td>
+                <td class="dataTableContent" align="right"><?php echo $currencies->format($customer['amount']); ?></td>
 <?php } ?>
                 <td class="dataTableContent" align="center">
-                <?php if ($customers->fields['customers_authorization'] == 4) { ?>
+                <?php if ($customer['customers_authorization'] == 4) { ?>
                 <?php echo zen_image(DIR_WS_IMAGES . 'icon_red_off.gif', IMAGE_ICON_STATUS_OFF); ?>
                 <?php } else {
-                    echo zen_draw_form('setstatus', FILENAME_CUSTOMERS, 'action=status&cID=' . $customers->fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));?>
-                  <?php if ($customers->fields['customers_authorization'] == 0) { ?>
+                    echo zen_draw_form('setstatus', FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));?>
+                  <?php if ($customer['customers_authorization'] == 0) { ?>
                     <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
                   <?php } else { ?>
                     <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
                   <?php } ?>
-                    <input type="hidden" name="current" value="<?php echo $customers->fields['customers_authorization']; ?>" />
+                    <input type="hidden" name="current" value="<?php echo $customer['customers_authorization']; ?>" />
                     </form>
                 <?php } ?>
                 </td>
-<?php if ($customers->fields['COWOA_account'] == 1) { ?>
+<?php if ($customer['COWOA_account'] == 1) { ?>
                 <td class="dataTableContent" align="center"><?php echo 'COWOA'; ?>&nbsp;</td>
 <?php }else{ ?>
                 <td class="dataTableContent" align="center"><?php echo 'STANDARD';} ?>&nbsp;</td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers->fields['customers_id'] == $cInfo->customers_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID')) . 'cID=' . $customers->fields['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID')) . 'cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
-      $customers->MoveNext();
     }
 ?>
               <tr>

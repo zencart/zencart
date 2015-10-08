@@ -16,14 +16,6 @@
         <form>
             <div class="row">
                 <div class="small-3 columns">
-                    <label class="inline" for="delete_image"><?php echo TEXT_DELETE_IMAGE; ?></label>
-                </div>
-                <div class="small-9 columns">
-                    <input type="checkbox" name="delete_image" id="delete_image">
-                </div>
-            </div>
-            <div class="row">
-                <div class="small-3 columns">
                     <label class="inline" for="delete_linked"><?php echo TEXT_DELETE_LINKED_ITEMS; ?></label>
                 </div>
                 <div class="small-9 columns">
