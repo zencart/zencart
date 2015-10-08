@@ -8,8 +8,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-if (isset($_GET['product_type'])) { 
-  if (zen_get_handler_from_type((int)$_GET['product_type']) == -1) {
+if (isset($_GET['product_type']) && (zen_get_handler_from_type((int)$_GET['product_type']) == -1)) {
       unset($_GET['product_type']); 
-  }
 }
