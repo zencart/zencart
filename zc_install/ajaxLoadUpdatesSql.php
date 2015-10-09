@@ -7,6 +7,7 @@
  * @version $Id:
  */
 define('IS_ADMIN_FLAG', false);
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 

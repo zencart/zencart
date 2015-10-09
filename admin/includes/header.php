@@ -233,7 +233,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
     echo '&nbsp;' . date("O" , time()) . ' GMT';  // time zone
     echo '&nbsp;[' . $_SERVER['REMOTE_ADDR'] . ']'; // current admin user's IP address
     echo '<br />';
-    echo @gethostname(); //what server am I working on?
+    echo version_compare(PHP_VERSION, '5.3.0', 'lt') ? php_uname('n') : gethostname(); //what server am I working on? // NOTE: gethostbyname only available since PHP 5.3.0
     echo ' - ' . date_default_timezone_get(); //what is the PHP timezone set to?
     $loc = setlocale(LC_TIME, 0);
     if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?

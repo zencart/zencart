@@ -115,7 +115,7 @@ class zcObserverLogEventListener extends base {
     /**
      * escalate severity if requested level is higher than calculated level
      */
-    $levels = static::$levels;
+    $levels = self::$levels;
     $levels_lookup = array_flip($levels);
 
     $integer_requested_severity = $requested_severity;

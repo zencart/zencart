@@ -77,7 +77,7 @@ if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
  * set the level of error reporting
  */
 if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);
 @ini_set('log_errors_max_len', 0);
@@ -94,7 +94,7 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
  */
 if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
-  include ('../includes/extra_configures/set_time_zone.php');
+  include (DIR_FS_ROOT . '/includes/extra_configures/set_time_zone.php');
 }
 // re-test
 if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
@@ -112,8 +112,9 @@ if (!isset($_GET['cacheignore'])) {
   //APC
   if (function_exists('apc_clear_cache')) @apc_clear_cache();
   //XCACHE
-  //@TODO - find a way to prevent admin login prompts with xcache
-  // if (function_exists('xcache_clear_cache')) @xcache_clear_cache();
+  if (function_exists('xcache_clear_cache')) {
+    @ini_set('xcache.cacher', 'OFF');
+  }
   //EA
   if (@ini_get('eaccelerator.enable') == 1) {
     @ini_set('eaccelerator.enable', 0);

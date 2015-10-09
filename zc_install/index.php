@@ -23,6 +23,8 @@
 /*
  * Initialize system core components
  */
+  if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+
   define('DIR_FS_INSTALL', __DIR__ . DIRECTORY_SEPARATOR);
   define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR);
 
@@ -36,5 +38,3 @@
     require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/main_template_vars.php');
     require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/tpl_main_page.php');
   }
-
-

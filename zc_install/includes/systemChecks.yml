@@ -40,15 +40,25 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 5.3.7
+          version: 5.2.9
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.3.7') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.2.9') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
           version: 7.1.0
           versionTest: lt
           localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.0.x') . PHP_EOL; ?>
+  checkPhpVersionRecommendation:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '5.5') . PHP_EOL; ?>
+    methods:
+      checkPhpVersionRecommended:
+        method: checkPhpVersion
+        parameters:
+          version: 5.5.0
+          versionTest: ge
   checkZCversion:
     runLevel: always
     errorLevel: WARN

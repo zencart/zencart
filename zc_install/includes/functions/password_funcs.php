@@ -9,7 +9,7 @@
  * @version
  */
 
-require_once (__DIR__ . '/../../../includes/classes/class.zcPassword.php');
+require_once (DIR_FS_ROOT . '/includes/classes/class.zcPassword.php');
 
 /**
  * Validates a plain text password with the encrpyted password
