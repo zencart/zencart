@@ -16,6 +16,7 @@ define('NAMESPACE_CONTROLLERS', 'ZenCart\Controllers');
 define('NAMESPACE_SERVICES', 'ZenCart\Services');
 define('NAMESPACE_AJAXDISPATCH', 'ZenCart\AjaxDispatch');
 define('NAMESPACE_LEAD', 'ZenCart\Lead');
+define('NAMESPACE_VIEW', 'ZenCart\View');
 
 define('URL_SERVICES', 'zencart/Services/src/');
 define('URL_CONTROLLERS', 'zencart/Controllers/src/');
@@ -26,6 +27,7 @@ define('URL_PAGINATOR', 'zencart/Paginator/src/');
 define('URL_QUERYBUILDER', 'zencart/QueryBuilder/src/');
 define('URL_REQUEST', 'zencart/Request/src/');
 define('URL_LEAD', 'zencart/Lead/src/');
+define('URL_VIEW', 'zencart/View/src/');
 
 /**
  * An array of namespace => basedir configurations
@@ -41,4 +43,5 @@ return array(
     NAMESPACE_QUERYBUILDER => DIR_CATALOG_LIBRARY. URL_QUERYBUILDER,
     NAMESPACE_REQUEST => DIR_CATALOG_LIBRARY. URL_REQUEST,
     NAMESPACE_LEAD => DIR_CATALOG_LIBRARY. URL_LEAD,
+    NAMESPACE_VIEW => DIR_CATALOG_LIBRARY. URL_VIEW,
 );
