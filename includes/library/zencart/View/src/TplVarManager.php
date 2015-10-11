@@ -21,21 +21,24 @@ class TplVarManager extends \base
      * @param $key
      * @param $value
      */
-    public function setTplVar($key, $value)
+    public function set($key, $value)
     {
         $this->tplVars[$key] = $value;
     }
 
     /**
-     *
+     * @param bool $onlyAsArray
      */
-    public function globalizeTplVars()
+    public function globalize($onlyAsArray = false)
     {
-        foreach ($this->tplVars as $tplVarName => $tplVarValue) {
-            $GLOBALS[$tplVarName] = $tplVarValue;
-        }
         $tplVars = issetorArray($GLOBALS, 'tplVars', array());
         $tplVars = array_merge($tplVars, $this->tplVars);
         $GLOBALS['tplVars'] = $tplVars;
+        if ($onlyAsArray) {
+            return;
+        }
+        foreach ($this->tplVars as $tplVarName => $tplVarValue) {
+            $GLOBALS[$tplVarName] = $tplVarValue;
+        }
     }
 }
