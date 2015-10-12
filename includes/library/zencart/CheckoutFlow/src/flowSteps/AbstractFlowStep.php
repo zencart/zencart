@@ -9,6 +9,9 @@
 namespace ZenCart\CheckoutFlow\flowSteps;
 
 use ZenCart\CheckoutFlow\CheckoutRedirectException;
+use ZenCart\CheckoutFlow\CheckoutManager as CheckoutManager;
+use ZenCart\Request\Request as Request;
+use ZenCart\View\View as View;
 
 /**
  * Class AbstractFlowState
@@ -42,9 +45,12 @@ abstract class AbstractFlowStep extends \base
     protected $session;
 
     /**
-     * @param $manager
+     * @param CheckoutManager $manager
+     * @param Request $request
+     * @param $dbConn
+     * @param View $view
      */
-    public function __construct($manager, $request, $dbConn, $view)
+    public function __construct(CheckoutManager $manager, Request $request, $dbConn, View $view)
     {
         $this->view = $view;
         $this->dbConn = $dbConn;
@@ -172,7 +178,7 @@ abstract class AbstractFlowStep extends \base
     }
 
     /**
-     *
+     * @param null $module
      */
     protected function initShipping($module = null)
     {
@@ -208,11 +214,17 @@ abstract class AbstractFlowStep extends \base
         return $this->manager;
     }
 
+    /**
+     * @return mixed
+     */
     public function getStateName()
     {
         return $this->stateName;
     }
 
+    /**
+     * @return mixed
+     */
     public function getViewStep()
     {
         if (isset($this->viewStepName)) {
@@ -221,6 +233,9 @@ abstract class AbstractFlowStep extends \base
         return $this->stepName;
     }
 
+    /**
+     * @return View
+     */
     public function getView()
     {
         return $this->view;

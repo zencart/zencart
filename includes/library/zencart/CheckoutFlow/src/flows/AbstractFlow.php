@@ -7,6 +7,9 @@
 namespace ZenCart\CheckoutFlow\flows;
 
 use ZenCart\CheckoutFlow\CheckoutRedirectException;
+use ZenCart\CheckoutFlow\CheckoutManager as CheckoutManager;
+use ZenCart\Request\Request as Request;
+use ZenCart\View\View as View;
 
 /**
  * Class AbstractFlow
@@ -25,6 +28,10 @@ abstract class AbstractFlow extends \base
     /**
      * @var
      */
+    protected $session;
+    /**
+     * @var
+     */
     protected $stepsList;
     /**
      * @var
@@ -34,11 +41,17 @@ abstract class AbstractFlow extends \base
      * @var
      */
     protected $redirectDestination;
+    /**
+     * @var
+     */
+    protected $tplVarManager;
 
     /**
-     * @param $manager
+     * @param CheckoutManager $manager
+     * @param Request $request
+     * @param View $view
      */
-    public function __construct($manager, $request, $view)
+    public function __construct(CheckoutManager $manager, Request $request, View $view)
     {
         $this->tplVarManager = $view->getTplVarManager();
         $this->manager = $manager;

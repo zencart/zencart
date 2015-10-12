@@ -229,9 +229,10 @@ class Shipping extends AbstractFlowStep
      * @param $shippingModule
      * @param $shippingMethod
      * @param $free_shipping
+     * @param $allowFreeShipping
      * @throws CheckoutRedirectException
      */
-    protected function getShippingQuotes($shippingModule, $shippingMethod, $free_shipping, $alllowFreeShipping)
+    protected function getShippingQuotes($shippingModule, $shippingMethod, $free_shipping, $allowFreeShipping)
     {
         global $shipping_modules;
 
@@ -240,7 +241,7 @@ class Shipping extends AbstractFlowStep
         $sessionShipping['id'] = $this->request->readPost('shipping');
         $shippingClass = $GLOBALS[$shippingModule];
         $this->session->set('shipping', $sessionShipping);
-        $quote = $this->setShippingQuoteError($quote, $alllowFreeShipping);
+        $quote = $this->setShippingQuoteError($quote, $allowFreeShipping);
         if (!is_object($shippingClass) && ($this->session->get('shipping')['id'] != 'free_free')) {
             $this->session->set('shipping', null);
             return;
@@ -266,12 +267,12 @@ class Shipping extends AbstractFlowStep
 
     /**
      * @param $quote
-     * @param $alllowFreeShipping
+     * @param $allowFreeShipping
      * @return mixed
      */
-    protected function setShippingQuoteError($quote, $alllowFreeShipping)
+    protected function setShippingQuoteError($quote, $allowFreeShipping)
     {
-        if ($this->request->readPost('shipping') == 'free_free' && ($this->order->content_type != 'virtual' && !$alllowFreeShipping)) {
+        if ($this->request->readPost('shipping') == 'free_free' && ($this->order->content_type != 'virtual' && !$allowFreeShipping)) {
             $quote['error'] = 'Invalid input. Please make another selection.';
         }
         return $quote;
@@ -292,6 +293,9 @@ class Shipping extends AbstractFlowStep
 
     /**
      * @param $quote
+     * @param $shipping_modules
+     * @param $shippingMethod
+     * @param $shippingModule
      * @return mixed
      */
     protected function setShippingQuoteNotFreeFree($quote, $shipping_modules, $shippingMethod, $shippingModule)

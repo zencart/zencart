@@ -49,6 +49,9 @@ class Finished extends AbstractFlowStep
         }
     }
 
+    /**
+     *
+     */
     protected function managePaymentMessages()
     {
         $this->view->getTplVarManager()->set('hasPaymentMessages', false);

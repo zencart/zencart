@@ -24,6 +24,9 @@ class EmailOnly extends Guest
      */
     protected $stepName = 'emailOnly';
 
+    /**
+     * @var string
+     */
     protected $viewStepName = 'guest';
 
     /**
