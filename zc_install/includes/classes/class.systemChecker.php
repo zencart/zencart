@@ -680,11 +680,11 @@ class systemChecker
       $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
       $result = $db -> selectdb($dbNameVal, $db -> link);
 
-      $sql = "select configuration_value from " . DB_PREFIX . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
+      $sql = "select configuration_value from " . $dbPrefixVal . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
       $result = $db->Execute($sql);
       if (!strstr($result->fields['configuration_value'], $checkip)) {
         $newip = $result->fields['configuration_value'] . ',' . $checkip;
-        $sql = "update " . DB_PREFIX . "configuration set configuration_value = '" . $db->prepare_input($newip) . "' where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
+        $sql = "update " . $dbPrefixVal . "configuration set configuration_value = '" . $db->prepare_input($newip) . "' where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
         $db->Execute($sql);
       }
     }
