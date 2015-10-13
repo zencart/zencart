@@ -144,6 +144,7 @@ define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect P
 <p>This version of Zen Cart&reg; is compatible with PHP versions 5.4.2+, 5.5.x, 5.6.x, and 7.0.<br>
 Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
+define('TEXT_ERROR_PHP_VERSION_RECOMMENDED', 'For maximum security and compatibility you should be using PHP %s or newer. This installer can proceed, but this is just letting you know that your site will not be PCI Compliant when running out-of-date software.');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
 define('TEXT_ERROR_MYSQL_SUPPORT', 'Problems with your MySQL (mysqli) support');

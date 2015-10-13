@@ -49,6 +49,16 @@ systemChecks:
           version: 7.1.0
           versionTest: lt
           localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.0.x') . PHP_EOL; ?>
+  checkPhpVersionRecommendation:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '5.6') . PHP_EOL; ?>
+    methods:
+      checkPhpVersionRecommended:
+        method: checkPhpVersion
+        parameters:
+          version: 5.6.0
+          versionTest: ge
   checkZCversion:
     runLevel: always
     errorLevel: WARN
