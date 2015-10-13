@@ -252,6 +252,19 @@ systemChecks:
           - checkType: configValue
             fieldName: CC_ENABLED_DEBIT
             expectedResult: 'Credit Card Enable Status - Debit'
+          - checkType: fieldSchema
+            tableName: admin
+            fieldName: reset_token
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: shipping_method
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
+          - checkType: configValue
+            fieldName: CURRENCY_SERVER_PRIMARY
+            expectedResult: 'Currency Exchange Rate: Primary Source'
 
   checkDBVersion154:
     runLevel: dbVersion
