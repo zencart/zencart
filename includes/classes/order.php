@@ -58,7 +58,7 @@ class order extends base {
                          billing_state, billing_country, billing_address_format_id,
                          payment_method, payment_module_code, shipping_method, shipping_module_code,
                          coupon_code, cc_type, cc_owner, cc_number, cc_expires, currency, currency_value,
-                         date_purchased, orders_status, last_modified, order_total, order_tax, ip_address, COWOA_order, order_weight
+                         date_purchased, orders_status, last_modified, order_total, order_tax, ip_address, is_guest_order, order_weight
                         from " . TABLE_ORDERS . "
                         where orders_id = '" . (int)$order_id . "'";
 

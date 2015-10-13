@@ -291,7 +291,7 @@ trait AccountFormValidator
         $check_email_query = "SELECT count(*) AS total
                             FROM " . TABLE_CUSTOMERS . "
                             WHERE customers_email_address = '" . zen_db_input($this->request->readPost('email-address')) . "'
-                            AND COWOA_account != 1";
+                            AND is_guest_account != 1";
         $check_email = $this->dbConn->Execute($check_email_query);
 
         if ($check_email->fields['total'] > 0) {

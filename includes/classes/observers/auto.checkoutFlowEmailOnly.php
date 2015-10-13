@@ -113,8 +113,7 @@ class zcObserverCheckoutFlowEmailOnly extends base
      */
     public function updateNotifyLoginSuccess(&$class, $eventID, $paramsArray = array())
     {
-//        if ($this->request->getSession()->get('COWOA', false) !== false) {
-        $this->request->getSession()->set('COWOA', false);
+        $this->request->getSession()->set('is_guest', false);
         $this->request->getSession()->set('customerType', null);
 //        }
     }
@@ -166,11 +165,11 @@ class zcObserverCheckoutFlowEmailOnly extends base
         if ($customerType == 'emailOnly' && $this->request->readGet('step') == 'finished') {
             return true;
         }
-        if (COWOA_STATUS == 'false' || COWOA_EMAIL_ONLY == 'false') {
+        if (GUEST_CHECKOUT_ALLOWED == 'false' || GUEST_ALLOW_EMAIL_ONLY == 'false') {
             return false;
         }
 
-        if (!isset($_SESSION['COWOA']) || $_SESSION['COWOA'] === false) {
+        if (!isset($_SESSION['is_guest']) || $_SESSION['is_guest'] === false) {
             return false;
         }
 

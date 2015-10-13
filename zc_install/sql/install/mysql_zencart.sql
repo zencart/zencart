@@ -572,7 +572,7 @@ CREATE TABLE customers (
   customers_referral varchar(32) NOT NULL default '',
   customers_paypal_payerid VARCHAR(20) NOT NULL default '',
   customers_paypal_ec TINYINT(1) UNSIGNED DEFAULT 0 NOT NULL,
-  COWOA_account tinyint(1) NOT NULL default 0,
+  is_guest_account tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (customers_id),
   KEY idx_email_address_zen (customers_email_address),
   KEY idx_referral_zen (customers_referral(10)),
@@ -1180,7 +1180,7 @@ CREATE TABLE orders (
   order_tax decimal(14,2) default NULL,
   paypal_ipn_id int(11) NOT NULL default '0',
   ip_address varchar(96) NOT NULL default '',
-  COWOA_order tinyint(1) NOT NULL default 0,
+  is_guest_order tinyint(1) NOT NULL default 0,
   order_weight float NOT NULL default '0',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
@@ -3017,10 +3017,10 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
-('COWOA Guest Checkout allowed?', 'COWOA_STATUS', 'false', 'Activate COWOA Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-('Enable Order Status', 'COWOA_ORDER_STATUS', 'true', 'Enable The Order Status Function of COWOA?<br />Set to True so that a Customer that uses COWOA will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-('Enable E-Mail Only', 'COWOA_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function of COWOA?<br />Set to True so that a Customer that uses COWOA will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-('Enable Create Account on Success', 'COWOA_ALLOW_CREATE_ACCOUNT', 'true', 'Allow Guest to create a full account on Checkout Success.', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
+('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'false', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Order Status for Guest Orders', 'GUEST_ORDER_STATUS', 'true', 'Alloq Guests to see Order Status?<br />Set to True so that a Customer that uses Guest Checkout will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Guest E-Mail Only checkout', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Create Account on Success', 'GUEST_ALLOW_CREATE_ACCOUNT', 'true', 'Allow Guest to create a full account on Checkout Success.', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Ajax Checkout?', 'PADSS_AJAX_CHECKOUT', '1', 'PA-DSS Compliance requires that for some inbuilt payment methods, that we use ajax to draw the checkout confirmation screen. While this will only happen if one of those payment methods is actually present, some people may want the traditional checkout flow <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 26, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Show Cart order on checkout success?', 'SHOW_CART_ORDER_CHECKOUT_SUCCESS', 'true', '', 26, 30, now(), now(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
 
@@ -3353,7 +3353,7 @@ INSERT INTO query_builder ( query_id , query_category , query_name , query_descr
 INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string , query_keys_list ) VALUES ( '5', 'email,newsletters', 'Active customers in past 3 months (Regardless of subscription status)', 'All active customers (purchased something) in last 3 months, ignoring newsletter-subscription status.', 'select c.customers_email_address, c.customers_lastname, c.customers_firstname from TABLE_CUSTOMERS c, TABLE_ORDERS o WHERE c.customers_id = o.customers_id and o.date_purchased > subdate(now(),INTERVAL 3 MONTH) GROUP BY c.customers_email_address, c.customers_lastname, c.customers_firstname order by c.customers_lastname, c.customers_firstname ASC', '');
 INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string , query_keys_list ) VALUES ( '6', 'email,newsletters', 'Administrator', 'Just the email account of the current administrator', 'select \'ADMIN\' as customers_firstname, admin_name as customers_lastname, admin_email as customers_email_address from TABLE_ADMIN where admin_id = $SESSION:admin_id', '');
 INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string , query_keys_list ) VALUES ( '7', 'email,newsletters', 'Customers who have never completed a purchase', 'For sending newsletter to all customers who registered but have never completed a purchase', 'SELECT DISTINCT c.customers_email_address as customers_email_address, c.customers_lastname as customers_lastname, c.customers_firstname as customers_firstname FROM TABLE_CUSTOMERS c LEFT JOIN  TABLE_ORDERS o ON c.customers_id=o.customers_id WHERE o.date_purchased IS NULL', '');
-INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string , query_keys_list ) VALUES ( '8', 'email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where COWOA_account != 1 order by customers_lastname, customers_firstname, customers_email_address', '');
+INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string , query_keys_list ) VALUES ( '8', 'email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where is_guest_account != 1 order by customers_lastname, customers_firstname, customers_email_address', '');
 
 #
 # end of Query-Builder Setup

@@ -69,12 +69,14 @@ define('TEXT_MAXIMUM_ENTRIES', '<span class="coming"><strong>NOTE:</strong></spa
 define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | 1 of  ');
 
 // Title of column in customer overview admin page
-define('TABLE_HEADING_COWOA', 'Account Type');
+define('TABLE_HEADING_ACCOUNT_TYPE', 'Account Type');
 
 // Title of section in customer details admin page
-define('COWOA_SECTION_HEADING', 'Account Status');
+define('ACCOUNT_TYPE_SECTION_HEADING', 'Account Status');
 
 // Detail output on customer details page
-define('COWOA_STATUS_TRUE', 'Checked out without Account');
-define('COWOA_STATUS_FALSE', 'Full Account Created');
+define('GUEST_STATUS_TRUE', 'Checked out without Account');
+define('GUEST_STATUS_FALSE', 'Full Account Created');
 
+define('TEXT_GUEST', 'Guest Account');
+define('TEXT_STANDARD', 'Standard Account');

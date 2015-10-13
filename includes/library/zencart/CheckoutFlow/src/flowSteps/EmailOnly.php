@@ -134,7 +134,7 @@ class EmailOnly extends Guest
             'type' => 'string',
             'fieldName' => 'customers_password'
         );
-        $sqlArray[] = array('value' => 1, 'type' => 'integer', 'fieldName' => 'COWOA_account');
+        $sqlArray[] = array('value' => 1, 'type' => 'integer', 'fieldName' => 'is_guest_account');
         $sqlArray[] = array(
             'value' => CUSTOMERS_APPROVAL_AUTHORIZATION,
             'type' => 'integer',

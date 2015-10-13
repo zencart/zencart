@@ -5,7 +5,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  Modified in v1.6.0 $
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 
   require('includes/application_top.php');
@@ -405,7 +404,6 @@
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')), 'NONSSL'));
         break;
       default:
-        // COWOA additional field included in this select statement
         $customers = $db->Execute("select c.customers_id, c.customers_gender, c.customers_firstname,
                                           c.customers_lastname, c.customers_dob, c.customers_email_address,
                                           a.entry_company, a.entry_street_address, a.entry_suburb,
@@ -413,7 +411,7 @@
                                           a.entry_country_id, c.customers_telephone, c.customers_fax,
                                           c.customers_newsletter, c.customers_default_address_id,
                                           c.customers_email_format, c.customers_group_pricing,
-          c.COWOA_account, c.customers_authorization, c.customers_referral
+          c.is_guest_account, c.customers_authorization, c.customers_referral
                                   from " . TABLE_CUSTOMERS . " c left join " . TABLE_ADDRESS_BOOK . " a
                                   on c.customers_default_address_id = a.address_book_id
                                   where a.customers_id = c.customers_id
@@ -555,15 +553,14 @@ function check_form() {
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
 <?php
-// COWOA add new frameset here to display account status when looking at a customer detail record
 ?>
       <tr>
-        <td class="formAreaTitle"><?php echo COWOA_SECTION_HEADING; ?></td>
+        <td class="formAreaTitle"><?php echo ACCOUNT_TYPE_SECTION_HEADING; ?></td>
       </tr>
       <tr>
         <td class="formArea"><table border="0" cellspacing="2" cellpadding="2">
           <tr>
-            <td class="main"><?php if ($cInfo->COWOA_account) echo COWOA_STATUS_TRUE; else echo COWOA_STATUS_FALSE; ?></td>
+            <td class="main"><?php if ($cInfo->is_guest_account) echo GUEST_STATUS_TRUE; else echo GUEST_STATUS_FALSE; ?></td>
           </tr>
           </table>
         </td>
@@ -572,7 +569,6 @@ function check_form() {
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
 <?php
-// END OF COWOA new frameset
 ?>
       <tr><?php echo zen_draw_form('customers', FILENAME_CUSTOMERS, zen_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form(customers);"', true) . zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
            echo zen_hide_session_id(); ?>
@@ -1037,14 +1033,12 @@ if ($processed == true) {
               case "gv_balance-desc":
               $disp_order = "cgc.amount DESC, c.customers_lastname, c.customers_firstname";
               break;
-              // COWOA+
-              case "COWOA-asc":
-              $disp_order = "c.COWOA_account";
+              case "account-type-asc":
+              $disp_order = "c.is_guest_account";
               break;
-              case "COWOA-desc":
-              $disp_order = "c.COWOA_account DESC";
+              case "account-type-desc":
+              $disp_order = "c.is_guest_account DESC";
               break;
-              // COWOA+
               default:
               $disp_order = "ci.customers_info_date_account_created DESC";
           }
@@ -1101,13 +1095,11 @@ if ($processed == true) {
                   <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'list_order=approval-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='approval-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
                 </td>
 
-        <!-- COWOA+ additional column heading in list of customers -->
                 <td class="dataTableHeadingContent" align="center">
-                  <?php echo (($_GET['list_order']=='COWOA-asc' or $_GET['list_order']=='COWOA-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_COWOA . '</span>' : TABLE_HEADING_COWOA); ?><br>
-                  <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'list_order=COWOA-asc', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='COWOA-asc' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
-                  <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'list_order=COWOA-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='COWOA-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
+                  <?php echo (($_GET['list_order']=='account-type-asc' or $_GET['list_order']=='account-type-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_ACCOUNT_TYPE . '</span>' : TABLE_HEADING_ACCOUNT_TYPE); ?><br>
+                  <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'list_order=account-type-asc', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='account-type-asc' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
+                  <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'list_order=account-type-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order']=='account-type-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
                 </td>
-        <!-- COWOA+ -->
                 <td class="dataTableHeadingContent" align="right" valign="top"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
@@ -1117,8 +1109,7 @@ if ($processed == true) {
       $search = "where c.customers_lastname like '%" . $keywords . "%' or c.customers_firstname like '%" . $keywords . "%' or c.customers_email_address like '%" . $keywords . "%' or c.customers_telephone rlike ':keywords:' or a.entry_company rlike ':keywords:' or a.entry_street_address rlike ':keywords:' or a.entry_city rlike ':keywords:' or a.entry_postcode rlike ':keywords:'";
       $search = $db->bindVars($search, ':keywords:', $keywords, 'regexp');
     }
-    // COWOA- MODIFIED line
-    $new_fields=', c.customers_telephone, a.entry_company, a.entry_street_address, a.entry_city, a.entry_postcode, c.customers_authorization, c.customers_referral, c.COWOA_account';
+    $new_fields=', c.customers_telephone, a.entry_company, a.entry_street_address, a.entry_city, a.entry_postcode, c.customers_authorization, c.customers_referral, c.is_guest_account';
     $customers_query_raw = "select c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, c.customers_group_pricing, a.entry_country_id, a.entry_company, ci.customers_info_date_of_last_logon, ci.customers_info_date_account_created " . $new_fields . ",
     cgc.amount
     from " . TABLE_CUSTOMERS . " c
@@ -1221,10 +1212,10 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
                     </form>
                 <?php } ?>
                 </td>
-<?php if ($customer['COWOA_account'] == 1) { ?>
-                <td class="dataTableContent" align="center"><?php echo 'COWOA'; ?>&nbsp;</td>
+<?php if ($customer['is_guest_account'] == 1) { ?>
+                <td class="dataTableContent" align="center"><?php echo TEXT_GUEST; ?>&nbsp;</td>
 <?php }else{ ?>
-                <td class="dataTableContent" align="center"><?php echo 'STANDARD';} ?>&nbsp;</td>
+                <td class="dataTableContent" align="center"><?php echo TEXT_STANDARD;} ?>&nbsp;</td>
                 <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID')) . 'cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php

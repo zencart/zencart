@@ -14,5 +14,4 @@ define('TEXT_INVALID_GV', 'The ' . TEXT_GV_NAME . ' number %s may be invalid or 
 define('TEXT_VALID_GV', 'Congratulations, you have redeemed a ' . TEXT_GV_NAME . ' worth %s.');
 
 define('ERROR_GV_CREATE_ACCOUNT', 'To redeem a Gift Voucher you must create an account.');
-define('ERROR_GV_COWOA', 'To redeem a Gift Voucher you must create an account.  You may not enter a Gift Voucher once you have begun checking out without an account. If you would like to use a Gift Voucher, you may <a href="' . zen_href_link(FILENAME_LOGOFF, '', 'SSL', false) . '">click here</a> to end your session, empty your cart, and begin again.');
-// eof
+

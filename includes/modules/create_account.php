@@ -138,7 +138,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $check_email_query = "select count(*) as total
                             from " . TABLE_CUSTOMERS . "
                             where customers_email_address = '" . zen_db_input($email_address) . "'
-                            and COWOA_account != 1";
+                            and is_guest_account != 1";
 
     $check_email = $db->Execute($check_email_query);
 

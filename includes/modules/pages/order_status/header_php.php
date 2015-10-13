@@ -4,9 +4,6 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: J_Schilz for Integrated COWOA - 2007
- * @version $Id: JT of GTI Custom Modified for Integrated COWOA 02-July-2010
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  * @version $Id: New in V1.6.0 $
  */
 // This should be first line of the script:

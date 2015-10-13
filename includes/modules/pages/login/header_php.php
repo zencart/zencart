@@ -45,7 +45,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
                                     customers_email_address, customers_default_address_id,
                                     customers_authorization, customers_referral
                            FROM " . TABLE_CUSTOMERS . "
-                           WHERE customers_email_address = :emailAddress AND COWOA_account  = 0";
+                           WHERE customers_email_address = :emailAddress AND is_guest_account  = 0";
 
     $check_customer_query  =$db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
     $check_customer = $db->Execute($check_customer_query);

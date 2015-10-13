@@ -49,7 +49,7 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
 <?php } elseif (STORE_STATUS == '0' && (!$_SESSION['customer_id'])) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGIN; ?></a></li>
  <?php }?>
-<?php if (!$_SESSION['customer_id'] &&  COWOA_ORDER_STATUS == 'true') { ?>
+<?php if (!$_SESSION['customer_id'] &&  GUEST_ORDER_STATUS == 'true') { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_ORDER_STATUS, '', 'SSL'); ?>"><?php echo HEADER_TITLE_ORDER_STATUS; ?></a></li>
 <?php } ?>
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>

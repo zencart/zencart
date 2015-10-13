@@ -26,12 +26,12 @@ class zcObserverCheckoutFlowGuest extends base
     {
         global $zcRequest;
         $this->request = $zcRequest;
-        if (COWOA_STATUS == 'true') {
+        if (GUEST_CHECKOUT_ALLOWED == 'true') {
             $this->attach($this, array('NOTIFY_LOGIN_SUCCESS'));
             $this->attach($this, array('NOTIFY_PASSWORD_FORGOTTEN_CHECK_CUSTOMER_QUERY'));
-            $this->setCowoaStatus();
+            $this->setGuestStatus();
         }
-        if (COWOA_STATUS == 'true' && $this->request->getSession()->get('COWOA') === true) {
+        if (GUEST_CHECKOUT_ALLOWED == 'true' && $this->request->getSession()->get('is_guest') === true) {
             $this->attach($this, array('NOTIFY_CHECKOUTFLOW_SET_INITIAL_STEPSLIST'));
             $this->attach($this, array('NOTIFY_CHECKOUTFLOW_GET_INITIAL_STEP'));
             $this->attach($this, array('NOTIFY_CHECKOUTFLOW_DOUSERVALIDATE_START'));
@@ -49,7 +49,7 @@ class zcObserverCheckoutFlowGuest extends base
      */
     public function updateNotifyLoginSuccess(&$class, $eventID, $paramsArray = array())
     {
-        $this->request->getSession()->set('COWOA', false);
+        $this->request->getSession()->set('is_guest', false);
         $this->request->getSession()->set('customerType', null);
     }
 
@@ -61,7 +61,7 @@ class zcObserverCheckoutFlowGuest extends base
      */
     public function updateNotifyPasswordForgottenCheckCustomerQuery(&$class, $eventID, $params, &$sqlQuery)
     {
-        $sqlQuery .= ' AND COWOA_account != 1';
+        $sqlQuery .= ' AND is_guest_account != 1';
     }
 
     /**
@@ -71,7 +71,7 @@ class zcObserverCheckoutFlowGuest extends base
      */
     public function updateNotifyCheckoutFlowSetInitialStepsList(&$class, $eventID, $paramsArray = array())
     {
-        if (!isset($_SESSION['customer_id']) || $this->request->getSession()->get('COWOA') === true) {
+        if (!isset($_SESSION['customer_id']) || $this->request->getSession()->get('is_guest') === true) {
             $stepsList = $class->getStepsList();
             array(array_unshift($stepsList, 'guest'));
             $class->setStepsList($stepsList);
@@ -144,7 +144,7 @@ class zcObserverCheckoutFlowGuest extends base
      */
     public function updateNotifyOrderCreateSetSqlDataArray(&$class, $eventID, $paramsArray = array(), &$sqlData)
     {
-        $sqlData['COWOA_order'] = 1;
+        $sqlData['is_guest_order'] = 1;
     }
 
     /**
@@ -199,10 +199,10 @@ class zcObserverCheckoutFlowGuest extends base
     /**
      *
      */
-    protected function setCowoaStatus()
+    protected function setGuestStatus()
     {
-        if ($this->request->getSession()->get('COWOA') === null) {
-            $this->request->getSession()->set('COWOA', true);
+        if ($this->request->getSession()->get('is_guest') === null) {
+            $this->request->getSession()->set('is_guest', true);
         }
     }
 
