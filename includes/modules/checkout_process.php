@@ -118,7 +118,7 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
   $_SESSION['order_summary']['order_total'] = $ototal;
   $_SESSION['order_summary']['commissionable_order'] = $commissionable_order;
   $_SESSION['order_summary']['commissionable_order_formatted'] = $commissionable_order_formatted;
-  $_SESSION['order_summary']['coupon_code'] = $order->info['coupon_code'];
+  $_SESSION['order_summary']['coupon_code'] = urlencode($order->info['coupon_code']);
   $_SESSION['order_summary']['currency_code'] = $order->info['currency'];
   $_SESSION['order_summary']['currency_value'] = $order->info['currency_value'];
   $_SESSION['order_summary']['payment_module_code'] = $order->info['payment_module_code'];
@@ -126,5 +126,11 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
   $_SESSION['order_summary']['orders_status'] = $order->info['orders_status'];
   $_SESSION['order_summary']['tax'] = $otax;
   $_SESSION['order_summary']['shipping'] = $oshipping;
+  $products_array = array();
+  foreach ($order->products as $key=>$val) {
+    $products_array[urlencode($val['id'])] = urlencode($val['model']);
+  }
+  $_SESSION['order_summary']['products_ordered_ids'] = implode('|', array_keys($products_array));
+  $_SESSION['order_summary']['products_ordered_models'] = implode('|', array_values($products_array));
   $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_HANDLE_AFFILIATES');
 
