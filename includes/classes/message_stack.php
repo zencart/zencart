@@ -38,13 +38,13 @@ class messageStack extends base {
     $duplicate = false;
     if (strlen($message) > 0) {
       if ($type == 'error') {
-        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => '<i class="fa fa-exclamation-triangle"></i>', 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-exclamation-triangle"></i>', 'text' => $message, 'type' => $type);
       } elseif ($type == 'warning') {
-        $theAlert = array('params' => 'class="messageStackWarning larger"', 'class' => $class, 'icon' => '<i class="fa fa-exclamation-circle"></i>', 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackWarning larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-exclamation-circle"></i>', 'text' => $message, 'type' => $type);
       } elseif ($type == 'success') {
-        $theAlert = array('params' => 'class="messageStackSuccess larger"', 'class' => $class, 'icon' => '<i class="fa fa-thumbs-o-up"></i>', 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackSuccess larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-thumbs-o-up"></i>', 'text' => $message, 'type' => $type);
       } elseif ($type == 'caution') {
-        $theAlert = array('params' => 'class="messageStackCaution larger"', 'class' => $class, 'icon' => '<i class="fa fa-question-circle"></i>', 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackCaution larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-hand-paper-o"></i>', 'text' => $message, 'type' => $type);
       } else {
         $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => '', 'text' => $message, 'type' => $type);
       }
