@@ -43,7 +43,7 @@
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 
 
-<div id="checkoutShipto" class="back">
+<div id="checkoutBillto" class="back">
 <h4 id="checkoutConfirmDefaultBillingAddress"><?php echo HEADING_BILLING_ADDRESS; ?></h4>
 <?php if (!$flagDisablePaymentAddressChange) { ?>
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
