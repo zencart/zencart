@@ -271,6 +271,18 @@ systemChecks:
             fieldCheck: Type
             expectedResult: 'VARCHAR(255)'
 
+  checkDBVersion155:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.5'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.5') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: CC_ENABLED_DEBIT
+            expectedResult: 'Credit Card Enable Status - Debit'
+
   checkDBVersion154:
     runLevel: dbVersion
     errorLevel: WARN
