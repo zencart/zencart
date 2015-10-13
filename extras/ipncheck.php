@@ -3,9 +3,9 @@
  * ipncheck.php diagnostic tool
  *
  * @package utility
- * @copyright Copyright 2007-2013 Zen Cart Development Team
+ * @copyright Copyright 2007-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jun 28 21:05:21 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  *
  * This utility is intended to be used to check whether this webserver is able to connect TO PayPal in order to RESPOND to an incoming IPN notification.
  * Unfortunately it cannot test whether PayPal's servers can successfully post an IPN *to* your store.  To do that one should test a live transaction.
@@ -32,7 +32,6 @@ if (!function_exists('curl_setopt_array')) {
 $verboseMode = (isset($_GET['verbose']) ? TRUE : FALSE);
 $headerMode = (isset($_GET['headers']) ? TRUE : FALSE);
 $testBoth = (isset($_GET['both']) && $_GET['both'] == '0') ? FALSE : TRUE;
-$checkNoChex = (isset($_GET['nochex'])) ? TRUE : FALSE;
 $testSandbox = (isset($_GET['sandbox'])) ? TRUE : FALSE;
 
 $_POST = array();
@@ -43,7 +42,7 @@ $_POST['ipn_mode'] = 'communication_test';
 if ($testSandbox) $_POST['test_ipn'] = 1;
 define('ENABLE_SSL','true');
 
-echo 'IPNCHECK.PHP - Version 1.3.9';
+echo 'IPNCHECK.PHP - Version 1.5.5';
 echo '<br /><br /><pre>';
     $defaultMethod = $altMethod = '';
     $info = '';
@@ -71,7 +70,6 @@ echo '<br /><br /><pre>';
       $scheme = 'https://';
       //Parse url
       $web = parse_url($scheme . 'www.paypal.com/cgi-bin/webscr');
-      if ($checkNoChex == TRUE) $web = parse_url('https://www.nochex.com/nochex.dll/apc/apc');
       if (isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) {
         $web = parse_url($scheme . 'www.sandbox.paypal.com/cgi-bin/webscr');
       }
