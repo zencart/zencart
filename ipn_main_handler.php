@@ -3,10 +3,10 @@
  * ipn_main_handler.php callback handler for PayPal IPN notifications
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.5 $
  */
 if (!defined('TEXT_RESELECT_SHIPPING')) define('TEXT_RESELECT_SHIPPING', 'You have changed the items in your cart since shipping was last calculated, and costs may have changed. Please verify/re-select your shipping method.');
 
@@ -29,7 +29,8 @@ if (isset($_GET['type']) && $_GET['type'] == 'ec') {
   if ( STOCK_CHECK == 'true' && STOCK_ALLOW_CHECKOUT != 'true' && isset($_SESSION['cart']) ) {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
+      $qtyAvailable = zen_get_products_stock($products[$i]['id']);
+      if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
         break;
       }
