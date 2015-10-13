@@ -11,6 +11,6 @@
  */
 ?>
 <?php for ($i=0, $n=sizeof($output); $i<$n; $i++) { ?>
-  <div <?php echo $output[$i]['params']; ?>><?php echo trim($output[$i]['icon'] . ' ') . $output[$i]['text']; ?></div>
+  <div <?php echo $output[$i]['params']; ?>><?php echo trim($output[$i]['icon'] . ' ' . $output[$i]['text']); ?></div>
 
 <?php } ?>
