@@ -13,6 +13,13 @@ It's free software, with free community-driven support available 24/7 on the Zen
 Zen Cart&reg; v1.5.5
 --------------------
 
+Compatibility
+-------------
+Zen Cart v1.5.5 is compatible with:
+ * PHP 5.2.10 to PHP 7.0.0
+ * Apache 2.2 (and 2.4 with access_compat mod installed)
+ * MySQL 5.4 to 5.6
+
 
 Installation
 ------------
@@ -35,11 +42,11 @@ For a MUCH more detailed set of installation instructions, see the [/docs/1.read
 
 PCI/PA-DSS Compliance
 ---------------------
-__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v154.pdf) should be followed for PCI Compliant implementation.__
+__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) should be followed for PCI Compliant implementation.__
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v154.pdf).
+Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf).
 
 
 Support
