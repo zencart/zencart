@@ -49,6 +49,16 @@ systemChecks:
           version: 7.1.0
           versionTest: lt
           localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.0.x') . PHP_EOL; ?>
+  checkPhpVersionRecommendation:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '5.6') . PHP_EOL; ?>
+    methods:
+      checkPhpVersionRecommended:
+        method: checkPhpVersion
+        parameters:
+          version: 5.6.0
+          versionTest: ge
   checkZCversion:
     runLevel: always
     errorLevel: WARN
@@ -260,6 +270,18 @@ systemChecks:
             fieldName: reset_token
             fieldCheck: Type
             expectedResult: 'VARCHAR(255)'
+
+  checkDBVersion155:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.5'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.5') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configValue
+            fieldName: CC_ENABLED_DEBIT
+            expectedResult: 'Credit Card Enable Status - Debit'
 
   checkDBVersion154:
     runLevel: dbVersion
