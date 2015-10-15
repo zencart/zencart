@@ -89,6 +89,11 @@ color: white;
   font-size: 15px;
   color: #666;
 }
+
+.widget-body a
+{
+  font-size: 15px;
+}
 .ui-sortable-placeholder { margin: 10px 0 0 0; border: 2px dashed black; visibility: visible !important; background: #dddddd }
 .ui-sortable-placeholder * { visibility: hidden; }
 
