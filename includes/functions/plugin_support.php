@@ -34,8 +34,32 @@
     if ($plugin_file_id == 0) return FALSE;
     $new_version_available = FALSE;
     $lookup_index = 0;
-    $url = 'http://www.zen-cart.com/downloads.php?do=versioncheck' . '&id='.(int)$plugin_file_id;
-    $data = json_decode(file_get_contents($url), true);
+    $url = 'https://www.zen-cart.com/downloads.php?do=versioncheck' . '&id='.(int)$plugin_file_id;
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$url);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    $error = curl_error($ch);
+
+    if ($error > 0) {
+      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url));
+      $response = curl_exec($ch);
+      $error = curl_error($ch);
+    }
+    curl_close($ch);
+    if ($error > 0 || $response == '') {
+      $response = file_get_contents($url);
+    }
+    if ($response === false) {
+      $response = file_get_contents(str_replace('tps:', 'tp:', $url));
+    }
+    if ($response === false) return false;
+
+    $data = json_decode($response, true);
     if (!$data || !is_array($data)) return false;
     // compare versions
     if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
@@ -43,4 +67,3 @@
     if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
     return ($new_version_available) ? $data[$lookup_index] : FALSE;
   }
-
