@@ -28,18 +28,34 @@ color: white;
 .headerBar a {
 color: white;
 }
-
 .widget-header 
 {
-  background-color: #dddddd;
-  padding: 5px;
+  background: transparent -moz-linear-gradient(center top , #E5EAEB, #CFD6D9) repeat scroll 0% 0%;
+  border-bottom: 1px solid #BEBEC4;
+  box-shadow: 0px 1px 0px #FFF inset;
+  border-radius: 3px 3px 0px 0px;
+  padding: 8px 10px 7px;
+  text-shadow: 1px 1px 0px #FFF;
   overflow: hidden; 
+}
+.widget-header i
+{
+  font-size: 18px;
+}
+.widget-header  a
+{
+  color: #9FAAB0;
+}
+.widget-header a:hover
+{
+  color: #818D93;
 }
 .widget-header h1
 {
-  background-color: #dddddd; 
-  font-size: 1em;
-	margin: 0 0 0 0; 
+  font-size: 15px;
+  text-shadow: 1px 1px 0px #FFF;
+  color: #292929;
+  margin: 0 0 0 0; 
   padding: 0 0 0 0; 
   float: left;
   cursor: move;
@@ -52,21 +68,26 @@ color: white;
 }
 .widget-container 
 {
-  margin: 10px 0 0 0;
-	border: 1px solid #555555; 
+  border: 1px solid #BEBEC4;
+  border-radius: 3px;
+  background-color: #F7F9FA;
+  margin: 10px 0 0 0; 
 }
 .widget-row 
 {
-	background-color: #ccccff;
-	margin: 1px;
-	padding: 2px;
+  margin: 1px;
+  padding: 2px;
+  border-bottom: 1px dashed #D5D5D5;
+  
 }
 .widget-body 
-{
-	clear: both;
-  background-color: #dddddd;
+{ 
+  clear: both;
+  background-color: #F7F9FA;
   padding: 2px;
   /*margin: 1px;*/
+  font-size: 15px;
+  color: #666;
 }
 .ui-sortable-placeholder { margin: 10px 0 0 0; border: 2px dashed black; visibility: visible !important; background: #dddddd }
 .ui-sortable-placeholder * { visibility: hidden; }
