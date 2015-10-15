@@ -21,7 +21,7 @@ if (isset ($_GET['act'])&&isset ($_GET['method'])) {
           $class,
           $_GET['method']
       ));
-      $result = htmlentities((string)$result, ENT_QUOTES, 'utf-8', FALSE);
+      $result = htmlentities_recurse((string)$result, ENT_QUOTES, 'utf-8', FALSE);
       echo json_encode ($result);exit();
     } else {
       echo 'method error';
