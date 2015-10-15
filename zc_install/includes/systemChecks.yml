@@ -265,11 +265,6 @@ systemChecks:
             fieldName: widget_group
             fieldCheck: Type
             expectedResult: 'VARCHAR(64)'
-          - checkType: fieldSchema
-            tableName: admin
-            fieldName: reset_token
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
 
   checkDBVersion155:
     runLevel: dbVersion
@@ -282,6 +277,16 @@ systemChecks:
           - checkType: configValue
             fieldName: CC_ENABLED_DEBIT
             expectedResult: 'Credit Card Enable Status - Debit'
+          - checkType: fieldSchema
+            tableName: admin
+            fieldName: reset_token
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: shipping_method
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
 
   checkDBVersion154:
     runLevel: dbVersion
