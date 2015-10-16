@@ -125,7 +125,7 @@ abstract class AbstractLeadController extends AbstractController
             $this->service->populateLanguageKeys($key, $languages, $resultItems);
         }
         $this->tplVars['hiddenFields'][] = $this->service->getEditHiddenField();
-        $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action')));
+        $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
     }
 
     /**
@@ -163,7 +163,7 @@ abstract class AbstractLeadController extends AbstractController
         $this->tplVars['legendTitle'] = TEXT_LEAD_ADD_ENTRY;
         $this->tplVars['leadDefinition']['action'] = 'add';
         $this->tplVars['leadDefinition']['formAction'] = 'insert';
-        $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action')));
+        $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
     }
 
     /**
