@@ -15,7 +15,7 @@ color:#0000ff;
 text-decoration:none;
 }
 a,body,html,table{
-font:normal normal 11px Verdana,sans-serif;
+font:normal normal 11px Verdana, sans-serif;
 }
 a:hover{
 color:#0000ff;
@@ -316,7 +316,6 @@ h1,.pageHeading{
 color:#003D00; /*727272*/
 font-size:16px;
 font-variant:small-caps;
-font-weight:bold;
 }
 .SaleMakerDisabled{
 background-color:#f0f1f1;

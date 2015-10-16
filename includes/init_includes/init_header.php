@@ -3,7 +3,7 @@
  * header code, mainly concerned with adding to messagestack when certain warnings are applicable
  *
  * @package templateStructure
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
@@ -152,3 +152,5 @@ if ($_SESSION['customer_id'] && zcRequest::readGet('main_page') != FILENAME_ADDR
     $addresses->MoveNext();
   }
 }
+$zcTplManager = new \ZenCart\View\TplVarManager();
+$zcView = new \ZenCart\View\View($zcTplManager, $messageStack, $breadcrumb);

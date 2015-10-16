@@ -3,10 +3,10 @@
  * messageStack Class.
  *
  * @package classes
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: message_stack.php 14169 2009-08-15 23:58:05Z drbyte $
+ * @version $Id: message_stack.php drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -38,15 +38,15 @@ class messageStack extends base {
     $duplicate = false;
     if (strlen($message) > 0) {
       if ($type == 'error') {
-        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_ERROR, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_ERROR, ICON_ERROR_ALT), 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-exclamation-triangle"></i>', 'text' => $message, 'type' => $type);
       } elseif ($type == 'warning') {
-        $theAlert = array('params' => 'class="messageStackWarning larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT), 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackWarning larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-exclamation-circle"></i>', 'text' => $message, 'type' => $type);
       } elseif ($type == 'success') {
-        $theAlert = array('params' => 'class="messageStackSuccess larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_SUCCESS, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_SUCCESS, ICON_SUCCESS_ALT), 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackSuccess larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-thumbs-o-up"></i>', 'text' => $message, 'type' => $type);
       } elseif ($type == 'caution') {
-        $theAlert = array('params' => 'class="messageStackCaution larger"', 'class' => $class, 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT), 'text' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackCaution larger"', 'class' => $class, 'icon' => '<i class="fa fa-2x fa-hand-paper-o"></i>', 'text' => $message, 'type' => $type);
       } else {
-        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => $message, 'type' => $type);
+        $theAlert = array('params' => 'class="messageStackError larger"', 'class' => $class, 'icon' => '', 'text' => $message, 'type' => $type);
       }
 
       for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
