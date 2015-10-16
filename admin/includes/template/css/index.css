@@ -127,6 +127,6 @@ text-align:center;
 
 .row { max-width: none}
 
-.form-horizontal input, select  {font-size: 1.2em !important}
-
-label {font-size: 1.2em}
+.form-horizontal input, select  {font-size: 1.0em !important;}
+.widget-edit-form select {padding:0;}
+label {font-size: 1.0em}
