@@ -95,7 +95,7 @@
         <div class="small-3 columns">
           <label><span class="prefix"><?php echo TEXT_FORM_LABEL_STORE_ZONE; ?></span>
         </div>
-        <div class="small-9 columns">
+        <div class="small-9 columns" id="store_zone_container">
           <?php echo $tplVars['zoneString']; ?>
         </div></label>
 	  </div>
