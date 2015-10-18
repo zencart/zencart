@@ -17,7 +17,7 @@
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
-define('DEBUG_AUTOLOAD', false);
+if (!defined('DEBUG_AUTOLOAD')) define('DEBUG_AUTOLOAD', false);
 /**
  * boolean used to see if we are in the admin script, obviously set to false here.
  * DO NOT REMOVE THE define BELOW. WILL BREAK ADMIN
@@ -141,7 +141,6 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 /**
  * Prepare init-system
  */
-unset($loaderPrefix); // admin doesn't need this override
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
@@ -154,7 +153,6 @@ require('includes/initsystem.php');
  * load the autoloader interpreter code.
  */
   require(DIR_FS_CATALOG . 'includes/autoload_func.php');
-
 
 
 function zen_parse_url($url, $element = 'array')

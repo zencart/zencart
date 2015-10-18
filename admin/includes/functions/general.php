@@ -1015,6 +1015,21 @@
     return zen_draw_pull_down_menu($name, $editors_pulldown, $html_editor);
   }
 
+  function zen_cfg_pull_down_exchange_rate_sources($source, $key = '') {
+    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $pulldown = array();
+    $pulldown[] = array('id' => TEXT_NONE, 'text' => TEXT_NONE);
+    $funcs = get_defined_functions();
+    $funcs = $funcs['user'];
+    sort($funcs);
+    foreach ($funcs as $func) {
+      if (preg_match('/quote_(.*)_currency/', $func, $regs)) {
+        $pulldown[] = array('id' => $regs[1], 'text' => $regs[1]);
+      }
+    }
+    return zen_draw_pull_down_menu($name, $pulldown, $source);
+  }
+
   function zen_cfg_password_input($value, $key = '') {
     if (function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
       $value = dbenc_decrypt($value);

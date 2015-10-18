@@ -1,9 +1,9 @@
 <?php
 /**
  * File contains the autoloader loop
- * 
+ *
  * The autoloader loop takes the array from the auto_loaders directory
- * and uses this this to constuct the InitSysytem. 
+ * and uses this this to constuct the InitSysytem.
  * see {@link http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem} for more details.
  *
  * @package initSystem
@@ -92,6 +92,6 @@ foreach ($autoLoadConfig as $actionPoint => $row) {
       }
       break;
     }
-    if (DEBUG_AUTOLOAD === true) echo $debugOutput;
+    if (DEBUG_AUTOLOAD === true) echo str_replace('<br />', '<br />' . "\n", $debugOutput);
   }
 }

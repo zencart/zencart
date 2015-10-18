@@ -75,3 +75,8 @@ if (!defined('DIR_FS_LOGS')) {
     @ini_set('error_reporting', $errors_to_log ); // log only errors according to defined rules
     set_error_handler('zen_debug_error_handler', $errors_to_log);
   }
+
+  if (defined('IS_CLI') && IS_CLI == 'VERBOSE') {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+  }
