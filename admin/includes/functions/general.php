@@ -3157,6 +3157,29 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
+   * build a list of directories in a specified parent folder
+   * (formatted in id/text pairs for SELECT boxes)
+   *
+   * @todo convert to a directory-iterator instead
+   * @todo - this will be deprecated after converting remaining admin pages to LEAD format
+   *
+   * @return array (id/text pairs)
+   */
+  function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Main Directory') {
+    if ($parent_folder == '') $parent_folder = DIR_FS_CATALOG_IMAGES;
+    $dir_info[] = array('id' => '', 'text' => $default_text);
+
+    $dir = @dir($parent_folder);
+    while ($file = $dir->read()) {
+      if (is_dir($parent_folder . $file) && $file != "." && $file != "..") {
+        $dir_info[] = array('id' => $file . '/', 'text' => $file);
+      }
+    }
+    $dir->close();
+    sort($dir_info);
+    return $dir_info;
+  }
+/**
  * Recursive algorithm to restrict all sub_categories of a specified category to a specified product_type
  */
   function zen_restrict_sub_categories($zf_cat_id, $zf_type) {

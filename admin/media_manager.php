@@ -249,14 +249,7 @@
       $contents[] = array('text' => TEXT_MEDIA_EDIT_INSTRUCTIONS);
       $contents[] = array('text' => zen_draw_separator('pixel_black.gif'));
 
-      $dir = @dir(DIR_FS_CATALOG_MEDIA);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (@is_dir(DIR_FS_CATALOG_MEDIA . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != ".." && $file != '.svn') {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_MEDIA);
       $contents[] = array('text' => '<br />' . TEXT_ADD_MEDIA_CLIP . zen_draw_file_field('clip_filename'));
       $contents[] = array('text' => TEXT_MEDIA_CLIP_DIR . ' ' . zen_draw_pull_down_menu('media_dir', $dir_info));
       $media_type_query = "select type_id, type_name, type_ext from " . TABLE_MEDIA_TYPES;

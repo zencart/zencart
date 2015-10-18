@@ -160,15 +160,7 @@
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_NAME . $category_inputs_string);
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_IMAGE . '<br />' . zen_draw_file_field('categories_image'));
 
-        $dir = @dir(DIR_FS_CATALOG_IMAGES);
-        $dir_info[] = array('id' => '', 'text' => "Main Directory");
-        while ($file = $dir->read()) {
-          if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-            $dir_info[] = array('id' => $file . '/', 'text' => $file);
-          }
-        }
-        $dir->close();
-
+        $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
         $default_directory = substr( $cInfo->categories_image, 0,strpos( $cInfo->categories_image, '/')+1);
         $contents[] = array('text' => TEXT_CATEGORIES_IMAGE_DIR . ' ' . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
 
@@ -189,15 +181,7 @@
         $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_NAME . $category_inputs_string);
         $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_IMAGE . '<br />' . zen_draw_file_field('categories_image'));
 
-        $dir = @dir(DIR_FS_CATALOG_IMAGES);
-        $dir_info[] = array('id' => '', 'text' => "Main Directory");
-        while ($file = $dir->read()) {
-          if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-            $dir_info[] = array('id' => $file . '/', 'text' => $file);
-          }
-        }
-        $dir->close();
-
+        $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
         $default_directory = substr( $cInfo->categories_image, 0,strpos( $cInfo->categories_image, '/')+1);
         $contents[] = array('text' => TEXT_CATEGORIES_IMAGE_DIR . ' ' . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
         $contents[] = array('text' => '<br>' . zen_info_image($cInfo->categories_image, $cInfo->categories_name));

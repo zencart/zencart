@@ -297,16 +297,7 @@ echo zen_draw_hidden_field('products_quantity_order_units', 1);
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
 <?php
-  $dir = @dir(DIR_FS_CATALOG_IMAGES);
-  $dir_info[] = array('id' => '', 'text' => "Main Directory");
-  while ($file = $dir->read()) {
-    if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $dir_info[] = array('id' => $file . '/', 'text' => $file);
-    }
-  }
-  $dir->close();
-  sort($dir_info);
-
+  $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
   $default_directory = substr( $pInfo->products_image, 0,strpos( $pInfo->products_image, '/')+1);
 ?>
           <tr>
