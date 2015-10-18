@@ -12,7 +12,7 @@
   $dir = @dir(DIR_FS_CATALOG_TEMPLATES);
   if (!$dir) die('DIR_FS_CATALOG_TEMPLATES NOT SET');
   while ($file = $dir->read()) {
-    if (is_dir(DIR_FS_CATALOG_TEMPLATES . $file) && strtoupper($file) != 'CVS' && $file != 'template_default') {
+    if (is_dir(DIR_FS_CATALOG_TEMPLATES . $file) && $file != 'template_default') {
       if (file_exists(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php')) {
         require(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php');
         $template_info[$file] = array('name' => $template_name,
