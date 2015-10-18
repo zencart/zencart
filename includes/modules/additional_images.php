@@ -5,7 +5,7 @@
  * Prepares list of additional product images to be displayed in template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: additional_images.php 18697 2011-05-04 14:35:20Z wilt $
@@ -13,6 +13,8 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+$zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_START');
+
 if (!defined('IMAGE_ADDITIONAL_DISPLAY_LINK_EVEN_WHEN_NO_LARGE')) define('IMAGE_ADDITIONAL_DISPLAY_LINK_EVEN_WHEN_NO_LARGE','Yes');
 $images_array = array();
 
@@ -64,6 +66,9 @@ if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
   }
 }
 
+$zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_LIST', NULL, $images_array);
+
+
 // Build output based on images found
 $num_images = sizeof($images_array);
 $list_box_contents = '';
@@ -109,3 +114,5 @@ if ($num_images) {
     }
   } // end for loop
 } // endif
+
+$zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_END');
