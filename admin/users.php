@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Jul 16 15:05:32 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Sep 12 2014 Modified in v1.5.4 $
  */
 
 require('includes/application_top.php');
 
 // Check if session has timed out
-if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN));
+if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 
 // make a note of the current user - they can't delete themselves (by accident) or change their own status
 $currentUser = $_SESSION['admin_id'];

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: admin_account.php 18698 2011-05-04 14:50:06Z wilt $
@@ -13,7 +13,7 @@ if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php')) {
 }
 
 // Check if session has timed out
-if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN));
+if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 $user = $_SESSION['admin_id'];
 
 // determine whether an action has been requested
