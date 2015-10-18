@@ -14,3 +14,5 @@ devtools.php
 Thumbs.db
 /vendor
 clover.xml
+configure.php
+
