@@ -84,7 +84,7 @@
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       if (!$payment_modules->in_special_checkout()) {
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
-<fieldset>
+<fieldset class="payment">
 <legend><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></legend>
 
 <?php

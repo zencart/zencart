@@ -5,7 +5,7 @@
  * Template used to render attribute display/input fields
  *
  * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_modules_attributes.php 3208 2006-03-19 16:48:57Z birdbrain $
@@ -27,7 +27,7 @@
   }
 ?>
 
-<div class="wrapperAttribsOptions">
+<div class="wrapperAttribsOptions" id="<?php echo $options_html_id[$i]; ?>">
 <h4 class="optionName back"><?php echo $options_name[$i]; ?></h4>
 <div class="back"><?php echo "\n" . $options_menu[$i]; ?></div>
 <br class="clearBoth" />
