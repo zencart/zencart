@@ -134,7 +134,7 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
   }
   if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }
 /**
@@ -147,6 +147,6 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
   if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }
