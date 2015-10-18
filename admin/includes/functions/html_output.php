@@ -294,10 +294,10 @@
 
 ////
 // Output a form hidden field
-  function zen_draw_hidden_field($name, $value = '', $parameters = '') {
+  function zen_draw_hidden_field($name, $value = '~*~*#', $parameters = '') {
     $field = '<input type="hidden" name="' . zen_output_string($name) . '"';
 
-    if (zen_not_null($value)) {
+    if (zen_not_null($value) && $value != '~*~*#') {
       $field .= ' value="' . zen_output_string($value) . '"';
     } elseif (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
