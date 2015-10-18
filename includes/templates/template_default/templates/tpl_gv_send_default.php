@@ -5,10 +5,10 @@
  * Template used to collect/display details of sending a GV to a friend from own GV balance. <br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_gv_send_default.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: tpl_gv_send_default.php drbyte  Modified in v1.5.5 $
  */
 ?>
 <div class="centerColumn" id="gvSendDefault">
@@ -45,9 +45,9 @@
 <h1 id="gvSendDefaultHeadingConfirm"><?php echo HEADING_TITLE_CONFIRM_SEND; ?></h1>
 
 <?php echo zen_draw_form('gv_send_process', zen_href_link(FILENAME_GV_SEND, 'action=process', 'SSL', false)); ?>
-<div id="gvSendDefaultMainMessage" class="content"><?php echo sprintf(MAIN_MESSAGE, $currencies->format($_POST['amount'], false), $_POST['to_name'], $_POST['email']); ?></div>
+<div id="gvSendDefaultMainMessage" class="content"><?php echo sprintf(MAIN_MESSAGE, $currencies->format($currencies->normalizeValue($_POST['amount']), false), $_POST['to_name'], $_POST['email']); ?></div>
 
-<div id="gvSendDefaultMessageSecondary" class="content"><?php echo sprintf(SECONDARY_MESSAGE, $_POST['to_name'], $currencies->format($_POST['amount'], false), $send_name); ?></div>
+<div id="gvSendDefaultMessageSecondary" class="content"><?php echo sprintf(SECONDARY_MESSAGE, $_POST['to_name'], $currencies->format($currencies->normalizeValue($_POST['amount']), false), $send_name); ?></div>
 <?php
     if ($_POST['message']) {
 ?>

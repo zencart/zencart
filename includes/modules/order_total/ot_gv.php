@@ -107,8 +107,7 @@ class ot_gv {
   function pre_confirmation_check($order_total) {
     global $order, $currencies, $messageStack;
     // clean out negative values and strip common currency symbols
-    $_SESSION['cot_gv'] = preg_replace('/[^0-9,.%]/', '', $_SESSION['cot_gv']);
-    $_SESSION['cot_gv'] = abs($_SESSION['cot_gv']);
+    $_SESSION['cot_gv'] = preg_replace('/[^0-9.,%]/', '', $_SESSION['cot_gv']);
 
     if ($_SESSION['cot_gv'] > 0) {
       // if cot_gv value contains any nonvalid characters, throw error
@@ -290,7 +289,8 @@ class ot_gv {
   function calculate_credit($save_total_cost) {
     global $db, $order, $currencies;
     // calculate value based on default currency
-    $gv_payment_amount = $currencies->value($_SESSION['cot_gv'], true, DEFAULT_CURRENCY);
+    $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
+    $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
     $full_cost = $save_total_cost - $gv_payment_amount;
     if ($full_cost < 0) {
       $full_cost = 0;
