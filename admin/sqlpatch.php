@@ -801,7 +801,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
         </tr>
         <tr>
           <td valign="top" class="main" width="110px"><?php echo TEXT_ENTER_QUERY_STRING; ?></td>
-          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery"',false); ?></td>
+          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery noEditor"',false); ?></td>
         </tr>
         <tr>
           <td colspan="2" align="right"><?php echo zen_image_submit('button_send.gif', IMAGE_SEND); ?></td>

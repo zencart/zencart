@@ -106,7 +106,6 @@
       var kill = document.getElementById('hoverJS');
       kill.disabled = true;
     }
-if (typeof _editor_url == "string") HTMLArea.replaceAll();
  }
  // -->
 </script>
