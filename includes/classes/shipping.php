@@ -70,7 +70,21 @@ class shipping extends base {
       }
     }
   }
-
+  function check_enabled($class)
+  {
+    $enabled = $class->enabled;
+    if (method_exists($class, 'check_enabled_for_zone') && $class->enabled)
+    {
+      $enabled = $class->check_enabled_for_zone();
+    }
+    $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE', array(), $class, $enabled);
+    if (method_exists($class, 'check_enabled') && $enabled)
+    {
+      $enabled = $class->check_enabled();
+    }
+    $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED', array(), $class, $enabled);
+    return $enabled;
+  }
   function calculate_boxes_weight_and_tare() {
     global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
@@ -83,11 +97,11 @@ class shipping extends base {
       $shipping_num_boxes = 1;
       $shipping_weight = $total_weight;
 
-      $za_tare_array = preg_split("/[:,]/" , SHIPPING_BOX_WEIGHT);
+      $za_tare_array = preg_split("/[:,]/" , str_replace(' ', '', SHIPPING_BOX_WEIGHT));
       $zc_tare_percent= $za_tare_array[0];
       $zc_tare_weight= $za_tare_array[1];
 
-      $za_large_array = preg_split("/[:,]/" , SHIPPING_BOX_PADDING);
+      $za_large_array = preg_split("/[:,]/" , str_replace(' ', '', SHIPPING_BOX_PADDING));
       $zc_large_percent= $za_large_array[0];
       $zc_large_weight= $za_large_array[1];
 
@@ -114,6 +128,8 @@ class shipping extends base {
           break;
       }
 
+      // total weight with Tare
+      $_SESSION['shipping_weight'] = $shipping_weight;
       if ($shipping_weight > SHIPPING_MAX_WEIGHT) { // Split into many boxes
 //        $shipping_num_boxes = ceil($shipping_weight/SHIPPING_MAX_WEIGHT);
         $zc_boxes = zen_round(($shipping_weight/SHIPPING_MAX_WEIGHT), 2);
@@ -124,10 +140,13 @@ class shipping extends base {
     $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
   }
 
-  function quote($method = '', $module = '', $calc_boxes_weight_tare = true) {
+  function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = array()) {
+    global $shipping_weight, $uninsurable_value;
     $quotes_array = array();
 
     if ($calc_boxes_weight_tare) $this->calculate_boxes_weight_and_tare();
+    // calculate amount not to be insured on shipping
+    $uninsurable_value = (method_exists($this, 'get_uninsurable_value')) ? $this->get_uninsurable_value($insurance_exclusions) : 0;
 
     if (is_array($this->modules)) {
       $include_quotes = array();
@@ -146,11 +165,15 @@ class shipping extends base {
 
       $size = sizeof($include_quotes);
       for ($i=0; $i<$size; $i++) {
+        if (method_exists($GLOBALS[$include_quotes[$i]], 'update_status')) $GLOBALS[$include_quotes[$i]]->update_status();
+        if (FALSE == $GLOBALS[$include_quotes[$i]]->enabled) continue;
+        $save_shipping_weight = $shipping_weight;
         $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
+        $shipping_weight = $save_shipping_weight;
         if (is_array($quotes)) $quotes_array[] = $quotes;
       }
     }
-    $this->notify('NOTIFY_SHIPPING_MODULE_GET_ALL_QUOTES', $quotes_array);
+    $this->notify('NOTIFY_SHIPPING_MODULE_GET_ALL_QUOTES', $quotes_array, $quotes_array);
     return $quotes_array;
   }
 
@@ -191,7 +214,7 @@ class shipping extends base {
           }
         }
       }
-      $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest);
+      $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest, $cheapest, $rates);
       return $cheapest;
     }
   }
