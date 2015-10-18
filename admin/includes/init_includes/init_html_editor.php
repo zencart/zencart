@@ -22,7 +22,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  * NOTE: THERE SHOULD BE NO NEED TO EDIT ANYTHING BELOW THIS LINE:
  */
   $editors_list['NONE'] = array('desc' => EDITOR_NONE, 'handler' => '', 'special_needs' => ''); // plain text
-  if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'htmlarea')) $editors_list['HTMLAREA']  = array('desc' => EDITOR_HTMLAREA,  'handler' => 'htmlarea.php',  'special_needs' => '');
   if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'ckeditor')) $editors_list['CKEDITOR']  = array('desc' => EDITOR_CKEDITOR,  'handler' => 'ckeditor.php',  'special_needs' => '');
   if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tiny_mce')) $editors_list['TINYMCE']   = array('desc' => EDITOR_TINYMCE,   'handler' => 'tinymce.php',   'special_needs' => '');
 
