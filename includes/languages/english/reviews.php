@@ -8,8 +8,9 @@
  */
 
 define('NAVBAR_TITLE', 'Reviews');
+define('HEADING_TITLE', 'Reviews');
+
 define('TEXT_OF_5_STARS', '');
 
 define('TEXT_PRODUCT_INFO', 'Product Information');
 define('TEXT_READ_REVIEW', 'Read Review');
-?>

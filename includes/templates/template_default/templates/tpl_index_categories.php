@@ -41,7 +41,7 @@
 <?php } ?>
 
 <?php } else { ?>
-<h1 id="indexCategoriesHeading"><?php echo $breadcrumb->last(); ?></h1>
+<h1 id="indexCategoriesHeading"><?php echo $current_categories_name; ?></h1>
 <?php } ?>
 
 <?php

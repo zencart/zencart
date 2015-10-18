@@ -14,7 +14,7 @@
 ?>
 <div class="centerColumn" id="indexProductList">
 
-<h1 id="productListHeading"><?php echo $breadcrumb->last(); ?></h1>
+<h1 id="productListHeading"><?php echo $current_categories_name; ?></h1>
 
 <?php
 if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {

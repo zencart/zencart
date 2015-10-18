@@ -11,7 +11,7 @@
 ?>
 <div class="centerColumn" id="reviewsDefault">
 
-<h1 id="reviewsDefaultHeading"><?php echo $breadcrumb->last();  ?></h1>
+<h1 id="reviewsDefaultHeading"><?php echo HEADING_TITLE ?></h1>
 
 <?php
   if ($reviews_split->number_of_rows > 0) {
