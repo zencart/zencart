@@ -87,7 +87,7 @@ class zcConfigureFileReader {
 		if(!$this->fileLoaded()) return null;
 
 		// Extract the contents of the define
-		if(preg_match('|define\(\s*[\'"]' . $searchDefine . '[\'"]\s*,\s*(?!\s*\);)(.+?)\s*\);|', $this->fileContent, $matches)) {
+		if(preg_match('|\s*define\(\s*[\'"]' . $searchDefine . '[\'"]\s*,\s*(?!\s*\);)(.+?)\s*\);|', $this->fileContent, $matches)) {
 			return $matches[1];
 		}
 		return null;
