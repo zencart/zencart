@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
+ * @version GIT: $Id: Author: wilt  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   $heading = array();
   $heading[] = array('params' => 'class="menuBoxHeading"',
                      'text'  => BOX_HEADING_TOOLS,
-                     'link'  => zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('selected_box')) . 'selected_box=tools'));
+                     'link'  => zen_href_link(basename($PHP_SELF), ''));
 
   $contents = array();
   $contents[] = array('text'  => SOME_TEXT);
