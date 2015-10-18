@@ -71,6 +71,17 @@ if (!defined('IS_ADMIN_FLAG')) {
       $products_url = $_POST['products_url'];
     }
 
+    $category_lookup = $db->Execute("select *
+                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                              where c.categories_id ='" . (int)$current_category_id . "'
+                              and c.categories_id = cd.categories_id
+                              and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    if (!$category_lookup->EOF) {
+      $cInfo = new objectInfo($category_lookup->fields);
+    } else {
+      $cInfo = new objectInfo(array());
+    }
+
     $artists_array = array(array('id' => '', 'text' => TEXT_NONE));
     $artists = $db->Execute("select artists_id, artists_name
                                    from " . TABLE_RECORD_ARTISTS . " order by artists_name");
@@ -242,7 +253,7 @@ echo zen_draw_form('new_product', $type_admin_handler , 'cPath=' . $cPath . (iss
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)); ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
