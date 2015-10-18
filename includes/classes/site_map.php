@@ -33,8 +33,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
    function __construct($load_from_database = true) {
      global $languages_id, $db;
-  $this->data = array();
- $categories_query = "select c.categories_id, cd.categories_name, c.parent_id
+     $this->data = array();
+     $categories_query = "select c.categories_id, cd.categories_name, c.parent_id
                       from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
                       where c.categories_id = cd.categories_id
                       and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'

@@ -13,7 +13,7 @@
     var $currencies;
 
 // class constructor
-    function currencies() {
+    function __construct() {
       global $db;
       $this->currencies = array();
       $currencies = $db->Execute("select code, title, symbol_left, symbol_right, decimal_point,

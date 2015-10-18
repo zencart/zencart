@@ -21,7 +21,7 @@ class currencies extends base {
   var $currencies;
 
   // class constructor
-  function currencies() {
+  function __constuct() {
     global $db;
     $this->currencies = array();
     $currencies_query = "select code, title, symbol_left, symbol_right, decimal_point,
@@ -61,7 +61,7 @@ class currencies extends base {
 
     return $format_string;
   }
-  
+
   function rateAdjusted($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
 
     if (empty($currency_type)) $currency_type = $_SESSION['currency'];
@@ -74,7 +74,7 @@ class currencies extends base {
     }
     return $result;
   }
-  
+
   function value($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
 
     if (empty($currency_type)) $currency_type = $_SESSION['currency'];

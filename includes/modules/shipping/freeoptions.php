@@ -12,7 +12,7 @@
     var $ck_freeoptions_total, $ck_freeoptions_weight, $ck_freeoptions_items;
 
 // class constructor
-    function freeoptions() {
+    function __construct() {
       global $order, $db;
 
       $this->code = 'freeoptions';

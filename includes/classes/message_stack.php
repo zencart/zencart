@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 class messageStack extends base {
 
   // class constructor
-  function messageStack() {
+  function __construct() {
 
     $this->messages = array();
 

@@ -28,7 +28,7 @@ if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUM
 class breadcrumb extends base {
   var $_trail;
 
-  function breadcrumb() {
+  function __construct() {
     $this->reset();
   }
 

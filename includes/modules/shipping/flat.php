@@ -11,7 +11,7 @@
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
-    function flat() {
+    function __construct() {
       global $order, $db;
 
       $this->code = 'flat';

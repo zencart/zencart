@@ -46,7 +46,7 @@ class perweightunit extends base {
    *
    * @return perweightunit
    */
-  function perweightunit() {
+  function __construct() {
     global $order, $db;
 
     $this->code = 'perweightunit';

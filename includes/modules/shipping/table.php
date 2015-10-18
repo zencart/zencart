@@ -46,7 +46,7 @@ class table extends base {
    *
    * @return table
    */
-  function table() {
+  function __construct() {
     global $order, $db;
 
     $this->code = 'table';

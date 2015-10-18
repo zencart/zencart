@@ -12,7 +12,7 @@
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
-    function item() {
+    function __construct() {
       global $order, $db;
 
       $this->code = 'item';
