@@ -479,7 +479,8 @@ $sql = "select count(*) as total
                         $tmp_attributes_image_row = 1;
                       }
 
-                      $tmp_attributes_image .= '<div class="attribImg">' . zen_image(DIR_WS_IMAGES . $products_options->fields['attributes_image']) . (PRODUCT_IMAGES_ATTRIBUTES_NAMES == '1' ? '<br />' . $products_options->fields['products_options_values_name'] : '') . '</div>' . "\n";
+// Do not show TEXT option value on images
+                      $tmp_attributes_image .= '<div class="attribImg">' . zen_image(DIR_WS_IMAGES . $products_options->fields['attributes_image']) . (PRODUCT_IMAGES_ATTRIBUTES_NAMES == '1' ? ( ($products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT && $products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) ? '<br />' . $products_options->fields['products_options_values_name'] : '') : '') . '</div>' . "\n";
                     }
                   }
 
