@@ -71,11 +71,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
   }
 
-  // log cleanup
-  if ($za_dir = @dir(DIR_FS_SQL_CACHE)) {
+  // log cleanup for zc_install "info logs". This still leaves behind any zcInstallDEBUG or zcInstallException log files
+  if ($za_dir = @dir(DIR_FS_LOGS)) {
     while ($zv_file = $za_dir->read()) {
-      if (preg_match('/^zcInstall.*\.log$/', $zv_file)) {
-        unlink(DIR_FS_SQL_CACHE . '/' . $zv_file);
+      if (preg_match('/^zcInstallLog.*\.log$/', $zv_file)) {
+        unlink(DIR_FS_LOGS . '/' . $zv_file);
       }
     }
     $za_dir->close();
