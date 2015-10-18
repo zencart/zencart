@@ -3,12 +3,15 @@
  * zcAjaxPayment
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  New in v1.5.4 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.5 $
  */
 class zcAjaxPayment extends base
 {
+  /**
+   * Test whether the selected payment module "does" the "CollectsCardDataOnsite" method
+   */
   public function doesCollectsCardDataOnsite()
   {
     require_once (DIR_WS_CLASSES.'payment.php');
@@ -23,6 +26,10 @@ class zcAjaxPayment extends base
         'data' => $retVal
     ));
   }
+
+  /**
+   * Build replacement confirmation page, which doesn't transmit sensitive CHD
+   */
   public function prepareConfirmation()
   {
     global $messageStack, $template, $breadcrumb, $template_dir_select, $template_dir, $language_page_directory, $currencies, $order, $zco_notifier, $db, $current_page_base, $order_total_modules, $credit_covers;
@@ -57,12 +64,15 @@ class zcAjaxPayment extends base
     if (!isset ($_SESSION['shipping'])) {
       zen_redirect (zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
-    if (isset ($_SESSION['shipping']['id'])&&$_SESSION['shipping']['id']=='free_free'&&$_SESSION['cart']->get_content_type ()!='virtual'&&defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING')&&MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING=='true'&&defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')&&$_SESSION['cart']->show_total ()<MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
+    if (isset ($_SESSION['shipping']['id']) && $_SESSION['shipping']['id']=='free_free'
+      && $_SESSION['cart']->get_content_type () != 'virtual'
+      && defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
+      && defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total () < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
       zen_redirect (zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
 
-    if (isset ($_POST['payment']))
-      $_SESSION['payment'] = $_POST['payment'];
+    if (isset ($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
+
     $_SESSION['comments'] = $_POST['comments'];
 
     if (DISPLAY_CONDITIONS_ON_CHECKOUT=='true') {
@@ -91,17 +101,11 @@ class zcAjaxPayment extends base
     $order_total_modules->collect_posts ();
     $order_total_modules->pre_confirmation_check ();
 
-    if (!isset ($credit_covers))
-      $credit_covers = FALSE;
-
-      // echo 'credit covers'.$credit_covers;
-
+    if (!isset ($credit_covers)) $credit_covers = FALSE;
     if ($credit_covers) {
       unset ($_SESSION['payment']);
       $_SESSION['payment'] = '';
     }
-
-    // @debug echo ($credit_covers == true) ? 'TRUE' : 'FALSE';
 
     if (is_array ($payment_modules->modules)) {
       $payment_modules->pre_confirmation_check ();
@@ -110,6 +114,7 @@ class zcAjaxPayment extends base
     if ($messageStack->size ('checkout_payment')>0) {
       zen_redirect (zen_href_link (FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
+
     // Stock Check
     $flagAnyOutOfStock = false;
     $stock_check = array();
@@ -194,6 +199,11 @@ class zcAjaxPayment extends base
         'pageTitle' => META_TAG_TITLE
     ));
   }
+
+  /**
+   * Helper method to test that javascript is enabled, and therefore Ajax can indeed be used.
+   * Implicitly sets some prerequisites in place for smooth processing when the actual prepareConfirmation() method is run later.
+   */
   public function setNoscriptCookie()
   {
     unset($_SESSION['jscript_enabled']);
