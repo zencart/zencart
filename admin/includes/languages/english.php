@@ -84,6 +84,8 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 define('MALE', 'Male');
 define('FEMALE', 'Female');
 
+define('TEXT_CHECK_ALL', 'Check All');
+define('TEXT_UNCHECK_ALL', 'Uncheck All');
 define('NONE', 'None');
 
 // configuration box text

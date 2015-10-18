@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sep 12 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  */
 
 require('includes/application_top.php');
@@ -47,11 +47,11 @@ elseif (in_array($action, array('edit','password','delete','delete_confirm','upd
 switch ($action) {
   case 'add': // display unpopulated form for adding a new user
     $formAction = 'insert';
-    $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+    $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     break;
   case 'edit': // display populated form for editing existing user
     $formAction = 'update';
-    $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+    $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     break;
   case 'password': // display unpopulated form for resetting existing user's password
     $formAction = 'reset';
@@ -72,7 +72,7 @@ switch ($action) {
       }
       $action = 'add';
       $formAction = 'insert';
-      $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+      $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     } else
     {
       $action = '';
@@ -89,7 +89,7 @@ switch ($action) {
       }
       $action = 'edit';
       $formAction = 'update';
-      $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+      $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     } else
     {
       $action = '';
