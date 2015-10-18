@@ -46,7 +46,7 @@
 <br class="clearBoth" />
 
 <label class="inputLabel" for="login-password"><?php echo ENTRY_PASSWORD; ?></label>
-<?php echo zen_draw_password_field('password', '', 'size="18" id="login-password"'); ?>
+<?php echo zen_draw_password_field('password', '', 'size="18" id="login-password" autocomplete="off"'); ?>
 <br class="clearBoth" />
 
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_LOGIN, BUTTON_LOGIN_ALT); ?></div>
