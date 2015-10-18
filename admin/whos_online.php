@@ -160,6 +160,22 @@ function zen_check_minutes($the_time_last_click) {
   $sql = $db->bindVars($sql, ':where:', $where, 'passthru');
   $sql = $db->bindVars($sql, ':orderby:', $order, 'passthru');
   $whos_online = $db->Execute($sql);
+
+  // catch the case where we have an invalid session key, and if so default it to first entry
+  $found_entry = false;
+  $candidate_info = '';
+  while(!$whos_online->EOF) {
+    if (!isset($candidate_info)) $candidate_info = $whos_online->fields['session_id']; // get first entry in list
+    if (!$found_entry && isset($_GET['info']) && $_GET['info'] == $whos_online->fields['session_id']) {
+      $found_entry = true;
+      break;
+    }
+    $whos_online->MoveNext();
+  }
+  if (!$found_entry) $_GET['info'] = $candidate_info;
+
+  // rewind query
+  $whos_online->rewind();
   $total_sess = $whos_online->RecordCount();
 
   $optURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('t', 'na', 'ns'));
@@ -267,7 +283,10 @@ function zen_check_minutes($the_time_last_click) {
                 <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='5') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=5"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ1; ?></a>&nbsp;
                 <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='15') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=15"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ2; ?></a>&nbsp;
                 <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='30') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=30"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ3; ?></a>&nbsp;
-                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='60') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=60"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ4; ?></a>&nbsp;<br />
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='60') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=60"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ4; ?></a>&nbsp;
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='300') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=300"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ5; ?></a>&nbsp;
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='600') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=600"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ6; ?></a>&nbsp;
+                <a class="optionClick<?php echo ($_SESSION['wo_timeout']=='840') ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>t=840"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ7; ?></a>&nbsp;<br />
 
                 <?php echo TEXT_WHOS_ONLINE_FILTER_SPIDERS; ?>
                 <a class="optionClick<?php echo ($_SESSION['wo_exclude_spiders'])  ? ' chosen' : ''; ?>" href="<?php echo $optURL;?>ns=1"><?php echo TEXT_YES; ?></a>&nbsp;
@@ -332,7 +351,8 @@ function zen_check_minutes($the_time_last_click) {
   $d=0;
   while (!$whos_online->EOF) {
     $time_online = (time() - $whos_online->fields['time_entry']);
-    if ( ((!$_GET['info']) || (@$_GET['info'] == $whos_online->fields['session_id'])) && (!$info) ) {
+
+    if ( (!$_GET['info'] || $_GET['info'] == $whos_online->fields['session_id']) && !$info) {
       $info = $whos_online->fields['session_id'];
       $ip_address = $whos_online->fields['ip_address'];
       $full_name = $whos_online->fields['full_name'];
