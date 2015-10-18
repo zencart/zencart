@@ -31,7 +31,7 @@
 <?php // ** END PAYPAL EXPRESS CHECKOUT ** ?>
 <div class="information"><?php echo TEXT_NEW_CUSTOMER_POST_INTRODUCTION_SPLIT; ?></div>
 
-<?php echo zen_draw_form('create', zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL')); ?>
+<?php echo zen_draw_form('create', zen_href_link(FILENAME_CREATE_ACCOUNT, (isset($_GET['gv_no']) ? '&gv_no=' . preg_replace(''/[^0-9.,%]/', '', $_GET['gv_no']) : ''), 'SSL')); ?>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CREATE_ACCOUNT, BUTTON_CREATE_ACCOUNT_ALT, 'name="registrationButton"'); ?></div>
 </form>
 </fieldset>
@@ -40,7 +40,7 @@
 <legend><?php echo HEADING_RETURNING_CUSTOMER_SPLIT; ?></legend>
 <div class="information"><?php echo TEXT_RETURNING_CUSTOMER_SPLIT; ?></div>
 
-<?php echo zen_draw_form('login', zen_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', 'id="loginForm"'); ?>
+<?php echo zen_draw_form('login', zen_href_link(FILENAME_LOGIN, 'action=process' . (isset($_GET['gv_no']) ? '&gv_no=' . preg_replace(''/[^0-9.,%]/', '', $_GET['gv_no']) : ''), 'SSL'), 'post', 'id="loginForm"'); ?>
 <label class="inputLabel" for="login-email-address"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
 <?php echo zen_draw_input_field('email_address', '', 'size="18" id="login-email-address"'); ?>
 <br class="clearBoth" />
@@ -64,7 +64,7 @@
 <?php
   }
 ?>
-<?php echo zen_draw_form('login', zen_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', 'id="loginForm"'); ?>
+<?php echo zen_draw_form('login', zen_href_link(FILENAME_LOGIN, 'action=process' . (isset($_GET['gv_no']) ? '&gv_no=' . preg_replace(''/[^0-9.,%]/', '', $_GET['gv_no']) : ''), 'SSL'), 'post', 'id="loginForm"'); ?>
 <fieldset>
 <legend><?php echo HEADING_RETURNING_CUSTOMER; ?></legend>
 
@@ -83,7 +83,7 @@
 </form>
 <br class="clearBoth" />
 
-<?php echo zen_draw_form('create_account', zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post', 'onsubmit="return check_form(create_account);" id="createAccountForm"') . zen_draw_hidden_field('action', 'process') . zen_draw_hidden_field('email_pref_html', 'email_format'); ?>
+<?php echo zen_draw_form('create_account', zen_href_link(FILENAME_CREATE_ACCOUNT, (isset($_GET['gv_no']) ? '&gv_no=' . preg_replace(''/[^0-9.,%]/', '', $_GET['gv_no']) : ''), 'SSL'), 'post', 'onsubmit="return check_form(create_account);" id="createAccountForm"') . zen_draw_hidden_field('action', 'process') . zen_draw_hidden_field('email_pref_html', 'email_format'); ?>
 <fieldset>
 <legend><?php echo HEADING_NEW_CUSTOMER; ?></legend>
 
