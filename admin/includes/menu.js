@@ -233,7 +233,6 @@ function printAlert()
 function init()
 {
   cssjsmenu('navbar');
-  cssjsmenu('nde-config');
   if (document.getElementById)
   {
     var kill = document.getElementById('hoverJS');
