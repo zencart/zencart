@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Fri Oct 19 13:10:27 2012 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: ajeh  Fri Oct 19 13:10:27 2012 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -164,7 +164,7 @@
         $value_id = zen_db_prepare_input($_GET['value_id']);
 
 // remove all attributes from products with value
-        $remove_attributes_query = $db->Execute("select products_attributes_id, options_id, options_values_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where options_values_id ='" . (int)$value_id . "'");
+        $remove_attributes_query = $db->Execute("select products_id, products_attributes_id, options_id, options_values_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where options_values_id ='" . (int)$value_id . "'");
         if ($remove_attributes_query->RecordCount() > 0) {
           // clean all tables of option value
           while (!$remove_attributes_query->EOF) {
@@ -939,7 +939,7 @@ example: Copy Color Red to products with Size Small
                   </td>
                   <td class="dataTableHeadingContent">
                   <?php echo
-                  TEXT_SELECT_OPTION_TO . '<br />' . $option_to_dropdown . '&nbsp<br />' .
+                  TEXT_SELECT_OPTION_TO . '<br />' . $option_to_dropdown . '&nbsp;<br />' .
                   TEXT_SELECT_OPTION_VALUES_TO . '<br />' . $option_values_to_dropdown;?>&nbsp;
                   </td>
                   <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?>&nbsp;</td>
