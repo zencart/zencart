@@ -4,10 +4,10 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -36,10 +36,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
   // clean up URL before executing it
-    while (strstr($url, '&&')) $url = str_replace('&&', '&', $url);
-    while (strstr($url, '&amp;&amp;')) $url = str_replace('&amp;&amp;', '&amp;', $url);
+    $url = preg_replace('/&{2,}/', '&', $url);
+    $url = preg_replace('/(&amp;)+/', '&amp;', $url);
     // header locates should not have the &amp; in the address it breaks things
-    while (strstr($url, '&amp;')) $url = str_replace('&amp;', '&', $url);
+    $url = preg_replace('/(&amp;)+/', '&', $url);
 
     if ($httpResponseCode == '') {
       session_write_close();
@@ -54,11 +54,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Parse the data used in the html tags to ensure the tags will not break.
- * Basically just an extension to the php strstr function
+ * Basically just an extension to the php strtr function
  * @param string The string to be parsed
  * @param string The needle to find
 */
-// Parse the data used in the html tags to ensure the tags will not break
   function zen_parse_input_field_data($data, $parse) {
     return strtr(trim($data), $parse);
   }
@@ -160,8 +159,9 @@ if (!defined('IS_ADMIN_FLAG')) {
         }
       }
     }
-    while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
-    while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
+
+    $get_url = preg_replace('/&{2,}/', '&', $get_url);
+    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
 
     return $get_url;
   }
@@ -540,8 +540,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // Return table heading with sorting capabilities
   function zen_create_sort_heading($sortby, $colnum, $heading) {
-    global $PHP_SELF;
-
     $sort_prefix = '';
     $sort_suffix = '';
 
@@ -1072,6 +1070,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     if ($str == "") return $str;
     if (is_array($str)) return $str;
     $str = trim($str);
+    $len = (int)$len;
+    if ($len == 0) return '';
     // if it's les than the size given, then return it
     if (strlen($str) <= $len) return $str;
     // else get that size of text
@@ -1099,7 +1099,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // set current box id
   function zen_get_box_id($box_id) {
-    while (strstr($box_id, '_')) $box_id = str_replace('_', '', $box_id);
+    $box_id = str_replace('_', '', $box_id);
     $box_id = str_replace('.php', '', $box_id);
     return $box_id;
   }
@@ -1191,7 +1191,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // enable shipping
   function zen_get_shipping_enabled($shipping_module) {
-    global $PHP_SELF, $cart, $order;
+    global $PHP_SELF, $order;
 
     // for admin always true if installed
     if (strstr($PHP_SELF, FILENAME_MODULES)) {
@@ -1275,15 +1275,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     $clean_it= nl2br($clean_it);
 
 // update breaks with a space for text displays in all listings with descriptions
-    while (strstr($clean_it, '<br>'))   $clean_it = str_replace('<br>',   ' ', $clean_it);
-    while (strstr($clean_it, '<br />')) $clean_it = str_replace('<br />', ' ', $clean_it);
-    while (strstr($clean_it, '<br/>'))  $clean_it = str_replace('<br/>',  ' ', $clean_it);
-    while (strstr($clean_it, '<p>'))    $clean_it = str_replace('<p>',    ' ', $clean_it);
-    while (strstr($clean_it, '</p>'))   $clean_it = str_replace('</p>',   ' ', $clean_it);
+    $clean_it = preg_replace('~(<br ?/?>|</?p>)~', ' ', $clean_it);
 
 // temporary fix more for reviews than anything else
-    while (strstr($clean_it, '<span class="smallText">')) $clean_it = str_replace('<span class="smallText">', ' ', $clean_it);
-    while (strstr($clean_it, '</span>')) $clean_it = str_replace('</span>', ' ', $clean_it);
+    $clean_it = str_replace('<span class="smallText">', ' ', $clean_it);
+    $clean_it = str_replace('</span>', ' ', $clean_it);
 
 // clean general and specific tags:
     $taglist = array('strong','b','u','i','em');
@@ -1293,7 +1289,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
 // remove any double-spaces created by cleanups:
-    while (strstr($clean_it, '  ')) $clean_it = str_replace('  ', ' ', $clean_it);
+    $clean_it = preg_replace('/[ ]+/', ' ', $clean_it);
 
 // remove other html code to prevent problems on display of text
     $clean_it = strip_tags($clean_it);
