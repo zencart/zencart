@@ -13,10 +13,10 @@
     global $logger;
 
 // clean up URL before executing it
-    while (strstr($url, '&&')) $url = str_replace('&&', '&', $url);
-    while (strstr($url, '&amp;&amp;')) $url = str_replace('&amp;&amp;', '&amp;', $url);
+    $url = preg_replace('/&{2,}/', '&', $url);
+    $url = preg_replace('/(&amp;)+/', '&amp;', $url);
     // header locates should not have the &amp; in the address it breaks things
-    while (strstr($url, '&amp;')) $url = str_replace('&amp;', '&', $url);
+    $url = str_replace('&amp;', '&', $url);
 
     if (STORE_PAGE_PARSE_TIME == 'true') {
       if (!is_object($logger)) $logger = new logger;
@@ -134,8 +134,8 @@
         }
       }
     }
-    while (strstr($get_url, '&&')) $get_url = str_replace('&&', '&', $get_url);
-    while (strstr($get_url, '&amp;&amp;')) $get_url = str_replace('&amp;&amp;', '&amp;', $get_url);
+    $get_url = preg_replace('/&{2,}/', '&', $get_url);
+    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
 
     return $get_url;
   }
@@ -747,18 +747,6 @@
                                   and languages_id = '" . (int)$language_id . "'");
     if ($manufacturer->EOF) return '';
     return $manufacturer->fields['manufacturers_url'];
-  }
-
-
-////
-// Wrapper for class_exists() function
-// This function is not available in all PHP versions so we test it before using it.
-  function zen_class_exists($class_name) {
-    if (function_exists('class_exists')) {
-      return class_exists($class_name);
-    } else {
-      return true;
-    }
   }
 
 
