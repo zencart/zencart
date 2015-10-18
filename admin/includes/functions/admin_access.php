@@ -594,7 +594,7 @@ function zen_get_profiles($withUsers = FALSE)
     $sql = "SELECT p.profile_id, p.profile_name, COUNT(a.admin_profile) as profile_users
             FROM " . TABLE_ADMIN_PROFILES . " p
             LEFT JOIN " . TABLE_ADMIN . " a ON a.admin_profile = p.profile_id
-            GROUP BY p.profile_id";
+            GROUP BY p.profile_id, p.profile_name";
     $result = $db->Execute($sql);
     while (!$result->EOF)
     {
