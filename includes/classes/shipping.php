@@ -3,10 +3,10 @@
  * shipping class
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Jul 24 17:24:08 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -40,8 +40,14 @@ class shipping extends base {
       }
 
       for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-        //          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
-        $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+        $lang_file = null;
+        $module_file = DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file'];
+        if (IS_ADMIN_FLAG === true) {
+          $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+          $module_file = DIR_FS_CATALOG . $module_file;
+        } else {
+          $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+        }
         if (@file_exists($lang_file)) {
           include_once($lang_file);
         } else {
@@ -52,11 +58,14 @@ class shipping extends base {
           }
         }
         $this->enabled = TRUE;
-        $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $include_modules[$i]['class']);
+        $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $include_modules[$i]['class'], $include_modules[$i]['class']);
         if ($this->enabled)
         {
-          include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
+          include_once($module_file);
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+
+          $enabled = $this->check_enabled($GLOBALS[$include_modules[$i]['class']]);
+          if ($enabled == FALSE ) unset($GLOBALS[$include_modules[$i]['class']]);
         }
       }
     }
