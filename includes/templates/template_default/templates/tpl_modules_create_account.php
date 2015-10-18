@@ -153,7 +153,7 @@
 <br class="clearBoth" />
 
 <?php
-  if ($phpBB->phpBB['installed'] == true) {
+  if ($display_nick_field == true) {
 ?>
 <label class="inputLabel" for="nickname"><?php echo ENTRY_NICK; ?></label>
 <?php echo zen_draw_input_field('nick','','id="nickname"') . (zen_not_null(ENTRY_NICK_TEXT) ? '<span class="alert">' . ENTRY_NICK_TEXT . '</span>': ''); ?>

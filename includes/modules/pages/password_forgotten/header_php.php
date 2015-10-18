@@ -58,13 +58,19 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
     $html_msg['EMAIL_CUSTOMERS_NAME'] = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
     $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password);
+
     // send the email
     zen_mail($check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'], $email_address, EMAIL_PASSWORD_REMINDER_SUBJECT, sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password), STORE_NAME, EMAIL_FROM, $html_msg,'password_forgotten');
+
+    // handle 3rd-party integrations
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_CHANGED', $email_address, $check_customer->fields['customers_id'], $new_password);
+
   } else {
     $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address);
   }
 
     $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
+
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 

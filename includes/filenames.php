@@ -188,5 +188,3 @@ define('FILENAME_PRODUCTS_DISCOUNT_PRICES','products_discount_prices.php');
 define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
 
-define('FILENAME_BB_INDEX', 'index.php'); // phpBB main index filename
-

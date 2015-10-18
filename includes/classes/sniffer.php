@@ -24,7 +24,6 @@ class sniffer extends base {
     $this->php = Array();
     $this->server = Array();
     $this->database = Array();
-    $this->phpBB = Array();
   }
 
   function table_exists($table_name) {

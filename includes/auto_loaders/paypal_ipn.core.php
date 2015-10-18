@@ -1,10 +1,9 @@
 <?php
 /**
- * autoloader array for catalog application_top.php
- * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
+ * autoloader array for paypal
  *
  * @package initSystem
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: paypal_ipn.core.php 12888 2009-04-07 19:47:09Z drbyte $
  */
@@ -12,6 +11,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
 }
 
+  $autoLoadConfig[0][] = array('autoType'=>'include',
+                               'loadFile'=> DIR_WS_INCLUDES . 'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -44,22 +45,14 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Breakpoint 10.
  *
+ * require('includes/init_includes/init_file_db_names.php');
  * require('includes/init_includes/init_database.php');
- * require('includes/version.php');
  *
  */
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
-/**
- * Breakpoint 20.
- *
- * require('includes/init_includes/init_file_db_names.php');
- *
- */
-  $autoLoadConfig[20][] = array('autoType'=>'include',
-                                'loadFile'=> DIR_WS_INCLUDES . 'version.php');
 /**
  * Breakpoint 30.
  *
@@ -82,7 +75,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * $sniffer = new sniffer();
  * require('includes/init_includes/init_sefu.php');
- * $phpBB = new phpBB();
  */
   $autoLoadConfig[50][] = array('autoType'=>'classInstantiate',
                                 'className'=>'sniffer',
