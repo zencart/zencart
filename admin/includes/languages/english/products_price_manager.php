@@ -10,7 +10,6 @@ define('HEADING_TITLE', 'Products Price Manager');
 define('HEADING_TITLE_PRODUCT_SELECT','Please select a Category with Products to display the Pricing Information of ...');
 
 define('TABLE_HEADING_PRODUCTS', 'Products');
-define('TABLE_HEADING_PRODUCTS_MODEL','Model');
 define('TABLE_HEADING_PRODUCTS_PRICE', 'Products Price/Special/Sale');
 define('TABLE_HEADING_PRODUCTS_PERCENTAGE','Percentage');
 define('TABLE_HEADING_AVAILABLE_DATE', 'Available');
@@ -20,7 +19,6 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_PRODUCT_INFO', 'Product Info:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Product Price Info:');
-define('TEXT_PRODUCTS_MODEL','Model:');
 define('TEXT_PRICE', 'Price');
 define('TEXT_PRODUCT_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_PRODUCTS_STATUS', 'Products Status:');

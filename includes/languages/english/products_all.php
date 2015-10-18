@@ -14,6 +14,5 @@ define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_MANUFACTURER', 'Manufacturer:');
 define('TEXT_PRICE', 'Price:');
 
-define('TEXT_PRODUCTS_MODEL','Model: ');
 define('TEXT_PRODUCTS_WEIGHT','Weight: ');
 define('TEXT_PRODUCTS_QUANTITY','In Stock: ');

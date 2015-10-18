@@ -14,13 +14,11 @@ define('TEXT_INFO_PRODUCTS_TO_CATEGORIES_AVAILABLE', 'Categories with Products t
 
 define('TABLE_HEADING_PRODUCTS_ID', 'Prod ID');
 define('TABLE_HEADING_PRODUCT', 'Product Name');
-define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_HEADING_EDIT_PRODUCTS_TO_CATEGORIES', 'EDITING PRODUCT TO CATEGORIES INFORMATION');
 define('TEXT_PRODUCTS_ID', 'Product ID# ');
 define('TEXT_PRODUCTS_NAME', 'Product: ');
-define('TEXT_PRODUCTS_MODEL', 'Model: ');
 define('TEXT_PRODUCTS_PRICE', 'Price: ');
 define('BUTTON_UPDATE_CATEGORY_LINKS', 'Update Category Links');
 define('BUTTON_NEW_PRODUCTS_TO_CATEGORIES', 'Select Product to Link');

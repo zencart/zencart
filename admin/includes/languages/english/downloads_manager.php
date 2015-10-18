@@ -24,7 +24,6 @@ define('HEADING_TITLE','Downloads Manager');
 define('TABLE_HEADING_ATTRIBUTES_ID', 'Attr ID');
 define('TABLE_HEADING_PRODUCTS_ID', 'Prod ID');
 define('TABLE_HEADING_PRODUCT', 'Product Name');
-define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_OPT_NAME', 'Option Name');
 define('TABLE_HEADING_OPT_VALUE', 'Option Value Name');
 define('TABLE_TEXT_FILENAME', 'Filename');
@@ -36,7 +35,6 @@ define('TABLE_HEADING_OPT_PRICE', 'Price');
 define('TABLE_HEADING_OPT_PRICE_PREFIX', 'Prefix');
 
 define('TEXT_PRODUCTS_NAME', 'Product: ');
-define('TEXT_PRODUCTS_MODEL', 'Model: ');
 
 define('TEXT_INFO_HEADING_EDIT_PRODUCTS_DOWNLOAD', 'EDITING DOWNLOAD INFORMATION');
 define('TEXT_INFO_HEADING_DELETE_PRODUCTS_DOWNLOAD', 'CONFIRM DELETION OF DOWNLOAD');

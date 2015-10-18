@@ -33,7 +33,6 @@ define('HEADING_SEARCH_HELP', 'Search Help');
 define('TEXT_SEARCH_HELP', 'Keywords may be separated by AND and/or OR statements for greater control of the search results.<br /><br />For example, Microsoft AND mouse would generate a result set that contain both words. However, for mouse OR keyboard, the result set returned would contain both or either words.<br /><br />Exact matches can be searched for by enclosing keywords in double-quotes.<br /><br />For example, "notebook computer" would generate a result set which match the exact string.<br /><br />Brackets can be used for further control on the result set.<br /><br />For example, Microsoft and (keyboard or mouse or "visual basic").');
 
 define('TABLE_HEADING_IMAGE', '');
-define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_PRODUCTS', 'Product Name');
 define('TABLE_HEADING_MANUFACTURER', 'Manufacturer');
 define('TABLE_HEADING_QUANTITY', 'Quantity');

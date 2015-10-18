@@ -25,7 +25,6 @@ define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
 define('TABLE_HEADING_DATE_ADDED', 'Date Added');
 define('TABLE_HEADING_STATUS', 'Status');
 
-define('TABLE_HEADING_PRODUCTS_MODEL', 'Model');
 define('TABLE_HEADING_PRODUCTS', 'Products');
 
 define('ENTRY_CUSTOMER', 'CUSTOMER:');

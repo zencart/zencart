@@ -31,7 +31,6 @@ if ( ($category_depth == 'products') || (zen_check_url_get_terms()) ) {
   // This section deals with product-listing page contents
   define('HEADING_TITLE', 'Available Products');
   define('TABLE_HEADING_IMAGE', 'Product Image');
-  define('TABLE_HEADING_MODEL', 'Model');
   define('TABLE_HEADING_PRODUCTS', 'Product Name');
   define('TABLE_HEADING_MANUFACTURER', 'Manufacturer');
   define('TABLE_HEADING_QUANTITY', 'Quantity');
