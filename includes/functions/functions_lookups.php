@@ -1,13 +1,13 @@
 <?php
 /**
  * functions_lookups.php
- * Lookup Functions for various Zen Cart activities such as countries, prices, products, product types, etc
+ * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 23 19:29:41 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: functions_lookups.php ajeh  Modified in v1.5.5 $
  */
 
 /**
@@ -151,9 +151,9 @@
 
 
 /**
- * Return a product's stock count.
+ * Return a product's stock-on-hand
  *
- * @param int The product id of the product who's stock we want
+ * @param int $products_id The product id of the product whose stock we want
 */
   function zen_get_products_stock($products_id) {
     global $db;
@@ -169,23 +169,15 @@
 
 /**
  * Check if the required stock is available.
- *
  * If insufficent stock is available return an out of stock message
  *
- * @param int The product id of the product whos's stock is to be checked
- * @param int Is this amount of stock available
- *
- * @TODO naughty html in a function
+ * @param int $products_id        The product id of the product whose stock is to be checked
+ * @param int $products_quantity  Quantity to compare against
 */
   function zen_check_stock($products_id, $products_quantity) {
     $stock_left = zen_get_products_stock($products_id) - $products_quantity;
-    $out_of_stock = '';
 
-    if ($stock_left < 0) {
-      $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
-    }
-
-    return $out_of_stock;
+    return ($stock_left < 0) ? '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>' : '';
   }
 
 /*

@@ -41,18 +41,15 @@
   if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
-        zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
-        break;
-      } else {
-// extra check on stock for mixed YES
-        if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+      $qtyAvailable = zen_get_products_stock($products[$i]['id']);
+      // compare against product inventory, and against mixed=YES
+      if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
           zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
           break;
         }
       }
     }
-  }
+
 // if no shipping destination address was selected, use the customers own address as default
   if (!$_SESSION['sendto']) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
