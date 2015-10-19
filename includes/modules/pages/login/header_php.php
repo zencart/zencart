@@ -127,15 +127,14 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         // eof: not require part of contents merge notice
 
         // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+        if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
+          if (SHOW_SHOPPING_CART_COMBINED == 2) {
+            // warning only do not send to cart
+            $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+          }
+          if (SHOW_SHOPPING_CART_COMBINED == 1) {
+            // show warning and send to shopping cart for review
             if (!(isset($_GET['gv_no']))) {
               $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
               zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
@@ -148,8 +147,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
         if (sizeof($_SESSION['navigation']->snapshot) > 0) {
           //    $back = sizeof($_SESSION['navigation']->path)-2;
-          //if (isset($_SESSION['navigation']->path[$back]['page'])) {
-          //    if (sizeof($_SESSION['navigation']->path)-2 > 0) {
           $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], array(zen_session_name())), $_SESSION['navigation']->snapshot['mode']);
           //            $origin_href = zen_back_link_only(true);
           $_SESSION['navigation']->clear_snapshot();
