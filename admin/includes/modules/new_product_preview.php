@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: new_product_preview.php 3009 2006-02-11 15:41:10Z wilt $
+ * @version $Id: new_product_preview.php drbyte  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 // upload image, if submitted
-  if (!isset($_GET['read']) || $_GET['read'] == 'only') {
+  if (!isset($_GET['read']) || $_GET['read'] !== 'only') {
     $products_image = new upload('products_image');
     $products_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
     $products_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
