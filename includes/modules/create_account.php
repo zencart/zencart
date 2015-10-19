@@ -27,6 +27,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   $email_format = (ACCOUNT_EMAIL_PREFERENCE == '1' ? 'HTML' : 'TEXT');
   $newsletter = (ACCOUNT_NEWSLETTER_STATUS == '1' || ACCOUNT_NEWSLETTER_STATUS == '0' ? false : true);
   $extra_welcome_text = '';
+  $send_welcome_email = true;
 
 /**
  * Process form contents
@@ -134,6 +135,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $check_email_query = "select count(*) as total
                             from " . TABLE_CUSTOMERS . "
                             where customers_email_address = '" . zen_db_input($email_address) . "'";
+    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_LOOKUP_BY_EMAIL', $email_address, $check_email_query, $send_welcome_email);
     $check_email = $db->Execute($check_email_query);
 
     if ($check_email->fields['total'] > 0) {
@@ -243,7 +245,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
   }
 
-
+  $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_VALIDATION_CHECK', array(), $error, $send_welcome_email);
+  
   if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
     $error = true;
     $messageStack->add('create_account', ENTRY_PASSWORD_ERROR);
@@ -342,9 +345,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['cart']->restore_contents();
 
     // hook notifier class
-    $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT', $email_address, $extra_welcome_text);
+    $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT', $email_address, $extra_welcome_text, $send_welcome_email);
 
-
+   if ($send_welcome_email) {
     // build the message content
     $name = $firstname . ' ' . $lastname;
 
@@ -432,7 +435,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if (trim(SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO_SUBJECT) != 'n/a') zen_mail('', SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO, SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO_SUBJECT . ' ' . EMAIL_SUBJECT,
       $email_text . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'welcome_extra');
     } //endif send extra emails
-
+   }
     zen_redirect(zen_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
 
   } //endif !error
