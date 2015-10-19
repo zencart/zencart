@@ -609,7 +609,7 @@ function couponpopupWindow(url) {
     for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {
       echo '              <tr>' . "\n" .
            '                <td align="right" class="'. str_replace('_', '-', $order->totals[$i]['class']) . '-Text">' . $order->totals[$i]['title'] . '</td>' . "\n" .
-           '                <td align="right" class="'. str_replace('_', '-', $order->totals[$i]['class']) . '-Amount">' . $currencies->format($order->totals[$i]['value'], false) . '</td>' . "\n" .
+           '                <td align="right" class="'. str_replace('_', '-', $order->totals[$i]['class']) . '-Amount">' . $currencies->format($order->totals[$i]['value'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
            '              </tr>' . "\n";
     }
 ?>
