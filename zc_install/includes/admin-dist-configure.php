@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Configuration Settings circa 1.5.5
+ * @package Configuration Settings
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -15,7 +15,6 @@
  * Enter the domain for your Admin URL. If you have SSL, enter the correct https address in the HTTP_SERVER setting, instead of just an http address.
  */
 define('HTTP_SERVER', '%%_HTTP_SERVER_ADMIN_%%');
-define('HTTPS_SERVER', '%%_HTTP_SERVER_ADMIN_%%');
 /**
  * Note about HTTPS_SERVER:
  * There is no longer an HTTPS_SERVER setting for the Admin. Instead, put your SSL URL in the HTTP_SERVER setting above.
@@ -38,8 +37,6 @@ define('HTTPS_CATALOG_SERVER', '%%_CATALOG_HTTPS_SERVER_%%');
  * Do you use SSL for your customers login/checkout on the storefront? If so, enter 'true'. Else 'false'.
  */
 define('ENABLE_SSL_CATALOG', '%%_ENABLE_SSL_CATALOG_%%');
-// secure webserver for admin?  Valid choices are 'true' or 'false' (including quotes).
-define('ENABLE_SSL_ADMIN', 'true');
 
 /**
  * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
@@ -48,40 +45,12 @@ define('ENABLE_SSL_ADMIN', 'true');
  */
 define('DIR_WS_CATALOG', '%%_DIR_WS_CATALOG_%%');
 define('DIR_WS_HTTPS_CATALOG', '%%_DIR_WS_HTTPS_CATALOG_%%');
-define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTP_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
-define('DIR_WS_HTTPS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTPS_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
-
-// NOTE: be sure to leave the trailing '/' at the end of these lines if you make changes!
-// * DIR_WS_* = Webserver directories (virtual/URL)
-// these paths are relative to top of your webspace ... (ie: under the public_html or httpdocs folder)
-define('DIR_WS_IMAGES', 'images/');
-define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
-define('DIR_WS_CATALOG_IMAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'images/');
-define('DIR_WS_CATALOG_TEMPLATE', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/templates/');
-define('DIR_WS_INCLUDES', 'includes/');
-define('DIR_WS_FUNCTIONS', DIR_WS_INCLUDES . 'functions/');
-define('DIR_WS_CLASSES', DIR_WS_INCLUDES . 'classes/');
-define('DIR_WS_MODULES', DIR_WS_INCLUDES . 'modules/');
-define('DIR_WS_LANGUAGES', DIR_WS_INCLUDES . 'languages/');
-define('DIR_WS_CATALOG_LANGUAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/languages/');
 
 /**
  * This is the complete physical path to your store's files.  eg: /var/www/vhost/accountname/public_html/store/
  * Should have a closing / on it.
  */
 define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
-
-//the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
-define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs');
-
-define('DIR_FS_CATALOG_LANGUAGES', DIR_FS_CATALOG . 'includes/languages/');
-define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
-define('DIR_FS_CATALOG_MODULES', DIR_FS_CATALOG . 'includes/modules/');
-define('DIR_FS_CATALOG_TEMPLATES', DIR_FS_CATALOG . 'includes/templates/');
-define('DIR_FS_BACKUP', DIR_FS_ADMIN . 'backups/');
-define('DIR_FS_EMAIL_TEMPLATES', DIR_FS_CATALOG . 'email/');
-define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
-
 
 /**
  * NOTE about DIR_FS_ADMIN

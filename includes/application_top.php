@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Sun Dec 30 15:16:17 2012 +0000 Modified in v1.5.2 $
+ * @version $Id:Modified in v1.5.5 $
  */
 /**
  * inoculate against hack attempts which waste CPU cycles
@@ -119,6 +119,18 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
   $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
   require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
   exit;
+}
+/**
+ * check for and load system defined path constants
+ */
+if (file_exists('includes/defined_paths.php')) {
+    /**
+     * load the system-defined path constants
+     */
+    require('includes/defined_paths.php');
+} else {
+    die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+    exit;
 }
 /**
  * include the list of extra configure files
