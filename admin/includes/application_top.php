@@ -60,6 +60,10 @@ if (version_compare(PHP_VERSION, 5.3, '>='))
 {
   @date_default_timezone_set(date_default_timezone_get());
 }
+
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
+
 /**
  * Set the local configuration parameters - mainly for developers
  */
