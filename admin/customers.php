@@ -1142,19 +1142,16 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
                 <td class="dataTableContent" align="center">
                 <?php if ($customers->fields['customers_authorization'] == 4) { ?>
                 <?php echo zen_image(DIR_WS_IMAGES . 'icon_red_off.gif', IMAGE_ICON_STATUS_OFF); ?>
-                <?php } else { ?>
-                  <?php if ($customers->fields['customers_authorization'] == 0) {
+                <?php } else {
                     echo zen_draw_form('setstatus', FILENAME_CUSTOMERS, 'action=status&cID=' . $customers->fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));?>
+                  <?php if ($customers->fields['customers_authorization'] == 0) { ?>
                     <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
-                    <input type="hidden" name="current" value="<?php echo $customers->fields['customers_authorization']; ?>" />
-                    </form>
-                  <?php } else {
-                    echo zen_draw_form('setstatus', FILENAME_CUSTOMERS, 'action=status&cID=' . $customers->fields['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));?>
+                  <?php } else { ?>
                     <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
+                  <?php } ?>
                     <input type="hidden" name="current" value="<?php echo $customers->fields['customers_authorization']; ?>" />
                     </form>
                   <?php } ?>
-                <?php } ?>
                 </td>
                 <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers->fields['customers_id'] == $cInfo->customers_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID')) . 'cID=' . $customers->fields['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
