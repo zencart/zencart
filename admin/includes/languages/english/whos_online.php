@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: whos_online.php 18698 2011-05-04 14:50:06Z wilt $
@@ -50,7 +50,10 @@ define('TEXT_WHOS_ONLINE_TIMER_UPDATING', 'Updating ');
 define('TEXT_WHOS_ONLINE_TIMER_EVERY', 'every %s seconds.&nbsp;&nbsp;');
 define('TEXT_WHOS_ONLINE_TIMER_DISABLED', 'Manually');
 define('TEXT_WHOS_ONLINE_TIMER_FREQ0', 'OFF');
-define('TEXT_WHOS_ONLINE_TIMER_FREQ1', '5 sec');
-define('TEXT_WHOS_ONLINE_TIMER_FREQ2', '15 sec');
-define('TEXT_WHOS_ONLINE_TIMER_FREQ3', '30 sec');
-define('TEXT_WHOS_ONLINE_TIMER_FREQ4', '1 min');
+define('TEXT_WHOS_ONLINE_TIMER_FREQ1', '5s');
+define('TEXT_WHOS_ONLINE_TIMER_FREQ2', '15s');
+define('TEXT_WHOS_ONLINE_TIMER_FREQ3', '30s');
+define('TEXT_WHOS_ONLINE_TIMER_FREQ4', '1m');
+define('TEXT_WHOS_ONLINE_TIMER_FREQ5', '5m');
+define('TEXT_WHOS_ONLINE_TIMER_FREQ6', '10m');
+define('TEXT_WHOS_ONLINE_TIMER_FREQ7', '14m');
