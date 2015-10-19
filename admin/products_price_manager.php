@@ -251,6 +251,8 @@
       zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit_update' . '&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id));
       break;
       case 'cancel':
+      // clean up blank discount_qty
+      $db->Execute("delete from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where discount_qty=0");
       // set edit message
       $messageStack->add_session(PRODUCT_WARNING_UPDATE_CANCEL, 'warning');
       zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id));
