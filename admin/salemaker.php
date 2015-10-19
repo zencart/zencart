@@ -132,7 +132,7 @@
         $sale_id = zen_db_prepare_input($_POST['sID']);
 
         // set sale off to update prices before removing
-        $db->Execute("update " . TABLE_SALEMAKER_SALES . " set sale_status=0 where sale_id='" . $sale_id . "'");
+        $db->Execute("update " . TABLE_SALEMAKER_SALES . " set sale_status=0 where sale_id='" . (int)$sale_id . "'");
 
         // update prices for products in sale
         zen_update_salemaker_product_prices($sale_id);
