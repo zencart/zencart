@@ -30,6 +30,9 @@ class navigationHistory extends base {
   }
 
   function add_current_page() {
+      // check whether there are pages which should be blacklisted against entering navigation history
+    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && $_GET['act'] != '') return;
+
     global $request_type, $cPath;
     $get_vars = "";
 
