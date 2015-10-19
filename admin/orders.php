@@ -464,6 +464,10 @@ function couponpopupWindow(url) {
                 <td class="main"><strong><?php echo TEXT_INFO_IP_ADDRESS; ?></strong></td>
                 <td class="main"><?php echo $order->info['ip_address']; ?></td>
               </tr>
+              <tr>
+                <td class="main"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
+                <td class="main"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '" . >' . TEXT_CUSTOMER_LOOKUP . '</a>'; ?></td>
+              </tr>
             </table></td>
             <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
               <tr>

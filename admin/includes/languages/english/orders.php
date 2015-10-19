@@ -118,3 +118,4 @@ define('TABLE_HEADING_CUSTOMER_COMMENTS', 'Customer<br />Comments');
 define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
 define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
 
+define('TEXT_CUSTOMER_LOOKUP', 'Lookup Customer');
