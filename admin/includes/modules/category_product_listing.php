@@ -363,6 +363,11 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and isset($_GET['pID']) && $_G
         <?php echo '<a href="' . zen_href_link($type_handler, 'cPath=' . $cPath . '&product_type=' . $products->fields['products_type'] . '&pID=' . $products->fields['products_id'] . '&action=delete_product') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
         <?php echo '<a href="' . zen_href_link($type_handler, 'cPath=' . $cPath . '&product_type=' . $products->fields['products_type'] . '&pID=' . $products->fields['products_id'] . '&action=move_product') . '">' . zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE) . '</a>'; ?>
         <?php echo '<a href="' . zen_href_link($type_handler, 'cPath=' . $cPath . '&product_type=' . $products->fields['products_type'] . '&pID=' . $products->fields['products_id'] .'&action=copy_to' ) . '">' . zen_image(DIR_WS_IMAGES . 'icon_copy_to.gif', ICON_COPY_TO) . '</a>'; ?>
+
+<?php if (defined('FILENAME_IMAGE_HANDLER') && file_exists(DIR_FS_ADMIN . FILENAME_IMAGE_HANDLER . '.php')) { ?>
+        <?php echo '<a href="' . zen_href_link(FILENAME_IMAGE_HANDLER, 'products_filter=' . $products->fields['products_id'] . '&current_category_id=' . $current_category_id) . '">' . zen_image(DIR_WS_IMAGES . 'icon_image_handler.gif', ICON_IMAGE_HANDLER) . '</a>'; ?>
+<?php } ?>
+
 <?php
 // BOF: Attribute commands
 //if (!empty($products->fields['products_id']) && zen_has_product_attributes($products->fields['products_id'], 'false')) {
