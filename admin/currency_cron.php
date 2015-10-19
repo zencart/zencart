@@ -9,7 +9,7 @@
 // uncomment the following line to disable this script execution in the case of an emergency malfunction when you can't access the server cron settings to kill the scheduled cron job:
 // exit(1);
 
-// This is intended to prevent unauthorized execution via a browser
+// This is intended to prevent unauthorized execution via a browser except from the server itself
 $is_browser = (isset($_SERVER['HTTP_HOST']) || PHP_SAPI != 'cli');
 if ($is_browser && isset($_SERVER["REMOTE_ADDR"]) && ($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"])){
   echo ' ERROR: Permission denied.';
@@ -55,6 +55,7 @@ if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 chdir(__DIR__);
 $loaderPrefix = 'currency_cron';
 $_SERVER['REMOTE_ADDR'] = 'cron';
+$_SERVER['REQUEST_URI'] = 'cron';
 $result = require('includes/application_top.php');
 if ($result == FALSE)  die("Error: application_top not found.\nMake sure you have placed the currency_cron.php file in your (renamed) Admin folder.\n\n");
 $_SERVER['HTTP_USER_AGENT'] = 'Zen Cart update';
