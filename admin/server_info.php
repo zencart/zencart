@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: server_info.php 13982 2009-07-25 15:49:38Z drbyte $
+ * @version $Id: server_info.php   Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -76,34 +76,24 @@
     <td colspan="2" height="44"><h1><?php echo HEADING_TITLE; ?></h1></td>
   </tr>
   <tr>
-    <td><strong><?php echo TITLE_SERVER_HOST; ?></strong> <?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong> </strong></td>
-    <td width="51%"><strong><?php echo TITLE_DATABASE_HOST; ?></strong> <?php echo $system['db_server'] . ' (' . $system['db_ip'] . ')'; ?></td>
-  </tr>
-  <tr>
-    <td><strong><?php echo TITLE_SERVER_OS; ?></strong> <?php echo $system['system'] . ' ' . $system['kernel']; ?> &nbsp;&nbsp;</td>
-    <td width="51%"><strong><?php echo TITLE_DATABASE; ?></strong> <?php echo $system['db_version'] . ($system['mysql_strict_mode'] == true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''); ?></td>
-  </tr>
-  <tr>
-    <td><strong><?php echo TITLE_SERVER_DATE; ?></strong> <?php echo $system['date']; ?> &nbsp;</td>
-    <td width="51%"><strong><?php echo TITLE_DATABASE_DATE; ?></strong> <?php echo $system['db_date']; ?> </td>
-  </tr>
-  <tr>
-    <td><strong><?php echo TITLE_SERVER_UP_TIME; ?></strong> <?php echo $system['uptime']; ?></td>
-    <td width="51%"><strong><?php echo TITLE_HTTP_SERVER; ?></strong> <?php echo $system['http_server']; ?></td>
-  </tr>
-  <tr>
-    <td><strong><?php echo TITLE_PHP_VERSION; ?></strong> <?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')' . ($system['php_memlimit'] != '' ? ' &nbsp; <strong>' . TITLE_PHP_MEMORY_LIMIT . '</strong> ' . $system['php_memlimit'] : ''); ?></td>
-    <td><?php echo '<strong>' . TITLE_PHP_SAFE_MODE . '</strong> ' . ($system['php_safemode'] != '' && $system['php_safemode'] != 'off' && $system['php_safemode'] != '0' ? 'On' : 'Off'); ?></td>
-  </tr>
-  <tr>
-    <td><strong><?php echo TITLE_PHP_FILE_UPLOADS; ?></strong>
-      <?php echo ($system['php_file_uploads'] != '' && $system['php_file_uploads'] != 'off' && $system['php_file_uploads'] != '0') ? 'On' : 'Off';  echo ' &nbsp;&nbsp; <strong>' . TITLE_PHP_UPLOAD_MAX . '</strong> ' . $system['php_uploadmaxsize'];?></td>
-    <td><strong><?php echo TITLE_PHP_POST_MAX_SIZE; ?></strong> <?php echo $system['php_postmaxsize']; ?></td>
-  </tr>
-  <tr>
-    <td><strong><?php echo TITLE_DATABASE_DATA_SIZE; ?></strong> <?php echo number_format(($system['database_size']/1024),0); ?> kB</td>
-    <td><strong><?php echo TITLE_DATABASE_INDEX_SIZE; ?></strong> <?php echo number_format(($system['index_size']/1024),0); ?> kB</td>
+    <td><strong><?php echo TITLE_SERVER_HOST; ?></strong> <?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?><br>
+    <strong><?php echo TITLE_SERVER_OS; ?></strong> <?php echo $system['system'] . ' ' . $system['kernel']; ?> <br>
+    <strong><?php echo TITLE_SERVER_DATE; ?></strong> <?php echo $system['date']; ?> &nbsp;<br>
+    <strong><?php echo TITLE_SERVER_UP_TIME; ?></strong> <?php echo $system['uptime']; ?><br>
+    <strong><?php echo TITLE_HTTP_SERVER; ?></strong> <?php echo $system['http_server']; ?><br>
+    <strong><?php echo TITLE_PHP_VERSION; ?></strong> <?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?><br>
+    <strong><?php echo TITLE_PHP_FILE_UPLOADS; ?></strong>
+      <?php echo ($system['php_file_uploads'] != '' && $system['php_file_uploads'] != 'off' && $system['php_file_uploads'] != '0') ? 'On' : 'Off';?>
+    &nbsp;&nbsp; <strong><?php echo TITLE_PHP_UPLOAD_MAX;?></strong><?php echo $system['php_uploadmaxsize'];?><br>
+    <?php echo ($system['php_memlimit'] != '' ? '<strong>' . TITLE_PHP_MEMORY_LIMIT . '</strong> ' . $system['php_memlimit'] : ''); ?><br>
+    <strong><?php echo TITLE_PHP_POST_MAX_SIZE; ?></strong> <?php echo $system['php_postmaxsize']; ?></td>
+    <td width="51%"><strong><?php echo TITLE_DATABASE; ?></strong> <?php echo $system['db_version'] . ($system['mysql_strict_mode'] == true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''); ?><br>
+    <strong><?php echo TITLE_DATABASE_HOST; ?></strong> <?php echo $system['db_server'] . ' (' . $system['db_ip'] . ')'; ?><br>
+    <strong><?php echo TITLE_DATABASE_DATE; ?></strong> <?php echo $system['db_date']; ?><br>
+    <strong><?php echo TITLE_DATABASE_DATA_SIZE; ?></strong> <?php echo number_format(($system['database_size']/1024),0); ?> kB<br>
+    <strong><?php echo TITLE_DATABASE_INDEX_SIZE; ?></strong> <?php echo number_format(($system['index_size']/1024),0); ?> kB<br>
+    <strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS; ?></strong> <?php echo $system['mysql_slow_query_log_status'] != '0' ? 'On' : 'Off'; ?><br><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_FILE; ?></strong> <?php echo zen_output_string_protected($system['mysql_slow_query_log_file']); ?><br>
+    <strong><?php echo TITLE_DATABASE_MYSQL_MODE; ?></strong> <?php echo zen_output_string_protected(str_replace(',', ', ', $system['mysql_mode'])); ?></td>
   </tr>
 </table>
 <br />
