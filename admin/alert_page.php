@@ -43,8 +43,6 @@ if (!$adminDirectoryExists && !$installDirectoryExists)
   <?php if ($adminDirectoryExists) { ?>
   <br />
   <p class=""><?php echo ALERT_PART2; ?></p>
-  <?php } else { ?>
-  <button class="button"><a href="<?php echo str_replace('?cmd=alert_page', '', $_SERVER['REQUEST_URI']);?>"><?php echo ALERT_CLICK_HERE; ?></a></button>
   <?php } ?>
   </div>
 </body>
