@@ -422,7 +422,7 @@ if ((!isset($_GET['sort'])) || (!preg_match('/[1-8][ad]/', $_GET['sort'])) || (s
   }
 } else {
   $sort_col = substr($_GET['sort'], 0 , 1);
-  $sort_order = substr($_GET['sort'], 1);
+  $sort_order = substr($_GET['sort'], -1);
   $order_str = ' order by ';
   switch ($column_list[$sort_col-1]) {
     case 'PRODUCT_LIST_MODEL':

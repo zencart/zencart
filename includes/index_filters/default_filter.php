@@ -112,7 +112,7 @@ if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
       }
     } else {
       $sort_col = substr($_GET['sort'], 0 , 1);
-      $sort_order = substr($_GET['sort'], 1);
+      $sort_order = substr($_GET['sort'], -1);
       switch ($column_list[$sort_col-1]) {
         case 'PRODUCT_LIST_MODEL':
           $listing_sql .= " order by p.products_model " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
