@@ -161,7 +161,7 @@ if (isset($_SESSION['cart']->cartID)) {
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
-          if (isset($quote['error'])) {
+          if (isset($quote[0]['error'])) {
             unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
