@@ -5,10 +5,10 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Apr 18 14:01:49 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
  */
 
 /**
@@ -335,8 +335,10 @@
 
       $ErrorInfo = '';
 
-      // set Hostname, since it can aid in delivery of emails. If emails are being rejected, comment out the following line and try again:
-      $mail->Hostname = defined('EMAIL_HOSTNAME') ? EMAIL_HOSTNAME : preg_replace('~(^https?://|\/.*$)~', '', defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER);
+      // set Hostname, since it can aid in delivery of emails.
+      $defaultHostname = preg_replace('~(^https?://|\/.*$)~', '', defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER);
+      // If emails are being rejected, comment out the following line and try again:
+      $mail->Hostname = defined('EMAIL_HOSTNAME') ? EMAIL_HOSTNAME : $defaultHostname;
 
       $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', array($mail), $mail);
       /**
@@ -732,3 +734,17 @@
     return $email_html;
   }
 
+  /**
+   * return customer email address
+   *
+   * @param string $customers_id
+   * return string
+   */
+  function zen_get_email_from_customers_id($customers_id) {
+    global $db;
+    $customers_values = $db->Execute("select customers_email_address
+                               from " . TABLE_CUSTOMERS . "
+                               where customers_id = '" . (int)$customers_id . "'");
+    if ($customers_values->EOF) return '';
+    return $customers_values->fields['customers_email_address'];
+  }
