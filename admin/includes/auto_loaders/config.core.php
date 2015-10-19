@@ -10,9 +10,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * autoloader array for admin application_top.php
 **/
-
 /**
- *
+ * require('includes/version.php');
  * require(DIR_WS_CLASSES . 'class.base.php');
  * require(DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier()'
@@ -27,8 +26,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'object_info.php');
  * require(DIR_WS_CLASSES . 'class.phpmailer.php');
  * require(DIR_WS_CLASSES . 'upload.php');
- *
  */
+  $autoLoadConfig[0][] = array('autoType'=>'require',
+                               'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -77,15 +77,12 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  *
  * require('includes/init_includes/init_file_db_names.php');
  * require('includes/init_includes/init_database.php');
- * require('includes/version.php');
  *
  */
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
-  $autoLoadConfig[10][] = array('autoType'=>'require',
-                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
 /**
  * Breakpoint 20.
  *
