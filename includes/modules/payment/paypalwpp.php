@@ -1522,7 +1522,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // init new order object
     require(DIR_WS_CLASSES . 'order.php');
-    $order = new order;
+    $order = new order('', $this->selectCurrency());
 
     // load the selected shipping module so that shipping taxes can be assessed
     require(DIR_WS_CLASSES . 'shipping.php');
