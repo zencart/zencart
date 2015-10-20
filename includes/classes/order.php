@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 class order extends base {
   var $info, $totals, $products, $customer, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
-  $products_ordered, $products_ordered_email, $attachArray;
+  $products_ordered, $products_ordered_email, $attachArray, $currency;
 
   function __construct($order_id = '', $override_currency = false) {
 
