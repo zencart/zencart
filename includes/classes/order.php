@@ -20,9 +20,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 class order extends base {
   var $info, $totals, $products, $customer, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
-  $products_ordered, $products_ordered_email, $attachArray;
+  $products_ordered, $products_ordered_email, $attachArray, $currency;
 
-  function __construct($order_id = '') {
+  function __construct($order_id = '', $override_currency = false) {
+
+    $this->currency = ($override_currency === false) ? $_SESSION['currency'] : $override_currency;
+
     $this->info = array();
     $this->totals = array();
     $this->products = array();
@@ -258,7 +261,7 @@ class order extends base {
   function cart() {
     global $db, $currencies;
 
-    $decimals = $currencies->get_decimal_places($_SESSION['currency']);
+    $decimals = $currencies->get_decimal_places($this->currency);
 
     $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -360,8 +363,8 @@ class order extends base {
     }
 
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
-                        'currency' => $_SESSION['currency'],
-                        'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
+                        'currency' => $this->currency,
+                        'currency_value' => $currencies->currencies[$this->currency]['value'],
                         'payment_method' => $GLOBALS[$class]->title,
                         'payment_module_code' => $GLOBALS[$class]->code,
                         'coupon_code' => $coupon_code->fields['coupon_code'],
@@ -372,7 +375,7 @@ class order extends base {
     //                          'cc_cvv' => (isset($GLOBALS['cc_cvv']) ? $GLOBALS['cc_cvv'] : ''),
                         'shipping_method' => (isset($_SESSION['shipping']['title'])) ? $_SESSION['shipping']['title'] : '',
                         'shipping_module_code' => (isset($_SESSION['shipping']['id']) && strpos($_SESSION['shipping']['id'], '_') > 0 ? $_SESSION['shipping']['id'] : $_SESSION['shipping']),
-                        'shipping_cost' => isset($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0,
+                        'shipping_cost' => $currencies->value(isset($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0, false, $this->currency),
                         'subtotal' => 0,
                         'shipping_tax' => 0,
                         'tax' => 0,
@@ -556,8 +559,8 @@ class order extends base {
         /*********************************************
          * Calculate taxes for this product
          *********************************************/
-        $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
-        + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
+        $shown_price = $currencies->value(zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']), false, $this->currency)
+          + $currencies->value(zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']), false, $this->currency);
         $this->info['subtotal'] += $shown_price;
         $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
         // find product's tax rate and description
@@ -572,11 +575,12 @@ class order extends base {
   //        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
           $tax_add = ($products_tax/100) * $shown_price;
         }
+        $tax_add = $currencies->value($tax_add, false, $this->currency);
         $this->info['tax'] += $tax_add;
         foreach ($taxRates as $taxDescription=>$taxRate)
         {
-          $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
-                  +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
+          $taxAdd = $currencies->value(zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate), false, $this->currency)
+                  + $currencies->value(zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate), false, $this->currency);
           if (isset($this->info['tax_groups'][$taxDescription]))
           {
             $this->info['tax_groups'][$taxDescription] += $taxAdd;
