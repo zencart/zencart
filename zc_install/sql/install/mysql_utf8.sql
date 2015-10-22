@@ -119,7 +119,7 @@ INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, count
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (102,'Iraq','IQ','IRQ','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (103,'Ireland','IE','IRL','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (104,'Israel','IL','ISR','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (105,'Italy','IT','ITA','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (105,'Italy','IT','ITA','5');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (106,'Jamaica','JM','JAM','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (107,'Japan','JP','JPN','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (108,'Jordan','JO','JOR','1');

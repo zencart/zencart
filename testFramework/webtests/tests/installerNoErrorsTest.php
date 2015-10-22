@@ -32,6 +32,8 @@ class installerNoErrorsTest extends CommonTestResources
 
         $continue = $this->byId('btnsubmit');
         $continue->click();
+        sleep(1);
+
         $this->assertTextPresent('Load Demo Data');
 
         $demoData = $this->byId('demoData');
@@ -46,6 +48,7 @@ class installerNoErrorsTest extends CommonTestResources
         $this->byId('db_user')->value(DB_USER);
         $this->byId('db_password')->value(DB_PASS);
         $this->byId('db_name')->value(DB_DBNAME);
+        sleep(1);
 
         $continue = $this->byId('btnsubmit');
         $continue->click();

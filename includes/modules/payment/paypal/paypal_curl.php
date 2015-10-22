@@ -9,7 +9,7 @@
  */
 
 /**
- * PayPal NVP (v84.0) and Payflow Pro (v4 HTTP API) implementation via cURL.
+ * PayPal NVP (v124.0) and Payflow Pro (v4 HTTP API) implementation via cURL.
  */
 class paypal_curl extends base {
 
