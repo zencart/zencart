@@ -471,6 +471,9 @@ define('NOT_INSTALLED_TEXT','Not Installed');
 
 // generic model
   define('TEXT_MODEL','Model:');
+  define('TEXT_PRODUCTS_MODEL', 'Products Model:');
+  define('TABLE_HEADING_PRODUCTS_MODEL','Model');
+  define('TABLE_HEADING_MODEL', 'Model');
 
 // column controller
   define('BOX_TOOLS_LAYOUT_CONTROLLER','Layout Boxes Controller');

@@ -203,7 +203,7 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
      */
     protected function processorListModel($item, $key)
     {
-        $this->displayValues[$key] = TEXT_PRODUCTS_MODEL . $item ['products_model'] . str_repeat('<br clear="all" />', substr(constant($this->prefix . $key), 3, 1));
+        $this->displayValues[$key] = TEXT_PRODUCT_MODEL . $item ['products_model'] . str_repeat('<br clear="all" />', substr(constant($this->prefix . $key), 3, 1));
     }
 
     /**

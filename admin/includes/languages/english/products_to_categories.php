@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_to_categories.php 18698 2011-05-04 14:50:06Z wilt $
@@ -14,13 +14,11 @@ define('TEXT_INFO_PRODUCTS_TO_CATEGORIES_AVAILABLE', 'Categories with Products t
 
 define('TABLE_HEADING_PRODUCTS_ID', 'Prod ID');
 define('TABLE_HEADING_PRODUCT', 'Product Name');
-define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_HEADING_EDIT_PRODUCTS_TO_CATEGORIES', 'EDITING PRODUCT TO CATEGORIES INFORMATION');
 define('TEXT_PRODUCTS_ID', 'Product ID# ');
 define('TEXT_PRODUCTS_NAME', 'Product: ');
-define('TEXT_PRODUCTS_MODEL', 'Model: ');
 define('TEXT_PRODUCTS_PRICE', 'Price: ');
 define('BUTTON_UPDATE_CATEGORY_LINKS', 'Update Category Links');
 define('BUTTON_NEW_PRODUCTS_TO_CATEGORIES', 'Select Product to Link');

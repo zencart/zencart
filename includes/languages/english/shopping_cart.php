@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: shopping_cart.php Modified in v1.5.4 $
@@ -14,7 +14,6 @@ define('HEADING_TITLE', 'Your Shopping Cart Contents');
 define('HEADING_TITLE_EMPTY', 'Your Shopping Cart');
 define('TABLE_HEADING_REMOVE', 'Remove');
 define('TABLE_HEADING_QUANTITY', 'Qty.');
-define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_PRICE','Unit');
 define('TEXT_CART_EMPTY', 'Your Shopping Cart is empty.');
 define('SUB_TITLE_SUB_TOTAL', 'Sub-Total:');
