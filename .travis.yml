@@ -7,11 +7,13 @@ php:
   - 5.5
   - 5.4
   - 7.0
+  - hhvm
 
 matrix:
   fast_finish: true
   allow_failures:
     - php: 7.0
+    - php: hhvm
 
 env:
   global:
@@ -44,7 +46,7 @@ before_script:
   - touch includes/configure.php
   - touch admin/includes/configure.php
   # php
-  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # mysql
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
   # set up apache server and vhost
