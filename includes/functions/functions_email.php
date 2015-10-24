@@ -246,7 +246,7 @@
       }
 
       // set the reply-to address.  If none set yet, then use Store's default email name/address.
-      // If sending from checkout or contact-us or tell-a-friend page, use the supplied info
+      // If sending from checkout or contact-us page, use the supplied info
       $email_reply_to_address = (isset($email_reply_to_address) && $email_reply_to_address != '') ? $email_reply_to_address : (in_array($module, array('contact_us',  'tell_a_friend', 'checkout_extra')) ? $from_email_address : EMAIL_FROM);
       $email_reply_to_name    = (isset($email_reply_to_name) && $email_reply_to_name != '')    ? $email_reply_to_name    : (in_array($module, array('contact_us',  'tell_a_friend', 'checkout_extra')) ? $from_email_name    : STORE_NAME);
       $mail->AddReplyTo($email_reply_to_address, $email_reply_to_name);
@@ -440,8 +440,6 @@
   $emodules_array[] = array('id' => 'order_status_extra', 'text' => 'Order Status-Extra');
   $emodules_array[] = array('id' => 'low_stock', 'text' => 'Low Stock Notices');
   $emodules_array[] = array('id' => 'cc_middle_digs', 'text' => 'CC - Middle-Digits');
-  $emodules_array[] = array('id' => 'tell_a_friend', 'text' => 'Tell-A-Friend');
-  $emodules_array[] = array('id' => 'tell_a_friend_extra', 'text' => 'Tell-A-Friend-Extra');
   $emodules_array[] = array('id' => 'purchase_order', 'text' => 'Purchase Order');
   $emodules_array[] = array('id' => 'payment_modules', 'text' => 'Payment Modules');
   $emodules_array[] = array('id' => 'payment_modules_extra', 'text' => 'Payment Modules-Extra');
