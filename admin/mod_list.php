@@ -110,7 +110,7 @@ require('includes/admin_html_head.php');
     $tables = $db->Execute($tables_query_raw); 
     if ($tables->RecordCount() <= 0) { 
 ?>
-      <tr><td colspan="3" align="left"><?php echo '<b>' . NO_tables_FOUND . '</b>'; ?></td></tr>
+      <tr><td colspan="3" align="left"><?php echo '<b>' . NO_INFORMATION_SCHEMA_TABLE_FOUND . '</b>'; ?></td></tr>
 <?php
     } else { 
        echo "<ul>"; 

@@ -20,6 +20,7 @@ define('HEADING_DISPLAY', 'Display');
 define('NO_EXTRAS', 'No additional modules');
 define('NO_LINK', 'Link cannot be created'); 
 define('NO_PAGES_TABLE_FOUND', 'Admin Pages table not found ');
+define('NO_INFORMATION_SCHEMA_TABLE_FOUND', 'INFORMATION_SCHEMA.TABLES table not found ');
 define('NO_NEW_PAGES', 'No new admin pages');
 define('NO_NEW_TABLES', 'No new tables');
 define('MISSING_ADMIN_PAGES_WHY', 'This is caused by migrating pre 1.5.0 mods which have entries in Admin->Configuration, without creating admin_pages entries for them.'); 
