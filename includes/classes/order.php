@@ -290,47 +290,51 @@ class order extends base {
     $billing_address = $db->Execute($billing_address_query);
 
     // set default tax calculation for not-logged-in visitors
-    $taxCountryId = $taxZoneId = -1;
+      $taxCountryId = $taxZoneId = 0;
 
-    $tax_address_query = '';
-    switch (STORE_PRODUCT_TAX_BASIS) {
-      case 'Shipping':
-      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                              from " . TABLE_ADDRESS_BOOK . " ab
-                              left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                              where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                              and ab.address_book_id = '" . (int)($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'";
-      break;
-      case 'Billing':
-      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                              from " . TABLE_ADDRESS_BOOK . " ab
-                              left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                              where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                              and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'";
-      break;
-      case 'Store':
-      if ($billing_address->fields['entry_zone_id'] == STORE_ZONE) {
-
-        $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                from " . TABLE_ADDRESS_BOOK . " ab
-                                left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'";
-      } else {
-        $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
+      // get tax zone info for logged-in visitors
+      if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
+          $taxCountryId = $taxZoneId = -1;
+          $tax_address_query = '';
+          switch (STORE_PRODUCT_TAX_BASIS) {
+              case 'Shipping':
+                  $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
                                 from " . TABLE_ADDRESS_BOOK . " ab
                                 left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                 where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
                                 and ab.address_book_id = '" . (int)($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'";
+                  break;
+              case 'Billing':
+                  $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
+                                from " . TABLE_ADDRESS_BOOK . " ab
+                                left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
+                                where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'";
+                  break;
+              case 'Store':
+                  if ($billing_address->fields['entry_zone_id'] == STORE_ZONE) {
+
+                      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
+                                  from " . TABLE_ADDRESS_BOOK . " ab
+                                  left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
+                                  where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                  and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'";
+                  } else {
+                      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
+                                  from " . TABLE_ADDRESS_BOOK . " ab
+                                  left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
+                                  where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                  and ab.address_book_id = '" . (int)($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'";
+                  }
+          }
+          if ($tax_address_query != '') {
+              $tax_address = $db->Execute($tax_address_query);
+              if ($tax_address->recordCount() > 0) {
+                  $taxCountryId = $tax_address->fields['entry_country_id'];
+                  $taxZoneId = $tax_address->fields['entry_zone_id'];
+              }
+          }
       }
-    }
-    if ($tax_address_query != '') {
-      $tax_address = $db->Execute($tax_address_query);
-      if ($tax_address->recordCount() > 0) {
-        $taxCountryId = $tax_address->fields['entry_country_id'];
-        $taxZoneId = $tax_address->fields['entry_zone_id'];
-      }
-    }
 
     $class =& $_SESSION['payment'];
 
@@ -449,7 +453,7 @@ class order extends base {
                                       'tax_groups'=>$taxRates,
                                       'tax_description' => zen_get_tax_description($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId),
                                       'price' => $products[$i]['price'],
-                                      'final_price' => $products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']),
+                                      'final_price' => zen_round($products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']), $decimals),
                                       'onetime_charges' => $_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity']),
                                       'weight' => $products[$i]['weight'],
                                       'products_priced_by_attribute' => $products[$i]['products_priced_by_attribute'],
@@ -465,8 +469,8 @@ class order extends base {
         $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
       } else 
       {
-        $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $tax_address->fields['entry_country_id'], $tax_address->fields['entry_zone_id']);
-        $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $tax_address->fields['entry_country_id'], $tax_address->fields['entry_zone_id']);
+          $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
+          $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
       }
 
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
@@ -926,8 +930,8 @@ class order extends base {
 
       // update totals counters
       $this->total_weight += ($this->products[$i]['qty'] * $this->products[$i]['weight']);
-      $this->total_tax += zen_calculate_tax($total_products_price * $this->products[$i]['qty'], $products_tax);
-      $this->total_cost += $total_products_price;
+      $this->total_tax += zen_calculate_tax($this->products[$i]['final_price'] * $this->products[$i]['qty'], $this->products[$i]['tax']);
+      $this->total_cost += $this->products[$i]['final_price'] + $this->products[$i]['onetime_charges'];
 
       $this->notify('NOTIFY_ORDER_PROCESSING_ONE_TIME_CHARGES_BEGIN', $i);
 
