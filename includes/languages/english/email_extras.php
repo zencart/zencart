@@ -8,6 +8,17 @@
  */
 
   if (!defined('EMAIL_FOOTER_COPYRIGHT')) define('EMAIL_FOOTER_COPYRIGHT','Copyright (c) ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>');
+  
+  define ('EMAIL_LOGO_FILENAME', 'header.jpg');  //-File is present in /email folder
+  define ('EMAIL_LOGO_WIDTH', '550');
+  define ('EMAIL_LOGO_HEIGHT', '110');
+  define ('EMAIL_LOGO_ALT_TITLE_TEXT', 'Zen Cart! The Art of E-commerce');
+  
+  // -----
+  // If you want to include some extra information in each email's header information (like perhaps the store address and/or phone number),
+  // set this value to contain the full HTML content to be copied, e.g. '<div id="extra-stuff">Extra stuff for header</div>'.
+  //
+  define ('EMAIL_EXTRA_HEADER_INFO', '');
 
 // office use only
   define('OFFICE_FROM','<strong>From:</strong>');
@@ -47,3 +58,4 @@
 // Low Stock Emails
   define('EMAIL_TEXT_SUBJECT_LOWSTOCK','Warning: Low Stock');
   define('SEND_EXTRA_LOW_STOCK_EMAIL_TITLE','Low Stock Report: ');
+
