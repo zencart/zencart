@@ -56,7 +56,7 @@ if (isset($_GET) & sizeof($_GET) > 0 ) {
 // check for SSL configuration changes:
 if (!defined('SSLPWSTATUSCHECK')) die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
 list($a, $b, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $b = (int)$b; $c = (int)$c;
-$d = (ENABLE_SSL_ADMIN == 'true') ? '1' : '0';
+$d = (defined('ENABLE_SSL_ADMIN') && ENABLE_SSL_ADMIN == 'true') ? '1' : '0';
 $e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
 $f = ':'.$d.':'.$e;
 if ($a == 0) {
