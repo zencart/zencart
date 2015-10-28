@@ -7,6 +7,17 @@
  * @version GIT: $Id: Author: DrByte  Sat Jul 27 20:38:11 2013 -0400 Modified in v1.5.2 $
  */
 
+  define ('EMAIL_LOGO_FILENAME', 'header.jpg');  //-File is present in /email folder
+  define ('EMAIL_LOGO_WIDTH', '550');
+  define ('EMAIL_LOGO_HEIGHT', '110');
+  define ('EMAIL_LOGO_ALT_TITLE_TEXT', 'Zen Cart! The Art of E-commerce');
+  
+  // -----
+  // If you want to include some extra information in each email's header information (like perhaps the store address and/or phone number),
+  // set this value to contain the full HTML content to be copied, e.g. '<div id="extra-stuff">Extra stuff for header</div>'.
+  //
+  define ('EMAIL_EXTRA_HEADER_INFO', '');
+
 // office use only
   define('OFFICE_FROM','From:');
   define('OFFICE_EMAIL','E-mail:');
