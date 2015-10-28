@@ -58,4 +58,3 @@ define('SEND_EXTRA_CC_EMAILS_TO_SUBJECT','[EXTRA CC ORDER info] #');
 // Low Stock Emails
 define('EMAIL_TEXT_SUBJECT_LOWSTOCK','Warning: Low Stock');
 define('SEND_EXTRA_LOW_STOCK_EMAIL_TITLE','Low Stock Report: ');
-
