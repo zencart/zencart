@@ -115,9 +115,10 @@ class testCatalogUrlGeneration extends zcTestCase
         @ini_set('log_errors_max_len', 0);  // unlimited length of message output
         @ini_set('display_errors', 0);      // do not output errors to screen/browser/client
         @ini_set('error_log', TESTCWD . 'log-myDEBUG.txt');
+        @ini_set('error_log', TESTCWD . 'log-myDEBUG.txt');
 
         $this->assertURLGenerated(
-            zen_href_link(FILENAME_DEFAULT, null, 'OTHER'),
+            zen_href_link(FILENAME_DEFAULT, '', 'OTHER'),
             HTTP_SERVER . DIR_WS_CATALOG
         );
 
