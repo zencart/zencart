@@ -153,7 +153,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->assertTextPresent('2.50'); //shipping
         $this->assertTextPresent('-$50.00'); //coupon discount
         $this->assertTextPresent('31.98'); //tax
-        $this->assertTextPresent('484.46'); //total
+        $this->assertTextPresent('484.47'); //total
         $this->byId('btn_submit')->click();
 
 
@@ -168,7 +168,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->assertTextPresent('-$499.99'); //coupon discount
         $this->assertTextPresent('2.50'); //shipping
         $this->assertTextPresent('0.48'); //tax
-        $this->assertTextPresent('2.97'); //total
+        $this->assertTextPresent('2.98'); //total
         $this->byId('btn_submit')->click();
 
 
@@ -183,7 +183,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->assertTextPresent('-$10.00'); //coupon discount
         $this->assertTextPresent('34.78'); //tax
         $this->assertTextPresent('2.50'); //shipping
-        $this->assertTextPresent('527.26'); //total
+        $this->assertTextPresent('527.27'); //total
         $this->byId('btn_submit')->click();
         $this->switchItemShippingTax('off');
         $this->switchToTaxInclusive();
@@ -231,7 +231,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->assertTextPresent('2.98'); //shipping
         $this->assertTextPresent('-$53.50'); //coupon discount
         $this->assertTextPresent('31.98'); //tax
-        $this->assertTextPresent('484.46'); //total
+        $this->assertTextPresent('484.47'); //total
         $this->byId('btn_submit')->click();
 
 
@@ -261,7 +261,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->assertTextPresent('-$10.65'); //coupon discount
         $this->assertTextPresent('34.83'); //tax
         $this->assertTextPresent('2.98'); //shipping
-        $this->assertTextPresent('527.31'); //total
+        $this->assertTextPresent('527.32'); //total
         $this->byId('btn_submit')->click();
         $this->switchItemShippingTax('off');
         $this->switchToTaxNonInclusive();

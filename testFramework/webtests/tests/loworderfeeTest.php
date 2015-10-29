@@ -102,14 +102,14 @@ class loworderfeeTest extends CommonTestResources
         $this->byId('ship-item-item')->click();
         $this->byCss('input[type="image"]')->click();
         $this->byName('cot_gv')->clear();
-        $this->byName('cot_gv')->value('50.76');
+        $this->byName('cot_gv')->value('50.77');
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shippimg
-        $this->assertTextPresent('$3.27'); //tax
+        $this->assertTextPresent('$3.28'); //tax
         $this->assertTextPresent('$5.00'); //loworder fee
-        $this->assertTextPresent('-$50.76'); //gift certificates
+        $this->assertTextPresent('-$50.77'); //gift certificates
         $this->assertTextPresent('$0.00'); //total
         $this->byId('btn_submit')->click();
         $this->switchItemShippingTax('off');
@@ -128,14 +128,14 @@ class loworderfeeTest extends CommonTestResources
         $this->byId('ship-item-item')->click();
         $this->byCss('input[type="image"]')->click();
         $this->byName('cot_gv')->clear();
-        $this->byName('cot_gv')->value('50.76');
+        $this->byName('cot_gv')->value('50.77');
         $this->byCss('input[type="image"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('42.79'); //net price
         $this->assertTextPresent('$2.98'); //shippimg
-        $this->assertTextPresent('$3.27'); //tax
+        $this->assertTextPresent('$3.28'); //tax
         $this->assertTextPresent('$5.00'); //loworder fee
-        $this->assertTextPresent('-$50.76'); //gift certificates
+        $this->assertTextPresent('-$50.77'); //gift certificates
         $this->assertTextPresent('$0.00'); //total
         $this->byId('btn_submit')->click();
         $this->switchItemShippingTax('off');
