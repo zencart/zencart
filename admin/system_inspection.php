@@ -22,9 +22,6 @@ require('includes/admin_html_head.php');
 <p><?php echo HEADING_WHY . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . "?"; ?></p>
 <h2><?php echo PAGES_TABLE; ?></h2>
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
-    <tr>
-             <td valign="top">
-
               <!-- this is the heading row -->
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent" align="left" valign="top">
@@ -200,10 +197,6 @@ require('includes/admin_html_head.php');
       echo NO_MISSING_ADMIN_PAGES; 
     }
 ?>
-<ul>
-</ul>
-
-
 </div>
 <!-- body_eof //-->
 
