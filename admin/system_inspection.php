@@ -22,9 +22,6 @@ require('includes/admin_html_head.php');
 <p><?php echo HEADING_WHY . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . "?"; ?></p>
 <h2><?php echo PAGES_TABLE; ?></h2>
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
-    <tr>
-             <td valign="top">
-
               <!-- this is the heading row -->
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent" align="left" valign="top">
@@ -51,10 +48,9 @@ require('includes/admin_html_head.php');
 <?php
     } else { 
        $unknown_pages = 0; 
-       while (!$pages->EOF) {
-          $key = $pages->fields['language_key']; 
+       foreach ($pages as $page) {
+          $key = $page['language_key']; 
           if (in_array($key, $built_in_boxes)) { 
-             $pages->MoveNext();
              continue;
           }
           $unknown_pages++; 
@@ -62,27 +58,27 @@ require('includes/admin_html_head.php');
                 <tr>
                    <td class="dataTableContent" align="left">
                    <?php 
-                      if (defined($pages->fields['language_key'])) 
-                         echo constant($pages->fields['language_key']);
+                      if (defined($page['language_key'])) 
+                         echo constant($page['language_key']);
                       else 
-                         echo "(" . $pages->fields['language_key'] . ")";
+                         echo "(" . $page['language_key'] . ")";
                    ?>
                    </td>
                    <td class="dataTableContent">
    <?php 
-                         echo $pages->fields['menu_key'];
+                         echo $page['menu_key'];
    ?>
                    </td>
                    <td class="dataTableContent">
    <?php 
-                         echo $pages->fields['display_on_menu'];
+                         echo $page['display_on_menu'];
    ?>
                    </td>
                    <td class="dataTableContent">
                    <?php 
-                      if (defined($pages->fields['language_key']) && 
-                          defined($pages->fields['main_page'])) {
-                         echo '<a href="' . zen_href_link(constant($pages->fields['main_page']), $pages->fields['page_params']) .'">' . constant($pages->fields['language_key']) . '</a>';  
+                      if (defined($page['language_key']) && 
+                          defined($page['main_page'])) {
+                         echo '<a href="' . zen_href_link(constant($page['main_page']), $page['page_params']) .'">' . constant($page['language_key']) . '</a>';  
                       } else {
                          echo NO_LINK; 
                       }
@@ -90,7 +86,6 @@ require('includes/admin_html_head.php');
                    </td>
                  </tr>
    <?php
-         $pages->MoveNext();
        }
        if ($unknown_pages == 0) { 
 ?>
@@ -115,18 +110,16 @@ require('includes/admin_html_head.php');
     } else { 
        echo "<ul>"; 
        $unknown_tables = 0; 
-       while (!$tables->EOF) {
-          $key = $tables->fields['TABLE_NAME']; 
+       foreach ($tables as $table) { 
+          $key = $table['TABLE_NAME']; 
           if (DB_PREFIX != '') { 
              $key = substr($key, strlen(DB_PREFIX)); 
           }
           if (in_array($key, $built_in_tables) || 
               in_array($key, $optional_tables)) {
-             $tables->MoveNext();
              continue;
           }
-          echo '<li>' . $tables->fields['TABLE_NAME'] . '</li>';
-          $tables->MoveNext();
+          echo '<li>' . $table['TABLE_NAME'] . '</li>';
           $unknown_tables++; 
        }
        if ($unknown_tables == 0) { 
@@ -184,14 +177,13 @@ require('includes/admin_html_head.php');
     $missing_pages = array(); 
     $pages_query_raw = " SELECT * FROM " . TABLE_CONFIGURATION_GROUP . " WHERE visible = '1'" ;
     $pages = $db->Execute($pages_query_raw); 
-    while (!$pages->EOF) { 
-       $gid = $pages->fields['configuration_group_id']; 
+    foreach ($pages as $page) { 
+       $gid = $page['configuration_group_id']; 
        $admin_entry = $db->Execute("SELECT * FROM " . TABLE_ADMIN_PAGES . " WHERE page_params = 'gid=". (int)$gid . "'");  
        if ($admin_entry->EOF) { 
            $missing_pages[] = array('gid' => $gid, 
-                                    'name' => $pages->fields['configuration_group_title']); 
+                                    'name' => $page['configuration_group_title']); 
        }
-       $pages->MoveNext();
     }
     if (sizeof($missing_pages) > 0) { 
        echo "<ul>"; 
@@ -205,10 +197,6 @@ require('includes/admin_html_head.php');
       echo NO_MISSING_ADMIN_PAGES; 
     }
 ?>
-<ul>
-</ul>
-
-
 </div>
 <!-- body_eof //-->
 
