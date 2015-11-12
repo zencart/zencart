@@ -121,6 +121,6 @@ class currencies extends base {
   }
 
   function display_price($products_price, $products_tax, $quantity = 1) {
-    return $this->format(zen_add_tax($products_price, $products_tax) * $quantity);
+    return $this->format(zen_add_tax($products_price * $quantity, $products_tax));
   }
 }

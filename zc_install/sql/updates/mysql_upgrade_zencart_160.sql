@@ -63,6 +63,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 UPDATE configuration SET val_function = '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":4}}}', configuration_description = 'Minimum length of admin usernames (must be 4 or more)' WHERE configuration_key = 'ADMIN_NAME_MINIMUM_LENGTH';
 
 DELETE FROM configuration WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID';
+DELETE FROM configuration WHERE configuration_key = 'ALLOW_GUEST_TO_TELL_A_FRIEND';
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Topmost Category Parent ID', 'TOPMOST_CATEGORY_PARENT_ID', '0', 'DEFAULT: 0<br>This is the top-most "parent" category ID. In default installs, this is always 0.  Very advanced customizations might require this to be adjusted. <br>WARNING: Changing this to something other than 0 could result in unpredictable behavior!!', '6', '80', now());
 
@@ -84,7 +85,7 @@ DELETE FROM configuration where configuration_key = 'PHPBB_LINKS_ENABLED' && con
 
 
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
-UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE');
+UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE', 'ITA');
 UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
 UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
 UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
@@ -183,6 +184,8 @@ SELECT (@t1:=configuration_group_id) as t1 FROM configuration_group WHERE config
 INSERT INTO admin_pages VALUES ('configWidgets','BOX_CONFIGURATION_WIDGET','FILENAME_CONFIGURATION',CONCAT('gID=',@t1), 'configuration', 'Y', 32);
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
 ('Max Error Logs', 'MAX_ERROR_LOGS', '20', 'Display this number of error logs', @t1, '1', now(), NULL, NULL);
+
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('system_inspection', 'BOX_TOOLS_SYSTEM_INSPECTION', 'FILENAME_SYSTEM_INSPECTION', '', 'tools', 'Y', 14) ;
 
 INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string ) VALUES ( '', 'email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where COWOA_account != 1 order by customers_lastname, customers_firstname, customers_email_address');
 

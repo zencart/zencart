@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: index.php 19537 2011-09-20 17:14:44Z drbyte $
@@ -31,7 +31,6 @@ if ( ($category_depth == 'products') || (zen_check_url_get_terms()) ) {
   // This section deals with product-listing page contents
   define('HEADING_TITLE', 'Available Products');
   define('TABLE_HEADING_IMAGE', 'Product Image');
-  define('TABLE_HEADING_MODEL', 'Model');
   define('TABLE_HEADING_PRODUCTS', 'Product Name');
   define('TABLE_HEADING_MANUFACTURER', 'Manufacturer');
   define('TABLE_HEADING_QUANTITY', 'Quantity');

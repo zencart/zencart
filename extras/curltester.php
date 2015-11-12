@@ -18,6 +18,7 @@ header('Cache-Control: no-cache, no-store, must-revalidate');
 <body>
 <p>Testing communications to various destinations. This is a simple diagnostic to determine whether your server can connect to common destinations.<br>
 <em>For advanced "details" mode, add </em><strong>?details=on</strong><em> to the URL.</em></p>
+<p><em>(Another resource you may find useful for testing your server's overall customer-facing SSL configuration: <a href="https://www.ssllabs.com/ssltest/index.html" target="_blank">https://www.ssllabs.com/ssltest/index.html</a> )</em></p>
 
 <?php
 error_reporting(E_ALL);

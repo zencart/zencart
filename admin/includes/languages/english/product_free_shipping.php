@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: product_free_shipping.php 15883 2010-04-11 16:41:26Z wilt $
@@ -89,7 +89,6 @@ define('TEXT_PRODUCTS_MANUFACTURER', 'Products Manufacturer:');
 define('TEXT_PRODUCTS_NAME', 'Products Name:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Products Description:');
 define('TEXT_PRODUCTS_QUANTITY', 'Products Quantity:');
-define('TEXT_PRODUCTS_MODEL', 'Products Model:');
 define('TEXT_PRODUCTS_IMAGE', 'Products Image:');
 define('TEXT_PRODUCTS_IMAGE_DIR', 'Upload to directory:');
 define('TEXT_PRODUCTS_URL', 'Products URL:');
@@ -111,7 +110,6 @@ define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
   define('TEXT_COPY_ATTRIBUTES_NO','No');
 
   define('TEXT_INFO_CURRENT_PRODUCT', 'Current Product: ');
-  define('TABLE_HEADING_MODEL', 'Model');
 
   define('TEXT_INFO_HEADING_ATTRIBUTE_FEATURES','Attributes Changes for Products ID# ');
   define('TEXT_INFO_ATTRIBUTES_FEATURES_DELETE','Delete <strong>ALL</strong> Product Attributes for:<br />');

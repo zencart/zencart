@@ -9,6 +9,8 @@
  * @TODO - add jquery validation to the password-reset fields, to show when passwords don't match
  * @TODO - add optional PCI-compliance indicator to password field, to show when password isn't compliant
  */
+require ('includes/application_top.php');
+
 define('ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS', 'Yes'); // Can be set to 'No' if you don't want warning/courtesy emails to be sent after several login failures have occurred
 
 // PCI-DSS / PA-DSS requirements for lockouts and intervals:
@@ -16,7 +18,6 @@ define('ADMIN_LOGIN_LOCKOUT_TIMER', (30 * 60));
 define('ADMIN_PASSWORD_EXPIRES_INTERVAL', strtotime('- 90 day'));
 
 //////////
-require ('includes/application_top.php');
 $admin_name = $admin_pass = $message = "";
 $errors = array();
 $error = $expired = false;

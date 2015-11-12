@@ -246,7 +246,7 @@
       }
 
       // set the reply-to address.  If none set yet, then use Store's default email name/address.
-      // If sending from checkout or contact-us or tell-a-friend page, use the supplied info
+      // If sending from checkout or contact-us page, use the supplied info
       $email_reply_to_address = (isset($email_reply_to_address) && $email_reply_to_address != '') ? $email_reply_to_address : (in_array($module, array('contact_us',  'tell_a_friend', 'checkout_extra')) ? $from_email_address : EMAIL_FROM);
       $email_reply_to_name    = (isset($email_reply_to_name) && $email_reply_to_name != '')    ? $email_reply_to_name    : (in_array($module, array('contact_us',  'tell_a_friend', 'checkout_extra')) ? $from_email_name    : STORE_NAME);
       $mail->AddReplyTo($email_reply_to_address, $email_reply_to_name);
@@ -440,8 +440,6 @@
   $emodules_array[] = array('id' => 'order_status_extra', 'text' => 'Order Status-Extra');
   $emodules_array[] = array('id' => 'low_stock', 'text' => 'Low Stock Notices');
   $emodules_array[] = array('id' => 'cc_middle_digs', 'text' => 'CC - Middle-Digits');
-  $emodules_array[] = array('id' => 'tell_a_friend', 'text' => 'Tell-A-Friend');
-  $emodules_array[] = array('id' => 'tell_a_friend_extra', 'text' => 'Tell-A-Friend-Extra');
   $emodules_array[] = array('id' => 'purchase_order', 'text' => 'Purchase Order');
   $emodules_array[] = array('id' => 'payment_modules', 'text' => 'Payment Modules');
   $emodules_array[] = array('id' => 'payment_modules_extra', 'text' => 'Payment Modules-Extra');
@@ -466,6 +464,37 @@
     }
     // Identify and Read the template file for the type of message being sent
     $langfolder = (strtolower($_SESSION['languages_code']) == 'en') ? '' : strtolower($_SESSION['languages_code']) . '/';
+
+    // Handle CSS and logo image
+    $css_lang_folder = $langfolder;
+    if (!file_exists (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css')) {
+      if ($css_lang_folder == '' || !file_exists (DIR_FS_EMAIL_TEMPLATES . 'email_common.css')) {
+        trigger_error ('Missing common email CSS file: ' . DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css', E_USER_ERROR);
+
+      } else {
+        $css_lang_folder = '';
+
+      }
+    }
+    $block['EMAIL_COMMON_CSS'] = file_get_contents (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css');
+
+    if (!isset ($block['EMAIL_LOGO_FILE']) || $block['EMAIL_LOGO_FILE'] == '') {
+      if (IS_ADMIN_FLAG === true) {
+        $block['EMAIL_LOGO_FILE'] = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
+
+      } else {
+        $block['EMAIL_LOGO_FILE'] = HTTP_SERVER . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
+
+      }
+    }
+    if (!isset ($block['EMAIL_LOGO_ALT_TEXT']) || $block['EMAIL_LOGO_ALT_TEXT'] == '') $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
+    if (!isset ($block['EMAIL_LOGO_WIDTH']) || $block['EMAIL_LOGO_WIDTH'] == '') $block['EMAIL_LOGO_WIDTH'] = EMAIL_LOGO_WIDTH;
+    if (!isset ($block['EMAIL_LOGO_HEIGHT']) || $block['EMAIL_LOGO_HEIGHT'] == '') $block['EMAIL_LOGO_HEIGHT'] = EMAIL_LOGO_HEIGHT;
+
+    if (!defined ('EMAIL_EXTRA_HEADER_INFO')) define ('EMAIL_EXTRA_HEADER_INFO', '');
+    if (!isset ($block['EXTRA_HEADER_INFO']) || $block['EXTRA_HEADER_INFO'] == '') $block['EXTRA_HEADER_INFO'] = EMAIL_EXTRA_HEADER_INFO;
+
+    // Obtain the template file to be used
     $template_filename_base = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_";
     $template_filename_base_en = DIR_FS_EMAIL_TEMPLATES . "email_template_";
     $template_filename = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html";
