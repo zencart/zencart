@@ -157,7 +157,6 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
      */
     protected function processColumnEntries($queryResult, $columnName, $item)
     {
-        reset($queryResult);
         foreach ($queryResult as $dispSortOrder) {
             foreach ($this->displayValues as $key => $value) {
                 if ($dispSortOrder ['configuration_key'] == $this->prefix . $key) {
