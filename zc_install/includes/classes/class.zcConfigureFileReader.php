@@ -48,7 +48,8 @@ class zcConfigureFileReader {
 			$realfile = realpath($file);
 			if(file_exists($realfile)) {
 				$this->file = $realfile;
-				$content = @file_get_contents($realfile);
+				$content = file($realfile);
+                $content = implode('~**~', $content);
 				if($content !== false && trim($content) !== '')
 					$this->fileContent = $content;
 			}
@@ -87,7 +88,7 @@ class zcConfigureFileReader {
 		if(!$this->fileLoaded()) return null;
 
 		// Extract the contents of the define
-		if(preg_match('|^\s*define\(\s*[\'"]' . $searchDefine . '[\'"]\s*,\s*(?!\s*\);)(.+?)\s*\);|', $this->fileContent, $matches)) {
+        if (preg_match('|\~\*\*\~\s*define\(\s*[\'"]' . $searchDefine . '[\'"]\s*,\s*(?!\s*\);)(.+?)\s*\);|', $this->fileContent, $matches)) {
 			return $matches[1];
 		}
 		return null;
