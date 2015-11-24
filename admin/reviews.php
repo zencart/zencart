@@ -279,11 +279,9 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
     $reviews = $db->Execute($reviews_query_raw);
     while (!$reviews->EOF) {
       if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ($_GET['rID'] == $reviews->fields['reviews_id']))) && !isset($rInfo)) {
-        $reviews_text = $db->Execute("select r.reviews_read, r.customers_name,
-                                             length(rd.reviews_text) as reviews_text_size
-                                      from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
-                                      where r.reviews_id = '" . (int)$reviews->fields['reviews_id'] . "'
-                                      and r.reviews_id = rd.reviews_id");
+        $reviews_text = $db->Execute("select length(reviews_text) as reviews_text_size
+                                      from " . TABLE_REVIEWS_DESCRIPTION . " rd
+                                      where reviews_id = '" . (int)$reviews->fields['reviews_id'] . "'");
 
         $products_image = $db->Execute("select products_image
                                         from " . TABLE_PRODUCTS . "
