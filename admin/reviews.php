@@ -254,7 +254,7 @@ require('includes/admin_html_head.php');
 
     $order_by = " order by pd.products_name";
 
-    $reviews_query_raw = ("select r.*, rd.*, pd.*, p.*, c.* from (" . TABLE_REVIEWS . " r left join " . TABLE_REVIEWS_DESCRIPTION . " rd on r.reviews_id = rd.reviews_id left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on r.products_id = pd.products_id and pd.language_id ='" . (int)$_SESSION['languages_id'] . "' left join " . TABLE_PRODUCTS . " p on p.products_id= r.products_id) left join " . TABLE_CUSTOMERS . " c on r.customers_id = c.customers_id where r.products_id = p.products_id " . $search . $order_by);
+    $reviews_query_raw = ("select r.*, rd.*, pd.*, p.*, c.*, length(rd.reviews_text) as reviews_text_size from (" . TABLE_REVIEWS . " r left join " . TABLE_REVIEWS_DESCRIPTION . " rd on r.reviews_id = rd.reviews_id left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on r.products_id = pd.products_id and pd.language_id ='" . (int)$_SESSION['languages_id'] . "' left join " . TABLE_PRODUCTS . " p on p.products_id= r.products_id) left join " . TABLE_CUSTOMERS . " c on r.customers_id = c.customers_id where r.products_id = p.products_id " . $search . $order_by);
 
 // reset page when page is unknown
 if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
@@ -279,10 +279,6 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
     $reviews = $db->Execute($reviews_query_raw);
     while (!$reviews->EOF) {
       if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ($_GET['rID'] == $reviews->fields['reviews_id']))) && !isset($rInfo)) {
-        $reviews_text = $db->Execute("select length(reviews_text) as reviews_text_size
-                                      from " . TABLE_REVIEWS_DESCRIPTION . " rd
-                                      where reviews_id = '" . (int)$reviews->fields['reviews_id'] . "'");
-
         $products_image = $db->Execute("select products_image
                                         from " . TABLE_PRODUCTS . "
                                         where products_id = '" . (int)$reviews->fields['products_id'] . "'");
@@ -297,7 +293,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
                                          from " . TABLE_REVIEWS . "
                                          where products_id = '" . (int)$reviews->fields['products_id'] . "'");
 
-        $review_info = array_merge($reviews_text->fields, $reviews_average->fields, $products_name->fields);
+        $review_info = array_merge($reviews_average->fields, $products_name->fields);
         $rInfo_array = array_merge($reviews->fields, $review_info, $products_image->fields);
         $rInfo = new objectInfo($rInfo_array);
       }
