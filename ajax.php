@@ -14,8 +14,8 @@ if (isset ($_GET['act'])&&isset ($_GET['method'])) {
   $className = 'zc'.ucfirst ($_GET['act']);
   $classFile = $className.'.php';
   $basePath = DIR_FS_CATALOG.DIR_WS_CLASSES;
-  if (file_exists (basename(realpath($basePath. 'ajax/'  .$classFile)))) {
-    require basename(realpath($basePath .'ajax/'  . $classFile));
+  if (file_exists (realpath($basePath. 'ajax/' . basename($classFile)))) {
+    require realpath($basePath .'ajax/' . basename($classFile));
     $class = new $className ();
     if (method_exists ($class, $_GET['method'])) {
       $result = call_user_func (array(
