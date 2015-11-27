@@ -13,8 +13,9 @@ $language_page_directory = DIR_WS_LANGUAGES.$_SESSION['language'].'/';
 if (isset ($_GET['act'])&&isset ($_GET['method'])) {
   $className = 'zc'.ucfirst ($_GET['act']);
   $classFile = $className.'.php';
-  if (file_exists (DIR_FS_CATALOG.DIR_WS_CLASSES.'ajax/'.$classFile)) {
-    require (DIR_FS_CATALOG.DIR_WS_CLASSES.'ajax/'.$classFile);
+  $basePath = DIR_FS_CATALOG.DIR_WS_CLASSES;
+  if (file_exists (realpath($basePath. 'ajax/' . basename($classFile)))) {
+    require realpath($basePath .'ajax/' . basename($classFile));
     $class = new $className ();
     if (method_exists ($class, $_GET['method'])) {
       $result = call_user_func (array(
