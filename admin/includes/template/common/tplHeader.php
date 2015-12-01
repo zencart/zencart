@@ -50,10 +50,10 @@ if ($tplVars['messageStack']->size > 0) {
     </tr></table></td>
   </tr>
 </table>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr class="headerBar">
+<table border="0" cellspacing="0" cellpadding="0" width="100%" class="headerBar">
+  <tr>
 
-    <td class="headerBarContent" align="left">
+    <td class="headerBarContent">
       <?php
       if (!$tplVars['hide_languages']) {
         echo zen_draw_form('languages', $tplVars['cmd'], '', 'get');
@@ -66,7 +66,7 @@ if ($tplVars['messageStack']->size > 0) {
       }
     ?>
     </td>
-    <td class="headerBarContent" align="center">
+    <td class="headerBarContent">
 <?php
     echo ((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? iconv('ISO-8859-1', 'UTF-8', strftime(ADMIN_NAV_DATE_TIME_FORMAT, time())) : strftime(ADMIN_NAV_DATE_TIME_FORMAT, time())); //windows does not "do" UTF-8...so a manual conversion is necessary
     echo '&nbsp;' . date("O" , time()) . ' GMT';  // time zone
@@ -78,7 +78,7 @@ if ($tplVars['messageStack']->size > 0) {
     if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
 ?></td>
 
-    <td class="headerBarContent" align="right"><?php echo '
+    <td class="headerBarContent right"><?php echo '
         <a href="' . zen_href_link(FILENAME_DEFAULT, '', 'NONSSL') . '" class="headerLink">' . HEADER_TITLE_TOP . '</a>&nbsp;|&nbsp;
         <a href="' . zen_catalog_href_link(FILENAME_DEFAULT) . '" class="headerLink" target="_blank">' . HEADER_TITLE_ONLINE_CATALOG . '</a>&nbsp;|&nbsp;
         <a href="http://www.zen-cart.com/" class="headerLink" target="_blank">' . HEADER_TITLE_SUPPORT_SITE . '</a>&nbsp;|&nbsp;

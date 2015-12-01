@@ -8,14 +8,14 @@
 ?>
 <?php if ($tplVars['listingBox']['paginator']['totalItemCount'] && $tplVars['leadDefinition']['showMultiActions']) { ?>
     <tr>
-        <td colspan="<?php echo $tplVars['leadDefinition']['columnCount']; ?>">&nbsp;
-            <input type="checkbox" id="adminLeadMultiCheckbox"><?php echo TEXT_MULTIPLE_CHECKBOX_TEXT; ?>
+        <td colspan="<?php echo $tplVars['leadDefinition']['columnCount']; ?>">
+            <label><input type="checkbox" id="adminLeadMultiCheckbox"> <?php echo TEXT_MULTIPLE_CHECKBOX_TEXT; ?></label>
             <?php if ($tplVars['leadDefinition']['multiEdit']) { ?>
                 <a href="#"><i class="fa fa-2x fa-pencil" id="adminLeadMultiEdit"></i></a>
             <?php } ?>
             &nbsp;<?php if ($tplVars['leadDefinition']['allowMultiDelete']) { ?>
-                <a href="#">
-                    <i class="fa fa-2x fa-trash" id="adminLeadMultiDelete" title="<?php echo TEXT_MULTI_DELETE; ?>"></i>
+                <a href="#" id="adminLeadMultiDelete">
+                    <i class="fa fa-2x fa-trash"></i> <?php echo TEXT_MULTI_DELETE; ?>
                 </a>
             <?php } ?>
         </td>
