@@ -10,7 +10,7 @@
  */
 ?>
 <div id="shippingEstimatorContent">
-<?php echo zen_draw_form('estimator', zen_href_link($show_in, '', $request_type), 'post'); ?>
+<?php echo zen_draw_form('estimator', zen_href_link($show_in . '#view', '', $request_type), 'post'); ?>
 <?php echo zen_draw_hidden_field('scid', $selected_shipping['id']); ?>
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 <?php
@@ -52,6 +52,7 @@
 <?php echo zen_get_country_list('zone_country_id', $selected_country, 'id="country" onchange="update_zone(this.form);"'); ?>
 <br class="clearBoth" />
 
+<a name="view"></a>
 <label class="inputLabel" for="stateZone" id="zoneLabel"><?php echo ENTRY_STATE; ?></label>
 <?php echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $state_zone_id, 'id="stateZone"');?>
 <br class="clearBoth" id="stBreak" />
