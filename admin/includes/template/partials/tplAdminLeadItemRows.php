@@ -20,7 +20,7 @@
             <td><?php echo $row[$field]; ?></td>
         <?php } ?>
 
-        <td>
+        <td class="actions">
             <?php foreach ($row['rowActions'] as $rowAction) { ?>
                 <a href="<?php echo $rowAction['link']; ?>" <?php echo $rowAction['linkParameters']; ?>>
                     <?php echo $rowAction['linkText']; ?>

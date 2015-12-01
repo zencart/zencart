@@ -9,15 +9,15 @@
  */
 ?>
 <div class="container" id="adminLeadContainer">
-  <div class="row" style="max-width: 100%; border-bottom: 1px solid">
+  <div class="row">
     <div class="row">
       <div class="left small-9 columns">
         <h1><?php echo $tplVars['leadDefinition']['pageTitle']; ?></h1>
       </div>
-      <div class="small-1 columns">
+      <div class="small-2 columns">
         <label class="inline" for="paginationQueryLimit"><?php echo TEXT_PAGINATION_LIMIT_SELECT; ?></label>
       </div>
-      <div class="small-2 columns">
+      <div class="small-1 columns">
        <?php echo zen_draw_pull_down_menu('paginationQueryLimit', $tplVars['leadDefinition']['paginationLimitSelect'], $tplVars['leadDefinition']['paginationLimitDefault'], 'id="paginationQueryLimit" style="width:auto"')?>
       </div>
     </div>
@@ -28,8 +28,8 @@
     <?php } ?>
   </div>
 
-  <div class="row" style="max-width: 100%">
-    <div class="large-2 columns" style="border-right: 1px solid">
+  <div class="row">
+    <div class="large-2 columns">
       <div class="panel multi">
         <div class="panel">
           <?php foreach ($tplVars['leadDefinition']['actionLinks'] as $actionLink) { ?>

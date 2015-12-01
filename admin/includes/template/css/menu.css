@@ -6,13 +6,10 @@ same in mozilla, ie and opera
 from items that are not contained but only
 covered. */
 ul.nde-menu-system{
-background-color:#599659;
+background:#008cba;
 display:block;
-margin:0;
-padding:4px 10px;
-}
-ul.nde-menu-system *{
-font-size:10px;
+margin:0 0 10px 0;
+padding: 7px 10px;
 }
 ul.nde-menu-system li{
 border-right:1px solid #003D00;
@@ -43,11 +40,12 @@ position:absolute;
 top:1em;/* required for NS 7.x/Gecko 1.0.x but not Gecko 1.3 */
 visibility:hidden;
 z-index:1000;
+border-bottom:#a8a8a8 1px solid;
 }
 ul.nde-menu-system li ul li{
-background-color:#f7f7f7;
-border:#a8a8a8 1px solid;
-border-width:0 1px 1px;
+background:#f2f2f2;
+border-right:#a8a8a8 1px solid;
+border-left:#a8a8a8 1px solid;
 display:block;
 list-style:none;
 margin:0;
@@ -55,23 +53,23 @@ padding:0;
 width:150px;
 }
 ul.nde-menu-system li ul li a{
-background-color:#EFF4EA;
+background:#f2f2f2;
 color:#333333;
 display:block;
 font-weight:normal;
 margin:0;
-padding:3px 5px;
+padding: 7px;
 }
 * html ul.nde-menu-system li ul li a{
 width:100%;
 }
 ul.nde-menu-system li ul li a:hover{
-background-color:#85C285;
+background:#cecece;
 color:#333333;
 text-decoration:none;
 }
 ul.nde-menu-system ul{
-background-color:#599659;
+background:#008cba;
 display:block;
 margin:0;
 padding:4px 0 0;
