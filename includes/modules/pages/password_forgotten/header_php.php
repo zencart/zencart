@@ -6,9 +6,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
- *
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
+ * @version $Id: Modified in V1.6.0 $
  */
 
 // This should be first line of the script:
@@ -37,8 +35,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
   $check_customer_query = "SELECT customers_firstname, customers_lastname, customers_password, customers_id
                            FROM " . TABLE_CUSTOMERS . "
-                           WHERE customers_email_address = :emailAddress
-                           AND COWOA_account != 1";
+                           WHERE customers_email_address = :emailAddress";
+
+  $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_CHECK_CUSTOMER_QUERY', array(), $check_customer_query);
 
   $check_customer_query = $db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
   $check_customer = $db->Execute($check_customer_query);

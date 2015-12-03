@@ -34,9 +34,10 @@ class Request extends \base
     /**
      * constructor
      */
-    public function __construct(WebRequest $webRequest = null)
+    public function __construct(WebRequest $webRequest = null, Session $session = null)
     {
         $this->request = $webRequest ? : (new WebFactory($GLOBALS))->newRequest();
+        $this->session  = $session ? : new Session;
         $this->initParameterBag();
     }
 
@@ -122,10 +123,27 @@ class Request extends \base
     }
 
     /**
+     * @param string $param
+     * @param $value
+     * @param string $source
+     */
+    public function set($param, $value, $source = 'get')
+    {
+        $this->parameterBag[$source][$param] = $value;
+    }
+
+    /**
      * @return object
      */
     public function getWebFactoryRequest()
     {
         return $this->request;
+    }
+    /**
+     * @return object
+     */
+    public function getSession()
+    {
+        return $this->session;
     }
 }

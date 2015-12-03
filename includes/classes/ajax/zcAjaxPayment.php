@@ -163,7 +163,7 @@ class zcAjaxPayment extends base
     if (isset ($$_SESSION['payment']->form_action_url)) {
       $form_action_url = $$_SESSION['payment']->form_action_url;
     } else {
-      $form_action_url = zen_href_link (FILENAME_CHECKOUT_PROCESS, '', 'SSL');
+      $form_action_url = zen_href_link (FILENAME_CHECKOUT_FLOW, 'step=process', 'SSL');
     }
 
     // if shipping-edit button should be overridden, do so

@@ -5,9 +5,9 @@
  * @package templateSystem
  * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Portions copyright COWOA authors see https://www.zen-cart.com/downloads.php?do=file&id=1115
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: tpl_login_default.php 18695 2011-05-04 05:24:19Z drbyte $
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 ?>
 <div class="centerColumn" id="loginDefault">
@@ -58,18 +58,16 @@
 <br class="clearBoth" />
 <?php
   if ($_SESSION['cart']->count_contents() > 0) { ?>
-<!-- BOF COWOA -->
-<?php if (COWOA_STATUS == 'true') { ?>
+<?php if (GUEST_CHECKOUT_ALLOWED == 'true') { ?>
     <fieldset>
-    <legend>Checkout Without Account</legend>
-    <?php echo TEXT_RATHER_COWOA; ?>
+    <legend><?php echo GUEST_CHECKOUT_HEADING; ?></legend>
+    <?php echo TEXT_ASK_GUEST_CHECKOUT; ?>
     <div class="buttonRow forward">
-    <?php echo "<a href=\"" . zen_href_link(FILENAME_NO_ACCOUNT, '', 'SSL') . "\">"; ?>
+    <?php echo "<a href=\"" . zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=guest', 'SSL') . "\">"; ?>
     <?php echo zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></a></div>
     <br class="clearBoth" />
     </fieldset>
   <?php } ?>
-<!-- BOF COWOA -->
 <?php } ?>
 <!--EOF PPEC split login- DO NOT REMOVE-->
 <?php } else { ?>
@@ -83,18 +81,16 @@
 ?>
 <?php
   if ($_SESSION['cart']->count_contents() > 0) { ?>
-<!-- BOF COWOA -->
-<?php if (COWOA_STATUS == 'true') { ?>
+<?php if (GUEST_CHECKOUT_ALLOWED == 'true') { ?>
     <fieldset>
-    <legend>Checkout Without Account</legend>
-    <?php echo TEXT_RATHER_COWOA; ?>
+    <legend><?php echo GUEST_CHECKOUT_HEADING; ?></legend>
+    <?php echo TEXT_ASK_GUEST_CHECKOUT; ?>
     <div class="buttonRow forward">
-    <?php echo "<a href=\"" . zen_href_link(FILENAME_NO_ACCOUNT, '', 'SSL') . "\">"; ?>
+    <?php echo "<a href=\"" . zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=guest', 'SSL') . "\">"; ?>
     <?php echo zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></a></div>
     <br class="clearBoth" />
     </fieldset>
   <?php } ?>
-<!-- BOF COWOA -->
 <?php } ?>
 <?php echo zen_draw_form('login', zen_href_link(FILENAME_LOGIN, 'action=process' . (isset($_GET['gv_no']) ? '&gv_no=' . preg_replace('/[^0-9.,%]/', '', $_GET['gv_no']) : ''), 'SSL'), 'post', 'id="loginForm"'); ?>
 <fieldset>

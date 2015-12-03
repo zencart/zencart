@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_gv.php 19103 wilt  Modified in v1.6.0 $
+ * @version $Id: Modified in V1.6.0 $
  */
 /**
  * Enter description here...
@@ -113,12 +113,12 @@ class ot_gv {
       // if cot_gv value contains any nonvalid characters, throw error
       if (preg_match('/[^0-9\,.]/', trim($_SESSION['cot_gv']))) {
         $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, error);
-        zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+        zen_redirect(zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=payment', 'SSL'));
       }
       // if requested redemption amount is greater than value of credits on account, throw error
       if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
         $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, error);
-        zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+        zen_redirect(zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=payment', 'SSL'));
       }
       $od_amount = $this->calculate_deductions($order_total);
       $order->info['total'] = $order->info['total'] - $od_amount['total'];
@@ -230,7 +230,7 @@ class ot_gv {
     if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
       $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT . ' - ' . number_format($_SESSION['cot_gv'], 2), error);
       $_SESSION['cot_gv'] = 0.00;
-      zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+      zen_redirect(zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=payment', 'SSL'));
     }
     if (isset($_POST['cot_gv']) && $_POST['cot_gv'] == 0) $_SESSION['cot_gv'] = '0.00';
 
@@ -244,12 +244,12 @@ class ot_gv {
         // if already redeemed, throw error
         if ( ($redeem_query->RecordCount() > 0) && ($gv_result->fields['coupon_type'] == 'G')  ) {
           $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, error);
-          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+          zen_redirect(zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=payment', 'SSL'));
         }
       } else {
         // if not valid redemption code, throw error
         $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, error);
-        zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+        zen_redirect(zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=payment', 'SSL'));
       }
       // if valid, add redeemed amount to customer's GV balance and mark as redeemed
       if ($gv_result->fields['coupon_type'] == 'G') {
@@ -278,7 +278,7 @@ class ot_gv {
         }
         //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_REDEEMED_AMOUNT. $currencies->format($gv_amount)), 'SSL'));
         $messageStack->add_session('redemptions',ERROR_REDEEMED_AMOUNT. $currencies->format($gv_amount), 'success' );
-        zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
+        zen_redirect(zen_href_link(FILENAME_CHECKOUT_FLOW, 'step=payment', 'SSL',true, false));
       }
     }
     if ($_POST['submit_redeem_x'] && $gv_result->fields['coupon_type'] == 'G') zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));

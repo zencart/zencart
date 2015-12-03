@@ -3,9 +3,9 @@
  * @package admin
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Portions copyright COWOA authors see https://www.zen-cart.com/downloads.php?do=file&id=1115
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 
   require('includes/application_top.php');
@@ -63,7 +63,7 @@
         if ($_GET['download_reset_on'] > 0) {
           // adjust download_maxdays based on current date
           $check_status = $db->Execute("select customers_name, customers_email_address, orders_status,
-                                      date_purchased, COWOA_order from " . TABLE_ORDERS . "
+                                      date_purchased, is_guest_order from " . TABLE_ORDERS . "
                                       where orders_id = '" . $_GET['oID'] . "'");
 
           // check for existing product attribute download days and max
@@ -119,7 +119,7 @@
 
         $order_updated = false;
         $check_status = $db->Execute("select customers_name, customers_email_address, orders_status,
-                                      date_purchased, COWOA_order from " . TABLE_ORDERS . "
+                                      date_purchased, is_guest_order from " . TABLE_ORDERS . "
                                       where orders_id = '" . (int)$oID . "'");
 
         if ( ($check_status->fields['orders_status'] != $status) || zen_not_null($comments)) {
@@ -137,9 +137,8 @@
 
             //send emails
 
-// BOF COWOA SEND ORDER_STATUS EMAIL
-            if (COWOA_ORDER_STATUS == 'true') {
-              if ($check_status->fields['COWOA_order'] == 1)  {
+            if (GUEST_ORDER_STATUS == 'true') {
+              if ($check_status->fields['is_guest_order'] == 1)  {
 
                 $message =
                     EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n\n" .
@@ -163,8 +162,8 @@
                 $customer_notified = '1';
               }
             }
-            if (COWOA_ORDER_STATUS == 'false') {
-              if ($check_status->fields['COWOA_order'] == 1)  {
+            if (GUEST_ORDER_STATUS == 'false') {
+              if ($check_status->fields['is_guest_order'] == 1)  {
 
                 $htmlInvoiceURL='';
                 $htmlInvoiceValue='';
@@ -189,8 +188,7 @@
                 $customer_notified = '1';
               }
             }
-// EOF COWOA SEND ORDER_STATUS EMAIL
-            if ($check_status->fields['COWOA_order'] != 1)  {
+            if ($check_status->fields['is_guest_order'] != 1)  {
               $message =
                 EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n\n" .
                 EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . "\n\n" .

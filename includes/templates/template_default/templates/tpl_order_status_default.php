@@ -8,8 +8,9 @@
  * @package templateSystem
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Portions copyright COWOA authors see https://www.zen-cart.com/downloads.php?do=file&id=1115
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
+ * @version $Id: New in V1.6.0 $
  */
 ?>  <!-- TPL_ORDER_STATUS_DEFAULT.PHP -->
 <div class="centerColumn" id="accountHistInfo">
@@ -167,25 +168,5 @@ echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, '', 'SSL
 
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>
 </fieldset>
-
-
-
-
-
-
 </form>
-<!--bof logoff-->
-<!--Kills session after COWOA customer looks at order status-->
-<?php
-if ($_SESSION['COWOA'] and COWOA_LOGOFF == 'true') {
-  zen_session_destroy();
-} else {
-  if (isset($_SESSION['customer_guest_id'])) {
-    echo TEXT_CHECKOUT_LOGOFF_GUEST;
-  } elseif (isset($_SESSION['customer_id'])) {
-    echo TEXT_CHECKOUT_LOGOFF_CUSTOMER;
-  }
-?>
-<?php } ?>
-<!--eof logoff-->
 </div>

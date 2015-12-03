@@ -59,7 +59,4 @@ if (SHOW_FOOTER_IP == '1') {
 <!--bof- site copyright display -->
 <div id="siteinfoLegal" class="legalCopyright"><?php echo FOOTER_TEXT_BODY; ?></div>
 <!--eof- site copyright display -->
-
-<?php
-} // flag_disable_footer
-?>
+<?php } // flag_disable_footer ?>

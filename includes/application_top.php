@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:
+ * @version GIT: Modified in v1.6.0 $Id:
  */
 /**
  * inoculate against hack attempts which waste CPU cycles
@@ -163,6 +163,10 @@ $loader->setClassFiles(array(
     'QueryCache'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'query_cache.php',
     'zcPassword'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php',
     'zcRequest'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcRequest.php',
+    'order'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php',
+    'shipping'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'shipping.php',
+    'payment'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'payment.php',
+    'order_total'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'order_total.php',
 
 ));
 $loader->register();
