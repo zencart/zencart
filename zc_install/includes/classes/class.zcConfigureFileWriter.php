@@ -46,12 +46,12 @@ class zcConfigureFileWriter
   protected function processAllConfigureFiles($adminDir)
   {
     $tplFile = DIR_FS_INSTALL . 'includes/catalog-dist-configure.php';
-    $outputFile = $this->inputs['physical_path'] . '/includes/configure.php';
+    $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
 // logDetails('catalog size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
     $tplFile = DIR_FS_INSTALL . 'includes/admin-dist-configure.php';
-    $outputFile = $this->inputs['physical_path'] . '/'. $adminDir . '/includes/configure.php';
+    $outputFile = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
 // logDetails('admin size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
 
