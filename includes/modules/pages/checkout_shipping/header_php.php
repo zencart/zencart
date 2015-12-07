@@ -215,8 +215,8 @@ if (isset($_SESSION['cart']->cartID)) {
 
   // if shipping-edit button should be overridden, do so
   $editShippingButtonLink = zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL');
-  if (isset($_SESSION['payment']) && method_exists($$_SESSION['payment'], 'alterShippingEditButton')) {
-    $theLink = $$_SESSION['payment']->alterShippingEditButton();
+  if (isset($_SESSION['payment']) && method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
+    $theLink = ${$_SESSION['payment']}->alterShippingEditButton();
     if ($theLink) {
       $editShippingButtonLink = $theLink;
       $displayAddressEdit = true;

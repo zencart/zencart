@@ -377,8 +377,8 @@ class order extends base {
     //echo $_SESSION['payment'];
     /*
     // this is set above to the module filename it should be set to the module title like Checks/Money Order rather than moneyorder
-    if (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
-    $this->info['payment_method'] = $$_SESSION['payment']->title;
+    if (isset(${$_SESSION['payment']}) && is_object(${$_SESSION['payment']})) {
+    $this->info['payment_method'] = ${$_SESSION['payment']}->title;
     }
     */
 
