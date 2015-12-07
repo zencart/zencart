@@ -358,7 +358,7 @@ CREATE TABLE counter (
 
 DROP TABLE IF EXISTS counter_history;
 CREATE TABLE counter_history (
-  startdate char(8) default NULL,
+  startdate char(8) NOT NULL default '',
   counter int(12) default NULL,
   session_counter int(12) default NULL,
   PRIMARY KEY  (startdate)
