@@ -17,7 +17,7 @@ When submitting bug reports, issues, plugins, or code as pull requests, please a
 * Code submissions should comply with the [Coding Standards](http://docs.zen-cart.com/Contributing/main/coding_standards)
 * If reporting a bug/issue, please provide exact steps which one can take to recreate the bug, starting from a brand new fresh install. See [Guidelines for Reporting Bugs](http://docs.zen-cart.com/Contributing/main/issues)
 * If providing a suggestion, please also explain the business problem the suggestion will solve.
-* If publishing a plugin, be sure it complies with the [Plugin Contribution Guidelines](https://www.zen-cart.com/forum.php)
+* If publishing a plugin, be sure it complies with the [Plugin Contribution Guidelines](https://www.zen-cart.com/content.php?53)
 * Check your spelling and grammar.
 
 Thank you for your contributions!
