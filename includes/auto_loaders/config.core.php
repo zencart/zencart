@@ -59,8 +59,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'sniffer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'class.phpbb.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'shopping_cart.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'navigation_history.php');
