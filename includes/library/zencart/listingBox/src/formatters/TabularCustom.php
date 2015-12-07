@@ -42,7 +42,7 @@ class TabularCustom extends AbstractFormatter implements FormatterInterface
                 );
                 if (isset($parameters ['formatter'])) {
                     $rowEntry = array(
-                        'value' => {$parameters['formatter']}(array(
+                        'value' => $parameters ['formatter'](array(
                             'item' => $item,
                             'field' => $field
                         )),
