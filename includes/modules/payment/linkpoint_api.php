@@ -323,7 +323,7 @@ class linkpoint_api {
         if ($order_totals[$i]['code'] == 'ot_total')    $myorder["chargetotal"] = round($order_totals[$i]['value'],2);
       } else {
         global ${$order_totals[$i]['code']};
-        if (substr($order_totals[$i]['text'], 0, 1) == '-' || (isset($$order_totals[$i]['code']->credit_class) && $$order_totals[$i]['code']->credit_class == true)) {
+        if (substr($order_totals[$i]['text'], 0, 1) == '-' || (isset(${$order_totals[$i]['code']}->credit_class) && ${$order_totals[$i]['code']}->credit_class == true)) {
           $creditsApplied += round($order_totals[$i]['value'],2);
         } else {
           $surcharges += round($order_totals[$i]['value'],2);
