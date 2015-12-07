@@ -10,15 +10,15 @@
  */
 
   if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] != 0) {
-// retreive the last x products purchased
-  $orders_history_query = "select distinct op.products_id
+// retrieve the last x products purchased
+  $orders_history_query = "select distinct op.products_id, o.date_purchased
                    from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p
                    where o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
                    and o.orders_id = op.orders_id
                    and op.products_id = p.products_id
-                   and p.products_status = '1'
-                   group by products_id
-                   order by o.date_purchased desc
+                   and p.products_status = 1
+                   group by products_id, date_purchased
+                   order by o.date_purchased desc, products_id
                    limit " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX;
 
     $orders_history = $db->Execute($orders_history_query);
