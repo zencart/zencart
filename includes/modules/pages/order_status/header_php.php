@@ -1,12 +1,11 @@
 <?php
 /**
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Portions copyright COWOA authors see https://www.zen-cart.com/downloads.php?do=file&id=1115
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: J_Schilz for Integrated COWOA - 2007
- * @version $Id: JT of GTI Custom Modified for Integrated COWOA 02-July-2010
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
+ * @version $Id: New in V1.6.0 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ORDER_STATUS');
@@ -30,10 +29,6 @@ if(!$errorInvalidID && !$errorInvalidEmail)
   if (isset($_POST['query_email_address']) && $customer_info->fields['customers_email_address'] != $_POST['query_email_address']) {
     $errorNoMatch=TRUE;
   } else {
-    $_SESSION['email_address'] = $_POST['query_email_address'];
-    $_SESSION['customer_id'] = $customer_info->fields['customers_id'];
-    $_SESSION['COWOA']= 'True';
-    $_SESSION['ORDER_STATUS'] = 'True';
     $statuses_query = "SELECT os.orders_status_name, osh.date_added, osh.comments, osh.customer_notified
                        FROM   " . TABLE_ORDERS_STATUS . " os, " . TABLE_ORDERS_STATUS_HISTORY . " osh
                        WHERE      osh.orders_id = :ordersID

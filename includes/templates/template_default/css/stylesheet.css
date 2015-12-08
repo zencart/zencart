@@ -760,3 +760,69 @@ ul.pagination {
 .item-list ul.pager li:first-child a .inactive,
 .item-list ul.pager li:last-child a .inactive {
   color: #b4b4b3; }
+#orderSteps ul {
+    margin:  0 0 50px 0 ;
+}
+
+#orderSteps ul li {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    /*width: 100px;*/
+    margin: 5px 1px 0 0;
+    text-indent: 35px;
+    position: relative;
+}
+
+#orderSteps ul li:before {
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    left: -2px;
+    border-style: solid;
+    border-width: 15px 0 15px 15px;
+    border-color: transparent transparent transparent #BCE8F1;
+    z-index: 0;
+}
+
+#orderSteps ul li:first-child:before {
+    border-color: transparent;
+}
+
+#orderSteps ul li a:after {
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    right: -15px;
+    border-style: solid;
+    border-width: 15px 0 15px 15px;
+    border-color: transparent transparent transparent #D9EDF7;
+    z-index: 10;
+}
+
+#orderSteps ul li a {
+    display: block;
+    background: #D9EDF7;
+    text-decoration:none
+}
+
+#orderSteps ul li a:hover {
+    text-decoration:none
+}
+
+/*
+ul li a:hover:after {
+    border-color: transparent transparent transparent pink;
+}
+*/
+#orderSteps ul li.active a {
+    color: white;
+    background: #3A87AD;
+    z-index: 100;
+}
+
+#orderSteps ul li.active a:after {
+    border-left-color: #3A87AD;
+}

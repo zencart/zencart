@@ -7,7 +7,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php drbyte  Modified in v1.6.0 $
- * @version $Id: Integrated COWOA v2.2 - 2007 - 2012
  */
 
 // This should be first line of the script:
@@ -46,8 +45,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
                                     customers_email_address, customers_default_address_id,
                                     customers_authorization, customers_referral
                            FROM " . TABLE_CUSTOMERS . "
-                           WHERE customers_email_address = :emailAddress
-                           AND COWOA_account != 1";
+                           WHERE customers_email_address = :emailAddress AND is_guest_account  = 0";
 
     $check_customer_query  =$db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
     $check_customer = $db->Execute($check_customer_query);

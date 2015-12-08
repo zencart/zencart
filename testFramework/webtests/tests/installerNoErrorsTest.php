@@ -33,7 +33,6 @@ class installerNoErrorsTest extends CommonTestResources
         $continue = $this->byId('btnsubmit');
         $continue->click();
         sleep(1);
-
         $this->assertTextPresent('Load Demo Data');
 
         $demoData = $this->byId('demoData');
