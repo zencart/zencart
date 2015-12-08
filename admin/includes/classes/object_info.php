@@ -29,6 +29,18 @@ class objectInfo
     /**
      * @param $object_array
      */
+    function objectInfo($object_array)
+    {
+        if (!is_array($object_array)) return;
+        reset($object_array);
+        while (list($key, $value) = each($object_array)) {
+            $this->$key = zen_db_prepare_input($value);
+        }
+    }
+
+    /**
+     * @param $object_array
+     */
     function updateObjectInfo($object_array)
     {
         if (!is_array($object_array)) return;
