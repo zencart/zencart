@@ -17,7 +17,7 @@ $_GET['gv_no'] = zen_sanitize_string(trim($_GET['gv_no']));
 if (!$_SESSION['customer_id']) {
   $_SESSION['navigation']->set_snapshot();
   $messageStack->add_session('login', ERROR_GV_CREATE_ACCOUNT, 'error');
-  zen_redirect(zen_href_link(FILENAME_LOGIN, (isset($_GET['gv_no']) ? 'gv_no=' . preg_replace('/[^0-9.,%]/', '', $_GET['gv_no'] : '') ), 'SSL'));
+  zen_redirect(zen_href_link(FILENAME_LOGIN, (isset($_GET['gv_no']) ? 'gv_no=' . preg_replace('/[^0-9.,%]/', '', $_GET['gv_no']) : '' ), 'SSL'));
 }
 // check for a voucher number in the url
 if (isset($_GET['gv_no'])) {
