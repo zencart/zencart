@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: meta_tags.php 11202 2008-11-23 09:18:34Z drbyte  Modified in v1.6.0 $
+ * @version $Id: meta_tags.php drbyte  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -33,6 +33,7 @@ while (!$keywords_metatags->EOF) {
   $keywords_string_metatags .= zen_clean_html($keywords_metatags->fields['categories_name']) . METATAGS_DIVIDER;
   $keywords_metatags->MoveNext();
 }
+$zco_notifier->notify('NOTIFY_MODULE_META_TAGS_BUILDKEYWORDS', CUSTOM_KEYWORDS, $keywords_string_metatags);
 define('KEYWORDS', str_replace('"','',zen_clean_html($keywords_string_metatags) . CUSTOM_KEYWORDS));
 
 // if per-page metatags overrides have been defined, use those, otherwise use usual defaults:
@@ -319,16 +320,24 @@ switch ($_GET['main_page']) {
   if (defined('META_TAG_KEYWORDS_EZPAGE_'.$ezpage_id)) define('META_TAG_KEYWORDS', constant('META_TAG_KEYWORDS_EZPAGE_'.$ezpage_id));
 // NO "break" here. Allow defaults if not overridden at the per-page level
   default:
+    $metatags_title = (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE;
+    $metatags_description = TITLE . (defined('NAVBAR_TITLE') ? PRIMARY_SECTION . NAVBAR_TITLE : '') . SECONDARY_SECTION . KEYWORDS;
+    $metatags_keywords = KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '');
+    $zco_notifier->notify('NOTIFY_MODULE_META_TAGS_UNSPECIFIEDPAGE', $current_page_base, $meta_tags_over_ride, $metatags_title, $metatags_description, $metatags_keywords);
+    if (false===$meta_tags_over_ride) {
   define('META_TAG_TITLE', (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) . SECONDARY_SECTION . KEYWORDS);
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) );
 }
+}
+
+$zco_notifier->notify('NOTIFY_MODULE_META_TAGS_OVERRIDE', array(), $meta_tags_over_ride, $metatags_title, $metatags_description, $metatags_keywords);
 
 // meta tags override due to 404, missing products_id, cPath or other EOF issues
 if ($meta_tags_over_ride == true) {
-  define('META_TAG_TITLE', (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE);
-  define('META_TAG_DESCRIPTION', TITLE . (defined('NAVBAR_TITLE') ? PRIMARY_SECTION . NAVBAR_TITLE : '') . SECONDARY_SECTION . KEYWORDS);
-  define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : ''));
+  define('META_TAG_TITLE', $metatags_title);
+  define('META_TAG_DESCRIPTION', $metatags_description);
+  define('META_TAG_KEYWORDS', $metatags_keywords);
 }
 
 // This should be last line of the script:
