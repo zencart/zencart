@@ -2015,7 +2015,7 @@ while (!$chk_sale_categories_all->EOF) {
     }
     $date_selector .= '</select>';
     $date_selector .= '<select name="'. $prefix .'_year">';
-    for ($i=2001;$i<2019;$i++){
+    for ($i=date('Y')-5; $i<date('Y')+11; $i++) {
       $date_selector .= '<option value="' . $i . '"';
       if ($i==$year) $date_selector .= 'selected';
       $date_selector .= '>' . $i . '</option>';
