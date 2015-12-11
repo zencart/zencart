@@ -57,7 +57,7 @@ Follow Us
 ---------
 For news and updates about Zen Cart&reg;, follow us on [Twitter](http://twitter.com/zencart) and [Facebook](http://facebook.com/zencart)
 
-Sign up for our free [Newsletter](https://zen-cart.us2.list-manage.com/subscribe/post?u=be6e7e81b710d494302cc72bf&id=dabb02f6c1)
+Sign up for our free [Newsletter](http://eepurl.com/bafnNj)
 
 Subscribe to [Critical News Updates And Release Announcements](http://www.zen-cart.com/subscription.php?do=addsubscription&f=2)
 
