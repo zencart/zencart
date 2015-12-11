@@ -18,7 +18,7 @@ Compatibility
 Zen Cart v1.5.5 is compatible with:
  * PHP 5.2.10 to PHP 7.0.0
  * Apache 2.2 (and 2.4 with access_compat mod installed)
- * MySQL 5.4 to 5.6
+ * MySQL 5.4 to 5.6 (and preliminary tests with MySQL 5.7 seem to be fine)
 
 
 Installation
@@ -57,7 +57,7 @@ Follow Us
 ---------
 For news and updates about Zen Cart&reg;, follow us on [Twitter](http://twitter.com/zencart) and [Facebook](http://facebook.com/zencart)
 
-Sign up for our free [Newsletter](http://visitor.constantcontact.com/d.jsp?m=1101879248585)
+Sign up for our free [Newsletter](https://zen-cart.us2.list-manage.com/subscribe/post?u=be6e7e81b710d494302cc72bf&id=dabb02f6c1)
 
 Subscribe to [Critical News Updates And Release Announcements](http://www.zen-cart.com/subscription.php?do=addsubscription&f=2)
 
