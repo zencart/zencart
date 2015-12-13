@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: button_names.php 19690 2011-10-04 16:41:45Z drbyte $
+ * @version $Id: button_names.php drbyte  Modified in v1.5.5 $
  */
 
 
@@ -59,7 +59,7 @@ define('BUTTON_IMAGE_CONTINUE_CHECKOUT', 'button_continue_checkout.gif');
 define('BUTTON_IMAGE_CREATE_ACCOUNT', 'button_create_account.gif');
 define('BUTTON_IMAGE_LOG_OFF', 'button_logoff.gif');
 /*
- * ALT tags used for buttons
+ * ALT tags used for buttons (text used for CSS buttons)
  */
 
 define('BUTTON_CREATE_ACCOUNT_ALT', 'Sign Up');
@@ -102,3 +102,4 @@ define('BUTTON_WRITE_REVIEW_ALT', 'Write Review');
 define('BUTTON_READ_REVIEWS_ALT', 'Read the Review');
 define('BUTTON_GOTO_PROD_DETAILS_ALT', 'Go To This Product\'s Detailed Information');
 define('BUTTON_MORE_REVIEWS_ALT', 'Read More Reviews');
+define('BUTTON_VIEW_ALL_ALT', 'View All');
