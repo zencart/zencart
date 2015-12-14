@@ -8,11 +8,13 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: meta_tags.php drbyte  Modified in v1.6.0 $
  */
+$meta_tags_over_ride = false;
+$metatag_page_name = $current_page_base;
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 // This should be first line of the script:
-$zco_notifier->notify('NOTIFY_MODULE_START_META_TAGS');
+$zco_notifier->notify('NOTIFY_MODULE_START_META_TAGS', $current_page_base, $metatag_page_name, $meta_tags_over_ride);
 
 // Add tertiary section to site tagline
 if (strlen(SITE_TAGLINE) > 1) {
@@ -20,10 +22,8 @@ if (strlen(SITE_TAGLINE) > 1) {
 } else {
   define('TAGLINE', '');
 }
-
 $review_on = "";
 $keywords_string_metatags = "";
-$meta_tags_over_ride = false;
 if (!defined('METATAGS_DIVIDER')) define('METATAGS_DIVIDER', ', ');
 
 // Get all top category names for use with web site keywords
@@ -37,14 +37,14 @@ $zco_notifier->notify('NOTIFY_MODULE_META_TAGS_BUILDKEYWORDS', CUSTOM_KEYWORDS, 
 define('KEYWORDS', str_replace('"','',zen_clean_html($keywords_string_metatags) . CUSTOM_KEYWORDS));
 
 // if per-page metatags overrides have been defined, use those, otherwise use usual defaults:
-if ($current_page_base != 'index') {
-  if (defined('META_TAG_TITLE_' . strtoupper($current_page_base))) define('META_TAG_TITLE', constant('META_TAG_TITLE_' . strtoupper($current_page_base)));
-  if (defined('META_TAG_DESCRIPTION_' . strtoupper($current_page_base))) define('META_TAG_DESCRIPTION', constant('META_TAG_DESCRIPTION_' . strtoupper($current_page_base)));
-  if (defined('META_TAG_KEYWORDS_' . strtoupper($current_page_base))) define('META_TAG_KEYWORDS', constant('META_TAG_KEYWORDS_' . strtoupper($current_page_base)));
+if ($metatag_page_name != 'index') {
+  if (defined('META_TAG_TITLE_' . strtoupper($metatag_page_name))) define('META_TAG_TITLE', constant('META_TAG_TITLE_' . strtoupper($metatag_page_name)));
+  if (defined('META_TAG_DESCRIPTION_' . strtoupper($metatag_page_name))) define('META_TAG_DESCRIPTION', constant('META_TAG_DESCRIPTION_' . strtoupper($metatag_page_name)));
+  if (defined('META_TAG_KEYWORDS_' . strtoupper($metatag_page_name))) define('META_TAG_KEYWORDS', constant('META_TAG_KEYWORDS_' . strtoupper($metatag_page_name)));
 }
 
 // Get different meta tag values depending on main_page values
-switch ($_GET['main_page']) {
+switch ($metatag_page_name) {
   case 'advanced_search':
   case 'account_edit':
   case 'account_history':
@@ -323,15 +323,15 @@ switch ($_GET['main_page']) {
     $metatags_title = (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE;
     $metatags_description = TITLE . (defined('NAVBAR_TITLE') ? PRIMARY_SECTION . NAVBAR_TITLE : '') . SECONDARY_SECTION . KEYWORDS;
     $metatags_keywords = KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '');
-    $zco_notifier->notify('NOTIFY_MODULE_META_TAGS_UNSPECIFIEDPAGE', $current_page_base, $meta_tags_over_ride, $metatags_title, $metatags_description, $metatags_keywords);
+    $zco_notifier->notify('NOTIFY_MODULE_META_TAGS_UNSPECIFIEDPAGE', $current_page_base, $metatag_page_name, $meta_tags_over_ride, $metatags_title, $metatags_description, $metatags_keywords);
     if (false===$meta_tags_over_ride) {
-  define('META_TAG_TITLE', (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE);
-  define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) . SECONDARY_SECTION . KEYWORDS);
-  define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) );
-}
+      define('META_TAG_TITLE', (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE);
+      define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) . SECONDARY_SECTION . KEYWORDS);
+      define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) );
+    }
 }
 
-$zco_notifier->notify('NOTIFY_MODULE_META_TAGS_OVERRIDE', array(), $meta_tags_over_ride, $metatags_title, $metatags_description, $metatags_keywords);
+$zco_notifier->notify('NOTIFY_MODULE_META_TAGS_OVERRIDE', $metatag_page_name, $meta_tags_over_ride, $metatags_title, $metatags_description, $metatags_keywords);
 
 // meta tags override due to 404, missing products_id, cPath or other EOF issues
 if ($meta_tags_over_ride == true) {
