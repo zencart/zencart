@@ -161,7 +161,7 @@ UPDATE configuration set configuration_value = '1' WHERE configuration_key = 'SH
 
 UPDATE configuration SET configuration_title='Credit Card Enable Status - Debit', configuration_key = 'CC_ENABLED_DEBIT', configuration_value ='0', configuration_description='Accept Debit Cards 0= off 1= on<br>NOTE: This is not deeply integrated at this time, and this setting may be redundant if your payment modules do not yet specifically have code to honour this switch.', date_added=now() WHERE configuration_key='CC_ENABLED_SWITCH';
 
-## Gueat Checkout
+## Guest Checkout
 ALTER TABLE customers ADD COLUMN is_guest_account tinyint(1) NOT NULL default 0;
 ALTER TABLE orders ADD COLUMN is_guest_order tinyint(1) NOT NULL default 0;
 INSERT INTO configuration_group VALUES (NULL, 'Guest Checkout', 'Set Checkout Without an Account', '100', '1');
