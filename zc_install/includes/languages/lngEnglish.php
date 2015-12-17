@@ -2,7 +2,7 @@
 /**
  * Main English language file for installer
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
@@ -128,6 +128,7 @@ define ('TEXT_CONTINUE_FIX', 'Return and Fix');
 define ('TEXT_REFRESH', 'Refresh');
 define ('TEXT_UPGRADE', 'Upgrade ...');
 define ('TEXT_CLEAN_INSTALL', 'Clean Install');
+define ('TEXT_UPDATE_CONFIGURE', 'Update Configure File');
 
 define('TEXT_NAVBAR_SYSTEM_INSPECTION', 'System Inspection');
 define('TEXT_NAVBAR_SYSTEM_SETUP', 'System Setup');
@@ -155,6 +156,7 @@ define('TEXT_ERROR_DEFINEPAGES_FOLDER', '/includes/languages/english/html_includ
 define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
 define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable');
 
+define('TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE', 'Your configure.php file is an old version and requires updating before we can continue.');
 define('TEXT_ERROR_HTACCESS_SUPPORT', 'Problems with .htaccess support');
 define('TEXT_ERROR_SESSION_SUPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');

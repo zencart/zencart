@@ -18,7 +18,7 @@ class zcConfigureFileWriter
     $this->inputs = $inputs;
     $replaceVars = array();
     $replaceVars['INSTALLER_METHOD'] = (isset($inputs['installer_method'])) ? trim($inputs['installer_method']) : 'Zen Cart Installer';
-    $replaceVars['DATE_NOW'] = date('D M y H:i:s');
+    $replaceVars['DATE_NOW'] = date('D M d Y H:i:s');
     $replaceVars['CATALOG_HTTP_SERVER'] = trim($inputs['http_server_catalog'], '/ ');
     $replaceVars['CATALOG_HTTPS_SERVER'] = trim($inputs['https_server_catalog'], '/ ');
     $replaceVars['ENABLE_SSL_CATALOG'] = isset($inputs['enable_ssl_catalog']) ? 'true' : 'false' ;
@@ -45,13 +45,13 @@ class zcConfigureFileWriter
   }
   protected function processAllConfigureFiles($adminDir)
   {
-    $tplFile = DIR_FS_INSTALL . 'includes/catalog-dist-configure.php';
-    $outputFile = $this->inputs['physical_path'] . '/includes/configure.php';
+    $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
+    $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
 // logDetails('catalog size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
-    $tplFile = DIR_FS_INSTALL . 'includes/admin-dist-configure.php';
-    $outputFile = $this->inputs['physical_path'] . '/'. $adminDir . '/includes/configure.php';
+    $tplFile = DIR_FS_INSTALL . 'includes/admin-configure-template.php';
+    $outputFile = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/configure.php';
     $result = $this->transformConfigureTplFile($tplFile, $outputFile);
 // logDetails('admin size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
 

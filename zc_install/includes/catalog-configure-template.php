@@ -37,9 +37,6 @@ define('DIR_WS_HTTPS_CATALOG', '%%_DIR_WS_HTTPS_CATALOG_%%');
  */
 define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
 
-//the following path is a COMPLETE path to the /logs/ folder  eg: /var/www/vhost/accountname/public_html/store/logs ... and no trailing slash
-define('DIR_FS_LOGS', DIR_FS_CATALOG . '/logs');
-
 /**
  * The following settings define your database connection.
  * These must be the SAME as you're using in your non-admin copy of configure.php
