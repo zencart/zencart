@@ -2040,7 +2040,7 @@ CREATE TABLE zones_to_geo_zones (
 
 # default data
 
-INSERT INTO template_select VALUES (1, 'classic', '0');
+INSERT INTO template_select VALUES (1, 'responsive_classic', '0');
 
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany, 6 - UK/GB
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','$city / $country');
@@ -2972,6 +2972,32 @@ INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, l
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'specials.php', 1, 1, 45, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'whats_new.php', 1, 0, 20, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'whos_online.php', 1, 1, 200, 200, 1);
+
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'banner_box.php', 1, 0, 300, 1, 127);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'banner_box2.php', 1, 1, 15, 1, 15);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'banner_box_all.php', 1, 1, 5, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'best_sellers.php', 1, 1, 30, 70, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'categories.php', 1, 0, 10, 10, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'currencies.php', 0, 1, 80, 60, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'document_categories.php', 1, 0, 0, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'ezpages.php', 1, 1, -1, 2, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'featured.php', 1, 0, 45, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'information.php', 1, 0, 50, 40, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'languages.php', 0, 1, 70, 50, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'manufacturers.php', 1, 0, 30, 20, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'manufacturer_info.php', 1, 1, 35, 95, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'more_information.php', 1, 0, 200, 200, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'music_genres.php', 1, 1, 0, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'order_history.php', 1, 1, 0, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'product_notifications.php', 1, 1, 55, 85, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'record_companies.php', 1, 1, 0, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'reviews.php', 1, 0, 40, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'search.php', 1, 1, 10, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'search_header.php', 0, 0, 0, 0, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'shopping_cart.php', 1, 1, 20, 30, 1);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'specials.php', 1, 1, 45, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'whats_new.php', 1, 0, 20, 0, 0);
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'whos_online.php', 1, 1, 200, 200, 1);
 
 INSERT INTO orders_status VALUES ( '1', '1', 'Pending');
 INSERT INTO orders_status VALUES ( '2', '1', 'Processing');
