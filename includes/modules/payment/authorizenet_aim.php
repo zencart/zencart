@@ -584,23 +584,23 @@ class authorizenet_aim extends base {
       if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;
     }
 
-    $this->mode = 'AIM';
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', array(), $submit_data);
-
-    switch ($this->mode) {
-      case 'eProcessing':
-        //eProcessing sometimes uses an AIM emulator, in which case if you're using this module for that purpose, use the notifier point above to have an observer class change the $class->mode to 'eProcessing', which will trigger the correct URL to be used.
-        $url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
-        break;
-      case (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo'):
-      case 'dump':
-        $url = 'https://developer.authorize.net/param_dump.asp';
-        break;
-      default:
-      case 'AIM':
-        $url = 'https://secure.authorize.net/gateway/transact.dll';
-        break;
-    }
+//    $this->mode = 'AIM';
+//    $this->notify('NOTIFY_PAYMENT_AUTHNET_MODE_SELECTION', array(), $submit_data);
+//
+//    switch ($this->mode) {
+//      case 'eProcessing':
+//        //eProcessing sometimes uses an AIM emulator, in which case if you're using this module for that purpose, use the notifier point above to have an observer class change the $class->mode to 'eProcessing', which will trigger the correct URL to be used.
+//        $url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
+//        break;
+//      case (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo'):
+//      case 'dump':
+//        $url = 'https://developer.authorize.net/param_dump.asp';
+//        break;
+//      default:
+//      case 'AIM':
+//        $url = 'https://secure.authorize.net/gateway/transact.dll';
+//        break;
+//    }
 
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
