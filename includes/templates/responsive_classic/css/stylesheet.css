@@ -259,17 +259,17 @@ TR.tableHeading {background:#666;color:#fff;}
 .productListing-rowheading{background:#999;padding:10px 10px;text-align:center;}
 .productListing-rowheading a{display:inline-block;padding:10px 30px;background:#05a5cb;color:#fff;text-decoration:none;}
 .productListing-rowheading a:hover{background:#333;}
-.productListing-odd{background:#f4f4f4;padding:20px;}
-.productListing-even{padding:20px;}
+.productListing-odd{background:#f4f4f4;padding:20px;overflow:hidden;}
+.productListing-even{padding:20px;overflow:hidden;}
 .productListing-even, .productListing-odd{clear:both;}
 .productListing-even:hover, .productListing-odd:hover{background:#ddd;}
 .productListing-even form, .productListing-odd form{float:right;}
 .productListing-even input[type=text], .productListing-odd input[type=text]{height:38px;width:20%;float:left;position:relative;top:-1px;}
 .list-image{min-height:200px;min-width:20%;float:left;margin-right:5%;}
 .list-price{color:#05a5cb;font-size:140%;margin:5px 0;}
-.list-more{display:block;background:#333;padding:8px 20px;color:#fff !important;float:right;text-align:center;text-decoration:none !important;/*margin-top:-50px;*/width:50%;}
+.list-more{display:block;background:#333;padding:8px 20px;color:#fff !important;float:right;text-align:center;text-decoration:none !important;width:50%;}
 .list-more:hover{background:#05a5cb;}
-#indexProductList .list-more{width:auto;}
+#indexProductList .list-more{width:auto;margin-top:-50px;}
 .itemTitle{font-weight:normal;font-size:150%;margin:5px 0;}
 .itemTitle a{color:#05a5cb;text-decoration:none;}
 .itemTitle a:hover{color:#666;}

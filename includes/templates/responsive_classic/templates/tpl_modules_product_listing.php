@@ -31,7 +31,7 @@
     if ($show_top_submit_button == true) {
 ?>
 <?php
-	if (PREV_NEXT_BAR_LOCATION == '2') {
+	if (PREV_NEXT_BAR_LOCATION == '2' && $listing->RecordCount()) {
       echo '<div class="prod-list-wrap group">';
     }
 ?>
@@ -44,7 +44,7 @@
     }
 ?>
 
- 
+
 <?php
     } // show top submit
 ?>
@@ -54,7 +54,7 @@
 <?php
 
     if ($show_top_submit_button == '2' && PREV_NEXT_BAR_LOCATION == '2' or $show_top_submit_button == '0' && PREV_NEXT_BAR_LOCATION == '2') {
-  
+
   }
     else {
       echo '</div>';
@@ -72,9 +72,9 @@
 
 <?php
     if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1') {
-  
+
     }
-    else {
+elseif ($listing->RecordCount()) {
       echo '<div class="prod-list-wrap group">';
     }
 ?>
@@ -120,9 +120,9 @@
 
 <?php
     if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1') {
-  
+
     }
-    else {
+elseif ($listing->RecordCount()) {
       echo '</div>';
     }
 ?>
