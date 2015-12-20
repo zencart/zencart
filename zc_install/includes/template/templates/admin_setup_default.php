@@ -60,7 +60,7 @@
     <div class="row">
       <?php if ($changedDir && $adminDir != 'admin') { ?>
       <div class="alert-box"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED; ?></div>
-      <?php } elseif (!$changedDir) { ?>
+      <?php } elseif (!$changedDir && $adminDir == 'admin') { ?>
       <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT; ?></div>
       <?php } else { ?>
       <div class="alert-box "><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED; ?></div>
