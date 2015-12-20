@@ -31,7 +31,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
     <?php  echo TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE; ?>
     </div>
 <?php } ?>
-<?php if (!$hasUpdatedConfigFile) { ?>
+<?php if (!$hasUpdatedConfigFile && $hasSaneConfigFile) { ?>
         <div class="alert-box alert">
             <?php  echo TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE; ?>
         </div>
@@ -85,7 +85,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
   <input type="submit" class="zc-full radius button" id="btnsubmit2" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="4">
 <?php } ?>
 <?php } ?>
-<?php if (!$hasUpdatedConfigFile) { ?>
+<?php if (!$hasUpdatedConfigFile && $hasSaneConfigFile) { ?>
     <input type="hidden" name="updateConfigure" value="true" >
     <input type="submit" class="zc-admin radius button" id="btnsubmit2" name="btnsubmit" value="<?php echo TEXT_UPDATE_CONFIGURE; ?>" tabindex="4">
 <?php } ?>
