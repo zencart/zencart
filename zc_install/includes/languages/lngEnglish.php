@@ -62,7 +62,7 @@ define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE', 'File');
 define('TEXT_EXAMPLE_DB_HOST', "usually 'localhost'");
 define('TEXT_EXAMPLE_DB_USER', 'enter your MySQL username');
 define('TEXT_EXAMPLE_DB_PWD', 'enter the password for your MySQL user');
-define('TEXT_EXAMPLE_DB_PREFIX', "usually best left blank, or use 'zen_'");
+define('TEXT_EXAMPLE_DB_PREFIX', "usually best left blank, or use zen_");
 define('TEXT_EXAMPLE_DB_NAME', 'enter your MySQL database name');
 define('TEXT_EXAMPLE_CACHEDIR', 'usually points to the equivalent of /your/user/home/public_html/zencart/cache folder');
 
@@ -228,7 +228,7 @@ define('TEXT_HELP_CONTENT_DEMODATA', "If you choose to load Demo Data, we will i
 define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
 define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8.<br>If you don't have a reason to use something else, use UTF8.");
 define('TEXT_HELP_TITLE_DBPREFIX', 'Database Tablename Prefix');
-define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: 'zen_'  <strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
+define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: <strong>zen_</strong><br><strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
 define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');
 define('TEXT_HELP_CONTENT_SQLCACHEMETHOD', "Default setting is 'none'. Alternatives are 'database' or 'file'. If your server is really slow, use 'none'. If your site is moderately busy, use 'database'. If your site is extremely high traffic, use 'file'. ");
 define('TEXT_HELP_TITLE_SQLCACHEDIRECTORY', 'SQL Cache Directory');
