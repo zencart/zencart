@@ -174,7 +174,6 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <?php
   }
 ?>
-  </div>
 <?php
   if (SHOW_BANNERS_GROUP_SET2 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET2)) {
     if ($banner->RecordCount() > 0) {
@@ -186,7 +185,9 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 ?>
   </div>
 <?php } // no HEADER_SALES_TEXT or SHOW_BANNERS_GROUP_SET2 ?>
+  </div>
 </div>
+
 <!--eof branding display-->
 <!--eof header logo and navigation display-->
 
@@ -194,8 +195,8 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
   <div id="navMainSearch1" class="forward"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></div>
 <?php  } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { ?>
   <div id="navMainSearch1" class="forward"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></div>
-<?php  } else if ( $_SESSION['layoutType'] == 'full' ) { 
-  } else { 
+<?php  } else if ( $_SESSION['layoutType'] == 'full' ) {
+  } else {
 //
   }
 ?>
