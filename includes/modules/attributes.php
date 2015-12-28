@@ -6,10 +6,10 @@
  * Prepares HTML for input fields with required uniqueness so template can display them as needed and keep collected data in proper fields
  *
  * @package modules
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id:  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -513,6 +513,7 @@ $sql = "select count(*) as total
                   } else {
                     $options_name[] = '<label class="attribsInput" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '">' . $products_options_names->fields['products_options_name'] . '</label>';
                   }
+                  $options_html_id[] = 'txt-attrib-' . $products_options_names->fields['products_options_id'];
                   $options_menu[] = $tmp_html . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
@@ -524,6 +525,7 @@ $sql = "select count(*) as total
                   } else {
                     $options_name[] = $products_options_names->fields['products_options_name'];
                   }
+                  $options_html_id[] = 'chk-attrib-' . $products_options_names->fields['products_options_id'];
                   $options_menu[] = $tmp_checkbox . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
@@ -535,6 +537,7 @@ $sql = "select count(*) as total
                   } else {
                     $options_name[] = $products_options_names->fields['products_options_name'];
                   }
+                  $options_html_id[] = 'rad-attrib-' . $products_options_names->fields['products_options_id'];
                   $options_menu[] = $tmp_radio . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
@@ -546,6 +549,7 @@ $sql = "select count(*) as total
                   } else {
                     $options_name[] = '<label class="attribsUploads" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '">' . $products_options_names->fields['products_options_name'] . '</label>';
                   }
+                  $options_html_id[] = 'upl-attrib-' . $products_options_names->fields['products_options_id'];
                   $options_menu[] = $tmp_html . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
@@ -553,6 +557,7 @@ $sql = "select count(*) as total
                   // READONLY
                   case ($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_READONLY):
                   $options_name[] = $products_options_names->fields['products_options_name'];
+                  $options_html_id[] = 'ro-attrib-' . $products_options_names->fields['products_options_id'];
                   $options_menu[] = $tmp_html . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
@@ -564,6 +569,7 @@ $sql = "select count(*) as total
                   } else {
                     $options_name[] = $products_options_names->fields['products_options_name'];
                   }
+                  $options_html_id[] = 'drp-attrib-' . $products_options_names->fields['products_options_id'];
                   $options_menu[] = zen_draw_radio_field('id[' . $products_options_names->fields['products_options_id'] . ']', $products_options_value_id, 'selected', 'id="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '"') . '<label class="attribsRadioButton" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '">' . $products_options_details . '</label>' . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
@@ -593,7 +599,7 @@ $sql = "select count(*) as total
                     $options_name[] = '<label class="attribsSelect" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '">' . $products_options_names->fields['products_options_name'] . '</label>';
                   }
 
-
+                  $options_html_id[] = 'drp-attrib-' . $products_options_names->fields['products_options_id'];
                   $options_menu[] = zen_draw_pull_down_menu('id[' . $products_options_names->fields['products_options_id'] . ']', $products_options_array, $selected_attribute, 'id="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '"') . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
