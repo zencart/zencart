@@ -465,12 +465,22 @@
               break;
             case (1): // all admin/catalog classes files
               $check_directory = array();
-              $check_directory[] = DIR_FS_CATALOG . DIR_WS_CLASSES;
+              $filename_listing = '';
+
+              $sub_dir_files = array();
+              getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
+              for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+                $check_directory[] = $sub_dir_files[$i] . '/';
+              }
               $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
               break;
             case (2): // all catalog classes files
               $check_directory = array();
-              $check_directory[] = DIR_FS_CATALOG . DIR_WS_CLASSES;
+              $sub_dir_files = array();
+              getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
+              for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+                $check_directory[] = $sub_dir_files[$i] . '/';
+              }
               break;
             case (3): // all admin class files
               $check_directory = array();
