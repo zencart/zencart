@@ -218,7 +218,7 @@ define('TEXT_HELP_CONTENT_PHYSICALPATH', "This is the actual path (according to 
 define('TEXT_HELP_TITLE_DBHOST', 'Database Host');
 define('TEXT_HELP_CONTENT_DBHOST', "What is the database host?  The database host can be in the form of a host name, such as 'localhost' or 'db1.myserver.com', or as an IP-address, such as '192.168.0.1'.");
 define('TEXT_HELP_TITLE_DBUSER', 'Database User');
-define('TEXT_HELP_CONTENT_DBUSER', "What is the username used to connect to the database? An example username is 'myusername_store'.<br>For PCI reasons you should NEVER user 'root' here.");
+define('TEXT_HELP_CONTENT_DBUSER', "What is the username used to connect to the database? An example username is 'myusername_store'.<br>For PCI reasons you should NEVER use 'root' here.");
 define('TEXT_HELP_TITLE_DBPASSWORD', 'Database Password');
 define('TEXT_HELP_CONTENT_DBPASSWORD', "What is the password used for your database username account? It was created when the database-username was created.");
 define('TEXT_HELP_TITLE_DBNAME', 'Database Name');
