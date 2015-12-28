@@ -11,7 +11,8 @@
     <div class="container">
       <div class="row">
         <div class="small-12 columns small-centered hero-unit">
-        <div class="logo"></div>
+            <div class="logo"></div>
+            <div class="version"><?php echo sprintf(ZC_VERSION_STRING, PROJECT_VERSION_NAME, PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR); ?></div>
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@
  */
 define('META_TAG_TITLE', 'Zen Cart&reg; Installer');
 define('HTML_PARAMS','dir="ltr" lang="en"');
-
+define('ZC_VERSION_STRING', '%s v%s');
 define('TEXT_PAGE_HEADING_INDEX', 'System Inspection');
 define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we continue');
 define('TEXT_INDEX_WARN_ERRORS', 'Some other problems');

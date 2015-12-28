@@ -56,13 +56,17 @@ input[readonly] {
    background: #dddddd;
 }
 
-
+.version {
+    text-align: right;
+    margin: 20px 20px;
+    font-style: italic;
+}
 
 
 /* breadcrumb custom styling */
 
 ul.breadcrumbs {
- margin:  0 0 50px 0 ;
+ margin:  0 0 30px 0 ;
 }
 
 ul.breadcrumbs li {
