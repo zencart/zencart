@@ -465,12 +465,22 @@
               break;
             case (1): // all admin/catalog classes files
               $check_directory = array();
-              $check_directory[] = DIR_FS_CATALOG . DIR_WS_CLASSES;
+              $filename_listing = '';
+
+              $sub_dir_files = array();
+              getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
+              for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+                $check_directory[] = $sub_dir_files[$i] . '/';
+              }
               $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
               break;
             case (2): // all catalog classes files
               $check_directory = array();
-              $check_directory[] = DIR_FS_CATALOG . DIR_WS_CLASSES;
+              $sub_dir_files = array();
+              getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
+              for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+                $check_directory[] = $sub_dir_files[$i] . '/';
+              }
               break;
             case (3): // all admin class files
               $check_directory = array();
@@ -508,10 +518,12 @@
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/templates' . '/';
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/sideboxes' . '/';
 
+              $check_directory[] = DIR_FS_CATALOG_MODULES . $template_dir . '/';
+              $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
+
               $sub_dir_files = array();
               getDirList(DIR_FS_CATALOG_MODULES . 'pages');
-
-              $check_dir = array_merge($check_directory, $sub_dir_files);
+              $check_dir = $sub_dir_files;
               for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
                 $check_directory[] = $check_dir[$i] . '/';
               }
@@ -526,6 +538,7 @@
               $check_directory = array();
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/sideboxes' . '/';
               $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/';
+              $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/sideboxes' . '/';
               break;
             case (4): // all /pages files
