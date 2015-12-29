@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: modules.php 19287 2011-07-28 15:51:25Z drbyte $
+ * @version $Id: modules.php  Modified in v1.5.5 $
  */
 
 define('HEADING_TITLE_MODULES_PAYMENT', 'Payment Modules');
@@ -18,7 +18,6 @@ define('TABLE_HEADING_ORDERS_STATUS','Orders Status');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_MODULE_DIRECTORY', 'Module Directory:');
-define('WARNING_MODULES_SORT_ORDER','WARNING: YOU HAVE DUPLICATE SORT ORDERS WHICH WILL RESULT IN CALCULATION ERRORS<br />PLEASE CORRECT THESE ISSUES NOW!');
 define('ERROR_MODULE_FILE_NOT_FOUND', 'ERROR: module not loaded due to missing language file: ');
 define('TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED', 'ALERT: Your Admin settings have been changed in your online store.');
 define('TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED', 'This is an automated email from your Zen Cart store to alert you of a change that was just made to your administrative settings: ' . "\n\n" . 'NOTE: Admin settings have been CHANGED for the [%s] module, by your Zen Cart admin user %s.' . "\n\n" . 'If you did not initiate these changes, it is advisable that you verify the settings immediately.' . "\n\n" . 'If you are already aware of these changes, you can ignore this automated email.');
