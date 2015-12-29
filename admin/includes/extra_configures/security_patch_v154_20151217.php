@@ -7,7 +7,6 @@
  */
 /**
  * Security Patch v154 20151217
- * @package patches
  *
  * NOTE: This patch is only for v1.5.x and older.
  * Install this file in /admin/includes/extra_configures/ folder.
