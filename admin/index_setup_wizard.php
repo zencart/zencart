@@ -42,13 +42,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
         $db->execute($sql);
         $store_country = (int)($_POST['zone_country_id']);
     }
+    $store_zone = '';
     if (isset($_POST['zone_id']) && $_POST['zone_id'] != '') {
-        $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
-                    WHERE configuration_key = 'STORE_ZONE'";
-        $sql = $db->bindVars($sql, ':configValue:', $_POST['zone_id'], 'integer');
-        $db->execute($sql);
         $store_zone = (int)($_POST['zone_id']);
     }
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
+                    WHERE configuration_key = 'STORE_ZONE'";
+    $sql = $db->bindVars($sql, ':configValue:', $store_zone, 'integer');
+    $db->execute($sql);
+
     if (isset($_POST['store_address']) && $_POST['store_address'] != '') {
         $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
                     WHERE configuration_key = 'STORE_NAME_ADDRESS'";
