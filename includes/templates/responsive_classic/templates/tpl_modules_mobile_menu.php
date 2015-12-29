@@ -136,7 +136,7 @@ echo $menulist;
     </li>
 
 
-    <li id="menu-search"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></div>
+    <li id="menu-search"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></li>
 
   </ul>
 </nav>
