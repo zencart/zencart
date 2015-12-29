@@ -276,7 +276,7 @@ TR.tableHeading {background:#666;color:#fff;}
 .tabTable{margin-bottom:20px;}
 .listingDescription{width:75%;}
 .cart-add{float:right;}
-.list-input{float:right;width:10%;margin-top:-10%;}
+.list-input{float:right;width:10%;}
 span.list-addtext{display:block;text-align:center;}
 .list-input input[type=text]{width:100%;}
 .prod-list-wrap{background:#666;color:#fff;text-align:center;padding:20px 20px 10px 20px;clear:both;height:40px;}

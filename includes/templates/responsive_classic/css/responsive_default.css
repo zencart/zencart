@@ -366,7 +366,7 @@ span.cssButton.normal_button.button.button_goto_prod_details, .button_goto_prod_
 /*bof basic*/
 legend{line-height:25px;}
 .mhide{display:none;}
-#navCatTabsWrapper, #navEZPagesTop, #navSuppWrapper{display:none;visibility:hidden;}
+#navCatTabsWrapper, #navEZPagesTop, #navSuppWrapper{}
 h2{line-height:22px;}
 input[type=password], select, input[type=number], input[type=tel], input[type=text], input[type=email]{width:90%;}
 #popupShippingEstimator select, #popupShippingEstimator input[type=text]{width:51%;}
