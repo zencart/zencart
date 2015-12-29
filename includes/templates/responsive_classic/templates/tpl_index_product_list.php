@@ -44,7 +44,7 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
   $check_for_alpha = $listing_sql;
   $check_for_alpha = $db->Execute($check_for_alpha);
 
-  if ($do_filter_list || ($check_for_alpha->RecordCount() > 0 && PRODUCT_LIST_ALPHA_SORTER == 'true')) {
+  if ($do_filter_list || isset($_GET['alpha_filter_id']) || ($check_for_alpha->RecordCount() > 0 && PRODUCT_LIST_ALPHA_SORTER == 'true')) {
   $form = zen_draw_form('filter', zen_href_link(FILENAME_DEFAULT), 'get') . '<label class="inputLabel">' .TEXT_SHOW . '</label>';
 ?>
 
