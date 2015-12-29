@@ -89,7 +89,7 @@
 <br class="clearBoth" />
 
 <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
-<?php echo zen_draw_input_field('email', $_POST['email'], 'size="40" id="email-address"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if ($error) echo $error_email; ?>
+<?php echo zen_draw_input_field('email', $_POST['email'], 'size="40" id="email-address"', 'email') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if ($error) echo $error_email; ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="amount"><?php echo ENTRY_AMOUNT; ?></label>
