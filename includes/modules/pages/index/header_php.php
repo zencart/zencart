@@ -56,7 +56,7 @@ if ($category_depth == 'products' && $listing->RecordCount() == 0) $robotsNoInde
 
 // if only one product in this category, go directly to the product page, instead of displaying a link to just one item:
 // if filter_id exists the 1 product redirect is ignored
-if (SKIP_SINGLE_PRODUCT_CATEGORIES=='True' and (!isset($_GET['filter_id']) and !isset($_GET['alpha_filter']))) {
+if (SKIP_SINGLE_PRODUCT_CATEGORIES=='True' and (!isset($_GET['filter_id']) and !isset($_GET['alpha_filter_id']))) {
   if ($listing->RecordCount() == 1) {
     zen_redirect(zen_href_link(zen_get_info_page($listing->fields['products_id']), ($cPath ? 'cPath=' . $cPath . '&' : '') . 'products_id=' . $listing->fields['products_id']));
   }
