@@ -52,6 +52,7 @@ if (isset($_GET['old']) && $_GET['old'] == '1') {
 }
 
 echo 'Connecting to UPS (port 80)...<br>';
+doCurlTest('http://www.ups.com/using/services/rave/qcostcgi.cgi');
 dofsockTest('www.ups.com', 80);
 
 echo 'Connecting to UPSXML (SSL) (wwwcie.ups.com) ...<br>';
