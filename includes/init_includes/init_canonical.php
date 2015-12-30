@@ -39,7 +39,7 @@ $keepableParams[] = 'record_company_id';
 $keepableParams[] = 'music_genre_id';
 $keepableParams[] = 'artists_id';
 
-$zco_notifier->notify ('NOTIFY_INIT_CANONICAL_PARAM_WHITELIST', $current_page_base, $excludeParams, $keepableParams, $includeCPath);
+$zco_notifier->notify ('NOTIFY_INIT_CANONICAL_PARAM_WHITELIST', $current_page, $excludeParams, $keepableParams, $includeCPath);
 
 // Go thru all GET params and prepare list of potentially-rogue keys to not include in generated canonical URL
 $rogues = array();
@@ -115,8 +115,8 @@ switch (true) {
   default:
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
     //$canonicalLink = '';
-    $zco_notifier->notify ('NOTIFY_INIT_CANONICAL_DEFAULT', $excludeParams, $canonicalLink);
+    $zco_notifier->notify ('NOTIFY_INIT_CANONICAL_DEFAULT', $current_page, $excludeParams, $canonicalLink);
 }
-$zco_notifier->notify ('NOTIFY_INIT_CANONICAL_FINAL', $excludeParams, $canonicalLink);
+$zco_notifier->notify ('NOTIFY_INIT_CANONICAL_FINAL', $current_page, $excludeParams, $canonicalLink);
 
 unset($excludeParams, $includeCPath, $rogues);
