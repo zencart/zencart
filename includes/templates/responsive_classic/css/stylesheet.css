@@ -409,3 +409,6 @@ h2.greeting a:hover{color:#666;}
 #advSearchDefault .floatingBox{min-height:115px;margin-bottom:30px;}
 #loginDefault{margin-bottom:30px;}
 
+.paypal-button-hidden {
+    visibility: hidden;
+}

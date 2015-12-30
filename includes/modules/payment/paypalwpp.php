@@ -94,6 +94,12 @@ class paypalwpp extends base {
   var $fmfResponse = '';
   var $fmfErrors = array();
   /**
+   * Flag to enable the modern in-context checkout.
+   * https://developer.paypal.com/docs/classic/express-checkout/in-context/integration/
+   * @var boolean
+   */
+  var $use_incontext_checkout = true;
+  /**
    * class constructor
    */
   function __construct() {
@@ -171,6 +177,14 @@ class paypalwpp extends base {
     if (!$this->in_special_checkout()) {
       $this->form_action_url = zen_href_link('ipn_main_handler.php', 'type=ec&markflow=1&clearSess=1&stage=final', 'SSL', true, true, true);
     }
+
+    if (MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE != 'InContext') {
+      $this->use_incontext_checkout = false;
+    }
+    if (!defined('MODULE_PAYMENT_PAYPALWPP_MERCHANTID') || MODULE_PAYMENT_PAYPALWPP_MERCHANTID == '') {
+      $this->use_incontext_checkout = false;
+    }
+
 
     // debug setup
     if (!@is_writable($this->_logDir)) $this->_logDir = DIR_FS_CATALOG . $this->_logDir;
@@ -270,8 +284,29 @@ class paypalwpp extends base {
    * Prepare the hidden fields comprising the parameters for the Submit button on the checkout confirmation page
    */
   function process_button() {
+    // When hitting the checkout-confirm button, we are going into markflow mode
     $_SESSION['paypal_ec_markflow'] = 1;
-    return '';
+
+    // if we have a token, we want to avoid incontext checkout, so we return no special markup
+    if (isset($_SESSION['paypal_ec_token']) && !empty($_SESSION['paypal_ec_token'])) {
+      return '';
+    }
+
+    // if incontext checkout is not enabled (ie: not configured), we return no special incontext markup
+    if ($this->use_incontext_checkout == false) return '';
+
+    // send the PayPal-provided javascript to trigger the incontext checkout experience
+    return "      <script>
+        window.paypalCheckoutReady = function () {
+        paypal.checkout.setup('" . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . "', {
+          //locale: '" . $this->getLanguageCode('incontext') . "',"
+          . (MODULE_PAYMENT_PAYPALWPP_SERVER == 'live' ? '' : "\n          environment: 'sandbox',") . "
+          container: 'checkout_confirmation',
+          button: 'btn_submit'
+        });
+      };
+      </script>
+      <script src=\"//www.paypalobjects.com/api/checkout.js\" async></script>";
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured
@@ -655,6 +690,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('PayPal Mode', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'PayPal', 'Which PayPal API system should be used for processing? <br /><u>Choices:</u><br /><font color=green>For choice #1, you need to supply <strong>API Settings</strong> above.</font><br /><strong>1. PayPal</strong> = Express Checkout with a regular PayPal account<br />or<br /><font color=green>for choices 2 &amp; 3 you need to supply <strong>PAYFLOW settings</strong>, below (and have a Payflow account)</font><br /><strong>2. Payflow-UK</strong> = Website Payments Pro UK Payflow Edition<br /><strong>3. Payflow-US</strong> = Payflow Pro Gateway only<!--<br /><strong>4. PayflowUS+EC</strong> = Payflow Pro with Express Checkout-->', '6', '25',  'zen_cfg_select_option(array(\'PayPal\', \'Payflow-UK\', \'Payflow-US\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Debug Mode', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING', 'Off', 'Would you like to enable debug mode?  A complete detailed log of failed transactions will be emailed to the store owner.', '6', '25', 'zen_cfg_select_option(array(\'Off\', \'Alerts Only\', \'Log File\', \'Log and Email\'), ', now())");
 
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('PayPal Merchant ID', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', '', 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on Profile and navigating to the My Business Info section; You will find your Merchant Account ID on that screen. A typical merchantID looks like FDEFDEFDEFDE11.', '6', '25', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Use InContext Checkout?', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'InContext', 'PayPal now offers a newer friendlier InContext (in-page) checkout mode (Requires that you enter your MerchantID in the Merchant ID Setting above). Or you can use the older checkout style which offers Pay Without Account by default but with a full-page-redirect.', '6', '25', 'zen_cfg_select_option(array(\'InContext\', \'Old\'), ', now())");
+
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_INSTALLED');
   }
 
@@ -670,8 +708,14 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if (!defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT')) {
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow eCheck?', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'Any', 'Do you want to allow non-instant payments like eCheck/EFT/ELV?', '6', '25', 'zen_cfg_select_option(array(\'Any\', \'Instant Only\'), ', now())");
       }
+      if (!defined('MODULE_PAYMENT_PAYPALWPP_MERCHANTID')) {
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('PayPal Merchant ID', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', '', 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on Profile and navigating to the My Business Info section; You will find your Merchant Account ID on that screen. A typical merchantID looks like FDEFDEFDEFDE11.', '6', '25', now())");
+      }
+      if (!defined('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE')) {
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Use InContext Checkout?', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'InContext', 'PayPal now offers a newer friendlier InContext (in-page) checkout mode (Requires that you enter your MerchantID in the Merchant ID Setting below). Or you can use the older checkout style which offers Pay Without Account by default but on a full-page-redirect.', '6', '25', 'zen_cfg_select_option(array(\'InContext\', \'Old\'), ', now())");
+      }
     }
-    $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
+    $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
     if (IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow'))) {
       $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'));
     }
@@ -1048,10 +1092,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * Determine the language to use when redirecting to the PayPal site
    * Order of selection: locale for current language, current-language-code, delivery-country, billing-country, store-country
    */
-  function getLanguageCode() {
+  function getLanguageCode($mode = 'ec') {
     global $order, $locales;
     $allowed_country_codes = array('US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL', 'PT', 'BR', 'RU');
     $allowed_language_codes = array('da_DK', 'he_IL', 'id_ID', 'ja_JP', 'no_NO', 'pt_BR', 'ru_RU', 'sv_SE', 'th_TH', 'tr_TR', 'zh_CN', 'zh_HK', 'zh_TW');
+
+    $additional_language_codes = array('de_DE', 'en_AU', 'en_GB', 'en_US', 'es_ES', 'fr_CA', 'fr_FR', 'it_IT', 'nl_NL', 'pl_PL', 'pt_PT');
+    if ($mode == 'incontext') {
+      $allowed_language_codes = array_merge($allowed_language_codes, $additional_language_codes);
+      $allowed_country_codes = array();
+    }
 
     $lang_code = '';
     $user_locale_info = array();
@@ -1546,9 +1596,13 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
 
     $options['ALLOWNOTE'] = 1;  // allow customer to enter a note on the PayPal site, which will be copied to order comments upon return to store.
+
     $options['SOLUTIONTYPE'] = 'Sole';  // Use 'Mark' for normal Express Checkout (where customer has a PayPal account), 'Sole' for Account-Optional. But Account-Optional must be enabled in your PayPal account under Selling Preferences.
 
-    $options['LANDINGPAGE'] = 'Billing';  // "Billing" or "Login" selects the style of landing page on PayPal site during checkout
+    // PayPal has acknowledged that they have a bug which prevents Account-Optional from working in InContext mode, so we have to use 'Mark' for InContext to work as of Dec 2015:
+    if ($this->use_incontext_checkout && $options['SOLUTIONTYPE'] == 'Sole') $options['SOLUTIONTYPE'] = 'Mark';
+
+    $options['LANDINGPAGE'] = 'Billing';  // "Billing" or "Login" selects the style of landing page on PayPal site during checkout (ie: which "section" is expanded when arriving there)
     //$options['USERSELECTEDFUNDINGSOURCE'] = 'Finance';  // 'Finance' is for PayPal BillMeLater.  Requires LANDINGPAGE=Billing.
 
     // Set the return URL if they click "Submit" on PayPal site
@@ -1691,15 +1745,21 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // prepare to redirect to PayPal so the customer can log in and make their selections
     $paypal_url = $this->getPayPalLoginServer();
 
+    // incontext checkout URL override:
+    if ($this->use_incontext_checkout) {
+      $paypal_url = str_replace('cgi-bin/webscr', 'checkoutnow/', $paypal_url);
+    }
+
     // Set the name of the displayed "continue" button on the PayPal site.
     // 'commit' = "Pay Now"  ||  'continue' = "Review Payment"
     $orderReview = true;
     if ($_SESSION['paypal_ec_markflow'] == 1) $orderReview = false;
     $userActionKey = "&useraction=" . ((int)$orderReview == false ? 'commit' : 'continue');
 
+    $this->ec_redirect_url = $paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . $userActionKey;
     // This is where we actually redirect the customer's browser to PayPal. Upon return from PayPal, they go to ec_step2
     header("HTTP/1.1 302 Object Moved");
-    zen_redirect($paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . $userActionKey);
+    zen_redirect($this->ec_redirect_url);
 
     // this should never be reached:
     return $error;
@@ -2871,10 +2931,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
           // if funding source problem occurred, must send back to re-select alternate funding source
           if ($response['L_ERRORCODE0'] == 10422 || $response['L_ERRORCODE0'] == 10486) {
-            $paypal_url = $this->getPayPalLoginServer();
-            zen_redirect($paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token']);
+            header("HTTP/1.1 302 Object Moved");
+            zen_redirect($this->ec_redirect_url);
             die();
           }
+
           // some other error condition
           $errorText = MODULE_PAYMENT_PAYPALWPP_INVALID_RESPONSE;
           $errorNum = urldecode($response['L_ERRORCODE0'] . $response['RESULT']);
