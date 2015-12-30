@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Mar 12 12:53:44 2014 +0000 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -33,7 +33,8 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
       echo '<a href="' . zen_href_link(FILENAME_CATEGORIES) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
     }
     echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '')) . zen_hide_session_id();
-    if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+    if (isset($_GET['search']) && zen_not_null($_GET['search'], zen_output_string_protected($_GET['search']))) {
+
       $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
       echo '<br />' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_output_string_protected($_GET['search']);
     }
