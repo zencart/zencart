@@ -50,8 +50,7 @@ class sagepay_zc_payment extends AbstractSagepayAPI
         $this->version = $this->getModuleDefineValue('_VNO');
         $this->title = $this->getModuleDefineValue('_CATALOG_TEXT_TITLE');
         $this->description = '';
-        if ((defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG === true) || (!isset($_GET['main_page']) ||
-                $_GET['main_page'] == '')
+        if ((defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG === true) || (!isset($_GET['main_page']) || $_GET['main_page'] == '')
         ) {
             $this->title = sprintf($this->getModuleDefineValue('_ADMIN_TEXT_TITLE'), $this->version);
             $this->description = $this->getModuleDefineValue('_ADMIN_TEXT_DESCRIPTION');
@@ -186,8 +185,7 @@ class sagepay_zc_payment extends AbstractSagepayAPI
     public function remove()
     {
         global $db;
-        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '",
-                $this->keys()) . "')");
+        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '",  $this->keys()) . "')");
     }
 
     /**
@@ -256,8 +254,7 @@ class sagepay_zc_payment extends AbstractSagepayAPI
         global $db;
         $sql = "SELECT * FROM " . TABLE_SAGEPAY_TRANSACTION . " WHERE zen_order_id = '" . $zf_order_id . "'";
         $sagepay_form_transaction_info = $db->Execute($sql);
-        require(DIR_FS_CATALOG . DIR_WS_MODULES .
-            'payment/sagepay_zc/sagepay_form_admin_notification.php');
+        require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/sagepay_zc/sagepay_form_admin_notification.php');
         return $output;
     }
 }
