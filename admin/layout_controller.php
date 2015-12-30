@@ -30,22 +30,22 @@
   }
 
   $dir_check= $directory_array;
-// Check all existing boxes are in the current template /sideboxes/shared
-if ($dir = @dir($boxes_directory_shared)) {
-  while ($file = $dir->read()) {
-    if (!is_dir($boxes_directory_shared . $file)) {
-      if (!in_array($file, $dir_check, TRUE)) {
-        if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-          $directory_array[] = $file;
+  // Check all existing boxes are in the current template /sideboxes/shared
+  if ($dir = @dir($boxes_directory_shared)) {
+    while ($file = $dir->read()) {
+      if (!is_dir($boxes_directory_shared . $file)) {
+        if (!in_array($file, $dir_check, TRUE)) {
+          if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
+            $directory_array[] = $file;
+          }
         }
       }
     }
+    $dir->close();
   }
-  $dir->close();
-}
-sort($directory_array);
+  sort($directory_array);
 
-$dir_check = $directory_array;
+  $dir_check = $directory_array;
 // Check all existing boxes are in the current template /sideboxes/template_dir
   if ($dir = @dir($boxes_directory_template)) {
     while ($file = $dir->read()) {
