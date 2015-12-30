@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:42:16 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -54,7 +54,7 @@ if (!defined('IS_ADMIN_FLAG')) {
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . '<strong>' . TEXT_PRODUCTS_NAME . '</strong>' . '&nbsp;' . ($pInfo->metatags_products_name_status == '1' ? zen_get_products_name($_GET['pID'], $languages[$i]['id']) : TEXT_META_EXCLUDED); ?>
             </td>
             <td class="main" valign="top">
-               <?php echo '<strong>' . TEXT_PRODUCTS_MODEL . '</strong>&nbsp;' . ($pInfo->metatags_model_status == '1' ? $pInfo->products_model : TEXT_META_EXCLUDED); ?>
+               <?php echo '<strong>' . TEXT_PRODUCTS_MODEL . '</strong>&nbsp;' . ($pInfo->metatags_model_status == '1' ? zen_output_string_protected($pInfo->products_model) : TEXT_META_EXCLUDED); ?>
             </td>
             <td class="main" valign="top">
                <?php echo '<strong>' . TEXT_PRODUCTS_PRICE_INFO . '</strong>&nbsp;' . ($pInfo->metatags_price_status == '1' ? $currencies->format($pInfo->products_price_sorter) : TEXT_META_EXCLUDED); ?>
@@ -65,15 +65,15 @@ if (!defined('IS_ADMIN_FLAG')) {
 
           <tr>
             <td class="main" valign="top"><?php echo TEXT_META_TAGS_TITLE; ?>&nbsp;</td>
-            <td class="main" colspan="3"><?php echo ($pInfo->metatags_title_status == '1' ? $pInfo->metatags_title : TEXT_META_EXCLUDED) ; ?></td>
+            <td class="main" colspan="3"><?php echo ($pInfo->metatags_title_status == '1' ? zen_output_string_protected($pInfo->metatags_title) : TEXT_META_EXCLUDED) ; ?></td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_META_TAGS_KEYWORDS; ?>&nbsp;</td>
-            <td class="main" colspan="3"><?php echo $pInfo->metatags_keywords; ?></td>
+            <td class="main" colspan="3"><?php echo zen_output_string_protected($pInfo->metatags_keywords); ?></td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_META_TAGS_DESCRIPTION; ?>&nbsp;</td>
-            <td class="main" colspan="3"><?php echo $pInfo->metatags_description; ?></td>
+            <td class="main" colspan="3"><?php echo zen_output_string_protected($pInfo->metatags_description); ?></td>
           </tr>
         </table></td>
       </tr>
