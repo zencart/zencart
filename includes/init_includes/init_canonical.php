@@ -47,7 +47,7 @@ foreach($_GET as $key => $val) {
   if (in_array($key, $excludeParams)) continue; // these will already be stripped, so skip
   if (in_array($key, $keepableParams)) continue; // these are part of navigation etc, so we don't want to strip these, so skip
   $excludeParams[] = $key;
-  $rogues[$key] = $val;
+  $rogues[$key] = $val; // this is here as an aid to finding false-positives. Simply uncomment the next line (if sizeof(rogues)) to cause rogues to be output in /logs/myDebug-xxxx.log for review
 }
 //if (sizeof($rogues)) error_log('Rogue $_GET params, from IP address: ' . $_SERVER['REMOTE_ADDR'] . ($_SERVER['HTTP_REFERER'] != '' ? "\nReferrer: " . $_SERVER['HTTP_REFERER'] : '') . "\nURI=" . $_SERVER['REQUEST_URI'] . "\n" . print_r($rogues, true));
 
