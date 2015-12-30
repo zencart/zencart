@@ -36,7 +36,7 @@ class zen_categories_ul_generator {
     var $document_types_list = ' (3) ';
     // acceptable format example: ' (3, 4, 9, 22, 18) '
     
-    function zen_categories_ul_generator($load_from_database = true)
+    function __construct($load_from_database = true)
     {
         global $languages_id, $db;
         $this->data = array();
