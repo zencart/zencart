@@ -3,10 +3,10 @@
  * canonical link handling
  *
  * @package initSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Feb 17 22:58:47 2013 -0500 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5-beta $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,9 +16,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 $includeCPath = FALSE;
 
 // EXCLUDE certain parameters which should not be included in canonical links:
-$excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom', 'dto', 'dfrom', 'inc_subcat', 'notify');
+$excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom',
+                       'dto', 'dfrom', 'inc_subcat', 'notify', 'edit', 'act', 'method', 'type', 'ec_cancel', 'token', 'addr', 'goto',
+                       'authcapt', 'delete', 'goback', 'gv_no', 'markflow', 'nocache', 'override', 'order', 'pos', 'referer', 'tx',
+                       'products_tax_class_id', 'set_session_login');
+// the following are listed one-per-line to allow for easy commenting-out in case a merchant wants to bypass these exclusions for canonical URL building
 $excludeParams[] = 'disp_order';
-//$excludeParams[] = 'page';
 $excludeParams[] = 'sort';
 $excludeParams[] = 'alpha_filter_id';
 $excludeParams[] = 'filter_id';
@@ -28,6 +31,24 @@ $excludeParams[] = 'utm_content';
 $excludeParams[] = 'utm_campaign';
 $excludeParams[] = 'language';
 $excludeParams[] = 'number_of_uploads';
+
+// The following are additional whitelisted params used for sanitizing the generated canonical URL (to prevent rogue params from getting added to canonical maliciously)
+$keepableParams = array('page', 'id', 'chapter', 'keyword', 'products_id', 'product_id', 'cPath', 'manufacturers_id', 'categories_id',
+                        'order_id', 'faq_item', 'products_image_large_additional', 'cID', 'pid', 'pID', 'reviews_id', 'typefilter');
+$keepableParams[] = 'record_company_id';
+$keepableParams[] = 'music_genre_id';
+$keepableParams[] = 'artists_id';
+
+// Go thru all GET params and prepare list of potentially-rogue keys to not include in generated canonical URL
+$rogues = array();
+foreach($_GET as $key => $val) {
+  if (in_array($key, $excludeParams)) continue; // these will already be stripped, so skip
+  if (in_array($key, $keepableParams)) continue; // these are part of navigation etc, so we don't want to strip these, so skip
+  $excludeParams[] = $key;
+  $rogues[$key] = $val;
+}
+//if (sizeof($rogues)) error_log('Rogue $_GET params, from IP address: ' . $_SERVER['REMOTE_ADDR'] . ($_SERVER['HTTP_REFERER'] != '' ? "\nReferrer: " . $_SERVER['HTTP_REFERER'] : '') . "\nURI=" . $_SERVER['REQUEST_URI'] . "\n" . print_r($rogues, true));
+
 
 $canonicalLink = '';
 switch (true) {
@@ -93,4 +114,4 @@ switch (true) {
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
     //$canonicalLink = '';
 }
-unset($excludeParams, $includeCPath);
+unset($excludeParams, $includeCPath, $rogues);
