@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Thu Oct 24 21:13:46 2013 +0100 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -355,7 +355,7 @@ function array_minus_array($a, $b) {
       case 'update_product':
         $zv_check_master_categories_id = 'true';
         $new_categories_sort_array[] = $_POST['current_master_categories_id'];
-        $current_master_categories_id = $_POST['current_master_categories_id'];
+        $current_master_categories_id = (int)$_POST['current_master_categories_id'];
 
         // set the linked products master_categories_id product(s)
         for ($i=0, $n=sizeof($_POST['categories_add']); $i<$n; $i++) {
@@ -639,7 +639,7 @@ if ($_GET['products_filter'] != '') {
       echo '  <td class="dataTableContent" align="right">' . $categories_list->fields['categories_id'] . '</td>' . "\n";
       if ($product_to_copy->fields['master_categories_id'] == $categories_list->fields['categories_id']) {
 //        echo '  <td class="dataTableContent" align="left">' . ($selected ? '<strong>' : '') . $zc_categories_checkbox . '&nbsp;' . $categories_list->fields['categories_name'] . ($selected ? '</strong>' : '') . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '</td>' . "\n";
-        echo '  <td class="dataTableContent" align="left">' . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;' . $categories_list->fields['categories_name'] . zen_draw_hidden_field('current_master_categories_id', $categories_list->fields['categories_id']) . '</td>' . "\n";
+        echo '  <td class="dataTableContent" align="left">' . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;' . $categories_list->fields['categories_name'] . zen_draw_hidden_field('current_master_categories_id', (int)$categories_list->fields['categories_id']) . '</td>' . "\n";
       } else {
         echo '  <td class="dataTableContent" align="left">' . ($selected ? '<strong>' : '') . $zc_categories_checkbox . '&nbsp;' . $categories_list->fields['categories_name'] . ($selected ? '</strong>' : '') . '</td>' . "\n";
       }
