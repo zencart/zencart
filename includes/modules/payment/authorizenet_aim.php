@@ -594,6 +594,7 @@ class authorizenet_aim extends base {
         $url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
         break;
       case (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo'):
+      case (AUTHORIZENET_DEVELOPER_MODE == 'echo'):
       case 'dump':
         $url = 'https://developer.authorize.net/param_dump.asp';
         break;
@@ -603,10 +604,7 @@ class authorizenet_aim extends base {
         $devurl = 'https://test.authorize.net/gateway/transact.dll';
         $certurl = 'https://certification.authorize.net/gateway/transact.dll';
         if (MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE == 'Sandbox') $url = $devurl;
-        if (defined('AUTHORIZENET_DEVELOPER_MODE')) {
-          if (AUTHORIZENET_DEVELOPER_MODE == 'on') $url = $devurl;
-          if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;
-        }
+        if (defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'certify') $url = $certurl;
       break;
     }
 
@@ -706,7 +704,7 @@ class authorizenet_aim extends base {
       if (CURL_PROXY_REQUIRED == 'True') $errorMessage .= 'Using CURL Proxy: [' . CURL_PROXY_SERVER_DETAILS . ']  with Proxy Tunnel: ' .($this->proxy_tunnel_flag ? 'On' : 'Off') . "\n";
       $errorMessage .= "\nRAW data received: \n" . $this->authorize . "\n\n";
 
-      if (strstr(MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING, 'Log') || strstr(MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING, 'All') || MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE == 'Sandbox' || (defined('AUTHORIZENET_DEVELOPER_MODE') && in_array(AUTHORIZENET_DEVELOPER_MODE, array('on', 'certify')))) {
+      if (strstr(MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING, 'Log') || strstr(MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING, 'All') || MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE == 'Sandbox' || (defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'certify')) {
         $key = $response[6] . '_' . time() . '_' . zen_create_random_value(4);
         $file = $this->_logDir . '/' . 'AIM_Debug_' . $key . '.log';
         if ($fp = @fopen($file, 'a')) {
