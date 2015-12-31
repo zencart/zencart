@@ -83,6 +83,8 @@ class authorizenet extends base {
     if ((int)MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID > 0) {
       $this->order_status = MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID;
     }
+    // Reset order status to pending if capture pending:
+    if (MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize') $this->order_status = 1;
 
     if (is_object($order)) $this->update_status();
 
