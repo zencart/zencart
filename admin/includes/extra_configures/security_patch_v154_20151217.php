@@ -59,8 +59,12 @@ if (isset($_POST['products_url'])) {
 }
 
 if (isset($_POST['products_name'])) {
-  foreach($_POST['products_name'] as $key => $value) {
-    $_POST['products_name'][$key] = preg_replace($prodNameRegex, '', $_POST['products_name'][$key]);
+  if(is_array($_POST['products_name'])) {
+    foreach ($_POST['products_name'] as $key => $value) {
+      $_POST['products_name'][$key] = preg_replace($prodNameRegex, '', $_POST['products_name'][$key]);
+    }
+  } else {
+    $_POST['products_name'] = preg_replace($prodNameRegex, '', $_POST['products_name']);
   }
 }
 
