@@ -199,9 +199,9 @@ class paypaldp extends base {
   function update_status() {
     global $order, $db;
 //    $this->zcLog('update_status', 'Checking whether module should be enabled or not.');
-    if (IS_ADMIN_FLAG === false) {
+    if (IS_ADMIN_FLAG === false && $this->enabled) {
       // if store is not running in SSL, cannot offer credit card module, for PCI reasons
-      if (!defined('ENABLE_SSL') || ENABLE_SSL != 'true') {
+      if (!defined('ENABLE_SSL') || (ENABLE_SSL != 'true' && substr(HTTP_SERVER, 0, 5) != 'https')) {
         $this->enabled = FALSE;
         $this->zcLog('update_status', 'Module disabled because SSL is not enabled on this site.');
       }
