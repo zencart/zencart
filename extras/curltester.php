@@ -75,13 +75,13 @@ echo 'Connecting to PayPal IPN (port 443) Sandbox ...<br>';
 dofsockTest('www.sandbox.paypal.com', 443);
 doCurlTest('https://www.sandbox.paypal.com/cgi-bin/webscr');
 
-echo 'Connecting to PayPal IPN Postback ...<br>';
-dofsockTest('ipnpb.paypal.com', 443);
-doCurlTest('https://ipnpb.paypal.com');
-
-echo 'Connecting to PayPal IPN Postback (Sandbox)...<br>';
-dofsockTest('ipnpb.sandbox.paypal.com', 443);
-doCurlTest('https://ipnpb.sandbox.paypal.com');
+//echo 'Connecting to PayPal IPN Postback ...<br>';
+//dofsockTest('ipnpb.paypal.com', 443);
+//doCurlTest('https://ipnpb.paypal.com');
+//
+//echo 'Connecting to PayPal IPN Postback (Sandbox)...<br>';
+//dofsockTest('ipnpb.sandbox.paypal.com', 443);
+//doCurlTest('https://ipnpb.sandbox.paypal.com');
 
 echo 'Connecting to PayPal Express/Pro Server ...<br>';
 doCurlTest('https://api-3t.paypal.com/nvp');
