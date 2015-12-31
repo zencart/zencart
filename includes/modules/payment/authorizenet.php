@@ -448,7 +448,6 @@ class authorizenet extends base {
     if (isset($this->reportable_submit_data['x_card_num'])) $this->reportable_submit_data['x_card_num'] = str_repeat('X', strlen($this->reportable_submit_data['x_card_num'] - 4)) . substr($this->reportable_submit_data['x_card_num'], -4);
     if (isset($this->reportable_submit_data['x_exp_date'])) $this->reportable_submit_data['x_exp_date'] = '****';
     if (isset($this->reportable_submit_data['x_card_code'])) $this->reportable_submit_data['x_card_code'] = '*******';
-    $this->reportable_submit_data['url'] = $url;
 
     $this->_debugActions($this->reportable_submit_data, 'Submit-Data', '', zen_session_id());
 
@@ -459,7 +458,7 @@ class authorizenet extends base {
    *
    */
   function before_process() {
-    global $messageStack;
+    global $messageStack, $order;
     $this->authorize = $_POST;
     unset($this->authorize['btn_submit_x'], $this->authorize['btn_submit_y']);
     $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], $this->authorize['x_amount']);
@@ -482,6 +481,9 @@ class authorizenet extends base {
 //       && $this->authorize['x_description'] == $this->submit_data['x_description']
        && (/*MODULE_PAYMENT_AUTHORIZENET_MD5HASH == 'DANGEROUSLY-BYPASSED' || */ $this->authorize['x_MD5_Hash'] == $this->authorize['HashValidationValue'])
      ){
+      $order->info['cc_type'] = $this->authorize['x_card_type'];
+      $order->info['cc_number'] = $this->authorize['x_account_number'];
+      $order->info['cc_owner'] = $this->authorize['x_first_name'] . ' ' . $this->authorize['x_last_name'];
       $this->auth_code = $this->authorize['x_auth_code'];
       $this->transaction_id = $this->authorize['x_trans_id'];
       return;
@@ -507,7 +509,7 @@ class authorizenet extends base {
     if ($order->info['currency'] != $this->gateway_currency) {
       $currency_comment = ' (' . number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
     }
-    $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . '. TransID: ' . $this->transaction_id . '.' . $currency_comment, 'string');
+    $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id . ' ' . $currency_comment, 'string');
     $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
     $sql = $db->bindVars($sql, ':orderStatus', $this->order_status, 'integer');
     $db->Execute($sql);

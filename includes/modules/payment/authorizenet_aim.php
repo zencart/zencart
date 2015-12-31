@@ -302,11 +302,9 @@ class authorizenet_aim extends base {
   }
   /**
    * Store the CC info to the order and process any results that come back from the payment gateway
-   *
    */
   function before_process() {
     global $response, $db, $order, $messageStack;
-    $order->info['cc_type']    = $_POST['cc_type'];
     $order->info['cc_owner']   = $_POST['cc_owner'];
     $order->info['cc_number']  = str_pad(substr($_POST['cc_number'], -4), strlen($_POST['cc_number']), "X", STR_PAD_LEFT);
     $order->info['cc_expires'] = '';  // $_POST['cc_expires'];
@@ -464,6 +462,7 @@ class authorizenet_aim extends base {
     if ($response[88] != '') {
       $_SESSION['payment_method_messages'] = $response[88];
     }
+    $order->info['cc_type'] = $response[51];
   }
   /**
    * Post-process activities. Updates the order-status history data with the auth code from the transaction.
@@ -477,7 +476,7 @@ class authorizenet_aim extends base {
     if ($order->info['currency'] != $this->gateway_currency) {
       $currency_comment = ' (' . number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
     }
-    $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . '. TransID: ' . $this->transaction_id . '.' . $currency_comment, 'string');
+    $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id . ' ' . $currency_comment, 'string');
     $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
     $sql = $db->bindVars($sql, ':orderStatus', $this->order_status, 'integer');
     $db->Execute($sql);
