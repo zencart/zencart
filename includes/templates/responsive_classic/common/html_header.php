@@ -52,6 +52,18 @@ if (!class_exists('Mobile_Detect')) {
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
   <link rel="canonical" href="<?php echo $canonicalLink; ?>" />
 <?php } ?>
+<?php
+  // BOF hreflang for multilingual sites
+  if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+    $lng = new language;
+  }
+  reset($lng->catalog_languages);
+  while (list($key, $value) = each($lng->catalog_languages)) {
+    if ($value['id'] == $_SESSION['languages_id']) continue;
+    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type) : $canonicalLink . '&amp;language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+  }
+  // EOF hreflang for multilingual sites
+?>
 
 <?php
 /**
