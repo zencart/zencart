@@ -6,10 +6,13 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson   Modified in v1.6.0 $
+ * @version GIT: $Id: Author: Ian Wilson   Modified in v1.5.5 $
  */
 
 require ('includes/application_top.php');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET');
+header("Access-Control-Allow-Headers: X-Requested-With");
 
 if (!function_exists('utf8_encode_recurse')) {
     function utf8_encode_recurse($mixed_value) {
