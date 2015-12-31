@@ -89,6 +89,11 @@ doCurlTest('https://api-3t.paypal.com/nvp');
 echo 'Connecting to PayPal Express/Pro Sandbox ...<br>';
 doCurlTest('https://api-3t.sandbox.paypal.com/nvp');
 
+if (time() < mktime(0, 0, 0, 3, 1, 2016)) {
+  echo 'Connecting to PayPal SECURITY ENDPOINT 2016 Sandbox ...<br>';
+  doCurlTest('https://test-api-3t.sandbox.paypal.com/nvp');
+}
+
 echo 'Connecting to PayPal Payflowpro Server ...<br>';
 doCurlTest('https://payflowpro.paypal.com/transaction');
 
