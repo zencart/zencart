@@ -74,6 +74,10 @@ class authorizenet_aim extends base {
    * this var is used to declare which gateway to work with
    */
   private $mode = 'AIM';
+  /**
+   * @var string the currency enabled in this gateway's merchant account
+   */
+  private $gateway_currency;
 
   /**
    * Constructor
@@ -116,14 +120,8 @@ class authorizenet_aim extends base {
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
-    // Determine default/supported currencies
-    if (in_array(DEFAULT_CURRENCY, array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD'))) {
-      $this->gateway_currency = DEFAULT_CURRENCY;
-    } else {
-      $this->gateway_currency = 'USD';
-    }
-
-
+    // set the currency for the gateway (others will be converted to this one before submission)
+    $this->gateway_currency = MODULE_PAYMENT_AUTHORIZENET_AIM_CURRENCY;
   }
   /**
    * calculate zone matches and flag settings to determine whether this module should display to customers or not
@@ -398,11 +396,11 @@ class authorizenet_aim extends base {
     }
 
     // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
-    if (!in_array($order->info['currency'], array('USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD', $this->gateway_currency))) {
-      $gateway_currency = 'USD';
+    if ($order->info['currency'] != $this->gateway_currency) {
       global $currencies;
       $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data['x_currency_code'] = $this->gateway_currency;
+      $submit_data['x_description'] .= ' (Converted from: ' . number_format($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
       unset($submit_data['x_tax'], $submit_data['x_freight']);
     }
 
@@ -473,9 +471,13 @@ class authorizenet_aim extends base {
    * @return boolean
    */
   function after_process() {
-    global $insert_id, $db;
+    global $insert_id, $db, $order, $currencies;
     $sql = "insert into " . TABLE_ORDERS_STATUS_HISTORY . " (comments, orders_id, orders_status_id, customer_notified, date_added) values (:orderComments, :orderID, :orderStatus, -1, now() )";
-    $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . '. TransID: ' . $this->transaction_id . '.', 'string');
+    $currency_comment = '';
+    if ($order->info['currency'] != $this->gateway_currency) {
+      $currency_comment = ' (' . number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
+    }
+    $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . '. TransID: ' . $this->transaction_id . '.' . $currency_comment, 'string');
     $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
     $sql = $db->bindVars($sql, ':orderStatus', $this->order_status, 'integer');
     $db->Execute($sql);
@@ -545,6 +547,8 @@ class authorizenet_aim extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Refunded Order Status', 'MODULE_PAYMENT_AUTHORIZENET_AIM_REFUNDED_ORDER_STATUS_ID', '1', 'Set the status of refunded orders to this value', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Needed For Review Order Status', 'MODULE_PAYMENT_AUTHORIZENET_AIM_REVIEW_ORDER_STATUS_ID', '1', 'Set the status of orders made with this payment module, BUT are needing to be reviewed for processing', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Debug Mode', 'MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING', 'Off', 'Would you like to enable debug mode?  A complete detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Log File\', \'Log and Email\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Currency Supported', 'MODULE_PAYMENT_AUTHORIZENET_AIM_CURRENCY', 'USD', 'Which currency is your Authnet Gateway Account configured to accept?<br>(Purchases in any other currency will be pre-converted to this currency before submission using the exchange rates in your store admin.)', '6', '0', 'zen_cfg_select_option(array(\'USD\', \'CAD\', \'GBP\', \'EUR\', \'AUD\', \'NZD\'), ', now())");
+
   }
   /**
    * Remove the module and all its settings
@@ -552,7 +556,7 @@ class authorizenet_aim extends base {
    */
   function remove() {
     global $db;
-    $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_AUTHORIZENET_AIM\_%'");
+    $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_AUTHORIZENET\_AIM\_%'");
   }
   /**
    * Internal list of configuration keys used for configuration of the module
@@ -560,7 +564,13 @@ class authorizenet_aim extends base {
    * @return array
    */
   function keys() {
-    return array('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS', 'MODULE_PAYMENT_AUTHORIZENET_AIM_LOGIN', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TXNKEY', 'MODULE_PAYMENT_AUTHORIZENET_AIM_MD5HASH', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE', 'MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE', 'MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA', 'MODULE_PAYMENT_AUTHORIZENET_AIM_EMAIL_CUSTOMER', 'MODULE_PAYMENT_AUTHORIZENET_AIM_EMAIL_MERCHANT', 'MODULE_PAYMENT_AUTHORIZENET_AIM_USE_CVV', 'MODULE_PAYMENT_AUTHORIZENET_AIM_SORT_ORDER', 'MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE', 'MODULE_PAYMENT_AUTHORIZENET_AIM_ORDER_STATUS_ID', 'MODULE_PAYMENT_AUTHORIZENET_AIM_REFUNDED_ORDER_STATUS_ID', 'MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING');
+    if (defined('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS')) {
+      global $db;
+      if (!defined('MODULE_PAYMENT_AUTHORIZENET_AIM_CURRENCY')) {
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Currency Supported', 'MODULE_PAYMENT_AUTHORIZENET_AIM_CURRENCY', 'USD', 'Which currency is your Authnet Gateway Account configured to accept?<br>(Purchases in any other currency will be pre-converted to this currency before submission using the exchange rates in your store admin.)', '6', '0', 'zen_cfg_select_option(array(\'USD\', \'CAD\', \'GBP\', \'EUR\', \'AUD\', \'NZD\'), ', now())");
+      }
+    }
+    return array('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS', 'MODULE_PAYMENT_AUTHORIZENET_AIM_LOGIN', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TXNKEY', 'MODULE_PAYMENT_AUTHORIZENET_AIM_MD5HASH', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE', 'MODULE_PAYMENT_AUTHORIZENET_AIM_CURRENCY', 'MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE', 'MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA', 'MODULE_PAYMENT_AUTHORIZENET_AIM_EMAIL_CUSTOMER', 'MODULE_PAYMENT_AUTHORIZENET_AIM_EMAIL_MERCHANT', 'MODULE_PAYMENT_AUTHORIZENET_AIM_USE_CVV', 'MODULE_PAYMENT_AUTHORIZENET_AIM_SORT_ORDER', 'MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE', 'MODULE_PAYMENT_AUTHORIZENET_AIM_ORDER_STATUS_ID', 'MODULE_PAYMENT_AUTHORIZENET_AIM_REFUNDED_ORDER_STATUS_ID', 'MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING');
   }
   /**
    * Send communication request
