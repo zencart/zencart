@@ -1105,10 +1105,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     $lang_code = '';
     $user_locale_info = array();
-    $user_locale_info[] = $lng->get_browser_language();
     if (isset($locales) && is_array($locales)) {
-      array_push($user_locale_info, $locales);
+      $user_locale_info = $locales;
     }
+    array_unshift($user_locale_info, $lng->get_browser_language());
     $user_locale_info[] = strtoupper($_SESSION['languages_code']);
     $shippingISO = zen_get_countries($order->delivery['country']['id'], true);
     $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2']);
