@@ -1093,7 +1093,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * Order of selection: locale for current language, current-language-code, delivery-country, billing-country, store-country
    */
   function getLanguageCode($mode = 'ec') {
-    global $order, $locales;
+    global $order, $locales, $lng;
     $allowed_country_codes = array('US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL', 'PT', 'BR', 'RU');
     $allowed_language_codes = array('da_DK', 'he_IL', 'id_ID', 'ja_JP', 'no_NO', 'pt_BR', 'ru_RU', 'sv_SE', 'th_TH', 'tr_TR', 'zh_CN', 'zh_HK', 'zh_TW');
 
@@ -1108,6 +1108,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if (isset($locales) && is_array($locales)) {
       $user_locale_info = $locales;
     }
+    array_unshift($user_locale_info, $lng->get_browser_language());
     $user_locale_info[] = strtoupper($_SESSION['languages_code']);
     $shippingISO = zen_get_countries($order->delivery['country']['id'], true);
     $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2']);
