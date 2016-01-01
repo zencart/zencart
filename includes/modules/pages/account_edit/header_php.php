@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php  Modified in v1.6.0 $
+ * @version $Id: header_php.php  Modified in v1.5.5 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_EDIT');
@@ -85,9 +85,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   // check external hook for duplicate email address, so we can reject the change if duplicates aren't allowed externally
   // (the observers should set any messageStack output as needed)
   $nick_error = false;
-  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error);
-  if ($nick_error) $error = true;
-  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_DUPLICATE', $nick, $nick_error);
+  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error, $nick);
   if ($nick_error) $error = true;
 
 

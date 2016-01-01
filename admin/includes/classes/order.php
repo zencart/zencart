@@ -4,10 +4,10 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: order.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.6.0 $
+ * @version $Id: order.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.5.5 $
  */
 
-  class order {
+  class order extends base {
     var $info, $totals, $products, $customer, $delivery;
 
     function __construct($order_id) {
@@ -47,8 +47,8 @@
       while (!$totals->EOF) {
         if ($totals->fields['class'] == 'ot_coupon') {
           $coupon_link_query = "SELECT coupon_id
-                  from " . TABLE_COUPONS . "
-                  where coupon_code ='" . zen_db_input($order->fields['coupon_code']) . "'";
+                                from " . TABLE_COUPONS . "
+                                where coupon_code ='" . zen_db_input($order->fields['coupon_code']) . "'";
           $coupon_link = $db->Execute($coupon_link_query);
           $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
         }
@@ -176,5 +176,6 @@
         $index++;
         $orders_products->MoveNext();
       }
+      $this->notify('ORDER_QUERY_ADMIN_COMPLETE', array('orders_id' => $order_id));
     }
   }

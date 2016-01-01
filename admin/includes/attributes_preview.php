@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -91,6 +91,9 @@ if (!defined('IS_ADMIN_FLAG')) {
         $tmp_attributes_image = '';
         $tmp_attributes_image_row = 0;
         $show_attributes_qty_prices_icon = 'false';
+
+        $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $products_options_names->fields);
+
         while (!$products_options->EOF) {
           // reset
           $products_options_display_price='';
@@ -99,6 +102,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
           $products_options_array[] = array('id' => $products_options->fields['products_options_values_id'],
                                             'text' => $products_options->fields['products_options_values_name']);
+          $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTIONS_LOOP', array(), $products_options->fields);
 
           if (((CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == '') or (STORE_STATUS == '1')) or (CUSTOMERS_APPROVAL_AUTHORIZATION == 2 and $_SESSION['customers_authorization'] != 0)) {
             $new_attributes_price = '';
@@ -602,5 +606,3 @@ if (!defined('IS_ADMIN_FLAG')) {
 //////////////////////////////////////////////////
 //// EOF: attributes
 //////////////////////////////////////////////////
-
-?>

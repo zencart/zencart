@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  */
   require('includes/application_top.php');
 
@@ -513,12 +513,14 @@ if ($_POST['image_delete'] == 1) {
         {
           $attribute_id = zen_db_prepare_input($_POST['delete_attribute_id']);
 
+          $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_ATTRIBUTE', array('attribute_id' => $attribute_id), $attribute_id);
+
           $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      where products_attributes_id = '" . (int)$attribute_id . "'");
+                        where products_attributes_id = " . (int)$attribute_id);
 
 // added for DOWNLOAD_ENABLED. Always try to remove attributes, even if downloads are no longer enabled
           $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
-                      where products_attributes_id = '" . (int)$attribute_id . "'");
+                        where products_attributes_id = " . (int)$attribute_id);
 
         // reset products_price_sorter for searches etc.
           zen_update_products_price_sorter($products_filter);
@@ -528,6 +530,8 @@ if ($_POST['image_delete'] == 1) {
         break;
 // delete all attributes
       case 'delete_all_attributes':
+        $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_ALL', array('pID' => $_POST['products_filter']));
+
         zen_delete_products_attributes($_POST['products_filter']);
         $messageStack->add_session(SUCCESS_ATTRIBUTES_DELETED . ' ID#' . $products_filter, 'success');
         $action='';
@@ -540,6 +544,8 @@ if ($_POST['image_delete'] == 1) {
         break;
 
       case 'delete_option_name_values':
+        $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_OPTION_NAME_VALUES', array('pID' => $_POST['products_filter'], 'options_id' => $_POST['products_options_id_all']));
+
         $delete_attributes_options_id = $db->Execute("select * from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . $_POST['products_filter'] . "' and options_id='" . $_POST['products_options_id_all'] . "'");
         while (!$delete_attributes_options_id->EOF) {
 // remove any attached downloads
