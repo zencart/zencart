@@ -131,7 +131,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
     <?php echo zen_draw_form('setup_wizard', FILENAME_DEFAULT, 'action=update', 'post', 'id="setupWizardForm"'); ?>
     <div>
         <label for="store_name"><?php echo TEXT_STORE_NAME ?></label>
-        <?php echo zen_draw_input_field('store_name', $store_name, ' id="store_name"');?>
+        <?php echo zen_draw_input_field('store_name', $store_name, ' id="store_name" autofocus="autofocus"');?>
     </div>
     <br>
     <div>
