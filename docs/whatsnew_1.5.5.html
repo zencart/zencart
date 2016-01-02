@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: Author: DrByte  Dec 30 2015  New in v1.5.5 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+td.plainbox, div.callout {border: 1px dashed;border-color: #C96E29;margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:10px ;}
+.error {color:#FF0000; }
+.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color:#c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.style1 {
+  font-size: 18px;
+  font-weight: bold;
+}
+.emphasize {
+  color: #336600;
+}
+fieldset {max-width: 748px; margin: auto}
+.center {text-align: center}
+
+
+-->
+</style>
+<title>What's New in Zen Cart(R) v1.5.5</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro" style="text-align: center;">Welcome to Zen Cart&reg; v1.5.5</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="small center">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.
+</p>
+</fieldset>
+<br>
+
+<fieldset>
+<h1>About PHP versions</h1>
+<p>Zen Cart&reg; v1.5.5 is compatible with PHP 5.3.7 through PHP 7.0, and MySQL 5.1 thru 5.7</p>
+<p class="small"><em>(Note: At the time of this release, PHP 5.5 is considered obsolete. You should be using PHP 5.6 or greater by now.)</em></p>
+
+<h1>Upgrade Instructions</h1>
+<p>This document only mentions the actual changes specific to v1.5.5 since v1.5.4.</p>
+<h2>From v1.5.4</h2>
+<p>Simple: if you are using v1.5.4 already and have not customized any of the files listed in the changed_files-v1-5-5.html document, then simply replace those files with the new files as listed.</p>
+<p>If you HAVE customized or altered certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.</p>
+<p>If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original Zen Cart files for the version those plugins were built for, and see what changes were there ... and then re-build those changes in the v1.5.4 file.</p>
+<h2>To v1.5.5 from v1.5.3 or older</h2>
+<p>If you are upgrading from a version OLDER than v1.5.4, then please do a <a href="https://www.zen-cart.com/upgrades" target="_blank">standard site upgrade</a>.</p>
+
+<h1>CHANGELOG - List of Changed Files </h1>
+<p>For a list of files that have been changed since v1.5.4, see the <a href="changed_files-v1-5-5.html" target="_blank">changed_files-v1-5-5.html</a> document.</p>
+
+
+<h1>Important Note!</h1>
+<p>Note the contents of configure.php have changed (to be simplified) ... and they're MUCH SMALLER now! <br>
+  The dist-configure.php shows the simplified contents, and zc_install will generate the leaner files (when doing fresh installs).<br>
+  Also, zc_install will upgrade your configure.php files to the new format as long as the files are writable by your server's PHP.
+</p>
+
+<h1>What's New ... Changes from v1.5.4 to v1.5.5 </h1>
+<h3><strong>The most notable improvements and bugfixes in v1.5.5 since v1.5.4 include:</strong></h3>
+<ul>
+  <li>All known bugfixes and security fixes</li>
+  <li>The default out-of-the-box template is now a mobile-friendly responsive-design theme built for flexibility with tablets, mobile devices, and desktops.</li>
+  <li>Added PHP 7.0 compatibility</li>
+  <li>Added MySQL 5.7 compatibility</li>
+  <li>Order Details added to Checkout-Success page</li>
+  <li>PayPal Express Checkout has numerous updated compatibilities added, including their latest InContext mobile support</li>
+  <li>Added customer-password reset via Admin</li>
+  <li>improved error-logging for troubleshooting (included @lat9's debug-backtrace mod),</li>
+  <li>improved/simplified code for db query handling, allowing simple foreach() iterations instead of requiring while(!EOF) loops,</li>
+  <li>added hooks to allow for 3rd-party-handling of taxes, for plugin support with orders, attributes, and much more</li>
+  <li>fix some rounding errors,</li>
+  <li>customer password reset via Admin,</li>
+  <li>rewrote zc_install,</li>
+  <li>added cron code for automated currency-updating,</li>
+  <li>replaced phpBB integration with generic hooks to allow for various external forums,</li>
+  <li>some language-file cleanups,</li>
+  <li>simplified the configure.php file contents significantly by retaining only the most-often-customized components, and added an automatic-converter as part of zc_install's db-upgrade step</li>
+  <li>improvements to developers-toolkit and whos-online,</li>
+  <li>added newer phpMailer integration,<br></li>
+  <li>fixed bug with a race condition causing database errors related to sessions</li>
+  <li>numerous updates to canonical-url handling</li>
+  <li>added hreflang markup for better indexing of multilingual sites, and other HTML page-header metatag improvements</li>
+  <li>integrated @lat9's "common CSS styling" for HTML emails</li>
+  <li>improved compatibility for payment/shipping modules and SSL/TLS to work with the 2016 SHA-256 Secure Server initiatives being embraced by modern hosting companies and PCI Compliance</li>
+  <li>security patches for alerts provided from various security watchdog sites</li>
+  <li>added SagePay Form payment module (for hosted offsite PCI compliant payment processing)</li>
+  <li>retired obsolete Linkpoint_API payment module (a modernized replacement will follow in early 2016 as a plugin)</li>
+  <li>a detailed list of individual changes can be viewed <a href="https://github.com/zencart/zc-v1-series/compare/v1.5.4...v1.5.5" target="_blank">on github</a> </li>
+  </ul>
+</fieldset>
+<br><br>
+<p class="center"><em>Copyright 2003 - 2015 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>
