@@ -20,19 +20,18 @@
 /*top search*/
 #navMainSearch{display:none;visibility:hidden;}
 #navMainSearch1{float:none;text-align:center;padding:10px 0;margin:0;width:100%!important;background:#666;}
-#navMainSearch1 input[type=text]{border:none;padding:9px;width:65% !important;font-weight:normal;color:#666;height:auto;position:relative;top:-1px;margin-bottom:0;}
-input.cssButton.submit_button.button.button_search, .button_search:hover{font-size:1.2em;}
+#navMainSearch1 input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+#navMainSearch1 input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
 /*search in mobile menu*/
-#menu-search input[type="text"]{border:none;padding:9px;font-size:80%;width:50% !important;max-width:65%;font-weight:normal;color:#666;height:auto;position:relative;top:-1px;margin-bottom:0;}
-#menu-search{padding:10px 0;}
-#menu-search input.cssButton.submit_button.button.button_search, .button_search:hover{font-size:1.0em;}
+#menu-search{padding:10px 0;margin-left:20px;}
+#menu-search input[type=text]{vertical-align:top;display:inline-block;border:0;width:48% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+#menu-search input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
 /*top navigation*/
 #navMain, #navMain ul{text-align:right !important;}
 #navMain{width:70%;float:right;position:fixed;right:0;top:-3px;z-index:2;}
 #navMain ul{float:right;width:100%;}
 #navMain i{font-size:150%;padding-top:7px;}
 #navMain ul li{border:none;}
-#navMain .last{position:relative;top:-7px;}
 div#logoWrapper {text-align:center;}
 div#logo {float:none;text-align:center;margin:25px 0 15px 0;}
 div#taglineWrapper { float:none;clear:both;}
@@ -72,13 +71,19 @@ span.cssButton.normal_button.button.button_continue_shopping, .button_continue_s
 .cartProductDisplay{padding-top:25px;width:80%;}
 
 /*bof checkout*/
-#checkoutPayment .forward, #checkoutShipping .forward{float:none;}
+#checkoutPayment .forward, #checkoutShipping .forward{float:none;width:100%;}
 #checkoutConfirmDefault input.submit_button, #checkoutPayment input.submit_button, #checkoutShipping input.submit_button, #checkoutShipping input.submit_button:hover{display:block !important;width:100% !important;}
 #checkoutConfirmDefault input.cssButtonHover, #checkoutPayment input.cssButtonHover, #checkoutShipping input.cssButtonHover{display:block !important;width:100% !important;}
 #checkoutConfirmDefaultHeadingComments{text-align:center;}
 h2{text-align:center;}
 .confirm-order{float:none;}
 #checkoutOrderTotals .forward{float:right;}
+.ccinfo select{width:45%;}
+#checkoutConfirmDefault .back{width:100%;}
+#checkoutConfirmDefault .forward{width:100%;float:right !important;}
+#checkoutConfirmDefault td{padding:15px;}
+#checkoutConfirmDefault span.cssButton.normal_button.button.small_edit, .small_edit:hover{width:20%;margin-left:7px;}
+#checkoutSuccessLogoff .forward{margin:25px;}
 
 /*account page*/
 div#accountDefault table, div#accountDefault thead, div#accountDefault tbody, div#accountDefault th, div#accountDefault td, div#accountDefault tr {display: block;clear:both;height:auto;text-align:left;width:99%;}
@@ -147,6 +152,9 @@ input.cssButton.submit_button.button.button_in_cart, .button_in_cart:hover{width
 #navEZPageNextPrev i:hover, .navNextPrevList i:hover{color:#05a5bc;}
 #navEZPageNextPrev .fa-list, .navNextPrevList .fa-list{margin:0 20px;}
 #attribsOptionsText{margin-left:30px;}
+h4.optionName {margin-left:0;}
+#prevOrders a{text-decoration:none;}
+.show-all{text-decoration:none !important;text-transform:capitalize !important;font-size:1.2em;}
 
 /*bof reviews*/
 .reviews-wrapper .forward{float:none;width:100%;}
@@ -196,6 +204,8 @@ h1{text-align:center;}
 ul{line-height:170%;}
 ul li a{padding:0 1.5em;}
 .red{padding:10px;}
+address{padding:20px 0 0.5em 0;clear:both;}
+
 }
 
 /* ALL MOBILE PHONES - ORIENTATION:PORTRAIT */
@@ -208,12 +218,14 @@ ul li a{padding:0 1.5em;}
 /*top search*/
 #navMainSearch{display:none;visibility:hidden;}
 #navMainSearch1{float:none;text-align:center;padding:10px 0;margin:0;width:100%!important;background:#666;}
-#navMainSearch1 input[type=text]{border:none;padding:9px;width:65% !important;font-weight:normal;color:#666;height:auto;position:relative;top:-1px;margin-bottom:0;}
-input.cssButton.submit_button.button.button_search, .button_search:hover{font-size:1.2em;}
+#navMainSearch1 input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+#navMainSearch1 input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
+
 /*search in mobile menu*/
-#menu-search input[type="text"]{border:none;padding:9px;font-size:80%;width:50% !important;max-width:65%;font-weight:normal;color:#666;height:auto;position:relative;top:-1px;margin-bottom:0;}
-#menu-search{padding:10px 0;}
-#menu-search input.cssButton.submit_button.button.button_search, .button_search:hover{font-size:1.0em;}
+#menu-search{padding:10px 0;margin-left:20px;}
+#menu-search input[type=text]{vertical-align:top;display:inline-block;border:0;width:48% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+#menu-search input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
+
 /*top navigation*/
 #navMain, #navMain ul{text-align:right !important;}
 #navMain{width:90%;float:right;position:fixed;right:0;top:-3px;z-index:2;}
@@ -223,7 +235,7 @@ div#logo {float:none;text-align:center;margin:30px 0 15px 0;}
 div#taglineWrapper {float:none;clear:both;}
 #navMain i{font-size:150%;padding-top:7px;}
 #navMain ul li{border:none;}
-#navMain .last{position:relative;top:-7px;}
+#navMain .last{}
 
 /*bof center-boxes*/
 .centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {clear:both;width:100%!important;height:auto;margin:0;padding:10px 0;}
@@ -263,12 +275,18 @@ span.cssButton.normal_button.button.button_continue_shopping, .button_continue_s
 .cartRemoveItemDisplay input[type=checkbox]{display:none;}
 
 /*bof checkout*/
-#checkoutPayment .forward, #checkoutShipping .forward{float:none;}
+#checkoutPayment .forward, #checkoutShipping .forward{float:none;width:100%;}
 #checkoutConfirmDefault input.submit_button, #checkoutPayment input.submit_button, #checkoutShipping input.submit_button, #checkoutShipping input.submit_button:hover{display:block !important;width:100% !important;}
 #checkoutConfirmDefault input.cssButtonHover, #checkoutPayment input.cssButtonHover, #checkoutShipping input.cssButtonHover{display:block !important;width:100% !important;}
 #checkoutConfirmDefaultHeadingComments{text-align:center;}
 h2{text-align:center;}
 .confirm-order{float:none;}
+.ccinfo select{width:45%;}
+#checkoutConfirmDefault .back{width:100%;}
+#checkoutConfirmDefault .forward{float:right !important;width:100%;}
+#checkoutConfirmDefault td{padding:15px;}
+#checkoutConfirmDefault span.cssButton.normal_button.button.small_edit, .small_edit:hover{width:20%;margin-left:7px;}
+#checkoutSuccessLogoff .forward{margin:25px;}
 
 /*bof account pages*/
 div#accountDefault table, div#accountDefault thead, div#accountDefault tbody, div#accountDefault th, div#accountDefault td, div#accountDefault tr {display: block;clear:both;height:auto;text-align:left;width:99%;}
@@ -293,6 +311,8 @@ div#myAccountPaymentInfo{text-align:left !important;}
 .show-all{display:block;background:#666;padding:12px 0;width:100%;color:#fff !important;}
 .show-all:hover{background:#05a5cb;}
 #accountPassword input[type=password]{width:90%;}
+#prevOrders a{text-decoration:none;}
+.show-all{text-decoration:none !important;text-transform:capitalize !important;font-size:1.2em;}
 
 /*bof product listing pages*/
 div#productListing table, div#productListing thead, div#productListing tbody, div#productListing th, div#productListing td, div#productListing tr {display: block; }
@@ -329,6 +349,7 @@ div#productListing tr.productListing-odd {clear:both;}
 .specialsListBoxContents:nth-child(odd), .centerBoxContentsAlsoPurch:nth-child(odd), .centerBoxContentsFeatured:nth-child(odd), .centerBoxContentsSpecials:nth-child(odd), .centerBoxContentsNew:nth-child(odd){background:#f4f4f4;}
 .navSplitPagesResult{text-align:center;}
 .navSplitPagesLinks{display:block;text-align:center;}
+#indexProductList .list-more{margin-top:0;}
 
 /*bof product info*/
 #pinfo-left, #pinfo-right, #cart-box, div#productReviewLink{float:none;}
@@ -342,12 +363,13 @@ div#productListing tr.productListing-odd {clear:both;}
 .wrapperAttribsOptions input[type=text]{width:70%;margin-left:1em;}
 .attributesComments{margin-left:1em;}
 .wrapperAttribsOptions{padding:0 20px;}
-input.cssButton.submit_button.button.button_in_cart, .button_in_cart:hover{width:70%;}
+/*input.cssButton.submit_button.button.button_in_cart, .button_in_cart:hover{width:70%;}*/
 #productDescription{padding:0;}
 #navEZPageNextPrev i, .navNextPrevList i{font-size:300%;color:#333;}
 #navEZPageNextPrev i:hover, .navNextPrevList i:hover{color:#05a5bc;}
 #navEZPageNextPrev .fa-list, .navNextPrevList .fa-list{margin:0 20px;}
-#attribsOptionsText{margin-left:30px;}
+#attribsOptionsText{margin-left:20px;}
+h4.optionName {margin-left:0;}
 .additionalImages img{width:90%;margin:0 auto;}
 .additionalImages{float:left !important;}
 
@@ -397,6 +419,6 @@ h1{text-align:center;}
 #indexDefaultMainContent {word-wrap:break-word;}
 ul{line-height:170%;}
 ul li a{padding:0 1.5em;}
-address{padding:0.5em 0;}
+address{padding:20px 0 0.5em 0;clear:both;}
 .red{padding:10px;}
 }

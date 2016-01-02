@@ -111,7 +111,9 @@ select#country, .wrapperAttribsOptions select{height:40px;}
 #navMain ul li a {text-decoration:none;padding:0 0.8em;margin:0;color:#ffffff;white-space:nowrap;}
 /*top right search*/
 #navMainSearch {width:38%;text-align:right;}
-#navMainSearch input[type=text]{border:none;padding:9px;width:65% !important;font-size:80%;font-weight:normal;color:#666;height:auto;position:relative;top:-1px;margin-bottom:0;}
+#navMainSearch input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+#navMainSearch input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
+
 /*top middle*/
 #logo{margin:10px 0;}
 #tagline {color:#000;font-size:1.8em;text-align:center;margin-top:10px;}
@@ -146,7 +148,7 @@ select#country, .wrapperAttribsOptions select{height:40px;}
 #navSupp li a {color: #fff;text-decoration: none;padding: 1.2em 1.0em;display: block;}
 #navSupp li a:hover {background:#444;}
 /*footer copyright*/
-#siteinfoIP, #siteinfoLegal, #bannerSix{background:#666;font-weight:normal;padding:1.0em 0;color:#fff;border:1px solid #666;margin:0;}
+#siteinfoIP, #siteinfoLegal, #bannerSix{background:#666665;font-weight:normal;padding:1.0em 0;color:#fff;border:1px solid #666;margin:0;}
 #siteinfoLegal a{color:#05a5cb;}
 #siteinfoLegal a:hover{color:#fff;}
 
@@ -276,6 +278,7 @@ TR.tableHeading {background:#666;color:#fff;}
 .list-more{display:block;background:#333;padding:8px 20px;color:#fff !important;float:right;text-align:center;text-decoration:none !important;width:50%;}
 .list-more:hover{background:#05a5cb;}
 #indexProductList .list-more{width:auto;margin-top:-50px;}
+#advancedsearchresultBody .list-more{width:auto;}
 .itemTitle{font-weight:normal;font-size:150%;margin:5px 0;}
 .itemTitle a{color:#05a5cb;text-decoration:none;}
 .itemTitle a:hover{color:#666;}
@@ -374,7 +377,8 @@ h4.optionName{margin:1% 30px 0 30px;padding:0;}
 #reviewsDefault .prod-list-wrap{padding:20px;}
 
 /*bof my account*/
-#myAccountGen li, #myAccountNotify li {margin:0;} 
+#myAccountGen li, #myAccountNotify li {margin:0;list-style-type:none;} 
+#myAccountGen li a, #myAccountNotify li a{text-decoration:none;}
 .accountTotalDisplay, .accountTaxDisplay {width:20%;text-align:right;}
 .accountQuantityDisplay {width:10%;vertical-align:top;}
 #gvFaqDefaultContent, #checkoutPayAddressDefault .instructions, #checkoutShipAddressDefault .instructions, #addressBookDefault .instructions, #myAccountNotify, #myAccountGen{padding:20px 20px 20px 30px;background:#eee;margin-top:0;}
