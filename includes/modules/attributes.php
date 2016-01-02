@@ -96,6 +96,10 @@ $sql = "select count(*) as total
                 $tmp_attributes_image = '';
                 $tmp_attributes_image_row = 0;
                 $show_attributes_qty_prices_icon = 'false';
+                $i=0;
+
+                $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $products_options_names->fields);
+
                 while (!$products_options->EOF) {
                   // reset
                   $products_options_display_price='';
@@ -103,7 +107,9 @@ $sql = "select count(*) as total
                   $price_onetime = '';
 
                   $products_options_array[] = array('id' => $products_options->fields['products_options_values_id'],
-                  'text' => $products_options->fields['products_options_values_name']);
+                                                    'text' => $products_options->fields['products_options_values_name']);
+
+                  $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTIONS_LOOP', $i++, $products_options->fields);
 
                   if (((CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == '') or (STORE_STATUS == '1')) or ((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' or CUSTOMERS_APPROVAL_AUTHORIZATION == '2') and $_SESSION['customers_authorization'] == '') or (CUSTOMERS_APPROVAL == '2' and $_SESSION['customers_authorization'] == '2') or (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' and $_SESSION['customers_authorization'] != 0) ) {
 
@@ -615,6 +621,9 @@ $sql = "select count(*) as total
 
                 // attributes images table
                 $options_attributes_image[] = trim($tmp_attributes_image) . "\n";
+
+                $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_OPTION_BUILT', $products_options_names->fields, $options_name, $options_menu, $options_comment, $options_comment_position, $options_html_id, $options_attributes_image);
+
                 $products_options_names->MoveNext();
               }
               // manage filename uploads
