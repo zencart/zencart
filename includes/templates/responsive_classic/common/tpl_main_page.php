@@ -254,5 +254,7 @@ if  ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == '
 }
 ?>
 
-
+<?php /* add any end-of-page code via an observer class */
+  $zco_notifier->notify('NOTIFY_FOOTER_END', $current_page);
+?>
 </body>

@@ -191,6 +191,9 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
   <script type="text/javascript">document.documentElement.className = 'no-fouc';</script>
   <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 3 of 3) ?>
+<?php
+  $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base); 
+?> 
 </head>
 
 <?php // NOTE: Blank line following is intended: ?>
