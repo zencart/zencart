@@ -205,8 +205,6 @@ class AbstractSagepayAPI extends base
             $formEntries['Basket'] = sagepayBasket::getCartContents($order);
         }
 
-        $entries['TxType'] = strtoupper($this->getModuleDefineValue('_TXTYPE'));
-        $entries['Vendor'] = $this->getModuleDefineValue('_VENDOR_NAME');
         $entries['ReferrerID'] = 'BB5F9F0D-8982-4203-AFD4-AF78017E4B92';
         return $entries;
     }
