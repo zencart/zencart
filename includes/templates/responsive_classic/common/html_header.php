@@ -193,7 +193,7 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
 <?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 3 of 3) ?>
 <?php
   $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base); 
-?> 
+?>
 </head>
 
 <?php // NOTE: Blank line following is intended: ?>
