@@ -127,7 +127,7 @@
 ?>
 <br class="clearBoth" />
 <label class="inputLabel" for="fax"><?php echo ENTRY_FAX_NUMBER; ?></label>
-<?php echo zen_draw_input_field('fax', '', 'id="fax"', 'tel') . (zen_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="alert">' . ENTRY_FAX_NUMBER_TEXT . '</span>': ''); ?>
+<?php echo zen_draw_input_field('fax', '', 'id="fax"', 'fax') . (zen_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="alert">' . ENTRY_FAX_NUMBER_TEXT . '</span>': ''); ?>
 <?php
   }
 ?>
