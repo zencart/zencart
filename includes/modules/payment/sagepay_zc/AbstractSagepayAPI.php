@@ -202,7 +202,7 @@ class AbstractSagepayAPI extends base
         $deliveryEntries = sagepayCustomer::setDeliveryEntries($order, $us_state_codes);
         $entries = array_merge($entries, $billingEntries, $deliveryEntries);
         if ($this->getModuleDefineValue('_SHOPCART') == 'true') {
-            $formEntries['Basket'] = sagepayBasket::getCartContents($order);
+            $entries['Basket'] = sagepayBasket::getCartContents($order);
         }
 
         return $entries;
