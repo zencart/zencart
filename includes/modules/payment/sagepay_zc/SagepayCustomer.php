@@ -74,7 +74,8 @@ class SagepayCustomer
      */
     public static function handleMissingDeliveryEntries($order, $us_state_codes)
     {
-        if (isset($order->delivery) && $order->delivery != false) {
+        if ($_SESSION['cart']->content_type == 'virtual') return $order->billing;
+        if (isset($order->delivery) && $order->delivery !== false && $order->delivery['street_address'] != '') {
             return $order->delivery;
         }
         return $order->billing;
