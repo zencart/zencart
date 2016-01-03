@@ -154,8 +154,8 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
   }
 
 // DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
-  $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base); 
-?> 
+  $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);
+?>
 
 </head>
 <?php // NOTE: Blank line following is intended: ?>
