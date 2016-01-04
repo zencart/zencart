@@ -1094,6 +1094,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    */
   function getLanguageCode($mode = 'ec') {
     global $order, $locales, $lng;
+    if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+      $lng = new language;
+    }
     $allowed_country_codes = array('US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL', 'PT', 'BR', 'RU');
     $allowed_language_codes = array('da_DK', 'he_IL', 'id_ID', 'ja_JP', 'no_NO', 'pt_BR', 'ru_RU', 'sv_SE', 'th_TH', 'tr_TR', 'zh_CN', 'zh_HK', 'zh_TW');
 
