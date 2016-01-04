@@ -202,12 +202,9 @@ class AbstractSagepayAPI extends base
         $deliveryEntries = sagepayCustomer::setDeliveryEntries($order, $us_state_codes);
         $entries = array_merge($entries, $billingEntries, $deliveryEntries);
         if ($this->getModuleDefineValue('_SHOPCART') == 'true') {
-            $formEntries['Basket'] = sagepayBasket::getCartContents($order);
+            $entries['Basket'] = sagepayBasket::getCartContents($order);
         }
 
-        $entries['TxType'] = strtoupper($this->getModuleDefineValue('_TXTYPE'));
-        $entries['Vendor'] = $this->getModuleDefineValue('_VENDOR_NAME');
-        $entries['ReferrerID'] = 'BB5F9F0D-8982-4203-AFD4-AF78017E4B92';
         return $entries;
     }
 }

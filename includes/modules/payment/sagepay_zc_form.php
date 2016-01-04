@@ -46,8 +46,8 @@ class sagepay_zc_form extends sagepay_zc_payment
     {
         $sid = zen_session_name() . '=' . zen_session_id();
         $formEntries = $this->buildStandardTransactionDetails();
-        $formEntries['SuccessURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', true));
-        $formEntries['FailureURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', true));
+        $formEntries['SuccessURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', false));
+        $formEntries['FailureURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', false));
         $processButtonString = SagepayUtil::processCryptEntries($formEntries);
 
         $crypt = SagepayUtil::encryptAndEncode($processButtonString, MODULE_PAYMENT_SAGEPAY_ZC_FORM_PASSWORD);
