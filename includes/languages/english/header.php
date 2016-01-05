@@ -21,9 +21,9 @@
 // added defines for header alt and text
   define('HEADER_ALT_TEXT', 'Powered by Zen Cart :: The Art of E-Commerce');
   define('HEADER_SALES_TEXT', 'TagLine Here');
-  define('HEADER_LOGO_WIDTH', '192px');
-  define('HEADER_LOGO_HEIGHT', '64px');
-  define('HEADER_LOGO_IMAGE', 'logo.gif');
+  define('HEADER_LOGO_WIDTH', '254px');
+  define('HEADER_LOGO_HEIGHT', '68px');
+  define('HEADER_LOGO_IMAGE', 'logo.png');
 
 // header Search Button/Box Search Button
   define('HEADER_SEARCH_BUTTON','Search');
