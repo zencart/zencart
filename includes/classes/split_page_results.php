@@ -3,10 +3,10 @@
  * split_page_results Class.
  *
  * @package classes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
+ * @version GIT: $Id: DrByte  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -96,18 +96,25 @@ class splitPageResults extends base {
   /* class functions */
 
   // display split-page-number-links
-  function display_links($max_page_links, $parameters = '') {
+  function display_links($max_page_links, $parameters = '', $isMobile = false) {
     global $request_type;
     if ($max_page_links == '') $max_page_links = 1;
 
-    $display_links_string = '';
+    $display_links_string = $ul_elements = '';
 
     $class = '';
 
     if (zen_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
 
     // previous button - not displayed on first page
-    if ($this->current_page_number > 1) $display_links_string .= '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
+    $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">' . PREVNEXT_BUTTON_PREV . '</a>';
+    if ($this->current_page_number > 1) {
+      $display_links_string .= $link . '&nbsp;&nbsp;';
+      $ul_elements .= '  <li class="pagination-previous" aria-label="Previous page">' . $link . '</li>' . "\n";
+    } else {
+      // $ul_elements .= '  <li class="disabled pagination-previous">' . $link . '</li>' . "\n";
+    }
+
 
     // check if number_of_pages > $max_page_links
     $cur_window_num = intval($this->current_page_number / $max_page_links);
@@ -117,23 +124,47 @@ class splitPageResults extends base {
     if ($this->number_of_pages % $max_page_links) $max_window_num++;
 
     // previous window of pages
-    if ($cur_window_num > 1) $display_links_string .= '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . ' ">...</a>';
+    $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . ' ">...</a>';
+    if ($cur_window_num > 1) {
+      $display_links_string .= $link;
+      $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
+    } else {
+      // $ul_elements .= '  <li class="ellipsis" aria-hidden="true">' . $link . '</li>' . "\n";
+    }
 
     // page nn button
     for ($jump_to_page = 1 + (($cur_window_num - 1) * $max_page_links); ($jump_to_page <= ($cur_window_num * $max_page_links)) && ($jump_to_page <= $this->number_of_pages); $jump_to_page++) {
       if ($jump_to_page == $this->current_page_number) {
         $display_links_string .= '&nbsp;<strong class="current">' . $jump_to_page . '</strong>&nbsp;';
+        $ul_elements .= '  <li class="current active">' . $jump_to_page . '</li>' . "\n";
       } else {
-        $display_links_string .= '&nbsp;<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a>&nbsp;';
+        $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a>';
+        $display_links_string .= '&nbsp;' . $link . '&nbsp;';
+        $ul_elements .= '  <li>' . $link . '</li>' . "\n";
       }
     }
 
     // next window of pages
-    if ($cur_window_num < $max_window_num) $display_links_string .= '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . ' ">...</a>&nbsp;';
+    if ($cur_window_num < $max_window_num) {
+      $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . ' ">...</a>';
+      $display_links_string .= $link . '&nbsp;';
+      $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
+    } else {
+      // $ul_elements .= '  <li class="ellipsis" aria-hidden="true">' . $link . '</li>' . "\n";
+    }
 
     // next button
-    if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) $display_links_string .= '&nbsp;<a href="' . zen_href_link($_GET['main_page'], $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">' . PREVNEXT_BUTTON_NEXT . '</a>&nbsp;';
+    if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) {
+      $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">' . PREVNEXT_BUTTON_NEXT . '</a>';
+      $display_links_string .= '&nbsp;' . $link . '&nbsp;';
+      $ul_elements .= '  <li class="pagination-next" aria-label="Next page">' . $link . '</li>' . "\n";
+    } else {
+      // $ul_elements .= '  <li class="disabled pagination-next">' . $link . '</li>' . "\n";
+    }
 
+    if ($isMobile) {
+      return  '<nav class="pagination">' . "\n" . '<ul class="pagination" role="navigation" aria-label="Pagination">' . "\n" . $ul_elements . '</ul>' . "\n" . '</nav>';
+    }
     if ($display_links_string == '&nbsp;<strong class="current">1</strong>&nbsp;') {
       return '&nbsp;';
     } else {
