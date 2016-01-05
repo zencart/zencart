@@ -46,3 +46,5 @@
 	define('MODULE_PAYMENT_SAGEPAY_ZC_FORM_PAYPAL_ADDRESS_STATUS', 'PayPal Address Status:');
 	define('MODULE_PAYMENT_SAGEPAY_ZC_FORM_PAYPAL_PAYER_STATUS', 'PayPal Payer Status:');
 
+    define('TEXT_TITLE_MCRYPT_ERROR', ' (mcrypt problem)');
+    define('TEXT_DESCRIPTION_MCRYPT_ERROR', ' The PHP mcrypt extension is not available. Sagepay form will be disabled at checkout.');

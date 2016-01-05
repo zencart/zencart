@@ -36,7 +36,11 @@ class sagepay_zc_form extends sagepay_zc_payment
         if (MODULE_PAYMENT_SAGEPAY_ZC_FORM_TEST_STATUS == 'test') {
             $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
         }
-        if (!function_exists('mcrypt_encrypt')) $this->enabled = false;
+        if (!function_exists('mcrypt_encrypt')) {
+            $this->title .= '<span class="alert">' . TEXT_TITLE_MCRYPT_ERROR . '</span>';
+            $this->description = '<span class="alert">' . TEXT_DESCRIPTION_MCRYPT_ERROR . '</span><br><br>' . $this->description;
+            $this->enabled = false;
+        }
     }
 
     /**
