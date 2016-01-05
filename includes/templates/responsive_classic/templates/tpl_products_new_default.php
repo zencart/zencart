@@ -43,7 +43,7 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
   if (($products_new_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
 <div class="prod-list-wrap group">
-<div id="newProductsDefaultListingTopLinks" class="back navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page'))); ?></div>
+<div id="newProductsDefaultListingTopLinks" class="back navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(($isMobile ? MAX_DISPLAY_PAGE_LINKS_MOBILE : MAX_DISPLAY_PAGE_LINKS), zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $isMobile); ?></div>
 <div id="newProductsDefaultListingTopNumber" class="navSplitPagesResult back"><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></div>
 <?php
   }
@@ -102,7 +102,7 @@ else {
 <?php
   if (($products_new_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
-<div id="newProductsDefaultListingBottomLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page'))); ?></div>
+<div id="newProductsDefaultListingBottomLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(($isMobile ? MAX_DISPLAY_PAGE_LINKS_MOBILE : MAX_DISPLAY_PAGE_LINKS), zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $isMobile); ?></div>
 <div id="newProductsDefaultListingBottomNumber" class="navSplitPagesResult back"><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></div>
 <?php
   }

@@ -268,10 +268,10 @@
   define('PREVNEXT_TITLE_PAGE_NO', 'Page %d');
   define('PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE', 'Previous Set of %d Pages');
   define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next Set of %d Pages');
-  define('PREVNEXT_BUTTON_FIRST', '&lt;&lt;FIRST');
-  define('PREVNEXT_BUTTON_PREV', '[&lt;&lt;&nbsp;Prev]');
-  define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&gt;&gt;]');
-  define('PREVNEXT_BUTTON_LAST', 'LAST&gt;&gt;');
+  define('PREVNEXT_BUTTON_FIRST', '&laquo;FIRST');
+  define('PREVNEXT_BUTTON_PREV', '[&laquo;&nbsp;Prev]');
+  define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&raquo;]');
+  define('PREVNEXT_BUTTON_LAST', 'LAST&raquo;');
 
   define('TEXT_BASE_PRICE','Starting at: ');
 
