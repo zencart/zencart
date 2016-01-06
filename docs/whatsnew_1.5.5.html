@@ -93,9 +93,9 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <h2>From v1.5.4</h2>
 <p>Simple: if you are using v1.5.4 already and have not customized any of the files listed in the changed_files-v1-5-5.html document, then simply replace those files with the new files as listed.</p>
 <p>If you HAVE customized or altered certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.</p>
-<p>If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original Zen Cart files for the version those plugins were built for, and see what changes were there ... and then re-build those changes in the v1.5.4 file.</p>
+<p>If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original Zen Cart files for the version those plugins were built for, and see what changes were there ... and then re-build those changes in the v1.5.5 file.</p>
 <h2>To v1.5.5 from v1.5.3 or older</h2>
-<p>If you are upgrading from a version OLDER than v1.5.4, then please do a <a href="https://www.zen-cart.com/upgrades" target="_blank">standard site upgrade</a>.</p>
+<p>If you are upgrading from a version OLDER than v1.5.4, then please do a <a href="https://www.zen-cart.com/upgrades" target="_blank">standard site upgrade</a>. Be sure to review all the links in this article, including tips on staging the upgrade in a separate directory/folder.</p>
 
 <h1>CHANGELOG - List of Changed Files </h1>
 <p>For a list of files that have been changed since v1.5.4, see the <a href="changed_files-v1-5-5.html" target="_blank">changed_files-v1-5-5.html</a> document.</p>
@@ -106,6 +106,9 @@ OSI Certified is a certification mark of the Open Source Initiative.
   The dist-configure.php shows the simplified contents, and zc_install will generate the leaner files (when doing fresh installs).<br>
   Also, zc_install will upgrade your configure.php files to the new format as long as the files are writable by your server's PHP.
 </p>
+
+<h1>A NOTE ABOUT THE NEW TEMPLATE</h1>
+<p>While Zen Cart&reg; v1.5.5 contains a newer "responsive_classic" template, we STRONGLY recommend that upgraders first upgrade their site using everything (including template_default) except the responsive_classic template contents. And then once the upgraded site is working properly then consider what changes you might want to make to your own active template. AGAIN: The responsive_classic template should NOT be implemented immediately as part of an upgrade; it should be a separate step if it is even used at all.</p>
 
 <h1>What's New ... Changes from v1.5.4 to v1.5.5 </h1>
 <h3><strong>The most notable improvements and bugfixes in v1.5.5 since v1.5.4 include:</strong></h3>
@@ -121,7 +124,6 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <li>improved/simplified code for db query handling, allowing simple foreach() iterations instead of requiring while(!EOF) loops,</li>
   <li>added hooks to allow for 3rd-party-handling of taxes, for plugin support with orders, attributes, and much more</li>
   <li>fix some rounding errors,</li>
-  <li>customer password reset via Admin,</li>
   <li>rewrote zc_install,</li>
   <li>added cron code for automated currency-updating,</li>
   <li>replaced phpBB integration with generic hooks to allow for various external forums,</li>
