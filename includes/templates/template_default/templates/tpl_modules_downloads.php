@@ -19,7 +19,7 @@
   if ($downloads->RecordCount() > 0) {
 ?>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="0" id="downloads">
+<table id="downloads">
 <caption><h4><?php echo HEADING_DOWNLOAD; ?></h4></caption>
   <tr class="tableHeading">
       <th scope="col" id="dlFileNameHeading"><?php echo TABLE_HEADING_PRODUCT_NAME; ?></th>

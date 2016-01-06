@@ -12,7 +12,7 @@
 <!-- bof: upcoming_products -->
 <fieldset>
 <legend><?php echo TABLE_HEADING_UPCOMING_PRODUCTS; ?></legend>
-<table border="0" width="100%" cellspacing="0" cellpadding="2" id="upcomingProductsTable" summary="<?php echo SUMMARY_TABLE_UPCOMING_PRODUCTS; ?>">
+<table id="upcomingProductsTable">
 <caption><?php echo CAPTION_UPCOMING_PRODUCTS; ?></caption>
   <tr>
     <th scope="col" id="upProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>

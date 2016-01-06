@@ -32,7 +32,7 @@
   $class =& $_SESSION['payment'];
 ?>
 
-<h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3> 
+<h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3>
 <h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $GLOBALS[$class]->title; ?></h4>
 
 <?php
@@ -105,7 +105,7 @@
 <?php  } //endif flagAnyOutOfStock ?>
 
 
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" id="cartContentsDisplay">
+      <table id="cartContentsDisplay">
         <tr class="cartTableHeading">
         <th scope="col" id="ccQuantityHeading" width="30"><?php echo TABLE_HEADING_QUANTITY; ?></th>
         <th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>

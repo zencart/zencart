@@ -34,6 +34,9 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
 <meta name="robots" content="noindex, nofollow" />
 <?php } ?>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+
 <?php if (defined('FAVICON')) { ?>
 <link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />

@@ -49,7 +49,7 @@
 <?php    } //endif STOCK_ALLOW_CHECKOUT ?>
 <?php  } //endif flagAnyOutOfStock ?>
 
-<table  border="0" width="100%" cellspacing="0" cellpadding="0" id="cartContentsDisplay">
+<table id="cartContentsDisplay">
      <tr class="tableHeading">
         <th scope="col" id="scQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
         <th scope="col" id="scUpdateQuantity">&nbsp;</th>

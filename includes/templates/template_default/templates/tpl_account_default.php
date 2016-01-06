@@ -23,8 +23,8 @@
   ?>
 <p class="forward"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL') . '">' . OVERVIEW_SHOW_ALL_ORDERS . '</a>'; ?></p>
 <br class="clearBoth" />
-<table width="100%" border="0" cellpadding="0" cellspacing="0" id="prevOrders">
-<caption><h2><?php echo OVERVIEW_PREVIOUS_ORDERS; ?></h2></caption>
+<h2 id="previous-orders"><?php echo OVERVIEW_PREVIOUS_ORDERS; ?></h2>
+<table id="prevOrders">
     <tr class="tableHeading">
     <th scope="col"><?php echo TABLE_HEADING_DATE; ?></th>
     <th scope="col"><?php echo TABLE_HEADING_ORDER_NUMBER; ?></th>
