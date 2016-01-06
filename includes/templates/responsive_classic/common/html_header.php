@@ -10,6 +10,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: rbarbour zcadditions.com Modified in v1.5.5 $
  */
+
+$zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
+
 /**
  * load the module for generating page meta-tags
  */
