@@ -27,7 +27,7 @@
         if ($products_all->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) {
           $display_products_image = str_repeat('<br />', substr(PRODUCT_ALL_LIST_IMAGE, 3, 1));
         } else {
-          $display_products_image = '<a href="' . zen_href_link(zen_get_info_page($products_all->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_all->fields['master_categories_id']) . '&products_id=' . $products_all->fields['products_id']) . '">' . zen_image(DIR_WS_IMAGES . $products_all->fields['products_image'], $products_all->fields['products_name'], IMAGE_PRODUCT_ALL_LISTING_WIDTH, IMAGE_PRODUCT_ALL_LISTING_HEIGHT) . '</a>' . str_repeat('<br clear="all" />', substr(PRODUCT_ALL_LIST_IMAGE, 3, 1));
+          $display_products_image = '<a href="' . zen_href_link(zen_get_info_page($products_all->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_all->fields['master_categories_id']) . '&products_id=' . $products_all->fields['products_id']) . '">' . zen_image(DIR_WS_IMAGES . $products_all->fields['products_image'], $products_all->fields['products_name'], IMAGE_PRODUCT_ALL_LISTING_WIDTH, IMAGE_PRODUCT_ALL_LISTING_HEIGHT) . '</a>' . str_repeat('<br class="clearBoth" />', substr(PRODUCT_ALL_LIST_IMAGE, 3, 1));
         }
 
       } else {
@@ -68,7 +68,7 @@
       }
 
       if (PRODUCT_ALL_LIST_MANUFACTURER != '0' and zen_get_show_product_switch($products_all->fields['products_id'], 'manufacturer')) {
-        $display_products_manufacturers_name = ($products_all->fields['manufacturers_name'] != '' ? '<b>' . TEXT_MANUFACTURER . '</b> ' . $products_all->fields['manufacturers_name'] . str_repeat('<br clear="all" />', substr(PRODUCT_ALL_LIST_MANUFACTURER, 3, 1)) : '');
+        $display_products_manufacturers_name = ($products_all->fields['manufacturers_name'] != '' ? '<b>' . TEXT_MANUFACTURER . '</b> ' . $products_all->fields['manufacturers_name'] . str_repeat('<br class="clearBoth" />', substr(PRODUCT_ALL_LIST_MANUFACTURER, 3, 1)) : '');
       } else {
         $display_products_manufacturers_name = '';
       }
