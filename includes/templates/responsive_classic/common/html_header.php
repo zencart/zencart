@@ -20,10 +20,10 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 1 of 3)
 if (!class_exists('Mobile_Detect')) {
   include_once(DIR_WS_CLASSES . 'Mobile_Detect.php'); 
+}
   $detect = new Mobile_Detect;
   $isMobile = (isset($detect) && $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile');
   if (!defined('MAX_DISPLAY_PAGE_LINKS_MOBILE')) define('MAX_DISPLAY_PAGE_LINKS_MOBILE', 3);
-}
 // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 1 of 3)
 ?>
 
