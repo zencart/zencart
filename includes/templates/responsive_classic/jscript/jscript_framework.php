@@ -6,7 +6,7 @@
  * @version GIT: $Id: Author: Ian Wilson  New in v1.5.4 $
  */
 ?>
-<script>
+<script type="text/javascript">
 if (typeof zcJS == "undefined" || !zcJS) {
   window.zcJS = { name: 'zcJS', version: '0.1.0.0' };
 };
