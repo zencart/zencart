@@ -9,7 +9,7 @@
  * @version GIT: $Id: Author: Ian Wilson   Modified in v1.5.4 $
  */
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript"><!--
 var selected;
 var submitter = null;
 
