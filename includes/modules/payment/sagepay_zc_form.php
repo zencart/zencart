@@ -41,6 +41,11 @@ class sagepay_zc_form extends sagepay_zc_payment
             $this->description = '<span class="alert">' . TEXT_DESCRIPTION_MCRYPT_ERROR . '</span><br><br>' . $this->description;
             $this->enabled = false;
         }
+        if ((extension_loaded('suhosin') || defined("SUHOSIN_PATCH"))  && ini_get('suhosin.get.max_value_length') < 600) {
+            $this->title .= '<span class="alert">' . TEXT_TITLE_SUHOSIN_ERROR . '</span>';
+            $this->description = '<span class="alert">' . TEXT_DESCRIPTION_SUHOSIN_GET_LENGTH_ERROR . '</span><br><br>' . $this->description;
+            $this->enabled = false;
+        }
     }
 
     /**
