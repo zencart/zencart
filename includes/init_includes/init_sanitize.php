@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id    Modified in v1.5.5 $
@@ -44,6 +44,7 @@
     if (isset($_GET[$key]))
     {
       $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
+      if (isset($_REQUEST[$key])) $_REQUEST[$key] = preg_replace('/[^\/0-9a-zA-Z_:@.-]/', '', $_REQUEST[$key]);
     }
   }
 
@@ -58,16 +59,20 @@
         foreach($value as $key2 => $val2){
           if ($key2 == 'keyword') {
             $_GET[$key][$key2] = preg_replace('/'.$unStrictReplace.'/', '', $val2);
+            if (isset($_REQUEST[$key][$key2])) $_REQUEST[$key][$key2] = preg_replace('/'.$unStrictReplace.'/', '', $val2);
           } else {
             $_GET[$key][$key2] = preg_replace('/'.$strictReplace.'/', '', $val2);
+            if (isset($_REQUEST[$key][$key2])) $_REQUEST[$key][$key2] = preg_replace('/'.$strictReplace.'/', '', $val2);
           }
           unset($GLOBALS[$key]);
         }
       } else {
         if ($key == 'keyword') {
           $_GET[$key] = preg_replace('/'.$unStrictReplace.'/', '', $value);
+          if (isset($_REQUEST[$key])) $_REQUEST[$key] = preg_replace('/'.$unStrictReplace.'/', '', $value);
         } else {
           $_GET[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
+          if (isset($_REQUEST[$key])) $_REQUEST[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
         }
         unset($GLOBALS[$key]);
       }
