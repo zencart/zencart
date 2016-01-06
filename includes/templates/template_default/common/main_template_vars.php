@@ -15,11 +15,12 @@
  * @version $Id: main_template_vars.php  Modified in v1.5.5 $
  */
 
+  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START', $template_dir);
+
   if (file_exists(DIR_WS_MODULES . 'pages/' . $current_page_base . '/main_template_vars.php')) {
     $body_code = DIR_WS_MODULES . 'pages/' . $current_page_base . '/main_template_vars.php';
   } else {
     $body_code = $template->get_template_dir('tpl_' . preg_replace('/.php/', '',$_GET['main_page']) . '_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_' . $_GET['main_page'] . '_default.php';
   }
 
-  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS', $current_page_base, $body_code);
-
+  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_END', $template_dir, $body_code);
