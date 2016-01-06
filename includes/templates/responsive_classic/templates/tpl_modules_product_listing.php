@@ -115,7 +115,7 @@ elseif ($listing->RecordCount()) {
 // if ($show_top_submit_button == true or $show_bottom_submit_button == true or (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 and $show_submit == true and $listing_split->number_of_rows > 0)) {
   if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
 ?>
-</form>
+
 <?php } ?>
 
 <?php
@@ -126,3 +126,4 @@ elseif ($listing->RecordCount()) {
       echo '</div>';
     }
 ?>
+</form>

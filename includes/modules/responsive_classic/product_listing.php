@@ -126,7 +126,7 @@ if ($listing_split->number_of_rows > 0) {
             }
             // hide quantity box
             if ($listing->fields['products_qty_box_status'] == 0) {
-              $lc_button = '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $listing->fields['products_id']) . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT, 'class="listingBuyNowButton"') . '</a>';
+              $lc_button = '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $listing->fields['products_id']) . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT) . '</a>';
             } else {
               $lc_button = '<div class="list-input"><span class="list-addtext">' . TEXT_PRODUCT_LISTING_MULTIPLE_ADD_TO_CART . "</span><input type=\"text\" name=\"products_id[" . $listing->fields['products_id'] . "]\" value=\"0\" size=\"4\" /></div>";
             }

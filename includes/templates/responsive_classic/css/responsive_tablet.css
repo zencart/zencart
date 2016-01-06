@@ -78,6 +78,8 @@ div#productListing tr.productListing-odd {clear:both;}
 #navEZPagesTOC ul li{font-size:130%;line-height:150%;}
 #navEZPagesTOC ul li a{text-decoration:none;}
 
+td.cartQuantityUpdate{width:15%;}
+
 
 /*bof basic*/
 input[type=password], input[type=number], input[type=tel], input[type=text], input[type=email]{width:95%;}
@@ -143,9 +145,11 @@ div#shoppingcart{display:none;visibility:hidden;}
 div#manufacturerinfo{display:none;visibility:hidden;}
 div#productnotifications{display:none;visibility:hidden;}
 div#orderhistory{display:none;visibility:hidden;}
+div#currencies{display:none;visibility:hidden;}
+div#languages{display:none;visibility:hidden;}
 
 /*bof login, create account*/
-div#loginDefault input[type="text"], div#loginDefault input[type="password"], div#loginDefault select {width:93%;}
+div#loginDefault input[type="text"], div#loginDefault input[type="password"], div#loginDefault select {height:40px;}
 LABEL.inputLabel {display:block;width:100%!important;text-align:left;}
 div#loginDefault fieldset { float:none;width:97%;margin-bottom:20px;min-height:0;}
 div#createAcctDefault input[type="text"], div#createAcctDefault input[type="password"], div#createAcctDefault select {width:85%;}
@@ -173,7 +177,8 @@ span.cssButton.normal_button.button.button_checkout, .button_checkout:hover{text
 span.cssButton.normal_button.button.button_continue_shopping, .button_continue_shopping:hover, span.cssButton.normal_button.button.button_shipping_estimator, .button_shipping_estimator:hover{display:block;padding:12px;text-align:center;}
 .cartTotalsDisplay{padding:10px 0;background:#333;color:#fff;margin-top:20px;}
 td.cartProductDisplay{padding-top:20px;}
-#cartProdTitle{display:block;margin-top:5px;}
+#cartProdTitle{margin-top:5px;}
+td.cartQuantityUpdate{width:15%;}
 
 /*bof account page*/
 div#accountDefault table, div#accountDefault thead, div#accountDefault tbody, div#accountDefault th, div#accountDefault td, div#accountDefault tr {display: block;clea
