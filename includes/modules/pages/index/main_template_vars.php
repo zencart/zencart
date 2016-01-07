@@ -216,6 +216,11 @@ if ($categories_description_lookup->RecordCount() > 0) {
   $current_categories_name = $categories_description_lookup->fields['categories_name'];
 }
 
+if ($current_categories_name == '' && isset($_GET['manufacturers_id'])) {
+  $result = $db->Execute( "SELECT * FROM " . TABLE_MANUFACTURERS . " m
+                           WHERE m.manufacturers_id = " . (int)$_GET['manufacturers_id'] . " LIMIT 1");
+  if (!$result->EOF) $current_categories_name = $result->fields['manufacturers_name'];
+}
 $zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body);
 
 require($template->get_template_dir($tpl_page_body, DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . $tpl_page_body);
