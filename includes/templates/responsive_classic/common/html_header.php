@@ -17,6 +17,9 @@ $zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_di
  * load the module for generating page meta-tags
  */
 require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
+/**
+ * output main page HEAD tag and related headers/meta-tags, etc
+ */
 ?>
 
 <?php
