@@ -217,11 +217,21 @@ if ($categories_description_lookup->RecordCount() > 0) {
 }
 
 if ($current_categories_name == '' && isset($_GET['manufacturers_id'])) {
-  $result = $db->Execute( "SELECT * FROM " . TABLE_MANUFACTURERS . " m
-                           WHERE m.manufacturers_id = " . (int)$_GET['manufacturers_id'] . " LIMIT 1");
+  $result = $db->Execute( "SELECT * FROM " . TABLE_MANUFACTURERS . "
+                           WHERE manufacturers_id = " . (int)$_GET['manufacturers_id'] . " LIMIT 1");
   if (!$result->EOF) $current_categories_name = $result->fields['manufacturers_name'];
 }
-$zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body);
+if ($current_categories_name == '' && isset($_GET['record_company_id'])) {
+  $result = $db->Execute( "SELECT * FROM " . TABLE_RECORD_COMPANY . "
+                           WHERE record_company_id = " . (int)$_GET['record_company_id'] . " LIMIT 1");
+  if (!$result->EOF) $current_categories_name = $result->fields['record_company_name'];
+}
+if ($current_categories_name == '' && isset($_GET['music_genre_id'])) {
+  $result = $db->Execute( "SELECT * FROM " . TABLE_MUSIC_GENRE . "
+                           WHERE music_genre_id = " . (int)$_GET['music_genre_id'] . " LIMIT 1");
+  if (!$result->EOF) $current_categories_name = $result->fields['music_genre_name'];
+}
+$zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body, $current_categories_name);
 
 require($template->get_template_dir($tpl_page_body, DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . $tpl_page_body);
 
