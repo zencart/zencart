@@ -14,23 +14,24 @@
 <h1 id="featuredDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <div id="filter-wrapper" class="group">
+
  <?php
   /**
-   * require code to display the list-display-order dropdown
+ * display the product order dropdown
    */
-  require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php'); 
-?>
+require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php'); ?>
 </div>
+
+
+
 
 <?php
 if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) {
 ?>
 
 <?php
-  if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) {
     if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
       echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_FEATURED_PRODUCTS, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
-    }
   }
 }
 ?>
@@ -38,11 +39,12 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
 
 
 <?php
-
+  $openGroupWrapperDiv = false;
   if (($featured_products_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'))) {
+    $openGroupWrapperDiv = true;
 ?>
 <div class="prod-list-wrap group">
-<div id="featuredProductsListingTopLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . ' ' . $featured_products_split->display_links(($isMobile ? MAX_DISPLAY_PAGE_LINKS_MOBILE : MAX_DISPLAY_PAGE_LINKS), zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $isMobile); ?></div>
+<div id="featuredProductsListingTopLinks" class="back navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . ' ' . $featured_products_split->display_links(($isMobile ? MAX_DISPLAY_PAGE_LINKS_MOBILE : MAX_DISPLAY_PAGE_LINKS), zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $isMobile); ?></div>
 
 <div id="featuredProductsListingTopNumber" class="navSplitPagesResult back"><?php echo $featured_products_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_FEATURED_PRODUCTS); ?></div>
 <?php
@@ -50,34 +52,29 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
 ?>
 
 
-
 <?php
-// only show button when there is something to submit
   if ($show_top_submit_button == true) {
+// only show when there is something to submit
 ?>
 <?php
       if (PREV_NEXT_BAR_LOCATION == '2') {
 	echo '<div class="prod-list-wrap group">';
       }
 ?>
-<div class="forward button-top"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit1" name="submit1"'); ?></div>
+<div class="button-top forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit1" name="submit1"'); ?></div>
 
 <?php
     if  (PREV_NEXT_BAR_LOCATION == '2') {
        echo '</div>';
      }
 ?>
-
 <?php
-  } // end show top button
+  } // top submit button
 ?>
 
-<?php
-
-    if ($show_top_submit_button == '2' && PREV_NEXT_BAR_LOCATION == '2' or $show_top_submit_button == '0' && PREV_NEXT_BAR_LOCATION == '2') {
   
-    }
-    else {
+<?php
+if ($openGroupWrapperDiv) {
       echo '</div>';
     }
 ?>
@@ -93,9 +90,8 @@ require($template->get_template_dir('/tpl_modules_products_featured_listing.php'
 
 <?php
     if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1') {
-  
-    }
-    else {
+  // nothing
+} else {
       echo '<div class="prod-list-wrap group">';
     }
 ?>
@@ -131,35 +127,20 @@ echo '</div>';
 <?php
     }  // bottom submit button
 ?>
-
+<?php
+if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1') {
+  // nothing
+} else {
+  echo '</div>';
+}
+?>
 
 <?php
-  // if ($show_top_submit_button == true or $show_bottom_submit_button == true or (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 and $show_submit == true and $listing_split->number_of_rows > 0)) {
+// only end form if form is created
 if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
 ?>
 </form>
-<?php } ?>
-
-<?php if ($show_top_submit_button == true && $show_bottom_submit_button == true && PREV_NEXT_BAR_LOCATION == '2') {
-
-  } else {
-?>
-
+<?php } // end if form is made ?>
 </div>
 
-<?php } ?>
-
-<?php
-if ($show_top_submit_button == true && PREV_NEXT_BAR_LOCATION == '2') {
-  echo '</div>';
-  } ?>
-
-
-<?php
-if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1' or $show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '2') {
   
-}
-else {
-  echo '</div>';
-}
-?>
