@@ -3,7 +3,7 @@
  * dist-configure.php - SAMPLE FILE!
  *
  * @package Configuration Settings
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Modified in v1.5.5 $
@@ -61,7 +61,7 @@ define('SQL_CACHE_METHOD', 'none');
 /**
  * Reserved for future use
  */
-define('SESSION_STORAGE', 'temporary value added by v160 installer');
+define('SESSION_STORAGE', 'temporary value added by zc_install');
 
 /**
  * Advanced use only:

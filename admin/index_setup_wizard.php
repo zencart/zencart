@@ -42,13 +42,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
         $db->execute($sql);
         $store_country = (int)($_POST['zone_country_id']);
     }
+    $store_zone = '';
     if (isset($_POST['zone_id']) && $_POST['zone_id'] != '') {
-        $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
-                    WHERE configuration_key = 'STORE_ZONE'";
-        $sql = $db->bindVars($sql, ':configValue:', $_POST['zone_id'], 'integer');
-        $db->execute($sql);
         $store_zone = (int)($_POST['zone_id']);
     }
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
+                    WHERE configuration_key = 'STORE_ZONE'";
+    $sql = $db->bindVars($sql, ':configValue:', $store_zone, 'integer');
+    $db->execute($sql);
+
     if (isset($_POST['store_address']) && $_POST['store_address'] != '') {
         $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = :configValue:
                     WHERE configuration_key = 'STORE_NAME_ADDRESS'";
@@ -129,7 +131,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
     <?php echo zen_draw_form('setup_wizard', FILENAME_DEFAULT, 'action=update', 'post', 'id="setupWizardForm"'); ?>
     <div>
         <label for="store_name"><?php echo TEXT_STORE_NAME ?></label>
-        <?php echo zen_draw_input_field('store_name', $store_name, ' id="store_name"');?>
+        <?php echo zen_draw_input_field('store_name', $store_name, ' id="store_name" autofocus="autofocus"');?>
     </div>
     <br>
     <div>

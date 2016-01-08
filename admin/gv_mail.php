@@ -369,7 +369,7 @@ function check_form(form_name) {
               </tr>
                <tr>
                 <td class="main"><?php echo TEXT_TO; ?></td>
-                <td><?php echo zen_draw_input_field('email_to', '', 'size="50"'); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
+                <td><?php echo zen_draw_input_field('email_to', '', 'size="50"', false, 'email'); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

@@ -22,6 +22,8 @@ define('TEXT_PRODUCT_INFO', 'Product Info:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Product Price Info:');
 define('TEXT_PRODUCTS_MODEL','Model:');
 define('TEXT_PRICE', 'Price');
+define('TEXT_PRICE_NET', 'Price (Net)');
+define('TEXT_PRICE_GROSS', 'Price (Gross)');
 define('TEXT_PRODUCT_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_PRODUCTS_STATUS', 'Products Status:');
 define('TEXT_PRODUCT_AVAILABLE', 'In Stock');
@@ -56,6 +58,8 @@ define('TEXT_FEATURED_CONFIRM_DELETE', 'Please confirm that you want to delete t
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
+define('TEXT_SPECIALS_SPECIAL_PRICE_NET', 'Special Price: (Net)');
+define('TEXT_SPECIALS_SPECIAL_PRICE_GROSS', 'Special Price: (Gross)');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date:');
 define('TEXT_SPECIALS_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>');

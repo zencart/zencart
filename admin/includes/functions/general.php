@@ -2015,7 +2015,7 @@ while (!$chk_sale_categories_all->EOF) {
     }
     $date_selector .= '</select>';
     $date_selector .= '<select name="'. $prefix .'_year">';
-    for ($i=2001;$i<2019;$i++){
+    for ($i = date('Y') - 5, $j = date('Y') + 11; $i < $j; $i++) {
       $date_selector .= '<option value="' . $i . '"';
       if ($i==$year) $date_selector .= 'selected';
       $date_selector .= '>' . $i . '</option>';
@@ -2572,23 +2572,18 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * (does not validate download filename)
  */
   function zen_has_product_attributes_downloads_status($products_id) {
-    global $db;
-    if (DOWNLOAD_ENABLED == 'true') {
-      $download_display_query_raw ="select pa.products_attributes_id, pad.products_attributes_filename
-                                    from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                    where pa.products_id='" . (int)$products_id . "'
-                                      and pad.products_attributes_id= pa.products_attributes_id";
-
-      $download_display = $db->Execute($download_display_query_raw);
-      if ($download_display->RecordCount() != 0) {
-        $valid_downloads = false;
-      } else {
-        $valid_downloads = true;
-      }
-    } else {
-      $valid_downloads = false;
+    if (!defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
+      return false;
     }
-    return $valid_downloads;
+
+    $query = "select pad.products_attributes_id
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              inner join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+              on pad.products_attributes_id = pa.products_attributes_id
+              where pa.products_id = " . (int) $products_id;
+
+    global $db;
+    return ($db->Execute($query)->RecordCount() > 0);
   }
 
 /**
@@ -3759,3 +3754,35 @@ function get_logs_data($maxToList = 'count') {
   $logs = zen_sort_array($logs, 'unixtime', SORT_DESC);
   return $logs;
 }
+
+/**
+ * function to override PHP's is_writable() which can occasionally be unreliable due to O/S and F/S differences
+ * attempts to open the specified file for writing. Returns true if successful, false if not.
+ * if a directory is specified, uses PHP's is_writable() anyway
+ *
+ * @var string
+ * @return boolean
+ */
+  function is__writeable($filepath, $make_unwritable = true) {
+    if (is_dir($filepath)) return is_writable($filepath);
+    $fp = @fopen($filepath, 'a');
+    if ($fp) {
+      @fclose($fp);
+      if ($make_unwritable) set_unwritable($filepath);
+      $fp = @fopen($filepath, 'a');
+      if ($fp) {
+        @fclose($fp);
+        return true;
+      }
+    }
+    return false;
+  }
+/**
+ * attempts to make the specified file read-only
+ *
+ * @var string
+ * @return boolean
+ */
+  function set_unwritable($filepath) {
+    return @chmod($filepath, 0444);
+  }

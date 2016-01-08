@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -178,7 +178,7 @@
     $dir->close();
   }
 
-  $installed_modules = array();
+  $installed_modules = $temp_for_sort = array();
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
     if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
@@ -187,15 +187,12 @@
       $class = substr($file, 0, strrpos($file, '.'));
       if (class_exists($class)) {
         $module = new $class;
+        // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
         if ($module->check() > 0) {
-          if ($module->sort_order > 0) {
-            if (isset($installed_modules[$module->sort_order]) && $installed_modules[$module->sort_order] != '') {
-              $zc_valid = false;
-            }
-            $installed_modules[$module->sort_order] = $file;
-          } else {
-            $installed_modules[] = $file;
-          }
+          // determine sort orders and add to list of installed modules
+          $temp_for_sort[$file] = (int)$module->sort_order . $file; // combine sort-order and filename for uniqueness in determining sort
+          asort($temp_for_sort);
+          $installed_modules = array_flip($temp_for_sort);
         }
         if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
           $module_info = array('code' => $module->code,
@@ -276,9 +273,6 @@
                  configuration_description, configuration_group_id, sort_order, date_added)
                  values ('Installed Modules', '" . zen_db_input($module_key) . "', '" . zen_db_input(implode(';', $installed_modules)) . "',
                          'This is automatically updated. No need to edit.', '6', '0', now())");
-  }
-  if (isset($zc_valid) && $zc_valid == false) {
-    echo '<span class="alert">' . WARNING_MODULES_SORT_ORDER . '</span>';
   }
 ?>
               <tr>

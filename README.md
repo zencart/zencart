@@ -3,7 +3,7 @@ Zen Cart&reg; - The Art of E-Commerce
 
 Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
 
-Zen Cart&reg; v1.5.5 is simply an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
+Zen Cart&reg; v1.5.5 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
 
 It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at <http://www.zen-cart.com/forum.php>
 
@@ -16,9 +16,9 @@ Zen Cart&reg; v1.5.5
 Compatibility
 -------------
 Zen Cart v1.5.5 is compatible with:
- * PHP 5.2.10 to PHP 7.0.0
+ * PHP 5.2.10 to PHP 7.0.1 (But you should use PHP 5.6 or greater)
  * Apache 2.2 (and 2.4 with access_compat mod installed)
- * MySQL 5.4 to 5.6
+ * MySQL 5.1 to 5.7
 
 
 Installation
@@ -57,7 +57,7 @@ Follow Us
 ---------
 For news and updates about Zen Cart&reg;, follow us on [Twitter](http://twitter.com/zencart) and [Facebook](http://facebook.com/zencart)
 
-Sign up for our free [Newsletter](http://visitor.constantcontact.com/d.jsp?m=1101879248585)
+Sign up for our free [Newsletter](http://eepurl.com/bafnNj)
 
 Subscribe to [Critical News Updates And Release Announcements](http://www.zen-cart.com/subscription.php?do=addsubscription&f=2)
 

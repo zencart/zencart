@@ -3,10 +3,10 @@
  * index header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: header_php.php ajeh  Modified in v1.5.5 $
  */
 
 // This should be first line of the script:
@@ -56,7 +56,7 @@ if ($category_depth == 'products' && $listing->RecordCount() == 0) $robotsNoInde
 
 // if only one product in this category, go directly to the product page, instead of displaying a link to just one item:
 // if filter_id exists the 1 product redirect is ignored
-if (SKIP_SINGLE_PRODUCT_CATEGORIES=='True' and (!isset($_GET['filter_id']) and !isset($_GET['alpha_filter']))) {
+if (SKIP_SINGLE_PRODUCT_CATEGORIES=='True' and (!isset($_GET['filter_id']) and !isset($_GET['alpha_filter_id']))) {
   if ($listing->RecordCount() == 1) {
     zen_redirect(zen_href_link(zen_get_info_page($listing->fields['products_id']), ($cPath ? 'cPath=' . $cPath . '&' : '') . 'products_id=' . $listing->fields['products_id']));
   }

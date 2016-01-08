@@ -5,11 +5,14 @@
  * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jul 5 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Dec 9 2015 Modified in v1.5.5 $
  */
+
+$zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
+
 /**
  * load the module for generating page meta-tags
  */
@@ -26,7 +29,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
 <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
 <meta http-equiv="imagetoolbar" content="no" />
-<meta name="author" content="The Zen Cart&reg; Team and others" />
+<meta name="author" content="<?php echo STORE_NAME ?>">
 <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
 <meta name="robots" content="noindex, nofollow" />
@@ -40,6 +43,18 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
 <link rel="canonical" href="<?php echo $canonicalLink; ?>" />
 <?php } ?>
+<?php
+  // BOF hreflang for multilingual sites
+  if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+    $lng = new language;
+  }
+  reset($lng->catalog_languages);
+  while (list($key, $value) = each($lng->catalog_languages)) {
+    if ($value['id'] == $_SESSION['languages_id']) continue;
+    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type) : $canonicalLink . '&amp;language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+  }
+  // EOF hreflang for multilingual sites
+?>
 
 <?php
 /**
@@ -95,6 +110,13 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
     echo '<link rel="stylesheet" type="text/css" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
   }
 
+/** CDN for jQuery core **/
+?>
+
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"%3E%3C/script%3E'));</script>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+
+<?php
 /**
  * load all site-wide jscript_*.js files from includes/templates/YOURTEMPLATE/jscript, alphabetically
  */
@@ -103,12 +125,6 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
     echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
 
-/** CDN for jQuery core **/
-?>
-  <script>window.jQuery || document.write('<script src="//code.jquery.com/jquery-1.11.1.min.js"><\/script>');</script>
-  <script>window.jQuery || document.write('<script src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"><\/script>');</script>
-
-<?php
 /**
  * load all page-specific jscript_*.js files from includes/modules/pages/PAGENAME, alphabetically
  */
@@ -141,6 +157,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
   }
 
 // DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
+  $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);
 ?>
 
 </head>

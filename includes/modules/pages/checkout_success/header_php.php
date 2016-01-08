@@ -96,7 +96,7 @@ $flag_global_notifications = $global->fields['global_product_notifications'];
 if ($flag_global_notifications != '1') {
   $products_array = array();
   $counter = 0;
-  $products_query = "SELECT products_id, products_name
+  $products_query = "SELECT DISTINCT products_id, products_name
                      FROM " . TABLE_ORDERS_PRODUCTS . "
                      WHERE orders_id = :ordersID
                      ORDER BY products_name";

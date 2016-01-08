@@ -21,7 +21,7 @@ $counter_query = "select startdate, counter from " . TABLE_COUNTER;
 $counter = $db->Execute($counter_query);
 $counter_startdate = $counter->fields['startdate'];
 //  $counter_startdate_formatted = strftime(DATE_FORMAT_LONG, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
-$counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
+if ($counter->RecordCount()) $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
 
 $specials = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= '0'");
 $specials_act = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= '1'");
@@ -64,8 +64,10 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
     <div class="reportBox">
         <div class="header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
         <?php
+        if ($counter->RecordCount()) {
         echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER_DATE . '</span><span class="rigth"> ' . $counter_startdate_formatted . '</span></div>';
         echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER . '</span><span class="rigth"> ' . $counter->fields['counter'] . '</span></div>';
+        }
         echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';
         echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS . ' </span><span class="rigth">' . $products->fields['count'] . '</span></div>';
         echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS_OFF . ' </span><span class="rigth">' . $products_off->fields['count'] . '</span></div>';

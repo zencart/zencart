@@ -652,3 +652,6 @@ LABEL#textAreaReviews {
 /* added padding to prevent CSS buttons from touching product image */
 .navNextPrevWrapper {padding-bottom: 5px;}
 
+.paypal-button-hidden {
+  visibility: hidden;
+}
