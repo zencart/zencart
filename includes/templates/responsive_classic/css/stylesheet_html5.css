@@ -1,7 +1,7 @@
 
-.categoryIconAlignLeft {text-align: left}
-.categoryIconAlignCenter {text-align: center}
-.categoryIconAlignRight {text-align: right}
+.alignLeft {text-align: left}
+.alignCenter {text-align: center}
+.alignRight {text-align: right}
 
 .tabTable {width:100%;border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
 
@@ -15,4 +15,9 @@ table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;
 #upcomingProductsTable {width: 100%; /* TABLE border="0" cellspacing="0" cellpadding="2" */ }
 #quantityDiscountsDetails { /* TABLE border="1" cellspacing="2" cellpadding="2" */ }
 
-.products-listing .productsAllListing, .productsNewListing, .productsFeaturedListing {width: 100%; /* TABLE border="0" width="100%" cellspacing="2" cellpadding="2" }
+.products-listing .productsAllListing, .productsNewListing, .productsFeaturedListing {width: 100%; /* TABLE border="0" width="100%" cellspacing="2" cellpadding="2" */}
+
+.tableBorder1 td {border: 1px solid black;}
+
+.accountOrderDate, .accountOrderStatus, .accountOrderTotal {width:70px;}
+.accountOrderId {width:30px;}

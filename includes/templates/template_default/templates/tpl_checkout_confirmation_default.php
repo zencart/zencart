@@ -107,7 +107,7 @@
 
       <table id="cartContentsDisplay">
         <tr class="cartTableHeading">
-        <th scope="col" id="ccQuantityHeading" width="30"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+        <th scope="col" id="ccQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
         <th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
 <?php
   // If there are tax groups, display the tax columns for price breakdown

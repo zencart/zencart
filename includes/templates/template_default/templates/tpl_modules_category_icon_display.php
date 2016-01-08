@@ -12,4 +12,4 @@
 
 ?>
 
-<div id="categoryIcon" class="categoryIcon <?php echo 'categoryIconAlign' . base::camelize($align, true); ?>"><?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . $_GET['cPath'], 'NONSSL') . '">' . $category_icon_display_image . $category_icon_display_name .  '</a>'; ?></div>
+<div id="categoryIcon" class="categoryIcon <?php echo 'align' . base::camelize($align, true); ?>"><?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . $_GET['cPath'], 'NONSSL') . '">' . $category_icon_display_image . $category_icon_display_name .  '</a>'; ?></div>

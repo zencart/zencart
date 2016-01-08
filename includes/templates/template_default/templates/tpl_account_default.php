@@ -37,12 +37,12 @@
   foreach($ordersArray as $orders) {
 ?>
   <tr>
-    <td width="70px"><?php echo zen_date_short($orders['date_purchased']); ?></td>
-    <td width="30px"><?php echo TEXT_NUMBER_SYMBOL . $orders['orders_id']; ?></td>
-    <td><address><?php echo zen_output_string_protected($orders['order_name']) . '<br />' . $orders['order_country']; ?></address></td>
-    <td width="70px"><?php echo $orders['orders_status_name']; ?></td>
-    <td width="70px" align="right"><?php echo $orders['order_total']; ?></td>
-    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '"> ' . zen_image_button(BUTTON_IMAGE_VIEW_SMALL, BUTTON_VIEW_SMALL_ALT) . '</a>'; ?></td>
+    <td class="accountOrderDate"><?php echo zen_date_short($orders['date_purchased']); ?></td>
+    <td class="accountOrderId"><?php echo TEXT_NUMBER_SYMBOL . $orders['orders_id']; ?></td>
+    <td class="accountAddress"><address><?php echo zen_output_string_protected($orders['order_name']) . '<br />' . $orders['order_country']; ?></address></td>
+    <td class="accountOrderStatus"><?php echo $orders['orders_status_name']; ?></td>
+    <td class="accountOrderTotal alignRight"><?php echo $orders['order_total']; ?></td>
+    <td class="accountOrderViewButton alignRight"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '"> ' . zen_image_button(BUTTON_IMAGE_VIEW_SMALL, BUTTON_VIEW_SMALL_ALT) . '</a>'; ?></td>
   </tr>
 
 <?php

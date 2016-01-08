@@ -24,7 +24,7 @@
   <tr class="tableHeading">
       <th scope="col" id="dlFileNameHeading"><?php echo TABLE_HEADING_PRODUCT_NAME; ?></th>
       <th scope="col" id="dlByteSize"><?php echo TABLE_HEADING_BYTE_SIZE; ?></th>
-      <th scope="col" id="dlButtonHeading"><?php echo TABLE_HEADING_DOWNLOAD_FILENAME; ?></th>
+      <th scope="col" id="dlFilenameHeading"><?php echo TABLE_HEADING_DOWNLOAD_FILENAME; ?></th>
       <th scope="col" id="dlDateHeading"><?php echo TABLE_HEADING_DOWNLOAD_DATE; ?></th>
       <th scope="col" id="dlCountHeading"><?php echo TABLE_HEADING_DOWNLOAD_COUNT; ?></th>
       <th scope="col" id="dlButtonHeading">&nbsp;</th>

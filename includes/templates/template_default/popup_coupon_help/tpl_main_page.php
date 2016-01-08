@@ -108,6 +108,6 @@
   echo $text_coupon_help;
 
 ?>
-<p class="smallText" align="right"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></p>
+<p class="smallText forward"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></p>
 
 </body>
