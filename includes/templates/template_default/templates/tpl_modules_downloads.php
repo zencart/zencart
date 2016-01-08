@@ -19,8 +19,8 @@
   if ($downloads->RecordCount() > 0) {
 ?>
 
+<h4 id="headingDownloads"><?php echo HEADING_DOWNLOAD; ?></h4>
 <table id="downloads">
-<caption><h4><?php echo HEADING_DOWNLOAD; ?></h4></caption>
   <tr class="tableHeading">
       <th scope="col" id="dlFileNameHeading"><?php echo TABLE_HEADING_PRODUCT_NAME; ?></th>
       <th scope="col" id="dlByteSize"><?php echo TABLE_HEADING_BYTE_SIZE; ?></th>

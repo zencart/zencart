@@ -17,8 +17,8 @@
 <div class="forward"><?php echo HEADING_ORDER_DATE . ' ' . zen_date_long($order->info['date_purchased']); ?></div>
 <br class="clearBoth" />
 
+<h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']); ?></h2>
 <table id="orderHistoryHeading">
-<caption><h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']); ?></h2></caption>
     <tr class="tableHeading">
         <th scope="col" id="myAccountQuantity"><?php echo HEADING_QUANTITY; ?></th>
         <th scope="col" id="myAccountProducts"><?php echo HEADING_PRODUCTS; ?></th>
