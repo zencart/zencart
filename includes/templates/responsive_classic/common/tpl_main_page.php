@@ -38,6 +38,17 @@
  * @version GIT: $Id: rbarbour zcadditions.com Modified in v1.5.5 $
  */
 
+/** bof DESIGNER TESTING ONLY: */
+// $messageStack->add('header', 'this is a sample error message', 'error');
+// $messageStack->add('header', 'this is a sample caution message', 'caution');
+// $messageStack->add('header', 'this is a sample success message', 'success');
+// $messageStack->add('main', 'this is a sample error message', 'error');
+// $messageStack->add('main', 'this is a sample caution message', 'caution');
+// $messageStack->add('main', 'this is a sample success message', 'success');
+/** eof DESIGNER TESTING ONLY */
+
+
+
 // the following IF statement can be duplicated/modified as needed to set additional flags
 if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
   $flag_disable_right = true;
@@ -45,20 +56,20 @@ if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sidebo
 
 // ZCAdditions.com, Responsive Template Default (BOF-addition 1 of 1)
 if ($flag_disable_right or COLUMN_RIGHT_STATUS == '0') {
-  $box_width_right = preg_replace('/[^0-9]/', '', '0'); 
+  $box_width_right = preg_replace('/[^0-9]/', '', '0');
   $box_width_right_new = '';
 } else {
   $box_width_right = COLUMN_WIDTH_RIGHT;
-  $box_width_right = preg_replace('/[^0-9]/', '', $box_width_right); 
+  $box_width_right = preg_replace('/[^0-9]/', '', $box_width_right);
   $box_width_right_new = 'col' . $box_width_right;
 }
 
 if ($flag_disable_left or COLUMN_LEFT_STATUS == '0') {
-  $box_width_left = preg_replace('/[^0-9]/', '', '0'); 
+  $box_width_left = preg_replace('/[^0-9]/', '', '0');
   $box_width_left_new = '';
 } else {
   $box_width_left = COLUMN_WIDTH_LEFT;
-  $box_width_left = preg_replace('/[^0-9]/', '', $box_width_left); 
+  $box_width_left = preg_replace('/[^0-9]/', '', $box_width_left);
   $box_width_left_new = 'col' . $box_width_left;
 }
 
@@ -76,12 +87,12 @@ $body_id = ($this_is_home_page) ? 'indexHome' : str_replace('_', '', $_GET['main
 ?>
 <body id="<?php echo $body_id . 'Body'; ?>"<?php if($zv_onload !='') echo ' onload="'.$zv_onload.'"'; ?>>
 
-<?php 
+<?php
  if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) {
   echo '<div id="page">';
  } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){
   echo '<div id="page">';
-  } else { 
+  } else {
 //
   }
 ?>
@@ -122,7 +133,7 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   * prepares and displays left column sideboxes
   *
   */
-  require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); 
+  require(DIR_WS_MODULES . zen_get_module_directory('column_left.php'));
 ?>
   </div>
 
@@ -157,7 +168,7 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   * prepares and displays center column
   *
   */
- require($body_code); 
+ require($body_code);
 ?>
 
 <?php
@@ -186,7 +197,7 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   * prepares and displays right column sideboxes
   *
   */
- require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); 
+ require(DIR_WS_MODULES . zen_get_module_directory('column_right.php'));
 ?>
   </div>
 
@@ -232,24 +243,24 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
 
 
 
- <?php 
-if  ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) { 
+ <?php
+if  ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) {
   echo '</div>';
 } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){
   echo '</div>';
-} else { 
+} else {
   //
 }
 ?>
 
 
-<?php if  ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) { 
+<?php if  ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) {
   require($template->get_template_dir('tpl_modules_mobile_menu.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_mobile_menu.php');
 } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){
   require($template->get_template_dir('tpl_modules_mobile_menu.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_mobile_menu.php');
-} else if ( $_SESSION['layoutType'] == 'full' ) { 
+} else if ( $_SESSION['layoutType'] == 'full' ) {
   //
-} else { 
+} else {
   //
 }
 ?>

@@ -84,7 +84,7 @@
 <?php
     }else{
 ?>
-<table width="100%" border="1" cellpadding="2" cellspacing ="2">
+<table id="seQuoteResults">
 <?php if ($_SESSION['customer_id'] < 1 ){ ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">

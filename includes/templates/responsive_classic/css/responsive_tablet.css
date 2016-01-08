@@ -177,7 +177,7 @@ span.cssButton.normal_button.button.button_checkout, .button_checkout:hover{text
 span.cssButton.normal_button.button.button_continue_shopping, .button_continue_shopping:hover, span.cssButton.normal_button.button.button_shipping_estimator, .button_shipping_estimator:hover{display:block;padding:12px;text-align:center;}
 .cartTotalsDisplay{padding:10px 0;background:#333;color:#fff;margin-top:20px;}
 td.cartProductDisplay{padding-top:20px;}
-#cartProdTitle{margin-top:5px;}
+.cartProdTitle{margin-top:5px;}
 td.cartQuantityUpdate{width:15%;}
 
 /*bof account page*/

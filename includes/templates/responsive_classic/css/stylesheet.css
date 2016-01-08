@@ -226,7 +226,7 @@ ul.list-links li:hover, ol.list-links li:hover{background:#eee;}
 TR.tableHeading {background:#666;color:#fff;}
 .rowOdd {background-color:#fff;height:1.5em;vertical-align:top;}
 .rowEven {background-color:#eee;height:1.5em;vertical-align:top;}
-#cartProdTitle{font-size:120%;}
+.cartProdTitle{font-size:120%;}
 .cartProductDisplay a{text-decoration:none;}
 /*shipping estimator styles*/
 #shippingEstimatorContent h2{background:#333;padding:20px 0;color:#fff;font-weight:normal;text-align:center;}
@@ -242,7 +242,7 @@ TR.tableHeading {background:#666;color:#fff;}
 
 /*bof images*/
 #productMainImage, #reviewsInfoDefaultProductImage, #productReviewsDefaultProductImage, #reviewWriteMainImage {margin:0 1em 1em 0;}
-#cartImage {margin:0.5em 1em;}
+.cartImage {margin:0.5em 1em;}
 
 /*bof center boxes*/
 .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew {margin:1em 0;}
@@ -426,4 +426,23 @@ h2.greeting a:hover{color:#666;}
 .paypal-button-hidden {
     visibility: hidden;
 }
+
+/* markup for tables used to present tabular data */
+.alignLeft {text-align: left}
+.alignCenter {text-align: center}
+.alignRight {text-align: right}
+.tabTable {width:100%;border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
+table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
+#cartContentsDisplay {width: 100%;}
+#myAccountOrdersStatus, #orderHistoryHeading, #prevOrders {width: 100%;}
+.accountOrderId {width:30px;}
+.accountOrderDate, .accountOrderStatus, .accountOrderTotal {width:70px;}
+#seQuoteResults {width: 100%;}
+#seQuoteResults td {border: 1px solid black;}
+.listBoxContentTable {width:100%;}
+.listBoxContentTable td {border: 1px solid black;}
+#upcomingProductsTable {width: 100%;}
+#quantityDiscountsDetails td {border: 1px solid black;}
+.products-listing .productsAllListing, .productsNewListing, .productsFeaturedListing {width: 100%;}
+.tableBorder1 td {border: 1px solid black;}
 

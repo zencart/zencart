@@ -31,7 +31,7 @@
       }
       $product_ids = substr($product_ids, 0, -1);
       $rows=0;
-      $customer_orders_string = '<table border="0" width="100%" cellspacing="0" cellpadding="1">';
+
       $products_history_query = "select products_id, products_name
                          from " . TABLE_PRODUCTS_DESCRIPTION . "
                          where products_id in (" . $product_ids . ")
@@ -46,7 +46,6 @@
         $customer_orders[$rows]['name'] = $products_history->fields['products_name'];
         $products_history->MoveNext();
       }
-      $customer_orders_string .= '</table>';
 
       require($template->get_template_dir('tpl_order_history.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_order_history.php');
       $title =  BOX_HEADING_CUSTOMER_ORDERS;
@@ -54,4 +53,3 @@
       require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default);
     }
   }
-?>

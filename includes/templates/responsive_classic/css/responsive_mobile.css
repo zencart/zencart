@@ -61,8 +61,8 @@ td.cartQuantity br, td.cartQuantityUpdate br{display:none;}
 td.cartQuantity{padding:20px 10px 0 20px;width:15%;}
 td.cartQuantityUpdate{padding:25px 0 0 0;width:10%;}
 .cartAttribsList{text-align:left;margin-left:15%;}
-span#cartProdTitle{text-align:left;}
-#cartImage img {max-width:80px;}
+span.cartProdTitle{text-align:left;}
+.cartImage img {max-width:80px;}
 .est-button{float:right;}
 #shoppingCartDefault .buttonRow{text-align:center;}
 span.cssButton.normal_button.button.button_checkout, .button_checkout:hover{text-align:center;}
@@ -263,9 +263,9 @@ td.cartQuantity br, td.cartQuantityUpdate br{display:none;}
 td.cartQuantity{padding:20px 10px 0 10px;}
 td.cartQuantityUpdate{padding:25px 0 0 0;}
 .cartAttribsList{text-align:left;margin-left:15%;}
-span#cartProdTitle{text-align:left;float:left;margin-top:15px;width:70%;}
-#cartImage{float:left;width:18%;}
-#cartImage img {max-width:80px;}
+span.cartProdTitle{text-align:left;float:left;margin-top:15px;width:70%;}
+.cartImage{float:left;width:18%;}
+.cartImage img {max-width:80px;}
 .est-button{float:right;}
 #shoppingCartDefault .forward{float:none;}
 #shoppingCartDefault .buttonRow{text-align:center;}

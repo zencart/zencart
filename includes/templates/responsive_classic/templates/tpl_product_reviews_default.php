@@ -63,7 +63,7 @@
     foreach ($reviewsArray as $reviews) {
 ?>
 
-<div class="reviews-wrapper" class="group">
+<div class="reviews-wrapper group">
 
 <div class="buttonRow forward read-reviews-button"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . (int)$_GET['products_id'] . '&reviews_id=' . $reviews['id']) . '">' . zen_image_button(BUTTON_IMAGE_READ_REVIEWS , BUTTON_READ_REVIEWS_ALT) . '</a>'; ?></div>
 

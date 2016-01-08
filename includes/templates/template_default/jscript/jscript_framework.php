@@ -6,7 +6,7 @@
  * @version GIT: $Id: Author: Ian Wilson  New in v1.5.4 $
  */
 ?>
-<script type="text/javascript">
+<script type="text/javascript"><!--//<![CDATA[
 if (typeof zcJS == "undefined" || !zcJS) {
   window.zcJS = { name: 'zcJS', version: '0.1.0.0' };
 };
@@ -134,11 +134,11 @@ zcJS.ajax({
 
   });
 <?php } ?>
-</script>
+//]] --></script>
 <?php if (PADSS_AJAX_CHECKOUT=='1' && ($current_page == FILENAME_CHECKOUT_CONFIRMATION || $current_page == FILENAME_CHECKOUT_PAYMENT || $current_page == FILENAME_CHECKOUT_SHIPPING) && !isset($_SESSION['jscript_enabled'])) { ?>
 <?php if ($payment_modules->doesCollectsCardDataOnsite == true) { ?>
 <noscript>
-<meta http-equiv="refresh" content="0;url=<?php echo zen_href_link(FILENAME_SHOPPING_CART, 'jscript=no');?>">
+<meta http-equiv="refresh" content="0; url=<?php echo zen_href_link(FILENAME_SHOPPING_CART, 'jscript=no');?>" />
 </noscript>
 <?php }?>
 <?php }?>
