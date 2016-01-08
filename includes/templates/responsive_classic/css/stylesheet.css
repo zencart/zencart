@@ -219,7 +219,7 @@ ul.list-links li:hover, ol.list-links li:hover{background:#eee;}
 TR.tableHeading {background:#666;color:#fff;}
 .rowOdd {background-color:#fff;height:1.5em;vertical-align:top;}
 .rowEven {background-color:#eee;height:1.5em;vertical-align:top;}
-#cartProdTitle{font-size:120%;}
+.cartProdTitle{font-size:120%;}
 .cartProductDisplay a{text-decoration:none;}
 /*shipping estimator styles*/
 #shippingEstimatorContent h2{background:#333;padding:20px 0;color:#fff;font-weight:normal;text-align:center;}
@@ -235,7 +235,7 @@ TR.tableHeading {background:#666;color:#fff;}
 
 /*bof images*/
 #productMainImage, #reviewsInfoDefaultProductImage, #productReviewsDefaultProductImage, #reviewWriteMainImage {margin:0 1em 1em 0;}
-#cartImage {margin:0.5em 1em;}
+.cartImage {margin:0.5em 1em;}
 
 /*bof center boxes*/
 .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew {margin:1em 0;}

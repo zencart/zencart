@@ -83,8 +83,8 @@ td.cartQuantity br, td.cartQuantityUpdate br{display:none;}
 td.cartQuantity{padding:20px 10px 0 20px;}
 td.cartQuantityUpdate{padding:25px 0 0 0;}
 .cartAttribsList{text-align:left;margin-left:15%;}
-span#cartProdTitle{text-align:left;}
-#cartImage img {max-width:80px;}
+span.cartProdTitle{text-align:left;}
+.cartImage img {max-width:80px;}
 .est-button{float:right;}
 #shoppingCartDefault .forward{float:none;}
 #shoppingCartDefault .buttonRow{text-align:center;}
@@ -263,8 +263,8 @@ td.cartQuantity br, td.cartQuantityUpdate br{display:none;}
 td.cartQuantity{padding:20px 10px 0 20px;}
 td.cartQuantityUpdate{padding:25px 0 0 0;}
 .cartAttribsList{text-align:left;margin-left:15%;}
-span#cartProdTitle{text-align:left;}
-#cartImage img {max-width:80px;}
+span.cartProdTitle{text-align:left;}
+.cartImage img {max-width:80px;}
 .est-button{float:right;}
 #shoppingCartDefault .forward{float:none;}
 #shoppingCartDefault .buttonRow{text-align:center;}
