@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stats_products_purchased.php  Modified in v1.6.0 $
@@ -110,34 +110,34 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
               <tr class="dataTableRowSelectedBot">
                 <td colspan="7" class="dataTableContent" align="center"><?php echo NONE; ?></td>
               </tr>
-<?php } ?>
-<?php
-  while (!$chk_orders_products->EOF) {
-    $rows++;
-
-    if (strlen($rows) < 2) {
-      $rows = '0' . $rows;
-    }
-    if ($products_filter != '') {
-    // products_id
-      $cPath = zen_get_product_path($products_filter);
-    } else {
-    // products_name or products_model
-      $cPath = zen_get_product_path($chk_orders_products->fields['products_id']);
-    }
-?>
-              <tr class="dataTableRow">
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'page', 'products_filter')) . 'cID=' . $chk_orders_products->fields['customers_id'] . '&action=edit', 'NONSSL') . '">' . $chk_orders_products->fields['customers_id'] . '</a>'; ?></td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'oID=' . $chk_orders_products->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . $chk_orders_products->fields['orders_id'] . '</a>'; ?></td>
-                <td class="dataTableContent"><?php echo zen_date_short($chk_orders_products->fields['date_purchased']); ?></td>
-                <td class="dataTableContent"><?php echo $chk_orders_products->fields['customers_name'] . ($chk_orders_products->fields['customers_company'] !='' ? '<br />' . $chk_orders_products->fields['customers_company'] : '') . '<br />' . $chk_orders_products->fields['customers_email_address']; ?></td>
-                <td class="dataTableContent" align="center"><?php echo $chk_orders_products->fields['products_quantity']; ?>&nbsp;</td>
-                <td class="dataTableContent" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_filter) . '">' . $chk_orders_products->fields['products_name'] . '</a>'; ?>&nbsp;</td>
-                <td class="dataTableContent" align="center"><?php echo $chk_orders_products->fields['products_model']; ?>&nbsp;</td>
-
-              </tr>
-<?php
-    $chk_orders_products->MoveNext();
+<?php 
+  }  else { 
+     foreach ($chk_orders_products as $product) {
+       $rows++;
+   
+       if (strlen($rows) < 2) {
+         $rows = '0' . $rows;
+       }
+       if ($products_filter != '') {
+       // products_id
+         $cPath = zen_get_product_path($products_filter);
+       } else {
+       // products_name or products_model
+         $cPath = zen_get_product_path($product['products_id']);
+       }
+   ?>
+                 <tr class="dataTableRow">
+                   <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'page', 'products_filter')) . 'cID=' . $product['customers_id'] . '&action=edit', 'NONSSL') . '">' . $product['customers_id'] . '</a>'; ?></td>
+                   <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'oID=' . $product['orders_id'] . '&action=edit', 'NONSSL') . '">' . $product['orders_id'] . '</a>'; ?></td>
+                   <td class="dataTableContent"><?php echo zen_date_short($product['date_purchased']); ?></td>
+                   <td class="dataTableContent"><?php echo $product['customers_name'] . ($product['customers_company'] !='' ? '<br />' . $product['customers_company'] : '') . '<br />' . $product['customers_email_address']; ?></td>
+                   <td class="dataTableContent" align="center"><?php echo $product['products_quantity']; ?>&nbsp;</td>
+                   <td class="dataTableContent" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_filter) . '">' . $product['products_name'] . '</a>'; ?>&nbsp;</td>
+                   <td class="dataTableContent" align="center"><?php echo $product['products_model']; ?>&nbsp;</td>
+   
+                 </tr>
+   <?php
+     }
   }
 ?>
             </table></td>
@@ -192,21 +192,20 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
 
   $rows = 0;
   $products = $db->Execute($products_query_raw);
-  while (!$products->EOF) {
+  foreach ($products as $product) { 
     $rows++;
 
     if (strlen($rows) < 2) {
       $rows = '0' . $rows;
     }
-    $cPath = zen_get_product_path($products->fields['products_id']);
+    $cPath = zen_get_product_path($product['products_id']);
 ?>
-              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products->fields['products_id'] . '&page='); ?>'">
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $products->fields['products_id']) . '">' . $products->fields['products_id'] . '</a>'; ?>&nbsp;&nbsp;</td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products->fields['products_id'] . '&page=') . '">' . $products->fields['products_name'] . '</a>'; ?></td>
-                <td class="dataTableContent" align="center"><?php echo $products->fields['products_ordered']; ?>&nbsp;</td>
+              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&page='); ?>'">
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $product['products_id']) . '">' . $product['products_id'] . '</a>'; ?>&nbsp;&nbsp;</td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&page=') . '">' . $product['products_name'] . '</a>'; ?></td>
+                <td class="dataTableContent" align="center"><?php echo $product['products_ordered']; ?>&nbsp;</td>
               </tr>
 <?php
-    $products->MoveNext();
   }
 ?>
             </table></td>
