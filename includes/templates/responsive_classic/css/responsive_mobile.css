@@ -194,7 +194,7 @@ legend{line-height:25px;}
 .mhide{display:none;}
 #navCatTabsWrapper, #navEZPagesTop, #navSuppWrapper{display:none;visibility:hidden;}
 h2{line-height:22px;}
-input[type=password], select, input[type=tel], input[type=text], input[type=email]{width:90%;}
+input[type=password], select, input[type=tel], input[type=text], input[type=email]{width:90% !important;}
 input[type=number]{width:93%;}
 input[type=date]{width:60%;}
 textarea{width:93%;margin:0;}
@@ -351,6 +351,11 @@ div#productListing tr.productListing-odd {clear:both;}
 .navSplitPagesLinks{display:block;text-align:center;}
 #indexProductList .list-more{margin-top:0;}
 
+/*pagination*/
+
+
+
+
 /*bof product info*/
 #pinfo-left, #pinfo-right, #cart-box, div#productReviewLink{float:none;}
 #pinfo-left, #pinfo-right, #cart-box{width:100%;}
@@ -411,7 +416,7 @@ legend{line-height:25px;}
 .mhide{display:none;}
 #navCatTabsWrapper, #navEZPagesTop, #navSuppWrapper{display:none;visibility:hidden;}
 h2{line-height:22px;}
-input[type=password], select, input[type=number], input[type=tel], input[type=text], input[type=email]{width:90%;}
+input[type=password], select, input[type=number], input[type=tel], input[type=text], input[type=email]{width:90% !important;}
 input[type=date]{width:50%;}
 textarea{width:93%;margin:0;}
 h1{text-align:center;}

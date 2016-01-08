@@ -132,6 +132,13 @@ select#country, .wrapperAttribsOptions select{height:40px;}
 #navEZPagesTop ul li:last-child{border-right:1px solid #555;}
 #navEZPagesTop li a {color: #fff;text-decoration: none;padding: 1.2em 1.0em;display: block;}
 #navEZPagesTop li a:hover {background:#777;}
+
+.pagination ul {font-size:0;text-align:center;overflow:hidden;padding:0;}
+.pagination li {font-size:0.75rem;display: inline-block;margin-top:0;border-left:1px solid #666;}
+.pagination li a {color: #fff;text-decoration: none;padding: 1.2em 1.0em;display: block;}
+.pagination li a:hover {background:#777;}
+.pagination .current{padding:1.2em 1.0em;}
+
 /*breadcrumbs*/
 #navBreadCrumb {margin:0;padding:0.5em;}
 #navBreadCrumb a{text-decoration:none;}
@@ -419,3 +426,4 @@ h2.greeting a:hover{color:#666;}
 .paypal-button-hidden {
     visibility: hidden;
 }
+
