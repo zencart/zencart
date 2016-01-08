@@ -38,6 +38,17 @@
  * @version GIT: $Id: rbarbour zcadditions.com Modified in v1.5.5 $
  */
 
+/** bof DESIGNER TESTING ONLY: */
+// $messageStack->add('header', 'this is a sample error message', 'error');
+// $messageStack->add('header', 'this is a sample caution message', 'caution');
+// $messageStack->add('header', 'this is a sample success message', 'success');
+// $messageStack->add('main', 'this is a sample error message', 'error');
+// $messageStack->add('main', 'this is a sample caution message', 'caution');
+// $messageStack->add('main', 'this is a sample success message', 'success');
+/** eof DESIGNER TESTING ONLY */
+
+
+
 // the following IF statement can be duplicated/modified as needed to set additional flags
 if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
   $flag_disable_right = true;
