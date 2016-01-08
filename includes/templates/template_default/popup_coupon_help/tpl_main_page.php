@@ -75,7 +75,7 @@
   foreach($cats as $key=>$value) {
     $mycats[] = $value["name"];
   }
-  $cats = '<ul id="couponCatRestrictions">' . '<li>' . implode('<li>', $mycats) . '</ul>';
+  $cats = '<ul id="couponCatRestrictions">' . '<li>' . implode('</li><li>', $mycats) . '</li></ul>';
   $text_coupon_help .= $cats;
 
   $text_coupon_help .= TEXT_COUPON_HELP_PRODUCTS;
@@ -102,7 +102,7 @@
   foreach($prods as $key=>$value) {
     $myprods[] = $value["name"];
   }
-  $prods = '<ul id="couponProdRestrictions">' . '<li>' . implode('<li>', $myprods) . '</ul>';
+  $prods = '<ul id="couponProdRestrictions">' . '<li>' . implode('</li><li>', $myprods) . '</li></ul>';
   $text_coupon_help .= $prods . TEXT_COUPON_GV_RESTRICTION;
 
   echo $text_coupon_help;
