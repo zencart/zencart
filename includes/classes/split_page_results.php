@@ -96,11 +96,14 @@ class splitPageResults extends base {
   /* class functions */
 
   // display split-page-number-links
-  function display_links($max_page_links, $parameters = '', $isMobile = false) {
+  function display_links($max_page_links, $parameters = '', $outputAsUnorderedList = false) {
     global $request_type;
     if ($max_page_links == '') $max_page_links = 1;
 
+    if ($this->number_of_pages == 1) return;
+
     $display_links_string = $ul_elements = '';
+    $counter_actual_page_links = 0;
 
     $class = '';
 
@@ -123,7 +126,7 @@ class splitPageResults extends base {
     $max_window_num = intval($this->number_of_pages / $max_page_links);
     if ($this->number_of_pages % $max_page_links) $max_window_num++;
 
-    // previous window of pages
+    // previous group of pages
     $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . ' ">...</a>';
     if ($cur_window_num > 1) {
       $display_links_string .= $link;
@@ -137,14 +140,16 @@ class splitPageResults extends base {
       if ($jump_to_page == $this->current_page_number) {
         $display_links_string .= '&nbsp;<strong class="current">' . $jump_to_page . '</strong>&nbsp;';
         $ul_elements .= '  <li class="current active">' . $jump_to_page . '</li>' . "\n";
+        $counter_actual_page_links++;
       } else {
         $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a>';
         $display_links_string .= '&nbsp;' . $link . '&nbsp;';
         $ul_elements .= '  <li>' . $link . '</li>' . "\n";
+        $counter_actual_page_links++;
       }
     }
 
-    // next window of pages
+    // next group of pages
     if ($cur_window_num < $max_window_num) {
       $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . ' ">...</a>';
       $display_links_string .= $link . '&nbsp;';
@@ -162,14 +167,15 @@ class splitPageResults extends base {
       // $ul_elements .= '  <li class="disabled pagination-next">' . $link . '</li>' . "\n";
     }
 
-    if ($isMobile) {
+    // if no pagination needed, return blank
+    if ($counter_actual_page_links == 0) return;
+
+    // return <nav><ul> format with a-hrefs wrapped in <li>
+    if ($outputAsUnorderedList) {
       return  '<nav class="pagination">' . "\n" . '<ul class="pagination" role="navigation" aria-label="Pagination">' . "\n" . $ul_elements . '</ul>' . "\n" . '</nav>';
     }
-    if ($display_links_string == '&nbsp;<strong class="current">1</strong>&nbsp;') {
-      return '&nbsp;';
-    } else {
-      return $display_links_string;
-    }
+    // return unformatted collection of a-hrefs
+    return $display_links_string;
   }
 
   // display number of total products found

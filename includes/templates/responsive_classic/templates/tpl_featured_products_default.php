@@ -44,7 +44,7 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
     $openGroupWrapperDiv = true;
 ?>
 <div class="prod-list-wrap group">
-<div id="featuredProductsListingTopLinks" class="back navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . ' ' . $featured_products_split->display_links(($isMobile ? MAX_DISPLAY_PAGE_LINKS_MOBILE : MAX_DISPLAY_PAGE_LINKS), zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $isMobile); ?></div>
+<div id="featuredProductsListingTopLinks" class="back navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . $featured_products_split->display_links($max_display_page_links, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $paginateAsUL); ?></div>
 
 <div id="featuredProductsListingTopNumber" class="navSplitPagesResult back"><?php echo $featured_products_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_FEATURED_PRODUCTS); ?></div>
 <?php
@@ -58,7 +58,7 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
 ?>
 <?php
       if (PREV_NEXT_BAR_LOCATION == '2') {
-	echo '<div class="prod-list-wrap group">';
+  echo '<div class="prod-list-wrap group">';
       }
 ?>
 <div class="button-top forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit1" name="submit1"'); ?></div>
@@ -72,7 +72,7 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
   } // top submit button
 ?>
 
-  
+
 <?php
 if ($openGroupWrapperDiv) {
       echo '</div>';
@@ -99,7 +99,7 @@ require($template->get_template_dir('/tpl_modules_products_featured_listing.php'
 <?php
   if (($featured_products_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
-<div id="featuredProductsListingBottomLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . ' ' . $featured_products_split->display_links(($isMobile ? MAX_DISPLAY_PAGE_LINKS_MOBILE : MAX_DISPLAY_PAGE_LINKS), zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $isMobile); ?></div>
+<div id="featuredProductsListingBottomLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . $featured_products_split->display_links($max_display_page_links, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $paginateAsUL); ?></div>
 
 <div id="featuredProductsListingBottomNumber" class="navSplitPagesResult back"><?php echo $featured_products_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_FEATURED_PRODUCTS); ?></div>
 <?php
@@ -113,7 +113,7 @@ require($template->get_template_dir('/tpl_modules_products_featured_listing.php'
 
 <?php
       if (PREV_NEXT_BAR_LOCATION == '1') {
-	echo '<div class="prod-list-wrap group button-bottom">';
+  echo '<div class="prod-list-wrap group button-bottom">';
       }
 ?>
 <div class="forward button-top"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit2" name="submit1"'); ?></div>
@@ -143,4 +143,4 @@ if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
 <?php } // end if form is made ?>
 </div>
 
-  
+
