@@ -13,7 +13,7 @@
  * Note: This file is applicable for v155 despite the filename mentioning v154 ... this is to encourage v154 users to install it even if not using v155 yet
  */
 
-$filedirRegex = '~[^0-9a-z\.!@#\$%^&\()`_+\-' . preg_quote(DIRECTORY_SEPARATOR) . '\~]~i';
+$filedirRegex = '~[^0-9a-z\.!@#\$%^&\( )`_+\-' . preg_quote(DIRECTORY_SEPARATOR) . '\~]~i';
 $prodNameRegex = '~(<\/?scri|on(load|mouse|error|read|key)=|= ?(\(|")|<!)~i';
 $prodDescRegex = '~(load=|= ?\(|<![^-])~i';
 $urlRegex = '~([^a-z0-9\'!#$&%@();:/=?_\~\[\]-]|[><])~i';
@@ -24,7 +24,7 @@ foreach($group as $key) {
   if (isset($_POST[$key])) $_POST[$key] = preg_replace($filedirRegex, '', $_POST[$key]);
 }
 
-$group = array('handler', 'type_name', 'action', 'product_attribute_is_free', 'attributes_default', 'attributes_price_base_included', 'products_attribute_maxdays',
+$group = array('handler', 'action', 'product_attribute_is_free', 'attributes_default', 'attributes_price_base_included', 'products_attribute_maxdays',
                'products_filter', 'module', 'page', 'attribute_page', 'cPath');
 foreach($group as $key) {
   if (isset($_POST[$key])) $_POST[$key] = preg_replace($alphaNumDashUnderscore, '', $_POST[$key]);
@@ -90,6 +90,10 @@ if (isset($_POST['metatags_description'])) {
   foreach($_POST['metatags_description'] as $key => $value) {
     $_POST['metatags_description'][$key] = htmlspecialchars($_POST['metatags_description'][$key], ENT_COMPAT, 'utf-8', FALSE);
   }
+}
+
+if (isset($_POST['type_name'])) {
+  $_POST['type_name'] = htmlspecialchars($_POST['type_name'], ENT_COMPAT, 'utf-8', FALSE);
 }
 
 if (isset($_POST['coupon_desc'])) {
