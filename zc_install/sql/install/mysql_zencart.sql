@@ -2165,6 +2165,27 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('mediaManager', 'BOX_CATALOG_MEDIA_MANAGER', 'FILENAME_MEDIA_MANAGER', '', 'extras', 'Y', 4),
        ('mediaTypes', 'BOX_CATALOG_MEDIA_TYPES', 'FILENAME_MEDIA_TYPES', '', 'extras', 'Y', 5);
 
+# Insert a default profile for managing orders, as a built-in example of profile functionality
+INSERT INTO admin_profiles (profile_name) values ('Order Processing');
+SET @profile_id=last_insert_id();
+INSERT INTO admin_pages_to_profiles (profile_id, page_key) VALUES
+(@profile_id, 'customers'),
+(@profile_id, 'orders'),
+(@profile_id, 'invoice'),
+(@profile_id, 'packingslip'),
+(@profile_id, 'paypal'),
+(@profile_id, 'currencies'),
+(@profile_id, 'reportCustomers'),
+(@profile_id, 'reportLowStock'),
+(@profile_id, 'reportProductsSold'),
+(@profile_id, 'reportProductsViewed'),
+(@profile_id, 'reportReferrals'),
+(@profile_id, 'gvMail'),
+(@profile_id, 'gvQueue'),
+(@profile_id, 'gvSent'),
+(@profile_id, 'whosOnline');
+
+
 INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart', 'http://www.zen-cart.com', 'banners/zencart_468_60_02.gif', 'Wide-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
 INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/125zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
 INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/125x125_zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
