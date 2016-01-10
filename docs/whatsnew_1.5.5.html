@@ -2,7 +2,7 @@
 <!--
 /**
  * @package documentation
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Dec 30 2015  New in v1.5.5 $
  */
@@ -124,11 +124,11 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <li>improved/simplified code for db query handling, allowing simple foreach() iterations instead of requiring while(!EOF) loops,</li>
   <li>added hooks to allow for 3rd-party-handling of taxes, for plugin support with orders, attributes, and much more</li>
   <li>fix some rounding errors,</li>
-  <li>rewrote zc_install,</li>
-  <li>added cron code for automated currency-updating,</li>
+  <li>added cron code for automated currency-updating, and currency sources can be selected from Admin->Config->My Store menu, and plugins can auto-show in this list</li>
   <li>replaced phpBB integration with generic hooks to allow for various external forums,</li>
   <li>some language-file cleanups,</li>
-  <li>simplified the configure.php file contents significantly by retaining only the most-often-customized components, and added an automatic-converter as part of zc_install's db-upgrade step</li>
+  <li>rewrote zc_install,</li>
+  <li>simplified the configure.php file contents significantly by retaining only the most-often-customized components, and added an automatic-converter as part of zc_install's initial inspection</li>
   <li>improvements to developers-toolkit and whos-online,</li>
   <li>added newer phpMailer integration,<br></li>
   <li>fixed bug with a race condition causing database errors related to sessions</li>
@@ -143,7 +143,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
   </ul>
 </fieldset>
 <br><br>
-<p class="center"><em>Copyright 2003 - 2015 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<p class="center"><em>Copyright 2003 - 2016 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
 <br><br>
 </body>
 </html>
