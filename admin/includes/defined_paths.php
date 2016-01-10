@@ -38,6 +38,18 @@ function zen_parse_url($url, $element = 'array')
   }
 }
 
+// make guesses in case the essentials from admin configure.php are missing (such as when someone uses a non-admin configure.php in their admin)
+if (!defined('HTTP_CATALOG_SERVER')) define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+if (!defined('HTTPS_CATALOG_SERVER')) define('HTTPS_CATALOG_SERVER', HTTP_SERVER);
+if (!defined('DIR_WS_CATALOG')) define('DIR_WS_CATALOG', DIR_WS_ADMIN . '/../');
+if (!defined('DIR_WS_HTTPS_CATALOG')) define('DIR_WS_HTTPS_CATALOG', DIR_WS_ADMIN . '/../');
+if (!defined('ENABLE_SSL_CATALOG')) define('ENABLE_SSL_CATALOG', strpos(HTTPS_CATALOG_SERVER, 'tps:') ? 'true': 'false');
+if (!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(DIR_FS_ADMIN . '/../') . '/');
+
+
+
+
+// now define all the admin constants
 if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
 
 if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTP_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
