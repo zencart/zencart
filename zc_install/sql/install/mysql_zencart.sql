@@ -1559,7 +1559,7 @@ CREATE TABLE products_attributes_download (
 
 DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
-  products_id int(11) NOT NULL auto_increment,
+  products_id int(11) NOT NULL,
   language_id int(11) NOT NULL default '1',
   products_name varchar(64) NOT NULL default '',
   products_description text,
