@@ -119,3 +119,5 @@ define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
 define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
 
 define('TEXT_CUSTOMER_LOOKUP', 'Lookup Customer');
+
+define('TEXT_INVALID_ORDER_STATUS', '<span class="alert">(Invalid Order Status)</span>');
