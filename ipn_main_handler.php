@@ -470,8 +470,8 @@ Processing...
       if ((int)$new_status == 0) $new_status = 1;
       if (in_array($_POST['payment_status'], array('Refunded', 'Reversed', 'Denied', 'Failed'))
            || substr($txn_type,0,8) == 'cleared-' || $txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared') {
-        $sql = ("select orders_status from " . TABLE_ORDERS . "
-                 where orders_id = :ordersID:");
+        $sql = "select orders_status from " . TABLE_ORDERS . "
+                 where orders_id = :ordersID:";
         $sql = $db->bindVars($sql, ':ordersID:', $ordersID, 'integer');
         $old_status = $db->Execute($sql);
         if ($new_status < $oldstatus->fields['orders_status'] && (substr($txn_type, 0, 8) == 'cleared-' || $txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared')) {
