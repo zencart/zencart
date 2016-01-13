@@ -38,7 +38,9 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
 <?php } // categories_description ?>
 </div>
 
+<?php if ($listing->RecordCount()) { ?>
 <div id="filter-wrapper" class="group">
+<?php } ?>
 
 <?php
   $check_for_alpha = $listing_sql;
@@ -95,7 +97,9 @@ require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA
 ?>
 
 <?php // end wrapper ?>
+<?php if ($listing->RecordCount()) { ?>
 </div>
+<?php } ?>
 
 
 <?php
