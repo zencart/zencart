@@ -34,7 +34,6 @@
 
 <?php if (!empty($totalsDisplay)) { ?>
   <div class="cartTotalsDisplay important"><?php echo $totalsDisplay; ?></div>
-  <br class="clearBoth" />
 <?php } ?>
 
 <?php  if ($flagAnyOutOfStock) { ?>

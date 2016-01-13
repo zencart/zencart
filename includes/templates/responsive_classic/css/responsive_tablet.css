@@ -75,21 +75,23 @@ div#productListing tr.productListing-odd {clear:both;}
 .wrapperAttribsOptions input[type=text]{width:80%;}
 .additionalImages img{width:90%;}
 
+/*bof ez pages*/
 #navEZPagesTOC ul li{font-size:130%;line-height:150%;}
 #navEZPagesTOC ul li a{text-decoration:none;}
 
+/*bof shopping cart*/
 td.cartQuantityUpdate{width:15%;}
 
-
 /*bof basic*/
-input[type=password], input[type=number], input[type=tel], input[type=text], input[type=email]{width:95%;}
+input[type=password], input[type=number], input[type=tel], input[type=text], input[type=email]{width:85%;margin-left:20px;}
 input[type=date]{width:60%;}
-#loginDefault input[type=password]{width:95%;}
+#loginDefault input[type=password]{width:85%;margin-left:20px;}
 textarea{width:95%;margin:0;}
 .hide{display:none !important;}
 #allProductsDefault input[type=text], #featuredDefault input[type=text], #newProductsDefault input[type=text]{width:50%;}
 ul.list-links li a, ol.list-links li a{padding-right:0;}
 input.submit_button{padding:12px 15px 30px 15px;}
+
 }
 
 /* ALL TABLETS - ORIENTATION:PORTRAIT (DEFAULT LAYOUT) */
@@ -222,7 +224,7 @@ div#productListing tr.productListing-odd {clear:both;}
 
 /*bof product info*/
 #pinfo-left{width:100%;float:none;margin-bottom:30px;}
-.navNextPrevWrapper{/*float:none;clear:both;width:100%;*/margin-bottom:0;}
+.navNextPrevWrapper{margin-bottom:0;}
 #productName{text-align:center;margin:0 0 20px 0;}
 #productPrices{text-align:center;margin:0 0 20px 0;}
 #cart-box{width:50%;float:right;}
@@ -258,15 +260,21 @@ div#productListing tr.productListing-odd {clear:both;}
 span.cssButton.normal_button.button.button_goto_prod_details{display:block;}
 
 /*bof contact us*/
-#contactUsForm input[type=text], #contactUsForm textarea{width:95%;}
+#contactUsForm input[type=text], #contactUsForm textarea{width:85%;}
 
 /*bof basic*/
 #indexDefaultMainContent {word-wrap:break-word;}
 h2{line-height:22px;}
-#password-current, #login-password, #password-new, #password-confirm, input[type=password], select, input[type=number], input[type=tel], input[type=text], input[type=email]{width:90%;}
+#password-current, #login-password, #password-new, #password-confirm, input[type=password], select, input[type=number], input[type=tel], input[type=text], input[type=email]{width:85%;margin-left:20px;}
 input[type=date]{width:60%;}
 textarea{width:93%;margin:0;}
 h1{text-align:center;}
 .floatingBox{width:100%;float:none;}
 legend{line-height:25px;}
+fieldset input[type=date], fieldset textarea, fieldset div, fieldset .inputLabel{width:90% !important;margin:0  0 0 20px !important;padding:0;}
+fieldset{width:98%;}
+fieldset p{width:90%;margin:0 auto;}
+.gvBal{float:none;}
+#sendSpendWrapper{width:auto;}
+#checkoutSuccess fieldset .buttonRow.forward{margin:0 !important;}
 }

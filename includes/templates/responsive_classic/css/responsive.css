@@ -14,7 +14,6 @@ img{max-width:100%;height:auto;border:0;}
 
 /* Added for responsive view () */
 .leftBoxContainer, .rightBoxContainer {width:auto !important;
-/*margin-left:0.5em;*/
 }
 
 /* No reason to edit the below pixel calculations */
