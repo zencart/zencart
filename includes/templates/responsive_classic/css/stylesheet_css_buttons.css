@@ -6,7 +6,7 @@ input.cssButtonHover {border:none;cursor: pointer;border:none;font-size: 1.2em;d
 span.normal_button {}
 span.normal_button:hover {}
 span.cssButton.normal_button.button.button_more_reviews, .button_more_reviews:hover, span.cssButton.normal_button.button.button_read_reviews, .button_read_reviews:hover{display:block;text-align:center;}
-kspan.cssButton.normal_button.button.button_write_review, .button_write_review, span.cssButton.normal_button.button.button_in_cart{display:block;text-align:center;font-size:130%;padding:12px 20px !important;}
+span.cssButton.normal_button.button.button_write_review, .button_write_review, span.cssButton.normal_button.button.button_in_cart{display:block;text-align:center;font-size:130%;padding:12px 20px !important;}
 #indexBody span.cssButton.normal_button.button.button_in_cart, #indexBody .button_in_cart:hover{display:inline-block;}
 span.cssButton.normal_button.button.button_goto_prod_details{background:#000;}
 .button_goto_prod_details:hover{background:#05a5cb !important;}
