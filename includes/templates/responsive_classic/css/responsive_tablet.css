@@ -183,8 +183,7 @@ td.cartProductDisplay{padding-top:20px;}
 td.cartQuantityUpdate{width:15%;}
 
 /*bof account page*/
-div#accountDefault table, div#accountDefault thead, div#accountDefault tbody, div#accountDefault th, div#accountDefault td, div#accountDefault tr {display: block;clea
-r:both;height:auto;text-align:left;width:99%;}
+div#accountDefault table, div#accountDefault thead, div#accountDefault tbody, div#accountDefault th, div#accountDefault td, div#accountDefault tr {display: block;clear:both;height:auto;text-align:left;width:99%;}
 div#accountDefault tr td:nth-child(6) {text-align:right;border-bottom:20px solid #fff;}
 div#accountDefault tr th {display:none;}
 div#accountDefault caption  {width:100%;}
