@@ -65,7 +65,7 @@ legend{padding:0;display:table;text-align:center;width:100%;padding:10px 0;font-
 fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;margin-bottom:20px;}
 body:not(:-moz-handler-blocked) fieldset{display:table-cell;}
 fieldset > fieldset{padding-top:50px;}
-fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;}
+fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;background:none;}
 fieldset p{margin-left:20px;}
 fieldset label, fieldset .inputLabel, fieldset h3, fieldset address, #advSearchDefault input, fieldset .buttonRow.back, fieldset select, fieldset input[type=radio], fieldset input[type=checkbox], fieldset div{margin-left:20px;}
 fieldset div, fieldset .buttonRow.forward{margin-right:20px;}
@@ -278,7 +278,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 #indexProductListCatDescription, #categoryDescription{margin-left:5%;float:left;}
 #cat-top{margin-bottom:20px;}
 #cat-left{text-align:center;}
-#filter-wrapper{padding:10px;}
+#filter-wrapper{padding:10px;margin-bottom:-16px;}
 #filter-wrapper select{width:25%;height:35px;}
 .navSplitPagesLinks {display:inline-block;}
 .navSplitPagesLinks a{padding:10px;font-weight:bold;text-decoration:none;}
@@ -332,7 +332,7 @@ span.list-addtext{display:block;text-align:center;}
 .categoryIcon {float:left;width:35%;}
 .categoryIcon a{text-decoration:none;}
 .categoryIcon img{margin-bottom:5px;}
-.navNextPrevWrapper {padding-bottom: 5px;float:right;/*width:65%;*/margin-top:-20px;margin-bottom:30px;}
+.navNextPrevWrapper {padding-bottom: 5px;float:right;margin-bottom:30px;}
 .navNextPrevCounter {margin:0;font-size:0.9em;}
 .navNextPrevList {display:inline;white-space:nowrap;margin:0;padding:0.5em 0;list-style-type: none;}
 #pinfo-left{float:left;width:43%;}
