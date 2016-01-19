@@ -11,8 +11,8 @@
  * picaflor-azul.com, Picaflor Responsive Classic
  */
  
-$template_name = 'Classic Responsive Template';
+$template_name = 'Responsive Classic Template';
 $template_version = 'Version 1.0';
 $template_author = 'Anne, www.picaflor-azul.com (c) 2015';
-$template_description = 'This template is responsive/mobile friendly.  It uses PHP Mobile Detect to serve up the optimized layout based on device. It allows you to call device-specific php, jquery, javascript or ajax.';
+$template_description = 'This HTML5 template is mobile friendly and uses contemporary Responsive CSS to allow sharing of a single template across multiple device types.  It uses PHP Mobile Detect to serve up the optimized layout based on device. It allows the designer to implement device-specific php, jquery, javascript or ajax.';
 $template_screenshot = 'scr_responsive_classic.jpg';
