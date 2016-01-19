@@ -15,9 +15,9 @@ Zen Cart&reg; v1.5.5
 
 Compatibility
 -------------
-Zen Cart v1.5.5 is compatible with:
- * PHP 5.2.10 to PHP 7.0.1 (But you should use PHP 5.6 or greater)
- * Apache 2.2 (and 2.4 with access_compat mod installed)
+Zen Cart v1.5.5 is designed for:
+ * PHP 5.6 and PHP 7.0  (but is compatible with as far back as 5.2.10)
+ * Apache 2.2 (and 2.4 with access_compat mod installed for custom .htaccess rule support)
  * MySQL 5.1 to 5.7
 
 
@@ -64,5 +64,5 @@ Subscribe to [Critical News Updates And Release Announcements](http://www.zen-ca
 
 &nbsp;  
 
-*&copy;Copyright 2003-2015, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2016, Zen Cart&reg;. All rights reserved.*
 
