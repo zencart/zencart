@@ -132,6 +132,7 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -198,9 +199,9 @@
 ?>
                 <td class="dataTableContent"><?php echo $record_company->fields['record_company_name']; ?></td>
                 <td class="dataTableContent" align="right">
-                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $record_company->fields['record_company_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
-                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $record_company->fields['record_company_id'] . '&action=delete') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
-                  <?php if (isset($aInfo) && is_object($aInfo) && ($record_company->fields['record_company_id'] == $aInfo->record_company_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_RECORD_COMPANY, zen_get_all_get_params(array('mID')) . 'mID=' . $record_company->fields['record_company_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $record_company->fields['record_company_id'] . '&action=edit') . '">' . ADMIN_ROW_ICON_EDIT . '</a>'; ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $record_company->fields['record_company_id'] . '&action=delete') . '">' . ADMIN_ROW_ICON_DELETE . '</a>'; ?>
+                  <?php if (isset($aInfo) && is_object($aInfo) && ($record_company->fields['record_company_id'] == $aInfo->record_company_id)) { echo ADMIN_ROW_ICON_RIGHT_ARROW; } else { echo '<a href="' . zen_href_link(FILENAME_RECORD_COMPANY, zen_get_all_get_params(array('mID')) . 'mID=' . $record_company->fields['record_company_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
                 </td>
               </tr>
 <?php

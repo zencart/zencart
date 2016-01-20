@@ -115,6 +115,7 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -236,9 +237,9 @@
                   <?php
                     // show current status
                     if ($set == 'payment' || $set == 'shipping') {
-                      echo '&nbsp;' . ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
+                      echo '&nbsp;' . ((!empty($module->enabled) && is_numeric($module->sort_order)) ? ADMIN_ROW_ICON_ACTIVE : ((empty($module->enabled) && is_numeric($module->sort_order)) ? ADMIN_ROW_ICON_RESTRICTED : ADMIN_ROW_ICON_ACTIVE));
                     } else {
-                      echo '&nbsp;' . (is_numeric($module->sort_order) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'));
+                      echo '&nbsp;' . (is_numeric($module->sort_order) ? ADMIN_ROW_ICON_ACTIVE : ADMIN_ROW_ICON_ACTIVE);
                     }
                   ?>
                 </td>
@@ -248,7 +249,7 @@
 ?>
                 <td class="dataTableContent" align="left">&nbsp;&nbsp;&nbsp;<?php echo (is_numeric($module->sort_order) ? (($orders_status_name->fields['orders_status_id'] < 1) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : ''); ?>&nbsp;&nbsp;&nbsp;</td>
 <?php } ?>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo ADMIN_ROW_ICON_RIGHT_ARROW; } else { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       }

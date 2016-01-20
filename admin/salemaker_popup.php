@@ -19,6 +19,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 </head>
 <body>
 <p class="main"><center><h1><?php echo HEADING_TITLE . ' - ' . $cname; ?><?php echo zen_draw_separator(); ?></h1></center></p>
@@ -56,9 +57,9 @@
                 <td  class="dataTableContent" align="center">
 <?php
       if ($salemaker_sales->fields['sale_status'] == '1') {
-        echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10);
+        echo ADMIN_ROW_ICON_ACTIVE;
       } else {
-        echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+        echo ADMIN_ROW_ICON_INACTIVE;
       }
 ?></td>
 

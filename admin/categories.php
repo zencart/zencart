@@ -554,6 +554,7 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -586,10 +587,10 @@ function init()
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND; ?></td>
-            <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF); ?></td>
-            <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_STATUS_ON . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
-            <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_LINKED . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED); ?></td>
-            <td class="smallText" align="center" width="150" valign="top"><?php echo TEXT_LEGEND_META_TAGS . '<br />' . TEXT_YES . '&nbsp;' . TEXT_NO . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?></td>
+            <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . ADMIN_ROW_ICON_INACTIVE; ?></td>
+            <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_STATUS_ON . '<br />' . ADMIN_ROW_ICON_ACTIVE; ?></td>
+            <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_LINKED . '<br />' . ADMIN_ROW_ICON_LINKED; ?></td>
+            <td class="smallText" align="center" width="150" valign="top"><?php echo TEXT_LEGEND_META_TAGS . '<br />' . TEXT_YES . '&nbsp;' . TEXT_NO . '<br />' . ADMIN_ROW_ICON_META_TAGS_ACTIVE . '&nbsp;' . ADMIN_ROW_ICON_META_TAGS_INACTIVE; ?></td>
           </tr>
         </table></td>
       </tr>

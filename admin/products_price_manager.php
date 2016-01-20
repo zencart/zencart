@@ -268,6 +268,7 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
@@ -375,7 +376,7 @@ if ($products_filter != '' && zen_get_product_is_linked($products_filter) == 'tr
 ?>
               <tr>
                 <td class="main" align="center" valign="bottom">
-                  <?php echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;' . TEXT_LEGEND_LINKED . ' ' . zen_get_product_is_linked($products_filter, 'true'); ?>
+                  <?php echo ADMIN_ROW_ICON_LINKED . '&nbsp;&nbsp;' . TEXT_LEGEND_LINKED . ' ' . zen_get_product_is_linked($products_filter, 'true'); ?>
                 </td>
               </tr>
 <?php } ?>
@@ -737,7 +738,7 @@ if (zen_get_product_is_linked($products_filter) == 'true') {
             <td colspan="4" class="main">
               <?php
                 // echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id);
-                echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;';
+                echo ADMIN_ROW_ICON_LINKED . '&nbsp;&nbsp;';
                 echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $pInfo->master_categories_id); ?>
             </td>
           </tr>

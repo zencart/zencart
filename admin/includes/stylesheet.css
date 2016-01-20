@@ -7,379 +7,506 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
-@import url("menu.css");/* including stylesheet for dhtml menu */
-@import url("index.css");/* including stylesheet for index.php */
-a{
-color:#0000ff;
-text-decoration:none;
+@import url("menu.css");
+/* including stylesheet for dhtml menu */
+@import url("index.css"); /* including stylesheet for index.php */
+a {
+    color: #0000ff;
+    text-decoration: none;
 }
-a,body,html,table{
-font:normal normal 11px Verdana,sans-serif;
+
+a, body, html, table {
+    font: normal normal 11px Verdana, sans-serif;
 }
-a:hover{
-color:#0000ff;
-text-decoration:underline;
+
+a:hover {
+    color: #0000ff;
+    text-decoration: underline;
 }
-a.headerLink:link{
-color:#ffffff;
-font-weight:bold;
-text-decoration:none;
+
+a.headerLink:link {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.headerLink:visited{
-color:#ffffff;
-font-weight:bold;
-text-decoration:none;
+
+a.headerLink:visited {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.headerLink:hover{
-color:#ffffff;
-font-weight:bold;
-text-decoration:underline;
+
+a.headerLink:hover {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: underline;
 }
-a.headerLink:active{
-color:#ffffff;
-font-weight:bold;
-text-decoration:none;
+
+a.headerLink:active {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.menuBoxContentLink:link{
-color:#0000ff;
-text-decoration:none;
+
+a.menuBoxContentLink:link {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.menuBoxContentLink:visited{
-color:#0000ff;
-text-decoration:none;
+
+a.menuBoxContentLink:visited {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.menuBoxContentLink:hover{
-color:#0000ff;
-text-decoration:underline;
+
+a.menuBoxContentLink:hover {
+    color: #0000ff;
+    text-decoration: underline;
 }
-a.menuBoxContentLink:active{
-color:#0000ff;
-text-decoration:none;
+
+a.menuBoxContentLink:active {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.menuBoxHeadingLink:link{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxHeadingLink:link {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.menuBoxHeadingLink:visited{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxHeadingLink:visited {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.menuBoxHeadingLink:hover{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxHeadingLink:hover {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.menuBoxHeadingLink:active{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxHeadingLink:active {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.splitPageLink:link{
-color:#0000ff;
-text-decoration:none;
+
+a.splitPageLink:link {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.splitPageLink:visited{
-color:#0000ff;
-text-decoration:none;
+
+a.splitPageLink:visited {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.splitPageLink:hover{
-background-color:#ffff33;
-color:#0000ff;
-text-decoration:underline;
+
+a.splitPageLink:hover {
+    background-color: #ffff33;
+    color: #0000ff;
+    text-decoration: underline;
 }
-a.splitPageLink:active{
-color:#0000ff;
-text-decoration:none;
+
+a.splitPageLink:active {
+    color: #0000ff;
+    text-decoration: none;
 }
-body{
-background-color:#ffffff;
-color:#333333;
-margin:0;
+
+body {
+    background-color: #ffffff;
+    color: #333333;
+    margin: 0;
 }
+
 .clearBoth {
-	clear: both;
-	}
-body#login{
-margin-top:100px;
-text-align:center;
+    clear: both;
 }
-body#login .button{
-cursor:pointer;
-padding: 3px;
-margin-top: 10px;
+
+body#login {
+    margin-top: 100px;
+    text-align: center;
 }
-body#login fieldset{
-margin:0 auto;
-padding:10px;
-width:400px;
+
+body#login .button {
+    cursor: pointer;
+    padding: 3px;
+    margin-top: 10px;
+}
+
+body#login fieldset {
+    margin: 0 auto;
+    padding: 10px;
+    width: 400px;
 }
 
 .loginLabel {
-	margin-left: 60px;
-	margin-right: 5px;
-	width: 125px;
-	float: left;
-	text-align: right;
-	line-height: 1.5;
-	}
-body#login legend{
-background:#ffffff;
-border:1px solid #333;
-color:#333333;
-font-size:90%;
-padding:0.2em 0.5em;
-text-align:right;
+    margin-left: 60px;
+    margin-right: 5px;
+    width: 125px;
+    float: left;
+    text-align: right;
+    line-height: 1.5;
 }
-checkbox,input,radio,select,textarea,file{
-font-size:11px;
+
+body#login legend {
+    background: #ffffff;
+    border: 1px solid #333;
+    color: #333333;
+    font-size: 90%;
+    padding: 0.2em 0.5em;
+    text-align: right;
 }
+
+checkbox, input, radio, select, textarea, file {
+    font-size: 11px;
+}
+
 textarea {
-width: 80%;
+    width: 80%;
 }
+
 /* to handle textareas for browsers which don't like % widths */
 textarea.sqlpatchKeyedQuery, TEXTAREA#file_contents {
-width:auto;
+    width: auto;
 }
-form{
-display:inline;
+
+form {
+    display: inline;
 }
-span.dataTableHeadingContentWhois{
-color:#ff6600;
-font-weight:bold;
+
+span.dataTableHeadingContentWhois {
+    color: #ff6600;
+    font-weight: bold;
 }
-span.normalprice{
-text-decoration:line-through;
+
+span.normalprice {
+    text-decoration: line-through;
 }
-span.productPriceDiscount,.inputRequirement{
-color:#ff0000;
+
+span.productPriceDiscount, .inputRequirement {
+    color: #ff0000;
 }
-span.productSpecialPrice,span.productSalePrice,.stockWarning,span.coming{
-color:#ff0000;
+
+span.productSpecialPrice, span.productSalePrice, .stockWarning, span.coming {
+    color: #ff0000;
 }
-span.productSpecialPriceSale{
-color:#ff0000;
-text-decoration:line-through;
+
+span.productSpecialPriceSale {
+    color: #ff0000;
+    text-decoration: line-through;
 }
-span.SortOrderHeader{
-color:#ff6600;
-font-weight:bold;
+
+span.SortOrderHeader {
+    color: #ff6600;
+    font-weight: bold;
 }
-span.SortOrderHeaderLink{
-color:#0000ff;
-font-weight:bold;
+
+span.SortOrderHeaderLink {
+    color: #0000ff;
+    font-weight: bold;
 }
-td.alert,span.alert{
-color:#ff0000;
-font-weight:bold;
+
+td.alert, span.alert {
+    color: #ff0000;
+    font-weight: bold;
 }
-td.attributeBoxContent{
-background-color:#dcdbd1;
-color:#333333;
+
+td.attributeBoxContent {
+    background-color: #dcdbd1;
+    color: #333333;
 }
-td.ot-subtotal-Amount,td.ot-cod-fee-Amount,td.ot-group-pricing-Amount,td.ot-gv-Amount,td.ot-loworderfee-Amount,td.ot-shipping-Amount,td.ot-subtotal-Amount,td.ot-tax-Amount,td.ot-coupon-Amount{
+
+td.ot-subtotal-Amount, td.ot-cod-fee-Amount, td.ot-group-pricing-Amount, td.ot-gv-Amount, td.ot-loworderfee-Amount, td.ot-shipping-Amount, td.ot-subtotal-Amount, td.ot-tax-Amount, td.ot-coupon-Amount {
 }
-td.ot-subtotal-Text,td.ot-cod-fee-Text,td.ot-total-Text,td.ot-group-pricing-Text,td.ot-gv-Text,td.ot-loworderfee-Text,td.ot-shipping-Text,td.ot-subtotal-Text,td.ot-tax-Text,td.ot-coupon-Text{
-font-weight:bold;
+
+td.ot-subtotal-Text, td.ot-cod-fee-Text, td.ot-total-Text, td.ot-group-pricing-Text, td.ot-gv-Text, td.ot-loworderfee-Text, td.ot-shipping-Text, td.ot-subtotal-Text, td.ot-tax-Text, td.ot-coupon-Text {
+    font-weight: bold;
 }
-td.ot-total-Amount{
-border-top:1px solid #9a9a9a;
-font-weight:bold;
+
+td.ot-total-Amount {
+    border-top: 1px solid #9a9a9a;
+    font-weight: bold;
 }
-tr.attributeBoxContent{
-background-color:#dcdbd1;
-color:#333333;
+
+tr.attributeBoxContent {
+    background-color: #dcdbd1;
+    color: #333333;
 }
-.attributeBoxContent{
-background-color:#dcdbd1;
-color:#333333;
+
+.attributeBoxContent {
+    background-color: #dcdbd1;
+    color: #333333;
 }
-.attributes-even{
-background-color:#ffffff;
+
+.attributes-even {
+    background-color: #ffffff;
 }
-.attributes-odd{
-background-color:#f7f6ef;
+
+.attributes-odd {
+    background-color: #f7f6ef;
 }
-.columnLeft{
-background-color:#f2f1ee;
-border-color:#999999;
-border-style:solid;
-border-width:1px;
-padding:2px;
+
+.columnLeft {
+    background-color: #f2f1ee;
+    border-color: #999999;
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px;
 }
-.dataTableContent{
-color:#333333;
+
+.dataTableContent {
+    color: #333333;
 }
-.dataTableContentBot{
-color:#333333;
+
+.dataTableContentBot {
+    color: #333333;
 }
-.dataTableContentWhois{
-color:#333333;
+
+.dataTableContentWhois {
+    color: #333333;
 }
-.dataTableHeadingContent{
-color:#333333;
-font-weight:bold;
+
+.dataTableHeadingContent {
+    color: #333333;
+    font-weight: bold;
 }
-.dataTableHeadingContentWhois{
-color:#333333;
-font-weight:bold;
+
+.dataTableHeadingContentWhois {
+    color: #333333;
+    font-weight: bold;
 }
-.dataTableHeadingContentWhois a:link,.dataTableHeadingContentWhois a:visited{
-color:#0000ff;
-font-weight:bold;
+
+.dataTableHeadingContentWhois a:link, .dataTableHeadingContentWhois a:visited {
+    color: #0000ff;
+    font-weight: bold;
 }
-.dataTableHeadingContentWhois a:hover{
-color:#ffffff;
-font-weight:bold;
+
+.dataTableHeadingContentWhois a:hover {
+    color: #ffffff;
+    font-weight: bold;
 }
-.dataTableHeadingRow{
-background-color:#d7d6cc;
+
+.dataTableHeadingRow {
+    background-color: #d7d6cc;
 }
-.dataTableHeadingRowWhois{
-background-color:#d7d6cc;
+
+.dataTableHeadingRowWhois {
+    background-color: #d7d6cc;
 }
-.dataTableRow{
-background-color:#f2f1ee;
+
+.dataTableRow {
+    background-color: #f2f1ee;
 }
-.dataTableRowBot{
-background-color:#facbfa;
+
+.dataTableRowBot {
+    background-color: #facbfa;
 }
-.dataTableRowOver{
-background-color:#ffffff;
-cursor:pointer;
-cursor:hand;
+
+.dataTableRowOver {
+    background-color: #ffffff;
+    cursor: pointer;
+    cursor: hand;
 }
-.dataTableRowOverBot{
-background-color:#ffffff;
+
+.dataTableRowOverBot {
+    background-color: #ffffff;
 }
-.dataTableRowOverWhois{
-background-color:#ffffff;
+
+.dataTableRowOverWhois {
+    background-color: #ffffff;
 }
-.dataTableRowSelected{
-background-color:#e7e6e0;
+
+.dataTableRowSelected {
+    background-color: #e7e6e0;
 }
-.dataTableRowSelectedBot{
-background-color:#ff93ff;
+
+.dataTableRowSelectedBot {
+    background-color: #ff93ff;
 }
-.dataTableRowSelectedWhois{
-background-color:#dee4e8;
+
+.dataTableRowSelectedWhois {
+    background-color: #dee4e8;
 }
-.dataTableRowSpacer,td.dataTableRowSpacer,TR.dataTableRowSpacer{
-background-color:#d7d6cc;
-color:#ff6600;
-font-size:11px;
-font-weight:bold;
-line-height:1.0;
+
+.dataTableRowSpacer, td.dataTableRowSpacer, TR.dataTableRowSpacer {
+    background-color: #d7d6cc;
+    color: #ff6600;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.0;
 }
-.dataTableRowWhois{
-background-color:#f2f1ee;
+
+.dataTableRowWhois {
+    background-color: #f2f1ee;
 }
-.errorText{
-color:#ff0000;
+
+.errorText {
+    color: #ff0000;
 }
-.fieldRequired{
-color:#ff0000;
+
+.fieldRequired {
+    color: #ff0000;
 }
-.formArea{
-background-color:#f4f4f4;
-border-color:#666;
-border-style:solid;
-border-width:1px;
+
+.formArea {
+    background-color: #f4f4f4;
+    border-color: #666;
+    border-style: solid;
+    border-width: 1px;
 }
-.formAreaTitle{
-font-family:Tahoma,Verdana,Arial,sans-serif;
-font-size:12px;
-font-weight:bold;
+
+.formAreaTitle {
+    font-family: Tahoma, Verdana, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
 }
-.headerBar{
-background-color:#333;
+
+.headerBar {
+    background-color: #333;
 }
-.headerBarContent{
-color:#ffffff;
-font-weight:bold;
-padding:2px;
+
+.headerBarContent {
+    color: #ffffff;
+    font-weight: bold;
+    padding: 2px;
 }
-.infoBoxContent{
-background-color:#e7e6e0;
-color:#333333;
+
+.infoBoxContent {
+    background-color: #e7e6e0;
+    color: #333333;
 }
-.infoBoxHeading{
-background-color:#333;
-color:#ffffff;
+
+.infoBoxHeading {
+    background-color: #333;
+    color: #ffffff;
 }
-.main{
+
+.main {
 }
-.menuBoxContent{
-color:#616060;
+
+.menuBoxContent {
+    color: #616060;
 }
-.menuBoxHeading{
-background-color:#ffffff;
-color:#616060;
+
+.menuBoxHeading {
+    background-color: #ffffff;
+    color: #616060;
 }
-.messageBox{
+
+.messageBox {
 }
-.messageStackCaution{
-background-color:#ffff00;
+
+.messageStackCaution {
+    background-color: #ffff00;
 }
-.messageStackError,.messageStackWarning{
-background-color:#ffb3b5;
+
+.messageStackError, .messageStackWarning {
+    background-color: #ffb3b5;
 }
-.messageStackSuccess{
-background-color:#d4ffbd;
+
+.messageStackSuccess {
+    background-color: #d4ffbd;
 }
-.oldPrice{
-text-decoration:line-through;
+
+.oldPrice {
+    text-decoration: line-through;
 }
-h1,.pageHeading{
-color:#333; /*727272*/
-font-size:16px;
-font-variant:small-caps;
-font-weight:bold;
+
+h1, .pageHeading {
+    color: #333; /*727272*/
+    font-size: 16px;
+    font-variant: small-caps;
+    font-weight: bold;
 }
-.SaleMakerDisabled{
-background-color:#f0f1f1;
+
+.SaleMakerDisabled {
+    background-color: #f0f1f1;
 }
-.SaleMakerOver{
-background-color:#ffffff;
-cursor:pointer;
-cursor:hand;
+
+.SaleMakerOver {
+    background-color: #ffffff;
+    cursor: pointer;
+    cursor: hand;
 }
-.SaleMakerSelected{
-background-color:#dee4e8;
-cursor:pointer;
-cursor:hand;
+
+.SaleMakerSelected {
+    background-color: #dee4e8;
+    cursor: pointer;
+    cursor: hand;
 }
-.smallText{
-font-size:9px;
+
+.smallText {
+    font-size: 9px;
 }
-.specialPrice{
-color:#ff6600;
+
+.specialPrice {
+    color: #ff6600;
 }
+
 .lookupAttention {
-  color: #FF0000;
+    color: #FF0000;
 }
+
 .clearBoth {
-	clear:both;
+    clear: both;
 }
+
 #loginExpiryPolicy {
-	margin-top: 2em;
+    margin-top: 2em;
 }
+
 .hiddenField {
-	display: none;
+    display: none;
 }
+
 #alt_nav {
-	padding:20px;
-	font-size:110%;
-	line-height:1.8em;
+    padding: 20px;
+    font-size: 110%;
+    line-height: 1.8em;
 }
+
 #alt_nav h2 {
-	font-size:90%
+    font-size: 90%
 }
+
 #alt_nav p {
-	max-width:600px;
+    max-width: 600px;
 }
+
 #alt_nav a {
-	white-space: nowrap;
+    white-space: nowrap;
 }
-label.error {color: red; font-weight: bold;}
+
+label.error {
+    color: red;
+    font-weight: bold;
+}
+.adminRowIcon, .adminRowIcon a{
+    color: #05a5cb;
+    text-decoration: none;
+    cursor: pointer;
+}
+.adminRowIcon:hover, .adminRowIcon a:hover{
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+.adminRowButton{
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background: inherit;
+}
+.adminRowIconActive, .adminRowIconInactive:hover{
+    color: green;
+}
+.adminRowIconInactive, .adminRowIconActive:hover{
+    color: red;
+}
+.adminRowIconRestricted, .adminRowIconRestricted:hover{
+    color: yellow;
+}
+.adminRowIconAttributesActive i.fa-stack-1x{
+    color: #f2f1ee;
+}

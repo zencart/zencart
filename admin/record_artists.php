@@ -131,6 +131,7 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -197,9 +198,9 @@
 ?>
                 <td class="dataTableContent"><?php echo $artists->fields['artists_name']; ?></td>
                 <td class="dataTableContent" align="right">
-                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $artists->fields['artists_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
-                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $artists->fields['artists_id'] . '&action=delete') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
-                  <?php if (isset($aInfo) && is_object($aInfo) && ($artists->fields['artists_id'] == $aInfo->artists_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, zen_get_all_get_params(array('mID')) . 'mID=' . $artists->fields['artists_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $artists->fields['artists_id'] . '&action=edit') . '">' . ADMIN_ROW_ICON_EDIT . '</a>'; ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $artists->fields['artists_id'] . '&action=delete') . '">' . ADMIN_ROW_ICON_DELETE. '</a>'; ?>
+                  <?php if (isset($aInfo) && is_object($aInfo) && ($artists->fields['artists_id'] == $aInfo->artists_id)) { echo ADMIN_ROW_ICON_RIGHT_ARROW; } else { echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, zen_get_all_get_params(array('mID')) . 'mID=' . $artists->fields['artists_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
                 </td>
               </tr>
 <?php
