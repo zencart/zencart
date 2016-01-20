@@ -233,7 +233,7 @@ function zen_check_minutes($the_time_last_click) {
   padding:5px;
   }
 .last-url-link a {
-  color:green;
+  color:#05a5cb;
   }
 .dataTableRowBot .last-url-link a {color: #333;}
 .dataTableRowSelectedBot .last-url-link a {color: #333;}
@@ -241,9 +241,9 @@ function zen_check_minutes($the_time_last_click) {
 .dataTableRowSelectedBot .last-url-link {background: #f0cbfa;}
 
 #wo-legend {float: left;}
-#wo-filters { float: right; background-color: #599659; color: #fff}
+#wo-filters { float: right; color: #fff; background-color: #05a5cb; padding: 2px 10px;}
 #wo-filters .optionClick { display: inline-block; color: #fff; border: 1px solid #fff; font-weight: bold; padding: 1px; margin: 2px 1px;}
-#wo-filters .chosen {background-color: #003D00;}
+#wo-filters .chosen {background-color: #333;}
 -->
 </style>
 </head>
