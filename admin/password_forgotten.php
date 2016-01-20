@@ -74,26 +74,20 @@ if (isset($_POST['submit']))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<meta name="robots" content="noindex, nofollow" />
 <link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<meta name="robots" content="noindex, nofollow"/>
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
   <div class="container">
-    <div class="row">
-    <div class="four columns centered end">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
       <form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
       <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
         <fieldset>
           <legend><?php echo HEADING_TITLE; ?></legend>
           <?php if ($resetToken == '') { ?>
-          <div class="row">
-            <div class="three columns">
-              <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
-            </div>
-            <div class="six columns end">
-              <input class="left inline" type="text" id="admin_email" name="admin_email" value="" autocomplete="off" autofocus="autofocus">
-            </div>
-          </div>
+            <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
+            <input class="left inline" type="text" id="admin_email" name="admin_email" value="" autocomplete="off" autofocus="autofocus">
           <?php } ?>
           <p class="messageStackSuccess"><?php echo $email_message; ?></p>
           <?php if ($resetToken == '') { ?>
@@ -105,7 +99,6 @@ if (isset($_POST['submit']))
         </fieldset>
       </form>
     </div>
-  </div>
 </div>
 </body>
 </html>

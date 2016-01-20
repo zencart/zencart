@@ -130,32 +130,42 @@ body#login {
 
 body#login .button {
     cursor: pointer;
-    padding: 3px;
+    padding: 5px 20px;
     margin-top: 10px;
+    background: #fff;
+    border: 0px;
+    font-weight: bold;
+}
+
+body#login .button:hover {
+    color: #fff;
+    background-color: #333;
 }
 
 body#login fieldset {
     margin: 0 auto;
     padding: 10px;
-    width: 400px;
+    background-color: #05a5cb;
 }
 
 .loginLabel {
     margin-left: 60px;
     margin-right: 5px;
-    width: 125px;
-    float: left;
     text-align: right;
     line-height: 1.5;
 }
 
 body#login legend {
-    background: #ffffff;
+    background: #333;
     border: 1px solid #333;
-    color: #333333;
-    font-size: 90%;
+    color: #fff;
     padding: 0.2em 0.5em;
-    text-align: right;
+}
+
+#login a{
+    float: right;
+    color: #fff;
+    font-size: 1em;
 }
 
 checkbox, input, radio, select, textarea, file {

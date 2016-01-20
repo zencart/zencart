@@ -10,9 +10,9 @@
 define('HEADING_TITLE', 'Reset Password');
 
 define('TEXT_ADMIN_EMAIL', 'Admin Email Address: ');
-define('TEXT_BUTTON_REQUEST_RESET', 'request reset');
-define('TEXT_BUTTON_LOGIN', 'login');
-define('TEXT_BUTTON_CANCEL', 'cancel');
+define('TEXT_BUTTON_REQUEST_RESET', 'Request Reset');
+define('TEXT_BUTTON_LOGIN', 'Login');
+define('TEXT_BUTTON_CANCEL', 'Cancel');
 
 define('ERROR_WRONG_EMAIL', 'You entered the wrong email address.');
 define('ERROR_WRONG_EMAIL_NULL', 'Go away gooberbrain :-P');
