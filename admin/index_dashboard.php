@@ -37,9 +37,12 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
     <meta name="robots" content="noindex, nofollow" />
-    <script language="JavaScript" src="includes/menu.js" type="text/JavaScript"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script language="JavaScript" src="includes/menu.js" type="text/JavaScript"></script>
     <script type="text/javascript">
         <!--
             function init()
@@ -60,7 +63,7 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
 
-        <div id="colone">
+        <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
     <div class="reportBox">
         <div class="header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
         <?php
@@ -102,7 +105,7 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
         ?>
     </div>
 </div>
-<div id="coltwo">
+<div id="coltwo" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
     <div class="reportBox">
         <div class="header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
         <?php  $customers = $db->Execute("select c.customers_id as customers_id, c.customers_firstname as customers_firstname, c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address, a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id order by a.customers_info_date_account_created DESC limit 5");
@@ -136,7 +139,7 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
 
     </div>
 </div>
-<div id="colthree">
+<div id="colthree" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
     <div class="reportBox">
         <div class="header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
         <?php  $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') order by orders_id DESC limit 5");

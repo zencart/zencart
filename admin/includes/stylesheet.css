@@ -126,7 +126,7 @@ width:400px;
 	}
 body#login legend{
 background:#ffffff;
-border:1px solid #003D00;
+border:1px solid #333;
 color:#333333;
 font-size:90%;
 padding:0.2em 0.5em;
@@ -282,8 +282,8 @@ color:#ff0000;
 color:#ff0000;
 }
 .formArea{
-background-color:#f1f9fe;
-border-color:#7b9ebd;
+background-color:#f4f4f4;
+border-color:#666;
 border-style:solid;
 border-width:1px;
 }
@@ -293,7 +293,7 @@ font-size:12px;
 font-weight:bold;
 }
 .headerBar{
-background-color:#003D00;
+background-color:#333;
 }
 .headerBarContent{
 color:#ffffff;
@@ -305,7 +305,7 @@ background-color:#e7e6e0;
 color:#333333;
 }
 .infoBoxHeading{
-background-color:#003D00;
+background-color:#333;
 color:#ffffff;
 }
 .main{
@@ -332,7 +332,7 @@ background-color:#d4ffbd;
 text-decoration:line-through;
 }
 h1,.pageHeading{
-color:#003D00; /*727272*/
+color:#333; /*727272*/
 font-size:16px;
 font-variant:small-caps;
 font-weight:bold;
