@@ -13,7 +13,7 @@
 ?>
 <div class="centerColumn" id="gvSendDefault">
 
-<div id="sendSpendWrapper"class="forward">
+<div id="sendSpendWrapper" class="forward">
 <h2><?php echo TEXT_AVAILABLE_BALANCE;?></h2>
 <p id="gvSendDefaultBalance"><?php echo TEXT_BALANCE_IS . $gv_current_balance; ?></p>
 <?php

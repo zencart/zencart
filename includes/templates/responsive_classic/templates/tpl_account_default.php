@@ -24,7 +24,7 @@
 <p class="forward"><?php echo '<a class="show-all" href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL') . '">' . OVERVIEW_SHOW_ALL_ORDERS . '</a>'; ?></p>
 <br class="clearBoth" />
 <h2 id="previous-orders"><?php echo OVERVIEW_PREVIOUS_ORDERS; ?></h2>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" id="prevOrders">
+<table id="prevOrders">
     <tr class="tableHeading">
     <th scope="col"><?php echo TABLE_HEADING_DATE; ?></th>
     <th scope="col"><?php echo TABLE_HEADING_ORDER_NUMBER; ?></th>
@@ -37,12 +37,12 @@
   foreach($ordersArray as $orders) {
 ?>
   <tr>
-    <td width="70px"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_DATE . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo zen_date_short($orders['date_purchased']); ?></td>
-    <td width="30px"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_ORDER_NUMBER . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo TEXT_NUMBER_SYMBOL . $orders['orders_id']; ?></td>
-    <td><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_SHIPPED_TO . '&#58;&nbsp;&nbsp;</b>'; }?><address><?php echo zen_output_string_protected($orders['order_name']) . '<br />' . $orders['order_country']; ?></address></td>
-    <td width="70px"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_STATUS . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo $orders['orders_status_name']; ?></td>
-    <td width="70px" align="right"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_TOTAL . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo $orders['order_total']; ?></td>
-    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '"> ' . zen_image_button(BUTTON_IMAGE_VIEW_SMALL, BUTTON_VIEW_SMALL_ALT) . '</a>'; ?></td>
+    <td class="accountOrderDate"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_DATE . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo zen_date_short($orders['date_purchased']); ?></td>
+    <td class="accountOrderId"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_ORDER_NUMBER . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo TEXT_NUMBER_SYMBOL . $orders['orders_id']; ?></td>
+    <td class="accountOrderAddress"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_SHIPPED_TO . '&#58;&nbsp;&nbsp;</b>'; }?><address><?php echo zen_output_string_protected($orders['order_name']) . '<br />' . $orders['order_country']; ?></address></td>
+    <td class="accountOrderStatus"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_STATUS . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo $orders['orders_status_name']; ?></td>
+    <td class="accountOrderTotal alignRight"><?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { echo '<b class="hide">' . TABLE_HEADING_TOTAL . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo $orders['order_total']; ?></td>
+    <td class="accountOrderViewButton alignRight"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '"> ' . zen_image_button(BUTTON_IMAGE_VIEW_SMALL, BUTTON_VIEW_SMALL_ALT) . '</a>'; ?></td>
   </tr>
 
 <?php

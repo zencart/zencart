@@ -93,7 +93,7 @@ define('TEXT_ADMIN_SETUP_NEWSLETTER_OPTIN', 'Opt In: ');
 //define('TEXT_MAIN_ADMIN_SETUP', '');
 
 
-define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finshed');
+define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finished');
 define('TEXT_COMPLETION_HEADER_MAIN', '');
 define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete.');
 define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can access your storefront and your Administration area using the links below.');

@@ -12,7 +12,7 @@
  * @version $Id: tpl_modules_products_featured_listing.php 6096 2007-04-01 00:43:21Z ajeh $
  */
 ?>
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
+<table class="products-listing productsFeaturedListing">
           <tr>
             <td colspan="3"><hr /></td>
           </tr>

@@ -12,7 +12,7 @@
 <!-- bof: upcoming_products -->
 <fieldset>
 <legend><?php echo TABLE_HEADING_UPCOMING_PRODUCTS; ?></legend>
-<table border="0" width="100%" cellspacing="0" cellpadding="2" id="upcomingProductsTable" summary="<?php echo SUMMARY_TABLE_UPCOMING_PRODUCTS; ?>">
+<table id="upcomingProductsTable">
 <caption><?php echo CAPTION_UPCOMING_PRODUCTS; ?></caption>
   <tr>
     <th scope="col" id="upProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
@@ -23,7 +23,7 @@
       $rowClass = (($row / 2) == floor($row / 2)) ? "rowEven" : "rowOdd";
       echo '  <tr class="' . $rowClass . '">' . "\n";
       echo '    <td ><a href="' . zen_href_link(zen_get_info_page($expectedItems[$i]['products_id']), 'cPath=' . $productsInCategory[$expectedItems[$i]['products_id']] . '&products_id=' . $expectedItems[$i]['products_id']) . '">' . $expectedItems[$i]['products_name'] . '</a></td>' . "\n";
-      echo '    <td align="right" >' . zen_date_short($expectedItems[$i]['date_expected']) . '</td>' . "\n";
+      echo '    <td class="alignRight" >' . zen_date_short($expectedItems[$i]['date_expected']) . '</td>' . "\n";
       echo '  </tr>' . "\n";
     }
 ?>
