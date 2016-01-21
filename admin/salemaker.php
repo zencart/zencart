@@ -387,7 +387,7 @@ var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2"
   }
 
     echo "      <tr>\n";
-    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . ADMIN_ROW_ICON_RIGHT_ARROW . "</td>\n";
+    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . ADMIN_ROW_ICON_ARROW_RIGHT . "</td>\n";
     echo '        <td class="main" colspan="2"><br>' . TEXT_SALEMAKER_ENTIRE_CATALOG . "</td>\n";
     echo "      </tr>\n";
     echo '      <tr onClick="RowClick(\'0\')">' . "\n";
@@ -395,7 +395,7 @@ var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2"
     echo '        <td class="main" colspan="2">' . TEXT_SALEMAKER_TOP . "</td>\n";
     echo "      </tr>\n";
     echo "      <tr>\n";
-    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . ADMIN_ROW_ICON_RIGHT_ARROW . "</td>\n";
+    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . ADMIN_ROW_ICON_ARROW_RIGHT . "</td>\n";
     echo '        <td class="main" colspan="2"><br>' . TEXT_SALEMAKER_CATEGORIES . "</td>\n";
     echo "      </tr>\n";
     echo "      </table></tr>\n";
@@ -490,7 +490,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
       }
 ?>
                 </td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($sInfo)) && ($salemaker_sales->fields['sale_id'] == $sInfo->sale_id) ) { echo ADMIN_ROW_ICON_RIGHT_ARROW; } else { echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (is_object($sInfo)) && ($salemaker_sales->fields['sale_id'] == $sInfo->sale_id) ) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;</td>
       </tr>
 <?php
       $salemaker_sales->MoveNext();
@@ -576,4 +576,4 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');

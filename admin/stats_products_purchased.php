@@ -259,4 +259,4 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');

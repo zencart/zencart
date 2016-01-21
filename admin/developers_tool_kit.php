@@ -917,7 +917,7 @@ if ($action == 'search_config_keys') {
         <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_description'];?> &nbsp;</td>
         <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_key'];?></td>
         <td class="<?php echo $tdClass;?>"><?php echo $keySearchResults->fields['configuration_value']; // implode("<br />\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value']))?></td>
-        <td class="<?php echo $tdClass;?>" align="center" onclick="document.location.href='<?php echo $viewlink;?>'"><a href="<?php echo $editlink;?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT);?></a></td>
+        <td class="<?php echo $tdClass;?>" align="center" onclick="document.location.href='<?php echo $viewlink;?>'"><a href="<?php echo $editlink;?>"><?php echo ADMIN_ROW_ICON_EDIT;?></a></td>
       </tr>
 <?php
       $groupChanged = FALSE;
@@ -1075,4 +1075,4 @@ if ($action == 'search_config_keys') {
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');

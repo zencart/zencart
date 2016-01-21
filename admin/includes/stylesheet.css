@@ -162,7 +162,7 @@ body#login legend {
     padding: 0.2em 0.5em;
 }
 
-#login a{
+#login a {
     float: right;
     color: #fff;
     font-size: 1em;
@@ -492,31 +492,48 @@ label.error {
     color: red;
     font-weight: bold;
 }
-.adminRowIcon, .adminRowIcon a{
+
+.adminRowIcon, .adminRowIcon a {
     color: #05a5cb;
     text-decoration: none;
     cursor: pointer;
 }
-.adminRowIcon:hover, .adminRowIcon a:hover{
+
+.adminRowIcon:hover, .adminRowIcon a:hover {
     color: #333;
     text-decoration: none;
     cursor: pointer;
 }
-.adminRowButton{
+
+.adminRowButton {
     padding: 0px;
     margin: 0px;
     border: 0px;
     background: inherit;
 }
-.adminRowIconActive, .adminRowIconInactive:hover{
+
+.adminRowIconActive, .adminRowIconInactive:hover {
     color: green;
 }
-.adminRowIconInactive, .adminRowIconActive:hover{
+
+.adminRowIconInactive, .adminRowIconActive:hover {
     color: red;
 }
-.adminRowIconRestricted, .adminRowIconRestricted:hover{
+
+.adminRowIconRestricted, .adminRowIconRestricted:hover {
     color: yellow;
 }
-.adminRowIconAttributesActive i.fa-stack-1x{
+
+.adminRowIconAttributesActive i.fa-stack-1x {
     color: #f2f1ee;
+}
+
+.adminRowIconCartActive, .adminRowIconCartNoActive, .adminRowIconCartActive:hover, .adminRowIconCartNoActive:hover {
+    color: green;
+    text-align: right;
+}
+
+.adminRowIconCartInactive, .adminRowIconCartNoInactive, .adminRowIconCartInactive:hover, .adminRowIconCartNoInactive:hover{
+    color: red;
+    text-align: right;
 }

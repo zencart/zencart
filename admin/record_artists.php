@@ -200,7 +200,7 @@
                 <td class="dataTableContent" align="right">
                   <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $artists->fields['artists_id'] . '&action=edit') . '">' . ADMIN_ROW_ICON_EDIT . '</a>'; ?>
                   <?php echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $artists->fields['artists_id'] . '&action=delete') . '">' . ADMIN_ROW_ICON_DELETE. '</a>'; ?>
-                  <?php if (isset($aInfo) && is_object($aInfo) && ($artists->fields['artists_id'] == $aInfo->artists_id)) { echo ADMIN_ROW_ICON_RIGHT_ARROW; } else { echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, zen_get_all_get_params(array('mID')) . 'mID=' . $artists->fields['artists_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
+                  <?php if (isset($aInfo) && is_object($aInfo) && ($artists->fields['artists_id'] == $aInfo->artists_id)) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, zen_get_all_get_params(array('mID')) . 'mID=' . $artists->fields['artists_id']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>
                 </td>
               </tr>
 <?php
@@ -328,4 +328,4 @@
 <br>
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');

@@ -94,13 +94,17 @@
           </tr>
 
           <tr>
-            <td><table border="0" width="100%" cellspacing="2" cellpadding="2">
-              <tr><?php echo zen_draw_form('search', FILENAME_STATS_CUSTOMERS_REFERRALS, '', 'get'); echo zen_draw_hidden_field('referral_code', $_GET['referral_code']); ?>
-                <td class="main" align="right"><?php echo TEXT_INFO_START_DATE . ' ' . zen_draw_input_field('start_date', $_GET['start_date']); ?></td>
-                <td class="main" align="right"><?php echo TEXT_INFO_END_DATE . ' ' . zen_draw_input_field('end_date', $_GET['end_date']) . zen_hide_session_id(); ?></td>
-                <td class="main" align="right"><?php echo zen_image_submit('button_display.gif', IMAGE_DISPLAY); ?></td>
-              </tr>
-            </td></table></form>
+            <td>
+                <?php echo zen_draw_form('search', FILENAME_STATS_CUSTOMERS_REFERRALS, '', 'get'); echo zen_draw_hidden_field('referral_code', $_GET['referral_code']); ?>
+                <table border="0" width="100%" cellspacing="2" cellpadding="2">
+                  <tr>
+                    <td class="main" align="right"><?php echo TEXT_INFO_START_DATE . ' ' . zen_draw_input_field('start_date', $_GET['start_date']); ?></td>
+                    <td class="main" align="right"><?php echo TEXT_INFO_END_DATE . ' ' . zen_draw_input_field('end_date', $_GET['end_date']) . zen_hide_session_id(); ?></td>
+                    <td class="main" align="right"><?php echo zen_image_submit('button_display.gif', IMAGE_DISPLAY); ?></td>
+                  </tr>
+                </table>
+                </form>
+            </td>
           </tr>
 
 <?php

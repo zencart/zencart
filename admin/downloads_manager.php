@@ -39,6 +39,7 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script language="javascript"><!--
@@ -99,7 +100,7 @@ function go_option() {
         <td width="100%"><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="smallText" align="center">
-              <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . TEXT_INFO_FILENAME_MISSING; ?> &nbsp;&nbsp;&nbsp;<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . TEXT_INFO_FILENAME_GOOD; ?>
+              <?php echo ADMIN_ROW_ICON_ACTIVE . TEXT_INFO_FILENAME_MISSING; ?> &nbsp;&nbsp;&nbsp;<?php echo ADMIN_ROW_ICON_INACTIVE . TEXT_INFO_FILENAME_GOOD; ?>
             </td>
           </tr>
         </table></td>
@@ -152,9 +153,9 @@ function go_option() {
 
   $filename_is_missing='';
   if ( !file_exists(DIR_FS_DOWNLOAD . $products_downloads_query->fields['products_attributes_filename']) ) {
-    $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+    $filename_is_missing = ADMIN_ROW_ICON_INACTIVE;
   } else {
-    $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
+    $filename_is_missing = ADMIN_ROW_ICON_ACTIVE;
   }
 ?>
 <?php
@@ -174,7 +175,7 @@ function go_option() {
                 <td class="smallText"><?php echo $filename_is_missing . '&nbsp;' . $products_downloads_query->fields['products_attributes_filename']; ?></td>
                 <td class="smallText"><?php echo $products_downloads_query->fields['products_attributes_maxdays']; ?></td>
                 <td class="smallText"><?php echo $products_downloads_query->fields['products_attributes_maxcount']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads_query->fields['products_attributes_id'] == $padInfo->products_attributes_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . 'padID=' . $products_downloads_query->fields['products_attributes_id'] . '&page=' . $_GET['page']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads_query->fields['products_attributes_id'] == $padInfo->products_attributes_id)) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . 'padID=' . $products_downloads_query->fields['products_attributes_id'] . '&page=' . $_GET['page']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   $products_downloads_query->MoveNext();
@@ -267,4 +268,4 @@ function go_option() {
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');

@@ -867,4 +867,4 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 ?>
 </body>
 </html>
-<?php } //endif $action = help ?>
+<?php } //endif $action = help

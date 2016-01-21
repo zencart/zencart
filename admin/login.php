@@ -150,4 +150,5 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
     </body>
 <?php } ?>
 </html>
-<?php require('includes/application_bottom.php'); ?>
+<?php require('includes/application_bottom.php');
+

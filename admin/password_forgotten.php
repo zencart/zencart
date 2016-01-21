@@ -102,4 +102,5 @@ if (isset($_POST['submit']))
 </div>
 </body>
 </html>
-<?php require('includes/application_bottom.php'); ?>
+<?php require('includes/application_bottom.php');
+

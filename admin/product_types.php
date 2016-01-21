@@ -143,7 +143,7 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-  <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -234,7 +234,7 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
 ?>
                 <td class="dataTableContent"><?php echo $configuration->fields['configuration_title']; ?></td>
                 <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) { echo ADMIN_ROW_ICON_RIGHT_ARROW; } else { echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=layout') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=layout') . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     $configuration->MoveNext();
@@ -341,7 +341,7 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
 ?>
                 <td class="dataTableContent"><?php echo $product_types->fields['type_name']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $product_types->fields['allow_add_to_cart']; ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($ptInfo) && is_object($ptInfo)) && ($product_types->fields['type_id'] == $ptInfo->type_id) ) { echo ADMIN_ROW_ICON_RIGHT_ARROW; } else { echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_types->fields['type_id']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;  </td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($ptInfo) && is_object($ptInfo)) && ($product_types->fields['type_id'] == $ptInfo->type_id) ) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_types->fields['type_id']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;  </td>
               </tr>
 <?php
     $product_types->MoveNext();
@@ -446,4 +446,4 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
 <br>
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
