@@ -33,7 +33,7 @@ div.reportBox {
     margin-top: 1em;
 }
 
-div.row {
+.reportBox div.row {
     background: #f7f6ef;
     clear: both;
     margin-top: 1px;
@@ -41,21 +41,21 @@ div.row {
     margin: 0px;
 }
 
-div.row:nth-of-type(2n) {
+.reportBox div.row:nth-of-type(2n) {
     background-color: #ffffff;
 }
 
-div.row span.center {
+.reportBox div.row span.center {
     margin-right: 30px;
 }
 
-div.row span.left {
+.reportBox div.row span.left {
     float: left;
     text-align: left;
     width: 74%;
 }
 
-div.row span.right {
+.reportBox div.row span.right {
     float: right;
     text-align: right;
     width: 34%;

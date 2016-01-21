@@ -374,6 +374,7 @@ tr.attributeBoxContent {
 
 .headerBar {
     background-color: #333;
+    color: #fff;
 }
 
 .headerBarContent {
@@ -381,6 +382,21 @@ tr.attributeBoxContent {
     font-weight: bold;
     padding: 2px;
 }
+
+.headerBar .nav{
+    float: right;
+    margin-right: 5px;
+}
+
+.headerBar div ul li a{
+    padding: 3px;
+    margin-top: 3px;
+}
+
+.headerBar div ul li a:hover{
+    color: #333;
+}
+
 
 .infoBoxContent {
     background-color: #e7e6e0;
