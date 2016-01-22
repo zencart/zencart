@@ -110,36 +110,59 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <h1>A NOTE ABOUT THE NEW TEMPLATE</h1>
 <p>While Zen Cart&reg; v1.5.5 contains a newer "responsive_classic" template, we STRONGLY recommend that upgraders first upgrade their site using everything (including template_default) except the responsive_classic template contents. And then once the upgraded site is working properly then consider what changes you might want to make to your own active template. AGAIN: The responsive_classic template should NOT be implemented immediately as part of an upgrade; it should be a separate step if it is even used at all.</p>
 
-<h1>What's New ... Changes from v1.5.4 to v1.5.5 </h1>
+<h1>Notes about changes to template_default</h1>
+<p>In Zen Cart the template_default directory contains the master copy of all storefront page templates. The normal procedure for customizing
+template files for use in your own personalized template is to make a copy of the corresponding file from template_default, put it into your own
+template folder (and matching folder structure), and make your customizations in that copy of the file. This way the only files you need in
+your personalized template folder are those that you have altered in some way from template_default.<br><br>With that explained, it is important
+that whenever you upgrade your site, you should also inspect ALL the template_default files to determine which changes in those files need
+to be replicated in your customized files.<br>
+Often a tool like Beyond Compare or Araxis Merge or Kaleidoscope or GnuDiff can be helpful for this. The process is simple: compare the
+template_default directory files from your *old* version against the template_default files in the *new) version, and use those results
+as a reference to copy those updated changes into each of the files you've customized in your custom/personalized template in your store.
+<br>Then, and only after you've done all those comparisons and updated your customized files in your custom template folder, you will
+copy the template_default files from the new version into the template_default directory of your store. This way you'll be left with
+updated personalized files *and* updated template_default files.
+</p>
+
+  <h2>Changes in template_default in v1.5.5</h2>
+  <p>The template_default files previously had a lot of old &lt;table&gt; markup to specify widths, cell borders and padding and spacing. These have been removed in v1.5.5 and relevant styles added to the bottom of the main stylesheet.css file. You will want to add the updated CSS parts to your own stylesheet if your custom template still uses those tables. (A few addon templates have aggressively ripped out various tables and may not be affected by this change.)</p>
+  <p>A few CSS changes were made in template_default to change IDs of repeating elements to be classes instead. Of note #cartDisplay is now .cartDisplay, and #cartImage is .cartImage</p>
+
+
+  <h1>What's New ... Changes from v1.5.4 to v1.5.5 </h1>
 <h3><strong>The most notable improvements and bugfixes in v1.5.5 since v1.5.4 include:</strong></h3>
 <ul>
-  <li>All known bugfixes and security fixes</li>
-  <li>The default out-of-the-box template is now a mobile-friendly responsive-design theme built for flexibility with tablets, mobile devices, and desktops.</li>
+  <li>All known v1.5.4 bugfixes and security fixes are included in v1.5.5</li>
+  <li>The default out-of-the-box template (called "Responsive Classic") is now a mobile-friendly responsive-design theme built for flexibility with tablets, mobile devices, and desktops.</li>
+  <li>The core template_default files have been reviewed for HTML5 compliance, and a number of classes and IDs have been added to move older styling to CSS instead</li>
   <li>Added PHP 7.0 compatibility</li>
   <li>Added MySQL 5.7 compatibility</li>
   <li>Order Details added to Checkout-Success page</li>
   <li>PayPal Express Checkout has numerous updated compatibilities added, including their latest InContext mobile support</li>
-  <li>Added customer-password reset via Admin</li>
-  <li>improved error-logging for troubleshooting (included @lat9's debug-backtrace mod),</li>
-  <li>improved/simplified code for db query handling, allowing simple foreach() iterations instead of requiring while(!EOF) loops,</li>
-  <li>added hooks to allow for 3rd-party-handling of taxes, for plugin support with orders, attributes, and much more</li>
-  <li>fix some rounding errors,</li>
-  <li>added cron code for automated currency-updating, and currency sources can be selected from Admin->Config->My Store menu, and plugins can auto-show in this list</li>
-  <li>replaced phpBB integration with generic hooks to allow for various external forums,</li>
-  <li>some language-file cleanups,</li>
-  <li>rewrote zc_install,</li>
-  <li>simplified the configure.php file contents significantly by retaining only the most-often-customized components, and added an automatic-converter as part of zc_install's initial inspection</li>
-  <li>improvements to developers-toolkit and whos-online,</li>
-  <li>added newer phpMailer integration,<br></li>
-  <li>fixed bug with a race condition causing database errors related to sessions</li>
-  <li>numerous updates to canonical-url handling</li>
-  <li>added hreflang markup for better indexing of multilingual sites, and other HTML page-header metatag improvements</li>
-  <li>integrated @lat9's "common CSS styling" for HTML emails</li>
-  <li>improved compatibility for payment/shipping modules and SSL/TLS to work with the 2016 SHA-256 Secure Server initiatives being embraced by modern hosting companies and PCI Compliance</li>
-  <li>security patches for alerts provided from various security watchdog sites</li>
-  <li>added SagePay Form payment module (for hosted offsite PCI compliant payment processing)</li>
-  <li>retired obsolete Linkpoint_API payment module (a modernized replacement will follow in early 2016 as a plugin)</li>
-  <li>a detailed list of individual changes can be viewed <a href="https://github.com/zencart/zc-v1-series/compare/v1.5.4...v1.5.5" target="_blank">on github</a> </li>
+  <li>added customer-password reset via Admin</li>
+  <li>Products Price Manager: Added display of taxes into prices</li>
+  <li>Improved error-logging for troubleshooting (included @lat9's debug-backtrace mod),</li>
+  <li>Improved/simplified code for db query handling, allowing simple foreach() iterations instead of requiring while(!EOF) loops,</li>
+  <li>Added hooks to allow for 3rd-party-handling of taxes, for plugin support with orders, attributes, and much more</li>
+  <li>Fix some rounding errors,</li>
+  <li>Added cron code for automated currency-updating, and currency sources can be selected from Admin->Config->My Store menu, and plugins can auto-show in this list</li>
+  <li>Replaced phpBB integration with generic hooks to allow for various external forums,</li>
+  <li>Some language-file cleanups,</li>
+  <li>A few Admin menu improvements to help it fit tablet screens better</li>
+  <li>Rewrote zc_install,</li>
+  <li>Simplified the configure.php file contents significantly by retaining only the most-often-customized components, and added an automatic-converter as part of zc_install's initial inspection</li>
+  <li>Improvements to developers-toolkit and whos-online,</li>
+  <li>Added newer phpMailer integration,<br></li>
+  <li>Fixed bug with a race condition causing database errors related to sessions</li>
+  <li>Numerous updates to canonical-url handling</li>
+  <li>Added hreflang markup for better indexing of multilingual sites, and other HTML page-header metatag improvements</li>
+  <li>Integrated @lat9's "common CSS styling" for HTML emails</li>
+  <li>Improved compatibility for payment/shipping modules and SSL/TLS to work with the 2016 SHA-256 Secure Server initiatives being embraced by modern hosting companies and PCI Compliance</li>
+  <li>Security patches for alerts provided from various security watchdog sites</li>
+  <li>Added SagePay Form payment module (for hosted offsite PCI compliant payment processing)</li>
+  <li>Retired obsolete Linkpoint_API payment module (replaced by the new Payeezy plugin)</li>
+  <li>A detailed list of individual changes can be viewed <a href="https://github.com/zencart/zc-v1-series/compare/v1.5.4...v1.5.5" target="_blank">on github</a> </li>
   </ul>
 </fieldset>
 <br><br>
