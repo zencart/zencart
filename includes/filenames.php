@@ -27,6 +27,7 @@ define('FILENAME_ADMIN_ACTIVITY', 'admin_activity');
 define('FILENAME_ADMIN_PAGE_REGISTRATION', 'admin_page_registration');
 define('FILENAME_ADVANCED_SEARCH', 'advanced_search');
 define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result');
+define('FILENAME_AJAX','ajax.php');
 define('FILENAME_ALT_NAV', 'alt_nav');
 define('FILENAME_ALERT_PAGE', 'alert_page');
 define('FILENAME_ATTRIBUTES', 'attributes');
