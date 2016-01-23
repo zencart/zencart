@@ -238,6 +238,49 @@
   }
 
 /*
+ *  Check if option name is not expected to have an option value (ie. text field, or File upload field)
+ */
+  function zen_option_name_no_values($option_name_id) {
+    global $db, $zco_notifier;
+    
+    $option_name_no_value = true;
+    if (!is_array($option_name_id)) {
+      $option_name_id = array($option_name_id);
+    }
+    
+    $sql = "SELECT products_options_types FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id :option_name_id:";
+    if (sizeof($option_name_id) > 1 ) ) {
+      $sql2 = 'in (';
+      foreach($option_name_id as $option_id) {
+        $sql2 .= ':option_id:,';
+        $sql2 = $db->bindVars($sql2, ':option_id:', $option_id, 'integer');
+      }
+      $sql2 = ')';
+      
+    } else {
+      $sql2 = ' = :option_id:';
+      $sql2 = $db->bindVars($sql2, ':option_id:', $option_name_id[0], 'integer');
+    }
+      
+    $sql = $sql->bindVars($sql, 'option_name_id:', $sql2, 'stringnoquote');
+    
+    $sql_result = $db->Execute($sql);
+    
+    foreach($sql_result as $opt_type) {
+
+      $test_var = false; // Set to true if the name is supposed to have a value associated
+      $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE');
+
+      if (!($opt_type == PRODUCTS_OPTIONS_TYPE_TEXT || $opt_type == PRODUCTS_OPTIONS_TYPE_FILE) || ($test_var && $opt_type != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type != PRODUCTS_OPTIONS_TYPE_FILE) )) {
+        $option_name_no_value = false;
+        break;
+      }
+    }
+    
+    return $option_name_no_value;
+  }
+
+/*
  *  Check if product has attributes values
  */
   function zen_has_product_attributes_values($products_id) {
