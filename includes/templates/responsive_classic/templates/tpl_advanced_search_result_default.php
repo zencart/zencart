@@ -29,8 +29,8 @@
 
   require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA_SORTER));
 ?>
-</form>
 </div>
+</form>
 <?php
   }
 ?>

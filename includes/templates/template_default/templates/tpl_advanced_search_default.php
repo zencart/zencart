@@ -38,7 +38,7 @@
 
 <fieldset class="floatingBox forward">
     <legend><?php echo ENTRY_MANUFACTURERS; ?></legend>
-    <?php echo zen_draw_pull_down_menu('manufacturers_id', zen_get_manufacturers(array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS)), PRODUCTS_MANUFACTURERS_STATUS), $sData['manufacturers_id']); ?>
+    <?php echo zen_draw_pull_down_menu('manufacturers_id', zen_get_manufacturers(array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS)), PRODUCTS_MANUFACTURERS_STATUS), $sData['manufacturers_id'], 'id="searchMfgId"'); ?>
 <br class="clearBoth" />
 </fieldset>
 <br class="clearBoth" />

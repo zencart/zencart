@@ -34,7 +34,6 @@
 
 <?php if (!empty($totalsDisplay)) { ?>
   <div class="cartTotalsDisplay important"><?php echo $totalsDisplay; ?></div>
-  <br class="clearBoth" />
 <?php } ?>
 
 <?php  if ($flagAnyOutOfStock) { ?>
@@ -49,7 +48,7 @@
 <?php    } //endif STOCK_ALLOW_CHECKOUT ?>
 <?php  } //endif flagAnyOutOfStock ?>
 
-<table  border="0" width="100%" cellspacing="0" cellpadding="0" id="cartContentsDisplay">
+<table id="cartContentsDisplay">
      <tr class="tableHeading">
         <th scope="col" id="scQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
         <th scope="col" id="scUpdateQuantity">&nbsp;</th>
@@ -65,7 +64,7 @@
      <tr class="<?php echo $product['rowClass']; ?>">
 
 <?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) {
-      // 
+      //
       } else { ?>
 
        <td class="cartQuantity">
@@ -87,7 +86,7 @@
 
        <td class="cartProductDisplay">
 
-<a href="<?php echo $product['linkProductsName']; ?>"><span id="cartImage" class="back"><?php echo $product['productsImage']; ?></span><span id="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
+<a href="<?php echo $product['linkProductsName']; ?>"><span class="cartImage back"><?php echo $product['productsImage']; ?></span><span class="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
 <br class="clearBoth" />
 <?php
   echo $product['attributeHiddenField'];

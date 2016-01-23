@@ -9,7 +9,7 @@
  * @version $Id: jscript_form_check.php 17014 2010-07-27 06:17:53Z drbyte $
  */
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript"><!--
 var selected;
 
 function check_form_optional(form_name) {

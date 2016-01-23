@@ -46,20 +46,20 @@ class SagepayCustomer
      */
     public static function setDeliveryEntries($order, $us_state_codes)
     {
-        $delvery = Self::handleMissingDeliveryEntries($order, $us_state_codes);
-        $deliveryEntries['DeliverySurname'] = $delvery['lastname'];
-        $deliveryEntries['DeliveryFirstnames'] = $delvery['firstname'];
-        $deliveryEntries['DeliveryAddress1'] = $delvery['street_address'];
+        $delivery = self::handleMissingDeliveryEntries($order, $us_state_codes);
+        $deliveryEntries['DeliverySurname'] = $delivery['lastname'];
+        $deliveryEntries['DeliveryFirstnames'] = $delivery['firstname'];
+        $deliveryEntries['DeliveryAddress1'] = $delivery['street_address'];
         $deliveryEntries['DeliveryAddress2'] = '';
         if (ACCOUNT_SUBURB == 'true') {
-            $deliveryEntries['DeliveryAddress2'] = $delvery['suburb'];
+            $deliveryEntries['DeliveryAddress2'] = $delivery['suburb'];
         }
-        $deliveryEntries['DeliveryCity'] = $delvery['city'];
-        $deliveryEntries['DeliveryPostCode'] = $delvery['postcode'];
-        $deliveryEntries['DeliveryCountry'] = $delvery['country']['iso_code_2'];
+        $deliveryEntries['DeliveryCity'] = $delivery['city'];
+        $deliveryEntries['DeliveryPostCode'] = $delivery['postcode'];
+        $deliveryEntries['DeliveryCountry'] = $delivery['country']['iso_code_2'];
         $orderstate = '';
-        if (($delvery['country']['iso_code_2']) == 'US') {
-            $orderstate = $us_state_codes[$delvery['state']];
+        if (($delivery['country']['iso_code_2']) == 'US') {
+            $orderstate = $us_state_codes[$delivery['state']];
         }
         $deliveryEntries['DeliveryState'] = $orderstate;
         $deliveryEntries['DeliveryPhone'] = $order->customer['telephone'];
@@ -74,7 +74,8 @@ class SagepayCustomer
      */
     public static function handleMissingDeliveryEntries($order, $us_state_codes)
     {
-        if (isset($order->delivery) && $order->delivery != false) {
+        if ($_SESSION['cart']->content_type == 'virtual') return $order->billing;
+        if (isset($order->delivery) && $order->delivery !== false && $order->delivery['street_address'] != '') {
             return $order->delivery;
         }
         return $order->billing;

@@ -26,7 +26,7 @@ if ($current_page_base != 'popup_shipping_estimator') {
 ?>
 <!-- shipping_estimator //-->
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 function shipincart_submit(){
   document.estimator.submit();
   return false;
@@ -286,5 +286,5 @@ if ($_SESSION['cart']->count_contents() > 0) {
 <?php
 }
 ?>
-<script type="text/javascript" language="javascript">update_zone(document.estimator); </script>
+<script type="text/javascript">update_zone(document.estimator); </script>
 <!-- shipping_estimator_eof //-->

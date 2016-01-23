@@ -914,5 +914,3 @@ function zen_has_product_attributes_downloads_status($products_id) {
 
     return $new_range;
   }
-
-?>

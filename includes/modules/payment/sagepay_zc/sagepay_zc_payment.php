@@ -211,16 +211,15 @@ class sagepay_zc_payment extends AbstractSagepayAPI
             'SHOPCART',
             'SENDEMAIL',
             'EMAILMSG',
-            'GIFTAID',
             'DEBUGGING'
         );
 
-        $removekeys = array();
+        $keys = array();
         foreach ($keylist as $key) {
             $keyName = 'MODULE_PAYMENT_' . $apiType . '_' . $key;
-            $removekeys[] = $keyName;
+            $keys[] = $keyName;
         }
-        return $removekeys;
+        return $keys;
     }
 
     /**

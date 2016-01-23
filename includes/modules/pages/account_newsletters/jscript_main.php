@@ -9,7 +9,7 @@
  * @version $Id: jscript_main.php 4274 2006-08-26 03:16:53Z drbyte $
  */
 ?>
-<script language="javascript"  type="text/javascript"><!--
+<script type="text/javascript"><!--
 function checkBox(object) {
   document.account_newsletter.elements[object].checked = !document.account_newsletter.elements[object].checked;
 }

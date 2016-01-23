@@ -10,38 +10,46 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: rbarbour zcadditions.com Modified in v1.5.5 $
  */
+
+$zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
+
 /**
  * load the module for generating page meta-tags
  */
 require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
+/**
+ * output main page HEAD tag and related headers/meta-tags, etc
+ */
 ?>
-
 <?php
-// ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 1 of 3)
-if (!class_exists('Mobile_Detect')) {
-  include_once(DIR_WS_CLASSES . 'Mobile_Detect.php'); 
-  $detect = new Mobile_Detect;
-}
-// ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 1 of 3)
-?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
-<head>
+// ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 1 of 2)
+if (!class_exists('Mobile_Detect')) {
+  include_once(DIR_WS_CLASSES . 'Mobile_Detect.php');
+}
+  $detect = new Mobile_Detect;
+  $isMobile = $detect->isMobile();
+  $isTablet = $detect->isTablet();
+  if (!isset($layoutType)) $layoutType = ($isMobile ? ($isTablet ? 'tablet' : 'mobile') : 'default');
+// ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 1 of 2)
+
+  $paginateAsUL = true;
+
+?>
+<!DOCTYPE html>
+<html <?php echo HTML_PARAMS; ?>>
+  <head>
+  <meta charset="<?php echo CHARSET; ?>">
   <title><?php echo META_TAG_TITLE; ?></title>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
   <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
   <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
-  <meta http-equiv="imagetoolbar" content="no" />
-  <meta name="author" content="<?php echo STORE_NAME ?>">
+  <meta name="author" content="<?php echo STORE_NAME ?>" />
   <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
   <meta name="robots" content="noindex, nofollow" />
 <?php } ?>
 
-<?php // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 2 of 3) ?>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
-<?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 2 of 3 ?>
 
 <?php if (defined('FAVICON')) { ?>
   <link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
@@ -124,7 +132,7 @@ if (!class_exists('Mobile_Detect')) {
 
 <script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"%3E%3C/script%3E'));</script>
 <script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
-  
+
 <?php
 /**
  * load all site-wide jscript_*.js files from includes/templates/YOURTEMPLATE/jscript, alphabetically
@@ -168,10 +176,10 @@ if (!class_exists('Mobile_Detect')) {
 // DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
 ?>
 
-<?php // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 3 of 3)
-$responsive_mobile = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_mobile.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />'; 
-$responsive_tablet = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_tablet.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />'; 
-$responsive_default = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_default.css' . '" />'; 
+<?php // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 2 of 2)
+$responsive_mobile = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_mobile.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />';
+$responsive_tablet = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_tablet.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />';
+$responsive_default = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_default.css' . '" />';
 
 if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional')) ) {
   echo '';
@@ -190,7 +198,7 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
 ?>
   <script type="text/javascript">document.documentElement.className = 'no-fouc';</script>
   <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-<?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 3 of 3) ?>
+<?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 2 of 2) ?>
 <?php
   $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);
 ?>

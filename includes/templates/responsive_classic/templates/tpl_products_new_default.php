@@ -16,7 +16,7 @@
 
 <div id="filter-wrapper" class="group">
 
-<?php 
+<?php
 /**
  * display the product order dropdown
  */
@@ -40,10 +40,12 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
 
 
 <?php
+  $openGroupWrapperDiv = false;
   if (($products_new_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'))) {
+    $openGroupWrapperDiv = true;
 ?>
 <div class="prod-list-wrap group">
-<div id="newProductsDefaultListingTopLinks" class="back navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page'))); ?></div>
+<div id="newProductsDefaultListingTopLinks" class="back navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . $products_new_split->display_links($max_display_page_links, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $paginateAsUL); ?></div>
 <div id="newProductsDefaultListingTopNumber" class="navSplitPagesResult back"><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></div>
 <?php
   }
@@ -63,18 +65,16 @@ if (PREV_NEXT_BAR_LOCATION == '2') {
 
 <?php
     if  (PREV_NEXT_BAR_LOCATION == '2') {
-	       echo '</div>';
-	     }
+         echo '</div>';
+       }
 ?>
 <?php
-    } // top submit button
+  } // top submit button
 ?>
 
 
 <?php
-if ($show_top_submit_button == '2' && PREV_NEXT_BAR_LOCATION == '2' or !$show_top_submit_button && PREV_NEXT_BAR_LOCATION == '2') {
-}
-else {
+if ($openGroupWrapperDiv) {
   echo '</div>';
 }
 ?>
@@ -92,9 +92,8 @@ require($template->get_template_dir('/tpl_modules_products_new_listing.php',DIR_
 
 <?php
 if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1') {
-  
-}
-else {
+  // nothing
+} else {
   echo '<div class="prod-list-wrap group">';
 }
 ?>
@@ -102,8 +101,8 @@ else {
 <?php
   if (($products_new_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
-<div id="newProductsDefaultListingBottomLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page'))); ?></div>
-<div id="newProductsDefaultListingBottomNumber" class="navSplitPagesResult back"><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></div>
+<div id="newProductsDefaultListingBottomLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . $products_new_split->display_links($max_display_page_links, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $paginateAsUL); ?></div>
+  <div id="newProductsDefaultListingBottomNumber" class="navSplitPagesResult back"><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></div>
 <?php
   }
 ?>
@@ -129,6 +128,13 @@ if (PREV_NEXT_BAR_LOCATION == '1') {
 <?php
   }  // bottom submit button
 ?>
+<?php
+if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1') {
+  // nothing
+} else {
+  echo '</div>';
+}
+?>
 
 <?php
 // only end form if form is created
@@ -138,18 +144,4 @@ if (PREV_NEXT_BAR_LOCATION == '1') {
 <?php } // end if form is made ?>
 </div>
 
-<?php
-  // if ($show_top_submit_button == true or $show_bottom_submit_button == true or (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 and $show_submit == true and $listing_split->number_of_rows > 0)) {
-if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
-?>
-</form>
-    <?php } ?>
 
-<?php
-if ($show_bottom_submit_button == false && PREV_NEXT_BAR_LOCATION == '1') {
-  
-}
-else {
-  echo '</div>';
-}
-?>

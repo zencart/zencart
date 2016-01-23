@@ -36,6 +36,16 @@ class sagepay_zc_form extends sagepay_zc_payment
         if (MODULE_PAYMENT_SAGEPAY_ZC_FORM_TEST_STATUS == 'test') {
             $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
         }
+        if (!function_exists('mcrypt_encrypt')) {
+            $this->title .= '<span class="alert">' . TEXT_TITLE_MCRYPT_ERROR . '</span>';
+            $this->description = '<span class="alert">' . TEXT_DESCRIPTION_MCRYPT_ERROR . '</span><br><br>' . $this->description;
+            $this->enabled = false;
+        }
+        if ((extension_loaded('suhosin') || defined("SUHOSIN_PATCH"))  && ini_get('suhosin.get.max_value_length') < 600) {
+            $this->title .= '<span class="alert">' . TEXT_TITLE_SUHOSIN_ERROR . '</span>';
+            $this->description = '<span class="alert">' . TEXT_DESCRIPTION_SUHOSIN_GET_LENGTH_ERROR . '</span><br><br>' . $this->description;
+            $this->enabled = false;
+        }
     }
 
     /**
@@ -45,8 +55,8 @@ class sagepay_zc_form extends sagepay_zc_payment
     {
         $sid = zen_session_name() . '=' . zen_session_id();
         $formEntries = $this->buildStandardTransactionDetails();
-        $formEntries['SuccessURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', true));
-        $formEntries['FailureURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', true));
+        $formEntries['SuccessURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', false));
+        $formEntries['FailureURL'] = str_replace('&amp;', '&', zen_href_link(FILENAME_CHECKOUT_PROCESS, $sid, 'SSL', false));
         $processButtonString = SagepayUtil::processCryptEntries($formEntries);
 
         $crypt = SagepayUtil::encryptAndEncode($processButtonString, MODULE_PAYMENT_SAGEPAY_ZC_FORM_PASSWORD);
