@@ -8,6 +8,8 @@
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
+logDetails($dbVersion, 'Version detected in database_upgrade/header_php.php');
+
 $versionArray = array();
 $versionArray[] = '1.2.6';
 $versionArray[] = '1.2.7';
