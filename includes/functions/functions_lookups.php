@@ -268,8 +268,8 @@
     
     foreach($sql_result as $opt_type) {
 
-      $test_var = false; // Set to true if the name is supposed to have a value associated
-      $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE');
+      $test_var = true; // Set to false if the name is not supposed to have a value associated
+      $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE', array($test_var), $test_var);
 
       if (!($opt_type == PRODUCTS_OPTIONS_TYPE_TEXT || $opt_type == PRODUCTS_OPTIONS_TYPE_FILE) || ($test_var && $opt_type != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type != PRODUCTS_OPTIONS_TYPE_FILE) )) {
         $option_name_no_value = false;
