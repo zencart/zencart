@@ -76,3 +76,17 @@ display:block;
 margin:0;
 padding:4px 0 0;
 }
+.upperMenu{
+    display: none;
+}
+@media (min-width: 979px) {
+    ul.nav li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+    }
+    .upperMenu{
+        display: block;
+    }
+    .upperMenuItems{
+        display: none !important;
+    }
+}

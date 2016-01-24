@@ -37,11 +37,8 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script language="JavaScript" src="includes/menu.js" type="text/JavaScript"></script>
     <script type="text/javascript">
         <!--

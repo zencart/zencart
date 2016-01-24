@@ -7,6 +7,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
+
+@import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
+
 @import url("menu.css");
 /* including stylesheet for dhtml menu */
 @import url("index.css"); /* including stylesheet for index.php */
@@ -144,7 +147,6 @@ body#login .button:hover {
 
 body#login fieldset {
     margin: 0 auto;
-    padding: 10px;
     background-color: #05a5cb;
 }
 
@@ -166,6 +168,7 @@ body#login legend {
     float: right;
     color: #fff;
     font-size: 1em;
+    margin: 20px;
 }
 
 checkbox, input, radio, select, textarea, file {
