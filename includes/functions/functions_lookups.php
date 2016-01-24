@@ -242,27 +242,27 @@
  */
   function zen_option_name_no_values($option_name_id) {
     global $db, $zco_notifier;
-    
+
     $option_name_no_value = true;
     if (!is_array($option_name_id)) {
       $option_name_id = array($option_name_id);
     }
     
-    $sql = "SELECT products_options_types FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id :option_name_id:";
-    if (sizeof($option_name_id) > 1 ) ) {
+    $sql = "SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id :option_name_id:";
+    if (sizeof($option_name_id) > 1 ) {
       $sql2 = 'in (';
       foreach($option_name_id as $option_id) {
         $sql2 .= ':option_id:,';
         $sql2 = $db->bindVars($sql2, ':option_id:', $option_id, 'integer');
       }
+      $sql2 = substr($sql2, 0, -1); // Need to remove the final comma off of the above.
       $sql2 = ')';
-      
     } else {
       $sql2 = ' = :option_id:';
       $sql2 = $db->bindVars($sql2, ':option_id:', $option_name_id[0], 'integer');
     }
       
-    $sql = $sql->bindVars($sql, 'option_name_id:', $sql2, 'stringnoquote');
+    $sql = $db->bindVars($sql, ':option_name_id:', $sql2, 'noquotestring');
     
     $sql_result = $db->Execute($sql);
     
@@ -271,7 +271,7 @@
       $test_var = true; // Set to false in observer if the name is not supposed to have a value associated
       $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE', array($test_var), $test_var);
 
-      if ($test_var && $opt_type != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type != PRODUCTS_OPTIONS_TYPE_FILE)) {
+      if ($test_var && $opt_type != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type != PRODUCTS_OPTIONS_TYPE_FILE) {
         $option_name_no_value = false;
         break;
       }
