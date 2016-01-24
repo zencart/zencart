@@ -209,7 +209,7 @@ define('BOX_COUPON_ADMIN','Coupon Admin');
 define('BOX_COUPON_RESTRICT','Coupon Restrictions');
 
 // admin access box text
-define('BOX_HEADING_ADMIN_ACCESS', 'Admins');
+define('BOX_HEADING_ADMIN_ACCESS', 'Admin Access Management');
 define('BOX_ADMIN_ACCESS_USERS',  'Admin Users');
 define('BOX_ADMIN_ACCESS_PROFILES', 'Admin Profiles');
 define('BOX_ADMIN_ACCESS_PAGE_REGISTRATION', 'Admin Page Registration');
@@ -743,35 +743,6 @@ define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not u
 define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate server (%s) failed for %s (%s) - trying the secondary exchange rate server.');
 
 
-define('ADMIN_ROW_ICON_ACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconActive"><i class="fa fa-circle fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_ARROW_RIGHT','<span class="fa-stack fa-lg adminRowIcon adminRowIconRightArrow"><i class="fa  fa-chevron-circle-right fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_ATTRIBUTES_ACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconAttributesActive"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-stack-1x">A</i></span>');
-define('ADMIN_ROW_ICON_ATTRIBUTES_INACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconAttributesInactive"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-stack-1x">A</i></span>');
-define('ADMIN_ROW_ICON_CART_ACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconCartActive"><i class="fa fa-cart-plus fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_CART_INACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconCartInactive"><i class="fa fa-cart-plus fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_CART_NO_ACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconCartNoActive"><i class="fa fa-shopping-cart fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_CART_NO_INACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconCartNoInactive"><i class="fa fa-shopping-cart fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_COPY','<span class="fa-stack fa-lg adminRowIcon adminRowIconCopy"><i class="fa fa-copy fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_DELETE','<span class="fa-stack fa-lg adminRowIcon adminRowIconDelete"><i class="fa fa-remove fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_EDIT','<span class="fa-stack fa-lg adminRowIcon adminRowIconEdit"><i class="fa fa-edit fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_FOLDER','<span class="fa-stack fa-lg adminRowIcon adminRowIconFolder"><i class="fa fa-folder fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_IMAGES','<span class="fa-stack fa-lg adminRowIcon adminRowIconImages"><i class="fa fa-camera fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_INFO','<span class="fa-stack fa-lg adminRowIcon adminRowIconInfo"><i class="fa fa-circle-o fa-stack-2x"></i><i class="fa fa-stack-1x">i</i></span>');
-define('ADMIN_ROW_ICON_INACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconInactive"><i class="fa fa-circle fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_LINKED','<span class="fa-stack fa-lg adminRowIcon adminRowIconLinked"><i class="fa fa-chain fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_META_TAGS_ACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconMetaTagsActive"><i class="fa fa-file-text fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_META_TAGS_INACTIVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconMetaTagsInactive"><i class="fa fa-file-text-o fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_MOVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconMove"><i class="fa fa-truck fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_PREVIEW','<span class="fa-stack fa-lg adminRowIcon adminRowIconPreview"><i class="fa fa-binoculars fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_RESTRICTED','<span class="fa-stack fa-lg adminRowIcon adminRowIconRestricted"><i class="fa fa-circle fa-stack"></i></span>');
-define('ADMIN_ROW_ICON_SAVE','<span class="fa-stack fa-lg adminRowIcon adminRowIconSave"><i class="fa fa-save fa-stack"></i></span>');
-
-
-
-
-
-
-define('ADMIN_ROW_ICON_PRICE','<span class="fa-stack fa-lg adminRowIcon adminRowIconPrice"><i class="fa fa-dollar fa-stack"></i></span>');
 ///////////////////////////////////////////////////////////
 // include additional files:
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_EMAIL_EXTRAS);

@@ -65,7 +65,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // if not on server show red
       if (!zen_orders_products_downloads($orders_download->fields['orders_products_filename'])) {
-        $zc_file_status = ADMIN_ROW_ICON_INACTIVE;
+        $zc_file_status = zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF);
       }
 ?>
           <tr>

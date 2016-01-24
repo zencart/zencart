@@ -445,7 +445,6 @@ function array_minus_array($a, $b) {
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-  <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script language="javascript"><!--
@@ -566,7 +565,7 @@ if ($_GET['products_filter'] != '') {
           <tr><?php echo zen_draw_form('restrict_product', FILENAME_PRODUCTS_TO_CATEGORIES, '', 'get', '', true) . zen_draw_hidden_field('action', 'set_master_categories_id') . zen_draw_hidden_field('products_filter', $products_filter) . zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
             <td class="main">
               <?php
-                echo '&nbsp;&nbsp;&nbsp;' . ADMIN_ROW_ICON_LINKED . '&nbsp;&nbsp;';
+                echo '&nbsp;&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;';
                 echo '<strong>' . TEXT_MASTER_CATEGORIES_ID . '</strong> ' . zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $product_to_copy->fields['master_categories_id'], 'onChange="this.form.submit();"');
                 echo zen_hide_session_id();
                 if ($product_to_copy->fields['master_categories_id'] <= 0) {
@@ -640,7 +639,7 @@ if ($_GET['products_filter'] != '') {
       echo '  <td class="dataTableContent" align="right">' . $categories_list->fields['categories_id'] . '</td>' . "\n";
       if ($product_to_copy->fields['master_categories_id'] == $categories_list->fields['categories_id']) {
 //        echo '  <td class="dataTableContent" align="left">' . ($selected ? '<strong>' : '') . $zc_categories_checkbox . '&nbsp;' . $categories_list->fields['categories_name'] . ($selected ? '</strong>' : '') . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '</td>' . "\n";
-        echo '  <td class="dataTableContent" align="left">' . '&nbsp;' . ADMIN_ROW_ICON_LINKED . '&nbsp;' . $categories_list->fields['categories_name'] . zen_draw_hidden_field('current_master_categories_id', $categories_list->fields['categories_id']) . '</td>' . "\n";
+        echo '  <td class="dataTableContent" align="left">' . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;' . $categories_list->fields['categories_name'] . zen_draw_hidden_field('current_master_categories_id', $categories_list->fields['categories_id']) . '</td>' . "\n";
       } else {
         echo '  <td class="dataTableContent" align="left">' . ($selected ? '<strong>' : '') . $zc_categories_checkbox . '&nbsp;' . $categories_list->fields['categories_name'] . ($selected ? '</strong>' : '') . '</td>' . "\n";
       }
@@ -852,4 +851,4 @@ if ($_GET['products_filter'] != '') {
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

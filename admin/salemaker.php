@@ -152,7 +152,6 @@ define('AUTOCHECK', 'False');
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -254,22 +253,17 @@ function SetCategories() {
 }
 
 </script>
+</head>
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetCategories();SetFocus();init()">
+<div id="spiffycalendar" class="text"></div>
 <?php
-$body_onload = "SetCategories();SetFocus();init()";
   } else {
-  $body_onload = "SetFocus();init()";
-  }
 ?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="<?php echo $body_onload; ?>">
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();init()">
 <?php
-if ( ($action == 'new') || ($action == 'edit') ) {
-    ?>
-    <div id="spiffycalendar" class="text"></div>
-    <?php
-}
-    ?>
-
+  }
+?>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -387,7 +381,7 @@ var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2"
   }
 
     echo "      <tr>\n";
-    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . ADMIN_ROW_ICON_ARROW_RIGHT . "</td>\n";
+    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif') . "</td>\n";
     echo '        <td class="main" colspan="2"><br>' . TEXT_SALEMAKER_ENTIRE_CATALOG . "</td>\n";
     echo "      </tr>\n";
     echo '      <tr onClick="RowClick(\'0\')">' . "\n";
@@ -395,7 +389,7 @@ var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2"
     echo '        <td class="main" colspan="2">' . TEXT_SALEMAKER_TOP . "</td>\n";
     echo "      </tr>\n";
     echo "      <tr>\n";
-    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . ADMIN_ROW_ICON_ARROW_RIGHT . "</td>\n";
+    echo '        <td valign="bottom" class="main">' . zen_draw_separator('pixel_trans.gif', '4', '1') . zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif') . "</td>\n";
     echo '        <td class="main" colspan="2"><br>' . TEXT_SALEMAKER_CATEGORIES . "</td>\n";
     echo "      </tr>\n";
     echo "      </table></tr>\n";
@@ -490,7 +484,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
       }
 ?>
                 </td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($sInfo)) && ($salemaker_sales->fields['sale_id'] == $sInfo->sale_id) ) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (is_object($sInfo)) && ($salemaker_sales->fields['sale_id'] == $sInfo->sale_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
       </tr>
 <?php
       $salemaker_sales->MoveNext();
@@ -576,4 +570,4 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

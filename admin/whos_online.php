@@ -36,23 +36,23 @@ function zen_check_quantity($which) {
   switch (true) {
     case ($which_query->RecordCount() == 0):
     if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-      return ADMIN_ROW_ICON_CART_NO_INACTIVE;
+      return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif');
     } else {
-      return ADMIN_ROW_ICON_CART_NO_ACTIVE;
+      return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
     }
     break;
     case (strstr($chk_cart_status,'"contents";a:0:')):
     if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-      return ADMIN_ROW_ICON_CART_NO_INACTIVE;
+      return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif');
     } else {
-      return ADMIN_ROW_ICON_CART_NO_ACTIVE;
+      return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
     }
     break;
     case (!strstr($chk_cart_status,'"contents";a:0:')):
     if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-      return ADMIN_ROW_ICON_CART_INACTIVE;
+      return zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif');
     } else {
-      return ADMIN_ROW_ICON_CART_ACTIVE;
+      return zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
     }
     break;
   }
@@ -188,7 +188,6 @@ function zen_check_minutes($the_time_last_click) {
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript">
@@ -234,7 +233,7 @@ function zen_check_minutes($the_time_last_click) {
   padding:5px;
   }
 .last-url-link a {
-  color:#05a5cb;
+  color:green;
   }
 .dataTableRowBot .last-url-link a {color: #333;}
 .dataTableRowSelectedBot .last-url-link a {color: #333;}
@@ -242,9 +241,9 @@ function zen_check_minutes($the_time_last_click) {
 .dataTableRowSelectedBot .last-url-link {background: #f0cbfa;}
 
 #wo-legend {float: left;}
-#wo-filters { float: right; color: #fff; background-color: #05a5cb; padding: 2px 10px;}
+#wo-filters { float: right; background-color: #599659; color: #fff}
 #wo-filters .optionClick { display: inline-block; color: #fff; border: 1px solid #fff; font-weight: bold; padding: 1px; margin: 2px 1px;}
-#wo-filters .chosen {background-color: #333;}
+#wo-filters .chosen {background-color: #003D00;}
 -->
 </style>
 </head>
@@ -269,10 +268,10 @@ function zen_check_minutes($the_time_last_click) {
               <?php echo
               '<a href="' . zen_href_link(FILENAME_WHOS_ONLINE . '.php', zen_get_all_get_params()) . '" class="menuBoxContentLink">' . '<strong><u>' . WHOS_ONLINE_REFRESH_LIST_TEXT . '</u></strong>' . '</a>' .
               '<br />' . "\n" . WHOS_ONLINE_LEGEND_TEXT . '&nbsp;' .
-              ADMIN_ROW_ICON_CART_ACTIVE . '&nbsp;' . WHOS_ONLINE_ACTIVE_TEXT . '&nbsp;&nbsp;' .
-              ADMIN_ROW_ICON_CART_INACTIVE . '&nbsp;' . WHOS_ONLINE_INACTIVE_TEXT . '&nbsp;&nbsp;' .
-              ADMIN_ROW_ICON_CART_NO_ACTIVE . '&nbsp;' . WHOS_ONLINE_ACTIVE_NO_CART_TEXT . '&nbsp;&nbsp;' .
-              ADMIN_ROW_ICON_CART_NO_INACTIVE . '&nbsp;' . WHOS_ONLINE_INACTIVE_NO_CART_TEXT . '<br />' .
+              zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_TEXT . '&nbsp;&nbsp;' .
+              zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_TEXT . '&nbsp;&nbsp;' .
+              zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_NO_CART_TEXT . '&nbsp;&nbsp;' .
+              zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_NO_CART_TEXT . '<br />' .
               WHOS_ONLINE_INACTIVE_LAST_CLICK_TEXT . '&nbsp;' . WHOIS_TIMER_INACTIVE . 's' .'&nbsp;||&nbsp;' . WHOS_ONLINE_INACTIVE_ARRIVAL_TEXT . '&nbsp;' .
               WHOIS_TIMER_DEAD . 's&nbsp;' . WHOS_ONLINE_REMOVED_TEXT;?>
               </div>
@@ -560,4 +559,4 @@ function zen_check_minutes($the_time_last_click) {
 <br />
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

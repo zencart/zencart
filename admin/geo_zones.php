@@ -128,7 +128,6 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <script language="javascript" src="includes/menu.js"></script>
 <script language="javascript" src="includes/general.js"></script>
 <?php
@@ -244,7 +243,7 @@ if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') an
 ?>
                 <td class="dataTableContent"><?php echo (($zones->fields['countries_name']) ? $zones->fields['countries_name'] : TEXT_ALL_COUNTRIES); ?></td>
                 <td class="dataTableContent"><?php echo (($zones->fields['zone_id']) ? $zones->fields['zone_name'] : PLEASE_SELECT); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($zones->fields['association_id'] == $sInfo->association_id)) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones->fields['association_id']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($zones->fields['association_id'] == $sInfo->association_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones->fields['association_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $zones->MoveNext();
@@ -266,9 +265,9 @@ if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') an
   } else {
 ?>
 <?php echo TEXT_LEGEND; ?>&nbsp;
-<?php echo ADMIN_ROW_ICON_ACTIVE . TEXT_LEGEND_TAX_AND_ZONES; ?>&nbsp;&nbsp;&nbsp;
-<?php echo ADMIN_ROW_ICON_RESTRICTED . TEXT_LEGEND_ONLY_ZONES; ?>&nbsp;&nbsp;&nbsp;
-<?php echo ADMIN_ROW_ICON_INACTIVE . TEXT_LEGEND_NOT_CONF; ?>&nbsp;&nbsp;&nbsp;<br />
+<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . TEXT_LEGEND_TAX_AND_ZONES; ?>&nbsp;&nbsp;&nbsp;
+<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . TEXT_LEGEND_ONLY_ZONES; ?>&nbsp;&nbsp;&nbsp;
+<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . TEXT_LEGEND_NOT_CONF; ?>&nbsp;&nbsp;&nbsp;<br />
             <table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_ZONES; ?></td>
@@ -331,19 +330,19 @@ if ((!isset($_GET['zpage']) or $_GET['zpage'] == '' or $_GET['zpage'] == '1') an
         echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones->fields['geo_zone_id']) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones->fields['geo_zone_id'] . '&action=list') . '">' . ADMIN_ROW_ICON_FOLDER . '</a>&nbsp;' . $zones->fields['geo_zone_name']; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones->fields['geo_zone_id'] . '&action=list') . '">' . zen_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $zones->fields['geo_zone_name']; ?></td>
                 <td class="dataTableContent"><?php echo $zones->fields['geo_zone_description']; ?></td>
                 <td class="dataTableContent" align="center"><?php
                     // show current status
                     if ($zones->fields['num_tax_rates'] && $zones->fields['num_zones']) {
-                      echo ADMIN_ROW_ICON_ACTIVE;
+                      echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
                     } elseif ($zones->fields['num_zones']) {
-                      echo ADMIN_ROW_ICON_RESTRICTED;
+                      echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif');
                     } else {
-                      echo ADMIN_ROW_ICON_INACTIVE;
+                      echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
                     }
                   ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($zInfo) && is_object($zInfo) && ($zones->fields['geo_zone_id'] == $zInfo->geo_zone_id)) { echo ADMIN_ROW_ICON_ARROW_RIGHT; } else { echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones->fields['geo_zone_id']) . '">' . ADMIN_ROW_ICON_INFO . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($zInfo) && is_object($zInfo) && ($zones->fields['geo_zone_id'] == $zInfo->geo_zone_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones->fields['geo_zone_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $zones->MoveNext();
@@ -475,4 +474,4 @@ if ((!isset($_GET['zpage']) or $_GET['zpage'] == '' or $_GET['zpage'] == '1') an
 <br>
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
