@@ -2163,7 +2163,7 @@ while (!$chk_sale_categories_all->EOF) {
     foreach($sql_result as $opt_type) {
       $test_var = true; // Set to false in observer if the name is not supposed to have a value associated
       $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE', array($test_var), $test_var);
-      if ($test_var && $opt_type != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type != PRODUCTS_OPTIONS_TYPE_FILE) {
+      if ($test_var && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) {
         $option_name_no_value = false;
         break;
       }
