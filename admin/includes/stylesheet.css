@@ -148,6 +148,7 @@ body#login .button:hover {
 body#login fieldset {
     margin: 0 auto;
     background-color: #05a5cb;
+    padding-bottom: 30px;
 }
 
 .loginLabel {

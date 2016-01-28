@@ -79,7 +79,6 @@ if (isset($_POST['submit']))
 <meta name="robots" content="noindex, nofollow"/>
 </head>
 <body id="login" onload="document.getElementById('admin_email').focus()">
-  <div class="container">
     <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
       <form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
       <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
@@ -99,7 +98,6 @@ if (isset($_POST['submit']))
         </fieldset>
       </form>
     </div>
-</div>
 </body>
 </html>
 <?php require('includes/application_bottom.php');

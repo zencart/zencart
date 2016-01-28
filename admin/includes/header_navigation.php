@@ -42,18 +42,3 @@ $menuTitles = zen_get_menu_titles();
 		</ul>
 	</div><!-- /.navbar-collapse -->
 </nav>
-
-<div id="navbar">
-  <ul class="nde-menu-system" onmouseover="hide_dropdowns('in');" onmouseout="hide_dropdowns('out');">
-    <?php foreach (zen_get_admin_menu_for_user() as $menuKey => $pages) { ?>
-    <li>
-      <a class="top" href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>"><?php echo $menuTitles[$menuKey] ?></a>
-      <ul>
-        <?php foreach ($pages as $page) { ?>
-        <li><a href="<?php echo zen_href_link($page['file'], $page['params']) ?>"><?php echo $page['name'] ?></a></li>
-        <?php } ?>
-      </ul>
-    </li>
-    <?php } ?>
-  </ul>
-</div>
