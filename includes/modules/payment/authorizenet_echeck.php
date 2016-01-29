@@ -145,7 +145,7 @@ class authorizenet_echeck extends base {
    * @return string
    */
   function javascript_validation() {
-    $js = '  if (payment_value == "' . $this->code . '") {' . "\n" .
+    $js = '  if (payment_value == "' . $this->code . '") {' . "\n" ;
     $js .= '    var echeck_custname = document.checkout_payment.authorizenet_echeck_bank_accountholder.value;' . "\n";
     $js .= '    var echeck_bank_aba = document.checkout_payment.authorizenet_echeck_bank_aba_code.value;' . "\n";
     $js .= '    var echeck_bank_acctnum = document.checkout_payment.authorizenet_echeck_bank_acct_num.value;' . "\n";
@@ -543,7 +543,7 @@ class authorizenet_echeck extends base {
     }
 
     // set URL
-    $url = 'https://secure.authorize.net/gateway/transact.dll';
+    $url = 'https://secure2.authorize.net/gateway/transact.dll';
     $devurl = 'https://test.authorize.net/gateway/transact.dll';
     $dumpurl = 'https://developer.authorize.net/param_dump.asp';
     $certurl = 'https://certification.authorize.net/gateway/transact.dll';
