@@ -407,6 +407,10 @@ tr.attributeBoxContent {
     color: #333333;
 }
 
+.infoBoxContent a img{
+    margin-bottom: 16px;
+}
+
 .infoBoxHeading {
     background-color: #333;
     color: #ffffff;
