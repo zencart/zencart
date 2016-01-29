@@ -297,6 +297,7 @@ function cssjsmenu(menuid)
   {
     return true;
   }
+  if (!document.getElementById(menuid)) { return true; }
 
   // check for downlevel browsers
   // Opera 6, IE 5/Mac are not supported

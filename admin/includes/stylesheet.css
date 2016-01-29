@@ -7,9 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
-
 @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
-
 @import url("menu.css");
 /* including stylesheet for dhtml menu */
 @import url("index.css"); /* including stylesheet for index.php */
@@ -269,6 +267,10 @@ tr.attributeBoxContent {
     padding: 2px;
 }
 
+.row {
+    margin: 0px;
+}
+
 .dataTableContent {
     color: #333333;
 }
@@ -387,27 +389,26 @@ tr.attributeBoxContent {
     padding: 2px;
 }
 
-.headerBar .nav{
+.headerBar .nav {
     float: right;
     margin-right: 5px;
 }
 
-.headerBar div ul li a{
+.headerBar div ul li a {
     padding: 3px;
     margin-top: 3px;
 }
 
-.headerBar div ul li a:hover{
+.headerBar div ul li a:hover {
     color: #333;
 }
-
 
 .infoBoxContent {
     background-color: #e7e6e0;
     color: #333333;
 }
 
-.infoBoxContent a img{
+.infoBoxContent a img {
     margin-bottom: 16px;
 }
 
@@ -417,6 +418,10 @@ tr.attributeBoxContent {
 }
 
 .main {
+}
+
+.main a img {
+    margin-bottom: 16px;
 }
 
 .menuBoxContent {
@@ -472,6 +477,10 @@ h1, .pageHeading {
 
 .smallText {
     font-size: 9px;
+}
+
+.smallText a img{
+    margin-bottom: 16px;
 }
 
 .specialPrice {
@@ -557,7 +566,7 @@ label.error {
     text-align: right;
 }
 
-.adminRowIconCartInactive, .adminRowIconCartNoInactive, .adminRowIconCartInactive:hover, .adminRowIconCartNoInactive:hover{
+.adminRowIconCartInactive, .adminRowIconCartNoInactive, .adminRowIconCartInactive:hover, .adminRowIconCartNoInactive:hover {
     color: red;
     text-align: right;
 }
