@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
@@ -428,12 +428,45 @@ function couponpopupWindow(url) {
 //        echo $module->admin_notification($oID);
       }
     }
+
+
+    $prev_button = $next_button = '<input type="button" class="orderprevnext button ordersall" value="' . BUTTON_TO_LIST . '" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS) . '\'">';
+
+    $result = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " WHERE orders_id < '" . $oID . "' ORDER BY orders_id DESC LIMIT 1");
+    if ($result->RecordCount()) {
+      $prev_button = '<input type="button" class="orderprevnext button previous" value="&laquo; ' . $result->fields['orders_id'] . '" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">';
+    }
+
+    $result = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " WHERE orders_id > '" . $oID . "' ORDER BY orders_id ASC LIMIT 1");
+    if ($result->RecordCount()) {
+      $next_button = '<input type="button" class="orderprevnext button next" value="' . $result->fields['orders_id'] . ' &raquo;" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">';
+    }
+
 ?>
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
+
+
+            <td class="main" valign="middle">&nbsp;</td>
+            <td align="center">
+              <table border="0" cellspacing="3" cellpadding="0">
+                <tr>
+                  <td class="main" align="center" valign="bottom"><?php echo $prev_button; ?></td>
+                  <td class="smallText" align="center" valign="bottom"><?php
+                    echo SELECT_ORDER_LIST . '<br />';
+                    echo zen_draw_form('input_oid', FILENAME_ORDERS, '', 'get', '', true);
+                    echo zen_draw_input_field('oID', '', 'size="11"');
+                    echo zen_draw_hidden_field('action', 'edit');
+                    echo '</form>';
+                  ?></td>
+                  <td class="main" align="center" valign="bottom"><?php echo $next_button; ?></td>
+                </tr>
+              </table>
+            </td>
+
             <td class="pageHeading" align="right"><?php echo '<a href="javascript:history.back()">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
           </tr>
         </table></td>
@@ -446,7 +479,7 @@ function couponpopupWindow(url) {
           <tr>
             <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
               <tr>
-                <td class="main" valign="top"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
+                <td class="main" valign="top"><strong><?php echo ENTRY_CUSTOMER_ADDRESS; ?></strong></td>
                 <td class="main"><?php echo zen_address_format($order->customer['format_id'], $order->customer, 1, '', '<br />'); ?></td>
               </tr>
               <tr>
@@ -454,7 +487,7 @@ function couponpopupWindow(url) {
               </tr>
               <tr>
                 <td class="main"><strong><?php echo ENTRY_TELEPHONE_NUMBER; ?></strong></td>
-                <td class="main"><?php echo $order->customer['telephone']; ?></td>
+                <td class="main"><a href="tel:<?php echo $order->customer['telephone']; ?>"><?php echo $order->customer['telephone']; ?></a></td>
               </tr>
               <tr>
                 <td class="main"><strong><?php echo ENTRY_EMAIL_ADDRESS; ?></strong></td>
@@ -462,7 +495,13 @@ function couponpopupWindow(url) {
               </tr>
               <tr>
                 <td class="main"><strong><?php echo TEXT_INFO_IP_ADDRESS; ?></strong></td>
-                <td class="main"><?php echo $order->info['ip_address']; ?></td>
+                <?php if ($order->info['ip_address'] != '') {
+                  $lookup_ip = substr($order->info['ip_address'], 0, strpos($order->info['ip_address'], ' '));
+                ?>
+                <td class="main"><a href="http://www.dnsstuff.com/tools#whois|type=ipv4&value=<?php echo $lookup_ip; ?>"  target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
+                <?php } else { ?>
+                <td class="main"><?php echo TEXT_UNKNOWN; ?></td>
+                <?php } ?>
               </tr>
               <tr>
                 <td class="main"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
@@ -695,7 +734,7 @@ function couponpopupWindow(url) {
         </table></td>
       </form></tr>
       <tr>
-        <td colspan="2" align="right" class="noprint"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']) . '" TARGET="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']) . '" TARGET="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action'))) . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'; ?></td>
+        <td colspan="2" align="right" class="noprint"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']) . '" target="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']) . '" target="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action'))) . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'; ?></td>
       </tr>
 <?php
 // check if order has open gv

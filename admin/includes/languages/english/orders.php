@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: orders.php  Modified in v1.5.5 $
@@ -29,20 +29,21 @@ define('TABLE_HEADING_PRODUCTS_MODEL', 'Model');
 define('TABLE_HEADING_PRODUCTS', 'Products');
 define('TABLE_HEADING_TAX', 'Tax');
 define('TABLE_HEADING_TOTAL', 'Total');
-define('TABLE_HEADING_PRICE_EXCLUDING_TAX', 'Price (ex)');
-define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (inc)');
-define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (ex)');
-define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total (inc)');
+define('TABLE_HEADING_PRICE_EXCLUDING_TAX', 'Price (excl)');
+define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (incl)');
+define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (excl)');
+define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total (incl)');
 
 define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
 define('TABLE_HEADING_DATE_ADDED', 'Date Added');
 
 define('ENTRY_CUSTOMER', 'Customer:');
+define('ENTRY_CUSTOMER_ADDRESS', 'Customer Address:<br><i class="fa fa-2x fa-user"></i>');
 define('ENTRY_SOLD_TO', 'SOLD TO:');
 define('ENTRY_DELIVERY_TO', 'Delivery To:');
 define('ENTRY_SHIP_TO', 'SHIP TO:');
-define('ENTRY_SHIPPING_ADDRESS', 'Shipping Address:');
-define('ENTRY_BILLING_ADDRESS', 'Billing Address:');
+define('ENTRY_SHIPPING_ADDRESS', 'Shipping Address:<br><i class="fa fa-2x fa-truck"></i>');
+define('ENTRY_BILLING_ADDRESS', 'Billing Address:<br><i class="fa fa-2x fa-credit-card"></i>');
 define('ENTRY_PAYMENT_METHOD', 'Payment Method:');
 define('ENTRY_CREDIT_CARD_TYPE', 'Credit Card Type:');
 define('ENTRY_CREDIT_CARD_OWNER', 'Credit Card Owner:');
@@ -118,6 +119,10 @@ define('TABLE_HEADING_CUSTOMER_COMMENTS', 'Customer<br />Comments');
 define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
 define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
 
-define('TEXT_CUSTOMER_LOOKUP', 'Lookup Customer');
+define('TEXT_CUSTOMER_LOOKUP', '<i class="fa fa-search"></i> Lookup Customer');
 
 define('TEXT_INVALID_ORDER_STATUS', '<span class="alert">(Invalid Order Status)</span>');
+
+define('BUTTON_TO_LIST', 'Order List');
+define('SELECT_ORDER_LIST', 'Jump to Order:');
+
