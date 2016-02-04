@@ -3,7 +3,7 @@
  * paypaldp.php payment module class for Paypal Payments Pro (aka Website Payments Pro)
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -1171,7 +1171,7 @@ class paypaldp extends base {
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
-                                        'version' => '124.0',
+                                        'version' => '201.0',
                                         'server' => MODULE_PAYMENT_PAYPALDP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
@@ -1875,6 +1875,7 @@ class paypaldp extends base {
             $_SESSION['payment'] = '';
           }
           if ($response['L_ERRORCODE0'] == 10566) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_CARD_TYPE_NOT_SUPPORTED;
+          if ($response['L_ERRORCODE0'] == 10417) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_TRY_OTHER_PAYMENT_METHOD;
           if ($response['L_ERRORCODE0'] == 10736) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_ADDR_ERROR;
           if ($response['L_ERRORCODE0'] == 10752) {
             $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED;
