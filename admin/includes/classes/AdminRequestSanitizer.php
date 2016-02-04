@@ -309,12 +309,24 @@ class AdminRequestSanitizer extends base
         $getToIgnore = array_merge($getToIgnore, $saniList);
         foreach ($_POST as $key => $value) {
             if (!in_array($key, $postToIgnore)) {
-                $_POST[$key] = htmlspecialchars($value);
+                if (is_array($value)) {
+                    foreach($value as $key2 => $val2){
+                        $_POST[$key][$key2] = htmlspecialchars($val2);
+                    }
+                } else {
+                    $_POST[$key] = htmlspecialchars($value);
+                }
             }
         }
         foreach ($_GET as $key => $value) {
             if (!in_array($key, $getToIgnore)) {
-                $_GET[$key] = htmlspecialchars($value);
+                if (is_array($value)) {
+                    foreach($value as $key2 => $val2){
+                        $_GET[$key][$key2] = htmlspecialchars($val2);
+                    }
+                } else {
+                    $_GET[$key] = htmlspecialchars($value);
+                }
             }
         }
     }
