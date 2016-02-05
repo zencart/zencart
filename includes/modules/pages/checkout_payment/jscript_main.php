@@ -35,13 +35,19 @@ function methodSelect(theMethod) {
     document.getElementById(theMethod).checked = 'checked';
   }
 }
-function collectsCardDataOnsite(paymentValue)
+
+    function doesCollectsCardDataOnsite(paymentValue)
+    {
+        if ($('#'+paymentValue+'_collects_onsite').val()) {
+            if($('#pmt-'+paymentValue).is(':checked')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+function doCollectsCardDataOnsite()
 {
- zcJS.ajax({
-  url: "ajax.php?act=ajaxPayment&method=doesCollectsCardDataOnsite",
-  data: {paymentValue: paymentValue}
-}).done(function( response ) {
-  if (response.data == true) {
    var str = $('form[name="checkout_payment"]').serializeArray();
 
    zcJS.ajax({
@@ -52,13 +58,7 @@ function collectsCardDataOnsite(paymentValue)
    $('#navBreadCrumb').html(response.breadCrumbHtml);
    $('#checkoutPayment').before(response.confirmationHtml);
    $(document).attr('title', response.pageTitle);
-
-   });
-  } else {
-   $('form[name="checkout_payment"]')[0].submit();
-}
-});
-return false;
+ });
 }
 
     $(document).ready(function(){
