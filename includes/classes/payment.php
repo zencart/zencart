@@ -155,10 +155,12 @@ class payment extends base {
        $js =  $js .'    alert(error_message);' . "\n";
        $js =  $js . '    return false;' . "\n";
        $js =  $js .'  } else {' . "\n";
+       $js =  $js .' var result = true '  . "\n";
        if ($this->doesCollectsCardDataOnsite == true && PADSS_AJAX_CHECKOUT == '1') {
-         $js .= '   return collectsCardDataOnsite(payment_value);' . "\n";
+         $js .= '      result = !(doesCollectsCardDataOnsite(payment_value));' . "\n";
        }
-       $js =  $js .'    return true;' . "\n";
+       $js =  $js .' if (result == false) doCollectsCardDataOnsite();' . "\n";
+       $js =  $js .'    return result;' . "\n";
        $js =  $js .'  }' . "\n" . '}' . "\n" . '//--></script>' . "\n";
     }
     return $js;
@@ -172,6 +174,12 @@ class payment extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $selection = $GLOBALS[$class]->selection();
+          if (isset($GLOBALS[$class]->collectsCardDataOnsite) && $GLOBALS[$class]->collectsCardDataOnsite == true) {
+            $selection['fields'][] = array('title' => '',
+                                         'field' => zen_draw_hidden_field($this->code . '_collects_onsite', 'true', 'id="' . $this->code. '_collects_onsite"'),
+                                         'tag' => '');
+
+          }
           if (is_array($selection)) $selection_array[] = $selection;
         }
       }
