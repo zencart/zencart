@@ -176,7 +176,7 @@ class payment extends base {
           $selection = $GLOBALS[$class]->selection();
           if (isset($GLOBALS[$class]->collectsCardDataOnsite) && $GLOBALS[$class]->collectsCardDataOnsite == true) {
             $selection['fields'][] = array('title' => '',
-                                         'field' => zen_draw_hidden_field('authorizenet_aim_collects_onsite', 'true', 'id="authorizenet_aim_collects_onsite"'),
+                                         'field' => zen_draw_hidden_field($this->code . '_collects_onsite', 'true', 'id="' . $this->code. '_collects_onsite"'),
                                          'tag' => '');
 
           }
