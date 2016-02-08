@@ -1,7 +1,7 @@
 <?php
 /**
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: rbarbour zcadditions.com  New in v1.5.5 $
  */
@@ -121,7 +121,7 @@ $('.rightBoxContainer').css('width', '');
 $('#mainWrapper').css('margin', 'auto');
 
 <?php } ?>
-$('a[href=#top]').click(function(){
+$('a[href="#top"]').click(function(){
 $('html, body').animate({scrollTop:0}, 'slow');
 return false;
 });
