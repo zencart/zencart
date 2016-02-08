@@ -3,7 +3,7 @@
  * functions used by payment module class for Paypal IPN payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -637,7 +637,7 @@
     global $db;
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
     $db->Execute("update " . TABLE_ORDERS  . "
-                  set orders_status = '" . (int)$new_status . "'
+                  set orders_status = '" . (int)$new_status . "', last_modified = now()
                   where orders_id = '" . (int)$ordersID . "'");
 
     $sql_data_array = array('orders_id' => (int)$ordersID,
