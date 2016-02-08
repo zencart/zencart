@@ -151,7 +151,7 @@ foreach ($menu_titles as $id => $title) {
     </div>
     <div>
       <label for="menuKey"><?php echo TEXT_MENU_KEY ?></label>
-      <?php echo zen_draw_pull_down_menu('menu_key', $menu_options, $menu_key) ?>
+      <?php echo zen_draw_pull_down_menu('menu_key', $menu_options, $menu_key, ' id="menuKey"');?>
     </div>
     <div>
       <label for="displayOnMenu"><?php echo TEXT_DISPLAY_ON_MENU ?></label>
