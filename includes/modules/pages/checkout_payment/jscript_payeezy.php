@@ -138,9 +138,9 @@ var responseHandler = function(status, response) {
     var $form = $('form[name="checkout_payment"]');
 
     // alert('Status = ' + status);
-    console.log(response);
 
     if (status != 201) {
+        console.error(response);
         if (response.Error && status != 400) {
             var errormsg = response.Error.messages;
             var errorcode = JSON.stringify(errormsg[0].code, null, 4);
@@ -160,6 +160,7 @@ var responseHandler = function(status, response) {
         $form.find('button').prop('disabled', false);
     } else {
         // alert('success');
+        console.log(response);
         var result = response.token.value;
         $('#payeezyjszc_fdtoken').val(result);
 
