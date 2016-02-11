@@ -55,6 +55,14 @@ class payeezyjszc extends base {
    * $commError and $commErrNo are CURL communication error details for debug purposes
    */
   var $commError, $commErrNo;
+  /**
+   * transaction vars hold the IDs of the completed payment
+   */
+  var $transaction_id, $transaction_messages, $auth_code;
+  /**
+   * internal vars
+   */
+  private $avs_codes, $cvv_codes;
 
 
   /**
@@ -93,6 +101,7 @@ class payeezyjszc extends base {
     // check for zone compliance and any other conditionals
     if (is_object($order)) $this->update_status();
 
+    $this->setAvsCvvMeanings();
   }
 
 
@@ -124,14 +133,13 @@ class payeezyjszc extends base {
     global $order;
 
     // PayEezy currently only accepts  "American Express", "Visa", "Mastercard", "Discover", "JCB", "Diners Club"
-    $cc_types = array(
-                      array('id' => 'Visa', 'text'=> 'Visa'),
-                      array('id' => 'Mastercard', 'text'=> 'Mastercard'),
-                      array('id' => 'Discover', 'text'=> 'Discover'),
-                      array('id' => 'American Express', 'text'=> 'American Express'),
-                      array('id' => 'JCB', 'text'=> 'JCB'),
-                      array('id' => 'Diners Club', 'text'=> 'Diners Club'),
-                      );
+    $cc_types = array();
+    if (CC_ENABLED_VISA == 1)     $cc_types[] = array('id' => 'Visa', 'text'=> 'Visa');
+    if (CC_ENABLED_MC == 1)       $cc_types[] = array('id' => 'Mastercard', 'text'=> 'Mastercard');
+    if (CC_ENABLED_DISCOVER == 1) $cc_types[] = array('id' => 'Discover', 'text'=> 'Discover');
+    if (CC_ENABLED_AMEX == 1)     $cc_types[] = array('id' => 'American Express', 'text'=> 'American Express');
+    if (CC_ENABLED_JCB == 1)      $cc_types[] = array('id' => 'JCB', 'text'=> 'JCB');
+    if (CC_ENABLED_DINERS_CLUB == 1) $cc_types[] = array('id' => 'Diners Club', 'text'=> 'Diners Club');
 
     // Prepare selection of expiry dates
     for ($i=1; $i<13; $i++) {
@@ -244,6 +252,9 @@ class payeezyjszc extends base {
     $order->info['cc_cvv']     = '***';
 
 
+    // @TODO - consider converting currencies if the gateway requires
+
+
     // format purchase amount 
     $payment_amount = $order->info['total'];
     $decimal_places = $currencies->get_decimal_places($order->info['currency']);
@@ -251,7 +262,8 @@ class payeezyjszc extends base {
       $payment_amount = $payment_amount * pow(10, $decimal_places); // Future: Exponentiation Operator ** requires PHP 5.6
     }
 
-    // @TODO - consider converting currencies if the gateway requires
+// sandbox testing
+// $payment_amount = 520200;
 
     // prepare data for submission
     $payload = array();
@@ -291,12 +303,13 @@ class payeezyjszc extends base {
 
     // validation_status: values - “success” / ”failure” based on input validation
 
-    // transaction_id and transaction_tag -- are used for follow-on processing such as recurring billing, void/capture/refund, etc
+    // transaction_id and transaction_tag (auth code) -- are used for follow-on processing such as recurring billing, void/capture/refund, etc
 
-    // success
+
+    // successful submission; now need to ensure it was not declined
     if (in_array($response['http_code'], array(200, 201, 202))) {
     // success example:
-    // {"correlation_id":"228.1400035528625",
+    // {"correlation_id":"228.1100035528625",
     // "transaction_status":"approved",
     // "validation_status":"success",
     // "transaction_type":"purchase",
@@ -309,21 +322,49 @@ class payeezyjszc extends base {
     // "token":{"token_type":"FDToken",
     //   "token_data":{"type":"Mastercard",
     //   "cardholder_name":"xyz",
-    //   "exp_date":"0416","value":"2833693200041732"}
+    //   "exp_date":"0430","value":"2833693200041732"}
     // },
     // "bank_resp_code":"100",
     // "bank_message":"Approved",
     // "gateway_resp_code":"00",
     // "gateway_message":"Transaction Normal"}
-      $this->transaction_id = $response['transaction_id'] . ' ' . $response['transaction_tag'];
-      $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
-      return true;
+
+      if ($response['transaction_status'] == 'approved') {
+        $this->auth_code = $response['transaction_tag'];
+        $this->transaction_id = $response['transaction_id'] . ' ' . $response['transaction_tag'];
+        $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
+        if (isset($response['avs']) && isset($this->avs_codes[$response['avs']])) $this->transaction_messages .= "\n" . 'AVS: ' . $this->avs_codes[$response['avs']];
+        if (isset($response['cvv2']) && isset($this->cvv_codes[$response['cvv2']])) $this->transaction_messages .= "\n" . 'CVV: ' . $this->cvv_codes[$response['cvv2']];
+        return true;        
+      }
+
+      if ($response['transaction_status'] == 'declined') {
+
+        // check if card is flagged for fraud
+        if (in_array($response['bank_resp_code'], array(500,501,502,503,596,534,524,519))) {
+          global $zco_notifier;
+          $_SESSION['payment_attempt'] = 500;
+          $zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_LOCKOUT', $response);
+          $_SESSION['cart']->reset(TRUE);
+          zen_session_destroy();
+          $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_DECLINED, 'error');
+          zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+        }
+
+        // generic "declined" message response
+        $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_DECLINED, 'error');
+        zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+      }
+
+      // Should never get here if we have a 200-204 response; if we get here, the transaction could not be processed for some other reason
+      $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ERROR . '[' . zen_output_string_protected($response['bank_resp_code'] . '/' . $response['gateway_resp_code']) . ']', 'error');
+      zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
     }
 
 
     // failed
     if ($response['http_code'] == 400) {
-      $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ERROR . '[' . zen_output_string_protected($response['Error']['messages']['description']) . ']', 'error');
+      $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ERROR . '[' . zen_output_string_protected($response['Error']['messages'][0]['description']) . ']', 'error');
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
 
     // error example:
@@ -336,10 +377,6 @@ class payeezyjszc extends base {
     //   },
     // "transaction_status":"Not Processed",
     // "validation_status":"failed",
-    // "transaction_type":"purchase",
-    // "method":"token",
-    // "amount":"200",
-    // "currency":"USD"}
 
     }
 
@@ -414,7 +451,7 @@ class payeezyjszc extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY', '', 'Enter the JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Trans Armour Token', 'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN', '', 'Enter the TA Token from your GGe4 account settings', '6', '0',  now(), 'zen_cfg_password_display')");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sandbox/Live Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE', 'Live', 'Use [Live] for real transactions<br>Use [Sandbox] for developer testing', '6', '0', 'zen_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Log Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING', 'Log Always and Email on Failures', 'Would you like to enable debug mode?  A complete detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Log Always\', \'Log Always and Email on Failures\', \'Email Always\', \'Email on Failures\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Log Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING', 'Log on Failures and Email on Failures', 'Would you like to enable debug mode?  A complete detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Log Always\', \'Log on Failures\', \'Log Always and Email on Failures\', \'Log on Failures and Email on Failures\', \'Email Always\', \'Email on Failures\'), ', now())");
 
   }
   function remove() {
@@ -439,7 +476,7 @@ class payeezyjszc extends base {
   }
 
 
-  public function hmacAuthorizationToken($payload)
+  private function hmacAuthorizationToken($payload)
   {
     $nonce = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
     $timestamp = strval(time()*1000); //time stamp in milli seconds
@@ -454,7 +491,7 @@ class payeezyjszc extends base {
     );
   }
 
-  public function postTransaction($payload, $headers)
+  private function postTransaction($payload, $headers)
   {
     $curlHeaders = array(
         'Content-Type: application/json',
@@ -480,7 +517,7 @@ class payeezyjszc extends base {
     $this->commInfo = curl_getinfo($request);
     curl_close($request);
 
-    if ($httpcode != 201) {
+    if (!in_array($httpcode, array(200,201,202))) {
       error_log($response);
     }
 
@@ -494,20 +531,23 @@ class payeezyjszc extends base {
   /**
    * Log transaction errors if enabled
    */
-  function logTransactionData($response, $payload, $order_time = '') {
+  private function logTransactionData($response, $payload) {
     global $db;
-    if ($order_time == '') $order_time = date("F j, Y, g:i a");
 
+    // Don't log headers if we get a success response
     if (substr($response['http_code'], 0, 2) == '20') unset($response['curlHeaders']);
+
     $logMessage = date('M-d-Y h:i:s') .
                     "\n=================================\n\n" .
                     ($this->commError !='' ? 'Comm results: ' . $this->commErrNo . ' ' . $this->commError . "\n\n" : '') .
-                    'HTTP Response Code: ' . $response['http_code'] . ".\nBank Message: " . $response['bank_message'] . "\n\n" .
-                    'Sending to Payeezy: ' . print_r($payload, true) . "\n\n" .
+                    'Transaction Status: ' . $response['transaction_status'] . "\n" .
+                    'Bank Message: ' . $response['bank_message'] . "\n" .
+                    'HTTP Response Code: ' . $response['http_code'] . "\n\n" .
+                    'Sent to Payeezy: ' . print_r($payload, true) . "\n\n" .
                     'Results Received back from Payeezy: ' . print_r($response, true) . "\n\n" .
                     'CURL communication info: ' . print_r($this->commInfo, true) . "\n";
 
-    if (strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Log')) {
+    if (strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Log Always') || ($response['transaction_status'] != 'approved' && strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Log on Failures'))) {
       $key = $response['transaction_id'] . '_' . preg_replace('/[^a-z]/i', '', $response['transaction_status']) . '_' . time() . '_' . zen_create_random_value(4);
       $file = $this->_logDir . '/' . 'PayEezy_' . $key . '.log';
       if ($fp = @fopen($file, 'a')) {
@@ -520,59 +560,41 @@ class payeezyjszc extends base {
     }
   }
 
+  private function setAvsCvvMeanings() {
+    $this->cvv_codes['M'] = 'CVV2/CVC2 Match - Indicates that the card is authentic. Complete the transaction if the authorization request was approved.';
+    $this->cvv_codes['N'] = 'CVV2 / CVC2 No Match – May indicate a problem with the card. Contact the cardholder to verify the CVV2 code before completing the transaction, even if the authorization request was approved.';
+    $this->cvv_codes['P'] = 'Not Processed - Indicates that the expiration date was not provided with the request, or that the card does not have a valid CVV2 code. If the expiration date was not included with the request, resubmit the request with the expiration date.';
+    $this->cvv_codes['S'] = 'Merchant Has Indicated that CVV2 / CVC2 is not present on card - May indicate a problem with the card. Contact the cardholder to verify the CVV2 code before completing the transaction.';
+    $this->cvv_codes['U'] = 'Issuer is not certified and/or has not provided visa encryption keys';
+    $this->cvv_codes['I'] = 'CVV2 code is invalid or empty';
+
+    $this->avs_codes['X'] = 'Exact match, 9 digit zip - Street Address, and 9 digit ZIP Code match';
+    $this->avs_codes['Y'] = 'Exact match, 5 digit zip - Street Address, and 5 digit ZIP Code match';
+    $this->avs_codes['A'] = 'Partial match - Street Address matches, ZIP Code does not';
+    $this->avs_codes['W'] = 'Partial match - ZIP Code matches, Street Address does not';
+    $this->avs_codes['Z'] = 'Partial match - 5 digit ZIP Code match only';
+    $this->avs_codes['N'] = 'No match - No Address or ZIP Code match';
+    $this->avs_codes['U'] = 'Unavailable - Address information is unavailable for that account number, or the card issuer does not support';
+    $this->avs_codes['G'] = 'Service Not supported, non-US Issuer does not participate';
+    $this->avs_codes['R'] = 'Retry - Issuer system unavailable, retry later';
+    $this->avs_codes['E'] = 'Not a mail or phone order';
+    $this->avs_codes['S'] = 'Service not supported';
+    $this->avs_codes['Q'] = 'Bill to address did not pass edit checks/Card Association cannot verify the authentication of an address';
+    $this->avs_codes['D'] = 'International street address and postal code match';
+    $this->avs_codes['B'] = 'International street address match, postal code not verified due to incompatible formats';
+    $this->avs_codes['C'] = 'International street address and postal code not verified due to incompatible formats';
+    $this->avs_codes['P'] = 'International postal code match, street address not verified due to incompatible format';
+    $this->avs_codes['1'] = 'Cardholder name matches';
+    $this->avs_codes['2'] = 'Cardholder name, billing address, and postal code match';
+    $this->avs_codes['3'] = 'Cardholder name and billing postal code match';
+    $this->avs_codes['4'] = 'Cardholder name and billing address match';
+    $this->avs_codes['5'] = 'Cardholder name incorrect, billing address and postal code match';
+    $this->avs_codes['6'] = 'Cardholder name incorrect, billing postal code matches';
+    $this->avs_codes['7'] = 'Cardholder name incorrect, billing address matches';
+    $this->avs_codes['8'] = 'Cardholder name, billing address, and postal code are all incorrect';
+    $this->avs_codes['F'] = 'Address and Postal Code match (UK only)';
+    $this->avs_codes['I'] = 'Address information not verified for international transaction';
+    $this->avs_codes['M'] = 'Address and Postal Code match';
+  }
 
 }
-
-
-
-/* *************************
-  CVV2 Response Code
-
-  The following CVV2 response Codes may be generated by First Data to indicate the status of a transaction based on your processing parameters.
-  Code  Description
-  M CVV2/CVC2 Match - Indicates that the card is authentic. Complete the transaction if the authorization request was approved.
-  N CVV2 / CVC2 No Match – May indicate a problem with the card. Contact the cardholder to verify the CVV2 code before completing the transaction, even if the authorization request was approved.
-  P Not Processed - Indicates that the expiration date was not provided with the request, or that the card does not have a valid CVV2 code. If the expiration date was not included with the request, resubmit the request with the expiration date.
-  S Merchant Has Indicated that CVV2 / CVC2 is not present on card - May indicate a problem with the card. Contact the cardholder to verify the CVV2 code before completing the transaction.
-  U Issuer is not certified and/or has not provided visa encryption keys
-  I CVV2 code is invalid or empty
-
-  AVS Response Code
-
-  The AVS result is a one-character response that indicates the degree of match for the provided address. Currently supported AVS responses are below.
-  Code  Description
-  North American Response Codes
-  X Exact match, 9 digit zip - Street Address, and 9 digit ZIP Code match
-  Y Exact match, 5 digit zip - Street Address, and 5 digit ZIP Code match
-  A Partial match - Street Address matches, ZIP Code does not
-  W Partial match - ZIP Code matches, Street Address does not
-  Z Partial match - 5 digit ZIP Code match only
-  N No match - No Address or ZIP Code match
-  U Unavailable - Address information is unavailable for that account number, or the card issuer does not support
-  G Service Not supported, non-US Issuer does not participate
-  R Retry - Issuer system unavailable, retry later
-  E Not a mail or phone order
-  S Service not supported
-  Q Bill to address did not pass edit checks/Card Association can't verify the authentication of an address
-  D International street address and postal code match
-  B International street address match, postal code not verified due to incompatible formats
-  C International street address and postal code not verified due to incompatible formats
-  P International postal code match, street address not verified due to incompatible format
-  1 Cardholder name matches
-  2 Cardholder name, billing address, and postal code match
-  3 Cardholder name and billing postal code match
-  4 Cardholder name and billing address match
-  5 Cardholder name incorrect, billing address and postal code match
-  6 Cardholder name incorrect, billing postal code matches
-  7 Cardholder name incorrect, billing address matches
-  8 Cardholder name, billing address, and postal code are all incorrect
-  International Response Codes
-  G Global non-AVS participant
-  B Address matches only
-  C Address and Postal Code do not match
-  D Address and Postal Code match
-  F Address and Postal Code match (UK only)
-  I Address information not verified for international transaction
-  M Address and Postal Code match
-  P Postal Code matches only
-*/
