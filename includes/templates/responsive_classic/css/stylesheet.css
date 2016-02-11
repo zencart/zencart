@@ -2,7 +2,7 @@
  * Main CSS Stylesheet
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: picaflor-azul Modified in v1.5.5 $
@@ -278,7 +278,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 #indexProductListCatDescription, #categoryDescription{margin-left:5%;float:left;}
 #cat-top{margin-bottom:20px;}
 #cat-left{text-align:center;}
-#filter-wrapper{padding:10px;margin-bottom:-16px;}
+#filter-wrapper{padding:10px;}
 #filter-wrapper select{width:25%;height:35px;}
 .navSplitPagesLinks {display:inline-block;}
 .navSplitPagesLinks a{padding:10px;font-weight:bold;text-decoration:none;}
@@ -352,7 +352,7 @@ span.list-addtext{display:block;text-align:center;}
 #productQuantityDiscounts td{padding:10px;border:none;}
 #productQuantityDiscounts td:last-child{border:none;}
 #productQuantityDiscounts tr:nth-child(even){}
-#productQuantityDiscounts table tr:first-child td{padding:5px 10px;;border:none !important;}
+#productQuantityDiscounts table tr:first-child td{padding:5px 10px;border:none !important;}
 #mediaManager {width:50%;margin:0.2em 0 0.2em 30px;padding:0.5em 0;}
 .mediaTitle {float:left;}
 .mediaTypeLink {float:right;}
@@ -452,7 +452,7 @@ h2.greeting a:hover{}
 #loginDefault{margin-bottom:30px;}
 #loginDefault .inputLabel{margin-left:20px;}
 #loginDefault .alert{margin-right:20px;}
-
+#loginDefault #country{margin-left:0;}
 .paypal-button-hidden{visibility:hidden;}
 
 /* markup for tables used to present tabular data */
