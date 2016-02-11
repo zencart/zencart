@@ -25,13 +25,15 @@ Requirements
 ------------
 Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP)
 
-- Compatible with PHP 5.4 thru PHP 5.6, and PHP 7
+- Compatible with PHP 5.4.2 to 7.0.x
 - Compatible with MySQL 5.1 to 5.7, via the PHP mysqli client
 - CURL (via PHP) is used to communication with payment/shipping services
 - Compatible with with Apache 2.2, (or Apache 2.4 with the backward-compatibility mode enabled for v2.2 .htaccess rules support.)
-- Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, php5, rewrite (in addition to other common modules)
+- Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, rewrite (in addition to other common modules)
 
 Zen Cart&reg; "can" run on IIS, but with some limitations, namely the need to manually secure various folders with IIS equivalents to .htaccess rules.
+
+Zen Cart&reg; can also run on Nginx, but does not supply a configuration file for enforcing any permission/access rules or optimization for serving page assets.
 
 
 Installation
@@ -55,7 +57,7 @@ For a MUCH more detailed set of installation instructions, see the [/docs/1.read
 
 PCI/PA-DSS Compliance
 ---------------------
-__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v154.pdf) should be followed for PCI Compliant implementation.__
+__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v155.pdf) should be followed for PCI Compliant implementation.__
 
 Documentation
 -------------
@@ -77,5 +79,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
   
-*&copy;Copyright 2003-2015, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2016, Zen Cart&reg;. All rights reserved.*
 
