@@ -278,7 +278,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 #indexProductListCatDescription, #categoryDescription{margin-left:5%;float:left;}
 #cat-top{margin-bottom:20px;}
 #cat-left{text-align:center;}
-#filter-wrapper{padding:10px;margin-bottom:-16px;}
+#filter-wrapper{padding:10px;}
 #filter-wrapper select{width:25%;height:35px;}
 .navSplitPagesLinks {display:inline-block;}
 .navSplitPagesLinks a{padding:10px;font-weight:bold;text-decoration:none;}
@@ -452,7 +452,7 @@ h2.greeting a:hover{}
 #loginDefault{margin-bottom:30px;}
 #loginDefault .inputLabel{margin-left:20px;}
 #loginDefault .alert{margin-right:20px;}
-
+#loginDefault #country{margin-left:0;}
 .paypal-button-hidden{visibility:hidden;}
 
 /* markup for tables used to present tabular data */
