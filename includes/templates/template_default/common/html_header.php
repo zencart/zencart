@@ -5,13 +5,16 @@
  * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Dec 9 2015 Modified in v1.5.5 $
  */
 
 $zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
+
+// Prevent clickjacking risks by setting X-Frame-Options:SAMEORIGIN
+header('X-Frame-Options:SAMEORIGIN');
 
 /**
  * load the module for generating page meta-tags
