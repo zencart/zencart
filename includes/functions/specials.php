@@ -39,11 +39,10 @@
     $specials = $db->Execute($specials_query);
 
     if ($specials->RecordCount() > 0) {
-      while (!$specials->EOF) {
-        zen_set_specials_status($specials->fields['specials_id'], '0');
-        zen_update_products_price_sorter($specials->fields['products_id']);
-        $zco_notifier->notify('NOTIFY_EXPIRE_SPECIALS', $specials->fields);
-        $specials->MoveNext();
+      foreach ($specials as $specials_item) {
+        zen_set_specials_status($specials_item->fields['specials_id'], '0');
+        zen_update_products_price_sorter($specials_item->fields['products_id']);
+        $zco_notifier->notify('NOTIFY_EXPIRE_SPECIALS', $specials_item->fields);
       }
     }
   }
@@ -70,11 +69,10 @@
     $specials = $db->Execute($specials_query);
 
     if ($specials->RecordCount() > 0) {
-      while (!$specials->EOF) {
-        zen_set_specials_status($specials->fields['specials_id'], '1');
-        zen_update_products_price_sorter($specials->fields['products_id']);
-        $zco_notifier->notify('NOTIFY_START_SPECIALS_ON', $specials->fields);
-        $specials->MoveNext();
+      foreach ($specials as $specials_item) {
+        zen_set_specials_status($specials_item->fields['specials_id'], '1');
+        zen_update_products_price_sorter($specials_item->fields['products_id']);
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_ON', $specials_item->fields);
       }
     }
 
@@ -90,11 +88,10 @@
     $specials = $db->Execute($specials_query);
 
     if ($specials->RecordCount() > 0) {
-      while (!$specials->EOF) {
-        zen_set_specials_status($specials->fields['specials_id'], '0');
-        zen_update_products_price_sorter($specials->fields['products_id']);
-        $zco_notifier->notify('NOTIFY_START_SPECIALS_OFF', $specials->fields);
-        $specials->MoveNext();
+      foreach ($specials as $specials_item) {
+        zen_set_specials_status($specials_item->fields['specials_id'], '0');
+        zen_update_products_price_sorter($specials_item->fields['products_id']);
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_OFF', $specials_item->fields);
       }
     }
   }
