@@ -23,7 +23,7 @@
 ////
 // Auto expire salemaker sales
   function zen_expire_salemaker() {
-    global $db;
+    global $db, $zco_notifier;
 
     $date_range = time();
     $zc_sale_date = date('Ymd', $date_range);
@@ -31,8 +31,10 @@
     $salemaker_query = "select sale_id
                        from " . TABLE_SALEMAKER_SALES . "
                        where sale_status = '1'
-                       and ((" . $zc_sale_date . " >= sale_date_end and sale_date_end != '0001-01-01')
-                       or (" . $zc_sale_date . " < sale_date_start and sale_date_start != '0001-01-01'))";
+                       and ((:zc_sale_date: >= sale_date_end and sale_date_end != '0001-01-01')
+                       or (:zc_sale_date: < sale_date_start and sale_date_start != '0001-01-01'))";
+                       
+    $salemaker_query = $db->bindVars($salemaker_query, ':zc_sale_date:', $zc_sale_date, 'date');
 
     $salemaker = $db->Execute($salemaker_query);
 
@@ -40,6 +42,7 @@
       while (!$salemaker->EOF) {
         zen_set_salemaker_status($salemaker->fields['sale_id'], '0');
         zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
+        $zco_notifier->notify('NOTIFY_EXPIRE_SALEMAKER', $salemaker->fields);
         $salemaker->MoveNext();
       }
     }
@@ -48,7 +51,7 @@
 ////
 // Auto start salemaker sales
   function zen_start_salemaker() {
-    global $db;
+    global $db, $zco_notifier;
 
     $date_range = time();
     $zc_sale_date = date('Ymd', $date_range);
@@ -56,10 +59,12 @@
     $salemaker_query = "select sale_id
                        from " . TABLE_SALEMAKER_SALES . "
                        where sale_status = '0'
-                       and (((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '0001-01-01') and (sale_date_end > " . $zc_sale_date . "))
-                       or ((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '0001-01-01') and (sale_date_end = '0001-01-01'))
-                       or (sale_date_start = '0001-01-01' and sale_date_end > " . $zc_sale_date . "))
+                       and (((sale_date_start <= :zc_sale_date: and sale_date_start != '0001-01-01') and (sale_date_end > :zc_sale_date:))
+                       or ((sale_date_start <= :zc_sale_date: and sale_date_start != '0001-01-01') and (sale_date_end = '0001-01-01'))
+                       or (sale_date_start = '0001-01-01' and sale_date_end > :zc_sale_date:))
                        ";
+                       
+    $salemaker_query = $db->bindVars($salemaker_query, ':zc_sale_date:', $zc_sale_date, 'date');
 
     $salemaker = $db->Execute($salemaker_query);
 
@@ -67,6 +72,7 @@
       while (!$salemaker->EOF) {
         zen_set_salemaker_status($salemaker->fields['sale_id'], '1');
         zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
+        $zco_notifier->notify('NOTIFY_START_SALEMAKER_ON', $salemaker->fields);
         $salemaker->MoveNext();
       }
     }
@@ -75,8 +81,10 @@
     $salemaker_query = "select sale_id
                        from " . TABLE_SALEMAKER_SALES . "
                        where sale_status = '1'
-                       and (" . $zc_sale_date . " < sale_date_start and sale_date_start != '0001-01-01')
+                       and (:zc_sale_date: < sale_date_start and sale_date_start != '0001-01-01')
                        ";
+    
+    $salemaker_query = $db->bindVars($salemaker_query, ':zc_sale_date:', $zc_sale_date, 'date');
 
     $salemaker = $db->Execute($salemaker_query);
 
@@ -84,8 +92,8 @@
       while (!$salemaker->EOF) {
         zen_set_salemaker_status($salemaker->fields['sale_id'], '0');
         zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
+        $zco_notifier->notify('NOTIFY_START_SALEMAKER_OFF', $salemaker->fields);
         $salemaker->MoveNext();
       }
     }
   }
-?>
