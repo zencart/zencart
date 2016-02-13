@@ -23,7 +23,7 @@
 ////
 // Auto expire products on special
   function zen_expire_specials() {
-    global $db;
+    global $db, $zco_notifier;
 
     $date_range = time();
     $zc_specials_date = date('Ymd', $date_range);
@@ -31,14 +31,17 @@
     $specials_query = "select specials_id, products_id
                        from " . TABLE_SPECIALS . "
                        where status = '1'
-                       and ((" . $zc_specials_date . " >= expires_date and expires_date != '0001-01-01')
-                       or (" . $zc_specials_date . " < specials_date_available and specials_date_available != '0001-01-01'))";
+                       and ((:zc_specials_date: >= expires_date and expires_date != '0001-01-01')
+                       or (:zc_specials_date: < specials_date_available and specials_date_available != '0001-01-01'))";
+    
+    $specials_query = $db->bindVars($specials_query, ':zc_specials_date:', $zc_specials_date, 'date');
 
     $specials = $db->Execute($specials_query);
 
     if ($specials->RecordCount() > 0) {
       while (!$specials->EOF) {
         zen_set_specials_status($specials->fields['specials_id'], '0');
+        $zco_notifier->notify('NOTIFY_EXPIRE_SPECIALS', $specials->fields);
         zen_update_products_price_sorter($specials->fields['products_id']);
         $specials->MoveNext();
       }
@@ -48,7 +51,7 @@
 ////
 // Auto start products on special
   function zen_start_specials() {
-    global $db;
+    global $db, $zco_notifier;
 
     $date_range = time();
     $zc_specials_date = date('Ymd', $date_range);
@@ -57,16 +60,19 @@
     $specials_query = "select specials_id, products_id
                        from " . TABLE_SPECIALS . "
                        where status = '0'
-                       and (((specials_date_available <= " . $zc_specials_date . " and specials_date_available != '0001-01-01') and (expires_date > " . $zc_specials_date . "))
-                       or ((specials_date_available <= " . $zc_specials_date . " and specials_date_available != '0001-01-01') and (expires_date = '0001-01-01'))
-                       or (specials_date_available = '0001-01-01' and expires_date > " . $zc_specials_date . "))
+                       and (((specials_date_available <= :zc_specials_date: and specials_date_available != '0001-01-01') and (expires_date > :zc_specials_date:))
+                       or ((specials_date_available <= :zc_specials_date: and specials_date_available != '0001-01-01') and (expires_date = '0001-01-01'))
+                       or (specials_date_available = '0001-01-01' and expires_date > :zc_specials_date:))
                        ";
+                       
+    $specials_query = $db->bindVars($specials_query, ':zc_specials_date:', $zc_specials_date, 'date');
 
     $specials = $db->Execute($specials_query);
 
     if ($specials->RecordCount() > 0) {
       while (!$specials->EOF) {
         zen_set_specials_status($specials->fields['specials_id'], '1');
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_ON', $specials->fields);
         zen_update_products_price_sorter($specials->fields['products_id']);
         $specials->MoveNext();
       }
@@ -76,17 +82,19 @@
     $specials_query = "select specials_id, products_id
                        from " . TABLE_SPECIALS . "
                        where status = '1'
-                       and (" . $zc_specials_date . " < specials_date_available and specials_date_available != '0001-01-01')
+                       and (:zc_specials_date: < specials_date_available and specials_date_available != '0001-01-01')
                        ";
+                       
+    $specials_query = $db->bindVars($specials_query, ':zc_specials_date:', $zc_specials_date, 'date');
 
     $specials = $db->Execute($specials_query);
 
     if ($specials->RecordCount() > 0) {
       while (!$specials->EOF) {
         zen_set_specials_status($specials->fields['specials_id'], '0');
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_OFF', $specials->fields);
         zen_update_products_price_sorter($specials->fields['products_id']);
         $specials->MoveNext();
       }
     }
   }
-?>
