@@ -39,11 +39,10 @@
     $salemaker = $db->Execute($salemaker_query);
 
     if ($salemaker->RecordCount() > 0) {
-      while (!$salemaker->EOF) {
-        zen_set_salemaker_status($salemaker->fields['sale_id'], '0');
-        zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
-        $zco_notifier->notify('NOTIFY_EXPIRE_SALEMAKER', $salemaker->fields);
-        $salemaker->MoveNext();
+      foreach ($salemaker as $salemaker_item) {
+        zen_set_salemaker_status($salemaker_item->fields['sale_id'], '0');
+        zen_update_salemaker_product_prices($salemaker_item->fields['sale_id']);
+        $zco_notifier->notify('NOTIFY_EXPIRE_SALEMAKER', $salemaker_item->fields);
       }
     }
   }
@@ -69,11 +68,10 @@
     $salemaker = $db->Execute($salemaker_query);
 
     if ($salemaker->RecordCount() > 0) {
-      while (!$salemaker->EOF) {
-        zen_set_salemaker_status($salemaker->fields['sale_id'], '1');
-        zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
-        $zco_notifier->notify('NOTIFY_START_SALEMAKER_ON', $salemaker->fields);
-        $salemaker->MoveNext();
+      foreach ($salemaker as $salemaker_item) {
+        zen_set_salemaker_status($salemaker_item->fields['sale_id'], '1');
+        zen_update_salemaker_product_prices($salemaker_item->fields['sale_id']);
+        $zco_notifier->notify('NOTIFY_START_SALEMAKER_ON', $salemaker_item->fields);
       }
     }
 
@@ -89,11 +87,10 @@
     $salemaker = $db->Execute($salemaker_query);
 
     if ($salemaker->RecordCount() > 0) {
-      while (!$salemaker->EOF) {
-        zen_set_salemaker_status($salemaker->fields['sale_id'], '0');
-        zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
-        $zco_notifier->notify('NOTIFY_START_SALEMAKER_OFF', $salemaker->fields);
-        $salemaker->MoveNext();
+      foreach ($salemaker as $salemaker_item) {
+        zen_set_salemaker_status($salemaker_item->fields['sale_id'], '0');
+        zen_update_salemaker_product_prices($salemaker_item->fields['sale_id']);
+        $zco_notifier->notify('NOTIFY_START_SALEMAKER_OFF', $salemaker_item->fields);
       }
     }
   }
