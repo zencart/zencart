@@ -41,8 +41,8 @@
     if ($specials->RecordCount() > 0) {
       while (!$specials->EOF) {
         zen_set_specials_status($specials->fields['specials_id'], '0');
-        $zco_notifier->notify('NOTIFY_EXPIRE_SPECIALS', $specials->fields);
         zen_update_products_price_sorter($specials->fields['products_id']);
+        $zco_notifier->notify('NOTIFY_EXPIRE_SPECIALS', $specials->fields);
         $specials->MoveNext();
       }
     }
@@ -72,8 +72,8 @@
     if ($specials->RecordCount() > 0) {
       while (!$specials->EOF) {
         zen_set_specials_status($specials->fields['specials_id'], '1');
-        $zco_notifier->notify('NOTIFY_START_SPECIALS_ON', $specials->fields);
         zen_update_products_price_sorter($specials->fields['products_id']);
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_ON', $specials->fields);
         $specials->MoveNext();
       }
     }
@@ -92,8 +92,8 @@
     if ($specials->RecordCount() > 0) {
       while (!$specials->EOF) {
         zen_set_specials_status($specials->fields['specials_id'], '0');
-        $zco_notifier->notify('NOTIFY_START_SPECIALS_OFF', $specials->fields);
         zen_update_products_price_sorter($specials->fields['products_id']);
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_OFF', $specials->fields);
         $specials->MoveNext();
       }
     }
