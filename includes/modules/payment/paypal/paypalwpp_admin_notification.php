@@ -9,6 +9,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: paypalwpp_admin_notification.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.6.0 $
  */
+  if (!defined('TEXT_MAXIMUM_CHARACTERS_ALLOWED')) define('TEXT_MAXIMUM_CHARACTERS_ALLOWED', ' chars allowed');
 
   $outputStartBlock = '';
   $outputPayPal = '';
@@ -19,6 +20,20 @@
   $outputRefund = '';
   $outputEndBlock = '';
   $output = '';
+
+$outputStartBlock .= '
+<script>
+function characterCount(field, count, maxchars) {
+  var realchars = field.value.replace(/\t|\r|\n|\r\n/g,\'\');
+  var excesschars = realchars.length - maxchars;
+  if (excesschars > 0) {
+    field.value = field.value.substring(0, maxchars);
+    alert("Error:\n\n- You are only allowed to enter up to"+maxchars+" characters.");
+  } else {
+    count.value = maxchars - realchars.length;
+  }
+}
+</script>';
 
   // strip slashes in case they were added to handle apostrophes:
   foreach ($ipn->fields as $key=>$value){
@@ -332,7 +347,10 @@
     $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PARTIAL_TEXT . ' ' . zen_draw_input_field('refamt', 'enter amount', 'length="8"');
     $outputRefund .= '<input type="submit" name="partialrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '" /><br />';
     //comment field
-    $outputRefund .= '<br />' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_TEXT_COMMENTS . '<br />' . zen_draw_textarea_field('refnote', 'soft', '50', '3', MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_DEFAULT_MESSAGE);
+    $counterParams = ' onKeyDown="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);" onKeyUp="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);"';
+    $outputRefund .= '<br />' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_TEXT_COMMENTS;
+    $outputRefund .= '<div style="text-align:right;margin-top:-1.2em"><input disabled="disabled" type="text" name="remainingRefund" size="3" maxlength="3" value="255" /> ' . TEXT_MAXIMUM_CHARACTERS_ALLOWED . '</div>';
+    $outputRefund .= zen_draw_textarea_field('refnote', 'soft', '50', '3', MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_DEFAULT_MESSAGE, $counterParams);
     //message text
     $outputRefund .= '<br />' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_SUFFIX;
     $outputRefund .= '</form>';
@@ -422,3 +440,4 @@
   $output .= $outputEndBlock;
   $output .= $outputEndBlock;
   $output .= '<!-- EOF: pp admin transaction processing tools -->';
+

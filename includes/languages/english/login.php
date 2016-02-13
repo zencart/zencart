@@ -1,11 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: login.php 14280 2009-08-29 01:33:18Z drbyte $
- * @version $Id: login.php 14280 2009-08-29 $ Integrated COWOA v2.2 - 2007 - 2012
+ * @version $Id: Modified in V1.6.0 $
  */
 
 define('NAVBAR_TITLE', 'Login');
@@ -22,8 +21,8 @@ define('TEXT_NEW_CUSTOMER_POST_INTRODUCTION_SPLIT', 'Create a Customer Profile w
 define('HEADING_RETURNING_CUSTOMER', 'Returning Customers: Please Log In');
 define('HEADING_RETURNING_CUSTOMER_SPLIT', 'Returning Customers');
 
-define('TEXT_RATHER_COWOA', 'For a faster checkout experience, we offer the option to checkout without creating an account.<br />');
-define('COWOA_HEADING', 'Checkout Without An Account');
+define('TEXT_ASK_GUEST_CHECKOUT', 'For a faster checkout experience, we offer the option to checkout without creating an account.<br />');
+define('GUEST_CHECKOUT_HEADING', 'Checkout Without An Account');
 define('TEXT_RETURNING_CUSTOMER_SPLIT', 'In order to continue, please login to your <strong>' . STORE_NAME . '</strong> account.');
 
 define('TEXT_PASSWORD_FORGOTTEN', 'Forgot your password?');

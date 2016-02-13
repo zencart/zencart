@@ -257,7 +257,7 @@
               left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
               where pa.products_id = " . (int)$products_id . "
               and po.language_id = " . (int)$_SESSION['languages_id'] . "
-              group by pa.options_id";
+              group by pa.options_id, pa.products_attributes_id";
     $result = $db->Execute($query);
 
     // if no attributes found, return 0
@@ -904,24 +904,20 @@
 // check if Product is set to use downloads
 // does not validate download filename
   function zen_has_product_attributes_downloads_status($products_id) {
-    global $db;
-    if (DOWNLOAD_ENABLED == 'true') {
-      $download_display_query_raw ="select pa.products_attributes_id, pad.products_attributes_filename
-                                    from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                    where pa.products_id='" . (int)$products_id . "'
-                                      and pad.products_attributes_id= pa.products_attributes_id";
-
-      $download_display = $db->Execute($download_display_query_raw);
-      if ($download_display->RecordCount() != 0) {
-        $valid_downloads = true;
-      } else {
-        $valid_downloads = false;
-      }
-    } else {
-      $valid_downloads = false;
+    if (!defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
+      return false;
     }
-    return $valid_downloads;
+
+    $query = "select pad.products_attributes_id
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              inner join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+              on pad.products_attributes_id = pa.products_attributes_id
+              where pa.products_id = " . (int) $products_id;
+
+    global $db;
+    return ($db->Execute($query)->RecordCount() > 0);
   }
+
 
 // build date range for new products
   function zen_get_new_date_range($time_limit = false) {

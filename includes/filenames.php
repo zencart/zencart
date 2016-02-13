@@ -8,7 +8,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: filenames.php  Modified in v1.6.0 $
- * @version $Id:  Modified in v1.6.0 $
  * @private
  */
 /**
@@ -41,6 +40,7 @@ define('FILENAME_CATEGORIES', 'categories');
 define('FILENAME_CATEGORY_ICON_DISPLAY', 'category_icon_display');
 define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation');
 define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment');
+define('FILENAME_CHECKOUT_FLOW', 'checkout_flow');
 define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address');
 define('FILENAME_CHECKOUT_PROCESS', 'checkout_process');
 define('FILENAME_CHECKOUT_SHIPPING', 'checkout_shipping');

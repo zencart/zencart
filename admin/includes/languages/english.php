@@ -89,7 +89,7 @@ define('BOX_CONFIGURATION_ALL_LISTING', 'All Listing');
 define('BOX_CONFIGURATION_INDEX_LISTING', 'Index Listing');
 define('BOX_CONFIGURATION_DEFINE_PAGE_STATUS', 'Define Page Status');
 define('BOX_CONFIGURATION_EZPAGES_SETTINGS', 'EZ-Pages Settings');
-define('BOX_CONFIGURATION_COWOA', 'Cowoa Configuration'); //for 1.6.0
+define('BOX_CONFIGURATION_CHECKOUT_SETTINGS', 'Checkout Settings'); //for 1.6.0
 define('BOX_CONFIGURATION_WIDGET', 'Widget Configuration'); //for 1.6.0
 
 // modules box text
@@ -727,10 +727,10 @@ define('TEXT_LEAD_ACTION', 'Action');
 define('TEXT_ALL', 'All');
 define('TEXT_ENABLED', 'Enabled');
 define('TEXT_DISABLED', 'Disabled');
-define('TEXT_MULTIPLE_CHECKBOX_TEXT', ' <-- Select All or Select individually then ');
-define('TEXT_MULTI_DELETE', 'Delete checked items');
+define('TEXT_MULTIPLE_CHECKBOX_TEXT', 'Select All');
+define('TEXT_MULTI_DELETE', 'Delete selected items');
 define('TEXT_CONFIRM_DELETE', 'Confirm Delete');
-define('TEXT_CONFIRM_DELETE_TEXT', 'Do you want to delete the selected items');
+define('TEXT_CONFIRM_DELETE_TEXT', 'Do you want to delete the selected items?');
 define('TEXT_CONFIRM', 'Confirm');
 define('TEXT_ITEM_DEFAULT', '<strong>(Default)</strong>');
 define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');

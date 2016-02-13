@@ -618,7 +618,7 @@
  *  Pulls values from a passed array, with the indicated option pre-selected
  */
   function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
-    $field = '<select name="' . zen_output_string($name) . '"';
+    $field = '<select id="select-'.zen_output_string($name).'" name="' . zen_output_string($name) . '"';
 
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
 

@@ -237,7 +237,7 @@ class paypaldp extends base {
     }
 
     // Purchase amount
-    if ($this->enabled) {
+    if ($this->enabled && isset($order) && isset($order->info)) {
       // module cannot be used for purchase > $10,000 USD equiv
       $order_amount = $this->calc_order_amount($order->info['total'], 'USD', false);
       if ($order_amount > 10000) {

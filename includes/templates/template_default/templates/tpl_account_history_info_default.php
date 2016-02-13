@@ -18,7 +18,7 @@
 <br class="clearBoth" />
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" summary="Itemized listing of previous order, includes number ordered, items and prices">
-<caption><h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']); ?></h2></caption>
+<caption><h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $orderId); ?></h2></caption>
     <tr class="tableHeading">
         <th scope="col" id="myAccountQuantity"><?php echo HEADING_QUANTITY; ?></th>
         <th scope="col" id="myAccountProducts"><?php echo HEADING_PRODUCTS; ?></th>

@@ -87,7 +87,7 @@ if ($credit_covers) {
 
 $payment_modules = new payment($_SESSION['payment']);
 $payment_modules->update_status();
-if ( ($_SESSION['payment'] == '' || !is_object($$_SESSION['payment']) ) && $credit_covers === FALSE) {
+if ( ($_SESSION['payment'] == '' || !is_object(${$_SESSION['payment']}) ) && $credit_covers === FALSE) {
   $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
 }
 
@@ -146,22 +146,22 @@ if ($_SESSION['cc_id']) {
   }
 }
 
-if (isset($$_SESSION['payment']->form_action_url)) {
-  $form_action_url = $$_SESSION['payment']->form_action_url;
+if (isset(${$_SESSION['payment']}->form_action_url)) {
+  $form_action_url = ${$_SESSION['payment']}->form_action_url;
 } else {
   $form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
 
 // if shipping-edit button should be overridden, do so
 $editShippingButtonLink = zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
-if (method_exists($$_SESSION['payment'], 'alterShippingEditButton')) {
-  $theLink = $$_SESSION['payment']->alterShippingEditButton();
+if (method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
+  $theLink = ${$_SESSION['payment']}->alterShippingEditButton();
   if ($theLink) $editShippingButtonLink = $theLink;
 }
 // deal with billing address edit button
 $flagDisablePaymentAddressChange = false;
-if (isset($$_SESSION['payment']->flagDisablePaymentAddressChange)) {
-  $flagDisablePaymentAddressChange = $$_SESSION['payment']->flagDisablePaymentAddressChange;
+if (isset(${$_SESSION['payment']}->flagDisablePaymentAddressChange)) {
+  $flagDisablePaymentAddressChange = ${$_SESSION['payment']}->flagDisablePaymentAddressChange;
 }
 
 

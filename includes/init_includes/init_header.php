@@ -135,22 +135,30 @@ if ( (DOWN_FOR_MAINTENANCE == 'true') && (!strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENAN
  * If a customer is logged in, check to see that the customers' address(es) still contain valid countries.
 * If not, redirect to the address-book page for changes.
 */
-if ($_SESSION['customer_id'] && zcRequest::readGet('main_page') != FILENAME_ADDRESS_BOOK_PROCESS && zcRequest::readGet('main_page') != FILENAME_LOGOFF) {
-  $addresses_query = "SELECT address_book_id, entry_country_id as country_id, entry_firstname as firstname, entry_lastname as lastname
+$skipCountryCheck = false;
+$zco_notifier->notify('NOTIFY_INIT_HEADER_CHECK_COUNTRY', array(), $skipCountryCheck);
+if (!$skipCountryCheck) {
+    if ($_SESSION['customer_id'] && zcRequest::readGet('main_page') != FILENAME_ADDRESS_BOOK_PROCESS && zcRequest::readGet('main_page') != FILENAME_LOGOFF) {
+        $addresses_query = "SELECT address_book_id, entry_country_id AS country_id, entry_firstname AS firstname, entry_lastname AS lastname
                       FROM   " . TABLE_ADDRESS_BOOK . "
                       WHERE  customers_id = :customersID
                       ORDER BY firstname, lastname";
 
-  $addresses_query = $db->bindVars($addresses_query, ':customersID', $_SESSION['customer_id'], 'integer');
-  $addresses = $db->Execute($addresses_query);
+        $addresses_query = $db->bindVars($addresses_query, ':customersID', $_SESSION['customer_id'], 'integer');
+        $addresses = $db->Execute($addresses_query);
 
-  while (!$addresses->EOF) {
-    if (zen_get_country_name($addresses->fields['country_id'], TRUE) == '') {
-      $messageStack->add_session('addressbook', sprintf(ERROR_TEXT_COUNTRY_DISABLED_PLEASE_CHANGE, zen_get_country_name($addresses->fields['country_id'], FALSE)), 'error');
-      zen_redirect (zen_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit=' . $addresses->fields['address_book_id'], 'SSL'));
+        while (!$addresses->EOF) {
+            if (zen_get_country_name($addresses->fields['country_id'], true) == '') {
+                $messageStack->add_session('addressbook',
+                    sprintf(ERROR_TEXT_COUNTRY_DISABLED_PLEASE_CHANGE,
+                        zen_get_country_name($addresses->fields['country_id'], false)),
+                    'error');
+                zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit=' . $addresses->fields['address_book_id'],
+                    'SSL'));
+            }
+            $addresses->MoveNext();
+        }
     }
-    $addresses->MoveNext();
-  }
 }
 $zcTplManager = new \ZenCart\View\TplVarManager();
 $zcView = new \ZenCart\View\View($zcTplManager, $messageStack, $breadcrumb);

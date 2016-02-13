@@ -38,7 +38,7 @@ class DerivedItemManager
      */
     protected function getDerivedItemResult($derivedItem, $resultItem)
     {
-        $result = $this->$derivedItem ['handler']($resultItem);
+        $result = $this->{$derivedItem['handler']}($resultItem);
         return $result;
     }
 

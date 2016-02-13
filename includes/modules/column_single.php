@@ -30,6 +30,9 @@ if (defined('BOX_WIDTH_SINGLE')) {
 if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_single_display->fields['layout_box_name']) ) {
   $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
   require(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_single_display->fields['layout_box_name']);
+} else if (file_exists(DIR_WS_MODULES . 'sideboxes/' . 'shared' . '/' . $column_single_display->fields['layout_box_name'])) {
+  $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
+  require(DIR_WS_MODULES . 'sideboxes/' . 'shared' . '/' . $column_single_display->fields['layout_box_name']);
 } else {
   $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
   require(DIR_WS_MODULES . 'sideboxes/' . $column_single_display->fields['layout_box_name']);
