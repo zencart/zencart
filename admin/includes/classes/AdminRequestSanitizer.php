@@ -201,8 +201,13 @@ class AdminRequestSanitizer extends base
         $prodDescRegex = '~(load=|= ?\(|<![^-])~i';
         foreach ($saniList as $value) {
             if (isset($_POST[$value])) {
-                foreach ($_POST[$value] as $pKey => $pValue) {
-                    $_POST[$value][$pKey] = preg_replace($prodDescRegex, '', $_POST[$value][$pKey]);
+                if (is_array($_POST[$value])) {
+                    foreach ($_POST[$value] as $pKey => $pValue) {
+                        $_POST[$value][$pKey] = preg_replace($prodDescRegex, '', $_POST[$value][$pKey]);
+                        $this->postKeysAlreadySanitized[] = $value;
+                    }
+                } else {
+                    $_POST[$value] = preg_replace($prodDescRegex, '', $_POST[$value]);
                     $this->postKeysAlreadySanitized[] = $value;
                 }
             }
