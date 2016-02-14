@@ -40,9 +40,9 @@
 
     if ($salemaker->RecordCount() > 0) {
       foreach ($salemaker as $salemaker_item) {
-        zen_set_salemaker_status($salemaker_item->fields['sale_id'], '0');
-        zen_update_salemaker_product_prices($salemaker_item->fields['sale_id']);
-        $zco_notifier->notify('NOTIFY_EXPIRE_SALEMAKER', $salemaker_item->fields);
+        zen_set_salemaker_status($salemaker_item['sale_id'], '0');
+        zen_update_salemaker_product_prices($salemaker_item['sale_id']);
+        $zco_notifier->notify('NOTIFY_EXPIRE_SALEMAKER', $salemaker_item);
       }
     }
   }
@@ -69,9 +69,9 @@
 
     if ($salemaker->RecordCount() > 0) {
       foreach ($salemaker as $salemaker_item) {
-        zen_set_salemaker_status($salemaker_item->fields['sale_id'], '1');
-        zen_update_salemaker_product_prices($salemaker_item->fields['sale_id']);
-        $zco_notifier->notify('NOTIFY_START_SALEMAKER_ON', $salemaker_item->fields);
+        zen_set_salemaker_status($salemaker_item['sale_id'], '1');
+        zen_update_salemaker_product_prices($salemaker_item['sale_id']);
+        $zco_notifier->notify('NOTIFY_START_SALEMAKER_ON', $salemaker_item);
       }
     }
 
@@ -88,9 +88,9 @@
 
     if ($salemaker->RecordCount() > 0) {
       foreach ($salemaker as $salemaker_item) {
-        zen_set_salemaker_status($salemaker_item->fields['sale_id'], '0');
-        zen_update_salemaker_product_prices($salemaker_item->fields['sale_id']);
-        $zco_notifier->notify('NOTIFY_START_SALEMAKER_OFF', $salemaker_item->fields);
+        zen_set_salemaker_status($salemaker_item['sale_id'], '0');
+        zen_update_salemaker_product_prices($salemaker_item['sale_id']);
+        $zco_notifier->notify('NOTIFY_START_SALEMAKER_OFF', $salemaker_item);
       }
     }
   }

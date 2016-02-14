@@ -40,9 +40,9 @@
 
     if ($specials->RecordCount() > 0) {
       foreach ($specials as $specials_item) {
-        zen_set_specials_status($specials_item->fields['specials_id'], '0');
-        zen_update_products_price_sorter($specials_item->fields['products_id']);
-        $zco_notifier->notify('NOTIFY_EXPIRE_SPECIALS', $specials_item->fields);
+        zen_set_specials_status($specials_item['specials_id'], '0');
+        zen_update_products_price_sorter($specials_item['products_id']);
+        $zco_notifier->notify('NOTIFY_EXPIRE_SPECIALS', $specials_item);
       }
     }
   }
@@ -70,9 +70,9 @@
 
     if ($specials->RecordCount() > 0) {
       foreach ($specials as $specials_item) {
-        zen_set_specials_status($specials_item->fields['specials_id'], '1');
-        zen_update_products_price_sorter($specials_item->fields['products_id']);
-        $zco_notifier->notify('NOTIFY_START_SPECIALS_ON', $specials_item->fields);
+        zen_set_specials_status($specials_item['specials_id'], '1');
+        zen_update_products_price_sorter($specials_item['products_id']);
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_ON', $specials_item);
       }
     }
 
@@ -89,9 +89,9 @@
 
     if ($specials->RecordCount() > 0) {
       foreach ($specials as $specials_item) {
-        zen_set_specials_status($specials_item->fields['specials_id'], '0');
-        zen_update_products_price_sorter($specials_item->fields['products_id']);
-        $zco_notifier->notify('NOTIFY_START_SPECIALS_OFF', $specials_item->fields);
+        zen_set_specials_status($specials_item['specials_id'], '0');
+        zen_update_products_price_sorter($specials_item['products_id']);
+        $zco_notifier->notify('NOTIFY_START_SPECIALS_OFF', $specials_item);
       }
     }
   }

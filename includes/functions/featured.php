@@ -40,8 +40,8 @@
 
     if ($featured->RecordCount() > 0) {
       foreach ($featured as $featured_item) {
-        zen_set_featured_status($featured_item->fields['featured_id'], '0');
-        $zco_notifier->notify('NOTIFY_EXPIRE_FEATURED', $featured_item->fields);
+        zen_set_featured_status($featured_item['featured_id'], '0');
+        $zco_notifier->notify('NOTIFY_EXPIRE_FEATURED', $featured_item);
       }
     }
   }
@@ -68,8 +68,8 @@
 
     if ($featured->RecordCount() > 0) {
       foreach ($featured as $featured_item) {
-        zen_set_featured_status($featured_item->fields['featured_id'], '1');
-        $zco_notifier('NOTIFY_START_FEATURED_ON', $featured_item->fields);
+        zen_set_featured_status($featured_item['featured_id'], '1');
+        $zco_notifier('NOTIFY_START_FEATURED_ON', $featured_item);
       }
     }
 
@@ -86,8 +86,8 @@
 
     if ($featured->RecordCount() > 0) {
       foreach ($featured as $featured_item) {
-        zen_set_featured_status($featured_item->fields['featured_id'], '0');
-        $zco_notifier->notify('NOTIFY_START_FEATURED_OFF', $featured_item->fields);
+        zen_set_featured_status($featured_item['featured_id'], '0');
+        $zco_notifier->notify('NOTIFY_START_FEATURED_OFF', $featured_item);
       }
     }
 
