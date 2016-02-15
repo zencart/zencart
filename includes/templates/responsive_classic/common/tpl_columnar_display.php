@@ -10,6 +10,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: picaflor-azul Modified in v1.5.5 $
  */
+
+$zco_notifier->notify('NOTIFY_TPL_COLUMNAR_DISPLAY_START', $current_page_base, $list_box_contents, $title);
+
 ?>
 <?php
   if ($title) {
@@ -40,4 +43,5 @@ if (is_array($list_box_contents) > 0 ) {
 <?php
   }
 }
-?> 
+
+$zco_notifier->notify('NOTIFY_TPL_COLUMNAR_DISPLAY_END', $current_page_base, $list_box_contents, $title);
