@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="row">
-      <?php if ($changedDir && $adminNewDir !== $adminDir) { ?>
+      <?php if ($changedDir) { ?>
         <div class="alert-box"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED; ?></div>
       <?php } elseif (!$changedDir && $adminNewDir == 'admin') { ?>
         <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT; ?></div>
