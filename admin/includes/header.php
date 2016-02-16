@@ -124,10 +124,7 @@ if (SHOW_GV_QUEUE == true) {
 ?>
 <!-- All HEADER_ definitions in the columns below are defined in includes/languages/english.php //-->
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3" id="adminHeaderLogo">
-        <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <?php if ($new_gv_queue_cnt > 0) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?>
         <?php
         if (isset($_SESSION['reset_admin_activity_log']) and ($_SESSION['reset_admin_activity_log'] == true and (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
@@ -138,11 +135,16 @@ if (SHOW_GV_QUEUE == true) {
         }
         ?>
     </div>
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+</div>
+<div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="adminHeaderLogo">
+        <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
         <?php
         if ($new_version) {
             ?>
-            <span align="right" class="main version-notify noprint" valign="top"><?php echo $new_version; ?>
+            <span class="main version-notify noprint" valign="top"><?php echo $new_version; ?>
                 <br/><?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?></span>
             <?php
         }
