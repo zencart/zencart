@@ -273,6 +273,7 @@ tr.attributeBoxContent {
 
 .dataTableContent {
     color: #333333;
+    padding: 2px;
 }
 
 .dataTableContentBot {
@@ -408,8 +409,8 @@ tr.attributeBoxContent {
     color: #333333;
 }
 
-.infoBoxContent a img {
-    margin-bottom: 16px;
+.infoBoxContent a img, .infoBoxContent input[type="image"] {
+    margin: 4px;
 }
 
 .infoBoxHeading {
@@ -569,4 +570,24 @@ label.error {
 .adminRowIconCartInactive, .adminRowIconCartNoInactive, .adminRowIconCartInactive:hover, .adminRowIconCartNoInactive:hover {
     color: red;
     text-align: right;
+}
+.configurationColumnLeft, .configurationColumnRight{
+    padding: 2px;
+}
+#loginFormDiv div.messageStackError{
+    margin: 5px;
+    padding: 5px;
+}
+img[alt="Cancel"], img[alt="Reset"]{
+    vertical-align: top;
+}
+.version-notify{
+    float: right;
+    padding: 10px;
+}
+.version-notify a img{
+margin-bottom: 5px;
+}
+#adminHeaderLogo{
+    padding: 5px;
 }

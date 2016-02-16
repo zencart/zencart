@@ -124,7 +124,7 @@ if (SHOW_GV_QUEUE == true) {
 ?>
 <!-- All HEADER_ definitions in the columns below are defined in includes/languages/english.php //-->
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3" id="adminHeaderLogo">
         <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">

@@ -100,7 +100,7 @@ if ($gID == 7) {
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 table-responsive">
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
 
                 <table border="0" width="100%" cellspacing="0" cellpadding="2">
                     <tr class="dataTableHeadingRow">
@@ -174,7 +174,7 @@ if ($gID == 7) {
                     ?>
                 </table>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
                 <?php
                 $heading = array();
                 $contents = array();

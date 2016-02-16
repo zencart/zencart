@@ -79,6 +79,7 @@ padding:4px 0 0;
 .upperMenu{
     display: none;
 }
+
 @media (min-width: 979px) {
     ul.nav li.dropdown:hover > ul.dropdown-menu {
         display: block;
@@ -88,5 +89,21 @@ padding:4px 0 0;
     }
     .upperMenuItems{
         display: none !important;
+    }
+}
+.navbar-default {
+    background-color: #d7d6cc;
+}
+.navbar-nav li>a.dropdown-toggle {
+    font-size: 1.3em;
+    color: #333;
+}
+@media (min-width: 768px) {
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .navbar {
+        min-height: 30px;
     }
 }
