@@ -9,6 +9,17 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
+<?php if (count($errors)) { ?>
+    <div class="alert-box alert">
+<?php
+      foreach ($errors as $errormessage) {
+        echo $errormessage . '<br>';
+      }
+      echo TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES;
+?>
+    </div>
+<?php } ?>
+
 <form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" data-abide>
   <input type="hidden" name="action" value="process" >
   <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
