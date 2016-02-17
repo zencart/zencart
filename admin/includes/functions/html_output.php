@@ -345,4 +345,3 @@
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
-?>

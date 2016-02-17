@@ -2,7 +2,7 @@
 /**
  * file contains zcConfigureFileWriter class
  * @package Installer
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
  */
@@ -13,6 +13,8 @@
  */
 class zcConfigureFileWriter
 {
+  public $errors = array();
+
   public function __construct($inputs)
   {
     $this->inputs = $inputs;
@@ -47,23 +49,34 @@ class zcConfigureFileWriter
   {
     $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
     $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
-    $result = $this->transformConfigureTplFile($tplFile, $outputFile);
-// logDetails('catalog size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
+    $result1 = $this->transformConfigureTplFile($tplFile, $outputFile);
+    if ((int)$result1 == 0) logDetails('catalogConfig size: ' . (int)$result1 . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
     $tplFile = DIR_FS_INSTALL . 'includes/admin-configure-template.php';
     $outputFile = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/configure.php';
-    $result = $this->transformConfigureTplFile($tplFile, $outputFile);
-// logDetails('admin size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
+    $result2 = $this->transformConfigureTplFile($tplFile, $outputFile);
+    if ((int)$result2 == 0) logDetails('adminConfig size: ' . (int)$result2 . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
 
+    // return a result indicating whether either file failed in some way: true=success; false=one-or-both-failed (bitwise '&' operand here is intentional)
+    return $result1 & $result2;
   }
   protected function transformConfigureTplFile($tplFile, $outputFile)
   {
-    $tplOriginal = @file_get_contents($tplFile);
+    $tplOriginal = file_get_contents($tplFile);
+    if ($tplOriginal === false) {
+      $this->errors[] = sprintf(TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE, $tplFile);
+      logDetails('Error: Could not read file: ' . $tplFile, 'reading configure.php template');
+      return false;
+    }
     foreach ($this->replaceVars as $varName => $varValue)
     {
       $tplOriginal = str_replace('%%_' . $varName . '_%%', $varValue, $tplOriginal);
     }
     $retval = file_put_contents($outputFile, $tplOriginal);
+    if ($retval === false) {
+      $this->errors[] = sprintf(TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE, $outputFile);
+      logDetails('Error: Could not write configure.php file: ' . $outputFile, 'writing configure.php contents');
+    }
 
     return $retval;
   }

@@ -1,13 +1,24 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.6.0 $
+ * @version $Id:  New in v1.5.5 $
  */
 ?>
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
+
+<?php if (count($errors)) { ?>
+    <div class="alert-box alert">
+<?php
+      foreach ($errors as $errormessage) {
+        echo $errormessage . '<br>';
+      }
+      echo TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES;
+?>
+    </div>
+<?php } ?>
 
 <form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" data-abide>
   <input type="hidden" name="action" value="process" >
@@ -58,12 +69,12 @@
       </div>
     </div>
     <div class="row">
-      <?php if ($changedDir && $adminDir != 'admin') { ?>
-      <div class="alert-box"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED; ?></div>
-      <?php } elseif (!$changedDir && $adminDir == 'admin') { ?>
-      <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT; ?></div>
+      <?php if ($changedDir) { ?>
+        <div class="alert-box"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED; ?></div>
+      <?php } elseif (!$changedDir && $adminNewDir == 'admin') { ?>
+        <div class="alert-box alert"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT; ?></div>
       <?php } else { ?>
-      <div class="alert-box "><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED; ?></div>
+        <div class="alert-box "><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED; ?></div>
       <?php }?>
     </div>
     <div class="row">
@@ -71,7 +82,7 @@
         <label class="inline" for="admin_directory"><a href="#" class="hasHelpText" id="ADMINDIRECTORY"><?php echo TEXT_ADMIN_SETUP_ADMIN_DIRECTORY; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="admin_directory" id="admin_directory" value="<?php echo $adminDir; ?>" readonly="readonly" tabindex="5" autocomplete="off">
+        <input type="text" name="admin_directory" id="admin_directory" value="<?php echo $adminNewDir; ?>" readonly="readonly" tabindex="5" autocomplete="off">
       </div>
     </div>
   </fieldset>

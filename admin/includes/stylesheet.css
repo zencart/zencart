@@ -7,6 +7,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
+@import "//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css";
+
 @import url("menu.css");/* including stylesheet for dhtml menu */
 @import url("index.css");/* including stylesheet for index.php */
 a{
@@ -383,3 +385,37 @@ color:#ff6600;
 	white-space: nowrap;
 }
 label.error {color: red; font-weight: bold;}
+
+
+
+/* This imageless css button is based on the button that was generated initially by CSSButtonGenerator.com */
+.buttonRow a {
+  text-decoration: none;
+}
+.button, input.button {
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  display:inline-block;
+  font-family:Verdana;
+  font-size:13px;
+  font-weight:bold;
+  margin: 0;
+  padding:3px 8px;
+  text-decoration:none;
+}
+input.orderprevnext {
+  background-color:#fee8b9;  /* Submit button background color */
+  border: 1px solid #638263;  /* Submit button border color */
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-block;
+  margin: 0;
+  padding: 3px 8px;
+  color: #404040;  /* Text color for submit buttons */
+}
+input.orderprevnext:hover {
+  background-color:#ffdc9c;  /* Hover color for the submit buttons */
+  border: 1px solid #638263;  /* Submit button border color */
+  cursor: pointer;
+}

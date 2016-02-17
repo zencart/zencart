@@ -3,10 +3,11 @@ Zen Cart(R) - The Art of E-Commerce
 Welcome to Zen Cart(R) E-Commerce
 
 THE FOLLOWING IS A VERY SIMPLIFIED INSTALLATION DOCUMENT.
-WE SUGGEST YOU USE THE HTML VERSIONS IN THE /docs FOLDER FOR MORE DETAILED INSTRUCTIONS.
-
 THE README DOCUMENTS ARE IN THE /docs FOLDER OF THIS DISTRIBUTION.
 
+WE SUGGEST YOU USE THE PDF "Implementation Guide" PDF FILE IN THE /docs FOLDER FOR FULLY DETAILED INSTRUCTIONS.
+
+IF YOU PREFER TO READ DOCUMENTS WITH YOUR BROWSER, START WITH THE /docs/index.html FILE.
 
 You can find online documentation at: http://tutorials.zen-cart.com
 
@@ -15,16 +16,12 @@ Zen Cart has a built-in automatic installation system. However to use this you m
 
 1. Extract the Zen Cart ZIP file (and tell the unzip utility to *retain* folder structures)
 2. Upload the Zen Cart files and folders to your server using your FTP program
-3. You must make some folders writable. The details are in the HTML-formatted documentation in the /docs/ folder
+3. You must make some folders writable. The details are in the /docs/Implementation-Guide.pdf and the HTML-formatted documentation in the /docs/ folder
 4. In your browser enter the URL to your website where you uploaded the files, specifically to the /zc_install/index.php file.
-5. Follow the instructions. You must create your MySQL database credentials before installation, and provide those details when prompted.
+5. Follow the instructions. You must create your MySQL database credentials before installation, and provide those details when prompted. Details of this are in the Implementation Guide PDF.
 
-For more detailed installation instructions, please see the /docs/1.readme_installation.html document in this distribution.
-
-
+For more detailed installation instructions, please see the Implementation Guide PDF in the /docs/ folder of this distribution.
 
 
 
-
-(Document Revision: $Id: install.txt 19798 2011-10-12 05:52:54Z drbyte $)
-((c)Copyright 2003-2011, Zen Cart(R). All rights reserved.)
+( (c)Copyright 2003-2016, Zen Cart(R). All rights reserved.)

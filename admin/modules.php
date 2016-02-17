@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
@@ -57,7 +57,7 @@
     $admname = '{' . preg_replace('/[^\d\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
     switch ($action) {
       case 'save':
-        if (!$is_ssl_protected && in_array($class, array('paypaldp', 'linkpoint_api', 'authorizenet_aim', 'authorizenet_echeck'))) break;
+        if (!$is_ssl_protected && in_array($class, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
         while (list($key, $value) = each($_POST['configuration'])) {
           if (is_array( $value ) ) {
             $value = implode( ", ", $value);
@@ -79,7 +79,7 @@
       case 'install':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($_POST['module']);
-        if (!$is_ssl_protected && in_array($class, array('paypaldp', 'linkpoint_api', 'authorizenet_aim', 'authorizenet_echeck'))) break;
+        if (!$is_ssl_protected && in_array($class, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
           $module = new $class;
@@ -294,7 +294,7 @@
       $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_remove.gif', IMAGE_DELETE, 'name="removeButton"') . ' <a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
       break;
     case 'edit':
-      if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'linkpoint_api', 'authorizenet_aim', 'authorizenet_echeck'))) break;
+      if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
       $keys = '';
       reset($mInfo->keys);
       while (list($key, $value) = each($mInfo->keys)) {
@@ -343,7 +343,7 @@
           $contents[] = array('text' => '<strong>Key: ' . $mInfo->code . '</strong><br />');
         }
         $keys = substr($keys, 0, strrpos($keys, '<br><br>'));
-        if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'linkpoint_api', 'authorizenet_aim', 'authorizenet_echeck')))) {
+        if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck')))) {
           $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['module']) ? '&module=' . $_GET['module'] : '') . '&action=edit', 'SSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT, 'name="editButton"') . '</a>');
         } else {
           $contents[] = array('align' => 'center', 'text' => TEXT_WARNING_SSL_EDIT);
@@ -352,7 +352,7 @@
         $contents[] = array('text' => '<br>' . $mInfo->description);
         $contents[] = array('text' => '<br>' . $keys);
       } else {
-        if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'linkpoint_api', 'authorizenet_aim', 'authorizenet_echeck')))) {
+        if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck')))) {
           $contents[] = array('align' => 'center', 'text' => zen_draw_form('install_module', FILENAME_MODULES, 'set=' . $set . '&action=install') . '<input type="hidden" name="module" value="' . $mInfo->code . '" />' . zen_image_submit('button_module_install.gif', IMAGE_MODULE_INSTALL, 'name="installButton"') . '</form>');
         } else {
           $contents[] = array('align' => 'center', 'text' => TEXT_WARNING_SSL_INSTALL);

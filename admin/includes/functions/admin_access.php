@@ -1,10 +1,10 @@
 <?php
 /**
  * @package Admin Access Management
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.5 $
  */
 
 /**
@@ -678,11 +678,6 @@ function zen_get_admin_pages($menu_only)
   /**
    * Then we'll deal with the exceptions
    */
-  // Include Linkpoint review only if the payment mod is enabled
-  if (!defined('MODULE_PAYMENT_LINKPOINT_API_STATUS') || MODULE_PAYMENT_LINKPOINT_API_STATUS != 'True')
-  {
-    unset ($retVal['customers']['linkpointReview']);
-  }
   // Include paypal ipn menu only if the payment mod is enabled
   if (!(defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS == 'True') &&
       !(defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True') &&

@@ -3,7 +3,7 @@
  * Header code file for the Advanced Search Results page
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php  Modified in v1.5.5 $
@@ -454,9 +454,10 @@ if ((!isset($_GET['sort'])) || (!preg_match('/[1-8][ad]/', $_GET['sort'])) || (s
 $listing_sql = $select_str . $from_str . $where_str . $order_str;
 // Notifier Point
 $zco_notifier->notify('NOTIFY_SEARCH_ORDERBY_STRING', $listing_sql);
+
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ADVANCED_SEARCH));
 $breadcrumb->add(NAVBAR_TITLE_2);
-
+$breadcrumb->add(zen_output_string_protected($keywords));
 
 $result = new splitPageResults($listing_sql, MAX_DISPLAY_PRODUCTS_LISTING, 'p.products_id', 'page');
 if ($result->number_of_rows == 0) {

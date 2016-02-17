@@ -3,7 +3,7 @@
  * sagepay form
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright Nixak
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -51,10 +51,14 @@ class sagepay_zc_payment extends AbstractSagepayAPI
         $this->version = $this->getModuleDefineValue('_VNO');
         $this->title = $this->getModuleDefineValue('_CATALOG_TEXT_TITLE');
         $this->description = '';
-        if ((defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG === true) || (!isset($_GET['main_page']) || $_GET['main_page'] == '')
-        ) {
+        if ((defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG === true) || (!isset($_GET['main_page']) || $_GET['main_page'] == ''))
+        {
             $this->title = sprintf($this->getModuleDefineValue('_ADMIN_TEXT_TITLE'), $this->version);
             $this->description = $this->getModuleDefineValue('_ADMIN_TEXT_DESCRIPTION');
+            $new_version_details = plugin_version_check_for_updates(2049, '1.00');
+            if ($new_version_details !== FALSE) {
+                $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+            }
         }
         $this->enabled = (($this->getModuleDefineValue('_STATUS') == 'True') ? true : false);
         $this->sort_order = $this->getModuleDefineValue('_SORT_ORDER');
@@ -63,10 +67,6 @@ class sagepay_zc_payment extends AbstractSagepayAPI
         }
         if (is_object($order)) {
             $this->update_status();
-        }
-        $new_version_details = plugin_version_check_for_updates(2049, '1.00');
-        if ($new_version_details !== FALSE) {
-            $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
         }
     }
 

@@ -199,15 +199,4 @@ class zcAjaxPayment extends base
         'pageTitle' => META_TAG_TITLE
     ));
   }
-
-  /**
-   * Helper method to test that javascript is enabled, and therefore Ajax can indeed be used.
-   * Implicitly sets some prerequisites in place for smooth processing when the actual prepareConfirmation() method is run later.
-   */
-  public function setNoscriptCookie()
-  {
-    unset($_SESSION['jscript_enabled']);
-    $_SESSION['jscript_enabled'] = true;
-    return (array('data'=>$_SESSION['jscript_enabled']));
-  }
 }

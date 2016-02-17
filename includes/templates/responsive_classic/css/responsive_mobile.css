@@ -379,8 +379,8 @@ div#productListing tr.productListing-odd {clear:both;}
 #navEZPageNextPrev .fa-list, .navNextPrevList .fa-list{margin:0 20px;}
 #attribsOptionsText{margin-left:20px;}
 h4.optionName {margin-left:0;}
-.additionalImages img{width:90%;margin:0 auto;}
-.additionalImages{float:left !important;}
+/*.additionalImages img{width:90%;margin:0 auto;}
+.additionalImages{float:left !important;}*/
 
 /*bof reviews*/
 .reviews-wrapper .forward{float:none;width:100%;}
