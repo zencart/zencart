@@ -10,6 +10,8 @@
 define('HEADING_TITLE', 'Admin Login');
 define('HEADING_TITLE_EXPIRED', 'Admin Login - Password Expired');
 
+define('TEXT_LOGIN','Login');
+define('TEXT_SUBMIT','Submit');
 define('TEXT_ADMIN_NAME', 'Admin Username:');
 define('TEXT_ADMIN_PASS', 'Admin Password:');
 define('TEXT_ADMIN_OLD_PASSWORD', 'Old Password:');

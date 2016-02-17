@@ -226,8 +226,12 @@
 
 ////
 // Output a form password field
-  function zen_draw_password_field($name, $value = '', $required = false) {
-    $field = zen_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
+  function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
+    $parameters .= ' maxlength="40"';
+    if($autocomplete == false){
+      $parameters .= ' autocomplete="off"';
+    }
+    $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
 
     return $field;
   }

@@ -136,6 +136,7 @@ body#login .button {
     background: #fff;
     border: 0px;
     font-weight: bold;
+    margin: 5px;
 }
 
 body#login .button:hover {
