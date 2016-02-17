@@ -314,7 +314,7 @@
     $mouse_over_class = 'cssButtonHover ' . (($type == 'button') ? 'normal_button button ' : '') . $sec_class . $sec_class . 'Hover';
     // javascript to set different classes on mouseover and mouseout: enables hover effect on the buttons
     // (pure css hovers on non link elements do work work in every browser)
-    $css_button_js .=  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
+    $css_button_js =  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
 
     if (CSS_BUTTON_POPUPS_IS_ARRAY == 'true') {
       $popuptext = (!empty($css_button_text[$button_name])) ? $css_button_text[$button_name] : ($button_name . CSSBUTTONS_CATALOG_POPUPS_SHOW_BUTTON_NAMES_TEXT);
@@ -578,3 +578,9 @@
         || $current_page_base=='down_for_maintenance') $addparms = 'rel="nofollow"';
     return ($parameters == '' ? $addparms : $parameters . ' ' . $addparms);
   }
+////
+// output label for input fields
+function zen_draw_label($text,$for,$parameters = ''){
+  $label = '<label for="'.$for.'" '.$parameters.'>'.$text.'</label>';
+  return $label;
+}
