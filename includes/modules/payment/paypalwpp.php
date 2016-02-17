@@ -3,7 +3,7 @@
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
@@ -810,7 +810,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
-                                        'version' => '124.0',
+                                        'version' => '201.0',
                                         'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
@@ -2921,7 +2921,12 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           if ($this->enableDebugging) {
             $this->_doDebug('PayPal Error Log - ec_step2()', "In function: ec_step2()\r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
           }
-          $this->terminateEC(MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_ERROR . ' (' . $response['L_ERRORCODE0'] . ' ' . urldecode($response['L_SHORTMESSAGE0'] . $response['RESULT']) . ')', true);
+          $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_ERROR;
+          if ($response['L_ERRORCODE0'] == 13113) {
+            $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_PAYPAL_DECLINED;
+            $_SESSION['payment'] = '';
+          }
+          $this->terminateEC($errorText . ' (' . $response['L_ERRORCODE0'] . ' ' . urldecode($response['L_SHORTMESSAGE0'] . $response['RESULT']) . ')', true);
           return true;
         }
         break;

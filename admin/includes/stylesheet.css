@@ -591,3 +591,36 @@ margin-bottom: 5px;
 #adminHeaderLogo{
     padding: 5px;
 }
+
+
+/* This imageless css button is based on the button that was generated initially by CSSButtonGenerator.com */
+.buttonRow a {
+  text-decoration: none;
+}
+.button, input.button {
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  display:inline-block;
+  font-family:Verdana;
+  font-size:13px;
+  font-weight:bold;
+  margin: 0;
+  padding:3px 8px;
+  text-decoration:none;
+}
+input.orderprevnext {
+  background-color:#fee8b9;  /* Submit button background color */
+  border: 1px solid #638263;  /* Submit button border color */
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-block;
+  margin: 0;
+  padding: 3px 8px;
+  color: #404040;  /* Text color for submit buttons */
+}
+input.orderprevnext:hover {
+  background-color:#ffdc9c;  /* Hover color for the submit buttons */
+  border: 1px solid #638263;  /* Submit button border color */
+  cursor: pointer;
+}
