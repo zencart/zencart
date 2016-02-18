@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: html_output.php drbyte Modified in v1.5.4 $
@@ -349,3 +349,9 @@
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
+////
+// output label for input fields
+    function zen_draw_label($text,$for,$parameters = ''){
+      $label = '<label for="'.$for.'" '.$parameters.'>'.$text.'</label>';
+      return $label;
+    }
