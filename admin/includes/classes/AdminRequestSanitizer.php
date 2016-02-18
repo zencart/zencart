@@ -178,7 +178,7 @@ class AdminRequestSanitizer extends base
     private function filterProductNameRegex()
     {
         $saniList = $this->adminSanitizationConfig['PRODUCT_NAME_REGEX'];
-        $prodNameRegex = '~(<\/?scri|on(load|mouse|error|read|key)=|= ?(\(|")|<!)~i';
+        $prodNameRegex = '~<\/?scri|on(load|mouse|error|read|key)(up|down)? ?=|[^(class)] ?= ?(\(|")|<!~i';
         foreach ($saniList as $key) {
             if (isset($_POST[$key])) {
                 $_POST[$key] = preg_replace($prodNameRegex, '', $_POST[$key]);
@@ -291,7 +291,7 @@ class AdminRequestSanitizer extends base
     private function filterProductNameDeepRegex()
     {
         $saniList = $this->adminSanitizationConfig['PRODUCT_NAME_DEEP_REGEX'];
-        $prodNameRegex = '~(<\/?scri|on(load|mouse|error|read|key)=|= ?(\(|")|<!)~i';
+        $prodNameRegex = '~<\/?scri|on(load|mouse|error|read|key)(up|down)? ?=|[^(class)] ?= ?(\(|")|<!~i';
         foreach ($saniList as $value) {
             if (isset($_POST[$value])) {
                 foreach ($_POST[$value] as $pKey => $pValue) {
@@ -339,7 +339,7 @@ class AdminRequestSanitizer extends base
     /**
      *
      */
-    private function filterSstrictSanitizeKeys()
+    private function filterStrictSanitizeKeys()
     {
         if (isset($_POST)) {
             foreach ($_POST as $key => $value) {
