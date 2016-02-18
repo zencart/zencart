@@ -211,7 +211,7 @@ define('BOX_COUPON_ADMIN','Coupon Admin');
 define('BOX_COUPON_RESTRICT','Coupon Restrictions');
 
 // admin access box text
-define('BOX_HEADING_ADMIN_ACCESS', 'Admins');
+define('BOX_HEADING_ADMIN_ACCESS', 'Admin Access Management');
 define('BOX_ADMIN_ACCESS_USERS',  'Admin Users');
 define('BOX_ADMIN_ACCESS_PROFILES', 'Admin Profiles');
 define('BOX_ADMIN_ACCESS_PAGE_REGISTRATION', 'Admin Page Registration');
