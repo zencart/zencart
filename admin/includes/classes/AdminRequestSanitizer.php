@@ -175,9 +175,9 @@ class AdminRequestSanitizer extends base
     /**
      *
      */
-    private function filterProductNameRegex()
+    private function filterWordsAndSymbolsRegex()
     {
-        $saniList = $this->adminSanitizationConfig['PRODUCT_NAME_REGEX'];
+        $saniList = $this->adminSanitizationConfig['WORDS_AND_SYMBOLS_REGEX'];
         $prodNameRegex = '~<\/?scri|on(load|mouse|error|read|key)(up|down)? ?=|[^(class)] ?= ?(\(|")|<!~i';
         foreach ($saniList as $key) {
             if (isset($_POST[$key])) {

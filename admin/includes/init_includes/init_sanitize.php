@@ -27,7 +27,7 @@ $adminSanitizerTypes = array_merge(array(
     'CONVERT_INT' => array('type' => 'builtin', 'strict' => false),
     'FILE_DIR_REGEX' => array('type' => 'builtin', 'strict' => false),
     'ALPHANUM_DASH_UNDERSCORE' => array('type' => 'builtin', 'strict' => false),
-    'PRODUCT_NAME_REGEX' => array('type' => 'builtin', 'strict' => false),
+    'WORDS_AND_SYMBOLS_REGEX' => array('type' => 'builtin', 'strict' => false),
     'META_TAGS' => array('type' => 'builtin', 'strict' => false),
     'SANITIZE_EMAIL' => array('type' => 'builtin', 'strict' => false),
     'PRODUCT_DESC_REGEX' => array('type' => 'builtin', 'strict' => false),
@@ -200,7 +200,7 @@ $group = array('title', 'coupon_name', 'banners_title', 'coupon_code', 'group_na
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
                'symbol_left', 'symbol_right');
-$sanitizer->addSanitizationGroup('PRODUCT_NAME_REGEX', $group);
+$sanitizer->addSanitizationGroup('WORDS_AND_SYMBOLS_REGEX', $group);
 
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
 $sanitizer->addSanitizationGroup('META_TAGS', $group);
