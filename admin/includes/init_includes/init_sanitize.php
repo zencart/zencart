@@ -223,7 +223,7 @@ $sanitizer->addSanitizationGroup('PRODUCT_NAME_DEEP_REGEX', $group);
 $group = array('configuration_value', 'configuration_key', 'search', 'query_string');
 $sanitizer->addSanitizationGroup('STRICT_SANITIZE_VALUES', $group);
 
-$group = array();
+$group = array(); // $group is ignored for the following group
 $sanitizer->addSanitizationGroup('STRICT_SANITIZE_KEYS', $group);
 
 $sanitizer->runSanitizers();

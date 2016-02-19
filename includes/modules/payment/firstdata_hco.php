@@ -192,7 +192,7 @@ class firstdata_hco extends base {
 
     $submit_data_core = array(
       'x_login' => html_entity_decode(MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_PAGEID),
-      'TPP-ID' => 'EZN001', // hosted checkout payment pages mode
+      'x_user3' => 'EZN001', // First Data mode
       'x_amount' => number_format($order->info['total'], 2),
       'x_currency_code' => $_SESSION['currency'],
       'x_type' => MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
@@ -477,7 +477,7 @@ class firstdata_hco extends base {
   /**
    * Used to do any debug logging / tracking / storage as required.
    */
-  function _debugActions($response, $mode, $order_time= '', $sessID = '') {
+  function _debugActions($response, $mode, $order_time= '') {
     if ($order_time == '') $order_time = date("F j, Y, g:i a");
     $response['url'] = $this->form_action_url;
     $this->reportable_submit_data['url'] = $this->form_action_url;
