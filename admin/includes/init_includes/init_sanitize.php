@@ -27,7 +27,7 @@ $adminSanitizerTypes = array_merge(array(
     'CONVERT_INT' => array('type' => 'builtin', 'strict' => false),
     'FILE_DIR_REGEX' => array('type' => 'builtin', 'strict' => false),
     'ALPHANUM_DASH_UNDERSCORE' => array('type' => 'builtin', 'strict' => false),
-    'PRODUCT_NAME_REGEX' => array('type' => 'builtin', 'strict' => false),
+    'WORDS_AND_SYMBOLS_REGEX' => array('type' => 'builtin', 'strict' => false),
     'META_TAGS' => array('type' => 'builtin', 'strict' => false),
     'SANITIZE_EMAIL' => array('type' => 'builtin', 'strict' => false),
     'PRODUCT_DESC_REGEX' => array('type' => 'builtin', 'strict' => false),
@@ -192,12 +192,15 @@ $group = array(
     'module',
     'page',
     'attribute_page',
-    'cPath'
+    'cPath',
 );
 $sanitizer->addSanitizationGroup('ALPHANUM_DASH_UNDERSCORE', $group);
 
-$group = array('title', 'coupon_name', 'banners_title', 'coupon_code');
-$sanitizer->addSanitizationGroup('PRODUCT_NAME_REGEX', $group);
+$group = array('title', 'coupon_name', 'banners_title', 'coupon_code', 'group_name', 'geo_zone_name', 'geo_zone_description',
+               'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
+               'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
+               'symbol_left', 'symbol_right');
+$sanitizer->addSanitizationGroup('WORDS_AND_SYMBOLS_REGEX', $group);
 
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
 $sanitizer->addSanitizationGroup('META_TAGS', $group);
@@ -205,7 +208,7 @@ $sanitizer->addSanitizationGroup('META_TAGS', $group);
 $group = array('customers_email_address');
 $sanitizer->addSanitizationGroup('SANITIZE_EMAIL', $group);
 
-$group = array('products_description', 'coupon_desc');
+$group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text'. 'pages_html_text', 'comments');
 $sanitizer->addSanitizationGroup('PRODUCT_DESC_REGEX', $group);
 
 $group = array('products_url');
@@ -214,10 +217,10 @@ $sanitizer->addSanitizationGroup('ALPHANUM_DASH_UNDERSCORE', $group);
 $group = array('coupon_min_order');
 $sanitizer->addSanitizationGroup('CURRENCY_VALUE_REGEX', $group);
 
-$group = array('products_name');
+$group = array('products_name', 'orders_status_name', 'configuration');
 $sanitizer->addSanitizationGroup('PRODUCT_NAME_DEEP_REGEX', $group);
 
-$group = array('configuration_value');
+$group = array('configuration_value', 'configuration_key', 'search', 'query_string');
 $sanitizer->addSanitizationGroup('STRICT_SANITIZE_VALUES', $group);
 
 $group = array();

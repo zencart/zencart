@@ -175,10 +175,10 @@ class AdminRequestSanitizer extends base
     /**
      *
      */
-    private function filterProductNameRegex()
+    private function filterWordsAndSymbolsRegex()
     {
-        $saniList = $this->adminSanitizationConfig['PRODUCT_NAME_REGEX'];
-        $prodNameRegex = '~(<\/?scri|on(load|mouse|error|read|key)=|= ?(\(|")|<!)~i';
+        $saniList = $this->adminSanitizationConfig['WORDS_AND_SYMBOLS_REGEX'];
+        $prodNameRegex = '~<\/?scri|on(load|mouse|error|read|key)(up|down)? ?=|[^(class)] ?= ?(\(|")|<!~i';
         foreach ($saniList as $key) {
             if (isset($_POST[$key])) {
                 $_POST[$key] = preg_replace($prodNameRegex, '', $_POST[$key]);
@@ -201,8 +201,13 @@ class AdminRequestSanitizer extends base
         $prodDescRegex = '~(load=|= ?\(|<![^-])~i';
         foreach ($saniList as $value) {
             if (isset($_POST[$value])) {
-                foreach ($_POST[$value] as $pKey => $pValue) {
-                    $_POST[$value][$pKey] = preg_replace($prodDescRegex, '', $_POST[$value][$pKey]);
+                if (is_array($_POST[$value])) {
+                    foreach ($_POST[$value] as $pKey => $pValue) {
+                        $_POST[$value][$pKey] = preg_replace($prodDescRegex, '', $_POST[$value][$pKey]);
+                        $this->postKeysAlreadySanitized[] = $value;
+                    }
+                } else {
+                    $_POST[$value] = preg_replace($prodDescRegex, '', $_POST[$value]);
                     $this->postKeysAlreadySanitized[] = $value;
                 }
             }
@@ -286,7 +291,7 @@ class AdminRequestSanitizer extends base
     private function filterProductNameDeepRegex()
     {
         $saniList = $this->adminSanitizationConfig['PRODUCT_NAME_DEEP_REGEX'];
-        $prodNameRegex = '~(<\/?scri|on(load|mouse|error|read|key)=|= ?(\(|")|<!)~i';
+        $prodNameRegex = '~<\/?scri|on(load|mouse|error|read|key)(up|down)? ?=|[^(class)] ?= ?(\(|")|<!~i';
         foreach ($saniList as $value) {
             if (isset($_POST[$value])) {
                 foreach ($_POST[$value] as $pKey => $pValue) {
@@ -334,7 +339,7 @@ class AdminRequestSanitizer extends base
     /**
      *
      */
-    private function filterSstrictSanitizeKeys()
+    private function filterStrictSanitizeKeys()
     {
         if (isset($_POST)) {
             foreach ($_POST as $key => $value) {
