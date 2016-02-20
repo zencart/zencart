@@ -573,7 +573,7 @@ label.error {
     text-align: right;
 }
 .configurationColumnLeft, .configurationColumnRight{
-    padding: 2px;
+    padding: 1px;
 }
 #loginFormDiv div.messageStackError{
     margin: 5px;
@@ -587,21 +587,28 @@ img[alt="Cancel"], img[alt="Reset"]{
     padding: 10px;
 }
 .version-notify a img{
-margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 #adminHeaderLogo{
     padding: 5px;
 }
 
-
+footer, #footer {
+    font-size: smallest;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    padding-bottom: 2em;
+}
 /* This imageless css button is based on the button that was generated initially by CSSButtonGenerator.com */
 .buttonRow a {
   text-decoration: none;
 }
 .button, input.button {
-  -moz-border-radius:6px;
-  -webkit-border-radius:6px;
-  border-radius:6px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  border-radius:5px;
   display:inline-block;
   font-family:Verdana;
   font-size:13px;
@@ -609,6 +616,13 @@ margin-bottom: 5px;
   margin: 0;
   padding:3px 8px;
   text-decoration:none;
+}
+input.button a, a input.button {
+    color: #404040;
+}
+input.submit {
+  background-color:#fee8b9;  /* Submit button background color */
+  border: 1px solid #638263;  /* Submit button border color */
 }
 input.orderprevnext {
   background-color:#fee8b9;  /* Submit button background color */
@@ -620,8 +634,20 @@ input.orderprevnext {
   padding: 3px 8px;
   color: #404040;  /* Text color for submit buttons */
 }
-input.orderprevnext:hover {
+input.orderprevnext:hover, input.submit:hover {
   background-color:#ffdc9c;  /* Hover color for the submit buttons */
   border: 1px solid #638263;  /* Submit button border color */
   cursor: pointer;
+}
+input.faint {
+    font-weight: normal;
+    font-size: 0.9em;
+}
+
+@media print {
+    .header-area, .footer-area, .noprint, 
+    .report-button { display: none;}
+    a[href]:after {
+        content: none
+    }
 }

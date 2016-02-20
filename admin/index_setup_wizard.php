@@ -82,6 +82,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
     <script language="JavaScript" src="includes/menu.js" type="text/JavaScript"></script>
     <link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
+    <link rel="stylesheet" type="text/css" href="includes/index.css" />
     <link rel="stylesheet" type="text/css" href="includes/admin_access.css" />
     <script type="text/javascript">
         <!--
@@ -120,7 +121,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
         // -->
     </script>
 </head>
-<body onLoad="init()">
+<body id="setupWizardPage" onLoad="init()">
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -141,7 +142,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
     <br>
     <div>
         <label for="store_owner_email"><?php echo TEXT_STORE_OWNER_EMAIL ?></label>
-        <?php echo zen_draw_input_field('store_owner_email', $store_owner_email, ' id="store_owner_email"');?>
+        <?php echo zen_draw_input_field('store_owner_email', $store_owner_email, ' id="store_owner_email"', null, 'email');?>
     </div>
     <br>
     <div>
@@ -160,7 +161,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
     </div>
     <br>
     <div>
-        <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE, 'id="button"') ?>
+      <input type="submit" class="button submit" id="button" value="<?php echo IMAGE_UPDATE; ?>">
     </div>
     </form>
 </div>
