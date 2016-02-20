@@ -68,10 +68,6 @@ div.warrantyrow {
     text-align: center;
 }
 
-#colone, #coltwo, #colthree {
-    padding-top: 3em;
-}
-
 #setupWizardForm INPUT[type="text"], 
 #setupWizardForm INPUT[type="email"],
 #setupWizardForm textarea {

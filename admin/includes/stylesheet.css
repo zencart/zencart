@@ -594,13 +594,26 @@ img[alt="Cancel"], img[alt="Reset"]{
 }
 
 footer, #footer {
-    font-size: smallest;
-    position: fixed;
-    bottom: 0;
     text-align: center;
     width: 100%;
-    padding-bottom: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
+footer, #footer, footer a, #footer a {
+    font-size: 0.9em;
+}
+footer.homeFooter, .bottom footer {
+    position: fixed;
+    bottom: 0;
+}
+@media screen {
+    body.indexDashboard {
+        height: 111%;
+    }
+}
+
+
+
 /* This imageless css button is based on the button that was generated initially by CSSButtonGenerator.com */
 .buttonRow a {
   text-decoration: none;
@@ -644,10 +657,16 @@ input.faint {
     font-size: 0.9em;
 }
 
+
 @media print {
     .header-area, .footer-area, .noprint, 
     .report-button { display: none;}
     a[href]:after {
         content: none
     }
+    footer, #footer {
+        position: fixed;
+        bottom: 0;
+    }
 }
+

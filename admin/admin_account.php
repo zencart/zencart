@@ -164,9 +164,11 @@ $userDetails = $userList[0];
 </div>
 <!-- body_eof //-->
 
+<div class="bottom">
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
+</div>
 <br>
 </body>
 </html>

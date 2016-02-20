@@ -55,7 +55,7 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
         // -->
     </script>
 </head>
-<body onLoad="init()">
+<body class="indexDashboard" onLoad="init()">
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
