@@ -71,3 +71,15 @@ div.warrantyrow {
 #colone, #coltwo, #colthree {
     padding-top: 3em;
 }
+
+#setupWizardForm INPUT[type="text"], 
+#setupWizardForm INPUT[type="email"],
+#setupWizardForm textarea {
+    width: 40%;
+    max-width: 450px;
+}
+@media (min-width: 768px) {
+    #setupWizardPage #pageWrapper{
+        margin: 1em 5% 1em 25%;
+    }
+}

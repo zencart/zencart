@@ -376,6 +376,9 @@ define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
 define('IMAGE_INSTALL_SPECIAL', 'Add Special Price Info');
 define('IMAGE_INSTALL_FEATURED', 'Add Featured Product Info');
 
+define('TEXT_VERSION_CHECK_BUTTON', 'Check for New Version');
+define('TEXT_BUTTON_RESET_ACTIVITY_LOG', 'View Activity Log');
+
 define('ICON_PRODUCTS_PRICE_MANAGER','Products Price Manager');
 define('ICON_COPY_TO', 'Copy to');
 define('ICON_CROSS', 'False');

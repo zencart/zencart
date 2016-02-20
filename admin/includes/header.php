@@ -109,7 +109,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($
     // display the "check for updated version" button.  The button link should be the current page and all params
     $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
     $url .= (strpos($url, '?') > 5 ? '&' : '?') . 'vcheck=yes';
-    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version = '<a href="' . $url . '">' . zen_image_button('button_check_new_version.gif', IMAGE_CHECK_VERSION) . '</a>';
+    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version = '<a href="' . $url . '">' . '<input type="button" class="button faint" value="' . TEXT_VERSION_CHECK_BUTTON . '"/></a>';
 }
 
 // check GV release queue and alert store owner
@@ -118,29 +118,31 @@ if (SHOW_GV_QUEUE == true) {
     $new_gv_queue_cnt = 0;
     if ($new_gv_queue->RecordCount() > 0) {
         $new_gv_queue_cnt = $new_gv_queue->RecordCount();
-        $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . zen_image_button('button_gift_queue.gif', IMAGE_GIFT_QUEUE) . '</a>';
+        $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="button submit faint" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
     }
 }
 ?>
 <!-- All HEADER_ definitions in the columns below are defined in includes/languages/english.php //-->
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <?php if ($new_gv_queue_cnt > 0) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?>
-        <?php
-        if (isset($_SESSION['reset_admin_activity_log']) and ($_SESSION['reset_admin_activity_log'] == true and (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
-            ?>
-            <span align="center" class="main noprint"
-                  valign="top"><?php echo '<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_reset.gif', RESET_ADMIN_ACTIVITY_LOG) . '<br />' . RESET_ADMIN_ACTIVITY_LOG . '</a>'; ?></span>
-            <?php
-        }
-        ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="adminHeaderLogo">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" id="adminHeaderLogo">
         <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
     </div>
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <span class="noprint"><?php if ($new_gv_queue_cnt > 0) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?></span>
+    </div>
+
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint"><span class="noprint">
+        <?php
+        if (isset($_SESSION['reset_admin_activity_log']) and ($_SESSION['reset_admin_activity_log'] == true and (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
+        ?>
+        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>"><input type="button" class="button submit faint" value="<?php echo TEXT_BUTTON_RESET_ACTIVITY_LOG;?>"/><br /><?php echo RESET_ADMIN_ACTIVITY_LOG; ?></a>
+        <?php
+        }
+        ?></span>
+    </div>
+
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
         <?php
         if ($new_version) {
             ?>
@@ -177,7 +179,7 @@ if (SHOW_GV_QUEUE == true) {
         if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
         ?>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noprint">
         <ul class="nav nav-pills upperMenu">
             <li><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
             <li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
