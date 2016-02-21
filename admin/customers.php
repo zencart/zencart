@@ -56,7 +56,7 @@
  */
   foreach ($addressArray as $address) {
 ?>
-<h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($address['firstname'] . ' ' . $address['lastname']); ?><?php if ($address['address_book_id'] == zen_get_customers_address_primary($_GET['cID'])) echo '&nbsp;' . PRIMARY_ADDRESS ; ?></h3>
+<h3 class="addressBookDefaultName"><?php echo htmlspecialchars($address['firstname'] . ' ' . $address['lastname'], ENT_COMPAT, CHARSET, FALSE); ?><?php if ($address['address_book_id'] == zen_get_customers_address_primary($_GET['cID'])) echo '&nbsp;' . PRIMARY_ADDRESS ; ?></h3>
 <address><?php echo zen_address_format($address['format_id'], $address['address'], true, ' ', '<br />'); ?></address>
 
 <br class="clearBoth" />
@@ -976,7 +976,7 @@ if ($processed == true) {
     echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       $keywords = zen_db_prepare_input($_GET['search']);
-      echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_output_string_protected($keywords);
+      echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . htmlspecialchars($keywords, ENT_COMPAT, CHARSET, FALSE);
     }
 ?>
             </td>
@@ -1282,7 +1282,7 @@ $().ready(function() {
 </script>');
       break;
     default:
-      if (isset($_GET['search'])) $_GET['search'] = zen_output_string_protected($_GET['search']);
+      if (isset($_GET['search'])) $_GET['search'] = htmlspecialchars($_GET['search'], ENT_COMPAT, CHARSET, FALSE);
       if (isset($cInfo) && is_object($cInfo)) {
         $customers_orders = $db->Execute("select o.orders_id, o.date_purchased, o.order_total, o.currency, o.currency_value,
                                           cgc.amount

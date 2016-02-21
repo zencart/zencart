@@ -181,7 +181,7 @@ if ($action != '')
           { // output non-XML data-format
             $postoutput = print_r(json_decode(@gzinflate($result->fields['gzpost'])), true);
             if ($format == 'HTML') {
-              $postoutput = nl2br(zen_output_string_protected($postoutput));
+              $postoutput = nl2br(htmlspecialchars($postoutput, ENT_COMPAT, CHARSET, FALSE));
             } else {
               $postoutput = nl2br($postoutput);
             }

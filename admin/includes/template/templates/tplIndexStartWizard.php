@@ -41,7 +41,7 @@
   <label class="inline" for="store_name"><?php echo TEXT_FORM_LABEL_STORE_NAME; ?></label>
   </div>
   <div class="small-9 columns">
-  <input type="text" id="store_name" name="store_name" value="<?php echo zen_output_string_protected($tplVars['storeName']); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STORENAME; ?>">
+  <input type="text" id="store_name" name="store_name" value="<?php echo htmlspecialchars($tplVars['storeName'], ENT_COMPAT, CHARSET, FALSE); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STORENAME; ?>">
   </div>
    </div>
 
@@ -50,7 +50,7 @@
    <label class="inline" for="store_owner"><?php echo TEXT_FORM_LABEL_STORE_OWNER; ?></label>
    </div>
   <div class="small-9 columns">
-    <input type="text" id="store_owner" name="store_owner" value="<?php echo zen_output_string_protected($tplVars['storeOwner']); ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
+    <input type="text" id="store_owner" name="store_owner" value="<?php echo htmlspecialchars($tplVars['storeOwner'], ENT_COMPAT, CHARSET, FALSE); ?>" tabindex="2" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
    </div>
    </div>
 
@@ -59,7 +59,7 @@
    <label class="inline" for="store_owner_email"><?php echo TEXT_FORM_LABEL_STORE_OWNER_EMAIL; ?></label>
    </div>
   <div class="small-9 columns">
-   <input type="text" id="store_owner_email" name="store_owner_email" value="<?php echo zen_output_string_protected($tplVars['storeOwnerEmail']); ?>" tabindex="3" placeholder="webmaster@example.com">
+   <input type="text" id="store_owner_email" name="store_owner_email" value="<?php echo htmlspecialchars($tplVars['storeOwnerEmail'], ENT_COMPAT, CHARSET, FALSE); ?>" tabindex="3" placeholder="webmaster@example.com">
    </div>
    </div>
 

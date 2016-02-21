@@ -13,9 +13,9 @@
   style="width: auto" name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>">
 <?php foreach ($tplVars['leadDefinition']['fields'][$field]['layout']['options'] as $option) { ?>
 <option
-    value="<?php echo zen_output_string_protected($option['id']); ?>"
+    value="<?php echo htmlspecialchars($option['id'], ENT_COMPAT, CHARSET, FALSE); ?>"
     <?php if ($tplVars['leadDefinition']['fields'][$field]['value'] == $option['id']) echo ' selected="selected" '; ?>>
-    <?php echo zen_output_string_protected($option['text']); ?>
+    <?php echo htmlspecialchars($option['text'], ENT_COMPAT, CHARSET, FALSE); ?>
 </option>
 <?php } ?>
 </select>

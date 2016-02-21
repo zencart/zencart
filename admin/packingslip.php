@@ -151,7 +151,7 @@
 
       if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
         for ($j=0, $k=sizeof($order->products[$i]['attributes']); $j<$k; $j++) {
-          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(htmlspecialchars($order->products[$i]['attributes'][$j]['value'], ENT_COMPAT, CHARSET, FALSE));
           echo '</i></small></nobr>';
         }
       }
