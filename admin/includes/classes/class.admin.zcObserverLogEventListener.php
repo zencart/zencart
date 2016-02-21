@@ -181,7 +181,7 @@ class zcObserverLogEventListener extends base {
   {
     $matches = '';
     if (preg_match_all('~(file://|<iframe|<frame|<embed|<script|<meta)~i', $string, $matches)) {
-      return htmlspecialchars(WARNING_REVIEW_ROGUE_ACTIVITY . ' [' . implode(' and ', $matches[1]) . ']', ENT_COMPAT, CHARSET, true);
+      return zen_output_string_protected(WARNING_REVIEW_ROGUE_ACTIVITY . ' [' . implode(' and ', $matches[1]) . ']');
     } else {
       return false;
     }

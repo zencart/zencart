@@ -151,7 +151,7 @@
 
       if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
         for ($j=0, $k=sizeof($order->products[$i]['attributes']); $j<$k; $j++) {
-          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(htmlspecialchars($order->products[$i]['attributes'][$j]['value'], ENT_COMPAT, CHARSET, FALSE));
           echo '</i></small></nobr>';
         }
       }
@@ -185,7 +185,7 @@
         echo '          <tr>' . "\n" .
              '            <td class="smallText" align="center" valign="top">' . zen_datetime_short($orders_history->fields['date_added']) . '</td>' . "\n";
         echo '            <td class="smallText" valign="top">' . $orders_status_array[$orders_history->fields['orders_status_id']] . '</td>' . "\n";
-        echo '            <td class="smallText" valign="top">' . ($orders_history->fields['comments'] == '' ? TEXT_NONE : nl2br(zen_db_output($orders_history->fields['comments']))) . '&nbsp;</td>' . "\n" .
+        echo '            <td class="smallText" valign="top">' . ($orders_history->fields['comments'] == '' ? TEXT_NONE : nl2br(zen_output_string_protected($orders_history->fields['comments']))) . '&nbsp;</td>' . "\n" .
              '          </tr>' . "\n";
         $orders_history->MoveNext();
         if (ORDER_COMMENTS_PACKING_SLIP == 1 && $count_comments >= 1) {
