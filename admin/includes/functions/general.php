@@ -36,7 +36,7 @@
 
   function zen_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
-      return htmlspecialchars($string, ENT_COMPAT, CHARSET, FALSE);
+      return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
     } else {
       if ($translate == false) {
         return zen_parse_input_field_data($string, array('"' => '&quot;'));

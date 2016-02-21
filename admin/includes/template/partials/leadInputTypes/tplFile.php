@@ -14,14 +14,14 @@
        style="width:auto"
        type="file"
        name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-       value="<?php echo htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value'], ENT_COMPAT, CHARSET, TRUE); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
+       value="<?php echo zen_output_string_protected($tplVars['leadDefinition']['fields'][$field]['value']); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
        <?php echo ($tplVars['leadDefinition']['fields'][$field]['validations']['required']) ? ' required ' : ''; ?>
        ><br>
        <?php if (isset($tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['imageDirectorySelector']) && $tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['imageDirectorySelector']) { ?>
           <?php echo zen_draw_pull_down_menu($tplVars['leadDefinition']['fields'][$field]['field'].'_file_select', $tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['imageDirectorySelectList']); ?>
        <?php }?>
 
-       <?php echo '&nbsp;' . htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value'], ENT_COMPAT, CHARSET, TRUE);?><br><?php echo zen_info_image($tplVars['leadDefinition']['fields'][$field]['value'], '', 100); ?><br>
+       <?php echo '&nbsp;' . zen_output_string_protected($tplVars['leadDefinition']['fields'][$field]['value']);?><br><?php echo zen_info_image($tplVars['leadDefinition']['fields'][$field]['value'], '', 100); ?><br>
        <?php if ($tplVars['leadDefinition']['action'] != 'list') { ?>
 <small class="error"><?php echo $tplVars['leadDefinition']['fields'][$field]['validations']['errorText']; ?></small>
 <?php   if ($tplVars['leadDefinition']['fields'][$field]['autocomplete']) { ?>

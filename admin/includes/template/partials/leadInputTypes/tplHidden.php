@@ -13,5 +13,5 @@
        style="width:auto"
        type="hidden"
        name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-       value="<?php echo htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value'], ENT_COMPAT, CHARSET, TRUE); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
+       value="<?php echo zen_output_string_protected($tplVars['leadDefinition']['fields'][$field]['value']); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
        >

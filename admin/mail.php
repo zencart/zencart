@@ -219,10 +219,10 @@ function check_form(form_name) {
               <td class="smallText"><b><?php echo TEXT_CUSTOMER; ?></b>&nbsp;&nbsp;&nbsp;<?php echo $mail_sent_to; ?></td>
             </tr>
             <tr>
-              <td class="smallText"><b><?php echo TEXT_FROM; ?></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars(stripslashes($_POST['from']), ENT_COMPAT, CHARSET, TRUE); ?></td>
+              <td class="smallText"><b><?php echo TEXT_FROM; ?></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo zen_output_string_protected(stripslashes($_POST['from'])); ?></td>
             </tr>
             <tr>
-              <td class="smallText"><b><?php echo TEXT_SUBJECT; ?></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars(stripslashes($_POST['subject']), ENT_COMPAT, CHARSET, TRUE); ?></td>
+              <td class="smallText"><b><?php echo TEXT_SUBJECT; ?></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo zen_output_string_protected(stripslashes($_POST['subject'])); ?></td>
             </tr>
             <tr>
               <td class="smallText"><b><hr /><?php echo strip_tags(TEXT_MESSAGE_HTML); ?></b></td>
@@ -242,7 +242,7 @@ function check_form(form_name) {
   $message_preview = (stristr($message_preview, '<br') ? $message_preview : nl2br($message_preview));
   $message_preview = str_replace(array('<br>','<br />'), "<br />\n", $message_preview);
   $message_preview = str_replace('</p>', "</p>\n", $message_preview);
-  echo '<tt>' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE) ) . '</tt>';
+  echo '<tt>' . nl2br(zen_output_string_protected(stripslashes(strip_tags($message_preview))) ) . '</tt>';
 ?>
                 <hr />
               </td>
@@ -298,14 +298,14 @@ function check_form(form_name) {
             </tr>
             <tr>
               <td class="main"><?php echo TEXT_FROM; ?></td>
-              <td><?php echo zen_draw_input_field('from', htmlspecialchars(EMAIL_FROM, ENT_COMPAT, CHARSET, TRUE), 'size="50"'); ?></td>
+              <td><?php echo zen_draw_input_field('from', zen_output_string_protected(EMAIL_FROM), 'size="50"'); ?></td>
             </tr>
             <tr>
               <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
             </tr>
             <tr>
               <td class="main"><?php echo TEXT_SUBJECT; ?></td>
-              <td><?php echo zen_draw_input_field('subject', htmlspecialchars($_POST['subject'], ENT_COMPAT, CHARSET, TRUE), 'size="50"'); ?></td>
+              <td><?php echo zen_draw_input_field('subject', zen_output_string_protected($_POST['subject']), 'size="50"'); ?></td>
             </tr>
             <tr>
               <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -315,7 +315,7 @@ function check_form(form_name) {
               <td class="main" width="750">
 <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED; ?>
 <?php if (EMAIL_USE_HTML == 'true') {
-  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"');
+  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', zen_output_string_protected(stripslashes($_POST['message_html'])), 'id="message_html" class="editorHook"');
 } ?>
               </td>
             </tr>
@@ -324,7 +324,7 @@ function check_form(form_name) {
             </tr>
             <tr>
               <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?></td>
-              <td><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars($_POST['message'], ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
+              <td><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', zen_output_string_protected($_POST['message']), 'class="noEditor"'); ?></td>
             </tr>
 
 <?php if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED === true && defined('DIR_WS_ADMIN_ATTACHMENTS') && is_dir(DIR_WS_ADMIN_ATTACHMENTS) && is_writable(DIR_WS_ADMIN_ATTACHMENTS) ) { ?>
