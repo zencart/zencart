@@ -58,9 +58,8 @@
     return $db->insert_ID();
   }
 
-  function zen_db_output($string) {
-    return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
-  }
+/* function zen_db_output has been deprecated in place of zen_output_string_protected and can be found in the store's
+includes/functions/compatibility.php file */
 
   function zen_db_input($string) {
     global $db;

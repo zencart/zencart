@@ -1009,11 +1009,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $db->Execute($query);
   }
 
-////
-  function zen_db_output($string) {
-    return htmlspecialchars($string);
-  }
-
+/* function zen_db_output has been deprecated in place of zen_output_string_protected and can be found in the store's
+includes/functions/compatibility.php file */
 
 // function to return field type
 // uses $tbl = table name, $fld = field name
