@@ -13,7 +13,7 @@
        style="width:auto"
        type="checkbox"
        name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-       value="<?php echo htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value']); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
+       value="<?php echo htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value'], ENT_COMPAT, CHARSET, TRUE); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
        >
 <?php if ($tplVars['leadDefinition']['action'] != 'list') { ?>
 <small class="error"><?php echo $tplVars['leadDefinition']['fields'][$field]['validations']['errorText']; ?></small>

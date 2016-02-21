@@ -184,7 +184,7 @@
           }
 
           // use to debug for UTF-8 NO BOM on files: test search on a, e, s change if below to true
-          if (false && htmlspecialchars($line, ENT_QUOTES, CHARSET) == '') {
+          if (false && htmlspecialchars($line, ENT_QUOTES, CHARSET, TRUE) == '') {
             echo '<br>SOMETHING BROKE in: ' . $file . '<br>on: ' . $line_num . ' - ' . $line . '<br>';
             $search_found = false;
           }
@@ -258,7 +258,7 @@
       $input = preg_replace('#(' . $highlight . ')#' . (!$case_sensitive ? 'i' : ''), '~~!~~!~~\1~!!~!!~', $input);
     }
     // sanitize output
-    $input = htmlspecialchars($input, ENT_QUOTES, CHARSET);
+    $input = htmlspecialchars($input, ENT_QUOTES, CHARSET, TRUE);
 
     // keep original "spaces" (doesn't account for tabs)
     $input = str_replace(' ', '&nbsp;', $input);
