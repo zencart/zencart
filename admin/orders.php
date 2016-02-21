@@ -685,7 +685,7 @@ function couponpopupWindow(url) {
           echo zen_image(DIR_WS_ICONS . 'unlocked.gif', TEXT_VISIBLE) . "</td>\n";
         }
         echo '            <td class="smallText">' . $orders_status_array[$orders_history->fields['orders_status_id']] . '</td>' . "\n";
-        echo '            <td class="smallText">' . nl2br(zen_db_output($orders_history->fields['comments'])) . '&nbsp;</td>' . "\n" .
+        echo '            <td class="smallText">' . nl2br(htmlspecialchars($orders_history->fields['comments'], ENT_COMPAT, CHARSET, TRUE)) . '&nbsp;</td>' . "\n" .
              '          </tr>' . "\n";
         $orders_history->MoveNext();
       }
