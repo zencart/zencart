@@ -24,4 +24,4 @@
 <?php       require('includes/template/javascript/'.$tplVars['leadDefinition']['fields'][$field]['autocomplete']['custom']); ?>
 <?php     } ?>
 <?php   } ?>
-<?php } ?>
+<?php }

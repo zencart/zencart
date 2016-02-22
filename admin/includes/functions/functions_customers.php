@@ -146,4 +146,3 @@
 
     return $lookup_customers_primary_address->fields['customers_default_address_id'];
   }
-?>
