@@ -72,8 +72,8 @@ require('includes/admin_html_head.php');
     <strong><?php echo TITLE_DATABASE_DATE; ?></strong> <?php echo $system['db_date']; ?><br>
     <strong><?php echo TITLE_DATABASE_DATA_SIZE; ?></strong> <?php echo number_format(($system['database_size']/1024),0); ?> kB<br>
     <strong><?php echo TITLE_DATABASE_INDEX_SIZE; ?></strong> <?php echo number_format(($system['index_size']/1024),0); ?> kB<br>
-    <strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS; ?></strong> <?php echo $system['mysql_slow_query_log_status'] != '0' ? 'On' : 'Off'; ?><br><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_FILE; ?></strong> <?php echo zen_output_string_protected($system['mysql_slow_query_log_file']); ?><br>
-    <strong><?php echo TITLE_DATABASE_MYSQL_MODE; ?></strong> <?php echo zen_output_string_protected(str_replace(',', ', ', $system['mysql_mode'])); ?></td>
+    <strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS; ?></strong> <?php echo $system['mysql_slow_query_log_status'] != '0' ? 'On' : 'Off'; ?><br><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_FILE; ?></strong> <?php echo htmlspecialchars($system['mysql_slow_query_log_file'], ENT_COMPAT, CHARSET, FALSE); ?><br>
+    <strong><?php echo TITLE_DATABASE_MYSQL_MODE; ?></strong> <?php echo htmlspecialchars(str_replace(',', ', ', $system['mysql_mode']), ENT_COMPAT, CHARSET, FALSE); ?></td>
   </tr>
 </table>
 <br />

@@ -314,7 +314,7 @@ require('includes/admin_html_head.php');
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_PAGES_TITLE; ?></td>
-            <td class="main"><?php echo zen_draw_input_field('pages_title', htmlspecialchars($ezInfo->pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES, 'pages_title'), true); ?></td>
+            <td class="main"><?php echo zen_draw_input_field('pages_title', zen_output_string_protected($ezInfo->pages_title), zen_set_field_length(TABLE_EZPAGES, 'pages_title'), true); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -401,7 +401,7 @@ require('includes/admin_html_head.php');
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_PAGES_HTML_TEXT; ?></td>
-            <td class="main"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '40', htmlspecialchars($ezInfo->pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"');?></td>
+            <td class="main"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '40', zen_output_string_protected($ezInfo->pages_html_text), 'class="editorHook"');?></td>
           </tr>
 
           <tr>

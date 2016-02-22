@@ -35,7 +35,7 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
     echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '')) . zen_hide_session_id();
     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-      echo '<br />' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_output_string_protected($_GET['search']);
+      echo '<br />' . TEXT_INFO_SEARCH_DETAIL_FILTER . htmlspecialchars($_GET['search'], ENT_COMPAT, CHARSET, FALSE);
     }
     echo '</form>';
 ?>

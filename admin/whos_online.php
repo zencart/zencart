@@ -399,22 +399,22 @@ require('includes/admin_html_head.php');
       }
     } else {
       if ($is_a_bot==true) {
-        echo '              <tr class="dataTableRowBot" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($whos_online->fields['session_id']), 'NONSSL') . '\'">' . "\n";
+        echo '              <tr class="dataTableRowBot" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . htmlspecialchars($whos_online->fields['session_id'], ENT_COMPAT, CHARSET, FALSE), 'NONSSL') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRowWhois" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($whos_online->fields['session_id']), 'NONSSL') . '\'">' . "\n";
+        echo '              <tr class="dataTableRowWhois" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . htmlspecialchars($whos_online->fields['session_id'], ENT_COMPAT, CHARSET, FALSE), 'NONSSL') . '\'">' . "\n";
       }
   }
 ?>
                 <td class="dataTableContentWhois" colspan=3 valign="top">&nbsp;&nbsp;<?php echo TIME_PASSED_LAST_CLICKED . '<br />&nbsp;&nbsp;&nbsp;&nbsp;' . zen_check_minutes($whos_online->fields['time_last_click']); ?> ago</td>
                 <td class="dataTableContentWhois" colspan=5 valign="top">
                   <?php
-                    echo TEXT_SESSION_ID . zen_output_string_protected($whos_online->fields['session_id']) . '<br />' .
-                    TEXT_HOST . zen_output_string_protected($whos_online->fields['host_address']) . '<br />' .
-                    TEXT_USER_AGENT . zen_output_string_protected($whos_online->fields['user_agent']) . '<br />';
+                    echo TEXT_SESSION_ID . htmlspecialchars($whos_online->fields['session_id'], ENT_COMPAT, CHARSET, FALSE) . '<br />' .
+                    TEXT_HOST . htmlspecialchars($whos_online->fields['host_address'], ENT_COMPAT, CHARSET, FALSE) . '<br />' .
+                    TEXT_USER_AGENT . htmlspecialchars($whos_online->fields['user_agent'], ENT_COMPAT, CHARSET, FALSE) . '<br />';
 
-                    $lastURLlink = '<a href="' . zen_output_string_protected($whos_online->fields['last_page_url']) . '" target="_blank">' . '<u>' . zen_output_string_protected($whos_online->fields['last_page_url']) . '</u>' . '</a>';
+                    $lastURLlink = '<a href="' . htmlspecialchars($whos_online->fields['last_page_url'], ENT_COMPAT, CHARSET, FALSE) . '" target="_blank">' . '<u>' . htmlspecialchars($whos_online->fields['last_page_url'], ENT_COMPAT, CHARSET, FALSE) . '</u>' . '</a>';
                     if (preg_match('/^(.*)' . zen_session_name() . '=[a-f,0-9]+[&]*(.*)/i', $whos_online->fields['last_page_url'], $array)) {
-                      $lastURLlink = zen_output_string_protected($array[1] . $array[2]);
+                      $lastURLlink = htmlspecialchars($array[1] . $array[2], ENT_COMPAT, CHARSET, FALSE);
                     }
                     echo '<div class="last-url-link">' . $lastURLlink . '</div>';
                   ?>

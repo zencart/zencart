@@ -853,7 +853,7 @@ function popupWindow(url) {
               </tr>
               <tr>
                 <td class="main" align="center"><?php echo '<span class="alert">' . TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO . '</span>' . '<br />' . zen_draw_products_pull_down('products_update_id', 'size="15"', $products_exclude_array, true, '', true); ?><br />
-                <span class="alert"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO_MANUAL; ?></span><br /><input type="text" name="products_update_id_manual" value="<?php echo zen_output_string_protected($_POST['products_update_id_manual']); ?>" size="6"><br /><br /></td>
+                <span class="alert"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO_MANUAL; ?></span><br /><input type="text" name="products_update_id_manual" value="<?php echo htmlspecialchars($_POST['products_update_id_manual'], ENT_COMPAT, CHARSET, FALSE); ?>" size="6"><br /><br /></td>
                 </td>
                 <td class="main" align="center"><?php echo zen_image_submit('button_copy.gif', IMAGE_COPY) . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
               </tr>
@@ -878,7 +878,7 @@ function popupWindow(url) {
               </tr>
               <tr>
                 <td class="main" align="center"><?php echo '<span class="alert">' . TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO . '</span>' . '<br />' . zen_draw_products_pull_down_categories('categories_update_id', 'size="5"', '', true, true); ?><br />
-                <span class="alert"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO_MANUAL; ?></span><br /><input type="text" name="categories_update_id_manual" value="<?php echo zen_output_string_protected($_POST['categories_update_id_manual']); ?>" size="6"><br /><br /></td>
+                <span class="alert"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO_MANUAL; ?></span><br /><input type="text" name="categories_update_id_manual" value="<?php echo htmlspecialchars($_POST['categories_update_id_manual'], ENT_COMPAT, CHARSET, FALSE); ?>" size="6"><br /><br /></td>
                 <td class="main" align="center"><?php echo zen_image_submit('button_copy.gif', IMAGE_COPY) . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
               </tr>
             </table></td>

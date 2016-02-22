@@ -150,19 +150,19 @@ echo zen_draw_form('new_product_meta_tags', $type_admin_handler , 'cPath=' . $cP
           <tr>
             <td class="main"valign="top"><?php echo TEXT_META_TAGS_TITLE; ?>&nbsp;</td>
             <td class="main">
-              <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_metatags_title($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false)); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"');?>
+              <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', zen_output_string_protected(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_metatags_title($pInfo->products_id, $languages[$i]['id'])), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false)); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"');?>
             </td>
           </tr>
           <tr>
             <td class="main"valign="top"><?php echo TEXT_META_TAGS_KEYWORDS; ?>&nbsp;</td>
             <td class="main">
-              <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', htmlspecialchars((isset($metatags_keywords[$languages[$i]['id']])) ? stripslashes($metatags_keywords[$languages[$i]['id']]) : zen_get_metatags_keywords($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); //,'id="'.'metatags_keywords' . $languages[$i]['id'] . '"'); ?>
+              <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', zen_output_string_protected((isset($metatags_keywords[$languages[$i]['id']])) ? stripslashes($metatags_keywords[$languages[$i]['id']]) : zen_get_metatags_keywords($pInfo->products_id, $languages[$i]['id'])), 'class="noEditor"'); //,'id="'.'metatags_keywords' . $languages[$i]['id'] . '"'); ?>
             </td>
           </tr>
           <tr>
             <td class="main"valign="top"><?php echo TEXT_META_TAGS_DESCRIPTION; ?>&nbsp;</td>
             <td class="main">
-              <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', htmlspecialchars((isset($metatags_description[$languages[$i]['id']])) ? stripslashes($metatags_description[$languages[$i]['id']]) : zen_get_metatags_description($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); //,'id="'.'metatags_description' . $languages[$i]['id'] . '"'); ?>
+              <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', zen_output_string_protected((isset($metatags_description[$languages[$i]['id']])) ? stripslashes($metatags_description[$languages[$i]['id']]) : zen_get_metatags_description($pInfo->products_id, $languages[$i]['id'])), 'class="noEditor"'); //,'id="'.'metatags_description' . $languages[$i]['id'] . '"'); ?>
             </td>
           </tr>
         </table></td>

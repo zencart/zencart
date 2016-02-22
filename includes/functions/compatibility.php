@@ -11,3 +11,13 @@
 
 
 // This file is empty in v1.5.2
+
+/**
+ * Function performed same action as zen_output_string_protected therefore is being deprecated.
+ * @param $string - string to sanitize
+ * @return string
+ */
+function zen_db_output($string)
+{
+    return zen_output_string_protected($string);
+}

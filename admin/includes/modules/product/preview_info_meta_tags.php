@@ -108,15 +108,15 @@ if (!defined('IS_ADMIN_FLAG')) {
       reset($_POST);
       while (list($key, $value) = each($_POST)) {
         if (!is_array($_POST[$key])) {
-          echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
+          echo zen_draw_hidden_field($key, zen_output_string_protected(stripslashes($value)));
         }
       }
 
       $languages = zen_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        echo zen_draw_hidden_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($metatags_title[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
-        echo zen_draw_hidden_field('metatags_keywords[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($metatags_keywords[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
-        echo zen_draw_hidden_field('metatags_description[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($metatags_description[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
+        echo zen_draw_hidden_field('metatags_title[' . $languages[$i]['id'] . ']', zen_output_string_protected(stripslashes($metatags_title[$languages[$i]['id']])));
+        echo zen_draw_hidden_field('metatags_keywords[' . $languages[$i]['id'] . ']', zen_output_string_protected(stripslashes($metatags_keywords[$languages[$i]['id']])));
+        echo zen_draw_hidden_field('metatags_description[' . $languages[$i]['id'] . ']', zen_output_string_protected(stripslashes($metatags_description[$languages[$i]['id']])));
       }
 
       echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="edit"') . '&nbsp;&nbsp;';
@@ -133,4 +133,3 @@ if (!defined('IS_ADMIN_FLAG')) {
     </table></form>
 <?php
     }
-?>

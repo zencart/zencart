@@ -123,7 +123,7 @@
         $check_configure = $db->Execute($sql);
       }
       if ($check_configure->RecordCount() >= 1) {
-        $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br /><br />';
+        $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . htmlspecialchars($configuration_key_lookup, ENT_COMPAT, CHARSET, FALSE)) . '">' . htmlspecialchars($configuration_key_lookup, ENT_COMPAT, CHARSET, FALSE) . '</a><br /><br />';
       } else {
         // do nothing
       }
@@ -136,7 +136,7 @@
       // only ask if found
       echo '<tr><td>' . $links . '</td></tr>';
     }
-    echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>' . "\n\n";
+    echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . htmlspecialchars($configuration_key_lookup, ENT_COMPAT, CHARSET, FALSE) . '</td></tr></table>' . "\n\n";
     echo '<tr><td>&nbsp;</td></tr>';
 
 // check all files located
@@ -184,7 +184,7 @@
           }
 
           // use to debug for UTF-8 NO BOM on files: test search on a, e, s change if below to true
-          if (false && htmlspecialchars($line, ENT_QUOTES, CHARSET) == '') {
+          if (false && htmlspecialchars($line, ENT_QUOTES, CHARSET, TRUE) == '') {
             echo '<br>SOMETHING BROKE in: ' . $file . '<br>on: ' . $line_num . ' - ' . $line . '<br>';
             $search_found = false;
           }
@@ -234,7 +234,7 @@
         echo $show_file . '<table><tr><td>&nbsp;</td></tr></table>';
       } // show file
     }
-    echo '<table border="0" width="100%" cellspacing="2" cellpadding="1" align="center"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
+    echo '<table border="0" width="100%" cellspacing="2" cellpadding="1" align="center"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . htmlspecialchars($configuration_key_lookup, ENT_COMPAT, CHARSET, FALSE) . '</td></tr></table>';
 
   } // zen_display_files
 
@@ -258,7 +258,7 @@
       $input = preg_replace('#(' . $highlight . ')#' . (!$case_sensitive ? 'i' : ''), '~~!~~!~~\1~!!~!!~', $input);
     }
     // sanitize output
-    $input = htmlspecialchars($input, ENT_QUOTES, CHARSET);
+    $input = htmlspecialchars($input, ENT_QUOTES, CHARSET, TRUE);
 
     // keep original "spaces" (doesn't account for tabs)
     $input = str_replace(' ', '&nbsp;', $input);
@@ -638,7 +638,7 @@
 
     // if no matches in either databases or selected language directory give an error
     if ($found == false) {
-      $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND . ' ' . zen_output_string_protected($configuration_key_lookup), 'caution');
+      $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND . ' ' . htmlspecialchars($configuration_key_lookup, ENT_COMPAT, CHARSET, FALSE), 'caution');
     } elseif (substr($action, 0, 7) == 'locate_') {
       echo '<table width="90%" align="center"><tr><td>' . zen_draw_separator('pixel_black.gif', '100%', '2') . '</td></tr><tr><td>&nbsp;</td></tr></table>' . "\n";
     }
@@ -745,7 +745,7 @@ if (isset($show_configuration_info) && $show_configuration_info == true) {
           <tr class="infoBoxContent">
             <td colspan="2" class="pageHeading" align="center">
 <?php
-      $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br />';
+      $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . htmlspecialchars($configuration_key_lookup, ENT_COMPAT, CHARSET, FALSE) . '&zv_files=1') . '">' . htmlspecialchars($configuration_key_lookup, ENT_COMPAT, CHARSET, FALSE) . '</a><br />';
       echo $links;
 ?>
             </td>
@@ -812,7 +812,7 @@ if (false) {
             <td class="main" align="left" valign="middle"><?php echo SEARCH_CFG_KEYS_HEADING_TITLE; ?></td>
           </tr>
           <tr><form name="search_keys" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys' . $flags); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo SEARCH_CFG_KEYS_SEARCH_BOX_TEXT . '<br />' . zen_draw_input_field('search', zen_output_string_protected($search), ' size="40" placeholder="' . SEARCH_CFG_KEYS_FORM_PLACEHOLDER . '"');?>
+            <td class="main" align="left" valign="bottom"><?php echo SEARCH_CFG_KEYS_SEARCH_BOX_TEXT . '<br />' . zen_draw_input_field('search', htmlspecialchars($search, ENT_COMPAT, CHARSET, FALSE), ' size="40" placeholder="' . SEARCH_CFG_KEYS_FORM_PLACEHOLDER . '"');?>
             <input type="submit" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>">
             <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&s=k' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>">
             <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&t=all' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>">

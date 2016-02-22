@@ -36,7 +36,7 @@
 
   function zen_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
-      return htmlspecialchars($string, ENT_COMPAT, CHARSET, FALSE);
+      return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
     } else {
       if ($translate == false) {
         return zen_parse_input_field_data($string, array('"' => '&quot;'));
@@ -126,12 +126,12 @@
           if (!is_array($value)) {
 //             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
             if (strlen($value) > 0) {
-              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+              $get_url .= htmlspecialchars($key, ENT_COMPAT, CHARSET, FALSE) . '=' . rawurlencode(stripslashes($value)) . '&';
             }
           } else {
             continue; // legacy code doesn't support passing arrays by GET, so skipping any arrays
             foreach(array_filter($value) as $arr){
-              $get_url .= zen_output_string_protected($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+              $get_url .= htmlspecialchars($key, ENT_COMPAT, CHARSET, FALSE) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
             }
           }
         }
@@ -518,21 +518,21 @@
                              from " . TABLE_ADDRESS_FORMAT . "
                              where address_format_id = '" . (int)$address_format_id . "'");
 
-    $company = zen_output_string_protected($address['company']);
+    $company = htmlspecialchars($address['company'], ENT_COMPAT, CHARSET, FALSE);
     if (isset($address['firstname']) && zen_not_null($address['firstname'])) {
-      $firstname = zen_output_string_protected($address['firstname']);
-      $lastname = zen_output_string_protected($address['lastname']);
+      $firstname = htmlspecialchars($address['firstname'], ENT_COMPAT, CHARSET, FALSE);
+      $lastname = htmlspecialchars($address['lastname'], ENT_COMPAT, CHARSET, FALSE);
     } elseif (isset($address['name']) && zen_not_null($address['name'])) {
-      $firstname = zen_output_string_protected($address['name']);
+      $firstname = htmlspecialchars($address['name'], ENT_COMPAT, CHARSET, FALSE);
       $lastname = '';
     } else {
       $firstname = '';
       $lastname = '';
     }
-    $street = zen_output_string_protected($address['street_address']);
-    $suburb = zen_output_string_protected($address['suburb']);
-    $city = zen_output_string_protected($address['city']);
-    $state = zen_output_string_protected($address['state']);
+    $street = htmlspecialchars($address['street_address'], ENT_COMPAT, CHARSET, FALSE);
+    $suburb = htmlspecialchars($address['suburb'], ENT_COMPAT, CHARSET, FALSE);
+    $city = htmlspecialchars($address['city'], ENT_COMPAT, CHARSET, FALSE);
+    $state = htmlspecialchars($address['state'], ENT_COMPAT, CHARSET, FALSE);
     if (isset($address['country_id']) && zen_not_null($address['country_id'])) {
       $country = zen_get_country_name($address['country_id']);
 
@@ -540,11 +540,11 @@
         $state = zen_get_zone_code($address['country_id'], $address['zone_id'], $state);
       }
     } elseif (isset($address['country']) && zen_not_null($address['country'])) {
-      $country = zen_output_string_protected($address['country']);
+      $country = htmlspecialchars($address['country'], ENT_COMPAT, CHARSET, FALSE);
     } else {
       $country = '';
     }
-    $postcode = zen_output_string_protected($address['postcode']);
+    $postcode = htmlspecialchars($address['postcode'], ENT_COMPAT, CHARSET, FALSE);
     $zip = $postcode;
 
     if ($html) {
@@ -570,7 +570,7 @@
     $statecomma = '';
     $streets = $street;
     if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') $country = zen_output_string_protected($address['country']);
+    if ($country == '') $country = htmlspecialchars($address['country'], ENT_COMPAT, CHARSET, FALSE);
     if ($state != '') $statecomma = $state . ', ';
 
     $fmt = $address_format->fields['format'];

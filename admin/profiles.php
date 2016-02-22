@@ -155,14 +155,14 @@ require('includes/admin_html_head.php');
           <?php echo zen_draw_form('profileNameForm', FILENAME_PROFILES, '', 'post', 'id="profile-update"') ?>
             <?php echo zen_draw_hidden_field('action', 'update_name'); ?>
             <?php echo zen_draw_hidden_field('profile', $profileDetails['id']); ?>
-            <?php echo zen_draw_input_field('profile-name', htmlspecialchars($profileDetails['name'], ENT_COMPAT, CHARSET, TRUE)); ?>
+            <?php echo zen_draw_input_field('profile-name', zen_output_string_protected($profileDetails['name'])); ?>
             <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
             <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
           </form>
         </td>
 <?php } else { ?>
-        <td class="name"><?php echo zen_output_string($profileDetails['name'], FALSE, TRUE); ?></td>
-        <td class="users"><?php echo zen_output_string($profileDetails['users'], FALSE, TRUE) ?></td>
+        <td class="name"><?php echo htmlspecialchars($profileDetails['name'], ENT_COMPAT, CHARSET, FALSE); ?></td>
+        <td class="users"><?php echo htmlspecialchars($profileDetails['users'], ENT_COMPAT, CHARSET, FALSE) ?></td>
 <?php if ($profileDetails['id'] != SUPERUSER_PROFILE) { ?>
         <td class="actions">
 <?php if ($action != 'delete') {  ?>
@@ -216,7 +216,7 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
         <input class="checkButton" type="button" value="<?php echo TEXT_UNCHECK_ALL; ?>" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
 <?php foreach ($pageList as $pageKey => $page) { ?>
-      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), in_array($pageKey,$permittedPages), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
+      <dd><label><?php echo zen_draw_checkbox_field('p[]', zen_output_string_protected($pageKey), in_array($pageKey,$permittedPages), '', ' class="' . $menuKey . '"'); ?><?php echo htmlspecialchars($page['name'], ENT_COMPAT, CHARSET, FALSE); ?></label></dd>
 <?php } ?>
     </dl>
 <?php } ?>
@@ -244,7 +244,7 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
         <input class="checkButton" type="button" value="<?php echo TEXT_UNCHECK_ALL; ?>" onclick="checkAll(this.form,'<?php echo $menuKey ?>',false);">
       </dt>
 <?php foreach ($pageList as $pageKey => $page) { ?>
-      <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
+      <dd><label><?php echo zen_draw_checkbox_field('p[]', zen_output_string_protected($pageKey), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '"'); ?><?php echo htmlspecialchars($page['name'], ENT_COMPAT, CHARSET, FALSE); ?></label></dd>
 <?php } ?>
     </dl>
 <?php } ?>

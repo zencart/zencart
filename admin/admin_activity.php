@@ -168,20 +168,20 @@ if ($action != '')
             $exporter_output .= "    <severity>" . $result->fields['severity'] . "</severity>\n";
             $exporter_output .= "    <access_date>" . $result->fields['access_date'] . "</access_date>\n";
             $exporter_output .= "    <admin_id>" . $result->fields['admin_id'] . "</admin_id>\n";
-            $exporter_output .= "    <admin_name>" . htmlspecialchars($result->fields['admin_name'], ENT_COMPAT, CHARSET, TRUE) . "</admin_name>\n";
+            $exporter_output .= "    <admin_name>" . zen_output_string_protected($result->fields['admin_name']) . "</admin_name>\n";
             $exporter_output .= "    <ip_address>" . $result->fields['ip_address'] . "</ip_address>\n";
             $exporter_output .= "    <page_accessed>" . $result->fields['page_accessed'] . "</page_accessed>\n";
-            $exporter_output .= "    <page_parameters>" . htmlspecialchars($result->fields['page_parameters'], ENT_COMPAT, CHARSET, TRUE) . "</page_parameters>\n";
-            $exporter_output .= "    <flagged>" . htmlspecialchars($result->fields['flagged'], ENT_COMPAT, CHARSET, TRUE) . "</flagged>\n";
-            $exporter_output .= "    <attention>" . htmlspecialchars($result->fields['attention'], ENT_COMPAT, CHARSET, TRUE) . "</attention>\n";
-            $exporter_output .= "    <logmessage>" . htmlspecialchars($result->fields['logmessage'], ENT_COMPAT, CHARSET, TRUE) . "</logmessage>\n";
+            $exporter_output .= "    <page_parameters>" . zen_output_string_protected($result->fields['page_parameters']) . "</page_parameters>\n";
+            $exporter_output .= "    <flagged>" . zen_output_string_protected($result->fields['flagged']) . "</flagged>\n";
+            $exporter_output .= "    <attention>" . zen_output_string_protected($result->fields['attention']) . "</attention>\n";
+            $exporter_output .= "    <logmessage>" . zen_output_string_protected($result->fields['logmessage']) . "</logmessage>\n";
             $exporter_output .= "    <postdata>" . $postoutput . "</postdata>\n";
             $exporter_output .= "  </row>\n";
           } else
           { // output non-XML data-format
             $postoutput = print_r(json_decode(@gzinflate($result->fields['gzpost'])), true);
             if ($format == 'HTML') {
-              $postoutput = nl2br(zen_output_string_protected($postoutput));
+              $postoutput = nl2br(htmlspecialchars($postoutput, ENT_COMPAT, CHARSET, FALSE));
             } else {
               $postoutput = nl2br($postoutput);
             }
@@ -363,7 +363,7 @@ require (DIR_WS_INCLUDES . 'header.php');
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', zen_output_string_protected($file), ' size="60"'); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

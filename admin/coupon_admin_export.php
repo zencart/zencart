@@ -135,7 +135,7 @@ if ($action != '')
             $exporter_output .= "<coupon_export_log>\n";
             $exporter_output .= "  <row>\n";
             $exporter_output .= "    <coupon_id>" . $result->fields['coupon_id'] . "</coupon_id>\n";
-            $exporter_output .= "    <coupon_code>" . htmlspecialchars($result->fields['coupon_code'], ENT_COMPAT, CHARSET, TRUE) . "</coupon_code>\n";
+            $exporter_output .= "    <coupon_code>" . zen_output_string_protected($result->fields['coupon_code']) . "</coupon_code>\n";
             $exporter_output .= "    <coupon_amount>" . $result->fields['coupon_amount'] . "</coupon_amount>\n";
             $exporter_output .= "    <coupon_type>" . $result->fields['coupon_type'] . "</coupon_type>\n";
             $exporter_output .= "    <coupon_minimum_order>" . $result->fields['coupon_minimum_order'] . "</coupon_minimum_order>\n";
@@ -309,7 +309,7 @@ require (DIR_WS_INCLUDES . 'header.php');
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', zen_output_string_protected($file), ' size="60"'); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

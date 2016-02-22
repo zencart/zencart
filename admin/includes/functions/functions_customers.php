@@ -39,21 +39,21 @@
                              where address_format_id = '" . (int)$address_format_id . "'";
 
     $address_format = $db->Execute($address_format_query);
-    $company = zen_output_string_protected($address['company']);
+    $company = htmlspecialchars($address['company'], ENT_COMPAT, CHARSET, FALSE);
     if (isset($address['firstname']) && zen_not_null($address['firstname'])) {
-      $firstname = zen_output_string_protected($address['firstname']);
-      $lastname = zen_output_string_protected($address['lastname']);
+      $firstname = htmlspecialchars($address['firstname'], ENT_COMPAT, CHARSET, FALSE);
+      $lastname = htmlspecialchars($address['lastname'], ENT_COMPAT, CHARSET, FALSE);
     } elseif (isset($address['name']) && zen_not_null($address['name'])) {
-      $firstname = zen_output_string_protected($address['name']);
+      $firstname = htmlspecialchars($address['name'], ENT_COMPAT, CHARSET, FALSE);
       $lastname = '';
     } else {
       $firstname = '';
       $lastname = '';
     }
-    $street = zen_output_string_protected($address['street_address']);
-    $suburb = zen_output_string_protected($address['suburb']);
-    $city = zen_output_string_protected($address['city']);
-    $state = zen_output_string_protected($address['state']);
+    $street = htmlspecialchars($address['street_address'], ENT_COMPAT, CHARSET, FALSE);
+    $suburb = htmlspecialchars($address['suburb'], ENT_COMPAT, CHARSET, FALSE);
+    $city = htmlspecialchars($address['city'], ENT_COMPAT, CHARSET, FALSE);
+    $state = htmlspecialchars($address['state'], ENT_COMPAT, CHARSET, FALSE);
     if (isset($address['country_id']) && zen_not_null($address['country_id'])) {
       $country = zen_get_country_name($address['country_id']);
 
@@ -62,14 +62,14 @@
       }
     } elseif (isset($address['country']) && zen_not_null($address['country'])) {
       if (is_array($address['country'])) {
-        $country = zen_output_string_protected($address['country']['countries_name']);
+        $country = htmlspecialchars($address['country']['countries_name'], ENT_COMPAT, CHARSET, FALSE);
       } else {
-      $country = zen_output_string_protected($address['country']);
+      $country = htmlspecialchars($address['country'], ENT_COMPAT, CHARSET, FALSE);
       }
     } else {
       $country = '';
     }
-    $postcode = zen_output_string_protected($address['postcode']);
+    $postcode = htmlspecialchars($address['postcode'], ENT_COMPAT, CHARSET, FALSE);
     $zip = $postcode;
 
     if ($html) {
@@ -97,9 +97,9 @@
     if ($suburb != '') $streets = $street . $cr . $suburb;
     if ($country == '') {
       if (is_array($address['country'])) {
-        $country = zen_output_string_protected($address['country']['countries_name']);
+        $country = htmlspecialchars($address['country']['countries_name'], ENT_COMPAT, CHARSET, FALSE);
       } else {
-      $country = zen_output_string_protected($address['country']);
+      $country = htmlspecialchars($address['country'], ENT_COMPAT, CHARSET, FALSE);
       }
     }
     if ($state != '') $statecomma = $state . ', ';
@@ -146,4 +146,3 @@
 
     return $lookup_customers_primary_address->fields['customers_default_address_id'];
   }
-?>
