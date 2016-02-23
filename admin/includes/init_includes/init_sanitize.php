@@ -208,7 +208,7 @@ $sanitizer->addSanitizationGroup('META_TAGS', $group);
 $group = array('customers_email_address');
 $sanitizer->addSanitizationGroup('SANITIZE_EMAIL', $group);
 
-$group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text'. 'pages_html_text', 'comments');
+$group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text', 'pages_html_text', 'comments');
 $sanitizer->addSanitizationGroup('PRODUCT_DESC_REGEX', $group);
 
 $group = array('products_url');
