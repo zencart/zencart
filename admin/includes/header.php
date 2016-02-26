@@ -128,29 +128,25 @@ if (SHOW_GV_QUEUE == true) {
         <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
     </div>
 
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint adminHeaderAlerts">
         <span class="noprint"><?php if ($new_gv_queue_cnt > 0) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?></span>
     </div>
 
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint"><span class="noprint">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint adminHeaderAlerts">
         <?php
         if (isset($_SESSION['reset_admin_activity_log']) and ($_SESSION['reset_admin_activity_log'] == true and (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
         ?>
         <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>"><input type="button" class="button submit faint" value="<?php echo TEXT_BUTTON_RESET_ACTIVITY_LOG;?>"/><br /><?php echo RESET_ADMIN_ACTIVITY_LOG; ?></a>
         <?php
         }
-        ?></span>
+        ?>
     </div>
 
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-        <?php
-        if ($new_version) {
-            ?>
-            <span class="main version-notify noprint" valign="top"><?php echo $new_version; ?>
-                <br/><?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?></span>
-            <?php
-        }
-        ?>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint adminHeaderAlerts right">
+        <?php if ($new_version) { ?>
+            <?php echo $new_version; ?><br/>
+                <?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?>
+        <?php } ?>
     </div>
 </div>
 <div class="row headerBar">
@@ -192,4 +188,4 @@ if (SHOW_GV_QUEUE == true) {
 <?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
 <script defer src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script defer src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script defer src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

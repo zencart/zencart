@@ -65,7 +65,7 @@
 <style>
 .pageHeading {font-size: 2em;}
 .serverInfo{max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1em;}
-.infocell {float:left; width: 380px;}
+.infocell {float:left; width: 380px;margin-right:10px;}
 .sysinfo {max-width:700px; margin: auto;border: 2px solid black;padding:1.5em;margin-top:2em;}
 .clearBoth{clear:both}
 

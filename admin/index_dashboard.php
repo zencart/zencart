@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: New in v1.5.5 $
@@ -60,7 +60,7 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
 
-        <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+<div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
     <div class="reportBox">
         <div class="header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
         <?php
