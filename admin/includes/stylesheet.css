@@ -2,12 +2,13 @@
  * @package admin
  * @ignore
  * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
-@import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
+@import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");
+
 @import url("menu.css");
 
 a {
@@ -644,17 +645,25 @@ label.error {
 img[alt="Cancel"], img[alt="Reset"]{
     vertical-align: top;
 }
-.version-notify{
-    float: right;
-    padding: 10px;
+.versionCurrent{
+  color:green;
 }
-.version-notify a img{
-    margin-bottom: 5px;
+.alertVersionNew{
+  color:#ff0000;
+  font-size:14px;
+  font-weight:bold;
+}
+.adminHeaderAlerts{
+    padding: 10px;
 }
 #adminHeaderLogo{
     padding: 5px;
 }
+.right {
+  text-align: right;
+}
 
+/* bof Footer */
 footer, #footer {
     text-align: center;
     width: 100%;
@@ -673,6 +682,8 @@ footer.homeFooter, .bottom footer {
         height: 111%;
     }
 }
+/* eof Footer */
+
 #setupWizardForm INPUT[type="text"],
 #setupWizardForm INPUT[type="email"],
 #setupWizardForm textarea {
@@ -729,10 +740,11 @@ input.faint {
     font-weight: normal;
     font-size: 0.9em;
 }
+/* End of css buttons */
 
-
+/* Print-specific styles */
 @media print {
-    .header-area, .footer-area, .noprint, 
+    .header-area, .footer-area, .noprint,
     .report-button { display: none;}
     a[href]:after {
         content: none
@@ -742,4 +754,4 @@ input.faint {
         bottom: 0;
     }
 }
-
+/* end of print-specific styles */
