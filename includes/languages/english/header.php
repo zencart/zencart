@@ -27,5 +27,4 @@
 // header Search Button/Box Search Button
   define('HEADER_SEARCH_BUTTON','Search');
   define('HEADER_SEARCH_DEFAULT_TEXT', 'Enter search keywords here');
-
-?>
+  define('SEARCH_DEFAULT_TEXT', 'search here');
