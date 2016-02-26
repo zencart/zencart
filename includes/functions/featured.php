@@ -23,7 +23,7 @@
 ////
 // Auto expire products on featured
   function zen_expire_featured() {
-    global $db;
+    global $db, $zco_notifier;
 
     $date_range = time();
     $zc_featured_date = date('Ymd', $date_range);
@@ -31,15 +31,17 @@
     $featured_query = "select featured_id
                        from " . TABLE_FEATURED . "
                        where status = '1'
-                       and ((" . $zc_featured_date . " >= expires_date and expires_date != '0001-01-01')
-                       or (" . $zc_featured_date . " < featured_date_available and featured_date_available != '0001-01-01'))";
+                       and ((:zc_featured_date: >= expires_date and expires_date != '0001-01-01')
+                       or (:zc_featured_date: < featured_date_available and featured_date_available != '0001-01-01'))";
 
+    $featured_query = $db->bindVars($featured_query, ':zc_featured_date:', $zc_featured_date, 'date');
+    
     $featured = $db->Execute($featured_query);
 
     if ($featured->RecordCount() > 0) {
-      while (!$featured->EOF) {
-        zen_set_featured_status($featured->fields['featured_id'], '0');
-        $featured->MoveNext();
+      foreach ($featured as $featured_item) {
+        zen_set_featured_status($featured_item['featured_id'], '0');
+        $zco_notifier->notify('NOTIFY_EXPIRE_FEATURED', $featured_item);
       }
     }
   }
@@ -47,7 +49,7 @@
 ////
 // Auto start products on featured
   function zen_start_featured() {
-    global $db;
+    global $db, $zco_notifier;
 
     $date_range = time();
     $zc_featured_date = date('Ymd', $date_range);
@@ -55,17 +57,19 @@
     $featured_query = "select featured_id
                        from " . TABLE_FEATURED . "
                        where status = '0'
-                       and (((featured_date_available <= " . $zc_featured_date . " and featured_date_available != '0001-01-01') and (expires_date > " . $zc_featured_date . "))
-                       or ((featured_date_available <= " . $zc_featured_date . " and featured_date_available != '0001-01-01') and (expires_date = '0001-01-01'))
-                       or (featured_date_available = '0001-01-01' and expires_date > " . $zc_featured_date . "))
+                       and (((featured_date_available <= :zc_featured_date: and featured_date_available != '0001-01-01') and (expires_date > :zc_featured_date:))
+                       or ((featured_date_available <= :zc_featured_date: and featured_date_available != '0001-01-01') and (expires_date = '0001-01-01'))
+                       or (featured_date_available = '0001-01-01' and expires_date > :zc_featured_date:))
                        ";
+    
+    $featured_query = $db->bindVars($featured_query, ':zc_featured_date:', $zc_featured_date, 'date');
 
     $featured = $db->Execute($featured_query);
 
     if ($featured->RecordCount() > 0) {
-      while (!$featured->EOF) {
-        zen_set_featured_status($featured->fields['featured_id'], '1');
-        $featured->MoveNext();
+      foreach ($featured as $featured_item) {
+        zen_set_featured_status($featured_item['featured_id'], '1');
+        $zco_notifier('NOTIFY_START_FEATURED_ON', $featured_item);
       }
     }
 
@@ -73,17 +77,18 @@
     $featured_query = "select featured_id
                        from " . TABLE_FEATURED . "
                        where status = '1'
-                       and (" . $zc_featured_date . " < featured_date_available and featured_date_available != '0001-01-01')
+                       and (:zc_featured_date: < featured_date_available and featured_date_available != '0001-01-01')
                        ";
+                       
+    $featured_query = $db->bindVars($featured_query, ':zc_featured_date:', $zc_featured_date, 'date');
 
     $featured = $db->Execute($featured_query);
 
     if ($featured->RecordCount() > 0) {
-      while (!$featured->EOF) {
-        zen_set_featured_status($featured->fields['featured_id'], '0');
-        $featured->MoveNext();
+      foreach ($featured as $featured_item) {
+        zen_set_featured_status($featured_item['featured_id'], '0');
+        $zco_notifier->notify('NOTIFY_START_FEATURED_OFF', $featured_item);
       }
     }
 
   }
-?>
