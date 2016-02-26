@@ -675,3 +675,10 @@ table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;
 .products-listing .productsAllListing, .productsNewListing, .productsFeaturedListing {width: 100%;}
 .tableBorder1 td {border: 1px solid black;}
 
+/*bof placeholders*/
+::-moz-placeholder, :-moz-placeholder {
+   text-align: right;
+   color: #D01;
+   opacity:  1;
+}
+::-webkit-input-placeholder, :-ms-input-placeholder, :placeholder-shown { color: #D01; text-align: right; }
