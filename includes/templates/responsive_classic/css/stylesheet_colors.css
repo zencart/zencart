@@ -55,3 +55,7 @@ ol.list-links li{border-bottom:1px solid #ddd;}
 #productQuantityDiscounts td{border-right:1px solid #eee;}
 #seQuoteResults td, .listBoxContentTable td, .tableBorder1 td {border: 1px solid #000;}
 
+/*bof placeholders*/
+::-moz-placeholder, :-moz-placeholder, ::-webkit-input-placeholder, :-ms-input-placeholder, :placeholder-shown {color: #D01;}
+
+

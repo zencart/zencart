@@ -10,8 +10,7 @@
 @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");
 
 @import url("menu.css");
-/* including stylesheet for dhtml menu */
-@import url("index.css"); /* including stylesheet for index.php */
+
 a {
     color: #0000ff;
     text-decoration: none;
@@ -175,6 +174,8 @@ body#login legend {
 checkbox, input, radio, select, textarea, file {
     font-size: 11px;
 }
+
+input.cfgInput { width: 99%;}
 
 textarea {
     width: 80%;
@@ -478,6 +479,62 @@ h1, .pageHeading {
     cursor: hand;
 }
 
+div.copyrightrow {
+    background: #ffffff;
+    clear: both;
+    font-size: 9px;
+    padding: 25px;
+    text-align: center;
+}
+
+div.header {
+    clear: both;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 3px;
+}
+
+div.reportBox {
+    background: #666;
+    border: 1px solid #666;
+    margin-top: 1em;
+}
+
+.reportBox div.row {
+    background: #f7f6ef;
+    clear: both;
+    margin-top: 1px;
+    padding: 3px;
+    margin: 0px;
+}
+
+.reportBox div.row:nth-of-type(2n) {
+    background-color: #ffffff;
+}
+
+.reportBox div.row span.center {
+    margin-right: 30px;
+}
+
+.reportBox div.row span.left {
+    float: left;
+    text-align: left;
+    width: 74%;
+}
+
+.reportBox div.row span.right {
+    float: right;
+    text-align: right;
+    width: 34%;
+}
+
+div.warrantyrow {
+    background: #ffffff;
+    clear: both;
+    font-size: 9px;
+    text-align: center;
+}
+
 .smallText {
     font-size: 9px;
 }
@@ -496,6 +553,11 @@ h1, .pageHeading {
 
 .clearBoth {
     clear: both;
+}
+
+div.clearBoth {
+    clear: both;
+    margin-top: 20px;
 }
 
 #loginExpiryPolicy {
@@ -621,6 +683,18 @@ footer.homeFooter, .bottom footer {
     }
 }
 /* eof Footer */
+
+#setupWizardForm INPUT[type="text"],
+#setupWizardForm INPUT[type="email"],
+#setupWizardForm textarea {
+    width: 40%;
+    max-width: 450px;
+}
+@media (min-width: 768px) {
+    #setupWizardPage #pageWrapper{
+        margin: 1em 5% 1em 25%;
+    }
+}
 
 
 

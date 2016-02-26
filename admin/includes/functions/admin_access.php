@@ -862,9 +862,15 @@ function zen_page_key_exists($page_key)
   return $result->RecordCount() >= 1 ? TRUE : FALSE;
 }
 
-function zen_register_admin_page($page_key, $language_key, $main_page, $page_params, $menu_key, $display_on_menu, $sort_order)
+function zen_register_admin_page($page_key, $language_key, $main_page, $page_params, $menu_key, $display_on_menu, $sort_order = -1)
 {
   global $db;
+  if ($sort_order == -1) {
+    $sql = "SELECT MAX(sort_order) AS sort_order_max FROM " . TABLE_ADMIN_PAGES . " WHERE menu_key = :menu_key:";
+    $sql = $db->bindVars($sql, ':menu_key:', $menu_key, 'string');
+    $result = $db->Execute($sql);
+    $sort_order = $result->fields['sort_order_max']+1;
+  }
   $sql = "INSERT INTO " . TABLE_ADMIN_PAGES . "
           SET page_key = :page_key:,
               language_key = :language_key:,

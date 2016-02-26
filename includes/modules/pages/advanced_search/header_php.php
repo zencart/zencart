@@ -14,7 +14,7 @@
 //test:
 //&keyword=die+hard&categories_id=10&inc_subcat=1&manufacturers_id=4&pfrom=1&pto=50&dfrom=01%2F01%2F2003&dto=12%2F20%2F2005
 
-  $sData['keyword'] =  stripslashes(isset($_GET['keyword']) ? zen_output_string_protected($_GET['keyword']) : zen_output_string_protected(KEYWORD_FORMAT_STRING));
+  $sData['keyword'] =  stripslashes(isset($_GET['keyword']) ? zen_output_string_protected($_GET['keyword']) : '');
   $sData['search_in_description'] = (isset($_GET['search_in_description']) ? zen_output_string((int)$_GET['search_in_description']) : 1);
   $sData['categories_id'] = (isset($_GET['categories_id'])    ? zen_output_string((int)$_GET['categories_id']) : 0);
   $sData['inc_subcat'] = (isset($_GET['inc_subcat'])       ? zen_output_string((int)$_GET['inc_subcat']) : 1);
