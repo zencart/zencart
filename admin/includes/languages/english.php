@@ -491,7 +491,7 @@ define('TEXT_VALID_CATEGORIES_LIST', 'Categories List');
 define('TEXT_VALID_CATEGORIES_ID', 'Category ID');
 define('TEXT_VALID_CATEGORIES_NAME', 'Category Name');
 
-define('DEFINE_LANGUAGE','Define Language:');
+define('DEFINE_LANGUAGE','Choose Language:');
 
 define('BOX_ENTRY_COUNTER_DATE','Hit Counter Started:');
 define('BOX_ENTRY_COUNTER','Hit Counter:');
@@ -564,8 +564,8 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('ERROR_ADMIN_DEMO','Admin Demo is Active ... the feature(s) you are trying to perform have been disabled');
 
 // Version Check notices
-  define('TEXT_VERSION_CHECK_NEW_VER','New Version Available v');
-  define('TEXT_VERSION_CHECK_NEW_PATCH','New PATCH Available: v');
+  define('TEXT_VERSION_CHECK_NEW_VER','<span class="alertVersionNew">New Version Available:</span> v');
+  define('TEXT_VERSION_CHECK_NEW_PATCH','<span class="alertVersionNew">New PATCH Available:</span> v');
   define('TEXT_VERSION_CHECK_PATCH','patch');
   define('TEXT_VERSION_CHECK_DOWNLOAD','Download Here');
   define('TEXT_VERSION_CHECK_CURRENT','Your version of Zen Cart&reg; appears to be current.');
