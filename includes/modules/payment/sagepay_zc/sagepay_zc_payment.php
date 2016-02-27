@@ -267,7 +267,7 @@ if (!function_exists('plugin_version_check_for_updates')) {
         if ($plugin_file_id == 0) return FALSE;
         $new_version_available = FALSE;
         $lookup_index = 0;
-        $url = 'https://www.zen-cart.com/downloads.php?do=versioncheck' . '&id='.(int)$plugin_file_id;
+        $url = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url);
