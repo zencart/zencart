@@ -10,10 +10,10 @@
 ?>
 <?php
   if (isset($tplVars['widget']['content']) && sizeof($tplVars['widget']['content']) > 0) {
-    foreach ($tplVars['widget']['content'] as $entry) {
-?>
-      <div class="widget-row"><span><?php echo $entry['text']; ?></span><span class="right"><?php echo $entry['value']; ?></span></div>
-<?php
+    foreach ($tplVars['widget']['content'] as $i=>$entry) {
+    $evenodd = ($i%2) ? 'odd' : 'even';
+      $params = array($evenodd,$entry['text'],$entry['value']);
+      echo vsprintf('<div class="widget-row widget-row-%s"><span>%s</span><span class="right">%s</span></div>', $params);
     }
   } else { 
     echo "&nbsp;"; 

@@ -283,9 +283,11 @@ font-weight:bold;
 .headerBarContent {
 	color: #999;
 	padding: 2px 7px;
+	vertical-align: middle;
 }
 .headerBarContent.right {
 	text-align: right;
+	float: none !important;
 }
 .headerBarContent a {
 	color: #999 !important;
@@ -369,7 +371,12 @@ color:#ff6600;
   white-space: nowrap;
 }
 .altnavBody #navbar {display: none;}
-
+.fixed {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+}
 .copyrightrow {
   font-size:9px;
   text-align: center;
