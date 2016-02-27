@@ -16,6 +16,8 @@
   if (isset($_GET['product_type'])) $_GET['product_type'] = (int)$_GET['product_type'];
   if (isset($_GET['cID'])) $_GET['cID'] = (int)$_GET['cID'];
 
+  $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_CATEGORIES', $action);
+
   if (!isset($_SESSION['categories_products_sort_order'])) {
     $_SESSION['categories_products_sort_order'] = CATEGORIES_PRODUCTS_SORT_ORDER;
   }

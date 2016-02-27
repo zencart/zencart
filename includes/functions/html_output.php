@@ -14,7 +14,10 @@
  * The HTML href link wrapper function
  */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
+    global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
+    $link = null;
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT', array(), $link, $page, $parameters, $connection, $add_session_id, $static, $use_dir_ws_catalog);
+    if($link !== null) return $link;
 
     if (!zen_not_null($page)) {
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
