@@ -1,4 +1,33 @@
 
+.headerBar {
+    background-color: #333;
+    color: #fff;
+}
+.headerBar select {
+    color: #333;
+    background-color: #fff;
+}
+
+.headerBarContent {
+    color: #ffffff;
+    font-weight: bold;
+    padding: 2px;
+}
+
+.headerBar .nav {
+    float: right;
+    margin-right: 5px;
+}
+
+.headerBar div ul li a {
+    padding: 3px;
+    margin-top: 3px;
+}
+
+.headerBar div ul li a:hover {
+    color: #333;
+}
+
 .upperMenu{
     display: none;
 }
