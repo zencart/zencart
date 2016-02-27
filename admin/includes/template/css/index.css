@@ -67,6 +67,11 @@ table tbody tr td { color: #333; padding: 0 0; vertical-align: top; border: none
   border-bottom: 1px dashed #D5D5D5;
   
 }
+.widget-row-odd {
+}
+.widget-row-even {
+  background-color:#f3f3ee;
+}
 .widget-body 
 { 
   clear: both;
