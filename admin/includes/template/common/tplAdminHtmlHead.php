@@ -56,6 +56,7 @@ $(function(){
       changeMonth: true,
       changeYear: true
   }) );
+  cssjsmenuinit();
   var nav = $('#navbar');
   var offsetTop = nav.offset().top;
   var floatMenu = function() {
@@ -75,6 +76,3 @@ $(function(){
 <link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
 <script src="includes/menu.js"></script>
 <script src="includes/template/javascript/select2-master/select2.js"></script>
-<script>
-  $(document).ready(function(){ cssjsmenuinit(); });
-</script>
