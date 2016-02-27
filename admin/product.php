@@ -13,6 +13,8 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
+  $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action);
+
   if (zen_not_null($action)) {
     switch ($action) {
       case 'setflag':
