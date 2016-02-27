@@ -56,6 +56,17 @@ $(function(){
       changeMonth: true,
       changeYear: true
   }) );
+  var nav = $('#navbar');
+  var offsetTop = nav.offset().top;
+  var floatMenu = function() {
+    if ($(window).scrollTop() > offsetTop) {
+      nav.addClass('fixed');
+    } else {
+      nav.removeClass('fixed');
+    }
+  }
+  $(window).scroll(floatMenu);
+  $('body').bind('touchmove', floatMenu);
 });
 </script>
     <link rel="stylesheet" type="text/css" href="includes/template/javascript/select2-master/select2.css" id="swlect2CSS">
