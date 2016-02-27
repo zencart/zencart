@@ -53,7 +53,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
 // display alerts/error messages, if any
 if ($messageStack->size > 0) {
     ?>
-    <div class="messageStack-header">
+    <div class="messageStack-header noprint">
         <?php
         echo $messageStack->output();
         ?>
@@ -104,7 +104,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($
         }
     }
     // display download link
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank">' . TEXT_VERSION_CHECK_DOWNLOAD . '</a>';
+    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank"><input type="button" class="button submit faint" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
 } else {
     // display the "check for updated version" button.  The button link should be the current page and all params
     $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
