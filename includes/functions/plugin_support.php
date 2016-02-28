@@ -3,7 +3,7 @@
  * plugin_support.php
  *
  * @package functions
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
   * @version $Id: Modified in v1.5.5 $
@@ -34,7 +34,7 @@
     if ($plugin_file_id == 0) return FALSE;
     $new_version_available = FALSE;
     $lookup_index = 0;
-    $url = 'https://www.zen-cart.com/downloads.php?do=versioncheck' . '&id='.(int)$plugin_file_id;
+    $url = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,$url);

@@ -57,6 +57,11 @@
   }
 
   function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+    global $zco_notifier;
+    $link = null;
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters, $connection);
+    if($link !== null) return $link;
+
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
