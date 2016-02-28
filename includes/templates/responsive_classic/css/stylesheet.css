@@ -64,7 +64,7 @@ input:focus, select:focus, textarea:focus {}
 legend{padding:0;display:table;text-align:center;width:100%;padding:10px 0;font-size:1.3em;}
 fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;margin-bottom:20px;}
 body:not(:-moz-handler-blocked) fieldset{display:table-cell;}
-fieldset > fieldset{padding-top:50px;}
+fieldset > fieldset{}
 fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;background:none;}
 fieldset p{margin-left:20px;}
 fieldset label, fieldset .inputLabel, fieldset h3, fieldset address, #advSearchDefault input, fieldset .buttonRow.back, fieldset select, fieldset input[type=radio], fieldset input[type=checkbox], fieldset div{margin-left:20px;}
