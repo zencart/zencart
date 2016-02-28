@@ -62,7 +62,7 @@ select{border:none;padding-left:5px;width:51%;}
 TEXTAREA {margin:auto;display:block;width:66%;}
 input:focus, select:focus, textarea:focus {}
 legend{padding:0;display:table;text-align:center;width:100%;padding:10px 0;font-size:1.3em;}
-fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;margin-bottom:20px;}
+fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;/*margin-bottom:20px;*/}
 body:not(:-moz-handler-blocked) fieldset{display:table-cell;}
 fieldset > fieldset{}
 fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;background:none;}
@@ -456,7 +456,7 @@ h2.greeting a:hover{}
 #loginDefault{margin-bottom:30px;}
 #loginDefault .inputLabel{margin-left:20px;}
 #loginDefault .alert{margin-right:20px;}
-#loginDefault #country{margin-left:0;}
+#loginDefault #country, #createAcctDefault #country{margin-left:0;}
 .paypal-button-hidden{visibility:hidden;}
 
 /* markup for tables used to present tabular data */
