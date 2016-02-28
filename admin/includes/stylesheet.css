@@ -8,6 +8,7 @@
  * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
  */
 @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css");
 
 @import url("menu.css");
 
@@ -23,7 +24,7 @@ body table {
   padding: 1px 3px;
   border-collapse: initial;
 }
-body {padding: 0 3px;}
+body {padding: 0 4px;}
 
 td,th {padding: 1px;}
 .main table td {
@@ -644,6 +645,9 @@ img[alt="Cancel"], img[alt="Reset"]{
 .right {
   text-align: right;
 }
+.center {
+  text-align: center;
+}
 
 /* bof Footer */
 footer, #footer {
@@ -703,17 +707,7 @@ input.submit {
   background-color:#fee8b9;  /* Submit button background color */
   border: 1px solid #638263;  /* Submit button border color */
 }
-input.orderprevnext {
-  background-color:#fee8b9;  /* Submit button background color */
-  border: 1px solid #638263;  /* Submit button border color */
-  font-size: 13px;
-  font-weight: bold;
-  display: inline-block;
-  margin: 0;
-  padding: 3px 8px;
-  color: #404040;  /* Text color for submit buttons */
-}
-input.orderprevnext:hover, input.submit:hover {
+input.submit:hover {
   background-color:#ffdc9c;  /* Hover color for the submit buttons */
   border: 1px solid #638263;  /* Submit button border color */
   cursor: pointer;
