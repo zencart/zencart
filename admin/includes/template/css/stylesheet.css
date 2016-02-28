@@ -369,7 +369,12 @@ color:#ff6600;
   white-space: nowrap;
 }
 .altnavBody #navbar {display: none;}
-
+.fixed {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
 .copyrightrow {
   font-size:9px;
   text-align: center;

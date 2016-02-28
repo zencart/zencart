@@ -62,10 +62,10 @@ table tbody tr td { color: #333; padding: 0 0; vertical-align: top; border: none
 }
 .widget-row 
 {
-  margin: 1px;
-  padding: 2px;
-  border-bottom: 1px dashed #D5D5D5;
-  
+  padding: 5px;
+}
+.widget-row:nth-child(even) {
+  background-color:#f3f3ee;
 }
 .widget-body 
 { 
