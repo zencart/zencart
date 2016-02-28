@@ -19,17 +19,6 @@ a {
 a, body, html, table {
     font: normal normal 11px Verdana, sans-serif;
 }
-body table {
-  padding: 1px 3px;
-  border-collapse: initial;
-}
-body {padding: 0 3px;}
-
-td,th {padding: 1px;}
-.main table td {
-  padding: 5px;
-}
-td.main {padding: 5px 2px;}
 
 a:hover {
     color: #0000ff;
@@ -128,6 +117,7 @@ a.splitPageLink:active {
 body {
     background-color: #ffffff;
     color: #333333;
+    margin: 0;
 }
 
 .clearBoth {
@@ -184,7 +174,7 @@ body#login legend {
 checkbox, input, radio, select, textarea, file {
     font-size: 11px;
 }
-.infoBoxContent input {margin: 1px 2px;}
+
 input.cfgInput { width: 99%;}
 
 textarea {
@@ -392,31 +382,6 @@ tr.attributeBoxContent {
     font-weight: bold;
 }
 
-.headerBar {
-    background-color: #333;
-    color: #fff;
-}
-
-.headerBarContent {
-    color: #ffffff;
-    font-weight: bold;
-    padding: 2px;
-}
-
-.headerBar .nav {
-    float: right;
-    margin-right: 5px;
-}
-
-.headerBar div ul li a {
-    padding: 3px;
-    margin-top: 3px;
-}
-
-.headerBar div ul li a:hover {
-    color: #333;
-}
-
 .infoBoxContent {
     background-color: #e7e6e0;
     color: #333333;
@@ -429,6 +394,9 @@ tr.attributeBoxContent {
 .infoBoxHeading {
     background-color: #333;
     color: #ffffff;
+}
+
+.main {
 }
 
 .main a img {
