@@ -8,9 +8,13 @@
  */
 
 define('HEADING_TITLE', 'Orders');
+define('HEADING_TITLE_DETAILS', 'Order Details');
 define('HEADING_TITLE_SEARCH', 'Order ID:');
 define('HEADING_TITLE_STATUS', 'Status:');
-define('HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS', 'Search by Product Name or <strong>ID:XX</strong> or Model ');
+define('HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS', 'Product Name or ID:XX or Model');
+define('HEADING_TITLE_SEARCH_ALL','Search: ');
+define('HEADING_TITLE_SEARCH_PRODUCTS','Product search: ');
+define('TEXT_RESET_FILTER', 'Remove search filter');
 define('TEXT_INFO_SEARCH_DETAIL_FILTER_ORDERS_PRODUCTS', 'Search Filter: ');
 define('TABLE_HEADING_PAYMENT_METHOD', 'Payment<br />Shipping');
 define('TABLE_HEADING_ORDERS_ID','ID');
@@ -125,4 +129,3 @@ define('TEXT_INVALID_ORDER_STATUS', '<span class="alert">(Invalid Order Status)<
 
 define('BUTTON_TO_LIST', 'Order List');
 define('SELECT_ORDER_LIST', 'Jump to Order:');
-
