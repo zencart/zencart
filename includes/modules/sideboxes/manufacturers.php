@@ -3,10 +3,10 @@
  * manufacturers sidebox - displays a list of manufacturers so customer can choose to filter on their products only
  *
  * @package templateSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Jul 12 12:27:04 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: Crystal Jones  Tue Mar 3 10:36:43 2015 -0800 Modified in v1.5.5 $
  */
 
 // test if manufacturers sidebox should show

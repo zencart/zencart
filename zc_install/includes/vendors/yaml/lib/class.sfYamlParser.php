@@ -21,7 +21,7 @@ if (!defined('PREG_BAD_UTF8_OFFSET_ERROR'))
  * @package    symfony
  * @subpackage yaml
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlParser.class.php 10832 2008-08-13 07:46:08Z fabien $
+ * @version $Id: Author: DrByte  Thu Oct 1 15:30:47 2015 -0400 New in v1.5.5 $
  * @codeCoverageIgnore
  */
 class sfYamlParser

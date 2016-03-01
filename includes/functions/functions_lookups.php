@@ -4,10 +4,10 @@
  * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_lookups.php ajeh  Modified in v1.5.5 $
+ * @version $Id: Author: mc12345678  Tue Feb 2 16:23:08 2016 -0500 Modified in v1.5.5 $
  */
 
 /**

@@ -3,10 +3,10 @@
  * sagepay form
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Wilt New in v1.5.5 $
+ * @version $Id: Author: zcwilt  Wed Jan 6 18:17:56 2016 +0000 New in v1.5.5 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {

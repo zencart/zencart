@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_navigation.php 19366 2011-08-28 20:21:09Z wilt $
+ * @version $Id: Author: DrByte  Fri Feb 26 00:34:34 2016 -0500 Modified in v1.5.5 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');

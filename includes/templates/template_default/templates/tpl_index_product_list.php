@@ -6,10 +6,10 @@
  * Displays product-listing when a particular category/subcategory is selected for browsing
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_index_product_list.php  Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Tue Dec 29 13:13:22 2015 -0500 Modified in v1.5.5 $
  */
 ?>
 <div class="centerColumn" id="indexProductList">
