@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: alert_page.php drbyte  Modified in v1.6.0 $
+ * @version $Id: Author: DrByte  Sun Aug 2 22:46:14 2015 -0400 Modified in v1.5.5 $
  */
 
 define('HEADING_TITLE', 'Warning!');
