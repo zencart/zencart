@@ -625,7 +625,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
   function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
     global $db;
     zen_create_exceptions_table();
-    $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,:file:, :reason:, now(), :line:)";
+    $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " (sql_file, reason, errordate, sqlstatement) VALUES (:file:, :reason:, now(), :line:)";
     $sql = $db->bindVars($sql, ':file:', $sql_file, 'string');
     $sql = $db->bindVars($sql, ':reason:', $reason, 'string');
     $sql = $db->bindVars($sql, ':line:', $line, 'string');
