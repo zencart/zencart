@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage yaml
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYaml.class.php 8988 2008-05-15 20:24:26Z fabien $
+ * @version $Id: Author: DrByte  Thu Oct 1 15:30:47 2015 -0400 New in v1.5.5 $
  * @codeCoverageIgnore
  */
 class sfYaml

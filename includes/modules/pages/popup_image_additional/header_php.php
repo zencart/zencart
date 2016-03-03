@@ -3,10 +3,10 @@
  * pop up image additional
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Modified in V1.5.5 $
+ * @version $Id: Author: zcwilt  Fri Sep 11 15:51:04 2015 +0100 Modified in v1.5.5 $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_POPUP_IMAGES_ADDITIONAL');

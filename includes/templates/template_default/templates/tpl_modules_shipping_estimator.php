@@ -3,10 +3,10 @@
  * Module Template - for shipping-estimator display
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_modules_shipping_estimator.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Author: DrByte  Wed Jan 6 16:47:38 2016 -0500 Modified in v1.5.5 $
  */
 ?>
 <div id="shippingEstimatorContent">

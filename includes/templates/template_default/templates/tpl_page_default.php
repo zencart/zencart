@@ -5,10 +5,10 @@
  * This is the template used for EZ-Pages content display.  It is named "tpl_page_default" instead of ezpage for friendlier appearance
  *
  * @package templateSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Oct 6 16:09:44 2012 -0400 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Sun Oct 18 13:09:57 2015 -0400 Modified in v1.5.5 $
  */
 ?>
 <div class="centerColumn" id="ezPageDefault">

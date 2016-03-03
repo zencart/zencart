@@ -3,10 +3,10 @@
  * best_sellers sidebox - displays selected number of (usually top ten) best selling products
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: best_sellers.php DrByte  Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Sat Oct 17 22:33:45 2015 -0400 Modified in v1.5.5 $
  */
 
 // test if box should display

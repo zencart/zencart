@@ -1,10 +1,10 @@
 <?php
 /**
  * @package htmleditors
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Jul 1 16:59:57 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:57:20 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('DIR_WS_EDITORS')) define('DIR_WS_EDITORS', 'editors/');
 if (!defined('IS_ADMIN_FLAG')) {

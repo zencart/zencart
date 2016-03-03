@@ -6,10 +6,10 @@
  * Displays shopping-cart contents
  *
  * @package templateSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_shopping_cart_default.php 15881 2010-04-11 16:32:39Z wilt $
+ * @version $Id: Author: DrByte  Thu Jan 7 22:38:14 2016 -0500 Modified in v1.5.5 $
  */
 ?>
 <div class="centerColumn" id="shoppingCartDefault">

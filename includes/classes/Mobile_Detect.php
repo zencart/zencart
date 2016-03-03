@@ -22,7 +22,7 @@
  *              README:       https://github.com/serbanghita/Mobile-Detect/blob/master/README.md
  *              HOWTO:        https://github.com/serbanghita/Mobile-Detect/wiki/Code-examples
  *
- * @version     2.8.17
+ * @version $Id: Author: DrByte  Sun Dec 13 16:32:43 2015 -0500 New in v1.5.5 $
  */
 
 class Mobile_Detect

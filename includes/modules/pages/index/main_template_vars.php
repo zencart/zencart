@@ -3,10 +3,10 @@
  * index main_template_vars.php
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Oct 29 00:05:45 2013 +0000 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Thu Jan 7 22:43:33 2016 -0500 Modified in v1.5.5 $
  */
 
 // This should be first line of the script:

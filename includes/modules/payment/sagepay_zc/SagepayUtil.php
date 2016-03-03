@@ -3,11 +3,11 @@
  * sagepay form
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright portions (c) 2013, Sage Pay Europe Ltd.
  * @copyright Portions Copyright Nixak
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Wilt New in v1.5.5 $
+ * @version $Id: Author: zcwilt  Fri Jan 1 14:43:31 2016 +0000 New in v1.5.5 $
  */
 
 /**
