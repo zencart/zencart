@@ -1,16 +1,18 @@
 /**
  * @package admin
- * @ignore
- * @access private
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Feb 28 02:42:59 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Thu Mar 3 2016  Modified in v1.5.5 $
  */
-@import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");
-@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css");
+
+@import url("css/bootstrap.min.css");
+/* @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"); */
 
 @import url("menu.css");
+
+@import url("css/font-awesome.min.css");
+/* @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"); */
 
 a {
     color: #0000ff;

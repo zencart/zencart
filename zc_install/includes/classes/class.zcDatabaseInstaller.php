@@ -285,7 +285,7 @@ class zcDatabaseInstaller
     logDetails($line . '  ' . $message . '  ' . $sqlFile, 'upgradeException');
     $this->upgradeExceptions[] = $message;
     $this->createExceptionsTable();
-    $sql="INSERT INTO " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,:file:, :reason:, now(), :line:)";
+    $sql="INSERT INTO " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS . " (sql_file, reason, errordate, sqlstatement) VALUES (:file:, :reason:, now(), :line:)";
     $sql = $this->db->bindVars($sql, ':file:', $sqlFile, 'string');
     $sql = $this->db->bindVars($sql, ':reason:', $message, 'string');
     $sql = $this->db->bindVars($sql, ':line:', $line, 'string');
