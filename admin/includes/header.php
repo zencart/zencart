@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Thu Mar 3 2016  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -187,5 +187,9 @@ if (SHOW_GV_QUEUE == true) {
 </div>
 <?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
-<script defer src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script defer src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- <script defer src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
+<!-- <script defer src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+
+<script defer src="includes/javascript/jquery-1.12.1.min.js"></script>
+<script defer src="includes/javascript/bootstrap.min.js"></script>
