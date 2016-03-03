@@ -12,7 +12,7 @@
  * @package payeezy
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson   New in v1.5.5 $
+ * @version $Id: Merge: cb2a6d7 7d1fe3d Author: DrByte <drbyte@zen-cart.com> New in v1.5.5 $
  */
 /**
  * PayEezy Payment module class

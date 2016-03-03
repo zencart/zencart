@@ -3,11 +3,11 @@
  * paypalwpp_admin_notification.php admin display component
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypalwpp_admin_notification.php 18695 2011-05-04 05:24:19Z drbyte  Modified in v1.6.0 $
+ * @version $Id: Author: DrByte  Mon Dec 7 14:47:12 2015 -0500 Modified in v1.5.5 $
  */
   if (!defined('TEXT_MAXIMUM_CHARACTERS_ALLOWED')) define('TEXT_MAXIMUM_CHARACTERS_ALLOWED', ' chars allowed');
 

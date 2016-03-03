@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Thu Oct 24 21:13:46 2013 +0100 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Thu Aug 29 23:58:50 2013 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');

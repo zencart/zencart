@@ -3,11 +3,11 @@
  * ot_cod_fee order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2002 Thomas Plänkers http://www.oscommerce.at
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_cod_fee.php ajeh  Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Sun Oct 18 01:50:12 2015 -0400 Modified in v1.5.5 $
  */
 /**
  * COD-FEE Order Totals Module

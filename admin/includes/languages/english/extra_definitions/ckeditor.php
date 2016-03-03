@@ -2,9 +2,9 @@
 /**
  * @package htmleditors
  * @copyright Copyright 2010 Kuroi Web Design
- * @copyright Portions Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ckeditor.php 107 2010-04-28 21:28:02Z kuroi $
+ * @version $Id: Author: DrByte  Thu Jan 7 14:19:15 2016 -0500 New in v1.5.5 $
  */
 
   define('EDITOR_CKEDITOR', 'CKEditor');

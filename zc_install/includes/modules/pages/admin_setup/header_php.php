@@ -3,7 +3,7 @@
  * @package Installer
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.5.5 $
+ * @version $Id: Author: DrByte  Tue Feb 16 15:03:47 2016 -0500 Modified in v1.5.5 $
  */
 
   @unlink(DEBUG_LOG_FOLDER . '/progress.json');

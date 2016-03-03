@@ -5,7 +5,7 @@
  * @package payeezy
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson   New in v1.5.5 $
+ * @version $Id: Author: DrByte  Thu Feb 11 13:35:53 2016 -0500 New in v1.5.5 $
  */
 
 define('MODULE_PAYMENT_PAYEEZYJSZC_TEXT_DESCRIPTION', 'Payeezy JS Gateway module.<br><br>Allows you to accept PCI Compliant credit card payments without making the customer leave your store!<br><a href="https://www.zen-cart.com/partners/firstdatapayeezy" target="_blank">Get more information, or Sign up for an account</a><br><br><a href="https://globalgatewaye4.firstdata.com" target="_blank">Log In To Your Payeezy Account</a>');

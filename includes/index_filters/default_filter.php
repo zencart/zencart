@@ -6,11 +6,11 @@
  * show the products of a specified manufacturer
  *
  * @package productTypes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: default_filter.php 14870 2009-11-19 22:36:24Z drbyte $
+ * @version $Id: Author: DrByte  Mon Oct 19 09:51:56 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
