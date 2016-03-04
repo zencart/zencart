@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Dec 30 23:30:41 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Thu Mar 3 22:31:02 2016 -0500 Modified in v1.5.5 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -742,7 +742,7 @@ class authorizenet_aim extends base {
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', $response[11], 'string');
       if (trim($this->transaction_id) != '') {
-        $sql = $db->bindVars($sql, ':transID', $this->transaction_id, 'string');
+        $sql = $db->bindVars($sql, ':transID', substr($this->transaction_id, 0, strpos($this->transaction_id, ' '));, 'string');
       } else {
         $sql = $db->bindVars($sql, ':transID', 'NULL', 'passthru');
       }
