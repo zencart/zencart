@@ -742,7 +742,7 @@ class authorizenet_aim extends base {
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', $response[11], 'string');
       if (trim($this->transaction_id) != '') {
-        $sql = $db->bindVars($sql, ':transID', substr($this->transaction_id, 0, strpos($this->transaction_id, ' '));, 'string');
+        $sql = $db->bindVars($sql, ':transID', substr($this->transaction_id, 0, strpos($this->transaction_id, ' ')), 'string');
       } else {
         $sql = $db->bindVars($sql, ':transID', 'NULL', 'passthru');
       }
