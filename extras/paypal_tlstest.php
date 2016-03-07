@@ -11,6 +11,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: DrByte  Wed Dec 30 18:38:35 2015 -0500 New in v1.5.5 $
  */
+// don't show error messages to browser
+ini_set('display_errors', 0);
+
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');
 
