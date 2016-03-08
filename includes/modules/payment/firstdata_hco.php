@@ -46,12 +46,12 @@ class firstdata_hco extends base {
    *
    * @var string
    */
-  private $_logDir = '';
+  protected $_logDir = '';
   /**
    * vars for internal processing and debug/logging
    */
-  private $reportable_submit_data;
-  private $authorize;
+  protected $reportable_submit_data;
+  protected $authorize;
   var $auth_code;
   var $transaction_id;
   /**
@@ -61,7 +61,7 @@ class firstdata_hco extends base {
   /**
    * @var the currency enabled in this gateway's merchant account. Transactions will be converted to this currency.
    */
-  private $gateway_currency;
+  protected $gateway_currency;
 
 
   /**
@@ -84,9 +84,11 @@ class firstdata_hco extends base {
         $this->title .= '<span class="alert"> (in Sandbox Developer mode)</span>';
       }
 
-      $new_version_details = plugin_version_check_for_updates(2051, $this->moduleVersion);
-      if ($new_version_details !== false) {
-        $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+      if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS')) {
+        $new_version_details = plugin_version_check_for_updates(2051, $this->moduleVersion);
+        if ($new_version_details !== false) {
+          $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+        }
       }
     }
 
@@ -452,7 +454,7 @@ class firstdata_hco extends base {
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_DEBUGGING');
   }
 
-  public function hmacAuthorizationToken($amount, $currency)
+  protected function hmacAuthorizationToken($amount, $currency)
   {
     $nonce = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
     $timestamp = strval(time()); //time stamp as a string
@@ -469,7 +471,7 @@ class firstdata_hco extends base {
   /**
    * Calculate validity of relay response
    */
-  function calc_md5_response($trans_id = '', $amount = '') {
+  protected function calc_md5_response($trans_id = '', $amount = '') {
     if ($amount == '' || $amount == '0') $amount = '0.00';
     return md5(MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_RESPONSEKEY . html_entity_decode(MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_PAGEID) . $trans_id . $amount);
   }
@@ -477,7 +479,7 @@ class firstdata_hco extends base {
   /**
    * Used to do any debug logging / tracking / storage as required.
    */
-  function _debugActions($response, $mode, $order_time= '') {
+  protected function _debugActions($response, $mode, $order_time= '') {
     if ($order_time == '') $order_time = date("F j, Y, g:i a");
     $response['url'] = $this->form_action_url;
     $this->reportable_submit_data['url'] = $this->form_action_url;
@@ -515,30 +517,49 @@ if (!function_exists('plugin_version_check_for_updates')) {
     if ($plugin_file_id == 0) return FALSE;
     $new_version_available = FALSE;
     $lookup_index = 0;
-    $url = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+    $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+    $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$url);
+    curl_setopt($ch, CURLOPT_URL,$url1);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 9);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
     $error = curl_error($ch);
+    $errno = curl_errno($ch);
 
     if ($error > 0) {
-      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url));
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
       $response = curl_exec($ch);
       $error = curl_error($ch);
+      $errno = curl_errno($ch);
+    }
+    if ($error > 0) {
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+      $response = curl_exec($ch);
+      $error = curl_error($ch);
+      $errno = curl_errno($ch);
     }
     curl_close($ch);
     if ($error > 0 || $response == '') {
-      $response = file_get_contents($url);
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
+      $ctx = stream_context_create(array('http' => array('timeout' => 5)));
+      $response = file_get_contents($url1, null, $ctx);
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
+        $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
+      }
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
+        return false;
+      }
     }
-    if ($response === false) {
-      $response = file_get_contents(str_replace('tps:', 'tp:', $url));
-    }
-    if ($response === false) return false;
 
     $data = json_decode($response, true);
     if (!$data || !is_array($data)) return false;

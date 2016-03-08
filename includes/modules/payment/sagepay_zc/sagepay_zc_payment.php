@@ -24,7 +24,7 @@ class sagepay_zc_payment extends AbstractSagepayAPI
     /**
      * @var mixed|null
      */
-    public $version;
+    public $version = '1.00';
     /**
      * @var string
      */
@@ -48,16 +48,18 @@ class sagepay_zc_payment extends AbstractSagepayAPI
     public function __construct()
     {
         global $order;
-        $this->version = $this->getModuleDefineValue('_VNO');
         $this->title = $this->getModuleDefineValue('_CATALOG_TEXT_TITLE');
         $this->description = '';
         if ((defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG === true) || (!isset($_GET['main_page']) || $_GET['main_page'] == ''))
         {
             $this->title = sprintf($this->getModuleDefineValue('_ADMIN_TEXT_TITLE'), $this->version);
             $this->description = $this->getModuleDefineValue('_ADMIN_TEXT_DESCRIPTION');
-            $new_version_details = plugin_version_check_for_updates(2049, '1.00');
-            if ($new_version_details !== FALSE) {
-                $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+
+            if ($this->getModuleDefineValue('_STATUS')) {
+                $new_version_details = plugin_version_check_for_updates(2049, $this->version);
+                if ($new_version_details !== FALSE) {
+                    $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+                }
             }
         }
         $this->enabled = (($this->getModuleDefineValue('_STATUS') == 'True') ? true : false);
@@ -267,33 +269,51 @@ if (!function_exists('plugin_version_check_for_updates')) {
         if ($plugin_file_id == 0) return FALSE;
         $new_version_available = FALSE;
         $lookup_index = 0;
-        $url = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+        $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+        $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_URL,$url1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 9);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         $error = curl_error($ch);
+        $errno = curl_errno($ch);
 
         if ($error > 0) {
-            curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url));
-            $response = curl_exec($ch);
-            $error = curl_error($ch);
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
+        }
+        if ($error > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
         }
         curl_close($ch);
         if ($error > 0 || $response == '') {
-            $response = file_get_contents($url);
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
+          $ctx = stream_context_create(array('http' => array('timeout' => 5)));
+          $response = file_get_contents($url1, null, $ctx);
+          if ($response === false) {
+            trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
+            $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
+          }
+          if ($response === false) {
+            trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
+            return false;
+          }
         }
-        if ($response === false) {
-            $response = file_get_contents(str_replace('tps:', 'tp:', $url));
-        }
-        if ($response === false) return false;
 
         $data = json_decode($response, true);
-
         if (!$data || !is_array($data)) return false;
         // compare versions
         if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
@@ -301,6 +321,7 @@ if (!function_exists('plugin_version_check_for_updates')) {
         if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
         return ($new_version_available) ? $data[$lookup_index] : FALSE;
     }
+
 }
 if (!function_exists('issetorArray')) {
     /**
