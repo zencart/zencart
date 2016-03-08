@@ -12,7 +12,7 @@
  * @package payeezy
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Merge: cb2a6d7 7d1fe3d Author: DrByte <drbyte@zen-cart.com> New in v1.5.5 $
+ * @version $Id: Author: Ian Wilson <ian@zen-cart.com> New in v1.5.5 $
  */
 /**
  * PayEezy Payment module class
@@ -27,7 +27,7 @@ class payeezyjszc extends base {
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '1.00';
+  var $moduleVersion = '0.90';
   /**
    * $title is the displayed name for this payment method
    *
@@ -75,11 +75,13 @@ class payeezyjszc extends base {
     $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CATALOG_TITLE; // Payment module title in Catalog
     if (IS_ADMIN_FLAG === true) {
       $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ADMIN_TITLE;
-      if (MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET == '')          $this->title .= '<span class="alert"> (not configured; API details needed)</span>';
-      if (MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox') $this->title .= '<span class="alert"> (Sandbox mode)</span>';
-      $new_version_details = plugin_version_check_for_updates(2050, $this->moduleVersion);
-      if ($new_version_details !== false) {
-          $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+      if (defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS')) {
+        if (MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET == '')          $this->title .= '<span class="alert"> (not configured; API details needed)</span>';
+        if (MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox') $this->title .= '<span class="alert"> (Sandbox mode)</span>';
+        $new_version_details = plugin_version_check_for_updates(2050, $this->moduleVersion);
+        if ($new_version_details !== false) {
+            $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+        }
       }
     }
 
@@ -178,7 +180,7 @@ class payeezyjszc extends base {
             ),
             array(
                 'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_EXPIRES,
-                'field' => zen_draw_pull_down_menu($this->code . '_cc_expires_month', $expires_month, strftime('%m'), 'payeezy-data="exp_month" id="' . $this->code . '_cc-expires-month"' . $onFocus) . '&nbsp;' . 
+                'field' => zen_draw_pull_down_menu($this->code . '_cc_expires_month', $expires_month, strftime('%m'), 'payeezy-data="exp_month" id="' . $this->code . '_cc-expires-month"' . $onFocus) . '&nbsp;' .
                          zen_draw_pull_down_menu($this->code . '_cc_expires_year', $expires_year, '', 'payeezy-data="exp_year" id="' . $this->code . '_cc-expires-year"' . $onFocus),
                 'tag' => $this->code . '_cc-expires-month'
             ),
@@ -190,6 +192,7 @@ class payeezyjszc extends base {
             array(
                 'title' => '',
                 'field' => zen_draw_hidden_field($this->code . '_fdtoken', '', 'id="' . $this->code . '_fdtoken"') . '<div id="payeezy-payment-errors"></div>' .
+                           zen_draw_hidden_field($this->code . '_currency', $order->info['currency'], 'payeezy-data="currency"') .
                            zen_draw_hidden_field($this->code . '_billing_street', $order->billing['street_address'], 'payeezy-data="billing.street"') .
                            zen_draw_hidden_field($this->code . '_billing_city', $order->billing['city'], 'payeezy-data="billing.city"') .
                            zen_draw_hidden_field($this->code . '_billing_state', zen_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']), 'payeezy-data="billing.state"') .
@@ -596,4 +599,65 @@ class payeezyjszc extends base {
     $this->avs_codes['M'] = 'Address and Postal Code match';
   }
 
+}
+
+// for backward compatibility with older ZC versions before v152 which didn't have this function:
+if (!function_exists('plugin_version_check_for_updates')) {
+  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '')
+  {
+    if ($plugin_file_id == 0) return FALSE;
+    $new_version_available = FALSE;
+    $lookup_index = 0;
+    $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+    $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$url1);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 9);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    $error = curl_error($ch);
+    $errno = curl_errno($ch);
+
+    if ($error > 0) {
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
+      $response = curl_exec($ch);
+      $error = curl_error($ch);
+      $errno = curl_errno($ch);
+    }
+    if ($error > 0) {
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+      $response = curl_exec($ch);
+      $error = curl_error($ch);
+      $errno = curl_errno($ch);
+    }
+    curl_close($ch);
+    if ($error > 0 || $response == '') {
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
+      $ctx = stream_context_create(array('http' => array('timeout' => 5)));
+      $response = file_get_contents($url1, null, $ctx);
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
+        $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
+      }
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
+        return false;
+      }
+    }
+
+    $data = json_decode($response, true);
+    if (!$data || !is_array($data)) return false;
+    // compare versions
+    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
+    // check whether present ZC version is compatible with the latest available plugin version
+    if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
+    return ($new_version_available) ? $data[$lookup_index] : FALSE;
+  }
 }
