@@ -32,7 +32,7 @@ class zcDatabaseInstaller
     $this->dbPassword = $options['db_password'];
     $this->dbName = $options['db_name'];
     $this->dbPrefix = $options['db_prefix'];
-    $this->dbCharset = $options['db_charset'];
+    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8' : $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
     $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
