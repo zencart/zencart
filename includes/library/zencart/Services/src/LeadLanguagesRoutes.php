@@ -203,6 +203,15 @@ class LeadLanguagesRoutes extends LeadRoutes
                     'record_company_url' => 'string',
                 )
             ),
+            array(
+                'table' => TABLE_COUNTRIES_NAME,
+                'languageKeyField' => 'languages_id',
+                'orderBy' => 'countries_id',
+                'fields' => array(
+                    'countries_id' => 'integer',
+                    'countries_name' => 'string',
+                )
+            ),
        );
         $this->updateLanguageTables($tableList, $insertId);
     }

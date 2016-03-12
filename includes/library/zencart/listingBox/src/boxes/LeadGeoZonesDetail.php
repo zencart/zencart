@@ -47,6 +47,12 @@ class LeadGeoZonesDetail extends AbstractLeadListingBox
                     'table' => TABLE_ZONES_TO_GEO_ZONES,
                     'field' => 'geo_zone_id',
                     'value' => ':geo_zone_id:'
+                ),
+                array(
+                    'type' => 'AND',
+                    'table' => TABLE_COUNTRIES_NAME,
+                    'field' => 'language_id',
+                    'value' => ':language_id:'
                 )
             ),
             'bindVars' => array(
@@ -54,11 +60,16 @@ class LeadGeoZonesDetail extends AbstractLeadListingBox
                     ':geo_zone_id:',
                     $this->request->readGet('geo_zone_id'),
                     'integer'
+                ),
+                array(
+                    ':language_id:',
+                    $_SESSION ['languages_id'],
+                    'integer'
                 )
             ),
             'joinTables' => array(
-                'TABLE_COUNTRIES' => array(
-                    'table' => TABLE_COUNTRIES,
+                'TABLE_COUNTRIES_NAME' => array(
+                    'table' => TABLE_COUNTRIES_NAME,
                     'alias' => 'c',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'zone_country_id',
@@ -74,6 +85,10 @@ class LeadGeoZonesDetail extends AbstractLeadListingBox
                     'selectColumns' => array('zone_name', 'zone_code')
                 )
             ),
+/*            'language' => true,
+            'singleTable' => true,
+            'languageInfoTable' => TABLE_COUNTRIES_NAME,
+            'languageKeyField' => 'language_id',*/
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
@@ -153,17 +168,19 @@ class LeadGeoZonesDetail extends AbstractLeadListingBox
                     )
                 ),
                 'countries_name' => array(
-                    'parentTable' => TABLE_COUNTRIES,
+                    'parentTable' => TABLE_COUNTRIES_NAME,
                     'bindVarsType' => 'string',
                     'autocomplete' => array(
-                        'dataTable' => TABLE_COUNTRIES,
+                        'dataTable' => TABLE_COUNTRIES_NAME,
                         'dataSearchField' => 'countries_name',
                         'valueResponse' => 'countries_name',
                         'dataResponse' => 'countries_id',
                         'dataResponseField' => 'zone_country_id',
                         'addAllResponse' => true,
                         'addAllResponseText' => TEXT_ALL_COUNTRIES,
-                        'addAllResponseValue' => 0
+                        'addAllResponseValue' => 0,
+                        'extraWhere' => 'language_id',
+                        'extraWhereVal' => $_SESSION ['languages_id']
                     ),
                     'layout' => array(
                         'common' => array(
@@ -232,6 +249,16 @@ class LeadGeoZonesDetail extends AbstractLeadListingBox
                             'align' => 'right',
                             'type' => 'hidden',
                             'size' => '20'
+                        )
+                    )
+                ),
+                'language_id' => array(
+                    'bindVarsType' => 'integer',
+                    'layout' => array(
+                        'common' => array(
+                            'title' => '',
+                            'type' => 'hidden',
+                            'size' => '30'
                         )
                     )
                 )

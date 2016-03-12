@@ -1158,9 +1158,10 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
       }
 
       if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customer['customers_id']))) && !isset($cInfo)) {
-        $country = $db->Execute("select countries_name
-                                 from " . TABLE_COUNTRIES . "
-                                 where countries_id = '" . (int)$customer['entry_country_id'] . "'");
+        $country = $db->Execute("SELECT countries_name
+                                 FROM " . TABLE_COUNTRIES_NAME . "
+                                 WHERE countries_id = '" . (int)$customers->fields['entry_country_id'] . "'
+                                 AND language_id = " . (int)$_SESSION['languages_id']);
 
         $reviews = $db->Execute("select count(*) as number_of_reviews
                                  from " . TABLE_REVIEWS . " where customers_id = '" . (int)$customer['customers_id'] . "'");

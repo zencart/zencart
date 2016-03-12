@@ -25,6 +25,27 @@ class LeadCountries extends AbstractLeadListingBox
                 'alias' => 'c',
                 'fkeyFieldLeft' => 'countries_id',
             ),
+            'joinTables' => array(
+                'TABLE_COUNTRIES_NAME' => array(
+                    'table' => TABLE_COUNTRIES_NAME,
+                    'alias' => 'cn',
+                    'type' => 'left',
+                    'fkeyFieldLeft' => 'countries_id',
+                    'addColumns' => true
+                )
+            ),
+            'whereClauses' => array(
+                array(
+                    'table' => TABLE_COUNTRIES_NAME,
+                    'field' => 'language_id',
+                    'value' => $_SESSION ['languages_id'],
+                    'type' => 'AND'
+                )
+            ),
+            'language' => true,
+            'singleTable' => true,
+            'languageInfoTable' => TABLE_COUNTRIES_NAME,
+            'languageKeyField' => 'language_id',
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
@@ -92,6 +113,7 @@ class LeadCountries extends AbstractLeadListingBox
                 ),
                 'countries_name' => array(
                     'bindVarsType' => 'string',
+                    'language' => true,
                     'layout' => array(
                         'common' => array(
                             'title' => TEXT_ENTRY_COUNTRY_NAME,

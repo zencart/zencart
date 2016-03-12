@@ -384,11 +384,17 @@
   }
 
 
-  function zen_get_country_name($country_id) {
+  function zen_get_country_name($country_id, $language_id = '') {
     global $db;
-    $country = $db->Execute("select countries_name
-                             from " . TABLE_COUNTRIES . "
-                             where countries_id = '" . (int)$country_id . "'");
+
+    if (!$language_id) {
+      $language_id = $_SESSION['languages_id'];
+    }
+
+    $country = $db->Execute("SELECT countries_name
+                             FROM " . TABLE_COUNTRIES_NAME . "
+                             WHERE countries_id = '" . (int)$country_id . "'
+                             AND language_id = '" . (int)$language_id . "'");
 
     if ($country->RecordCount() < 1) {
       return $country_id;
@@ -398,11 +404,12 @@
   }
 
 
-  function zen_get_country_name_cfg() {
+  function zen_get_country_name_cfg($country_id) {
     global $db;
-    $country = $db->Execute("select countries_name
-                             from " . TABLE_COUNTRIES . "
-                             where countries_id = '" . (int)$country_id . "'");
+    $country = $db->Execute("SELECT countries_name
+                             FROM " . TABLE_COUNTRIES_NAME . "
+                             WHERE countries_id = '" . (int)$country_id . "'
+                             AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
     if ($country->RecordCount() < 1) {
       return $country_id;
@@ -823,9 +830,10 @@
       $countries_array[] = array('id' => '',
                                  'text' => $default);
     }
-    $countries = $db->Execute("select countries_id, countries_name
-                               from " . TABLE_COUNTRIES . "
-                               order by countries_name");
+    $countries = $db->Execute("SELECT countries_id, countries_name
+                               FROM " . TABLE_COUNTRIES_NAME . "
+                               WHERE language_id = '" . (int)$_SESSION['languages_id'] . "'
+                               ORDER BY countries_name");
 
     while (!$countries->EOF) {
       $countries_array[] = array('id' => $countries->fields['countries_id'],
