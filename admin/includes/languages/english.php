@@ -66,7 +66,7 @@ define('CHARSET', 'utf-8');
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Admin Home');
 define('HEADER_TITLE_SUPPORT_SITE', 'Support Site');
-define('HEADER_TITLE_ONLINE_CATALOG', 'Online Catalog');
+define('HEADER_TITLE_ONLINE_CATALOG', 'Storefront');
 define('HEADER_TITLE_VERSION', 'Version');
 define('HEADER_TITLE_ACCOUNT', 'Account');
 define('HEADER_TITLE_LOGOFF', 'Logoff');

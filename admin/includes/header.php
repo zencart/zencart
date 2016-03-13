@@ -104,12 +104,12 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($
         }
     }
     // display download link
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank"><input type="button" class="button submit faint" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
+    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
 } else {
     // display the "check for updated version" button.  The button link should be the current page and all params
     $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
     $url .= (strpos($url, '?') > 5 ? '&' : '?') . 'vcheck=yes';
-    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version = '<a href="' . $url . '">' . '<input type="button" class="button faint" value="' . TEXT_VERSION_CHECK_BUTTON . '"/></a>';
+    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version = '<a href="' . $url . '">' . '<input type="button" class="btn btn-link" value="' . TEXT_VERSION_CHECK_BUTTON . '"/></a>';
 }
 
 // check GV release queue and alert store owner
@@ -118,38 +118,44 @@ if (SHOW_GV_QUEUE == true) {
     $new_gv_queue_cnt = 0;
     if ($new_gv_queue->RecordCount() > 0) {
         $new_gv_queue_cnt = $new_gv_queue->RecordCount();
-        $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="button submit faint" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
+        $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="btn btn-info" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
     }
 }
 ?>
 <!-- All HEADER_ definitions in the columns below are defined in includes/languages/english.php //-->
-<div class="row">
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" id="adminHeaderLogo">
+  <div class="row">
+    <div class="col-xs-8 col-sm-3" id="adminHeaderLogo">
         <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
     </div>
 
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint adminHeaderAlerts">
-        <span class="noprint"><?php if ($new_gv_queue_cnt > 0) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?></span>
+    <div class="hidden-xs col-sm-3 col-sm-push-6 noprint adminHeaderAlerts">
+        <?php if ($new_version) { ?>
+            <?php echo $new_version; ?><br/>
+            <?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?>
+        <?php } ?>
     </div>
 
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint adminHeaderAlerts">
+    <div class="hidden-sm hidden-md hidden-lg col-xs-4 noprint adminHeaderAlerts">
+        <a href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><input type="button" class="btn btn-primary" value="<?php echo BOX_CUSTOMERS_ORDERS; ?>"/></a>
+    </div>
+
+    <div class="clearfix visible-xs-block"></div>
+    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
         <?php
         if (isset($_SESSION['reset_admin_activity_log']) and ($_SESSION['reset_admin_activity_log'] == true and (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
         ?>
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>"><input type="button" class="button submit faint" value="<?php echo TEXT_BUTTON_RESET_ACTIVITY_LOG;?>"/><br /><?php echo RESET_ADMIN_ACTIVITY_LOG; ?></a>
+        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>"><input type="button" class="btn btn-warning" value="<?php echo TEXT_BUTTON_RESET_ACTIVITY_LOG;?>"/></a><p class="hidden-xs"><br /><?php echo RESET_ADMIN_ACTIVITY_LOG; ?></p>
         <?php
         }
         ?>
     </div>
 
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 noprint adminHeaderAlerts right">
-        <?php if ($new_version) { ?>
-            <?php echo $new_version; ?><br/>
-                <?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?>
-        <?php } ?>
+    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
+        <?php if ($new_gv_queue_cnt > 0) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?>
     </div>
-</div>
-<div class="row headerBar">
+
+  </div>
+  <div class="row headerBar">
     <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
         <?php
         if (!$hide_languages) {
@@ -184,12 +190,12 @@ if (SHOW_GV_QUEUE == true) {
             <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
         </ul>
     </div>
-</div>
+  </div>
 <?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
 
-<!-- <script defer src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
-<!-- <script defer src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
+<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 
-<script defer src="includes/javascript/jquery-1.12.1.min.js"></script>
-<script defer src="includes/javascript/bootstrap.min.js"></script>
+<script src="includes/javascript/jquery-1.12.1.min.js"></script>
+<script src="includes/javascript/bootstrap.min.js"></script>
