@@ -730,8 +730,8 @@ input.faint {
         content: none
     }
     footer, #footer {
-        position: fixed;
-        bottom: 0;
+        /*position: fixed;*/
+        /*bottom: 0;*/
     }
 }
 /* end of print-specific styles */
