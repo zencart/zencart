@@ -661,6 +661,7 @@ footer, #footer {
 footer, #footer, footer a, #footer a {
     font-size: 0.9em;
 }
+/*
 footer.homeFooter, .bottom footer {
     position: fixed;
     bottom: 0;
@@ -670,6 +671,7 @@ footer.homeFooter, .bottom footer {
         height: 111%;
     }
 }
+*/
 /* eof Footer */
 
 #setupWizardForm INPUT[type="text"],
