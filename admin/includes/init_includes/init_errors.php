@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Dec 30 14:19:47 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Sun Mar 13 2016  Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,7 +16,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // check if a default language is set
   if (!defined('DEFAULT_LANGUAGE') || DEFAULT_LANGUAGE=='') {
-    $messageStack->add(ERROR_NO_DEFAULT_LANGUAGE_DEFINED, 'error');
+    // Note: Can't use a language constant here, because that would require one to be defined :)
+    $messageStack->add('ERROR: No default language defined.', 'error');
   }
 
   if (function_exists('ini_get') && ((bool)ini_get('file_uploads') == false) ) {
