@@ -36,10 +36,11 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
-    <script language="JavaScript" src="includes/menu.js" type="text/JavaScript"></script>
+    <script language="JavaScript" src="includes/menu.js" type="text/javascript"></script>
     <script type="text/javascript">
         <!--
             function init()
