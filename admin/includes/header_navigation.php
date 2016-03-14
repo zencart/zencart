@@ -26,7 +26,7 @@ $menuTitles = zen_get_menu_titles();
     <ul class="nav navbar-nav">
           <?php foreach (zen_get_admin_menu_for_user() as $menuKey => $pages) { ?>
             <li class="dropdown">
-              <a href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>" class="dropdown-toggle" data-toggle="dropdown" ><?php echo $menuTitles[$menuKey] ?><b class="caret"></b></a>
+              <a href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><?php echo $menuTitles[$menuKey] ?><b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <?php foreach ($pages as $page) { ?>
                   <li><a href="<?php echo zen_href_link($page['file'], $page['params']) ?>"><?php echo $page['name'] ?></a></li>
