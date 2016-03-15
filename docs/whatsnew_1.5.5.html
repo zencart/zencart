@@ -19,9 +19,10 @@ td.plainbox, div.callout {border: 1px dashed;border-color: #C96E29;margin:5px 40
 .heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
 .title1 {color:#C96E29; font-weight:bold; font-size:22px; }
 .title2 {color:#C96E29; font-weight:bold; font-size:13px; }
-.small {font-size:10px ;}
+.small {font-size:11px ;}
+.smaller {font-size:10px ;}
 .error {color:#FF0000; }
-.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color:#c96e29;}
+.code {font-family: "Lucida Console", Monaco, monospace; font-size:14px; color:#c96e29;}
 .pseudolink {text-decoration:underline; color:#5778CE;}
 h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
 h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
@@ -65,7 +66,7 @@ We appreciate your support.<br>
 <em>The Zen Cart&reg; Team</em><br>
 <br>
 
-<p class="small center">
+<p class="smaller center">
 Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
@@ -84,8 +85,8 @@ OSI Certified is a certification mark of the Open Source Initiative.
 
 <fieldset>
 <h1>About PHP versions</h1>
-<p>Zen Cart&reg; v1.5.5 is compatible with PHP 5.3.7 through PHP 7.0, and MySQL 5.1 thru 5.7</p>
-<p class="small"><em>(Note: At the time of this release, PHP 5.5 is considered obsolete. You should be using PHP 5.6 or greater by now.)</em></p>
+<p>Zen Cart&reg; v1.5.5 is designed for PHP 5.6 and PHP 7.0, with MySQL 5.1 thru 5.7 and Apache 2.2/2.4</p>
+<p class="small">It is compatible with PHP 5.2.10 through PHP 7.0, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.5 is considered obsolete.</a> You should be using PHP 5.6 or greater by now.)</em></p>
 
 <h1>Upgrade Instructions</h1>
 <p>This document only mentions the actual changes specific to v1.5.5 since v1.5.4.</p>
@@ -101,42 +102,50 @@ OSI Certified is a certification mark of the Open Source Initiative.
 
 
 <h1>Important Note about <span class="caps">configure.php</span> files</span>!</h1>
-<p>The contents of <span class="filename">configure.php</span> have changed (to be simplified) ... and they're MUCH SMALLER now! <br>
-  The <span class="filename">dist-configure.php</span> shows the simplified contents, and zc_install will generate the leaner files (when doing fresh installs).<br>
-  Also, zc_install will upgrade your <span class="filename">configure.php</span> files to the new format as long as the files are writable by your server's PHP.
+<p>The contents of <span class="code">configure.php</span> have changed (to be simplified) ... and they're MUCH SMALLER now! <br>
+  The <span class="code">dist-configure.php</span> shows the simplified contents, and zc_install will generate the leaner files (when doing fresh installs).<br>
+  Also, zc_install will upgrade your <span class="code">configure.php</span> files to the new format as long as the files are writable by your server's PHP.
 </p>
 
 <h1>A NOTE ABOUT THE NEW TEMPLATE</h1>
-<p>While Zen Cart&reg; v1.5.5 contains a newer "responsive_classic" template, we STRONGLY recommend that upgraders first upgrade their site using
- everything (including template_default) except the responsive_classic template contents. And then once the upgraded site is working properly
- then consider what changes you might want to make to your own active template. AGAIN: The responsive_classic template should NOT be implemented
- immediately as part of an upgrade; it should be a separate step if it is even used at all.</p>
+<p>While Zen Cart&reg; v1.5.5 contains a newer "responsive_classic" template, we STRONGLY recommend that upgraders <strong>first upgrade 
+ the site using everything (including template_default) <u>except the responsive_classic template</u> contents.</strong><br>
+ <br>
+ Then once the upgraded site is working properly you can consider what changes you might want to make to your own active template. <br>
+ <br>
+ <em>(Important notes about <span class="code">template_default</span> are shown below)</em><br>
+ <br>
+ AGAIN: The responsive_classic template should NOT be implemented immediately as part of an upgrade; it should be a separate step ...
+ if it is even used at all. IT IS NOT NECESSARY TO USE responsive_classic ON YOUR EXISTING SITE, AND YOU SHOULD UPGRADE THE REST OF
+ YOUR SITE FIRST BEFORE ATTEMPTING TO CONVERT/ADAPT IT TO YOUR USE.</p>
 
 <h1>Notes about changes to <span class="caps">template_default</span></h1>
-<p>In Zen Cart the <span class="filename">template_default</span> directory contains the master copy of all storefront page templates. The normal procedure for customizing
-template files for use in your own personalized template is to make a copy of the corresponding file from template_default, put it into your own
-template folder (and matching folder structure), and make your customizations in that copy of the file. This way the only files you need in
-your personalized template folder are those that you have altered in some way from template_default.<br><br>With that explained, it is important
-that whenever you upgrade your site, you should also inspect ALL the template_default files to determine which changes in those files need
-to be replicated in your customized files.<br>
-Often a tool like Beyond Compare or Araxis Merge or Kaleidoscope or GnuDiff can be helpful for this. The process is simple: compare the
-template_default directory files from your *old* version against the template_default files in the *new) version, and use those results
-as a reference to copy those updated changes into each of the files you've customized in your custom/personalized template in your store.
-<br>Then, and only after you've done all those comparisons and updated your customized files in your custom template folder, you will
-copy the template_default files from the new version into the template_default directory of your store. This way you'll be left with
-updated personalized files *and* updated template_default files.
+<p><strong>UPGRADERS SHOULD BE SURE TO UPDATE BOTH template_default AND YOUR CUSTOM TEMPLATE as described here:</strong></p>
+<p>In Zen Cart the <span class="code">template_default</span> directory contains the master copy of all storefront page templates. 
+ The normal procedure for customizing template files for use in your own personalized template is to make a copy of the corresponding file from 
+ template_default, put it into your own template folder (and matching folder structure), and make your customizations in that copy of the file.
+ This way the only files you need in your personalized template folder are those that you have altered in some way from template_default.<br><br>
+ With that explained, it is important that whenever you upgrade your site, you should also inspect ALL the template_default files to determine
+ which changes in those files need to be replicated in your customized files.<br>
+ Often a tool like <a href="http://www.scootersoftware.com/download.php" target="_blank">Beyond Compare</a> or Araxis Merge or GnuDiff
+ can be helpful for this. The process is simple: compare the template_default directory files from your *old* version against the
+ template_default files in the *new) version, and use those results as a reference to copy those updated changes into each of the files 
+ you've customized in your custom/personalized template in your store.<br>
+ Then, and only after you've done all those comparisons and updated your customized files in your custom template folder, you will
+ copy the template_default files from the new version into the template_default directory of your store. This way you'll be left with
+ updated personalized files *and* updated template_default files.
 </p>
 
   <h2>Changes in template_default for v1.5.5</h2>
-  <p>The template_default files previously had a lot of old &lt;table&gt; markup to specify widths, cell borders and padding and spacing.
+  <p>The template_default files previously had a lot of old <span class="code">&lt;table&gt;</span> markup to specify widths, cell borders and padding and spacing.
   These have been removed in v1.5.5 and relevant styles added to the bottom of the main stylesheet.css file. You will want to add the updated
   CSS parts to your own stylesheet if your custom template still uses those tables. (A few 3rd-party templates have aggressively ripped out
   various tables and may not be affected by this change.)</p>
   <p>A few CSS changes were made in template_default to change IDs of repeating elements to be classes instead.
-  Of note <span class="filename">#cartDisplay</span> is now <span class="filename">.cartDisplay</span>, and <span class="filename">#cartImage</span> is <span class="filename">.cartImage</span></p>
+  Of note <span class="code">#cartDisplay</span> is now <span class="code">.cartDisplay</span>, and <span class="code">#cartImage</span> is <span class="code">.cartImage</span></p>
 
 
-  <h1>What's New ... Changes from v1.5.4 to v1.5.5 </h1>
+<h1>What's New ... Changes from v1.5.4 to v1.5.5 </h1>
 <h3><strong>The most notable improvements and bugfixes in v1.5.5 since v1.5.4 include:</strong></h3>
 <ul>
   <li>All known v1.5.4 bugfixes and security fixes are included in v1.5.5, including tighter control around XSS as well as clickjacking</li>
@@ -146,32 +155,34 @@ updated personalized files *and* updated template_default files.
   <li>Admin: Added customer-password reset via Admin</li>
   <li>Admin: Products Price Manager: Added display of taxes into prices</li>
   <li>Admin: Improvements to developers-toolkit and whos-online</li>
+  <li>SEO: Numerous updates to canonical-url handling</li>
+  <li>SEO: Added hreflang markup for better indexing of multilingual sites, and other HTML page-header metatag improvements</li>
   <li>Checkout: Order Details added to Checkout-Success page</li>
   <li>Payment: PayPal Express Checkout has numerous updated compatibilities added, including their latest InContext mobile support</li>
   <li>Payment: Added SagePay Form payment module (for hosted offsite PCI compliant credit card processing)</li>
-  <li>Payment: Added Payeezy JS (First Data/Global Gateway e4) Payment module (for onsite PCI compliant credit card processing)</li>
   <li>Payment: Added First Data Hosted Checkout Payment Pages (Global Gateway e4) module (for hosted offsite PCI compliant credit card processing)</li>
   <li>Payment: Retired obsolete Linkpoint_API payment module (replaced by the new Payeezy JS module)</li>
-  <li>SEO: Numerous updates to canonical-url handling</li>
-  <li>SEO: Added hreflang markup for better indexing of multilingual sites, and other HTML page-header metatag improvements</li>
+  <li>Payment: Added Payeezy JS (First Data/Global Gateway e4) Payment module (for onsite PCI compliant credit card processing)</li>
   <li>Core: Added PHP 7.0 compatibility</li>
   <li>Core: Added MySQL 5.7 compatibility</li>
-  <li>Core: Improved error-logging for troubleshooting (included @lat9's debug-backtrace mod),</li>
+  <li>Core: Improved error-logging for troubleshooting (included @lat9's debug-backtrace mod)</li>
   <li>Core: Improved/simplified code for db query handling, allowing simple foreach() iterations instead of requiring while(!EOF) loops,</li>
   <li>Core: Added hooks to allow for 3rd-party-handling of taxes, for plugin support with orders, attributes, and much more</li>
-  <li>Core: Fix some rounding errors,</li>
+  <li>Core: Fix some rounding errors</li>
   <li>Core: Added cron code for automated currency-updating, and currency sources can be selected from Admin->Config->My Store menu, and plugins can auto-show in this list</li>
   <li>Core: Fixed bug with a race condition causing database errors related to sessions</li>
   <li>Core: Simplified the configure.php file contents significantly by retaining only the most-often-customized components, and added an automatic-converter as part of zc_install's initial inspection</li>
   <li>Email: Integrated @lat9's "common CSS styling" for HTML emails</li>
   <li>Email: Added newer phpMailer integration (better compatibility with more email services), and email-failure errors are logged to /logs/ for easier debugging if problems occur</li>
-  <li>Some language-file cleanups,</li>
+  <li>Some language-file cleanups</li>
   <li>Improved compatibility for payment/shipping modules and SSL/TLS to work with the 2016 SHA-256 Secure Server initiatives being embraced by modern hosting companies and PCI Compliance</li>
   <li>Rewrote zc_install - fresh new look, will make future internal maintenance easier</li>
-  <li>Replaced phpBB integration with generic hooks to allow for various external forums,</li>
+  <li>Replaced phpBB integration with generic hooks to allow for various external forums</li>
   <li>Security patches for alerts provided from various security watchdog sites</li>
-  <li>A detailed list of individual changes can be viewed <a href="https://github.com/zencart/zc-v1-series/compare/v1.5.4...v1.5.5" target="_blank">on github</a> </li>
-  </ul>
+  <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>
+</ul>
+<p>A very long detailed list of individual code changes can be viewed <a href="https://github.com/zencart/zc-v1-series/compare/v1.5.4...v1.5.5" target="_blank">on github</a> </p>
+
 </fieldset>
 <br><br>
 <p class="center"><em>Copyright 2003 - 2016 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
