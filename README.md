@@ -30,20 +30,18 @@ Installation is simple:
 2. Ensure you check that the md5/sha1 hash of the Zip matches those publicly posted.
   * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](http://www.zen-cart.com/content.php?305).
 3. Unzip the downloaded zip file 
-4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your public_html or www or html folder (the folder will already exist on your webserver)
-5. In your browser, enter the address to your site, such as: www.example.com (or if you uploaded it into another foldername use www.example.com/foldername)
-6. Rename the /includes/dist-configure.php and /admin/includes/dist-configure.php files to "configure.php" and make the files writable (so the install process can write your configuration information into them after you answer a few questions in the following steps).
-7. Also make the /cache and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
+4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your `public_html` or `www` or `html` folder (the folder will already exist on your webserver)
+5. In your browser, enter the address to your site, such as: `www.example.com` (or if you uploaded it into another subdirectory such as `foldername` use `www.example.com/foldername`)
+6. Rename the `/includes/dist-configure.php` and `/admin/includes/dist-configure.php` files to "`configure.php`" and make the files writable (so the install process can write your configuration information into them after you answer a few questions in the following steps).
+7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
-That's the abbreviated version of installation instructions!
-
-For a MUCH more detailed set of installation instructions, see the [/docs/1.readme_installation.html](http://www.zen-cart.com/docs/1.readme_installation.html) file in your Zen Cart files.
+If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) PDF.
 
 
 Guidance for Secure Installations
 ---------------------------------
-__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements. Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.__
+__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.
 
 
 Documentation
