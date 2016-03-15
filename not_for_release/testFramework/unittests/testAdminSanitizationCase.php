@@ -6,7 +6,7 @@
  * @package tests
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Mon Feb 1 16:59:30 2016 +0000 New in v1.5.5 $
+ * @version $Id: Author: zcwilt  Tue Mar 15 16:59:30 2016 +0000 New in v1.5.5 $
  */
 
 /**
@@ -82,18 +82,24 @@ class testAdminSanitization extends PHPUnit_Framework_TestCase
     {
         $group = array(
             'img_dir_safe',
-            'img_dir_not_safe'
+            'img_dir_not_safe',
+            'img_dir_windows',
+            'img_dir_linux',
+            'img_dir_linux_space'
             );
         $adminSanitizationConfig['FILE_DIR_REGEX'] = $group;
         $adminSanitizerTypes = array('FILE_DIR_REGEX' => array('type' => 'builtin', 'strict' => false));
 
-        $_POST = array('img_dir_safe' => '100', 'img_dir_not_safe' => 'alert();');
+        $_POST = array('img_dir_safe' => '100', 'img_dir_not_safe' => 'alert();', 'img_dir_windows' => 'matrox\matrox.gif', 'img_dir_linux' => 'matrox/matrox.gif', 'img_dir_linux_space' => 'mat rox/matrox.gif');
         $arq = new AdminRequestSanitizer($adminSanitizationConfig, $adminSanitizerTypes, true);
         $arq->runSanitizers();
         $postAlreadySanitized = $arq->getPostKeysAlreadySanitized();
-        $this->assertTrue(count($postAlreadySanitized) == 2);
+        $this->assertTrue(count($postAlreadySanitized) == 5);
         $this->assertTrue($_POST['img_dir_safe'] == 100);
         $this->assertTrue($_POST['img_dir_not_safe'] === 'alert()');
+        $this->assertTrue($_POST['img_dir_windows'] == 'matrox\matrox.gif');
+        $this->assertTrue($_POST['img_dir_linux'] === 'matrox/matrox.gif');
+        $this->assertTrue($_POST['img_dir_linux_space'] === 'mat rox/matrox.gif');
     }
 
     public function testAlphaNumDashUnderScore()
@@ -219,14 +225,14 @@ class testAdminSanitization extends PHPUnit_Framework_TestCase
         $this->assertTrue($_POST['products_name_not_safe'][0] === '100xyz_pt>();');
     }
 
-    public function testProductNameRegex()
+    public function testWordsAndSymbolsRegex()
     {
         $group = array(
             'products_name_safe',
             'products_name_not_safe'
         );
-        $adminSanitizationConfig['PRODUCT_NAME_REGEX'] = $group;
-        $adminSanitizerTypes = array('PRODUCT_NAME_REGEX' => array('type' => 'builtin', 'strict' => false));
+        $adminSanitizationConfig['WORDS_AND_SYMBOLS_REGEX'] = $group;
+        $adminSanitizerTypes = array('WORDS_AND_SYMBOLS_REGEX' => array('type' => 'builtin', 'strict' => false));
 
 
         $_POST = array('products_name_safe' => '<strong>Name</strong>', 'products_name_not_safe' => '100xyz_</script>();');
