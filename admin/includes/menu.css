@@ -47,13 +47,13 @@
     background-color: #d7d6cc;
 }
 .navbar-nav li>a.dropdown-toggle {
-    font-size: 1.3em;
+    font-size: 1.2em;
     color: #333;
 }
 @media (min-width: 768px) {
     .navbar-nav>li>a {
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
     }
     .navbar {
         min-height: 30px;

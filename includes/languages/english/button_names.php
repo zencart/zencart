@@ -59,14 +59,14 @@ define('BUTTON_IMAGE_CONTINUE_CHECKOUT', 'button_continue_checkout.gif');
 define('BUTTON_IMAGE_CREATE_ACCOUNT', 'button_create_account.gif');
 define('BUTTON_IMAGE_LOG_OFF', 'button_logoff.gif');
 /*
- * ALT tags used for buttons (text used for CSS buttons)
+ * ALT text is used as Button Text, or for the ALT tag on image-buttons
  */
 
 define('BUTTON_CREATE_ACCOUNT_ALT', 'Sign Up');
 define('BUTTON_LOG_OFF_ALT', 'Log Off');
 define('BUTTON_ADD_TO_CART_ALT', 'Add This to My Cart');
 define('BUTTON_ADD_ADDRESS_ALT', 'Add Address');
-define('BUTTON_ADD_PRODUCTS_TO_CART_ALT','Add Selected Products to Cart');
+define('BUTTON_ADD_PRODUCTS_TO_CART_ALT','Add Selected to Cart');
 define('BUTTON_BACK_ALT', 'Back');
 define('BUTTON_BUY_NOW_ALT', 'Buy Now');
 define('BUTTON_CANCEL_ALT', 'Cancel');
@@ -101,6 +101,6 @@ define('BUTTON_UPDATE_ALT', 'Update');
 define('BUTTON_VIEW_SMALL_ALT', 'View');
 define('BUTTON_WRITE_REVIEW_ALT', 'Write Review');
 define('BUTTON_READ_REVIEWS_ALT', 'Read the Review');
-define('BUTTON_GOTO_PROD_DETAILS_ALT', 'Go To This Product\'s Detailed Information');
+define('BUTTON_GOTO_PROD_DETAILS_ALT', 'Go To This Product\'s Details');
 define('BUTTON_MORE_REVIEWS_ALT', 'Read More Reviews');
 define('BUTTON_VIEW_ALL_ALT', 'View All');
