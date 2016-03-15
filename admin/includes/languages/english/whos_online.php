@@ -44,7 +44,9 @@ define('WHOIS_TIMER_INACTIVE', 180); // seconds when considered inactive - 180 d
 define('WHOIS_TIMER_DEAD', 540); // seconds when considered dead - 540 default = 9 minutes
 define('WHOIS_SHOW_HOST', '1'); // show Last Clicked time and host name - 1 default
 define('WHOIS_REPEAT_LEGEND_BOTTOM', '12'); // show legend on bottom when more than how many entries - 12 default
-define('OFFICE_IP_TO_HOST_ADDRESS', 'OFF');
+
+define('TEXT_DUPLICATE_IPS', 'Duplicate IP Addresses: ');
+define('TEXT_TOTAL_UNIQUE_USERS', 'Total Unique Users: ');
 
 define('TEXT_WHOS_ONLINE_TIMER_UPDATING', 'Updating ');
 define('TEXT_WHOS_ONLINE_TIMER_EVERY', 'every %s seconds.&nbsp;&nbsp;');

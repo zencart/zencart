@@ -470,7 +470,9 @@ function zen_check_minutes($the_time_last_click) {
   }
 ?>
               <tr>
-                <td class="smallText" colspan="8"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, $total_sess); print "<br />Duplicate IP Addresses: $total_dupes<br />Total Unique Users: $total_cust.";?></td>
+                <td class="smallText" colspan="8"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, $total_sess); ?><br />
+                <?php echo TEXT_DUPLICATE_IPS . $total_dupes; ?><br />
+                <?php echo TEXT_TOTAL_UNIQUE_USERS . $total_cust;?>.</td>
               </tr>
             </table></td>
 <?php
