@@ -142,7 +142,7 @@ class AdminRequestSanitizer extends base
      */
     private function filterFileDirRegex()
     {
-        $filedirRegex = '~[^0-9a-z\.!@#\$%^&\()`_+\-' . preg_quote(DIRECTORY_SEPARATOR) . '\~]~i';
+        $filedirRegex = '~[^0-9a-z' . preg_quote('.!@#$%^& ()`_+-~/' . '\\', '~') . ']~i';
         $saniList = $this->adminSanitizationConfig['FILE_DIR_REGEX'];
         foreach ($saniList as $key) {
             if (isset($_POST[$key])) {

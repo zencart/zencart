@@ -5,7 +5,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Tue Feb 23 18:26:42 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Tue Mar 15 18:26:42 2016 +0000 Modified in v1.5.5 $
  */
 
 require_once(DIR_WS_CLASSES . 'AdminRequestSanitizer.php');
@@ -212,7 +212,7 @@ $group = array('products_description', 'coupon_desc', 'file_contents', 'categori
 $sanitizer->addSanitizationGroup('PRODUCT_DESC_REGEX', $group);
 
 $group = array('products_url');
-$sanitizer->addSanitizationGroup('ALPHANUM_DASH_UNDERSCORE', $group);
+$sanitizer->addSanitizationGroup('PRODUCT_URL_REGEX', $group);
 
 $group = array('coupon_min_order');
 $sanitizer->addSanitizationGroup('CURRENCY_VALUE_REGEX', $group);
