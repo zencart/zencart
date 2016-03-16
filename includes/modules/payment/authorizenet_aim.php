@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 3 22:31:02 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Wed Mar 16 16:12:21 2016 -0500 Modified in v1.5.5 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -653,18 +653,18 @@ class authorizenet_aim extends base {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-//   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
-//   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
-    if (CURL_PROXY_REQUIRED == 'True') {
-      $this->proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
-      curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, $this->proxy_tunnel_flag);
-      curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-      curl_setopt ($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
-    }
 
     $this->authorize = curl_exec($ch);
     $this->commError = curl_error($ch);
     $this->commErrNo = curl_errno($ch);
+
+    if ($this->commErrNo == 35) {
+      trigger_error('ALERT: Could not process Authorize.net AIM transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
+      $this->authorize = curl_exec($ch);
+      $this->commError = curl_error($ch);
+      $this->commErrNo = curl_errno($ch);
+    }
 
     $this->commInfo = @curl_getinfo($ch);
     curl_close ($ch);

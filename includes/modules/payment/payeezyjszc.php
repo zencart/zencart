@@ -4,8 +4,8 @@
  *
  * Payeezy does token-based transactions, to avoid the risks of onsite handling of card data, thereby not interfering with PCI Compliance.
  * The customer stays on-site but card-processing is done remotely over secure channels, preventing any unnecessary processing of sensitive data.
- * 
- * NOTE: You will need TransArmor enabled on your merchant account to do token based transactions. 
+ *
+ * NOTE: You will need TransArmor enabled on your merchant account to do token based transactions.
  * Contact your merchant account representative for more details on how to enable this or call 1-855-799-0790.
  * For merchants domiciled outside the U.S. please contact your local technical support team for assistance with preparing your account to work with PayEezyJS and Token-Based transactions.
  *
@@ -244,7 +244,7 @@ class payeezyjszc extends base {
       $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_MISSING_FDTOKEN, 'error');
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
     }
-    
+
     $order->info['cc_owner']   = $_POST['cc_owner'];
     $order->info['cc_type'] = $_POST['cc_type'];
     $order->info['cc_number']  = $_POST['cc_number'];
@@ -258,7 +258,7 @@ class payeezyjszc extends base {
     // @TODO - consider converting currencies if the gateway requires
 
 
-    // format purchase amount 
+    // format purchase amount
     $payment_amount = $order->info['total'];
     $decimal_places = $currencies->get_decimal_places($order->info['currency']);
     if ($decimal_places > 0) {
@@ -299,10 +299,10 @@ class payeezyjszc extends base {
     // 404 = requested resource did not exist
     // 500, 502, 503, 504 = server error on Payeezy end
 
-    // transaction_status: 
-    // Approved = Card Approved 
-    // Declined = Gateway declined 
-    // Not Processed = For any internal errors this status is returned. 
+    // transaction_status:
+    // Approved = Card Approved
+    // Declined = Gateway declined
+    // Not Processed = For any internal errors this status is returned.
 
     // validation_status: values - “success” / ”failure” based on input validation
 
@@ -338,7 +338,7 @@ class payeezyjszc extends base {
         $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
         if (isset($response['avs']) && isset($this->avs_codes[$response['avs']])) $this->transaction_messages .= "\n" . 'AVS: ' . $this->avs_codes[$response['avs']];
         if (isset($response['cvv2']) && isset($this->cvv_codes[$response['cvv2']])) $this->transaction_messages .= "\n" . 'CVV: ' . $this->cvv_codes[$response['cvv2']];
-        return true;        
+        return true;
       }
 
       if ($response['transaction_status'] == 'declined') {
@@ -469,7 +469,7 @@ class payeezyjszc extends base {
        'MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID',
        'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY',
        'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET',
-       'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN', 
+       'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN',
        'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY',
        'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN',
        'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE',
@@ -511,9 +511,18 @@ class payeezyjszc extends base {
     curl_setopt($request, CURLOPT_HEADER, false);
     curl_setopt($request, CURLOPT_HTTPHEADER, $curlHeaders);
     $response = curl_exec($request);
+
+    $commErrNo = curl_errno($request);
+    if ($commErrNo == 35) {
+      trigger_error('ALERT: Could not process Payeezy transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
+      curl_setopt($request, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
+      $response = curl_exec($request);
+    }
+
     if (FALSE === $response) {
       $this->commError = curl_error($request);
       $this->commErrNo = curl_errno($request);
+      trigger_error('Payeezy communications failure. ' . $this->commErrNo . ' - ' . $this->commError, E_USER_NOTICE);
     }
     $httpcode = curl_getinfo($request, CURLINFO_HTTP_CODE);
     $this->commInfo = curl_getinfo($request);

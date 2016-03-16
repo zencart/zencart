@@ -5,7 +5,7 @@
  * @package paymentMethod
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 01:51:14 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Wed Mar 16 16:12:21 2016 -0500 Modified in v1.5.5 $
  */
 
 /**
@@ -451,6 +451,14 @@ class paypal_curl extends base {
     $response = curl_exec($ch);
     $commError = curl_error($ch);
     $commErrNo = curl_errno($ch);
+
+    if ($commErrNo == 35) {
+      trigger_error('ALERT: Could not process PayPal transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
+      $response = curl_exec($ch);
+      $commError = curl_error($ch);
+      $commErrNo = curl_errno($ch);
+    }
 
     $commInfo = @curl_getinfo($ch);
     curl_close($ch);
