@@ -12,11 +12,11 @@ define('HEADING_TITLE_EXPIRED', 'Admin Login - Password Expired');
 
 define('TEXT_LOGIN','Login');
 define('TEXT_SUBMIT','Submit');
-define('TEXT_ADMIN_NAME', 'Admin Username:');
-define('TEXT_ADMIN_PASS', 'Admin Password:');
-define('TEXT_ADMIN_OLD_PASSWORD', 'Old Password:');
-define('TEXT_ADMIN_NEW_PASSWORD', 'New Password:');
-define('TEXT_ADMIN_CONFIRM_PASSWORD', 'Confirm Password:');
+define('TEXT_ADMIN_NAME', 'Admin Username');
+define('TEXT_ADMIN_PASS', 'Admin Password');
+define('TEXT_ADMIN_OLD_PASSWORD', 'Old Password');
+define('TEXT_ADMIN_NEW_PASSWORD', 'New Password');
+define('TEXT_ADMIN_CONFIRM_PASSWORD', 'Confirm Password');
 
 define('ERROR_WRONG_LOGIN', 'You entered the wrong username or password.');
 define('ERROR_SECURITY_ERROR', 'There was a security error when trying to login.');
