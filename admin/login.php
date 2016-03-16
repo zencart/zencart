@@ -96,13 +96,13 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
                           <div class="form-group">
                             <label class="col-xs-4 col-offset-xs-1 col-sm-4 col-md-6 control-label" for="admin_name-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NAME; ?>:</label>
                             <div class="col-xs-6 col-sm-7 col-md-6">
-                              <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control" id="admin_name" autocomplete="off" placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
+                              <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control" id="admin_name" autocomplete="off" autofocus placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
                             </div>
                           </div>
                           <div class="form-group">
                             <label class="col-xs-4 col-offset-xs-1 col-sm-4 col-md-6 control-label" for="admin_pass"><?php echo TEXT_ADMIN_PASS; ?>:</label>
                             <div class="col-xs-6 col-sm-7 col-md-6">
-                            <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_PASS . '" autofocus', false); ?>
+                            <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_PASS . '"', false); ?>
                             </div>
                           </div>
                         </div>
