@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Feb 4 13:57:57 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Wed Mar 16 10:28:02 2016 -0500 Modified in v1.5.5 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -1171,7 +1171,7 @@ class paypaldp extends base {
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
-                                        'version' => '201.0',
+                                        'version' => '124.0',
                                         'server' => MODULE_PAYMENT_PAYPALDP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
