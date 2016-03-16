@@ -45,6 +45,11 @@ class SagepayUtil
 
         $rawresponse = curl_exec($curlSession);
 
+        if (curl_errno($curlSession) == 35) {
+          curl_setopt($curlSession, CURLOPT_SSL_CURLOPT_SSLVERSION, 6);
+          $rawresponse = curl_exec($curlSession);
+        }
+
         if (curl_getinfo($curlSession, CURLINFO_HTTP_CODE) !== 200) {
             $output['Status'] = "FAIL";
             $output['StatusDetails'] = "Server Response: " . curl_getinfo($curlSession, CURLINFO_HTTP_CODE);

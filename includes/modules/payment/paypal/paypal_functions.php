@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Feb 4 21:02:58 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Wed Mar 16 16:12:21 2016 -0500 Modified in v1.5.5 $
  */
 
 // Functions for paypal processing
@@ -575,6 +575,12 @@
     $response = curl_exec($ch);
     $commError = curl_error($ch);
     $commErrNo = curl_errno($ch);
+    if ($commErrNo == 35) {
+      curl_setopt($ch, CURLOPT_SSLVERSION, 6);
+      $response = curl_exec($ch);
+      $commError = curl_error($ch);
+      $commErrNo = curl_errno($ch);
+    }
     $commInfo = @curl_getinfo($ch);
     curl_close($ch);
 
