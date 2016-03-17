@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Sun Feb 28 13:59:36 2016 -0500 New in v1.5.5 $
+ * @version $Id: picaflor-azul Thu Mar 17 12:13:18 2016 -0500 New in v1.5.5 $
  */
 
 /*bof basic elements*/
@@ -102,7 +102,7 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:4
 #popupImage {margin:0;padding:0;}
 #contentMainWrapper{padding-bottom:30px;}
 #navColumnOneWrapper, #navColumnTwoWrapper, #mainWrapper{margin:auto;}
-#mainWrapper{} 
+#mainWrapper{}
 #sendSpendWrapper {padding:20px 0;width:100%;}
 #sendSpendWrapper .buttonRow{margin-right:20px;}
 .floatingBox, #accountLinksWrapper, #checkoutShipto, #checkoutBillto, #navEZPagesTOCWrapper {margin:0;width:47%;}
@@ -181,7 +181,7 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:4
 /*styles for centerbox, left and right hand headings*/
 h2.centerBoxHeading, h3.rightBoxHeading, h3.leftBoxHeading{font-size:1.2em;font-weight:normal;}
 h3.rightBoxHeading a, h3.leftBoxHeading a{color: #ffffff;font-weight:normal;text-decoration:none;/*remove text decoration if you want an underline*/}
-h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {text-decoration:none;} 
+h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {text-decoration:none;}
 .rightBoxHeading, .leftBoxHeading, .centerBoxHeading {margin:0;padding:1.0em 0.2em;}
 /*sidebox content styles*/
 .sideBoxContent {padding:1.0em;margin-bottom:10px;}
@@ -201,7 +201,7 @@ ul.list-links li:hover, ol.list-links li:hover{}
 #cartBoxListWrapper li, .orderHistList li{list-style-type:none;padding:8px 0;}
 #cartBoxListWrapper li a, .orderHistList li a{display:inline !important;}
 .orderHistList i{margin-left:10px;display:inline;}
-#cartBoxListWrapper, .orderHistList {margin:0;padding:0;} 
+#cartBoxListWrapper, .orderHistList {margin:0;padding:0;}
 #shoppingcartContent hr{display:none;}
 .cartBoxTotal{padding:10px !important;}
 .sideBoxContent .productPriceDiscount{font-size:130%;margin-top:3px;}
@@ -225,7 +225,7 @@ ul.list-links li:hover, ol.list-links li:hover{}
 .normalprice, .productSpecialPriceSale {text-decoration:line-through;}
 .productSpecialPrice, .productSalePrice, .productSpecialPriceSale, .productPriceDiscount {}
 #ezPageBoxList ul {list-style-type:none;}
-#ezPageBoxList li, .cartBoxTotal {margin:0;padding: 0.2em 0;} 
+#ezPageBoxList li, .cartBoxTotal {margin:0;padding: 0.2em 0;}
 #cartBoxEmpty, #cartBoxVoucherBalance {font-weight:bold;}
 .totalBox {width:5.5em;text-align:right;padding:0.2em;}
 .lineTitle, .amount {text-align:right;padding:0.2em;}
@@ -405,7 +405,7 @@ h4.optionName{margin:1% 30px 0 30px;padding:0;}
 #reviewsInfoDefault .rating{margin:10px 0;}
 
 /*bof my account*/
-#myAccountGen li, #myAccountNotify li {margin:0;list-style-type:none;} 
+#myAccountGen li, #myAccountNotify li {margin:0;list-style-type:none;}
 #myAccountGen li a, #myAccountNotify li a{text-decoration:none;}
 .accountTotalDisplay, .accountTaxDisplay {width:20%;text-align:right;}
 .accountQuantityDisplay {width:10%;vertical-align:top;}
