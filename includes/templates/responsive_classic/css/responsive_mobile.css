@@ -362,6 +362,7 @@ div#productListing tr.productListing-odd {clear:both;}
 #indexProductList .list-more{margin-top:0;}
 .cart-add, .productListing-odd form, .productListing-even form {float:none;}
 .list-input input{width:50% !important;}
+.itemTitle{width:100% !important;}
 
 /*bof product info*/
 #pinfo-left, #pinfo-right, #cart-box, div#productReviewLink{float:none;}

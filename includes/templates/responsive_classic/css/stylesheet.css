@@ -308,7 +308,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .list-more:hover{}
 #indexProductList .list-more{width:auto;margin-top:-50px;}
 #advancedsearchresultBody .list-more{width:auto;}
-.itemTitle{font-weight:normal;font-size:150%;margin:5px 0;}
+.itemTitle{font-weight:normal;font-size:150%;margin:5px 0;width:80%;}
 .itemTitle a{text-decoration:none;}
 .itemTitle a:hover{}
 .tabTable{margin-bottom:20px;}
