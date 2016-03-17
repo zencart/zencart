@@ -65,6 +65,7 @@ if ($show_welcome != true) { ?>
     if ($current_categories_description != '') {
 ?>
 <div id="categoryDescription" class="catDescContent"><?php echo $current_categories_description;  ?></div>
+<br class="clearBoth" />
 <?php } // categories_description ?>
 
 <?php
