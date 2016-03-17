@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: picaflor-azul Thu Jan 14 09:44:37 2016 +0100 New in v1.5.5 $
+ * @version $Id: picaflor-azul Thu Mar 17 12:13:18 2016 -0500 New in v1.5.5 $
  *
  */
 
@@ -60,7 +60,7 @@ div#productListing table, div#productListing thead, div#productListing tbody, di
 div#productListing tr.productListing-rowheading {display:none;}
 div#productListing tr.productListing-odd, div#productListing tr.productListing-even{width:100%;float:left;height:auto;border:1px solid #e9e9e9;}
 div#productListing tr.productListing-odd {clear:both;}
-.button-top{overflow:hidden;margin-top:-25px;}
+.button-top{overflow:hidden;}
 #productsListingBottomNumber, #allProductsListingBottomNumber, #allProductsListingTopNumber, #productsListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber {width:16% !important;}
 
 /*bof reviews*/
@@ -91,6 +91,7 @@ textarea{width:95%;margin:0;}
 #allProductsDefault input[type=text], #featuredDefault input[type=text], #newProductsDefault input[type=text]{width:50%;}
 ul.list-links li a, ol.list-links li a{padding-right:0;}
 input.submit_button{padding:12px 15px 30px 15px;}
+#searchContent input, .list-input input{width:85% !important;margin-left:0;}
 
 }
 
@@ -218,7 +219,7 @@ div#productListing tr.productListing-odd {clear:both;}
 #productListing{margin-bottom:15px;}
 .prod-list-wrap .buttonRow{margin-top:0;}
 .productListing-rowheading a{padding:10px;background:none;}
-#filter-wrapper select{width:48%;}
+#filter-wrapper select{width:48%;margin-top:10px;}
 
 
 /*bof product info*/
@@ -265,6 +266,7 @@ span.cssButton.normal_button.button.button_goto_prod_details{display:block;}
 #indexDefaultMainContent {word-wrap:break-word;}
 h2{line-height:22px;}
 #password-current, #login-password, #password-new, #password-confirm, input[type=password], select, input[type=number], input[type=tel], input[type=text], input[type=email]{width:85%;margin-left:20px;}
+.list-input input{width:85% !important;margin-left:0;}
 input[type=date]{width:60%;}
 textarea{width:93%;margin:0;}
 h1{text-align:center;}

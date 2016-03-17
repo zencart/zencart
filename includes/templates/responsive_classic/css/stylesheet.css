@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Sun Feb 28 13:59:36 2016 -0500 New in v1.5.5 $
+ * @version $Id: picaflor-azul Thu Mar 17 12:13:18 2016 -0500 New in v1.5.5 $
  */
 
 /*bof basic elements*/
@@ -56,13 +56,13 @@ HR {height: 1px;margin-top:0.5em;border:none;}
 
 /*bof form elements*/
 CODE {font-family:arial, verdana, helvetica, sans-serif;font-size:1em;}
-FORM, SELECT, INPUT {display:inline;font-size:1em;margin:0.1em;}
+FORM, SELECT, INPUT {display:inline;font-size:1em;margin:0 0.1em 0 0;}
 input{height:35px;padding-left:5px;margin-bottom:10px;}
 select{border:none;padding-left:5px;width:51%;}
 TEXTAREA {margin:auto;display:block;width:66%;}
 input:focus, select:focus, textarea:focus {}
 legend{padding:0;display:table;text-align:center;width:100%;padding:10px 0;font-size:1.3em;}
-fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;/*margin-bottom:20px;*/}
+fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;margin-bottom:20px;}
 body:not(:-moz-handler-blocked) fieldset{display:table-cell;}
 fieldset > fieldset{}
 fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;background:none;}
@@ -86,10 +86,6 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:4
 .sideBoxContent select{width:auto;}
 #currenciesContent select{height:35px;}
 
-/*bof placeholders*/
-::-moz-placeholder, :-moz-placeholder {text-align: right;, opacity: 1;}
-::-webkit-input-placeholder, :-ms-input-placeholder, :placeholder-shown {text-align: right;}
-
 /*bof warnings, errors, messages*/
 .messageStackWarning, .messageStackError, .messageStackSuccess, .messageStackCaution {line-height:1.8em;padding:20px;}
 .messageStackWarning, .messageStackError {}
@@ -102,7 +98,7 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:4
 #popupImage {margin:0;padding:0;}
 #contentMainWrapper{padding-bottom:30px;}
 #navColumnOneWrapper, #navColumnTwoWrapper, #mainWrapper{margin:auto;}
-#mainWrapper{} 
+#mainWrapper{}
 #sendSpendWrapper {padding:20px 0;width:100%;}
 #sendSpendWrapper .buttonRow{margin-right:20px;}
 .floatingBox, #accountLinksWrapper, #checkoutShipto, #checkoutBillto, #navEZPagesTOCWrapper {margin:0;width:47%;}
@@ -122,6 +118,10 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:4
 #navMainSearch {width:38%;text-align:right;}
 #navMainSearch input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 #navMainSearch input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
+
+.cart-add input[type=text]{vertical-align:top;display:inline-block;border:0;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;height:42px;border:3px solid #ccc;}
+.cart-add input[type=submit], #navMainSearch input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
+
 
 /*top middle*/
 #logo{margin:10px 0;}
@@ -181,7 +181,7 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:4
 /*styles for centerbox, left and right hand headings*/
 h2.centerBoxHeading, h3.rightBoxHeading, h3.leftBoxHeading{font-size:1.2em;font-weight:normal;}
 h3.rightBoxHeading a, h3.leftBoxHeading a{color: #ffffff;font-weight:normal;text-decoration:none;/*remove text decoration if you want an underline*/}
-h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {text-decoration:none;} 
+h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {text-decoration:none;}
 .rightBoxHeading, .leftBoxHeading, .centerBoxHeading {margin:0;padding:1.0em 0.2em;}
 /*sidebox content styles*/
 .sideBoxContent {padding:1.0em;margin-bottom:10px;}
@@ -201,7 +201,7 @@ ul.list-links li:hover, ol.list-links li:hover{}
 #cartBoxListWrapper li, .orderHistList li{list-style-type:none;padding:8px 0;}
 #cartBoxListWrapper li a, .orderHistList li a{display:inline !important;}
 .orderHistList i{margin-left:10px;display:inline;}
-#cartBoxListWrapper, .orderHistList {margin:0;padding:0;} 
+#cartBoxListWrapper, .orderHistList {margin:0;padding:0;}
 #shoppingcartContent hr{display:none;}
 .cartBoxTotal{padding:10px !important;}
 .sideBoxContent .productPriceDiscount{font-size:130%;margin-top:3px;}
@@ -225,7 +225,7 @@ ul.list-links li:hover, ol.list-links li:hover{}
 .normalprice, .productSpecialPriceSale {text-decoration:line-through;}
 .productSpecialPrice, .productSalePrice, .productSpecialPriceSale, .productPriceDiscount {}
 #ezPageBoxList ul {list-style-type:none;}
-#ezPageBoxList li, .cartBoxTotal {margin:0;padding: 0.2em 0;} 
+#ezPageBoxList li, .cartBoxTotal {margin:0;padding: 0.2em 0;}
 #cartBoxEmpty, #cartBoxVoucherBalance {font-weight:bold;}
 .totalBox {width:5.5em;text-align:right;padding:0.2em;}
 .lineTitle, .amount {text-align:right;padding:0.2em;}
@@ -287,6 +287,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .navSplitPagesLinks {display:inline-block;}
 .navSplitPagesLinks a{padding:10px;font-weight:bold;text-decoration:none;}
 .navSplitPagesLinks a:hover{}
+.navSplitEmpty3rdColumn {margin-left: 0 !important;}
 .current{padding:10px;}
 .productListing-rowheading{padding:10px 10px;text-align:center;}
 .productListing-rowheading a{display:inline-block;padding:10px 30px;text-decoration:none;}
@@ -296,14 +297,14 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .productListing-even, .productListing-odd{clear:both;}
 .productListing-even:hover, .productListing-odd:hover{}
 .productListing-even form, .productListing-odd form{float:right;}
-.productListing-even input[type=text], .productListing-odd input[type=text]{height:38px;width:20%;float:left;position:relative;top:-1px;}
+.cart-add input[type=text]{width:auto !important;}
 .list-image{min-height:200px;min-width:20%;float:left;margin-right:5%;}
 .list-price{font-size:140%;margin:5px 0;}
 .list-more{display:block;padding:8px 20px;float:right;text-align:center;text-decoration:none !important;width:50%;}
 .list-more:hover{}
 #indexProductList .list-more{width:auto;margin-top:-50px;}
 #advancedsearchresultBody .list-more{width:auto;}
-.itemTitle{font-weight:normal;font-size:150%;margin:5px 0;}
+.itemTitle{font-weight:normal;font-size:150%;margin:5px 0;width:80%;}
 .itemTitle a{text-decoration:none;}
 .itemTitle a:hover{}
 .tabTable{margin-bottom:20px;}
@@ -312,12 +313,12 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .list-input{float:right;width:10%;}
 span.list-addtext{display:block;text-align:center;}
 .list-input input[type=text]{width:100%;}
-.prod-list-wrap{text-align:center;padding:20px 20px 10px 20px;clear:both;height:40px;}
+.prod-list-wrap{text-align:center;padding:20px 10px 10px 20px;clear:both;height:40px;}
 #productsListingListingBottomLinks, #allProductsListingTopLinks, #allProductsListingBottomLinks, #featuredProductsListingTopLinks, #featuredProductsListingBottomLinks, #newProductsDefaultListingTopLinks, #newProductsDefaultListingBottomLinks, #productsListingListingTopLinks{width:47%;margin-left:25%;text-align:center;}
 #productsListingBottomNumber, #allProductsListingBottomNumber, #allProductsListingTopNumber, #productsListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber{width:25%;margin-left:-74%;margin-top:0;}
 #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber{margin-left:-72.5%;}
 #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber{margin-left:-71%;}
-.button-top{width:25%;text-align:right;margin:-10px 20px 0 0;}
+.button-top{width:25%;text-align:right;margin:-10px 0px 0 0;}
 .button-bottom{height:auto;padding:9px 0 5px 0;}
 #specialsListing .prod-list-wrap{padding:20px 20px 0 20px;}
 #productListing{margin-bottom:20px;}
@@ -404,7 +405,7 @@ h4.optionName{margin:1% 30px 0 30px;padding:0;}
 #reviewsInfoDefault .rating{margin:10px 0;}
 
 /*bof my account*/
-#myAccountGen li, #myAccountNotify li {margin:0;list-style-type:none;} 
+#myAccountGen li, #myAccountNotify li {margin:0;list-style-type:none;}
 #myAccountGen li a, #myAccountNotify li a{text-decoration:none;}
 .accountTotalDisplay, .accountTaxDisplay {width:20%;text-align:right;}
 .accountQuantityDisplay {width:10%;vertical-align:top;}

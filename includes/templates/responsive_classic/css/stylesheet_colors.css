@@ -39,7 +39,7 @@ span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.
 
 /*bof border colors*/
 HR {border-bottom:1px solid #9a9a9a;}
-input, TEXTAREA{border:3px solid #ddd;}
+input, TEXTAREA{border:3px solid #ccc;}
 #navMain ul li {border-right:1px solid #fff;}
 #navCatTabs li {border-left: 1px solid #05919f;}
 #navCatTabs ul li:last-child{border-right:1px solid #05919f;}

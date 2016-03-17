@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: picaflor-azul Thu Jan 7 22:38:14 2016 -0500 New in v1.5.5 $
+ * @version $Id: picaflor-azul Thu Mar 17 12:13:18 2016 -0500 New in v1.5.5 $
  *
  */
 
@@ -396,6 +396,7 @@ div#headerWrapper,div#navSuppWrapper {width:100%;margin:auto;}
 #navCatTabs ul li:last-child, #navCatTabs ul li{border:none;padding:5px;}
 ul.list-links li a, ol.list-links li a{padding-right:0;padding-left:5px;}
 #productsListingBottomNumber, #allProductsListingBottomNumber, #allProductsListingTopNumber, #productsListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber{width:16% !important;}
+.button-top{margin-right:15px;}
 }
 
 @media (min-width:1500px) and (max-width:1800px) {
