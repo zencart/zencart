@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: picaflor-azul Wed Feb 10 20:03:31 2016 -0500 New in v1.5.5 $
+ * @version $Id: picaflor-azul Wed Mar 16 19:21:17 2016 -0500 New in v1.5.5 $
  *
  */
 
@@ -421,6 +421,7 @@ legend{line-height:25px;}
 #navCatTabsWrapper, #navEZPagesTop, #navSuppWrapper{display:none;visibility:hidden;}
 h2{line-height:22px;}
 input[type=password], select, input[type=number], input[type=tel], input[type=text], input[type=email]{width:80%;margin-left:20px;}
+select{width:80% !important;}
 input[type=date]{width:50%;}
 textarea{width:93%;margin:0;}
 h1{text-align:center;}
@@ -436,4 +437,5 @@ fieldset p{width:90%;margin:0 auto;}
 .gvBal{float:none;}
 #sendSpendWrapper{width:auto;}
 #checkoutSuccess fieldset .buttonRow.forward{margin:0 !important;}
+#advSearchDefault input.cssButton.submit_button.button.button_search, #advSearchDefault .button_search:hover{width:100%;margin-left:0;margin-bottom:10px;height:45px;}
 }
