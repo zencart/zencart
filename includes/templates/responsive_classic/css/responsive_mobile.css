@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: picaflor-azul Wed Mar 16 19:21:17 2016 -0500 New in v1.5.5 $
+ * @version $Id: picaflor-azul Thu Mar 17 12:13:18 2016 -0500 New in v1.5.5 $
  *
  */
 
@@ -113,7 +113,8 @@ div#productListing tr.productListing-odd {clear:both;}
 .navSplitPagesResult{margin-top:10px;}
 .navSplitPagesLinks{margin:20px 0;}
 #filter-wrapper{text-align:center;}
-#filter-wrapper select{width:48%;}
+#filter-wrapper select{width:48%;margin-top:10px;}
+.cart-add{margin-right:10px;}
 #productsListingListingBottomLinks, #productsListingListingTopLinks, #newProductsDefaultListingBottomLinks, #newProductsDefaultListingTopLinks, #featuredProductsListingBottomLinks, #featuredProductsListingTopLinks, #allProductsListingBottomLinks, #allProductsListingTopLinks{clear:both;float:none;display:block;width:100%;text-align:center;margin:0;}
 #reviewsDefaultListingTopNumber, #reviewsDefaultListingBottomNumber, #productsListingBottomNumber, #productsListingTopNumber, #newProductsDefaultListingBottomNumber, #newProductsDefaultListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #allProductsListingTopNumber, #allProductsListingBottomNumber{clear:both;float:none;width:100%;text-align:center;margin-left:0;}
 .button-top{width:100%;margin:0;text-align:center;float:none;clear:both;}
@@ -340,7 +341,7 @@ div#productListing tr.productListing-odd {clear:both;}
 .navSplitPagesResult{margin-top:10px;}
 .navSplitPagesLinks{margin:20px 0;}
 #filter-wrapper{text-align:center;}
-#filter-wrapper select{width:48%;}
+#filter-wrapper select{width:48%;margin-top:10px;}
 #productsListingListingBottomLinks, #productsListingListingTopLinks, #newProductsDefaultListingBottomLinks, #newProductsDefaultListingTopLinks, #featuredProductsListingBottomLinks, #featuredProductsListingTopLinks, #allProductsListingBottomLinks, #allProductsListingTopLinks{clear:both;float:none;display:block;width:100%;text-align:center;margin:0;}
 #reviewsDefaultListingTopNumber, #reviewsDefaultListingBottomNumber, #productsListingBottomNumber, #productsListingTopNumber, #newProductsDefaultListingBottomNumber, #newProductsDefaultListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #allProductsListingTopNumber, #allProductsListingBottomNumber{clear:both;float:none;width:100%;text-align:center;margin-left:0;}
 .button-top{width:100%;margin:0;text-align:center;float:none;clear:both;}
@@ -355,11 +356,12 @@ div#productListing tr.productListing-odd {clear:both;}
 .list-more{margin:10px 0;float:none;padding:15px 0;}
 .productListing-even, .productListing-odd{text-align:center;line-height:165%;}
 .listingDescription{width:100%;}
-.productListing-even input[type=text], .productListing-odd input[type=text]{width:30% !important;float:none;top:0;}
 .specialsListBoxContents:nth-child(odd), .centerBoxContentsAlsoPurch:nth-child(odd), .centerBoxContentsFeatured:nth-child(odd), .centerBoxContentsSpecials:nth-child(odd), .centerBoxContentsNew:nth-child(odd){background:#f4f4f4;}
 .navSplitPagesResult{text-align:center;}
 .navSplitPagesLinks{display:block;text-align:center;}
 #indexProductList .list-more{margin-top:0;}
+.cart-add, .productListing-odd form, .productListing-even form {float:none;}
+.list-input input{width:50% !important;}
 
 /*bof product info*/
 #pinfo-left, #pinfo-right, #cart-box, div#productReviewLink{float:none;}

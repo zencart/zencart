@@ -56,13 +56,13 @@ HR {height: 1px;margin-top:0.5em;border:none;}
 
 /*bof form elements*/
 CODE {font-family:arial, verdana, helvetica, sans-serif;font-size:1em;}
-FORM, SELECT, INPUT {display:inline;font-size:1em;margin:0.1em;}
+FORM, SELECT, INPUT {display:inline;font-size:1em;margin:0 0.1em 0 0;}
 input{height:35px;padding-left:5px;margin-bottom:10px;}
 select{border:none;padding-left:5px;width:51%;}
 TEXTAREA {margin:auto;display:block;width:66%;}
 input:focus, select:focus, textarea:focus {}
 legend{padding:0;display:table;text-align:center;width:100%;padding:10px 0;font-size:1.3em;}
-fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;/*margin-bottom:20px;*/}
+fieldset{border:0;padding:0.01em 0 0 0;padding-bottom:20px;padding-top:20px;margin:0;min-width:0;margin-bottom:20px;}
 body:not(:-moz-handler-blocked) fieldset{display:table-cell;}
 fieldset > fieldset{}
 fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;background:none;}
@@ -122,6 +122,10 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:4
 #navMainSearch {width:38%;text-align:right;}
 #navMainSearch input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 #navMainSearch input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
+
+.cart-add input[type=text]{vertical-align:top;display:inline-block;border:0;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;height:42px;border:3px solid #ccc;}
+.cart-add input[type=submit], #navMainSearch input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
+
 
 /*top middle*/
 #logo{margin:10px 0;}
@@ -297,7 +301,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .productListing-even, .productListing-odd{clear:both;}
 .productListing-even:hover, .productListing-odd:hover{}
 .productListing-even form, .productListing-odd form{float:right;}
-.productListing-even input[type=text], .productListing-odd input[type=text]{height:38px;width:20%;float:left;position:relative;top:-1px;}
+.cart-add input[type=text]{width:auto !important;}
 .list-image{min-height:200px;min-width:20%;float:left;margin-right:5%;}
 .list-price{font-size:140%;margin:5px 0;}
 .list-more{display:block;padding:8px 20px;float:right;text-align:center;text-decoration:none !important;width:50%;}
@@ -313,12 +317,12 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .list-input{float:right;width:10%;}
 span.list-addtext{display:block;text-align:center;}
 .list-input input[type=text]{width:100%;}
-.prod-list-wrap{text-align:center;padding:20px 20px 10px 20px;clear:both;height:40px;}
+.prod-list-wrap{text-align:center;padding:20px 10px 10px 20px;clear:both;height:40px;}
 #productsListingListingBottomLinks, #allProductsListingTopLinks, #allProductsListingBottomLinks, #featuredProductsListingTopLinks, #featuredProductsListingBottomLinks, #newProductsDefaultListingTopLinks, #newProductsDefaultListingBottomLinks, #productsListingListingTopLinks{width:47%;margin-left:25%;text-align:center;}
 #productsListingBottomNumber, #allProductsListingBottomNumber, #allProductsListingTopNumber, #productsListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber{width:25%;margin-left:-74%;margin-top:0;}
 #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber{margin-left:-72.5%;}
 #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber{margin-left:-71%;}
-.button-top{width:25%;text-align:right;margin:-10px 20px 0 0;}
+.button-top{width:25%;text-align:right;margin:-10px 0px 0 0;}
 .button-bottom{height:auto;padding:9px 0 5px 0;}
 #specialsListing .prod-list-wrap{padding:20px 20px 0 20px;}
 #productListing{margin-bottom:20px;}
