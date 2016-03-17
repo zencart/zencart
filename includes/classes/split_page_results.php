@@ -14,7 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Split Page Result Class
  *
- * An sql paging class, that allows for sql reslt to be shown over a number of pages using  simple navigation system
+ * An sql paging class, that allows for sql result to be shown over a number of pages using simple navigation system
  * Overhaul scheduled for subsequent release
  *
  * @package classes
