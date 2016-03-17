@@ -287,6 +287,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .navSplitPagesLinks {display:inline-block;}
 .navSplitPagesLinks a{padding:10px;font-weight:bold;text-decoration:none;}
 .navSplitPagesLinks a:hover{}
+.navSplitEmpty3rdColumn {margin-left: 0 !important;}
 .current{padding:10px;}
 .productListing-rowheading{padding:10px 10px;text-align:center;}
 .productListing-rowheading a{display:inline-block;padding:10px 30px;text-decoration:none;}
