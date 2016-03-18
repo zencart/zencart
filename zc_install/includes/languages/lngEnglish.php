@@ -161,7 +161,7 @@ define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
 define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable');
 
 define('TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE', 'Your configure.php file is an old version and requires updating before we can continue.');
-define('TEXT_ERROR_HTACCESS_SUPPORT', 'Problems with .htaccess support');
+define('TEXT_ERROR_HTACCESS_SUPPORT', 'Problems with .htaccess support (it is not properly denying access to files that ought to be restricted).');
 define('TEXT_ERROR_SESSION_SUPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
 define('TEXT_ERROR_SESSION_SUPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
@@ -194,8 +194,8 @@ define('TEXT_NAVBAR_INSTALLATION_INSTRUCTIONS', 'Installation Instructions');
 define('TEXT_NAVBAR_FORUM_LINK', 'Forum');
 define('TEXT_NAVBAR_WIKI_LINK', 'Wiki');
 
-define('TEXT_HELP_TITLE_HTACCESSSUPPORT', 'htaccess support');
-define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with the htaccess support on your server. This may be because you are not using Apache as your Web Server or .htaccess support is disabled or not configured correctly.<br><br>htaccess support is used to provide security for certain files/folders on your server.');
+define('TEXT_HELP_TITLE_HTACCESSSUPPORT', '.htaccess support');
+define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with the htaccess support on your server.<br><br>.htaccess support is used to provide security for preventing access to certain files/folders.<br><br>Possible causes of this problem include: maybe you are not using Apache as your Web Server or .htaccess support is disabled or not configured correctly, OR MORE LIKELY: the .htaccess files that come with Zen Cart (in its various subdirectories) have not been uploaded to your server.<br><br><strong>(Note that any file starting with a "." is usually treated as a "hidden" file, so it could be that your FTP program failed to upload these because you have the display/transfer of hidden files turned off in its settings.)</strong><br><br>This message is shown after zc_install attempted to access files on your server that should normally be blocked by the security rules in the built-in .htaccess files.<br><br>You may proceed with installing despite this situation, but be advised that your site is less secure than it ought to be. Your hosting company should be able to assist you with ensuring .htaccess support is enabled in your site.');
 define('TEXT_HELP_TITLE_FOLDERPERMS', 'Folder Permissions');
 define('TEXT_HELP_CONTENT_FOLDERPERMS', 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders" target="_blank">http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders</a>');
 define('TEXT_HELP_TITLE_CONNECTIONDATABASECHECK', 'Initial Database Connection');
@@ -260,7 +260,7 @@ define('TEXT_DB_VERSION_NOT_FOUND', 'A Zen Cart database for %s was not found!')
 
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
-define('TEXT_HELP_CONTENT_AGREETOTERMS', "<h2>The GNU General Public License (GPL)</h2>
+define('TEXT_HELP_CONTENT_AGREETOTERMS', "<a href='http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html' target='_blank'>Original GPL 2.0 text</a><h2>The GNU General Public License (GPL)</h2>
 
 <h3>Version 2, June 1991</h3>
 
@@ -546,12 +546,13 @@ YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
 PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.</p>
 
-         <p>END OF TERMS AND CONDITIONS</p>
+         <p><strong>END OF TERMS AND CONDITIONS</strong></p>
 
 
 
-
-
+<br>
+<br>
+<br>
 
 
 
