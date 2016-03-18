@@ -573,8 +573,8 @@ class systemChecker
         CURLOPT_FOLLOWLOCATION => false,    // follow redirects
         CURLOPT_ENCODING       => "",       // handle all encodings
         CURLOPT_AUTOREFERER    => true,     // set referer on redirect
-        CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
-        CURLOPT_TIMEOUT        => 120,      // timeout on response
+        CURLOPT_CONNECTTIMEOUT => 3,        // timeout on connect
+        CURLOPT_TIMEOUT        => 3,        // timeout on response
         CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
     );
 
