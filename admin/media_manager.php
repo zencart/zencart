@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: media_manager.php  drbyte Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Sun Oct 18 02:03:48 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -34,9 +34,8 @@
 
       break;
       case 'new_cat':
-    $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
-    $products_filter = $new_product_query->fields['products_id'];
-    zen_redirect(zen_href_link(FILENAME_MEDIA_MANAGER, 'action=products&current_category_id=' . $current_category_id . '&mID=' . $_GET['mID'] . '&page=' . $_GET['page']));
+        $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
+        zen_redirect(zen_href_link(FILENAME_MEDIA_MANAGER, 'action=products&current_category_id=' . $current_category_id . '&mID=' . $_GET['mID'] . '&page=' . $_GET['page']));
       break;
       case 'remove_clip':
         if (isset($_POST['mID']) && isset($_POST['clip_id']))
@@ -57,6 +56,7 @@
             if (preg_match('/'.$ext->fields['type_ext'] . '/', $clip_name)) {
 
               if ($media_upload = new upload('clip_filename')) {
+                $media_upload->set_extensions(array('mp3','mp4','swf','avi','mpg','wma','rm','ra','ram','wmv','epub','flv','ogg','m4v','m4a','webm'));
                 $media_upload->set_destination(DIR_FS_CATALOG_MEDIA . $_POST['media_dir']);
                 if ($media_upload->parse() && $media_upload->save()) {
                   $media_upload_filename = zen_db_prepare_input($_POST['media_dir'] . $media_upload->filename);
@@ -249,14 +249,7 @@
       $contents[] = array('text' => TEXT_MEDIA_EDIT_INSTRUCTIONS);
       $contents[] = array('text' => zen_draw_separator('pixel_black.gif'));
 
-      $dir = @dir(DIR_FS_CATALOG_MEDIA);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (@is_dir(DIR_FS_CATALOG_MEDIA . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != ".." && $file != '.svn') {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_MEDIA);
       $contents[] = array('text' => '<br />' . TEXT_ADD_MEDIA_CLIP . zen_draw_file_field('clip_filename'));
       $contents[] = array('text' => TEXT_MEDIA_CLIP_DIR . ' ' . zen_draw_pull_down_menu('media_dir', $dir_info));
       $media_type_query = "select type_id, type_name, type_ext from " . TABLE_MEDIA_TYPES;

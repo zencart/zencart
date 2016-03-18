@@ -6,11 +6,11 @@
  * show the products of a specified record company
  *
  * @package productTypes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Jul 16 12:08:58 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Mon Oct 19 09:51:56 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -138,7 +138,7 @@ if (!isset($select_column_list)) $select_column_list = "";
       }
     } else {
       $sort_col = substr($_GET['sort'], 0 , 1);
-      $sort_order = substr($_GET['sort'], 1);
+      $sort_order = substr($_GET['sort'], -1);
       switch ($column_list[$sort_col-1])
       {
         case 'PRODUCT_LIST_MODEL':

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Jun 14 20:02:41 2014 +0100 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Sun Oct 18 02:12:50 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -43,6 +43,7 @@
                       where record_company_id = '" . (int)$record_company_id . "'");
       } else {
         $record_company_image = new upload('record_company_image');
+        $record_company_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $record_company_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $record_company_image->parse() &&  $record_company_image->save()) {
           // remove image from database if none
@@ -236,15 +237,8 @@
       $contents[] = array('text' => TEXT_NEW_INTRO);
       $contents[] = array('text' => '<br>' . TEXT_RECORD_COMPANY_NAME . '<br>' . zen_draw_input_field('record_company_name', '', zen_set_field_length(TABLE_RECORD_COMPANY, 'record_company_name')));
       $contents[] = array('text' => '<br>' . TEXT_RECORD_COMPANY_IMAGE . '<br>' . zen_draw_file_field('record_company_image'));
-      $dir = @dir(DIR_FS_CATALOG_IMAGES);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
 
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
       $default_directory = 'record_company/';
 
       $contents[] = array('text' => '<BR />' . TEXT_RECORD_COMPANY_IMAGE_DIR . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
@@ -266,15 +260,10 @@
       $contents[] = array('text' => TEXT_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_RECORD_COMPANY_NAME . '<br>' . zen_draw_input_field('record_company_name', htmlspecialchars($aInfo->record_company_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_RECORD_COMPANY, 'record_company_name')));
       $contents[] = array('text' => '<br />' . TEXT_RECORD_COMPANY_IMAGE . '<br>' . zen_draw_file_field('record_company_image') . '<br />' . $aInfo->record_company_image);
-      $dir = @dir(DIR_FS_CATALOG_IMAGES);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
+
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
       $default_directory = substr( $aInfo->record_company_image, 0,strpos( $aInfo->record_company_image, '/')+1);
+
       $contents[] = array('text' => '<BR />' . TEXT_RECORD_COMPANY_IMAGE_DIR . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
       $contents[] = array('text' => '<br />' . TEXT_RECORD_COMPANY_IMAGE_MANUAL . '&nbsp;' . zen_draw_input_field('record_company_image_manual'));
       $contents[] = array('text' => '<br />' . zen_info_image($aInfo->record_company_image, $aInfo->record_company_name));

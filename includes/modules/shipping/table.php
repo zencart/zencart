@@ -1,10 +1,10 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: table.php 14498 2009-10-01 20:16:16Z ajeh $
+ * @version $Id: Author: DrByte  Sat Oct 17 22:52:38 2015 -0400 Modified in v1.5.5 $
  */
 /**
  * Enter description here...
@@ -46,7 +46,7 @@ class table extends base {
    *
    * @return table
    */
-  function table() {
+  function __construct() {
     global $order, $db;
 
     $this->code = 'table';
@@ -71,7 +71,10 @@ class table extends base {
 
     if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_TABLE_ZONE > 0) ) {
       $check_flag = false;
-      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_TABLE_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
+                             where geo_zone_id = '" . MODULE_SHIPPING_TABLE_ZONE . "'
+                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
+                             order by zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {
           $check_flag = true;

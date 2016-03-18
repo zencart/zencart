@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Mar 4 16:45:41 2014 -0500 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Sun Oct 18 03:43:51 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -89,6 +89,7 @@
         if (empty($banners_html_text)) {
           if (empty($banners_image_local)) {
             $banners_image = new upload('banners_image');
+            $banners_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
             $banners_image->set_destination(DIR_FS_CATALOG_IMAGES . $banners_image_target);
             if ( ($banners_image->parse() == false) || ($banners_image->save() == false) ) {
               $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
@@ -131,21 +132,15 @@
 
           $sql = "UPDATE " . TABLE_BANNERS . "
                   SET
-                    date_scheduled = :scheduledDate,
+                    date_scheduled = DATE_ADD(:scheduledDate, INTERVAL '00:00:00' HOUR_SECOND),
                     expires_date = DATE_ADD(:expiresDate, INTERVAL '23:59:59' HOUR_SECOND),
                     expires_impressions = " . ($expires_impressions == 0 ? "null" : ":expiresImpressions") . "
                     WHERE banners_id = :bannersID";
-          if ($expires_impressions > 0) {
-            $sql = $db->bindVars($sql, ':expiresImpressions', $expires_impressions, 'integer');
-          }
-          if ($date_scheduled != '') {
-            $sql = $db->bindVars($sql, ':scheduledDate', $date_scheduled, 'date');
-          }
-          if ($expires_date != '') {
-            $sql = $db->bindVars($sql, ':expiresDate', $expires_date, 'date');
-          }
-            $sql = $db->bindVars($sql, ':bannersID', $banners_id, 'integer');
-            $db->Execute($sql);
+          $sql = $db->bindVars($sql, ':expiresImpressions', $expires_impressions, 'integer');
+          $sql = $db->bindVars($sql, ':scheduledDate', $date_scheduled, 'date');
+          $sql = $db->bindVars($sql, ':expiresDate', $expires_date, 'date');
+          $sql = $db->bindVars($sql, ':bannersID', $banners_id, 'integer');
+          $db->Execute($sql);
 
           zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id));
         } else {
@@ -250,6 +245,7 @@ function popupImageWindow(url) {
   }
   // -->
 </script>
+<?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body onload="init()">
 <div id="spiffycalendar" class="text"></div>
@@ -275,9 +271,9 @@ function popupImageWindow(url) {
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND; ?></td>
-            <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '&nbsp' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
-            <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_BANNER_ON_SSL . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_blue_on.gif', IMAGE_ICON_BANNER_ON_SSL_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_blue_off.gif', IMAGE_ICON_BANNER_ON_SSL_OFF); ?></td>
+            <td class="smallText" align="center" width="100"><?php echo TABLE_HEADING_STATUS . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF); ?></td>
             <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_BANNER_OPEN_NEW_WINDOWS . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_orange_on.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_orange_off.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF); ?></td>
+            <td class="smallText" align="center" width="100"><?php echo TEXT_LEGEND_BANNER_ON_SSL . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_blue_on.gif', IMAGE_ICON_BANNER_ON_SSL_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_blue_off.gif', IMAGE_ICON_BANNER_ON_SSL_OFF); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -312,9 +308,9 @@ function popupImageWindow(url) {
                                      from " . TABLE_BANNERS . "
                                      where banners_id = '" . (int)$bID . "'");
 
-      $bInfo->objectInfo($banner->fields);
+      $bInfo->updateObjectInfo($banner->fields);
     } elseif (zen_not_null($_POST)) {
-      $bInfo->objectInfo($_POST);
+      $bInfo->updateObjectInfo($_POST);
     }
 
     if (!isset($bInfo->status)) $bInfo->status = '1';
@@ -411,7 +407,7 @@ function popupImageWindow(url) {
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_BANNERS_HTML_TEXT; ?></td>
-            <td class="main"><?php echo TEXT_BANNERS_HTML_TEXT_INFO . '<br />' . zen_draw_textarea_field('banners_html_text', 'soft', '60', '5', htmlspecialchars($bInfo->banners_html_text, ENT_COMPAT, CHARSET, TRUE)); ?></td>
+            <td class="main"><?php echo TEXT_BANNERS_HTML_TEXT_INFO . '<br />' . zen_draw_textarea_field('banners_html_text', 'soft', '80', '10', htmlspecialchars($bInfo->banners_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="' . (preg_match('/.*?(?:\[CDATA\[|<script)/', $bInfo->banners_html_text) ? 'noEditor' : 'editorHook') . '"'); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

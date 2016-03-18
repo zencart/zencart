@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Author: DrByte  Tue Mar 1 14:28:36 2016 -0500 New in v1.5.5 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+.plainbox, div.callout {border: 1px dashed; border-color: #C96E29; margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:11px ;}
+.smaller {font-size:10px ;}
+.error {color:#FF0000; }
+.code {font-family: "Lucida Console", Monaco, monospace; font-size:14px; color:#c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.center {text-align: center}
+-->
+</style>
+<title>Zen Cart&reg; Changed Files</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro center">Welcome to Zen Cart&reg;</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="center small">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.</p>
+</fieldset>
+<br>
+
+
+<fieldset>
+<h1 class="intro center">Version 1.5.5</h1>
+<p>NOTE:<br>
+  For a listing of What's New in this release, please see the <a href="whatsnew_1.5.5.html" target="_blank">whatsnew_1.5.5.html</a> file in the <span class="code">/docs</span> folder. <br>
+      <a href="https://www.zen-cart.com/releasenotes" target="_blank">You may also see the list in the support forum here</a>. <br>
+      <br>
+      The following is a list of FILE/FOLDER adds/deletes/changes: </p>
+
+<h1>NEW Files ADDED to v1.5.5 (since release of v1.5.4)</h1>
+<ul>
+<li>admin/currency_cron.php</li>
+<li>admin/index_dashboard.php</li>
+<li>admin/index_setup_wizard.php</li>
+<li>admin/includes/ckeditor.php</li>
+<li>admin/includes/defined_paths.php</li>
+<li>admin/includes/developers_tool_kit.css</li>
+<li>admin/includes/auto_loaders/currency_cron.core.php</li>
+<li>admin/includes/classes/AdminRequestSanitizer.php</li>
+<li>admin/includes/extra_datafiles/sagepay_transaction_database_tables.php</li>
+<li>admin/includes/languages/english/ckeditor.php</li>
+<li>email/email_common.css</li>
+<li>extras/paypal_tlstest.php</li>
+<li>includes/auto_loaders/config.zca_layout.php</li>
+<li>includes/classes/Mobile_Detect.php</li>
+<li>includes/classes/categories_ul_generator.php</li>
+<li>includes/classes/vendors/PHPMailer/ (whole folder)</li>
+<li>includes/classes/vendors/index.html</li>
+<li>includes/defined_paths.php</li>
+<li>includes/extra_datafiles/sagepay_database_tables.php</li>
+<li>includes/functions/extra_functions/zca_responsive_functions.php</li>
+<li>includes/init_includes/init_zca_layout.php</li>
+<li>includes/languages/english/extra_definitions/responsive_classic/product_free_shipping.php</li>
+<li>includes/languages/english/html_includes/responsive_classic/ (entire folder)</li>
+<li>includes/languages/english/modules/payment/firstdata_hco.php</li>
+<li>includes/languages/english/modules/payment/payeezyjszc.php</li>
+<li>includes/languages/english/modules/payment/sagepay_zc_form.php</li>
+<li>includes/languages/english/responsive_classic/  (entire folder)</li>
+<li>includes/modules/pages/checkout_payment/jscript_payeezyjs.php</li>
+<li>includes/modules/payment/firstdata_hco.php</li>
+<li>includes/modules/payment/payeezyjszc.php</li>
+<li>includes/modules/payment/sagepay_zc_form.php</li>
+<li>includes/modules/payment/sagepay_zc/AbstractSagepayAPI.php</li>
+<li>includes/modules/payment/sagepay_zc/SagepayBasket.php</li>
+<li>includes/modules/payment/sagepay_zc/SagepayCustomer.php</li>
+<li>includes/modules/payment/sagepay_zc/SagepayUtil.php</li>
+<li>includes/modules/payment/sagepay_zc/sagepay_form_admin_notification.php</li>
+<li>includes/modules/payment/sagepay_zc/sagepay_zc_payment.php</li>
+<li>includes/modules/responsive_classic/product_listing.php</li>
+<li>includes/templates/responsive_classic/ (entire folder)</li>
+<li>includes/templates/template_default/images/always-free-shipping.png</li>
+<li>includes/templates/template_default/images/call_for_prices.png</li>
+<li>includes/templates/template_default/images/down_for_maintenance.png</li>
+<li>includes/templates/template_default/images/free.png</li>
+</ul>
+<h1>DELETED Files in v1.5.5 (since release of v1.5.4)</h1>
+<ul>
+<li>admin/linkpoint_review.php</li>
+<li>admin/includes/index.css</li>
+<li>admin/includes/classes/payment_module_info.php</li>
+<li>admin/includes/extra_datafiles/linkpoint_api_database_tables.php</li>
+<li>admin/includes/init_includes/init_currencies.php</li>
+<li>admin/includes/languages/english/linkpoint_review.php</li>
+<li>admin/includes/languages/english/extra_definitions/linkpoint_review.php</li>
+<li>email/email_template_tell_a_friend.html</li>
+<li>includes/classes/class.phpbb.php</li>
+<li>includes/classes/class.smtp.php (this logic replaced with files in the vendors/phpMailer package)</li>
+<li>includes/classes/support/ (whole folder, replaced with vendors/phpMailer)</li>
+<li>includes/classes/vendors/password_compat-master/.travis.yml (these auxilary files are not needed, but password_compat.php is retained)</li>
+<li>includes/classes/vendors/password_compat-master/README.md</li>
+<li>includes/classes/vendors/password_compat-master/phpunit.xml.dist</li>
+<li>includes/classes/vendors/password_compat-master/test/ (folder)</li>
+<li>includes/extra_datafiles/linkpoint_api_database_tables.php</li>
+<li>includes/languages/english/modules/payment/linkpoint_api.php</li>
+<li>includes/modules/payment/linkpoint_api.php</li>
+<li>includes/modules/payment/linkpoint_api/ (folder)</li>
+</ul>
+<h1>CHANGED Files in v1.5.5 (since release of v1.5.4)</h1>
+<p>Remember: in addition to this list, the above lists of NEW and DELETED files also need to be considered.</p>
+<ul>
+<li>/ajax.php</li>
+<li>/ipn_main_handler.php</li>
+<li>extras/.htaccess</li>
+<li>extras/curltester.php</li>
+<li>extras/ipncheck.php</li>
+<li>pub/.htaccess</li>
+<li>admin/admin_account.php</li>
+<li>admin/admin_page_registration.php</li>
+<li>admin/alert_page.php</li>
+<li>admin/attributes_controller.php</li>
+<li>admin/banner_manager.php</li>
+<li>admin/categories.php</li>
+<li>admin/configuration.php</li>
+<li>admin/coupon_admin.php</li>
+<li>admin/currencies.php</li>
+<li>admin/customers.php</li>
+<li>admin/define_pages_editor.php</li>
+<li>admin/developers_tool_kit.php</li>
+<li>admin/document_general.php</li>
+<li>admin/document_product.php</li>
+<li>admin/ezpages.php</li>
+<li>admin/gv_mail.php</li>
+<li>admin/index.php</li>
+<li>admin/languages.php</li>
+<li>admin/layout_controller.php</li>
+<li>admin/login.php</li>
+<li>admin/mail.php</li>
+<li>admin/manufacturers.php</li>
+<li>admin/media_manager.php</li>
+<li>admin/modules.php</li>
+<li>admin/newsletters.php</li>
+<li>admin/options_name_manager.php</li>
+<li>admin/options_values_manager.php</li>
+<li>admin/orders.php</li>
+<li>admin/password_forgotten.php</li>
+<li>admin/product.php</li>
+<li>admin/product_free_shipping.php</li>
+<li>admin/product_music.php</li>
+<li>admin/product_types.php</li>
+<li>admin/products_price_manager.php</li>
+<li>admin/products_to_categories.php</li>
+<li>admin/profiles.php</li>
+<li>admin/record_artists.php</li>
+<li>admin/record_company.php</li>
+<li>admin/reviews.php</li>
+<li>admin/server_info.php</li>
+<li>admin/sqlpatch.php</li>
+<li>admin/stats_customers.php</li>
+<li>admin/stats_products_purchased.php</li>
+<li>admin/template_select.php</li>
+<li>admin/users.php</li>
+<li>admin/whos_online.php</li>
+<li>admin/includes/application_top.php</li>
+<li>admin/includes/attributes_preview.php</li>
+<li>admin/includes/cssjsmenuhover.css</li>
+<li>admin/includes/dist-configure.php</li>
+<li>admin/includes/footer.php</li>
+<li>admin/includes/header.php</li>
+<li>admin/includes/header_navigation.php</li>
+<li>admin/includes/menu.css</li>
+<li>admin/includes/menu.js</li>
+<li>admin/includes/stylesheet.css</li>
+<li>admin/includes/auto_loaders/config.core.php</li>
+<li>admin/includes/classes/box.php</li>
+<li>admin/includes/classes/class.admin.zcObserverLogEventListener.php</li>
+<li>admin/includes/classes/class.admin.zcObserverLogWriterDatabase.php</li>
+<li>admin/includes/classes/currencies.php</li>
+<li>admin/includes/classes/language.php</li>
+<li>admin/includes/classes/logger.php</li>
+<li>admin/includes/classes/message_stack.php</li>
+<li>admin/includes/classes/object_info.php</li>
+<li>admin/includes/classes/order.php</li>
+<li>admin/includes/classes/split_page_results.php</li>
+<li>admin/includes/classes/split_page_results_new.php</li>
+<li>admin/includes/classes/table_block.php</li>
+<li>admin/includes/classes/upload.php</li>
+<li>admin/includes/extra_configures/enable_error_logging.php</li>
+<li>admin/includes/functions/admin_access.php</li>
+<li>admin/includes/functions/functions_prices.php</li>
+<li>admin/includes/functions/general.php</li>
+<li>admin/includes/functions/html_output.php</li>
+<li>admin/includes/functions/localization.php</li>
+<li>admin/includes/init_includes/init_database.php</li>
+<li>admin/includes/init_includes/init_db_config_read.php</li>
+<li>admin/includes/init_includes/init_errors.php</li>
+<li>admin/includes/init_includes/init_file_db_names.php</li>
+<li>admin/includes/init_includes/init_general_funcs.php</li>
+<li>admin/includes/init_includes/init_html_editor.php</li>
+<li>admin/includes/init_includes/init_sanitize.php</li>
+<li>admin/includes/init_includes/init_sessions.php</li>
+<li>admin/includes/languages/english.php</li>
+<li>admin/includes/languages/english/alert_page.php</li>
+<li>admin/includes/languages/english/countries.php</li>
+<li>admin/includes/languages/english/currencies.php</li>
+<li>admin/includes/languages/english/customers.php</li>
+<li>admin/includes/languages/english/developers_tool_kit.php</li>
+<li>admin/includes/languages/english/email_extras.php</li>
+<li>admin/includes/languages/english/index.php</li>
+<li>admin/includes/languages/english/login.php</li>
+<li>admin/includes/languages/english/modules.php</li>
+<li>admin/includes/languages/english/orders.php</li>
+<li>admin/includes/languages/english/password_forgotten.php</li>
+<li>admin/includes/languages/english/products_price_manager.php</li>
+<li>admin/includes/languages/english/server_info.php</li>
+<li>admin/includes/languages/english/store_manager.php</li>
+<li>admin/includes/languages/english/users.php</li>
+<li>admin/includes/languages/english/whos_online.php</li>
+<li>admin/includes/modules/category_product_listing.php</li>
+<li>admin/includes/modules/copy_to_confirm.php</li>
+<li>admin/includes/modules/new_product_preview.php</li>
+<li>admin/includes/modules/update_product.php<br></li>
+<li>admin/includes/modules/document_general/collect_info.php</li>
+<li>admin/includes/modules/document_general/collect_info_metatags.php</li>
+<li>admin/includes/modules/document_product/collect_info.php</li>
+<li>admin/includes/modules/document_product/collect_info_metatags.php</li>
+<li>admin/includes/modules/newsletters/newsletter.php</li>
+<li>admin/includes/modules/newsletters/product_notification.php</li>
+<li>admin/includes/modules/product/collect_info.php</li>
+<li>admin/includes/modules/product/collect_info_metatags.php</li>
+<li>admin/includes/modules/product_free_shipping/collect_info.php</li>
+<li>admin/includes/modules/product_free_shipping/collect_info_metatags.php</li>
+<li>admin/includes/modules/product_music/collect_info.php</li>
+<li>admin/includes/modules/product_music/collect_info_metatags.php</li>
+<li>admin/includes/modules/product_music/copy_to_confirm.php</li>
+<li>admin/includes/modules/product_music/update_product.php</li>
+<li>email/email_template_checkout.html</li>
+<li>email/email_template_contact_us.html</li>
+<li>email/email_template_coupon.html</li>
+<li>email/email_template_default.html</li>
+<li>email/email_template_direct_email.html</li>
+<li>email/email_template_gv_mail.html</li>
+<li>email/email_template_gv_queue.html</li>
+<li>email/email_template_gv_send.html</li>
+<li>email/email_template_low_stock.html</li>
+<li>email/email_template_newsletters.html</li>
+<li>email/email_template_order_status.html</li>
+<li>email/email_template_password_forgotten.html</li>
+<li>email/email_template_product_notification.html</li>
+<li>email/email_template_welcome.html<br></li>
+<li>includes/.htaccess</li>
+<li>includes/application_top.php</li>
+<li>includes/autoload_func.php</li>
+<li>includes/dist-configure.php</li>
+<li>includes/filenames.php</li>
+<li>includes/form_check_js.php</li>
+<li>includes/spiders.txt</li>
+<li>includes/version.php</li>
+<li>includes/auto_loaders/config.core.php</li>
+<li>includes/auto_loaders/paypal_ipn.core.php</li>
+<li>includes/classes/ajax/zcAjaxPayment.php</li>
+<li>includes/classes/boxes.php</li>
+<li>includes/classes/breadcrumb.php</li>
+<li>includes/classes/cache.php</li>
+<li>includes/classes/cc_validation.php</li>
+<li>includes/classes/class.phpmailer.php</li>
+<li>includes/classes/class.zcPassword.php</li>
+<li>includes/classes/currencies.php</li>
+<li>includes/classes/http_client.php</li>
+<li>includes/classes/language.php</li>
+<li>includes/classes/message_stack.php</li>
+<li>includes/classes/navigation_history.php</li>
+<li>includes/classes/order.php</li>
+<li>includes/classes/order_total.php</li>
+<li>includes/classes/payment.php</li>
+<li>includes/classes/products.php</li>
+<li>includes/classes/query_cache.php</li>
+<li>includes/classes/shipping.php</li>
+<li>includes/classes/shopping_cart.php</li>
+<li>includes/classes/site_map.php</li>
+<li>includes/classes/sniffer.php</li>
+<li>includes/classes/split_page_results.php</li>
+<li>includes/classes/template_func.php</li>
+<li>includes/classes/upload.php</li>
+<li>includes/classes/db/mysql/define_queries.php</li>
+<li>includes/classes/db/mysql/query_factory.php</li>
+<li>includes/classes/vendors/password_compat-master/composer.json</li>
+<li>includes/classes/vendors/password_compat-master/lib/password.php</li>
+<li>includes/classes/vendors/password_compat-master/version-test.php</li>
+<li>includes/extra_configures/enable_error_logging.php</li>
+<li>includes/functions/banner.php</li>
+<li>includes/functions/functions_email.php</li>
+<li>includes/functions/functions_general.php</li>
+<li>includes/functions/functions_lookups.php</li>
+<li>includes/functions/functions_prices.php</li>
+<li>includes/functions/html_output.php</li>
+<li>includes/functions/password_funcs.php</li>
+<li>includes/functions/plugin_support.php</li>
+<li>includes/functions/sessions.php</li>
+<li>includes/index_filters/default_filter.php</li>
+<li>includes/index_filters/music_genre_filter.php</li>
+<li>includes/index_filters/record_company_filter.php</li>
+<li>includes/init_includes/init_canonical.php</li>
+<li>includes/init_includes/init_customer_auth.php</li>
+<li>includes/init_includes/init_database.php</li>
+<li>includes/init_includes/init_db_config_read.php</li>
+<li>includes/init_includes/init_file_db_names.php</li>
+<li>includes/init_includes/init_header.php</li>
+<li>includes/init_includes/init_sanitize.php</li>
+<li>includes/init_includes/init_sessions.php</li>
+<li>includes/languages/english.php</li>
+<li>includes/languages/english/button_names.php</li>
+<li>includes/languages/english/checkout_payment.php</li>
+<li>includes/languages/english/checkout_success.php</li>
+<li>includes/languages/english/credit_cards.php</li>
+<li>includes/languages/english/email_extras.php</li>
+<li>includes/languages/english/header.php</li>
+<li>includes/languages/english/password_forgotten.php</li>
+<li>includes/languages/english/reviews.php</li>
+<li>includes/languages/english/shopping_cart.php</li>
+<li>includes/languages/english/specials.php</li>
+<li>includes/languages/english/modules/payment/authorizenet.php</li>
+<li>includes/languages/english/modules/payment/authorizenet_aim.php</li>
+<li>includes/languages/english/modules/payment/paypaldp.php</li>
+<li>includes/languages/english/modules/payment/paypalwpp.php</li>
+<li>includes/modules/additional_images.php</li>
+<li>includes/modules/also_purchased_products.php</li>
+<li>includes/modules/attributes.php</li>
+<li>includes/modules/checkout_process.php</li>
+<li>includes/modules/create_account.php</li>
+<li>includes/modules/meta_tags.php</li>
+<li>includes/modules/product_listing.php</li>
+<li>includes/modules/product_listing_alpha_sorter.php</li>
+<li>includes/modules/shipping_estimator.php</li>
+<li>includes/modules/order_total/ot_cod_fee.php</li>
+<li>includes/modules/order_total/ot_coupon.php</li>
+<li>includes/modules/order_total/ot_group_pricing.php</li>
+<li>includes/modules/order_total/ot_gv.php</li>
+<li>includes/modules/order_total/ot_loworderfee.php</li>
+<li>includes/modules/order_total/ot_shipping.php</li>
+<li>includes/modules/order_total/ot_subtotal.php</li>
+<li>includes/modules/order_total/ot_tax.php</li>
+<li>includes/modules/order_total/ot_total.php</li>
+<li>includes/modules/pages/account/jscript_main.php</li>
+<li>includes/modules/pages/account_edit/header_php.php</li>
+<li>includes/modules/pages/account_edit/jscript_form_check.php</li>
+<li>includes/modules/pages/account_history/jscript_main.php</li>
+<li>includes/modules/pages/account_newsletters/jscript_main.php</li>
+<li>includes/modules/pages/account_password/header_php.php</li>
+<li>includes/modules/pages/account_password/jscript_form_check.php</li>
+<li>includes/modules/pages/address_book/jscript_main.php</li>
+<li>includes/modules/pages/address_book_process/header_php.php</li>
+<li>includes/modules/pages/address_book_process/jscript_addr_pulldowns.php</li>
+<li>includes/modules/pages/address_book_process/jscript_main.php</li>
+<li>includes/modules/pages/advanced_search/header_php.php</li>
+<li>includes/modules/pages/advanced_search/jscript_main.php</li>
+<li>includes/modules/pages/advanced_search_result/header_php.php</li>
+<li>includes/modules/pages/checkout_confirmation/header_php.php</li>
+<li>includes/modules/pages/checkout_confirmation/jscript_main.php</li>
+<li>includes/modules/pages/checkout_payment/header_php.php</li>
+<li>includes/modules/pages/checkout_payment/jscript_main.php</li>
+<li>includes/modules/pages/checkout_payment_address/jscript_addr_pulldowns.php</li>
+<li>includes/modules/pages/checkout_payment_address/jscript_main.php</li>
+<li>includes/modules/pages/checkout_process/header_php.php</li>
+<li>includes/modules/pages/checkout_shipping/header_php.php</li>
+<li>includes/modules/pages/checkout_shipping_address/jscript_addr_pulldowns.php</li>
+<li>includes/modules/pages/checkout_shipping_address/jscript_main.php</li>
+<li>includes/modules/pages/checkout_success/header_php.php</li>
+<li>includes/modules/pages/contact_us/header_php.php</li>
+<li>includes/modules/pages/create_account/jscript_addr_pulldowns.php</li>
+<li>includes/modules/pages/create_account/jscript_form_check.php</li>
+<li>includes/modules/pages/document_general_info/jscript_main.php</li>
+<li>includes/modules/pages/document_product/jscript_main.php</li>
+<li>includes/modules/pages/gv_redeem/header_php.php</li>
+<li>includes/modules/pages/gv_send/header_php.php</li>
+<li>includes/modules/pages/index/header_php.php</li>
+<li>includes/modules/pages/index/main_template_vars.php</li>
+<li>includes/modules/pages/login/header_php.php</li>
+<li>includes/modules/pages/login/jscript_addr_pulldowns.php</li>
+<li>includes/modules/pages/login/jscript_form_check.php</li>
+<li>includes/modules/pages/login/jscript_main.php</li>
+<li>includes/modules/pages/password_forgotten/header_php.php</li>
+<li>includes/modules/pages/popup_coupon_help/jscript_main.php</li>
+<li>includes/modules/pages/popup_cvv_help/jscript_main.php</li>
+<li>includes/modules/pages/popup_image/jscript_main.php</li>
+<li>includes/modules/pages/popup_image_additional/header_php.php</li>
+<li>includes/modules/pages/popup_image_additional/jscript_main.php</li>
+<li>includes/modules/pages/popup_search_help/jscript_main.php</li>
+<li>includes/modules/pages/popup_shipping_estimator/jscript_addr_pulldowns.php</li>
+<li>includes/modules/pages/product_free_shipping_info/jscript_main.php</li>
+<li>includes/modules/pages/product_info/jscript_main.php</li>
+<li>includes/modules/pages/product_music_info/jscript_main.php</li>
+<li>includes/modules/pages/product_reviews/jscript_main.php</li>
+<li>includes/modules/pages/product_reviews_info/jscript_main.php</li>
+<li>includes/modules/pages/product_reviews_write/header_php.php</li>
+<li>includes/modules/pages/product_reviews_write/jscript_main.php</li>
+<li>includes/modules/pages/shopping_cart/header_php.php</li>
+<li>includes/modules/pages/shopping_cart/jscript_main.php</li>
+<li>includes/modules/payment/authorizenet.php</li>
+<li>includes/modules/payment/authorizenet_aim.php</li>
+<li>includes/modules/payment/authorizenet_echeck.php</li>
+<li>includes/modules/payment/cod.php</li>
+<li>includes/modules/payment/freecharger.php</li>
+<li>includes/modules/payment/moneyorder.php</li>
+<li>includes/modules/payment/paypal.php</li>
+<li>includes/modules/payment/paypaldp.php</li>
+<li>includes/modules/payment/paypalwpp.php</li>
+<li>includes/modules/payment/paypal/paypal_curl.php</li>
+<li>includes/modules/payment/paypal/paypal_functions.php</li>
+<li>includes/modules/payment/paypal/paypalwpp_admin_notification.php</li>
+<li>includes/modules/payment/paypal/tpl_ec_button.php</li>
+<li>includes/modules/shipping/flat.php</li>
+<li>includes/modules/shipping/freeoptions.php</li>
+<li>includes/modules/shipping/freeshipper.php</li>
+<li>includes/modules/shipping/item.php</li>
+<li>includes/modules/shipping/perweightunit.php</li>
+<li>includes/modules/shipping/storepickup.php</li>
+<li>includes/modules/shipping/table.php</li>
+<li>includes/modules/shipping/zones.php</li>
+<li>includes/modules/sideboxes/banner_box.php</li>
+<li>includes/modules/sideboxes/banner_box2.php</li>
+<li>includes/modules/sideboxes/banner_box_all.php</li>
+<li>includes/modules/sideboxes/best_sellers.php</li>
+<li>includes/modules/sideboxes/document_categories.php</li>
+<li>includes/modules/sideboxes/information.php</li>
+<li>includes/modules/sideboxes/manufacturers.php</li>
+<li>includes/modules/sideboxes/order_history.php</li>
+<li>includes/templates/classic/css/stylesheet.css</li>
+<li>includes/templates/template_default/common/html_header.php</li>
+<li>includes/templates/template_default/common/main_template_vars.php</li>
+<li>includes/templates/template_default/common/tpl_columnar_display.php</li>
+<li>includes/templates/template_default/common/tpl_header.php</li>
+<li>includes/templates/template_default/common/tpl_list_box_content.php</li>
+<li>includes/templates/template_default/common/tpl_main_page.php</li>
+<li>includes/templates/template_default/common/tpl_tabular_display.php</li>
+<li>includes/templates/template_default/css/stylesheet.css</li>
+<li>includes/templates/template_default/jscript/jquery.min.js</li>
+<li>includes/templates/template_default/jscript/jscript_framework.php</li>
+<li>includes/templates/template_default/popup_attributes_qty_prices/tpl_main_page.php</li>
+<li>includes/templates/template_default/popup_coupon_help/tpl_main_page.php</li>
+<li>includes/templates/template_default/sideboxes/tpl_banner_box.php</li>
+<li>includes/templates/template_default/sideboxes/tpl_banner_box2.php</li>
+<li>includes/templates/template_default/sideboxes/tpl_banner_box_all.php</li>
+<li>includes/templates/template_default/sideboxes/tpl_reviews_random.php</li>
+<li>includes/templates/template_default/sideboxes/tpl_search.php</li>
+<li>includes/templates/template_default/sideboxes/tpl_search_header.php</li>
+<li>includes/templates/template_default/templates/tpl_account_default.php</li>
+<li>includes/templates/template_default/templates/tpl_account_edit_default.php</li>
+<li>includes/templates/template_default/templates/tpl_account_history_default.php</li>
+<li>includes/templates/template_default/templates/tpl_account_history_info_default.php</li>
+<li>includes/templates/template_default/templates/tpl_account_password_default.php</li>
+<li>includes/templates/template_default/templates/tpl_address_book_process_default.php</li>
+<li>includes/templates/template_default/templates/tpl_advanced_search_default.php</li>
+<li>includes/templates/template_default/templates/tpl_advanced_search_result_default.php</li>
+<li>includes/templates/template_default/templates/tpl_ajax_checkout_confirmation_default.php</li>
+<li>includes/templates/template_default/templates/tpl_checkout_confirmation_default.php</li>
+<li>includes/templates/template_default/templates/tpl_checkout_payment_default.php</li>
+<li>includes/templates/template_default/templates/tpl_checkout_success_default.php</li>
+<li>includes/templates/template_default/templates/tpl_contact_us_default.php</li>
+<li>includes/templates/template_default/templates/tpl_discount_coupon_default.php</li>
+<li>includes/templates/template_default/templates/tpl_featured_products_default.php</li>
+<li>includes/templates/template_default/templates/tpl_gv_send_default.php</li>
+<li>includes/templates/template_default/templates/tpl_index_categories.php</li>
+<li>includes/templates/template_default/templates/tpl_index_product_list.php</li>
+<li>includes/templates/template_default/templates/tpl_login_default.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_address_book_details.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_attributes.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_category_icon_display.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_checkout_new_address.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_create_account.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_downloads.php</li>
+<li>includes/templates/template_default/templates/tpl_main_product_image.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_products_all_listing.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_products_featured_listing.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_products_new_listing.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_products_quantity_discounts.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_product_listing.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_shipping_estimator.php</li>
+<li>includes/templates/template_default/templates/tpl_modules_upcoming_products.php</li>
+<li>includes/templates/template_default/templates/tpl_page_default.php</li>
+<li>includes/templates/template_default/templates/tpl_page_not_found_default.php</li>
+<li>includes/templates/template_default/templates/tpl_password_forgotten_default.php</li>
+<li>includes/templates/template_default/templates/tpl_products_all_default.php</li>
+<li>includes/templates/template_default/templates/tpl_products_new_default.php</li>
+<li>includes/templates/template_default/templates/tpl_product_reviews_default.php</li>
+<li>includes/templates/template_default/templates/tpl_reviews_default.php</li>
+<li>includes/templates/template_default/templates/tpl_shopping_cart_default.php</li>
+<li>includes/templates/template_default/templates/tpl_site_map_default.php</li>
+<li>includes/templates/template_default/templates/tpl_specials_default.php</li>
+<li>includes/templates/template_default/templates/tpl_ssl_check_default.php</li>
+<li>includes/templates/template_default/templates/tpl_time_out_default.php</li>
+
+<br>
+<li>/zc_install/ ... assume *all* of /zc_install/ has changed<li>
+<li>... and a reminder: delete the /docs and /extras and /readme.md and /install.txt files when you're done installing!
+</ul>
+
+
+<h1>&nbsp;</h1>
+</fieldset>
+<p class="center"><em>Copyright 2003 - 2016 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>

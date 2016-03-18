@@ -6,10 +6,10 @@
  * Displays the allowed payment modules, for selection by customer.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_payment_default.php  wilt  Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Sat Oct 17 21:58:04 2015 -0400 Modified in v1.5.5 $
  */
 ?>
 <?php echo $payment_modules->javascript_validation(); ?>
@@ -22,19 +22,6 @@
 <?php if ($messageStack->size('redemptions') > 0) echo $messageStack->output('redemptions'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 <?php if ($messageStack->size('checkout_payment') > 0) echo $messageStack->output('checkout_payment'); ?>
-
-<?php
-  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-?>
-<fieldset>
-<legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
-<div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
-<?php echo  zen_draw_checkbox_field('conditions', '1', false, 'id="conditions"');?>
-<label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
-</fieldset>
-<?php
-  }
-?>
 
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       if (!$payment_modules->in_special_checkout()) {
@@ -97,7 +84,7 @@
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       if (!$payment_modules->in_special_checkout()) {
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
-<fieldset>
+<fieldset class="payment">
 <legend><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></legend>
 
 <?php
@@ -203,7 +190,21 @@
 <?php echo zen_draw_textarea_field('comments', '45', '3'); ?>
 </fieldset>
 
+<?php
+  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
+?>
+<fieldset>
+<legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
+<div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
+<?php echo  zen_draw_checkbox_field('conditions', '1', false, 'id="conditions"');?>
+<label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
+</fieldset>
+<?php
+  }
+?>
+
 <div class="buttonRow forward" id="paymentSubmit"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT, 'onclick="submitFunction('.zen_user_has_gv_account($_SESSION['customer_id']).','.$order->info['total'].')"'); ?></div>
+
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </form>

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Apr 1 15:45:22 2014 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Sat Jan 9 23:02:19 2016 -0500 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,11 +16,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 **/
 // customization for the design layout
   define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
-
-// Define how do we update currency exchange rates
-// Possible values are 'ecb', 'boc', 'oanda', 'xe', or '' (to disable the option).  HOWEVER: Note that using "xe" or "oanda" subjects you to TOS terms requiring you to subscribe to their services. Use at your own risk.
-  define('CURRENCY_SERVER_PRIMARY', 'ecb');
-  define('CURRENCY_SERVER_BACKUP', 'boc');
 
 // include the database functions
   require(DIR_WS_FUNCTIONS . 'database.php');
@@ -60,30 +55,33 @@ if (isset($_GET) & sizeof($_GET) > 0 ) {
 
 // check for SSL configuration changes:
 if (!defined('SSLPWSTATUSCHECK')) die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
-list($a, $b, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $b = (int)$b; $c = (int)$c;
-$d = (ENABLE_SSL_ADMIN == 'true') ? '1' : '0';
 $e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
-$f = ':'.$d.':'.$e;
+if (SSLPWSTATUSCHECK == '') {
+  $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '".$e.':'.$e."', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  $db->Execute($sql);
+  die('One-time auto-configuration completed. Please refresh the page.');
+}
+list($a, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $c = (int)$c;
 if ($a == 0) {
-  if (($b == 0 && $d == 1) || ($c == 0 && $e == 1)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1" . $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 0 && $e == 1) { // was nonSSL but now is SSL, so need to exp pwds
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
     $sql = "UPDATE " . TABLE_ADMIN . " set pwd_last_change_date = '1990-01-01 14:02:22'";
     $db->Execute($sql);
   }
-  if (($b == 1 && $d == 0) || ($c == 1 && $e == 0)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0". $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 1 && $e == 0) { // was nonSSL then SSL and now nonSSL again, so recording that we're now nonSSL
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0:". $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
 } else if ($a == 1) {  // == 1
-  if (($b == 1 && $d == 0) || ($c == 1 && $e == 0)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0". $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 1 && $e == 0) {  // was SSL, but is now nonSSL, so recording the change
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0:". $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
-  if (($b == 0 && $d == 1) || ($c == 0 && $e == 1)) {
-    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1" . $f . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
+  if ($c == 0 && $e == 1) {  // was changed to SSL last time checked, so recording that is all SSL now
+    $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
 }
-unset($a,$b,$c,$d,$e,$f);
+unset($a,$c,$e);
 // end ssl config change detection

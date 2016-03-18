@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Apr 17 14:57:10 2014 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Sun Oct 18 02:03:48 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -75,6 +75,7 @@
     // PROCESS UPLOAD ATTACHMENTS
     if (isset($_FILES['upload_file']) && zen_not_null($_FILES['upload_file']) && ($_POST['upload_file'] != 'none')) {
       if ($attachments_obj = new upload('upload_file')) {
+        $attachments_obj->set_extensions(array('jpg','jpeg','gif','png','zip','gzip','pdf','mp3','wma','wmv','wav','epub','ogg','webm','m4v','m4a'));
         $attachments_obj->set_destination(DIR_WS_ADMIN_ATTACHMENTS . $_POST['attach_dir']);
         if ($attachments_obj->parse() && $attachments_obj->save()) {
           $attachment_file = $_POST['attach_dir'] . $attachments_obj->filename;
@@ -122,7 +123,6 @@ function init()
     var kill = document.getElementById('hoverJS');
     kill.disabled = true;
   }
-  if (typeof _editor_url == "string") HTMLArea.replace('message_html');
 }
 // -->
 </script>
@@ -335,7 +335,7 @@ function check_form(form_name) {
               <td class="main" width="750">
 <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED; ?>
 <?php if (EMAIL_USE_HTML == 'true') {
-  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html"');
+  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"');
 } ?>
               </td>
             </tr>
@@ -344,7 +344,7 @@ function check_form(form_name) {
             </tr>
             <tr>
               <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?></td>
-              <td><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars($_POST['message'], ENT_COMPAT, CHARSET, TRUE)); ?></td>
+              <td><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars($_POST['message'], ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
             </tr>
 
 <?php if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED === true && defined('DIR_WS_ADMIN_ATTACHMENTS') && is_dir(DIR_WS_ADMIN_ATTACHMENTS) && is_writable(DIR_WS_ADMIN_ATTACHMENTS) ) { ?>
@@ -353,14 +353,7 @@ function check_form(form_name) {
             </tr>
 <?php if (defined('EMAIL_ATTACHMENT_UPLOADS_ENABLED') && EMAIL_ATTACHMENT_UPLOADS_ENABLED === true) { ?>
 <?php
-  $dir = @dir(DIR_WS_ADMIN_ATTACHMENTS);
-  $dir_info[] = array('id' => '', 'text' => "admin-attachments");
-  while ($file = $dir->read()) {
-    if (is_dir(DIR_WS_ADMIN_ATTACHMENTS . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $dir_info[] = array('id' => $file . '/', 'text' => $file);
-    }
-  }
-  $dir->close();
+  $dir_info = zen_build_subdirectories_array(DIR_WS_ADMIN_ATTACHMENTS, 'admin-attachments');
 ?>
             <tr>
               <td class="main" valign="top"><?php echo TEXT_SELECT_ATTACHMENT_TO_UPLOAD; ?></td>
@@ -372,14 +365,7 @@ function check_form(form_name) {
             </tr>
 <?php  } // end uploads-enabled dialog ?>
 <?php
-  $dir = @dir(DIR_WS_ADMIN_ATTACHMENTS);
-  $file_list[] = array('id' => '', 'text' => "(none)");
-  while ($file = $dir->read()) {
-    if (is_file(DIR_WS_ADMIN_ATTACHMENTS . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-      $file_list[] = array('id' => $file , 'text' => $file);
-    }
-  }
-  $dir->close();
+  $dir_info = zen_build_subdirectories_array(DIR_WS_ADMIN_ATTACHMENTS, '(none)');
 ?>
             <tr>
               <td class="main" valign="top"><?php echo TEXT_SELECT_ATTACHMENT; ?></td>

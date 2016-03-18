@@ -3,10 +3,10 @@
  * language Class.
  *
  * @package classes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: language.php 14141 2009-08-10 19:34:47Z wilt $
+ * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -20,22 +20,24 @@ if (!defined('IS_ADMIN_FLAG')) {
 class language extends base {
   var $languages, $catalog_languages, $browser_languages, $language;
 
-  function language($lng = '') {
+  function __construct($lng = '') {
     global $db;
 
     $this->catalog_languages = array();
     $languages_query = "select languages_id, name, code, image, directory
-                          from " . TABLE_LANGUAGES . " 
+                          from " . TABLE_LANGUAGES . "
                           order by sort_order";
 
     $languages = $db->Execute($languages_query);
 
     while (!$languages->EOF) {
-      $this->catalog_languages[$languages->fields['code']] = array('id' => $languages->fields['languages_id'],
-      'name' => $languages->fields['name'],
-      'image' => $languages->fields['image'],
-      'code' => $languages->fields['code'],
-      'directory' => $languages->fields['directory']);
+      $this->catalog_languages[$languages->fields['code']] = array(
+              'id' => $languages->fields['languages_id'],
+              'name' => $languages->fields['name'],
+              'image' => $languages->fields['image'],
+              'code' => $languages->fields['code'],
+              'directory' => $languages->fields['directory'],
+              );
       $languages->MoveNext();
     }
     $this->browser_languages = '';

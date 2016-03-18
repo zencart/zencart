@@ -3,10 +3,10 @@
  * paypal.php payment module class for PayPal Payments Standard (IPN) method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Oct 23 01:01:52 2013 -0400 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Tue Feb 16 22:22:40 2016 -0500 Modified in v1.5.5 $
  */
 
 define('MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE', 'true');
@@ -51,10 +51,10 @@ class paypal extends base {
     * @param int $paypal_ipn_id
     * @return paypal
     */
-  function paypal($paypal_ipn_id = '') {
+  function __construct($paypal_ipn_id = '') {
     global $order, $messageStack;
     $this->code = 'paypal';
-    $this->codeVersion = '1.5.4';
+    $this->codeVersion = '1.5.5';
     if (IS_ADMIN_FLAG === true) {
       // Payment Module title in Admin
       $this->title = STORE_COUNTRY != '223' ? MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE_NONUSA : MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE;
@@ -71,7 +71,6 @@ class paypal extends base {
     }
     if (is_object($order)) $this->update_status();
 
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.4') $this->enabled = false;
     /**
      * Determine which PayPal URL to direct the customer's browser to when needed
      */
@@ -81,6 +80,7 @@ class paypal extends base {
       $this->form_action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
     }
 
+    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.5') $this->enabled = false;
 
     // verify table structure
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
@@ -350,7 +350,7 @@ class paypal extends base {
     list($this->transaction_amount, $this->transaction_currency) = $_SESSION['paypal_transaction_info'];
     unset($_SESSION['paypal_transaction_info']);
     if (isset($_GET['referer']) && $_GET['referer'] == 'paypal') {
-      $this->notify('NOTIFY_PAYMENT_PAYPAL_RETURN_TO_STORE');
+      $this->notify('NOTIFY_PAYMENT_PAYPAL_RETURN_TO_STORE', $_GET);
       if (defined('MODULE_PAYMENT_PAYPAL_PDTTOKEN') && MODULE_PAYMENT_PAYPAL_PDTTOKEN != '' && isset($_GET['tx']) && $_GET['tx'] != '') {
         $pdtStatus = $this->_getPDTresults($this->transaction_amount, $this->transaction_currency, $_GET['tx']);
       } else {
@@ -375,7 +375,7 @@ class paypal extends base {
         return true;
       }
     } else {
-      $this->notify('NOTIFY_PAYMENT_PAYPAL_CANCELLED_DURING_CHECKOUT');
+      $this->notify('NOTIFY_PAYMENT_PAYPAL_CANCELLED_DURING_CHECKOUT', $_GET);
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
   }
@@ -471,14 +471,7 @@ class paypal extends base {
       ipn_debug_email('PDT NOTICE :: paypal table updated: ' . print_r($sql_data_array, true));
     }
   }
-  /**
-   * Used to display error message details
-   *
-   * @return boolean
-    */
-  function output_error() {
-    return false;
-  }
+
   /**
    * Check to see whether module is installed
    *

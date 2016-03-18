@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: newsletters.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:53:59 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -102,7 +102,6 @@
       var kill = document.getElementById('hoverJS');
       kill.disabled = true;
     }
-  if (typeof _editor_url == "string") HTMLArea.replace('message_html');
   }
   // -->
 </script>
@@ -204,17 +203,16 @@ check_select('audience_selected','',"<?php echo ERROR_PLEASE_SELECT_AUDIENCE; ?>
                                   from " . TABLE_NEWSLETTERS . "
                                   where newsletters_id = '" . (int)$nID . "'");
 
-      $nInfo->objectInfo($newsletter->fields);
+      $nInfo->updateObjectInfo($newsletter->fields);
     } elseif ($_POST) {
-      $nInfo->objectInfo($_POST);
+      $nInfo->updateObjectInfo($_POST);
     }
 
-    $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
     $directory_array = array();
     if ($dir = dir(DIR_WS_MODULES . 'newsletters/')) {
       while ($file = $dir->read()) {
         if (!is_dir(DIR_WS_MODULES . 'newsletters/' . $file)) {
-          if (substr($file, strrpos($file, '.')) == $file_extension) {
+          if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
             $directory_array[] = $file;
           }
         }

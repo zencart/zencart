@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Sun Oct 18 02:03:48 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -43,6 +43,9 @@
         break;
       case 'insert':
       case 'save':
+        if (!isset($_POST['type_name'])) {
+          continue;
+        }
         if (isset($_GET['ptID'])) $type_id = zen_db_prepare_input($_GET['ptID']);
         $type_name = zen_db_prepare_input($_POST['type_name']);
         $handler = zen_db_prepare_input($_POST['handler']);
@@ -72,6 +75,7 @@
         }
 
         $type_image = new upload('default_image');
+        $type_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $type_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $type_image->parse() &&  $type_image->save()) {
           // remove image from database if none
@@ -369,14 +373,7 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
       $contents[] = array('text' => TEXT_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_PRODUCT_TYPES_NAME . '<br>' . zen_draw_input_field('type_name', $ptInfo->type_name, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_name')));
       $contents[] = array('text' => '<br />' . TEXT_PRODUCT_TYPES_IMAGE . '<br>' . zen_draw_file_field('default_image') . '<br />' . $ptInfo->default_image);
-      $dir = @dir(DIR_FS_CATALOG_IMAGES);
-      $dir_info[] = array('id' => '', 'text' => "Main Directory");
-      while ($file = $dir->read()) {
-        if (is_dir(DIR_FS_CATALOG_IMAGES . $file) && strtoupper($file) != 'CVS' && $file != "." && $file != "..") {
-          $dir_info[] = array('id' => $file . '/', 'text' => $file);
-        }
-      }
-      $dir->close();
+      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
       $default_directory = substr( $ptInfo->default_image, 0,strpos( $ptInfo->default_image, '/')+1);
       $contents[] = array('text' => '<BR />' . TEXT_PRODUCTS_IMAGE_DIR . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory));
       $contents[] = array('text' => '<br />' . zen_info_image($ptInfo->default_image, $ptInfo->type_name));

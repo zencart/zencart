@@ -1,9 +1,9 @@
 <?php
 /**
  * @package plugins
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 New in v1.5.4 $
+ * @version $Id: Author: DrByte  Fri Oct 9 15:32:07 2015 -0400 Modified in v1.5.5 $
  *
  * Designed for ZC >= v1.5.4
  *
@@ -115,7 +115,7 @@ class zcObserverLogEventListener extends base {
     /**
      * escalate severity if requested level is higher than calculated level
      */
-    $levels = static::$levels;
+    $levels = self::$levels;
     $levels_lookup = array_flip($levels);
 
     $integer_requested_severity = $requested_severity;

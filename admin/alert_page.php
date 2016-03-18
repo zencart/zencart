@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Oct 23 14:38:22 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Mon Oct 19 16:41:08 2015 -0400 Modified in v1.5.5 $
  */
 require ('includes/application_top.php');
 $adminDirectoryExists = $installDirectoryExists = FALSE;
@@ -40,8 +40,10 @@ if (!$adminDirectoryExists && !$installDirectoryExists)
   <li><?php echo ALERT_RENAME_ADMIN; ?><br /><a href="http://tutorials.zen-cart.com/index.php?article=33" target="_blank"><?php echo ADMIN_RENAME_FAQ_NOTE; ?></a></li>
   <?php  } ?>
   </ul>
+  <?php if ($adminDirectoryExists) { ?>
   <br />
   <p class=""><?php echo ALERT_PART2; ?></p>
+  <?php } ?>
   </div>
 </body>
 </html>

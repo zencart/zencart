@@ -1,384 +1,737 @@
 /**
  * @package admin
- * @ignore
- * @access private
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: stylesheet.css 19301 2011-07-28 21:50:05Z kuroi $
+ * @version $Id: Author: DrByte  Sun Mar 13 2016  Modified in v1.5.5 $
  */
-@import url("menu.css");/* including stylesheet for dhtml menu */
-@import url("index.css");/* including stylesheet for index.php */
-a{
-color:#0000ff;
-text-decoration:none;
+
+@import url("css/bootstrap.min.css");
+/* @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"); */
+
+@import url("menu.css");
+
+@import url("css/font-awesome.min.css");
+/* @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"); */
+
+a {
+    color: #0000ff;
+    text-decoration: none;
 }
-a,body,html,table{
-font:normal normal 11px Verdana,sans-serif;
+
+a, body, html, table {
+    font: normal normal 11px Verdana, sans-serif;
 }
-a:hover{
-color:#0000ff;
-text-decoration:underline;
+body table {
+  padding: 1px 3px;
+  border-collapse: initial;
 }
-a.headerLink:link{
-color:#ffffff;
-font-weight:bold;
-text-decoration:none;
+body {padding: 0 4px;}
+
+td,th {padding: 1px;}
+.main table td {
+  padding: 5px;
 }
-a.headerLink:visited{
-color:#ffffff;
-font-weight:bold;
-text-decoration:none;
+td.main {padding: 5px 2px;}
+
+a:hover {
+    color: #0000ff;
+    text-decoration: underline;
 }
-a.headerLink:hover{
-color:#ffffff;
-font-weight:bold;
-text-decoration:underline;
+
+a.headerLink:link {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.headerLink:active{
-color:#ffffff;
-font-weight:bold;
-text-decoration:none;
+
+a.headerLink:visited {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.menuBoxContentLink:link{
-color:#0000ff;
-text-decoration:none;
+
+a.headerLink:hover {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: underline;
 }
-a.menuBoxContentLink:visited{
-color:#0000ff;
-text-decoration:none;
+
+a.headerLink:active {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.menuBoxContentLink:hover{
-color:#0000ff;
-text-decoration:underline;
+
+a.menuBoxContentLink:link {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.menuBoxContentLink:active{
-color:#0000ff;
-text-decoration:none;
+
+a.menuBoxContentLink:visited {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.menuBoxHeadingLink:link{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxContentLink:hover {
+    color: #0000ff;
+    text-decoration: underline;
 }
-a.menuBoxHeadingLink:visited{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxContentLink:active {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.menuBoxHeadingLink:hover{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxHeadingLink:link {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.menuBoxHeadingLink:active{
-color:#0000ff;
-font-weight:bold;
-text-decoration:none;
+
+a.menuBoxHeadingLink:visited {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.splitPageLink:link{
-color:#0000ff;
-text-decoration:none;
+
+a.menuBoxHeadingLink:hover {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.splitPageLink:visited{
-color:#0000ff;
-text-decoration:none;
+
+a.menuBoxHeadingLink:active {
+    color: #0000ff;
+    font-weight: bold;
+    text-decoration: none;
 }
-a.splitPageLink:hover{
-background-color:#ffff33;
-color:#0000ff;
-text-decoration:underline;
+
+a.splitPageLink:link {
+    color: #0000ff;
+    text-decoration: none;
 }
-a.splitPageLink:active{
-color:#0000ff;
-text-decoration:none;
+
+a.splitPageLink:visited {
+    color: #0000ff;
+    text-decoration: none;
 }
-body{
-background-color:#ffffff;
-color:#333333;
-margin:0;
+
+a.splitPageLink:hover {
+    background-color: #ffff33;
+    color: #0000ff;
+    text-decoration: underline;
 }
+
+a.splitPageLink:active {
+    color: #0000ff;
+    text-decoration: none;
+}
+
+body {
+    background-color: #ffffff;
+    color: #333333;
+}
+
 .clearBoth {
-	clear: both;
-	}
-body#login{
-margin-top:100px;
-text-align:center;
+    clear: both;
 }
-body#login .button{
-cursor:pointer;
-padding: 3px;
-margin-top: 10px;
+
+body#login {
+    margin-top: 100px;
+    text-align: center;
 }
-body#login fieldset{
-margin:0 auto;
-padding:10px;
-width:400px;
+
+body#login .button {
+    cursor: pointer;
+    padding: 5px 20px;
+    margin-top: 10px;
+    background: #fff;
+    border: 0px;
+    font-weight: bold;
+    margin: 5px;
+}
+
+body#login .button:hover {
+    color: #fff;
+    background-color: #333;
+}
+
+body#login fieldset {
+    margin: 0 auto;
+    background-color: #05a5cb;
+    padding-bottom: 30px;
 }
 
 .loginLabel {
-	margin-left: 60px;
-	margin-right: 5px;
-	width: 125px;
-	float: left;
-	text-align: right;
-	line-height: 1.5;
-	}
-body#login legend{
-background:#ffffff;
-border:1px solid #003D00;
-color:#333333;
-font-size:90%;
-padding:0.2em 0.5em;
-text-align:right;
+    margin-left: 60px;
+    margin-right: 5px;
+    text-align: right;
+    line-height: 1.5;
 }
-checkbox,input,radio,select,textarea,file{
-font-size:11px;
+
+body#login legend {
+    background: #333;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 0.2em 0.5em;
 }
+
+#login a {
+    float: right;
+    color: #fff;
+    font-size: 1em;
+    margin: 20px;
+}
+
+checkbox, input, radio, select, textarea, file {
+    font-size: 11px;
+}
+.infoBoxContent input {margin: 1px 2px;}
+input.cfgInput { width: 99%;}
+
 textarea {
-width: 80%;
+    width: 80%;
 }
+
 /* to handle textareas for browsers which don't like % widths */
 textarea.sqlpatchKeyedQuery, TEXTAREA#file_contents {
-width:auto;
+    width: auto;
 }
-form{
-display:inline;
+
+form {
+    display: inline;
 }
-span.dataTableHeadingContentWhois{
-color:#ff6600;
-font-weight:bold;
+
+span.dataTableHeadingContentWhois {
+    color: #ff6600;
+    font-weight: bold;
 }
-span.normalprice{
-text-decoration:line-through;
+
+span.normalprice {
+    text-decoration: line-through;
 }
-span.productPriceDiscount,.inputRequirement{
-color:#ff0000;
+
+span.productPriceDiscount, .inputRequirement {
+    color: #ff0000;
 }
-span.productSpecialPrice,span.productSalePrice,.stockWarning,span.coming{
-color:#ff0000;
+
+span.productSpecialPrice, span.productSalePrice, .stockWarning, span.coming {
+    color: #ff0000;
 }
-span.productSpecialPriceSale{
-color:#ff0000;
-text-decoration:line-through;
+
+span.productSpecialPriceSale {
+    color: #ff0000;
+    text-decoration: line-through;
 }
-span.SortOrderHeader{
-color:#ff6600;
-font-weight:bold;
+
+span.SortOrderHeader {
+    color: #ff6600;
+    font-weight: bold;
 }
-span.SortOrderHeaderLink{
-color:#0000ff;
-font-weight:bold;
+
+span.SortOrderHeaderLink {
+    color: #0000ff;
+    font-weight: bold;
 }
-td.alert,span.alert{
-color:#ff0000;
-font-weight:bold;
+
+td.alert:not(.messageStackAlert), span.alert:not(.messageStackAlert) {
+    color: #ff0000;
+    font-weight: bold;
 }
-td.attributeBoxContent{
-background-color:#dcdbd1;
-color:#333333;
+
+td.attributeBoxContent {
+    background-color: #dcdbd1;
+    color: #333333;
 }
-td.ot-subtotal-Amount,td.ot-cod-fee-Amount,td.ot-group-pricing-Amount,td.ot-gv-Amount,td.ot-loworderfee-Amount,td.ot-shipping-Amount,td.ot-subtotal-Amount,td.ot-tax-Amount,td.ot-coupon-Amount{
+
+td.ot-subtotal-Amount, td.ot-cod-fee-Amount, td.ot-group-pricing-Amount, td.ot-gv-Amount, td.ot-loworderfee-Amount, td.ot-shipping-Amount, td.ot-subtotal-Amount, td.ot-tax-Amount, td.ot-coupon-Amount {
 }
-td.ot-subtotal-Text,td.ot-cod-fee-Text,td.ot-total-Text,td.ot-group-pricing-Text,td.ot-gv-Text,td.ot-loworderfee-Text,td.ot-shipping-Text,td.ot-subtotal-Text,td.ot-tax-Text,td.ot-coupon-Text{
-font-weight:bold;
+
+td.ot-subtotal-Text, td.ot-cod-fee-Text, td.ot-total-Text, td.ot-group-pricing-Text, td.ot-gv-Text, td.ot-loworderfee-Text, td.ot-shipping-Text, td.ot-subtotal-Text, td.ot-tax-Text, td.ot-coupon-Text {
+    font-weight: bold;
 }
-td.ot-total-Amount{
-border-top:1px solid #9a9a9a;
-font-weight:bold;
+
+td.ot-total-Amount {
+    border-top: 1px solid #9a9a9a;
+    font-weight: bold;
 }
-tr.attributeBoxContent{
-background-color:#dcdbd1;
-color:#333333;
+
+tr.attributeBoxContent {
+    background-color: #dcdbd1;
+    color: #333333;
 }
-.attributeBoxContent{
-background-color:#dcdbd1;
-color:#333333;
+
+.attributeBoxContent {
+    background-color: #dcdbd1;
+    color: #333333;
 }
-.attributes-even{
-background-color:#ffffff;
+
+.attributes-even {
+    background-color: #ffffff;
 }
-.attributes-odd{
-background-color:#f7f6ef;
+
+.attributes-odd {
+    background-color: #f7f6ef;
 }
-.columnLeft{
-background-color:#f2f1ee;
-border-color:#999999;
-border-style:solid;
-border-width:1px;
-padding:2px;
+
+.columnLeft {
+    background-color: #f2f1ee;
+    border-color: #999999;
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px;
 }
-.dataTableContent{
-color:#333333;
+
+.row {
+    margin: 0px;
 }
-.dataTableContentBot{
-color:#333333;
+
+.dataTableContent {
+    color: #333333;
+    padding: 2px;
 }
-.dataTableContentWhois{
-color:#333333;
+
+.dataTableContentBot {
+    color: #333333;
 }
-.dataTableHeadingContent{
-color:#333333;
-font-weight:bold;
+
+.dataTableContentWhois {
+    color: #333333;
 }
-.dataTableHeadingContentWhois{
-color:#333333;
-font-weight:bold;
+
+.dataTableHeadingContent {
+    color: #333333;
+    font-weight: bold;
 }
-.dataTableHeadingContentWhois a:link,.dataTableHeadingContentWhois a:visited{
-color:#0000ff;
-font-weight:bold;
+
+.dataTableHeadingContentWhois {
+    color: #333333;
+    font-weight: bold;
 }
-.dataTableHeadingContentWhois a:hover{
-color:#ffffff;
-font-weight:bold;
+
+.dataTableHeadingContentWhois a:link, .dataTableHeadingContentWhois a:visited {
+    color: #0000ff;
+    font-weight: bold;
 }
-.dataTableHeadingRow{
-background-color:#d7d6cc;
+
+.dataTableHeadingContentWhois a:hover {
+    color: #ffffff;
+    font-weight: bold;
 }
-.dataTableHeadingRowWhois{
-background-color:#d7d6cc;
+
+.dataTableHeadingRow {
+    background-color: #d7d6cc;
 }
-.dataTableRow{
-background-color:#f2f1ee;
+
+.dataTableHeadingRowWhois {
+    background-color: #d7d6cc;
 }
-.dataTableRowBot{
-background-color:#facbfa;
+
+.dataTableRow {
+    background-color: #f2f1ee;
 }
-.dataTableRowOver{
-background-color:#ffffff;
-cursor:pointer;
-cursor:hand;
+
+.dataTableRowBot {
+    background-color: #facbfa;
 }
-.dataTableRowOverBot{
-background-color:#ffffff;
+
+.dataTableRowOver {
+    background-color: #ffffff;
+    cursor: pointer;
+    cursor: hand;
 }
-.dataTableRowOverWhois{
-background-color:#ffffff;
+
+.dataTableRowOverBot {
+    background-color: #ffffff;
 }
-.dataTableRowSelected{
-background-color:#e7e6e0;
+
+.dataTableRowOverWhois {
+    background-color: #ffffff;
 }
-.dataTableRowSelectedBot{
-background-color:#ff93ff;
+
+.dataTableRowSelected {
+    background-color: #e7e6e0;
 }
-.dataTableRowSelectedWhois{
-background-color:#dee4e8;
+
+.dataTableRowSelectedBot {
+    background-color: #ff93ff;
 }
-.dataTableRowSpacer,td.dataTableRowSpacer,TR.dataTableRowSpacer{
-background-color:#d7d6cc;
-color:#ff6600;
-font-size:11px;
-font-weight:bold;
-line-height:1.0;
+
+.dataTableRowSelectedWhois {
+    background-color: #dee4e8;
 }
-.dataTableRowWhois{
-background-color:#f2f1ee;
+
+.dataTableRowSpacer, td.dataTableRowSpacer, TR.dataTableRowSpacer {
+    background-color: #d7d6cc;
+    color: #ff6600;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.0;
 }
-.errorText{
-color:#ff0000;
+
+.dataTableRowWhois {
+    background-color: #f2f1ee;
 }
-.fieldRequired{
-color:#ff0000;
+
+.errorText {
+    color: #ff0000;
 }
-.formArea{
-background-color:#f1f9fe;
-border-color:#7b9ebd;
-border-style:solid;
-border-width:1px;
+
+.fieldRequired {
+    color: #ff0000;
 }
-.formAreaTitle{
-font-family:Tahoma,Verdana,Arial,sans-serif;
-font-size:12px;
-font-weight:bold;
+
+.formArea {
+    background-color: #f4f4f4;
+    border-color: #666;
+    border-style: solid;
+    border-width: 1px;
 }
-.headerBar{
-background-color:#003D00;
+
+.formAreaTitle {
+    font-family: Tahoma, Verdana, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
 }
-.headerBarContent{
-color:#ffffff;
-font-weight:bold;
-padding:2px;
+
+.infoBoxContent {
+    background-color: #e7e6e0;
+    color: #333333;
 }
-.infoBoxContent{
-background-color:#e7e6e0;
-color:#333333;
+
+.infoBoxContent a img, .infoBoxContent input[type="image"] {
+    margin: 4px;
 }
-.infoBoxHeading{
-background-color:#003D00;
-color:#ffffff;
+
+.infoBoxHeading {
+    background-color: #333;
+    color: #ffffff;
 }
-.main{
+
+.main a img {
+    margin-bottom: 16px;
 }
-.menuBoxContent{
-color:#616060;
+
+.menuBoxContent {
+    color: #616060;
 }
-.menuBoxHeading{
-background-color:#ffffff;
-color:#616060;
+
+.menuBoxHeading {
+    background-color: #ffffff;
+    color: #616060;
 }
-.messageBox{
+
+.messageBox {
 }
-.messageStackCaution{
-background-color:#ffff00;
+
+.messageStackCaution {
+    background-color: #ffff00;
 }
-.messageStackError,.messageStackWarning{
-background-color:#ffb3b5;
+
+.messageStackError, .messageStackWarning {
+    background-color: #ffb3b5;
 }
-.messageStackSuccess{
-background-color:#d4ffbd;
+
+.messageStackSuccess {
+    background-color: #d4ffbd;
 }
-.oldPrice{
-text-decoration:line-through;
+
+.oldPrice {
+    text-decoration: line-through;
 }
-h1,.pageHeading{
-color:#003D00; /*727272*/
-font-size:16px;
-font-variant:small-caps;
-font-weight:bold;
+
+h1, .pageHeading {
+    color: #333; /*727272*/
+    font-size: 16px;
+    font-variant: small-caps;
+    font-weight: bold;
 }
-.SaleMakerDisabled{
-background-color:#f0f1f1;
+
+.SaleMakerDisabled {
+    background-color: #f0f1f1;
 }
-.SaleMakerOver{
-background-color:#ffffff;
-cursor:pointer;
-cursor:hand;
+
+.SaleMakerOver {
+    background-color: #ffffff;
+    cursor: pointer;
+    cursor: hand;
 }
-.SaleMakerSelected{
-background-color:#dee4e8;
-cursor:pointer;
-cursor:hand;
+
+.SaleMakerSelected {
+    background-color: #dee4e8;
+    cursor: pointer;
+    cursor: hand;
 }
-.smallText{
-font-size:9px;
+
+div.copyrightrow {
+    background: #ffffff;
+    clear: both;
+    font-size: 9px;
+    padding: 25px;
+    text-align: center;
 }
-.specialPrice{
-color:#ff6600;
+
+div.header {
+    clear: both;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 3px;
 }
+
+div.reportBox {
+    background: #666;
+    border: 1px solid #666;
+    margin-top: 1em;
+}
+
+.reportBox div.row {
+    background: #f7f6ef;
+    clear: both;
+    margin-top: 1px;
+    padding: 3px;
+    margin: 0px;
+}
+
+.reportBox div.row:nth-of-type(2n) {
+    background-color: #ffffff;
+}
+
+.reportBox div.row span.center {
+    margin-right: 30px;
+}
+
+.reportBox div.row span.left {
+    float: left;
+    text-align: left;
+    width: 74%;
+}
+
+.reportBox div.row span.right {
+    float: right;
+    text-align: right;
+    width: 34%;
+}
+
+div.warrantyrow {
+    background: #ffffff;
+    clear: both;
+    font-size: 9px;
+    text-align: center;
+}
+
+.smallText {
+    font-size: 9px;
+}
+
+.smallText a img{
+    margin-bottom: 16px;
+}
+
+.specialPrice {
+    color: #ff6600;
+}
+
 .lookupAttention {
-  color: #FF0000;
+    color: #FF0000;
 }
+
 .clearBoth {
-	clear:both;
+    clear: both;
 }
+
+div.clearBoth {
+    clear: both;
+    margin-top: 20px;
+}
+
 #loginExpiryPolicy {
-	margin-top: 2em;
+    margin-top: 2em;
 }
+
 .hiddenField {
-	display: none;
+    display: none;
 }
+
 #alt_nav {
-	padding:20px;
-	font-size:110%;
-	line-height:1.8em;
+    padding: 20px;
+    font-size: 110%;
+    line-height: 1.8em;
 }
+
 #alt_nav h2 {
-	font-size:90%
+    font-size: 90%
 }
+
 #alt_nav p {
-	max-width:600px;
+    max-width: 600px;
 }
+
 #alt_nav a {
-	white-space: nowrap;
+    white-space: nowrap;
 }
+
+label.error {
+    color: red;
+    font-weight: bold;
+}
+
+.adminRowIcon, .adminRowIcon a {
+    color: #05a5cb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.adminRowIcon:hover, .adminRowIcon a:hover {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.adminRowButton {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background: inherit;
+}
+
+.adminRowIconActive, .adminRowIconInactive:hover {
+    color: green;
+}
+
+.adminRowIconInactive, .adminRowIconActive:hover {
+    color: red;
+}
+
+.adminRowIconRestricted, .adminRowIconRestricted:hover {
+    color: yellow;
+}
+
+.adminRowIconAttributesActive i.fa-stack-1x {
+    color: #f2f1ee;
+}
+
+.adminRowIconCartActive, .adminRowIconCartNoActive, .adminRowIconCartActive:hover, .adminRowIconCartNoActive:hover {
+    color: green;
+    text-align: right;
+}
+
+.adminRowIconCartInactive, .adminRowIconCartNoInactive, .adminRowIconCartInactive:hover, .adminRowIconCartNoInactive:hover {
+    color: red;
+    text-align: right;
+}
+.configurationColumnLeft, .configurationColumnRight{
+    padding: 1px;
+}
+#loginFormDiv div.messageStackError{
+    margin: 5px;
+    padding: 5px;
+}
+img[alt="Cancel"], img[alt="Reset"]{
+    vertical-align: top;
+}
+.versionCurrent{
+  color:green;
+}
+.alertVersionNew{
+  color:#ff0000;
+  font-size:14px;
+  font-weight:bold;
+}
+.adminHeaderAlerts{
+    padding: 10px;
+}
+#adminHeaderLogo{
+    padding: 5px;
+}
+.right {
+  text-align: right;
+}
+.center {
+  text-align: center;
+}
+
+/* bof Footer */
+footer, #footer {
+    text-align: center;
+    width: 100%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+footer, #footer, footer a, #footer a {
+    font-size: 0.9em;
+}
+/*
+footer.homeFooter, .bottom footer {
+    position: fixed;
+    bottom: 0;
+}
+@media screen {
+    body.indexDashboard {
+        height: 111%;
+    }
+}
+*/
+/* eof Footer */
+
+#setupWizardForm INPUT[type="text"],
+#setupWizardForm INPUT[type="email"],
+#setupWizardForm textarea {
+    width: 40%;
+    max-width: 450px;
+}
+@media (min-width: 768px) {
+    #setupWizardPage #pageWrapper{
+        margin: 1em 5% 1em 25%;
+    }
+}
+
+
+
+/* This imageless css button is based on the button that was generated initially by CSSButtonGenerator.com */
+.buttonRow a {
+  text-decoration: none;
+}
+.button, input.button {
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  border-radius:5px;
+  display:inline-block;
+  font-family:Verdana;
+  font-size:13px;
+  font-weight:bold;
+  margin: 0;
+  padding:3px 8px;
+  text-decoration:none;
+}
+input.button a, a input.button {
+    color: #404040;
+}
+input.submit {
+  background-color:#fee8b9;  /* Submit button background color */
+  border: 1px solid #638263;  /* Submit button border color */
+}
+input.submit:hover {
+  background-color:#ffdc9c;  /* Hover color for the submit buttons */
+  border: 1px solid #638263;  /* Submit button border color */
+  cursor: pointer;
+}
+input.faint {
+    font-weight: normal;
+    font-size: 0.9em;
+}
+/* End of css buttons */
+
+/* Print-specific styles */
+@media print {
+    .header-area, .footer-area, .noprint,
+    .report-button { display: none;}
+    a[href]:after {
+        content: none
+    }
+    footer, #footer {
+        /*position: fixed;*/
+        /*bottom: 0;*/
+    }
+}
+/* end of print-specific styles */

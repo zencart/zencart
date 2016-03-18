@@ -3,14 +3,14 @@
  * Module Template - for shipping-estimator display
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_modules_shipping_estimator.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Author: DrByte  Wed Jan 6 16:47:38 2016 -0500 Modified in v1.5.5 $
  */
 ?>
 <div id="shippingEstimatorContent">
-<?php echo zen_draw_form('estimator', zen_href_link($show_in, '', $request_type), 'post'); ?>
+<?php echo zen_draw_form('estimator', zen_href_link($show_in . '#view', '', $request_type), 'post'); ?>
 <?php echo zen_draw_hidden_field('scid', $selected_shipping['id']); ?>
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 <?php
@@ -52,6 +52,7 @@
 <?php echo zen_get_country_list('zone_country_id', $selected_country, 'id="country" onchange="update_zone(this.form);"'); ?>
 <br class="clearBoth" />
 
+<a name="view"></a>
 <label class="inputLabel" for="stateZone" id="zoneLabel"><?php echo ENTRY_STATE; ?></label>
 <?php echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $state_zone_id, 'id="stateZone"');?>
 <br class="clearBoth" id="stBreak" />
@@ -83,7 +84,7 @@
 <?php
     }else{
 ?>
-<table width="100%" border="1" cellpadding="2" cellspacing ="2">
+<table id="seQuoteResults">
 <?php if ($_SESSION['customer_id'] < 1 ){ ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">

@@ -3,10 +3,10 @@
  * ot_gv order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Apr 15 17:32:27 2014 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Sun Oct 18 03:26:56 2015 -0400 Modified in v1.5.5 $
  */
 /**
  * Enter description here...
@@ -30,7 +30,7 @@ class ot_gv {
    *
    * @return ot_gv
    */
-  function ot_gv() {
+  function __construct() {
     global $currencies;
     $this->code = 'ot_gv';
     $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
@@ -107,8 +107,7 @@ class ot_gv {
   function pre_confirmation_check($order_total) {
     global $order, $currencies, $messageStack;
     // clean out negative values and strip common currency symbols
-    $_SESSION['cot_gv'] = preg_replace('/[^0-9,.%]/', '', $_SESSION['cot_gv']);
-    $_SESSION['cot_gv'] = abs($_SESSION['cot_gv']);
+    $_SESSION['cot_gv'] = preg_replace('/[^0-9.,%]/', '', $_SESSION['cot_gv']);
 
     if ($_SESSION['cot_gv'] > 0) {
       // if cot_gv value contains any nonvalid characters, throw error
@@ -227,7 +226,14 @@ class ot_gv {
   function collect_posts() {
     global $db, $currencies, $messageStack;
     // if we have no GV amount selected, set it to 0
-    if (!$_POST['cot_gv']) $_SESSION['cot_gv'] = '0.00';
+    // if requested redemption amount is greater than value of credits on account, throw error
+    if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
+      $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT . ' - ' . number_format($_SESSION['cot_gv'], 2), error);
+      $_SESSION['cot_gv'] = 0.00;
+      zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    }
+    if (isset($_POST['cot_gv']) && $_POST['cot_gv'] == 0) $_SESSION['cot_gv'] = '0.00';
+
     // if we have a GV redemption code submitted, process it
     if ($_POST['gv_redeem_code']) {
       // check for validity
@@ -283,7 +289,8 @@ class ot_gv {
   function calculate_credit($save_total_cost) {
     global $db, $order, $currencies;
     // calculate value based on default currency
-    $gv_payment_amount = $currencies->value($_SESSION['cot_gv'], true, DEFAULT_CURRENCY);
+    $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
+    $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
     $full_cost = $save_total_cost - $gv_payment_amount;
     if ($full_cost < 0) {
       $full_cost = 0;

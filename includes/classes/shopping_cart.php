@@ -3,10 +3,10 @@
  * Class for managing the Shopping Cart
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Sun Oct 18 01:35:35 2015 -0400 Modified in v1.5.5 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -76,7 +76,7 @@ class shoppingCart extends base {
    * Simply resets the users cart.
    * @return void
    */
-  function shoppingCart() {
+  function __construct() {
     $this->notify('NOTIFIER_CART_INSTANTIATE_START');
     $this->reset();
     $this->notify('NOTIFIER_CART_INSTANTIATE_END');
@@ -300,7 +300,19 @@ class shoppingCart extends base {
               $option = substr($option, strlen(TEXT_PREFIX));
               $attr_value = stripslashes($value);
               $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
-              $this->contents[$products_id]['attributes_values'][$option] = $attr_value;
+              
+              // -----
+              // Check that the length of this TEXT attribute is less than or equal to its "Max Length" definition. While there
+              // is some javascript on a product details' page that limits the number of characters entered, the customer
+              // can choose to disable javascript entirely or circumvent that checking by performing a copy&paste action.
+              //
+              $check = $db->Execute ("SELECT products_options_length FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option . " LIMIT 1");
+              if (!$check->EOF) {
+                if (strlen ($attr_value) > $check->fields['products_options_length']) {
+                  $attr_value = zen_trunc_string ($attr_value, $check->fields['products_options_length'], '');
+                }
+                $this->contents[$products_id]['attributes_values'][$option] = $attr_value;
+              }
             }
           }
 
@@ -608,19 +620,20 @@ class shoppingCart extends base {
   }
   /**
    * Method return a comma separated list of all products in the cart
+   * NOTE: Not used in core ZC, but some plugins and shipping modules make use of it as a helper function
    *
    * @return string
-   * @todo ICW - is this actually used anywhere?
    */
   function get_product_id_list() {
-    $product_id_list = '';
-    if (is_array($this->contents)) {
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
-        $product_id_list .= ', ' . zen_db_input($products_id);
-      }
+    if (!is_array($this->contents)) {
+      return '';
     }
-    return substr($product_id_list, 2);
+    reset($this->contents);
+    $product_id_list = array();
+    while (list($products_id, ) = each($this->contents)) {
+      $product_id_list[] = $products_id;
+    }
+    return implode(',', $product_id_list);
   }
   /**
    * Method to calculate cart totals(price and weight)

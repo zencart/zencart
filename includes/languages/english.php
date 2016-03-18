@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Tue Jan 5 15:06:15 2016 -0500 Modified in v1.5.5 $
  */
 
 // FOLLOWING WERE moved to meta_tags.php
@@ -137,7 +137,6 @@
   define('BOX_INFORMATION_CONDITIONS', 'Conditions of Use');
   define('BOX_INFORMATION_SHIPPING', 'Shipping &amp; Returns');
   define('BOX_INFORMATION_CONTACT', 'Contact Us');
-  define('BOX_BBINDEX', 'Forum');
   define('BOX_INFORMATION_UNSUBSCRIBE', 'Newsletter Unsubscribe');
 
   define('BOX_INFORMATION_SITE_MAP', 'Site Map');
@@ -269,10 +268,10 @@
   define('PREVNEXT_TITLE_PAGE_NO', 'Page %d');
   define('PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE', 'Previous Set of %d Pages');
   define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next Set of %d Pages');
-  define('PREVNEXT_BUTTON_FIRST', '&lt;&lt;FIRST');
-  define('PREVNEXT_BUTTON_PREV', '[&lt;&lt;&nbsp;Prev]');
-  define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&gt;&gt;]');
-  define('PREVNEXT_BUTTON_LAST', 'LAST&gt;&gt;');
+  define('PREVNEXT_BUTTON_FIRST', '&laquo;FIRST');
+  define('PREVNEXT_BUTTON_PREV', '[&laquo;&nbsp;Prev]');
+  define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&raquo;]');
+  define('PREVNEXT_BUTTON_LAST', 'LAST&raquo;');
 
   define('TEXT_BASE_PRICE','Starting at: ');
 
@@ -509,6 +508,7 @@
   define('TEXT_AUTHORIZATION_PENDING_PRICE', 'Price Unavailable');
   define('TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE', 'APPROVAL PENDING');
   define('TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE','Login to Shop');
+  define('TEXT_AUTHORIZATION_PENDING_CHECKOUT', 'Checkout Unavailable - Approval Pending');
 
 // text pricing
   define('TEXT_CHARGES_WORD','Calculated Charge:');

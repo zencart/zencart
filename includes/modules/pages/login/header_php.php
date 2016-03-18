@@ -3,10 +3,10 @@
  * Login Page
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Mar 6 14:59:16 2014 -0500 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Mon Oct 19 10:48:31 2015 -0400 Modified in v1.5.5 $
  */
 
 // This should be first line of the script:
@@ -127,17 +127,19 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         // eof: not require part of contents merge notice
 
         // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+        if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
+          if (SHOW_SHOPPING_CART_COMBINED == 2) {
+            // warning only do not send to cart
+            $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+          }
+          if (SHOW_SHOPPING_CART_COMBINED == 1) {
+            // show warning and send to shopping cart for review
+            if (!(isset($_GET['gv_no']))) {
               $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
               zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+            } else {
+              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
             }
           }
         }
@@ -145,8 +147,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
         if (sizeof($_SESSION['navigation']->snapshot) > 0) {
           //    $back = sizeof($_SESSION['navigation']->path)-2;
-          //if (isset($_SESSION['navigation']->path[$back]['page'])) {
-          //    if (sizeof($_SESSION['navigation']->path)-2 > 0) {
           $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], array(zen_session_name())), $_SESSION['navigation']->snapshot['mode']);
           //            $origin_href = zen_back_link_only(true);
           $_SESSION['navigation']->clear_snapshot();
@@ -165,8 +165,8 @@ $breadcrumb->add(NAVBAR_TITLE);
 
 // Check for PayPal express checkout button suitability:
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True' && defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') && MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON == 'On');
-// Check for express checkout button suitability:
-$ec_button_enabled = ($paypalec_enabled && ($_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0));
+// Check for express checkout button suitability (must have cart contents, value > 0, and value < 10000USD):
+$ec_button_enabled = ($paypalec_enabled && $_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0 && $currencies->value($_SESSION['cart']->total, true, 'USD') <= 10000);
 
 
 // This should be last line of the script:

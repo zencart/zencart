@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Jul 16 15:05:32 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Fri Feb 19 22:01:13 2016 -0500 Modified in v1.5.5 $
  */
 
 require('includes/application_top.php');
 
 // Check if session has timed out
-if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN));
+if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 
 // make a note of the current user - they can't delete themselves (by accident) or change their own status
 $currentUser = $_SESSION['admin_id'];
@@ -47,11 +47,11 @@ elseif (in_array($action, array('edit','password','delete','delete_confirm','upd
 switch ($action) {
   case 'add': // display unpopulated form for adding a new user
     $formAction = 'insert';
-    $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+    $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     break;
   case 'edit': // display populated form for editing existing user
     $formAction = 'update';
-    $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+    $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     break;
   case 'password': // display unpopulated form for resetting existing user's password
     $formAction = 'reset';
@@ -72,7 +72,7 @@ switch ($action) {
       }
       $action = 'add';
       $formAction = 'insert';
-      $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+      $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     } else
     {
       $action = '';
@@ -89,7 +89,7 @@ switch ($action) {
       }
       $action = 'edit';
       $formAction = 'update';
-      $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
+      $profilesList = array_merge(array(array('id'=>0,'text'=>TEXT_CHOOSE_PROFILE)), zen_get_profiles());
     } else
     {
       $action = '';
@@ -182,10 +182,10 @@ $userList = zen_get_users();
 <?php if ($action == 'add') { ?>
       <tr>
         <td class="id">&nbsp;</td>
-        <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', false, 'text', true) ?></td>
-        <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="field"', false, 'text', true) ?></td>
+        <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', true, 'text', true) ?></td>
+        <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="field"', true, 'email', true) ?></td>
         <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0) ?></td>
-        <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="field"', false, 'password'); ?></td>
+        <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="field"', true, 'password'); ?></td>
         <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="field"', false, 'password'); ?></td>
         <td class="actions"><?php echo zen_image_submit('button_insert.gif', IMAGE_INSERT) ?> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>"> <?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a></td>
       </tr>
@@ -200,7 +200,7 @@ $userList = zen_get_users();
 <?php } ?>
 <?php if ($action == 'edit' && $user == $userDetails['id']) { ?>
         <td class="name"><?php echo zen_draw_input_field('name', $userDetails['name'], 'class="field"') ?></td>
-        <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"') ?></td>
+        <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"', false, 'email') ?></td>
 <?php } else { ?>
         <td class="name"><?php echo $userDetails['name'] ?></td>
         <td class="email"><?php echo $userDetails['email'] ?></td>
@@ -262,10 +262,11 @@ $userList = zen_get_users();
 </div>
 <!-- body_eof //-->
 
+<div class="bottom">
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-<br>
+</div>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

@@ -3,10 +3,10 @@
  * cache Class.
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: cache.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Author: DrByte  Fri Dec 12 13:59:38 2014 -0500 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -125,9 +125,9 @@ class cache extends base {
         return true;
       }
       $result_serialize = $db->prepare_input(base64_encode(serialize($zf_result_array)));
-      $sql = "insert into " . TABLE_DB_CACHE . " set cache_entry_name = '" . $zp_cache_name . "',
-                                                 cache_data = '" . $result_serialize . "',
-                   cache_entry_created = '" . time() . "'";
+      $sql = "insert ignore into " . TABLE_DB_CACHE . " (cache_entry_name, cache_data, cache_entry_created) VALUES (:cachename, :cachedata, unix_timestamp() )";
+      $sql = $db->bindVars($sql, ':cachename', $zp_cache_name, 'string');
+      $sql = $db->bindVars($sql, ':cachedata', $result_serialize, 'string');
       $db->Execute($sql);
       return true;
       break;

@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Sun Jan 10 02:53:32 2016 -0500 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -38,13 +38,11 @@ $path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
 if (defined('SESSION_USE_ROOT_COOKIE_PATH') && SESSION_USE_ROOT_COOKIE_PATH  == 'True') $path = '/';
 $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
 $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PREFIX == 'True') ? '.' : '';
+if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) $domainPrefix = '';
 $secureFlag = ((ENABLE_SSL == 'true' && substr(HTTP_SERVER, 0, 6) == 'https:' && substr(HTTPS_SERVER, 0, 6) == 'https:') || (ENABLE_SSL == 'false' && substr(HTTP_SERVER, 0, 6) == 'https:')) ? TRUE : FALSE;
 
-if (PHP_VERSION >= '5.2.0') {
-  session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, TRUE);
-} else {
-  session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);
-}
+session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, TRUE);
+
 /**
  * set the session ID if it exists
  */
@@ -54,11 +52,10 @@ if (isset($_POST[zen_session_name()])) {
   zen_session_id($_GET[zen_session_name()]);
 }
 /**
- * need to tidy up $_SERVER['REMOTE_ADDR'] here before we use it anywhere else
- * one problem we don't address here is if $_SERVER['REMOTE_ADDRESS'] is not set to anything at all
+ * Sanitize the IP address, and resolve any proxies.
  */
 $ipAddressArray = explode(',', zen_get_ip_address());
-$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '';
+$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '.';
 $_SERVER['REMOTE_ADDR'] = $ipAddress;
 /**
  * start the session
@@ -135,7 +132,7 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
   }
   if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }
 /**
@@ -148,6 +145,6 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
   if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
     zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 }

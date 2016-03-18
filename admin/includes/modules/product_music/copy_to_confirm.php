@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Mon Oct 19 11:35:49 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -44,6 +44,17 @@ if (!defined('IS_ADMIN_FLAG')) {
                                      from " . TABLE_PRODUCTS . "
                                      where products_id = '" . (int)$products_id . "'");
 
+            // fix Product copy from if Unit is 0
+            if ($product->fields['products_quantity_order_units'] == 0) {
+              $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_quantity_order_units = 1 WHERE products_id = '" . (int)$products_id . "'";
+              $results = $db->Execute($sql);
+            }
+            // fix Product copy from if Minimum is 0
+            if ($product->fields['products_quantity_order_min'] == 0) {
+              $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_quantity_order_min = 1 WHERE products_id = '" . (int)$products_id . "'";
+              $results = $db->Execute($sql);
+            }
+
             $tmp_value = zen_db_input($product->fields['products_quantity']);
             $products_quantity = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
             $tmp_value = zen_db_input($product->fields['products_price']);
@@ -68,12 +79,12 @@ if (!defined('IS_ADMIN_FLAG')) {
                                   '" . $products_price . "',
                                   '" . zen_db_input($product->fields['products_virtual']) . "',
                                   now(),
-                                  '" . (zen_not_null(zen_db_input($product->fields['products_date_available'])) ? zen_db_input($product->fields['products_date_available']) : '0001-01-01 00:00:00') . "',
+                                  " . (zen_not_null(zen_db_input($product->fields['products_date_available'])) ? "'" . zen_db_input($product->fields['products_date_available']) . "'" : 'null') . ",
                                   '" . $products_weight . "', '0',
                                   '" . (int)$product->fields['products_tax_class_id'] . "',
                                   '" . (int)$product->fields['manufacturers_id'] . "',
-                                  '" . zen_db_input($product->fields['products_quantity_order_min']) . "',
-                                  '" . zen_db_input($product->fields['products_quantity_order_units']) . "',
+                                  '" . zen_db_input(($product->fields['products_quantity_order_min'] == 0 ? 1 : $product->fields['products_quantity_order_min'])) . "',
+                                  '" . zen_db_input(($product->fields['products_quantity_order_units'] == 0 ? 1 : $product->fields['products_quantity_order_units'])) . "',
                                   '" . zen_db_input($product->fields['products_priced_by_attribute']) . "',
                                   '" . (int)$product->fields['product_is_free'] . "',
                                   '" . (int)$product->fields['product_is_call'] . "',
@@ -88,7 +99,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
             $dup_products_id = $db->Insert_ID();
 
-            if (isset($_POST['copy_media']) && $_POST['copy_media'] == 'on') {
+            if (isset($_POST['copy_media']) && ($_POST['copy_media'] == '1' || $_POST['copy_media'] == 'on')) {
               $product_media = $db->Execute("select media_id from " . TABLE_MEDIA_TO_PRODUCTS . "
                                              where product_id = '" . (int)$products_id . "'");
               while (!$product_media->EOF) {
@@ -101,7 +112,8 @@ if (!defined('IS_ADMIN_FLAG')) {
               }
             }
 
-            $music_extra = $db->Execute("select artists_id, record_company_id, music_genre_id from " . TABLE_PRODUCT_MUSIC_EXTRA . "                                                where products_id = '" . (int)$products_id . "'");
+            $music_extra = $db->Execute("select artists_id, record_company_id, music_genre_id from " . TABLE_PRODUCT_MUSIC_EXTRA . "
+                                         where products_id = '" . (int)$products_id . "'");
 
             $db->Execute("insert into " . TABLE_PRODUCT_MUSIC_EXTRA . "
                           (products_id, artists_id, record_company_id, music_genre_id)
@@ -132,7 +144,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                           (products_id, categories_id)
                           values ('" . (int)$dup_products_id . "', '" . (int)$categories_id . "')");
             $products_id = $dup_products_id;
-            $description->MoveNext();
+
 // FIX HERE
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Copy attributes to duplicate product

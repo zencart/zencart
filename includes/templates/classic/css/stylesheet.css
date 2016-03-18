@@ -2,10 +2,10 @@
  * Main CSS Stylesheet
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Apr 17 23:49:06 2014 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Fri Jan 8 15:34:24 2016 -0500 Modified in v1.5.5 $
  */
 
 body {
@@ -721,4 +721,27 @@ LABEL#textAreaReviews {
 
 /* added padding to prevent CSS buttons from touching product image */
 .navNextPrevWrapper {padding-bottom: 5px;}
+
+.paypal-button-hidden {
+  visibility: hidden;
+}
+
+/* markup for tables used to present tabular data */
+.alignLeft {text-align: left}
+.alignCenter {text-align: center}
+.alignRight {text-align: right}
+.tabTable {width:100%;border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
+table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
+#cartContentsDisplay {width: 100%;}
+#myAccountOrdersStatus, #orderHistoryHeading, #prevOrders {width: 100%;}
+.accountOrderId {width:30px;}
+.accountOrderDate, .accountOrderStatus, .accountOrderTotal {width:70px;}
+#seQuoteResults {width: 100%;}
+#seQuoteResults td {border: 1px solid black;}
+.listBoxContentTable {width:100%;}
+.listBoxContentTable td {border: 1px solid black;}
+#upcomingProductsTable {width: 100%;}
+#quantityDiscountsDetails td {border: 1px solid black;}
+.products-listing .productsAllListing, .productsNewListing, .productsFeaturedListing {width: 100%;}
+.tableBorder1 td {border: 1px solid black;}
 

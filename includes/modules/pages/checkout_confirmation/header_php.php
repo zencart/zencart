@@ -3,10 +3,10 @@
  * checkout_confirmation header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 16:20:00 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Mon Dec 7 14:40:03 2015 -0500 Modified in v1.5.5 $
  */
 
 // This should be first line of the script:
@@ -45,7 +45,8 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
 }
 
 if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
-$_SESSION['comments'] = $_POST['comments'];
+
+$_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
 
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -86,7 +87,7 @@ if ($credit_covers) {
 
 $payment_modules = new payment($_SESSION['payment']);
 $payment_modules->update_status();
-if ( ($_SESSION['payment'] == '' || !is_object($$_SESSION['payment']) ) && $credit_covers === FALSE) {
+if ( ($_SESSION['payment'] == '' || !is_object(${$_SESSION['payment']}) ) && $credit_covers === FALSE) {
   $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
 }
 
@@ -145,22 +146,22 @@ if ($_SESSION['cc_id']) {
   }
 }
 
-if (isset($$_SESSION['payment']->form_action_url)) {
-  $form_action_url = $$_SESSION['payment']->form_action_url;
+if (isset(${$_SESSION['payment']}->form_action_url)) {
+  $form_action_url = ${$_SESSION['payment']}->form_action_url;
 } else {
   $form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
 
 // if shipping-edit button should be overridden, do so
 $editShippingButtonLink = zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
-if (method_exists($$_SESSION['payment'], 'alterShippingEditButton')) {
-  $theLink = $$_SESSION['payment']->alterShippingEditButton();
+if (method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
+  $theLink = ${$_SESSION['payment']}->alterShippingEditButton();
   if ($theLink) $editShippingButtonLink = $theLink;
 }
 // deal with billing address edit button
 $flagDisablePaymentAddressChange = false;
-if (isset($$_SESSION['payment']->flagDisablePaymentAddressChange)) {
-  $flagDisablePaymentAddressChange = $$_SESSION['payment']->flagDisablePaymentAddressChange;
+if (isset(${$_SESSION['payment']}->flagDisablePaymentAddressChange)) {
+  $flagDisablePaymentAddressChange = ${$_SESSION['payment']}->flagDisablePaymentAddressChange;
 }
 
 
@@ -170,4 +171,3 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_CONFIRMATION');
-?>

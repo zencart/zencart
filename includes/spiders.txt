@@ -1,4 +1,4 @@
-$Id: spiders.txt 2014-06-17 drbyte $
+$Id: spiders.txt 2015-09-11 drbyte $
 bot
 robot
 crawl
@@ -299,6 +299,7 @@ netscoop
 newscan-online
 nextgensearchbot
 ng-search
+nodeping
 northstar
 noyona
 npbot

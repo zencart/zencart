@@ -6,10 +6,10 @@
  * Displays final checkout details, cart, payment and shipping info details.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_confirmation_default.php 6247 2007-04-21 21:34:47Z wilt $
+ * @version $Id: Author: DrByte  Fri Jan 8 00:33:36 2016 -0500 Modified in v1.5.5 $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -32,7 +32,7 @@
   $class =& $_SESSION['payment'];
 ?>
 
-<h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3> 
+<h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3>
 <h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $GLOBALS[$class]->title; ?></h4>
 
 <?php
@@ -84,18 +84,11 @@
 ?>
 <br class="clearBoth" />
 <hr />
-<?php
-// always show comments
-//  if ($order->info['comments']) {
-?>
 
 <h2 id="checkoutConfirmDefaultHeadingComments"><?php echo HEADING_ORDER_COMMENTS; ?></h2>
 <div class="buttonRow forward"><?php echo  '<a href="' . zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
 <div><?php echo (empty($order->info['comments']) ? NO_COMMENTS_TEXT : nl2br(zen_output_string_protected($order->info['comments'])) . zen_draw_hidden_field('comments', $order->info['comments'])); ?></div>
 <br class="clearBoth" />
-<?php
-//  }
-?>
 <hr />
 
 <h2 id="checkoutConfirmDefaultHeadingCart"><?php echo HEADING_PRODUCTS; ?></h2>
@@ -112,9 +105,9 @@
 <?php  } //endif flagAnyOutOfStock ?>
 
 
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" id="cartContentsDisplay">
+      <table id="cartContentsDisplay">
         <tr class="cartTableHeading">
-        <th scope="col" id="ccQuantityHeading" width="30"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+        <th scope="col" id="ccQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
         <th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
 <?php
   // If there are tax groups, display the tax columns for price breakdown

@@ -6,10 +6,10 @@
  * They can send up to the amount of GV accumlated in their account by way of purchased GV's or GV's sent to them.
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 22:54:11 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Sun Oct 18 03:26:56 2015 -0400 Modified in v1.5.5 $
  */
 
 // This should be first line of the script:
@@ -83,10 +83,11 @@ if ($_GET['action'] == 'send') {
   $_POST['amount'] = str_replace('$', '', $_POST['amount']);
 
   $gv_amount = trim($_POST['amount']);
-  if (preg_match('/[^0-9\.]/', $gv_amount)) {
+  if (preg_match('/[^0-9\.,]/', $gv_amount)) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
   }
+  $gv_amount = $currencies->normalizeValue($gv_amount);
   if ( $currencies->value($gv_amount, true,DEFAULT_CURRENCY) > $customer_amount || $gv_amount == 0) {
     //echo $currencies->value($customer_amount, true,DEFAULT_CURRENCY);
     $error = true;

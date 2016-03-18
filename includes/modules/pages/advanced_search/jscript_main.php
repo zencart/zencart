@@ -20,8 +20,8 @@
 // $Id: jscript_main.php 345 2004-09-27 19:59:38Z wilt $
 //
 ?>
-<script language="javascript" src="includes/general.js" type="text/javascript"></script>
-<script language="javascript" type="text/javascript"><!--
+<script src="includes/general.js" type="text/javascript"></script>
+<script type="text/javascript"><!--
 function check_form() {
   var error_message = "<?php echo JS_ERROR; ?>";
   var error_found = false;

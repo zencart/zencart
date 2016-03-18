@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php drbyte Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Fri Feb 26 20:52:53 2016 -0500 Modified in v1.5.5 $
  */
 
 ////
@@ -57,6 +57,11 @@
   }
 
   function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+    global $zco_notifier;
+    $link = null;
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters, $connection);
+    if($link !== null) return $link;
+
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
@@ -140,7 +145,7 @@
 ////
 // javascript to dynamically update the states/provinces list when the country is changed
 // TABLES: zones
-  function zen_js_zone_list($country, $form, $field) {
+  function zen_js_zone_list($country, $form, $field, $showTextField = true) {
     global $db;
     $countries = $db->Execute("select distinct zone_country_id
                                from " . TABLE_ZONES . "
@@ -171,10 +176,12 @@
       $num_country++;
       $countries->MoveNext();
     }
-    $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
-                      '  }' . "\n";
-
+      $output_string .= '  }';
+      if ($showTextField) {
+          $output_string .= ' else {' . "\n" .
+              '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+              '  }' . "\n";
+      }
     return $output_string;
   }
 
@@ -224,8 +231,12 @@
 
 ////
 // Output a form password field
-  function zen_draw_password_field($name, $value = '', $required = false) {
-    $field = zen_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
+  function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
+    $parameters .= ' maxlength="40"';
+    if($autocomplete == false){
+      $parameters .= ' autocomplete="off"';
+    }
+    $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
 
     return $field;
   }
@@ -292,10 +303,10 @@
 
 ////
 // Output a form hidden field
-  function zen_draw_hidden_field($name, $value = '', $parameters = '') {
+  function zen_draw_hidden_field($name, $value = '~*~*#', $parameters = '') {
     $field = '<input type="hidden" name="' . zen_output_string($name) . '"';
 
-    if (zen_not_null($value)) {
+    if (zen_not_null($value) && $value != '~*~*#') {
       $field .= ' value="' . zen_output_string($value) . '"';
     } elseif (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
@@ -343,4 +354,9 @@
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
-?>
+////
+// output label for input fields
+  function zen_draw_label($text, $for, $parameters = ''){
+    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+    return $label;
+  }

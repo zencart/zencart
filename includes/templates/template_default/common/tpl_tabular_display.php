@@ -5,18 +5,20 @@
  * This file is used for generating tabular output where needed, based on the supplied array of table-cell contents.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_tabular_display.php 3957 2006-07-13 07:27:06Z drbyte $
+ * @version $Id: Author: DrByte  Mon Feb 15 13:59:01 2016 -0500 Modified in v1.5.5 $
  */
+
+$zco_notifier->notify('NOTIFY_TPL_TABULAR_DISPLAY_START', $current_page_base, $list_box_contents);
 
 //print_r($list_box_contents);
   $cell_scope = (!isset($cell_scope) || empty($cell_scope)) ? 'col' : $cell_scope;
   $cell_title = (!isset($cell_title) || empty($cell_title)) ? 'list' : $cell_title;
 
 ?>
-<table width="100%" border="0" cellspacing="0" cellpadding="0" id="<?php echo 'cat' . $cPath . 'Table'; ?>" class="tabTable">
+<table id="<?php echo 'cat' . $cPath . 'Table'; ?>" class="tabTable">
 <?php
   for($row=0; $row<sizeof($list_box_contents); $row++) {
     $r_params = "";
@@ -41,5 +43,7 @@
   </tr>
 <?php
   }
-?> 
+?>
 </table>
+<?php
+$zco_notifier->notify('NOTIFY_TPL_TABULAR_DISPLAY_END', $current_page_base, $list_box_contents);

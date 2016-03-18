@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:53:59 2015 -0400 Modified in v1.5.5 $
  */
 
 // Sets the status of a page
@@ -193,7 +193,6 @@
       var kill = document.getElementById('hoverJS');
       kill.disabled = true;
     }
-  if (typeof _editor_url == "string") HTMLArea.replaceAll();
   }
   // -->
 </script>
@@ -274,9 +273,9 @@
 
       $page_query = "select * from " . TABLE_EZPAGES . " where pages_id = '" . (int)$_GET['ezID'] . "'";
       $page = $db->Execute($page_query);
-      $ezInfo->objectInfo($page->fields);
+      $ezInfo->updateObjectInfo($page->fields);
     } elseif (zen_not_null($_POST)) {
-      $ezInfo->objectInfo($_POST);
+      $ezInfo->updateObjectInfo($_POST);
     }
 
 // set all status settings and switches
@@ -423,7 +422,7 @@
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_PAGES_HTML_TEXT; ?></td>
-            <td class="main"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '40', htmlspecialchars($ezInfo->pages_html_text, ENT_COMPAT, CHARSET, TRUE));?></td>
+            <td class="main"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '40', htmlspecialchars($ezInfo->pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"');?></td>
           </tr>
 
           <tr>

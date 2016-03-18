@@ -3,10 +3,10 @@
  * File contains the order-totals-processing class ("order-total")
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: order_total.php 19103 2011-07-13 18:10:46Z wilt $
+ * @version $Id: Author: DrByte  Sun Oct 18 01:47:46 2015 -0400 Modified in v1.5.5 $
  */
 /**
  * order-total class
@@ -22,15 +22,21 @@ class order_total extends base {
   var $modules = array();
 
   // class constructor
-  function order_total() {
+  function __construct() {
     global $messageStack;
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && zen_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
       reset($module_list);
       while (list(, $value) = each($module_list)) {
-        //include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/' . $value);
-        $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/', $value, 'false');
+        $lang_file = null;
+        $module_file = DIR_WS_MODULES . 'order_total/' . $value;
+        if (IS_ADMIN_FLAG === true) {
+          $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/', $value, 'false');
+          $module_file = DIR_FS_CATALOG . $module_file;
+        } else {
+          $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/', $value, 'false');
+        }
         if (@file_exists($lang_file)) {
           include_once($lang_file);
         } else {
@@ -40,7 +46,6 @@ class order_total extends base {
             $messageStack->add_session(WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
           }
         }
-        $module_file = DIR_WS_MODULES . 'order_total/' . $value;
         if (@file_exists($module_file)) {
           include_once($module_file);
           $class = substr($value, 0, strrpos($value, '.'));
@@ -170,39 +175,22 @@ class order_total extends base {
   // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
   // total, we don't want to go to paypal etc.
   //
-  function pre_confirmation_check($returnOrderTotalOnly = FALSE) {
+  function pre_confirmation_check($returnOrderTotalOnly = false) {
     global $order, $credit_covers;
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      $total_deductions  = 0;
       reset($this->modules);
       $orderInfoSaved = $order->info;
       while (list(, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class ) {
-          $order_total = $GLOBALS[$class]->get_order_total(isset($_SESSION['cc_id']) ? $_SESSION['cc_id'] : '');
-          if (is_array($order_total)) $order_total = $order_total['total'];
-          $deduction = $GLOBALS[$class]->pre_confirmation_check($order_total);
-          $total_deductions = $total_deductions + $deduction;
-//        echo 'class = ' . $class . "<br>";
-//        echo 'order-total = ' . $order_total . "<br>";
-//        echo 'deduction = ' .  $deduction . "<br>";
-        }
-        else
-        {
-          $GLOBALS[$class]->process();
-          $GLOBALS[$class]->output = array();
-        }
+        $GLOBALS[$class]->process();
+        $GLOBALS[$class]->output = array();
       }
-      $calculatedOrderTotal = $order->info['total'];
-      $order->info = $orderInfoSaved;
-//      echo "orderTotal = {$order->info['total']}";
-//      echo "TotalDeductions = {$total_deductions}";
-//      do not set when Free Charger is being used
-      $difference = $order->info['total'] - $total_deductions;
-      if ( $difference <= 0.009 && $_SESSION['payment'] != 'freecharger') {
+      $reCalculatedOrderTotal = $order->info['total'];
+      if ($reCalculatedOrderTotal <= 0.009 && $_SESSION['payment'] != 'freecharger') {
         $credit_covers = true;
       }
-      if ($returnOrderTotalOnly == TRUE) return $calculatedOrderTotal;
+      $order->info = $orderInfoSaved;
+      if ($returnOrderTotalOnly === true) return $reCalculatedOrderTotal;
     }
   }
   // this function is called in checkout process. it tests whether a decision was made at checkout payment to use
@@ -224,7 +212,6 @@ class order_total extends base {
   // Called in checkout process to clear session variables created by each credit class module.
   //
   function clear_posts() {
-    global $_POST;
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
       while (list(, $value) = each($this->modules)) {

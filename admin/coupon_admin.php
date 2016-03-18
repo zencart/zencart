@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Mon Feb 1 18:16:03 2016 -0500 Modified in v1.5.5 $
  */
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -307,11 +307,6 @@
       var kill = document.getElementById('hoverJS');
       kill.disabled = true;
     }
-<?php if ($_GET['action'] == 'new' || $_GET['action'] == 'voucheredit') { ?>
-    if (typeof _editor_url == "string") HTMLArea.replaceAll();
-<?php } else { ?>
-    if (typeof _editor_url == "string") HTMLArea.replace('message_html');
-<?php } ?>
   }
   // -->
 </script>
@@ -633,12 +628,12 @@ $customer = $db->Execute("select customers_firstname, customers_lastname
 <?php   if (EMAIL_USE_HTML == 'true') { ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_RICH_TEXT_MESSAGE; ?></td>
-                <td><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html"'); ?></td>
+                <td><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"'); ?></td>
               </tr>
 <?php } ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?>&nbsp;&nbsp;</td>
-                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(strip_tags(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html'])), ENT_COMPAT, CHARSET, TRUE)); ?></td>
+                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(strip_tags(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html'])), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -777,10 +772,10 @@ $customer = $db->Execute("select customers_firstname, customers_lastname
      <tr>
         <td align="left"><?php echo zen_image_submit('button_confirm.gif',COUPON_BUTTON_CONFIRM, (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?></td>
         <td align="left"><?php echo zen_image_submit('button_cancel.gif',COUPON_BUTTON_CANCEL, 'name=back'); ?></td>
-      </td>
       </tr>
 
-      </td></table></form>
+      </td></table></form></td>
+
       </tr>
 
       </table></td>
@@ -864,7 +859,7 @@ $customer = $db->Execute("select customers_firstname, customers_lastname
 
       <tr>
         <td align="left" valign="top" class="main"><?php if ($i==0) echo COUPON_DESC; ?></td>
-        <td align="left" valign="top"><?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','8', htmlspecialchars(stripslashes($_POST['coupon_desc'][$language_id]), ENT_COMPAT, CHARSET, TRUE)); ?>
+        <td align="left" valign="top"><?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','8', htmlspecialchars(stripslashes($_POST['coupon_desc'][$language_id]), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"'); ?>
             <?php echo '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></td>
         <td align="left" valign="top" class="main"><?php if ($i==0) echo COUPON_DESC_HELP; ?></td>
       </tr>
@@ -934,7 +929,7 @@ $customer = $db->Execute("select customers_firstname, customers_lastname
         <td align="left">&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
       </td>
       </tr>
-      </td></table></form>
+      </td></table></form></td>
       </tr>
 
       </table></td>

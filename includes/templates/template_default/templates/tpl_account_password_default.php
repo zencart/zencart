@@ -6,10 +6,10 @@
  * Allows customer to change their password
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_account_password_default.php 2896 2006-01-26 19:10:56Z birdbrain $
+ * @version $Id: rbarbour zcadditions.com Fri Feb 26 00:03:33 2016 -0500 Modified in v1.5.5 $
  */
 ?>
 <div class="centerColumn" id="accountPassword">
@@ -23,15 +23,15 @@
 <?php if ($messageStack->size('account_password') > 0) echo $messageStack->output('account_password'); ?>
 
 <label class="inputLabel" for="password-current"><?php echo ENTRY_PASSWORD_CURRENT; ?></label>
-<?php echo zen_draw_password_field('password_current','','id="password-current" autocomplete="off"') . (zen_not_null(ENTRY_PASSWORD_CURRENT_TEXT) ? '<span class="alert">' . ENTRY_PASSWORD_CURRENT_TEXT . '</span>': ''); ?>
+<?php echo zen_draw_password_field('password_current','','id="password-current" autocomplete="off" placeholder="' . ENTRY_PASSWORD_CURRENT_TEXT . '" required'); ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="password-new"><?php echo ENTRY_PASSWORD_NEW; ?></label>
-<?php echo zen_draw_password_field('password_new','','id="password-new" autocomplete="off"') . (zen_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="alert">' . ENTRY_PASSWORD_NEW_TEXT . '</span>': ''); ?>
+<?php echo zen_draw_password_field('password_new','','id="password-new" autocomplete="off" placeholder="' . ENTRY_PASSWORD_NEW_TEXT . '" required'); ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="password-confirm"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
-<?php echo zen_draw_password_field('password_confirmation','','id="password-confirm" autocomplete="off"') . (zen_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="alert">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>': ''); ?>
+<?php echo zen_draw_password_field('password_confirmation','','id="password-confirm" autocomplete="off" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '" required'); ?>
 <br class="clearBoth" />
 </fieldset>
 

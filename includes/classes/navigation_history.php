@@ -3,10 +3,10 @@
  * Navigation_history Class.
  *
  * @package classes
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: navigation_history.php 19328 2011-08-06 22:53:47Z drbyte $
+ * @version $Id: Author: DrByte  Mon Oct 19 00:50:19 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 class navigationHistory extends base {
   var $path, $snapshot;
 
-  function navigationHistory() {
+  function __construct() {
     $this->reset();
   }
 
@@ -30,6 +30,9 @@ class navigationHistory extends base {
   }
 
   function add_current_page() {
+      // check whether there are pages which should be blacklisted against entering navigation history
+    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && $_GET['act'] != '') return;
+
     global $request_type, $cPath;
     $get_vars = "";
 

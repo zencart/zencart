@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -625,7 +625,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
   function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
     global $db;
     zen_create_exceptions_table();
-    $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,:file:, :reason:, now(), :line:)";
+    $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " (sql_file, reason, errordate, sqlstatement) VALUES (:file:, :reason:, now(), :line:)";
     $sql = $db->bindVars($sql, ':file:', $sql_file, 'string');
     $sql = $db->bindVars($sql, ':reason:', $reason, 'string');
     $sql = $db->bindVars($sql, ':line:', $line, 'string');
@@ -801,7 +801,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
         </tr>
         <tr>
           <td valign="top" class="main" width="110px"><?php echo TEXT_ENTER_QUERY_STRING; ?></td>
-          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery"',false); ?></td>
+          <td><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '','id="sqlpatchKeyedQuery" class="sqlpatchKeyedQuery noEditor"',false); ?></td>
         </tr>
         <tr>
           <td colspan="2" align="right"><?php echo zen_image_submit('button_send.gif', IMAGE_SEND); ?></td>

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: reviews.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:53:59 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -81,6 +81,7 @@
   }
   // -->
 </script>
+<?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body onLoad="init()">
 <!-- header //-->
@@ -153,7 +154,7 @@
       <tr>
         <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><b><?php echo ENTRY_REVIEW; ?></b><br><br><?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text), ENT_COMPAT, CHARSET, TRUE)); ?></td>
+            <td class="main" valign="top"><b><?php echo ENTRY_REVIEW; ?></b><br><br><?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
           </tr>
           <tr>
             <td class="smallText" align="right"><?php echo ENTRY_REVIEW_TEXT; ?></td>

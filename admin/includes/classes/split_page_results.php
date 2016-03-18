@@ -1,14 +1,15 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: split_page_results.php 18926 2011-06-13 04:44:17Z drbyte $
+ * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
  */
-
-  class splitPageResults {
-    function splitPageResults(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows) {
+class splitPageResults
+{
+    function __construct(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows)
+    {
       global $db;
 
       if ($max_rows_per_page == 0) $max_rows_per_page = 20;

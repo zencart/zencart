@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue May 21 23:13:29 2013 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: zcwilt  Mon Oct 19 18:21:05 2015 +0100 Modified in v1.5.5 $
  */
 /**
  * File contains just application_top code
@@ -17,7 +17,7 @@
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
-define('DEBUG_AUTOLOAD', false);
+if (!defined('DEBUG_AUTOLOAD')) define('DEBUG_AUTOLOAD', false);
 /**
  * boolean used to see if we are in the admin script, obviously set to false here.
  * DO NOT REMOVE THE define BELOW. WILL BREAK ADMIN
@@ -60,6 +60,10 @@ if (version_compare(PHP_VERSION, 5.3, '>='))
 {
   @date_default_timezone_set(date_default_timezone_get());
 }
+
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
+
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -87,6 +91,18 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') ||
   } else {
     die('ERROR: admin/includes/configure.php file not found. Suggest running zc_install/index.php?');
   }
+}
+/**
+ * check for and load system defined path constants
+ */
+if (file_exists('includes/defined_paths.php')) {
+    /**
+     * load the system-defined path constants
+     */
+    require('includes/defined_paths.php');
+} else {
+    die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+    exit;
 }
 /**
  * ignore version-check if INI file setting has been set
@@ -141,7 +157,6 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 /**
  * Prepare init-system
  */
-unset($loaderPrefix); // admin doesn't need this override
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
@@ -155,32 +170,3 @@ require('includes/initsystem.php');
  */
   require(DIR_FS_CATALOG . 'includes/autoload_func.php');
 
-
-
-function zen_parse_url($url, $element = 'array')
-{
-  // Read the various elements of the URL, to use in auto-detection of admin foldername (basically a simplified parse_url equivalent which automatically supports ports and uncommon TLDs)
-  $t1 = array();
-  // scheme
-  $s1 = explode('://', $url);
-  $t1['scheme'] = $s1[0];
-  // host
-  $s2 = explode('/', trim($s1[1], '/'));
-  $t1['host'] = $s2[0];
-  array_shift($s2);
-  // path/uri
-  $t1['path'] = implode('/', $s2);
-  $p1 = ($t1['path'] != '') ? '/' . $t1['path'] : '';
-
-  switch($element) {
-    case 'path':
-    case 'host':
-    case 'scheme':
-      return $t1[$element];
-    case '/path':
-      return $p1;
-    case 'array':
-    default:
-      return $t1;
-  }
-}

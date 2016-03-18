@@ -4,10 +4,10 @@
  * Defines the filenames used in the project
  *
  * @package general
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: filenames.php 19690 2011-10-04 16:41:45Z drbyte $
+ * @version $Id: Author: DrByte  Sat Oct 17 21:54:07 2015 -0400 Modified in v1.5.5 $
  * @private
  */
 /**
@@ -187,6 +187,4 @@ define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
 define('FILENAME_PRODUCTS_DISCOUNT_PRICES','products_discount_prices.php');
 define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
-
-define('FILENAME_BB_INDEX', 'index.php'); // phpBB main index filename
 

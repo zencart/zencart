@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: language.php 19103 2011-07-13 18:10:46Z wilt $
+ * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -18,7 +18,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   class language {
     var $languages, $catalog_languages, $browser_languages, $language;
 
-    function language($lng = '') {
+    function __construct($lng = '') {
       global $db;
 
       $this->catalog_languages = array();

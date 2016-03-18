@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: stats_customers.php 15582 2010-02-26 17:22:10Z ajeh $
+ * @version $Id: Author: DrByte  Sat Oct 17 21:23:07 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -64,7 +64,12 @@
               </tr>
 <?php
   if (isset($_GET['page']) && ($_GET['page'] > 1)) $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
-  $customers_query_raw = "select c.customers_id, c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price)+sum(op.onetime_charges)  as ordersum from " . TABLE_CUSTOMERS . " c, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS . " o where c.customers_id = o.customers_id and o.orders_id = op.orders_id group by c.customers_id order by ordersum DESC";
+  $customers_query_raw = "SELECT c.customers_id, c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price)+sum(op.onetime_charges)  as ordersum
+                          FROM " . TABLE_CUSTOMERS . " c, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS . " o
+                          WHERE c.customers_id = o.customers_id
+                          AND o.orders_id = op.orders_id
+                          GROUP BY c.customers_id, c.customers_firstname, c.customers_lastname
+                          ORDER BY ordersum DESC";
   $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $customers_query_raw, $customers_query_numrows);
 // fix counted customers
   $customers_query_m = $db->Execute("select customers_id

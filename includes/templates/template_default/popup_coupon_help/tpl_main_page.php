@@ -3,10 +3,10 @@
  * Override Template for common/tpl_main_page.php
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Fri Jun 28 10:09:45 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Fri Jan 8 13:28:20 2016 -0500 Modified in v1.5.5 $
  */
 ?>
 <body id="popupCouponHelp" onload="resize();">
@@ -75,7 +75,7 @@
   foreach($cats as $key=>$value) {
     $mycats[] = $value["name"];
   }
-  $cats = '<ul id="couponCatRestrictions">' . '<li>' . implode('<li>', $mycats) . '</ul>';
+  $cats = '<ul id="couponCatRestrictions">' . '<li>' . implode('</li><li>', $mycats) . '</li></ul>';
   $text_coupon_help .= $cats;
 
   $text_coupon_help .= TEXT_COUPON_HELP_PRODUCTS;
@@ -102,12 +102,12 @@
   foreach($prods as $key=>$value) {
     $myprods[] = $value["name"];
   }
-  $prods = '<ul id="couponProdRestrictions">' . '<li>' . implode('<li>', $myprods) . '</ul>';
+  $prods = '<ul id="couponProdRestrictions">' . '<li>' . implode('</li><li>', $myprods) . '</li></ul>';
   $text_coupon_help .= $prods . TEXT_COUPON_GV_RESTRICTION;
 
   echo $text_coupon_help;
 
 ?>
-<p class="smallText" align="right"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></p>
+<p class="smallText forward"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></p>
 
 </body>

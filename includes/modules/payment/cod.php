@@ -3,16 +3,16 @@
  * COD Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jan 22 03:36:04 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Mon Dec 9 15:09:07 2013 -0500 Modified in v1.5.5 $
  */
   class cod {
     var $code, $title, $description, $enabled;
 
 // class constructor
-    function cod() {
+    function __construct() {
       global $order;
 
       $this->code = 'cod';
@@ -32,9 +32,9 @@
     function update_status() {
       global $order, $db;
 
-      if ($this->enabled && (int)MODULE_PAYMENT_COD_ZONE > 0 && isset($order->billing['country']['id'])) {
+      if ($this->enabled && (int)MODULE_PAYMENT_COD_ZONE > 0 && isset($order->delivery['country']['id'])) {
         $check_flag = false;
-        $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_COD_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_COD_ZONE . "' and zone_country_id = '" . (int)$order->delivery['country']['id'] . "' order by zone_id");
         while (!$check->EOF) {
           if ($check->fields['zone_id'] < 1) {
             $check_flag = true;
@@ -56,6 +56,11 @@
         if ($order->content_type != 'physical') {
           $this->enabled = false;
         }
+      }
+
+      // other status checks?
+      if ($this->enabled) {
+        // other checks here
       }
     }
 

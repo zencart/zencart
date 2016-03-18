@@ -3,10 +3,10 @@
  * ot_coupon order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: wilt  Modified in v1.5.4 $
+ * @version $Id: Author: zcwilt  Tue Dec 29 11:11:29 2015 +0000 Modified in v1.5.5 $
  */
 /**
  * Order Total class  to handle discount coupons
@@ -30,7 +30,7 @@ class ot_coupon {
    *
    * @return ot_coupon
    */
-  function ot_coupon() {
+  function __construct() {
     $this->code = 'ot_coupon';
     $this->header = MODULE_ORDER_TOTAL_COUPON_HEADER;
     $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
@@ -187,7 +187,7 @@ class ot_coupon {
 
 // left for total order amount vs qualified order amount just switch the commented lines
 //        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order']) {
-        if (strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
+        if ($coupon_result->fields['coupon_minimum_order'] > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
 
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_REDEEM_COUPON_MINIMUM, $currencies->format($coupon_result->fields['coupon_minimum_order'])),'caution');
           $this->clear_posts();
@@ -298,8 +298,7 @@ class ot_coupon {
               break;
           }
 
-//          $sql = "select zone_id, zone_country_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . $coupon_result->fields['coupon_zone_restriction'] . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id";
-          $sql = "select zone_id, zone_country_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . $coupon_result->fields['coupon_zone_restriction'] . "' and zone_country_id = '" . $check_zone_country_id . "' order by zone_id";
+          $sql = "select zone_id, zone_country_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . $coupon_result->fields['coupon_zone_restriction'] . "' and zone_country_id = '" . (int)$check_zone_country_id . "' order by zone_id";
           $check = $db->Execute($sql);
 
           // base restrictions zone restrictions for Delivery or Billing address
@@ -419,10 +418,10 @@ class ot_coupon {
             case 'E': // percentage & Free Shipping
               $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type'];
-              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               // add in Free Shipping
               $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
+              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
                 $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
               }
@@ -435,12 +434,12 @@ class ot_coupon {
             case 'O': // amount off & Free Shipping
               $od_amount['total'] = zen_round(($coupon->fields['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon->fields['coupon_amount']) * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
-              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               // add in Free Shipping
               if ($this->include_shipping == 'false') {
                 $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
               }
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
+              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
               if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
                 $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
               }

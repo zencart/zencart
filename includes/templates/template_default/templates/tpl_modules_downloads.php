@@ -3,10 +3,10 @@
  * Module Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_modules_downloads.php 6374 2007-05-25 20:24:42Z drbyte $
+ * @version $Id: Author: DrByte  Fri Jan 8 13:28:51 2016 -0500 Modified in v1.5.5 $
  */
 /**
  * require the downloads module
@@ -19,12 +19,12 @@
   if ($downloads->RecordCount() > 0) {
 ?>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="0" id="downloads">
-<caption><h4><?php echo HEADING_DOWNLOAD; ?></h4></caption>
+<h4 id="headingDownloads"><?php echo HEADING_DOWNLOAD; ?></h4>
+<table id="downloads">
   <tr class="tableHeading">
       <th scope="col" id="dlFileNameHeading"><?php echo TABLE_HEADING_PRODUCT_NAME; ?></th>
       <th scope="col" id="dlByteSize"><?php echo TABLE_HEADING_BYTE_SIZE; ?></th>
-      <th scope="col" id="dlButtonHeading"><?php echo TABLE_HEADING_DOWNLOAD_FILENAME; ?></th>
+      <th scope="col" id="dlFilenameHeading"><?php echo TABLE_HEADING_DOWNLOAD_FILENAME; ?></th>
       <th scope="col" id="dlDateHeading"><?php echo TABLE_HEADING_DOWNLOAD_DATE; ?></th>
       <th scope="col" id="dlCountHeading"><?php echo TABLE_HEADING_DOWNLOAD_COUNT; ?></th>
       <th scope="col" id="dlButtonHeading">&nbsp;</th>

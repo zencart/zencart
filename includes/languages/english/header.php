@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header.php 2940 2006-02-02 04:29:05Z drbyte $
+ * @version $Id: Author: DrByte  Fri Feb 26 00:22:54 2016 -0500 Modified in v1.5.5 $
  */
 
 // header text in includes/header.php
@@ -27,5 +27,4 @@
 // header Search Button/Box Search Button
   define('HEADER_SEARCH_BUTTON','Search');
   define('HEADER_SEARCH_DEFAULT_TEXT', 'Enter search keywords here');
-
-?>
+  define('SEARCH_DEFAULT_TEXT', 'search here');

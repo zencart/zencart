@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: credit_cards.php 6119 2007-04-05 08:20:16Z drbyte $
+ * @version $Id: Author: DrByte  Mon Jul 27 18:24:22 2015 -0400 Modified in v1.5.5 $
  */
 /*
 
@@ -34,7 +34,7 @@ define('TEXT_CC_ENABLED_DISCOVER','Discover');
 define('TEXT_CC_ENABLED_JCB','JCB');
 define('TEXT_CC_ENABLED_AUSTRALIAN_BANKCARD','Australian Bankcard');
 define('TEXT_CC_ENABLED_SOLO','Solo');
-define('TEXT_CC_ENABLED_SWITCH','Switch');
+define('TEXT_CC_ENABLED_DEBIT','Debit');
 define('TEXT_CC_ENABLED_MAESTRO','Maestro');
 
 // for images define these as:
@@ -51,6 +51,5 @@ define('IMAGE_CC_ENABLED_DISCOVER', zen_image($template->get_template_dir('cc5.g
 define('IMAGE_CC_ENABLED_JCB', zen_image($template->get_template_dir('cc6.gif', DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . 'cc6.gif'));
 define('IMAGE_CC_ENABLED_AUSTRALIAN_BANKCARD', zen_image($template->get_template_dir('cc7.gif', DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . 'cc7.gif'));
 define('IMAGE_CC_ENABLED_SOLO', zen_image($template->get_template_dir('cc8.gif', DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . 'cc8.gif'));
-define('IMAGE_CC_ENABLED_SWITCH', zen_image($template->get_template_dir('cc9.gif', DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . 'cc9.gif'));
+define('IMAGE_CC_ENABLED_DEBIT', zen_image($template->get_template_dir('cc9.gif', DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . 'cc9.gif'));
 define('IMAGE_CC_ENABLED_MAESTRO', zen_image($template->get_template_dir('cc10.gif', DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . 'cc10.gif'));
-?>

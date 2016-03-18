@@ -3,10 +3,10 @@
  * authorize.net echeck payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Wed Mar 16 16:12:21 2016 -0500 Modified in v1.5.5 $
  */
 /**
  * Authorize.net echeck Payment Module
@@ -68,10 +68,8 @@ class authorizenet_echeck extends base {
   var $reportable_submit_data = array();
   /**
    * Constructor
-   *
-   * @return authorizenet_echeck
    */
-  function authorizenet_echeck() {
+  function __construct() {
     global $order, $messageStack;
     $this->code = 'authorizenet_echeck';
     $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_ECHECK_STATUS == 'True') ? true : false); // Whether the module is installed or not
@@ -118,7 +116,7 @@ class authorizenet_echeck extends base {
     // check other reasons for the module to be deactivated:
     if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
-      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_ECHECK_ZONE . "' and zone_country_id = '" . (int)$order->billing['country']['id'] . "' order by zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {
           $check_flag = true;
@@ -133,6 +131,11 @@ class authorizenet_echeck extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**
@@ -322,7 +325,7 @@ class authorizenet_echeck extends base {
     $order_time = date("F j, Y, g:i a");
 
     // Calculate the next expected order id
-    $last_order_id = $db->Execute("select * from " . TABLE_ORDERS . " order by orders_id desc limit 1");
+    $last_order_id = $db->Execute("select orders_id from " . TABLE_ORDERS . " order by orders_id desc limit 1");
     $new_order_id = $last_order_id->fields['orders_id'];
     $new_order_id = ($new_order_id + 1);
     $new_order_id = (string)$new_order_id . '-' . zen_create_random_value(6, 'chars');
@@ -586,18 +589,18 @@ class authorizenet_echeck extends base {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-//   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
-//   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
-    if (CURL_PROXY_REQUIRED == 'True') {
-      $this->proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
-      curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, $this->proxy_tunnel_flag);
-      curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-      curl_setopt ($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
-    }
 
     $this->authorize = curl_exec($ch);
     $this->commError = curl_error($ch);
     $this->commErrNo = curl_errno($ch);
+
+    if ($this->commErrNo == 35) {
+      trigger_error('ALERT: Could not process Authorize.net echeck transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
+      $this->authorize = curl_exec($ch);
+      $this->commError = curl_error($ch);
+      $this->commErrNo = curl_errno($ch);
+    }
 
     $this->commInfo = @curl_getinfo($ch);
     curl_close ($ch);
@@ -673,7 +676,11 @@ class authorizenet_echeck extends base {
       $sql = $db->bindVars($sql, ':respCode', $response[0], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', $response[11], 'string');
-      $sql = $db->bindVars($sql, ':transID', $this->transaction_id, 'string');
+      if (trim($this->transaction_id) != '') {
+        $sql = $db->bindVars($sql, ':transID', $this->transaction_id, 'string');
+      } else {
+        $sql = $db->bindVars($sql, ':transID', 'NULL', 'passthru');
+      }
       $sql = $db->bindVars($sql, ':sentData', print_r($this->reportable_submit_data, true), 'string');
       $sql = $db->bindVars($sql, ':recvData', print_r($response, true), 'string');
       $sql = $db->bindVars($sql, ':orderTime', $order_time, 'string');

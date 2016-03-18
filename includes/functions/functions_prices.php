@@ -3,10 +3,10 @@
  * functions_prices
  *
  * @package functions
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Wed Jun 26 11:54:36 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Fri Jan 22 10:56:26 2016 +0000 Modified in v1.5.5 $
  */
 
 ////
@@ -177,6 +177,10 @@
         // customer must be logged in to browse
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
+      case ((int)$_SESSION['customers_authorization'] == 2):
+        // customer is logged in and was changed to must be approved to see prices
+        return TEXT_AUTHORIZATION_PENDING_PRICE;
+        break;
         default:
         // proceed normally
         break;
@@ -249,9 +253,9 @@
         $show_sale_price = '<br />' . '<span class="productSalePrice">' . PRODUCT_PRICE_SALE . $currencies->display_price($display_sale_price, zen_get_tax_rate($product_check->fields['products_tax_class_id'])) . '</span>';
       } else {
         if ($product_check->fields['product_is_free'] == '1') {
-          $show_normal_price = '<s>' . $currencies->display_price($display_normal_price, zen_get_tax_rate($product_check->fields['products_tax_class_id'])) . '</s>';
+          $show_normal_price = '<span class="productFreePrice"><s>' . $currencies->display_price($display_normal_price, zen_get_tax_rate($product_check->fields['products_tax_class_id'])) . '</s></span>';
         } else {
-          $show_normal_price = $currencies->display_price($display_normal_price, zen_get_tax_rate($product_check->fields['products_tax_class_id']));
+          $show_normal_price = '<span class="productBasePrice">' . $currencies->display_price($display_normal_price, zen_get_tax_rate($product_check->fields['products_tax_class_id'])) . '</span>';
         }
         $show_special_price = '';
         $show_sale_price = '';
@@ -442,7 +446,6 @@
 ////
 // Return quantity buy now
   function zen_get_buy_now_qty($product_id) {
-    global $cart;
     $check_min = zen_get_products_quantity_order_min($product_id);
     $check_units = zen_get_products_quantity_order_units($product_id);
     $buy_now_qty=1;
@@ -479,7 +482,6 @@
 // compute product discount to be applied to attributes or other values
   function zen_get_discount_calc($product_id, $attributes_id = false, $attributes_amount = false, $check_qty= false) {
     global $discount_type_id, $sale_maker_discount;
-    global $cart;
 
     // no charge
     if ($attributes_id > 0 and $attributes_amount == 0) {
@@ -1026,7 +1028,7 @@ If a special exist * 10
 ////
 // return attributes_qty_prices or attributes_qty_prices_onetime based on qty
   function zen_get_attributes_qty_prices_onetime($string, $qty) {
-    $attribute_qty = preg_split("/[:,]/" , $string);
+    $attribute_qty = preg_split("/[:,]/" , str_replace(' ', '', $string));
     $new_price = 0;
     $size = sizeof($attribute_qty);
 // if an empty string is passed then $attributes_qty will consist of a 1 element array
@@ -1048,7 +1050,7 @@ If a special exist * 10
   function zen_get_attributes_quantity_price($check_what, $check_for) {
 // $check_what='1:3.00,5:2.50,10:2.25,20:2.00';
 // $check_for=50;
-      $attribute_table_cost = preg_split("/[:,]/" , $check_what);
+      $attribute_table_cost = preg_split("/[:,]/" , str_replace(' ', '', $check_what));
       $size = sizeof($attribute_table_cost);
       for ($i=0, $n=$size; $i<$n; $i+=2) {
         if ($check_for >= $attribute_table_cost[$i]) {
@@ -1065,7 +1067,6 @@ If a special exist * 10
 // attributes final price
   function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false') {
     global $db;
-    global $cart;
 
     $attributes_price_final = 0;
 
@@ -1109,7 +1110,6 @@ If a special exist * 10
 // attributes final price onetime
   function zen_get_attributes_price_final_onetime($attribute, $qty= 1, $pre_selected_onetime) {
     global $db;
-    global $cart;
 
     if ($pre_selected_onetime == '' or $attribute != $pre_selected_onetime->fields["products_attributes_id"]) {
       $pre_selected_onetime = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
@@ -1149,9 +1149,8 @@ If a special exist * 10
 // calculate words
   function zen_get_word_count($string, $free=0) {
     $string = str_replace(array("\r\n", "\n", "\r", "\t"), ' ', $string);
-
     if ($string != '') {
-      while (strstr($string, '  ')) $string = str_replace('  ', ' ', $string);
+      $string = preg_replace('/[ ]+/', ' ', $string);
       $string = trim($string);
       $word_count = substr_count($string, ' ');
       return (($word_count+1) - $free);
@@ -1165,7 +1164,6 @@ If a special exist * 10
 ////
 // calculate words price
   function zen_get_word_count_price($string, $free=0, $price) {
-
     $word_count = zen_get_word_count($string, $free);
     if ($word_count >= 1) {
       return ($word_count * $price);
@@ -1179,8 +1177,7 @@ If a special exist * 10
 // calculate letters
   function zen_get_letters_count($string, $free=0) {
     $string = str_replace(array("\r\n", "\n", "\r", "\t"), ' ', $string);
-
-    while (strstr($string, '  ')) $string = str_replace('  ', ' ', $string);
+    $string = preg_replace('/[ ]+/', ' ', $string);
     $string = trim($string);
     if (TEXT_SPACES_FREE == '1') {
       $letters_count = strlen(str_replace(' ', '', $string));
@@ -1211,7 +1208,7 @@ If a special exist * 10
 ////
 // compute discount based on qty
   function zen_get_products_discount_price_qty($product_id, $check_qty, $check_amount=0) {
-    global $db, $cart;
+    global $db;
       $new_qty = $_SESSION['cart']->in_cart_mixed_discount_quantity($product_id);
       // check for discount qty mix
       if ($new_qty > $check_qty) {

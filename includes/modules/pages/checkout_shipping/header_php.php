@@ -3,10 +3,10 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Mon Dec 7 14:40:03 2015 -0500 Modified in v1.5.5 $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
@@ -41,18 +41,15 @@
   if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
-        zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
-        break;
-      } else {
-// extra check on stock for mixed YES
-        if ( zen_get_products_stock($products[$i]['id']) - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+      $qtyAvailable = zen_get_products_stock($products[$i]['id']);
+      // compare against product inventory, and against mixed=YES
+      if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
           zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
           break;
         }
       }
     }
-  }
+
 // if no shipping destination address was selected, use the customers own address as default
   if (!$_SESSION['sendto']) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
@@ -89,8 +86,10 @@ if (isset($_SESSION['cart']->cartID)) {
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
+    $_SESSION['shipping'] = array();
     $_SESSION['shipping']['id'] = 'free_free';
     $_SESSION['shipping']['title'] = 'free_free';
+    $_SESSION['shipping']['cost'] = 0;
     $_SESSION['sendto'] = false;
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
@@ -162,7 +161,7 @@ if (isset($_SESSION['cart']->cartID)) {
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
-          if (isset($quote['error'])) {
+          if (isset($quote[0]['error'])) {
             unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
@@ -205,20 +204,19 @@ if (isset($_SESSION['cart']->cartID)) {
     }
   }
 
-// if no shipping method has been selected, automatically select the cheapest method.
-// if the modules status was changed when none were available, to save on implementing
+// If no shipping method has been selected, automatically select the cheapest method.
+// If the module's status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-  if ( !isset($_SESSION['shipping']) && (zen_count_shipping_modules() > 1) )  $_SESSION['shipping'] = $shipping_modules->cheapest();
-
+  if ((!isset($_SESSION['shipping']) || (!isset($_SESSION['shipping']['id']) || $_SESSION['shipping']['id'] == '') && zen_count_shipping_modules() >= 1)) $_SESSION['shipping'] = $shipping_modules->cheapest();
 
   // Should address-edit button be offered?
   $displayAddressEdit = (MAX_ADDRESS_BOOK_ENTRIES >= 2);
 
   // if shipping-edit button should be overridden, do so
   $editShippingButtonLink = zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL');
-  if (isset($_SESSION['payment']) && method_exists($$_SESSION['payment'], 'alterShippingEditButton')) {
-    $theLink = $$_SESSION['payment']->alterShippingEditButton();
+  if (isset($_SESSION['payment']) && method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
+    $theLink = ${$_SESSION['payment']}->alterShippingEditButton();
     if ($theLink) {
       $editShippingButtonLink = $theLink;
       $displayAddressEdit = true;

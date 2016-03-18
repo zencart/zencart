@@ -1,10 +1,10 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: perweightunit.php 15616 2010-03-06 04:07:11Z ajeh $
+ * @version $Id: Author: DrByte  Sat Oct 17 22:52:38 2015 -0400 Modified in v1.5.5 $
  */
 /**
  * "Per Weight Unit" shipping module, allowing you to offer per-unit-rate shipping options
@@ -46,7 +46,7 @@ class perweightunit extends base {
    *
    * @return perweightunit
    */
-  function perweightunit() {
+  function __construct() {
     global $order, $db;
 
     $this->code = 'perweightunit';
@@ -74,7 +74,7 @@ class perweightunit extends base {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_PERWEIGHTUNIT_ZONE . "'
-                             and zone_country_id = '" . $order->delivery['country']['id'] . "'
+                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
                              order by zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {

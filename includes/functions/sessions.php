@@ -4,10 +4,10 @@
  * Session functions
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Mar 12 22:37:22 2014 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: ksteslicki  Sun Jan 25 17:45:51 2015 -0800 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -60,22 +60,14 @@ if (!defined('IS_ADMIN_FLAG')) {
     global $SESS_LIFE;
     $expiry = time() + $SESS_LIFE;
 
-    $qid = "select count(*) as total
-            from " . TABLE_SESSIONS . "
-            where sesskey = '" . zen_db_input($key) . "'";
-    $total = $db->Execute($qid);
+    $sql = "insert into " . TABLE_SESSIONS . " (sesskey, expiry, `value`)
+            values (:zkey, :zexpiry, :zvalue)
+            ON DUPLICATE KEY UPDATE `value`=:zvalue, expiry=:zexpiry";
+    $sql = $db->bindVars($sql, ':zkey', $key, 'string');
+    $sql = $db->bindVars($sql, ':zexpiry', $expiry, 'integer');
+    $sql = $db->bindVars($sql, ':zvalue', $val, 'string');
+    $result = $db->Execute($sql);
 
-    if ($total->fields['total'] > 0) {
-      $sql = "update " . TABLE_SESSIONS . "
-              set expiry = '" . zen_db_input($expiry) . "', value = '" . zen_db_input($val) . "'
-              where sesskey = '" . zen_db_input($key) . "'";
-      $result = $db->Execute($sql);
-    } else {
-      $sql = "insert into " . TABLE_SESSIONS . "
-              values ('" . zen_db_input($key) . "', '" . zen_db_input($expiry) . "', '" .
-                       zen_db_input($val) . "')";
-      $result = $db->Execute($sql);
-    }
     return (!empty($result) && !empty($result->resource));
   }
 
@@ -108,7 +100,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     } elseif (defined('SESSION_TIMEOUT_CATALOG') && (int)SESSION_TIMEOUT_CATALOG > 120) {
       @ini_set('session.gc_maxlifetime', (int)SESSION_TIMEOUT_CATALOG);
     }
-    if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '')
+    if (preg_replace('/[a-zA-Z0-9,-]/', '', session_id()) != '')
     {
       zen_session_id(md5(uniqid(rand(), true)));
     }
@@ -122,7 +114,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_session_id($sessid = '') {
     if (!empty($sessid)) {
       $tempSessid = $sessid;
-      if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '')
+      if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempSessid) != '')
       {
         $sessid = md5(uniqid(rand(), true));
       }
@@ -135,7 +127,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_session_name($name = '') {
     if (!empty($name)) {
       $tempName = $name;
-      if (preg_replace('/[a-zA-Z0-9]/', '', $tempName) == '') return session_name($name);
+      if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempName) == '') return session_name($name);
       return FALSE;
     } else {
       return session_name();

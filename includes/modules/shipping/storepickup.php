@@ -1,10 +1,10 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Mon Jul 15 17:13:18 2013 -0400 Modified in v1.5.5 $
  */
 /**
  * Store-Pickup / Will-Call shipping method
@@ -69,7 +69,7 @@ class storepickup extends base {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_STOREPICKUP_ZONE . "'
-                             and zone_country_id = '" . $order->delivery['country']['id'] . "'
+                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
                              order by zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {
@@ -85,6 +85,11 @@ class storepickup extends base {
       if ($check_flag == false) {
         $this->enabled = false;
       }
+    }
+
+    // other status checks?
+    if ($this->enabled) {
+      // other checks here
     }
   }
   /**

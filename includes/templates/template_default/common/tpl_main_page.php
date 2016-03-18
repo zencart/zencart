@@ -32,11 +32,22 @@
  * }<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_main_page.php 7085 2007-09-22 04:56:31Z ajeh $
+ * @version $Id: Author: DrByte  Fri Jan 8 14:09:25 2016 -0500 Modified in v1.5.5 $
  */
+
+/** bof DESIGNER TESTING ONLY: */
+// $messageStack->add('header', 'this is a sample error message', 'error');
+// $messageStack->add('header', 'this is a sample caution message', 'caution');
+// $messageStack->add('header', 'this is a sample success message', 'success');
+// $messageStack->add('main', 'this is a sample error message', 'error');
+// $messageStack->add('main', 'this is a sample caution message', 'caution');
+// $messageStack->add('main', 'this is a sample success message', 'success');
+/** eof DESIGNER TESTING ONLY */
+
+
 
 // the following IF statement can be duplicated/modified as needed to set additional flags
   if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
@@ -185,4 +196,8 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   }
 ?>
 <!--eof- banner #6 display -->
+
+<?php /* add any end-of-page code via an observer class */
+  $zco_notifier->notify('NOTIFY_FOOTER_END', $current_page);
+?>
 </body>

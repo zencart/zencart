@@ -5,10 +5,10 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Apr 18 14:01:49 2014 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Thu Jan 28 23:20:41 2016 +0100 Modified in v1.5.5 $
  */
 
 /**
@@ -128,7 +128,7 @@
       $email_text = preg_replace('/&{2,}/', '&', $email_text);
 
       // clean up currencies for text emails
-      $zen_fix_currencies = preg_split("/[:,]/" , CURRENCIES_TRANSLATIONS);
+      $zen_fix_currencies = preg_split("/[:,]/" , str_replace(' ', '', CURRENCIES_TRANSLATIONS));
       $size = sizeof($zen_fix_currencies);
       for ($i=0, $n=$size; $i<$n; $i+=2) {
         $zen_fix_current = $zen_fix_currencies[$i];
@@ -334,6 +334,12 @@
       @ini_set('mail.add_x_header', 0);
 
       $ErrorInfo = '';
+
+      // set Hostname, since it can aid in delivery of emails.
+      $defaultHostname = preg_replace('~(^https?://|\/.*$)~', '', defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER);
+      // If emails are being rejected, comment out the following line and try again:
+      $mail->Hostname = defined('EMAIL_HOSTNAME') ? EMAIL_HOSTNAME : $defaultHostname;
+
       $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', array($mail), $mail);
       /**
        * Send the email. If an error occurs, trap it and display it in the messageStack
@@ -365,7 +371,9 @@
     } // end foreach loop thru possible multiple email addresses
     $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_ALL_SPECIFIED_ADDRESSES');
 
-    if (EMAIL_FRIENDLY_ERRORS=='false' && $ErrorInfo != '') die('<br /><br />Email Error: ' . $ErrorInfo);
+    if ($ErrorInfo != '') {
+      trigger_error('Email Error: ' . $ErrorInfo);
+    }
 
     return $ErrorInfo;
   }  // end function
@@ -460,6 +468,38 @@
     }
     // Identify and Read the template file for the type of message being sent
     $langfolder = (strtolower($_SESSION['languages_code']) == 'en') ? '' : strtolower($_SESSION['languages_code']) . '/';
+
+    // Handle CSS and logo image
+    $common_css = '';
+    $css_lang_folder = $langfolder;
+    if (!file_exists (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css')) {
+      if ($css_lang_folder == '' || !file_exists (DIR_FS_EMAIL_TEMPLATES . 'email_common.css')) {
+        trigger_error ('Missing common email CSS file: ' . DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css', E_USER_ERROR);
+
+      } else {
+        $css_lang_folder = '';
+
+      }
+    }
+    $block['EMAIL_COMMON_CSS'] = file_get_contents (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css');
+
+    if (!isset ($block['EMAIL_LOGO_FILE']) || $block['EMAIL_LOGO_FILE'] == '') {
+      if (IS_ADMIN_FLAG === true) {
+        $block['EMAIL_LOGO_FILE'] = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
+
+      } else {
+        $block['EMAIL_LOGO_FILE'] = HTTP_SERVER . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
+
+      }
+    }
+    if (!isset ($block['EMAIL_LOGO_ALT_TEXT']) || $block['EMAIL_LOGO_ALT_TEXT'] == '') $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
+    if (!isset ($block['EMAIL_LOGO_WIDTH']) || $block['EMAIL_LOGO_WIDTH'] == '') $block['EMAIL_LOGO_WIDTH'] = EMAIL_LOGO_WIDTH;
+    if (!isset ($block['EMAIL_LOGO_HEIGHT']) || $block['EMAIL_LOGO_HEIGHT'] == '') $block['EMAIL_LOGO_HEIGHT'] = EMAIL_LOGO_HEIGHT;
+
+    if (!defined ('EMAIL_EXTRA_HEADER_INFO')) define ('EMAIL_EXTRA_HEADER_INFO', '');
+    if (!isset ($block['EXTRA_HEADER_INFO']) || $block['EXTRA_HEADER_INFO'] == '') $block['EXTRA_HEADER_INFO'] = EMAIL_EXTRA_HEADER_INFO;
+
+    // Obtain the template file to be used
     $template_filename_base = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_";
     $template_filename_base_en = DIR_FS_EMAIL_TEMPLATES . "email_template_";
     $template_filename = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html";
@@ -728,3 +768,17 @@
     return $email_html;
   }
 
+  /**
+   * return customer email address
+   *
+   * @param string $customers_id
+   * return string
+   */
+  function zen_get_email_from_customers_id($customers_id) {
+    global $db;
+    $customers_values = $db->Execute("select customers_email_address
+                               from " . TABLE_CUSTOMERS . "
+                               where customers_id = '" . (int)$customers_id . "'");
+    if ($customers_values->EOF) return '';
+    return $customers_values->fields['customers_email_address'];
+  }

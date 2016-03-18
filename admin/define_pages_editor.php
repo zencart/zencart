@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:53:59 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -15,12 +15,11 @@
 //echo 'I SEE ' . $check_directory[$i] . '<br>';
 
       $dir_check = $check_directory[$i];
-      $file_extension = '.php';
 
       if ($dir = @dir($dir_check)) {
         while ($file = $dir->read()) {
           if (!is_dir($dir_check . $file)) {
-            if (substr($file, strrpos($file, '.')) == $file_extension) {
+            if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
               $directory_array[] = $file;
             }
           }
@@ -117,7 +116,6 @@
       var kill = document.getElementById('hoverJS');
       kill.disabled = true;
     }
-  if (typeof _editor_url == "string") HTMLArea.replaceAll();
   }
   // -->
 </script>
@@ -188,7 +186,7 @@ if (isset($_GET['filename'])) {
           <tr><?php echo zen_draw_form('language', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save'); ?>
             <td><table border="0" cellspacing="0" cellpadding="2">
               <tr>
-                <td class="main"><?php echo zen_draw_textarea_field('file_contents', 'soft', '100%', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' id="file_contents"'); ?></td>
+                <td class="main"><?php echo zen_draw_textarea_field('file_contents', 'soft', '100%', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' id="file_contents" class="editorHook"'); ?></td>
               </tr>
               <tr>
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -223,9 +221,8 @@ if (isset($_GET['filename'])) {
     $dir = dir(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']);
     $left = false;
     if ($dir) {
-      $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
       while ($file = $dir->read()) {
-        if (substr($file, strrpos($file, '.')) == $file_extension) {
+        if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
           echo '                <td class="smallText"><a href="' . zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $file) . '">' . $file . '</a></td>' . "\n";
           if (!$left) {
             echo '              </tr>' . "\n" .

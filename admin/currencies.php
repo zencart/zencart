@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:09:58 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -91,42 +91,7 @@
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
         break;
       case 'update_currencies':
-        $server_used = CURRENCY_SERVER_PRIMARY;
-        zen_set_time_limit(600);
-        $currency = $db->Execute("select currencies_id, code, title, decimal_places from " . TABLE_CURRENCIES);
-        while (!$currency->EOF) {
-          $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
-          $rate = $quote_function($currency->fields['code']);
-
-          if (empty($rate) && (zen_not_null(CURRENCY_SERVER_BACKUP))) {
-            // failed to get currency quote from primary server - attempting to use backup server instead
-            $messageStack->add_session(sprintf(WARNING_PRIMARY_SERVER_FAILED, CURRENCY_SERVER_PRIMARY, $currency->fields['title'], $currency->fields['code']), 'warning');
-            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency';
-            $rate = $quote_function($currency->fields['code']);
-            $server_used = CURRENCY_SERVER_BACKUP;
-          }
-
-          /* Add currency uplift */
-          if ($rate != 1 && defined('CURRENCY_UPLIFT_RATIO') && (int)CURRENCY_UPLIFT_RATIO != 0) {
-            $rate = (string)((float)$rate * (float)CURRENCY_UPLIFT_RATIO);
-          }
-
-          // special handling for currencies which don't support decimal places
-          if ($currency->fields['decimal_places'] == '0') {
-            $rate = (int)$rate;
-          }
-
-          if (zen_not_null($rate) && $rate > 0) {
-            $db->Execute("update " . TABLE_CURRENCIES . "
-                          set value = '" . $rate . "', last_updated = now()
-                          where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
-            $messageStack->add_session(sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], $server_used), 'success');
-          } else {
-            $messageStack->add_session(sprintf(ERROR_CURRENCY_INVALID, $currency->fields['title'], $currency->fields['code'], $server_used), 'error');
-          }
-          $currency->MoveNext();
-        }
-        zen_record_admin_activity('Currency exchange rates updated via the Update button in the admin console.', 'info');
+        zen_update_currencies();
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
         break;
       case 'delete':
@@ -200,6 +165,7 @@
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_NAME; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_CODES; ?></td>
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_CURRENCY_VALUE; ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo TEXT_INFO_CURRENCY_LAST_UPDATED; ?></td>
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
@@ -225,6 +191,7 @@
 ?>
                 <td class="dataTableContent"><?php echo $currency->fields['code']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo number_format($currency->fields['value'], 8); ?></td>
+                <td class="dataTableContent" align="center"><?php echo zen_datetime_short($currency->fields['last_updated']); ?></td>
                 <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($currency->fields['currencies_id'] == $cInfo->currencies_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency->fields['currencies_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
@@ -232,7 +199,7 @@
   }
 ?>
               <tr>
-                <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+                <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
                     <td class="smallText" valign="top"><?php echo $currency_split->display_count($currency_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CURRENCIES); ?></td>
                     <td class="smallText" align="right"><?php echo $currency_split->display_links($currency_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
@@ -306,7 +273,7 @@
         $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_DECIMAL_POINT . ' ' . $cInfo->decimal_point);
         $contents[] = array('text' => TEXT_INFO_CURRENCY_THOUSANDS_POINT . ' ' . $cInfo->thousands_point);
         $contents[] = array('text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places);
-        $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_LAST_UPDATED . ' ' . zen_date_short($cInfo->last_updated));
+        $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_LAST_UPDATED . ': ' . zen_datetime_short($cInfo->last_updated));
         $contents[] = array('text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8));
         $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code));
       }

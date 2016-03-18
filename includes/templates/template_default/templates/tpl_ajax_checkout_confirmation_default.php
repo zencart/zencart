@@ -6,10 +6,10 @@
  * Displays final checkout details, cart, payment and shipping info details.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson   New in v1.5.4 $
+ * @version $Id: Author: DrByte  Fri Jan 8 00:33:36 2016 -0500 Modified in v1.5.5 $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -112,9 +112,9 @@
 <?php  } //endif flagAnyOutOfStock ?>
 
 
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" id="cartContentsDisplay">
+      <table id="cartContentsDisplay">
         <tr class="cartTableHeading">
-        <th scope="col" id="ccQuantityHeading" width="30"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+        <th scope="col" id="ccQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
         <th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
 <?php
   // If there are tax groups, display the tax columns for price breakdown

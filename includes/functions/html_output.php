@@ -4,17 +4,20 @@
  * HTML-generating functions used throughout the core
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Apr 19 13:30:33 2014 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Fri Feb 26 20:52:53 2016 -0500 Modified in v1.5.5 $
  */
 
 /*
  * The HTML href link wrapper function
  */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
+    global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
+    $link = null;
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT', array(), $link, $page, $parameters, $connection, $add_session_id, $static, $use_dir_ws_catalog);
+    if($link !== null) return $link;
 
     if (!zen_not_null($page)) {
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
@@ -314,7 +317,7 @@
     $mouse_over_class = 'cssButtonHover ' . (($type == 'button') ? 'normal_button button ' : '') . $sec_class . $sec_class . 'Hover';
     // javascript to set different classes on mouseover and mouseout: enables hover effect on the buttons
     // (pure css hovers on non link elements do work work in every browser)
-    $css_button_js .=  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
+    $css_button_js =  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
 
     if (CSS_BUTTON_POPUPS_IS_ARRAY == 'true') {
       $popuptext = (!empty($css_button_text[$button_name])) ? $css_button_text[$button_name] : ($button_name . CSSBUTTONS_CATALOG_POPUPS_SHOW_BUTTON_NAMES_TEXT);
@@ -399,7 +402,7 @@
  *  Output a form password field
  */
   function zen_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
-    return zen_draw_input_field($name, $value, $parameters, 'password', true);
+    return zen_draw_input_field($name, $value, $parameters, 'password', false);
   }
 
 /*
@@ -459,10 +462,10 @@
 /*
  *  Output a form hidden field
  */
-  function zen_draw_hidden_field($name, $value = '', $parameters = '') {
+  function zen_draw_hidden_field($name, $value = '~*~*#', $parameters = '') {
     $field = '<input type="hidden" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
 
-    if (zen_not_null($value)) {
+    if (zen_not_null($value) && $value != '~*~*#') {
       $field .= ' value="' . zen_output_string($value) . '"';
     } elseif (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
@@ -502,7 +505,11 @@
  *  Pulls values from a passed array, with the indicated option pre-selected
  */
   function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
-    $field = '<select name="' . zen_output_string($name) . '"';
+    $field = '<select';
+
+    if (!strstr($parameters, 'id=')) $field .= ' id="select-'.zen_output_string($name).'"';
+
+    $field .= ' name="' . zen_output_string($name) . '"';
 
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
 
@@ -574,4 +581,9 @@
         || $current_page_base=='down_for_maintenance') $addparms = 'rel="nofollow"';
     return ($parameters == '' ? $addparms : $parameters . ' ' . $addparms);
   }
-?>
+////
+// output label for input fields
+  function zen_draw_label($text, $for, $parameters = ''){
+    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+    return $label;
+  }

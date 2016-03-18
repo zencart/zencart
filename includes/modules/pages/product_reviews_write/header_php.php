@@ -3,10 +3,10 @@
  * reviews Write
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Nov 6 21:44:06 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Sun Oct 18 23:03:39 2015 -0400 Modified in v1.5.5 $
  */
 /**
  * Header code file for product reviews "write" page
@@ -38,7 +38,7 @@ if (!$product_info->RecordCount()) {
   zen_redirect(zen_href_link(FILENAME_PRODUCT_REVIEWS, zen_get_all_get_params(array('action'))));
 }
 
-$customer_query = "SELECT customers_firstname, customers_lastname, customers_email_address
+$customer_query = "SELECT customers_firstname, CONCAT(LEFT(customers_lastname,1),'.') AS customers_lastname, customers_email_address
                    FROM " . TABLE_CUSTOMERS . "
                    WHERE customers_id = :customersID";
 $customer_query = $db->bindVars($customer_query, ':customersID', $_SESSION['customer_id'], 'integer');

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Fri Oct 19 13:10:27 2012 -0400 Modified in v1.5.3 $
+ * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -206,6 +206,7 @@
         $remove_option_values = $db->Execute("select products_options_id, products_options_values_id from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$option_id . "'");
 
         while (!$remove_option_values->EOF) {
+          $zco_notifier->notify('OPTIONS_NAME_MANAGER_DELETE_OPTION', array('option_id' => $option_id, 'options_values_id' => (int)$remove_option_values->fields['products_options_values_id']));
           $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id='" . (int)$remove_option_values->fields['products_options_values_id'] . "' and products_options_values_id !=0");
           $remove_option_values->MoveNext();
         }
@@ -270,7 +271,7 @@
             }
             $all_update_products->MoveNext();
           }
-          if ($updated='true') {
+          if ($updated == 'true') {
             $messageStack->add_session(SUCCESS_PRODUCTS_OPTIONS_VALUES, 'success');
           } else {
             $messageStack->add_session(ERROR_PRODUCTS_OPTIONS_VALUES, 'error');
@@ -289,6 +290,7 @@
 // change to delete
 // should add download delete
                 $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . (int)$all_update_products->fields['products_id'] . "' and options_id='" . (int)$_POST['options_id'] . "'");
+                $zco_notifier->notify('OPTIONS_NAME_MANAGER_UPDATE_OPTIONS_VALUES_DELETE', array('products_id' => $all_update_products->fields['products_id'], 'options_id' => $all_options_values->fields['products_options_id'], 'options_values_id' => $all_options_values->fields['products_options_values_id']));
               } else {
                 // skip this option_name does not exist
               }
@@ -323,7 +325,7 @@
             $db->Execute($sql);
             $copy_from_values->MoveNext();
             if ($copy_from_values->fields['products_options_values_id'] != $current_id or $copy_from_values->EOF) {
-              $sql = "insert into " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_values_to_products_options_id, products_options_id, products_options_values_id) values (0, '" . (int)$options_id_to . "', '" . (int)$next_id . "')";
+              $sql = "insert into " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id) values ('" . (int)$options_id_to . "', '" . (int)$next_id . "')";
               $db->Execute($sql);
               $next_id++;
             }

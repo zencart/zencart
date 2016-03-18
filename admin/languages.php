@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Wed Apr 15 17:51:01 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -27,9 +27,9 @@
                         values ('" . zen_db_input($name) . "', '" . zen_db_input($code) . "',
                                 '" . zen_db_input($image) . "', '" . zen_db_input($directory) . "',
                                 '" . zen_db_input($sort_order) . "')");
-          zen_record_admin_activity('Language [' . $code . '] added', 'info');
-
           $insert_id = $db->Insert_ID();
+
+          zen_record_admin_activity('Language [' . $code . '] added', 'info');
 
           // set default, if selected
           if (isset($_POST['default']) && ($_POST['default'] == 'on')) {

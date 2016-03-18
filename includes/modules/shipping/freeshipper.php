@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
@@ -11,7 +11,7 @@
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
-    function freeshipper() {
+    function __construct() {
       global $order, $db;
 
       $this->code = 'freeshipper';

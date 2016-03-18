@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Oct 28 23:52:35 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Sat Jul 5 15:28:52 2014 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,7 +16,23 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Load queryFactory db classes
   require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/' .DB_TYPE . '/query_factory.php');
   $db = new queryFactory();
-  $db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE);
+  if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE)) {
+    // If can't connect, send 503 Service Unavailable header and redirect to install or message page
+    header("HTTP/1.1 503 Service Unavailable");
+    $down_for_maint_source = 'nddbc.html';
+
+    if (file_exists('../zc_install/index.php')) {
+      header('location: ../zc_install/index.php');
+      exit;
+    } elseif (defined('HTTP_SERVER') && defined('DIR_WS_CATALOG')) {
+      header('location: ' . HTTP_SERVER . DIR_WS_CATALOG . $down_for_maint_source);
+      exit(1);
+    } else {
+      header('location: ../' . $down_for_maint_source);
+//    header('location: mystoreisdown.html');
+      exit(1);
+    }
+  }
 
   // Do a quick sanity check that system tables exist
   if (defined('SQL_CACHE_METHOD') && SQL_CACHE_METHOD == 'database') {

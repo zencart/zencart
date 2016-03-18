@@ -1,26 +1,24 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: layout_controller.php drbyte  Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Sat Aug 1 18:01:55 2015 -0400 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
 
 // Check all existing boxes are in the main /sideboxes
   $boxes_directory = DIR_FS_CATALOG_MODULES . 'sideboxes/';
+  $boxes_directory_template = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
 
-  $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $directory_array = array();
   if ($dir = @dir($boxes_directory)) {
     while ($file = $dir->read()) {
       if (!is_dir($boxes_directory . $file)) {
-        if (substr($file, strrpos($file, '.')) == $file_extension) {
-          if ($file != 'empty.txt') {
-            $directory_array[] = $file;
-          }
+        if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
+          $directory_array[] = $file;
         }
       }
     }
@@ -30,27 +28,22 @@
     $dir->close();
   }
 
-// Check all exisiting boxes are in the current template /sideboxes/template_dir
   $dir_check= $directory_array;
-  $boxes_directory = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
 
-  $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-
-  if ($dir = @dir($boxes_directory)) {
+// Check all existing boxes are in the current template /sideboxes/template_dir
+  if ($dir = @dir($boxes_directory_template)) {
     while ($file = $dir->read()) {
-      if (!is_dir($boxes_directory . $file)) {
-          if (in_array($file, $dir_check, TRUE)) {
-            // skip name exists
-          } else {
-            if ($file != 'empty.txt') {
-              $directory_array[] = $file;
-            }
+      if (!is_dir($boxes_directory_template . $file)) {
+        if (!in_array($file, $dir_check, TRUE)) {
+          if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
+            $directory_array[] = $file;
           }
+        }
       }
     }
-    sort($directory_array);
     $dir->close();
   }
+  sort($directory_array);
 
   $warning_new_box='';
   $installed_boxes = array();
@@ -204,9 +197,6 @@ if ($warning_new_box) {
               </tr>
 
 <?php
-  $boxes_directory = DIR_FS_CATALOG_MODULES . 'sideboxes' . '/';
-  $boxes_directory_template = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
-
   $column_controller = $db->Execute("select layout_id, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single from " . TABLE_LAYOUT_BOXES . " where (layout_template='" . zen_db_input($template_dir) . "' and layout_box_name NOT LIKE '%ezpages_bar%') order by  layout_box_location, layout_box_sort_order");
   while (!$column_controller->EOF) {
 //    if (((!$_GET['cID']) || (@$_GET['cID'] == $column_controller->fields['layout_id'])) && (!$bInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
