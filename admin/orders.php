@@ -374,7 +374,7 @@ function couponpopupWindow(url) {
         <td class="row noprint">
           <div class="form-inline">
             <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
-              <?php echo zen_draw_form('search', FILENAME_ORDERS, 'class="form-control', 'get', '', true); ?>
+              <?php echo zen_draw_form('search', FILENAME_ORDERS, '', 'get', '', true); ?>
                 <label for="allSearch" class="sr-only"><?php echo HEADING_TITLE_SEARCH_ALL; ?></label>
                 <div class="input-group">
                   <?php
@@ -390,7 +390,7 @@ function couponpopupWindow(url) {
               <?php echo '</form>'; ?>
             </div>
             <div class="form-group col-xs-6 col-sm-3 col-md-3 col-lg-3">
-              <?php echo zen_draw_form('search_orders_products', FILENAME_ORDERS, 'class="form-control', 'get', '', true); ?>
+              <?php echo zen_draw_form('search_orders_products', FILENAME_ORDERS, '', 'get', '', true); ?>
                 <label for="productSearch" class="sr-only"><?php echo HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS; ?></label>
                 <div class="input-group">
                   <?php
@@ -407,7 +407,7 @@ function couponpopupWindow(url) {
               <?php echo '</form>'; ?>
             </div>
             <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
-              <?php echo zen_draw_form('orders', FILENAME_ORDERS, 'class="form-control', 'get', '', true);
+              <?php echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', '', true);
               ?>
                 <label for="orderSearch" class="sr-only"><?php echo HEADING_TITLE_SEARCH; ?></label>
                 <?php
@@ -417,7 +417,7 @@ function couponpopupWindow(url) {
               ?>
             </div>
             <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
-              <?php echo zen_draw_form('status', FILENAME_ORDERS, 'class="form-control"', 'get', '', true);
+              <?php echo zen_draw_form('status', FILENAME_ORDERS, '', 'get', '', true);
                 echo '<label for="selectstatus" class="sr-only">' . HEADING_TITLE_STATUS . '</label> ' . zen_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), (int)$_GET['status'], 'class="form-control" onChange="this.form.submit();" id="selectstatus"');
                 echo '</form>';
               ?>
