@@ -63,7 +63,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <?php
 // base price
   if ($show_onetime_charges_description == 'true') {
-    $one_time = '<span >' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br />';
+    $one_time = '<span>' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br />';
   } else {
     $one_time = '';
   }
