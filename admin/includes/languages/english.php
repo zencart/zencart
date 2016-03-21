@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 00:34:34 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Mar 21 18:55:18 2016 -0500 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -633,6 +633,8 @@ define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING', 'Max:');
   define('PRODUCT_PRICE_DISCOUNT_AMOUNT','&nbsp;off');
 // Sale Maker Sale Price
   define('PRODUCT_PRICE_SALE','Sale:&nbsp;');
+
+define('TEXT_PRICED_BY_ATTRIBUTES', 'Priced by Attributes');
 
 // Rich Text / HTML resources
 define('TEXT_HTML_EDITOR_NOT_DEFINED','If you have no HTML editor defined or JavaScript disabled, you may enter raw HTML text here manually.');
