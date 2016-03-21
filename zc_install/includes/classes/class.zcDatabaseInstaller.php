@@ -4,7 +4,7 @@
  * @package Installer
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: DrByte  Thu Mar 21 16:18:21 2016 -0500 New in v1.5.5 $
  *
  */
 /**
@@ -42,7 +42,7 @@ class zcDatabaseInstaller
     'REPLACE INTO ',
     'INSERT INTO ',
     'INSERT IGNORE INTO ',
-    'ALTER IGNORE TABLE ',
+//    'ALTER IGNORE TABLE ',
     'ALTER TABLE ',
     'TRUNCATE TABLE ',
     'RENAME TABLE ',
@@ -196,6 +196,54 @@ class zcDatabaseInstaller
     } else
     {
       $this->line = 'INSERT INTO ' . $this->dbPrefix . substr($this->line, 12);
+    }
+  }
+  public function parserInsertIgnoreInto()
+  {
+    if (!$this->tableExists($this->lineSplit[3]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[3]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'INSERT IGNORE INTO ' . $this->dbPrefix . substr($this->line, 19);
+    }
+  }
+  public function parserTruncateTable()
+  {
+    if (!$this->tableExists($this->lineSplit[2]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'TRUNCATE TABLE ' . $this->dbPrefix . substr($this->line, 15);
+    }
+  }
+  public function parserFrom()
+  {
+    if (!$this->tableExists($this->lineSplit[1]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[1]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'FROM ' . $this->dbPrefix . substr($this->line, 5);
+    }
+  }
+  public function parserDeleteFrom()
+  {
+    if (!$this->tableExists($this->lineSplit[2]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'DELETE FROM ' . $this->dbPrefix . substr($this->line, 12);
     }
   }
   public function parserReplaceInto()

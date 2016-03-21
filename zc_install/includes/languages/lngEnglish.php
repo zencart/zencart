@@ -258,6 +258,19 @@ define('TEXT_ERROR_NEW_VERSION_AVAILABLE', '<a href="http://www.zen-cart.com/get
 
 define('TEXT_DB_VERSION_NOT_FOUND', 'A Zen Cart database for %s was not found!');
 
+define('REASON_TABLE_ALREADY_EXISTS','Cannot create table %s because it already exists');
+define('REASON_TABLE_DOESNT_EXIST','Cannot drop table %s because it does not exist.');
+define('REASON_TABLE_NOT_FOUND','Cannot execute because table %s does not exist.');
+define('REASON_CONFIG_KEY_ALREADY_EXISTS','Cannot insert configuration_key "%s" because it already exists');
+define('REASON_COLUMN_ALREADY_EXISTS','Cannot ADD column %s because it already exists.');
+define('REASON_COLUMN_DOESNT_EXIST_TO_DROP','Cannot DROP column %s because it does not exist.');
+define('REASON_COLUMN_DOESNT_EXIST_TO_CHANGE','Cannot CHANGE column %s because it does not exist.');
+define('REASON_PRODUCT_TYPE_LAYOUT_KEY_ALREADY_EXISTS','Cannot insert prod-type-layout configuration_key "%s" because it already exists');
+define('REASON_INDEX_DOESNT_EXIST_TO_DROP','Cannot drop index %s on table %s because it does not exist.');
+define('REASON_PRIMARY_KEY_DOESNT_EXIST_TO_DROP','Cannot drop primary key on table %s because it does not exist.');
+define('REASON_INDEX_ALREADY_EXISTS','Cannot add index %s to table %s because it already exists.');
+define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
+
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
 define('TEXT_HELP_CONTENT_AGREETOTERMS', "<a href='http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html' target='_blank'>Original GPL 2.0 text</a><h2>The GNU General Public License (GPL)</h2>
