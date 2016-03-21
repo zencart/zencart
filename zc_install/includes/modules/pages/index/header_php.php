@@ -28,7 +28,8 @@ if (isset($_POST['updateConfigure'])) {
         $storeConfigureFileReader = new zcConfigureFileReader(DIR_FS_ROOT .'includes/configure.php');
         $adminConfigureFileReader = new zcConfigureFileReader(DIR_FS_ROOT . $selectedAdminDir . '/includes/configure.php');
         $configureInputs = $storeConfigureFileReader->getStoreInputsFromLegacy();
-        $configureInputs['http_server_admin'] = trim($adminConfigureFileReader->getRawDefine('HTTPS_SERVER'), "'");
+        $configureInputs['enable_ssl_admin'] = trim($adminConfigureFileReader->getRawDefine('ENABLE_SSL_ADMIN'), "'");
+        $configureInputs['http_server_admin'] = trim($adminConfigureFileReader->getRawDefine( ($configureInputs['enable_ssl_admin'] == 'true' ? 'HTTPS_SERVER' : 'HTTP_SERVER') ), "'");
         $configureInputs['adminDir'] = $selectedAdminDir;
         $storeConfigureFileWriter = new zcConfigureFileWriter($configureInputs);
     }
