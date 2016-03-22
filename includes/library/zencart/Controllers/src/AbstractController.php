@@ -61,6 +61,12 @@ abstract class AbstractController extends \base
     {
         $this->tplVars['cmd'] = $this->request->readGet('cmd');
         $this->tplVars['useFoundation'] = $this->useFoundation;
+
+        $this->tplVars['hide_languages'] = $GLOBALS['hide_languages'];
+        $this->tplVars['languages'] = $GLOBALS['languages'];
+        $this->tplVars['languages_array'] = $GLOBALS['languages_array'];
+        $this->tplVars['languages_selected'] = $GLOBALS['languages_selected'];
+
     }
 
     /**
