@@ -3,10 +3,10 @@
  * download header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Nov 2 00:02:54 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: Author: DrByte  Mar 22 15:35:01 2016 -0500 Modified in v1.5.5 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_DOWNLOAD');
@@ -81,7 +81,7 @@ function zen_random_name()
   if (defined('DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT') && DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT === TRUE) $dirname = '';
   $length = floor(zen_rand(16,20));
   for ($i = 1; $i <= $length; $i++) {
-    $q = floor(zen_rand(1,26));
+    $q = floor(zen_rand(0,25));
     $dirname .= $letters[$q];
   }
   return $dirname;
