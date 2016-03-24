@@ -185,8 +185,8 @@ if (zen_not_null($action)) {
                             $module = new $class;
                             // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
                             if ($module->check() > 0) {
-                                // determine sort orders and add to list of installed modules
-                                $temp_for_sort[$file] = (int)$module->sort_order . $file; // combine sort-order and filename for uniqueness in determining sort
+                                // determine sort orders (using up to 6 digits, then filename) and add to list of installed modules
+                                $temp_for_sort[$file] = str_pad((int)$module->sort_order, 6, "0", STR_PAD_LEFT) . $file;
                                 asort($temp_for_sort);
                                 $installed_modules = array_flip($temp_for_sort);
                             }
