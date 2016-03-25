@@ -44,7 +44,7 @@ abstract class AbstractLeadController extends AbstractController
         $leadDef = $this->leadDefinitionBuilder->getleadDefinition();
         $this->paginator = new Paginator($request);
         $this->paginator->setScrollerParams(array('mvcCmdName' => 'cmd'));
-        $this->paginatortBuilder = new PaginatorBuilder($request, $this->listingBox->getListingQuery(),
+        $this->paginatorBuilder = new PaginatorBuilder($request, $this->listingBox->getListingQuery(),
             $this->paginator);
         $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
         $this->listingBox->setLeadDefinition($this->leadDefinitionBuilder->getleadDefinition());
@@ -60,7 +60,7 @@ abstract class AbstractLeadController extends AbstractController
     {
         $this->service->manageLanguageJoin();
         $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatortBuilder->getPaginator());
+            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->listingBox);
     }
 
@@ -91,7 +91,7 @@ abstract class AbstractLeadController extends AbstractController
         $this->useView = false;
         $this->service->doFilter();
         $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatortBuilder->getPaginator());
+            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->listingBox);
         $tplRows = $this->loadTemplateAsString('includes/template/partials/tplAdminLeadItemRows.php', $this->tplVars);
         $paginator = $this->loadTemplateAsString('includes/template/partials/tplPaginatorStandard.php', $this->tplVars);
@@ -114,7 +114,7 @@ abstract class AbstractLeadController extends AbstractController
         $this->tplVars['languages'] = $languages;
         $this->service->setEditQueryparts();
         $resultItems = $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatortBuilder->getPaginator());
+            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->tplVars['legendTitle'] = TEXT_LEAD_EDIT_ENTRY;
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
@@ -152,7 +152,7 @@ abstract class AbstractLeadController extends AbstractController
         $languages = $this->service->prepareLanguageTplVars();
         $this->tplVars['languages'] = $languages;
         $resultItems = $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatortBuilder->getPaginator());
+            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
         if (isset($outputLayout['editMap'])) {
             foreach ($outputLayout['editMap'] as $key) {
