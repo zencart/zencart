@@ -21,11 +21,13 @@
     $countries_array = array();
     if (zen_not_null($countries_id)) {
       $countries_array['countries_name'] = '';
-      $countries = "select countries_name, countries_iso_code_2, countries_iso_code_3
-                    from " . TABLE_COUNTRIES . "
-                    where countries_id = '" . (int)$countries_id . "'";
-      if ($activeOnly) $countries .= " and status != 0 ";
-      $countries .= " order by countries_name";
+      $countries = "SELECT con.countries_name, co.countries_iso_code_2, co.countries_iso_code_3
+                    FROM " . TABLE_COUNTRIES . " co, " . TABLE_COUNTRIES_NAME . " con
+                    WHERE co.countries_id = '" . (int)$countries_id . "'
+                    AND con.countries_id = co.countries_id
+                    AND con.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+      if ($activeOnly) $countries .= " AND co.status != 0 ";
+      $countries .= " ORDER BY con.countries_name";
       $countries_values = $db->Execute($countries);
 
       if ($with_iso_codes == true) {
@@ -40,10 +42,12 @@
         if (!$countries_values->EOF) $countries_array = array('countries_name' => $countries_values->fields['countries_name']);
       }
     } else {
-      $countries = "select countries_id, countries_name
-                    from " . TABLE_COUNTRIES . " ";
-      if ($activeOnly) $countries .= " where status != 0 ";
-      $countries .= " order by countries_name";
+      $countries = "SELECT co.countries_id, con.countries_name
+                    FROM " . TABLE_COUNTRIES . " co, " . TABLE_COUNTRIES_NAME . " con";
+      if ($activeOnly) $countries .= " WHERE co.status != 0 ";
+      $countries .= " AND con.countries_id = co.countries_id";
+      $countries .= " AND con.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+      $countries .= " ORDER BY con.countries_name";
       $countries_values = $db->Execute($countries);
       while (!$countries_values->EOF) {
         $countries_array[] = array('countries_id' => $countries_values->fields['countries_id'],
