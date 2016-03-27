@@ -47,8 +47,6 @@ if (!defined('ENABLE_SSL_CATALOG')) define('ENABLE_SSL_CATALOG', strpos(HTTPS_CA
 if (!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(DIR_FS_ADMIN . '/../') . '/');
 
 
-
-
 // now define all the admin constants
 if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
 
@@ -83,3 +81,6 @@ if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 if (!defined('DIR_CATALOG_LIBRARY')) {
     define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
 }
+
+//catchall for old things that still use it ... but should be rewritten so this can be removed fully.
+if (!defined('DIR_WS_HTTPS_ADMIN')) define('DIR_WS_HTTPS_ADMIN', DIR_WS_ADMIN);
