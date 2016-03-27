@@ -20,7 +20,7 @@ function getDependant()
 {
 
  dependant = $('#entry_field_zone_country_id').val();
- var urlLink = '<?php echo zen_ajax_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')) . 'action=autocompleteGeoZone'); ?>';
+ var urlLink = '<?php echo zen_ajax_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')) . 'action=autocomplete'); ?>';
  var dataTable = '&dataTable='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataTable'];?>';
  var dataSearchField = '&dataSearchField='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataSearchField'];?>';
  var dataResponse = '&dataResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataResponse'];?>';

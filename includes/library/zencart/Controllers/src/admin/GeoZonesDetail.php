@@ -29,13 +29,4 @@ class GeoZonesDetail extends AbstractLeadController
         $this->service->insertExecute();
         $this->response['redirect'] = zen_href_link($this->request->readGet('cmd'), 'geo_zone_id=' . (int)$this->request->readPost('entry_field_geo_zone_id'));
     }
-
-    /**
-     *
-     */
-    public function autocompleteGeoZoneExecute()
-    {
-        $this->useView = false;
-        $this->response = $this->service->autocompleteGeoZoneExecute();
-    }
 }
