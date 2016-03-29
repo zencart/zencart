@@ -5,7 +5,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Tue Mar 15 18:26:42 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Sun Mar 20 18:26:42 2016 +0000 Modified in v1.5.5 $
  */
 
 require_once(DIR_WS_CLASSES . 'AdminRequestSanitizer.php');
@@ -13,6 +13,10 @@ require_once(DIR_WS_CLASSES . 'AdminRequestSanitizer.php');
 
 if (!defined('DO_STRICT_SANITIZATION')) {
     DEFINE('DO_STRICT_SANITIZATION', true);
+}
+
+if (!defined('DO_DEBUG_SANITIZATION')) {
+    DEFINE('DO_DEBUG_SANITIZATION', false);
 }
 
 if (!isset($adminSanitizationConfig)) {
@@ -39,6 +43,7 @@ $adminSanitizerTypes = array_merge(array(
 ), $adminSanitizerTypes);
 
 $sanitizer = new AdminRequestSanitizer($adminSanitizationConfig, $adminSanitizerTypes, DO_STRICT_SANITIZATION);
+$sanitizer->setDebug(DO_DEBUG_SANITIZATION);
 
 $group = array(
     'action',

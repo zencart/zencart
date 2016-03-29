@@ -6,7 +6,7 @@
  * @package tests
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Tue Mar 15 16:59:30 2016 +0000 New in v1.5.5 $
+ * @version $Id: Author: zcwilt  Sun Mar 20 16:59:30 2016 +0000 New in v1.5.5 $
  */
 
 /**
@@ -244,4 +244,23 @@ class testAdminSanitization extends PHPUnit_Framework_TestCase
         $this->assertTrue($_POST['products_name_not_safe'] === '100xyz_pt>();');
     }
 
+    public function testStrictSanitizeValues()
+    {
+        $group = array(
+            'some_param_ignore',
+        );
+        $_POST = array('some_param_ignore' => '<strong>Name</strong>', 'some_param_simple' => '100xyz_</script>();',
+                       'some_param_array'=>array('100xyz_</script>();'), 'some_param_deep_array'=>array(array('100xyz_</script>();')));
+
+        $adminSanitizationConfig['STRICT_SANITIZE_VALUES'] = $group;
+        $adminSanitizerTypes = array('STRICT_SANITIZE_VALUES' => array('type' => 'builtin', 'strict' => true));
+        $arq = new AdminRequestSanitizer($adminSanitizationConfig, $adminSanitizerTypes, true);
+        $arq->runSanitizers();
+        $postAlreadySanitized = $arq->getPostKeysAlreadySanitized();
+        $this->assertTrue(count($postAlreadySanitized) == 4);
+        $this->assertTrue($_POST['some_param_ignore'] == '<strong>Name</strong>');
+        $this->assertTrue($_POST['some_param_simple'] == '100xyz_&lt;/script&gt;();');
+        $this->assertTrue($_POST['some_param_array'][0] == '100xyz_&lt;/script&gt;();');
+        $this->assertTrue($_POST['some_param_deep_array'][0][0] == '100xyz_&lt;/script&gt;();');
+    }
 }
