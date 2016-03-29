@@ -14,7 +14,7 @@
 ?>
 <div class="centerColumn" id="checkoutShipAddressDefault">
 
-<?php echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"'); ?>
+<?php echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="group"'); ?>
 <h1 id="checkoutShipAddressDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php if ($messageStack->size('checkout_address') > 0) echo $messageStack->output('checkout_address'); ?>
@@ -38,10 +38,15 @@
  */
   require($template->get_template_dir('tpl_modules_checkout_new_address.php', DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . 'tpl_modules_checkout_new_address.php');
 ?>
+<div class="buttonRow forward"><?php echo zen_draw_hidden_field('action', 'submit') . zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>
+</form>
+
 <?php
     }
     if ($addresses_count > 1) {
 ?>
+<?php echo zen_draw_form('checkout_address_book', zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="group"'); ?>
+
 <fieldset>
 <legend><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></legend>
 <?php
@@ -57,6 +62,7 @@
 <div class="buttonRow forward"><?php echo zen_draw_hidden_field('action', 'submit') . zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
+</form>
 <?php
   if ($process == true) {
 ?>
@@ -65,5 +71,4 @@
 <?php
   }
 ?>
-</form>
 </div>
