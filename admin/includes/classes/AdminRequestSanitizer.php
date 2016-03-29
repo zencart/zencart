@@ -350,8 +350,8 @@ class AdminRequestSanitizer extends base
         $saniList = $this->adminSanitizationConfig['STRICT_SANITIZE_VALUES'];
         $postToIgnore = array_merge($postToIgnore, $saniList);
         $getToIgnore = array_merge($getToIgnore, $saniList);
-        $this->traverseStricSanitize($_POST, $postToIgnore);
-        $this->traverseStricSanitize($_GET, $getToIgnore);
+        $this->traverseStrictSanitize($_POST, $postToIgnore);
+        $this->traverseStrictSanitize($_GET, $getToIgnore);
     }
 
     /**
@@ -360,12 +360,12 @@ class AdminRequestSanitizer extends base
      * @param bool|false $inner
      * @return mixed
      */
-    private function traverseStricSanitize(&$item, $ignore, $inner = false)
+    private function traverseStrictSanitize(&$item, $ignore, $inner = false)
     {
         foreach ($item as $k => $v) {
             if ($inner || (!$inner && !in_array($k, $ignore))) {
                 if (is_array($v)) {
-                    $item[$k] = $this->traverseStricSanitize($v, $ignore, true);
+                    $item[$k] = $this->traverseStrictSanitize($v, $ignore, true);
                 } else {
                     $item[$k] = htmlspecialchars($item[$k]);
                 }
