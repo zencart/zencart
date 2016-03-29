@@ -82,7 +82,7 @@ input[type=radio], input[type=checkbox]{margin-top:8px;vertical-align:middle;hei
 input[type=file], input[type=image]{border:none;width:auto;height:auto;}
 input[type=tel], input[type=email], input[type=password]{width:50%;}
 select#country, .wrapperAttribsOptions select, #advSearchDefault select, select#stateZone {height:40px;}
-select#country, select#stateZone {margin-left:0;}
+select#country, select#stateZone, #state {margin-left:0;}
 .ccinfo select{width:auto;height:25px;margin-bottom:10px;}
 .sideBoxContent select{width:auto;}
 #currenciesContent select{height:35px;}
