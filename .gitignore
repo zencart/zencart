@@ -1,28 +1,24 @@
-myDEBUG-*.log
-cache/*.sql
-cache/sess_*
-logs/*.log
+configure.php
+local/configure.php
+includes/local
+/vendor
+dbencdata*.ini
+
+testFramework/webtests/config/*
+!testFramework/webtests/config/localconfig_EXAMPLE.php
+testFramework/codeception/tests/_output/*
+
+
 *.php1
 *.bak
 *.old
 Thumbs.db
-admin/includes/configure.php
-includes/configure.php
-local/configure.php
-includes/local/configure.php
-admin/includes/local/configure.php
+*.DS_Store
+
 docs/phpdocs*
 phpdoc.xml
-dbencdata*.ini
-testFramework/webtests/config/*
-!testFramework/webtests/config/localconfig_EXAMPLE.php
 devtools.php
 dev-*.*
-includes/local
-vendor
-bin
-build
-*.DS_Store
 
 # Ignore eclipse project files
 .project
@@ -32,7 +28,8 @@ build
 # Ignore phpStorm stuff 
 .idea
 
-testFramework/codeception/tests/_output/*
 
 # dbv
 /data/meta/revision
+
+clover.xml
