@@ -1,0 +1,34 @@
+##############################################################
+##############################################################
+##############################################################
+### 		NGINX CONFIGURATION FOR ZENCART
+###
+### Copy and paste into ‘http’ section of nginx conf file
+### IMPORTANT: 
+###    - Enables optional caching in serve section
+###    - Remember to uncomment relevant lines in server section
+###
+###
+##############################################################
+##############################################################
+##############################################################
+
+
+##############################################################
+# ‘Expires’ map
+# Copy and paste into ‘http’ section of nginx con file
+##############################################################
+## Map "expires" values to mime types and store it to a variable
+map $sent_http_content_type $zencart_expires {
+	default				5m;
+	application/x-javascript	1h;
+	text/x-javascript		1h;
+	text/css			1h;
+	text/html			1h;
+	image/gif			7d;
+	video/x-flv			7d;
+	application/pdf			7d;
+	image/x-icon			7d;
+	image/jpeg			7d;
+	image/png			7d;
+	text/cache-manifest		2s;

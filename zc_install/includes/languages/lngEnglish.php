@@ -99,7 +99,8 @@ define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete.');
 define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can access your storefront and your Administration area using the links below.');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "You need to remove the /zc_install/ folder so that someone can't re-install your shop again and wipe out your database! A message will appear and you will not be able to log into your admin until the folder has been removed.");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "You will be barred from administering your installation and a warning message will be shown on the storefront until the /zc_install/ folder has been deleted.");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', "This is to prevent unauthorized persons from overwriting your installation");
 
 define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
 define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
@@ -252,6 +253,80 @@ define('TEXT_ERROR_NEW_VERSION_AVAILABLE', '<a href="http://www.zen-cart.com/get
 
 define('TEXT_DB_VERSION_NOT_FOUND', 'A Zen Cart database for %s was not found!');
 
+define('TEXT_COMPLETION_NGINX_TEXT', "<u>Important security information for Nginx</u>");
+define('TEXT_HELP_TITLE_NGINXCONF', "Securing Zencart on Nginx Webservers");
+define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
+	<p>
+		Your Zencart installation comes with security measures in a format native to the Apache Webserver.
+		<br>
+		See below to implement a similar set of measures for the Nginx Webserver. 
+	</p>
+	<ul style='list-style-type:square'>
+		<li>
+			Go to your <b>'zc_install/includes/nginx_conf'</b> folder and open the following files:
+			<ul style='list-style-type:circle'>
+				<li>
+					ngx_conf_http.txt
+				</li>
+				<li>
+					ngx_conf_server.txt
+				</li>
+			</ul>
+		</li>
+		<li>
+			Paste the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section of your nginx configuration file
+			<ul style='list-style-type:circle'>
+				<li>
+					Edit the caching durations in the <b>'map'</b> block to suit as required
+				</li>
+			</ul>
+		</li>
+		<li>
+			Paste the contents of <b>'ngx_conf_server.txt'</b> into the relevant <b>'server'</b> section of your nginx configuration file.
+			<ul style='list-style-type:circle'>
+				<li>
+					The order in which the directives appear is important. Do not modify without fully understanding them.
+				</li>
+				<li>
+					The directives should be placed at the begin of the server block.
+				</li>
+			</ul>
+		</li>
+		<li>
+			Edit the <b>'zencart_php_handler'</b> location block to match your PHP settings
+			<ul style='list-style-type:circle'>
+				<li>
+					Simply duplicate the contents of your existing PHP location block in <b>'zencart_php_handler'</b> location block.
+				</li>
+			</ul>
+		</li>
+		<li>
+			Uncomment the <b>'zencart_expires'</b> lines if required
+			<ul style='list-style-type:circle'>
+				<li>
+					Ensure you have pasted the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section
+				</li>
+			</ul>
+		</li>
+		<li>
+			Reload Nginx
+			<ul style='list-style-type:circle'>
+				<li>
+					Do this before closing this dialog box
+				</li>
+				<li>
+					Remember to delete the <b>'zc_install'</b> folder when done
+					<ul style='list-style-type:none'>
+						<li>
+							- Including the <b>'zc_install/includes/nginx_conf'</b> folder and its contents
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	<ol>
+</div>
+<br>");
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
 define('TEXT_HELP_CONTENT_AGREETOTERMS', "<h2>The GNU General Public License (GPL)</h2>
