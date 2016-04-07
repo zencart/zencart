@@ -16,20 +16,7 @@ table tbody tr td { color: #333; padding: 0 0; vertical-align: top; border: none
 .version-notify { 
   text-align: right;
 }
-
-.headerBarContent {
-  text-align: right;
-}
-
-.headerBar td {
-background-color:#003D00;
-color: white;
-}
-.headerBar a {
-color: white;
-}
-.widget-header 
-{
+.widget-header {
   background: transparent -moz-linear-gradient(center top , #E5EAEB, #CFD6D9) repeat scroll 0% 0%;
   border-bottom: 1px solid #BEBEC4;
   box-shadow: 0px 1px 0px #FFF inset;
@@ -75,10 +62,10 @@ color: white;
 }
 .widget-row 
 {
-  margin: 1px;
-  padding: 2px;
-  border-bottom: 1px dashed #D5D5D5;
-  
+  padding: 5px;
+}
+.widget-row:nth-child(even) {
+  background-color:#f3f3ee;
 }
 .widget-body 
 { 

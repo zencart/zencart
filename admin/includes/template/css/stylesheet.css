@@ -11,14 +11,14 @@
 @import "font-awesome.min.css";
 
 a{
-color:#0000ff;
+color:#008cba;
 text-decoration:none;
 }
 a,body,html,table{
 font:normal normal 11px Verdana, sans-serif;
 }
 a:hover{
-color:#0000ff;
+color:#007095;
 text-decoration:underline;
 }
 a.headerLink:link{
@@ -104,7 +104,6 @@ cursor:pointer;
 padding: 3px;
 margin-top: 10px;
 }
-
 .loginLabel {
   margin-left: 60px;
   margin-right: 5px;
@@ -273,20 +272,30 @@ font-family:Tahoma,Verdana,Arial,sans-serif;
 font-size:12px;
 font-weight:bold;
 }
-.headerBar{
-background-color:#003D00;
+.header, .header table {
+	border: none;
+	margin: 0;
 }
-.headerBarContent{
-color:#ffffff;
-font-weight:bold;
-padding:2px;
+.headerBar {
+	background: #f2f2f2;
+	margin: 0;
+}
+.headerBarContent {
+	color: #999;
+	padding: 2px 7px;
+}
+.headerBarContent.right {
+	text-align: right;
+}
+.headerBarContent a {
+	color: #999 !important;
 }
 .infoBoxContent{
 background-color:#e7e6e0;
 color:#333333;
 }
 .infoBoxHeading{
-background-color:#003D00;
+background-color:#000;
 color:#ffffff;
 }
 .main{
@@ -313,8 +322,8 @@ background-color:#d4ffbd;
 text-decoration:line-through;
 }
 h1,.pageHeading{
-color:#003D00; /*727272*/
-font-size:16px;
+color:#000; /*727272*/
+font-size:18px;
 font-variant:small-caps;
 }
 .SaleMakerDisabled{
@@ -360,7 +369,12 @@ color:#ff6600;
   white-space: nowrap;
 }
 .altnavBody #navbar {display: none;}
-
+.fixed {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
 .copyrightrow {
   font-size:9px;
   text-align: center;
@@ -372,7 +386,23 @@ label.error {color: red; font-weight: bold;}
 body#indexBody {font-size: 13px}
 body#indexBody a i.fa {font-size: 1.2em}
 
-td,
-th {
-  padding: 2px;
+td.actions a {
+	display: block;
+	padding-right: 7px;
+	border-right: solid 1px #ccc;
+	margin-right: 7px;
+	float: left;
+}
+
+td.actions a:last-child {
+	border: none;
+}
+
+#leadMultipleActions label {
+	font-weight: bold;
+	float: left;
+}
+
+#leadMultipleActions a {
+	float: right;
 }

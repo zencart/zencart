@@ -252,18 +252,19 @@ class LeadRoutes extends LeadService
         $sql = "SELECT :dataResponse:, :valueResponse: FROM :dataTable: WHERE :dataSearchField: LIKE ':search:%'";
         if ($this->request->has('extraWhere') && isset($this->outputLayout['fields'][$this->request->readGet('extraWhere')])) {
             $sql .= ' AND :extraWhereField: = :extraWhereValue:';
-            $sql = $this->dbConn->bindVars($sql, ':extraWhereField:', $this->request->readGet('extraWhere'),
-                'noquotestring');
+            $sql = $this->dbConn->bindVars($sql, ':extraWhereField:', $this->request->readGet('extraWhere'), 'noquotestring');
             $bindVarsType = $this->outputLayout['fields'][$this->request->readGet('extraWhere')]['bindVarsType'];
-            $sql = $this->dbConn->bindVars($sql, ':extraWhereValue:', $this->request->readGet('extraWhereVal'),
-                $bindVarsType);
+            $sql = $this->dbConn->bindVars($sql, ':extraWhereValue:', $this->request->readGet('extraWhereVal'), $bindVarsType);
+        }
+        if ($this->canManageSingleTableLanguage()) {
+            $sql = $this->autoCompleteManageLanguage($sql);
         }
         $sql = $this->dbConn->bindVars($sql, ':dataResponse:', $dataResponse, 'noquotestring');
         $sql = $this->dbConn->bindVars($sql, ':valueResponse:', $valueResponse, 'noquotestring');
         $sql = $this->dbConn->bindVars($sql, ':dataSearchField:', $dataSearchField, 'noquotestring');
         $sql = $this->dbConn->bindVars($sql, ':dataTable:', $dataTable, 'noquotestring');
         $sql = $this->dbConn->bindVars($sql, ':search:', $search, 'noquotestring');
-        $dbResults = $this->dbConn->execute($sql);
+        $results = $this->dbConn->execute($sql);
         $retVal = array('results' => array());
         if ($this->request->has('addAllResponse') && $this->request->readGet('addAllResponse') == true) {
             $retVal['results'][] = array(
@@ -271,12 +272,42 @@ class LeadRoutes extends LeadService
                 'id' => $this->request->readGet('addAllResponseValue')
             );
         }
-        foreach ($dbResults as $result) {
+        foreach ($results as $result) {
             $retVal['results'][] = array(
                 'text' => $result[$valueResponse],
                 'id' => $result[$dataResponse]
             );
         }
         return $retVal;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function canManageSingleTableLanguage()
+    {
+        if (!issetorArray($this->listingQuery, 'language', false)) {
+            return false;
+        }
+        if (!issetorArray($this->listingQuery, 'singleTable', false)) {
+            return false;
+        }
+        $parentTable = issetorArray($this->listingQuery, 'languageInfoTable', null);
+        if ($this->request->readGet('dataTable') != $parentTable) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param $sql
+     * @return string
+     */
+    protected function autoCompleteManageLanguage($sql)
+    {
+        $sql .= ' AND :languageField: = :languageValue:';
+        $sql = $this->dbConn->bindVars($sql, ':languageField:', $this->listingQuery['languageKeyField'], 'noquotestring');
+        $sql = $this->dbConn->bindVars($sql, ':languageValue:', $_SESSION['languages_id'], 'integer');
+        return $sql;
     }
 }
