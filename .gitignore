@@ -33,3 +33,6 @@ build
 .idea
 
 testFramework/codeception/tests/_output/*
+
+# dbv
+/data/meta/revision

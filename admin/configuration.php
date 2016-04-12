@@ -50,9 +50,9 @@
 
   $gID = (isset($_GET['gID'])) ? $_GET['gID'] : 1;
   $_GET['gID'] = $gID;
-  $cfg_group = $db->Execute("select configuration_group_title
-                             from " . TABLE_CONFIGURATION_GROUP . "
-                             where configuration_group_id = '" . (int)$gID . "'");
+  $cfg_group = $db->Execute("select language_key
+                             from " . TABLE_ADMIN_PAGES . "
+                             where configuration_group_id = 'gID=" . (int)$gID . "'");
 
 if ($gID == 7) {
         $shipping_errors = '';
@@ -86,7 +86,7 @@ require('includes/admin_html_head.php');
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo $cfg_group->fields['configuration_group_title']; ?></td>
+            <td class="pageHeading"><?php echo constant($cfg_group->fields['language_key']); ?></td>
             <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
