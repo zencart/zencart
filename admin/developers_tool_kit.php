@@ -359,14 +359,24 @@
             case (1): // all english.php files
               $check_directory = array();
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES;
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . 'shared/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . 'shared/' . $_SESSION['language'] . '/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $template_dir . '/' . $_SESSION['language'] . '/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/shared/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/extra_definitions/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/extra_definitions/shared/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/extra_definitions/' . $template_dir . '/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/payment/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/payment/shared/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/payment/' . $template_dir . '/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/shipping/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/shipping/shared/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/shipping/' . $template_dir . '/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/order_total/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/order_total/shared/';
+              $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/order_total/' . $template_dir . '/';
               $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']. '/modules/product_types/';
               $check_directory[] = DIR_FS_ADMIN . DIR_WS_LANGUAGES;
               $check_directory[] = DIR_FS_ADMIN . DIR_WS_LANGUAGES . $_SESSION['language'] . '/';
@@ -500,8 +510,16 @@
               $check_directory[] = DIR_FS_CATALOG_MODULES;
               $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/';
 
+              $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'shared/templates' . '/';
+              $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'shared/sideboxes' . '/';
+              $check_directory[] = DIR_FS_CATALOG_MODULES . 'shared/';
+              $check_directory[] = DIR_FS_CATALOG_MODULES . 'shared/sideboxes/';
+
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/templates' . '/';
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/sideboxes' . '/';
+
+              $check_directory[] = DIR_FS_CATALOG_MODULES . $template_dir . '/';
+              $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
 
               $sub_dir_files = array();
               getDirList(DIR_FS_CATALOG_MODULES . 'pages');
@@ -515,12 +533,16 @@
             case (2): // all /templates files
               $check_directory = array();
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/templates' . '/';
+              $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'shared/templates' . '/';
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/templates' . '/';
               break;
             case (3): // all sideboxes files
               $check_directory = array();
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/sideboxes' . '/';
               $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/';
+              $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'shared/sideboxes' . '/';
+              $check_directory[] = DIR_FS_CATALOG_MODULES . 'shared/sideboxes/';
+              $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
               $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/sideboxes' . '/';
               break;
             case (4): // all /pages files
