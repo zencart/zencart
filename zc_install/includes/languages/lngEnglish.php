@@ -152,7 +152,7 @@ Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest
 define('TEXT_ERROR_PHP_VERSION_RECOMMENDED', 'For maximum security and compatibility you should be using PHP %s or newer. This installer can proceed, but this is just letting you know that your site will not be PCI Compliant when running out-of-date software.');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
-define('TEXT_ERROR_MYSQL_SUPPORT', 'Problems with your MySQL (mysqli) support');
+define('TEXT_ERROR_MYSQL_SUPPORT', 'Problems with your MySQL (mysqli) support. Your server appears to be missing the mysqli extension for PHP, and without it we cannot connect to your database. Prior to PHP 5.5 it sometimes had to be "added manually" by the server administrator. Talk to your hosting company for assistance.');
 define('TEXT_ERROR_LOG_FOLDER', DIR_FS_LOGS . ' folder is not writeable');
 define('TEXT_ERROR_CACHE_FOLDER', DIR_FS_SQL_CACHE . ' folder is not writeable');
 define('TEXT_ERROR_IMAGES_FOLDER', '/images/ folder is not writeable');
@@ -161,6 +161,7 @@ define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
 define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable');
 
 define('TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE', 'Your configure.php file is an old version and requires updating before we can continue.');
+
 define('TEXT_ERROR_HTACCESS_SUPPORT', 'Problems with .htaccess support (it is not properly denying access to files that ought to be restricted).');
 define('TEXT_ERROR_SESSION_SUPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
@@ -172,10 +173,10 @@ define('TEXT_ERROR_SET_TIME_LIMIT', 'max_execution_time setting disabled ');
 define('TEXT_ERROR_GD', 'GD Extension not enabled');
 define('TEXT_ERROR_ZLIB', 'Zlib Extension not enabled');
 define('TEXT_ERROR_OPENSSL', 'Openssl Extension not enabled');
-define('TEXT_ERROR_CURL', 'Problems with the CURL extension');
-define('TEXT_ERROR_UPLOADS', 'Upload Extension not enabled');
-define('TEXT_ERROR_XML', 'XML Extension not enabled');
-define('TEXT_ERROR_GZIP', 'Gzip Extension not enabled');
+define('TEXT_ERROR_CURL', 'Problems with the CURL extension - PHP is reporting that CURL is not present.');
+define('TEXT_ERROR_UPLOADS', 'Upload Extension for PHP is not enabled');
+define('TEXT_ERROR_XML', 'XML Extension in PHP is not enabled');
+define('TEXT_ERROR_GZIP', 'Gzip Extension in PHP is not enabled');
 define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be loaded');
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
 define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use CURL to contact a live server');
