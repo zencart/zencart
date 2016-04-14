@@ -288,7 +288,10 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 					The order in which the directives appear is important. Do not modify without fully understanding them.
 				</li>
 				<li>
-					The directives should be placed at the begin of the server block.
+					The directives should be placed at the beginning of the server block before any other location blocks.
+				</li>
+				<li>
+					The directives may be used for SSL and/or Non SSL server blocks.
 				</li>
 			</ul>
 		</li>
