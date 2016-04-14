@@ -261,6 +261,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 		<br>
 		See below to implement a similar set of measures for the Nginx Webserver. 
 	</p>
+	<hr>
 	<ul style='list-style-type:square'>
 		<li>
 			Go to your <b>'zc_install/includes/nginx_conf'</b> folder and open the following files:
@@ -274,7 +275,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section of your nginx configuration file
+			Paste the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section of your nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					Edit the caching durations in the <b>'map'</b> block to suit as required
@@ -285,43 +286,63 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			Paste the contents of <b>'ngx_conf_server.txt'</b> into the relevant <b>'server'</b> section of your nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
-					The order in which the directives appear is important. Do not modify without fully understanding them.
+					The directives may be used for SSL and/or Non SSL server blocks.
 				</li>
 				<li>
 					The directives should be placed at the beginning of the server block before any other location blocks.
-				</li>
-				<li>
-					The directives may be used for SSL and/or Non SSL server blocks.
-				</li>
-			</ul>
-		</li>
-		<li>
-			Edit the <b>'zencart_php_handler'</b> location block to match your PHP settings
-			<ul style='list-style-type:circle'>
-				<li>
-					Simply duplicate the contents of your existing PHP location block in <b>'zencart_php_handler'</b> location block.
-				</li>
-			</ul>
-		</li>
-		<li>
-			Uncomment the <b>'zencart_expires'</b> lines if required
-			<ul style='list-style-type:circle'>
-				<li>
-					Ensure you have pasted the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section
-				</li>
-			</ul>
-		</li>
-		<li>
-			Reload Nginx
-			<ul style='list-style-type:circle'>
-				<li>
-					Do this before closing this dialog box
-				</li>
-				<li>
-					Remember to delete the <b>'zc_install'</b> folder when done
 					<ul style='list-style-type:none'>
 						<li>
-							- Including the <b>'zc_install/includes/nginx_conf'</b> folder and its contents
+							- The order in which the directives appear is important.
+						</li>
+						<li>
+							- Do not modify without fully understanding them.
+						</li>
+						<li>
+							- It is especially critical that these appear before any generic php handling location blocks such as...
+<br><br>
+<pre>
+<code>location ~ \.php { Nginx PHP Handling Directives; }</code>
+</pre>
+<br>
+						</li>
+					</ul>
+			</ul>
+		</li>
+		<li>
+			Instead, edit the <b>'zencart_php_handler'</b> location block to match your Nginx PHP Handling Directives.
+			<ul style='list-style-type:circle'>
+				<li>
+					Simply duplicate the contents of your existing PHP handling location block into the <b>'zencart_php_handler'</b> location block.
+					<ul style='list-style-type:none'>
+						<li>
+							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
+						</li>
+						<li>
+							- If you do not have an existing PHP handling location block, perhaps you are setting up Nginx just to run Zencart, then please refer to online guides such as those found <a href='https://www.google.com/search?hl=en&q=setup%20php%20on%20nginx&ei=FRAPV5bmOMmsU9iFuegP'  target='_blank'><u>HERE</u></a> and implement the PHP directives in the <b>'zencart_php_handler'</b> location block.  
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li>
+			Uncomment the <strong>'zencart_expires'</strong> lines if required.
+			<ul style='list-style-type:circle'>
+				<li>
+					Ensure you have pasted the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section.
+				</li>
+			</ul>
+		</li>
+		<li>
+			Reload Nginx.
+			<ul style='list-style-type:circle'>
+				<li>
+					Do this before closing this dialog box.
+				</li>
+				<li>
+					Remember to delete the <b>'zc_install'</b> folder when done.
+					<ul style='list-style-type:none'>
+						<li>
+							- Including the <b>'zc_install/includes/nginx_conf'</b> folder and its contents.
 						</li>
 					</ul>
 				</li>
@@ -329,7 +350,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 		</li>
 	<ol>
 </div>
-<br>");
+<hr>");
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
 define('TEXT_HELP_CONTENT_AGREETOTERMS', "<h2>The GNU General Public License (GPL)</h2>
