@@ -3,13 +3,13 @@
     <title>Zen Cart v1.5.5</title>
     <parser>
         <default-package-name>core</default-package-name>
-        <target>/Programming/CODE/DOCS/DELETE-this-cache-folder/</target>
+        <target>../phpdoc-cache-folder-to-DELETE/</target>
         <extensions>
             <extension>php</extension>
         </extensions>
     </parser>
     <transformer>
-        <target>/Programming/CODE/DOCS/phpdoc-1-5-5</target>
+        <target>../phpdoc-1-5-5</target>
     </transformer>
     <transformations>
         <template name="checkstyle" />
