@@ -51,37 +51,37 @@
 # 'zc_install' Folder
 ###############################	
 ## Allow all requests to specific static file types in 'zc_install'
-	location ~ ^%%http_store_folder%%/zc_install/(.+)\.(ico|js|css|jpg|gif|png|html)$ {
+	location ~ ^/%%http_store_folder%%/zc_install/(.+)\.(ico|js|css|jpg|gif|png|html)$ {
 		# Optional caching improvement
 		# Uncomment if accompanying 'map' block in HTTP section has been added
 		#expires $zencart_expires;		
 	}
 ## Allow and fastrack internal requests to PHP files in subdirectories under 'zc_install'
 ## Returns '404 Not Found' http code for external requests
-	location ~ ^%%http_store_folder%%/zc_install/(.+)/(.+)\.php$ {
+	location ~ ^/%%http_store_folder%%/zc_install/(.+)/(.+)\.php$ {
 		internal;
 	}
 ## Allow all requests to index.php file directly under 'zc_install'
-	location ~ ^%%http_store_folder%%/zc_install/index\.php$ {
+	location ~ ^/%%http_store_folder%%/zc_install/index\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
 ## Allow all requests to PHP files with names that start with 'ajax' directly under 'zc_install' 
-	location ~ ^%%http_store_folder%%/zc_install/ajax(.+)\.php$ {
+	location ~ ^/%%http_store_folder%%/zc_install/ajax(.+)\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
 ## Allow internal requests to 'zc_install/sql'
 ## Returns '404 Not Found' http code for external requests	
-	location ~ ^%%http_store_folder%%/zc_install/sql(.*)$ {
+	location ~ ^/%%http_store_folder%%/zc_install/sql(.*)$ {
 		internal;
 	}
 ## Allow and redirect all requests to 'zc_install' root		
-	location ~ ^%%http_store_folder%%/zc_install(/?)$ {
-		rewrite ^ %%http_store_folder%%/zc_install/index.php redirect;
+	location ~ ^/%%http_store_folder%%/zc_install(/?)$ {
+		rewrite ^ /%%http_store_folder%%/zc_install/index.php redirect;
 	}
 ## Forbid any other request to 'zc_install' and any subfolders
-	location ~ ^%%http_store_folder%%/zc_install {
+	location ~ ^/%%http_store_folder%%/zc_install {
 		return 403;
 	}
 
@@ -91,15 +91,15 @@
 ###############################	
 ## Allow and fastrack internal requests to 'includes/classes'
 ## Returns '404 Not Found' http code for external requests
-	location ^~ %%http_store_folder%%/includes/classes {
+	location ^~ /%%http_store_folder%%/includes/classes {
 		internal;
 	}
 ## Allow all 'GET' and 'HEAD' requests to specific static file types in 'includes'
-	location ~ ^%%http_store_folder%%/includes(.+)$ {
+	location ~ ^/%%http_store_folder%%/includes(.+)$ {
 		if ( $request_method !~ ^(GET|HEAD)$ ) {
 			return 403;
 		}
-		location ~ ^%%http_store_folder%%/includes(.+)\.(ico|jpe?g|gif|otf|webp|png|swf|flv|pdf|svg?z)$ {
+		location ~ ^/%%http_store_folder%%/includes(.+)\.(ico|jpe?g|gif|otf|webp|png|swf|flv|pdf|svg?z)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Last-Modified '';
@@ -109,7 +109,7 @@
 			# Uncomment if accompanying 'map' block in HTTP section has been added
 			#expires $zencart_expires;		
 		}
-		location ~ ^%%http_store_folder%%/includes/(.+)\.(html|htm|xml|txt|xsl)$ {
+		location ~ ^/%%http_store_folder%%/includes/(.+)\.(html|htm|xml|txt|xsl)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Cache-Control 'max-age=7200, must-revalidate';
@@ -118,13 +118,13 @@
 			# Uncomment if accompanying 'map' block in HTTP section has been added
 			#expires $zencart_expires;		
 		}
-		location ~ ^%%http_store_folder%%/includes/(.+)\.(js|css)$ {
+		location ~ ^/%%http_store_folder%%/includes/(.+)\.(js|css)$ {
 			# Optional caching improvement
 			# Uncomment if accompanying 'map' block in HTTP section has been added
 			#expires $zencart_expires;		
 		}
 		# Forbid any other request to 'includes' and any subfolders
-		location ~ ^%%http_store_folder%%/includes {
+		location ~ ^/%%http_store_folder%%/includes {
 			return 403;
 		}
 	}
@@ -134,12 +134,12 @@
 # 'pub' Folder
 ###############################	
 ## Allow and force downloads of all requests to specific static file types in 'pub'
-	location ~ ^%%http_store_folder%%/pub/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
+	location ~ ^/%%http_store_folder%%/pub/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
 		types        { }
 		default_type application/octet-stream;
 	}
 ## Forbid any other request to 'pub' and any subfolders
-	location ~ ^%%http_store_folder%%/pub {
+	location ~ ^/%%http_store_folder%%/pub {
 		return 403;
 	}
 
@@ -148,7 +148,7 @@
 # 'download' Folder
 ###############################	
 ## Allow and force downloads of all requests to specific static file types in 'download'
-	location ~ ^%%http_store_folder%%/download/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
+	location ~ ^/%%http_store_folder%%/download/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
 		types        { }
 		default_type application/octet-stream;
 		
@@ -157,7 +157,7 @@
 		internal;
 	}
 ## Forbid any other request to 'download' and any subfolders
-	location ~ ^%%http_store_folder%%/download {
+	location ~ ^/%%http_store_folder%%/download {
 		return 403;
 	}
 
@@ -167,11 +167,11 @@
 ###############################	
 ## Allow internal requests to 'images/uploads'
 ## Returns '404 Not Found' http code for external requests
-	location ~ ^%%http_store_folder%%/images/uploads {
+	location ~ ^/%%http_store_folder%%/images/uploads {
 		internal;
 	}
 ## Allow all requests to specific static file types in 'images'
-	location ~ ^%%http_store_folder%%/images/(.+)\.(jpe?g|gif|webp|png|swf)$ {
+	location ~ ^/%%http_store_folder%%/images/(.+)\.(jpe?g|gif|webp|png|swf)$ {
 		add_header Pragma '';
 		add_header ETag '';
 		add_header Cache-Control 'max-age=864000, public, must-revalidate';
@@ -182,7 +182,7 @@
 		#expires $zencart_expires;		
 	}
 ## Forbid any other request to 'images' and any subfolders
-	location ~ ^%%http_store_folder%%/images {
+	location ~ ^/%%http_store_folder%%/images {
 		return 403;
 	}
 
@@ -191,7 +191,7 @@
 # 'media' Folder
 ###############################	
 ## Allow all requests to specific static file types in 'media'
-	location ~ ^%%http_store_folder%%/media/(.+)\.(mp3|mp4|swf|avi|mpg|wma|rm|ra|ram|wmv|epub|flv|ogg|m4v|m4a|webm)$ {
+	location ~ ^/%%http_store_folder%%/media/(.+)\.(mp3|mp4|swf|avi|mpg|wma|rm|ra|ram|wmv|epub|flv|ogg|m4v|m4a|webm)$ {
 		add_header Pragma '';
 		add_header ETag '';
 		add_header Cache-Control 'max-age=864000, public, must-revalidate';
@@ -202,7 +202,7 @@
 		#expires $zencart_expires;		
 	}
 ## Forbid any other request to 'media' and any subfolders
-	location ~ ^%%http_store_folder%%/media {
+	location ~ ^/%%http_store_folder%%/media {
 		return 403;
 	}
 
@@ -211,18 +211,18 @@
 # 'extras' Folder
 ###############################	
 ## Allow all requests to html files in 'extras'
-	location ~ ^%%http_store_folder%%/extras/(.+)\.html$ {
+	location ~ ^/%%http_store_folder%%/extras/(.+)\.html$ {
 		# Optional caching improvement
 		# Uncomment if accompanying 'map' block in HTTP section has been added
 		#expires $zencart_expires;		
 	}
 ## Allow all requests to all PHP files
-	location ~ ^%%http_store_folder%%/extras/(.+)\.php$ {
+	location ~ ^/%%http_store_folder%%/extras/(.+)\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
 ## Forbid any other request to 'extras' and any subfolders
-	location ~ ^%%http_store_folder%%/extras {
+	location ~ ^/%%http_store_folder%%/extras {
 		return 403;
 	}
 
@@ -231,13 +231,13 @@
 # 'email' Folder
 ###############################	
 ## Allow all requests to specific static file types in 'email'
-	location ~ ^%%http_store_folder%%/email/(.+)\.(jpe?g|gif|png)$ {
+	location ~ ^/%%http_store_folder%%/email/(.+)\.(jpe?g|gif|png)$ {
 		# Optional caching improvement
 		# Uncomment if accompanying 'map' block in HTTP section has been added
 		#expires $zencart_expires;		
 	}
 ## Forbid any other request to 'email' and any subfolders
-	location ~ ^%%http_store_folder%%/email {
+	location ~ ^/%%http_store_folder%%/email {
 		return 403;
 	}
 
@@ -246,13 +246,13 @@
 # 'editors' and 'docs' Folders
 ###############################	
 ## Allow all requests to specific static file types in 'editors' or 'docs'
-	location ~ ^%%http_store_folder%%/(editors|docs)/(.+)\.(js|css|jpe?g|gif|png|html?|xml|pdf)$ {
+	location ~ ^/%%http_store_folder%%/(editors|docs)/(.+)\.(js|css|jpe?g|gif|png|html?|xml|pdf)$ {
 		# Optional caching improvement
 		# Uncomment if accompanying 'map' block in HTTP section has been added
 		#expires $zencart_expires;		
 	}
 ## Forbid any other request to 'editors' or 'docs' and any subfolders
-	location ~ ^%%http_store_folder%%/(editors|docs) {
+	location ~ ^/%%http_store_folder%%/(editors|docs) {
 		return 403;
 	}
 
@@ -262,7 +262,7 @@
 ###############################	
 ## Allow and fastrack internal requests to 'cache'
 ## Returns '404 Not Found' http code for external requests
-	location ^~ %%http_store_folder%%/cache {
+	location ^~ /%%http_store_folder%%/cache {
 		internal;
 	}
 
@@ -272,7 +272,7 @@
 ###############################	
 ## Allow and fastrack internal requests to 'logs'
 ## Returns '404 Not Found' http code for external requests
-	location ^~ %%http_store_folder%%/logs {
+	location ^~ /%%http_store_folder%%/logs {
 		internal;
 	}
 
@@ -281,7 +281,7 @@
 # ADMIN Folder
 ###############################	
 ## Allow all 'POST', 'GET' and 'HEAD' requests to all PHP files
-	location ~ ^%%http_store_folder%%/%%admin_folder%%/(.+)\.php$ {
+	location ~ ^/%%http_store_folder%%/%%admin_folder%%/(.+)\.php$ {
 		if ( $request_method !~ ^(GET|HEAD|POST)$ ) {
 			return 403;
 		}
@@ -289,11 +289,11 @@
 		return 418;
 	}
 ## Allow all 'GET' and 'HEAD' requests to specific static file types
-	location ~ ^%%http_store_folder%%/%%admin_folder%%(.*)$ {
+	location ~ ^/%%http_store_folder%%/%%admin_folder%%(.*)$ {
 		if ( $request_method !~ ^(GET|HEAD)$ ) {
 			return 403;
 		}
-		location ~ ^%%http_store_folder%%/%%admin_folder%%/(.+)\.(ico|jpe?g|gif|otf|woff2?|ttf|webp|png|swf|flv|pdf|svg?z)$ {
+		location ~ ^/%%http_store_folder%%/%%admin_folder%%/(.+)\.(ico|jpe?g|gif|otf|woff2?|ttf|webp|png|swf|flv|pdf|svg?z)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Last-Modified '';
@@ -303,7 +303,7 @@
 			# Uncomment if accompanying 'map' block in HTTP section has been added
 			#expires $zencart_expires;		
 		}
-		location ~ ^%%http_store_folder%%/%%admin_folder%%/(.+)\.(html|htm|xml|txt|xsl)$ {
+		location ~ ^/%%http_store_folder%%/%%admin_folder%%/(.+)\.(html|htm|xml|txt|xsl)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Cache-Control 'max-age=7200, must-revalidate';
@@ -312,13 +312,13 @@
 			# Uncomment if accompanying 'map' block in HTTP section has been added
 			#expires $zencart_expires;		
 		}
-		location ~ ^%%http_store_folder%%/%%admin_folder%%/(.+)\.(js|css)$ {
+		location ~ ^/%%http_store_folder%%/%%admin_folder%%/(.+)\.(js|css)$ {
 			# Optional caching improvement
 			# Uncomment if accompanying 'map' block in HTTP section has been added
 			#expires $zencart_expires;		
 		}
-		location ~ ^%%http_store_folder%%/%%admin_folder%%(/?)$ {
-			rewrite ^ %%http_store_folder%%/%%admin_folder%%/index.php redirect;
+		location ~ ^/%%http_store_folder%%/%%admin_folder%%(/?)$ {
+			rewrite ^ /%%http_store_folder%%/%%admin_folder%%/index.php redirect;
 		}
 		# Forbid any other request to '%%admin_folder%%' and any subfolders
 		return 403;
@@ -329,11 +329,11 @@
 # ROOT Folder
 ###############################	
 ## Allow all requests to specific static file types
-	location ~ ^%%http_store_folder%%/(.+)\.(md|ico|txt|html)$ {
+	location ~ ^/%%http_store_folder%%/(.+)\.(md|ico|txt|html)$ {
 		#expires $zencart_expires;
 	}
-## Allow all requests to specific PHP files directly under the '%%http_store_folder%%' folder
-	location ~ ^%%http_store_folder%%/(ajax|index|page_not_found|ipn_main_handler)\.php$ {
+## Allow all requests to specific PHP files directly under the '/%%http_store_folder%%' folder
+	location ~ ^/%%http_store_folder%%/(ajax|index|page_not_found|ipn_main_handler)\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
@@ -343,6 +343,6 @@
 # Catchall
 ###############################	
 ## Redirect any request not previously explicitly handled to the main index.php uri
-	location ~ ^%%http_store_folder%%(.*)$ {
-		rewrite ^ %%http_store_folder%%/index.php redirect;
+	location ~ ^/%%http_store_folder%%(.*)$ {
+		rewrite ^ /%%http_store_folder%%/index.php redirect;
 	}
