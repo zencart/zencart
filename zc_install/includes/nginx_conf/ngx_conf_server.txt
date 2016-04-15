@@ -125,9 +125,7 @@
 			#expires $zencart_expires;		
 		}
 		# Forbid any other request to 'includes' and any subfolders
-		location ~ ^%%http_store_folder%%/includes {
-			return 403;
-		}
+		return 403;
 	}
 
 
