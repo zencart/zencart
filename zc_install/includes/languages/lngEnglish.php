@@ -350,8 +350,8 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 		</li>
 	<ol>
 </div>
-<div class='alert-box secondary'>
-	<font color=red><b>IMPORTANT:</b></font> These location blocks should be <b>BEFORE</b> any other location blocks in your Nginx configuration server block.
+<div class='alert-box alert'>
+	<b>IMPORTANT:</b> These location blocks should be <b>BEFORE</b> any other location blocks in your Nginx configuration server block.
 </div>
 <hr>");
 
