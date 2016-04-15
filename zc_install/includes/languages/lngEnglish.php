@@ -95,12 +95,12 @@ define('TEXT_ADMIN_SETUP_NEWSLETTER_OPTIN', 'Opt In: ');
 
 define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finshed');
 define('TEXT_COMPLETION_HEADER_MAIN', '');
-define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete.');
-define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can access your storefront and your Administration area using the links below.');
+define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation completed.');
+define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can now access your Storefront and Admin Backend using the links below.');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "You will be barred from administering your installation and a warning message will be shown on the storefront until the /zc_install/ folder has been deleted.");
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', "This is to prevent unauthorized persons from overwriting your installation");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "Delete the '/zc_install/' folder now!");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', "You will be barred from administering your installation and a warning message will be shown on the storefront until the folder has been deleted to prevent unauthorized persons from overwriting your installation");
 
 define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
 define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
@@ -275,7 +275,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section of your nginx configuration file.
+			Paste the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section of your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					Edit the caching durations in the <b>'map'</b> block to suit as required
@@ -283,7 +283,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <b>'ngx_conf_server.txt'</b> into the relevant <b>'server'</b> section of your nginx configuration file.
+			Paste the contents of <b>'ngx_conf_server.txt'</b> into the relevant <b>'server'</b> blocks of your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					The directives may be used for SSL and/or Non SSL server blocks.
@@ -295,18 +295,18 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 							- The order in which the directives appear is important.
 						</li>
 						<li>
-							- Do not modify without fully understanding them.
-						</li>
-						<li>
-							- It is especially critical that these appear before any generic php handling location blocks such as...
-<br><br>
-<pre>
-<code>location ~ \.php { Nginx PHP Handling Directives; }</code>
-</pre>
-<br>
+							- Do not change this order without fully understanding the directives and implications.
 						</li>
 					</ul>
 			</ul>
+		</li>
+		<li>
+			It is especially critical that these directives appear before any generic php handling location blocks such as ...
+<br>
+<pre>
+	<code>location ~ \.php { Nginx PHP Handling Directives; }</code>
+</pre>
+			... or any other location blocks that might be processed before these are.
 		</li>
 		<li>
 			Instead, edit the <b>'zencart_php_handler'</b> location block to match your Nginx PHP Handling Directives.
@@ -318,14 +318,14 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
 						</li>
 						<li>
-							- If you do not have an existing PHP handling location block, perhaps you are setting up Nginx just to run Zencart, then please refer to online guides such as those found <a href='https://www.google.com/search?hl=en&q=setup%20php%20on%20nginx&ei=FRAPV5bmOMmsU9iFuegP'  target='_blank'><u>HERE</u></a> and implement the PHP directives in the <b>'zencart_php_handler'</b> location block.  
+							- If you do not have an existing PHP handling location block, perhaps you are just setting up Nginx to run Zencart, then please refer to online guides such as those found <a href='https://www.google.com/search?hl=en&q=setup%20php%20on%20nginx&ei=FRAPV5bmOMmsU9iFuegP'  target='_blank'><u>HERE</u></a> and implement the PHP directives in the <b>'zencart_php_handler'</b> location block.  
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</li>
 		<li>
-			Uncomment the <strong>'zencart_expires'</strong> lines if required.
+			Uncomment the <b>'zencart_expires'</b> lines if required.
 			<ul style='list-style-type:circle'>
 				<li>
 					Ensure you have pasted the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section.
@@ -349,6 +349,9 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 	<ol>
+</div>
+<div class='alert-box secondary'>
+	<font color=red><b>IMPORTANT:</b></font> These location blocks should be <b>BEFORE</b> any other location blocks in your Nginx configuration server block.
 </div>
 <hr>");
 
