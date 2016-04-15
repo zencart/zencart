@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Mar 22 15:02:01 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Fri Apr 15 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -250,22 +250,22 @@
 
       if ($error == false) {
 
-        $sql_data_array = array('customers_firstname' => $customers_firstname,
-                                'customers_lastname' => $customers_lastname,
-                                'customers_email_address' => $customers_email_address,
-                                'customers_telephone' => $customers_telephone,
-                                'customers_fax' => $customers_fax,
-                                'customers_group_pricing' => $customers_group_pricing,
-                                'customers_newsletter' => $customers_newsletter,
-                                'customers_email_format' => $customers_email_format,
-                                'customers_authorization' => $customers_authorization,
-                                'customers_referral' => $customers_referral
-                                );
+        $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$customers_firstname, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_lastname', 'value'=>$customers_lastname, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_email_address', 'value'=>$customers_email_address, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_telephone', 'value'=>$customers_telephone, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_fax', 'value'=>$customers_fax, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_group_pricing', 'value'=>$customers_group_pricing, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_newsletter', 'value'=>$customers_newsletter, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_email_format', 'value'=>$customers_email_format, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_authorization', 'value'=>$customers_authorization, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_referral', 'value'=>$customers_referral, 'type'=>'stringIgnoreNull'),
+        );
 
-        if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
-        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = ($customers_dob == '0001-01-01 00:00:00' ? '0001-01-01 00:00:00' : zen_date_raw($customers_dob));
+        if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$customers_gender, 'type'=>'stringIgnoreNull');
+        if (ACCOUNT_DOB == 'true')  $sql_data_array[] = array('fieldName'=>'customers_dob', 'value'=>($customers_dob == '0001-01-01 00:00:00' ? '0001-01-01 00:00:00' : zen_date_raw($customers_dob)), 'type'=>'date');
 
-        zen_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "'");
+        $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "'");
 
         $db->Execute("update " . TABLE_CUSTOMERS_INFO . "
                       set customers_info_date_account_last_modified = now()
@@ -273,27 +273,28 @@
 
         if ($entry_zone_id > 0) $entry_state = '';
 
-        $sql_data_array = array('entry_firstname' => $customers_firstname,
-                                'entry_lastname' => $customers_lastname,
-                                'entry_street_address' => $entry_street_address,
-                                'entry_postcode' => $entry_postcode,
-                                'entry_city' => $entry_city,
-                                'entry_country_id' => $entry_country_id);
+        $sql_data_array = array(array('fieldName'=>'entry_firstname', 'value'=>$customers_firstname, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'entry_lastname', 'value'=>$customers_lastname, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'entry_street_address', 'value'=>$entry_street_address, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'entry_postcode', 'value'=>$customers_telephone, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'entry_city', 'value'=>$entry_postcode, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'entry_country_id', 'value'=>$entry_country_id, 'type'=>'integer'),
+        );
 
         if (ACCOUNT_COMPANY == 'true') $sql_data_array['entry_company'] = $entry_company;
         if (ACCOUNT_SUBURB == 'true') $sql_data_array['entry_suburb'] = $entry_suburb;
 
         if (ACCOUNT_STATE == 'true') {
           if ($entry_zone_id > 0) {
-            $sql_data_array['entry_zone_id'] = $entry_zone_id;
-            $sql_data_array['entry_state'] = '';
+            $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$entry_zone_id, 'type'=>'integer');
+            $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull');
           } else {
-            $sql_data_array['entry_zone_id'] = '0';
-            $sql_data_array['entry_state'] = $entry_state;
+            $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>0, 'type'=>'integer');
+            $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$entry_state, 'type'=>'stringIgnoreNull');
           }
         }
 
-        zen_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
+        $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id, 'NONSSL'));
 

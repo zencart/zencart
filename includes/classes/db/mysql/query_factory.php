@@ -8,7 +8,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Feb 14 17:28:50 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: zcwuilt Fri Apr 15 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -441,11 +441,11 @@ class queryFactory extends base {
       break;
       case 'string':
         if (preg_match('/null/i', $value)) return 'null';
-        if (isset($typeArray[1])) {
-          $regexp = $typeArray[1];
-        }
         return '\'' . $this->prepare_input($value) . '\'';
       break;
+      case 'stringIgnoreNull':
+        return '\'' . $this->prepare_input($value) . '\'';
+        break;
       case 'noquotestring':
         return $this->prepare_input($value);
       break;
