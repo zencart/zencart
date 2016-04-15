@@ -264,7 +264,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<hr>
 	<ul style='list-style-type:square'>
 		<li>
-			Go to your <b>'zc_install/includes/nginx_conf'</b> folder and open the following files:
+			Go to your <strong>'zc_install/includes/nginx_conf'</strong> folder and open the following files:
 			<ul style='list-style-type:circle'>
 				<li>
 					ngx_conf_http.txt
@@ -275,15 +275,15 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section of your Nginx configuration file.
+			Paste the contents of <strong>'ngx_conf_http.txt'</strong> into the <strong>'http'</strong> section of your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
-					Edit the caching durations in the <b>'map'</b> block to suit as required
+					Edit the caching durations in the <strong>'map'</strong> block to suit as required
 				</li>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <b>'ngx_conf_server.txt'</b> into the relevant <b>'server'</b> blocks of your Nginx configuration file.
+			Paste the contents of <strong>'ngx_conf_server.txt'</strong> into the relevant <strong>'server'</strong> blocks of your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					The directives may be used for SSL and/or Non SSL server blocks.
@@ -309,26 +309,26 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			... or any other location blocks that might be processed before these are.
 		</li>
 		<li>
-			Instead, edit the <b>'zencart_php_handler'</b> location block to match your Nginx PHP Handling Directives.
+			Instead, edit the <strong>'zencart_php_handler'</strong> location block to match your Nginx PHP Handling Directives.
 			<ul style='list-style-type:circle'>
 				<li>
-					Simply duplicate the contents of your existing PHP handling location block into the <b>'zencart_php_handler'</b> location block.
+					Simply duplicate the contents of your existing PHP handling location block into the <strong>'zencart_php_handler'</strong> location block.
 					<ul style='list-style-type:none'>
 						<li>
 							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
 						</li>
 						<li>
-							- If you do not have an existing PHP handling location block, perhaps you are just setting up Nginx to run Zencart, then please refer to online guides such as those found <a href='https://www.google.com/search?hl=en&q=setup%20php%20on%20nginx&ei=FRAPV5bmOMmsU9iFuegP'  target='_blank'><u>HERE</u></a> and implement the PHP directives in the <b>'zencart_php_handler'</b> location block.  
+							- If you do not have an existing PHP handling location block, perhaps you are just setting up Nginx to run Zencart, then please refer to online guides such as those found <a href='https://www.google.com/search?hl=en&q=setup%20php%20on%20nginx&ei=FRAPV5bmOMmsU9iFuegP'  target='_blank'><u>HERE</u></a> and implement the PHP directives in the <strong>'zencart_php_handler'</strong> location block.  
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</li>
 		<li>
-			Uncomment the <b>'zencart_expires'</b> lines if required.
+			Uncomment the <strong>'zencart_expires'</strong> lines if required.
 			<ul style='list-style-type:circle'>
 				<li>
-					Ensure you have pasted the contents of <b>'ngx_conf_http.txt'</b> into the <b>'http'</b> section.
+					Ensure you have pasted the contents of <strong>'ngx_conf_http.txt'</strong> into the <strong>'http'</strong> section.
 				</li>
 			</ul>
 		</li>
@@ -339,10 +339,10 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 					Do this before closing this dialog box.
 				</li>
 				<li>
-					Remember to delete the <b>'zc_install'</b> folder when done.
+					Remember to delete the <strong>'zc_install'</strong> folder when done.
 					<ul style='list-style-type:none'>
 						<li>
-							- Including the <b>'zc_install/includes/nginx_conf'</b> folder and its contents.
+							- Including the <strong>'zc_install/includes/nginx_conf'</strong> folder and its contents.
 						</li>
 					</ul>
 				</li>
@@ -351,7 +351,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<ol>
 </div>
 <div class='alert-box alert'>
-	<b>IMPORTANT:</b> These location blocks should be <b>BEFORE</b> any other location blocks in your Nginx configuration server block.
+	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block.
 </div>
 <hr>");
 
