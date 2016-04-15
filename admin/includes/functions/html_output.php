@@ -409,13 +409,13 @@
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
       if ($usessl) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
+        $form .= zen_href_link($action, $parameters, 'SSL');
       } else {
         $form .= zen_href_link($action, $parameters, 'NONSSL');
       }
     } else {
       if ($usessl) {
-        $form .= zen_href_link($action, '', 'NONSSL');
+        $form .= zen_href_link($action, '', 'SSL');
       } else {
         $form .= zen_href_link($action, '', 'NONSSL');
       }
