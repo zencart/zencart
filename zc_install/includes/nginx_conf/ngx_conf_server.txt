@@ -15,10 +15,11 @@
 
 
 ###############################
-# PHP Handler
+# Zencart PHP Handler
 ###############################	
 ## The following block serves all PHP requests internally directed to it within this conf file
-## Edit to reflect your set up for serving PHP
+## Edit to reflect your actual setup for serving PHP
+## Likely to require editing the ‘fastcgi_pass’ directive
 	location @zencart_php_handler {
 		try_files	$uri =404;
 				
@@ -48,7 +49,7 @@
 
 
 ###############################
-# 'zc_install' Folder
+# Zencart 'zc_install' Folder
 ###############################	
 ## Allow all requests to specific static file types in 'zc_install'
 	location ~ ^%%http_store_folder%%/zc_install/(.+)\.(ico|js|css|jpg|gif|png|html)$ {
@@ -87,7 +88,7 @@
 
 
 ###############################
-# 'includes' Folder
+# Zencart 'includes' Folder
 ###############################	
 ## Allow and fastrack internal requests to 'includes/classes'
 ## Returns '404 Not Found' http code for external requests
@@ -131,7 +132,7 @@
 
 
 ###############################
-# 'pub' Folder
+# Zencart 'pub' Folder
 ###############################	
 ## Allow and force downloads of all requests to specific static file types in 'pub'
 	location ~ ^%%http_store_folder%%/pub/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
@@ -145,7 +146,7 @@
 
 
 ###############################
-# 'download' Folder
+# Zencart 'download' Folder
 ###############################	
 ## Allow and force downloads of all requests to specific static file types in 'download'
 	location ~ ^%%http_store_folder%%/download/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
@@ -163,7 +164,7 @@
 
 
 ###############################
-# 'images' Folder
+# Zencart 'images' Folder
 ###############################	
 ## Allow internal requests to 'images/uploads'
 ## Returns '404 Not Found' http code for external requests
@@ -188,7 +189,7 @@
 
 
 ###############################
-# 'media' Folder
+# Zencart 'media' Folder
 ###############################	
 ## Allow all requests to specific static file types in 'media'
 	location ~ ^%%http_store_folder%%/media/(.+)\.(mp3|mp4|swf|avi|mpg|wma|rm|ra|ram|wmv|epub|flv|ogg|m4v|m4a|webm)$ {
@@ -208,7 +209,7 @@
 
 
 ###############################
-# 'extras' Folder
+# Zencart 'extras' Folder
 ###############################	
 ## Allow all requests to html files in 'extras'
 	location ~ ^%%http_store_folder%%/extras/(.+)\.html$ {
@@ -228,7 +229,7 @@
 
 
 ###############################
-# 'email' Folder
+# Zencart 'email' Folder
 ###############################	
 ## Allow all requests to specific static file types in 'email'
 	location ~ ^%%http_store_folder%%/email/(.+)\.(jpe?g|gif|png)$ {
@@ -243,7 +244,7 @@
 
 
 ###############################
-# 'editors' and 'docs' Folders
+# Zencart 'editors' and 'docs' Folders
 ###############################	
 ## Allow all requests to specific static file types in 'editors' or 'docs'
 	location ~ ^%%http_store_folder%%/(editors|docs)/(.+)\.(js|css|jpe?g|gif|png|html?|xml|pdf)$ {
@@ -258,7 +259,7 @@
 
 
 ###############################
-# 'cache' Folder
+# Zencart 'cache' Folder
 ###############################	
 ## Allow and fastrack internal requests to 'cache'
 ## Returns '404 Not Found' http code for external requests
@@ -268,7 +269,7 @@
 
 
 ###############################
-# 'logs' Folder
+# Zencart 'logs' Folder
 ###############################	
 ## Allow and fastrack internal requests to 'logs'
 ## Returns '404 Not Found' http code for external requests
@@ -278,9 +279,10 @@
 
 
 ###############################
-# ADMIN Folder
+# Zencart ADMIN Folder
 ###############################	
 ## Allow all 'POST', 'GET' and 'HEAD' requests to all PHP files
+## More secure to specifically allow eligible files but not practical
 	location ~ ^%%http_store_folder%%/%%admin_folder%%/(.+)\.php$ {
 		if ( $request_method !~ ^(GET|HEAD|POST)$ ) {
 			return 403;
@@ -326,13 +328,13 @@
 
 
 ###############################
-# ROOT Folder
+# Zencart ROOT Folder
 ###############################	
 ## Allow all requests to specific static file types
 	location ~ ^%%http_store_folder%%/(.+)\.(md|ico|txt|html)$ {
 		#expires $zencart_expires;
 	}
-## Allow all requests to specific PHP files directly under the '%%http_store_folder%%' folder
+## Allow all requests to specific PHP files directly under the Zencart ROOT folder
 	location ~ ^%%http_store_folder%%/(ajax|index|page_not_found|ipn_main_handler)\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
@@ -340,7 +342,7 @@
 
 	
 ###############################
-# Catchall
+# Zencart Catchall
 ###############################	
 ## Redirect any request not previously explicitly handled to the main index.php uri
 	location ~ ^%%http_store_folder%%(.*)$ {
