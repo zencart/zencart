@@ -678,7 +678,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         return false;
       }
     } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
+      if (($value != '') && (strtolower($value) != 'NULL') && (strlen(trim($value)) > 0)) {
         return true;
       } else {
         return false;
@@ -952,7 +952,7 @@ if (!defined('IS_ADMIN_FLAG')) {
           case 'now()':
             $query .= 'now(), ';
             break;
-          case 'null':
+          case 'NULL':
             $query .= 'null, ';
             break;
           default:
@@ -968,8 +968,8 @@ if (!defined('IS_ADMIN_FLAG')) {
           case 'now()':
             $query .= $columns . ' = now(), ';
             break;
-          case 'null':
-            $query .= $columns .= ' = null, ';
+          case 'NULL':
+            $query .= $columns . ' = null, ';
             break;
           default:
             $query .= $columns . ' = \'' . zen_db_input($value) . '\', ';

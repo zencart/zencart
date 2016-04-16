@@ -246,7 +246,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_VALIDATION_CHECK', array(), $error, $send_welcome_email);
-  
+
   if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
     $error = true;
     $messageStack->add('create_account', ENTRY_PASSWORD_ERROR);
@@ -265,7 +265,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   } else {
     $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
                            array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
-                           array('fieldName'=>'customers_email_address', 'value'=>$street_address, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_email_address', 'value'=>$email_address, 'type'=>'stringIgnoreNull'),
                            array('fieldName'=>'customers_nick', 'value'=>$nick, 'type'=>'stringIgnoreNull'),
                            array('fieldName'=>'customers_telephone', 'value'=>$telephone, 'type'=>'stringIgnoreNull'),
                            array('fieldName'=>'customers_fax', 'value'=>$fax, 'type'=>'stringIgnoreNull'),
@@ -277,7 +277,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     );
 
     if ((CUSTOMERS_REFERRAL_STATUS == '2' and $customers_referral != '')) $sql_data_array[] = array('fieldName'=>'customers_referral', 'value'=>$customers_referral, 'type'=>'stringIgnoreNull');
-    if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_referral', 'value'=>$gender, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
     if (ACCOUNT_DOB == 'true')  $sql_data_array[] = array('fieldName'=>'customers_dob', 'value'=>empty($_POST['dob']) || $dob_entered == '0001-01-01 00:00:00' ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']), 'type'=>'date');
 
     $db->perform(TABLE_CUSTOMERS, $sql_data_array);
@@ -297,8 +297,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     );
 
     if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
-    if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
-    if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = $sql_data_array[] = array('fieldName'=>'$suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
 
     if (ACCOUNT_STATE == 'true') {
       if ($zone_id > 0) {

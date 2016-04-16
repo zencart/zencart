@@ -440,7 +440,7 @@ class queryFactory extends base {
         return (int)$value;
       break;
       case 'string':
-        if (preg_match('/null/i', $value)) return 'null';
+        if (preg_match('/NULL/', $value)) return 'null';
         return '\'' . $this->prepare_input($value) . '\'';
       break;
       case 'stringIgnoreNull':
