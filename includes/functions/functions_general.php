@@ -678,7 +678,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         return false;
       }
     } else {
-      if (($value != '') && ($value != 'NULL') && (strlen(trim($value)) > 0)) {
+      if ($value != '' && $value != 'NULL' && strlen(trim($value)) > 0) {
         return true;
       } else {
         return false;
