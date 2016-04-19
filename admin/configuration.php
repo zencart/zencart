@@ -21,13 +21,13 @@
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
           zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
         }
-        
+
         $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
-        // See if there are any configuration checks 
+        // See if there are any configuration checks
         $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = '" . (int)$cID . "'");
-        if (!$checks->EOF && $checks->fields['val_function'] != NULL) { 
-           require_once('includes/functions/configuration_checks.php'); 
-           zen_validate_configuration_entry($configuration_value, $checks->fields['val_function']); 
+        if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
+           require_once('includes/functions/configuration_checks.php');
+           zen_validate_configuration_entry($configuration_value, $checks->fields['val_function']);
         }
 
         $db->Execute("update " . TABLE_CONFIGURATION . "
@@ -52,7 +52,7 @@
   $_GET['gID'] = $gID;
   $cfg_group = $db->Execute("select language_key
                              from " . TABLE_ADMIN_PAGES . "
-                             where configuration_group_id = 'gID=" . (int)$gID . "'");
+                             where page_params = 'gID=" . (int)$gID . "'");
 
 if ($gID == 7) {
         $shipping_errors = '';
@@ -138,7 +138,7 @@ require('includes/admin_html_head.php');
     }
 ?>
 <?php
-   // multilanguage support: 
+   // multilanguage support:
    // For example, in admin/includes/languages/spanish/configuration.php
    // define('CFGTITLE_STORE_NAME', 'Nombre de la Tienda');
    // define('CFGDESC_STORE_NAME', 'El nombre de mi tienda');
@@ -146,7 +146,7 @@ require('includes/admin_html_head.php');
       $configuration->fields['configuration_title'] = constant('CFGTITLE_' . $configuration->fields['configuration_key']);
     }
     if (defined('CFGDESC_' . $configuration->fields['configuration_key'])) {
-      $configuration->fields['configuration_description'] = constant('CFGDESC_' . $configuration->fields['configuration_key']); 
+      $configuration->fields['configuration_description'] = constant('CFGDESC_' . $configuration->fields['configuration_key']);
     }
 ?>
                 <td class="dataTableContent"><?php echo $configuration->fields['configuration_title']; ?></td>
@@ -167,7 +167,7 @@ require('includes/admin_html_head.php');
       $cInfo->configuration_title = constant('CFGTITLE_' . $cInfo->configuration_key);
     }
     if (defined('CFGDESC_' . $cInfo->configuration_key)) {
-      $cInfo->configuration_description = constant('CFGDESC_' . $cInfo->configuration_key); 
+      $cInfo->configuration_description = constant('CFGDESC_' . $cInfo->configuration_key);
     }
 
   switch ($action) {
