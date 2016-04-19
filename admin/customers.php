@@ -276,13 +276,13 @@
         $sql_data_array = array(array('fieldName'=>'entry_firstname', 'value'=>$customers_firstname, 'type'=>'stringIgnoreNull'),
                                 array('fieldName'=>'entry_lastname', 'value'=>$customers_lastname, 'type'=>'stringIgnoreNull'),
                                 array('fieldName'=>'entry_street_address', 'value'=>$entry_street_address, 'type'=>'stringIgnoreNull'),
-                                array('fieldName'=>'entry_postcode', 'value'=>$customers_telephone, 'type'=>'stringIgnoreNull'),
-                                array('fieldName'=>'entry_city', 'value'=>$entry_postcode, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'entry_postcode', 'value'=>$entry_postcode, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'entry_city', 'value'=>$entry_city, 'type'=>'stringIgnoreNull'),
                                 array('fieldName'=>'entry_country_id', 'value'=>$entry_country_id, 'type'=>'integer'),
         );
 
-        if (ACCOUNT_COMPANY == 'true') $sql_data_array['entry_company'] = $entry_company;
-        if (ACCOUNT_SUBURB == 'true') $sql_data_array['entry_suburb'] = $entry_suburb;
+        if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$entry_company, 'type'=>'stringIgnoreNull');
+        if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$entry_suburb, 'type'=>'stringIgnoreNull');
 
         if (ACCOUNT_STATE == 'true') {
           if ($entry_zone_id > 0) {

@@ -438,7 +438,7 @@
         return false;
       }
     } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
+      if (($value != '') && ($value != 'NULL') && (strlen(trim($value)) > 0)) {
         return true;
       } else {
         return false;
