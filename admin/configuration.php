@@ -52,7 +52,7 @@
   $_GET['gID'] = $gID;
   $cfg_group = $db->Execute("select language_key
                              from " . TABLE_ADMIN_PAGES . "
-                             where configuration_group_id = 'gID=" . (int)$gID . "'");
+                             where page_params = 'gID=" . (int)$gID . "'");
 
 if ($gID == 7) {
         $shipping_errors = '';
