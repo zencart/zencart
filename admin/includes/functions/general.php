@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Fri Apr 22 12:16:32 2016 -0500 Modified in v1.5.5 $
  */
 
 ////
@@ -3453,6 +3453,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * replacement for fmod to manage values < 1
  */
   function fmod_round($x, $y) {
+    if ($y == 0) {
+      return 0;
+    }
     $x = strval($x);
     $y = strval($y);
     $zc_round = ($x*1000)/($y*1000);
