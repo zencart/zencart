@@ -77,9 +77,9 @@
 	location ~ %%http_store_folder%%/zc_install/sql(.*)$ {
 		internal;
 	}
-## Allow and redirect all requests to 'zc_install' root		
+## Redirect all requests to 'zc_install' root to 'zc_install/index.php’
 	location ~ %%http_store_folder%%/zc_install(/?)$ {
-		rewrite ^ %%http_store_folder%%/zc_install/index.php redirect;
+		return %%http_store_folder%%/zc_install/index.php;
 	}
 ## Forbid any other request to 'zc_install' and any subfolders
 	location ~ %%http_store_folder%%/zc_install {
@@ -317,8 +317,9 @@
 			# Uncomment if accompanying 'map' block in HTTP section has been added
 			#expires $zencart_expires;		
 		}
+		# Redirect all requests to ADMIN root to ADMIN/index.php 
 		location ~ %%http_store_folder%%/%%admin_folder%%(/?)$ {
-			rewrite ^ %%http_store_folder%%/%%admin_folder%%/index.php redirect;
+			return %%http_store_folder%%/%%admin_folder%%/index.php;
 		}
 		# Forbid any other request to '%%admin_folder%%' and any subfolders
 		return 403;
@@ -342,7 +343,7 @@
 ###############################
 # Zencart Catchall
 ###############################	
-## Redirect any request not previously explicitly handled to the main index.php uri
+## Redirect any request not previously explicitly handled to main Zencart index.php file
 	location ~ %%http_store_folder%%(.*)$ {
-		rewrite ^ %%http_store_folder%%/index.php redirect;
+		return %%http_store_folder%%/index.php;
 	}
