@@ -22,6 +22,8 @@ if (strlen(SITE_TAGLINE) > 1) {
 } else {
   define('TAGLINE', '');
 }
+// array to remove specific characters from meta-data
+$bad_characters = array('"','*');
 $review_on = "";
 $keywords_string_metatags = "";
 if (!defined('METATAGS_DIVIDER')) define('METATAGS_DIVIDER', ', ');
@@ -34,7 +36,7 @@ while (!$keywords_metatags->EOF) {
   $keywords_metatags->MoveNext();
 }
 $zco_notifier->notify('NOTIFY_MODULE_META_TAGS_BUILDKEYWORDS', CUSTOM_KEYWORDS, $keywords_string_metatags);
-define('KEYWORDS', str_replace('"','',zen_clean_html($keywords_string_metatags) . CUSTOM_KEYWORDS));
+define('KEYWORDS', str_replace($bad_characters,'',zen_clean_html($keywords_string_metatags) . CUSTOM_KEYWORDS));
 
 // if per-page metatags overrides have been defined, use those, otherwise use usual defaults:
 if ($metatag_page_name != 'index') {
@@ -94,9 +96,9 @@ switch ($metatag_page_name) {
   $sql = "select * from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " mcd where mcd.categories_id = '" . (int)$current_category_id . "' and mcd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
   $category_metatags = $db->Execute($sql);
   if (!$category_metatags->EOF) {
-    define('META_TAG_TITLE', str_replace('"','',$category_metatags->fields['metatags_title']));
-    define('META_TAG_DESCRIPTION', str_replace('"','',$category_metatags->fields['metatags_description']));
-    define('META_TAG_KEYWORDS', str_replace('"','',$category_metatags->fields['metatags_keywords']));
+    define('META_TAG_TITLE', str_replace($bad_characters,'',$category_metatags->fields['metatags_title']));
+    define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',$category_metatags->fields['metatags_description']));
+    define('META_TAG_KEYWORDS', str_replace($bad_characters,'',$category_metatags->fields['metatags_keywords']));
   } else {
     // build categories meta tags
     // eof: categories meta tags
@@ -106,9 +108,9 @@ switch ($metatag_page_name) {
       if ($category_metatags->EOF) {
         $meta_tags_over_ride = true;
       } else {
-        define('META_TAG_TITLE', str_replace('"','', zen_clean_html($category_metatags->fields['categories_name']) . PRIMARY_SECTION . TITLE . TAGLINE));
-        define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . zen_clean_html($category_metatags->fields['categories_name']) . SECONDARY_SECTION . KEYWORDS));
-        define('META_TAG_KEYWORDS', str_replace('"','',KEYWORDS . METATAGS_DIVIDER . zen_clean_html($category_metatags->fields['categories_name'])));
+        define('META_TAG_TITLE', str_replace($bad_characters,'', zen_clean_html($category_metatags->fields['categories_name']) . PRIMARY_SECTION . TITLE . TAGLINE));
+        define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . PRIMARY_SECTION . zen_clean_html($category_metatags->fields['categories_name']) . SECONDARY_SECTION . KEYWORDS));
+        define('META_TAG_KEYWORDS', str_replace($bad_characters,'',KEYWORDS . METATAGS_DIVIDER . zen_clean_html($category_metatags->fields['categories_name'])));
       } // EOF
     } elseif ($category_depth == 'products') {
       if (isset($_GET['manufacturers_id']) || ((isset($_GET['filter_id']) && $_GET['filter_id'] > 0) && isset($_GET['cPath'])) ) {
@@ -122,9 +124,9 @@ switch ($metatag_page_name) {
         if ($manufacturer_metatags->EOF) {
           $meta_tags_over_ride = true;
         } else {
-          define('META_TAG_TITLE', str_replace('"','',$manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
-          define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
-          define('META_TAG_KEYWORDS', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
+          define('META_TAG_TITLE', str_replace($bad_characters,'',$manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
+          define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
+          define('META_TAG_KEYWORDS', str_replace($bad_characters,'', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
         } // EOF
       } else {
         $sql = "select cd.categories_name from " . TABLE_CATEGORIES . ' c, ' . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.categories_id = '" . (int)$current_category_id . "' and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' and c.categories_status=1";
@@ -132,9 +134,9 @@ switch ($metatag_page_name) {
         if ($category_metatags->EOF) {
           $meta_tags_over_ride = true;
         } else {
-          define('META_TAG_TITLE', str_replace('"','', zen_clean_html($category_metatags->fields['categories_name']) . PRIMARY_SECTION . TITLE . TAGLINE));
-          define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . zen_clean_html($category_metatags->fields['categories_name']) . SECONDARY_SECTION . KEYWORDS));
-          define('META_TAG_KEYWORDS', str_replace('"','',KEYWORDS . METATAGS_DIVIDER . zen_clean_html($category_metatags->fields['categories_name'])));
+          define('META_TAG_TITLE', str_replace($bad_characters,'', zen_clean_html($category_metatags->fields['categories_name']) . PRIMARY_SECTION . TITLE . TAGLINE));
+          define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . PRIMARY_SECTION . zen_clean_html($category_metatags->fields['categories_name']) . SECONDARY_SECTION . KEYWORDS));
+          define('META_TAG_KEYWORDS', str_replace($bad_characters,'',KEYWORDS . METATAGS_DIVIDER . zen_clean_html($category_metatags->fields['categories_name'])));
         } // EOF
       }
     } else {
@@ -146,9 +148,9 @@ switch ($metatag_page_name) {
           define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)) . SECONDARY_SECTION . KEYWORDS);
           define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . str_replace(array("'",'"'),'',strip_tags(HEADING_TITLE)));
         } else {
-          define('META_TAG_TITLE', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
-          define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
-          define('META_TAG_KEYWORDS', str_replace('"','', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
+          define('META_TAG_TITLE', str_replace($bad_characters,'', $manufacturer_metatags->fields['manufacturers_name'] . PRIMARY_SECTION . TITLE . TAGLINE));
+          define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . PRIMARY_SECTION . $manufacturer_metatags->fields['manufacturers_name'] . SECONDARY_SECTION . KEYWORDS));
+          define('META_TAG_KEYWORDS', str_replace($bad_characters,'', $manufacturer_metatags->fields['manufacturers_name'] . METATAGS_DIVIDER . KEYWORDS));
         }
       } else {
         // nothing custom main page
@@ -160,14 +162,14 @@ switch ($metatag_page_name) {
   // eof: categories meta tags
 
   case 'popup_image':
-  $meta_products_name = str_replace('"','',zen_clean_html($products_values->fields['products_name']));
+  $meta_products_name = str_replace($bad_characters,'',zen_clean_html($products_values->fields['products_name']));
   define('META_TAG_TITLE', $meta_products_name . PRIMARY_SECTION . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . $meta_products_name . SECONDARY_SECTION . KEYWORDS);
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . $meta_products_name);
   break;
 
   case 'popup_image_additional':
-  $meta_products_name = str_replace('"','',zen_clean_html($products_values->fields['products_name']));
+  $meta_products_name = str_replace($bad_characters,'',zen_clean_html($products_values->fields['products_name']));
   define('META_TAG_TITLE', $meta_products_name . PRIMARY_SECTION . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . $meta_products_name . SECONDARY_SECTION . KEYWORDS);
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . $meta_products_name);
@@ -240,9 +242,9 @@ switch ($metatag_page_name) {
         $metatags_keywords = KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER;
       }
 
-      define('META_TAG_TITLE', str_replace('"','',zen_clean_html($review_on . $meta_products_name)));
-      define('META_TAG_DESCRIPTION', str_replace('"','',zen_clean_html($metatags_description . ' ')));
-      define('META_TAG_KEYWORDS', str_replace('"','',zen_clean_html($metatags_keywords)));  // KEYWORDS and CUSTOM_KEYWORDS are added above
+      define('META_TAG_TITLE', str_replace($bad_characters,'',zen_clean_html($review_on . $meta_products_name)));
+      define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',zen_clean_html($metatags_description . ' ')));
+      define('META_TAG_KEYWORDS', str_replace($bad_characters,'',zen_clean_html($metatags_keywords)));  // KEYWORDS and CUSTOM_KEYWORDS are added above
 
     } else {
       // build un-customized meta tag
@@ -271,9 +273,9 @@ switch ($metatag_page_name) {
 
       $meta_products_description = zen_clean_html($meta_products_description);
 
-      define('META_TAG_TITLE', str_replace('"','',$review_on . $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TAGLINE));
-      define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description . ' '));
-      define('META_TAG_KEYWORDS', str_replace('"','',$meta_products_name . METATAGS_DIVIDER . KEYWORDS));
+      define('META_TAG_TITLE', str_replace($bad_characters,'',$review_on . $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TAGLINE));
+      define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description . ' '));
+      define('META_TAG_KEYWORDS', str_replace($bad_characters,'',$meta_products_name . METATAGS_DIVIDER . KEYWORDS));
 
     } // CUSTOM META TAGS
   } // EOF
@@ -306,9 +308,9 @@ switch ($metatag_page_name) {
 
     $review_text_metatags = substr(strip_tags(stripslashes($review_metatags->fields['reviews_text'])), 0, 60);
     $reviews_rating_metatags = SUB_TITLE_RATING . ' ' . sprintf(TEXT_OF_5_STARS, $review_metatags->fields['reviews_rating']);
-    define('META_TAG_TITLE', str_replace('"','',$meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TERTIARY_SECTION . NAVBAR_TITLE));
-    define('META_TAG_DESCRIPTION', str_replace('"','',TITLE . PRIMARY_SECTION . NAVBAR_TITLE . SECONDARY_SECTION . $meta_products_name . SECONDARY_SECTION . $review_metatags->fields['customers_name'] . SECONDARY_SECTION . $review_text_metatags . ' ' . SECONDARY_SECTION . $reviews_rating_metatags));
-    define('META_TAG_KEYWORDS', str_replace('"','',KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER . $review_metatags->fields['customers_name'] . METATAGS_DIVIDER . $reviews_rating_metatags));
+    define('META_TAG_TITLE', str_replace($bad_characters,'',$meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TERTIARY_SECTION . NAVBAR_TITLE));
+    define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . PRIMARY_SECTION . NAVBAR_TITLE . SECONDARY_SECTION . $meta_products_name . SECONDARY_SECTION . $review_metatags->fields['customers_name'] . SECONDARY_SECTION . $review_text_metatags . ' ' . SECONDARY_SECTION . $reviews_rating_metatags));
+    define('META_TAG_KEYWORDS', str_replace($bad_characters,'',KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER . $review_metatags->fields['customers_name'] . METATAGS_DIVIDER . $reviews_rating_metatags));
   } // EOF
   break;
 // EZ-Pages:
