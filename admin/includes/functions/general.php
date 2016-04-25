@@ -3278,8 +3278,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * the value of the configuration_key is then returned
  * NOTE: keys are looked up first in the product_type_layout table and if not found looked up in the configuration table.
  */
-    function zen_get_show_product_switch($lookup, $field, $prefix= 'SHOW_', $suffix= '_INFO', $field_prefix= '_',
-                                         $field_suffix='') {
+    function zen_get_show_product_switch($lookup, $field, $prefix= 'SHOW_', $suffix= '_INFO', $field_prefix= '_', $field_suffix='') {
       global $db;
       $zv_key = zen_get_show_product_switch_name($lookup, $field, $prefix, $suffix, $field_prefix, $field_suffix);
       $sql = "select configuration_key, configuration_value from " . TABLE_PRODUCT_TYPE_LAYOUT . " where configuration_key='" . zen_db_input($zv_key) . "'";
@@ -3302,8 +3301,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 /**
  * return switch name
  */
-    function zen_get_show_product_switch_name($lookup, $field, $prefix= 'SHOW_', $suffix= '_INFO', $field_prefix= '_',
-                                              $field_suffix='') {
+    function zen_get_show_product_switch_name($lookup, $field, $prefix= 'SHOW_', $suffix= '_INFO', $field_prefix= '_', $field_suffix='') {
       global $db;
       $type_lookup = 0;
       $type_handler = '';
