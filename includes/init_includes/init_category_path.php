@@ -18,7 +18,7 @@ if (isset($_GET['cPath'])) {
 } elseif (isset($_GET['products_id']) && !zen_check_url_get_terms()) {
   $cPath = zen_get_product_path($_GET['products_id']);
 } else {
-  if (SHOW_CATEGORIES_ALWAYS == '1' && !zen_check_url_get_terms()) {
+  if ($current_page == 'index' && SHOW_CATEGORIES_ALWAYS == '1' && !zen_check_url_get_terms()) {
     $show_welcome = true;
     $cPath = (defined('CATEGORIES_START_MAIN') ? CATEGORIES_START_MAIN : '');
   } else {
