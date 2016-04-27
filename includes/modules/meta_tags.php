@@ -13,8 +13,9 @@ $metatag_page_name = $current_page_base;
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-// This should be first line of the script:
-$zco_notifier->notify('NOTIFY_MODULE_START_META_TAGS', $current_page_base, $metatag_page_name, $meta_tags_over_ride);
+// array to remove specific characters from meta-data
+$bad_characters = array('"','*');
+$zco_notifier->notify('NOTIFY_MODULE_START_META_TAGS', $current_page_base, $metatag_page_name, $meta_tags_over_ride, $bad_characters);
 
 // Add tertiary section to site tagline
 if (strlen(SITE_TAGLINE) > 1) {
@@ -22,8 +23,6 @@ if (strlen(SITE_TAGLINE) > 1) {
 } else {
   define('TAGLINE', '');
 }
-// array to remove specific characters from meta-data
-$bad_characters = array('"','*');
 $review_on = "";
 $keywords_string_metatags = "";
 if (!defined('METATAGS_DIVIDER')) define('METATAGS_DIVIDER', ', ');
