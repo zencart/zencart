@@ -144,6 +144,31 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <p>A few CSS changes were made in template_default to change IDs of repeating elements to be classes instead.
   Of note <span class="code">#cartDisplay</span> is now <span class="code">.cartDisplay</span>, and <span class="code">#cartImage</span> is <span class="code">.cartImage</span></p>
 
+<h1>v1.5.5a vs v1.5.5</h1>
+<h3>Since the first iteration of v1.5.5 on 17-March-2016, the following changes have been applied to become v1.5.5a ...</h3>
+<ul>
+<li>Fix several upgrade-related problems caused by zero-dates in the customers table data/history</li>
+<li>Revamp admin sanitization code to work better with various plugins such as Edit Orders, etc</li>
+<li>Admin orders page had some incorrect CSS classes specified</li>
+<li>Admin customers page had some incorrect HTML tags for span and bold markup</li>
+<li>Admin "Support" link restored to navigation menu</li>
+<li>Admin - fix privilege escalation vulnerability</li>
+<li>Fix missing SEARCH_DEFAULT_TEXT, ERROR_GV_CREATE_ACCOUNT and TEXT_PRICED_BY_ATTRIBUTES language defines</li>
+<li>The zc_install test for availability of SSL and .htaccess could fail due to timeouts when offline</li>
+<li>The zc_install "configure.php file update" was not always handling conversion of old SSL URLs properly</li>
+<li>Fix "uninitialized string offset" error in zen_random_name()</li>
+<li>Fix sort-order of shipping/payment modules when sort-orders are multiple digits</li>
+<li>Responsive Classic: Fix alignment/display of State Dropdown element on address pages</li>
+<li>Fix to inability to choose from address-book during checkout, and fix double "continue" buttons on same page</li>
+<li>Order comments flag was showing incorrectly on PayPal EC transactions</li>
+<li>Restore define for DIR_WS_HTTPS_ADMIN for legacy plugin purposes</li>
+<li>Added several .gitignore files in various folders, to help site developers avoid committing unnecessary files to version control</li>
+<li>For language-specific currency overrides, fix the default</li>
+<li>Fix bindvars to honor string entries that contain 'null'</li>
+<li>add safety to fmod_round</li>
+<li>Fix extra breadcrumb that was appearing when always-open-with-category is enabled</li>
+<li>Update BOC currency parsing to cope with their data changes and division-by-zero errors as a result</li>
+</ul>
 
 <h1>What's New ... Changes from v1.5.4 to v1.5.5 </h1>
 <h3><strong>The most notable improvements and bugfixes in v1.5.5 since v1.5.4 include:</strong></h3>
