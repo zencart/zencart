@@ -123,10 +123,11 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
     $data = explode(',', $line); // make an array, where each value is a separate column from the CSV
     $curName = substr(trim($data[1]), 0, 3); // take only first 3 chars of currency code (ie: removes "_NOON" suffix, or whatever future suffix BOC adds)
     $curRate = trim($data[sizeof($data)-1]);  // grab the value from the last column
-    $currencyArray[trim($curName)] = (float)$curRate;
+    // if the value isn't already set and isn't (basically) zero, update it in the array
+    if (!isset($currencyArray[trim($curName)]) || $currencyArray[trim($curName)] < 0.00001) $currencyArray[trim($curName)] = (float)$curRate;
   }
-
-  if (!isset($currencyArray[$requested])) return false; // requested not found
+  // sanity checks
+  if (!isset($currencyArray[$requested])) return false; // $requested not found
   if ($currencyArray[$requested] == 0) return false; // can't divide by zero
 
   $rate = (string)($currencyArray[DEFAULT_CURRENCY]/(float)$currencyArray[$requested]);
