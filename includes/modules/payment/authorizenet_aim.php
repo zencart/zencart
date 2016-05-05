@@ -131,7 +131,7 @@ class authorizenet_aim extends base {
     global $order, $db;
     if (IS_ADMIN_FLAG === false) {
       // if store is not running in SSL, cannot offer credit card module, for PCI reasons
-      if (MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE == 'Prduction' && (!defined('ENABLE_SSL') || ENABLE_SSL != 'true')) $this->enabled = FALSE;
+      if (MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE == 'Production' && (!defined('ENABLE_SSL') || ENABLE_SSL != 'true')) $this->enabled = FALSE;
     }
     // check other reasons for the module to be deactivated:
     if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_AIM_ZONE > 0 && isset($order->billing['country']['id'])) {
