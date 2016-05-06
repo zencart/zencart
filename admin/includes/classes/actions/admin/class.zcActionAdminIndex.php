@@ -37,7 +37,11 @@ class zcActionAdminIndex extends zcActionAdminBase
     {
         $widgetProfileList = WidgetManager::getInstallableWidgetsList($_SESSION ['admin_id'], $_SESSION ['languages_id']);
         $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
-        $this->templateVariables ['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
+        if ($widgetInfoList) { 
+           $this->templateVariables ['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
+        } else {
+           $this->templateVariables ['widgetList'] = array(); 
+        }
         $this->templateVariables ['widgets'] = WidgetManager::prepareTemplateVariables($this->templateVariables ['widgetList']);
         $this->templateVariables ['widgetInfoList'] = $widgetInfoList;
     }
