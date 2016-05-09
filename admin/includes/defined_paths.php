@@ -5,10 +5,10 @@
  * -- ADMIN version --
  *
  * @package initSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: defined_paths.php$
+ * @version $Id: Author: DrByte  Sat Jan 9 22:19:03 2016 -0500 New in v1.5.5 $
  */
 function zen_parse_url($url, $element = 'array')
 {
@@ -38,6 +38,15 @@ function zen_parse_url($url, $element = 'array')
   }
 }
 
+// make guesses in case the essentials from admin configure.php are missing (such as when someone uses a non-admin configure.php in their admin)
+if (!defined('HTTP_CATALOG_SERVER')) define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+if (!defined('HTTPS_CATALOG_SERVER')) define('HTTPS_CATALOG_SERVER', HTTP_SERVER);
+if (!defined('DIR_WS_CATALOG')) define('DIR_WS_CATALOG', DIR_WS_ADMIN . '/../');
+if (!defined('DIR_WS_HTTPS_CATALOG')) define('DIR_WS_HTTPS_CATALOG', DIR_WS_ADMIN . '/../');
+if (!defined('ENABLE_SSL_CATALOG')) define('ENABLE_SSL_CATALOG', strpos(HTTPS_CATALOG_SERVER, 'tps:') ? 'true': 'false');
+if (!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(DIR_FS_ADMIN . '/../') . '/');
+
+// now define all the admin constants
 if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTP_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
@@ -69,3 +78,7 @@ if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 if (!defined('DIR_CATALOG_LIBRARY')) {
     define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
 }
+
+//catchalls for old things that still use it ... but which should be rewritten so this can be removed fully.
+if (!defined('HTTP' . 'S_SERVER')) define('HTTP' . 'S_SERVER', HTTP_SERVER);
+if (!defined('DIR_WS_HTTPS_ADMIN')) define('DIR_WS_HTTPS_ADMIN', DIR_WS_ADMIN);
