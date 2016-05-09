@@ -85,7 +85,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       $zone_query = "SELECT distinct zone_id, zone_name, zone_code
                        FROM " . TABLE_ZONES . "
                        WHERE zone_country_id = :zoneCountryID
-                       AND " . 
+                       AND " .
                      ((trim($state) != '' && $zone_id == 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
                       "zone_id = :zoneID
                        ORDER BY zone_code ASC, zone_name";
@@ -136,24 +136,24 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
 
     if ($error == false) {
       $sql_data_array = array(array('fieldName'=>'customers_id', 'value'=>$_SESSION['customer_id'], 'type'=>'integer'),
-                              array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'string'),
-                              array('fieldName'=>'entry_lastname','value'=>$lastname, 'type'=>'string'),
-                              array('fieldName'=>'entry_street_address','value'=>$street_address, 'type'=>'string'),
-                              array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'string'),
-                              array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'string'),
+                              array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_lastname','value'=>$lastname, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_street_address','value'=>$street_address, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'stringIgnoreNull'),
                               array('fieldName'=>'entry_country_id', 'value'=>$country, 'type'=>'integer')
       );
 
       if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'enum:m|f');
-      if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'string');
-      if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'string');
+      if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
+      if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
       if (ACCOUNT_STATE == 'true') {
         if ($zone_id > 0) {
           $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer');
-          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'string');
+          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull');
         } else {
           $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>0, 'type'=>'integer');
-          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'string');
+          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'stringIgnoreNull');
         }
       }
       $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
@@ -252,4 +252,3 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_END_CHECKOUT_NEW_ADDRESS');
-?>

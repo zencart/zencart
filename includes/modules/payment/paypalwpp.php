@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Mar 16 10:28:02 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Wed Mar 27 01:25:43 2016 -0500 Modified in v1.5.5 $
  */
 /**
  * load the communications layer code
@@ -1836,7 +1836,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                              'ship_country_code'   => urldecode($response['PAYMENTREQUEST_0_COUNTRYCODE']),
                              'ship_address_status' => urldecode($response['PAYMENTREQUEST_0_ADDRESSSTATUS']),
                              'ship_phone'      => urldecode($response['PAYMENTREQUEST_0_SHIPTOPHONENUM'] != '' ? $response['PAYMENTREQUEST_0_SHIPTOPHONENUM'] : $response['PHONENUM']),
-                             'order_comment'   => urldecode($response['NOTE']) . ' ' . urldecode($response['PAYMENTREQUEST_0_NOTETEXT']),
+                             'order_comment'   => (isset($response['NOTE']) || isset($response['PAYMENTREQUEST_0_NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response['PAYMENTREQUEST_0_NOTETEXT']) : ''),
                              );
 
 //    if (strtoupper($response['ADDRESSSTATUS']) == 'NONE' || !isset($response['SHIPTOSTREET']) || $response['SHIPTOSTREET'] == '') {

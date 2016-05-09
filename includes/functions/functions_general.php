@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Tue Dec 29 22:16:43 2015 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Fri Apr 22 22:16:43 2015 +0000 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -678,7 +678,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         return false;
       }
     } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
+      if ($value != '' && $value != 'NULL' && strlen(trim($value)) > 0) {
         return true;
       } else {
         return false;
@@ -952,7 +952,7 @@ if (!defined('IS_ADMIN_FLAG')) {
           case 'now()':
             $query .= 'now(), ';
             break;
-          case 'null':
+          case 'NULL':
             $query .= 'null, ';
             break;
           default:
@@ -968,8 +968,8 @@ if (!defined('IS_ADMIN_FLAG')) {
           case 'now()':
             $query .= $columns . ' = now(), ';
             break;
-          case 'null':
-            $query .= $columns .= ' = null, ';
+          case 'NULL':
+            $query .= $columns . ' = null, ';
             break;
           default:
             $query .= $columns . ' = \'' . zen_db_input($value) . '\', ';
@@ -1363,6 +1363,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 
   // replacement for fmod to manage values < 1
   function fmod_round($x, $y) {
+    if ($y == 0) {
+      return 0;
+    }
     $x = strval($x);
     $y = strval($y);
     $zc_round = ($x*1000)/($y*1000);

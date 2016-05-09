@@ -81,7 +81,8 @@ input[type=text]{width:50%;}
 input[type=radio], input[type=checkbox]{margin-top:8px;vertical-align:middle;height:auto;}
 input[type=file], input[type=image]{border:none;width:auto;height:auto;}
 input[type=tel], input[type=email], input[type=password]{width:50%;}
-select#country, .wrapperAttribsOptions select, #advSearchDefault select{height:40px;}
+select#country, .wrapperAttribsOptions select, #advSearchDefault select, select#stateZone {height:40px;}
+select#country, select#stateZone, #state {margin-left:0;}
 .ccinfo select{width:auto;height:25px;margin-bottom:10px;}
 .sideBoxContent select{width:auto;}
 #currenciesContent select{height:35px;}
@@ -457,7 +458,6 @@ h2.greeting a:hover{}
 #loginDefault{margin-bottom:30px;}
 #loginDefault .inputLabel{margin-left:20px;}
 #loginDefault .alert{margin-right:20px;}
-#loginDefault #country, #createAcctDefault #country{margin-left:0;}
 .paypal-button-hidden{visibility:hidden;}
 
 /* markup for tables used to present tabular data */
