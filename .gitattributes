@@ -9,4 +9,3 @@ CONTRIBUTING.md   export-ignore
 phpdoc.xml        export-ignore
 phpdoc.dist.xml   export-ignore
 *not_for_release* export-ignore
-codeception.yml  export-ignore

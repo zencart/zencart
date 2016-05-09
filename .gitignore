@@ -6,7 +6,6 @@ dbencdata*.ini
 
 testFramework/webtests/config/*
 !testFramework/webtests/config/localconfig_EXAMPLE.php
-testFramework/codeception/tests/_output/*
 
 
 *.php1
