@@ -39,8 +39,8 @@ define('TEXT_INFO_META_TAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is 
 
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Admin Home');
-define('HEADER_TITLE_SUPPORT_SITE', 'Support Site');
-define('HEADER_TITLE_ONLINE_CATALOG', 'Online Catalog');
+define('HEADER_TITLE_SUPPORT_SITE', 'Support');
+define('HEADER_TITLE_ONLINE_CATALOG', 'Storefront');
 define('HEADER_TITLE_VERSION', 'Version');
 define('HEADER_TITLE_ACCOUNT', 'Account');
 define('HEADER_TITLE_LOGOFF', 'Logoff');
@@ -177,7 +177,7 @@ define('BOX_LOCALIZATION_LANGUAGES', 'Languages');
 define('BOX_LOCALIZATION_ORDERS_STATUS', 'Orders Status');
 
 // gift vouchers box text
-define('BOX_HEADING_GV_ADMIN', TEXT_GV_NAME . '/Coupons');
+define('BOX_HEADING_GV_ADMIN', 'Discounts');
 define('BOX_GV_ADMIN_QUEUE',  TEXT_GV_NAMES . ' Queue');
 define('BOX_GV_ADMIN_MAIL', 'Mail ' . TEXT_GV_NAME);
 define('BOX_GV_ADMIN_SENT', TEXT_GV_NAMES . ' sent');
@@ -185,7 +185,7 @@ define('BOX_COUPON_ADMIN','Coupon Admin');
 define('BOX_COUPON_RESTRICT','Coupon Restrictions');
 
 // admin access box text
-define('BOX_HEADING_ADMIN_ACCESS', 'Admin Access Management');
+define('BOX_HEADING_ADMIN_ACCESS', 'Admins');
 define('BOX_ADMIN_ACCESS_USERS',  'Admin Users');
 define('BOX_ADMIN_ACCESS_PROFILES', 'Admin Profiles');
 define('BOX_ADMIN_ACCESS_PAGE_REGISTRATION', 'Admin Page Registration');
@@ -449,7 +449,7 @@ define('TEXT_VALID_CATEGORIES_LIST', 'Categories List');
 define('TEXT_VALID_CATEGORIES_ID', 'Category ID');
 define('TEXT_VALID_CATEGORIES_NAME', 'Category Name');
 
-define('DEFINE_LANGUAGE','Define Language:');
+define('DEFINE_LANGUAGE','Choose Language:');
 
 define('BOX_ENTRY_COUNTER_DATE','Hit Counter Started:');
 define('BOX_ENTRY_COUNTER','Hit Counter:');
@@ -525,8 +525,8 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('ERROR_ADMIN_DEMO','Admin Demo is Active ... the feature(s) you are trying to perform have been disabled');
 
 // Version Check notices
-  define('TEXT_VERSION_CHECK_NEW_VER','New Version Available v');
-  define('TEXT_VERSION_CHECK_NEW_PATCH','New PATCH Available: v');
+  define('TEXT_VERSION_CHECK_NEW_VER','<span class="alertVersionNew">New Version Available:</span> v');
+  define('TEXT_VERSION_CHECK_NEW_PATCH','<span class="alertVersionNew">New PATCH Available:</span> v');
   define('TEXT_VERSION_CHECK_PATCH','patch');
   define('TEXT_VERSION_CHECK_DOWNLOAD','Download Here');
   define('TEXT_VERSION_CHECK_CURRENT','Your version of Zen Cart&reg; appears to be current.');
@@ -610,7 +610,6 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
   define('EDITOR_NONE', 'Plain Text');
   define('TEXT_EDITOR_INFO', 'Text Editor');
   define('ERROR_EDITORS_FOLDER_NOT_FOUND', 'You have an HTML editor selected in \'My Store\' but the \'/editors/\' folder cannot be located. Please disable your selection or move your editor files into the \''.DIR_WS_CATALOG.'editors/\' folder');
-
   define('TEXT_CATEGORIES_PRODUCTS_SORT_ORDER_INFO', 'Categories/Product Display Order: ');
   define('TEXT_SORT_PRODUCTS_SORT_ORDER_PRODUCTS_NAME', 'Products Sort Order, Products Name');
   define('TEXT_SORT_PRODUCTS_NAME', 'Products Name');
