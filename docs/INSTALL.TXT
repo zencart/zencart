@@ -1,48 +1,27 @@
 Zen Cart(R) - The Art of E-Commerce
+
 Welcome to Zen Cart(R) E-Commerce
 
 THE FOLLOWING IS A VERY SIMPLIFIED INSTALLATION DOCUMENT.
-WE SUGGEST YOU USE THE HTML VERSIONS IN THE /docs FOLDER FOR MORE DETAILED INSTRUCTIONS.
-
 THE README DOCUMENTS ARE IN THE /docs FOLDER OF THIS DISTRIBUTION.
 
+WE SUGGEST YOU USE THE PDF "Implementation Guide" PDF FILE IN THE /docs FOLDER FOR FULLY DETAILED INSTRUCTIONS.
+
+IF YOU PREFER TO READ DOCUMENTS WITH YOUR BROWSER, START WITH THE /docs/index.html FILE.
 
 You can find online documentation at: http://tutorials.zen-cart.com
 
 
-Zen Cart has a built-in automatic installation system. However to use this you must first unpack
-the code to a web server.
+Zen Cart has a built-in automatic installation system. However to use this you must first unpack and upload the code to a compatible web server:
 
-The web server can either be on your local computer or on an internet host.
+1. Extract the Zen Cart ZIP file (and tell the unzip utility to *retain* folder structures)
+2. Upload the Zen Cart files and folders to your server using your FTP program
+3. You must make some folders writable. The details are in the /docs/Implementation-Guide.pdf and the HTML-formatted documentation in the /docs/ folder
+4. In your browser enter the URL to your website where you uploaded the files, specifically to the /zc_install/index.php file.
+5. Follow the instructions. You must create your MySQL database credentials before installation, and provide those details when prompted. Details of this are in the Implementation Guide PDF.
 
-To start off, you must extract the Zen Cart(R) ZIP file. How you do this depends on the operating system you use.
-
-Once extracted, you will have a directory containing the Zen Cart(R) scripts.
-
-The contents of this directory needs to be moved to your webserver, either by copying the directory or
-by using an FTP progam.
-
-You will then need to run the zc_install script.
-
-To do this you must open a browser and type in the URL to your store:
-
-If you are running the store on your own PC, this will be
-
-   http://localhost/{zen-cart-directory}/zc_install/
-
-or if on a live webserver:
-
-   http://{www.mydomain.com}/zc_install/
-
-Next you simply follow the prompts to install Zen Cart(R).
-
-You will be asked for your MySQL database credentials. You must create the database and user+password prior to installation.
-
-For more detailed installation instructions, please see the /docs/1.readme_installation.html document in this distribution.
+For more detailed installation instructions, please see the Implementation Guide PDF in the /docs/ folder of this distribution.
 
 
 
-
-
-
-(Document Revision: $Id: INSTALL.TXT 5925 2007-02-28 08:34:31Z drbyte $)
+( (c)Copyright 2003-2016, Zen Cart(R). All rights reserved.)
