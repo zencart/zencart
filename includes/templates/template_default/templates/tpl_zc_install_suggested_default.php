@@ -59,7 +59,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
   <br><br>
   </li>
   <?php if (isset($problemString) && $problemString != '') { ?>
-  <li class="systemError">Additional *IMPORTANT* details: <?php echo $problemString; ?></li>
+  <li class="systemError errorDetails">Additional *IMPORTANT* Details: <?php echo $problemString; ?></li>
   <?php } ?>
   </ol>
   <br>

@@ -11,6 +11,11 @@
  * @version $Id:  Modified in v1.6.0 $
  */
 
+$zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
+
+// Prevent clickjacking risks by setting X-Frame-Options:SAMEORIGIN
+header('X-Frame-Options:SAMEORIGIN');
+
 /**
  * output main page HEAD tag and related headers etc
  */
@@ -21,7 +26,7 @@
   <head>
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo META_TAG_TITLE; ?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
     <meta name="author" content="<?php echo STORE_NAME ?>">
     <meta name="generator" content="shopping cart program by Zen Cart(R), http://www.zen-cart.com eCommerce software">
 <?php if (META_TAG_KEYWORDS != '') { ?>
@@ -38,6 +43,19 @@
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
     <link rel="canonical" href="<?php echo $canonicalLink; ?>">
 <?php } ?>
+
+<?php
+  // BOF hreflang for multilingual sites
+  if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+    $lng = new language;
+  }
+  reset($lng->catalog_languages);
+  while (list($key, $value) = each($lng->catalog_languages)) {
+    if ($value['id'] == $_SESSION['languages_id']) continue;
+    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type) : $canonicalLink . '&amp;language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+  }
+  // EOF hreflang for multilingual sites
+?>
 
 <?php
   // output assembled stylesheet links (see modules/tpl_css_js_generator.php)
@@ -62,6 +80,8 @@
   // FAVICON markup called from template:
   require($template->get_template_dir('tpl_favicon.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_favicon.php');
 ?>
+
+<?php  $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base); ?>
 
   </head>
 

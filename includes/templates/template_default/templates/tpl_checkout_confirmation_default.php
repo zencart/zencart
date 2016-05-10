@@ -94,19 +94,12 @@
         ?>
         <br class="clearBoth" />
         <hr />
-<?php
-// always show comments
-//  if ($order->info['comments']) {
-        ?>
 
         <h4 id="checkoutConfirmDefaultHeadingComments"><?php echo HEADING_ORDER_COMMENTS; ?></h4>
 
         <div class="buttonRow forward"><?php echo  '<a href="' . zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
         <div><?php echo (empty($order->info['comments']) ? NO_COMMENTS_TEXT : nl2br(zen_output_string_protected($order->info['comments'])) . zen_draw_hidden_field('comments', $order->info['comments'])); ?></div>
         <br class="clearBoth" />
-<?php
-//  }
-        ?>
         <hr />
 
         <h4 id="checkoutConfirmDefaultHeadingCart"><?php echo HEADING_PRODUCTS; ?></h4>
@@ -123,9 +116,9 @@
         <?php  } //endif flagAnyOutOfStock ?>
 
 
-        <table border="0" width="100%" cellspacing="0" cellpadding="0" id="cartContentsDisplay">
+      <table id="cartContentsDisplay">
             <tr class="cartTableHeading">
-                <th scope="col" id="ccQuantityHeading" width="30"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+        <th scope="col" id="ccQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
                 <th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
                 <?php
                 // If there are tax groups, display the tax columns for price breakdown
