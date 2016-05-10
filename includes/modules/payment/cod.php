@@ -3,10 +3,10 @@
  * COD Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: cod.php 15420 2010-02-04 21:27:05Z drbyte $
+ * @version $Id: Author: DrByte  Mon Dec 9 15:09:07 2013 -0500 Modified in v1.5.5 $
  */
   class cod extends base {
     var $code, $title, $description, $enabled;

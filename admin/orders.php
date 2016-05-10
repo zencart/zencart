@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions copyright COWOA authors see https://www.zen-cart.com/downloads.php?do=file&id=1115
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -394,56 +394,72 @@ function couponpopupWindow(url) {
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
+<table class="container-fluid" border="0" width="100%" cellspacing="2" cellpadding="2">
 <!-- body_text //-->
+  <tr>
+    <td class="pageHeading"><?php echo ($action == 'edit' && $order_exists) ? HEADING_TITLE_DETAILS : HEADING_TITLE; ?></td>
+  </tr>
 
+<?php $order_list_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS) . '\'"><i class="fa fa-th-list" aria-hidden="true"></i> ' . BUTTON_TO_LIST . '</button>'; ?>
 <?php if ($action == '') { ?>
 <!-- search -->
   <tr>
-    <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-         <tr><?php echo zen_draw_form('search', FILENAME_ORDERS, '', 'get', '', true); ?>
-            <td width="65%" class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
-            <td colspan="2" class="smallText" align="right">
-<?php
-// show reset search
-  if ((isset($_GET['search']) && zen_not_null($_GET['search'])) or $_GET['cID'] !='') {
-    echo '<a href="' . zen_href_link(FILENAME_ORDERS, '', 'NONSSL') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a><br />';
-  }
-?>
-<?php
-  echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
-  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-    $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-    echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
-  }
-?>
-            </td>
-          </form>
+        <td class="row noprint">
+          <div class="form-inline">
+            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+              <?php echo zen_draw_form('search', FILENAME_ORDERS, '', 'get', '', true); ?>
+                <label for="allSearch" class="sr-only"><?php echo HEADING_TITLE_SEARCH_ALL; ?></label>
+                <div class="input-group">
+                  <?php
+                  $placeholder = zen_output_string_protected(isset($_GET['search']) && $_GET['search_orders_products'] != '' ? $_GET['search'] : HEADING_TITLE_SEARCH_ALL);
+                  echo zen_draw_input_field('search', '', 'id="allSearch" class="form-control" placeholder="' . $placeholder . '"');
+                  ?>
+                <?php if ((isset($_GET['search']) && zen_not_null($_GET['search'])) or $_GET['cID'] !='') { ?>
+                  <div class="input-group-btn">
+                    <a class="btn btn-danger" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><span aria-hidden="true">&times;</span></a>
+                  </div>
+                <?php } ?>
+                </div>
+              <?php echo '</form>'; ?>
+            </div>
+            <div class="form-group col-xs-6 col-sm-3 col-md-3 col-lg-3">
+              <?php echo zen_draw_form('search_orders_products', FILENAME_ORDERS, '', 'get', '', true); ?>
+                <label for="productSearch" class="sr-only"><?php echo HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS; ?></label>
+                <div class="input-group">
+                  <?php
+                  $placeholder = zen_output_string_protected(isset($_GET['search_orders_products']) && $_GET['search_orders_products'] != '' ? $_GET['search_orders_products'] : HEADING_TITLE_SEARCH_PRODUCTS);
+                  echo zen_draw_input_field('search_orders_products', '', 'id="productSearch" class="form-control" aria-describedby="helpBlock3" placeholder="' . $placeholder . '"');
+                  ?>
+                <?php if ((isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) or $_GET['cID'] !='') { ?>
+                  <div class="input-group-btn">
+                    <a class="btn btn-danger" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><span aria-hidden="true">&times;</span></a>
+                  </div>
+                <?php } ?>
+                </div>
+                <span id="helpBlock3" class="help-block"><?php echo HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS; ?></span>
+              <?php echo '</form>'; ?>
+            </div>
+            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+              <?php echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', '', true);
+              ?>
+                <label for="orderSearch" class="sr-only"><?php echo HEADING_TITLE_SEARCH; ?></label>
+                <?php
+                echo zen_draw_input_field('oID', '', 'size="11" maxlength="11" id="orderSearch" class="form-control" placeholder="' . HEADING_TITLE_SEARCH . '"', '', 'number');
+                echo zen_draw_hidden_field('action', 'edit');
+                echo '</form>';
+              ?>
+            </div>
+            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+              <?php echo zen_draw_form('status', FILENAME_ORDERS, '', 'get', '', true);
+                echo '<label for="selectstatus" class="sr-only">' . HEADING_TITLE_STATUS . '</label> ' . zen_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), (int)$_GET['status'], 'class="form-control" onChange="this.form.submit();" id="selectstatus"');
+                echo '</form>';
+              ?>
+            </div>
+         </div>
+        </td>
 
-
-         <?php echo zen_draw_form('search_orders_products', FILENAME_ORDERS, '', 'get', '', true); ?>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
-            <td colspan="2" class="smallText" align="right">
-<?php
-// show reset search orders_products
-  if ((isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) or $_GET['cID'] !='') {
-    echo '<a href="' . zen_href_link(FILENAME_ORDERS, '', 'NONSSL') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a><br />';
-  }
-?>
-<?php
-  echo HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS . ' ' . zen_draw_input_field('search_orders_products') . zen_hide_session_id();
-  if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) {
-    $keywords_orders_products = zen_db_input(zen_db_prepare_input($_GET['search_orders_products']));
-    echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER_ORDERS_PRODUCTS . zen_db_prepare_input($keywords_orders_products);
-  }
-?>
-            </td>
-          </form>
-
-          </tr>
-        </table></td>
       </tr>
 <!-- search -->
 <?php } ?>
@@ -785,27 +801,6 @@ function couponpopupWindow(url) {
   } else {
 ?>
       <tr>
-        <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
-            <td align="right"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-              <tr><?php echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', '', true); ?>
-                <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . zen_draw_input_field('oID', '', 'size="12"') . zen_draw_hidden_field('action', 'edit') . zen_hide_session_id(); ?></td>
-              </form></tr>
-              <tr><?php echo zen_draw_form('status', FILENAME_ORDERS, '', 'get', '', true); ?>
-                <td class="smallText" align="right">
-                  <?php
-                    echo HEADING_TITLE_STATUS . ' ' . zen_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), $_GET['status'], 'onChange="this.form.submit();"');
-                    echo zen_hide_session_id();
-                  ?>
-                </td>
-              </form></tr>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="smallText"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH; ?>
@@ -883,44 +878,31 @@ function couponpopupWindow(url) {
     $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
 ?>
 <?php
-    if (isset($_GET['cID'])) {
-      $cID = zen_db_prepare_input($_GET['cID']);
-      $orders_query_raw =   "select o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
-                            $new_fields . "
-                            from (" . TABLE_ORDERS_STATUS . " s, " .
-                            TABLE_ORDERS . " o " .
-                            $new_table . ")
-                            left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') " . "
-                            where o.customers_id = '" . (int)$cID . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "' order by orders_id DESC";
 
+    $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
+$new_fields . "
+                          from (" . TABLE_ORDERS . " o " .
+                          $new_table . ")
+                          left join " . TABLE_ORDERS_STATUS . " s on (o.orders_status = s.orders_status_id and s.language_id = " . (int)$_SESSION['languages_id'] . ")
+                          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
+
+
+    if (isset($_GET['cID'])) {
+      $cID = (int)zen_db_prepare_input($_GET['cID']);
+      $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
 //echo '<BR><BR>I SEE A: ' . $orders_query_raw . '<BR><BR>';
 
     } elseif ($_GET['status'] != '') {
-      $status = zen_db_prepare_input($_GET['status']);
-      $orders_query_raw = "select o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
-                          $new_fields . "
-                          from (" . TABLE_ORDERS_STATUS . " s, " .
-                          TABLE_ORDERS . " o " .
-                          $new_table . ")
-                          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') " . "
-                          where o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "' and s.orders_status_id = '" . (int)$status . "'  " .
-                          $search . " order by o.orders_id DESC";
-
+      $status = (int)zen_db_prepare_input($_GET['status']);
+      $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status . $search;
 //echo '<BR><BR>I SEE B: ' . $orders_query_raw . '<BR><BR>';
 
     } else {
-      $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
-                          $new_fields . "
-                          from (" . TABLE_ORDERS_STATUS . " s, " .
-                          TABLE_ORDERS . " o " .
-                          $new_table . ")
-                          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') " . "
-                          where (o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "')  " .
-                          $search . " order by o.orders_id DESC";
-
+      $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search) : '';
 //echo '<BR><BR>I SEE C: ' . $orders_query_raw . '<BR><BR>';
-
     }
+
+    $orders_query_raw .= " order by o.orders_id DESC";
 
 // Split Page
 // reset page when page is unknown
@@ -1042,32 +1024,32 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
           $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
           $contents[] = array('align' => 'center', 'text' => $goto_gv);
         }
-      }
 
 // display customers comment if any exist (comment from first available order status)
       if ($orders_comment = zen_get_orders_comments($oInfo->orders_id)) {
         $contents[] = array('align' => 'left', 'text' => '<br />' . TABLE_HEADING_COMMENTS . ': ' . $orders_comment);
-      }
+        }
 
-      $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
-      $order = new order($oInfo->orders_id);
-      $contents[] = array('text' => TABLE_HEADING_PRODUCTS . ': ' . sizeof($order->products) );
-      for ($i=0; $i<sizeof($order->products); $i++) {
-        $contents[] = array('text' => $order->products[$i]['qty'] . '&nbsp;x&nbsp;' . $order->products[$i]['name']);
+        $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
+        $order = new order($oInfo->orders_id);
+        $contents[] = array('text' => TABLE_HEADING_PRODUCTS . ': ' . sizeof($order->products) );
+        for ($i=0; $i<sizeof($order->products); $i++) {
+          $contents[] = array('text' => $order->products[$i]['qty'] . '&nbsp;x&nbsp;' . $order->products[$i]['name']);
 
-        if (sizeof($order->products[$i]['attributes']) > 0) {
-          for ($j=0; $j<sizeof($order->products[$i]['attributes']); $j++) {
-            $contents[] = array('text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i></nobr>' );
+          if (sizeof($order->products[$i]['attributes']) > 0) {
+            for ($j=0; $j<sizeof($order->products[$i]['attributes']); $j++) {
+              $contents[] = array('text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i></nobr>' );
+            }
+          }
+          if ($i > MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING and MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
+            $contents[] = array('align' => 'left', 'text' => TEXT_MORE);
+            break;
           }
         }
-        if ($i > MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING and MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
-          $contents[] = array('align' => 'left', 'text' => TEXT_MORE);
-          break;
-        }
-      }
 
-      if (sizeof($order->products) > 0) {
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
+        if (sizeof($order->products) > 0) {
+          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
+        }
       }
       break;
   }

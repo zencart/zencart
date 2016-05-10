@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -110,7 +110,7 @@
                                   where language_id= '" . (int)$languages[$i]['id'] . "'
                                   and products_options_name='" . zen_db_input($option_name) . "'");
             if ($check->fields['count'] > 1) {
-              $duplicate_option .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $option_name;
+              $duplicate_option .= ' <b>' . strtoupper($languages[$i]['name']) . '</b> : ' . $option_name;
             }
           }
         }
@@ -184,7 +184,7 @@
                                 and products_options_name='" . zen_db_input($option_name) . "'");
 
           if ($check->RecordCount() > 1 and !empty($option_name)) {
-            $duplicate_option .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $option_name;
+            $duplicate_option .= ' <b>' . strtoupper($languages[$i]['name']) . '</b> : ' . $option_name;
           }
         }
         if (!empty($duplicate_option)) {
@@ -332,7 +332,7 @@
             $db->Execute($sql);
             $copy_from_values->MoveNext();
             if ($copy_from_values->fields['products_options_values_id'] != $current_id or $copy_from_values->EOF) {
-              $sql = "insert into " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_values_to_products_options_id, products_options_id, products_options_values_id) values (0, '" . (int)$options_id_to . "', '" . (int)$next_id . "')";
+              $sql = "insert into " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id) values (" . (int)$options_id_to . ", " . (int)$next_id . ")";
               $db->Execute($sql);
               $next_id++;
             }

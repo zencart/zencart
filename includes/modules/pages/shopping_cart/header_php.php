@@ -3,10 +3,10 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
+ * @version $Id: Author: DrByte  Fri Dec 4 16:31:15 2015 -0500 Modified in v1.5.5 $
  */
 
 // This should be first line of the script:
@@ -182,4 +182,4 @@ if (!$flagHasCartContents) {
 }
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');
-?>
+

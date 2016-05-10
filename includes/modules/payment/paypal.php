@@ -3,7 +3,7 @@
  * paypal.php payment module class for PayPal Payments Standard (IPN) method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
@@ -471,14 +471,7 @@ class paypal extends base {
       ipn_debug_email('PDT NOTICE :: paypal table updated: ' . print_r($sql_data_array, true));
     }
   }
-  /**
-   * Used to display error message details
-   *
-   * @return boolean
-    */
-  function output_error() {
-    return false;
-  }
+
   /**
    * Check to see whether module is installed
    *

@@ -586,7 +586,6 @@ $sql = "select count(*) as total
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
                   break;
 
-                  // previously this was default:
                   case ($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_SELECT):
                   // normal dropdown menu display
                   if (isset($_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']])) {

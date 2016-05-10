@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: admin_html_head.php  New in v1.6.0 $
@@ -32,8 +32,8 @@
 <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
 <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 
-<script src="includes/javascript/jquery-1.12.1.min.js"></script>
-<script src="includes/javascript/bootstrap.min.js"></script>
+<script src="includes/template/javascript/jquery-1.12.1.min.js"></script>
+<script src="includes/template/javascript/bootstrap.min.js"></script>
 
 
 <script src="includes/general.js"></script>

@@ -323,9 +323,8 @@
               $attributes_image_name = $current_image_name;
             }
 
-            $db->Execute("insert into " . TABLE_PRODUCTS_ATTRIBUTES . " (products_attributes_id, products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
-                          values (0,
-                                  '" . (int)$products_id . "',
+            $db->Execute("insert into " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
+                          values ('" . (int)$products_id . "',
                                   '" . (int)$options_id . "',
                                   '" . (int)$values_id . "',
                                   '" . (float)zen_db_input($value_price) . "',
@@ -864,7 +863,6 @@ function popupWindow(url) {
               <tr>
                 <td class="main" align="center"><?php echo '<span class="alert">' . TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO . '</span>' . '<br />' . zen_draw_products_pull_down('products_update_id', 'size="15"', $products_exclude_array, true, '', true); ?><br />
                 <span class="alert"><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO_MANUAL; ?></span><br /><input type="text" name="products_update_id_manual" value="<?php echo zen_output_string_protected($_POST['products_update_id_manual']); ?>" size="6"><br /><br /></td>
-                </td>
                 <td class="main" align="center"><?php echo zen_image_submit('button_copy.gif', IMAGE_COPY) . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
               </tr>
             </table></td>

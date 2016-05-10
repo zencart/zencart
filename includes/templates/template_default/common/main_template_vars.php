@@ -30,7 +30,6 @@
  *
  * @package templateSystem
  * @copyright Copyright 2003-2016 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: main_template_vars.php 2620 2005-12-20 00:52:57Z drbyte $
  */
@@ -99,3 +98,4 @@
   }
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_END', $template_dir, $body_code);
+
