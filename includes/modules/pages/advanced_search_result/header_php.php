@@ -3,10 +3,10 @@
  * Header code file for the Advanced Search Results page
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: Modified in v1.6.0 $
  */
 
 // This should be first line of the script:
@@ -131,6 +131,8 @@ if ($error == true) {
 }
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ADVANCED_SEARCH));
 $breadcrumb->add(NAVBAR_TITLE_2);
+$breadcrumb->add(zen_output_string_protected($keywords));
+
 $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
 $box = new ZenCart\ListingBox\boxes\SearchResults($zcRequest);
 $paginator = new ZenCart\Paginator\Paginator($zcRequest);
@@ -143,3 +145,5 @@ if ($box->getTotalItemCount() === 0) {
   $messageStack->add_session('search', TEXT_NO_PRODUCTS, 'caution');
   zen_redirect(zen_href_link(FILENAME_ADVANCED_SEARCH, zen_get_all_get_params('action')));
 }
+// This should be last line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_END_ADVANCED_SEARCH_RESULTS', $keywords);

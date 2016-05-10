@@ -3,7 +3,7 @@
  * Header code file for the customer's Account-Edit page
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php  Modified in v1.6.0 $
@@ -85,7 +85,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   // check external hook for duplicate email address, so we can reject the change if duplicates aren't allowed externally
   // (the observers should set any messageStack output as needed)
   $nick_error = false;
-  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error);
+  $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error, $nick);
   if ($nick_error) $error = true;
   $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_DUPLICATE', $nick, $nick_error);
   if ($nick_error) $error = true;
@@ -103,19 +103,19 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $zco_notifier->notify('NOTIFY_NICK_UPDATE_EMAIL_ADDRESS', $nick, $db->prepareInput($email_address));
 
     // build array of data to store the requested changes
-    $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'string'),
-                            array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'string'),
-                            array('fieldName'=>'customers_email_address', 'value'=>$email_address, 'type'=>'string'),
-                            array('fieldName'=>'customers_telephone', 'value'=>$telephone, 'type'=>'string'),
-                            array('fieldName'=>'customers_fax', 'value'=>$fax, 'type'=>'string'),
-                            array('fieldName'=>'customers_email_format', 'value'=>$email_format, 'type'=>'string')
+    $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'customers_email_address', 'value'=>$email_address, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'customers_telephone', 'value'=>$telephone, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'customers_fax', 'value'=>$fax, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'customers_email_format', 'value'=>$email_format, 'type'=>'stringIgnoreNull')
     );
 
     if ((CUSTOMERS_REFERRAL_STATUS == '2' and $customers_referral != '')) {
-      $sql_data_array[] = array('fieldName'=>'customers_referral', 'value'=>$customers_referral, 'type'=>'string');
+      $sql_data_array[] = array('fieldName'=>'customers_referral', 'value'=>$customers_referral, 'type'=>'stringIgnoreNull');
     }
     if (ACCOUNT_GENDER == 'true') {
-      $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'string');
+      $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
     }
     if (ACCOUNT_DOB == 'true') {
       if ($dob == '0001-01-01 00:00:00' or $_POST['dob'] == '') {
@@ -140,7 +140,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $where_clause = "customers_id = :customersID AND address_book_id = :customerDefaultAddressID";
     $where_clause = $db->bindVars($where_clause, ':customersID', $_SESSION['customer_id'], 'integer');
     $where_clause = $db->bindVars($where_clause, ':customerDefaultAddressID', $_SESSION['customer_default_address_id'], 'integer');
-    $sql_data_array = array(array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'string'),
+    $sql_data_array = array(array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
     array('fieldName'=>'entry_lastname', 'value'=>$lastname, 'type'=>'string'));
 
     $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', $where_clause);

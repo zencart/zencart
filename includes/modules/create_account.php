@@ -3,7 +3,7 @@
  * create_account header_php.php
  *
  * @package modules
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: create_account.php  Modified in v1.6.0 $
@@ -82,10 +82,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $password = zen_db_prepare_input($_POST['password']);
   $confirmation = zen_db_prepare_input($_POST['confirmation']);
 
-  if (ACCOUNT_VALIDATION == 'true' && CREATE_ACCOUNT_VALIDATION == 'true') {
-    $antirobotreg = zen_db_prepare_input($_POST['antirobotreg']);
-  }
-  $error = false;
 
   if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
     if (!isset($_POST['privacy_conditions']) || ($_POST['privacy_conditions'] != '1')) {
@@ -140,6 +136,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             where customers_email_address = '" . zen_db_input($email_address) . "'
                             and is_guest_account != 1";
 
+    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_LOOKUP_BY_EMAIL', $email_address, $check_email_query, $send_welcome_email);
     $check_email = $db->Execute($check_email_query);
 
     if ($check_email->fields['total'] > 0) {
@@ -147,7 +144,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
     } else {
       $nick_error = false;
-      $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error);
+      $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_EXISTING_EMAIL', $email_address, $nick_error, $nick);
       if ($nick_error) {
         $error = true;
       }
@@ -249,53 +246,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
   }
 
-
-  if (ACCOUNT_VALIDATION == 'true' && CREATE_ACCOUNT_VALIDATION == 'true') {
-  $sql = "SELECT * FROM " . TABLE_ANTI_ROBOT_REGISTRATION . " WHERE session_id = '" . zen_session_id() . "' LIMIT 1";
-  if( !$result = $db->Execute($sql) ) {
-	$error = true;
-	$entry_antirobotreg_error = true;
-	$text_antirobotreg_error = ERROR_VALIDATION_1;
-	$messageStack->add('create_account', ERROR_VALIDATION_1);
-	} else {
-	$entry_antirobotreg_error = false;
-	$antirobotrow = $db->Execute($sql);
-		if (( strtolower($_POST['antirobotreg']) != $antirobotrow->fields['reg_key'] ) or ($antirobotrow->fields['reg_key'] =='')) {
-		$error = true;
-		$entry_antirobotreg_error = true;
-		$text_antirobotreg_error = ERROR_VALIDATION_2;
-		$messageStack->add('create_account', ERROR_VALIDATION_2);
-		} else {
-                $sql = "DELETE FROM " . TABLE_ANTI_ROBOT_REGISTRATION . " WHERE session_id = '" . zen_session_id() . "'";
-				if( !$result = $db->Execute($sql) )
-				{
-                                $error = true;
-                                $entry_antirobotreg_error = true;
-                                $text_antirobotreg_error = ERROR_VALIDATION_3;
-                               $messageStack->add('create_account', ERROR_VALIDATION_3);
-                                } else {
-                                $sql = "OPTIMIZE TABLE " . TABLE_ANTI_ROBOT_REGISTRATION . "";
-                                        if( !$result = $db->Execute($sql) )
-                                                {
-                                                $error = true;
-                                                $entry_antirobotreg_error = true;
-                                                $text_antirobotreg_error = ERROR_VALIDATION_4;
-                                                $messageStack->add('create_account', ERROR_VALIDATION_4);
-                                                } else {
-                                                $entry_antirobotreg_error = false;
-                         		}
-                                }
-                	}
-  }
-
-	if (strlen($antirobotreg) <> ENTRY_VALIDATION_LENGTH) {
-		$error = true;
-		$entry_antirobotreg_error = true;
-		} else {
-		$entry_antirobotreg_error = false;
-	}
-}
-
+  $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_VALIDATION_CHECK', array(), $error, $send_welcome_email);
 
   if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
     $error = true;
@@ -313,54 +264,59 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add_session('header', (defined('ERROR_CREATE_ACCOUNT_SPAM_DETECTED') ? ERROR_CREATE_ACCOUNT_SPAM_DETECTED : 'Thank you, your account request has been submitted for review.'), 'success');
     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
   } else {
-    $sql_data_array = array('customers_firstname' => $firstname,
-                            'customers_lastname' => $lastname,
-                            'customers_email_address' => $email_address,
-                            'customers_nick' => $nick,
-                            'customers_telephone' => $telephone,
-                            'customers_fax' => $fax,
-                            'customers_newsletter' => (int)$newsletter,
-                            'customers_email_format' => $email_format,
-                            'customers_default_address_id' => 0,
-                            'customers_password' => zen_encrypt_password($password),
-                            'customers_authorization' => (int)$customers_authorization
+    $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_email_address', 'value'=>$email_address, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_nick', 'value'=>$nick, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_telephone', 'value'=>$telephone, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_fax', 'value'=>$fax, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_newsletter', 'value'=>$newsletter, 'type'=>'integer'),
+                           array('fieldName'=>'customers_email_format', 'value'=>$email_format, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_default_address_id', 'value'=>0, 'type'=>'integer'),
+                           array('fieldName'=>'customers_password', 'value'=>zen_encrypt_password($password), 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'customers_authorization', 'value'=>$customers_authorization, 'type'=>'integer'),
     );
 
-    if ((CUSTOMERS_REFERRAL_STATUS == '2' and $customers_referral != '')) $sql_data_array['customers_referral'] = $customers_referral;
-    if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-    if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = (empty($_POST['dob']) || $dob_entered == '0001-01-01 00:00:00' ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']));
+    if ((CUSTOMERS_REFERRAL_STATUS == '2' and $customers_referral != '')) $sql_data_array[] = array('fieldName'=>'customers_referral', 'value'=>$customers_referral, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_DOB == 'true')  $sql_data_array[] = array('fieldName'=>'customers_dob', 'value'=>empty($_POST['dob']) || $dob_entered == '0001-01-01 00:00:00' ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']), 'type'=>'date');
 
-    zen_db_perform(TABLE_CUSTOMERS, $sql_data_array);
+    $db->perform(TABLE_CUSTOMERS, $sql_data_array);
 
     $_SESSION['customer_id'] = $db->Insert_ID();
 
     $zco_notifier->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(array('customer_id' => $_SESSION['customer_id']), $sql_data_array));
-    $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
-                            'entry_firstname' => $firstname,
-                            'entry_lastname' => $lastname,
-                            'entry_street_address' => $street_address,
-                            'entry_postcode' => $postcode,
-                            'entry_city' => $city,
-                            'entry_country_id' => $country);
 
-    if (ACCOUNT_GENDER == 'true') $sql_data_array['entry_gender'] = $gender;
-    if (ACCOUNT_COMPANY == 'true') $sql_data_array['entry_company'] = $company;
-    if (ACCOUNT_SUBURB == 'true') $sql_data_array['entry_suburb'] = $suburb;
+
+    $sql_data_array = array(array('fieldName'=>'customers_id', 'value'=>$_SESSION['customer_id'], 'type'=>'integer'),
+                            array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'entry_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'entry_street_address', 'value'=>$street_address, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'stringIgnoreNull'),
+                            array('fieldName'=>'entry_country_id', 'value'=>$country, 'type'=>'integer'),
+    );
+
+    if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
+
     if (ACCOUNT_STATE == 'true') {
       if ($zone_id > 0) {
-        $sql_data_array['entry_zone_id'] = $zone_id;
-        $sql_data_array['entry_state'] = '';
+        $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer');
+        $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull');
       } else {
-        $sql_data_array['entry_zone_id'] = '0';
-        $sql_data_array['entry_state'] = $state;
+        $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>0, 'type'=>'integer');
+        $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'stringIgnoreNull');
       }
     }
 
-    zen_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+    $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
     $address_id = $db->Insert_ID();
 
     $zco_notifier->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $address_id), $sql_data_array));
+
     $sql = "update " . TABLE_CUSTOMERS . "
               set customers_default_address_id = '" . (int)$address_id . "'
               where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
@@ -393,9 +349,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['cart']->restore_contents();
 
     // hook notifier class
-    $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT', $email_address, $extra_welcome_text);
+    $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS_VIA_CREATE_ACCOUNT', $email_address, $extra_welcome_text, $send_welcome_email);
 
-
+   if ($send_welcome_email) {
     // build the message content
     $name = $firstname . ' ' . $lastname;
 
@@ -423,6 +379,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . " (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent) values ('" . $coupon_id ."', '0', 'Admin', '" . $email_address . "', now() )");
 
       $text_coupon_help = sprintf(TEXT_COUPON_HELP_DATE, zen_date_short($coupon->fields['coupon_start_date']),zen_date_short($coupon->fields['coupon_expire_date']));
+
       // if on, add in Discount Coupon explanation
       //        $email_text .= EMAIL_COUPON_INCENTIVE_HEADER .
       $email_text .= "\n" . EMAIL_COUPON_INCENTIVE_HEADER .
@@ -484,6 +441,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     } //endif send extra emails
 }
     zen_redirect(zen_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
+
+  } //endif !error
 }
 
 

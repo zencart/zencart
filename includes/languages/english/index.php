@@ -54,4 +54,4 @@ if ( ($category_depth == 'products') || (zen_check_url_get_terms()) ) {
   /*Replace this line with the headline you would like for your shop. For example: 'Welcome to My SHOP!'*/
   define('HEADING_TITLE', 'Congratulations! You have successfully installed your Zen Cart&reg; E-Commerce Solution.'); 
 }
-?>
+

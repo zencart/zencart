@@ -3,10 +3,10 @@
  * pop up image additional
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: Author: zcwilt  Fri Sep 11 15:51:04 2015 +0100 Modified in v1.5.5 $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_POPUP_IMAGES_ADDITIONAL');
@@ -46,6 +46,16 @@
 
     // set base/fallback
     $products_image_path = DIR_WS_IMAGES . $products_image;
+  }
+  
+  $_GET['products_image_large_additional'] = str_replace(' ', '+', stripslashes($_REQUEST['products_image_large_additional']));
+
+  $basepath = "";
+  $realBase = realpath($basepath);
+  $userpath = $basepath . $_GET['products_image_large_additional'];
+  $realUserPath = realpath($userpath);
+  if ($realUserPath === false || strpos($realUserPath, $realBase) !== 0) {
+      $_GET['products_image_large_additional'] = '';
   }
 
   $zco_notifier->notify('NOTIFY_POPUP_IMAGES_ADDITIONAL_INTERCEPT');
