@@ -97,13 +97,13 @@
     break;
 
     case ('optimize_db_start'):
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes') {
         $processing_message = TEXT_INFO_OPTIMIZING_DATABASE_TABLES;
         $processing_action_url = zen_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
-      }
     break;
-    // clean out unused space in database
     case ('optimize_db_do'):
+    // clean out unused space in database
+      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
+      {
         $sql = "SHOW TABLE STATUS FROM `" . DB_DATABASE ."`";
         $tables = $db->Execute($sql);
         while(!$tables->EOF) {
@@ -122,6 +122,7 @@
         zen_record_admin_activity('Store Manager executed [optimize database tables]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+      }
     break;
 
 // clean out old DEBUG logfiles

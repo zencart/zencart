@@ -62,6 +62,8 @@ define('TEXT_CHECK_ALL', 'Check All');
 define('TEXT_UNCHECK_ALL', 'Uncheck All');
 define('NONE', 'None');
 
+define('TEXT_UNKNOWN', 'Unknown');
+
 // configuration box text
 define('BOX_HEADING_CONFIGURATION', 'Configuration');
 define('BOX_CONFIGURATION_MY_STORE', 'My Store');
@@ -352,6 +354,9 @@ define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
 define('IMAGE_INSTALL_SPECIAL', 'Add Special Price Info');
 define('IMAGE_INSTALL_FEATURED', 'Add Featured Product Info');
 
+define('TEXT_VERSION_CHECK_BUTTON', 'Check for New Version');
+define('TEXT_BUTTON_RESET_ACTIVITY_LOG', 'View Activity Log');
+
 define('ICON_PRODUCTS_PRICE_MANAGER','Products Price Manager');
 define('ICON_COPY_TO', 'Copy to');
 define('ICON_CROSS', 'False');
@@ -418,6 +423,7 @@ define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Error: There is currently no defaul
 
 define('TEXT_NONE', '--none--');
 define('TEXT_TOP', 'Top');
+define('PLEASE_SELECT', 'Please select ...');
 
 define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination does not exist %s');
 define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination not writeable %s');
@@ -436,6 +442,10 @@ define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %sinc
 define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language file: ');
 define('ERROR_MODULE_REMOVAL_PROHIBITED', 'ERROR: Module removal prohibited: ');
 define('WARNING_REVIEW_ROGUE_ACTIVITY', 'ALERT: Please review for possible XSS activity:');
+
+define('ERROR_FILE_NOT_REMOVEABLE', 'Error: Could not remove the file specified. You may have to use FTP to remove the file, due to a server-permissions configuration limitation.');
+define('WARNING_SESSION_AUTO_START', 'Warning: session.auto_start is enabled - please disable this PHP feature in php.ini (restarting your webserver may be necessary to activate the change).');
+define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warning: The downloadable products directory does not exist: ' . DIR_FS_DOWNLOAD . '. Downloadable products will not work until this directory is valid.');
 
 define('TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> gift vouchers)');
 define('TEXT_DISPLAY_NUMBER_OF_COUPONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> coupons)');
@@ -512,8 +522,8 @@ define('NOT_INSTALLED_TEXT','Not Installed');
 // search filters
   define('TEXT_INFO_SEARCH_DETAIL_FILTER','Search Filter: ');
   define('HEADING_TITLE_SEARCH_DETAIL','Search: ');
-  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS', 'Search for Product(s) - Delimited by commas');
-  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL', 'Search for Products Name/Model');
+  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS', 'Search for Product IDs (Delimited by commas)');
+  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL', 'Search for Product Name/Model');
 
   define('PREV_NEXT_PRODUCT', 'Products: ');
   define('TEXT_CATEGORIES_STATUS_INFO_OFF', '<span class="alert">*Category is Disabled</span>');
@@ -592,6 +602,8 @@ define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING', 'Max:');
   define('PRODUCT_PRICE_DISCOUNT_AMOUNT','&nbsp;off');
 // Sale Maker Sale Price
   define('PRODUCT_PRICE_SALE','Sale:&nbsp;');
+
+define('TEXT_PRICED_BY_ATTRIBUTES', 'Priced by Attributes');
 
 // Rich Text / HTML resources
 define('TEXT_HTML_EDITOR_NOT_DEFINED','If you have no HTML editor defined or JavaScript disabled, you may enter raw HTML text here manually.');

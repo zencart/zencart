@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
@@ -15,6 +15,8 @@
   if (isset($_GET['page'])) $_GET['page'] = (int)$_GET['page'];
   if (isset($_GET['product_type'])) $_GET['product_type'] = (int)$_GET['product_type'];
   if (isset($_GET['cID'])) $_GET['cID'] = (int)$_GET['cID'];
+
+  $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_CATEGORIES', $action);
 
   if (!isset($_SESSION['categories_products_sort_order'])) {
     $_SESSION['categories_products_sort_order'] = CATEGORIES_PRODUCTS_SORT_ORDER;

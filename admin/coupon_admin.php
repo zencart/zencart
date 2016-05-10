@@ -1042,10 +1042,10 @@ function check_form(form_name) {
      <tr>
         <td align="left"><?php echo zen_image_submit('button_confirm.gif',COUPON_BUTTON_CONFIRM, (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?></td>
         <td align="left"><?php echo zen_image_submit('button_cancel.gif',COUPON_BUTTON_CANCEL, 'name=back'); ?></td>
-      </td>
       </tr>
 
-      </td></table></form>
+      </td></table></form></td>
+
       </tr>
 
       </table></td>
@@ -1228,7 +1228,7 @@ function check_form(form_name) {
         <td align="left">&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
       </td>
       </tr>
-      </td></table></form>
+      </td></table></form></td>
       </tr>
 
       </table></td>

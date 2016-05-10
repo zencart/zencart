@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: media_manager.php drbyte  Modified in v1.6.0 $
@@ -66,8 +66,8 @@
                   $db->Execute("insert into " . TABLE_MEDIA_CLIPS . "
                                 (media_id, clip_type, clip_filename, date_added) values (
                                  '" . (int)$_GET['mID'] . "',
-                                 '" . zen_db_prepare_input($media_type) . "',
-                                 '" . $media_upload_filename . "', now())");
+                                 '" . zen_db_input($media_type) . "',
+                                 '" . zen_db_input($media_upload_filename) . "', now())");
                 }
               }
 

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:17:58 2012 +0100 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Fri Feb 19 22:01:13 2016 -0500 Modified in v1.5.5 $
  */
 
 require('includes/application_top.php');
@@ -258,10 +258,11 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
 </div>
 <!-- body_eof //-->
 
+<div class="bottom">
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-<br>
+</div>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

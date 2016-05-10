@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
@@ -441,7 +441,7 @@
         return false;
       }
     } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
+      if ($value != '' && $value != 'NULL' && strlen(trim($value)) > 0) {
         return true;
       } else {
         return false;
@@ -973,7 +973,7 @@
 // Function to read in text area in admin
  function zen_cfg_textarea_small($text, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_textarea_field($name, false, 35, 1, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor"');
+    return zen_draw_textarea_field($name, false, 35, 1, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor" autofocus');
   }
 
 
@@ -2114,6 +2114,43 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
+
+/*
+ *  Check if option name is not expected to have an option value (ie. text field, or File upload field)
+ */
+  function zen_option_name_base_expects_no_values($option_name_id) {
+    global $db, $zco_notifier;
+    $option_name_no_value = true;
+    if (!is_array($option_name_id)) {
+      $option_name_id = array($option_name_id);
+    }
+    $sql = "SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id :option_name_id:";
+    if (sizeof($option_name_id) > 1 ) {
+      $sql2 = 'in (';
+      foreach($option_name_id as $option_id) {
+        $sql2 .= ':option_id:,';
+        $sql2 = $db->bindVars($sql2, ':option_id:', $option_id, 'integer');
+      }
+      $sql2 = rtrim($sql2, ','); // Need to remove the final comma off of the above.
+      $sql2 = ')';
+    } else {
+      $sql2 = ' = :option_id:';
+      $sql2 = $db->bindVars($sql2, ':option_id:', $option_name_id[0], 'integer');
+    }
+    $sql = $db->bindVars($sql, ':option_name_id:', $sql2, 'noquotestring');
+    $sql_result = $db->Execute($sql);
+    foreach($sql_result as $opt_type) {
+      $test_var = true; // Set to false in observer if the name is not supposed to have a value associated
+      $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE', $opt_type, $test_var);
+      if ($test_var && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) {
+        $option_name_no_value = false;
+        break;
+      }
+    }
+    return $option_name_no_value;
+  }
+
+
 function zen_copy_products_attributes($products_id_from, $products_id_to) {
   global $db;
   global $messageStack;
@@ -3214,9 +3251,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * the value of the configuration_key is then returned
  * NOTE: keys are looked up first in the product_type_layout table and if not found looked up in the configuration table.
  */
-    function zen_get_show_product_switch($lookup, $field, $suffix= 'SHOW_', $prefix= '_INFO', $field_prefix= '_', $field_suffix='') {
+    function zen_get_show_product_switch($lookup, $field, $prefix= 'SHOW_', $suffix= '_INFO', $field_prefix= '_', $field_suffix='') {
       global $db;
-      $zv_key = zen_get_show_product_switch_name($lookup, $field, $suffix, $prefix, $field_prefix, $field_suffix);
+      $zv_key = zen_get_show_product_switch_name($lookup, $field, $prefix, $suffix, $field_prefix, $field_suffix);
       $sql = "select configuration_key, configuration_value from " . TABLE_PRODUCT_TYPE_LAYOUT . " where configuration_key='" . zen_db_input($zv_key) . "'";
       $zv_key_value = $db->Execute($sql);
 //echo 'I CAN SEE - look ' . $lookup . ' - field ' . $field . ' - key ' . $zv_key . ' value ' . $zv_key_value->fields['configuration_value'] .'<br>';
@@ -3237,7 +3274,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 /**
  * return switch name
  */
-    function zen_get_show_product_switch_name($lookup, $field, $suffix= 'SHOW_', $prefix= '_INFO', $field_prefix= '_', $field_suffix='') {
+    function zen_get_show_product_switch_name($lookup, $field, $prefix= 'SHOW_', $suffix= '_INFO', $field_prefix= '_', $field_suffix='') {
       global $db;
       $type_lookup = 0;
       $type_handler = '';
@@ -3248,7 +3285,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$type_lookup . "'";
       $result = $db->Execute($sql);
       if (!$result->EOF) $type_handler = $result->fields['type_handler'];
-      $zv_key = strtoupper($suffix . $type_handler . $prefix . $field_prefix . $field . $field_suffix);
+      $zv_key = strtoupper($prefix . $type_handler . $suffix . $field_prefix . $field . $field_suffix);
 
       return $zv_key;
     }
@@ -3411,10 +3448,13 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * replacement for fmod to manage values < 1
  */
   function fmod_round($x, $y) {
+    if ($y == 0) {
+      return 0;
+    }
     $x = strval($x);
     $y = strval($y);
     $zc_round = ($x*1000)/($y*1000);
-    $zc_round_ceil = round($zc_round,0);
+    $zc_round_ceil = (int)($zc_round);
     $multiplier = $zc_round_ceil * $y;
     $results = abs(round($x - $multiplier, 6));
      return $results;
@@ -3668,8 +3708,6 @@ function zen_get_ip_address() {
   return $ip;
 }
 
-
-
 /**
  * Perform an array multisort, based on 1 or 2 columns being passed
  * (defaults to sorting by first column ascendingly then second column ascendingly unless otherwise specified)
@@ -3752,6 +3790,39 @@ function get_logs_data($maxToList = 'count') {
   $logs = zen_sort_array($logs, 'unixtime', SORT_DESC);
   return $logs;
 }
+
+/**
+ * function to override PHP's is_writable() which can occasionally be unreliable due to O/S and F/S differences
+ * attempts to open the specified file for writing. Returns true if successful, false if not.
+ * if a directory is specified, uses PHP's is_writable() anyway
+ *
+ * @var string
+ * @return boolean
+ */
+  function is__writeable($filepath, $make_unwritable = true) {
+    if (is_dir($filepath)) return is_writable($filepath);
+    $fp = @fopen($filepath, 'a');
+    if ($fp) {
+      @fclose($fp);
+      if ($make_unwritable) set_unwritable($filepath);
+      $fp = @fopen($filepath, 'a');
+      if ($fp) {
+        @fclose($fp);
+        return true;
+      }
+    }
+    return false;
+  }
+/**
+ * attempts to make the specified file read-only
+ *
+ * @var string
+ * @return boolean
+ */
+  function set_unwritable($filepath) {
+    return @chmod($filepath, 0444);
+  }
+  
 /**
  * function issetorArray
  *

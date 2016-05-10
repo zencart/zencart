@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
@@ -41,7 +41,8 @@
         if ( (WARN_BEFORE_DOWN_FOR_MAINTENANCE == 'true') && (DOWN_FOR_MAINTENANCE == 'true') ) {
         $db->Execute("update " . TABLE_CONFIGURATION . "
                       set configuration_value = 'false', last_modified = '" . NOW . "'
-                      where configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'"); }
+                      where configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'");
+            }
 
         zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
         break;
@@ -50,9 +51,9 @@
 
   $gID = (isset($_GET['gID'])) ? $_GET['gID'] : 1;
   $_GET['gID'] = $gID;
-  $cfg_group = $db->Execute("select language_key
-                             from " . TABLE_ADMIN_PAGES . "
-                             where page_params = 'gID=" . (int)$gID . "'");
+$cfg_group = $db->Execute("select configuration_group_title
+                             from " . TABLE_CONFIGURATION_GROUP . "
+                             where configuration_group_id = '" . (int)$gID . "'");
 
 if ($gID == 7) {
         $shipping_errors = '';
@@ -177,7 +178,7 @@ require('includes/admin_html_head.php');
       if ($cInfo->set_function) {
         eval('$value_field = ' . $cInfo->set_function . '"' . htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, TRUE) . '");');
       } else {
-        $value_field = zen_draw_input_field('configuration_value', htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, TRUE), 'size="60"');
+                            $value_field = zen_draw_input_field('configuration_value', htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, TRUE), 'size="60" class="cfgInput" autofocus');
       }
 
       $contents = array('form' => zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=save'));

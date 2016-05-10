@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 31 11:39:58 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -110,7 +110,7 @@
                                   where language_id= '" . (int)$languages[$i]['id'] . "'
                                   and products_options_name='" . zen_db_input($option_name) . "'");
             if ($check->fields['count'] > 1) {
-              $duplicate_option .= ' <b>' . strtoupper($languages[$i]['name']) . '</b> : ' . $option_name;
+              $duplicate_option .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $option_name;
             }
           }
         }
@@ -184,7 +184,7 @@
                                 and products_options_name='" . zen_db_input($option_name) . "'");
 
           if ($check->RecordCount() > 1 and !empty($option_name)) {
-            $duplicate_option .= ' <b>' . strtoupper($languages[$i]['name']) . '</b> : ' . $option_name;
+            $duplicate_option .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $option_name;
           }
         }
         if (!empty($duplicate_option)) {
@@ -202,11 +202,10 @@
         }
         $option_id = zen_db_prepare_input($_GET['option_id']);
 
-        $update_products_price_sorter = $db->Execute("select distinct products_id from " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE options_id ='" . $option_id . "'");
-
         $remove_option_values = $db->Execute("select products_options_id, products_options_values_id from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$option_id . "'");
 
         while (!$remove_option_values->EOF) {
+          $zco_notifier->notify('OPTIONS_NAME_MANAGER_DELETE_OPTION', array('option_id' => $option_id, 'options_values_id' => (int)$remove_option_values->fields['products_options_values_id']));
           $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id='" . (int)$remove_option_values->fields['products_options_values_id'] . "' and products_options_values_id !=0");
           $remove_option_values->MoveNext();
         }
@@ -215,12 +214,6 @@
                       where products_options_id = '" . (int)$option_id . "'");
 
         $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id = '" . (int)$option_id . "'");
-
-        while (!$update_products_price_sorter->EOF) {
-          // update products_price_sorter with new changes
-          zen_update_products_price_sorter($update_products_price_sorter->fields['products_id']);
-          $update_products_price_sorter->MoveNext();
-        }
 
         zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, $_SESSION['page_info'] . '&option_order_by=' . $option_order_by));
         break;
@@ -298,14 +291,15 @@
 // echo '<br>This should be deleted: ' . zen_get_products_name($all_options_values->fields['products_options_id']);
 // change to delete
 // should add download delete
-                $updated = 'true';
+                $updated = true;
                 $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id='" . (int)$all_update_products->fields['products_id'] . "' and options_id='" . (int)$_POST['options_id'] . "'");
+                $zco_notifier->notify('OPTIONS_NAME_MANAGER_UPDATE_OPTIONS_VALUES_DELETE', array('products_id' => $all_update_products->fields['products_id'], 'options_id' => $all_options_values->fields['products_options_id'], 'options_values_id' => $all_options_values->fields['products_options_values_id']));
               } else {
                 // skip this option_name does not exist
               }
               $all_options_values->MoveNext();
             }
-            if ($updated == 'true') {
+            if ($updated == true) {
               // update products_price_sorter with new changes
               zen_update_products_price_sorter((int)$all_update_products->fields['products_id']);
             }
