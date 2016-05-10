@@ -3,10 +3,10 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2015 Zen Cart Development Team
+# * @copyright Copyright 2003-2016 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version GIT: $Id: Author: DrByte  Thu Sept 10 2015  New in v1.5.5 $
+# * @version $Id: Author: DrByte  Tue Jan 12 12:52:48 2016 -0500 New in v1.5.5 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -39,6 +39,9 @@ TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
 UPDATE configuration set configuration_group_id = 6 where configuration_key in ('PRODUCTS_OPTIONS_TYPE_SELECT', 'UPLOAD_PREFIX', 'TEXT_PREFIX');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Product option type Select', 'PRODUCTS_OPTIONS_TYPE_SELECT', '0', 'The number representing the Select type of product option.', 6, NULL, now(), now(), NULL, NULL);
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Upload prefix', 'UPLOAD_PREFIX', 'upload_', 'Prefix used to differentiate between upload options and other options', 6, NULL, now(), now(), NULL, NULL);
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Text prefix', 'TEXT_PREFIX', 'txt_', 'Prefix used to differentiate between text option values and other option values', 6, NULL, now(), now(), NULL, NULL);
 
 UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
 UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
@@ -52,7 +55,10 @@ UPDATE configuration SET configuration_title='Credit Card Enable Status - Debit'
 UPDATE configuration set configuration_title = 'Enable HTML Emails?', configuration_description = 'Send emails in HTML format if recipient has enabled it in their preferences.' WHERE configuration_key = 'EMAIL_USE_HTML';
 UPDATE configuration set configuration_title = 'Email Admin Format?', configuration_description = 'Please select the Admin extra email format (Note: Enable HTML Emails must be on for HTML option to work)' WHERE configuration_key = 'ADMIN_EXTRA_EMAIL_FORMAT';
 
-UPDATE configuration set sort_order = '1', configuration_description = 'Send out e-mails?<br>(Default state is ON.<br>Turn off to suppress ALL outgoing email messages from this store.)' WHERE configuration_key = 'SEND_EMAILS';
+UPDATE configuration SET configuration_title='Prev/Next Navigation Page Links (Desktop)', configuration_description='Number of numbered pagination links to display.' WHERE configuration_key = 'MAX_DISPLAY_PAGE_LINKS';
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Prev/Next Navigation Page Links (Mobile)', 'MAX_DISPLAY_PAGE_LINKS_MOBILE', '3', 'Number of numbered pagination links to display on Mobile devices (assuming your template supports mobile-specific settings)', '3', '3', now());
+
+UPDATE configuration set sort_order = '1', configuration_description = 'Send out e-mails?<br>Normally this is set to true.<br>Set to false to suppress ALL outgoing email messages from this store, such as when working with a test copy of your store offline.' WHERE configuration_key = 'SEND_EMAILS';
 UPDATE configuration set sort_order = '2', configuration_description = 'Defines the method for sending mail.<br /><strong>PHP</strong> is the default, and uses built-in PHP wrappers for processing.<br />Servers running on Windows and MacOS should change this setting to <strong>SMTP</strong>.<br /><br /><strong>SMTPAUTH</strong> should be used if your server requires SMTP authorization to send messages. You must also configure your SMTPAUTH settings in the appropriate fields in this admin section.<br /><br /><strong>sendmail</strong> is for linux/unix hosts using the sendmail program on the server<br /><strong>"sendmail-f"</strong> is only for servers which require the use of the -f parameter to send mail. This is a security setting often used to prevent spoofing. Will cause errors if your host mailserver is not configured to use it.<br /><br /><strong>Qmail</strong> is mostly obsolete and only used for linux/unix hosts running Qmail as sendmail wrapper at /var/qmail/bin/sendmail.' WHERE configuration_key = 'EMAIL_TRANSPORT';
 UPDATE configuration set configuration_description = 'Enter the IP port number that your SMTP mailserver operates on.<br />Only required if using SMTP Authentication for email.<br><br>Default: 25<br>Typical values are:<br>25 - normal unencrypted SMTP<br>587 - encrypted SMTP<br>465 - older MS SMTP port' WHERE configuration_key = 'EMAIL_SMTPAUTH_MAIL_SERVER_PORT';
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Primary Source', 'CURRENCY_SERVER_PRIMARY', 'ecb', 'Where to request external currency updates from (Primary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
@@ -65,16 +71,20 @@ UPDATE configuration_group SET configuration_group_description = 'Define Pages O
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 ALTER TABLE coupons_description MODIFY coupon_name VARCHAR(64) NOT NULL DEFAULT '';
 ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
-ALTER TABLE admin MODIFY COLUMN pwd_last_change_date datetime NOT NULL default '0001-01-01 00:00:00';
-ALTER TABLE admin MODIFY COLUMN last_modified datetime NOT NULL default '0001-01-01 00:00:00';
-ALTER TABLE admin MODIFY COLUMN last_login_date datetime NOT NULL default '0001-01-01 00:00:00';
-ALTER TABLE admin MODIFY COLUMN last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00';
+ALTER TABLE admin MODIFY COLUMN pwd_last_change_date datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_modified datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_login_date datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00';
+UPDATE admin SET pwd_last_change_date='0001-01-01' where pwd_last_change_date < '0001-01-01';
+UPDATE admin SET last_modified='0001-01-01' where last_modified < '0001-01-01';
+UPDATE admin SET last_login_date='0001-01-01' where last_login_date < '0001-01-01';
+UPDATE admin SET last_failed_attempt='0001-01-01' where last_failed_attempt < '0001-01-01';
 ALTER TABLE admin MODIFY admin_pass VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY prev_pass1 VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY prev_pass2 VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY prev_pass3 VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin MODIFY reset_token VARCHAR( 255 ) NOT NULL DEFAULT '';
+
+UPDATE customers SET customers_dob='0001-01-01' where customers_dob < '0001-01-01';
 ALTER TABLE customers MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT '';
+
 ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
 ALTER TABLE whos_online MODIFY session_id varchar(255) NOT NULL default '';
 ALTER TABLE admin_menus MODIFY menu_key VARCHAR(255) NOT NULL DEFAULT '';
@@ -94,6 +104,29 @@ UPDATE query_builder set query_string = 'select max(o.date_purchased) as date_pu
 UPDATE query_builder set query_string = 'select c.customers_email_address, c.customers_lastname, c.customers_firstname from TABLE_CUSTOMERS c, TABLE_ORDERS o where c.customers_newsletter = \'1\' AND c.customers_id = o.customers_id and o.date_purchased > subdate(now(),INTERVAL 3 MONTH) GROUP BY c.customers_email_address, c.customers_lastname, c.customers_firstname order by c.customers_lastname, c.customers_firstname ASC' where query_name='Active customers in past 3 months (Subscribers)';
 UPDATE query_builder set query_string = 'select c.customers_email_address, c.customers_lastname, c.customers_firstname from TABLE_CUSTOMERS c, TABLE_ORDERS o WHERE c.customers_id = o.customers_id and o.date_purchased > subdate(now(),INTERVAL 3 MONTH) GROUP BY c.customers_email_address, c.customers_lastname, c.customers_firstname order by c.customers_lastname, c.customers_firstname ASC' where query_name='Active customers in past 3 months (Regardless of subscription status)';
 
+ALTER TABLE products_description MODIFY products_id int(11) NOT NULL;
+
+
+# Insert a default profile for managing orders, as a built-in example of profile functionality
+INSERT INTO admin_profiles (profile_name) values ('Order Processing');
+SET @profile_id=last_insert_id();
+INSERT INTO admin_pages_to_profiles (profile_id, page_key) VALUES
+(@profile_id, 'customers'),
+(@profile_id, 'orders'),
+(@profile_id, 'invoice'),
+(@profile_id, 'packingslip'),
+(@profile_id, 'paypal'),
+(@profile_id, 'currencies'),
+(@profile_id, 'reportCustomers'),
+(@profile_id, 'reportLowStock'),
+(@profile_id, 'reportProductsSold'),
+(@profile_id, 'reportProductsViewed'),
+(@profile_id, 'reportReferrals'),
+(@profile_id, 'gvMail'),
+(@profile_id, 'gvQueue'),
+(@profile_id, 'gvSent'),
+(@profile_id, 'whosOnline');
+
 #############
 
 #### VERSION UPDATE STATEMENTS
@@ -105,8 +138,8 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='1', project_version_minor='5.5', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
-UPDATE project_version SET project_version_major='1', project_version_minor='5.5', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.5a', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.5', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 #####  END OF UPGRADE SCRIPT
 

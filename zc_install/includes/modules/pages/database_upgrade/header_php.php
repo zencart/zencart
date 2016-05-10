@@ -1,13 +1,15 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: Author: DrByte  Sat Jan 23 01:09:54 2016 +0000 Modified in v1.5.5 $
  */
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
+logDetails($dbVersion, 'Version detected in database_upgrade/header_php.php');
+
 $versionArray = array();
 $versionArray[] = '1.2.6';
 $versionArray[] = '1.2.7';

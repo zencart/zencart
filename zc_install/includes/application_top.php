@@ -1,10 +1,10 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: Author: DrByte  Fri Oct 9 15:32:07 2015 -0400 Modified in v1.5.5 $
  */
 
 @ini_set("arg_separator.output", "&");
@@ -94,7 +94,7 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
  */
 if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
-  include ('../includes/extra_configures/set_time_zone.php');
+  include (DIR_FS_ROOT . '/includes/extra_configures/set_time_zone.php');
 }
 // re-test
 if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
@@ -170,10 +170,10 @@ define('ZC_UPG_DEBUG3', (!isset($_GET['debug3']) && !isset($_POST['debug3']) || 
  */
 define('DIR_WS_INSTALL_TEMPLATE', 'includes/template/');
 require (DIR_FS_INSTALL . 'includes/classes/class.systemChecker.php');
-require (DIR_FS_ROOT . 'includes/classes/vendors/yaml/lib/class.sfYaml.php');
+require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYaml.php');
 require (DIR_FS_INSTALL . 'includes/classes/class.zcRegistry.php');
-require (DIR_FS_ROOT . 'includes/classes/vendors/yaml/lib/class.sfYamlParser.php');
-require (DIR_FS_ROOT . 'includes/classes/vendors/yaml/lib/class.sfYamlInline.php');
+require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlParser.php');
+require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlInline.php');
 if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
 $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);
 if ($current_page == '' || !file_exists('includes/modules/pages/' . $current_page)) $_GET['main_page'] = $current_page = 'index';
