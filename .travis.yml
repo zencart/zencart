@@ -30,7 +30,7 @@ git:
   submodules: false
 
 before_install:
-  - composer self-update -q
+  - travis_retry composer self-update -q
   - git submodule update --init --recursive
 
 install:
