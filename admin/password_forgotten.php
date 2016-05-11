@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
@@ -75,39 +75,39 @@ if (isset($_POST['submit']))
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow" />
-<link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css">
 <link href="includes/template/css/login.css" rel="stylesheet" type="text/css">
+<link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
-<body id="login" onload="document.getElementById('admin_email').focus()">
-  <div class="container">
-    <div class="row">
-    <div class="small-12 columns small-centered">
-      <form id="loginForm" action="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'SSL'); ?>" method="post">
-      <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+<body id="login">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+        <?php
+        echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'post', 'id="loginForm"', 'true');
+        ?>
         <fieldset>
-          <legend><?php echo HEADING_TITLE; ?></legend>
-          <?php if ($resetToken == '') { ?>
-          <div class="row">
-            <div class="small-3 columns">
-              <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
-            </div>
-            <div class="small-9 columns">
-              <input class="left inline" type="text" id="admin_email" name="admin_email" value="" autocomplete="off" autofocus="autofocus">
-            </div>
-          </div>
-          <?php } ?>
-          <p class="messageStackSuccess"><?php echo $email_message; ?></p>
-          <?php if ($resetToken == '') { ?>
-          <input type="submit" name="submit" class="button" value="<?php echo TEXT_BUTTON_REQUEST_RESET; ?>">
-          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_CANCEL; ?>">
-          <?php } else { ?>
-          <input type="submit" name="login" class="button" value="<?php echo TEXT_BUTTON_LOGIN; ?>">
-          <?php } ?>
+            <legend><?php echo HEADING_TITLE; ?></legend>
+            <?php
+            if ($resetToken == '')
+            { ?>
+                <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
+                <?php
+                echo zen_draw_input_field('admin_email','','id="admin_email" class="left inline" autocomplete="off" autofocus');
+            } ?>
+            <p class="messageStackSuccess"><?php echo $email_message; ?></p>
+            <?php
+            if
+            ($resetToken == '')
+            {
+                echo zen_draw_input_field('submit',TEXT_BUTTON_REQUEST_RESET,'class="button"',false,'submit');
+                echo zen_draw_input_field('login',TEXT_BUTTON_CANCEL,'class="button"',false,'submit');
+            } else {
+                echo zen_draw_input_field('login',TEXT_BUTTON_LOGIN,'class="button"',false,'submit');
+            }
+            ?>
         </fieldset>
-      </form>
+        </form>
     </div>
-  </div>
-</div>
-</body>
-</html>
-<?php require('includes/application_bottom.php'); ?>
+    </body>
+    </html>
+<?php require('includes/application_bottom.php');
+

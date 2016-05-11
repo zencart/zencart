@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Jul 1 17:04:00 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  May 2 2016 Modified in v1.5.5a $
  */
 /**
  * Dependencies:
@@ -80,7 +80,7 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
   $url = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
   $data = '';
   if (!isset($XMLContent) || !is_array($XMLContent) || sizeof($XMLContent) < 1) {
-    $XMLContent = @file($url);
+    $XMLContent = file($url);
     if (! is_object($XMLContent) && function_exists('curl_init')) {
       // check via CURL instead.
       $XMLContent = doCurlCurrencyRequest('POST', $url, $data);
@@ -103,11 +103,11 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
   return $rate;
 }
 
-function quote_boc_currency($requested = '', $base = DEFAULT_CURRENCY)
+function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 {
-  if ($requested == $base) return 1;
-  if ($requested == '') return '';
+  if ($currencyCode == $base) return 1;
   static $CSVContent;
+  $requested = $currencyCode;
   $url = 'http://www.bankofcanada.ca/stats/assets/csv/fx-seven-day.csv';
   $currencyArray = array();
   $currencyArray['CAD'] = 1;
@@ -120,11 +120,16 @@ function quote_boc_currency($requested = '', $base = DEFAULT_CURRENCY)
   }
   foreach ($CSVContent as $line) {
     if (substr($line, 0, 1) == '#' || substr($line, 0, 4) == 'Date' || trim($line) == '') continue;
-    $data = explode(',', $line);
-    $curName = $data[1];
-    $curRate = $data[sizeof($data)-1];
-    $currencyArray[trim($curName)] = (float)$curRate;
+    $data = explode(',', $line); // make an array, where each value is a separate column from the CSV
+    $curName = substr(trim($data[1]), 0, 3); // take only first 3 chars of currency code (ie: removes "_NOON" suffix, or whatever future suffix BOC adds)
+    $curRate = trim($data[sizeof($data)-1]);  // grab the value from the last column
+    // if the value isn't already set and isn't (basically) zero, update it in the array
+    if (!isset($currencyArray[trim($curName)]) || $currencyArray[trim($curName)] < 0.00001) $currencyArray[trim($curName)] = (float)$curRate;
   }
+  // sanity checks
+  if (!isset($currencyArray[$requested])) return false; // $requested not found
+  if ($currencyArray[$requested] == 0) return false; // can't divide by zero
+
   $rate = (string)($currencyArray[DEFAULT_CURRENCY]/(float)$currencyArray[$requested]);
   return $rate;
 }

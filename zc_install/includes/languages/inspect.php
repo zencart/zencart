@@ -2,10 +2,10 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: inspect.php 19537 2011-09-20 17:14:44Z drbyte $
+ * @version $Id: Author: DrByte  Mon Feb 15 00:32:48 2016 -0500 New in v1.5.5 $
  */
 /**
  * defining language components for the page
@@ -61,7 +61,6 @@
   define('LABEL_CURRENT_CACHE_PATH','Current SQL Cache Folder');
   define('LABEL_SUGGESTED_CACHE_PATH','Suggested SQL Cache Folder');
   define('LABEL_HTTP_HOST','HTTP Host');
-  define('LABEL_PATH_TRANLSATED','Path_Translated');
   define('LABEL_REALPATH', 'Real Path');
   define('LABEL_PHP_API_MODE','PHP API Mode');
   define('LABEL_PHP_MODULES','PHP Modules Active');

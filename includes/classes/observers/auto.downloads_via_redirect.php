@@ -90,7 +90,7 @@ class zcObserverDownloadsViaRedirect extends base {
     if (defined('DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT') && DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT === TRUE) $dirname = '';
     $length = floor(zen_rand(16,20));
     for ($i = 1; $i <= $length; $i++) {
-      $q = floor(zen_rand(1,26));
+      $q = floor(zen_rand(0,25));
       $dirname .= $letters[$q];
     }
     return $dirname;

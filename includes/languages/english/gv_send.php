@@ -40,4 +40,3 @@ define('EMAIL_GV_ENTER', ' and enter the ' . TEXT_GV_REDEEM . ' ');
 define('EMAIL_GV_FIXED_FOOTER', 'If you have problems redeeming the ' . TEXT_GV_NAME . ' using the automated link above, ' . "\n" .
                                 'you can also enter the ' . TEXT_GV_NAME . ' ' . TEXT_GV_REDEEM . ' during the checkout process at our store.');
 define('EMAIL_GV_SHOP_FOOTER', '');
-?>

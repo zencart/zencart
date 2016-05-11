@@ -1,14 +1,20 @@
 /**
  * @package admin
- * @ignore
- * @access private
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css  Modified in v1.6.0 $
  */
 @import "foundation-icons.css";
 @import "font-awesome.min.css";
+
+@import url("bootstrap.min.css");
+/* @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"); */
+
+@import url("menu.css");
+
+/* @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"); */
+
 
 a{
 color:#008cba;
@@ -17,6 +23,18 @@ text-decoration:none;
 a,body,html,table{
 font:normal normal 11px Verdana, sans-serif;
 }
+body table {
+  padding: 1px 3px;
+  border-collapse: initial;
+}
+body {padding: 0 4px;}
+
+td,th {padding: 1px;}
+.main table td {
+  padding: 5px;
+}
+td.main {padding: 5px 2px;}
+
 a:hover{
 color:#007095;
 text-decoration:underline;
@@ -97,24 +115,64 @@ text-decoration:none;
 body{
 background-color:#ffffff;
 color:#333333;
-margin:0;
 }
-body#login .button{
-cursor:pointer;
-padding: 3px;
-margin-top: 10px;
+
+.clearBoth {
+    clear: both;
+}
+
+body#login {
+    margin-top: 100px;
+    text-align: center;
+}
+
+body#login .button {
+    cursor: pointer;
+    padding: 5px 20px;
+    margin-top: 10px;
+    background: #fff;
+    border: 0px;
+    font-weight: bold;
+    margin: 5px;
+}
+
+body#login .button:hover {
+    color: #fff;
+    background-color: #333;
+}
+
+body#login fieldset {
+    margin: 0 auto;
+    background-color: #05a5cb;
+    padding-bottom: 30px;
 }
 .loginLabel {
   margin-left: 60px;
   margin-right: 5px;
-  width: 125px;
-  float: left;
   text-align: right;
   line-height: 1.5;
   }
+
+body#login legend {
+    background: #333;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 0.2em 0.5em;
+}
+
+#login a {
+    float: right;
+    color: #fff;
+    font-size: 1em;
+    margin: 20px;
+}
+
 checkbox,input,radio,select,textarea,file{
 font-size:11px;
 }
+.infoBoxContent input {margin: 1px 2px;}
+input.cfgInput { width: 99%;}
+
 textarea {
 width: 80%;
 }
@@ -150,7 +208,8 @@ span.SortOrderHeaderLink{
 color:#0000ff;
 font-weight:bold;
 }
-td.alert,span.alert{
+
+td.alert:not(.messageStackAlert), span.alert:not(.messageStackAlert) {
 color:#ff0000;
 font-weight:bold;
 }
@@ -188,8 +247,14 @@ border-style:solid;
 border-width:1px;
 padding:2px;
 }
+
+.row {
+    margin: 0px;
+}
+
 .dataTableContent{
 color:#333333;
+    padding: 2px;
 }
 .dataTableContentBot{
 color:#333333;
@@ -294,11 +359,18 @@ font-weight:bold;
 background-color:#e7e6e0;
 color:#333333;
 }
+
+.infoBoxContent a img, .infoBoxContent input[type="image"] {
+    margin: 4px;
+}
+
 .infoBoxHeading{
 background-color:#000;
 color:#ffffff;
 }
-.main{
+
+.main a img {
+    margin-bottom: 16px;
 }
 .menuBoxContent{
 color:#616060;
@@ -325,6 +397,7 @@ h1,.pageHeading{
 color:#000; /*727272*/
 font-size:18px;
 font-variant:small-caps;
+    font-weight: bold;
 }
 .SaleMakerDisabled{
 background-color:#f0f1f1;
@@ -339,9 +412,71 @@ background-color:#dee4e8;
 cursor:pointer;
 cursor:hand;
 }
+
+div.copyrightrow {
+    background: #ffffff;
+    clear: both;
+    font-size: 9px;
+    padding: 25px;
+    text-align: center;
+}
+
+div.header {
+    clear: both;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 3px;
+}
+
+div.reportBox {
+    background: #666;
+    border: 1px solid #666;
+    margin-top: 1em;
+}
+
+.reportBox div.row {
+    background: #f7f6ef;
+    clear: both;
+    margin-top: 1px;
+    padding: 3px;
+    margin: 0px;
+}
+
+.reportBox div.row:nth-of-type(2n) {
+    background-color: #ffffff;
+}
+
+.reportBox div.row span.center {
+    margin-right: 30px;
+}
+
+.reportBox div.row span.left {
+    float: left;
+    text-align: left;
+    width: 74%;
+}
+
+.reportBox div.row span.right {
+    float: right;
+    text-align: right;
+    width: 34%;
+}
+
+div.warrantyrow {
+    background: #ffffff;
+    clear: both;
+    font-size: 9px;
+    text-align: center;
+}
+
 .smallText{
 font-size:9px;
 }
+
+.smallText a img{
+    margin-bottom: 16px;
+}
+
 .specialPrice{
 color:#ff6600;
 }
@@ -351,6 +486,16 @@ color:#ff6600;
 .clearBoth {
   clear:both;
 }
+
+div.clearBoth {
+    clear: both;
+    margin-top: 20px;
+}
+
+#loginExpiryPolicy {
+    margin-top: 2em;
+}
+
 .hiddenField {
   display: none;
 }
@@ -385,6 +530,90 @@ label.error {color: red; font-weight: bold;}
 
 body#indexBody {font-size: 13px}
 body#indexBody a i.fa {font-size: 1.2em}
+
+
+
+label.error {
+    color: red;
+    font-weight: bold;
+}
+
+.adminRowIcon, .adminRowIcon a {
+    color: #05a5cb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.adminRowIcon:hover, .adminRowIcon a:hover {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.adminRowButton {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background: inherit;
+}
+
+.adminRowIconActive, .adminRowIconInactive:hover {
+    color: green;
+}
+
+.adminRowIconInactive, .adminRowIconActive:hover {
+    color: red;
+}
+
+.adminRowIconRestricted, .adminRowIconRestricted:hover {
+    color: yellow;
+}
+
+.adminRowIconAttributesActive i.fa-stack-1x {
+    color: #f2f1ee;
+}
+
+.adminRowIconCartActive, .adminRowIconCartNoActive, .adminRowIconCartActive:hover, .adminRowIconCartNoActive:hover {
+    color: green;
+    text-align: right;
+}
+
+.adminRowIconCartInactive, .adminRowIconCartNoInactive, .adminRowIconCartInactive:hover, .adminRowIconCartNoInactive:hover {
+    color: red;
+    text-align: right;
+}
+.configurationColumnLeft, .configurationColumnRight{
+    padding: 1px;
+}
+#loginFormDiv div.messageStackError{
+    margin: 5px;
+    padding: 5px;
+}
+img[alt="Cancel"], img[alt="Reset"]{
+    vertical-align: top;
+}
+.versionCurrent{
+  color:green;
+}
+.alertVersionNew{
+  color:#ff0000;
+  font-size:14px;
+  font-weight:bold;
+}
+.adminHeaderAlerts{
+    padding: 10px;
+}
+#adminHeaderLogo{
+    padding: 5px;
+}
+.right {
+  text-align: right;
+}
+.center {
+  text-align: center;
+}
+
+
 
 td.actions a {
 	display: block;

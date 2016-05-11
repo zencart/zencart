@@ -1,6 +1,6 @@
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
  */
@@ -65,8 +65,6 @@ zcJS.ajax = function (options) {
          document.open();
          document.write(responseHtml);
          document.close();
-         } else {
-           alert('An unknown response '+response+': :'+contentType+': :'+errorThrown+' was received while processing an ajax call. The action you requested could not be completed.');
          }
      }
    });
@@ -74,7 +72,6 @@ zcJS.ajax = function (options) {
   var promise = deferred.promise();
   return promise;
 };
-
 zcJS.timer = function (options) {
   var defaults = {
     interval: 10000,
@@ -85,12 +82,12 @@ zcJS.timer = function (options) {
 },
   settings = $.extend(true, {}, defaults, options);
 
-  var enabled = Boolean(false);
+  var enabled = new Boolean(false);
   var timerId = 0;
   var mySelf;
   this.Start = function()
   {
-      this.enabled = Boolean(true);
+      this.enabled = new Boolean(true);
 
       mySelf = this;
       mySelf.settings = settings;
@@ -112,7 +109,7 @@ zcJS.timer = function (options) {
   };
   this.Stop = function()
   {
-    mySelf.enabled = Boolean(false);
+    mySelf.enabled = new Boolean(false);
     clearInterval(mySelf.timerId);
     if (mySelf.settings.stopEvent)
     {

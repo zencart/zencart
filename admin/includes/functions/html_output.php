@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
@@ -365,7 +365,7 @@
 ////
 // javascript to dynamically update the states/provinces list when the country is changed
 // TABLES: zones
-  function zen_js_zone_list($country, $form, $field) {
+  function zen_js_zone_list($country, $form, $field, $showTextField = true) {
     global $db;
     $countries = $db->Execute("select distinct zone_country_id
                                from " . TABLE_ZONES . "
@@ -396,10 +396,12 @@
       $num_country++;
       $countries->MoveNext();
     }
-    $output_string .= '  } else {' . "\n" .
+      $output_string .= '  }';
+      if ($showTextField) {
+          $output_string .= ' else {' . "\n" .
                       '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
                       '  }' . "\n";
-
+      }
     return $output_string;
   }
 
@@ -408,17 +410,9 @@
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
-      if ($usessl) {
-        $form .= zen_href_link($action, $parameters, 'SSL');
-      } else {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      }
+        $form .= zen_href_link($action, $parameters);
     } else {
-      if ($usessl) {
-        $form .= zen_href_link($action, '', 'SSL');
-      } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      }
+        $form .= zen_href_link($action, '');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (zen_not_null($params)) {
@@ -450,8 +444,12 @@
 
 ////
 // Output a form password field
-  function zen_draw_password_field($name, $value = '', $required = false) {
-    $field = zen_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
+  function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
+    $parameters .= ' maxlength="40"';
+    if($autocomplete == false){
+      $parameters .= ' autocomplete="off"';
+    }
+    $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
 
     return $field;
   }
@@ -568,6 +566,12 @@
     if ( ($session_started == true) && defined('SID') && zen_not_null(SID) ) {
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
+  }
+////
+// output label for input fields
+  function zen_draw_label($text, $for, $parameters = ''){
+    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+    return $label;
   }
 
 /**

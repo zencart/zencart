@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_header.php $
+ * @version $Id: init_header.php   Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -137,7 +137,7 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
 // ignore version check if not enabled or if not on main page or sysinfo page
 if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini !='off' && ($version_check_sysinfo==true || $version_check_index==true) && $zv_db_patch_ok == true) || $version_check_requested==true ) {
   $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
-  $lines = @file(NEW_VERSION_CHECKUP_URL);
+  $lines = @file(NEW_VERSION_CHECKUP_URL . '?v='.PROJECT_VERSION_MAJOR.'.'.PROJECT_VERSION_MINOR.'&p='.PHP_VERSION.'&a='.$_SERVER['SERVER_SOFTWARE'].'&r='.urlencode(HTTP_SERVER));
   //check for major/minor version info
   if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
     $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];
@@ -146,35 +146,33 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini !='off' && ($v
   // first confirm that we're at latest major/minor -- otherwise no need to check patches:
   if (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) == PROJECT_VERSION_MINOR) {
   //check to see if either patch needs to be applied
-  if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1) || trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
-  // reset update message, since we WILL be advising of an available upgrade
-    if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
-    //check for patch #1
-    if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
-    //          if ($new_version != '') $new_version .= '<br />';
-      $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' .TEXT_VERSION_CHECK_PATCH .': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
+    if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1) || trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
+      // reset update message, since we WILL be advising of an available upgrade
+      if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
+      //check for patch #1
+      if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
+        $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' .TEXT_VERSION_CHECK_PATCH .': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
+      }
+      if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
+        $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' .TEXT_VERSION_CHECK_PATCH .': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
+      }
     }
-    if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
-    //          if ($new_version != '') $new_version .= '<br />';
-      $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' .TEXT_VERSION_CHECK_PATCH .': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
-    }
-    }
-    }
-    // display download link
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
-  } else {
-  // display the "check for updated version" button.  The button link should be the current page and all params
-    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
-    $url .= (strpos($url,'?') > 5 ? '&' : '?') . 'vcheck=yes';
-    if ($zv_db_patch_ok == true || $version_check_sysinfo==true ) $new_version = '<a href="' . $url . '">' . zen_image_button('button_check_new_version.gif',IMAGE_CHECK_VERSION) . '</a>';
   }
+    // display download link
+  if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
+} else {
+  // display the "check for updated version" button.  The button link should be the current page and all params
+  $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
+  $url .= (strpos($url,'?') > 5 ? '&' : '?') . 'vcheck=yes';
+  if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version = '<a href="' . $url . '">' . '<input type="button" class="btn btn-link" value="' . TEXT_VERSION_CHECK_BUTTON . '"/></a>';
+}
 
 // check GV release queue and alert store owner
-    if (SHOW_GV_QUEUE==true && (zen_is_superuser() || check_page(FILENAME_ORDERS, array()))) {
-    $new_gv_queue= $db->Execute("select * from " . TABLE_COUPON_GV_QUEUE . " where release_flag='N'");
-    $new_gv_queue_cnt = 0;
-    if ($new_gv_queue->RecordCount() > 0) {
+if (SHOW_GV_QUEUE==true && (zen_is_superuser() || check_page(FILENAME_ORDERS, array()))) {
+  $new_gv_queue= $db->Execute("select * from " . TABLE_COUPON_GV_QUEUE . " where release_flag='N'");
+  $new_gv_queue_cnt = 0;
+  if ($new_gv_queue->RecordCount() > 0) {
     $new_gv_queue_cnt= $new_gv_queue->RecordCount();
-    $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . zen_image_button('button_gift_queue.gif',IMAGE_GIFT_QUEUE) . '</a>';
-    }
+    $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="btn btn-info" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
   }
+}

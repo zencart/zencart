@@ -159,7 +159,9 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
 <!--eof- banner #6 display -->
 
 
-
+<?php /* add any end-of-page code via an observer class */
+  $zco_notifier->notify('NOTIFY_FOOTER_END', $current_page);
+?>
 
 
 <?php

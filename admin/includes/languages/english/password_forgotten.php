@@ -1,18 +1,18 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: password_forgotten.php 18784 2011-05-25 07:40:29Z drbyte $
+ * @version $Id: Author: bislewl  Wed Jan 20 16:12:13 2016 -0600 Modified in v1.5.5 $
  */
 
 define('HEADING_TITLE', 'Reset Password');
 
 define('TEXT_ADMIN_EMAIL', 'Admin Email Address: ');
-define('TEXT_BUTTON_REQUEST_RESET', 'request reset');
-define('TEXT_BUTTON_LOGIN', 'login');
-define('TEXT_BUTTON_CANCEL', 'cancel');
+define('TEXT_BUTTON_REQUEST_RESET', 'Request Reset');
+define('TEXT_BUTTON_LOGIN', 'Login');
+define('TEXT_BUTTON_CANCEL', 'Cancel');
 
 define('ERROR_WRONG_EMAIL', 'You entered the wrong email address.');
 define('ERROR_WRONG_EMAIL_NULL', 'Go away gooberbrain :-P');

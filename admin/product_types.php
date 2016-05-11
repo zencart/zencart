@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
@@ -43,6 +43,9 @@
         break;
       case 'insert':
       case 'save':
+        if (!isset($_POST['type_name'])) {
+          continue;
+        }
         if (isset($_GET['ptID'])) $type_id = zen_db_prepare_input($_GET['ptID']);
         $type_name = zen_db_prepare_input($_POST['type_name']);
         $handler = zen_db_prepare_input($_POST['handler']);

@@ -2,9 +2,9 @@
 /**
  * file contains systemChecker Class
  * @package Installer
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: wilt  New in v1.6.0 $
+ * @version $Id: Author: DrByte  Tue Feb 16 17:44:40 2016 -0500 New in v1.5.5 $
  *
  */
 /**
@@ -573,8 +573,8 @@ class systemChecker
         CURLOPT_FOLLOWLOCATION => false,    // follow redirects
         CURLOPT_ENCODING       => "",       // handle all encodings
         CURLOPT_AUTOREFERER    => true,     // set referer on redirect
-        CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
-        CURLOPT_TIMEOUT        => 120,      // timeout on response
+        CURLOPT_CONNECTTIMEOUT => 3,        // timeout on connect
+        CURLOPT_TIMEOUT        => 3,        // timeout on response
         CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
     );
 
@@ -632,7 +632,7 @@ class systemChecker
   function checkIsZCVersionCurrent()
   {
     $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
-    $lines = @file(NEW_VERSION_CHECKUP_URL);
+    $lines = @file(NEW_VERSION_CHECKUP_URL . '?v='.PROJECT_VERSION_MAJOR.'.'.PROJECT_VERSION_MINOR.'&p='.PHP_VERSION.'&a='.$_SERVER['SERVER_SOFTWARE'].'&r='.urlencode($_SERVER['HTTP_HOST']).'&m=zc_install');
     //check for major/minor version info
     if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
       $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];

@@ -4,7 +4,7 @@
  * Class used for database abstraction to MySQL via mysqli
  *
  * @package classes
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -452,9 +452,10 @@ class queryFactory extends base {
         return (int)$value;
       break;
       case 'string':
-        if (isset($typeArray[1])) {
-          $regexp = $typeArray[1];
-        }
+        if (preg_match('/NULL/', $value)) return 'null';
+        return '\'' . $this->prepare_input($value) . '\'';
+      break;
+      case 'stringIgnoreNull':
         return '\'' . $this->prepare_input($value) . '\'';
       break;
       case 'noquotestring':
@@ -464,6 +465,7 @@ class queryFactory extends base {
         return '\'' . $this->prepare_input($value) . '\'';
       break;
       case 'date':
+        if (preg_match('/null/i', $value)) return 'null';
         return '\'' . $this->prepare_input($value) . '\'';
       break;
       case 'enum':

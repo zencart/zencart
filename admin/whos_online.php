@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: whos_online.php DrByte  Modified in v1.6.0 $
@@ -452,7 +452,9 @@ require('includes/admin_html_head.php');
   }
 ?>
               <tr>
-                <td class="smallText" colspan="8"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, $total_sess); print "<br />Duplicate IP Addresses: $total_dupes<br />Total Unique Users: $total_cust.";?></td>
+                <td class="smallText" colspan="8"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, $total_sess); ?><br />
+                <?php echo TEXT_DUPLICATE_IPS . $total_dupes; ?><br />
+                <?php echo TEXT_TOTAL_UNIQUE_USERS . $total_cust;?>.</td>
               </tr>
             </table></td>
 <?php

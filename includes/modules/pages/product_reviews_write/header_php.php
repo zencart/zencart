@@ -3,10 +3,10 @@
  * reviews Write
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Jul 21 16:05:31 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Sun Oct 18 23:03:39 2015 -0400 Modified in v1.5.5 $
  */
 /**
  * Header code file for product reviews "write" page
@@ -91,8 +91,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     $sql = $db->bindVars($sql, ':insertID', $insert_id, 'integer');
     $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
     $sql = $db->bindVars($sql, ':reviewText', $review_text, 'string');
-
     $db->Execute($sql);
+
     // send review-notification email to admin
     if (REVIEWS_APPROVAL == '1' && SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO_STATUS == '1' and defined('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO') and SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO !='') {
       $email_text  = sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_INTRO, $product_info->fields['products_name']) . "\n\n" ;

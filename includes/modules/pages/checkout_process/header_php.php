@@ -3,10 +3,10 @@
  * Checkout Process Page
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 17018 2010-07-27 07:25:41Z drbyte $
+ * @version $Id: Author: DrByte  Tue Oct 13 15:33:13 2015 -0400 Modified in v1.5.5 $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_PROCESS');

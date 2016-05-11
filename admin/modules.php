@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  Modified in v1.6.0 $
@@ -133,33 +133,31 @@ require('includes/admin_html_head.php');
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
+<div class="container-fluid">
 <!-- body_text //-->
-    <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+            <span class="pageHeading"><?php echo HEADING_TITLE; ?></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+            <table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                 <td class="dataTableHeadingContent">&nbsp;</td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                    <td class="dataTableHeadingContent"
+                        align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
                 <td class="dataTableHeadingContent" colspan="2"><?php echo TEXT_MODULE_STATE; ?></td>
 <?php
   if ($set == 'payment') {
 ?>
-                <td class="dataTableHeadingContent" align="center" width="100"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></td>
+                        <td class="dataTableHeadingContent" align="center"
+                            width="100"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></td>
 <?php } ?>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent"
+                        align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
   $directory_array = array();
@@ -175,7 +173,7 @@ require('includes/admin_html_head.php');
     $dir->close();
   }
 
-  $installed_modules = array();
+  $installed_modules = $temp_for_sort = array();
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
     if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
@@ -184,16 +182,12 @@ require('includes/admin_html_head.php');
       $class = substr($file, 0, strrpos($file, '.'));
       if (class_exists($class)) {
         $module = new $class;
-        $check = $module->check();
-        if ($check > 0) {
-          if ($module->sort_order > 0) {
-            if (isset($installed_modules[$module->sort_order]) && $installed_modules[$module->sort_order] != '') {
-              $zc_valid = false;
-            }
-            $installed_modules[$module->sort_order] = $file;
-          } else {
-            $installed_modules[] = $file;
-          }
+        // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
+        if ($check = $module->check()) {
+           // determine sort orders (using up to 6 digits, then filename) and add to list of installed modules
+          $temp_for_sort[$file] = str_pad((int)$module->sort_order, 6, "0", STR_PAD_LEFT) . $file;
+          asort($temp_for_sort);
+          $installed_modules = array_flip($temp_for_sort);
           if (method_exists($module, 'check_enabled_for_zone') && $module->enabled) $module->check_enabled_for_zone();
           if (method_exists($module, 'check_enabled') && $module->enabled) $module->check_enabled_for_zone();
         }
@@ -255,7 +249,7 @@ require('includes/admin_html_head.php');
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo (strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>
-                <td class="dataTableContent" align="center"><?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
+                            <td class="dataTableContent" align="right"><?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $moduleStatusIcon; ?></td>
                 <td class="dataTableContent"><?php echo $moduleStatusText; ?></td>
 <?php
@@ -294,9 +288,6 @@ require('includes/admin_html_head.php');
                  configuration_description, configuration_group_id, sort_order, date_added)
                  values ('Installed Modules', '" . zen_db_input($module_key) . "', '" . zen_db_input(implode(';', $installed_modules)) . "',
                          'This is automatically updated. No need to edit.', '6', '0', now())");
-  }
-  if (isset($zc_valid) && $zc_valid == false) {
-    echo '<span class="alert">' . WARNING_MODULES_SORT_ORDER . '</span>';
   }
 ?>
               <tr>
@@ -351,10 +342,8 @@ require('includes/admin_html_head.php');
             $use_function = $value['use_function'];
             if (preg_match('/->/', $use_function)) {
               $class_method = explode('->', $use_function);
-              if (!class_exists($class_method[0]))
-                include_once(DIR_WS_CLASSES . $class_method[0] . '.php');
-              if (!is_object(${$class_method[0]}))
-                ${$class_method[0]} = new $class_method[0]();
+              if (!class_exists($class_method[0])) include_once(DIR_WS_CLASSES . $class_method[0] . '.php');
+              if (!is_object(${$class_method[0]})) ${$class_method[0]} = new $class_method[0]();
               $keys .= zen_call_function($class_method[1], $value['value'], ${$class_method[0]});
             } else {
               $keys .= zen_call_function($use_function, $value['value']);
@@ -387,20 +376,19 @@ require('includes/admin_html_head.php');
       }
       break;
   }
+            ?>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
+            <?php
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
     $box = new box;
     echo $box->infoBox($heading, $contents);
-    echo '            </td>' . "\n";
   }
 ?>
-          </tr>
-        </table></td>
-      </tr>
-    </table></td>
+        </div>
+    </div>
 <!-- body_text_eof //-->
-  </tr>
-</table>
+</div>
 <!-- body_eof //-->
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>

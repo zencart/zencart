@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+    <title>Zen Cart v1.6.0-ALPHA</title>
+    <parser>
+        <default-package-name>core</default-package-name>
+        <target>../phpdoc-cache-folder-to-DELETE/</target>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
+    </parser>
+    <transformer>
+        <target>../phpdoc-1-6-0</target>
+    </transformer>
+    <transformations>
+        <template name="checkstyle" />
+        <template name="responsive" />
+    </transformations>
+    <files>
+        <file>index.php</file>
+        <file>ajax.php</file>
+        <file>ipn_main_handler.php</file>
+        <directory>includes</directory>
+        <ignore>includes/classes/vendors/*</ignore>
+        <ignore>includes/classes/Mobile_Detect.php</ignore>
+        <ignore>includes/languages/classic/*</ignore>
+        <ignore>includes/languages/english/classic/*</ignore>
+        <ignore>includes/languages/english/extra_definitions/classic/*</ignore>
+        <ignore>includes/languages/english/html_includes/classic/*</ignore>
+        <ignore>includes/modules/classic/*</ignore>
+        <ignore>includes/modules/sideboxes/classic/*</ignore>
+        <ignore>includes/templates/classic/*</ignore>
+
+        <ignore>admin/*</ignore>
+
+        <ignore>cache/*</ignore>
+        <ignore>docs/*</ignore>
+        <ignore>download/*</ignore>
+        <ignore>editors/*</ignore>
+        <ignore>email/*</ignore>
+        <ignore>extras/*</ignore>
+        <ignore>images/*</ignore>
+        <ignore>logs/*</ignore>
+        <ignore>media/*</ignore>
+        <ignore>pub/*</ignore>
+        <ignore>zc_install/*</ignore>
+        <ignore>not_for_release/*</ignore>
+        <ignore>not_for_release.php</ignore>
+    </files>
+    <logging>
+        <level>crit</level>
+    </logging>
+</phpdocumentor>

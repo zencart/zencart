@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Tue Dec 29 12:22:34 2015 -0500 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -46,14 +46,14 @@
       $id1 = create_coupon_code($mail->fields['customers_email_address']);
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
-                                    values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
+                                    values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 
       $insert_id = $db->Insert_ID();
 
       $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . "
                     (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent)
                     values ('" . $insert_id ."', '0', 'Admin',
-                            '" . $mail->fields['customers_email_address'] . "', now() )");
+                            '" . zen_db_input($mail->fields['customers_email_address']) . "', now() )");
 
       $message = $_POST['message'];
       $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
@@ -130,14 +130,14 @@
       // Now create the coupon main entry
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
-                                    values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
+                                    values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 
       $insert_id = $db->Insert_id();
 
       $insert_query = $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . "
                                     (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent)
                                     values ('" . $insert_id ."', '0', 'Admin',
-                                            '" . $_POST['email_to'] . "', now() )");
+                                            '" . zen_db_input($_POST['email_to']) . "', now() )");
 
     }
     zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
@@ -348,7 +348,7 @@ function check_form(form_name) {
               </tr>
                <tr>
                 <td class="main"><?php echo TEXT_TO; ?></td>
-                <td><?php echo zen_draw_input_field('email_to', '', 'size="50"'); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
+                <td><?php echo zen_draw_input_field('email_to', '', 'size="50"', false, 'email'); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

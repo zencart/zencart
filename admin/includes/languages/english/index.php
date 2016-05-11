@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Wed Sep 5 10:59:13 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: zcwilt   Modified in v1.6.0 $
  */
 
 define('HEADING_TITLE', 'Choose an action..');
@@ -91,3 +91,4 @@ define('TEXT_FORM_LABEL_STORE_ADDRESS', 'Store Address');
 define('TEXT_EXAMPLE_STORENAME', 'Enter your Store Name here');
 define('TEXT_EXAMPLE_STOREOWNER', 'Store Owner Name - displayed in emails, personalizes the customer experience');
 define('TEXT_EXAMPLE_STOREADDRESS', 'Enter the Mailing Address of your store - displayed on Contact-Us page, and in Invoices/Packing Slips');
+define('TEXT_STORE_DETAILS', 'Please provide details of your store. All fields are required');

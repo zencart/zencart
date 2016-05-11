@@ -3,10 +3,10 @@
  * checkout_new_address.php
  *
  * @package modules
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: checkout_new_address.php 6772 2007-08-21 12:33:29Z drbyte $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.5 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CHECKOUT_NEW_ADDRESS');
@@ -136,24 +136,24 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
 
     if ($error == false) {
       $sql_data_array = array(array('fieldName'=>'customers_id', 'value'=>$_SESSION['customer_id'], 'type'=>'integer'),
-                              array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'string'),
-                              array('fieldName'=>'entry_lastname','value'=>$lastname, 'type'=>'string'),
-                              array('fieldName'=>'entry_street_address','value'=>$street_address, 'type'=>'string'),
-                              array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'string'),
-                              array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'string'),
+                              array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_lastname','value'=>$lastname, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_street_address','value'=>$street_address, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'stringIgnoreNull'),
                               array('fieldName'=>'entry_country_id', 'value'=>$country, 'type'=>'integer')
       );
 
       if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'enum:m|f');
-      if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'string');
-      if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'string');
+      if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
+      if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
       if (ACCOUNT_STATE == 'true') {
         if ($zone_id > 0) {
           $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer');
-          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'string');
+          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull');
         } else {
           $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>0, 'type'=>'integer');
-          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'string');
+          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'stringIgnoreNull');
         }
       }
       $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
@@ -252,4 +252,3 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_END_CHECKOUT_NEW_ADDRESS');
-?>

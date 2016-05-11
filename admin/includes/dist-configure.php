@@ -1,12 +1,12 @@
 <?php
 /**
- * dist-configure.php - SAMPLE FILE!
+ * dist-configure.php - SAMPLE FILE from v160 !
  *
- * @package Configuration Settings circa 1.6.0
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @package Configuration Settings
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 31 17:24:25 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: DrByte  Thu Dec 17 11:49:31 2015 -0500 Modified in v1.5.5 $
  * @private
  */
 

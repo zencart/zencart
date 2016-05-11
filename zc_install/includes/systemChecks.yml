@@ -317,6 +317,11 @@ systemChecks:
             fieldName: customers_password
             fieldCheck: Type
             expectedResult: 'VARCHAR(255)'
+          - checkType: fieldSchema
+            tableName: admin
+            fieldName: admin_pass
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
 
   checkDBVersion152:
     runLevel: dbVersion
@@ -336,6 +341,9 @@ systemChecks:
             fieldName: session_id
             fieldCheck: Type
             expectedResult: 'VARCHAR(255)'
+          - checkType: configValue
+            fieldName: SHOW_CATEGORY_PRODUCTS_LINKED_STATUS
+            expectedResult: 'Show linked status for categories'
 
   checkDBVersion151:
     runLevel: dbVersion

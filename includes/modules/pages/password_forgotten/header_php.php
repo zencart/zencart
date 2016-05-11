@@ -3,7 +3,7 @@
  * Password Forgotten
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Modified in V1.6.0 $
@@ -31,6 +31,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     if (! isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
     $_SESSION['login_attempt'] ++;
   } // END SLAM PREVENTION
+
   $email_address = zen_db_prepare_input($_POST['email_address']);
 
   $check_customer_query = "SELECT customers_firstname, customers_lastname, customers_password, customers_id

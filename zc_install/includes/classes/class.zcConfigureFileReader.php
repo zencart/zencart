@@ -2,8 +2,9 @@
 /**
  * file contains zcConfigureFileReader Class
  * @package Installer
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:
+ * @version $Id: Author: zcwilt  Sat Dec 5 18:49:20 2015 +0000 New in v1.5.5 $
  */
 /**
  *
@@ -87,9 +88,9 @@ class zcConfigureFileReader {
 		if(!$this->fileLoaded()) return null;
 
 		// Extract the contents of the define
-		if(preg_match('|^\s*define\(\s*[\'"]' . $searchDefine . '[\'"]\s*,\s*(?!\s*\);)(.+?)\s*\);|m', $this->fileContent, $matches)) {
-			return $matches[1];
-		}
+        if(preg_match('|^\s*define\(\s*[\'"]' . $searchDefine . '[\'"]\s*,\s*(?!\s*\);)(.+?)\s*\);|m', $this->fileContent, $matches)) {
+            return $matches[1];
+        }
 		return null;
 	}
 
@@ -131,4 +132,36 @@ class zcConfigureFileReader {
 
 		return null;
 	}
+
+    public function getStoreInputsFromLegacy()
+    {
+        $mapper = array(
+            'HTTP_SERVER' => 'http_server_catalog',
+            'HTTPS_SERVER' => 'https_server_catalog',
+            'ENABLE_SSL' => 'enable_ssl_catalog',
+            'DIR_WS_CATALOG' => 'dir_ws_http_catalog',
+            'DIR_WS_HTTPS_CATALOG' => 'dir_ws_https_catalog',
+            'DIR_FS_CATALOG' => 'physical_path',
+            'DB_TYPE' => 'db_type',
+            'DB_PREFIX' => 'db_prefix',
+            'DB_CHARSET' => 'db_charset',
+            'DB_SERVER' => 'db_host',
+            'DB_SERVER_USERNAME'  => 'db_user',
+            'DB_SERVER_PASSWORD' => 'db_password',
+            'DB_DATABASE' => 'db_name',
+            'SQL_CACHE_METHOD' => 'sql_cache_method',
+        );
+        return $this->processConfigureInputsMapper($mapper);
+    }
+
+    protected function processConfigureInputsMapper($mapper)
+    {
+        $inputs = array();
+        foreach ($mapper as $defineKey => $inputsKey) {
+            $value = $this->getRawDefine($defineKey);
+            $value = trim($value, "'");
+            $inputs[$inputsKey] = $value;
+        }
+        return $inputs;
+    }
 }

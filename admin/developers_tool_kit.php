@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: developers_tool_kit.php Author: DrByte  Modified in v1.6.0 $
@@ -18,6 +18,7 @@
     $_POST['case_sensitive'] = $_POST['case_sensitive'];
   }
   $configuration_key_lookup = (isset($_POST['configuration_key'])) ? $_POST['configuration_key'] : '';
+  $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
   function getDirList ($dirName, $filetypes = 1) {
     global $directory_array, $sub_dir_files;
@@ -342,6 +343,7 @@
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
+      $q_const = zen_output_string_protected($_POST['configuration_key']);
 
       $sql = "select *, (case when use_function = 'zen_cfg_password_display' then '********' else configuration_value end) as configuration_value from " . TABLE_CONFIGURATION . " where configuration_key=:zcconfigkey:";
       $sql = $db->BindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
@@ -425,6 +427,7 @@
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
+      $q_func = zen_output_string_protected($_POST['configuration_key']);
 
           // build filenames to search
           switch ($zv_files_group) {
@@ -450,7 +453,7 @@
               break;
             } // eof: switch
 
-              // Check for new databases and filename in extra_datafiles directory
+              // @TODO: Check for new databases and filename in extra_datafiles directory
 
               zen_display_files();
 
@@ -463,6 +466,7 @@
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
+      $q_class = zen_output_string_protected($_POST['configuration_key']);
 
           // build filenames to search
           switch ($zv_files_group) {
@@ -471,20 +475,30 @@
               break;
             case (1): // all admin/catalog classes files
               $check_directory = array();
-              $check_directory[] = DIR_FS_CATALOG . DIR_WS_CLASSES;
+              $filename_listing = '';
+
+              $sub_dir_files = array();
+              getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
+              for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+                $check_directory[] = $sub_dir_files[$i] . '/';
+              }
               $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
               break;
             case (2): // all catalog classes files
               $check_directory = array();
-              $check_directory[] = DIR_FS_CATALOG . DIR_WS_CLASSES;
+              $sub_dir_files = array();
+              getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
+              for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+                $check_directory[] = $sub_dir_files[$i] . '/';
+              }
               break;
-            case (3): // all admin function files
+            case (3): // all admin class files
               $check_directory = array();
               $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
               break;
             } // eof: switch
 
-              // Check for new databases and filename in extra_datafiles directory
+              // @TODO: Check for new databases and filename in extra_datafiles directory
 
               zen_display_files();
 
@@ -497,6 +511,7 @@
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
+      $q_tpl = zen_output_string_protected($_POST['configuration_key']);
 
           // build filenames to search
           switch ($zv_files_group) {
@@ -576,6 +591,7 @@
       $found = false;
       $zv_files_group = $_POST['zv_files'];
       $zv_filestype_group = $_POST['zv_filestype'];
+      $q_all = zen_output_string_protected($_POST['configuration_key']);
 //echo 'settings: ' . '$zv_files_group: ' . $zv_files_group . '$zv_filestype_group: ' . $zv_filestype_group . '<br>';
 //echo 'Who am I template ' . $template_dir . ' sess lang ' . $_SESSION['language'];
       switch ($zv_files_group) {
@@ -802,7 +818,7 @@ if (false) {
           </tr>
 
           <tr><form name = "locate_configure" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_configuration', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_KEY_PLACEHOLDER . '"'); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_const, ' size="40" placeholder="' . TEXT_SEARCH_KEY_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
@@ -922,7 +938,7 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_function" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_func, ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
@@ -947,7 +963,7 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_class" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_class, ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
@@ -972,7 +988,7 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_template" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
+            <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_tpl, ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
                 $za_lookup = array(array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
@@ -999,7 +1015,7 @@ if ($action == 'search_config_keys') {
           </tr>
 
           <tr><form name = "locate_all_files" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-            <td class="main" align="left" valign="bottom"><?php echo TEXT_SEARCH_LOOKUP_PLACEHOLDER . '<br>' . zen_draw_input_field('configuration_key', '', ' size="40" placeholder="' . TEXT_SEARCH_LOOKUP_PLACEHOLDER . '"');?></td>
+            <td class="main" align="left" valign="bottom"><?php echo TEXT_SEARCH_LOOKUP_PLACEHOLDER . '<br>' . zen_draw_input_field('configuration_key', $q_all, ' size="40" placeholder="' . TEXT_SEARCH_LOOKUP_PLACEHOLDER . '"');?></td>
 
             <td class="main" align="left" valign="middle">
               <?php

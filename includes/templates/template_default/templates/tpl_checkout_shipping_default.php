@@ -20,6 +20,7 @@
 <!-- eof Order Steps (tableless) -->
 
 <h1 id="checkoutShippingHeading"><?php echo HEADING_TITLE; ?></h1>
+
 <?php if ($messageStack->size('checkout_shipping') > 0) echo $messageStack->output('checkout_shipping'); ?>
 
 <h2 id="checkoutShippingHeadingAddress"><?php echo TITLE_SHIPPING_ADDRESS; ?></h2>
@@ -80,7 +81,7 @@
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
             $checked = FALSE;
-            if (isset($_SESSION['shipping']['id'])) {
+            if (isset($_SESSION['shipping']) && isset($_SESSION['shipping']['id'])) {
               $checked = ($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']);
             }
             if ( ($checked == true) || ($n == 1 && $n2 == 1) ) {

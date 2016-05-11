@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sep 12 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte   Modified in v1.6.0 $
  */
 
 require('includes/application_top.php');
@@ -162,11 +162,11 @@ require('includes/admin_html_head.php');
 <?php if ($action == 'add') { ?>
       <tr>
         <td class="id">&nbsp;</td>
-        <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', false, 'text', true) ?></td>
-        <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="field"', false, 'text', true) ?></td>
-        <td class="mobile"><?php echo zen_draw_input_field('mobile', isset($_POST['mobile']) ? $_POST['mobile'] : '', 'class="field"', false, 'text', true) ?></td>
+        <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', true, 'text', true) ?></td>
+        <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="field"', true, 'email', true) ?></td>
+         <td class="mobile"><?php echo zen_draw_input_field('mobile', isset($_POST['mobile']) ? $_POST['mobile'] : '', 'class="field"', false, 'tel', true) ?></td>
         <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0) ?></td>
-        <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="field"', false, 'password'); ?></td>
+        <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="field"', true, 'password'); ?></td>
         <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="field"', false, 'password'); ?></td>
         <td class="actions"><?php echo zen_image_submit('button_insert.gif', IMAGE_INSERT) ?> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>"> <?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a></td>
       </tr>
@@ -181,8 +181,8 @@ require('includes/admin_html_head.php');
 <?php } ?>
 <?php if ($action == 'edit' && $user == $userDetails['id']) { ?>
         <td class="name"><?php echo zen_draw_input_field('name', $userDetails['name'], 'class="field"') ?></td>
-        <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"') ?></td>
-        <td class="mobile"><?php echo zen_draw_input_field('mobile', $userDetails['mobile'], 'class="field"') ?></td>
+        <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"', false, 'email') ?></td>
+        <td class="mobile"><?php echo zen_draw_input_field('mobile', $userDetails['mobile'], 'class="field"', false, 'tel') ?></td>
 <?php } else { ?>
         <td class="name"><?php echo $userDetails['name'] ?></td>
         <td class="email"><?php echo $userDetails['email'] ?></td>
@@ -245,10 +245,11 @@ require('includes/admin_html_head.php');
 </div>
 <!-- body_eof //-->
 
+<div class="bottom">
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-<br>
+</div>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

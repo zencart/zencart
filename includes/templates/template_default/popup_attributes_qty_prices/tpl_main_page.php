@@ -3,27 +3,18 @@
  * Override Template for common/tpl_main_page.php
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_main_page.php 14283 2009-08-29 01:43:10Z drbyte $
+ * @version $Id: Author: DrByte  Fri Jan 8 00:33:36 2016 -0500 Modified in v1.6.0 $
  */
 // Notifier hook to allow for dynamic changes to template operation
 $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
 ?>
-<body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"';?>>
-
-<table width="98%" border="2" cellpadding="2" cellspacing ="2" align="center" class="popupattributeqty">
-  <tr>
-    <td><table width="100%" border="0" cellpadding="2" cellspacing ="2" class="popupattributeqty">
-      <tr>
-        <td class="main" align="right"><a class="btn close-window" href="javascript:window.close();"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a></td>
-      </tr>
-      <tr>
-        <td class="pageHeading"><?php echo TEXT_ATTRIBUTES_QTY_PRICES_HELP ?></td>
-      </tr>
-      <tr>
-        <td>
+<body id="popupAtrribsQuantityPricesHelp">
+<p class="button forward"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></p>
+<div class="popupattributeqty">
+<h2 class="pageHeading"><?php echo TEXT_ATTRIBUTES_QTY_PRICES_HELP ?></h2>
 <?php
 $show_onetime= 'false';
 // attributes_qty_price
@@ -62,8 +53,10 @@ $show_onetime= 'false';
                 $order_by;
 
         $products_options_lookup = $db->Execute($sql);
-        $cnt_qty_prices= 0;
+
         while (!$products_options_lookup->EOF) {
+        $cnt_qty_prices= 0;
+
           // set for attributes_qty_prices_onetime
           if ($products_options_lookup->fields['attributes_qty_prices_onetime'] != '') {
             $show_onetime= 'true';
@@ -75,7 +68,7 @@ $show_onetime= 'false';
             $attribute_table_cost = preg_split("/[:,]/" , str_replace(' ', '', $products_options_lookup->fields['attributes_qty_prices']));
             $size = sizeof($attribute_table_cost);
             for ($i=0, $n=$size; $i<$n; $i+=2) {
-//                $attribute_quantity .= '<td align="center">' . (($i <= 1 and $attribute_table_cost[$i] != 1) ? '1-' . $attribute_table_cost[$i] : $attribute_table_cost[$i] . '+') . '</td>';
+//                $attribute_quantity .= '<td class="alignCenter">' . (($i <= 1 and $attribute_table_cost[$i] != 1) ? '1-' . $attribute_table_cost[$i] : $attribute_table_cost[$i] . '+') . '</td>';
                 $zc_disp_qty = '';
                 switch (true) {
                   case ($i+2==$n):
@@ -94,12 +87,12 @@ $show_onetime= 'false';
                     $zc_disp_qty = $attribute_table_cost[$i];
                     break;
                 }
-//                $attribute_quantity .= '<td align="center">' . (($i <= 1 and $attribute_table_cost[$i] != 1) ? '1-' . $attribute_table_cost[$i] : $attribute_table_cost[$i-2]+1 . '-' . $attribute_table_cost[$i]) . '</td>';
-                $attribute_quantity .= '<td align="center">' . $zc_disp_qty . '</td>';
-                $attribute_quantity_price .= '<td align="right">' . $currencies->display_price($attribute_table_cost[$i+1], zen_get_tax_rate($_GET['products_tax_class_id'])) . '</td>';
+//                $attribute_quantity .= '<td class="alignCenter">' . (($i <= 1 and $attribute_table_cost[$i] != 1) ? '1-' . $attribute_table_cost[$i] : $attribute_table_cost[$i-2]+1 . '-' . $attribute_table_cost[$i]) . '</td>';
+                $attribute_quantity .= '<td class="alignCenter">' . $zc_disp_qty . '</td>';
+                $attribute_quantity_price .= '<td class="alignRight">' . $currencies->display_price($attribute_table_cost[$i+1], zen_get_tax_rate($_GET['products_tax_class_id'])) . '</td>';
                 $cnt_qty_prices++;
             }
-            echo '<table border="1" cellpadding="2" cellspacing="2">';
+            echo '<table class="tableBorder1">';
             echo '  <tr><td colspan="' . ($cnt_qty_prices + 1) . '">' . $products_options_names_lookup->fields['products_options_name'] . ' ' . $products_options_lookup->fields['products_options_values_name'] . '</td></tr>';
             echo '  <tr>';
             echo '    <td>' . TABLE_ATTRIBUTES_QTY_PRICE_QTY . '</td>' . $attribute_quantity;
@@ -107,25 +100,22 @@ $show_onetime= 'false';
             echo '  <tr>';
             echo '    <td>' . TABLE_ATTRIBUTES_QTY_PRICE_PRICE . '</td>' . $attribute_quantity_price;
             echo '  </tr>';
-            echo '</table>';
+            echo '</table><br>';
           }
           $products_options_lookup->MoveNext();
         }
           $products_options_names_lookup->MoveNext();
       }
 ?>
-        </td>
-      </tr>
+</div>
+
 
 <?php
   if ($show_onetime == 'true') {
 ?>
 
-      <tr>
-        <td class="pageHeading"><?php echo TEXT_ATTRIBUTES_QTY_PRICES_ONETIME_HELP ?></td>
-      </tr>
-      <tr>
-        <td>
+<h2 class="pageHeading"><?php echo TEXT_ATTRIBUTES_QTY_PRICES_ONETIME_HELP ?></h2>
+<div class="popupQtyOneTime">
 <?php
 // attributes_qty_price_onetime
       if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
@@ -163,8 +153,9 @@ $show_onetime= 'false';
                 $order_by;
 
         $products_options_lookup = $db->Execute($sql);
-        $cnt_qty_prices= 0;
+
         while (!$products_options_lookup->EOF) {
+        $cnt_qty_prices= 0;
           if ($products_options_lookup->fields['attributes_qty_prices_onetime'] != '') {
             $attribute_quantity= '';
             $attribute_quantity_price= '';
@@ -172,12 +163,12 @@ $show_onetime= 'false';
             $attribute_table_cost = preg_split("/[:,]/" , str_replace(' ', '', $attribute_table_cost));
             $size = sizeof($attribute_table_cost);
             for ($i=0, $n=$size; $i<$n; $i+=2) {
-                $attribute_quantity .= '<td align="center">' . $attribute_table_cost[$i] . '</td>';
-//                $attribute_quantity_price .= '<td align="right">' . $attribute_table_cost[$i+1] . '</td>';
-                $attribute_quantity_price .= '<td align="right">' . $currencies->display_price($attribute_table_cost[$i+1], zen_get_tax_rate($_GET['products_tax_class_id'])) . '</td>';
+                $attribute_quantity .= '<td class="alignCenter">' . $attribute_table_cost[$i] . '</td>';
+//                $attribute_quantity_price .= '<td class="alignRight">' . $attribute_table_cost[$i+1] . '</td>';
+                $attribute_quantity_price .= '<td class="alignRight">' . $currencies->display_price($attribute_table_cost[$i+1], zen_get_tax_rate($_GET['products_tax_class_id'])) . '</td>';
                 $cnt_qty_prices++;
             }
-            echo '<table border="1" cellpadding="2" cellspacing="2">';
+            echo '<table class="tableBorder1">';
             echo '  <tr><td colspan="' . ($cnt_qty_prices + 1) . '">' . $products_options_names_lookup->fields['products_options_name'] . ' ' . $products_options_lookup->fields['products_options_values_name'] . '</td></tr>';
             echo '  <tr>';
             echo '    <td>' . TABLE_ATTRIBUTES_QTY_PRICE_QTY . '</td>' . $attribute_quantity;
@@ -193,16 +184,10 @@ $show_onetime= 'false';
       }
 
 ?>
-        </td>
-      </tr>
+</div>
 <?php } // show onetime ?>
 
-      <tr>
-        <td class="main" align="right"><a class="btn close-window" href="javascript:window.close();"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a></td>
-      </tr>
-    </table></td>
-  </tr>
-</table>
+<p class="smallText" align="right"><a class="btn close-window" href="javascript:window.close()"><?php echo TEXT_CURRENT_CLOSE_WINDOW; ?></a><br clear="all" /></p>
 
 <?php
 /*************** JAVASCRIPT OUTPUT before </body> close ************************/

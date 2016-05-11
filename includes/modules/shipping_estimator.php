@@ -7,11 +7,11 @@
  * - Shows Free Shipping on Virtual products
  *
  * @package modules
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: shipping_estimator.php 19954 2011-11-03 18:09:36Z drbyte $
+ * @version $Id: Author: DrByte  Wed Jan 6 12:47:43 2016 -0500 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -58,7 +58,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
   }
 */
 
-  //if($_SESSION['cart']->get_content_type() !== 'virtual') {
+  //if($_SESSION['cart']->get_content_type() !== 'virtual')
   if ($_SESSION['customer_id']) {
     // user is logged in
     if (isset($_POST['address_id'])){

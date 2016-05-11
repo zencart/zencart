@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: admin_html_head.php  New in v1.6.0 $
@@ -29,16 +29,12 @@
   <?php } ?>
 <?php } ?>
 
-<script src="includes/template/javascript/foundation/modernizr.js"></script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
+<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 
-<?php /** CDN for jQuery core **/ ?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.min.js"><\/script>');</script>
+<script src="includes/template/javascript/jquery-1.12.1.min.js"></script>
+<script src="includes/template/javascript/bootstrap.min.js"></script>
 
-<?php /** Load Foundation framework core**/ ?>
-<script src="includes/template/javascript/foundation/foundation.min.js"></script>
-
-<?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
 
 <script src="includes/general.js"></script>
 
@@ -67,4 +63,5 @@ $(function(){
 <script>
   $(document).ready(function(){ cssjsmenuinit(); });
 </script>
+
 
