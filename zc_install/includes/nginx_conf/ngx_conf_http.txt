@@ -1,7 +1,7 @@
 ##############################################################
 ##############################################################
 ##############################################################
-### 		NGINX CONFIGURATION FOR ZENCART
+### 		NGINX CONFIGURATION FOR ZEN CART
 ###
 ### Copy and paste into ‘http’ section of nginx conf file
 ### IMPORTANT: 
