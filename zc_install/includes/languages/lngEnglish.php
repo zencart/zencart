@@ -339,7 +339,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
 						</li>
 						<li>
-							- If you do not have an existing PHP handling location block, perhaps you are just setting up Nginx to run ZEN CART, then please refer to online guides such as those found <a href='https://www.google.com/search?q=setup%20php%20on%20nginx' target='_blank'><u>HERE</u></a> and implement the PHP directives in the <strong>'zencart_php_handler'</strong> location block.  
+							- If you do not have an existing PHP handling location block, perhaps you are just setting up Nginx to run ZEN CART, then please refer to available guides such as from <a href='https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/' target='_blank'><u>THE NGINX WEBSITE</u></a> and implement the PHP directives in the <strong>'zencart_php_handler'</strong> location block.  
 						</li>
 					</ul>
 				</li>
