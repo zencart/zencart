@@ -77,22 +77,9 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
-        <link href="includes/stylesheet.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 <link href="includes/template/css/login.css" rel="stylesheet" type="text/css" />
 <meta name="robots" content="noindex, nofollow" />
-        <script type="text/javascript"><!--
-            function animate(f) {
-                var button = document.getElementById("btn_submit");
-                var img = document.getElementById("actionImg");
-                button.style.cursor = "wait";
-                button.disabled = true;
-                button.className = 'hiddenField';
-                img.className = '';
-                return true;
-            }
-            //--></script>
-
 </head>
     <?php if (!isset($expired) || $expired == FALSE) { ?>
         <body id="login">
@@ -100,7 +87,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
             <div class="row">
             <div id="loginFormDiv" class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
                 <?php
-                echo zen_draw_form('loginForm',FILENAME_LOGIN,zen_get_all_get_params(),'post','id="loginForm" onsubmit="animate(this)" class="form-horizontal"','true');
+                echo zen_draw_form('loginForm',FILENAME_LOGIN,zen_get_all_get_params(),'post','id="loginForm" class="form-horizontal"','true');
                 echo zen_draw_hidden_field('action','do'.$_SESSION['securityToken'],'id="action1"');
                 ?>
                   <fieldset>
@@ -143,7 +130,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
             <div class="row">
             <div id="loginFormDiv" class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
                 <?php
-                echo zen_draw_form('loginForm',FILENAME_LOGIN,'','post','id="loginForm" onsubmit="animate(this)" class="form-horizontal"','true');
+                echo zen_draw_form('loginForm',FILENAME_LOGIN,'','post','id="loginForm" class="form-horizontal"','true');
                 echo zen_draw_hidden_field('action','rs'.$_SESSION['securityToken'],'id="action1"');
                 ?>
                 <fieldset>

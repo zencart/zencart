@@ -229,7 +229,7 @@ if ($action != '')
 <head>
 <meta charset="<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <?php
