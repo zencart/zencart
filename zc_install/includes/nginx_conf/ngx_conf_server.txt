@@ -89,7 +89,7 @@
 	}
 	## Redirect all requests to 'zc_install' root to 'zc_install/index.php’
 	location ~ %%store_folder%%/zc_install(/?)$ {
-		rewrite ^  %%store_folder%%/zc_install/index.php redirect;
+		return $scheme://$host%%store_folder%%/zc_install/index.php;
 	}
 	## Deny any other request to 'zc_install' and any subfolders
 	location ~ %%store_folder%%/zc_install {
@@ -289,7 +289,7 @@
 		}
 		# Redirect all requests to ADMIN root to ADMIN/index.php 
 		location ~ %%admin_folder%%(/?)$ {
-			rewrite ^ %%admin_folder%%/index.php redirect;
+			return $scheme://$host%%admin_folder%%/index.php;
 		}
 		# Deny any other request to '%%admin_folder%%' and any subfolders
 		return 403;
@@ -315,6 +315,6 @@
 	#############################################################################################	
 	## Redirect any request not previously explicitly handled to main ZEN CART index.php file
 	location ~ %%store_folder%%(.*)$ {
-		rewrite ^  %%store_folder%%/index.php redirect;
+		return $scheme://$host%%store_folder%%/index.php;
 	}
 
