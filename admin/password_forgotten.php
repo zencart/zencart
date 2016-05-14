@@ -75,9 +75,8 @@ if (isset($_POST['submit']))
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
 <meta name="robots" content="noindex, nofollow" />
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 <link href="includes/template/css/login.css" rel="stylesheet" type="text/css">
-<link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body id="login">
     <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
@@ -107,7 +106,6 @@ if (isset($_POST['submit']))
         </fieldset>
         </form>
     </div>
-    </body>
-    </html>
+</body>
+</html>
 <?php require('includes/application_bottom.php');
-

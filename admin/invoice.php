@@ -34,7 +34,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript">
 function couponpopupWindow(url) {

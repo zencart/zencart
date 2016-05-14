@@ -3,7 +3,7 @@
  * language Class.
  *
  * @package classes
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: language.php drbyte  Modified in v1.6.0 $
@@ -32,6 +32,11 @@ class language extends base {
   protected $language = '';
 
   /**
+   * @var array DEPRECATED - This is old, and only present for compatibility reasons. Use get_available_languages() instead.
+   */
+  public $catalog_languages = array();
+
+  /**
    * @param string $lng The language we'd like to set the site to, as long as it exists in the db
    * @return string
    */
@@ -56,6 +61,9 @@ class language extends base {
       // if none were found, there's gonna be trouble, but here we set a default, so we can avoid having to test for it later
       $this->available_languages['en'] = array('id' => 1, 'name' => 'english', 'image' => 'icon.gif', 'code' => 'en', 'directory' => 'english');
     }
+
+    // for legacy compatibility only:
+    $this->catalog_languages = $this->get_available_languages();
 
     return $this->set_language($lng);
   }

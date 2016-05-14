@@ -5,7 +5,7 @@
  * outputs the html header, eg the doctype and the entire [HEAD] section
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
@@ -46,13 +46,11 @@ header('X-Frame-Options:SAMEORIGIN');
 
 <?php
   // BOF hreflang for multilingual sites
-  if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-    $lng = new language;
-  }
-  reset($lng->catalog_languages);
-  while (list($key, $value) = each($lng->catalog_languages)) {
-    if ($value['id'] == $_SESSION['languages_id']) continue;
-    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type) : $canonicalLink . '&amp;language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+  if (isset($language_list) || $language_list = $lng->get_available_languages()) {
+    while (list($key, $value) = each($language_list)) {
+      if ($value['id'] == $_SESSION['languages_id']) continue;
+      echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type) : $canonicalLink . '&amp;language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+    }
   }
   // EOF hreflang for multilingual sites
 ?>

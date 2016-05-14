@@ -18,7 +18,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <p class="main"><center><h1><?php echo HEADING_TITLE . ' - ' . $cname; ?><?php echo zen_draw_separator(); ?></h1></center></p>
@@ -44,8 +44,8 @@
   $salemaker_sales = $db->Execute($salemaker_sales_query_raw);
   while (!$salemaker_sales->EOF) {
     $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-	while (list($key,$value) = each($categories)) {
-	  if ($value == $_GET['cid']) {
+  while (list($key,$value) = each($categories)) {
+    if ($value == $_GET['cid']) {
 ?>
               <tr>
                 <td  class="dataTableContent" align="left"><?php echo $salemaker_sales->fields['sale_name']; ?></td>
@@ -63,10 +63,10 @@
 ?></td>
 
 
-			  </tr>
+        </tr>
 <?php
      }
-	}
+  }
     $salemaker_sales->MoveNext();
   }
 ?>
