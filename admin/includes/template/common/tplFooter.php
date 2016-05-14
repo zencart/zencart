@@ -22,6 +22,8 @@ following copyright announcement. //-->
 <?php if ($tplVars['useFoundation']) { ?>
 <!-- Initialize the Foundation plugins -->
 <script>
+if (window.Foundation) {
   $(document).foundation();
+}
 </script>
 <?php } ?>
