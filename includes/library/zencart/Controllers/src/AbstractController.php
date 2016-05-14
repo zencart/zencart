@@ -75,11 +75,11 @@ abstract class AbstractController extends \base
     protected function prepareDefaultCSS()
     {
         if ($this->useView) {
-            $cssList [] = array(
-                'href' => 'includes/template/css/normalize.css',
-                'id' => 'normalizeCSS'
-            );
             if ($this->useFoundation) {
+                $cssList [] = array(
+                    'href' => 'includes/template/css/normalize.css',
+                    'id' => 'normalizeCSS'
+                );
                 $cssList [] = array(
                     'href' => 'includes/template/css/foundation.min.css',
                     'id' => 'foundationCSS'
