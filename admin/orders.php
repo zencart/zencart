@@ -545,7 +545,7 @@ function couponpopupWindow(url) {
                 <?php if ($order->info['ip_address'] != '') {
                   $lookup_ip = substr($order->info['ip_address'], 0, strpos($order->info['ip_address'], ' '));
                 ?>
-                <td class="main"><a href="http://www.dnsstuff.com/tools#whois|type=ipv4&value=<?php echo $lookup_ip; ?>"  target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
+                <td class="main"><a href="http://www.dnsstuff.com/tools#whois|type=ipv4&&value=<?php echo $lookup_ip; ?>"  target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
                 <?php } else { ?>
                 <td class="main"><?php echo TEXT_UNKNOWN; ?></td>
                 <?php } ?>
