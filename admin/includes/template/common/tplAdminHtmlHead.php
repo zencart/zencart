@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:   New in v1.6.0 $
@@ -16,6 +16,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 
 <?php foreach ($tplVars['cssList'] as $entry ) { ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $entry['href']; ?>" <?php echo (isset($entry['id']) ? 'id="' . $entry['id'] . '"': ''); ?> <?php echo (isset($entry['media']) ? 'media="' . $entry['media'] . '"': ''); ?>>
@@ -56,25 +57,8 @@ $(function(){
       changeMonth: true,
       changeYear: true
   }) );
-  var nav = $('#navbar');
-  var offsetTop = nav.offset().top;
-  var floatMenu = function() {
-    if ($(window).scrollTop() > offsetTop) {
-      nav.addClass('fixed');
-    } else {
-      nav.removeClass('fixed');
-    }
-  }
-  $(window).scroll(floatMenu);
-  $('body').bind('touchmove', floatMenu);
 });
 </script>
-    <link rel="stylesheet" type="text/css" href="includes/template/javascript/select2-master/select2.css" id="swlect2CSS">
-
+<link rel="stylesheet" type="text/css" href="includes/template/javascript/select2-master/select2.css" id="swlect2CSS">
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
-<link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
-<script src="includes/menu.js"></script>
 <script src="includes/template/javascript/select2-master/select2.js"></script>
-<script>
-  $(document).ready(function(){ cssjsmenuinit(); });
-</script>

@@ -24,5 +24,7 @@
 
 <!-- Initialize the Foundation plugins -->
 <script>
+if (window.Foundation) {
   $(document).foundation();
+}
 </script>

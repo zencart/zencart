@@ -5,7 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: stylesheet.css  Modified in v1.6.0 $
  */
-@import "foundation-icons.css";
 @import "font-awesome.min.css";
 
 @import url("bootstrap.min.css");
@@ -338,22 +337,22 @@ font-size:12px;
 font-weight:bold;
 }
 .header, .header table {
-	border: none;
-	margin: 0;
+  border: none;
+  margin: 0;
 }
 .headerBar {
-	background: #f2f2f2;
-	margin: 0;
+  background: #f2f2f2;
+  margin: 0;
 }
 .headerBarContent {
-	color: #999;
-	padding: 2px 7px;
+  color: #999;
+  padding: 2px 7px;
 }
 .headerBarContent.right {
-	text-align: right;
+  text-align: right;
 }
 .headerBarContent a {
-	color: #999 !important;
+  color: #999 !important;
 }
 .infoBoxContent{
 background-color:#e7e6e0;
@@ -616,22 +615,22 @@ img[alt="Cancel"], img[alt="Reset"]{
 
 
 td.actions a {
-	display: block;
-	padding-right: 7px;
-	border-right: solid 1px #ccc;
-	margin-right: 7px;
-	float: left;
+  display: block;
+  padding-right: 7px;
+  border-right: solid 1px #ccc;
+  margin-right: 7px;
+  float: left;
 }
 
 td.actions a:last-child {
-	border: none;
+  border: none;
 }
 
 #leadMultipleActions label {
-	font-weight: bold;
-	float: left;
+  font-weight: bold;
+  float: left;
 }
 
 #leadMultipleActions a {
-	float: right;
+  float: right;
 }

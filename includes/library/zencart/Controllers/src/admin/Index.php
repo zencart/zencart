@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
@@ -76,7 +76,7 @@ class Index extends AbstractController
             if (count($options) == 0) {
                 array_unshift($options, array('id' => 0, 'text' => TEXT_NONE));
             }
-            $html = zen_draw_pull_down_menu('store_zone', $options, -1, 'id="store_zone"');
+            $html = zen_draw_pull_down_menu('store_zone', $options, -1, 'id="store_zone" tabindex="5"'); // tabindex is here so it gets reinserted when ajax redraws this input field
             $this->response = array('html'=>$html);
         }
     }}

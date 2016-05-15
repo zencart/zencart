@@ -17,9 +17,9 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/normalize.css" id="normalizeCSS">
-<!-- <link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css" id="foundationCSS"> -->
 <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css" id="stylesheetCSS">
 <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print" id="printCSS">
 
@@ -58,10 +58,3 @@ $(function(){
 </script>
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
-<link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
-<script src="includes/menu.js"></script>
-<script>
-  $(document).ready(function(){ cssjsmenuinit(); });
-</script>
-
-
