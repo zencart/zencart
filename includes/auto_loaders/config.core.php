@@ -233,6 +233,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_header.php');
 
+/**
+ * Breakpoint 185.
+ *
+ * require('includes/classes/class.phpmailer.php');
+ *
+ */
+  $autoLoadConfig[185][] = array('autoType'=>'class',
+                                 'loadFile'=> 'class.phpmailer.php');
 
 /**
  * NOTE: Most plugins should be added from point 200 onward.
