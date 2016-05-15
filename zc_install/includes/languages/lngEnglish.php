@@ -304,7 +304,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <strong>'ngx_conf_server.txt'</strong> into the relevant <strong>'server'</strong> blocks of your Nginx configuration file.
+			Paste the contents of <strong>'ngx_conf_server.txt'</strong> into the relevant <strong>'server'</strong> block of your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					The directives may be used for SSL and/or Non SSL server blocks.
@@ -323,7 +323,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 		</li>
 		<li>
 			It is especially critical that these directives appear before any generic php handling location blocks such as ...
-<br>
+			<br>
 <pre>
 	<code>location ~ \.php { <strong>Nginx PHP Handling Directives;</strong> }</code>
 </pre>
@@ -333,13 +333,13 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			Instead, edit the <strong>'zencart_php_handler'</strong> location block to match your Nginx PHP Handling Directives.
 			<ul style='list-style-type:circle'>
 				<li>
-					Simply duplicate the contents of your existing PHP handling location block into the <strong>'zencart_php_handler'</strong> location block.
+					Simply duplicate the contents of your existing PHP handling location block.
 					<ul style='list-style-type:none'>
 						<li>
 							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
 						</li>
 						<li>
-							- If you do not have an existing PHP handling location block, perhaps you are just setting up Nginx to run ZEN CART, then please refer to available guides such as from <a href='https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/' target='_blank'><u>THE NGINX WEBSITE</u></a> and implement the PHP directives in the <strong>'zencart_php_handler'</strong> location block.  
+							- If you do not have an existing PHP handling location block, please refer to available guides such as from <a href='https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/' target='_blank'><u>The Nginx Website</u></a>.  
 						</li>
 					</ul>
 				</li>

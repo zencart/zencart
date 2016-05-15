@@ -8,15 +8,6 @@
 
   require (DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
   
-  function ngxconf_update($fname, $oldword, $newword) {
-    $fhandle = fopen($fname,"r");
-    $content = fread($fhandle,filesize($fname));
-    $content = str_replace($oldword, $newword, $content);
-    $fhandle = fopen($fname,"w");
-    fwrite($fhandle,$content);
-    fclose($fhandle);
-  }
-
   $isUpgrade = FALSE;
   $adminLink = $catalogLink = '#';
   $adminServer = isset($_POST['http_server_admin']) ? $_POST['http_server_admin'] : '';
@@ -48,9 +39,25 @@
     $error = $dbInstaller->doCompletion($options);
   }
   
-  $target_file = "includes/nginx_conf/ngx_conf_server.txt";
-  $tempvar = trim($dir_ws_http_catalog, "/");
-  $store_dir = ($tempvar=="") ? "" : "/" . $tempvar;
-  $admin_dir = $store_dir . '/' . trim($adminDir,"/");
-  ngxconf_update($target_file, '%%store_folder%%', $store_dir);
-  ngxconf_update($target_file, '%%admin_folder%%', $admin_dir);
+  // Update Nginx Conf Template
+  $ngx_temp = trim($dir_ws_http_catalog, "/");
+  $ngx_store = ($ngx_temp=="") ? "" : "/" . $ngx_temp;
+  $ngx_slash = ($ngx_temp=="") ? "/" : $ngx_store;
+  $ngx_admin = $ngx_store . '/' . trim($adminDir,"/");
+  
+  $ngx_array = array(
+    "%%admin_folder%%" => $ngx_admin,
+    "%%store_folder%%" => $ngx_store,
+    "%%slash_folder%%" => $ngx_slash,
+  );
+  
+  $ngx_file = "includes/nginx_conf/ngx_conf_server.txt";
+  $ngx_handle = fopen($ngx_file, "r");
+  $ngx_content = fread($ngx_handle, filesize($ngx_file));
+  foreach($ngx_array as $ngx_placeholder => $ngx_string) {
+  	$ngx_content = str_replace($ngx_placeholder, $ngx_string, $ngx_content);
+  }
+  $ngx_handle = fopen($ngx_file, "w");
+  fwrite($ngx_handle, $ngx_content);
+  fclose($ngx_handle);
+  

@@ -1,10 +1,10 @@
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
-### 		NGINX CONFIGURATION FOR ZEN CART
+### 		                  NGINX CONFIGURATION FOR ZEN CART
 ###
-### Copy and paste into ‘server’ section of nginx conf file
-### IMPORTANT: 
+### NOTES: 
+###    - Copy and paste into ‘server’ section of nginx conf file for ZEN CART
 ###    - Location Block order is important
 ###    - Paste before any other location blocks if any
 ###
@@ -19,12 +19,12 @@
 	#############################################################################################	
 	## The following block serves all PHP requests internally directed to it within this conf file
 	## Edit to reflect your actual setup for serving PHP
-	## Likely to require editing the ‘fastcgi_pass’ directive
 	location @zencart_php_handler {
 		if (!-f $document_root$fastcgi_script_name) { return 404; }
 
 		fastcgi_index	index.php;
 		fastcgi_pass	12.0.0.1:9000;
+		
 		fastcgi_param	SCRIPT_FILENAME		$document_root$fastcgi_script_name;
 		fastcgi_param	QUERY_STRING		$query_string;
 		fastcgi_param	REQUEST_METHOD		$request_method;
@@ -56,19 +56,17 @@
 	#
 	#
 	#
-	#
-
 
 
 	#############################################################################################
 	# ZEN CART 'zc_install' Folder
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'zc_install'
-	location ~ %%store_folder%%/zc_install/(.+)\.(ico|js|css|jpg|gif|png|html)$ {
+	location ~ %%store_folder%%/zc_install/.+\.(ico|js|css|jpg|gif|png|html)$ {
 		expires $zencart_expires;		
 	}
 	## Allow and fastrack internal requests to PHP files in subdirectories under 'zc_install'
-	location ~ %%store_folder%%/zc_install/(.+)/(.+)\.php$ {
+	location ~ %%store_folder%%/zc_install/.+/.+\.php$ {
 		internal;
 		error_page 418 = @zencart_php_handler;
 		return 418;
@@ -79,7 +77,7 @@
 		return 418;
 	}
 	## Allow all requests to PHP files with names that start with 'ajax' directly under 'zc_install' 
-	location ~ %%store_folder%%/zc_install/ajax(.+)\.php$ {
+	location ~ %%store_folder%%/zc_install/ajax.+\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
@@ -89,9 +87,9 @@
 	}
 	## Redirect all requests to 'zc_install' root to 'zc_install/index.php’
 	location ~ %%store_folder%%/zc_install(/?)$ {
-		return $scheme://$host%%store_folder%%/zc_install/index.php;
+		rewrite ^ %%store_folder%%/zc_install/index.php redirect;
 	}
-	## Deny any other request to 'zc_install' and any subfolders
+	## Deny any other request to 'zc_install' and/or subfolders
 	location ~ %%store_folder%%/zc_install {
 		return 403;
 	}
@@ -100,30 +98,26 @@
 	#############################################################################################
 	# ZEN CART 'includes' Folder
 	#############################################################################################	
-	## Allow and fastrack internal requests to 'includes/classes'
-	location ^~ %%store_folder%%/includes/classes {
-		internal;
-	}
 	## Allow all 'GET' and 'HEAD' requests to specific static file types in 'includes'
-	location ~ %%store_folder%%/includes(.+)$ {
+	location ~ %%store_folder%%/includes {
 		if ( $request_method !~ ^(GET|HEAD)$ ) { return 403; }
-		location ~ %%store_folder%%/includes(.+)\.(ico|jpe?g|gif|otf|webp|png|swf|flv|pdf|svg?z)$ {
+		location ~ %%store_folder%%/includes.+\.(ico|jpe?g|gif|otf|webp|png|swf|flv|pdf|svg?z)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Last-Modified '';
 			add_header Cache-Control 'max-age=864000, public, must-revalidate';
 			expires $zencart_expires;		
 		}
-		location ~ %%store_folder%%/includes/(.+)\.(html|htm|xml|txt|xsl)$ {
+		location ~ %%store_folder%%/includes/.+\.(html|htm|xml|txt|xsl)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Cache-Control 'max-age=7200, must-revalidate';
 			expires $zencart_expires;		
 		}
-		location ~ %%store_folder%%/includes/(.+)\.(js|css)$ {
+		location ~ %%store_folder%%/includes/.+\.(js|css)$ {
 			expires $zencart_expires;		
 		}
-		# Deny any other request to 'includes' and any subfolders
+		# Deny any other request to 'includes' and/or subfolders
 		return 403;
 	}
 
@@ -132,11 +126,11 @@
 	# ZEN CART 'pub' Folder
 	#############################################################################################	
 	## Allow and force downloads of all requests to specific static file types in 'pub'
-	location ~ %%store_folder%%/pub/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
-		types        { }
+	location ~ %%store_folder%%/pub/.+\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
+		types { }
 		default_type application/octet-stream;
 	}
-	## Deny any other request to 'pub' and any subfolders
+	## Deny any other request to 'pub' and/or subfolders
 	location ~ %%store_folder%%/pub {
 		return 403;
 	}
@@ -145,15 +139,15 @@
 	#############################################################################################
 	# ZEN CART 'download' Folder
 	#############################################################################################	
-	## Allow and force downloads of all requests to specific static file types in 'download'
-	location ~ %%store_folder%%/download/(.+)\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
-		types        { }
+	## Allow and force downloads of internal requests to specific static file types in 'download'
+	location ~ %%store_folder%%/download/.+\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$ {
+		types { }
 		default_type application/octet-stream;
 		
 		# Comment out the 'internal' line below if you wish to allow direct access to 'download' folder
 		internal;
 	}
-	## Deny any other request to 'download' and any subfolders
+	## Deny any other request to 'download' and/or subfolders
 	location ~ %%store_folder%%/download {
 		return 403;
 	}
@@ -167,14 +161,14 @@
 		internal;
 	}
 	## Allow all requests to specific static file types in 'images'
-	location ~ %%store_folder%%/images/(.+)\.(jpe?g|gif|webp|png|swf)$ {
+	location ~ %%store_folder%%/images/.+\.(jpe?g|gif|webp|png|swf)$ {
 		add_header Pragma '';
 		add_header ETag '';
 		add_header Cache-Control 'max-age=864000, public, must-revalidate';
 		add_header Last-Modified '';
 		expires $zencart_expires;		
 	}
-	## Deny any other request to 'images' and any subfolders
+	## Deny any other request to 'images' and/or subfolders
 	location ~ %%store_folder%%/images {
 		return 403;
 	}
@@ -184,14 +178,14 @@
 	# ZEN CART 'media' Folder
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'media'
-	location ~ %%store_folder%%/media/(.+)\.(mp3|mp4|swf|avi|mpg|wma|rm|ra|ram|wmv|epub|flv|ogg|m4v|m4a|webm)$ {
+	location ~ %%store_folder%%/media/.+\.(mp3|mp4|swf|avi|mpg|wma|rm|ra|ram|wmv|epub|flv|ogg|m4v|m4a|webm)$ {
 		add_header Pragma '';
 		add_header ETag '';
 		add_header Cache-Control 'max-age=864000, public, must-revalidate';
 		add_header Last-Modified '';
 		expires $zencart_expires;		
 	}
-	## Deny any other request to 'media' and any subfolders
+	## Deny any other request to 'media' and/or subfolders
 	location ~ %%store_folder%%/media {
 		return 403;
 	}
@@ -201,15 +195,15 @@
 	# ZEN CART 'extras' Folder
 	#############################################################################################	
 	## Allow all requests to html files in 'extras'
-	location ~ %%store_folder%%/extras/(.+)\.html$ {
+	location ~ %%store_folder%%/extras/.+\.html$ {
 		expires $zencart_expires;		
 	}
 	## Allow all requests to all PHP files
-	location ~ %%store_folder%%/extras/(.+)\.php$ {
+	location ~ %%store_folder%%/extras/.+\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
-	## Deny any other request to 'extras' and any subfolders
+	## Deny any other request to 'extras' and/or subfolders
 	location ~ %%store_folder%%/extras {
 		return 403;
 	}
@@ -219,10 +213,10 @@
 	# ZEN CART 'email' Folder
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'email'
-	location ~ %%store_folder%%/email/(.+)\.(jpe?g|gif|png)$ {
+	location ~ %%store_folder%%/email/.+\.(jpe?g|gif|png)$ {
 		expires $zencart_expires;		
 	}
-	## Deny any other request to 'email' and any subfolders
+	## Deny any other request to 'email' and/or subfolders
 	location ~ %%store_folder%%/email {
 		return 403;
 	}
@@ -232,10 +226,10 @@
 	# ZEN CART 'editors' and 'docs' Folders
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'editors' or 'docs'
-	location ~ %%store_folder%%/(editors|docs)/(.+)\.(js|css|jpe?g|gif|png|html?|xml|pdf)$ {
+	location ~ %%store_folder%%/(editors|docs)/.+\.(js|css|jpe?g|gif|png|html?|xml|pdf)$ {
 		expires $zencart_expires;		
 	}
-	## Deny any other request to 'editors' or 'docs' and any subfolders
+	## Deny any other request to 'editors' or 'docs' and/or subfolders
 	location ~ %%store_folder%%/(editors|docs) {
 		return 403;
 	}
@@ -263,35 +257,35 @@
 	# ZEN CART ADMIN Folder
 	#############################################################################################	
 	## Allow all 'POST', 'GET' and 'HEAD' requests to all PHP files
-	location ~ %%admin_folder%%/(.+)\.php$ {
+	location ~ %%admin_folder%%/.+\.php$ {
 		if ( $request_method !~ ^(GET|HEAD|POST)$ ) { return 403; }
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
 	## Allow all 'GET' and 'HEAD' requests to specific static file types
-	location ~ %%admin_folder%%(.*)$ {
+	location ~ %%admin_folder%% {
 		if ( $request_method !~ ^(GET|HEAD)$ ) { return 403; }
-		location ~ %%admin_folder%%/(.+)\.(ico|jpe?g|gif|otf|woff2?|ttf|webp|png|swf|flv|pdf|svg?z)$ {
+		location ~ %%admin_folder%%/.+\.(ico|jpe?g|gif|eot|otf|woff2?|ttf|webp|png|swf|flv|pdf|svgz?)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Last-Modified '';
 			add_header Cache-Control 'max-age=864000, public, must-revalidate';
 			expires $zencart_expires;		
 		}
-		location ~ %%admin_folder%%/(.+)\.(html|htm|xml|txt|xsl)$ {
+		location ~ %%admin_folder%%/.+\.(html|htm|xml|txt|xsl)$ {
 			add_header ETag '';
 			add_header Pragma '';
 			add_header Cache-Control 'max-age=7200, must-revalidate';		
 			expires $zencart_expires;		
 		}
-		location ~ %%admin_folder%%/(.+)\.(js|css)$ {
+		location ~ %%admin_folder%%/.+\.(js|css)$ {
 			expires $zencart_expires;		
 		}
 		# Redirect all requests to ADMIN root to ADMIN/index.php 
 		location ~ %%admin_folder%%(/?)$ {
-			return $scheme://$host%%admin_folder%%/index.php;
+			rewrite ^ %%admin_folder%%/index.php redirect;
 		}
-		# Deny any other request to '%%admin_folder%%' and any subfolders
+		# Deny any other request to '%%admin_folder%%' and/or subfolders
 		return 403;
 	}
 
@@ -300,7 +294,7 @@
 	# ZEN CART Root Folder
 	#############################################################################################	
 	## Allow all requests to specific static file types
-	location ~ %%store_folder%%/(.+)\.(md|ico|txt|html)$ {
+	location ~ %%store_folder%%/.+\.(md|ico|txt|html)$ {
 		expires $zencart_expires;
 	}
 	## Allow all requests to specific PHP files directly under the ZEN CART ROOT folder
@@ -314,7 +308,6 @@
 	# ZEN CART Catchall
 	#############################################################################################	
 	## Redirect any request not previously explicitly handled to main ZEN CART index.php file
-	location ~ %%store_folder%%(.*)$ {
-		return $scheme://$host%%store_folder%%/index.php;
+	location ~ %%slash_folder%% {
+		rewrite ^ %%store_folder%%/index.php redirect;
 	}
-
