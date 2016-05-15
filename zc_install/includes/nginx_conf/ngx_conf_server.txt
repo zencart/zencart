@@ -257,7 +257,7 @@
 	#############################################################################################
 	# ZEN CART 'cache' Folder
 	#############################################################################################	
-	## Allow and fastrack internal requests to 'cache'
+	## Allow internal requests to 'cache'
 	location ~ %%store_folder%%/cache {
 		internal;
 	}
@@ -266,7 +266,7 @@
 	#############################################################################################
 	# ZEN CART 'logs' Folder
 	#############################################################################################	
-	## Allow and fastrack internal requests to 'logs'
+	## Allow internal requests to 'logs'
 	location ~ %%store_folder%%/logs {
 		internal;
 	}
@@ -279,7 +279,7 @@
 	location ~ %%store_folder%%/zc_install/.+\.(ico|js|css|jpg|gif|png|html)$ {
 		expires $zencart_expires;		
 	}
-	## Allow and fastrack internal requests to PHP files in subdirectories under 'zc_install'
+	## Allow internal requests to PHP files in subdirectories under 'zc_install'
 	location ~ %%store_folder%%/zc_install/.+/.+\.php$ {
 		internal;
 		error_page 418 = @zencart_php_handler;
@@ -290,7 +290,7 @@
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
-	## Allow all requests to PHP files with names that start with 'ajax' directly under 'zc_install' 
+	## Allow all requests to PHP files that start with 'ajax' directly under 'zc_install' 
 	location ~ %%store_folder%%/zc_install/ajax.+\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
