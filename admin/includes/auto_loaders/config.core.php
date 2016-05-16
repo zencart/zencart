@@ -42,8 +42,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'loadFile'=>'logger.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'shopping_cart.php',
-                               );
+                               'loadFile'=>'shopping_cart.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'products.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -106,7 +105,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  *
  * require('includes/init_includes/init_gzip.php');
  * $sniffer = new sniffer();
-
  *
  */
   $autoLoadConfig[30][] = array('autoType'=>'init_script',
