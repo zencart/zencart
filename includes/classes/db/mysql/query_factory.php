@@ -487,7 +487,6 @@ class queryFactory extends base {
  * method to do bind variables to a query
 **/
   function bindVars($sql, $bindVarString, $bindVarValue, $bindVarType, $debug = false) {
-    $bindVarTypeArray = explode(':', $bindVarType);
     $sqlNew = $this->getBindVarValue($bindVarValue, $bindVarType);
     $sqlNew = str_replace($bindVarString, $sqlNew, $sql);
     return $sqlNew;
