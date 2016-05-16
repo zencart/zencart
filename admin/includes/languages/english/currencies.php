@@ -17,6 +17,7 @@ define('TEXT_ENTRY_CURRENCY_SYMBOL_RIGHT', 'Symbol Right:');
 define('TEXT_ENTRY_CURRENCY_DECIMAL_POINT', 'Decimal Point:');
 define('TEXT_ENTRY_CURRENCY_THOUSANDS_POINT', 'Thousands Point:');
 define('TEXT_ENTRY_CURRENCY_DECIMAL_PLACES', 'Decimal Places:');
+define('TEXT_ENTRY_LAST_UPDATED', 'Last Updated');
 define('TEXT_ENTRY_SET_AS_DEFAULT', TEXT_SET_DEFAULT . ' (requires a manual update of currency values)');
 define('TEXT_UPDATE_CURRENCIES', 'Update Currency Conversions');
 define('TEXT_ISO_LIST', 'ISO Currency Codes');

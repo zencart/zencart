@@ -25,6 +25,9 @@ class LeadCurrencies extends AbstractLeadListingBox
                 return $item ['title'];
             }
         };
+        $lastUpdated = function ($item, $key, $pkey) {
+            return zen_datetime_short($item ['last_updated']);
+        };
 
         $this->listingQuery = array(
             'mainTable' => array(
@@ -178,6 +181,18 @@ class LeadCurrencies extends AbstractLeadListingBox
                             'type' => 'text',
                             'size' => '5'
                         )
+                    )
+                ),
+                'last_updated' => array(
+                    'bindVarsType' => 'string',
+                    'layout' => array(
+                        'common' => array(
+                            'title' => TEXT_ENTRY_LAST_UPDATED,
+                            'align' => 'right',
+                        )
+                    ),
+                    'fieldFormatter' => array(
+                    'callable' => $lastUpdated
                     )
                 ),
                 'setAsDefault' => array(
