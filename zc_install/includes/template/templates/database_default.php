@@ -98,6 +98,7 @@
         <select name="sql_cache_method" id="sql_cache_method" tabindex="8" ><?php echo $sqlCacheTypeOptions; ?></select>
       </div>
     </div>
+    <div class="row"><div class="small-12 columns mainContent"><div class="alert-box"><?php echo TEXT_DATABASE_ADVANCED_TIPS; ?></div></div></div>
   </fieldset>
   <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="10" >
 </form>
