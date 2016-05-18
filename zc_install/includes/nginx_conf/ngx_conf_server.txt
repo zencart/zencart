@@ -218,7 +218,7 @@
 	# ZEN CART ADMIN Folder
 	#############################################################################################	
 	## Allow all 'GET' and 'HEAD' requests to specific file types
-	location ~ %%store_folder%%/Index-NoG-daDdy {
+	location ~ %%admin_folder%% {
 		## Additionally allow all 'POST' requests to all PHP files
 		location ~ %%admin_folder%%/.+\.php$ {
 			if ( $request_method !~ ^(GET|HEAD|POST)$ ) { return 403; }
@@ -249,7 +249,7 @@
 			if ( $request_method !~ ^(GET|HEAD)$ ) { return 403; }
 			rewrite ^ %%admin_folder%%/index.php? redirect;
 		}
-		# Deny any other request to '%%store_folder%%/Index-NoG-daDdy' and/or subfolders
+		# Deny any other request to ADMIN folder and/or subfolders
 		return 403;
 	}
 	
