@@ -41,12 +41,12 @@ define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
 define('TABLE_HEADING_DATE_ADDED', 'Date Added');
 
 define('ENTRY_CUSTOMER', 'Customer:');
-define('ENTRY_CUSTOMER_ADDRESS', 'Customer Address:<br><i class="fa fa-2x fa-user"></i>');
+define('ENTRY_CUSTOMER_ADDRESS', 'Customer Address:');
 define('ENTRY_SOLD_TO', 'SOLD TO:');
 define('ENTRY_DELIVERY_TO', 'Delivery To:');
 define('ENTRY_SHIP_TO', 'SHIP TO:');
-define('ENTRY_SHIPPING_ADDRESS', 'Shipping Address:<br><i class="fa fa-2x fa-truck"></i>');
-define('ENTRY_BILLING_ADDRESS', 'Billing Address:<br><i class="fa fa-2x fa-credit-card"></i>');
+define('ENTRY_SHIPPING_ADDRESS', 'Shipping Address:');
+define('ENTRY_BILLING_ADDRESS', 'Billing Address:');
 define('ENTRY_PAYMENT_METHOD', 'Payment Method:');
 define('ENTRY_CREDIT_CARD_TYPE', 'Credit Card Type:');
 define('ENTRY_CREDIT_CARD_OWNER', 'Credit Card Owner:');
@@ -122,7 +122,7 @@ define('TABLE_HEADING_CUSTOMER_COMMENTS', 'Customer<br />Comments');
 define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
 define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
 
-define('TEXT_CUSTOMER_LOOKUP', '<i class="fa fa-search"></i> Lookup Customer');
+define('TEXT_CUSTOMER_LOOKUP', 'Lookup Customer');
 
 define('TEXT_INVALID_ORDER_STATUS', '<span class="alert">(Invalid Order Status)</span>');
 

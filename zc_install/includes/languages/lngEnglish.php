@@ -40,6 +40,7 @@ define('TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH', 'There appears to be a p
 
 define('TEXT_PAGE_HEADING_DATABASE', 'Database Setup');
 define('TEXT_DATABASE_HEADER_MAIN', 'NOTE: You must create your MySQL database and corresponding Database user, and grant permissions to that user, before proceeding on this page. Click the left-column titles below for help with understanding each component.');
+define('TEXT_DATABASE_ADVANCED_TIPS', 'ADVANCED TIP: If you have custom .sql scripts to run as part of this install, upload them to the zc_install/sql/plugins folder before proceeding. (They need to be named like "mysql_xxxxx.sql" to be recognized and run.)');
 define('TEXT_DATABASE_SETUP_SETTINGS', 'Basic Settings');
 define('TEXT_DATABASE_SETUP_DB_HOST', 'Database Host: ');
 define('TEXT_DATABASE_SETUP_DB_USER', 'Database User: ');
