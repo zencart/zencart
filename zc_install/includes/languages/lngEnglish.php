@@ -286,18 +286,18 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<hr>
 	<ul style='list-style-type:square'>
 		<li>
-			Go to your <strong>'zc_install/includes/nginx_conf'</strong> folder and open the following files:
+			Go to your <strong>'zc_install/includes/nginx_conf'</strong> folder and open the following files using a text editor such as notepad or textedit:
 			<ul style='list-style-type:circle'>
 				<li>
-					ngx_conf_http.txt
+					zencart_ngx_http.conf
 				</li>
 				<li>
-					ngx_conf_server.txt
+					zencart_ngx_server.conf
 				</li>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <strong>'ngx_conf_http.txt'</strong> into the <strong>'http'</strong> section of your Nginx configuration file.
+			Add the contents of <strong>'zencart_ngx_http.conf'</strong> under the <strong>'http'</strong> section of your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					Edit the caching durations in the <strong>'map'</strong> block to suit as required
@@ -305,7 +305,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Paste the contents of <strong>'ngx_conf_server.txt'</strong> into the relevant <strong>'server'</strong> block of your Nginx configuration file.
+			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for ZEN CART in your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					The directives may be used for SSL and/or Non SSL server blocks.
@@ -368,7 +368,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<ol>
 </div>
 <div class='alert-box alert'>
-	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block.
+	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for ZEN CART.
 </div>
 <hr>");
 

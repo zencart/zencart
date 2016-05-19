@@ -51,7 +51,7 @@
     "%%slash_folder%%" => $ngx_slash,
   );
   
-  $ngx_file = "includes/nginx_conf/ngx_conf_server.txt";
+  $ngx_file = "includes/nginx_conf/zencart_ngx_server.conf";
   $ngx_handle = fopen($ngx_file, "r");
   $ngx_content = fread($ngx_handle, filesize($ngx_file));
   foreach($ngx_array as $ngx_placeholder => $ngx_string) {
