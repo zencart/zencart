@@ -5,7 +5,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt Thu Apr 07 18:26:42 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt Thu May 19 18:26:42 2016 +0000 Modified in v1.5.5 $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -196,7 +196,7 @@ $group = array(
 );
 $sanitizer->addSimpleSanitization('ALPHANUM_DASH_UNDERSCORE', $group);
 
-$group = array('title', 'coupon_name', 'banners_title', 'coupon_code', 'group_name', 'geo_zone_name', 'geo_zone_description',
+$group = array('manufacturers_name', 'title', 'coupon_name', 'banners_title', 'coupon_code', 'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
                'symbol_left', 'symbol_right');
