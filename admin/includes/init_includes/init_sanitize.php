@@ -195,7 +195,8 @@ $group = array(
 );
 $sanitizer->addSimpleSanitization('ALPHANUM_DASH_UNDERSCORE', $group);
 
-$group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name', 'title', 'coupon_name', 'banners_title', 'coupon_code', 'group_name', 'geo_zone_name', 'geo_zone_description',
+$group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name',
+               'title', 'coupon_name', 'banners_title', 'coupon_code', 'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
                'symbol_left', 'symbol_right');
