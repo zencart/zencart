@@ -96,13 +96,14 @@ define('TEXT_ADMIN_SETUP_NEWSLETTER_OPTIN', 'Opt In: ');
 
 define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finished');
 define('TEXT_COMPLETION_HEADER_MAIN', '');
-define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete.');
-define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can access your storefront and your Administration area using the links below.');
+define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation completed.');
+define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can now access your store front and admin backend using the links below.');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "You need to remove the /zc_install/ folder so that someone can't re-install your shop again and wipe out your database! A message will appear and you will not be able to log into your admin until the folder has been removed.");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "Please delete the 'zc_install' folder now");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', "To prevent unauthorized persons from overwriting your installation, administering your installation will be disabled until the folder has been deleted.");
 
-define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
+define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Store Front');
 define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
@@ -273,6 +274,103 @@ define('REASON_PRIMARY_KEY_DOESNT_EXIST_TO_DROP','Cannot drop primary key on tab
 define('REASON_INDEX_ALREADY_EXISTS','Cannot add index %s to table %s because it already exists.');
 define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
 
+
+define('TEXT_COMPLETION_NGINX_TEXT', "<u>Important security information for Nginx</u>");
+define('TEXT_HELP_TITLE_NGINXCONF', "Securing ZEN CART on Nginx Webservers");
+define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
+	<p>
+		Your ZEN CART installation comes with security measures in a format native to the Apache Webserver.
+		<br>
+		See below to implement a similar set of measures for the Nginx Webserver. 
+	</p>
+	<hr>
+	<ul style='list-style-type:square'>
+		<li>
+			Go to your <strong>'zc_install/includes/nginx_conf'</strong> folder and open the following files using a text editor such as notepad or textedit:
+			<ul style='list-style-type:circle'>
+				<li>
+					zencart_ngx_http.conf
+				</li>
+				<li>
+					zencart_ngx_server.conf
+				</li>
+			</ul>
+		</li>
+		<li>
+			Add the contents of <strong>'zencart_ngx_http.conf'</strong> under the <strong>'http'</strong> section of your Nginx configuration file.
+			<ul style='list-style-type:circle'>
+				<li>
+					Edit the caching durations in the <strong>'map'</strong> block to suit as required
+				</li>
+			</ul>
+		</li>
+		<li>
+			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for ZEN CART in your Nginx configuration file.
+			<ul style='list-style-type:circle'>
+				<li>
+					The directives may be used for SSL and/or Non SSL server blocks.
+				</li>
+				<li>
+					The directives should be placed at the beginning of the server block before any other location blocks.
+					<ul style='list-style-type:none'>
+						<li>
+							- The order in which the directives appear is important.
+						</li>
+						<li>
+							- Do not change this order without fully understanding the directives and implications.
+						</li>
+					</ul>
+			</ul>
+		</li>
+		<li>
+			It is especially critical that these directives appear before any generic php handling location blocks such as ...
+			<br>
+<pre>
+	<code>location ~ \.php { <strong>Nginx PHP Handling Directives;</strong> }</code>
+</pre>
+			... or any other location blocks that might be processed before these are.
+		</li>
+		<li>
+			Instead, edit the <strong>'zencart_php_handler'</strong> location block to match your Nginx PHP Handling Directives.
+			<ul style='list-style-type:circle'>
+				<li>
+					Simply duplicate the contents of your existing PHP handling location block.
+					<ul style='list-style-type:none'>
+						<li>
+							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
+						</li>
+						<li>
+							- If you do not have an existing PHP handling location block, please refer to available guides such as from <a href='https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/' target='_blank'><u>The Nginx Website</u></a>.  
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li>
+			If using plugins for 'Pretty URLs', insert the relevant directives into the specified block.
+		</li>
+		<li>
+			Reload Nginx.
+			<ul style='list-style-type:circle'>
+				<li>
+					Do this before closing this dialog box.
+				</li>
+				<li>
+					Remember to delete the <strong>'zc_install'</strong> folder when done.
+					<ul style='list-style-type:none'>
+						<li>
+							- Including the <strong>'zc_install/includes/nginx_conf'</strong> folder and its contents.
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	<ol>
+</div>
+<div class='alert-box alert'>
+	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for ZEN CART.
+</div>
+<hr>");
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
 define('TEXT_HELP_CONTENT_AGREETOTERMS', "<a href='http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html' target='_blank'>Original GPL 2.0 text</a><h2>The GNU General Public License (GPL)</h2>
