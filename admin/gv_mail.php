@@ -17,7 +17,7 @@
   if ($_GET['action'] == 'set_editor') {
     // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
     $action='';
-    zen_redirect(zen_href_link(FILENAME_GV_MAIL));
+    zen_redirect(zen_admin_href_link(FILENAME_GV_MAIL));
   }
 
   if ( ($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address'] || $_POST['email_to']) && (!$_POST['back_x']) ) {
@@ -32,7 +32,7 @@
     if (zen_admin_demo()) {
       $_GET['action']= '';
       $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-      zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
+      zen_redirect(zen_admin_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
     }
     $from = zen_db_prepare_input($_POST['from']);
     $subject = zen_db_prepare_input($_POST['subject']);
@@ -140,7 +140,7 @@
                                             '" . zen_db_input($_POST['email_to']) . "', now() )");
 
     }
-    zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
+    zen_redirect(zen_admin_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
   }
 
   if ( ($_GET['action'] == 'preview') && (!$_POST['customers_email_address']) && (!$_POST['email_to']) ) {
@@ -322,7 +322,7 @@ function check_form(form_name) {
                 <table border="0" width="100%" cellpadding="0" cellspacing="2">
                   <tr>
                     <td><?php echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="back"'); ?></td>
-                    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_GV_MAIL) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . ($_POST['amount'] <= 0 ? '' : zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL)); ?></td>
+                    <td align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_GV_MAIL) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . ($_POST['amount'] <= 0 ? '' : zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL)); ?></td>
                   </tr>
                 </table></td>
               </tr>

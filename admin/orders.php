@@ -52,7 +52,7 @@
     if ($orders->RecordCount() <= 0) {
       $order_exists = false;
       if ($action != '') $messageStack->add_session(ERROR_ORDER_DOES_NOT_EXIST . ' ' . $oID, 'error');
-      zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
+      zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action'))));
     }
   }
 
@@ -90,7 +90,7 @@
           unset($_GET['download_reset_on']);
 
           $messageStack->add_session(SUCCESS_ORDER_UPDATED_DOWNLOAD_ON, 'success');
-          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+          zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         }
       // reset single download to off
         if ($_GET['download_reset_off'] > 0) {
@@ -102,7 +102,7 @@
           unset($_GET['download_reset_off']);
 
           $messageStack->add_session(SUCCESS_ORDER_UPDATED_DOWNLOAD_OFF, 'success');
-          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+          zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         }
       break;
       case 'update_order':
@@ -110,7 +110,7 @@
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+          zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         }
         $oID = zen_db_prepare_input($_GET['oID']);
         $comments = zen_db_prepare_input($_POST['comments']);
@@ -289,31 +289,31 @@
         } else {
           $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'deleteconfirm':
         // demo active test
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
+          zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action'))));
         }
         $oID = zen_db_prepare_input($_POST['oID']);
 
         zen_remove_order($oID, $_POST['restock']);
 
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action'))));
         break;
       case 'delete_cvv':
         $delete_cvv = $db->Execute("update " . TABLE_ORDERS . " set cc_cvv = '" . TEXT_DELETE_CVV_REPLACEMENT . "' where orders_id = '" . (int)$_GET['oID'] . "'");
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'mask_cc':
         $result  = $db->Execute("select cc_number from " . TABLE_ORDERS . " where orders_id = '" . (int)$_GET['oID'] . "'");
         $old_num = $result->fields['cc_number'];
         $new_num = substr($old_num, 0, 4) . str_repeat('*', (strlen($old_num) - 8)) . substr($old_num, -4);
         $mask_cc = $db->Execute("update " . TABLE_ORDERS . " set cc_number = '" . $new_num . "' where orders_id = '" . (int)$_GET['oID'] . "'");
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
 
       case 'doRefund':
@@ -329,7 +329,7 @@
           }
         }
         zen_record_admin_activity('Order ' . $oID . ' refund processed. See order comments for details.', 'info');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'doAuth':
         $order = new order($oID);
@@ -343,7 +343,7 @@
             }
           }
         }
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'doCapture':
         $order = new order($oID);
@@ -357,7 +357,7 @@
             }
           }
         }
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'doVoid':
         $order = new order($oID);
@@ -372,7 +372,7 @@
           }
         }
         zen_record_admin_activity('Order ' . $oID . ' void processed. See order comments for details.', 'info');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
     }
   }
@@ -400,7 +400,7 @@ function couponpopupWindow(url) {
     <td class="pageHeading"><?php echo ($action == 'edit' && $order_exists) ? HEADING_TITLE_DETAILS : HEADING_TITLE; ?></td>
   </tr>
 
-<?php $order_list_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS) . '\'"><i class="fa fa-th-list" aria-hidden="true"></i> ' . BUTTON_TO_LIST . '</button>'; ?>
+<?php $order_list_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_admin_href_link(FILENAME_ORDERS) . '\'"><i class="fa fa-th-list" aria-hidden="true"></i> ' . BUTTON_TO_LIST . '</button>'; ?>
 <?php if ($action == '') { ?>
 <!-- search -->
   <tr>
@@ -418,7 +418,7 @@ function couponpopupWindow(url) {
                   ?>
                 <?php if ((isset($_GET['search']) && zen_not_null($_GET['search'])) or $_GET['cID'] !='') { ?>
                   <div class="input-group-btn">
-                    <a class="btn btn-danger" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><span aria-hidden="true">&times;</span></a>
+                    <a class="btn btn-danger" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_admin_href_link(FILENAME_ORDERS); ?>"><span aria-hidden="true">&times;</span></a>
                   </div>
                 <?php } ?>
                 </div>
@@ -434,7 +434,7 @@ function couponpopupWindow(url) {
                   ?>
                 <?php if ((isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) or $_GET['cID'] !='') { ?>
                   <div class="input-group-btn">
-                    <a class="btn btn-danger" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><span aria-hidden="true">&times;</span></a>
+                    <a class="btn btn-danger" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_admin_href_link(FILENAME_ORDERS); ?>"><span aria-hidden="true">&times;</span></a>
                   </div>
                 <?php } ?>
                 </div>
@@ -482,13 +482,13 @@ function couponpopupWindow(url) {
     $prev_button = '';
     $result = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " WHERE orders_id < '" . $oID . "' ORDER BY orders_id DESC LIMIT 1");
     if ($result->RecordCount()) {
-      $prev_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">&laquo; ' . $result->fields['orders_id'] . '</button>';
+      $prev_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_admin_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">&laquo; ' . $result->fields['orders_id'] . '</button>';
     }
 
     $next_button = '';
     $result = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " WHERE orders_id > '" . $oID . "' ORDER BY orders_id ASC LIMIT 1");
     if ($result->RecordCount()) {
-      $next_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">' . $result->fields['orders_id'] . ' &raquo;</button>';
+      $next_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_admin_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">' . $result->fields['orders_id'] . ' &raquo;</button>';
     }
 
 ?>
@@ -552,7 +552,7 @@ function couponpopupWindow(url) {
               </tr>
               <tr>
                 <td class="main"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
-                <td class="main"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '" . >' . '<i class="fa fa-search"></i> ' . TEXT_CUSTOMER_LOOKUP . '</a>'; ?></td>
+                <td class="main"><?php echo '<a href="' . zen_admin_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address']) . '" . >' . '<i class="fa fa-search"></i> ' . TEXT_CUSTOMER_LOOKUP . '</a>'; ?></td>
               </tr>
             </table></td>
             <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
@@ -602,12 +602,12 @@ function couponpopupWindow(url) {
           </tr>
           <tr>
             <td class="main"><?php echo ENTRY_CREDIT_CARD_NUMBER; ?></td>
-            <td class="main"><?php echo $order->info['cc_number'] . (zen_not_null($order->info['cc_number']) && !strstr($order->info['cc_number'],'X') && !strstr($order->info['cc_number'],'********') ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=mask_cc&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_MASK_CC_NUMBER . '</a>' : ''); ?></td>
+            <td class="main"><?php echo $order->info['cc_number'] . (zen_not_null($order->info['cc_number']) && !strstr($order->info['cc_number'],'X') && !strstr($order->info['cc_number'],'********') ? '&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_ORDERS, '&action=mask_cc&oID=' . $oID) . '" class="noprint">' . TEXT_MASK_CC_NUMBER . '</a>' : ''); ?></td>
           </tr>
 <?php if (zen_not_null($order->info['cc_cvv'])) { ?>
           <tr>
             <td class="main"><?php echo ENTRY_CREDIT_CARD_CVV; ?></td>
-            <td class="main"><?php echo $order->info['cc_cvv'] . (zen_not_null($order->info['cc_cvv']) && !strstr($order->info['cc_cvv'],TEXT_DELETE_CVV_REPLACEMENT) ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=delete_cvv&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_DELETE_CVV_FROM_DATABASE . '</a>' : ''); ?></td>
+            <td class="main"><?php echo $order->info['cc_cvv'] . (zen_not_null($order->info['cc_cvv']) && !strstr($order->info['cc_cvv'],TEXT_DELETE_CVV_REPLACEMENT) ? '&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_ORDERS, '&action=delete_cvv&oID=' . $oID) . '" class="noprint">' . TEXT_DELETE_CVV_FROM_DATABASE . '</a>' : ''); ?></td>
           </tr>
 <?php } ?>
           <tr>
@@ -781,7 +781,7 @@ function couponpopupWindow(url) {
         </table></td>
       </form></tr>
       <tr>
-        <td colspan="2" align="right" class="noprint"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']) . '" target="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']) . '" target="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action'))) . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'; ?></td>
+        <td colspan="2" align="right" class="noprint"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']) . '" target="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']) . '" target="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action'))) . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'; ?></td>
       </tr>
 <?php
 // check if order has open gv
@@ -789,7 +789,7 @@ function couponpopupWindow(url) {
                                   from " . TABLE_COUPON_GV_QUEUE ."
                                   where order_id = '" . $_GET['oID'] . "' and release_flag='N' limit 1");
         if ($gv_check->RecordCount() > 0) {
-          $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'order=' . $_GET['oID']) . '">' . zen_image_button('button_gift_queue.gif',IMAGE_GIFT_QUEUE) . '</a>';
+          $goto_gv = '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE, 'order=' . $_GET['oID']) . '">' . zen_image_button('button_gift_queue.gif',IMAGE_GIFT_QUEUE) . '</a>';
           echo '      <tr><td align="right"><table width="225"><tr>';
           echo '        <td align="center">';
           echo $goto_gv . '&nbsp;&nbsp;';
@@ -932,9 +932,9 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
       }
 
       if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '\'">' . "\n";
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id']) . '\'">' . "\n";
       }
 
       $show_difference = '';
@@ -948,13 +948,13 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
 ?>
                 <td class="dataTableContent" align="right"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
                 <td class="dataTableContent" align="left" width="50"><?php echo $show_payment_type; ?></td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] != '' ? '<br />' . $orders->fields['customers_company'] : ''); ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_admin_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id']) . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] != '' ? '<br />' . $orders->fields['customers_company'] : ''); ?></td>
                 <td class="dataTableContent" align="right"><?php echo strip_tags($orders->fields['order_total']); ?></td>
                 <td class="dataTableContent" align="center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <td class="dataTableContent" align="center"><?php echo (zen_get_orders_comments($orders->fields['orders_id']) == '' ? '' : zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16)); ?></td>
 
-                <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?><?php if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?><?php if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $orders->MoveNext();
@@ -972,7 +972,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
                   <tr>
                     <td class="smallText" align="right" colspan="2">
                       <?php
-                        echo '<a href="' . zen_href_link(FILENAME_ORDERS, '', 'NONSSL') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>';
+                        echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>';
                         if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                           $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
                           echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
@@ -998,14 +998,14 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
 //      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br /><br /><strong>' . ENTRY_ORDER_ID . $oInfo->orders_id . '<br />' . $oInfo->order_total . '<br />' . $oInfo->customers_name . ($oInfo->customers_company != '' ? '<br />' . $oInfo->customers_company : '') . '</strong>');
       $contents[] = array('text' => '<br />' . zen_draw_checkbox_field('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . ' <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id, 'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . ' <a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (isset($oInfo) && is_object($oInfo)) {
         $heading[] = array('text' => '<strong>[' . $oInfo->orders_id . ']&nbsp;&nbsp;' . zen_datetime_short($oInfo->date_purchased) . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=delete', 'NONSSL') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id) . '" TARGET="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id) . '" TARGET="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id) . '" TARGET="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id) . '" TARGET="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a>');
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS', $oInfo, $contents);
 
         $contents[] = array('text' => '<br />' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));
@@ -1020,7 +1020,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
                                   from " . TABLE_COUPON_GV_QUEUE ."
                                   where order_id = '" . $oInfo->orders_id . "' and release_flag='N' limit 1");
         if ($gv_check->RecordCount() > 0) {
-          $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'order=' . $oInfo->orders_id) . '">' . zen_image_button('button_gift_queue.gif',IMAGE_GIFT_QUEUE) . '</a>';
+          $goto_gv = '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE, 'order=' . $oInfo->orders_id) . '">' . zen_image_button('button_gift_queue.gif',IMAGE_GIFT_QUEUE) . '</a>';
           $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
           $contents[] = array('align' => 'center', 'text' => $goto_gv);
         }
@@ -1048,7 +1048,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
         }
 
         if (sizeof($order->products) > 0) {
-          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
+          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
         }
       }
       break;

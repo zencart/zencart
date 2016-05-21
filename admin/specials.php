@@ -23,7 +23,7 @@
       case 'set_specials_sort_order':
         $_SESSION['specials_sort_order'] = $_GET['reset_specials_sort_order'];
         $action='';
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) && $_GET['sID'] > 0 ? 'sID=' . $_GET['sID'] : '') . (isset($_GET['search']) && trim($_GET['search']) != ''  ? '&search=' . $_GET['search'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) && $_GET['sID'] > 0 ? 'sID=' . $_GET['sID'] : '') . (isset($_GET['search']) && trim($_GET['search']) != ''  ? '&search=' . $_GET['search'] : '')));
         break;
       case 'setflag':
         if (isset($_POST['flag']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0))
@@ -32,7 +32,7 @@
           // reset products_price_sorter for searches etc.
           $update_price = $db->Execute("select products_id from " . TABLE_SPECIALS . " where specials_id = '" . (int)$_GET['id'] . "'");
           zen_update_products_price_sorter($update_price->fields['products_id']);
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $_GET['id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'NONSSL'));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $_GET['id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         }
         break;
       case 'insert':
@@ -77,9 +77,9 @@
 
         } // nothing selected
         if ($_GET['go_back'] == 'ON'){
-          zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_id . '&current_category_id=' . $_GET['current_category_id']));
+          zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_id . '&current_category_id=' . $_GET['current_category_id']));
         } else {
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $new_special->fields['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $new_special->fields['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         }
         break;
       case 'insert_category':
@@ -90,7 +90,7 @@
         $include_inactive = ($_POST['include_inactive'] == 'include_inactive_yes');
         if ($_POST['categories_id'] < 1 || empty($_POST['specials_price'])) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_CATEGORY, 'caution');
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         } else {
           // get all category products_id
           global $categories_products_id_list;
@@ -161,13 +161,13 @@
             } else {
               $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']) . ' ' . SUCCESS_SPECIALS_PRICE_SET . $_POST['specials_price'], 'caution');
             }
-            zen_redirect(zen_href_link(FILENAME_SPECIALS));
+            zen_redirect(zen_admin_href_link(FILENAME_SPECIALS));
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
-            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+            zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
           }
         } // nothing selected
-        zen_redirect(zen_href_link(FILENAME_SPECIALS));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS));
         break;
       case 'remove_category':
         $include_subcategories = ($_POST['include_subcategories'] == 'include_subcategories_yes');
@@ -175,7 +175,7 @@
 
         if ($_POST['categories_id'] < 1) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_CATEGORY, 'caution');
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         } else {
           // get all category products_id
           global $categories_products_id_list;
@@ -204,10 +204,10 @@
             }
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_CATEGORY_SUB, $_POST['categories_id']), 'caution');
-            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+            zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
           }
         } // nothing selected
-        zen_redirect(zen_href_link(FILENAME_SPECIALS));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS));
         break;
 
       case 'insert_manufacturer':
@@ -217,7 +217,7 @@
 
         if ($_POST['manufacturer_id'] < 1 || empty($_POST['specials_price'])) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_MANUFACTURER, 'caution');
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         } else {
           // build $products_id_list based on manufacturer_id
           $chk_special_query = "SELECT products_id from " . TABLE_PRODUCTS . " WHERE manufacturers_id = '" . (int)$_POST['manufacturer_id'] . "'";
@@ -291,18 +291,18 @@
             } else {
               $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
             }
-            zen_redirect(zen_href_link(FILENAME_SPECIALS));
+            zen_redirect(zen_admin_href_link(FILENAME_SPECIALS));
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
-            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+            zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
           }
         } // nothing selected
-        zen_redirect(zen_href_link(FILENAME_SPECIALS));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS));
         break;
       case 'remove_manufacturer':
         if ($_POST['manufacturer_id'] < 1) {
           $messageStack->add_session(ERROR_NOTHING_SELECTED_MANUFACTURER, 'caution');
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         } else {
           // build $products_id_list based on manufacturer_id
           $chk_special_query = "SELECT products_id from " . TABLE_PRODUCTS . " WHERE manufacturers_id = '" . (int)$_POST['manufacturer_id'] . "'";
@@ -335,10 +335,10 @@
             }
           } else {
             $messageStack->add_session(sprintf(ERROR_NOTHING_SELECTED_MANUFACTURER_SUB, $_POST['manufacturer_id']), 'caution');
-            zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+            zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
           }
         } // nothing selected
-        zen_redirect(zen_href_link(FILENAME_SPECIALS));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS));
         break;
       case 'update':
         $specials_id = zen_db_prepare_input($_POST['specials_id']);
@@ -368,14 +368,14 @@
         $update_price = $db->Execute("select products_id from " . TABLE_SPECIALS . " where specials_id = '" . (int)$specials_id . "'");
         zen_update_products_price_sorter($update_price->fields['products_id']);
 
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         break;
       case 'deleteconfirm':
         // demo active test
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         }
         $specials_id = zen_db_prepare_input($_POST['sID']);
 
@@ -388,7 +388,7 @@
 
         zen_update_products_price_sorter($update_price_id);
 
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         break;
       case 'pre_add_confirmation':
       // check for blank or existing special
@@ -417,7 +417,7 @@
         }
 
         if ($skip_special == true) {
-          zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . ($check_special->fields['specials_id'] > 0 ? 'sID=' . $check_special->fields['specials_id'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+          zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . ($check_special->fields['specials_id'] > 0 ? 'sID=' . $check_special->fields['specials_id'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         }
       // add empty special
 
@@ -435,7 +435,7 @@
         $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
 
         $messageStack->add_session(SUCCESS_SPECIALS_PRE_ADD, 'success');
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, 'action=edit' . '&sID=' . $new_special->fields['specials_id'] . '&manual=1'));
+        zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, 'action=edit' . '&sID=' . $new_special->fields['specials_id'] . '&manual=1'));
         break;
     }
   }
@@ -462,7 +462,7 @@ require('includes/admin_html_head.php');
 <?php
 // show reset search
   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-    echo '<a href="' . zen_href_link(FILENAME_SPECIALS) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
+    echo '<a href="' . zen_admin_href_link(FILENAME_SPECIALS) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
   }
   echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
@@ -502,7 +502,7 @@ require('includes/admin_html_head.php');
 <?php
   if (empty($action)) {
 ?>
-                    <td align="center"><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new') . '">' . zen_image_button('button_new_product.gif', IMAGE_NEW_PRODUCT) . '</a>'; ?></td>
+                    <td align="center"><?php echo '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new') . '">' . zen_image_button('button_new_product.gif', IMAGE_NEW_PRODUCT) . '</a>'; ?></td>
 <?php
   }
 ?>
@@ -590,7 +590,7 @@ require('includes/admin_html_head.php');
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><br><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
-            <td class="main" align="right" valign="top"><br><?php echo (($form_action == 'insert') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)) . ((int)$_GET['manual'] == 0 ? '&nbsp;&nbsp;&nbsp;<a href="' . ($_GET['go_back'] == 'ON' ? zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) and $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>' : ''); ?></td>
+            <td class="main" align="right" valign="top"><br><?php echo (($form_action == 'insert') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)) . ((int)$_GET['manual'] == 0 ? '&nbsp;&nbsp;&nbsp;<a href="' . ($_GET['go_back'] == 'ON' ? zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) and $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>' : ''); ?></td>
           </tr>
         </table></td>
       </form></tr>
@@ -692,9 +692,9 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       }
 
       if (isset($sInfo) && is_object($sInfo) && ($specials->fields['specials_id'] == $sInfo->specials_id)) {
-        echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'">' . "\n";
+        echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'">' . "\n";
       } else {
-        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials->fields['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'">' . "\n";
+        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials->fields['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'">' . "\n";
       }
 
       if ($specials->fields['products_priced_by_attribute'] == '1') {
@@ -730,9 +730,9 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
 ?>
                 </td>
                 <td class="dataTableContent" align="right">
-                  <?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials->fields['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
-                  <?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials->fields['specials_id'] . '&action=delete' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
-                  <?php if (isset($sInfo) && is_object($sInfo) && ($specials->fields['specials_id'] == $sInfo->specials_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_SPECIALS, zen_get_all_get_params(array('sID')) . 'sID=' . $specials->fields['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
+                  <?php echo '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials->fields['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
+                  <?php echo '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials->fields['specials_id'] . '&action=delete' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
+                  <?php if (isset($sInfo) && is_object($sInfo) && ($specials->fields['specials_id'] == $sInfo->specials_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, zen_get_all_get_params(array('sID')) . 'sID=' . $specials->fields['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
                 </td>
       </tr>
 <?php
@@ -749,7 +749,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
   if (empty($action)) {
 ?>
                   <tr>
-                    <td colspan="2" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new') . '">' . zen_image_button('button_new_product.gif', IMAGE_NEW_PRODUCT) . '</a>'; ?></td>
+                    <td colspan="2" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new') . '">' . zen_image_button('button_new_product.gif', IMAGE_NEW_PRODUCT) . '</a>'; ?></td>
                   </tr>
 <?php
   }
@@ -768,14 +768,14 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&action=deleteconfirm' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . zen_draw_hidden_field('sID', $sInfo->specials_id));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br><b>' . $sInfo->products_name . '</b>');
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'pre_add':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS . '</b>');
       $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=pre_add_confirmation' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
       $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_PRE_ADD_PRODUCTS_ID . '<br>' . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id')));
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . (int)$_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . (int)$_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'pre_add_category':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS_CATEGORY . '</b>');
@@ -794,7 +794,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_END_DATE . '<br>' . zen_draw_input_field('special_end_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
 
       $contents[] = array('text' => TEXT_SPECIALS_PRICE_TIP);
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'pre_remove_category':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_CATEGORY . '</b>');
@@ -805,7 +805,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       $contents[] = array('text' => TEXT_INFO_INCLUDE_SUBCATEGORIES . '<br />' . zen_draw_radio_field('include_subcategories', 'include_subcategories_yes', true) . ' ' . TEXT_SKIP_SUBCATEGORIES . '<br />' . zen_draw_radio_field('include_subcategories', 'include_subcategories_no') . ' ' . TEXT_SKIP_SUBCATEGORIES_NO);
       $contents[] = array('text' => TEXT_INFO_INCLUDE_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_yes', true) . ' ' . TEXT_SKIP_INACTIVE . '<br />' . zen_draw_radio_field('include_inactive', 'include_inactive_no') . ' ' . TEXT_SKIP_INACTIVE_NO);
 
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'pre_add_manufacturer':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS_MANUFACTURER . '</b>');
@@ -821,14 +821,14 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
       $contents[] = array('text' => TEXT_PRE_ADD_SPECIAL_END_DATE . '<br>' . zen_draw_input_field('special_end_date', '', 'maxlength="10" class="datepicker"') . '&nbsp;' . SPECIALS_DATE_ERROR);
 
       $contents[] = array('text' => TEXT_SPECIALS_PRICE_TIP);
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'pre_remove_manufacturer':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_PRE_REMOVE_SPECIALS_MANUFACTURER . '</b>');
       $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=remove_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
       $contents[] = array('text' => TEXT_INFO_PRE_REMOVE_INTRO_MANUFACTURER . '<br />');
       $contents[] = array('text' => '<br />' . TEXT_PRE_REMOVE_MANUFACTURER_ID . '<br>' . zen_draw_input_field('manufacturer_id'));
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_confirm.gif', IMAGE_CONFIRM) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (is_object($sInfo)) {
@@ -840,8 +840,8 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
         $specials_current_price = $sInfo->products_price;
       }
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=delete' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit&products_filter=' . $sInfo->products_id) . '">' . zen_image_button('button_products_price_manager.gif', IMAGE_PRODUCTS_PRICE_MANAGER) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=delete' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit&products_filter=' . $sInfo->products_id) . '">' . zen_image_button('button_products_price_manager.gif', IMAGE_PRODUCTS_PRICE_MANAGER) . '</a>');
         $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->specials_date_added));
         $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified));
         $contents[] = array('align' => 'center', 'text' => '<br>' . zen_info_image($sInfo->products_image, $sInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
@@ -852,17 +852,17 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
         $contents[] = array('text' => '<br>' . TEXT_INFO_AVAILABLE_DATE . ' <b>' . (($sInfo->specials_date_available != '0001-01-01' and $sInfo->specials_date_available !='') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE) . '</b>');
         $contents[] = array('text' => '<br>' . TEXT_INFO_EXPIRES_DATE . ' <b>' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date !='') ? zen_date_short($sInfo->expires_date) : TEXT_NONE) . '</b>');
         $contents[] = array('text' => '' . TEXT_INFO_STATUS_CHANGE . ' ' . zen_date_short($sInfo->date_status_change));
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_CATEGORIES, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>');
       } else {
         $heading[] = array('text' => '<b>' . TEXT_NONE . '</b>');
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL . '</a><br /><br />');
       $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3') . '<br /><br />');
-      $contents[] = array('align' => 'center', 'text' => TEXT_INFO_CATEGORY . '<br />' . '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL_CATEGORY . '</a><br /><br />');
-      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_remove_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '<br />' . TEXT_INFO_MANUAL_CATEGORY_REMOVE . '</a><br /><br />');
-      $contents[] = array('align' => 'center', 'text' => TEXT_INFO_MANUFACTURER . '<br />' . '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL_MANUFACTURER . '</a><br /><br />');
-      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_remove_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '<br />' . TEXT_INFO_MANUAL_MANUFACTURER_REMOVE . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => TEXT_INFO_CATEGORY . '<br />' . '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'action=pre_add_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL_CATEGORY . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'action=pre_remove_category' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '<br />' . TEXT_INFO_MANUAL_CATEGORY_REMOVE . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => TEXT_INFO_MANUFACTURER . '<br />' . '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'action=pre_add_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_select.gif', IMAGE_SELECT) . '<br />' . TEXT_INFO_MANUAL_MANUFACTURER . '</a><br /><br />');
+      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'action=pre_remove_manufacturer' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . ((isset($_GET['sID']) && $_GET['sID'] > 0) ? '&sID=' . $_GET['sID'] : '') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '<br />' . TEXT_INFO_MANUAL_MANUFACTURER_REMOVE . '</a><br /><br />');
 
       break;
   }

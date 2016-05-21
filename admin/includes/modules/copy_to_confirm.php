@@ -159,4 +159,4 @@ if ( $_POST['copy_attributes']=='copy_attributes_yes' and $_POST['copy_as'] == '
           zen_update_products_price_sorter($products_id);
 
         }
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));

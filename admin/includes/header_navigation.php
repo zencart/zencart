@@ -26,20 +26,20 @@ $menuTitles = zen_get_menu_titles();
     <ul class="nav navbar-nav">
           <?php foreach (zen_get_admin_menu_for_user() as $menuKey => $pages) { ?>
             <li class="dropdown">
-              <a href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><?php echo $menuTitles[$menuKey] ?><b class="caret"></b></a>
+              <a href="<?php echo zen_admin_href_link(FILENAME_ALT_NAV) ?>" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><?php echo $menuTitles[$menuKey] ?><b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <?php foreach ($pages as $page) { ?>
-                  <li><a href="<?php echo zen_href_link($page['file'], $page['params']) ?>"><?php echo $page['name'] ?></a></li>
+                  <li><a href="<?php echo zen_admin_href_link($page['file'], $page['params']) ?>"><?php echo $page['name'] ?></a></li>
                 <?php } ?>
               </ul>
             </li>
           <?php } ?>
-          <li class="upperMenuItems"><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
+          <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_DEFAULT); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
           <li class="upperMenuItems"><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
           <li class="upperMenuItems"><a href="https://www.zen-cart.com/" class="headerLink" target="_blank" class="headerLink"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
-          <li class="upperMenuItems"><a href="<?php echo zen_href_link(FILENAME_SERVER_INFO, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
-          <li class="upperMenuItems"><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
-          <li class="upperMenuItems"><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
+          <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_SERVER_INFO); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
+          <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
+          <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_LOGOFF); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>

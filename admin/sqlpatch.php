@@ -806,7 +806,7 @@ require('includes/admin_html_head.php');
         </tr>
     <tr>
       <td width="300" align="right">
-        <a href="<?php echo zen_href_link(FILENAME_SQLPATCH, 'action=help'); ?>" target='_blank'><?php echo zen_image_button('button_details.gif', IMAGE_DETAILS); ?></a></td>
+        <a href="<?php echo zen_admin_href_link(FILENAME_SQLPATCH, 'action=help'); ?>" target='_blank'><?php echo zen_image_button('button_details.gif', IMAGE_DETAILS); ?></a></td>
     </tr>
 <!-- body_text_eof //-->
 </table>

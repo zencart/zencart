@@ -32,7 +32,7 @@
       $gv_page->MoveNext();
     }
     $_GET['page'] = round(($page_cnt/MAX_DISPLAY_SEARCH_RESULTS));
-    zen_redirect(zen_href_link(FILENAME_GV_QUEUE, 'gid=' . $gv_check->fields['unique_id'] . '&page=' . $_GET['page']));
+    zen_redirect(zen_admin_href_link(FILENAME_GV_QUEUE, 'gid=' . $gv_check->fields['unique_id'] . '&page=' . $_GET['page']));
   }
 // eof: find gv for a particular order and set page
 
@@ -108,7 +108,7 @@
       }
     }
     // return back to same page after release
-    zen_redirect(zen_href_link(FILENAME_GV_QUEUE, 'page=' . (int)$_GET['page']));
+    zen_redirect(zen_admin_href_link(FILENAME_GV_QUEUE, 'page=' . (int)$_GET['page']));
   }
 require('includes/admin_html_head.php');
 ?>
@@ -151,16 +151,16 @@ require('includes/admin_html_head.php');
       $gInfo = new objectInfo($gv_list->fields);
     }
     if ( (is_object($gInfo)) && ($gv_list->fields['unique_id'] == $gInfo->unique_id) ) {
-      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_GV_QUEUE, zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit') . '\'">' . "\n";
+      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_GV_QUEUE, zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_GV_QUEUE, zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list->fields['unique_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_GV_QUEUE, zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list->fields['unique_id']) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $gv_list->fields['customers_firstname'] . ' ' . $gv_list->fields['customers_lastname']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $gv_list->fields['order_id']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $currencies->format($gv_list->fields['amount']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo zen_datetime_short($gv_list->fields['date_created']); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($gInfo)) && ($gv_list->fields['unique_id'] == $gInfo->unique_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'page=' . $_GET['page'] . '&gid=' . $gv_list->fields['unique_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (is_object($gInfo)) && ($gv_list->fields['unique_id'] == $gInfo->unique_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE, 'page=' . $_GET['page'] . '&gid=' . $gv_list->fields['unique_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     $gv_list->MoveNext();
@@ -181,8 +181,8 @@ require('includes/admin_html_head.php');
   switch ($_GET['action']) {
     case 'release':
       $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
-      $contents[] = array('align' => 'center', 'text' => zen_draw_form('gv_release', FILENAME_GV_QUEUE, 'action=confirmrelease&page=' . $_GET['page']) . zen_image_submit('button_confirm_red.gif', IMAGE_CONFIRM) . '<input type="hidden" name="gid" value="' . $gInfo->unique_id . '" /></form>' . '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
-//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => zen_draw_form('gv_release', FILENAME_GV_QUEUE, 'action=confirmrelease&page=' . $_GET['page']) . zen_image_submit('button_confirm_red.gif', IMAGE_CONFIRM) . '<input type="hidden" name="gid" value="' . $gInfo->unique_id . '" /></form>' . '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE, 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE, 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page']) . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_admin_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
@@ -190,12 +190,12 @@ require('includes/admin_html_head.php');
       if ($gv_list->RecordCount() == 0) {
         $contents[] = array('align' => 'center','text' => TEXT_GV_NONE);
       } else {
-        $contents[] = array('align' => 'center','text' => '<a href="' . zen_href_link(FILENAME_GV_QUEUE,'action=release&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL'). '">' . zen_image_button('button_release_gift.gif', IMAGE_RELEASE) . '</a>');
+        $contents[] = array('align' => 'center','text' => '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE,'action=release&gid=' . $gInfo->unique_id . '&page=' . $_GET['page']). '">' . zen_image_button('button_release_gift.gif', IMAGE_RELEASE) . '</a>');
 
 // quick link to order
         $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','90%','3'));
         $contents[] = array('align' => 'center', 'text' => TEXT_EDIT_ORDER . $gInfo->order_id);
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $gInfo->order_id . '&action=edit', 'NONSSL') . '">' . zen_image_button('button_order.gif', IMAGE_ORDER) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_ORDERS, 'oID=' . $gInfo->order_id . '&action=edit') . '">' . zen_image_button('button_order.gif', IMAGE_ORDER) . '</a>');
       }
       break;
    }
