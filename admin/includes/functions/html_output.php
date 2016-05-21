@@ -8,7 +8,7 @@
  */
 
   /**
-   * Deprecated and will be removed in latter versions. 
+   * Deprecated and will be removed in later versions. 
    * Use zen_admin_href_link instead
    */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
