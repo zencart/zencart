@@ -31,15 +31,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $password = zen_db_prepare_input($_POST['password']);
   $loginAuthorized = false;
 
-  /* Privacy-policy-read does not need to be checked during "login"
-  if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
-  if (!isset($_POST['privacy_conditions']) || ($_POST['privacy_conditions'] != '1')) {
-  $error = true;
-  $messageStack->add('create_account', ERROR_PRIVACY_STATEMENT_NOT_ACCEPTED, 'error');
-  }
-  }
-  */
-
     // Check if email exists
     $check_customer_query = "SELECT customers_id, customers_firstname, customers_lastname, customers_password,
                                     customers_email_address, customers_default_address_id,
@@ -146,9 +137,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         // eof: contents merge notice
 
         if (sizeof($_SESSION['navigation']->snapshot) > 0) {
-          //    $back = sizeof($_SESSION['navigation']->path)-2;
           $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], array(zen_session_name())), $_SESSION['navigation']->snapshot['mode']);
-          //            $origin_href = zen_back_link_only(true);
           $_SESSION['navigation']->clear_snapshot();
           zen_redirect($origin_href);
         } else {

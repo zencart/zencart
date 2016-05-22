@@ -16,7 +16,6 @@
     $product = $db->Execute("select products_price, products_model, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
 
     if ($product->RecordCount() > 0) {
-//  	  $product_price = $product->fields['products_price'];
       $product_price = zen_get_products_base_price($product_id);
     } else {
       return false;
