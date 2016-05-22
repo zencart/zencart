@@ -367,11 +367,6 @@ class order extends base {
                         'payment_method' => $GLOBALS[$class]->title,
                         'payment_module_code' => $GLOBALS[$class]->code,
                         'coupon_code' => $coupon_code->fields['coupon_code'],
-    //                          'cc_type' => (isset($GLOBALS['cc_type']) ? $GLOBALS['cc_type'] : ''),
-    //                          'cc_owner' => (isset($GLOBALS['cc_owner']) ? $GLOBALS['cc_owner'] : ''),
-    //                          'cc_number' => (isset($GLOBALS['cc_number']) ? $GLOBALS['cc_number'] : ''),
-    //                          'cc_expires' => (isset($GLOBALS['cc_expires']) ? $GLOBALS['cc_expires'] : ''),
-    //                          'cc_cvv' => (isset($GLOBALS['cc_cvv']) ? $GLOBALS['cc_cvv'] : ''),
                         'shipping_method' => (isset($_SESSION['shipping']['title'])) ? $_SESSION['shipping']['title'] : '',
                         'shipping_module_code' => (isset($_SESSION['shipping']['id']) && strpos($_SESSION['shipping']['id'], '_') > 0 ? $_SESSION['shipping']['id'] : $_SESSION['shipping']),
                         'shipping_cost' => $currencies->value(isset($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0, false, $this->currency),
@@ -385,10 +380,6 @@ class order extends base {
                         'order_weight' => ($shipping_weight * $shipping_num_boxes)
                         );
 
-    //print_r($GLOBALS[$class]);
-    //echo $class;
-    //print_r($GLOBALS);
-    //echo $_SESSION['payment'];
     /*
     // this is set above to the module filename it should be set to the module title like Checks/Money Order rather than moneyorder
     if (isset(${$_SESSION['payment']}) && is_object(${$_SESSION['payment']})) {
@@ -501,14 +492,6 @@ class order extends base {
         $subindex = 0;
         reset($products[$i]['attributes']);
         while (list($option, $value) = each($products[$i]['attributes'])) {
-          /*
-          //clr 030714 Determine if attribute is a text attribute and change products array if it is.
-          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID){
-          $attr_value = $products[$i]['attributes_values'][$option];
-          } else {
-          $attr_value = $attributes->fields['products_options_values_name'];
-          }
-          */
 
           $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
                                           pa.options_values_price, pa.price_prefix
@@ -571,7 +554,6 @@ class order extends base {
           $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
         } else {
           // calculate the amount of tax for this product (assuming tax is NOT included in the price)
-  //        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
           $tax_add = ($products_tax/100) * $shown_price;
         }
         $tax_add = $currencies->value($tax_add, false, $this->currency);
@@ -784,8 +766,6 @@ class order extends base {
           } else {
             $stock_left = $stock_values->fields['products_quantity'];
           }
-
-          //            $this->products[$i]['stock_value'] = $stock_values->fields['products_quantity'];
 
           $db->Execute("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
           if ($stock_left <= 0) {

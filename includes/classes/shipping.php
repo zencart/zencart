@@ -188,7 +188,6 @@ class shipping extends base {
           $quotes = $GLOBALS[$class]->quotes;
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {
-            //              if ($quotes['methods'][$i]['cost']) {
             if (isset($quotes['methods'][$i]['cost'])){
               $rates[] = array('id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
                                'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',
