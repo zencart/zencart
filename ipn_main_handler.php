@@ -466,11 +466,8 @@ Processing...
           break;
       }
       // update order status history with new information
-      ipn_debug_email('IPN NOTICE :: Set new status ' . $new_status . " for order ID = " .  $ordersID . ($_POST['pending_reason'] != '' ? '.   Reason_code = ' . $_POST['pending_reason'] : '') );
-      if ((int)$new_status == 0) {
-        $new_status = 1;
-        ipn_debug_email('IPN NOTICE :: Set new status ' . $new_status . " for order ID = " .  $ordersID . ($_POST['pending_reason'] != '' ? '.   Reason_code = ' . $_POST['pending_reason'] : '') );
-      }
+      if ((int)$new_status == 0) $new_status = 1;
+      
       if (in_array($_POST['payment_status'], array('Refunded', 'Reversed', 'Denied', 'Failed'))
            || substr($txn_type,0,8) == 'cleared-' || $txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared') {
         $sql = "select orders_status from " . TABLE_ORDERS . "
