@@ -31,6 +31,7 @@ git:
 
 before_install:
   - travis_retry composer self-update -q
+  - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
   - git submodule update --init --recursive
 
 install:
