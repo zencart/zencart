@@ -1006,4 +1006,8 @@
 
     return $new_range;
   }
+function zen_get_config_remove_attention($config_value)
+{
+  return (strpos(zen_get_configuration_key_value($config_value), 'lookupAttention') ? '' : zen_get_configuration_key_value($config_value));
+}
 

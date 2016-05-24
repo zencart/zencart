@@ -429,6 +429,7 @@ class order extends base {
                             'country' => array('id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']),
                             'country_id' => $shipping_address->fields['entry_country_id'],
                             'format_id' => (int)$shipping_address->fields['address_format_id']);
+    $this->check_pickup();
 
     $this->billing = array('firstname' => $billing_address->fields['entry_firstname'],
                            'lastname' => $billing_address->fields['entry_lastname'],
@@ -602,6 +603,19 @@ class order extends base {
     }
     $this->notify('NOTIFY_ORDER_CART_FINISHED');
   }
+  function check_pickup() {
+    if (strstr($this->info['shipping_module_code'], 'storepickup') or strstr($_SESSION['shipping']['id'], 'storepickup')) {
+      $this->delivery['firstname'] = zen_get_config_remove_attention('STORE_NAME');
+      $this->delivery['lastname'] = '';
+      $this->delivery['street_address'] = zen_get_config_remove_attention('MODULE_SHIPPING_STOREPICKUP_ADDR1');
+      $this->delivery['suburb'] = zen_get_config_remove_attention('MODULE_SHIPPING_STOREPICKUP_SUBURB');
+      $this->delivery['city'] = zen_get_config_remove_attention('MODULE_SHIPPING_STOREPICKUP_CITY');
+      $this->delivery['postcode'] = zen_get_config_remove_attention('MODULE_SHIPPING_STOREPICKUP_ZIP');
+      $this->delivery['state'] = zen_get_config_remove_attention('MODULE_SHIPPING_STOREPICKUP_STATE');
+      $this->delivery['company'] = '';
+      $this->delivery['country']['title'] = zen_get_country_name(zen_get_configuration_key_value('STORE_COUNTRY'));
+    }
+  }
 
   function create($zf_ot_modules, $zf_mode = false) {
     global $db;
@@ -632,6 +646,8 @@ class order extends base {
       $cStart = substr($this->info['cc_number'], 0, ($cOffset > 4 ? 4 : (int)$cOffset));
       $this->info['cc_number'] = str_pad($cStart, 6, 'X') . $cEnd;
     };
+
+    $this->check_pickup();
 
     $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                             'customers_name' => $this->customer['firstname'] . ' ' . $this->customer['lastname'],
