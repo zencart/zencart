@@ -1,5 +1,5 @@
 # [Zen Cart&reg; - The Art of E-Commerce](https://www.zen-cart.com/) 
-[![Build Status](https://travis-ci.org/zencart/zc-v1-series.svg)](https://travis-ci.org/zencart/zc-v1-series) 
+[![Build Status](https://travis-ci.org/zencart/zencart.svg)](https://travis-ci.org/zencart/zencart) 
 [![Download Zen Cart&reg;](https://img.shields.io/sourceforge/dm/zencart.svg)](http://sourceforge.net/projects/zencart/files/latest/download)
 
 ===============
