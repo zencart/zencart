@@ -80,6 +80,7 @@
       }
 
       zen_record_admin_activity('GV Queue entry released in the amount of ' . $gv_amount . ' for ' . $mail->fields['customers_email_address'], 'info');
+      $zco_notifier->notify('ADMIN_GV_QUEUE_RELEASE', $mail->fields['customers_email_address'], $gv_amount);
 
       $gv_amount=$gv_resulta->fields['amount'];
       $gv_result=$db->Execute("select amount
