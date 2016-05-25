@@ -13,15 +13,15 @@
         "php": ">=5.4"
     },
     "require-dev": {
-        "sauce/sausage": ">=0.15.2",
-        "sauce/connect": ">=3.0",
-        "phpunit/phpunit": "4.*",
-        "phpunit/phpunit-selenium": ">=1.2",
-        "phpmd/phpmd": "~2",
-        "phpdocumentor/phpdocumentor": "2.*",
-        "squizlabs/php_codesniffer": "~2",
-        "satooshi/php-coveralls": "~0.6",
-        "mikey179/vfsStream": "1.*"
+        "phpunit/phpunit": ">4.8",
+        "phpunit/phpunit-selenium": ">2",
+        "sauce/sausage": "^0.17.0",
+        "sauce/connect": "^3.1",
+        "phpmd/phpmd": "^2.4",
+        "phpdocumentor/phpdocumentor": "^2.9",
+        "squizlabs/php_codesniffer": "^2.6",
+        "satooshi/php-coveralls": "^1.0",
+        "mikey179/vfsStream": "^1.6"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"],
