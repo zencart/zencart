@@ -25,6 +25,7 @@
         $sql = $db->bindVars($sql, ':maxcount:', $_POST['products_attributes_maxcount'], 'string');
         $db->Execute($sql);
         zen_record_admin_activity('Downloads-manager details added/updated for ' . $_POST['products_attributes_filename'], 'info');
+        $zco_notifier->notify('ADMIN_DOWNLOADS_MANAGER_UPDATE', $_POST['products_attributes_filename']);
         zen_redirect(zen_admin_href_link(FILENAME_DOWNLOADS_MANAGER, 'padID=' . (int)$_GET['padID'] . '&page=' . (int)$_GET['page']));
         break;
     }

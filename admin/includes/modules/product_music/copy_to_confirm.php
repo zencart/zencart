@@ -28,6 +28,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                               values ('" . (int)$products_id . "', '" . (int)$categories_id . "')");
 
                 zen_record_admin_activity('Product ' . (int)$products_id . ' copied as link to category ' . (int)$categories_id . ' via admin console.', 'info');
+                $zco_notifier->notify('NOTIFIER_ADMIN_COPY_PRODUCT_AS_LINK', $products_id, $categories_id);
               }
             } else {
               $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
@@ -178,6 +179,7 @@ if ( $_POST['copy_attributes']=='copy_attributes_yes' and $_POST['copy_as'] == '
             }
 
             zen_record_admin_activity('Product ' . (int)$old_products_id . ' duplicated as product ' . (int)$dup_products_id . ' via admin console.', 'info');
+            $zco_notifier->notify('NOTIFIER_ADMIN_COPY_PRODUCT_AS_DUPLICATE', $old_products_id, $dup_products_id);
           }
 
           // reset products_price_sorter for searches etc.

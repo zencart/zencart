@@ -286,6 +286,7 @@
           }
           $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
           zen_record_admin_activity('Order ' . $oID . ' updated.', 'info');
+          $zco_notifier->notify('ADMIN_ORDER_UPDATED', $oID);
         } else {
           $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
@@ -325,6 +326,7 @@
             $module = new $order->info['payment_module_code'];
             if (method_exists($module, '_doRefund')) {
               $module->_doRefund($oID);
+              $zco_notifier->notify('ADMIN_ORDER_REFUNDED', $oID);
             }
           }
         }
@@ -340,6 +342,7 @@
             $module = new $order->info['payment_module_code'];
             if (method_exists($module, '_doAuth')) {
               $module->_doAuth($oID, $order->info['total'], $order->info['currency']);
+              $zco_notifier->notify('ADMIN_ORDER_PAYMENT_AUTH', $oID, $order->info['total'], $order->info['currency']);
             }
           }
         }
@@ -354,6 +357,7 @@
             $module = new $order->info['payment_module_code'];
             if (method_exists($module, '_doCapt')) {
               $module->_doCapt($oID, 'Complete', $order->info['total'], $order->info['currency']);
+              $zco_notifier->notify('ADMIN_ORDER_PAYMENT_CAPTURE', $oID, $order->info['total'], $order->info['currency']);
             }
           }
         }
@@ -368,6 +372,7 @@
             $module = new $order->info['payment_module_code'];
             if (method_exists($module, '_doVoid')) {
               $module->_doVoid($oID);
+              $zco_notifier->notify('ADMIN_ORDER_PAYMENT_VOID', $oID);
             }
           }
         }

@@ -12,9 +12,11 @@
   global $db;
     if ($status == '1') {
       zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 0', 'info');
+      $zco_notifier->notify('ADMIN_EZPAGES_STATUS_CHANGE', (int)$pages_id, $status_field, 0);
       return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '0'  where pages_id = '" . (int)$pages_id . "'");
     } elseif ($status == '0') {
       zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 1', 'info');
+      $zco_notifier->notify('ADMIN_EZPAGES_STATUS_CHANGE', (int)$pages_id, $status_field, 1);
       return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '1'  where pages_id = '" . (int)$pages_id . "'");
     } else {
       return -1;
@@ -144,10 +146,12 @@
             $pages_id = $db->insert_ID();
             $messageStack->add(SUCCESS_PAGE_INSERTED, 'success');
             zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' added.', 'info');
+            $zco_notifier->notify('ADMIN_EZPAGES_PAGE_ADDED', (int)$pages_id);
           } elseif ($action == 'update') {
             zen_db_perform(TABLE_EZPAGES, $sql_data_array, 'update', "pages_id = '" . (int)$pages_id . "'");
             $messageStack->add(SUCCESS_PAGE_UPDATED, 'success');
             zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' updated.', 'info');
+            $zco_notifier->notify('ADMIN_EZPAGES_PAGE_UPDATED', (int)$pages_id);
           }
 
           zen_redirect(zen_admin_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ezID=' . $pages_id));
@@ -169,6 +173,7 @@
         $db->Execute("delete from " . TABLE_EZPAGES . " where pages_id = '" . (int)$pages_id . "'");
         $messageStack->add(SUCCESS_PAGE_REMOVED, 'success');
         zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' deleted.', 'notice');
+        $zco_notifier->notify('ADMIN_EZPAGES_PAGE_DELETED', (int)$pages_id);
         zen_redirect(zen_admin_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page']));
         break;
     }

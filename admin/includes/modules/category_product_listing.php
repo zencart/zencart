@@ -237,26 +237,6 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
     $products_count = 0;
     if (isset($_GET['search']) && !empty($_GET['search']) && $action != 'edit_category') {
 // fix duplicates and force search to use master_categories_id
-/*
-      $products_query_raw = ("select p.products_type, p.products_id, pd.products_name, p.products_quantity,
-                                       p.products_image, p.products_price, p.products_date_added,
-                                       p.products_last_modified, p.products_date_available,
-                                       p.products_status, p2c.categories_id,
-                                       p.products_model,
-                                       p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
-                                       p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping,
-                                       p.products_quantity_order_max, p.products_sort_order
-                                from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, "
-                                       . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                where p.products_id = pd.products_id
-                                and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                and p.products_id = p2c.products_id
-                                and (
-                                pd.products_name like '%" . zen_db_input($_GET['search']) . "%'
-                                or pd.products_description like '%" . zen_db_input($_GET['search']) . "%'
-                                or p.products_model like '%" . zen_db_input($_GET['search']) . "%')" .
-                                $order_by);
-*/
       $products_query_raw = ("select p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                        p.products_image, p.products_price, p.products_date_added,
                                        p.products_last_modified, p.products_date_available,

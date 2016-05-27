@@ -83,9 +83,11 @@
               zen_mail($custinfo->fields['customers_firstname'] . ' ' . $custinfo->fields['customers_lastname'], $custinfo->fields['customers_email_address'], EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
             }
             zen_record_admin_activity('Customer-approval-authorization set customer auth status to 0 for customer ID ' . (int)$customers_id, 'info');
+            $zco_notifier->notify('ADMIN_CUSTOMER_AUTHORIZATION_CHANGE', (int)$customers_id, 0);
           } else {
             $sql = "update " . TABLE_CUSTOMERS . " set customers_authorization='" . CUSTOMERS_APPROVAL_AUTHORIZATION . "' where customers_id='" . (int)$customers_id . "'";
             zen_record_admin_activity('Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . (int)$customers_id, 'info');
+            $zco_notifier->notify('ADMIN_CUSTOMER_AUTHORIZATION_CHANGE', (int)$customers_id, CUSTOMERS_APPROVAL_AUTHORIZATION);
           }
           $db->Execute($sql);
           $action = '';
@@ -297,6 +299,7 @@
 
         $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
+        $zco_notifier->notify('ADMIN_CUSTOMER_UPDATE', (int)$customers_id, (int)$default_address_id, $sql_data_array);
         zen_redirect(zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
 
         } else if ($error == true) {
@@ -402,6 +405,8 @@
                       where customer_id = '" . (int)$customers_id . "'");
 
         zen_record_admin_activity('Customer with customer ID ' . (int)$customers_id . ' deleted.', 'warning');
+
+        $zco_notifier->notify('ADMIN_CUSTOMER_DELETED', (int)$customers_id);
         zen_redirect(zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action'))));
         break;
       default:

@@ -71,6 +71,7 @@
                             '" . zen_db_input($expires_date) . "', '1', '" . zen_db_input($specials_date_available) . "')");
 
         $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
+        $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_ADDED', $products_id, $new_special->fields['specials_id']);
 
         // reset products_price_sorter for searches etc.
         zen_update_products_price_sorter((int)$products_id);
@@ -111,7 +112,7 @@
                 }
               }
 
-              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special_query = "SELECT specials_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
               // check if product has a special and skip if skip_specials
               if (!$chk_special->EOF) {
@@ -119,6 +120,7 @@
                   continue;
                 } else {
                   $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                  $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_REMOVED_PRODUCT', $products_id, $chk_special->fields['specials_id']);
                 }
               }
 
@@ -150,9 +152,8 @@
                                   now(),
                                   '" . zen_db_input($expires_date) . "', '1', '" . zen_db_input($specials_date_available) . "')");
               $special_added = true;
+              $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_ADDED_PRODUCT', $products_id, $db->insert_ID());
 
-//@@TODO - remove $new_special not used?
-//              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
               // reset products_price_sorter for searches etc.
               zen_update_products_price_sorter((int)$products_id);
             }
@@ -187,11 +188,12 @@
             foreach($products_id_list as $key => $value) {
               $new_specials_products_id = $value;
               $products_id = zen_db_prepare_input($new_specials_products_id);
-              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special_query = "SELECT specials_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
               // check if product has a special
               if (!$chk_special->EOF) {
                 $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_REMOVED_PRODUCT', $products_id, $chk_special->fields['specials_id']);
                 $special_removed = true;
                 // reset products_price_sorter for searches etc.
                 zen_update_products_price_sorter((int)$products_id);
@@ -241,7 +243,7 @@
                   continue;
                 }
               }
-              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special_query = "SELECT specials_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
               // check if product has a special and skip if skip_specials
               if (!$chk_special->EOF) {
@@ -249,6 +251,7 @@
                   continue;
                 } else {
                   $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
+                  $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_REMOVED_PRODUCT', $products_id, $chk_special->fields['specials_id']);
                 }
               }
 
@@ -281,8 +284,8 @@
                                   '" . zen_db_input($expires_date) . "', '1', '" . zen_db_input($specials_date_available) . "')");
               $special_added = true;
 
-//@@TODO - remove $new_special not used?
-//              $new_special = $db->Execute("select specials_id from " . TABLE_SPECIALS . " where products_id='" . (int)$products_id . "'");
+              $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_ADDED_PRODUCT', $products_id, $db->insert_ID());
+
               // reset products_price_sorter for searches etc.
               zen_update_products_price_sorter((int)$products_id);
             }
@@ -318,12 +321,13 @@
             foreach($products_id_list as $key => $value) {
               $new_specials_products_id = $value;
               $products_id = zen_db_prepare_input($new_specials_products_id);
-              $chk_special_query = "SELECT products_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
+              $chk_special_query = "SELECT specials_id from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'";
               $chk_special = $db->Execute($chk_special_query);
               // check if product has a special
               if (!$chk_special->EOF) {
                 $db->Execute("DELETE from " . TABLE_SPECIALS . " WHERE products_id = '" . $products_id . "'");
                 $special_removed = true;
+                $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_REMOVED_PRODUCT', $products_id, $chk_special->fields['specials_id']);
                 // reset products_price_sorter for searches etc.
                 zen_update_products_price_sorter((int)$products_id);
               }
@@ -367,6 +371,7 @@
         // reset products_price_sorter for searches etc.
         $update_price = $db->Execute("select products_id from " . TABLE_SPECIALS . " where specials_id = '" . (int)$specials_id . "'");
         zen_update_products_price_sorter($update_price->fields['products_id']);
+        $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_UPDATED', $specials_id, $update_price->fields['products_id']);
 
         zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         break;
@@ -387,6 +392,7 @@
                       where specials_id = '" . (int)$specials_id . "'");
 
         zen_update_products_price_sorter($update_price_id);
+        $zco_notifier->notify('NOTIFIER_ADMIN_SPECIAL_DELETED', $specials_id, $update_price_id);
 
         zen_redirect(zen_admin_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
         break;

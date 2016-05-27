@@ -32,6 +32,8 @@
                                       'sale_date_last_modified' => 'now()',
                                       'sale_date_status_change' => 'now()');
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_data_array, 'update', "sale_id = '" . zen_db_prepare_input($_GET['sID']) . "'");
+          $zco_notifier->notify('NOTIFY_SALEMAKER_TOGGLE', (int)$_GET['sID'], (int)$_POST['flag']);
+
           // update prices for products in sale
           zen_update_salemaker_product_prices($_GET['sID']);
           zen_redirect(zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $_GET['sID']));
@@ -84,10 +86,12 @@
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_sales_data_array, 'insert');
 
           $_POST['sID'] = $db->Insert_ID();
+          $zco_notifier->notify('NOTIFY_SALEMAKER_ADDED', $_POST['sID']);
 
         } else {
           $salemaker_sales_data_array['sale_date_last_modified'] = 'now()';
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_sales_data_array, 'update', "sale_id = '" . zen_db_input($_POST['sID']) . "'");
+          $zco_notifier->notify('NOTIFY_SALEMAKER_UPDATED', $_POST['sID'], $sql_data_array);
         }
 
         // update prices for products in sale
@@ -121,6 +125,8 @@
             zen_db_perform(TABLE_SALEMAKER_SALES, $sql_data_array, 'insert');
 
             $sale_id = $db->Insert_ID();
+            $zco_notifier->notify('NOTIFY_SALEMAKER_COPIED', $sale_id, $sql_data_array);
+
             // update prices for products in sale
             zen_update_salemaker_product_prices($sale_id);
           }
@@ -133,6 +139,7 @@
 
         // set sale off to update prices before removing
         $db->Execute("update " . TABLE_SALEMAKER_SALES . " set sale_status=0 where sale_id='" . (int)$sale_id . "'");
+        $zco_notifier->notify('NOTIFY_SALEMAKER_DELETED', $sale_id);
 
         // update prices for products in sale
         zen_update_salemaker_product_prices($sale_id);
