@@ -111,7 +111,7 @@ class Payment extends AbstractFlowStep
     {
         $this->notify('NOTIFY_CHECKOUTFLOW_PAYMENT_GET_SESSION_BILLTO_START');
         if (!$this->session->get('billto')) {
-            $$this->session->set('billto', $this->session->get('customer_default_address_id'));
+            $this->session->set('billto', $this->session->get('customer_default_address_id'));
         } else {
             $this->checkBillToAddressBook();
 
