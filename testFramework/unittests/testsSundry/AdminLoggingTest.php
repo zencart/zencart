@@ -123,7 +123,8 @@ class testAdminLoggingCase extends zcTestCase
 
         // test for expected notice
         $observer2 = new zcObserverLogEventListener();
-        $result = $observer2->updateNotifyAdminActivityLogEvent(new stdClass(), '', $message_to_log, $requested_severity);
+        $stdClass = new stdClass();
+        $result = $observer2->updateNotifyAdminActivityLogEvent($stdClass, '', $message_to_log, $requested_severity);
 
         // and test that the malicious code doesn't appear in the log
         $var = file($file);
@@ -172,7 +173,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testEmptyLogfile');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
         $this->assertFileExists($file);
 
         $var = file($file);
@@ -194,7 +196,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testMissingLogfile');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
 
         $this->assertFileExists($file, 'File must exist.');
 
@@ -218,7 +221,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testLogWriterUpdate');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
         $this->assertFileExists($file);
 
         $var = file($file);
@@ -264,7 +268,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testLogWriterUpdate');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
         $this->assertFileExists($file);
 
         $var = file($file);
