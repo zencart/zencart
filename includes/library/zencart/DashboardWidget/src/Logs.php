@@ -23,7 +23,11 @@ class Logs extends AbstractWidget
   private function getDisplayName($log)
   {
      $str = $log['datetime']; 
-     if (strpos($log['filename'], "-adm-") !== false) $str .= TEXT_ADMIN_LOG_SUFFIX; 
+     if (strpos($log['filename'], "-adm-") !== false) { 
+        $str .= TEXT_ADMIN_LOG_SUFFIX; 
+     } else if ($log['pathcode'] == 2) {
+        $str .= TEXT_SQL_LOG_SUFFIX; 
+     }
      return $str;
   }
 
