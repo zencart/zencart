@@ -3763,6 +3763,7 @@ function get_logs_data($maxToList = 'count') {
   $file = array();
   $i = 0;
   foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE) as $purgeFolder) {
+    $sourcePurgeFolder = $purgeFolder; 
     $purgeFolder = rtrim($purgeFolder, '/');
     if (!file_exists($purgeFolder) || !is_dir($purgeFolder)) continue;
 
@@ -3778,6 +3779,11 @@ function get_logs_data($maxToList = 'count') {
         $logs[$i]['filesize'] = @filesize($filename);
         $logs[$i]['unixtime'] = @filemtime($filename);
         $logs[$i]['datetime'] = strftime(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
+        if ($sourcePurgeFolder == DIR_FS_LOGS) {
+           $logs[$i]['pathcode'] = 1;
+        } else { 
+           $logs[$i]['pathcode'] = 2;
+        } 
       }
       $i++;
       if ($maxToList != 'count' && $i >= $maxToList) break;
