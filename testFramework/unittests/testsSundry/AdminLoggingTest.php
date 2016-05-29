@@ -148,7 +148,8 @@ class testAdminLoggingCase extends zcTestCase
 
         // now trigger the notifier
         $observer = new zcObserverLogEventListener();
-        $result = $observer->updateNotifyAdminActivityLogEvent(new stdClass(), '', $message_to_log, $requested_severity);
+        $stdClass = new stdClass();
+        $result = $observer->updateNotifyAdminActivityLogEvent($stdClass, '', $message_to_log, $requested_severity);
 
         // and test that the message appears in the log
         $var = file($file);
