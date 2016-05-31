@@ -5,7 +5,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt Thu May 19 18:26:42 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt Tue May 31 18:26:42 2016 +0000 Modified in v1.5.5a $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -228,5 +228,8 @@ $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
 
 $group = array();
 $sanitizer->addSimpleSanitization('STRICT_SANITIZE_KEYS', $group);
+
+$group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post', 'pages' => array('reviews')));
+$sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();
