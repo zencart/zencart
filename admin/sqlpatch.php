@@ -329,7 +329,8 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
       } //endif ! # or -
     } // end foreach $lines
     zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
-   return array('queries'=> $results, 'string'=>$string, 'output'=>$return_output, 'ignored'=>($ignored_count), 'errors'=>$errors);
+    $zco_notifier->notify('ADMIN_SQLPATCH_APPLIED', $string, $results, $return_output, $ignored_count, $errors);
+    return array('queries'=> $results, 'string'=>$string, 'output'=>$return_output, 'ignored'=>($ignored_count), 'errors'=>$errors);
   } //end function
 
   function zen_table_exists($tablename, $pre_install=false) {

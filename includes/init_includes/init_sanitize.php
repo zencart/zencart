@@ -56,7 +56,7 @@ if (isset($_GET ['products_id']) && isset($_SESSION ['check_valid']) && $_SESSIO
      * do not recheck redirect
      */
     $_SESSION ['check_valid'] = 'false';
-    zen_redirect(zen_href_link($mainPage, 'products_id=' . $_GET ['products_id']));
+    //zen_redirect(zen_href_link($mainPage, 'products_id=' . $_GET ['products_id']));
   }
 } else {
   $_SESSION ['check_valid'] = 'true';

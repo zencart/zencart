@@ -1,16 +1,15 @@
 # [Zen Cart&reg; - The Art of E-Commerce](https://www.zen-cart.com/) 
-[![Build Status](https://travis-ci.org/zencart/zc-v1-series.svg)](https://travis-ci.org/zencart/zc-v1-series) 
+[![Build Status](https://travis-ci.org/zencart/zencart.svg)](https://travis-ci.org/zencart/zencart) 
 [![Download Zen Cart&reg;](https://img.shields.io/sourceforge/dm/zencart.svg)](http://sourceforge.net/projects/zencart/files/latest/download)
 
 ===============
 
-The latest stable version is currently [v1.5.5](https://github.com/zencart/zc-v1-series/releases/tag/v1.5.5).
+You are currently viewing code for the upcoming Zen Cart&reg; v1.6.0 release, which brings increased flexibility for customizing each storeowner's own preferences.
+
+The latest stable version is currently [v1.5.5](https://github.com/zencart/zencart/releases/tag/v1.5.5).
 
 [![Download Latest Official Zen Cart&reg; Release](https://a.fsdn.com/con/app/sf-download-button)<br>Download Latest Official Zen Cart&reg; Release](http://sourceforge.net/projects/zencart/files/latest/download)
 
-
-
-You are currently viewing code for the upcoming Zen Cart&reg; v1.6.0 release, which brings optimizations for improved templating and responsive design, in addition to increased flexibility for customizing to each storeowner's own preferences.
 
 Zen Cart is free software, with free support available 24/7 on the Zen Cart&reg; Support Site forums at <https://www.zen-cart.com/forum.php> provided by our enthusiastic community of actual Zen Cart&reg; users, integrators, and the developers themselves.
 
@@ -19,11 +18,11 @@ Zen Cart is free software, with free support available 24/7 on the Zen Cart&reg;
 
 Zen Cart&reg; v1.6.0
 --------------------
-[Download latest in-development version from github](https://github.com/zencart/zc-v1-series/archive/v160.zip)
+[Download latest in-development version from github](https://github.com/zencart/zencart/archive/v160.zip)
 
 Requirements
 ------------
-Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP)
+Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP), based on the following specifications
 
 - Compatible with PHP 5.4.2 to 7.0.x
 - Compatible with MySQL 5.1 to 5.7, via the PHP mysqli client
@@ -31,9 +30,10 @@ Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VP
 - Compatible with with Apache 2.2, (or Apache 2.4 with the backward-compatibility mode enabled for v2.2 .htaccess rules support.)
 - Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, rewrite (in addition to other common modules)
 
-Zen Cart&reg; "can" run on IIS, but with some limitations, namely the need to manually secure various folders with IIS equivalents to .htaccess rules.
+Zen Cart&reg; can also run on Nginx, but requires that the server administrator understand properly configuring the nginx *.conf files when prompted with the recommended directives at the end of the zc_install setup phase.
 
-Zen Cart&reg; can also run on Nginx, but does not supply a configuration file for enforcing any permission/access rules or optimization for serving page assets.
+Zen Cart&reg; has been reported to run on IIS, but with some limitations, namely the need to manually secure various folders with IIS equivalents to .htaccess rules.
+
 
 
 Installation
@@ -66,9 +66,9 @@ Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/ind
 
 Developer Documentation
 -----------------------
-Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zc-v1-series](https://github.com/zencart/zc-v1-series) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
+Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
 
-Visit [docs.zen-cart.com](http://docs.zen-cart.com/Developer_Documentation/v1.5.5/) for v1.5.5-specific guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.
+Visit [docs.zen-cart.com](http://docs.zen-cart.com/Developer_Documentation/v1.5.5/) for v1.5.5-specific guidance on issues relevant to developers. This documentation site is very new, but content will be added over time. (NOTE: additional "sections" of the documentation are accessible from the pulldown menu in the upper nav bar.)
 
 Developers will find the standalone [Habitat VM](http://docs.zen-cart.com/Habitat/main) to be a useful tool for staging site upgrades and doing offline feature development or testing. Designers may like it for testing new templates without affecting the live site.
 

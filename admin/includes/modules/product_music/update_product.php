@@ -78,8 +78,8 @@
                     (products_id, categories_id)
                     values ('" . (int)$products_id . "', '" . (int)$current_category_id . "')");
 
-      zen_record_admin_activity('Product ' . (int)$products_id . ' ' . ($action == 'insert_product' ? 'added' : 'updated') . ' via admin console.', 'info');
-
+      zen_record_admin_activity('New product ' . (int)$products_id . ' added via admin console.', 'info');
+      $zco_notifier->notify('NOTIFIER_ADMIN_NEW_PRODUCT_ADDED', $products_id, $current_category_id);
 
 
       ///////////////////////////////////////////////////////
@@ -107,6 +107,8 @@
       $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
       zen_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "'");
+      $zco_notifier->notify('NOTIFIER_ADMIN_PRODUCT_UPDATED', $products_id, $sql_data_array);
+      zen_record_admin_activity('Updated product ' . (int)$products_id . ' via admin console.', 'info');
 
       // reset products_price_sorter for searches etc.
       zen_update_products_price_sorter((int)$products_id);
