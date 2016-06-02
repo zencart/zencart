@@ -124,7 +124,7 @@
         $check_configure = $db->Execute($sql);
       }
       if ($check_configure->RecordCount() >= 1) {
-        $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br /><br />';
+        $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br /><br />';
       } else {
         // do nothing
       }
@@ -339,7 +339,7 @@
     case ('locate_configuration'):
       if ($configuration_key_lookup == '') {
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
-        zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
+        zen_redirect(zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
@@ -423,7 +423,7 @@
     case ('locate_function'):
       if ($configuration_key_lookup == '') {
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
-        zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
+        zen_redirect(zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
@@ -462,7 +462,7 @@
     case ('locate_class'):
       if ($configuration_key_lookup == '') {
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
-        zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
+        zen_redirect(zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
@@ -507,7 +507,7 @@
     case ('locate_template'):
       if ($configuration_key_lookup == '') {
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
-        zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
+        zen_redirect(zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
@@ -586,7 +586,7 @@
       $zv_check_root = false;
       if ($configuration_key_lookup == '') {
         $messageStack->add_session(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
-        zen_redirect(zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
+        zen_redirect(zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT));
       }
       $found = false;
       $zv_files_group = $_POST['zv_files'];
@@ -759,7 +759,7 @@ if (isset($show_configuration_info) && $show_configuration_info == true) {
             <td class="main" align="center" valign="middle">
               <?php
                 if ($show_products_type_layout == false and ($check_configure->fields['configuration_id'] != 0 and $check_configure_group->fields['visible'] != 0)) {
-                  echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                  echo '<a href="' . zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
                 } else {
                   $page= '';
                   if (strstr($check_configure->fields['configuration_key'], 'MODULE_SHIPPING')) $page .= 'shipping';
@@ -767,10 +767,10 @@ if (isset($show_configuration_info) && $show_configuration_info == true) {
                   if (strstr($check_configure->fields['configuration_key'], 'MODULE_ORDER_TOTAL')) $page .= 'ordertotal';
 
                   if ($show_products_type_layout == true) {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                    echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
                   } else {
                     if ($page != '') {
-                      echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $page) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                      echo '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $page) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
                     } else {
                       echo TEXT_INFO_NO_EDIT_AVAILABLE . '<br />';
                     }
@@ -778,12 +778,12 @@ if (isset($show_configuration_info) && $show_configuration_info == true) {
                 }
               ?>
               </td>
-            <td class="main" align="center" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+            <td class="main" align="center" valign="middle"><?php echo '<a href="' . zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
           <tr class="infoBoxContent">
             <td colspan="2" class="pageHeading" align="center">
 <?php
-      $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br />';
+      $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br />';
       echo $links;
 ?>
             </td>
@@ -803,7 +803,7 @@ if (false) {
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '">' . zen_image_button('button_update.gif', IMAGE_UPDATE) . '</a>'; ?></td>
+            <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '">' . zen_image_button('button_update.gif', IMAGE_UPDATE) . '</a>'; ?></td>
           </tr>
         </table></td>
       </tr>
@@ -817,7 +817,7 @@ if (false) {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_CONFIGURATION_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_configure" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_configuration', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_configure" action="<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_configuration'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_const, ' size="40" placeholder="' . TEXT_SEARCH_KEY_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
@@ -849,12 +849,12 @@ if (false) {
           <tr>
             <td class="main" align="left" valign="middle"><?php echo SEARCH_CFG_KEYS_HEADING_TITLE; ?></td>
           </tr>
-          <tr><form name="search_keys" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys' . $flags); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name="search_keys" action="<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys' . $flags); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo SEARCH_CFG_KEYS_SEARCH_BOX_TEXT . '<br />' . zen_draw_input_field('search', zen_output_string_protected($search), ' size="40" placeholder="' . SEARCH_CFG_KEYS_FORM_PLACEHOLDER . '"');?>
             <input type="submit" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP;?>">
-            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&s=k' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>">
-            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&t=all' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>">
-            <button title="<?php echo TEXT_RESET_BUTTON_ALT; ?>" onClick="document.search_keys.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT); ?>';document.search_keys.search='';document.search_keys.submit();"><?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET; ?></button>
+            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>" onClick="document.search_keys.action='<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&s=k' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY;?>">
+            <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>" onClick="document.search_keys.action='<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&t=all' . $flags) ?>';document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL;?>">
+            <button title="<?php echo TEXT_RESET_BUTTON_ALT; ?>" onClick="document.search_keys.action='<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT); ?>';document.search_keys.search='';document.search_keys.submit();"><?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET; ?></button>
             </td>
           </form>
           </tr>
@@ -888,14 +888,14 @@ if ($action == 'search_config_keys') {
       if($keySearchResults->fields['src']=='type')
       {
         $section = 'Product Types';
-        $editlink = zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' .  $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=layout_edit');
-        $viewlink = zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' .  $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=layout');
+        $editlink = zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' .  $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=layout_edit');
+        $viewlink = zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' .  $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=layout');
       }
       else if($keySearchResults->fields['src']=='conf')
       {
         $section = 'Configuration';
-        $editlink = zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=edit');
-        $viewlink = zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id']);
+        $editlink = zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id'] . '&amp;action=edit');
+        $viewlink = zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResults->fields['configuration_group_id'] . '&amp;cID=' . $keySearchResults->fields['configuration_id']);
       }
       else
       {
@@ -937,7 +937,7 @@ if ($action == 'search_config_keys') {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_FUNCTION_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_function" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_function" action="<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_func, ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
@@ -962,7 +962,7 @@ if ($action == 'search_config_keys') {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_CLASS_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_class" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_class" action="<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_class, ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
@@ -987,7 +987,7 @@ if ($action == 'search_config_keys') {
             <td colspan="3" class="main" align="left" valign="middle"><?php echo TEXT_TEMPLATE_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_template" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_template" action="<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo '<strong>' . TEXT_CONFIGURATION_KEY . '</strong>' . '<br />' . zen_draw_input_field('configuration_key', $q_tpl, ' size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></td>
             <td class="main" align="left" valign="middle">
               <?php
@@ -1014,7 +1014,7 @@ if ($action == 'search_config_keys') {
             <td colspan="4" class="main" align="left" valign="middle"><?php echo TEXT_ALL_FILES_CONSTANT; ?></td>
           </tr>
 
-          <tr><form name = "locate_all_files" action="<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+          <tr><form name = "locate_all_files" action="<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="bottom"><?php echo TEXT_SEARCH_LOOKUP_PLACEHOLDER . '<br>' . zen_draw_input_field('configuration_key', $q_all, ' size="40" placeholder="' . TEXT_SEARCH_LOOKUP_PLACEHOLDER . '"');?></td>
 
             <td class="main" align="left" valign="middle">
@@ -1045,8 +1045,8 @@ if ($action == 'search_config_keys') {
             </td>
             <td class="main" align="right" valign="bottom">
               <input type="submit" value="<?php echo TEXT_BUTTON_SEARCH;?>" title="<?php echo TEXT_BUTTON_SEARCH_ALT;?>">
-              <input type="button" value="<?php echo TEXT_BUTTON_REGEX_SEARCH;?>" onClick="document.locate_all_files.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files&m=r') ?>';document.locate_all_files.submit();" title="<?php echo TEXT_BUTTON_REGEX_SEARCH_ALT;?>">
-              <button title="<?php echo TEXT_RESET_BUTTON_ALT; ?>" onClick="document.locate_all_files.action='<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT); ?>';document.locate_all_files.submit();"><?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET; ?></button>
+              <input type="button" value="<?php echo TEXT_BUTTON_REGEX_SEARCH;?>" onClick="document.locate_all_files.action='<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files&m=r') ?>';document.locate_all_files.submit();" title="<?php echo TEXT_BUTTON_REGEX_SEARCH_ALT;?>">
+              <button title="<?php echo TEXT_RESET_BUTTON_ALT; ?>" onClick="document.locate_all_files.action='<?php echo zen_admin_href_link(FILENAME_DEVELOPERS_TOOL_KIT); ?>';document.locate_all_files.submit();"><?php echo SEARCH_CFG_KEYS_FORM_BUTTON_RESET; ?></button>
             </td>
           </form></tr>
         </table></td>

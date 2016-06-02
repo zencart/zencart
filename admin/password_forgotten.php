@@ -16,11 +16,11 @@ if (zen_admin_demo())
 {
   $_GET['action'] = '';
   $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-  zen_redirect(zen_href_link(FILENAME_DEFAULT));
+  zen_redirect(zen_admin_href_link(FILENAME_DEFAULT));
 }
 if (isset($_POST['login']))
 {
-  zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+  zen_redirect(zen_admin_href_link(FILENAME_LOGIN));
 }
 // Slam prevention:
 if ($_SESSION['login_attempt'] > 9) {

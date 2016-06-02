@@ -14,7 +14,7 @@
   $chk_option_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id='" . (int)$_SESSION['languages_id'] . "' limit 1");
   if ($chk_option_values->RecordCount() < 1) {
     $messageStack->add_session(ERROR_DEFINE_OPTION_VALUES, 'caution');
-    zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
+    zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
   }
 
   $currencies = new currencies();
@@ -28,14 +28,14 @@
       }
       $messageStack->add_session(SUCCESS_OPTION_VALUES_SORT_ORDER . ' ' . zen_options_name($_GET['options_id']), 'success');
       $_GET['action']='';
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
       break;
 // update by product
     case ('update_product'):
       $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT . $_POST['products_update_id'] . ' ' . zen_get_products_name($_POST['products_update_id'], $_SESSION['languages_id']), 'success');
       zen_update_attributes_products_option_values_sort_order($_POST['products_update_id']);
       $action='';
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
       break;
 // update by category
     case ('update_categories_attributes'):
@@ -51,7 +51,7 @@
       }
       $messageStack->add_session(SUCCESS_CATEGORIES_UPDATE_SORT . (int)$_POST['categories_update_id'] . ' ' . zen_get_category_name($_POST['categories_update_id'], $_SESSION['languages_id']), 'success');
       $action='';
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
       break;
 // update all products in catalog
     case ('update_all_products_attributes_sort_order'):
@@ -69,7 +69,7 @@
       }
       $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_ALL, 'success');
       $action='';
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
       break;
   } // switch
 require('includes/admin_html_head.php');
@@ -125,7 +125,7 @@ if ($_GET['options_id']=='') {
     <tr class="dataTableHeadingRow">
       <td colspan="3" class="dataTableHeadingContent" align="center"><?php echo TEXT_EDIT_OPTION_NAME; ?> <?php echo zen_options_name($_GET['options_id']); ?></td>
     </tr>
-<?php // echo zen_draw_form('update', zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id'], 'NONSSL'), '', 'post'); ?>
+<?php // echo zen_draw_form('update', zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id']), '', 'post'); ?>
 <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id'], 'post'); ?>
 <?php
     echo '    <tr class="dataTableHeadingRow"><td class="dataTableHeadingContent">Option ID</td><td class="dataTableHeadingContent">Option Value Name</td><td class="dataTableHeadingContent">Sort Order</td></tr><tr>';
@@ -156,7 +156,7 @@ if ($_GET['options_id']=='') {
       <?php
         }
       ?>
-      <td colspan="<?php echo ($option_values_exist == true ? '1' : '3'); ?>"height="50" align="center" valign="middle" class="dataTableHeadingContent"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES) . '">'; ?><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a></td>
+      <td colspan="<?php echo ($option_values_exist == true ? '1' : '3'); ?>"height="50" align="center" valign="middle" class="dataTableHeadingContent"><?php echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES) . '">'; ?><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a></td>
     </tr>
   </form>
   </table>
@@ -178,7 +178,7 @@ if (empty($_GET['options_id'])) {
       <tr>
         <td colspan="2" class="main" align="left"><br /><?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS_PRODUCTS; ?></td>
       </tr>
-      <tr><form name="update_product_attributes" <?php echo 'action="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_product') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+      <tr><form name="update_product_attributes" <?php echo 'action="' . zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_product') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
         <td colspan="2"><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo zen_draw_products_pull_down_attributes('products_update_id'); ?></td>
@@ -193,7 +193,7 @@ if (empty($_GET['options_id'])) {
       <tr>
         <td colspan="2" class="main" align="left"><br /><?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS_CATEGORIES; ?></td>
       </tr>
-      <tr><form name="update_categories_attributes" <?php echo 'action="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_categories_attributes') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('categories_update_id', $_GET['categories_update_id']); ?><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+      <tr><form name="update_categories_attributes" <?php echo 'action="' . zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_categories_attributes') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('categories_update_id', $_GET['categories_update_id']); ?><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
         <td colspan="2"><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo zen_draw_products_pull_down_categories_attributes('categories_update_id'); ?></td>

@@ -78,7 +78,7 @@ require('includes/admin_html_head.php');
                    <?php 
                       if (defined($page['language_key']) && 
                           defined($page['main_page'])) {
-                         echo '<a href="' . zen_href_link(constant($page['main_page']), $page['page_params']) .'">' . constant($page['language_key']) . '</a>';  
+                         echo '<a href="' . zen_admin_href_link(constant($page['main_page']), $page['page_params']) .'">' . constant($page['language_key']) . '</a>';  
                       } else {
                          echo NO_LINK; 
                       }
@@ -189,7 +189,7 @@ require('includes/admin_html_head.php');
        echo "<ul>"; 
        foreach ($missing_pages as $missing_page) { 
           echo "<li>";
-          echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, "gID=" . (int)$missing_page['gid']) .'">' . $missing_page['name'] . '</a>';  
+          echo '<a href="' . zen_admin_href_link(FILENAME_CONFIGURATION, "gID=" . (int)$missing_page['gid']) .'">' . $missing_page['name'] . '</a>';  
           echo "</li>";
        } 
        echo "</ul>"; 

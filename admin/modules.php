@@ -77,7 +77,7 @@
         $zco_notifier->notify('ADMIN_MODULE_CHANGED', $_GET['module'], $admname, $key, $value);
         $msg .= "\n\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
         zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')));
         break;
       case 'install':
         $class = basename($_POST['module']);
@@ -93,7 +93,7 @@
           $result = $module->install();
         }
         if ($result != 'failed') {
-          zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit'));
+          zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit'));
         }
        break;
       case 'removeconfirm':
@@ -108,7 +108,7 @@
           zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
           $result = $module->remove();
         }
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+        zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
        break;
       case 'commtest':
         $class = basename($_GET['module']);
@@ -124,7 +124,7 @@
             $messageStack->add_session($result, 'caution');
           }
         }
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+        zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
        break;
     }
   }
@@ -241,12 +241,12 @@ require('includes/admin_html_head.php');
 
         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
           if ($check > 0) {
-            echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') . '\'">' . "\n";
+            echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
           } else {
             echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
           }
         } else {
-          echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'">' . "\n";
+          echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '\'">' . "\n";
         }
 //print_r($module) . '<br><BR>';
 //echo (!empty($module->enabled) ? 'ENABLED' : 'NOT ENABLED') . ' vs ' . (is_numeric($module->sort_order) ? 'ON' : 'OFF') . '<BR><BR>' ;
@@ -264,8 +264,8 @@ require('includes/admin_html_head.php');
 <?php } ?>
                 <td class="dataTableContent" align="right">
 <?php
-  if (method_exists($module, 'testCommunications')) { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=commtest', 'SSL') . '" title="' . IMAGE_ICON_COMM . '"><i class="fa fa-bolt fa-fw"></i></a>'; }
-  if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo '<i class="fa fa-chevron-circle-right fa-fw"></i>'; } else { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" title="' . IMAGE_ICON_INFO . '">' . '<i class="fa fa-exclamation-circle fa-fw"></i>' . '</a>'; }
+  if (method_exists($module, 'testCommunications')) { echo '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=commtest') . '" title="' . IMAGE_ICON_COMM . '"><i class="fa fa-bolt fa-fw"></i></a>'; }
+  if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo '<i class="fa fa-chevron-circle-right fa-fw"></i>'; } else { echo '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '" title="' . IMAGE_ICON_INFO . '">' . '<i class="fa fa-exclamation-circle fa-fw"></i>' . '</a>'; }
 ?>
                 </td>
               </tr>
@@ -310,7 +310,7 @@ require('includes/admin_html_head.php');
       $contents[] = array('text' => '<input type="hidden" name="module" value="' . (isset($_GET['module']) ? $_GET['module'] : "") . '"/>');
       $contents[] = array('text' => TEXT_DELETE_INTRO);
 
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_remove.gif', IMAGE_DELETE, 'name="removeButton"') . ' <a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_remove.gif', IMAGE_DELETE, 'name="removeButton"') . ' <a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
       break;
     case 'edit':
       if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
@@ -332,7 +332,7 @@ require('includes/admin_html_head.php');
         $contents[] = array('text' => '<strong>Key: ' . $mInfo->code . '</strong><br />');
       }
       $contents[] = array('text' => $keys);
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE, 'name="saveButton"') . ' <a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE, 'name="saveButton"') . ' <a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
       break;
     default:
       $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
@@ -363,11 +363,11 @@ require('includes/admin_html_head.php');
         }
         $keys = substr($keys, 0, strrpos($keys, '<br><br>'));
         if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck')))) {
-          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['module']) ? '&module=' . $_GET['module'] : '') . '&action=edit', 'SSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT, 'name="editButton"') . '</a>');
+          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['module']) ? '&module=' . $_GET['module'] : '') . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT, 'name="editButton"') . '</a>');
         } else {
           $contents[] = array('align' => 'center', 'text' => TEXT_WARNING_SSL_EDIT);
         }
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '">' . zen_image_button('button_module_remove.gif', IMAGE_MODULE_REMOVE, 'name="removeButton"') . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . zen_image_button('button_module_remove.gif', IMAGE_MODULE_REMOVE, 'name="removeButton"') . '</a>');
         $contents[] = array('text' => '<br>' . $mInfo->description);
         $contents[] = array('text' => '<br>' . $keys);
       } else {

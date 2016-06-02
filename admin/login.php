@@ -65,7 +65,7 @@ if (isset($_POST['action']) && $_POST['action'] != '')
       $message = SUCCESS_PASSWORD_UPDATED;
       list($error, $expired, $message, $redirect) = zen_validate_user_login($admin_name, $adm_new_pwd);
       if ($redirect != '') zen_redirect($redirect);
-      zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
+      zen_redirect(zen_admin_href_link(FILENAME_DEFAULT));
     }
     if ($error) sleep(3);
   }
@@ -116,7 +116,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
                     <br class="clearBoth"/>
                     <p class="messageStackError"><?php echo $message; ?></p>
                     <img id="actionImg" src="images/loading.gif" class="hiddenField"/>
-                    <br/><a href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'); ?>"><?php echo TEXT_PASSWORD_FORGOTTEN; ?></a>
+                    <br/><a href="<?php echo zen_admin_href_link(FILENAME_PASSWORD_FORGOTTEN); ?>"><?php echo TEXT_PASSWORD_FORGOTTEN; ?></a>
                 </fieldset>
                 </form>
                 <div id="loginExpiryPolicy"><?php echo LOGIN_EXPIRY_NOTICE; ?></div>

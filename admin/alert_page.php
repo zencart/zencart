@@ -18,7 +18,7 @@ if (is_dir($check_path))
 }
 if (!$adminDirectoryExists && !$installDirectoryExists)
 {
-  zen_redirect(zen_href_link(FILENAME_DEFAULT));
+  zen_redirect(zen_admin_href_link(FILENAME_DEFAULT));
 }
 ?>
 <!DOCTYPE html>

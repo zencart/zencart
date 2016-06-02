@@ -8,48 +8,8 @@
  */
 
   /**
-   * Returns a admin link formatted for use in a href attribute. This should
-   * be used when adding a link to an web resource / page located within the
-   * Zen Cart admin folder. Failure to use this function may result
-   * in broken website links and cause issues with some Zen Cart plugins.
-   *
-   * This function should not be directly called from a language file. Why?
-   * Observers are typically not be loaded until after the language files.
-   * So if this function is used in a language file, any observers may not
-   * receive notification a admin link is being generated.
-   *
-   * <b>Example Usage:</b>
-   * Link to a category:
-   *   <i>zen_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
-   * Link to a category (using an array for the parameters):
-   *   <i>zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
-   * HTTPS (SSL) Link to an EZ Page:
-   *   <i>zen_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
-   * Static link to an PDF:
-   *   <i>zen_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
-   * Static HTTPS (SSL) Link to a PHP script (with parameters):
-   *   <i>zen_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
-   *
-   * @deprecated 1.6.0 use zen_admin_href_link instead.
-   *
-   * @param string $page The Zen Cart page name or the path to a file / web
-   *   resource (relative to the folder containing Zen Cart).
-   *
-   * @param string|array $parameters The urlencoded query string (or an array
-   *   of key => value pairs to urlencode) to append to the link. When an array
-   *   is passed the key / value pairs will be encoded using RFC 3986. Default
-   *   is to not add a query string to the link.
-   *
-   * @param string $connection This parameter is no longer used and will be
-   *   ignored. The value of HTTP_SERVER defined in the admin configure.php is
-   *   always used when generating the href_link for admin pages and resources.
-   *
-   * @param boolean $add_session_id true to add the session id to the link when
-   *   needed (such as when session cookies are disabled, before the session
-   *   cookie exists, or switching connection methods), false otherwise.
-   *   Default is true.
-   *
-   * @return string
+   * Deprecated and will be removed in later versions. 
+   * Use zen_admin_href_link instead
    */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
     return zen_admin_href_link($page, $parameters, $add_session_id);
@@ -68,15 +28,15 @@
    *
    * <b>Example Usage:</b>
    * Link to a category:
-   *   <i>zen_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
+   *   <i>zen_admin_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
    * Link to a category (using an array for the parameters):
-   *   <i>zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
+   *   <i>zen_admin_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
    * HTTPS (SSL) Link to an EZ Page:
-   *   <i>zen_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
+   *   <i>zen_admin_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
    * Static link to an PDF:
-   *   <i>zen_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
+   *   <i>zen_admin_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
    * Static HTTPS (SSL) Link to a PHP script (with parameters):
-   *   <i>zen_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
+   *   <i>zen_admin_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
    *
    * @param string $page The Zen Cart page name or the path to a file / web
    *   resource (relative to the folder containing Zen Cart).
@@ -163,20 +123,20 @@
    * receive notification a catalog link is being generated.
    *
    * <i>This function does not allow the addition of a session id (zenid) to the
-   * links. In all other ways the function is identical to zen_href_link on
+   * links. In all other ways the function is identical to zen_admin_href_link on
    * the catalog (store) side of Zen Cart.</i>
    *
    * <b>Example Usage:</b>
    * Link to a category:
-   *   <i>zen_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
+   *   <i>zen_catalog_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
    * Link to a category (using an array for the parameters):
-   *   <i>zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
+   *   <i>zen_catalog_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
    * HTTPS (SSL) Link to an EZ Page:
-   *   <i>zen_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
+   *   <i>zen_catalog_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
    * Static link to an PDF:
-   *   <i>zen_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
+   *   <i>zen_catalog_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
    * Static HTTPS (SSL) Link to a PHP script (with parameters):
-   *   <i>zen_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
+   *   <i>zen_catalog_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
    *
    * @param string $page The Zen Cart page name or the path to a file / web
    *   resource (relative to the folder containing Zen Cart).
@@ -410,9 +370,9 @@
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
-        $form .= zen_href_link($action, $parameters);
+        $form .= zen_admin_href_link($action, $parameters);
     } else {
-        $form .= zen_href_link($action, '');
+        $form .= zen_admin_href_link($action);
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (zen_not_null($params)) {
