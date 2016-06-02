@@ -480,7 +480,7 @@ class queryFactory extends base {
         }
         return $this->prepare_input($value);
       default:
-      die('var-type undefined: ' . $type . '('.$value.')');
+        trigger_error ("var-type undefined: $type ($value).", E_USER_ERROR);
     }
   }
 /**
