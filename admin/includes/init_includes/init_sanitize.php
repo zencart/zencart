@@ -220,7 +220,7 @@ $sanitizer->addSimpleSanitization('PRODUCT_URL_REGEX', $group);
 $group = array('coupon_min_order');
 $sanitizer->addSimpleSanitization('CURRENCY_VALUE_REGEX', $group);
 
-$group = array('products_name', 'orders_status_name', 'configuration');
+$group = array('categories_name', 'products_name', 'orders_status_name', 'configuration');
 $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 
 $group = array('configuration_value', 'configuration_key', 'search', 'query_string');
