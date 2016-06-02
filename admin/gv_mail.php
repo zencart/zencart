@@ -83,7 +83,7 @@
 
       zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], $subject , $message, $from, $from, $html_msg, 'gv_mail');
       zen_record_admin_activity('GV mail sent to ' . $mail->fields['customers_email_address'] . ' in the amount of ' . $currencies->format($_POST['amount']), 'info');
-      $zco_notifier->notify('ADMIN_GV_EMAIL_SENT', $mail->fields['customers_email_address'], $currencies->format($_POST['amount']);
+      $zco_notifier->notify('ADMIN_GV_EMAIL_SENT', $mail->fields['customers_email_address'], $currencies->format($_POST['amount']));
       $recip_count++;
       if (SEND_EXTRA_GV_ADMIN_EMAILS_TO_STATUS== '1' and SEND_EXTRA_GV_ADMIN_EMAILS_TO != '') {
         zen_mail('', SEND_EXTRA_GV_ADMIN_EMAILS_TO, SEND_EXTRA_GV_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, $from, $from, $html_msg, 'gv_mail_extra');
