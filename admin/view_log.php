@@ -22,7 +22,6 @@
 <br />
 <?php 
   if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
-   $filename = DIR_FS_LOGS . "/";
    $pathname = DIR_FS_LOGS . "/";
    $filename = $_GET['logname']; 
    $file = $pathname . $filename;
@@ -32,13 +31,12 @@
         (strlen($rpdir) < strlen($rppathdir)) ) { 
       // hacking logname parameter in URL
       echo FILE_NOT_FOUND; 
+      zen_record_admin_activity("Possible hacking in log viewer - looking at " . $rppathdir);
    } else if (file_exists($file)) {
       echo '<strong>' . PATH . '</strong>' .  $pathname . '<br />'; 
       echo '<strong>' . FILENAME . '</strong>' .  $filename . '<br /><br />'; 
       $file_array = @file($file);
       $file_contents = @implode('', $file_array);
-
-      $file_writeable = true;
       echo nl2br(zen_output_string_protected($file_contents)); 
    } else { 
       echo FILE_NOT_FOUND; 
