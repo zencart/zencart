@@ -22,14 +22,8 @@
 <br />
 <?php 
   if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
-  if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache');
-   if ($_GET['pathcode'] == 1) { 
-      $filename = DIR_FS_LOGS . "/";
-      $pathname = DIR_FS_LOGS . "/";
-   } else { 
-      $filename = DIR_FS_SQL_CACHE . "/";
-      $pathname = DIR_FS_SQL_CACHE . "/";
-   }
+   $filename = DIR_FS_LOGS . "/";
+   $pathname = DIR_FS_LOGS . "/";
    $filename = $_GET['logname']; 
    $file = $pathname . $filename;
    $rpdir = realpath($file);

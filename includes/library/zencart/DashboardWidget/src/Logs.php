@@ -43,11 +43,11 @@ class Logs extends AbstractWidget
     $max_logs_to_list = 20;
 
     $logs = get_logs_data($max_logs_to_list);
-    // keys in $logs are: 'path', 'filename', 'filesize', 'unixtime', 'datetime', 'pathcode'
+    // keys in $logs are: 'path', 'filename', 'filesize', 'unixtime', 'datetime'
 
     foreach ($logs as $log) {
       $tplVars['content'][] = array(
-                                    'text'=> '<a href="' . zen_href_link(FILENAME_VIEW_LOG, 'logname=' . $log['filename'] . "&pathcode=" . $log['pathcode'], 'NONSSL') . '">' . $this->getDisplayName($log) . '</a>', 
+                                    'text'=> '<a href="' . zen_href_link(FILENAME_VIEW_LOG, 'logname=' . $log['filename']) . '">' . $this->getDisplayName($log) . '</a>', 
                                     'value'=>$log['filesize'],
                                     );
     }
