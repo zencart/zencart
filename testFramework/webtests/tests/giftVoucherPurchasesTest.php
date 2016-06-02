@@ -22,10 +22,11 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
-        $this->byCss('input[type=image]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('100');
-        $this->byCss('input[type=image]')->click();
+        $this->byId('pmt-cod')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('-$45.29');
         $this->byId('btn_submit')->click();
     }
@@ -36,10 +37,10 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
-        $this->byCss('input[type=image]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.28');
-        $this->byCss('input[type=image]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Please select a payment method for your order');
     }
 
@@ -51,10 +52,10 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-flat-flat')->click();
-        $this->byCss('input[type=image]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('48.73');
-        $this->byCss('input[type=image]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchFlatShippingTax('off');
     }
@@ -66,11 +67,11 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
-        $this->byCss('input[type=image]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('20,50');
-        $this->byCss('input[type=image]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('SEK24,79');
         $this->byId('btn_submit')->click();
         $this->setConfigurationValue('DEFAULT_CURRENCY', 'USD');
@@ -89,11 +90,11 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->byId('amount')->value('20,50');
         $this->byId('message-area')->clear();
         $this->byid('message-area')->value('this is a test message');
-        $this->byCss('input[type=image]')->click();
+        $this->byName('gv_send_send')->submit();
 
         $this->assertTextPresent('Send Gift Certificate Confirmation');
         $this->assertTextPresent('SEK20,50');
-        $this->byCss('input[type=image]')->click();
+        $this->byName('gv_send_process')->submit();
         $this->setConfigurationValue('DEFAULT_CURRENCY', 'USD');
     }
 }

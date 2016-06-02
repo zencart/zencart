@@ -11,7 +11,6 @@
  */
 class loworderfeeTest extends CommonTestResources
 {
-
     public function testLowOrderFeeSetupGV()
     {
         $this->switchItemShippingTax('off');
@@ -28,9 +27,9 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shipping
@@ -49,10 +48,10 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.28');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchLowOrderFee('off');
     }
@@ -65,10 +64,10 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.29');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchLowOrderFee('off');
     }
@@ -82,10 +81,10 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.76');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchItemShippingTax('off');
         $this->switchLowOrderFee('off');
@@ -100,10 +99,10 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('50.77');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shippimg
@@ -126,10 +125,10 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('50.77');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('42.79'); //net price
         $this->assertTextPresent('$2.98'); //shippimg
@@ -152,9 +151,9 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shipping
@@ -176,10 +175,10 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.29');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->setCustomerGroupDiscount(WEBTEST_DEFAULT_CUSTOMER_EMAIL, 0);
         $this->switchLowOrderFee('off');
@@ -194,12 +193,12 @@ class loworderfeeTest extends CommonTestResources
         $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
         $this->byId('ship-item-item')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('46.01');
         $this->byName('dc_redeem_code')->value('test10percent');
         $this->byId('pmt-cod')->click();
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit')->submit();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shipping

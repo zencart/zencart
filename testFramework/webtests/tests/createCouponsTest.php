@@ -11,15 +11,16 @@
  */
 class createCouponsTest extends CommonTestResources
 {
+
     function testCreateCouponsDo()
     {
         $this->createCoupon('test10percent');
         $this->createCoupon('test10fixed');
         $this->createCoupon('test100fixed');
         $this->createCoupon('test100percent');
-        $this->createCoupon('test100PercentIncludeShipping');
+//        $this->createCoupon('test100PercentIncludeShipping');
         $this->createCoupon('testFreeShipping');
         $this->createCoupon('test10percentrestricted');
-        $this->createCoupon('test10percentrestrictedminimum');
+//        $this->createCoupon('test10percentrestrictedminimum');
     }
 }

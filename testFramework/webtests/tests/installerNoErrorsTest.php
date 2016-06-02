@@ -25,7 +25,7 @@ class installerNoErrorsTest extends CommonTestResources
         $this->assertTextPresent('System Inspection');
         $continue = $this->byId('btnsubmit');
         $continue->click();
-        $this->assertTextPresent('Agree to licence terms');
+        $this->assertTextPresent('Agree to license terms');
 
         $agreeLicense = $this->byId('agreeLicense');
         $agreeLicense->click();
@@ -47,11 +47,11 @@ class installerNoErrorsTest extends CommonTestResources
         $this->byId('db_user')->value(DB_USER);
         $this->byId('db_password')->value(DB_PASS);
         $this->byId('db_name')->value(DB_DBNAME);
-        sleep(1);
+//        sleep(1);
 
         $continue = $this->byId('btnsubmit');
         $continue->click();
-        sleep(1);
+//        sleep(5);
         $this->byId('admin_user')->clear();
         $this->byId('admin_user')->value(WEBTEST_ADMIN_NAME_INSTALL);
         $this->byId('admin_email')->clear();
@@ -62,7 +62,7 @@ class installerNoErrorsTest extends CommonTestResources
         $continue = $this->byId('btnsubmit');
         $continue->click();
 
-        $this->assertTextPresent('Installation is now complete');
+        $this->assertTextPresent('Installation completed');
 
         $this->url('https://' . DIR_WS_ADMIN);
 
