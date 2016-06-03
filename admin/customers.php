@@ -83,11 +83,11 @@
               zen_mail($custinfo->fields['customers_firstname'] . ' ' . $custinfo->fields['customers_lastname'], $custinfo->fields['customers_email_address'], EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
             }
             zen_record_admin_activity('Customer-approval-authorization set customer auth status to 0 for customer ID ' . (int)$customers_id, 'info');
-            $zco_notifier->notify('ADMIN_CUSTOMER_AUTHORIZATION_CHANGE', (int)$customers_id, 0);
+            $zco_notifier->notify('ADMIN_CUSTOMER_AUTHORIZATION_CHANGE', 0, $customers_id);
           } else {
             $sql = "update " . TABLE_CUSTOMERS . " set customers_authorization='" . CUSTOMERS_APPROVAL_AUTHORIZATION . "' where customers_id='" . (int)$customers_id . "'";
             zen_record_admin_activity('Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . (int)$customers_id, 'info');
-            $zco_notifier->notify('ADMIN_CUSTOMER_AUTHORIZATION_CHANGE', (int)$customers_id, CUSTOMERS_APPROVAL_AUTHORIZATION);
+            $zco_notifier->notify('ADMIN_CUSTOMER_AUTHORIZATION_CHANGE', CUSTOMERS_APPROVAL_AUTHORIZATION, $customers_id);
           }
           $db->Execute($sql);
           $action = '';
