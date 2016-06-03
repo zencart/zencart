@@ -28,18 +28,15 @@
    $rpdir = realpath($file);
    $rppathdir = realpath($pathname);
    if ( (substr($rpdir, 0, strlen($rppathdir)) != $rppathdir) || 
-        (strlen($rpdir) < strlen($rppathdir)) ) { 
-      // hacking logname parameter in URL
+        (strlen($rpdir) < strlen($rppathdir)) || 
+        (!file_exists($file)) ) {
       echo FILE_NOT_FOUND; 
-      zen_record_admin_activity("Possible hacking in log viewer - looking at " . $rppathdir);
-   } else if (file_exists($file)) {
+   } else {
       echo '<strong>' . PATH . '</strong>' .  $pathname . '<br />'; 
       echo '<strong>' . FILENAME . '</strong>' .  $filename . '<br /><br />'; 
       $file_array = @file($file);
       $file_contents = @implode('', $file_array);
       echo nl2br(zen_output_string_protected($file_contents)); 
-   } else { 
-      echo FILE_NOT_FOUND; 
    }
 
 ?>
