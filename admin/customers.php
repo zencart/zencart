@@ -299,7 +299,7 @@
 
         $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
-        $zco_notifier->notify('ADMIN_CUSTOMER_UPDATE', (int)$customers_id, (int)$default_address_id, $sql_data_array);
+        $zco_notifier->notify('ADMIN_CUSTOMER_UPDATE', (int)$customers_id, $default_address_id, $sql_data_array);
         zen_redirect(zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
 
         } else if ($error == true) {

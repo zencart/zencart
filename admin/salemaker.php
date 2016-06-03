@@ -32,7 +32,7 @@
                                       'sale_date_last_modified' => 'now()',
                                       'sale_date_status_change' => 'now()');
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_data_array, 'update', "sale_id = '" . zen_db_prepare_input($_GET['sID']) . "'");
-          $zco_notifier->notify('NOTIFY_SALEMAKER_TOGGLE', (int)$_GET['sID'], (int)$_POST['flag']);
+          $zco_notifier->notify('NOTIFY_SALEMAKER_TOGGLE', (int)$_GET['sID'], $_POST['flag']);
 
           // update prices for products in sale
           zen_update_salemaker_product_prices($_GET['sID']);
