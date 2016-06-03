@@ -570,6 +570,8 @@ define('ERROR_USPS_STATUS', '<strong>Warning:</strong> USPS shipping module is e
 define('ERROR_SHIPPING_MODULES_NOT_DEFINED', 'NOTE: You have no shipping modules activated. Please go to Modules->Shipping to configure.');
 define('ERROR_PAYMENT_MODULES_NOT_DEFINED', 'NOTE: You have no payment modules activated. Please go to Modules->Payment to configure.');
 
+define('TEXT_TOTAL_WEIGHT', 'Total weight: %s ' . TEXT_PRODUCT_WEIGHT_UNIT);
+
 // text pricing
 define('TEXT_CHARGES_WORD','Calculated Charge:');
 define('TEXT_PER_WORD','<br />Price per word: ');
