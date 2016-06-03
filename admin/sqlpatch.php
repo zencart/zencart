@@ -84,6 +84,7 @@ $linebreak = '
 // NOTE: this line break is intentional!!!!
 
  function executeSql($lines, $database, $table_prefix = '') {
+   global $zco_notifier; 
    @set_time_limit(1200);
 
    global $db, $debug, $messageStack;
@@ -282,7 +283,6 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
           default:
             break;
           } //end switch
-//        } // endif $table_prefix
         $newline .= $line . ' ';
 
         if ( substr($line,-1) ==  ';') {
