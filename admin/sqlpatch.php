@@ -84,10 +84,9 @@ $linebreak = '
 // NOTE: this line break is intentional!!!!
 
  function executeSql($lines, $database, $table_prefix = '') {
-   global $zco_notifier; 
+   global $db, $debug, $messageStack, $zco_notifier; 
    @set_time_limit(1200);
 
-   global $db, $debug, $messageStack;
    $sql_file='SQLPATCH';
    $newline = '';
    $saveline = '';
