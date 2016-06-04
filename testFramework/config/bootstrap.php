@@ -1,5 +1,4 @@
 <?php
-
 ini_set('error_reporting', E_ALL);
 $vendorUrl =  __DIR__ . '/../../vendor/autoload.php';
 if (getenv('HABITAT') == 'true') {

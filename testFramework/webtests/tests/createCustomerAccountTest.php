@@ -16,7 +16,6 @@ class createCustomerAccountTest extends CommonTestResources
         $this->url('http://' . BASE_URL);
         $this->byLinkText('Log In')->click();
         $this->assertTextPresent('Welcome, Please Sign In');
-        $this->byId('gender-male')->click();
         $this->byId('firstname')->value('Tom');
         $this->byId('lastname')->value('Bombadil');
         $this->byId('street-address')->value('999 Some Street');
@@ -25,11 +24,11 @@ class createCustomerAccountTest extends CommonTestResources
         $this->byId('postcode')->value('33133');
         $this->byId('telephone')->value('+441202010109382');
         $this->select($this->byId('country'))->selectOptionByValue(223);
-        $this->byId('dob')->value('05/21/1970');
+//        $this->byId('dob')->value('05/21/1970');
         $this->byId('email-address')->value(WEBTEST_DEFAULT_CUSTOMER_EMAIL);
         $this->byId('password-new')->value(WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
         $this->byId('password-confirm')->value(WEBTEST_DEFAULT_CUSTOMER_PASSWORD);
-        $this->byCss('#createAccountForm > div.buttonRow.forward > input[type="image"]')->click();
+        $this->byCss('#createAccountForm')->submit();
         $this->assertTextPresent('Your Account Has Been Created');
     }
 
@@ -38,7 +37,6 @@ class createCustomerAccountTest extends CommonTestResources
         $this->url('http://' . BASE_URL);
         $this->byLinkText('Log In')->click();
         $this->assertTextPresent('Welcome, Please Sign In');
-        $this->byId('gender-male')->click();
         $this->byId('firstname')->value('UK Tom');
         $this->byId('lastname')->value('Bombadil');
         $this->byId('street-address')->value('999 Some Street');
@@ -47,11 +45,11 @@ class createCustomerAccountTest extends CommonTestResources
         $this->byId('postcode')->value('NE11AA');
         $this->byId('telephone')->value('+441202010109382');
         $this->select($this->byId('country'))->selectOptionByValue(222);
-        $this->byId('dob')->value('05/21/1970');
+//        $this->byId('dob')->value('05/21/1970');
         $this->byId('email-address')->value(WEBTEST_UK_CUSTOMER_EMAIL);
         $this->byId('password-new')->value(WEBTEST_UK_CUSTOMER_PASSWORD);
         $this->byId('password-confirm')->value(WEBTEST_UK_CUSTOMER_PASSWORD);
-        $this->byCss('#createAccountForm > div.buttonRow.forward > input[type="image"]')->click();
+        $this->byCss('#createAccountForm')->submit();
         $this->assertTextPresent('Your Account Has Been Created');
     }
 
@@ -60,7 +58,6 @@ class createCustomerAccountTest extends CommonTestResources
         $this->url('http://' . BASE_URL);
         $this->byLinkText('Log In')->click();
         $this->assertTextPresent('Welcome, Please Sign In');
-        $this->byId('gender-male')->click();
         $this->byId('firstname')->value('Canada Tom');
         $this->byId('lastname')->value('Bombadil');
         $this->byId('street-address')->value('999 Some Street');
@@ -69,11 +66,11 @@ class createCustomerAccountTest extends CommonTestResources
         $this->byId('postcode')->value('NE11AA');
         $this->byId('telephone')->value('+441202010109382');
         $this->select($this->byId('country'))->selectOptionByValue(38);
-        $this->byId('dob')->value('05/21/1970');
+//        $this->byId('dob')->value('05/21/1970');
         $this->byId('email-address')->value(WEBTEST_CANADA_CUSTOMER_EMAIL);
         $this->byId('password-new')->value(WEBTEST_CANADA_CUSTOMER_PASSWORD);
         $this->byId('password-confirm')->value(WEBTEST_CANADA_CUSTOMER_PASSWORD);
-        $this->byCss('#createAccountForm > div.buttonRow.forward > input[type="image"]')->click();
+        $this->byCss('#createAccountForm')->submit();
         $this->assertTextPresent('Your Account Has Been Created');
     }
 }
