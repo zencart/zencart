@@ -3746,7 +3746,6 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
 
 /**
  * Obtain a list of .log/.xml files from the /logs/ folder
- * (and also /cache/ folder for backward compatibility of older modules which store logs there)
  *
  * If $maxToList == 'count' then it returns the total number of files found
  * If an integer is passed, then an array of files is returned, including paths, filenames, and datetime details
@@ -3758,11 +3757,11 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
  */
 function get_logs_data($maxToList = 'count') {
   if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
-  if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache');
   $logs = array();
   $file = array();
   $i = 0;
-  foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE) as $purgeFolder) {
+  foreach(array(DIR_FS_LOGS) as $purgeFolder) {
+    $sourcePurgeFolder = $purgeFolder; 
     $purgeFolder = rtrim($purgeFolder, '/');
     if (!file_exists($purgeFolder) || !is_dir($purgeFolder)) continue;
 
