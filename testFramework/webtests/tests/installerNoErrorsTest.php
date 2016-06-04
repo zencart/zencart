@@ -67,17 +67,12 @@ class installerNoErrorsTest extends CommonTestResources
         $this->url('https://' . DIR_WS_ADMIN);
 
         $this->assertTextPresent('Admin Login');
-        $this->byId('admin_name')->value(WEBTEST_ADMIN_NAME_INSTALL);
-        $this->byId('admin_pass')->value(WEBTEST_ADMIN_PASSWORD_INSTALL);
-        $continue = $this->byId('btn_submit');
-        $continue->click();
-
+        $this->loginStandardAdmin(WEBTEST_ADMIN_NAME_INSTALL, WEBTEST_ADMIN_PASSWORD_INSTALL);
         $this->byId('store_name')->value(WEBTEST_STORE_NAME);
         $this->byId('store_owner')->value(WEBTEST_STORE_OWNER);
         $this->byId('store_owner_email')->value(WEBTEST_STORE_OWNER_EMAIL);
         $continue = $this->byId('btnsubmit');
         $continue->click();
-
         $this->assertTextPresent('Add Widget');
     }
 

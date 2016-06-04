@@ -122,11 +122,10 @@ class CommonTestResources extends PHPUnit_Extensions_Selenium2TestCase
         $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=logoff');
         $this->url('https://' . DIR_WS_ADMIN);
         $this->assertTextPresent('Admin Login');
-        $this->byId('admin_name')->value($adminName);
-        $this->byId('admin_pass')->value($adminPass);
+        $this->byName('admin_name')->value($adminName);
+        $this->byName('admin_pass')->value($adminPass);
         $continue = $this->byId('btn_submit');
         $continue->click();
-        $this->assertTextPresent('Add Widget');
     }
 
     public function switchToTaxInclusive()
