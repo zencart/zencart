@@ -1,0 +1,15 @@
+<phpunit bootstrap="../config/bootstrap.php">
+    <testsuites>
+        <testsuite name="Zen Cart">
+            <file>tests/installerNoErrorsTest.php</file>
+            <file>tests/postInstallCatalogChecksTest.php</file>
+            <file>tests/setUpTaxZonesTest.php</file>
+            <file>tests/createCustomerAccountTest.php</file>
+            <file>tests/giftVoucherPurchasesTest.php</file>
+            <file>tests/createCouponsTest.php</file>
+            <file>tests/useCouponsInCatalogTest.php</file>
+            <file>tests/groupDiscountTest.php</file>
+            <file>tests/loworderfeeTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -8,7 +8,11 @@
  */
 
   /**
+<<<<<<< HEAD
    * Deprecated and will be removed in later versions. 
+=======
+   * Deprecated and will be removed in later versions. 
+>>>>>>> refs/remotes/zencart/v160
    * Use zen_admin_href_link instead
    */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {

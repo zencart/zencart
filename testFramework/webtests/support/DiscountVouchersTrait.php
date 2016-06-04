@@ -162,29 +162,29 @@ trait DiscountVouchersTrait
         $this->byXpath("//input[@name='add' and @value='Update']")->click();
     }
 
-    public function createCouponTest10percentrestrictedminimum()
-    {
-        $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=coupon_admin');
-        $this->byName('couponInsert')->click();
-        $this->byName('coupon_amount')->value("10%");
-        $this->byName('coupon_name[1]')->clear();
-        $this->byName('coupon_name[1]')->value("test10percentrestrictedminimum");
-        $this->byName('coupon_uses_user')->clear();
-        $this->byName('coupon_uses_user')->value("");
-        $this->byName('coupon_min_order')->clear();
-        $this->byName('coupon_min_order')->value("50");
-        $this->byName('coupon_code')->value("test10percentrestrictedminimum");
-        $this->byCss("input[type='image']")->click();
-        $this->byCss("input[type='image']")->click();
-        $this->assertTextPresent('Discount Coupons');
-        $this->assertTextPresent('Multiple Discount Coupons');
-        $this->assertTextPresent('test10percentrestrictedminimum');
-        $this->byCss('img[alt="Restrict Discount Coupon"]')->click();
-        $this->select($this->byId('restrict_status_category'))->selectOptionByValue('Deny');
-        $this->byXpath("//input[@name='add' and @value='Add']")->click();
-        $this->select($this->byName('cPath_prod'))->selectOptionByValue(9);
-        $this->select($this->byName('products_drop'))->selectOptionByValue(3);
-        $this->select($this->byId('restrict_status_product'))->selectOptionByValue('Allow');
-        $this->byXpath("//input[@name='add' and @value='Update']")->click();
-    }
+//    public function createCouponTest10percentrestrictedminimum()
+//    {
+//        $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=coupon_admin');
+//        $this->byName('couponInsert')->click();
+//        $this->byName('coupon_amount')->value("10%");
+//        $this->byName('coupon_name[1]')->clear();
+//        $this->byName('coupon_name[1]')->value("test10percentrestrictedminimum");
+//        $this->byName('coupon_uses_user')->clear();
+//        $this->byName('coupon_uses_user')->value("");
+//        $this->byName('coupon_min_order')->clear();
+//        $this->byName('coupon_min_order')->value("50");
+//        $this->byName('coupon_code')->value("test10percentrestrictedminimum");
+//        $this->byCss("input[type='image']")->click();
+//        $this->byCss("input[type='image']")->click();
+//        $this->assertTextPresent('Discount Coupons');
+//        $this->assertTextPresent('Multiple Discount Coupons');
+//        $this->assertTextPresent('test10percentrestrictedminimum');
+//        $this->byCss('img[alt="Restrict Discount Coupon"]')->click();
+////        $this->select($this->byId('restrict_status_category'))->selectOptionByValue('Deny');
+//        $this->byXpath("//input[@name='add' and @value='Add']")->click();
+//        $this->select($this->byName('cPath_prod'))->selectOptionByValue(9);
+//        $this->select($this->byName('products_drop'))->selectOptionByValue(3);
+//        $this->select($this->byId('restrict_status_product'))->selectOptionByValue('Allow');
+//        $this->byXpath("//input[@name='add' and @value='Update']")->click();
+//    }
 }
