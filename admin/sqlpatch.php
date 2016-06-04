@@ -84,9 +84,9 @@ $linebreak = '
 // NOTE: this line break is intentional!!!!
 
  function executeSql($lines, $database, $table_prefix = '') {
+   global $db, $debug, $messageStack, $zco_notifier; 
    @set_time_limit(1200);
 
-   global $db, $debug, $messageStack;
    $sql_file='SQLPATCH';
    $newline = '';
    $saveline = '';
@@ -110,9 +110,6 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
       // Syntax: #NEXT_X_ROWS_AS_ONE_COMMAND:6     for running the next 6 commands together (commands denoted by a ;)
       if (substr($line,0,28) == '#NEXT_X_ROWS_AS_ONE_COMMAND:') $keep_together = substr($line,28);
       if (substr($line,0,1) != '#' && substr($line,0,1) != '-' && $line != '') {
-//        if ($table_prefix != -1) {
-//echo '*}'.$line.'<br>';
-
           $line_upper=strtoupper($line);
           switch (true) {
           case (substr($line_upper, 0, 21) == 'DROP TABLE IF EXISTS '):
@@ -282,7 +279,6 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
           default:
             break;
           } //end switch
-//        } // endif $table_prefix
         $newline .= $line . ' ';
 
         if ( substr($line,-1) ==  ';') {
