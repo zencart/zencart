@@ -174,7 +174,7 @@ INSERT INTO admin_pages VALUES ('configGuest','BOX_CONFIGURATION_GUEST','FILENAM
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
   ('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'false', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Order Status for Guest Orders', 'GUEST_ORDER_STATUS', 'true', 'Alloq Guests to see Order Status?<br />Set to True so that a Customer that uses Guest Checkout will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-  ('Enable Guest E-Mail Only checkout', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+  ('Enable Guest E-Mail Only checkout when free', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Create Account on Success', 'GUEST_ALLOW_CREATE_ACCOUNT', 'true', 'Allow Guest to create a full account on Checkout Success.', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
 
 
