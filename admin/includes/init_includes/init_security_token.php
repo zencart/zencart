@@ -22,6 +22,6 @@ if ((isset ( $_GET ['action'] ) || isset($_POST['action']) ) && $_SERVER['REQUES
 {
   if ((! isset ( $_SESSION ['securityToken'] ) || ! isset ( $_POST ['securityToken'] )) || ($_SESSION ['securityToken'] !== $_POST ['securityToken']))
   {
-    zen_redirect ( zen_href_link ( FILENAME_DEFAULT, '', 'SSL' ) );
+    zen_redirect ( zen_admin_href_link ( FILENAME_DEFAULT ) );
   }
 }

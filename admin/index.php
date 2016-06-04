@@ -16,7 +16,7 @@ if (!isset($_GET['cmd']))
     // Only redirect if not a request for "index.php"
     if($cmd != 'index') {
         require('includes/application_top.php');
-        zen_redirect(zen_href_link(str_replace('.php', '', basename($_SERVER ['SCRIPT_FILENAME'])), zen_get_all_get_params()));
+        zen_redirect(zen_admin_href_link(str_replace('.php', '', basename($_SERVER ['SCRIPT_FILENAME'])), zen_get_all_get_params()));
     }
 
     // Populate the command and continue

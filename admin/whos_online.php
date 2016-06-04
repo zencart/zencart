@@ -248,7 +248,7 @@ require('includes/admin_html_head.php');
           <tr>
             <td class="smallText" colspan="2"><div id="wo-legend">
               <?php echo
-              '<a href="' . zen_href_link(FILENAME_WHOS_ONLINE . '.php', zen_get_all_get_params()) . '" class="menuBoxContentLink">' . '<strong><u>' . WHOS_ONLINE_REFRESH_LIST_TEXT . '</u></strong>' . '</a>' .
+              '<a href="' . zen_admin_href_link(FILENAME_WHOS_ONLINE . '.php', zen_get_all_get_params()) . '" class="menuBoxContentLink">' . '<strong><u>' . WHOS_ONLINE_REFRESH_LIST_TEXT . '</u></strong>' . '</a>' .
               '<br />' . "\n" . WHOS_ONLINE_LEGEND_TEXT . '&nbsp;' .
               zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_TEXT . '&nbsp;&nbsp;' .
               zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_TEXT . '&nbsp;&nbsp;' .
@@ -357,9 +357,9 @@ require('includes/admin_html_head.php');
       }
   } else {
     if ($is_a_bot==true) {
-        echo '              <tr class="dataTableRowBot" onmouseover="this.className=\'dataTableRowOverBot\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online->fields['session_id'], 'NONSSL') . '\'">' . "\n";
+        echo '              <tr class="dataTableRowBot" onmouseover="this.className=\'dataTableRowOverBot\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online->fields['session_id']) . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRowWhois" onmouseover="this.className=\'dataTableRowOverWhois\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online->fields['session_id'], 'NONSSL') . '\'">' . "\n";
+        echo '              <tr class="dataTableRowWhois" onmouseover="this.className=\'dataTableRowOverWhois\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online->fields['session_id']) . '\'">' . "\n";
       }
   }
 ?>
@@ -367,7 +367,7 @@ require('includes/admin_html_head.php');
                 <td class="dataTableContentWhois" align="center">
                   <?php
                     if ($whos_online->fields['customer_id'] != 0) {
-                      echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $whos_online->fields['customer_id'] . '&action=edit', 'NONSSL') . '"><u>' . $whos_online->fields['customer_id'] . '</u></a>';
+                      echo '<a href="' . zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $whos_online->fields['customer_id'] . '&action=edit') . '"><u>' . $whos_online->fields['customer_id'] . '</u></a>';
                     } else {
                       echo $whos_online->fields['customer_id'];
                     }
@@ -376,7 +376,7 @@ require('includes/admin_html_head.php');
                 <td class="dataTableContentWhois" nowrap="nowrap">
                   <?php
                     if ($whos_online->fields['customer_id'] != 0) {
-                      echo '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $whos_online->fields['customer_id'], 'NONSSL') . '">' . '<u>' . $whos_online->fields['full_name'] . '</u></a>';
+                      echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, 'cID=' . $whos_online->fields['customer_id']) . '">' . '<u>' . $whos_online->fields['full_name'] . '</u></a>';
                     } else {
                       echo $whos_online->fields['full_name'];
                     }
@@ -399,9 +399,9 @@ require('includes/admin_html_head.php');
       }
     } else {
       if ($is_a_bot==true) {
-        echo '              <tr class="dataTableRowBot" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($whos_online->fields['session_id']), 'NONSSL') . '\'">' . "\n";
+        echo '              <tr class="dataTableRowBot" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($whos_online->fields['session_id'])) . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRowWhois" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($whos_online->fields['session_id']), 'NONSSL') . '\'">' . "\n";
+        echo '              <tr class="dataTableRowWhois" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($whos_online->fields['session_id'])) . '\'">' . "\n";
       }
   }
 ?>
@@ -506,7 +506,7 @@ require('includes/admin_html_head.php');
         $contents[] = array('text' => $full_name . ' - ' . $ip_address . '<br />' . $info);
         $products = $_SESSION['cart']->get_products();
         for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-          $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . zen_get_product_path($products[$i]['id']) . '&pID=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>');
+          $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . zen_get_product_path($products[$i]['id']) . '&pID=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>');
         }
 
         if (sizeof($products) > 0) {

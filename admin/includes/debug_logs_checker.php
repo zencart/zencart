@@ -11,8 +11,10 @@
  * @version $Id: debug_logs_checker.php Ajeh $
  */
 
-  $cnt_logs = get_logs_data('count');
-  if ($cnt_logs > 0){
-    $messageStack->add(DEBUG_LOGS_DISCOVERED . $cnt_logs);
-    $messageStack->add(DEBUG_LOGS_WARNING);
+  if ($_GET['cmd'] != FILENAME_VIEW_LOG) { 
+     $cnt_logs = get_logs_data('count');
+     if ($cnt_logs > 0){
+       $messageStack->add(DEBUG_LOGS_DISCOVERED . $cnt_logs);
+       $messageStack->add(DEBUG_LOGS_WARNING);
+     }
   }

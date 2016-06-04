@@ -169,6 +169,7 @@ define('FILENAME_TEMPLATE_SELECT', 'template_select');
 define('FILENAME_TIME_OUT','time_out');
 define('FILENAME_UNSUBSCRIBE', 'unsubscribe');
 define('FILENAME_USERS', 'users');
+define('FILENAME_VIEW_LOG', 'view_log');
 define('FILENAME_ZONES', 'zones');
 define('FILENAME_WHOS_ONLINE', 'whos_online');
 

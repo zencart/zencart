@@ -6,7 +6,7 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<form name="lead_filter" id="lead_filter_form" action="<?php echo zen_href_link($_GET['cmd'], 'action=multiEdit'); ?>"
+<form name="lead_filter" id="lead_filter_form" action="<?php echo zen_admin_href_link($_GET['cmd'], 'action=multiEdit'); ?>"
       method="post">
     <input type="hidden" name="securityToken"
            value="<?php echo $_SESSION['securityToken']; ?>">
@@ -31,7 +31,7 @@
                 </th>
             <?php } ?>
             <td>
-                <a href="<?php echo zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action'))); ?>" id="clearFiltersLink">Clear Filters</a>
+                <a href="<?php echo zen_admin_href_link($_GET['cmd'], zen_get_all_get_params(array('action'))); ?>" id="clearFiltersLink">Clear Filters</a>
             </td>
         </tr>
         </thead>

@@ -14,7 +14,7 @@
             e.stopImmediatePropagation()
             $("#rowDeleteModal").foundation('reveal', 'close');
             zcJS.ajax({
-                url: '<?php echo zen_href_link($_GET['cmd'], "action=delete" . $tplVars['leadDefinition']['extraDeleteParameters']); ?>',
+                url: '<?php echo zen_admin_href_link($_GET['cmd'], "action=delete" . $tplVars['leadDefinition']['extraDeleteParameters']); ?>',
                 data: {id: $(this).attr('data-item')}
             }).done(function( response ) {
                 if (response.html)

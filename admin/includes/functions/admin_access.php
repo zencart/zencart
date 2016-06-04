@@ -399,7 +399,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
         zen_session_destroy();
         zen_record_admin_activity('Too many login failures. Account locked for ' . ADMIN_LOGIN_LOCKOUT_TIMER / 60 . ' minutes', 'warning');
         sleep(15);
-        $redirect = zen_href_link(FILENAME_DEFAULT, '', 'SSL');
+        $redirect = zen_admin_href_link(FILENAME_DEFAULT);
         return array($error, $expired, $message, $redirect);
       } else
       {
@@ -435,7 +435,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     {
       zen_session_recreate();
     }
-    $redirect = zen_href_link($camefrom, zen_get_all_get_params(array('camefrom')), 'SSL');
+    $redirect = zen_admin_href_link($camefrom, zen_get_all_get_params(array('camefrom')));
   }
   return array($error, $expired, $message, $redirect);
 }

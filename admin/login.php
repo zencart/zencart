@@ -65,7 +65,7 @@ if (isset($_POST['action']) && $_POST['action'] != '')
       $message = SUCCESS_PASSWORD_UPDATED;
       list($error, $expired, $message, $redirect) = zen_validate_user_login($admin_name, $adm_new_pwd);
       if ($redirect != '') zen_redirect($redirect);
-      zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
+      zen_redirect(zen_admin_href_link(FILENAME_DEFAULT));
     }
     if ($error) sleep(3);
   }
@@ -77,9 +77,9 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
-<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
-<link href="includes/template/css/login.css" rel="stylesheet" type="text/css" />
-<meta name="robots" content="noindex, nofollow" />
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css">
+<link href="includes/template/css/login.css" rel="stylesheet" type="text/css">
+<meta name="robots" content="noindex, nofollow">
 </head>
     <?php if (!isset($expired) || $expired == FALSE) { ?>
         <body id="login">
@@ -97,7 +97,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
                           <div class="form-group">
                             <label class="col-xs-4 col-offset-xs-1 col-sm-4 col-md-6 control-label" for="admin_name-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NAME; ?>:</label>
                             <div class="col-xs-6 col-sm-7 col-md-6">
-                              <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control" id="admin_name" autocomplete="off" autofocus placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
+                              <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control" id="admin_name-' . $_SESSION['securityToken'] . '" autocomplete="off" autofocus placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
                             </div>
                           </div>
                           <div class="form-group">
@@ -116,7 +116,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
                     <br class="clearBoth"/>
                     <p class="messageStackError"><?php echo $message; ?></p>
                     <img id="actionImg" src="images/loading.gif" class="hiddenField"/>
-                    <br/><a href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'); ?>"><?php echo TEXT_PASSWORD_FORGOTTEN; ?></a>
+                    <br/><a href="<?php echo zen_admin_href_link(FILENAME_PASSWORD_FORGOTTEN); ?>"><?php echo TEXT_PASSWORD_FORGOTTEN; ?></a>
                 </fieldset>
                 </form>
                 <div id="loginExpiryPolicy"><?php echo LOGIN_EXPIRY_NOTICE; ?></div>

@@ -65,9 +65,9 @@ require('includes/admin_html_head.php');
       $rows = '0' . $rows;
     }
 ?>
-              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customers->fields['customers_id'], 'NONSSL'); ?>'">
+              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo zen_admin_href_link(FILENAME_CUSTOMERS, 'cID=' . $customers->fields['customers_id']); ?>'">
                 <td class="dataTableContent" align="right"><?php echo $customers->fields['customers_id']; ?>&nbsp;&nbsp;</td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customers->fields['customers_id'], 'NONSSL') . '">' . $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_admin_href_link(FILENAME_CUSTOMERS, 'cID=' . $customers->fields['customers_id']) . '">' . $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a>'; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $currencies->format($customers->fields['ordersum']); ?>&nbsp;</td>
               </tr>
 <?php

@@ -28,7 +28,7 @@ define('BANNER_STATISTICS', 'Banner Statistics');
 define('TEXT_TOTAL_LOGFILES_FOUND', '<br>Note: Total of %s log files found on server.');
 define('TEXT_DISPLAYING_RECENT_COUNT', ' (Displaying only the most recent %s files.)');
 define('TEXT_NO_LOGFILES_FOUND', 'No debug log files found.');
-
+define('TEXT_ADMIN_LOG_SUFFIX', '(admin)'); 
 
 /* NOTE: defines for additional contributed "plugin" widgets should be placed into
  * a new file in the extra_definitions folder, not in this file, since
