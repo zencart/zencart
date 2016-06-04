@@ -160,7 +160,7 @@
           if (substr($file, 0, 1) != '.') {
             if (preg_match('/^(' . $patternString . ').*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
-                zen_remove($purgeFolder . '/' . $file);
+                zen_remove_file($purgeFolder . '/' . $file);
               }
             }
           }

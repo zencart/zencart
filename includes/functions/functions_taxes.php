@@ -13,12 +13,15 @@
 // Returns the tax rate for a zone / class
 // TABLES: tax_rates, zones_to_geo_zones
   function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
-    global $db;
+    global $db, $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (isset($_SESSION['customer_id'])) {
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
+      } else if (isset($customer_country_id)) {
+        $country_id = $customer_country_id;
+        $zone_id = $customer_zone_id;
       } else {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
@@ -154,25 +157,46 @@
     }
     return $rates_array;
   }
-////
-// Add tax to a products price based on whether we are displaying tax "in" the price
+  
+/**
+ * Add tax to a products price based on whether we are displaying tax "in" the price
+ */
   function zen_add_tax($price, $tax) {
     global $currencies;
 
-    if ( (DISPLAY_PRICE_WITH_TAX == 'true') && ($tax > 0) ) {
-      return $price + zen_calculate_tax($price, $tax);
+    if (IS_ADMIN_FLAG === true) {
+      if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
+        return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']) + zen_calculate_tax($price, $tax);
+      } else {
+        return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
+      }
     } else {
-      return $price;
+      if ( (DISPLAY_PRICE_WITH_TAX == 'true') && ($tax > 0) ) {
+        return $price + zen_calculate_tax($price, $tax);
+      } else {
+        return $price;
+      }
     }
   }
 
- // Calculates Tax rounding the result
+/**
+ * Calculates Tax rounding the result
+ */
   function zen_calculate_tax($price, $tax) {
-    global $currencies;
     return $price * $tax / 100;
   }
-////
-// Output the tax percentage with optional padded decimals
+  
+/**
+ * Returns the tax rate for a tax class
+ * TABLES: tax_rates
+ */
+  function zen_get_tax_rate_value($class_id) {
+    return zen_get_tax_rate($class_id);
+  }
+
+/**
+ * Output the tax percentage with optional padded decimals
+ */
   function zen_display_tax_value($value, $padding = TAX_DECIMAL_PLACES) {
     if (strpos($value, '.')) {
       $loop = true;
@@ -224,6 +248,20 @@
     }
 
     return $tax_rate;
+  }
+
+
+  function zen_get_tax_class_title($tax_class_id) {
+    global $db;
+    if ($tax_class_id == '0') {
+      return TEXT_NONE;
+    } else {
+      $classes = $db->Execute("select tax_class_title
+                               from " . TABLE_TAX_CLASS . "
+                               where tax_class_id = '" . (int)$tax_class_id . "'");
+      if ($classes->EOF) return '';
+      return $classes->fields['tax_class_title'];
+    }
   }
 
  function zen_get_tax_locations($store_country = -1, $store_zone = -1) {

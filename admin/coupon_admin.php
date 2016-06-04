@@ -191,7 +191,7 @@
           $minimum_extra_chars = 7;
           $delta_calculation = SECURITY_CODE_LENGTH - ($old_code_length + $minimum_extra_chars);
           $new_code_length = ($delta_calculation > 0) ? $minimum_extra_chars + $delta_calculation : $minimum_extra_chars;
-          $new_code = create_coupon_code($_POST['coupon_copy_to_dup_name'], $new_code_length, $_POST['coupon_copy_to_dup_name']);
+          $new_code = zen_create_coupon_code($_POST['coupon_copy_to_dup_name'], $new_code_length, $_POST['coupon_copy_to_dup_name']);
           if ($new_code != '') {
           // make new coupon
             $sql_data_array = array('coupon_code' => zen_db_prepare_input($new_code),
@@ -361,7 +361,7 @@
         $messageStack->add(ERROR_NO_COUPON_CODE, 'error');
       }
       if (!$_POST['coupon_code']) {
-        $coupon_code = create_coupon_code();
+        $coupon_code = zen_create_coupon_code();
       }
       if ($_POST['coupon_code']) $coupon_code = $_POST['coupon_code'];
       $sql = "select coupon_id, coupon_code

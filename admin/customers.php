@@ -835,12 +835,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_country_error == true) {
-      echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
+      echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries_for_pulldown(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
     } else {
       echo zen_get_country_name($cInfo->entry_country_id) . zen_draw_hidden_field('entry_country_id');
     }
   } else {
-    echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->entry_country_id);
+    echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries_for_pulldown(), $cInfo->entry_country_id);
   }
 ?></td>
           </tr>
@@ -1306,7 +1306,7 @@ $().ready(function() {
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_LAST_LOGON . ' '  . zen_date_short($cInfo->date_last_logon));
         $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logons);
 
-        $customer_gv_balance = zen_user_has_gv_balance($cInfo->customers_id);
+        $customer_gv_balance = zen_user_has_gv_account($cInfo->customers_id);
         $contents[] = array('text' => '<br />' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer_gv_balance));
 
         $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customers_orders->RecordCount());

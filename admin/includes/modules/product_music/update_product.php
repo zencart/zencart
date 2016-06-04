@@ -180,7 +180,7 @@
     define('IMAGE_MANAGER_HANDLER', 0);
     define('DIR_IMAGEMAGICK', '');
     if ($new_image == 'true' and IMAGE_MANAGER_HANDLER >= 1) {
-      $src= DIR_FS_CATALOG . DIR_WS_IMAGES . zen_get_products_image((int)$products_id);
+      $src= DIR_FS_CATALOG . DIR_WS_IMAGES . zen_get_products_image_name((int)$products_id);
       $filename_small= $src;
       preg_match("/.*\/(.*)\.(\w*)$/", $src, $fname);
       list($oiwidth, $oiheight, $oitype) = getimagesize($src);
@@ -203,7 +203,7 @@
       $large_width= $oiwidth;
       $large_height= $oiheight;
 
-      $products_image = zen_get_products_image((int)$products_id);
+      $products_image = zen_get_products_image_name((int)$products_id);
       $products_image_extension = substr($products_image, strrpos($products_image, '.'));
       $products_image_base = preg_replace('/'.$products_image_extension.'/', '', $products_image);
 

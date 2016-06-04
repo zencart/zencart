@@ -197,6 +197,19 @@
     return $addresses->fields['total'];
   }
 
+  // look up customers default or primary address
+  function zen_get_customers_address_primary($customer_id) {
+    global $db;
+
+    $lookup_customers_primary_address_query = "SELECT customers_default_address_id
+                                              from " . TABLE_CUSTOMERS . "
+                                              WHERE customers_id = '" . (int)$customer_id . "'";
+
+    $lookup_customers_primary_address = $db->Execute($lookup_customers_primary_address_query);
+
+    return $lookup_customers_primary_address->fields['customers_default_address_id'];
+  }
+
 ////
 // validate customer matches session
   function zen_get_customer_validate_session($customer_id) {
@@ -212,4 +225,28 @@
       return false;
     }
     return true;
+  }
+  function zen_customers_name($customers_id) {
+    global $db;
+    $customers_values = $db->Execute("select customers_firstname, customers_lastname
+                               from " . TABLE_CUSTOMERS . "
+                               where customers_id = '" . (int)$customers_id . "'");
+    if ($customers_values->EOF) return '';
+    return $customers_values->fields['customers_firstname'] . ' ' . $customers_values->fields['customers_lastname'];
+  }
+
+
+/**
+ * customer lookup of address book
+ */
+  function zen_get_customers_address_book($customer_id) {
+    global $db;
+
+    $customer_address_book_count_query = "SELECT c.*, ab.* from " .
+                                          TABLE_CUSTOMERS . " c
+                                          left join " . TABLE_ADDRESS_BOOK . " ab on c.customers_id = ab.customers_id
+                                          WHERE c.customers_id = '" . (int)$customer_id . "'";
+
+    $customer_address_book_count = $db->Execute($customer_address_book_count_query);
+    return $customer_address_book_count;
   }

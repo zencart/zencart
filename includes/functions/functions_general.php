@@ -141,7 +141,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 */
   function zen_get_all_get_params($exclude_array = array(), $search_engine_safe = true) {
     if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'main_page', 'error', 'x', 'y'));
+    $exclude_array = array_merge($exclude_array, array('main_page', 'cmd', 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
+    if (function_exists('zen_session_name')) {
+      $exclude_array[] = zen_session_name();
+    }
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
@@ -173,7 +176,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
   function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
     if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
+    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'cmd', 'error', 'x', 'y'));
     $fields = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
@@ -202,12 +205,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $fields;
   }
 
-////
-// Returns the clients browser
+/**
+ * Returns details about the visitor's browser: pass the string you want to detect and this will return true/false
+ */
   function zen_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 
@@ -232,7 +234,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Output a raw date string in the selected locale date format
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
   function zen_date_long($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if ($raw_date == '0001-01-01 00:00:00' || $raw_date == '') return false;
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -250,7 +252,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
 // NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
   function zen_date_short($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || empty($raw_date) ) return false;
+    if ($raw_date == '0001-01-01 00:00:00' || empty($raw_date)) return false;
 
     $year = substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -267,8 +269,46 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
   }
 
+  function zen_datetime_short($raw_datetime) {
+    if ($raw_datetime == '0001-01-01 00:00:00' || $raw_datetime == '') return false;
+
+    $year = (int)substr($raw_datetime, 0, 4);
+    $month = (int)substr($raw_datetime, 5, 2);
+    $day = (int)substr($raw_datetime, 8, 2);
+    $hour = (int)substr($raw_datetime, 11, 2);
+    $minute = (int)substr($raw_datetime, 14, 2);
+    $second = (int)substr($raw_datetime, 17, 2);
+
+    return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
+  }
+
+
+function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMAT_DATEPICKER_ADMIN)
+{
+  if ($date == 'null' || $date == '') return $date;
+  $mpos = strpos($formatIn, 'm');
+  $dpos = strpos($formatIn, 'd');
+  $ypos = strpos($formatIn, 'y');
+  $d = substr($date, $dpos, 2);
+  $m = substr($date, $mpos, 2);
+  $y = substr($date, $ypos, 4);
+  switch ($formatOut)
+  {
+    case 'raw':
+      $mdate = $y . $m . $d;
+      break;
+    case 'raw-reverse':
+      $mdate = $d . $m . $y;
+      break;
+    case 'mysql':
+     $mdate = $y . '-' . $m . '-' . $d;
+
+  }
+  return $mdate;
+}
+
 ////
-// Parse search string into indivual objects
+// Parse search string into individual objects
   function zen_parse_search_string($search_str = '', &$objects) {
     $search_str = trim(strtolower($search_str));
 
@@ -551,23 +591,6 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $sort_prefix . $heading . $sort_suffix;
   }
 
-
-////
-// Return a product ID with attributes
-/*
-  function zen_get_uprid_OLD($prid, $params) {
-    $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-      while (list($option, $value) = each($params)) {
-        $uprid = $uprid . '{' . $option . '}' . $value;
-      }
-    }
-
-    return $uprid;
-  }
-*/
-
-
 ////
 // Return a product ID with attributes
   function zen_get_uprid($prid, $params) {
@@ -716,8 +739,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     return (int)$string;
   }
 
-////
-// Return a random value
+/**
+ * Return a random value
+ */
   function zen_rand($min = null, $max = null) {
     static $seeded;
 
@@ -949,9 +973,14 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 ////
-  function zen_db_prepare_input($string) {
+  function zen_db_prepare_input($string, $trimspace = true) {
     if (is_string($string)) {
-      return trim(zen_sanitize_string(stripslashes($string)));
+      if (IS_ADMIN_FLAG === true && $trimspace == true) {
+        return trim(stripslashes($string));
+      } else {
+        return trim(zen_sanitize_string(stripslashes($string)));
+        // return stripslashes($string);
+      }
     } elseif (is_array($string)) {
       reset($string);
       while (list($key, $value) = each($string)) {
@@ -964,7 +993,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 ////
-  function zen_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
+  function zen_db_perform($table, $data, $action = 'insert', $parameters = '') {
     global $db;
     reset($data);
     if (strtolower($action) == 'insert') {
@@ -1011,13 +1040,19 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 ////
   function zen_db_output($string) {
-    return htmlspecialchars($string);
+    return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
   }
 
+////
+  function zen_db_insert_id() {
+    global $db;
+    return $db->insert_ID();
+  }
 
-// function to return field type
-// uses $tbl = table name, $fld = field name
-
+/**
+ * function to return field type
+ * uses $tbl = table name, $fld = field name
+ */
   function zen_field_type($tbl, $fld) {
     global $db;
     $rs = $db->MetaColumns($tbl);
@@ -1025,8 +1060,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $type;
   }
 
-// function to return field length
-// uses $tbl = table name, $fld = field name
+/**
+ * function to return field length
+ * uses $tbl = table name, $fld = field name
+ */
   function zen_field_length($tbl, $fld) {
     global $db;
     $rs = $db->MetaColumns($tbl);
@@ -1034,14 +1071,15 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $length;
   }
 
-////
-// return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 70
-// uses $tbl = table name, $fld = field name
-// example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
-  function zen_set_field_length($tbl, $fld, $max=70) {
+/**
+ * return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 50
+ * uses $tbl = table name, $fld = field name
+ * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ */
+  function zen_set_field_length($tbl, $fld, $max=50, $override=false) {
     $field_length= zen_field_length($tbl, $fld);
     switch (true) {
-      case ($field_length > $max):
+      case (($override == false and $field_length > $max)):
         $length= 'size = "' . ($max+1) . '" maxlength= "' . $field_length . '"';
         break;
       default:
@@ -1221,8 +1259,10 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 
-////
-// enable shipping
+
+/**
+ * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
+ */
   function zen_get_shipping_enabled($shipping_module) {
     global $zcRequest;
 
@@ -1294,8 +1334,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $string;
   }
 
-////
-// remove common HTML from text for display as paragraph
+/**
+ * remove common HTML from text for display as paragraph
+ */
   function zen_clean_html($clean_it, $extraTags = '') {
     if (!is_array($extraTags)) $extraTags = array($extraTags);
 
@@ -1358,8 +1399,9 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 
-////
-// find template or default file
+/**
+ * find template or default file
+ */
   function zen_get_file_directory($check_directory, $check_file, $dir_only = 'false') {
     global $template_dir;
 
@@ -1394,7 +1436,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     return $zp_result;
   }
 
-// replacement for fmod to manage values < 1
+/**
+ * replacement for fmod to manage values < 1
+ */
   function fmod_round($x, $y) {
     if ($y == 0) {
       return 0;
@@ -1475,12 +1519,12 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 /**
- * supplies javascript to dynamically update the states/provinces list when the country is changed
+ * builds javascript to dynamically update the states/provinces list when the country is changed
  * TABLES: zones
  *
  * return string
  */
-  function zen_js_zone_list($country, $form, $field) {
+  function zen_js_zone_list($country, $form, $field, $showTextField = true) {
     global $db;
     $countries = $db->Execute("select distinct zone_country_id
                                from " . TABLE_ZONES . "
@@ -1507,19 +1551,29 @@ if (!defined('IS_ADMIN_FLAG')) {
       }
       $num_country++;
       $countries->MoveNext();
-      $output_string .= '    hideStateField(' . $form . ');' . "\n" ;
+      if (IS_ADMIN_FLAG === false) $output_string .= '    hideStateField(' . $form . ');' . "\n" ;
     }
-    $output_string .= '  } else {' . "\n" .
+    if (IS_ADMIN_FLAG === false) {
+      $output_string .= '  } else {' . "\n" .
+                        '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+                        '    showStateField(' . $form . ');' . "\n" .
+                        '  }' . "\n";
+      return $output_string;
+    }
+      $output_string .= '  }';
+      if ($showTextField) {
+          $output_string .= ' else {' . "\n" .
                       '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
-                      '    showStateField(' . $form . ');' . "\n" .
                       '  }' . "\n";
+      }
     return $output_string;
   }
 
 
 
-////
-// compute the days between two dates
+/**
+ * compute the days between two dates
+ */
   function zen_date_diff($date1, $date2) {
   //$date1  today, or any other day
   //$date2  date to check against
