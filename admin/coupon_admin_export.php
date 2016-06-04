@@ -258,7 +258,7 @@ if ($action != '')
           unset($f);
         } // endif $save_to_file
       } //end if $records for processing not 0
-      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN_EXPORT));
+      zen_redirect(zen_admin_href_link(FILENAME_COUPON_ADMIN_EXPORT));
       break;
 
   } //end switch / case
@@ -320,7 +320,7 @@ require (DIR_WS_INCLUDES . 'header.php');
               </td>
           </tr>
           <tr>
-            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
         </table>
         </td>

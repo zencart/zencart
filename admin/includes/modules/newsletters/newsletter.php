@@ -22,7 +22,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
     function choose_audience() {
-      $choose_audience_string = '<form name="audience" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') .'" method="post" onsubmit="return check_form(audience);">' .
+      $choose_audience_string = '<form name="audience" action="' . zen_admin_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') .'" method="post" onsubmit="return check_form(audience);">' .
                  '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' .
                  ' <table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                  '  <tr>' . "\n" .
@@ -74,11 +74,11 @@ if (!defined('IS_ADMIN_FLAG')) {
                         '    <td>' . zen_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '<form name="ready_to_send" action="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send') .'" method="post" >' .
+                        '<form name="ready_to_send" action="' . zen_admin_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send') .'" method="post" >' .
                         '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />' .
                         '    <td align="right"> ' . zen_draw_hidden_field('audience_selected',$this->query_name).
                         zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL) .
-                        '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a></td>' . "\n" .
+                        '<a href="' . zen_admin_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a></td>' . "\n" .
                         '</form>' .
                         '  </tr>' . "\n" .
                         '</table>';

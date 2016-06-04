@@ -95,7 +95,7 @@ $form_disabled = false;
  $(function() {
     $('#store_country').change(function(e) {
       zcJS.ajax({
-        url: "<?php echo zen_href_link($_GET['cmd'], "action=getZones"); ?>",
+        url: "<?php echo zen_admin_href_link($_GET['cmd'], "action=getZones"); ?>",
         data: {id: $(this).val()}
       }).done(function( response ) {
         $('#store_zone_container').html(response.html);

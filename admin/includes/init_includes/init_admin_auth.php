@@ -24,12 +24,12 @@ if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE ==
   {
     if (substr(DIR_WS_ADMIN, - 7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, - 7) == '/admin/')
     {
-      zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
+      zen_redirect(zen_admin_href_link(FILENAME_ALERT_PAGE));
     }
     $check_path = dirname($_SERVER ['SCRIPT_FILENAME']) . '/../zc_install';
     if (is_dir($check_path))
     {
-      zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
+      zen_redirect(zen_admin_href_link(FILENAME_ALERT_PAGE));
     }
   }
 }
@@ -37,9 +37,9 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE) {
   if (! ($zcRequest->readGet('cmd') == FILENAME_LOGIN)) {
     if (! isset($_SESSION ['admin_id'])) {
       if (! ($zcRequest->readGet('cmd') == FILENAME_PASSWORD_FORGOTTEN)) {
-        zen_redirect(zen_href_link(FILENAME_LOGIN, 'camefrom=' . $zcRequest->readGet('cmd') . '&' . zen_get_all_get_params(array(
-            'cmd'
-        )), 'SSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_LOGIN, 'camefrom=' . $zcRequest->readGet('cmd') 
+          . '&' . zen_get_all_get_params(array('cmd'))
+        ));
       }
     }
     if (! in_array($page, array(
@@ -54,7 +54,7 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE) {
       if (check_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == FALSE) {
         zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
 
-        zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
+        zen_redirect(zen_admin_href_link(FILENAME_DENIED));
       }
     }
   }
@@ -68,7 +68,7 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE) {
         FILENAME_DENIED,
         FILENAME_ALT_NAV
     )) && isset($_SESSION ['admin_id'])) {
-      zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
+      zen_redirect(zen_admin_href_link(FILENAME_DEFAULT));
     }
   }
 }

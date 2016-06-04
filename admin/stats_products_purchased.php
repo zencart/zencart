@@ -44,7 +44,7 @@ require('includes/admin_html_head.php');
       echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . $products_filter;
     }
     if (isset($products_filter) && zen_not_null($products_filter)) {
-      echo '<br/ >' . '<a href="' . zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
+      echo '<br/ >' . '<a href="' . zen_admin_href_link(FILENAME_STATS_PRODUCTS_PURCHASED) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
     }
     echo '</form>';
 
@@ -56,7 +56,7 @@ require('includes/admin_html_head.php');
       echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_db_prepare_input($products_filter_name_model);
     }
     if (isset($products_filter_name_model) && zen_not_null($products_filter_name_model)) {
-      echo '<br/ >' . '<a href="' . zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
+      echo '<br/ >' . '<a href="' . zen_admin_href_link(FILENAME_STATS_PRODUCTS_PURCHASED) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
     }
     echo '</form>';
 ?>
@@ -127,12 +127,12 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
        }
    ?>
                  <tr class="dataTableRow">
-                   <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'page', 'products_filter')) . 'cID=' . $product['customers_id'] . '&action=edit', 'NONSSL') . '">' . $product['customers_id'] . '</a>'; ?></td>
-                   <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'oID=' . $product['orders_id'] . '&action=edit', 'NONSSL') . '">' . $product['orders_id'] . '</a>'; ?></td>
+                   <td class="dataTableContent"><?php echo '<a href="' . zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'page', 'products_filter')) . 'cID=' . $product['customers_id'] . '&action=edit') . '">' . $product['customers_id'] . '</a>'; ?></td>
+                   <td class="dataTableContent"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'oID=' . $product['orders_id'] . '&action=edit') . '">' . $product['orders_id'] . '</a>'; ?></td>
                    <td class="dataTableContent"><?php echo zen_date_short($product['date_purchased']); ?></td>
                    <td class="dataTableContent"><?php echo $product['customers_name'] . ($product['customers_company'] !='' ? '<br />' . $product['customers_company'] : '') . '<br />' . $product['customers_email_address']; ?></td>
                    <td class="dataTableContent" align="center"><?php echo $product['products_quantity']; ?>&nbsp;</td>
-                   <td class="dataTableContent" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_filter) . '">' . $product['products_name'] . '</a>'; ?>&nbsp;</td>
+                   <td class="dataTableContent" align="center"><?php echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_filter) . '">' . $product['products_name'] . '</a>'; ?>&nbsp;</td>
                    <td class="dataTableContent" align="center"><?php echo $product['products_model']; ?>&nbsp;</td>
    
                  </tr>
@@ -200,9 +200,9 @@ if ($products_filter > 0 or $products_filter_name_model != '') {
     }
     $cPath = zen_get_product_path($product['products_id']);
 ?>
-              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&page='); ?>'">
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $product['products_id']) . '">' . $product['products_id'] . '</a>'; ?>&nbsp;&nbsp;</td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&page=') . '">' . $product['products_name'] . '</a>'; ?></td>
+              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&page='); ?>'">
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $product['products_id']) . '">' . $product['products_id'] . '</a>'; ?>&nbsp;&nbsp;</td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&page=') . '">' . $product['products_name'] . '</a>'; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $product['products_ordered']; ?>&nbsp;</td>
               </tr>
 <?php

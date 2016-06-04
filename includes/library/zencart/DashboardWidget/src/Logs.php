@@ -20,6 +20,15 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class Logs extends AbstractWidget
 {
+  private function getDisplayName($log)
+  {
+     $str = $log['datetime']; 
+     if (strpos($log['filename'], "-adm-") !== false) { 
+        $str .= TEXT_ADMIN_LOG_SUFFIX; 
+     }
+     return $str;
+  }
+
   public function prepareContent()
   {
     $tplVars = array();
@@ -38,7 +47,7 @@ class Logs extends AbstractWidget
 
     foreach ($logs as $log) {
       $tplVars['content'][] = array(
-                                    'text'=> $log['filename'], // @TODO future: add clickable link to ajax-driven viewer here
+                                    'text'=> '<a href="' . zen_href_link(FILENAME_VIEW_LOG, 'logname=' . $log['filename']) . '">' . $this->getDisplayName($log) . '</a>', 
                                     'value'=>$log['filesize'],
                                     );
     }

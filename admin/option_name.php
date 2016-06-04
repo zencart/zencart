@@ -14,7 +14,7 @@
   $chk_option_names = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS . " where language_id='" . (int)$_SESSION['languages_id'] . "' limit 1");
   if ($chk_option_names->RecordCount() < 1) {
     $messageStack->add_session(ERROR_DEFINE_OPTION_NAMES, 'caution');
-    zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER));
+    zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_NAME_MANAGER));
   }
 
   $specified_language = (isset($_GET['lng_id'])) ? (int)$_GET['lng_id'] : (int)$_SESSION['languages_id'];
@@ -38,7 +38,7 @@
                     AND language_id=" . (int)$specified_language);
     }
     $messageStack->add_session(SUCCESS_OPTION_SORT_ORDER, 'success');
-    zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_NAME, 'lng_id=' . (int)$specified_language));
+    zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_OPTIONS_NAME, 'lng_id=' . (int)$specified_language));
   }
 
 $usingDefaultLanguage = ($specified_language == $_SESSION['languages_id']);

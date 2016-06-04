@@ -162,7 +162,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini !='off' && ($v
   if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
 } else {
   // display the "check for updated version" button.  The button link should be the current page and all params
-  $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
+  $url = zen_admin_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck')));
   $url .= (strpos($url,'?') > 5 ? '&' : '?') . 'vcheck=yes';
   if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version = '<a href="' . $url . '">' . '<input type="button" class="btn btn-link" value="' . TEXT_VERSION_CHECK_BUTTON . '"/></a>';
 }
@@ -173,6 +173,6 @@ if (SHOW_GV_QUEUE==true && (zen_is_superuser() || check_page(FILENAME_ORDERS, ar
   $new_gv_queue_cnt = 0;
   if ($new_gv_queue->RecordCount() > 0) {
     $new_gv_queue_cnt= $new_gv_queue->RecordCount();
-    $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="btn btn-info" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
+    $goto_gv = '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="btn btn-info" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
   }
 }
