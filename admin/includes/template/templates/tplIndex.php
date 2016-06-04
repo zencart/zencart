@@ -54,6 +54,8 @@ $(function() {
       }).done(function( response ) {
         $('.add-widget-container').html(response.html);
         $('#add-widget').foundation('reveal', 'open');
+      }).fail(function( response ) {
+        window.location.replace("<?php echo zen_admin_href_link(FILENAME_LOGIN);?>"); 
       });
 
 
