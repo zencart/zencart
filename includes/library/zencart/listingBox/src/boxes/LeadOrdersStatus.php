@@ -79,7 +79,6 @@ class LeadOrdersStatus extends AbstractLeadListingBox
                 ),
                 'orders_status_name' => array(
                     'bindVarsType' => 'string',
-                    'language' => true,
                     'layout' => array(
                         'common' => array(
                             'title' => TEXT_ENTRY_ORDERS_STATUS_NAME,
