@@ -8,7 +8,7 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<div class="row collapse <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' error';}; ?>">
+<div class="<?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' error';}; ?>">
 <div class="small-2 columns">
 <input id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
        class="<?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput <?php if ($tplVars['leadDefinition']['fields'][$field]['autocomplete']) echo 'autocomplete'; ?> <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' error ';}; ?>"
