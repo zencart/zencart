@@ -14,7 +14,7 @@
     $action = 'new_product';
   } elseif ($_POST['products_model'] . $_POST['products_url'] . $_POST['products_name'] . $_POST['products_description'] != '') {
     $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
-    $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
+    $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'NULL';
     // Data-cleaning to prevent MySQL5 data-type mismatch errors:
     $tmp_value = zen_db_prepare_input($_POST['products_quantity']);
     $products_quantity = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;

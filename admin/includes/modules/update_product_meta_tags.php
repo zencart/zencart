@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
          if (isset($_GET['pID'])) $products_id = zen_db_prepare_input($_GET['pID']);
           $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
 
-          $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
+          $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'NULL';
 
           $sql_data_array = array(
                                   'metatags_title_status' => zen_db_prepare_input($_POST['metatags_title_status']),
