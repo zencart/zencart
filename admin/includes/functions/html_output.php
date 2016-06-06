@@ -8,11 +8,7 @@
  */
 
   /**
-<<<<<<< HEAD
-   * Deprecated and will be removed in later versions. 
-=======
-   * Deprecated and will be removed in later versions. 
->>>>>>> refs/remotes/zencart/v160
+   * Deprecated and will be removed in later versions.
    * Use zen_admin_href_link instead
    */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
@@ -327,49 +323,6 @@
   }
 
 ////
-// javascript to dynamically update the states/provinces list when the country is changed
-// TABLES: zones
-  function zen_js_zone_list($country, $form, $field, $showTextField = true) {
-    global $db;
-    $countries = $db->Execute("select distinct zone_country_id
-                               from " . TABLE_ZONES . "
-                               order by zone_country_id");
-
-    $num_country = 1;
-    $output_string = '';
-    while (!$countries->EOF) {
-      if ($num_country == 1) {
-        $output_string .= '  if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
-      } else {
-        $output_string .= '  } else if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
-      }
-
-      $states = $db->Execute("select zone_name, zone_id
-                              from " . TABLE_ZONES . "
-                              where zone_country_id = '" . $countries->fields['zone_country_id'] . "'
-                              order by zone_name");
-
-
-      $num_state = 1;
-      while (!$states->EOF) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
-        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states->fields['zone_name'] . '", "' . $states->fields['zone_id'] . '");' . "\n";
-        $num_state++;
-        $states->MoveNext();
-      }
-      $num_country++;
-      $countries->MoveNext();
-    }
-      $output_string .= '  }';
-      if ($showTextField) {
-          $output_string .= ' else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
-                      '  }' . "\n";
-      }
-    return $output_string;
-  }
-
-////
 // Output a form
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
@@ -550,4 +503,3 @@ function zen_ajax_href_link($page = '', $parameters = '', $connection = 'NONSSL'
     $link = str_replace('&amp;', '&', $link);
     return $link;
 }
-

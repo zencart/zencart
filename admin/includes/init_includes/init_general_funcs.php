@@ -14,16 +14,12 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package admin
 **/
-
-// include the database functions
-  require(DIR_WS_FUNCTIONS . 'database.php');
-
-// define our general functions used application-wide
-  require(DIR_WS_FUNCTIONS . 'general.php');
-  require(DIR_WS_FUNCTIONS . 'functions_prices.php');
+  require(DIR_WS_FUNCTIONS . 'functions_helpers.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php');
+  require(DIR_WS_FUNCTIONS . 'functions_admin_menu.php');
+  require(DIR_WS_FUNCTIONS . 'functions_crud.php');
   require(DIR_WS_FUNCTIONS . 'functions_system.php');
   require(DIR_WS_FUNCTIONS . 'html_output.php');
-  require(DIR_WS_FUNCTIONS . 'functions_customers.php'); // partial copy of catalog functions customers for now
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
 
 /**
@@ -84,4 +80,3 @@ if ($a == 0) {
 }
 unset($a,$c,$e);
 // end ssl config change detection
-
