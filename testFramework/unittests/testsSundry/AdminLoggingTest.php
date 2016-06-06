@@ -32,7 +32,7 @@ class testAdminLoggingCase extends zcTestCase
     public function setUp()
     {
         parent::setUp();
-        require_once DIR_FS_ADMIN . 'includes/functions/general.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';

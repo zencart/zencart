@@ -8,15 +8,15 @@
 require_once(__DIR__ . '/../support/zcTestCase.php');
 
 /**
- * @see admin/includes/functions/general.php
+ * @see /includes/functions/functions_lookups.php
  */
-class AdminFunctionsGeneralTest extends zcTestCase
+class AttributeLookupsTest extends zcTestCase
 {
     public function setUp()
     {
         parent::setUp();
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
-        require DIR_FS_ADMIN . 'includes/functions/general.php';
+        require DIR_FS_CATALOG . 'includes/functions/functions_lookups.php';
     }
 
     public function testZenHasProductAttributesDownloadsStatusWhenDownloadEnabledIsFalse()

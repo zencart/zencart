@@ -127,7 +127,7 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
 
       if ((!isset($_GET['cID']) && !isset($_GET['pID']) || (isset($_GET['cID']) && ($_GET['cID'] == $categories->fields['categories_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
         //$category_childs = array('childs_count' => zen_childs_in_category_count($categories->fields['categories_id']));
-        //$category_products = array('products_count' => zen_products_in_category_count($categories->fields['categories_id']));
+        //$category_products = array('products_count' => zen_count_products_in_category($categories->fields['categories_id']));
 
         //$cInfo_array = array_merge($categories->fields, $category_childs, $category_products);
         $cInfo = new objectInfo($categories->fields);

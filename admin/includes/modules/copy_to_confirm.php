@@ -81,7 +81,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                   '" . $products_price . "',
                                   '" . zen_db_input($product->fields['products_virtual']) . "',
                                   now(),
-                                  " . (zen_not_null(zen_db_input($product->fields['products_date_available'])) ? "'" . zen_db_input($product->fields['products_date_available']) . "'" : 'null') . ",
+                                  " . (zen_not_null(zen_db_input($product->fields['products_date_available'])) ? "'" . zen_db_input($product->fields['products_date_available']) . "'" : 'NULL') . ",
                                   '" . $products_weight . "', '0',
                                   '" . (int)$product->fields['products_tax_class_id'] . "',
                                   '" . (int)$product->fields['manufacturers_id'] . "',
