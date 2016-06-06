@@ -56,12 +56,10 @@ abstract class zcDBTestCase extends PHPUnit_Framework_TestCase
 
     if(IS_ADMIN_FLAG)
     {
-      require_once(DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'general.php');
+      require_once DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'functions_crud.php';
+      require_once DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'functions_admin_menu.php';
     }
-    else
-    {
-      require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php');
-    }
+    require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php';
 
     require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
     require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');

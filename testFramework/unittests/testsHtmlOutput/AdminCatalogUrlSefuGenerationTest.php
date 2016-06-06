@@ -21,7 +21,7 @@ class testAdminCatalogUrlSefuGeneration extends zcTestCase
             define('IS_ADMIN_FLAG', true);
         }
         parent::setUp();
-        require DIR_FS_ADMIN . 'includes/functions/general.php';
+        require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php';
         require DIR_FS_ADMIN . 'includes/functions/html_output.php';
 
         if (!defined('ENABLE_SSL')) {

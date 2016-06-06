@@ -26,13 +26,16 @@ if (!function_exists('zen_get_admin_name')) {
  */
 class testAdminLoggingCase extends zcTestCase
 {
+    protected $preserveGlobalState = FALSE;
+    protected $runTestInSeparateProcess = TRUE;
+
     public function setUp()
     {
         parent::setUp();
-        require DIR_FS_ADMIN . 'includes/functions/general.php';
-        require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
-        require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
-        require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';
         vfsStreamWrapper::register();
         vfsStream::useDotFiles(false);
         $_SESSION['securityToken'] = 'abc';

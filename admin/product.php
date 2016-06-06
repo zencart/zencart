@@ -221,7 +221,7 @@ require('includes/admin_html_head.php');
         }
 
         // only ask if product has discounts
-        if (zen_has_product_discounts($pInfo->products_id) == 'true') {
+        if (zen_has_product_discounts($pInfo->products_id)) {
           $contents[] = array('text' => '<br />' . TEXT_COPY_DISCOUNTS_ONLY);
           $contents[] = array('text' => '<br />' . TEXT_COPY_DISCOUNTS . '<br />' . zen_draw_radio_field('copy_discounts', 'copy_discounts_yes', true) . ' ' . TEXT_COPY_DISCOUNTS_YES . '<br />' . zen_draw_radio_field('copy_discounts', 'copy_discounts_no') . ' ' . TEXT_COPY_DISCOUNTS_NO);
           $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));

@@ -695,6 +695,9 @@ function couponpopupWindow(url) {
     }
 ?>
           <tr>
+            <td align="right" colspan="8"><?php echo sprintf(TEXT_TOTAL_WEIGHT, $order->info['order_weight']); ?></td>
+          </tr>
+          <tr>
             <td align="right" colspan="8"><table border="0" cellspacing="0" cellpadding="2">
 <?php
     for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {

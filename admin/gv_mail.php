@@ -43,7 +43,7 @@
 
     while (!$mail->EOF) {
 
-      $id1 = create_coupon_code($mail->fields['customers_email_address']);
+      $id1 = zen_create_coupon_code($mail->fields['customers_email_address']);
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
                                     values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
@@ -94,7 +94,7 @@
     }
 
     if ($_POST['email_to']) {
-      $id1 = create_coupon_code($_POST['email_to']);
+      $id1 = zen_create_coupon_code($_POST['email_to']);
       $message = zen_db_prepare_input($_POST['message']);
       $message .= "\n\n" . TEXT_GV_WORTH  . $currencies->format($_POST['amount']) . "\n\n";
       $message .= TEXT_TO_REDEEM;

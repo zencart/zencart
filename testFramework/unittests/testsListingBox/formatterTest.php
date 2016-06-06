@@ -129,6 +129,8 @@ class testFormatterCase extends zcTestCase
         define('PRODUCTS_OPTIONS_TYPE_FILE', 1);
         define('PRODUCTS_OPTIONS_TYPE_TEXT', 1);
         define('PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED', 1);
+        define('PRODUCTS_OPTIONS_TYPE_READONLY', 5);
+        define('TEXT_PRODUCTS_MIX_ON', 'TEXT_PRODUCTS_MIX_ON');
         $_SESSION['languages_id'] = 1;
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
@@ -396,7 +398,9 @@ class testFormatterCase extends zcTestCase
         define('TEXT_NO_PRODUCTS', 0);
         define('PRODUCTS_QUANTITY_MIN_TEXT_LISTING', 0);
         define('PRODUCTS_QUANTITY_UNIT_TEXT_LISTING', 0);
-        define('TEXT_PRODUCTS_MIX_ON', 'TEXT_PRODUCTS_MIX_ON');
+        if (!defined('TEXT_PRODUCTS_MIX_ON')) {
+            define('TEXT_PRODUCTS_MIX_ON', 'TEXT_PRODUCTS_MIX_ON');
+        }
         $request = $this->getMock('\\ZenCart\\Request\\Request');
         $request->method('readGet')->willReturn(1);
         $qfr = $this->getMockBuilder('queryFactoryResult')

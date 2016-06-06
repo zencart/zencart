@@ -63,8 +63,8 @@
           asort($categories_all);
           $categories_all_string = ',' . implode(',', array_unique($categories_all)) . ',';
         } else {
-          $categories_selected_string = 'null';
-          $categories_all_string = 'null';
+          $categories_selected_string = 'NULL';
+          $categories_all_string = 'NULL';
         }
 
         $salemaker_sales_data_array = array('sale_name' => zen_db_prepare_input($_POST['name']),
@@ -105,8 +105,7 @@
           $salemaker_sales = $db->Execute("select * from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . zen_db_input($_GET['sID']) . "'");
           if ($salemaker_sales->RecordCount() > 0) {
 
-          $sql_data_array = array('sale_id' => 'null',
-                                  'sale_status' => 0,
+          $sql_data_array = array('sale_status' => 0,
                                   'sale_name' => $newname,
                                   'sale_date_added' => 'now()',
                                   'sale_date_last_modified' => '0001-01-01',

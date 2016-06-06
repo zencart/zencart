@@ -258,7 +258,7 @@ class order extends base {
   }
 
   function cart() {
-    global $db, $currencies;
+    global $db, $currencies, $shipping_weight, $shipping_num_boxes;
 
     $decimals = $currencies->get_decimal_places($this->currency);
 
@@ -377,7 +377,7 @@ class order extends base {
                         'tax_groups' => array(),
                         'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
                         'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
-                        'order_weight' => ($shipping_weight * $shipping_num_boxes)
+                        'order_weight' => ($shipping_weight * $shipping_num_boxes),
                         );
 
     /*
