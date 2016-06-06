@@ -702,7 +702,7 @@
       $category = $db->Execute("select cd.categories_name
                                 from " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                 where cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                and cd.categories_id = '" . (int)$parent_id . "'");
+                                and cd.categories_id = '" . (int)$parent_id . "'" . $limit_count);
 
       $category_tree_array[] = array('id' => $parent_id, 'text' => $category->fields['categories_name']);
     }
@@ -712,7 +712,7 @@
                                 where c.categories_id = cd.categories_id
                                 and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                 and c.parent_id = '" . (int)$parent_id . "'
-                                order by c.sort_order, cd.categories_name");
+                                order by c.sort_order, cd.categories_name" . $limit_count);
 
     while (!$categories->EOF) {
       if ($category_has_products == true and zen_count_products_in_category($categories->fields['categories_id'], '', false, true) >= 1) {
@@ -732,6 +732,7 @@
 
   function zen_count_products_in_cats($category_id) {
     global $db;
+    $c_array = array();
     $cat_products_query = "select count(if (p.products_status=1,1,NULL)) as pr_on, count(*) as total
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
                            where p.products_id = p2c.products_id
@@ -770,7 +771,7 @@
   function zen_get_products_to_categories($category_id, $include_inactive = false, $counts_what = 'products') {
     global $db;
 
-    $products_count = $cat_products_count = 0;
+    $cat_products_count = 0;
     $products_linked = '';
     if ($include_inactive == true) {
       switch ($counts_what) {

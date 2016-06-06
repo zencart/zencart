@@ -301,6 +301,7 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMA
       $mdate = $d . $m . $y;
       break;
     case 'mysql':
+    default:
      $mdate = $y . '-' . $m . '-' . $d;
 
   }
@@ -767,7 +768,6 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMA
       $url = parse_url($url);
       $url = $url['host'];
     }
-//echo $url;
 
     $domain_array = explode('.', $url);
     $domain_size = sizeof($domain_array);

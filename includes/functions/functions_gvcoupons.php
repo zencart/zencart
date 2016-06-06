@@ -24,7 +24,7 @@
 
     if ($customer_gv->RecordCount() > 0) {
       $new_gv_amount = $customer_gv->fields['amount'] + $coupon_gv->fields['coupon_amount'];
-      $gv_query = $db->Execute("update " . TABLE_COUPON_GV_CUSTOMER . "
+      $db->Execute("update " . TABLE_COUPON_GV_CUSTOMER . "
                                 set amount = '" . $new_gv_amount . "'
                                 where customer_id = '" . (int)$customer_id . "'");
     } else {
@@ -69,6 +69,7 @@
     $ccid .= md5(uniqid("",$salt));
     srand((double)microtime()*1000000); // seed the random number generator
     $good_result = 0;
+    $id1 = '';
     while ($good_result == 0) {
       $random_start = @rand(0, (128-$length));
       $id1=substr($ccid, $random_start, $length);

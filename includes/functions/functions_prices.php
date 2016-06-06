@@ -550,9 +550,7 @@
       case ($discount_type_id == 5):
         // No Sale and No Special
 //        $sale_maker_discount = 1;
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             if ($special_price_discount != 0) {
@@ -560,10 +558,7 @@
             } else {
               $calc = $attributes_amount;
             }
-
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
 //echo 'How much 3 - ' . $qty . ' : ' . $product_id . ' : ' . $qty . ' x ' .  $attributes_amount . ' vs ' . $check_discount_qty_price . ' - ' . $sale_maker_discount . '<br />';
@@ -571,15 +566,11 @@
       case ($discount_type_id == 59):
         // No Sale and Special
 //        $sale_maker_discount = $special_price_discount;
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -588,30 +579,22 @@
 // BOF: percentage discounts apply to Sale
       case ($discount_type_id == 120):
         // percentage discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $sale_maker_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 1209):
         // percentage discount on Sale and Special with a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $calc2 = $calc - ($calc * $sale_maker_discount);
             $sale_maker_discount = $calc - $calc2;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -620,9 +603,7 @@
 // BOF: percentage discounts skip specials
       case ($discount_type_id == 110):
         // percentage discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $sale_maker_discount);
@@ -635,25 +616,19 @@
 //            $sale_maker_discount = $calc - $calc2;
               $calc = $attributes_amount - ($attributes_amount * $sale_maker_discount);
               $sale_maker_discount = $calc;
-            } else {
-              $sale_maker_discount = $sale_maker_discount;
             }
           }
         }
         break;
       case ($discount_type_id == 1109):
         // percentage discount on Sale and Special with a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
 //            $calc2 = $calc - ($calc * $sale_maker_discount);
 //            $sale_maker_discount = $calc - $calc2;
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -662,30 +637,22 @@
 // BOF: flat amount discounts
       case ($discount_type_id == 20):
         // flat amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount - $sale_maker_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 209):
         // flat amount discount on Sale and Special with a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $calc2 = ($calc - $sale_maker_discount);
             $sale_maker_discount = $calc2;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -694,15 +661,11 @@
 // BOF: flat amount discounts Skip Special
       case ($discount_type_id == 10):
         // flat amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount - $sale_maker_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -715,8 +678,6 @@
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -725,32 +686,23 @@
 // BOF: New Price amount discounts
       case ($discount_type_id == 220):
         // New Price amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 2209):
         // New Price amount discount on Sale and Special with a special
-        if (!$attributes_id) {
-//          $sale_maker_discount = $sale_maker_discount;
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -759,32 +711,23 @@
 // BOF: New Price amount discounts - Skip Special
       case ($discount_type_id == 210):
         // New Price amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 2109):
         // New Price amount discount on Sale and Special with a special
-        if (!$attributes_id) {
-//          $sale_maker_discount = $sale_maker_discount;
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
