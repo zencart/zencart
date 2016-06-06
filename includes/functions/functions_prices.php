@@ -155,7 +155,7 @@
     // 1 = Login to shop
     // 2 = Can browse but no prices
     // verify display of prices
-    switch ($use_customer_restrictions) {
+    if ($use_customer_restrictions) switch (true) {
       case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
         // customer must be logged in to browse
         return '';
@@ -180,13 +180,10 @@
         // customer is logged in and was changed to must be approved to see prices
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
-      default:
-        // proceed normally
-        break;
     }
 
-    // show case only
-    if (STORE_STATUS != '0') {
+    // skip prices when in showcase-only mode
+    if (IS_ADMIN_FLAG === false) {
       if (STORE_STATUS == '1') {
         return '';
       }
@@ -307,7 +304,7 @@
 // Display Price Retail
 // Specials and Tax Included
   function zen_get_products_display_price($products_id) {
-    $val = zen_get_products_output_price($products_id, (IS_ADMIN_FLAG==false));
+    $val = zen_get_products_output_price($products_id, (IS_ADMIN_FLAG===false));
     if (is_array($val) && isset($val['legacy_output'])) $val = $val['legacy_output'];
     return $val;
   }
@@ -807,7 +804,7 @@
 
 ////
 // look up discount in sale makers - attributes only can have discounts if set as percentages
-// this gets the discount amount this does not determin when to apply the discount
+// this gets the discount amount this does not determine when to apply the discount
   function zen_get_products_sale_discount_type($product_id = false, $categories_id = false, $return_value = false) {
     global $currencies;
     global $db;
@@ -899,9 +896,9 @@ If a special exist * 10+9
 
 /**
  * look up discount in sale makers - attributes only can have discounts if set as percentages
- * this gets the discount amount this does not determin when to apply the discount
+ * this gets the discount amount this does not determine when to apply the discount
  * 
- * NOTE: catalog-side you should use zen_get_discout_calc() instead of this!!!
+ * NOTE: catalog-side you should use zen_get_discount_calc() instead of this!!!
  */
   function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
     global $db, $currencies;
