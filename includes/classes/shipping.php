@@ -18,7 +18,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @package classes
  */
 class shipping extends base {
-  var $modules;
+  public $modules;
+  public $abort_legacy_calculations = false;
 
   // class constructor
   function __construct($module = '') {
@@ -88,7 +89,10 @@ class shipping extends base {
   function calculate_boxes_weight_and_tare() {
     global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
-    $this->abort_legacy_calculations = FALSE;
+    // set this before any overrides/observers
+    $_SESSION['shipping_weight'] = $shipping_weight;
+
+    $this->abort_legacy_calculations = false;
     $this->notify('NOTIFY_SHIPPING_MODULE_PRE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
     if ($this->abort_legacy_calculations) return;
 
