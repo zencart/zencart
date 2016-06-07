@@ -57,9 +57,9 @@ switch (true) {
 /**
  * SSL Pages get no special treatment, since they don't usually require being indexed uniquely differently from non-SSL pages
  */
-  case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
-    $canonicalLink = '';
-    break;
+  // case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
+  //   $canonicalLink = '';
+  //   break;
 /**
  * for products (esp those linked to multiple categories):
  */
