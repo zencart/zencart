@@ -30,6 +30,7 @@ define('TABLE_CONFIGURATION_GROUP', DB_PREFIX . 'configuration_group');
 define('TABLE_COUNTER', DB_PREFIX . 'counter');
 define('TABLE_COUNTER_HISTORY', DB_PREFIX . 'counter_history');
 define('TABLE_COUNTRIES', DB_PREFIX . 'countries');
+define('TABLE_COUNTRIES_NAME', DB_PREFIX . 'countries_name');
 define('TABLE_COUPON_GV_QUEUE', DB_PREFIX . 'coupon_gv_queue');
 define('TABLE_COUPON_GV_CUSTOMER', DB_PREFIX . 'coupon_gv_customer');
 define('TABLE_COUPON_EMAIL_TRACK', DB_PREFIX . 'coupon_email_track');

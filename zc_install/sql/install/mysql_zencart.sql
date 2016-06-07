@@ -393,6 +393,20 @@ CREATE TABLE countries (
 # --------------------------------------------------------
 
 #
+# Table structure for table 'countries_name'
+#
+
+CREATE TABLE countries_name (
+  countries_id int(11) NOT NULL,
+  language_id int(11) NOT NULL DEFAULT 1,
+  countries_name varchar(64) NOT NULL,
+  UNIQUE countries (countries_id, language_id),
+  KEY idx_countries_name_zen (countries_name)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
 # Table structure for table 'coupon_email_track'
 #
 
