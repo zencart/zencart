@@ -837,7 +837,7 @@ function check_form() {
     if ($entry_country_error == true) {
       echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries_for_pulldown(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
     } else {
-      echo zen_get_country_name($cInfo->entry_country_id) . zen_draw_hidden_field('entry_country_id');
+      echo zen_get_country_name($cInfo->entry_country_id, $_SESSION['languages_id']) . zen_draw_hidden_field('entry_country_id');
     }
   } else {
     echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries_for_pulldown(), $cInfo->entry_country_id);
@@ -1164,7 +1164,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
 
       if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customer['customers_id']))) && !isset($cInfo)) {
         $country = $db->Execute("select countries_name
-                                 from " . TABLE_COUNTRIES . "
+                                 from " . TABLE_COUNTRIES_NAME . "
                                  where countries_id = '" . (int)$customer['entry_country_id'] . "'");
 
         $reviews = $db->Execute("select count(*) as number_of_reviews
