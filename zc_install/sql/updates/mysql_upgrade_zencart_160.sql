@@ -85,18 +85,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 DELETE FROM configuration where configuration_key = 'PHPBB_LINKS_ENABLED' && configuration_value != 'true';
 
-
-UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
-UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE', 'ITA');
-UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
-UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
-UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
-UPDATE countries set countries_name = 'Bonaire, Sint Eustatius and Saba', countries_iso_code_2 = 'BQ', countries_iso_code_3 = 'BES' WHERE countries_iso_code_3 = 'ANT';
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (247,'Curaçao','CW','CUW','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (248,'Sint Maarten (Dutch part)','SX','SXM','1');
-
-ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
-
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 
 ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
@@ -362,6 +350,16 @@ INSERT INTO listingboxes_to_listingboxgroups (listingbox, group_id, sort_order) 
 ('UpcomingProductsCenter', 1, 4);
 
 
+UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
+UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE', 'ITA');
+UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
+UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
+UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
+UPDATE countries set countries_name = 'Bonaire, Sint Eustatius and Saba', countries_iso_code_2 = 'BQ', countries_iso_code_3 = 'BES' WHERE countries_iso_code_3 = 'ANT';
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (247,'Curaçao','CW','CUW','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (248,'Sint Maarten (Dutch part)','SX','SXM','1');
+ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
+
 CREATE TABLE countries_name (
   countries_id int(11) NOT NULL,
   language_id int(11) NOT NULL DEFAULT 1,
@@ -372,8 +370,16 @@ CREATE TABLE countries_name (
 
 INSERT INTO countries_name (countries_id, countries_name)
 SELECT c.countries_id, c.countries_name
-FROM countries c
-ALTER TABLE countries DROP countries_name
+FROM countries c;
+ALTER TABLE countries DROP countries_name;
+
+
+
+
+
+
+
+
 
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
 ## CHANGE-411 increase size of fileds in admin profile related tables
