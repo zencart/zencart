@@ -377,17 +377,29 @@ CREATE TABLE counter_history (
 DROP TABLE IF EXISTS countries;
 CREATE TABLE countries (
   countries_id int(11) NOT NULL auto_increment,
-  countries_name varchar(64) NOT NULL default '',
   countries_iso_code_2 char(2) NOT NULL default '',
   countries_iso_code_3 char(3) NOT NULL default '',
   address_format_id int(11) NOT NULL default '0',
   status tinyint(1) default 1,
   PRIMARY KEY  (countries_id),
-  KEY idx_countries_name_zen (countries_name),
   KEY idx_address_format_id_zen (address_format_id),
   KEY idx_iso_2_zen (countries_iso_code_2),
   KEY idx_iso_3_zen (countries_iso_code_3),
   KEY idx_status_zen (status, countries_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'countries_name'
+#
+
+CREATE TABLE countries_name (
+  countries_id int(11) NOT NULL,
+  language_id int(11) NOT NULL DEFAULT 1,
+  countries_name varchar(64) NOT NULL,
+  UNIQUE countries (countries_id, language_id),
+  KEY idx_countries_name_zen (countries_name)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------

@@ -361,6 +361,20 @@ INSERT INTO listingboxes_to_listingboxgroups (listingbox, group_id, sort_order) 
 ('SpecialsProductsCenter', 1, 2),
 ('UpcomingProductsCenter', 1, 4);
 
+
+CREATE TABLE countries_name (
+  countries_id int(11) NOT NULL,
+  language_id int(11) NOT NULL DEFAULT 1,
+  countries_name varchar(64) NOT NULL,
+  UNIQUE countries (countries_id, language_id),
+  KEY idx_countries_name_zen (countries_name)
+) ENGINE=MyISAM;
+
+INSERT INTO countries_name (countries_id, countries_name)
+SELECT c.countries_id, c.countries_name
+FROM countries c
+ALTER TABLE countries DROP countries_name
+
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
 ## CHANGE-411 increase size of fileds in admin profile related tables
 ## CHANGE-367 - Dashboard Widgets for 1.6 Admin Home Page (including ajax infrastructure)

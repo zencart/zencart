@@ -21,11 +21,13 @@
     $countries_array = array();
     if (zen_not_null($countries_id)) {
       $countries_array['countries_name'] = '';
-      $countries = "select countries_name, countries_iso_code_2, countries_iso_code_3
-                    from " . TABLE_COUNTRIES . "
-                    where countries_id = '" . (int)$countries_id . "'";
-      if ($activeOnly) $countries .= " and status != 0 ";
-      $countries .= " order by countries_name";
+      $countries = "select cn.countries_name, c.countries_iso_code_2, c.countries_iso_code_3
+                    from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn
+                    where c.countries_id = '" . (int)$countries_id . "'
+                    and cn.countries_id = c.countries_id
+                    and cn.language_id = " . (int)$_SESSION['languages_id'];
+      if ($activeOnly) $countries .= " and c.status != 0 ";
+      $countries .= " order by cn.countries_name";
       $countries_values = $db->Execute($countries);
 
       if ($with_iso_codes == true) {
@@ -40,10 +42,12 @@
         if (!$countries_values->EOF) $countries_array = array('countries_name' => $countries_values->fields['countries_name']);
       }
     } else {
-      $countries = "select countries_id, countries_name
-                    from " . TABLE_COUNTRIES . " ";
-      if ($activeOnly) $countries .= " where status != 0 ";
-      $countries .= " order by countries_name";
+      $countries = "select c.countries_id, cn.countries_name
+                    from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn
+                    where cn.countries_id = c.countries_id
+                    and cn.language_id = " . (int)$_SESSION['languages_id'];
+      if ($activeOnly) $countries .= " and c.status != 0 ";
+      $countries .= " order by cn.countries_name";
       $countries_values = $db->Execute($countries);
       while (!$countries_values->EOF) {
         $countries_array[] = array('countries_id' => $countries_values->fields['countries_id'],
@@ -65,9 +69,11 @@
       $countries_array[] = array('id' => '',
                                  'text' => $default);
     }
-    $countries = $db->Execute("select countries_id, countries_name
-                               from " . TABLE_COUNTRIES . "
-                               order by countries_name");
+    $countries = $db->Execute("select c.countries_id, cn.countries_name
+                               from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn
+                               where cn.countries_id = c.countries_id
+                               and cn.language_id = " . (int)$_SESSION['languages_id'] . "
+                               order by cn.countries_name");
 
     while (!$countries->EOF) {
       $countries_array[] = array('id' => $countries->fields['countries_id'],

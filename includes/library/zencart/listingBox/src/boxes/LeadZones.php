@@ -25,8 +25,8 @@ class LeadZones extends AbstractLeadListingBox
                 'fkeyFieldLeft' => 'zone_id',
             ),
             'joinTables' => array(
-                'TABLE_COUNTRIES' => array(
-                    'table' => TABLE_COUNTRIES,
+                'TABLE_COUNTRIES_NAME' => array(
+                    'table' => TABLE_COUNTRIES_NAME,
                     'alias' => 'c',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'zone_country_id',
@@ -34,6 +34,18 @@ class LeadZones extends AbstractLeadListingBox
                     'addColumns' => true
                 )
             ),
+            'whereClauses' => array(
+                array(
+                    'table' => TABLE_COUNTRIES_NAME,
+                    'field' => 'language_id',
+                    'value' => (int)$_SESSION ['languages_id'],
+                    'type' => 'AND'
+                )
+            ),
+            'language' => true,
+            'singleTable' => true,
+            'languageInfoTable' => TABLE_COUNTRIES_NAME,
+            'languageKeyField' => 'language_id',
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
@@ -87,10 +99,10 @@ class LeadZones extends AbstractLeadListingBox
                     )
                 ),
                 'countries_name' => array(
-                    'parentTable' => TABLE_COUNTRIES,
+                    'parentTable' => TABLE_COUNTRIES_NAME,
                     'bindVarsType' => 'string',
                     'autocomplete' => array(
-                        'dataTable' => TABLE_COUNTRIES,
+                        'dataTable' => TABLE_COUNTRIES_NAME,
                         'dataSearchField' => 'countries_name',
                         'valueResponse' => 'countries_name',
                         'dataResponse' => 'countries_id',
