@@ -25,7 +25,7 @@
                     from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn
                     where c.countries_id = '" . (int)$countries_id . "'
                     and cn.countries_id = c.countries_id
-                    and cn.language_id = " . $_SESSION['languages_id'];
+                    and cn.language_id = " . (int)$_SESSION['languages_id'];
       if ($activeOnly) $countries .= " and c.status != 0 ";
       $countries .= " order by cn.countries_name";
       $countries_values = $db->Execute($countries);
@@ -45,7 +45,7 @@
       $countries = "select c.countries_id, cn.countries_name
                     from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn
                     where cn.countries_id = c.countries_id
-                    and cn.language_id = " . $_SESSION['languages_id'];
+                    and cn.language_id = " . (int)$_SESSION['languages_id'];
       if ($activeOnly) $countries .= " and c.status != 0 ";
       $countries .= " order by cn.countries_name";
       $countries_values = $db->Execute($countries);
@@ -72,7 +72,7 @@
     $countries = $db->Execute("select c.countries_id, cn.countries_name
                                from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn
                                where cn.countries_id = c.countries_id
-                               and cn.language_id = " . $_SESSION['languages_id'] . "
+                               and cn.language_id = " . (int)$_SESSION['languages_id'] . "
                                order by cn.countries_name");
 
     while (!$countries->EOF) {

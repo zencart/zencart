@@ -38,7 +38,7 @@ class LeadZones extends AbstractLeadListingBox
                 array(
                     'table' => TABLE_COUNTRIES_NAME,
                     'field' => 'language_id',
-                    'value' => $_SESSION ['languages_id'],
+                    'value' => (int)$_SESSION ['languages_id'],
                     'type' => 'AND'
                 )
             ),
