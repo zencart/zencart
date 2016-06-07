@@ -18,6 +18,12 @@ define('NAMESPACE_AJAXDISPATCH', 'ZenCart\AjaxDispatch');
 define('NAMESPACE_LEAD', 'ZenCart\Lead');
 define('NAMESPACE_CHECKOUTFLOW', 'ZenCart\CheckoutFlow');
 define('NAMESPACE_VIEW', 'ZenCart\View');
+define('NAMESPACE_ADMINUSER', 'ZenCart\AdminUser');
+define('NAMESPACE_VALITRON', 'Valitron');
+define('NAMESPACE_FORMVALIDATION', 'ZenCart\FormValidation');
+define('NAMESPACE_AURADI', 'Aura\Di');
+define('NAMESPACE_INTEROPCONTAINER', 'Interop\Container');
+define('NAMESPACE_ADMINNOTIFICATIONS', 'ZenCart\AdminNotifications');
 
 define('URL_SERVICES', 'zencart/Services/src/');
 define('URL_CONTROLLERS', 'zencart/Controllers/src/');
@@ -30,6 +36,12 @@ define('URL_REQUEST', 'zencart/Request/src/');
 define('URL_LEAD', 'zencart/Lead/src/');
 define('URL_CHECKOUTFLOW', 'zencart/CheckoutFlow/src/');
 define('URL_VIEW', 'zencart/View/src/');
+define('URL_ADMINUSER', 'zencart/AdminUser/src/');
+define('URL_VALITRON', 'valitron/src/Valitron');
+define('URL_FORMVALIDATION', 'zencart/FormValidation/src/');
+define('URL_AURADI', 'aura/AuraDi/src/');
+define('URL_INTEROPCONTAINER', 'container-interop/src/Interop/Container/');
+define('URL_ADMINNOTIFICATIONS', 'zencart/AdminNotifications/src/');
 
 /**
  * An array of namespace => basedir configurations
@@ -47,4 +59,11 @@ return array(
     NAMESPACE_LEAD => DIR_CATALOG_LIBRARY. URL_LEAD,
     NAMESPACE_CHECKOUTFLOW => DIR_CATALOG_LIBRARY. URL_CHECKOUTFLOW,
     NAMESPACE_VIEW => DIR_CATALOG_LIBRARY. URL_VIEW,
+    NAMESPACE_ADMINUSER => DIR_CATALOG_LIBRARY. URL_ADMINUSER,
+    NAMESPACE_VALITRON => DIR_CATALOG_LIBRARY. URL_VALITRON,
+    NAMESPACE_FORMVALIDATION => DIR_CATALOG_LIBRARY. URL_FORMVALIDATION,
+    NAMESPACE_AURADI => DIR_CATALOG_LIBRARY. URL_AURADI,
+    NAMESPACE_INTEROPCONTAINER => DIR_CATALOG_LIBRARY. URL_INTEROPCONTAINER,
+    NAMESPACE_ADMINNOTIFICATIONS => DIR_CATALOG_LIBRARY. URL_ADMINNOTIFICATIONS,
+
 );

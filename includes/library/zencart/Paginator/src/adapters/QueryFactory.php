@@ -25,6 +25,7 @@ class QueryFactory extends AbstractAdapter implements AdapterInterface
      */
     public function getResultList($data, array $params)
     {
+//        print_r($data['mainSql']);
         $limit = $params['currentItem'] - 1 . ',' . $params['itemsPerPage'];
         $results = $data['dbConn']->execute($data['mainSql'], $limit);
         $resultList = array();

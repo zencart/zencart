@@ -28,9 +28,10 @@ abstract class AbstractListingBox extends \base
     /**
      * @param \ZenCart\Request\Request $request
      */
-    public function __construct(\ZenCart\Request\Request $request)
+    public function __construct(\ZenCart\Request\Request $request, $db)
     {
         $this->request = $request;
+        $this->dbConn = $db;
         $this->initQueryAndLayout();
         $this->notify('NOTIFY_LISTINGBOX_CONSTRUCT_END');
     }
@@ -47,7 +48,7 @@ abstract class AbstractListingBox extends \base
 
         $this->notify('NOTIFY_LISTINGBOX_BUILDRESULTS_START');
         $this->tplVars['filter'] = $this->doFilters($db);
-        $queryBuilder->processQuery($this->listingQuery);
+        $queryBuilder->processQuery($this->getListingQuery());
         $query = $queryBuilder->getQuery();
         $query['dbConn'] = $db;
         $resultItems = $this->processPaginatorResults($paginator, $query, $db);
@@ -90,7 +91,7 @@ abstract class AbstractListingBox extends \base
         $finalItems = [];
         $derivedItems = issetorArray($this->listingQuery, 'derivedItems', array());
         foreach ($resultItems as $resultItem) {
-            $resultItem = $derivedItemsManager->manageDerivedItems($derivedItems, $resultItem);
+            $resultItem = $derivedItemsManager->manageDerivedItems($derivedItems, $resultItem, $this->leadDefinition['action']);
             $finalItems [] = $resultItem;
         }
 
@@ -268,17 +269,31 @@ abstract class AbstractListingBox extends \base
     /**
      * @return array
      */
-    public function getListingQuery()
+    public function getListingQuery($type = null)
     {
-        return $this->listingQuery;
+        $result = $this->listingQuery;
+        if (!isset($type) && isset($this->listingQuery['main'])) {
+            $result = $this->listingQuery['main'];
+        }
+        if (isset($type)) {
+            $result = $this->listingQuery[$type];
+        }
+        return $result;
     }
 
     /**
      * @return array
      */
-    public function getOutputLayout()
+    public function getOutputLayout($type = null)
     {
-        return $this->outputLayout;
+        $result = $this->outputLayout;
+        if (!isset($type) && isset($this->outputLayout['main'])) {
+            $result = $this->outputLayout['main'];
+        }
+        if (isset($type)) {
+            $result = $this->outputLayout[$type];
+        }
+        return $result;
     }
 
     /**

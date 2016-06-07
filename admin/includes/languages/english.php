@@ -42,7 +42,7 @@ define('HEADER_TITLE_TOP', 'Admin Home');
 define('HEADER_TITLE_SUPPORT_SITE', 'Support');
 define('HEADER_TITLE_ONLINE_CATALOG', 'Storefront');
 define('HEADER_TITLE_VERSION', 'Version');
-define('HEADER_TITLE_ACCOUNT', 'Account');
+define('HEADER_TITLE_ACCOUNT', 'My Account');
 define('HEADER_TITLE_LOGOFF', 'Logoff');
 //define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 
@@ -750,3 +750,8 @@ define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
 define('TEXT_AUTOCOMPLETE_DEFAULT_PLACEHOLDER', 'Search or Select below');
 define('TEXT_DELETE_LINKED_ITEMS', 'Delete Linked Products');
 define('TEXT_DELETE_IMAGE', 'Delete Linked Image');
+
+// notifications
+
+define('TEXT_HEADER_NOTIFICATIONS_COUNT', 'You have %s notifications');
+define('TEXT_HEADER_GV_QUEUE', 'Gift Voucher Queue .. %s Item(s)');

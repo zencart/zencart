@@ -7,179 +7,88 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
+//print_r($tplVars);
 ?>
-<div id="colone">
-<div class="container">
-  <div class="row">
-    <div class="small-12 columns widget-tools">
-      <a href="#" class="widget-add">+ Add Widget</a>
-    </div>
-  </div>
-  <div class="row" id="main-sortables">
-<?php require(DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php'); ?>
-  </div>
-</div>
-<div id="deleteWidget" class="reveal-modal small" data-reveal>
-<a class="close-reveal-modal">x</a>
-<p><?php echo TEXT_CONFIRM_REMOVE; ?></p>
-<a class="radius button remove" href="#"><?php echo TEXT_REMOVE; ?></a>
-<a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
+<section class="content-header">
+    <h1><a href="#" class="widget-add">+ Add Widget</a></h1>
+</section>
+
+<div class="row">
+    <?php for ($column = 0; $column < 3; $column++) { ?>
+        <section class="col-lg-4 connectedSortable ui-sortable">
+            <?php if (isset($tplVars['widgetInfoList'][$column])) { ?>
+                <?php foreach ($tplVars['widgetInfoList'][$column] as $widget) { ?>
+                    <?php $tplVars['widget'] = $tplVars['widgets'][$widget['widget_key']]; ?>
+
+                    <div id="<?php echo $tplVars['widgets'][$widget['widget_key']]['widgetBaseId']; ?>" class="flipable">
+
+                        <div class="flip-front box box-solid <?php echo $widget['widget_theme']; ?> sortable">
+                            <div class="box-header ui-sortable-handle" style="cursor: move;">
+                                <i class="fa <?php echo $widget['widget_icon']; ?>"></i>
+
+                                <h3 class="box-title"><?php echo $tplVars['widgets'][$widget['widget_key']]['widgetTitle']; ?></h3>
+
+                                <div class="pull-right box-tools">
+                                    <button class="btn btn-success btn-sm" data-widget="settings" type="button">
+                                        <i class="fa fa-wrench"></i>
+                                    </button>
+                                    <button class="btn btn-success btn-sm" data-widget="collapse" type="button">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button class="btn btn-success btn-sm" data-widget="remove" type="button">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <?php
+                                if (file_exists($tplVars['widgets'][$widget['widget_key']]['templateFile'])) {
+                                    require($tplVars['widgets'][$widget['widget_key']]['templateFile']);
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                    </div>
+                <?php } ?>
+            <?php } ?>
+        </section>
+    <?php } ?>
 </div>
 
-<div id="add-widget" class="reveal-modal small" data-reveal>
-<div class="add-widget-container"></div>
-<a class="close-reveal-modal">x</a>
-<a class="radius secondary button dismiss" href="#"><?php echo TEXT_CANCEL; ?></a>
+
+
+
+
+
+<div id="add-widget" class="modal fade " tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >Add Widget</h4>
+            </div>
+            <div class="modal-body add-widget-container">
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+
+
+
 
 <script>
-var intervalTimers = new Array();
-$(function() {
-  <?php if (isset($tplVars['widgetList']) && sizeof($tplVars['widgetList']) == 0) { ?> 
-  <?php foreach ($tplVars['widgetList'] as $widgetObject) { ?>
-    <?php $widget = $widgetObject->getWidgetInfo(); ?>
-    <?php if ($widget['widget_refresh'] != 0) { ?>
-      createWidgetIntervalTimer('<?php echo $widget['widget_key']; ?>', '<?php echo $widget['widget_refresh']; ?>');
-    <?php } ?>
-  <?php } ?>
 
-  <?php } ?>
-  createSortables();
+//    $('.dismiss').click(function() {
+//        $('a.close-reveal-modal').trigger('click');
+//    });
 
 
-  $('.widget-add').click(function (e) {
-      zcJS.ajax({
-        url: "zcAjaxHandler.php?act=dashboardWidget&method=getInstallableWidgets",
-        data: {}
-      }).done(function( response ) {
-        $('.add-widget-container').html(response.html);
-        $('#add-widget').foundation('reveal', 'open');
-      }).fail(function( response ) {
-        window.location.replace("<?php echo zen_admin_href_link(FILENAME_LOGIN);?>"); 
-      });
 
 
-      });
-
-    $('.dismiss').click(function() {
-      $('a.close-reveal-modal').trigger('click');
-    });
-  });
-
-
-function createSortables() {
-  $(".sortable-column").sortable(
-  {
-    connectWith : ".sortable-column",
-    handle: '.widget-handle',
-    placeholder: "ui-sortable-placeholder",
-    forcePlaceholderSize: true,
-    update : function(event, ui)
-    {
-      if (this === ui.item.parent()[0]) {
-        var itemStr = getItems('.sortable-column');
-        zcJS.ajax({
-          url: "zcAjaxHandler.php?act=dashboardWidget&method=updateWidgetPositions",
-          data: {'items': itemStr}
-        }).done(function( msg ) {
-        });
-      }
-    }
-  });
-
-    $('.widget-minimize').unbind('click').click(function (e) {
-    var id = $(this).parents('.widget-container').attr('id');
-    if ($(this).html() == '<i class="fa fa-toggle-down"></i>')
-    {
-      $(this).html('<i class="fa fa-toggle-up"></i>');
-    } else
-    {
-      $(this).html('<i class="fa fa-toggle-down"></i>');
-    }
-    $('#'+id).find('.widget-body').toggle();
-  });
-
-  $('.widget-edit').unbind('click').click(function (e) {
-    if ($('.widget-edit-form').length == 0)
-    {
-      var id = $(this).parents('.widget-container').attr('id');
-      doWidgetEdit(id);
-    }
-  });
-
-
-  $('.widget-close').unbind('click').click(function (e) {
-    var id = $(this).parents('.widget-container').attr('id');
-    $('#deleteWidget').foundation('reveal', 'open');
-    $('.dismiss').click(function() {
-      $('#deleteWidget').foundation('reveal', 'close');
-    });
-    $('.remove').unbind('click').click(function() {
-      $('#deleteWidget').foundation('reveal', 'close');
-      $('#'+id).hide();
-      var itemStr = id;
-      zcJS.ajax({
-        url: "zcAjaxHandler.php?act=dashboardWidget&method=removeWidget",
-        data: {'item': itemStr}
-      }).done(function( response ) {
-      });
-    })
-  });
-}
-
-function getItems(container)
-{
-  var columns = [];
-  $(container).each(function(){
-    columns.push($(this).sortable('toArray').join(','));
-  });
-  return columns.join('|');
-}
-function doWidgetEdit(id)
-{
-  //$(".columns").sortable('disable');
-  zcJS.ajax({
-    url: "zcAjaxHandler.php?act=dashboardWidget&method=getWidgetEdit",
-    data: {'id': id}
-  }).done(function( response ) {
-    if (response.html)
-    {
-      $('#'+ id).find('.widget-body').html(response.html);
-      createSortables();
-    }
-  });
-}
-function createWidgetIntervalTimer(key, interval)
-{
-  var realInterval = interval * 1000;
-  if (intervalTimers[key]) {
-    timer = intervalTimers[key];
-    timer.Stop();
-    delete timer;
-    if (interval != 0)
-    {
-      var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
-      intervalTimers[key] = timer;
-      timer.Start();
-    }
-  } else {
-    if (interval != 0)
-    {
-      var timer = new zcJS.timer({interval: realInterval, intervalEvent: doIntervalProcess, key: key});
-      intervalTimers[key] = timer;
-      timer.Start();
-    }
-  }
-}
-
-function doIntervalProcess(timer)
-{
-  zcJS.ajax({
-    url: "zcAjaxHandler.php?act=dashboardWidget&method=timerUpdate",
-    data: {'id': timer.settings.key}
-  }).done(function( response ) {
-    $('#'+ timer.settings.key).find('.widget-body').html(response.html);
-  });
-}
 </script>
-</div>

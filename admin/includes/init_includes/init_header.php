@@ -10,6 +10,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
+$adminNotifications = $di->get('zencart_notifications');
+
 // Show Languages Dropdown for convenience only if main filename and directory exists
 if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PHP_SELF) != FILENAME_PRODUCTS_OPTIONS_NAME . '.php') and empty($action)) {
   $languages_array = array();
@@ -37,7 +39,10 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
 
     // if languages in table do not match valid languages show error message
     if ($count != sizeof($languages)) {
-      $messageStack->add('MISSING LANGUAGE FILES OR DIRECTORIES ...' . $missing_languages,'caution');
+//      $messageStack->add('MISSING LANGUAGE FILES OR DIRECTORIES ...' . $missing_languages,'caution');
+      $notification = array('type' => 'bell', 'text' => 'MISSING LANGUAGE ' . $missing_languages, 'class' => 'fa fa-warning text-red');
+      $adminNotifications->addNotification($notification);
+
     }
     $hide_languages= false;
   } else {
@@ -173,6 +178,12 @@ if (SHOW_GV_QUEUE==true && (zen_is_superuser() || check_page(FILENAME_ORDERS, ar
   $new_gv_queue_cnt = 0;
   if ($new_gv_queue->RecordCount() > 0) {
     $new_gv_queue_cnt= $new_gv_queue->RecordCount();
-    $goto_gv = '<a href="' . zen_admin_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="btn btn-info" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
+    $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE) . '">' . '<input type="button" class="btn btn-info" value="' . IMAGE_GIFT_QUEUE . '"/></a>';
+
+
+    $adminNotifications = $di->get('zencart_notifications');
+    $notification = array('type' => 'bell', 'text' => sprintf(TEXT_HEADER_GV_QUEUE, $new_gv_queue_cnt), 'link' => zen_href_link(FILENAME_GV_QUEUE), 'pageKey' => 'gvQueue');
+    $adminNotifications->addNotification($notification);
+
   }
 }
