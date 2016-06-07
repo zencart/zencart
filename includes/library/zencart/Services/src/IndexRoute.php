@@ -53,7 +53,7 @@ class IndexRoute extends AbstractService
         $storeOwnerEmail = $this->request->readPost('store_owner_email', ((STORE_OWNER_EMAIL_ADDRESS != '') ? STORE_OWNER_EMAIL_ADDRESS : ''));
         $storeCountry = $this->request->readPost('store_country', ((STORE_COUNTRY != '') ? STORE_COUNTRY : ''));
         $storeZone = $this->request->readPost('store_zone', ((STORE_ZONE != '') ? STORE_ZONE : ''));
-        $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries(), $storeCountry, 'id="store_country" tabindex="4"');
+        $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries_for_pulldown(), $storeCountry, 'id="store_country" tabindex="4"');
         $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone" tabindex="5"');
         $this->listener->setTplVar('storeName', $storeName);
         $this->listener->setTplVar('storeAddress', $storeAddress);
