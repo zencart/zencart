@@ -1166,7 +1166,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
         $country = $db->Execute("select countries_name
                                  from " . TABLE_COUNTRIES_NAME . "
                                  where countries_id = '" . (int)$customer['entry_country_id'] . "'
-                                 and language_id = " . $_SESSION['languages_id']);
+                                 and language_id = " . (int)$_SESSION['languages_id']);
 
         $reviews = $db->Execute("select count(*) as number_of_reviews
                                  from " . TABLE_REVIEWS . " where customers_id = '" . (int)$customer['customers_id'] . "'");
