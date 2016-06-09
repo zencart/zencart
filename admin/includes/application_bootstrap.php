@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:
@@ -44,7 +44,7 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
   error_reporting(0);
 }
 // set php_self in the local scope
-if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
+if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
 $PHP_SELF = htmlspecialchars($PHP_SELF);
 // Suppress html from error messages
 @ini_set("html_errors","0");
