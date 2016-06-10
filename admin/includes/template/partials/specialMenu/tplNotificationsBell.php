@@ -9,7 +9,7 @@
 //echo count($tplVars['notifications']['bell'])
 ?>
 
-<?php if (isset($tplVars['notifications']['bell'])) { ?>}
+<?php if (isset($tplVars['notifications']['bell'])) { ?>
 <li class="dropdown notifications-menu">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="fa fa-bell-o"></i>
