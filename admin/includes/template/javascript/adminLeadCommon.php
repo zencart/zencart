@@ -19,10 +19,10 @@
                 myCheckboxes.push($(this).val());
             });
             if (myCheckboxes.length > 0) {
-                $("#rowMultiDeleteModal").foundation('reveal', 'open');
+                $("#rowMultiDeleteModal").modal('show');
                 $( "#rowMultiDeleteConfirm").unbind( "click" );
                 $('#rowMultiDeleteConfirm').on('click', function (e) {
-                    $("#rowMultiDeleteModal").foundation('reveal', 'close');
+                    $("#rowMultiDeleteModal").modal('hide');
                     zcJS.ajax({
                         url: '<?php echo zen_admin_href_link($_GET['cmd'], zen_get_all_get_params(array('action')) . "action=multiDelete"); ?>',
                         data: {'selected[]': myCheckboxes}

@@ -6,12 +6,14 @@
  */
 namespace ZenCart\Controllers;
 use ZenCart\Services\IndexRoute;
+use ZenCart\Request\Request as Request;
+use ZenCart\AdminUser\AdminUser as User;
 
 /**
  * Class Index
  * @package ZenCart\Controllers
  */
-class Index extends AbstractController
+class Index extends AbstractAdminController
 {
     /**
      * @var bool
@@ -28,9 +30,9 @@ class Index extends AbstractController
      * @param $request
      * @param $db
      */
-    public function __construct($controllerCommand, $request, $db)
+    public function __construct(Request $request, $db, User $user)
     {
-        parent::__construct($controllerCommand, $request, $db);
+        parent::__construct($request, $db, $user);
         $this->service = new IndexRoute($this, $request, $db);
     }
 

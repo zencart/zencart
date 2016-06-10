@@ -75,10 +75,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
-  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
-                               'className'=>'\\ZenCart\\Request\\Request',
-                               'objectName'=>'zcRequest');
-
 /**
  * Breakpoint 10.
  *
@@ -141,6 +137,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_sessions.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_security_token.php');
+$autoLoadConfig[60][] = array('autoType'=>'init_script',
+                              'loadFile'=> 'init_di_container.php');
+
 /**
  * Breakpoint 70.
  *

@@ -88,6 +88,11 @@ class LeadOrdersStatus extends AbstractLeadListingBox
                             'size' => '30'
                         )
                     ),
+                    'validations' => array(
+                        'rules' => array(
+                            array('type' => 'lengthBetween', 'params'=>array(4,12))
+                        )
+                    ),
                     'fieldFormatter' => array(
                         'callable' => $orderStatusName
                     )

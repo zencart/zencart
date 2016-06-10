@@ -1,4 +1,5 @@
 <?php
+use ZenCart\AdminUser\AdminUser;
 /**
  * @package admin
  * @copyright Copyright 2003-2015 Zen Cart Development Team
@@ -37,7 +38,8 @@ if (file_exists($controllerFile))
     if (class_exists($controllerName))
     {
         $foundAction = TRUE;
-        $actionClass = new $controllerName($controllerCommand, $zcRequest, $db);
+        $actionClass = $di->newInstance($controllerName);
+//        $actionClass = new $controllerName($zcRequest, $db, new AdminUser($_SESSION['admin_id']));
         $actionClass->invoke();
     }
 }

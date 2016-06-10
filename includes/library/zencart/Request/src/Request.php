@@ -34,10 +34,10 @@ class Request extends \base
     /**
      * constructor
      */
-    public function __construct(WebRequest $webRequest = null, Session $session = null)
+    public function __construct(WebRequest $webRequest, Session $session)
     {
-        $this->request = $webRequest ? : (new WebFactory($GLOBALS))->newRequest();
-        $this->session  = $session ? : new Session;
+        $this->request = $webRequest;
+        $this->session  = $session;
         $this->initParameterBag();
     }
 

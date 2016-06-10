@@ -11,10 +11,10 @@
  * @version $Id: debug_logs_checker.php Ajeh $
  */
 
-  if ($_GET['cmd'] != FILENAME_VIEW_LOG) { 
-     $cnt_logs = get_logs_data('count');
-     if ($cnt_logs > 0){
-       $messageStack->add(DEBUG_LOGS_DISCOVERED . $cnt_logs);
-       $messageStack->add(DEBUG_LOGS_WARNING);
-     }
+  $cnt_logs = get_logs_data('count');
+  if ($cnt_logs > 0){
+
+    $adminNotifications = $di->get('zencart_notifications');
+    $notification = array('type' => 'bell', 'text' => DEBUG_LOGS_DISCOVERED . $cnt_logs, 'class' => 'fa fa-warning text-red');
+    $adminNotifications->addNotification($notification);
   }

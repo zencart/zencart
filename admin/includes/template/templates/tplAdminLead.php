@@ -8,66 +8,65 @@
  * @version $Id: New in v1.6.0 $
  */
 ?>
-<div class="container" id="adminLeadContainer">
-  <div class="row">
-    <div class="row">
-      <div class="left small-9 columns">
-        <h1><?php echo $tplVars['leadDefinition']['pageTitle']; ?></h1>
-      </div>
-      <div class="small-2 columns">
-        <label class="inline" for="paginationQueryLimit"><?php echo TEXT_PAGINATION_LIMIT_SELECT; ?></label>
-      </div>
-      <div class="small-1 columns">
-       <?php echo zen_draw_pull_down_menu('paginationQueryLimit', $tplVars['leadDefinition']['paginationLimitSelect'], $tplVars['leadDefinition']['paginationLimitDefault'], 'id="paginationQueryLimit" style="width:auto"')?>
-      </div>
-    </div>
-    <?php if ($tplVars['leadDefinition']['headerTemplate']) { ?>
-    <div class="left small-9 columns">
-      <?php require 'includes/template/partials/'.$tplVars['leadDefinition']['headerTemplate']; ?>
-    </div>
-    <?php } ?>
-  </div>
 
-  <div class="row">
-    <div class="large-2 columns">
-      <div class="panel multi">
-        <div class="panel">
-          <?php foreach ($tplVars['leadDefinition']['actionLinks'] as $actionLink) { ?>
-          <a
-            href="<?php echo $actionLink['href']; ?>"
-            class="button expand radius lead"><?php echo $actionLink['text']; ?></a><br>
-          <?php }?>
-        </div>
-        <?php if (isset($tplVars['leadDefinition']['relatedLinks'])) { ?>
-        <div class="panel">
-          <h1><?php echo TEXT_LEAD_RELATED; ?></h1>
-          <?php foreach ($tplVars['leadDefinition']['relatedLinks'] as $relatedLink) { ?>
-          <a href="<?php echo $relatedLink['href']; ?>"
-            class="button expand radius lead" <?php if (isset($relatedLink['target'])) {?> target="<?php echo $relatedLink['target']; ?>" <?php } ?>>
-              <?php echo $relatedLink['text']; ?></a>
-          <?php }?>
-        </div>
-        <?php } ?>
-      </div>
+<section class="content-header row">
+    <h1 class="pull-left"><?php echo $tplVars['leadDefinition']['pageTitle']; ?></h1>
+    <div class="form pull-right">
+        <label for="paginationQueryLimit"><?php echo TEXT_PAGINATION_LIMIT_SELECT; ?></label>
+        <?php echo zen_draw_pull_down_menu('paginationQueryLimit', $tplVars['leadDefinition']['paginationLimitSelect'], $tplVars['leadDefinition']['paginationLimitDefault'], 'id="paginationQueryLimit" style="width:auto"')?>
     </div>
-    <div id="adminLeadMainContent">
-      <?php require 'includes/template/partials/'.$tplVars['leadDefinition']['contentTemplate']; ?>
-    </div>
-  </div>
-</div>
+</section>
+<?php if ($tplVars['leadDefinition']['headerTemplate']) { ?>
+<section class="content-header row">
+    <?php require 'includes/template/partials/'.$tplVars['leadDefinition']['headerTemplate']; ?>
+</section>
+<?php } ?>
 
-<div id="rowMultiDeleteModal" class="reveal-modal small" data-reveal tabindex="-1">
-    <div class="modal-header">
-        <a class="close-reveal-modal">×</a>
-        <h3><?php echo TEXT_CONFIRM_DELETE; ?></h3>
-    </div>
-    <div class="modal-body">
-        <?php echo TEXT_CONFIRM_DELETE_TEXT; ?>
-    </div>
-    <div class="modal-footer">
-        <a href="#" id="rowMultiDeleteConfirm" data-item=""><button
-                class="radius button"><?php echo TEXT_CONFIRM; ?></button></a>
-        <button class="radius button dismiss"><?php echo TEXT_CANCEL; ?></button>
-    </div>
-</div>
+<section class="row" id="adminLeadContainer">
+    <aside class="col-md-2">
+        <div class="panel">
+            <?php if (count($tplVars['leadDefinition']['actionLinks'])) { ?>
+            <div class="panel">
+                <?php foreach ($tplVars['leadDefinition']['actionLinks'] as $actionLink) { ?>
+                    <a href="<?php echo $actionLink['href']; ?>" class="btn btn-primary btn-block"><?php echo $actionLink['text']; ?></a>
+                <?php }?>
+            </div>
+            <?php } ?>
+            <?php if (count($tplVars['leadDefinition']['relatedLinks'])) { ?>
+                <div class="panel">
+                    <h2><?php echo TEXT_LEAD_RELATED; ?></h2>
+                    <?php foreach ($tplVars['leadDefinition']['relatedLinks'] as $relatedLink) { ?>
+                        <a href="<?php echo $relatedLink['href']; ?>"
+                           class="btn btn-primary btn-block" <?php if (isset($relatedLink['target'])) {?> target="<?php echo $relatedLink['target']; ?>" <?php } ?>>
+                            <?php echo $relatedLink['text']; ?></a>
+                    <?php }?>
+                </div>
+            <?php } ?>
+        </div>
+    </aside>
+    <section class="col-md-10">
+        <div class="panel">
+            <?php require 'includes/template/partials/'.$tplVars['leadDefinition']['contentTemplate']; ?>
+        </div>
+    </section>
+</section>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="rowMultiDeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><?php echo TEXT_CONFIRM_DELETE; ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?php echo TEXT_CONFIRM_DELETE_TEXT; ?></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo TEXT_CANCEL; ?></button>
+                <button type="button" class="btn btn-primary" id="rowMultiDeleteConfirm"><?php echo TEXT_CONFIRM; ?></button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <?php require 'includes/template/javascript/adminLeadCommon.php'; ?>

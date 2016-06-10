@@ -155,9 +155,6 @@ class LeadCountries extends AbstractLeadListingBox
                             'size' => '5'
                         )
                     ),
-                    'validations' => array(
-                        'pattern' => 'integer'
-                    )
                 ),
                 'status' => array(
                     'bindVarsType' => 'integer',
