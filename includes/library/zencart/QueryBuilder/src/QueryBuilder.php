@@ -48,6 +48,7 @@ class QueryBuilder extends \base
         $this->parts ['bindVars'] = issetorArray($listingQuery, 'bindVars', array());
         $this->parts ['selectList'] = issetorArray($listingQuery, 'selectList', array());
         $this->parts ['orderBys'] = issetorArray($listingQuery, 'orderBys', array());
+        $this->parts ['groupBys'] = issetorArray($listingQuery, 'groupBys', array());
         $this->parts ['filters'] = issetorArray($listingQuery, 'filters', array());
         $this->parts ['derivedItems'] = issetorArray($listingQuery, 'derivedItems', array());
         $this->parts ['joinTables'] = issetorArray($listingQuery, 'joinTables', array());
@@ -82,6 +83,7 @@ class QueryBuilder extends \base
         $this->query ['table'] .= $this->parts ['mainTableName'] . " AS " . $this->parts ['mainTableAlias'] . " ";
         $this->processWhereClause();
         $this->processOrderBys();
+        $this->processGroupBys();
         $this->processSelectList();
         $this->setFinalQuery($listingQuery);
         $this->processBindVars();
@@ -92,7 +94,7 @@ class QueryBuilder extends \base
     {
         $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_START');
         $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .
-            $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'];
+            $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'] . $this->query ['groupBy'];
         if (!isset($this->query['countSql'])) {
             $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($listingQuery, 'isDistinct', false) ? "DISTINCT " : '') .
                 $this->parts ['mainTableAlias'] . "." . $this->parts ['mainTableFkeyField'] . ")
@@ -188,6 +190,7 @@ class QueryBuilder extends \base
         }
         $fkeyFieldLeft = $this->parts ['mainTableAlias'] . '.' . $joinTable ['fkeyFieldLeft'];
         if (isset($joinTable ['fkeyTable'])) {
+           // print_r($this->parts);
             $fkeyFieldLeft = $this->parts ['tableAliases'] [constant($joinTable ['fkeyTable'])] . '.' . $joinTable ['fkeyFieldLeft'];
         }
         $fkeyFieldRight = $joinTable ['alias'] . '.' . $joinTable ['fkeyFieldLeft'];
@@ -259,6 +262,35 @@ class QueryBuilder extends \base
             $this->query ['orderBy'] = substr($this->query ['orderBy'], 0, strlen($this->query ['orderBy']) - 2) . " ";
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSORDERBYS_END');
+    }
+
+    /**
+     * process orderBy clauses
+     */
+    protected function processGroupBys()
+    {
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSGROUPBYS_START');
+        $this->query ['groupBy'] = "";
+        if (count($this->parts ['groupBys']) == 0) {
+            return;
+        }
+        $this->query ['groupBy'] = " GROUP BY ";
+        foreach ($this->parts ['groupBys'] as $groupBy) {
+            $result = $this->processGroupByEntry($groupBy);
+            if ($result) {
+                continue;
+            }
+        }
+        if (substr($this->query ['groupBy'], strlen($this->query ['groupBy']) - 2) == ', ') {
+            $this->query ['groupBy'] = substr($this->query ['groupBy'], 0, strlen($this->query ['groupBy']) - 2) . " ";
+        }
+        $this->notify('NOTIFY_QUERYBUILDER_PROCESSGROUPBYS_END');
+    }
+
+    protected function processGroupByEntry($groupBy)
+    {
+        $this->query ['groupBy'] .= $groupBy . ", ";
+        return false;
     }
 
     protected function processOrderByEntry($orderBy)

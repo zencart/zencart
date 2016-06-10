@@ -7,7 +7,7 @@
 namespace ZenCart\Services;
 use ZenCart\DashboardWidget\WidgetManager;
 use ZenCart\Request\Request as Request;
-use Zencart\Controllers\AbstractController as Controller;
+use Zencart\Controllers\AbstractAdminController as Controller;
 
 /**
  * Class IndexRoute

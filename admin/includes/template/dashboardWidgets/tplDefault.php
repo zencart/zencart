@@ -12,7 +12,10 @@
   if (isset($tplVars['widget']['content']) && sizeof($tplVars['widget']['content']) > 0) {
     foreach ($tplVars['widget']['content'] as $entry) {
 ?>
-      <div class="widget-row"><span><?php echo $entry['text']; ?></span><span class="right"><?php echo $entry['value']; ?></span></div>
+      <div class="row widget-row">
+          <div class="col-lg-8"><?php echo $entry['text']; ?></div>
+          <div class="col-lg-4  text-right"><?php echo $entry['value']; ?></div>
+      </div>
 <?php
     }
   } else { 

@@ -263,14 +263,22 @@ final class WidgetManager
   public static function addWidgetForUser($widget, $user)
   {
     global $db;
+    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " WHERE widget_key = :widgetKey:";
+    $sql = $db->bindVars($sql, ':widgetKey:', $widget, 'string');
+    $widgetDetail = $db->execute($sql);
+    $widgetIcon =  $widgetDetail->fields['widget_icon'];
+    $widgetTheme =  $widgetDetail->fields['widget_theme'];
+
     $sql = "SELECT MAX(widget_row) as max FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS;
     $result = $db->execute($sql);
     $max = (int)$result->fields['max'];
     $max++;
     $sql = "INSERT INTO " . TABLE_DASHBOARD_WIDGETS_TO_USERS . "
-            (widget_key, admin_id, widget_row, widget_column) VALUES (:widgetId:, :adminId:, $max, 0) ";
+            (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme) VALUES (:widgetId:, :adminId:, $max, 0, :widgetIcon:, :widgetHeaderColor:) ";
     $sql = $db->bindVars($sql, ':widgetId:', $widget, 'string');
     $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
+    $sql = $db->bindVars($sql, ':widgetIcon:', $widgetIcon, 'string');
+    $sql = $db->bindVars($sql, ':widgetHeaderColor:', $widgetTheme, 'string');
     $db->execute($sql);
   }
 }

@@ -984,3 +984,22 @@ function zen_deregister_admin_pages($pages)
     zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($pages, true), 'warning');
   }
 }
+
+/**
+ * @param bool|true $addTextAll
+ * @return array
+ */
+function getProfilesList($addTextAll = true)
+{
+  global $db;
+  $profileList = [];
+  $sql = "SELECT * FROM " .TABLE_ADMIN_PROFILES;
+  $results = $db->execute($sql);
+  if ($addTextAll) {
+    $profileList[] = array('id' => '', 'text' => TEXT_ALL);
+  }
+  foreach ($results as $result) {
+    $profileList[] = array('id' => $result['profile_id'], 'text' => $result['profile_name']);
+  }
+  return $profileList;
+}

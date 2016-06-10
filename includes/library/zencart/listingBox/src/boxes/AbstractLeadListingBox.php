@@ -14,9 +14,9 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     /**
      * @param \ZenCart\Request\Request $request
      */
-    public function __construct(\ZenCart\Request\Request $request)
+    public function __construct(\ZenCart\Request\Request $request, $db)
     {
-        parent::__construct($request);
+        parent::__construct($request, $db);
         $this->setDefaults();
     }
 
@@ -31,9 +31,10 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null)
     {
         $this->tplVars['filter'] = $this->doFilters($db);
-        $queryBuilder->processQuery($this->listingQuery);
+        $queryBuilder->processQuery($this->getListingQuery());
         $query = $queryBuilder->getQuery();
         $this->dbConn = $query['dbConn'] = $db;
+        //print_r($query);
         $resultItems = $this->processPaginatorResults($paginator, $query, $db);
         $resultItems = $this->transformPaginationItems($resultItems);
         $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);

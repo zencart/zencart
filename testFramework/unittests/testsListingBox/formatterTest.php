@@ -401,7 +401,9 @@ class testFormatterCase extends zcTestCase
         if (!defined('TEXT_PRODUCTS_MIX_ON')) {
             define('TEXT_PRODUCTS_MIX_ON', 'TEXT_PRODUCTS_MIX_ON');
         }
-        $request = $this->getMock('\\ZenCart\\Request\\Request');
+        $request = $this->getMockBuilder('\ZenCart\Request\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
         $request->method('readGet')->willReturn(1);
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
@@ -486,7 +488,9 @@ class testFormatterCase extends zcTestCase
         define('PRODUCT_LIST_WEIGHT', 1);
         define('PRODUCT_LIST_IMAGE', 1);
         define('TEXT_NO_PRODUCTS', 0);
-        $request = $this->getMock('\\ZenCart\\Request\\Request');
+        $request = $this->getMockBuilder('\ZenCart\Request\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
             ->getMock();

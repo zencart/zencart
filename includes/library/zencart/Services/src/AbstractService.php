@@ -6,7 +6,7 @@
  */
 namespace ZenCart\Services;
 
-use Zencart\Controllers\AbstractController as Controller;
+use Zencart\Controllers\AbstractAdminController as Controller;
 use ZenCart\Request\Request as Request;
 
 /**
