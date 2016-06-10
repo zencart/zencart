@@ -375,9 +375,11 @@ CREATE TABLE countries_name (
   KEY idx_countries_name_zen (countries_name)
 ) ENGINE=MyISAM;
 
-INSERT INTO countries_name (countries_id, countries_name)
-SELECT c.countries_id, c.countries_name
-FROM countries c;
+INSERT INTO countries_name (countries_id, language_id, countries_name)
+SELECT c.countries_id, l.languages_id, c.countries_name
+FROM countries c
+LEFT JOIN languages l
+ON 1;
 ALTER TABLE countries DROP countries_name;
 
 
