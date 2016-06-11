@@ -59,7 +59,7 @@ class LeadMediaManagerProducts extends AbstractLeadListingBox
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_LINKED_PRODUCTS,
                     'pagingVarSrc' => 'post'
                 )
             ),
