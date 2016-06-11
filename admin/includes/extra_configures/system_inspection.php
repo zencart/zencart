@@ -33,6 +33,7 @@ $built_in_boxes = array(
 'BOX_CONFIGURATION_INDEX_LISTING',
 'BOX_CONFIGURATION_DEFINE_PAGE_STATUS',
 'BOX_CONFIGURATION_EZPAGES_SETTINGS',
+'BOX_CONFIGURATION_CHECKOUT_SETTINGS',
 
 // modules box text
 'BOX_HEADING_MODULES',
@@ -170,6 +171,7 @@ $built_in_tables = array(
 'counter',
 'counter_history',
 'countries',
+'countries_name',
 'coupon_email_track',
 'coupon_gv_customer',
 'coupon_gv_queue',
