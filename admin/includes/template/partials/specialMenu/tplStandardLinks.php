@@ -7,7 +7,7 @@
  */
 ?>
 <li><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>"><?php echo HEADER_TITLE_TOP; ?></a></li>
-<li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
-<li><a href="http://www.zen-cart.com/"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
+<li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
+<li><a href="http://www.zen-cart.com/" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
 <li><a href="<?php echo zen_href_link(FILENAME_SERVER_INFO); ?>"><?php echo HEADER_TITLE_VERSION; ?></a></li>
 

@@ -45,7 +45,7 @@ class LeadMediaManagerClips extends AbstractLeadListingBox
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES,
+                    'navLinkText' => TABLE_HEADING_MEDIA_CLIP_NAME,
                     'pagingVarSrc' => 'post'
                 )
             ),
