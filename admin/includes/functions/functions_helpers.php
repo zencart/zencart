@@ -22,6 +22,22 @@
   }
 
   /**
+   * @param $language_id
+   * @return array
+   */
+  function zen_get_languages_list() {
+    $languages = zen_get_languages();
+    $languages = array_reverse($languages);
+    $languageList = [];
+    $languageList[] = array('id'=>'', 'text' => TEXT_ALL);
+    foreach($languages as $language) {
+      $languageList[] = array('id'=>$language['id'], 'text' => $language['name']);
+    }
+    return $languageList;
+  }
+
+
+  /**
    * build a list of directories in a specified parent folder
    * (formatted in id/text pairs for SELECT boxes)
    *
