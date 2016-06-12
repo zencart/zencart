@@ -34,5 +34,6 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
     <link rel="stylesheet" type="text/css" href="includes/template/javascript/select2-master/select2.css" id="select2CSS">
+    <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
     <script src="includes/template/javascript/select2-master/select2.js"></script>
 

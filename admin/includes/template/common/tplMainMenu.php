@@ -21,7 +21,7 @@
             <ul class="nav navbar-nav">
                 <?php foreach ($tplVars['adminMenuForUser'] as $menuKey => $pages) { ?>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                        <a href="#" role="button" aria-haspopup="true"
                            aria-expanded="false"><?php echo $tplVars['menuTitles'][$menuKey] ?><span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">

@@ -11,7 +11,7 @@
     <section>
         <?php require('includes/template/common/tplMessageStack.php'); ?>
     </section>
-    <nav class="navbar navbar-default no-margin">
+    <nav class="navbar navbar-default no-margin upperMenu">
         <div class="container-fluid">
             <ul class="nav navbar-nav">
             <?php
