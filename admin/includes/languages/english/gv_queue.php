@@ -4,12 +4,12 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:$
+ * @version $Id:  Modified in v1.6.0 $
  */
 
 define('HEADING_TITLE', TEXT_GV_NAME . ' Release Queue');
 
-define('TABLE_HEADING_CUSTOMERS', 'Customers');
+define('TABLE_HEADING_CUSTOMERS', 'Customer');
 define('TABLE_HEADING_ORDERS_ID', 'Order-No.');
 define('TABLE_HEADING_VOUCHER_VALUE', TEXT_GV_NAME . ' Value');
 define('TABLE_HEADING_DATE_PURCHASED', 'Date Purchased');

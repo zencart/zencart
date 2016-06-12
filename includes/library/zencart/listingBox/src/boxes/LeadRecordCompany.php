@@ -63,7 +63,7 @@ class LeadRecordCompany extends AbstractLeadListingBox
                     'href' => zen_href_link(FILENAME_MEDIA_TYPES)
                 )
             ),
-            'hasImageUpload' => true,
+            'hasMediaUpload' => true,
             'listMap' => array(
                 'record_company_id',
                 'record_company_name',
@@ -102,8 +102,8 @@ class LeadRecordCompany extends AbstractLeadListingBox
                             'title' => TEXT_ENTRY_RECORD_COMPANY_IMAGE,
                             'type' => 'file',
                             'uploadOptions' => array(
-                                'imageDirectorySelector' => true,
-                                'imageDirectoryServer' => false
+                                'mediaDirectorySelector' => true,
+                                'mediaDirectoryServer' => false
                             ),
                             'size' => '30'
                         )

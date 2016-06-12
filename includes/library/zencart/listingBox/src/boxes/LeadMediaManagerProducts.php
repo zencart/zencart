@@ -67,9 +67,8 @@ class LeadMediaManagerProducts extends AbstractLeadListingBox
 
         $this->outputLayout = array(
             'pageTitle' => $this->getTitle(),
-//            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicGenre.php',
             'allowDelete' => true,
-//            'extraDeleteParameters' => '&product_id=' . $this->request->readGet('product_id'),
+            'extraDeleteParameters' => '&media_id=' . $this->request->readGet('media_id'),
             'allowEdit' => false,
             'relatedLinks' => array(
                 array(
@@ -152,7 +151,7 @@ class LeadMediaManagerProducts extends AbstractLeadListingBox
                     'bindVarsType' => 'integer',
                     'layout' => array(
                         'common' => array(
-                            'title' => TABLE_HEADING_MEDIA,
+                            'title' => TABLE_HEADING_SELECT_PRODUCT,
                             'size' => '30',
                             'type' => 'productSelect'
                         )
@@ -171,7 +170,7 @@ class LeadMediaManagerProducts extends AbstractLeadListingBox
                     )
                 ),
             ),
-            'extraRowActions' => array(),
+//            'extraRowActions' => array(),
         );
     }
 

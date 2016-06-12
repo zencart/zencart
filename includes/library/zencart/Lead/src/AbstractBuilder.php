@@ -93,10 +93,11 @@ abstract class AbstractBuilder extends \base
             'paginationQueryLimit' => $paginationQueryLimit,
             'paginationLimitSelect' => $this->getPaginationLimitOptions(),
             'paginationLimitDefault' => $paginationQueryLimit,
-            'columnCount' => count($this->outputLayout['listMap']) +2,
+            'columnCount' => count($this->outputLayout['listMap']) + 2,
             'rowActions' => array(),
         );
-        $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONDEFAULTS_SETMAP', array(), $paginationSessKey, $paginationQueryLimit, $map);
+        $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONDEFAULTS_SETMAP', array(), $paginationSessKey, $paginationQueryLimit,
+            $map);
         $this->processDefaults($map);
         $this->setLeadDefinitionActionLinks();
         $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONDEFAULTS_END');
@@ -129,7 +130,7 @@ abstract class AbstractBuilder extends \base
             'contentTemplate' => 'tplAdminLeadListContent.php',
             'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandler.php',
             'inputLabelTemplate' => 'leadInputTypes/tplInputLabel.php',
-            'autoCompleteTemplate' => '/tplAutoComplete.php',
+            'select2DriverTemplate' => '/tplSelect2Driver.php',
             'errorTemplate' => 'leadInputTypes/tplInputError.php',
             'listMap' => $this->outputLayout ['listMap'],
             'editMap' => $this->outputLayout ['editMap'],
@@ -137,7 +138,7 @@ abstract class AbstractBuilder extends \base
             'headerTemplate' => false,
             'extraRowActions' => null,
             'mainTableFkeyField' => $this->listingQuery ['mainTable']['fkeyFieldLeft'],
-            'hasImageUpload' => false,
+            'hasMediaUpload' => false,
             'allowEdit' => true,
             'allowDelete' => false,
             'allowMultiDelete' => true,
@@ -147,7 +148,8 @@ abstract class AbstractBuilder extends \base
             'relatedLinks' => array(),
             'paginationSessKey' => issetorArray($this->outputLayout, 'paginationSessionKey',
                 $this->listingQuery['mainTable']['table'] . '_pql'),
-            'enctype' => isset($this->outputLayout['hasImageUpload']) ? "enctype='multipart/form-data'" : ''
+            'enctype' => isset($this->outputLayout['hasMediaUpload']) ? "enctype='multipart/form-data'" : '',
+            'extraHandlerTemplates' => isset($this->outputLayout['extraHandlerTemplates']) ? $this->outputLayout['extraHandlerTemplates'] : array(),
         );
         $this->notify('NOTIFY_LEADBUILDER_GETDEFAULTMAP_END', array(), $defaultMap);
         return $defaultMap;
@@ -159,7 +161,7 @@ abstract class AbstractBuilder extends \base
         if ($this->leadDefinition["allowEdit"]) {
             $hasRowActions = true;
         }
-        if ($this->leadDefinition["allowEdit"]) {
+        if ($this->leadDefinition["allowDelete"]) {
             $hasRowActions = true;
         }
         if (isset($this->leadDefinition ['extraRowActions'])) {
@@ -167,6 +169,7 @@ abstract class AbstractBuilder extends \base
         }
         $this->leadDefinition["hasRowActions"] = $hasRowActions;
     }
+
     /**
      *
      */
@@ -278,10 +281,7 @@ abstract class AbstractBuilder extends \base
         $this->notify('NOTIFY_LEADBUILDER_BUILDFIELDDEFINITIONS_START');
         foreach ($this->outputLayout ['fields'] as $field => $options) {
             $layout = $this->buildActualLayoutFromContext($options);
-            if (isset($layout ['uploadOptions'] ['imageDirectorySelector']) && $layout ['uploadOptions'] ['imageDirectorySelector'] === true) {
-                $selectList = $this->buildImageDirectorySelector();
-                $layout ['uploadOptions'] ['imageDirectorySelectList'] = $selectList;
-            }
+            $layout['uploadOptions'] = $this->buildUploadFileOptions($layout);
             $validations = isset($options ['validations']) ? $options ['validations'] : array(
                 'required' => true
             );
@@ -294,9 +294,33 @@ abstract class AbstractBuilder extends \base
             $this->leadDefinition ['fields'] [$field] ['validations'] = $validations;
             $this->leadDefinition ['fields'] [$field] ['value'] = '';
             $this->leadDefinition ['fields'] [$field] ['field'] = 'entry_field_' . $field;
-            $this->leadDefinition ['fields'] [$field] ['autocomplete'] = isset($options ['autocomplete']) ? $options ['autocomplete'] : false;
+            $this->leadDefinition ['fields'] [$field] ['fillByLookup'] = isset($options ['fillByLookup']) ? $options ['fillByLookup'] : false;
         }
         $this->notify('NOTIFY_LEADBUILDER_BUILDFIELDDEFINITIONS_END');
+    }
+
+    protected function buildUploadFileOptions($layout)
+    {
+        $uploadOptions = array(
+            'mediaDirectorySelector' => false,
+            'mediaDirectoryServer' => false,
+            'baseUploadDirectory' => DIR_FS_CATALOG_IMAGES,
+            'textMainUploadDirectiry' => TEXT_SELECT_MAIN_DIRECTORY,
+            'textMissingMedia' => TEXT_NONEXISTENT_IMAGE,
+            'mediaPreviewTemplate' => 'partials/tplUploadPreview.php'
+        );
+
+        if (isset($layout['uploadOptions'])) {
+            $uploadOptions = array_merge($uploadOptions, $layout['uploadOptions']);
+            }
+
+        if ( $uploadOptions ['mediaDirectorySelector'] === true) {
+            $selectList = $this->buildMediaDirectorySelector($uploadOptions);
+            $uploadOptions ['imageDirectorySelectList'] = $selectList;
+        }
+
+        return $uploadOptions;
+
     }
 
     /**
@@ -320,13 +344,14 @@ abstract class AbstractBuilder extends \base
      * @param string $baseDirectory
      * @return array
      */
-    protected function buildImageDirectorySelector($baseDirectory = DIR_FS_CATALOG_IMAGES)
+    protected function buildMediaDirectorySelector($uploadOptions)
     {
-        $this->notify('NOTIFY_LEADBUILDER_BUILDIMAGEDIRECTORYSELECTOR_START', array(), $baseDirectory);
+        $baseDirectory = $uploadOptions['baseUploadDirectory'];
+        $this->notify('NOTIFY_LEADBUILDER_BUILDMEDIADIRECTORYSELECTOR_START', array(), $baseDirectory);
         $selectList = array();
         $selectList [] = array(
             'id' => '',
-            'text' => TEXT_SELECT_MAIN_DIRECTORY
+            'text' => $uploadOptions['textMainUploadDirectiry']
         );
         $dir = @dir($baseDirectory);
         while ($file = $dir->read()) {
@@ -340,7 +365,7 @@ abstract class AbstractBuilder extends \base
         $dir->close();
         unset($dir);
         sort($selectList);
-        $this->notify('NOTIFY_LEADBUILDER_BUILDIMAGEDIRECTORYSELECTOR_END', array(), $selectList);
+        $this->notify('NOTIFY_LEADBUILDER_BUILDMEDIADIRECTORYSELECTOR_END', array(), $selectList);
         return $selectList;
     }
 

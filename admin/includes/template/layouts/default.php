@@ -1,5 +1,4 @@
 <?php  require_once('includes/template/common/tplHtmlHead.php');?>
-</head>
 <body class="skin-blue-light">
 <div class="wrapper">
 <?php require_once('includes/template/common/tplHeader.php'); ?>

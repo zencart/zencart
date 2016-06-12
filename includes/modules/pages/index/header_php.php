@@ -61,7 +61,7 @@ require (DIR_WS_MODULES . zen_get_module_directory ( 'require_languages.php' ));
 if (true)
 {
   $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
-  $box = new ZenCart\ListingBox\boxes\ProductsPage($zcRequest);
+  $box = new ZenCart\ListingBox\boxes\ProductsPage($zcRequest, $db);
   $paginator = new ZenCart\Paginator\Paginator($zcRequest);
   $builder = new ZenCart\ListingBox\PaginatorBuilder($zcRequest,$box->getListingQuery(), $paginator);
   $box->buildResults($qb, $db, new ZenCart\ListingBox\DerivedItemManager, $builder->getPaginator());

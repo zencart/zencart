@@ -7,32 +7,32 @@
  */
 ?>
 <script>
-var urlLink = '<?php echo zen_ajax_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')) . 'action=autocomplete'); ?>';
-var dataTable = '&dataTable='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataTable'];?>';
-var dataSearchField = '&dataSearchField='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataSearchField'];?>';
-var dataResponse = '&dataResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataResponse'];?>';
-var valueResponse = '&valueResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['valueResponse'];?>';
-<?php if (isset($tplVars['leadDefinition']['fields'][$field]['autocomplete']['addAllResponse'])) {  ?>
-var addAllResponse = '&addAllResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['addAllResponse'];?>';
-var addAllResponseText = '&addAllResponseText='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['addAllResponseText'];?>';
-var addAllResponseValue = '&addAllResponseValue='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['addAllResponseValue'];?>';
+var urlLink = '<?php echo zen_ajax_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')) . 'action=fillByLookup'); ?>';
+var dataTable = '&dataTable='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['dataTable'];?>';
+var dataSearchField = '&dataSearchField='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['dataSearchField'];?>';
+var dataResponse = '&dataResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['dataResponse'];?>';
+var valueResponse = '&valueResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['valueResponse'];?>';
+<?php if (isset($tplVars['leadDefinition']['fields'][$field]['fillByLookup']['addAllResponse'])) {  ?>
+var addAllResponse = '&addAllResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['addAllResponse'];?>';
+var addAllResponseText = '&addAllResponseText='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['addAllResponseText'];?>';
+var addAllResponseValue = '&addAllResponseValue='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['addAllResponseValue'];?>';
 <?php } ?>
-<?php if (isset($tplVars['leadDefinition']['fields'][$field]['autocomplete']['extraWhere'])) {  ?>
-var extraWhere = '&extraWhere='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['extraWhere'];?>';
+<?php if (isset($tplVars['leadDefinition']['fields'][$field]['fillByLookup']['extraWhere'])) {  ?>
+var extraWhere = '&extraWhere='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['extraWhere'];?>';
 var extraWhereVal = '&extraWhereVal='+$('#entry_field_zone_country_id').val();
 <?php } ?>
 var parameterList = dataTable+dataSearchField+dataResponse+valueResponse;
-<?php if (isset($tplVars['leadDefinition']['fields'][$field]['autocomplete']['addAllResponse'])) {  ?>
+<?php if (isset($tplVars['leadDefinition']['fields'][$field]['fillByLookup']['addAllResponse'])) {  ?>
 parameterList += addAllResponse;
 parameterList += addAllResponseText;
 parameterList += addAllResponseValue;
 <?php } ?>
-<?php if (isset($tplVars['leadDefinition']['fields'][$field]['autocomplete']['extraWhere'])) {  ?>
+<?php if (isset($tplVars['leadDefinition']['fields'][$field]['fillByLookup']['extraWhere'])) {  ?>
 parameterList += extraWhere;
 parameterList += extraWhereVal;
 <?php } ?>
 $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').select2({
- placeholder: '<?php echo (isset($tplVars['leadDefinition']['fields'][$field]['autocomplete']['placeholder']) ? $tplVars['leadDefinition']['fields'][$field]['autocomplete']['placeholder'] : TEXT_AUTOCOMPLETE_DEFAULT_PLACEHOLDER); ?>',
+ placeholder: '<?php echo (isset($tplVars['leadDefinition']['fields'][$field]['fillByLookup']['placeholder']) ? $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['placeholder'] : TEXT_FILLBYLOOKUP_DEFAULT_PLACEHOLDER); ?>',
  dropdownAutoWidth: true,
  ajax: {
    url: urlLink + parameterList,
@@ -50,7 +50,7 @@ $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').selec
 },
 initSelection: function (element, callback) {
  parameterList = dataTable+dataSearchField+dataResponse+valueResponse+'&exactMatch=true';
- <?php if (isset($tplVars['leadDefinition']['fields'][$field]['autocomplete']['extraWhere'])) {  ?>
+ <?php if (isset($tplVars['leadDefinition']['fields'][$field]['fillByLookup']['extraWhere'])) {  ?>
  parameterList += extraWhere;
  parameterList += extraWhereVal;
  <?php } ?>
@@ -70,7 +70,7 @@ initSelection: function (element, callback) {
 $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').change(function () {
   var selectedId = $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').select2('data').id;
   var selectedText = $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').select2('data').text;
-  $('#entry_field_<?php echo $tplVars['leadDefinition']['fields'][$field]['autocomplete']['dataResponseField']; ?>').val(selectedId);
+  $('#entry_field_<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['dataResponseField']; ?>').val(selectedId);
   $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').val(selectedText);
 
 });

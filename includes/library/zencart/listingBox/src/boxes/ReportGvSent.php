@@ -60,10 +60,20 @@ class ReportGvSent extends AbstractLeadListingBox
                     'selectColumns' => array('sent_firstname', 'sent_lastname', 'date_sent', 'emailed_to')
                 ),
             ),
+            'whereClauses' => array(
+                array(
+                    'type' => 'AND',
+                    'table' => TABLE_COUPONS,
+                    'field' => 'coupon_type',
+                    'value' => "'G'"
+                ),
+            ),
+            'orderBys' => array(
+                array('field' => 'date_sent DESC')),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_COUPONS,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS,
                     'pagingVarSrc' => 'post'
                 )
             ),

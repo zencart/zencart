@@ -3,7 +3,7 @@
  * Admin Lead Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: New in v1.6.0 $
  */
@@ -58,7 +58,8 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title"><?php echo TEXT_CONFIRM_DELETE; ?></h4>
-            </div>
+        //print_r($tplVars['leadDefinition']['fields'][$field]);
+    </div>
             <div class="modal-body">
                 <p><?php echo TEXT_CONFIRM_DELETE_TEXT; ?></p>
             </div>
@@ -71,3 +72,8 @@
 </div><!-- /.modal -->
 
 <?php require 'includes/template/javascript/adminLeadCommon.php'; ?>
+<?php if (count($tplVars['leadDefinition']['extraHandlerTemplates'])) {
+    foreach ($tplVars['leadDefinition']['extraHandlerTemplates'] as $template) {
+        require_once('includes/template/' . $template);
+    }
+}

@@ -1,12 +1,10 @@
-<?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:   Modified in v1.6.0 $
+ * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
  */
-?>
-<script>
+
 if (typeof zcJS == "undefined" || !zcJS) {
   window.zcJS = { name: 'zcJS', version: '0.1.0.0' };
 };
@@ -14,7 +12,6 @@ if (typeof zcJS == "undefined" || !zcJS) {
 zcJS.ajax = function (options) {
   options.url = options.url.replace(/&amp;/g, '&');
   var deferred = $.Deferred(function (d) {
-      var securityToken = '<?php echo $_SESSION['securityToken']; ?>';
       var defaults = {
           cache: false,
           type: 'POST',
@@ -116,4 +113,3 @@ zcJS.timer = function (options) {
     }
   };
 };
-</script>
