@@ -96,7 +96,7 @@ class ReportStatsProductsViewed extends AbstractLeadListingBox
                             'size' => '5'
                         ),
                         'list' => array(
-                            'options' => \zen_get_languages()
+                            'options' => \zen_get_languages_list()
                         ),
                     ),
                 ),
