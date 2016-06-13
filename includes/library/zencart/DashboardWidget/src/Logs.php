@@ -47,7 +47,7 @@ class Logs extends AbstractWidget
 
     foreach ($logs as $log) {
       $tplVars['content'][] = array(
-                                    'text'=> '<a href="' . zen_href_link(FILENAME_VIEW_LOG, 'logname=' . $log['filename']) . '">' . $this->getDisplayName($log) . '</a>', 
+                                    'text'=> '<a href="' . zen_admin_href_link(FILENAME_VIEW_LOG, 'logname=' . $log['filename']) . '">' . $this->getDisplayName($log) . '</a>', 
                                     'value'=>$log['filesize'],
                                     );
     }
