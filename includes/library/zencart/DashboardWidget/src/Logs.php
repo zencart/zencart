@@ -47,7 +47,7 @@ class Logs extends AbstractWidget
 
     foreach ($logs as $log) {
       $tplVars['content'][] = array(
-                                    'text'=> '<a href="' . zen_href_link(FILENAME_VIEW_LOG, 'logname=' . $log['filename']) . '">' . $this->getDisplayName($log) . '</a>', 
+                                    'text'=> '<a href="' . zen_admin_href_link(FILENAME_VIEW_LOG, 'logname=' . $log['filename']) . '">' . $this->getDisplayName($log) . '</a>', 
                                     'value'=>$log['filesize'],
                                     );
     }
@@ -58,6 +58,9 @@ class Logs extends AbstractWidget
       $final_message .= sprintf(TEXT_DISPLAYING_RECENT_COUNT, $max_logs_to_list);
     }
     $tplVars['content'][] = array('text'=> $final_message, 'value'=> '');
+
+    $clean_message = '<a href="' . zen_admin_href_link(FILENAME_STORE_MANAGER) . '">' . TEXT_CLEANUP_LOGFILES . '</a>';
+    $tplVars['content'][] = array('text'=> $clean_message, 'value'=> '');
 
     return $tplVars;
   }
