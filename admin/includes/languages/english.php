@@ -735,7 +735,7 @@ define('TEXT_LEAD_EDIT', 'Edit');
 define('TEXT_LEAD_DELETE', 'Delete');
 define('TEXT_LEAD_ADD_ENTRY', 'Add Entry');
 define('TEXT_LEAD_EDIT_ENTRY', 'Edit Entry');
-define('TEXT_PAGINATION_LIMIT_SELECT', 'Select Pagination Items');
+define('TEXT_PAGINATION_LIMIT_SELECT', 'Maximum Number of Rows');
 define('TEXT_LEAD_ACTION', 'Action');
 define('TEXT_ALL', 'All');
 define('TEXT_ENABLED', 'Enabled');
