@@ -39,6 +39,7 @@ class Logs extends AbstractWidget
   {
      if ($this->count > 0) { 
         $info['widget_theme'] = 'bg-red-gradient'; 
+        $info['widget_icon'] = 'fa-warning'; 
         $this->widgetInfoChanged = true;
      }
   }

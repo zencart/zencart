@@ -259,7 +259,7 @@ INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_i
 ('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient'),
 ('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient'),
 ('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient'),
-('logs', 'logs', 1, 'fa-warning', 'bg-light-blue-gradient')
+('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient')
 ;
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
@@ -287,7 +287,7 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ('new-customers', 1, 0, 1, 'fa-user-plus', 'bg-light-blue-gradient'),
 ('counter-history', 1, 1, 1, 'fa-calendar', 'bg-light-blue-gradient'),
 ('new-orders', 1, 0, 2, 'fa-shopping-cart', 'bg-light-blue-gradient'),
-('logs', 1, 1, 2, 'fa-warning', 'bg-light-blue-gradient')
+('logs', 1, 1, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient')
 ;
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient');
