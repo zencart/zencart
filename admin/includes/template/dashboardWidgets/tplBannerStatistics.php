@@ -19,7 +19,7 @@
 
   <script>
   (function() {
-    var bannerWidgetBox = $('#banner-statistics.widget-container');
+    var bannerWidgetBox = $('#banner-statistics .widget-body');
     var boxHeight = bannerWidgetBox.height();
     if (boxHeight < 150) boxHeight = 150;
     $('#banner-widget').width(bannerWidgetBox.width()-10).height(boxHeight);

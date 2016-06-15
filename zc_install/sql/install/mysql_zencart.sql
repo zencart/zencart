@@ -3446,8 +3446,8 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ;
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient');
-INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'BANNER_STATISTICS_GROUP', '', 1);
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS');
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'BANNER_STATISTICS', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS_GROUP');
 
 
 INSERT INTO listingbox_locations (location_key, location_name) VALUES

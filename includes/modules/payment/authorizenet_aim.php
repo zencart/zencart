@@ -638,7 +638,7 @@ class authorizenet_aim extends base {
       default:
       case 'AIM':
         $submit_data['x_solution_id'] = 'A1000003'; // used by authorize.net
-        $url = 'https://secure.authorize.net/gateway/transact.dll';
+        $url = 'https://secure2.authorize.net/gateway/transact.dll';
         $devurl = 'https://test.authorize.net/gateway/transact.dll';
         $certurl = 'https://certification.authorize.net/gateway/transact.dll';
         if (MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE == 'Sandbox') $url = $devurl;
