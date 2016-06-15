@@ -25,12 +25,17 @@ abstract class AbstractWidget
   public function __construct($widgetKey, $widgetInfo = NULL)
   {
     $this->widgetInfo = $widgetInfo;
+    $this->widgetInfoChanged = false;
     $this->widgetKey = $widgetKey;
     $this->tplVars = array();
     $this->tplVars['content'] = array();
   }
 
   abstract public function prepareContent();
+
+  public function updatewidgetInfo() 
+  {
+  }
 
   public function getTemplateFile()
   {

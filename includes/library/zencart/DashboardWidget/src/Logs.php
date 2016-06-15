@@ -20,6 +20,12 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class Logs extends AbstractWidget
 {
+  public function __construct($widgetKey, $widgetInfo = NULL) 
+  {
+      parent::__construct($widgetKey, $widgetInfo);
+      $count = 0;
+  }
+
   private function getDisplayName($log)
   {
      $str = $log['datetime']; 
@@ -29,12 +35,20 @@ class Logs extends AbstractWidget
      return $str;
   }
 
+  public function updatewidgetInfo(&$info)
+  {
+     if ($this->count > 0) { 
+        $info['widget_theme'] = 'bg-red-gradient'; 
+        $this->widgetInfoChanged = true;
+     }
+  }
+
   public function prepareContent()
   {
     $tplVars = array();
 
-    $count = get_logs_data('count');
-    if ($count == 0) {
+    $this->count = get_logs_data('count');
+    if ($this->count == 0) {
      $tplVars['content'][] = array('text'=>TEXT_NO_LOGFILES_FOUND, 'value'=>'');
      return $tplVars;
     }
@@ -53,8 +67,8 @@ class Logs extends AbstractWidget
     }
 
     // display summary
-    $final_message = sprintf(TEXT_TOTAL_LOGFILES_FOUND, $count);
-    if ($count > $max_logs_to_list) {
+    $final_message = sprintf(TEXT_TOTAL_LOGFILES_FOUND, $this->count);
+    if ($this->count > $max_logs_to_list) {
       $final_message .= sprintf(TEXT_DISPLAYING_RECENT_COUNT, $max_logs_to_list);
     }
     $tplVars['content'][] = array('text'=> $final_message, 'value'=> '');

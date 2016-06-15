@@ -6,6 +6,10 @@
  * @version $Id: $
  */
 
+// Note: The widgets_groups and widgets_description values 
+// are built in code; you can't search for them.
+// See includes/library/zencart/DashboardWidget/src
+
 // Entries in dashboard_widgets_groups
 define('GENERAL_STATISTICS_GROUP', 'General Statistics');
 define('ORDER_STATISTICS_GROUP', 'Order Statistics');
