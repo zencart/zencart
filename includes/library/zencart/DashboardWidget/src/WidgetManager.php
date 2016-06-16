@@ -103,11 +103,11 @@ final class WidgetManager
    * @return array
    * @todo   Is this necessary or valid with the new autoloading?
    */
-  public static function loadWidgetClasses(array $widgetList)
+  public static function loadWidgetClasses(array $widgetInfoList)
   {
-    $widgetClassList = array();
+    $widgetList = array();
 
-    foreach ($widgetList as $widgets) {
+    foreach ($widgetInfoList as $widgets) {
       foreach ($widgets as $widget) {
         $classNameSpace = __NAMESPACE__ . '\\';
         $className = base::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
@@ -119,11 +119,11 @@ final class WidgetManager
         }
 
         $widgetClass = new $className($widget['widget_key'], $widget);
-        $widgetClassList[$widget['widget_key']] = $widgetClass;
+        $widgetList[$widget['widget_key']] = $widgetClass;
       }
     }
 
-    return $widgetClassList;
+    return $widgetList;
   }
 
   public static function prepareTemplateVariables($widgetList)
@@ -135,6 +135,7 @@ final class WidgetManager
       $tplVars[$widgetkey]['templateFile'] = $widget->getTemplateFile();
       $tplVars[$widgetkey]['widgetTitle']  = $widget->getWidgetTitle();
       $tplVars[$widgetkey]['widgetBaseId'] = $widget->getWidgetBaseId();
+      $widget->updatewidgetInfo($widgetList[$widgetkey]->widgetInfo);
     }
 
     return $tplVars;

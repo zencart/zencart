@@ -3,7 +3,7 @@
  * Abstract Dashboard Widget
  *
  * @package   ZenCart\Admin\DashboardWidget
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version   GIT: $Id: $
  */
@@ -22,15 +22,21 @@ use base;
  */
 abstract class AbstractWidget
 {
+  public $widgetInfoChanged = false;
+  public $widgetInfo;
+  public $widgetKey;
+
   public function __construct($widgetKey, $widgetInfo = NULL)
   {
     $this->widgetInfo = $widgetInfo;
     $this->widgetKey = $widgetKey;
-    $this->tplVars = array();
-    $this->tplVars['content'] = array();
   }
 
   abstract public function prepareContent();
+
+  public function updatewidgetInfo(&$info)
+  {
+  }
 
   public function getTemplateFile()
   {
