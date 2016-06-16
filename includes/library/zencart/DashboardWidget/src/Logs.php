@@ -20,10 +20,11 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class Logs extends AbstractWidget
 {
+  protected $count; 
   public function __construct($widgetKey, $widgetInfo = NULL) 
   {
       parent::__construct($widgetKey, $widgetInfo);
-      $count = 0;
+      $this->count = 0;
   }
 
   private function getDisplayName($log)
