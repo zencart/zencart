@@ -11,10 +11,12 @@
 
 <section class="content-header row">
     <h1 class="pull-left"><?php echo $tplVars['leadDefinition']['pageTitle']; ?></h1>
+    <?php if ($tplVars['listingBox']['paginator']['show']) { ?>
     <div class="form pull-right">
         <label for="paginationQueryLimit"><?php echo TEXT_PAGINATION_LIMIT_SELECT; ?></label>
         <?php echo zen_draw_pull_down_menu('paginationQueryLimit', $tplVars['leadDefinition']['paginationLimitSelect'], $tplVars['leadDefinition']['paginationLimitDefault'], 'id="paginationQueryLimit" style="width:auto"')?>
     </div>
+    <?php } ?>
 </section>
 <?php if ($tplVars['leadDefinition']['headerTemplate']) { ?>
 <section class="content-header row">
