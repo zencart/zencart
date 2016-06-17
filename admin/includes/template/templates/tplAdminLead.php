@@ -25,28 +25,27 @@
 <section class="row" id="adminLeadContainer">
     <aside class="col-md-2">
         <div class="panel">
-            <?php if (count($tplVars['leadDefinition']['actionLinks'])) { ?>
-            <div class="panel">
-                <?php foreach ($tplVars['leadDefinition']['actionLinks'] as $actionLink) { ?>
-                    <a href="<?php echo $actionLink['href']; ?>" class="btn btn-primary btn-block"><?php echo $actionLink['text']; ?></a>
-                <?php }?>
-            </div>
-            <?php } ?>
-            <?php if (count($tplVars['leadDefinition']['relatedLinks'])) { ?>
-                <div class="panel">
-                    <h2><?php echo TEXT_LEAD_RELATED; ?></h2>
-                    <?php foreach ($tplVars['leadDefinition']['relatedLinks'] as $relatedLink) { ?>
-                        <a href="<?php echo $relatedLink['href']; ?>"
-                           class="btn btn-primary btn-block" <?php if (isset($relatedLink['target'])) {?> target="<?php echo $relatedLink['target']; ?>" <?php } ?>>
-                            <?php echo $relatedLink['text']; ?></a>
-                    <?php }?>
-                </div>
-            <?php } ?>
+<?php if (count($tplVars['leadDefinition']['actionLinks'])) { ?>
+        <div class="panel">
+<?php foreach ($tplVars['leadDefinition']['actionLinks'] as $actionLink) { ?>
+            <a href="<?php echo $actionLink['href']; ?>" class="btn btn-primary btn-block"><?php echo $actionLink['text']; ?></a>
+<?php }?>
+        </div>
+<?php } ?>
+<?php if (count($tplVars['leadDefinition']['relatedLinks'])) { ?>
+        <div class="panel">
+        <h2><?php echo TEXT_LEAD_RELATED; ?></h2>
+<?php foreach ($tplVars['leadDefinition']['relatedLinks'] as $relatedLink) { ?>
+            <a href="<?php echo $relatedLink['href']; ?>" class="btn btn-primary btn-block" <?php if (isset($relatedLink['target'])) {?> target="<?php echo $relatedLink['target']; ?>" <?php } ?>>
+<?php echo $relatedLink['text']; ?></a>
+<?php }?>
+        </div>
+<?php } ?>
         </div>
     </aside>
     <section class="col-md-10">
         <div class="panel">
-            <?php require 'includes/template/partials/'.$tplVars['leadDefinition']['contentTemplate']; ?>
+<?php require 'includes/template/partials/'.$tplVars['leadDefinition']['contentTemplate']; ?>
         </div>
     </section>
 </section>
