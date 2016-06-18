@@ -195,12 +195,22 @@ function zen_get_select_options($optionList, $setDefault)
     $documentRoot = zen_get_document_root();
     $url = ($request_type == 'SSL' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . str_replace('/zc_install/index.php', '', $_SERVER['SCRIPT_NAME']);
     $httpServer = zen_parse_url($url, 'host', true);
+    $using_localhost = false;
+    define('LOCALHOST', 'localhost'); 
+    if (strncmp($httpServer, LOCALHOST, strlen(LOCALHOST)) == 0) { 
+       $using_localhost = true;
+    }
     $adminServer = ($request_type == 'SSL') ? 'https://' : 'http://';
     $adminServer .= $httpServer;
     $catalogHttpServer = 'http://' . $httpServer;
     $catalogHttpUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
-    $catalogHttpsServer = 'https://' . $httpServer;
-    $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    if (!$using_localhost) { 
+      $catalogHttpsServer = 'https://' . $httpServer;
+      $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    } else {
+      $catalogHttpsServer = 'http://' . $httpServer;
+      $catalogHttpsUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    }
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';
     $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';
 
