@@ -203,8 +203,8 @@ function zen_get_select_options($optionList, $setDefault)
       $catalogHttpsServer = 'https://' . $httpServer;
       $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
     } else {
-      $catalogHttpsServer = 'http://' . $httpServer;
-      $catalogHttpsUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+      $catalogHttpsServer = $catalogHttpServer;
+      $catalogHttpsUrl = $catalogHttpUrl;
     }
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';
     $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';
