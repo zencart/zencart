@@ -33,3 +33,13 @@
     return $data['directory'];
   }
 
+
+/**
+ * Count how many subcategories exist in a category
+ * TABLES: categories
+ */
+  function zen_get_products_master_categories_name($categories_id) {
+    return zen_get_categories_parent_name($categories_id);
+  }
+
+
