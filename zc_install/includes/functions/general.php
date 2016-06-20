@@ -199,8 +199,13 @@ function zen_get_select_options($optionList, $setDefault)
     $adminServer .= $httpServer;
     $catalogHttpServer = 'http://' . $httpServer;
     $catalogHttpUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
-    $catalogHttpsServer = 'https://' . $httpServer;
-    $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    if ($request_type == 'SSL') { 
+      $catalogHttpsServer = 'https://' . $httpServer;
+      $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    } else {
+      $catalogHttpsServer = $catalogHttpServer;
+      $catalogHttpsUrl = $catalogHttpUrl;
+    }
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';
     $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';
 
