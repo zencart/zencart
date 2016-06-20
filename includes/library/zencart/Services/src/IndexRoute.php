@@ -39,6 +39,17 @@ class IndexRoute extends AbstractService
         $this->listener->setTplVar('widgetList', $widgetList);
         $this->listener->setTplVar('widgets', WidgetManager::prepareTemplateVariables($widgetList));
         $this->listener->setTplVar('widgetInfoList', $widgetInfoList);
+
+        // Update $widgetInfoList with $widgetList changes
+        foreach ($widgetInfoList as &$widgets) {
+          foreach ($widgets as &$widget) {
+             if ($widgetList[$widget['widget_key']]->widgetInfoChanged) {
+               $widget = $widgetList[$widget['widget_key']]->widgetInfo; 
+             }
+          }
+        }
+
+        $this->listener->setTplVar('widgetInfoList', $widgetInfoList);
     }
 
     /**
