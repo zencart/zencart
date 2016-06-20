@@ -363,14 +363,8 @@ UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_
 UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
 UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
 UPDATE countries set countries_name = 'Bonaire, Sint Eustatius and Saba', countries_iso_code_2 = 'BQ', countries_iso_code_3 = 'BES' WHERE countries_iso_code_3 = 'ANT';
-UPDATE countries set countries_name = 'Bosnia and Herzegovina' where countries_iso_code_3 = 'BIH';
-UPDATE countries set countries_name = 'Guinea-Bissau' where countries_iso_code_3 = 'GNB';
-UPDATE countries set countries_name = 'Heard and McDonald Islands' where countries_iso_code_3 = 'HMD';
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (247,'Curaçao','CW','CUW','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (248,'Sint Maarten (Dutch part)','SX','SXM','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (249,'Saint-Barthélemy','BL','BLM','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (250,'Congo - Kinshasa','CD','COD','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (251,'St. Martin','MF','MAF','1');
 ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
 
 CREATE TABLE countries_name (
@@ -388,6 +382,15 @@ LEFT JOIN languages l
 ON 1;
 ALTER TABLE countries DROP countries_name;
 
+UPDATE countries_name set countries_name = 'Bosnia and Herzegovina' where countries_iso_code_3 = 'BIH';
+UPDATE countries_name set countries_name = 'Guinea-Bissau' where countries_iso_code_3 = 'GNB';
+UPDATE countries_name set countries_name = 'Heard and McDonald Islands' where countries_iso_code_3 = 'HMD';
+INSERT INTO countries (countries_id,countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (249,'BL','BLM','1');
+INSERT INTO countries (countries_id,countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (250,'CD','COD','1');
+INSERT INTO countries (countries_id,countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (251,'MF','MAF','1');
+INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(249, 1, 'Saint-Barthélemy');
+INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(250, 1, 'Congo - Kinshasa');
+INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(251, 1, 'St. Martin');
 
 
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
