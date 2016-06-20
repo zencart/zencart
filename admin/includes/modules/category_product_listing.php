@@ -171,7 +171,7 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
       }
       if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == '1' || (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == '2' && $categories->fields['parent_id'] != (int)TOPMOST_CATEGORY_PARENT_ID))
       {
-        if (zen_get_products_to_categories($categories->fields['categories_id'], true, 'products_active') == 'true') {
+        if (zen_get_products_to_categories($categories->fields['categories_id'], true, 'products_active') === true) {
           echo '&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED);
         }
       } else

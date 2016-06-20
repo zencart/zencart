@@ -461,36 +461,36 @@
   function zen_get_products_category_id($products_id) {
     global $db;
 
-    $the_products_category_query = "select products_id, master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'";
-    $the_products_category = $db->Execute($the_products_category_query);
-    if ($the_products_category->EOF) return '';
-    return $the_products_category->fields['master_categories_id'];
+    $sql = "select master_categories_id from " . TABLE_PRODUCTS . " where products_id = " . (int)$products_id;
+    $result = $db->Execute($sql);
+    if ($result->EOF) return '';
+    return $result->fields['master_categories_id'];
   }
 
 /*
  * Return category's image
  * TABLES: categories
  */
-  function zen_get_categories_image($what_am_i) {
+  function zen_get_categories_image($category_id) {
     global $db;
 
-    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . $what_am_i . "'";
-    $the_products_category = $db->Execute($the_categories_image_query);
+    $sql = "select categories_image from " . TABLE_CATEGORIES . " where categories_id= " . (int)$category_id;
+    $result = $db->Execute($sql);
 
-    return $the_products_category->fields['categories_image'];
+    return $result->fields['categories_image'];
   }
 
 /*
  *  Return category's name from ID, assuming current language
  *  TABLES: categories_description
  */
-  function zen_get_categories_name($who_am_i) {
+  function zen_get_categories_name($category_id) {
     global $db;
-    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . $who_am_i . "' and language_id= '" . $_SESSION['languages_id'] . "'";
+    $sql = "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= " . (int)$category_id . " and language_id= " . (int)$_SESSION['languages_id'];
 
-    $the_categories_name = $db->Execute($the_categories_name_query);
+    $result = $db->Execute($sql);
 
-    return $the_categories_name->fields['categories_name'];
+    return $result->fields['categories_name'];
   }
 
 
