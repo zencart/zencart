@@ -202,9 +202,6 @@ $group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name',
                'symbol_left', 'symbol_right');
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
-$group = array('metatags_title', 'metatags_keywords', 'metatags_description');
-$sanitizer->addSimpleSanitization('META_TAGS', $group);
-
 $group = array('customers_email_address' => array('sanitizerType' => 'SANITIZE_EMAIL_AUDIENCE', 'method' => 'post', 'pages' => array('mail')));
 $sanitizer->addComplexSanitization($group);
 
@@ -220,7 +217,7 @@ $sanitizer->addSimpleSanitization('PRODUCT_URL_REGEX', $group);
 $group = array('coupon_min_order');
 $sanitizer->addSimpleSanitization('CURRENCY_VALUE_REGEX', $group);
 
-$group = array('categories_name', 'products_name', 'orders_status_name', 'configuration');
+$group = array('categories_name', 'products_name', 'orders_status_name', 'configuration', 'metatags_title', 'metatags_keywords', 'metatags_description');
 $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 
 $group = array('configuration_value', 'configuration_key', 'search', 'query_string');
