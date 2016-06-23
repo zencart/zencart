@@ -394,6 +394,7 @@ CREATE TABLE countries (
 # Table structure for table 'countries_name'
 #
 
+DROP TABLE IF EXISTS countries_name;
 CREATE TABLE countries_name (
   countries_id int(11) NOT NULL,
   language_id int(11) NOT NULL DEFAULT 1,
