@@ -21,6 +21,9 @@
         <file>ipn_main_handler.php</file>
         <directory>includes</directory>
         <ignore>includes/classes/vendors/*</ignore>
+        <ignore>includes/library/aura/*</ignore>
+        <ignore>includes/library/container-interop/*</ignore>
+        <ignore>includes/library/vlucas/*</ignore>
         <ignore>includes/classes/Mobile_Detect.php</ignore>
         <ignore>includes/languages/classic/*</ignore>
         <ignore>includes/languages/english/classic/*</ignore>

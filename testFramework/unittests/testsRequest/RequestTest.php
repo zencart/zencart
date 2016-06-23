@@ -20,9 +20,9 @@ class testRequest extends zcTestCase
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/AuraDi/src');
+        $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/di/src');
         $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
-        $loader->addPrefix('Interop\Container', DIR_CATALOG_LIBRARY . 'container-interop/src/Interop/Container/');
+        $loader->addPrefix('Interop\Container', DIR_CATALOG_LIBRARY . 'container-interop/container-interop/src/Interop/Container/');
         require_once DIR_FS_CATALOG . 'includes/diConfigs/AuraWeb.php';
         require_once DIR_FS_CATALOG . 'includes/diConfigs/ZenCartCommon.php';
     }

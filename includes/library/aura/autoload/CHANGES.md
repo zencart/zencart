@@ -1,1 +1,1 @@
-Initial 2.0.0-beta1 release.
+This release corrects the README to show the correct phpunit command.

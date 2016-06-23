@@ -38,4 +38,6 @@ filter:
         - 'includes/classes/class.smtp.php'
         - 'includes/classes/http_client.php'
         - 'includes/library/aura/*'
+        - 'includes/library/container-interop/*'
+        - 'includes/library/vlucas/*'
         - 'includes/modules/debug_blocks/*'
