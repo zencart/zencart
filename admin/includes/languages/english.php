@@ -150,7 +150,6 @@ define('BOX_TOOLS_CACHE', 'Cache Control');
 define('BOX_TOOLS_DEFINE_LANGUAGE', 'Define Languages');
 define('BOX_TOOLS_FILE_MANAGER', 'File Manager');
 define('BOX_TOOLS_MAIL', 'Send Email');
-define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter and Product Notifications Manager');
 define('BOX_TOOLS_SERVER_INFO', 'Server/Version Info');
 define('BOX_TOOLS_WHOS_ONLINE', 'Who\'s Online');
 define('BOX_TOOLS_STORE_MANAGER', 'Store Manager');
