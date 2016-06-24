@@ -42,7 +42,7 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVars['languages'] = $languages;
         $this->service->setEditQueryparts();
         $resultItems = $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
+            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator(), true);
         $this->tplVars['legendTitle'] = TEXT_LEAD_EDIT_ENTRY;
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
