@@ -1,0 +1,15 @@
+{
+    "title": "Aura.Di",
+    "content": [
+        "getting-started.md",
+        "constructor.md",
+        "setter.md",
+        "inheritance.md",
+        "services.md",
+        "lazy.md",
+        "factories.md",
+        "config.md",
+        "auto.md",
+        "migrating.md"
+    ]
+}

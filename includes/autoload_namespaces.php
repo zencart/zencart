@@ -3,7 +3,7 @@
  * Default autoloader namespace configuration
  *
  * @package initSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version  $Id: New in v1.6.0 $
  */
@@ -37,10 +37,10 @@ define('URL_LEAD', 'zencart/Lead/src/');
 define('URL_CHECKOUTFLOW', 'zencart/CheckoutFlow/src/');
 define('URL_VIEW', 'zencart/View/src/');
 define('URL_ADMINUSER', 'zencart/AdminUser/src/');
-define('URL_VALITRON', 'valitron/src/Valitron');
+define('URL_VALITRON', 'vlucas/valitron/src/Valitron');
 define('URL_FORMVALIDATION', 'zencart/FormValidation/src/');
-define('URL_AURADI', 'aura/AuraDi/src/');
-define('URL_INTEROPCONTAINER', 'container-interop/src/Interop/Container/');
+define('URL_AURADI', 'aura/di/src/');
+define('URL_INTEROPCONTAINER', 'container-interop/container-interop/src/Interop/Container/');
 define('URL_ADMINNOTIFICATIONS', 'zencart/AdminNotifications/src/');
 
 /**
@@ -65,5 +65,4 @@ return array(
     NAMESPACE_AURADI => DIR_CATALOG_LIBRARY. URL_AURADI,
     NAMESPACE_INTEROPCONTAINER => DIR_CATALOG_LIBRARY. URL_INTEROPCONTAINER,
     NAMESPACE_ADMINNOTIFICATIONS => DIR_CATALOG_LIBRARY. URL_ADMINNOTIFICATIONS,
-
 );

@@ -1,3 +1,3 @@
 <?php
 
-require 'vendors/PHPMailer/PHPMailerAutoload.php';
+require DIR_CATALOG_LIBRARY . 'PHPMailer/PHPMailerAutoload.php';
