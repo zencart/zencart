@@ -10,7 +10,7 @@ For a full PSR-0 only autoloader, please see [Aura.Autoload v1](https://github.c
 
 ### Installation
 
-This library requires PHP 5.3 or later, and has no userland dependencies.
+This library requires PHP 5.3 or later; we recommend using the latest available version of PHP as a matter of principle. It has no userland dependencies.
 
 It is installable and autoloadable via Composer as [aura/autoload](https://packagist.org/packages/aura/autoload).
 
@@ -18,16 +18,17 @@ Alternatively, [download a release](https://github.com/auraphp/Aura.Autoload/rel
 
 ### Quality
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/badges/quality-score.png?s=6a3eaf6df96443eca1ac8b0ab68aac87e4b60cd8)](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/)
-[![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/badges/coverage.png?s=cdd39a30828aeb528df12444cb3704c8a419b50e)](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/)
+[![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Autoload/)
 [![Build Status](https://travis-ci.org/auraphp/Aura.Autoload.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Autoload)
 
-To run the [PHPUnit][] tests at the command line, go to the _tests_ directory and issue `phpunit`.
+To run the unit tests at the command line, issue `phpunit` at the package root. (This requires [PHPUnit][] to be available as `phpunit`.)
+
+[PHPUnit]: http://phpunit.de/manual/
 
 This library attempts to comply with [PSR-1][], [PSR-2][], and [PSR-4][]. If
 you notice compliance oversights, please send a patch via pull request.
 
-[PHPUnit]: http://phpunit.de/manual/
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
@@ -76,7 +77,7 @@ $loader->setPrefixes(array(
         '/path/to/foo-bar/src',
         '/path/to/foo-bar/tests',
     ),
-    
+
     'Baz\Dib' => array(
         '/path/to/baz.dib/src',
         '/path/to/baz.dib/tests',
@@ -133,7 +134,7 @@ These methods are available to inspect the `Loader`:
 
 - `getPrefixes()` returns all the added namespace prefixes and their base
   directories
-  
+
 - `getClassFiles()` returns all the explicit class-to-file mappings
 
 - `getLoadedClasses()` returns all the class names loaded by the `Loader` and

@@ -24,7 +24,7 @@ Requirements
 ------------
 Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP), based on the following specifications
 
-- Compatible with PHP 5.4.2 to 7.0.x
+- Compatible with PHP 5.5.0 to 7.0.x
 - Compatible with MySQL 5.1 to 5.7, via the PHP mysqli client
 - CURL (via PHP) is used to communication with payment/shipping services
 - Compatible with with Apache 2.2, (or Apache 2.4 with the backward-compatibility mode enabled for v2.2 .htaccess rules support.)
