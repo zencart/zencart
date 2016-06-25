@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
@@ -746,7 +746,7 @@ define('TEXT_CONFIRM_DELETE_TEXT', 'Do you want to delete the selected items?');
 define('TEXT_CONFIRM', 'Confirm');
 define('TEXT_ITEM_DEFAULT', '<strong>(Default)</strong>');
 define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
-define('TEXT_AUTOCOMPLETE_DEFAULT_PLACEHOLDER', 'Search or Select below');
+define('TEXT_FILLBYLOOKUP_DEFAULT_PLACEHOLDER', 'Search or Select below');
 define('TEXT_DELETE_LINKED_ITEMS', 'Delete Linked Products');
 define('TEXT_DELETE_IMAGE', 'Delete Linked Image');
 
@@ -754,3 +754,14 @@ define('TEXT_DELETE_IMAGE', 'Delete Linked Image');
 
 define('TEXT_HEADER_NOTIFICATIONS_COUNT', 'You have %s notifications');
 define('TEXT_HEADER_GV_QUEUE', 'Gift Voucher Queue .. %s Item(s)');
+
+
+// date ranges
+
+define('TEXT_SELECT_DATE_RANGE', 'Select Date Range');
+define('TEXT_DATE_RANGE_TODAY', 'Today');
+define('TEXT_DATE_RANGE_YESTERDAY', 'Yesterday');
+define('TEXT_DATE_RANGE_LAST_7_DAYS', 'Last 7 Days');
+define('TEXT_DATE_RANGE_LAST_30_DAYS', 'Last 30 Days');
+define('TEXT_DATE_RANGE_THIS_MONTH', 'This Month');
+define('TEXT_DATE_RANGE_LAST_MONTH', 'Last Month');

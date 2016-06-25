@@ -142,23 +142,12 @@ abstract class AbstractLeadController extends AbstractListingController
     /**
      *
      */
-    public function autocompleteExecute()
-    {
-        $this->useView = false;
-        $retVal = $this->service->autocompleteExecute();
-        $this->response = $retVal;
-    }
-
-    /**
-     *
-     */
     public function deleteExecute()
     {
         $this->useView = false;
         $result = $this->service->deleteExecute();
         if ($result === true) {
             $this->filterExecute();
-
             return;
         }
         header("Status: 403 Forbidden", true, 403);  //@todo REFACTOR  handle header output in main controller

@@ -167,7 +167,7 @@ class LeadTaxRates extends AbstractLeadListingBox
                 'tax_class_title' => array(
                     'parentTable' => TABLE_TAX_CLASS,
                     'bindVarsType' => 'string',
-                    'autocomplete' => array(
+                    'fillByLookup' => array(
                         'dataTable' => TABLE_TAX_CLASS,
                         'dataSearchField' => 'tax_class_title',
                         'valueResponse' => 'tax_class_title',
@@ -180,7 +180,13 @@ class LeadTaxRates extends AbstractLeadListingBox
                             'align' => 'right',
                             'type' => 'text',
                             'size' => '30'
-                        )
+                        ),
+                        'edit' => array(
+                            'title' => TEXT_ENTRY_TAX_CLASS_TITLE,
+                            'align' => 'right',
+                            'type' => 'textSelect2',
+                            'size' => '30'
+                        ),
                     )
                 ),
                 'tax_class_id' => array(
@@ -196,7 +202,7 @@ class LeadTaxRates extends AbstractLeadListingBox
                 'geo_zone_name' => array(
                     'parentTable' => TABLE_GEO_ZONES,
                     'bindVarsType' => 'string',
-                    'autocomplete' => array(
+                    'fillByLookup' => array(
                         'dataTable' => TABLE_GEO_ZONES,
                         'dataSearchField' => 'geo_zone_name',
                         'valueResponse' => 'geo_zone_name',
@@ -209,7 +215,13 @@ class LeadTaxRates extends AbstractLeadListingBox
                             'align' => 'right',
                             'type' => 'text',
                             'size' => '30'
-                        )
+                        ),
+                        'edit' => array(
+                            'title' => TEXT_ENTRY_ZONE,
+                            'align' => 'right',
+                            'type' => 'textSelect2',
+                            'size' => '30'
+                        ),
                     )
                 ),
                 'tax_zone_id' => array(

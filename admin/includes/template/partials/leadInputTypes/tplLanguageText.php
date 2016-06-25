@@ -12,7 +12,7 @@
     <?php require('includes/template/partials/' . $tplVars['leadDefinition']['inputLabelTemplate']); ?>
     <div class="input-group col-sm-6">
         <input id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-               class=" form-control <?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput <?php if ($tplVars['leadDefinition']['fields'][$field]['autocomplete']) echo 'autocomplete'; ?> <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' error ';}; ?>"
+               class=" form-control <?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput  <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' error ';}; ?>"
                type="text"
                name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field'].'['.$languageKey .']'; ?>"
                value="<?php echo htmlspecialchars($entry); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"

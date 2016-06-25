@@ -138,6 +138,16 @@ abstract class AbstractListingController extends AbstractAdminController
     }
 
     /**
+     *
+     */
+    public function fillByLookupExecute()
+    {
+        $this->useView = false;
+        $retVal = $this->service->fillByLookupExecute();
+        $this->response = $retVal;
+    }
+
+    /**
      * @param $mainKey
      * @param $languages
      */

@@ -242,7 +242,7 @@ class LeadRoutes extends LeadService
     /**
      * @return array
      */
-    public function autoCompleteExecute()
+    public function fillByLookupExecute()
     {
         $dataTable = $this->request->readGet('dataTable');
         $dataSearchField = $this->request->readGet('dataSearchField');
@@ -257,7 +257,7 @@ class LeadRoutes extends LeadService
             $sql = $this->dbConn->bindVars($sql, ':extraWhereValue:', $this->request->readGet('extraWhereVal'), $bindVarsType);
         }
         if ($this->canManageSingleTableLanguage()) {
-            $sql = $this->autoCompleteManageLanguage($sql);
+            $sql = $this->fillByLookupManageLanguage($sql);
         }
         $sql = $this->dbConn->bindVars($sql, ':dataResponse:', $dataResponse, 'noquotestring');
         $sql = $this->dbConn->bindVars($sql, ':valueResponse:', $valueResponse, 'noquotestring');
@@ -303,7 +303,7 @@ class LeadRoutes extends LeadService
      * @param $sql
      * @return string
      */
-    protected function autoCompleteManageLanguage($sql)
+    protected function fillByLookupManageLanguage($sql)
     {
         $sql .= ' AND :languageField: = :languageValue:';
         $sql = $this->dbConn->bindVars($sql, ':languageField:', $this->listingQuery['languageKeyField'], 'noquotestring');

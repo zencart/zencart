@@ -5,6 +5,7 @@
  * @version $Id: currencies.php 15880 2010-04-11 16:24:30Z wilt $
  */
 namespace ZenCart\ListingBox\boxes;
+
 /**
  * Class AbstractListingBox
  * @package ZenCart\ListingBox\Box
@@ -62,7 +63,9 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
      */
     public function transformPaginationItems($items, $currentPage)
     {
-        if (count($items) == 0) return array();
+        if (count($items) == 0) {
+            return array();
+        }
         $rows = array();
         foreach ($items as $item) {
             $row = array();
@@ -103,11 +106,27 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
             $row ['rowActions'] [$extraRowActions ['key']] = array(
                 'link' => $this->buildExtraActionLink($extraRowActions ['link'], $item),
                 'linkText' => $extraRowActions ['linkText'],
-                'linkParameters' => isset($extraRowActions ['linkParameters']) ? $extraRowActions ['linkParameters'] : ''
+                'linkParameters' => $this->buildLinkParameters($extraRowActions ['linkParameters'], $item)
             );
         }
         return $row;
     }
+
+
+    public function buildLinkParameters($parameters, $item)
+    {
+        $parameterLinks = '';
+        if (!$parameters) {
+            return $parameterLinks;
+        }
+        foreach ($parameters as $param) {
+            if ($param['type'] == 'data-item') {
+                $parameterLinks .= ' data-item =' . $item [$param ['value']] . ' ';
+            }
+        }
+        return $parameterLinks;
+    }
+
 
     /**
      * @param $parameters
@@ -196,7 +215,7 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     {
         $this->listingQuery['languageKeyField'] = isset($this->listingQuery['languageKeyField']) ? $this->listingQuery['languageKeyField'] : 'languages_id';
         if (!isset($this->outputLayout['formatter'])) {
-            $this->outputLayout['formatter'] = array('class'=> 'AdminLead');
+            $this->outputLayout['formatter'] = array('class' => 'AdminLead');
         }
     }
 
@@ -219,11 +238,15 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     {
         $newVal = $item[$key] ^= 1;
         $icon = 'icon_red_on.gif';
-        if (!$newVal) $icon = 'icon_green_on.gif';
-        return '<a class="ajaxDataUpdater" data-action="updateField" data-pkey="' . $pkey . '" data-pkeyvalue="' . $item [$pkey] . '" data-value="' . $newVal . '" data-field="' . $key . '" href="' . zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array(
+        if (!$newVal) {
+            $icon = 'icon_green_on.gif';
+        }
+        return '<a class="ajaxDataUpdater" data-action="updateField" data-pkey="' . $pkey . '" data-pkeyvalue="' . $item [$pkey] . '" data-value="' . $newVal . '" data-field="' . $key . '" href="' . zen_href_link($this->request->readGet('cmd'),
+            zen_get_all_get_params(array(
                 'action'
             )) . 'action=updateField&field=' . $key . '&value=' . $newVal) . '"><img border="0" title=" Status - Enabled " alt="Status - Enabled" src="images/' . $icon . '" ></a>';
     }
+
     /**
      *
      * @param unknown $item
@@ -233,9 +256,9 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
      */
     public function zoneStatusIcon($item, $key, $pkey)
     {
-        $sql = "SELECT count(*) AS num_zones FROM " . TABLE_ZONES_TO_GEO_ZONES . "  where geo_zone_id = '" . (int)$item['geo_zone_id'] . "'  group by geo_zone_id";
+        $sql = "SELECT count(*) AS num_zones FROM " . TABLE_ZONES_TO_GEO_ZONES . "  WHERE geo_zone_id = '" . (int)$item['geo_zone_id'] . "'  GROUP BY geo_zone_id";
         $result = $this->dbConn->execute($sql);
-        $sql = "select count(*) as num_tax_rates from " . TABLE_TAX_RATES . "  where tax_zone_id = '" . (int)$item['geo_zone_id'] . "'  group by tax_zone_id";
+        $sql = "SELECT count(*) AS num_tax_rates FROM " . TABLE_TAX_RATES . "  WHERE tax_zone_id = '" . (int)$item['geo_zone_id'] . "'  GROUP BY tax_zone_id";
         $result1 = $this->dbConn->execute($sql);
         $icon = 'icon_status_red.gif';
         if ($result->fields['num_zones'] > 0) {

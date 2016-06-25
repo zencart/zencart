@@ -52,6 +52,7 @@ abstract class AbstractAdminController extends \base
         $this->dbConn = $db;
         $this->controllerCommand = $this->request->readGet('cmd');
         $this->tplVars = array();
+        $this->tplVars = array('jscriptVars' => ['securityToken' => $request->getSession()->get('securityToken')]);
         $this->response = array(
             'data' => null
         );

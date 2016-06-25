@@ -10,12 +10,19 @@
         <link rel="stylesheet" type="text/css"
               href="<?php echo $entry['href']; ?>" <?php echo(isset($entry['id']) ? 'id="' . $entry['id'] . '"' : ''); ?> <?php echo(isset($entry['media']) ? 'media="' . $entry['media'] . '"' : ''); ?>>
     <?php } ?>
+    <?php if (isset($tplVars['jscriptVars'])) { ?>
+        <script>
+            <?php foreach ($tplVars['jscriptVars'] as $jsName => $jsValue) { ?>
+            var <?php echo $jsName; ?> = '<?php echo $jsValue; ?>'
+            <?php } ?>
+        </script>
+    <?php } ?>
     <!-- Font Awesome Icons -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <?php /** CDN for jQuery core **/ ?>
     <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
     <script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.min.js"><\/script>');</script>
-    <?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
+    <script src="includes/template/javascript/zcJSFramework.js"></script>
     <link rel="stylesheet" type="text/css" href="includes/template/css/jquery-ui.min.css" id="jQueryUIThemeCSS">
     <?php /** CDN for jQuery UI components **/ ?>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
@@ -35,5 +42,8 @@
     <![endif]-->
     <link rel="stylesheet" type="text/css" href="includes/template/javascript/select2-master/select2.css" id="select2CSS">
     <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
+    <link rel="stylesheet" href="includes/template/AdminLTE2/plugins/daterangepicker/daterangepicker-bs3.css">
     <script src="includes/template/javascript/select2-master/select2.js"></script>
-
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+</head>
