@@ -42,7 +42,7 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVars['languages'] = $languages;
         $this->service->setEditQueryparts();
         $resultItems = $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
+            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator(), true);
         $this->tplVars['legendTitle'] = TEXT_LEAD_EDIT_ENTRY;
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
@@ -142,23 +142,12 @@ abstract class AbstractLeadController extends AbstractListingController
     /**
      *
      */
-    public function autocompleteExecute()
-    {
-        $this->useView = false;
-        $retVal = $this->service->autocompleteExecute();
-        $this->response = $retVal;
-    }
-
-    /**
-     *
-     */
     public function deleteExecute()
     {
         $this->useView = false;
         $result = $this->service->deleteExecute();
         if ($result === true) {
             $this->filterExecute();
-
             return;
         }
         header("Status: 403 Forbidden", true, 403);  //@todo REFACTOR  handle header output in main controller

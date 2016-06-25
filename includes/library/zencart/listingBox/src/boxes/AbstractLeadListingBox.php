@@ -5,6 +5,7 @@
  * @version $Id: currencies.php 15880 2010-04-11 16:24:30Z wilt $
  */
 namespace ZenCart\ListingBox\boxes;
+
 /**
  * Class AbstractListingBox
  * @package ZenCart\ListingBox\Box
@@ -28,23 +29,27 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
      * @return array
      * @throws \Exception
      */
-    public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null)
+    public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null, $singleItem = false)
     {
         $this->tplVars['filter'] = $this->doFilters($db);
         $queryBuilder->processQuery($this->getListingQuery());
         $query = $queryBuilder->getQuery();
         $this->dbConn = $query['dbConn'] = $db;
-        //print_r($query);
-        $resultItems = $this->processPaginatorResults($paginator, $query, $db);
-        $resultItems = $this->transformPaginationItems($resultItems);
+        $usePaginator = $paginator;
+        if ($singleItem) {
+            $usePaginator = null;
+        }
+        $resultItems = $this->processPaginatorResults($usePaginator, $query, $db);
+        $resultItems = $this->transformPaginationItems($resultItems, $paginator->getCurrentPage());
         $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);
         $formatter = $this->doFormatter($finalItems, $db);
         $this->tplVars['formatter'] = $formatter->getTplVars();
         $this->tplVars['formattedItems'] = $formatter->getFormattedResults();
         $this->doMultiFormSubmit($finalItems);
-        $this->normalizeTplVars($paginator);
+        $this->normalizeTplVars($usePaginator);
         return $finalItems;
     }
+
     /**
      * @param $listBoxContents
      */
@@ -56,9 +61,11 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
      * @param $items
      * @return array
      */
-    public function transformPaginationItems($items)
+    public function transformPaginationItems($items, $currentPage)
     {
-        if (count($items) == 0) return array();
+        if (count($items) == 0) {
+            return array();
+        }
         $rows = array();
         foreach ($items as $item) {
             $row = array();
@@ -67,8 +74,8 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
             if ($this->leadDefinition ['allowEdit']) {
                 $row ['rowActions'] ['edit'] = array(
                     'link' => zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array(
-                            'action'
-                        )) . 'action=edit&' . $this->listingQuery ['mainTable']['fkeyFieldLeft'] . '=' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']]),
+                            'action', 'page', $this->listingQuery ['mainTable']['fkeyFieldLeft']
+                        )) . 'action=edit&' . $this->listingQuery ['mainTable']['fkeyFieldLeft'] . '=' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']] . '&page=' . $currentPage),
                     'linkText' => TEXT_LEAD_EDIT,
                     'linkParameters' => ''
                 );
@@ -99,11 +106,27 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
             $row ['rowActions'] [$extraRowActions ['key']] = array(
                 'link' => $this->buildExtraActionLink($extraRowActions ['link'], $item),
                 'linkText' => $extraRowActions ['linkText'],
-                'linkParameters' => isset($extraRowActions ['linkParameters']) ? $extraRowActions ['linkParameters'] : ''
+                'linkParameters' => $this->buildLinkParameters($extraRowActions ['linkParameters'], $item)
             );
         }
         return $row;
     }
+
+
+    public function buildLinkParameters($parameters, $item)
+    {
+        $parameterLinks = '';
+        if (!$parameters) {
+            return $parameterLinks;
+        }
+        foreach ($parameters as $param) {
+            if ($param['type'] == 'data-item') {
+                $parameterLinks .= ' data-item =' . $item [$param ['value']] . ' ';
+            }
+        }
+        return $parameterLinks;
+    }
+
 
     /**
      * @param $parameters
@@ -192,7 +215,7 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     {
         $this->listingQuery['languageKeyField'] = isset($this->listingQuery['languageKeyField']) ? $this->listingQuery['languageKeyField'] : 'languages_id';
         if (!isset($this->outputLayout['formatter'])) {
-            $this->outputLayout['formatter'] = array('class'=> 'AdminLead');
+            $this->outputLayout['formatter'] = array('class' => 'AdminLead');
         }
     }
 
@@ -215,11 +238,15 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
     {
         $newVal = $item[$key] ^= 1;
         $icon = 'icon_red_on.gif';
-        if (!$newVal) $icon = 'icon_green_on.gif';
-        return '<a class="ajaxDataUpdater" data-action="updateField" data-pkey="' . $pkey . '" data-pkeyvalue="' . $item [$pkey] . '" data-value="' . $newVal . '" data-field="' . $key . '" href="' . zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array(
+        if (!$newVal) {
+            $icon = 'icon_green_on.gif';
+        }
+        return '<a class="ajaxDataUpdater" data-action="updateField" data-pkey="' . $pkey . '" data-pkeyvalue="' . $item [$pkey] . '" data-value="' . $newVal . '" data-field="' . $key . '" href="' . zen_href_link($this->request->readGet('cmd'),
+            zen_get_all_get_params(array(
                 'action'
             )) . 'action=updateField&field=' . $key . '&value=' . $newVal) . '"><img border="0" title=" Status - Enabled " alt="Status - Enabled" src="images/' . $icon . '" ></a>';
     }
+
     /**
      *
      * @param unknown $item
@@ -229,9 +256,9 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
      */
     public function zoneStatusIcon($item, $key, $pkey)
     {
-        $sql = "SELECT count(*) AS num_zones FROM " . TABLE_ZONES_TO_GEO_ZONES . "  where geo_zone_id = '" . (int)$item['geo_zone_id'] . "'  group by geo_zone_id";
+        $sql = "SELECT count(*) AS num_zones FROM " . TABLE_ZONES_TO_GEO_ZONES . "  WHERE geo_zone_id = '" . (int)$item['geo_zone_id'] . "'  GROUP BY geo_zone_id";
         $result = $this->dbConn->execute($sql);
-        $sql = "select count(*) as num_tax_rates from " . TABLE_TAX_RATES . "  where tax_zone_id = '" . (int)$item['geo_zone_id'] . "'  group by tax_zone_id";
+        $sql = "SELECT count(*) AS num_tax_rates FROM " . TABLE_TAX_RATES . "  WHERE tax_zone_id = '" . (int)$item['geo_zone_id'] . "'  GROUP BY tax_zone_id";
         $result1 = $this->dbConn->execute($sql);
         $icon = 'icon_status_red.gif';
         if ($result->fields['num_zones'] > 0) {

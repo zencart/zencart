@@ -23,27 +23,39 @@ class LeadGvQueue extends AbstractLeadListingBox
         $customersName = function ($resultItem) {
             return $resultItem['customers_firstname'] . ' ' . $resultItem['customers_lastname'];
         };
+        $currencyFormat = function ($item, $key, $pkey) {
+            $currencies = new \currencies();
+            return $currencies->format($item[$key]);
+        };
 
         $this->listingQuery = array(
             'mainTable' => array(
-                'table' => TABLE_CUSTOMERS,
-                'alias' => 'c',
-                'fkeyFieldLeft' => 'customers_id',
+                'table' => TABLE_COUPON_GV_QUEUE,
+                'alias' => 'cgq',
+                'fkeyFieldLeft' => 'unique_id',
             ),
             'joinTables' => array(
-                'TABLE_COUPON_GV_QUEUE' => array(
-                    'table' => TABLE_COUPON_GV_QUEUE,
-                    'alias' => 'cgq',
+                'TABLE_CUSTOMERS' => array(
+                    'table' => TABLE_CUSTOMERS,
+                    'alias' => 'c',
                     'type' => 'left',
-                    'fkeyFieldLeft' => 'customers_id',
-                    'fkeyFieldRight' => 'customer_id',
-                    'selectColumns' => array('unique_id', 'order_id', 'amount', 'date_created')
+                    'fkeyFieldLeft' => 'customer_id',
+                    'fkeyFieldRight' => 'customers_id',
+                    'selectColumns' => array('customers_firstname', 'customers_lastname')
+                ),
+            ),
+            'whereClauses' => array(
+                array(
+                    'type' => 'AND',
+                    'table' => TABLE_COUPON_GV_QUEUE,
+                    'field' => 'release_flag',
+                    'value' => "'N'"
                 ),
             ),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_COUNTRIES,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS,
                     'pagingVarSrc' => 'post'
                 )
             ),
@@ -59,6 +71,7 @@ class LeadGvQueue extends AbstractLeadListingBox
 
         $this->outputLayout = array(
 
+            'extraHandlerTemplates' => array('partials/tplReleaseGvHandler.php'),
             'allowEdit' => false,
             'allowAdd' => false,
             'showActionLinkListList' => false,
@@ -79,14 +92,15 @@ class LeadGvQueue extends AbstractLeadListingBox
                                 'name' => 'action',
                                 'value' => 'release'
                             ),
-                            array(
-                                'type' => 'item',
-                                'name' => 'gid',
-                                'value' => 'unique_id'
-                            )
                         )
                     ),
-                    'linkText' => TEXT_LINK_RELEASE
+                    'linkText' => TEXT_LINK_RELEASE,
+                    'linkParameters' => array(
+                        array(
+                            'type' => 'data-item',
+                            'value' => 'unique_id'
+                        ),
+                    )
                 ),
             ),
             'listMap' => array(
@@ -111,6 +125,7 @@ class LeadGvQueue extends AbstractLeadListingBox
                     'layout' => array(
                         'common' => array(
                             'title' => TABLE_HEADING_ORDERS_ID,
+                            'type' => 'text',
                             'align' => 'right',
                             'size' => '30'
                         )
@@ -124,13 +139,16 @@ class LeadGvQueue extends AbstractLeadListingBox
                             'align' => 'right',
                             'size' => '30'
                         )
-                    )
+                    ),
+                    'fieldFormatter' => array(
+                        'callable' => $currencyFormat
+                    ),
                 ),
                 'date_created' => array(
                     'bindVarsType' => 'integer',
                     'layout' => array(
                         'common' => array(
-                            'title' => TABLE_HEADING_VOUCHER_VALUE,
+                            'title' => TABLE_HEADING_DATE_PURCHASED,
                             'align' => 'right',
                             'size' => '30'
                         )

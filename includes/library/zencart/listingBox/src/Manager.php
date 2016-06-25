@@ -31,7 +31,7 @@ class Manager extends \base
             $derivedIemManager = new DerivedItemManager();
             $qb = new QueryBuilder($db);
             $boxClass = '\\ZenCart\\ListingBox\\boxes\\' . $listingBox;
-            $box = new $boxClass($request);
+            $box = new $boxClass($request, $db);
             $builder = new \ZenCart\ListingBox\PaginatorBuilder($request, $box->getListingQuery(), $paginator);
             $box->buildResults($qb, $db, $derivedIemManager, $builder->getPaginator());
             if ($box->getFormattedItemsCount() > 0) {

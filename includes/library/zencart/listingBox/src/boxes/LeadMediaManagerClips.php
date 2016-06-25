@@ -53,9 +53,9 @@ class LeadMediaManagerClips extends AbstractLeadListingBox
 
         $this->outputLayout = array(
             'pageTitle' => $this->getTitle(),
-//            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicGenre.php',
+            //            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicGenre.php',
             'allowDelete' => true,
-//            'extraDeleteParameters' => '&product_id=' . $this->request->readGet('product_id'),
+            'extraDeleteParameters' => '&media_id=' . $this->request->readGet('media_id'),
             'allowEdit' => false,
             'relatedLinks' => array(
                 array(
@@ -100,11 +100,13 @@ class LeadMediaManagerClips extends AbstractLeadListingBox
                     )
                 )
             ),
+            'hasMediaUpload' => true,
             'listMap' => array(
                 'clip_filename',
             ),
             'editMap' => array(
-//                'media_name',
+                'media_id',
+                'clip_filename',
             ),
             'fields' => array(
                 'clip_filename' => array(
@@ -112,7 +114,19 @@ class LeadMediaManagerClips extends AbstractLeadListingBox
                     'layout' => array(
                         'common' => array(
                             'title' => TABLE_HEADING_MEDIA_CLIP_NAME,
-                            'size' => '30'
+                            ),
+
+                        'add' => array(
+                            'title' => TABLE_HEADING_MEDIA_CLIP_NAME,
+                            'size' => '30',
+                            'type' => 'file',
+                            'uploadOptions' => array(
+                                'mediaDirectorySelector' => true,
+                                'mediaDirectoryServer' => false,
+                                'baseUploadDirectory' => DIR_FS_CATALOG_MEDIA,
+                                'textMainUploadDirectiry' => TEXT_SELECT_MAIN_MEDIA_DIRECTORY,
+                                'mediaPreviewTemplate' => 'partials/tplUploadMediaManagerPreview.php'
+                            ),
                         )
                     )
                 ),
@@ -122,14 +136,22 @@ class LeadMediaManagerClips extends AbstractLeadListingBox
                         'common' => array(
                             'title' => TABLE_HEADING_MEDIA,
                             'size' => '30'
+                        ),
+                        'add' => array(
+                            'type' => 'hidden',
                         )
                     )
                 ),
                 'clip_id' => array(
                     'bindVarsType' => 'integer',
+                    'layout' => array(
+                        'common' => array(
+                            'title' => TABLE_HEADING_SELECT_PRODUCT,
+                            'size' => '30',
+                        ),
+                    )
                 ),
             ),
-            'extraRowActions' => array(),
         );
     }
 

@@ -22,8 +22,8 @@
         <?php } ?>
         <?php if ($tplVars['leadDefinition']['hasRowActions']) { ?>
         <td class="actions">
-            <?php foreach ($row['rowActions'] as $rowAction) { ?>
-                <a class="btn btn-xs" href="<?php echo $rowAction['link']; ?>" <?php echo $rowAction['linkParameters']; ?>>
+            <?php foreach ($row['rowActions'] as $action => $rowAction) { ?>
+                <a class="btn btn-xs <?php echo 'rowHandler'. ucfirst($action); ?>" href="<?php echo $rowAction['link']; ?>" <?php echo $rowAction['linkParameters']; ?>>
                     <?php echo $rowAction['linkText']; ?>
                 </a>
             <?php } ?>
@@ -33,4 +33,3 @@
     </tr>
 <?php } ?>
 <?php require 'includes/template/partials/' . $tplVars['leadDefinition']['deleteItemHandlerTemplate']; ?>
-

@@ -1,13 +1,12 @@
 <?php
 /**
- * Admin Lead Template  - text partial
+ * Admin Lead Template  - select2 partial
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:   New in v1.6.0 $
  */
-//print_r($tplVars['leadDefinition']['fields'][$field]);
 ?>
 <div class="form-group">
     <?php require('includes/template/partials/' . $tplVars['leadDefinition']['inputLabelTemplate']); ?>
@@ -21,5 +20,6 @@
            <?php echo ($tplVars['leadDefinition']['fields'][$field]['validations']['required']) ? ' required ' : ''; ?>
            >
         <?php require('includes/template/partials/' . $tplVars['leadDefinition']['errorTemplate']); ?>
+        <?php require('includes/template/partials/' . $tplVars['leadDefinition']['select2DriverTemplate']); ?>
     </div>
 </div>

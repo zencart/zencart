@@ -16,8 +16,7 @@
             echo ' has-error ';
         }; ?>">
         <input id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-               class="<?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput <?php if ($tplVars['leadDefinition']['fields'][$field]['autocomplete']) {
-                   echo 'autocomplete';
+               class="<?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput
                } ?> <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) {
                    echo ' error ';
                }; ?>"
@@ -27,12 +26,10 @@
                size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
             <?php echo ($tplVars['leadDefinition']['fields'][$field]['validations']['required']) ? ' required ' : ''; ?>
         >
-        <?php if (isset($tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['imageDirectorySelector']) && $tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['imageDirectorySelector']) { ?>
+        <?php if ($tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['mediaDirectorySelector']) { ?>
             <?php echo zen_draw_pull_down_menu($tplVars['leadDefinition']['fields'][$field]['field'] . '_file_select',
                 $tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['imageDirectorySelectList']); ?>
         <?php } ?>
-
-        <?php echo '&nbsp;' . htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value']); ?>
-        <br><?php echo zen_info_image($tplVars['leadDefinition']['fields'][$field]['value'], '', 100); ?><br>
+        <?php require('includes/template/' . $tplVars['leadDefinition']['fields'][$field]['layout']['uploadOptions']['mediaPreviewTemplate']); ?>
     </div>
 </div>

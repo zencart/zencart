@@ -101,7 +101,7 @@ class LeadZones extends AbstractLeadListingBox
                 'countries_name' => array(
                     'parentTable' => TABLE_COUNTRIES_NAME,
                     'bindVarsType' => 'string',
-                    'autocomplete' => array(
+                    'fillByLookup' => array(
                         'dataTable' => TABLE_COUNTRIES_NAME,
                         'dataSearchField' => 'countries_name',
                         'valueResponse' => 'countries_name',
@@ -114,6 +114,12 @@ class LeadZones extends AbstractLeadListingBox
                             'title' => TEXT_ENTRY_COUNTRY_NAME,
                             'align' => 'right',
                             'type' => 'text',
+                            'size' => '30'
+                        ),
+                        'edit' => array(
+                            'title' => TEXT_ENTRY_COUNTRY_NAME,
+                            'align' => 'right',
+                            'type' => 'textSelect2',
                             'size' => '30'
                         )
                     )

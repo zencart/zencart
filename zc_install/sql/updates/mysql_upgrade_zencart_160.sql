@@ -138,6 +138,8 @@ UPDATE query_builder set query_string = 'select c.customers_email_address, c.cus
 
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
+DELETE FROM admin_pages WHERE page_key = 'newsletters';
+DELETE FROM admin_pages_to_profiles WHERE page_key = 'newsletters';
 
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_COUNTS_ADMIN';
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS';

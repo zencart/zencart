@@ -12,4 +12,22 @@ namespace ZenCart\Controllers;
  */
 class MediaManagerClips extends AbstractLeadController
 {
+    /**
+     *
+     */
+    public function addExecute()
+    {
+        parent::addExecute();
+        $this->tplVars ['leadDefinition'] ['fields'] ['media_id'] ['value'] = $this->request->readGet('media_id');
+    }
+
+    /**
+     *
+     */
+    public function insertExecute()
+    {
+        $this->service->insertExecute();
+        $this->response['redirect'] = zen_href_link($this->request->readGet('cmd'), 'media_id=' . (int)$this->request->readPost('entry_field_media_id'));
+    }
+
 }

@@ -7,7 +7,7 @@
  */
 ?>
 <script type="text/javascript">
-    $('.rowDelete').on('click', function () {
+    $('.rowHandlerDelete').on('click', function () {
         $("#rowDeleteModal").modal('show');
         $('#rowDeleteConfirm').attr('data-item', $(this).attr('data-item'));
         $('#rowDeleteConfirm').on('click', function (e) {
