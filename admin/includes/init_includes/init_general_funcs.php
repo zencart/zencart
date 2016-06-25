@@ -14,13 +14,13 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package admin
 **/
-  require(DIR_WS_FUNCTIONS . 'functions_helpers.php');
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php');
-  require(DIR_WS_FUNCTIONS . 'functions_admin_menu.php');
-  require(DIR_WS_FUNCTIONS . 'functions_crud.php');
-  require(DIR_WS_FUNCTIONS . 'functions_system.php');
-  require(DIR_WS_FUNCTIONS . 'html_output.php');
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
+require(DIR_WS_FUNCTIONS . 'functions_helpers.php');
+require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php');
+require(DIR_WS_FUNCTIONS . 'functions_admin_menu.php');
+require(DIR_WS_FUNCTIONS . 'functions_crud.php');
+require(DIR_WS_FUNCTIONS . 'functions_system.php');
+require(DIR_WS_FUNCTIONS . 'html_output.php');
+require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
 
 /**
  * require the plugin support functions
@@ -80,3 +80,4 @@ if ($a == 0) {
 }
 unset($a,$c,$e);
 // end ssl config change detection
+
