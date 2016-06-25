@@ -28,23 +28,27 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
      * @return array
      * @throws \Exception
      */
-    public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null)
+    public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null, $singleItem = false)
     {
         $this->tplVars['filter'] = $this->doFilters($db);
         $queryBuilder->processQuery($this->getListingQuery());
         $query = $queryBuilder->getQuery();
         $this->dbConn = $query['dbConn'] = $db;
-        //print_r($query);
-        $resultItems = $this->processPaginatorResults($paginator, $query, $db);
-        $resultItems = $this->transformPaginationItems($resultItems);
+        $usePaginator = $paginator;
+        if ($singleItem) {
+            $usePaginator = null;
+        }
+        $resultItems = $this->processPaginatorResults($usePaginator, $query, $db);
+        $resultItems = $this->transformPaginationItems($resultItems, $paginator->getCurrentPage());
         $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);
         $formatter = $this->doFormatter($finalItems, $db);
         $this->tplVars['formatter'] = $formatter->getTplVars();
         $this->tplVars['formattedItems'] = $formatter->getFormattedResults();
         $this->doMultiFormSubmit($finalItems);
-        $this->normalizeTplVars($paginator);
+        $this->normalizeTplVars($usePaginator);
         return $finalItems;
     }
+
     /**
      * @param $listBoxContents
      */
@@ -56,7 +60,7 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
      * @param $items
      * @return array
      */
-    public function transformPaginationItems($items)
+    public function transformPaginationItems($items, $currentPage)
     {
         if (count($items) == 0) return array();
         $rows = array();
@@ -67,8 +71,8 @@ abstract class AbstractLeadListingBox extends AbstractListingBox
             if ($this->leadDefinition ['allowEdit']) {
                 $row ['rowActions'] ['edit'] = array(
                     'link' => zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array(
-                            'action'
-                        )) . 'action=edit&' . $this->listingQuery ['mainTable']['fkeyFieldLeft'] . '=' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']]),
+                            'action', 'page', $this->listingQuery ['mainTable']['fkeyFieldLeft']
+                        )) . 'action=edit&' . $this->listingQuery ['mainTable']['fkeyFieldLeft'] . '=' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']] . '&page=' . $currentPage),
                     'linkText' => TEXT_LEAD_EDIT,
                     'linkParameters' => ''
                 );

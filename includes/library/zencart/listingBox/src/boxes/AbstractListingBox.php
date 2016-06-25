@@ -101,7 +101,7 @@ abstract class AbstractListingBox extends \base
     /**
      * @param $paginator
      */
-    protected function normalizeTplVars($paginator)
+    protected function normalizeTplVars($paginator = null)
     {
         $showFilterForm = false;
         if (isset($this->tplVars['filter'])) {
