@@ -289,8 +289,8 @@ class paypalwpp extends base {
 
     // if we have a token, we want to avoid incontext checkout, so we return no special markup
     if (isset($_SESSION['paypal_ec_token']) && !empty($_SESSION['paypal_ec_token'])) {
-    return '';
-  }
+      return '';
+    }
 
     // if incontext checkout is not enabled (ie: not configured), we return no special incontext markup
     if ($this->use_incontext_checkout == false) return '';
@@ -597,11 +597,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // $this->zcLog("_GetTransactionDetails($oID):", print_r($response, true));
 
     $error = $this->_errorHandler($response, 'GetTransactionDetails', 10007);
-    if ($error === false) {
-      return false;
-    } else {
-      return $response;
-    }
+
+    return ($error === false) ? $response : $error;
   }
   /**
    * Used to read details of existing transactions.  FOR FUTURE USE.
@@ -626,11 +623,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     //$this->zcLog("_TransactionSearch($startDate, $oID, $criteria):", print_r($response, true));
 
     $error = $this->_errorHandler($response, 'TransactionSearch');
-    if ($error === false) {
-      return false;
-    } else {
-      return $response;
-    }
+
+    return ($error === false) ? $response : $error;
   }
   /**
    * Evaluate installation status of this module. Returns true if the status key is found.
@@ -3089,6 +3083,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         }
         break;
     }
+    return false;
   }
 
   function tableCheckup() {
