@@ -104,7 +104,7 @@ class LeadMediaManagerProducts extends AbstractLeadListingBox
                     )
                 ),
                 'parentView' => array(
-                    'linkTitle' => 'Parent Collection',
+                    'linkTitle' => TEXT_PARENT_COLLECTION,
                     'linkCmd' => FILENAME_MEDIA_MANAGER,
                     'linkGetAllGetParams' => true,
                     'linkGetAllGetParamsIgnore' => array(

@@ -35,14 +35,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Confirm Release</h4>
+                <h4 class="modal-title"><?php echo TEXT_TITLE_CONFIRM_RELEASE; ?></h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to release this Gift Voucher</p>
+                <p><?php echo TEXT_INFO_CONFIRM_RELEASE; ?></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="rowGvReleaseConfirm">Confirm</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo TEXT_CANCEL; ?></button>
+                <button type="button" class="btn btn-primary" id="rowGvReleaseConfirm"><?php echo TEXT_CONFIRME; ?></button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
