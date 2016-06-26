@@ -79,7 +79,7 @@ class SpecialsProductsPage extends AbstractListingBox
                 array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
                     'field' => 'language_id',
-                    'value' => $_SESSION ['languages_id'],
+                    'value' => $this->request->getSession()->get('languages_id'),
                     'type' => 'AND'
                 )
             ),
