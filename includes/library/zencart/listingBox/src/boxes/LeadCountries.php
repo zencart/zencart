@@ -38,7 +38,7 @@ class LeadCountries extends AbstractLeadListingBox
                 array(
                     'table' => TABLE_COUNTRIES_NAME,
                     'field' => 'language_id',
-                    'value' => (int)$_SESSION ['languages_id'],
+                    'value' => (int)$this->reguest->getSession()->get('languages_id'),
                     'type' => 'AND'
                 )
             ),
