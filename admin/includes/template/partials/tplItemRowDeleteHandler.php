@@ -11,14 +11,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Confirm Delete</h4>
+                <h4 class="modal-title"><?php echo TEXT_CONFIRM_DELETE; ?></h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this item</p>
+                <p><?php echo TEXT_CONFIRM_DELETE_TEXT; ?></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="rowDeleteConfirm">Confirm</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo TEXT_CANCEL; ?></button>
+                <button type="button" class="btn btn-primary" id="rowDeleteConfirm"><?php echo TEXT_CONFIRM; ?></button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
