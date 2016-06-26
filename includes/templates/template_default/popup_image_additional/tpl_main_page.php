@@ -12,7 +12,7 @@
 // Notifier hook to allow for dynamic changes to template operation
 $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
 ?>
-<body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"';?>>
+<body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"';?> onload="resizeImagePopup();">
 
 <div>
 <a class="btn close-window" href="javascript:window.close()"><?php echo zen_image($products_image_path, $products_name . ' ' . TEXT_CLOSE_IMAGE_WINDOW); ?></a>

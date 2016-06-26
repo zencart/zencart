@@ -102,7 +102,7 @@ if ($num_images) {
     $large_link = zen_href_link(FILENAME_POPUP_IMAGE_ADDITIONAL, 'pID=' . $_GET['products_id'] . '&pos=' . $i . '&img=' . $products_image_large);
 
     $js_rel = '';
-    $js_href = 'javascript:popupWindow(\\\'' . str_replace($products_image_large, urlencode(addslashes($products_image_large)), $large_link) . '\\\')';
+    $js_href = 'javascript:popupImageWindow(\\\'' . str_replace($products_image_large, urlencode(addslashes($products_image_large)), $large_link) . '\\\')';
 
     $zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_LINKS', $i, $products_image_large, $js_href, $js_rel, $products_name, $large_link, $thumb_slashes);
 
@@ -112,7 +112,7 @@ if ($num_images) {
 
     $noscript_link = '<noscript>' . ($flag_display_large ? '<a href="' . zen_href_link(FILENAME_POPUP_IMAGE_ADDITIONAL, 'pID=' . $_GET['products_id'] . '&pos=' . $i . '&img=' . $products_image_large) . '" target="_blank">' . $thumb_regular . '<br /><span class="imgLinkAdditional">' . TEXT_CLICK_TO_ENLARGE . '</span></a>' : $thumb_regular ) . '</noscript>';
 
-    //      $alternate_link = '<a href="' . $products_image_large . '" onclick="javascript:popupWindow(\''. $large_link . '\') return false;" title="' . $products_name . '" target="_blank">' . $thumb_regular . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>';
+    //      $alternate_link = '<a href="' . $products_image_large . '" onclick="javascript:popupImageWindow(\''. $large_link . '\') return false;" title="' . $products_name . '" target="_blank">' . $thumb_regular . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>';
 
     $link = $script_link . "\n      " . $noscript_link;
     //      $link = $alternate_link;
