@@ -389,7 +389,7 @@ class order extends base {
                         'total' => 0,
                         'tax_groups' => array(),
                         'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
-                        'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
+                        'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . zen_get_ip_address(),
                         'order_weight' => ($shipping_weight * $shipping_num_boxes),
                         );
 
@@ -665,7 +665,7 @@ class order extends base {
                             'order_tax' => $this->info['tax'],
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
-                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
+                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . zen_get_ip_address(),
                             'order_weight' => $this->info['order_weight']
                             );
 
