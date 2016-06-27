@@ -988,52 +988,52 @@ class order extends base {
    *
    * @param $zf_insert_id
    */
-  public function send_order_email($zf_insert_id, $zf_mode = FALSE) {
-      global $currencies, $order_totals;
+  public function send_order_email($zf_insert_id) {
+    global $currencies, $order_totals;
 
-      $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $zf_insert_id, $order_totals, $zf_mode);
-      if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
+    $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $zf_insert_id, $order_totals, $zf_mode);
+    if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
 
-      $this->sendLowStockEmails();
+    $this->sendLowStockEmails();
 
-      // prepare the email confirmation message details
-      // make an array to store the html version of the email
-      $html_msg=array();
-      $email_order = '';
+    // prepare the email confirmation message details
+    // make an array to store the html version of the email
+    $html_msg=array();
+    $email_order = '';
 
-      $emailTextInvoiceText = EMAIL_TEXT_INVOICE_URL_CLICK;
-      $emailTextInvoiceUrl =zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
+    $emailTextInvoiceText = EMAIL_TEXT_INVOICE_URL_CLICK;
+    $emailTextInvoiceUrl =zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
 
-      $this->notify('NOTIFY_ORDER_SEND_EMAIL_SET_ORDER_LINK', array(), $emailTextInvoiceText, $emailTextInvoiceUrl, $zf_insert_id);
+    $this->notify('NOTIFY_ORDER_SEND_EMAIL_SET_ORDER_LINK', array(), $emailTextInvoiceText, $emailTextInvoiceUrl, $zf_insert_id);
 
-      $html_msg['EMAIL_TEXT_HEADER']     = EMAIL_TEXT_HEADER;
-      $html_msg['EMAIL_TEXT_FROM']       = EMAIL_TEXT_FROM;
-      $html_msg['INTRO_STORE_NAME']      = STORE_NAME;
-      $html_msg['EMAIL_THANKS_FOR_SHOPPING'] = EMAIL_THANKS_FOR_SHOPPING;
-      $html_msg['EMAIL_DETAILS_FOLLOW']  = EMAIL_DETAILS_FOLLOW;
-      $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
-      $html_msg['INTRO_ORDER_NUMBER']    = $zf_insert_id;
-      $html_msg['INTRO_DATE_TITLE']      = EMAIL_TEXT_DATE_ORDERED;
-      $html_msg['INTRO_DATE_ORDERED']    = strftime(DATE_FORMAT_LONG);
-      $html_msg['INTRO_URL_TEXT']        = $emailTextInvoiceText;
-      $html_msg['INTRO_URL_VALUE']       = $emailTextInvoiceUrl;
-      $html_msg['EMAIL_CUSTOMER_PHONE']  = $this->customer['telephone'];
-      $html_msg['EMAIL_ORDER_DATE']      = date(ORDER_EMAIL_DATE_FORMAT);
+    $html_msg['EMAIL_TEXT_HEADER']     = EMAIL_TEXT_HEADER;
+    $html_msg['EMAIL_TEXT_FROM']       = EMAIL_TEXT_FROM;
+    $html_msg['INTRO_STORE_NAME']      = STORE_NAME;
+    $html_msg['EMAIL_THANKS_FOR_SHOPPING'] = EMAIL_THANKS_FOR_SHOPPING;
+    $html_msg['EMAIL_DETAILS_FOLLOW']  = EMAIL_DETAILS_FOLLOW;
+    $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
+    $html_msg['INTRO_ORDER_NUMBER']    = $zf_insert_id;
+    $html_msg['INTRO_DATE_TITLE']      = EMAIL_TEXT_DATE_ORDERED;
+    $html_msg['INTRO_DATE_ORDERED']    = strftime(DATE_FORMAT_LONG);
+    $html_msg['INTRO_URL_TEXT']        = $emailTextInvoiceText;
+    $html_msg['INTRO_URL_VALUE']       = $emailTextInvoiceUrl;
+    $html_msg['EMAIL_CUSTOMER_PHONE']  = $this->customer['telephone'];
+    $html_msg['EMAIL_ORDER_DATE']      = date(ORDER_EMAIL_DATE_FORMAT);
 
-      $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
-      $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
-      EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
-      EMAIL_SEPARATOR . "\n" .
-      EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
-          $emailTextInvoiceText . ' ' . $emailTextInvoiceUrl . "\n\n";
+    $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
+    $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
+    EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
+    EMAIL_SEPARATOR . "\n" .
+    EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
+    EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
+        $emailTextInvoiceText . ' ' . $emailTextInvoiceUrl . "\n\n";
 
-    //comments area
-      $html_msg['ORDER_COMMENTS'] = '';
-      if ($this->info['comments']) {
-        $email_order .= zen_db_output($this->info['comments']) . "\n\n";
-        $html_msg['ORDER_COMMENTS'] = nl2br(zen_db_output($this->info['comments']));
-      }
+  //comments area
+    $html_msg['ORDER_COMMENTS'] = '';
+    if ($this->info['comments']) {
+      $email_order .= zen_db_output($this->info['comments']) . "\n\n";
+      $html_msg['ORDER_COMMENTS'] = nl2br(zen_db_output($this->info['comments']));
+    }
 
     $this->notify('NOTIFY_ORDER_EMAIL_BEFORE_PRODUCTS', array(), $email_order, $html_msg);
 
@@ -1067,15 +1067,15 @@ class order extends base {
     }
 
     if ($_SESSION['cart']->show_total() != 0) {
-    $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
-    EMAIL_SEPARATOR . "\n" .
-    zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
-    $html_msg['ADDRESS_BILLING_TITLE']   = EMAIL_TEXT_BILLING_ADDRESS;
-    $html_msg['ADDRESS_BILLING_DETAIL']  = zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, '', "<br />");
+      $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
+      EMAIL_SEPARATOR . "\n" .
+      zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+      $html_msg['ADDRESS_BILLING_TITLE']   = EMAIL_TEXT_BILLING_ADDRESS;
+      $html_msg['ADDRESS_BILLING_DETAIL']  = zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, '', "<br />");
 //     $html_msg['ADDRESS_BILLING_DETAIL'] .= $this->customer['telephone'] . '<br />';
     } else{
-    $html_msg['ADDRESS_BILLING_TITLE']   = '';
-    $html_msg['ADDRESS_BILLING_DETAIL']  = ' <br />';
+      $html_msg['ADDRESS_BILLING_TITLE']   = '';
+      $html_msg['ADDRESS_BILLING_DETAIL']  = ' <br />';
     }
     if (is_object($GLOBALS[$_SESSION['payment']])) {
       $cc_num_display = (isset($this->info['cc_number']) && $this->info['cc_number'] != '') ? /*substr($this->info['cc_number'], 0, 4) . */ str_repeat('X', (strlen($this->info['cc_number']) - 8)) . substr($this->info['cc_number'], -4) . "\n\n" : '';
