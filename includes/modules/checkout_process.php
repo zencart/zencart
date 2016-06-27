@@ -92,7 +92,7 @@ $order->create_add_products($insert_id);
 $_SESSION['order_number_created'] = $insert_id;
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE_ADD_PRODUCTS');
 //send email notifications
-$order->send_order_email($insert_id, 2);
+$order->send_order_email($insert_id);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 
 // clear slamming protection since payment was accepted

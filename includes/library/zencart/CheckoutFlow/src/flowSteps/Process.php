@@ -204,7 +204,7 @@ class Process extends AbstractFlowStep
     protected function manageOrderSendEmails()
     {
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_ORDER_SEND_EMAILS_START');
-        $GLOBALS['order']->send_order_email($GLOBALS['insert_id'], 2);
+        $GLOBALS['order']->send_order_email($GLOBALS['insert_id']);
         $this->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_ORDER_SEND_EMAILS_END');
     }
