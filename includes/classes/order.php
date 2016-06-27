@@ -9,19 +9,26 @@
  */
 /**
  * order class
- *
- * Handles all order-processing functions
+ * Handles order creation/querying, and prepares/sends confirmation emails
  *
  * @package classes
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-class order extends base {
-  var $info, $totals, $products, $customer, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
-  $products_ordered, $products_ordered_email, $attachArray, $currency;
 
-  function __construct($order_id = '', $override_currency = false) {
+class order extends base {
+  public $info, $totals, $products, $customer, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
+  $products_ordered, $products_ordered_email, $attachArray, $currency, $queryReturnFlag;
+
+  /**
+   * Constructor
+   * Builds order object contents from customer's session basket or from db
+   *
+   * @param int $order_id
+   * @param bool $override_currency
+   */
+  public function __construct($order_id = 0, $override_currency = false) {
 
     $this->currency = ($override_currency === false) ? $_SESSION['currency'] : $override_currency;
 
@@ -32,20 +39,28 @@ class order extends base {
     $this->delivery = array();
 
     $this->notify('NOTIFY_ORDER_INSTANTIATE', array(), $order_id);
-    if (zen_not_null($order_id)) {
-      $this->query($order_id);
+    if ((int)$order_id > 0) {
+      $this->query((int)$order_id);
     } else {
       $this->cart();
     }
   }
 
-  function query($order_id) {
+  /**
+   * Retrieve specified order's data from database and populate object arrays
+   *
+   * @param int $order_id
+   */
+  protected function query($order_id = 0) {
     global $db;
 
-    $order_id = zen_db_prepare_input($order_id);
+    $order_id = (int)$order_id;
     $this->queryReturnFlag = NULL;
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return;
+
+    // cast again in case the notifier changed it
+    $order_id = (int)$order_id;
 
     $order_query = "select *
                         from " . TABLE_ORDERS . "
@@ -246,7 +261,10 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_AFTER_QUERY', array(), $order_id);
   }
 
-  function cart() {
+  /**
+   * Prepare order object data based on contents of customer's shopping basket from customer's active session.
+   */
+  protected function cart() {
     global $db, $currencies, $shipping_weight, $shipping_num_boxes;
 
     $decimals = $currencies->get_decimal_places($this->currency);
@@ -340,7 +358,7 @@ class order extends base {
       }
       if ($tax_address_query != '') {
         $tax_address = $db->Execute($tax_address_query);
-        if ($tax_address->recordCount() > 0) {
+        if ($tax_address->RecordCount() > 0) {
           $taxCountryId = $tax_address->fields['entry_country_id'];
           $taxZoneId = $tax_address->fields['entry_zone_id'];
         }
@@ -375,29 +393,6 @@ class order extends base {
                         'order_weight' => ($shipping_weight * $shipping_num_boxes),
                         );
 
-    /*
-    // this is set above to the module filename it should be set to the module title like Checks/Money Order rather than moneyorder
-    if (isset(${$_SESSION['payment']}) && is_object(${$_SESSION['payment']})) {
-    $this->info['payment_method'] = ${$_SESSION['payment']}->title;
-    }
-    */
-
-/*
-// bof: move below calculations
-    if ($this->info['total'] == 0) {
-      if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
-        $this->info['order_status'] = DEFAULT_ORDERS_STATUS_ID;
-      } else {
-        $this->info['order_status'] = DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
-      }
-    }
-    if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
-      if ( isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && ($GLOBALS[$class]->order_status > 0) ) {
-        $this->info['order_status'] = $GLOBALS[$class]->order_status;
-      }
-    }
-// eof: move below calculations
-*/
     $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
                             'lastname' => $customer_address->fields['customers_lastname'],
                             'company' => $customer_address->fields['entry_company'],
@@ -580,16 +575,6 @@ class order extends base {
       $this->info['total'] = $this->info['subtotal'] + $this->info['tax'] + $this->info['shipping_cost'];
     }
 
-/*
-// moved to function create
-    if ($this->info['total'] == 0) {
-      if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
-        $this->info['order_status'] = DEFAULT_ORDERS_STATUS_ID;
-      } else {
-        $this->info['order_status'] = DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
-      }
-    }
-*/
     if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
       if ( isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && ($GLOBALS[$class]->order_status > 0) ) {
         $this->info['order_status'] = $GLOBALS[$class]->order_status;
@@ -598,7 +583,14 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_CART_FINISHED');
   }
 
-  function create($zf_ot_modules, $zf_mode = false) {
+  /**
+   * Creates a new order from the object's arrays built from the cart() method triggered by the constructor
+   * $zf_ot_modules is an array of order-totals calculated by checkout_process during checkout
+   *
+   * @param array $zf_ot_modules
+   * @return int|string
+   */
+  public function create($zf_ot_modules) {
     global $db;
 
     $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_DURING_ORDER_CREATE', array(), $zf_ot_modules);
@@ -708,11 +700,14 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_COMMENT', $sql_data_array, $osh_insert_id);
 
     return $insert_id;
-
   }
 
-
-  function create_add_products($zf_insert_id, $zf_mode = false) {
+  /**
+   * Adds the object's products to the orders_products table for the specified order number
+   *
+   * @param int $zf_insert_id
+   */
+  public function create_add_products($zf_insert_id) {
     global $db, $currencies, $order_total_modules, $order_totals;
 
     // initialized for the email confirmation
@@ -973,26 +968,34 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_AFTER_ORDER_CREATE_ADD_PRODUCTS');
   }
 
-
-    protected function sendLowStockEmails()
-    {
-        $this->send_low_stock_emails = true;
-        $this->notify('NOTIFY_ORDER_SEND_LOW_STOCK_EMAILS');
-        if ($this->send_low_stock_emails && $this->email_low_stock != ''  && SEND_LOWSTOCK_EMAIL=='1') {
-            $email_low_stock = SEND_EXTRA_LOW_STOCK_EMAIL_TITLE . "\n\n" . $this->email_low_stock;
-            zen_mail('', SEND_EXTRA_LOW_STOCK_EMAILS_TO, EMAIL_TEXT_SUBJECT_LOWSTOCK, $email_low_stock, STORE_OWNER, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => nl2br($email_low_stock)),'low_stock');
-        }
+  /**
+   * Sends an email to the storeowner summarizing the items that are now in low-stock status
+   * as calculated by inventory-update actions when the create_add_products() method was called
+   */
+  protected function sendLowStockEmails()
+  {
+    $this->send_low_stock_emails = true;
+    $this->notify('NOTIFY_ORDER_SEND_LOW_STOCK_EMAILS');
+    if ($this->send_low_stock_emails && $this->email_low_stock != ''  && SEND_LOWSTOCK_EMAIL=='1') {
+        $email_low_stock = SEND_EXTRA_LOW_STOCK_EMAIL_TITLE . "\n\n" . $this->email_low_stock;
+        zen_mail('', SEND_EXTRA_LOW_STOCK_EMAILS_TO, EMAIL_TEXT_SUBJECT_LOWSTOCK, $email_low_stock, STORE_OWNER, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => nl2br($email_low_stock)),'low_stock');
     }
+  }
 
-
-  function send_order_email($zf_insert_id, $zf_mode = FALSE) {
+  /**
+   * Sends order-confirmation email to customer and storeowner
+   * Depends on the product-related content being prepared in advance by the create_add_products() method
+   *
+   * @param $zf_insert_id
+   */
+  public function send_order_email($zf_insert_id, $zf_mode = FALSE) {
       global $currencies, $order_totals;
-
 
       $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $zf_insert_id, $order_totals, $zf_mode);
       if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
 
       $this->sendLowStockEmails();
+
       // prepare the email confirmation message details
       // make an array to store the html version of the email
       $html_msg=array();
