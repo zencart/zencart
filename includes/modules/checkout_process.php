@@ -124,6 +124,7 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
   $_SESSION['order_summary']['payment_module_code'] = $order->info['payment_module_code'];
   $_SESSION['order_summary']['shipping_method'] = $order->info['shipping_method'];
   $_SESSION['order_summary']['orders_status'] = $order->info['orders_status'];
+  $_SESSION['order_summary']['orders_status_name'] = $order->info['orders_status_name'];
   $_SESSION['order_summary']['tax'] = $otax;
   $_SESSION['order_summary']['shipping'] = $oshipping;
   $products_array = array();

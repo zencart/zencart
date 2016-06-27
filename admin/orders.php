@@ -19,7 +19,7 @@
   if (isset($_GET['download_reset_on'])) $_GET['download_reset_on'] = (int)$_GET['download_reset_on'];
   if (isset($_GET['download_reset_off'])) $_GET['download_reset_off'] = (int)$_GET['download_reset_off'];
 
-  include(DIR_WS_CLASSES . 'order.php');
+  include(DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php');
 
   // prepare order-status pulldown list
   $orders_statuses = array();

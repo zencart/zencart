@@ -47,26 +47,15 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return;
 
-    $order_query = "select customers_id, customers_name, customers_company,
-                         customers_street_address, customers_suburb, customers_city,
-                         customers_postcode, customers_state, customers_country,
-                         customers_telephone, customers_email_address, customers_address_format_id,
-                         delivery_name, delivery_company, delivery_street_address, delivery_suburb,
-                         delivery_city, delivery_postcode, delivery_state, delivery_country,
-                         delivery_address_format_id, billing_name, billing_company,
-                         billing_street_address, billing_suburb, billing_city, billing_postcode,
-                         billing_state, billing_country, billing_address_format_id,
-                         payment_method, payment_module_code, shipping_method, shipping_module_code,
-                         coupon_code, cc_type, cc_owner, cc_number, cc_expires, currency, currency_value,
-                         date_purchased, orders_status, last_modified, order_total, order_tax, ip_address, is_guest_order, order_weight
+    $order_query = "select *
                         from " . TABLE_ORDERS . "
                         where orders_id = '" . (int)$order_id . "'";
 
     $order = $db->Execute($order_query);
 
-    $totals_query = "select title, text, class
+    $totals_query = "select title, text, class, value
                          from " . TABLE_ORDERS_TOTAL . "
-                         where orders_id = '" . (int)$order_id . "'
+                         where orders_id = " . (int)$order_id . "
                          order by sort_order";
 
     $totals = $db->Execute($totals_query);
@@ -75,14 +64,16 @@ class order extends base {
 
 
       if ($totals->fields['class'] == 'ot_coupon') {
-        $coupon_link_query = "SELECT coupon_id
+        $sql = "SELECT coupon_id
                 from " . TABLE_COUPONS . "
-                where coupon_code ='" . $order->fields['coupon_code'] . "'";
-        $coupon_link = $db->Execute($coupon_link_query);
+                where coupon_code = :couponCode";
+        $sql = $db->bindVars($sql, ':couponCode', $order->fields['coupon_code'], 'string');
+        $coupon_link = $db->Execute($sql);
         $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
                               'text' => $totals->fields['text'],
+                                'value' => $totals->fields['value'],
                               'class' => $totals->fields['class']);
       $totals->MoveNext();
     }
@@ -91,24 +82,18 @@ class order extends base {
                              from " . TABLE_ORDERS_TOTAL . "
                              where orders_id = '" . (int)$order_id . "'
                              and class = 'ot_total'";
-
-
     $order_total = $db->Execute($order_total_query);
-
 
     $shipping_method_query = "select title, value
                                 from " . TABLE_ORDERS_TOTAL . "
                                 where orders_id = '" . (int)$order_id . "'
                                 and class = 'ot_shipping'";
-
-
     $shipping_method = $db->Execute($shipping_method_query);
 
     $order_status_query = "select orders_status_name
                              from " . TABLE_ORDERS_STATUS . "
                              where orders_status_id = '" . $order->fields['orders_status'] . "'
                              and language_id = '" . (int)$_SESSION['languages_id'] . "'";
-
     $order_status = $db->Execute($order_status_query);
 
     $this->info = array('currency' => $order->fields['currency'],
@@ -121,14 +106,16 @@ class order extends base {
                         'cc_type' => $order->fields['cc_type'],
                         'cc_owner' => $order->fields['cc_owner'],
                         'cc_number' => $order->fields['cc_number'],
+                        'cc_cvv' => $order->fields['cc_cvv'],
                         'cc_expires' => $order->fields['cc_expires'],
                         'date_purchased' => $order->fields['date_purchased'],
-                        'orders_status' => $order_status->fields['orders_status_name'],
-                        'last_modified' => $order->fields['last_modified'],
+                        'orders_status' => $order->fields['orders_status'],
+                        'orders_status_name' => $order_status->fields['orders_status_name'],
                         'total' => $order->fields['order_total'],
                         'tax' => $order->fields['order_tax'],
+                        'last_modified' => $order->fields['last_modified'],
                         'ip_address' => $order->fields['ip_address'],
-                        'order_weight' => $order->fields['order_weight']
+                        'order_weight' => $order->fields['order_weight'],
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -179,7 +166,7 @@ class order extends base {
                                  products_quantity_order_min, products_quantity_order_units, products_quantity_order_max,
                                  products_quantity_mixed, products_mixed_discount_quantity
                                   from " . TABLE_ORDERS_PRODUCTS . "
-                                  where orders_id = '" . (int)$order_id . "'
+                                  where orders_id = " . (int)$order_id . "
                                   order by orders_products_id";
 
     $orders_products = $db->Execute($orders_products_query);
@@ -242,7 +229,9 @@ class order extends base {
                                                                    'option_id' => $attributes->fields['products_options_id'],
                                                                    'value_id' => $attributes->fields['products_options_values_id'],
                                                                    'prefix' => $attributes->fields['price_prefix'],
-                                                                   'price' => $attributes->fields['options_values_price']);
+                                                                   'price' => $attributes->fields['options_values_price'],
+                                                                   'product_attribute_is_free' =>$attributes->fields['product_attribute_is_free'],
+                                                                   );
 
           $subindex++;
           $attributes->MoveNext();

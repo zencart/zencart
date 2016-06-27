@@ -264,6 +264,7 @@ class Process extends AbstractFlowStep
         $orderSummary['payment_module_code'] = $order->info['payment_module_code'];
         $orderSummary['shipping_method'] = $order->info['shipping_method'];
         $orderSummary['orders_status'] = $order->info['orders_status'];
+        $orderSummary['orders_status_name'] = $order->info['orders_status_name'];
         $orderSummary['tax'] = $otax;
         $orderSummary['shipping'] = $oshipping;
         $this->session->set('order_summary', $orderSummary);
