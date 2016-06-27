@@ -18,7 +18,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 class order extends base {
-  public $info, $totals, $products, $customer, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
+  public $info, $totals, $products, $customer, $billing, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
   $products_ordered, $products_ordered_email, $attachArray, $currency, $queryReturnFlag;
 
   /**
@@ -65,19 +65,14 @@ class order extends base {
     $order_query = "select *
                         from " . TABLE_ORDERS . "
                         where orders_id = '" . (int)$order_id . "'";
-
     $order = $db->Execute($order_query);
 
     $totals_query = "select title, text, class, value
                          from " . TABLE_ORDERS_TOTAL . "
                          where orders_id = " . (int)$order_id . "
                          order by sort_order";
-
     $totals = $db->Execute($totals_query);
-
     while (!$totals->EOF) {
-
-
       if ($totals->fields['class'] == 'ot_coupon') {
         $sql = "SELECT coupon_id
                 from " . TABLE_COUPONS . "
@@ -88,22 +83,10 @@ class order extends base {
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
                               'text' => $totals->fields['text'],
-                                'value' => $totals->fields['value'],
+                              'value' => $totals->fields['value'],
                               'class' => $totals->fields['class']);
       $totals->MoveNext();
     }
-
-    $order_total_query = "select text, value
-                             from " . TABLE_ORDERS_TOTAL . "
-                             where orders_id = '" . (int)$order_id . "'
-                             and class = 'ot_total'";
-    $order_total = $db->Execute($order_total_query);
-
-    $shipping_method_query = "select title, value
-                                from " . TABLE_ORDERS_TOTAL . "
-                                where orders_id = '" . (int)$order_id . "'
-                                and class = 'ot_shipping'";
-    $shipping_method = $db->Execute($shipping_method_query);
 
     $order_status_query = "select orders_status_name
                              from " . TABLE_ORDERS_STATUS . "
@@ -171,15 +154,7 @@ class order extends base {
                            'format_id' => $order->fields['billing_address_format_id']);
 
     $index = 0;
-    $orders_products_query = "select orders_products_id, products_id, products_name,
-                                 products_model, products_price, products_tax,
-                                 products_quantity, final_price,
-                                 onetime_charges,
-                                 products_priced_by_attribute, product_is_free, products_discount_type,
-                                 products_discount_type_from,
-                                 products_weight, products_virtual, product_is_always_free_shipping,
-                                 products_quantity_order_min, products_quantity_order_units, products_quantity_order_max,
-                                 products_quantity_mixed, products_mixed_discount_quantity
+    $orders_products_query = "select *
                                   from " . TABLE_ORDERS_PRODUCTS . "
                                   where orders_id = " . (int)$order_id . "
                                   order by orders_products_id";
@@ -187,7 +162,7 @@ class order extends base {
     $orders_products = $db->Execute($orders_products_query);
 
     while (!$orders_products->EOF) {
-      // convert quantity to proper decimals - account history
+      // convert quantity to proper decimals (particularly for account history)
       if (QUANTITY_DECIMALS != 0) {
         $fix_qty = $orders_products->fields['products_quantity'];
         switch (true) {
@@ -195,6 +170,7 @@ class order extends base {
           $new_qty = $fix_qty;
           break;
           default:
+          // remove trailing 0's
           $new_qty = preg_replace('/[0]+$/', '', $orders_products->fields['products_quantity']);
           break;
         }
@@ -203,7 +179,7 @@ class order extends base {
       }
 
       $new_qty = round($new_qty, QUANTITY_DECIMALS);
-
+      // cast to integer if value doesn't need to be float
       if ($new_qty == (int)$new_qty) {
         $new_qty = (int)$new_qty;
       }
@@ -230,16 +206,13 @@ class order extends base {
                                       'products_mixed_discount_quantity' => $orders_products->fields['products_mixed_discount_quantity']
                                       );
 
-      $subindex = 0;
-      $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
-                              options_values_price, price_prefix from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                               where orders_id = '" . (int)$order_id . "'
-                               and orders_products_id = '" . (int)$orders_products->fields['orders_products_id'] . "'";
-
+      $attributes_query = "select * from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                               where orders_id = " . (int)$order_id . "
+                               and orders_products_id = " . (int)$orders_products->fields['orders_products_id'];
       $attributes = $db->Execute($attributes_query);
       if ($attributes->RecordCount()) {
         while (!$attributes->EOF) {
-          $this->products[$index]['attributes'][$subindex] = array('option' => $attributes->fields['products_options'],
+          $this->products[$index]['attributes'][] = array('option' => $attributes->fields['products_options'],
                                                                    'value' => $attributes->fields['products_options_values'],
                                                                    'option_id' => $attributes->fields['products_options_id'],
                                                                    'value_id' => $attributes->fields['products_options_values_id'],
@@ -247,8 +220,6 @@ class order extends base {
                                                                    'price' => $attributes->fields['options_values_price'],
                                                                    'product_attribute_is_free' =>$attributes->fields['product_attribute_is_free'],
                                                                    );
-
-          $subindex++;
           $attributes->MoveNext();
         }
       }
@@ -369,11 +340,13 @@ class order extends base {
 
     $class =& $_SESSION['payment'];
 
+    $coupon_code = '';
     if (isset($_SESSION['cc_id'])) {
       $coupon_code_query = "select coupon_code
                               from " . TABLE_COUPONS . "
                               where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
-      $coupon_code = $db->Execute($coupon_code_query);
+      $result = $db->Execute($coupon_code_query);
+      if ($result->RecordCount()) $coupon_code = $result->fields['coupon_code'];
     }
 
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
@@ -381,7 +354,7 @@ class order extends base {
                         'currency_value' => $currencies->currencies[$this->currency]['value'],
                         'payment_method' => $GLOBALS[$class]->title,
                         'payment_module_code' => $GLOBALS[$class]->code,
-                        'coupon_code' => $coupon_code->fields['coupon_code'],
+                        'coupon_code' => $coupon_code,
                         'shipping_method' => (isset($_SESSION['shipping']['title'])) ? $_SESSION['shipping']['title'] : '',
                         'shipping_module_code' => (isset($_SESSION['shipping']['id']) && strpos($_SESSION['shipping']['id'], '_') > 0 ? $_SESSION['shipping']['id'] : $_SESSION['shipping']),
                         'shipping_cost' => $currencies->value(isset($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0, false, $this->currency),
@@ -590,7 +563,7 @@ class order extends base {
    * $zf_ot_modules is an array of order-totals calculated by checkout_process during checkout
    *
    * @param array $zf_ot_modules
-   * @return int|string
+   * @return int order number
    */
   public function create($zf_ot_modules) {
     global $db;
@@ -805,7 +778,7 @@ class order extends base {
                               'products_quantity_order_units' => $this->products[$i]['products_quantity_order_units'],
                               'products_quantity_order_max' => $this->products[$i]['products_quantity_order_max'],
                               'products_quantity_mixed' => $this->products[$i]['products_quantity_mixed'],
-                              'products_mixed_discount_quantity' => $this->products[$i]['products_mixed_discount_quantity']
+                              'products_mixed_discount_quantity' => $this->products[$i]['products_mixed_discount_quantity'],
                               );
       zen_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
@@ -859,15 +832,18 @@ class order extends base {
                                  pa.attributes_price_words, pa.attributes_price_words_free,
                                  pa.attributes_price_letters, pa.attributes_price_letters_free
                                  from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                 where pa.products_id = '" . $this->products[$i]['id'] . "' and pa.options_id = '" . (int)$this->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$this->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
+                                 where pa.products_id = '" . $this->products[$i]['id'] . "' 
+                                 and pa.options_id = '" . (int)$this->products[$i]['attributes'][$j]['option_id'] . "' 
+                                 and pa.options_id = popt.products_options_id 
+                                 and pa.options_values_id = '" . (int)$this->products[$i]['attributes'][$j]['value_id'] . "' 
+                                 and pa.options_values_id = poval.products_options_values_id 
+                                 and popt.language_id = '" . $_SESSION['languages_id'] . "' 
+                                 and poval.language_id = '" . $_SESSION['languages_id'] . "'");
           }
 
-          //clr 030714 update insert query.  changing to use values form $order->products for products_options_values.
           $sql_data_array = array('orders_id' => $order_id,
                                   'orders_products_id' => $order_products_id,
                                   'products_options' => $attributes_values->fields['products_options_name'],
-
-          //                                 'products_options_values' => $attributes_values->fields['products_options_values_name'],
                                   'products_options_values' => $this->products[$i]['attributes'][$j]['value'],
                                   'options_values_price' => $attributes_values->fields['options_values_price'],
                                   'price_prefix' => $attributes_values->fields['price_prefix'],
@@ -889,7 +865,7 @@ class order extends base {
                                   'attributes_price_letters_free' => $attributes_values->fields['attributes_price_letters_free'],
                                   'products_options_id' => (int)$this->products[$i]['attributes'][$j]['option_id'],
                                   'products_options_values_id' => (int)$this->products[$i]['attributes'][$j]['value_id'],
-                                  'products_prid' => $this->products[$i]['id']
+                                  'products_prid' => $this->products[$i]['id'],
                                   );
 
           zen_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
@@ -905,7 +881,7 @@ class order extends base {
                                     'download_maxdays' => $attributes_values->fields['products_attributes_maxdays'],
                                     'download_count' => $attributes_values->fields['products_attributes_maxcount'],
                                     'products_prid' => $this->products[$i]['id'],
-                                    'products_attributes_id' => $products_attributes_id
+                                    'products_attributes_id' => $products_attributes_id,
                                     );
 
             zen_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
