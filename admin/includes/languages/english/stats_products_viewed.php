@@ -7,6 +7,8 @@
  * @version $Id:$
  */
 
+// NOTE: In v1.6.0, this has been converted to a LEAD page. See:
+// includes/library/zencart/listingBox/src/boxes/ReportStatsProductsViewed.php
 
 define('HEADING_TITLE', 'Best Viewed Products');
 

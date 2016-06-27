@@ -14,3 +14,4 @@ define('TEXT_LEAD_ACTION_ADD_ENTRY', 'Add Linked Product');
 define('TEXT_DISPLAY_NUMBER_OF_LINKED_PRODUCTS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> linked products)');
 define('TABLE_HEADING_SELECT_PRODUCT', 'Select Product');
 define('TEXT_NO_PRODUCTS', 'No Products in this category');
+define('TEXT_PARENT_COLLECTION', 'Parent Media Collection');

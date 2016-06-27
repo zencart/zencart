@@ -32,3 +32,6 @@ define('TEXT_EDIT_ORDER','Edit Order ID# ');
 define('TEXT_GV_NONE','No ' . TEXT_GV_NAME . ' to release');
 
 define('TEXT_LINK_RELEASE','Release GV');
+
+define('TEXT_TITLE_CONFIRM_RELEASE','Confirm Release GV');
+define('TEXT_INFO_CONFIRM_RELEASE','Are you sure you want to release this Gift Voucher');

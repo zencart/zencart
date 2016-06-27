@@ -1016,11 +1016,8 @@ class paypaldp extends base {
     }
 
     $error = $this->_errorHandler($response, 'GetTransactionDetails', 10007);
-    if ($error === true) {
-      return false;
-    } else {
-      return $response;
-    }
+
+    return ($error === false) ? $response : $error;
   }
   /**
    * Used to read details of existing transactions.  FOR FUTURE USE.
@@ -1043,11 +1040,8 @@ class paypaldp extends base {
     $response = $doPayPal->TransactionSearch($startDate, $txnID, $email, $criteria);
 
     $error = $this->_errorHandler($response, 'TransactionSearch');
-    if ($error === false) {
-      return false;
-    } else {
-      return $response;
-    }
+
+    return ($error === false) ? $response : $error;
   }
   /**
    * Evaluate installation status of this module. Returns true if the status key is found.
