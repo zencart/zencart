@@ -42,7 +42,7 @@ class order extends base {
     if ((int)$order_id > 0) {
       $this->query((int)$order_id);
     } else {
-      $this->cart();
+      $this->cart($_SESSION['cart']);
     }
   }
 
@@ -263,13 +263,15 @@ class order extends base {
 
   /**
    * Prepare order object data based on contents of customer's shopping basket from customer's active session.
+   *
+   * @param shoppingCart $basket
    */
-  protected function cart() {
+  protected function cart(shoppingCart $basket) {
     global $db, $currencies, $shipping_weight, $shipping_num_boxes;
 
     $decimals = $currencies->get_decimal_places($this->currency);
 
-    $this->content_type = $_SESSION['cart']->get_content_type();
+    $this->content_type = $basket->get_content_type();
 
     $customer_address_query = "select c.customers_firstname, c.customers_lastname, c.customers_telephone,
                                     c.customers_email_address, ab.entry_company, ab.entry_street_address,
@@ -434,7 +436,7 @@ class order extends base {
                            'format_id' => (int)$billing_address->fields['address_format_id']);
 
     $index = 0;
-    $products = $_SESSION['cart']->get_products();
+    $products = $basket->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       if (($i/2) == floor($i/2)) {
         $rowClass="rowEven";
@@ -448,8 +450,8 @@ class order extends base {
                                       'tax_groups'=>$taxRates,
                                       'tax_description' => zen_get_tax_description($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId),
                                       'price' => $products[$i]['price'],
-                                      'final_price' => zen_round($products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']), $decimals),
-                                      'onetime_charges' => $_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity']),
+                                      'final_price' => zen_round($products[$i]['price'] + $basket->attributes_price($products[$i]['id']), $decimals),
+                                      'onetime_charges' => $basket->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity']),
                                       'weight' => $products[$i]['weight'],
                                       'products_priced_by_attribute' => $products[$i]['products_priced_by_attribute'],
                                       'product_is_free' => $products[$i]['product_is_free'],
@@ -518,7 +520,7 @@ class order extends base {
       }
 
       // add onetime charges here
-      //$_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity'])
+      //$basket->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity'])
 
 
       /**************************************
@@ -673,7 +675,7 @@ class order extends base {
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
 
     $insert_id = $db->Insert_ID();
-    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_HEADER', array_merge(array('orders_id' => $insert_id, 'shipping_weight' => $_SESSION['cart']->weight), $sql_data_array), $insert_id);
+    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_HEADER', array_merge(array('orders_id' => $insert_id, 'shipping_weight' => $this->info['order_weight']), $sql_data_array), $insert_id);
 
     for ($i=0, $n=sizeof($zf_ot_modules); $i<$n; $i++) {
       $sql_data_array = array('orders_id' => $insert_id,
@@ -986,7 +988,7 @@ class order extends base {
    * Sends order-confirmation email to customer and storeowner
    * Depends on the product-related content being prepared in advance by the create_add_products() method
    *
-   * @param $zf_insert_id
+   * @param $order_id
    */
   public function send_order_email($order_id) {
     global $currencies, $order_totals;
@@ -1066,7 +1068,7 @@ class order extends base {
       zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
     }
 
-    if ($_SESSION['cart']->show_total() != 0) {
+    if ($this->info['total'] > 0) {
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
       EMAIL_SEPARATOR . "\n" .
       zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
