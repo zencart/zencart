@@ -204,7 +204,7 @@ class Process extends AbstractFlowStep
     protected function manageOrderSendEmails()
     {
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_ORDER_SEND_EMAILS_START');
-        $GLOBALS['order']->send_order_email($GLOBALS['insert_id'], 2);
+        $GLOBALS['order']->send_order_email($GLOBALS['insert_id']);
         $this->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_ORDER_SEND_EMAILS_END');
     }
@@ -264,6 +264,7 @@ class Process extends AbstractFlowStep
         $orderSummary['payment_module_code'] = $order->info['payment_module_code'];
         $orderSummary['shipping_method'] = $order->info['shipping_method'];
         $orderSummary['orders_status'] = $order->info['orders_status'];
+        $orderSummary['orders_status_name'] = $order->info['orders_status_name'];
         $orderSummary['tax'] = $otax;
         $orderSummary['shipping'] = $oshipping;
         $this->session->set('order_summary', $orderSummary);
