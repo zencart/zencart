@@ -48,12 +48,13 @@ if (!isset($credit_covers)) $credit_covers = FALSE;
 // load selected payment module
 require(DIR_WS_CLASSES . 'payment.php');
 $payment_modules = new payment($_SESSION['payment']);
-// load the selected shipping module
-require(DIR_WS_CLASSES . 'shipping.php');
-$shipping_modules = new shipping($_SESSION['shipping']);
 
 require(DIR_WS_CLASSES . 'order.php');
 $order = new order;
+
+// load the selected shipping module
+require(DIR_WS_CLASSES . 'shipping.php');
+$shipping_modules = new shipping($_SESSION['shipping']);
 
 // prevent 0-entry orders from being generated/spoofed
 if (sizeof($order->products) < 1) {
