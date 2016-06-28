@@ -4,7 +4,7 @@
 ### 		                  NGINX CONFIGURATION FOR ZEN CART
 ###
 ### NOTES: 
-###    - Copy and paste into ZEN CART handling ‘server’ section of nginx conf file
+###    - Copy and paste into Zen Cart handling ‘server’ section of nginx conf file
 ###    - Location Block order is important
 ###    - Include before any other location blocks if any
 ###
@@ -15,7 +15,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART PHP Handler
+	# Zen Cart PHP Handler
 	#############################################################################################	
 	## The following block serves all PHP requests internally directed to it within this conf file
 	## Edit to reflect your actual setup for serving PHP
@@ -49,7 +49,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART Pretty URLs Handler
+	# Zen Cart Pretty URLs Handler
 	#############################################################################################	
 	## The following block handles Pretty URLs
 	## Insert directives below as required
@@ -59,9 +59,9 @@
 	
 	
 	#############################################################################################
-	# ZEN CART Root Folder
+	# Zen Cart Root Folder
 	#############################################################################################	
-	## Allow all requests to specific PHP files directly under the ZEN CART ROOT folder
+	## Allow all requests to specific PHP files directly under the Zen Cart ROOT folder
 	location ~ %%store_folder%%/(ajax|index|page_not_found|ipn_main_handler)\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
@@ -72,7 +72,7 @@
 	}
 	
 	#############################################################################################
-	# ZEN CART 'includes' Folder
+	# Zen Cart 'includes' Folder
 	#############################################################################################	
 	## Allow all 'GET' and 'HEAD' requests to specific static file types in 'includes' and/or subfolders
 	location ~ %%store_folder%%/includes {
@@ -96,7 +96,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'images' Folder
+	# Zen Cart 'images' Folder
 	#############################################################################################	
 	## Allow internal requests to 'images/uploads'
 	location ~ %%store_folder%%/images/uploads {
@@ -114,7 +114,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'pub' Folder
+	# Zen Cart 'pub' Folder
 	#############################################################################################	
 	## Allow and force downloads of all requests to specific static file types in 'pub' and/or subfolders
 	location ~ %%store_folder%%/pub/.+\.(g?zip|pdf|mp3?4?|swf|wma|wmv|wav|epub|ogg|webm|m4v?a?)$ {
@@ -128,7 +128,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'download' Folder
+	# Zen Cart 'download' Folder
 	#############################################################################################	
 	## Allow and force downloads of internal requests to specific static file types in 'download' and/or subfolders
 	location ~ %%store_folder%%/download/.+\.(mpe?g?3?4?|swf|avi|wma?v?|wav|epub|flv|ogg|webm|m4v?a?|mov|g?zip|rar|t?gz|tar|pdf)$ {
@@ -145,7 +145,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'media' Folder
+	# Zen Cart 'media' Folder
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'media' and/or subfolders
 	location ~ %%store_folder%%/media/.+\.(mpe?g?3?4?|swf|avi|wma?v?|wav|epub|flv|ogg|webm|m4v?a?|mov|ra?m?)$ {
@@ -159,7 +159,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'extras' Folder
+	# Zen Cart 'extras' Folder
 	#############################################################################################	
 	## Allow all requests to html files in 'extras' and/or subfolders
 	location ~ %%store_folder%%/extras/.+\.html$ {
@@ -177,7 +177,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'email' Folder
+	# Zen Cart 'email' Folder
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'email' and/or subfolders
 	location ~ %%store_folder%%/email/.+\.(jpe?g|gif|png)$ {
@@ -190,7 +190,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'editors' and 'docs' Folders
+	# Zen Cart 'editors' and 'docs' Folders
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'editors' or 'docs' and/or subfolders
 	location ~ %%store_folder%%/(editors|docs)/.+\.(js|css|jpe?g|gif|png|html?|xml|pdf)$ {
@@ -203,7 +203,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART ADMIN Folder
+	# Zen Cart ADMIN Folder
 	#############################################################################################	
 	## Allow all 'GET' and 'HEAD' requests to specific file types
 	location ~ %%admin_folder%% {
@@ -238,7 +238,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'cache' Folder
+	# Zen Cart 'cache' Folder
 	#############################################################################################	
 	## Allow internal requests to 'cache' and/or subfolders
 	location ~ %%store_folder%%/cache {
@@ -247,7 +247,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'logs' Folder
+	# Zen Cart 'logs' Folder
 	#############################################################################################	
 	## Allow internal requests to 'logs' and/or subfolders
 	location ~ %%store_folder%%/logs {
@@ -256,7 +256,7 @@
 	
 	
 	#############################################################################################
-	# ZEN CART 'zc_install' Folder
+	# Zen Cart 'zc_install' Folder
 	#############################################################################################	
 	## Allow all requests to specific static file types in 'zc_install' and/or subfolders
 	location ~ %%store_folder%%/zc_install/.+\.(ico|js|css|jpg|gif|png|html)$ {
@@ -293,9 +293,9 @@
 	
 	
 	#############################################################################################
-	# ZEN CART Catchall
+	# Zen Cart Catchall
 	#############################################################################################	
-	## Redirect any request not previously explicitly handled to main ZEN CART index.php file
+	## Redirect any request not previously explicitly handled to main Zen Cart index.php file
 	location ~ %%slash_folder%% {
 		rewrite ^ %%store_folder%%/index.php? redirect;
 	}
