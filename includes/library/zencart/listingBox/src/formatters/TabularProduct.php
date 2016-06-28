@@ -26,7 +26,7 @@ class TabularProduct extends AbstractFormatter implements FormatterInterface
     {
         $defineList = $this->initDefineList();
         $columnList = $this->initColumnList($defineList);
-        $items = $this->itemList;;
+        $items = $this->itemList;
         $this->countQtyBoxItems = 0;
         $listBoxContents = $this->buildColumnOptions($items, $columnList);
         $this->formattedResults = $listBoxContents;
@@ -120,6 +120,12 @@ class TabularProduct extends AbstractFormatter implements FormatterInterface
                     $item ['products_name'] . '</a></h3><div class="listingDescription">' .
                     zen_trunc_string(zen_clean_html(stripslashes($prodDesc)), PRODUCT_LIST_DESCRIPTION) . '</div>';
                 return array('value' => $lc_text, 'col_params' => '');
+            },
+            'PRODUCT_LIST_DESCRIPTION' => function () use ($item, $prodLink) {
+                $prodDesc = zen_get_products_description($item ['products_id'], $_SESSION ['languages_id']);
+                $lc_text = '<div class="listingDescription">' .
+                    zen_trunc_string(zen_clean_html(stripslashes($prodDesc)), PRODUCT_LIST_DESCRIPTION) . '</div>';
+                return array('value' => $lc_text, 'col_params' => 'colspan="'. $this->tplVars['maxColSpan'] . '"');
             },
             'PRODUCT_LIST_MANUFACTURER' => function () use ($item, $prodLink) {
                 $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $item ['manufacturers_id']) . '">' . $item ['manufacturers_name'] . '</a>';
