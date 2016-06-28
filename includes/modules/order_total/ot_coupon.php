@@ -519,11 +519,10 @@ class ot_coupon {
 //              $od_amount['total'] = zen_round($orderTotalDetails['orderTotal']*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
               $od_amount['total'] = zen_round($coupon_total*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type'];
-//              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
-              $ratio = $od_amount['total']/$coupon_total;
               // add in Free Shipping
               $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
+              $ratio = $od_amount['total']/$coupon_total;
               if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
                 $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
               }
@@ -540,13 +539,12 @@ class ot_coupon {
               $od_amount['total'] = zen_round(($coupon->fields['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon->fields['coupon_amount']) * ($orderTotalDetails['orderTotal']>0) * $coupon_product_count, $currencyDecimalPlaces);
               //$od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($coupon_total>0), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
-//              $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
-              $ratio = $od_amount['total']/$coupon_total;
               // add in Free Shipping
               if ($this->include_shipping == 'false') {
                   $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
               }
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
+              $ratio = $od_amount['total']/$coupon_total;
               if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
                 $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
               }
