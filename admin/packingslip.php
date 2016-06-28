@@ -16,7 +16,7 @@
                           from " . TABLE_ORDERS . "
                           where orders_id = '" . (int)$oID . "'");
 
-  include(DIR_WS_CLASSES . 'order.php');
+  include(DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php');
   $order = new order($oID);
 
   // prepare order-status pulldown list

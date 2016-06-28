@@ -354,7 +354,7 @@ Processing...
         $_SESSION['order_number_created'] = $insert_id;
         $GLOBALS[$_SESSION['payment']]->transaction_id = $_POST['txn_id'];
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE_ADD_PRODUCTS');
-        $order->send_order_email($insert_id, 2);
+        $order->send_order_email($insert_id);
         ipn_debug_email('Breakpoint: 5m - emailing customer');
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 
