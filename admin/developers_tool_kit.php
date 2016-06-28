@@ -20,6 +20,10 @@
   $configuration_key_lookup = (isset($_POST['configuration_key'])) ? $_POST['configuration_key'] : '';
   $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
+  // if the wrap_lines is set in the URL or in the POST, then we'll use the .wrappable CSS class for the output.
+  $wrap_lines = ($zcRequest->readPost('wrap_lines', 0) != 0 || $zcRequest->readGet('wrap_lines', 0) != 0);
+
+
   function getDirList ($dirName, $filetypes = 1) {
     global $directory_array, $sub_dir_files;
 // add directory name to the sub_dir_files list;
@@ -41,7 +45,7 @@
   }
 
   function zen_display_files($include_root = false, $filetypesincluded = 1) {
-    global $check_directory, $found, $configuration_key_lookup;
+    global $check_directory, $found, $configuration_key_lookup, $wrap_lines;
     global $db;
     $max_context_lines_before = $max_context_lines_after = abs((int)$_POST['context_lines']);
 
@@ -158,7 +162,7 @@
         $show_file .= '<tr class="infoBoxContent"><td class="dataTableHeadingContent">';
         $show_file .= '<strong>' . $file . '</strong>';
         $show_file .= '</td></tr>';
-        $show_file .= '<tr><td class="main">';
+        $show_file .= '<tr><td class="main ' . ($wrap_lines ? 'wrappable' : '') . '">';
 
         // put file into an array to be scanned
         $lines = file($file);
@@ -885,6 +889,8 @@ if ($action == 'search_config_keys') {
 <?php
     while (!$keySearchResults->EOF)
     {
+      $groupChanged = FALSE;
+
       if($keySearchResults->fields['src']=='type')
       {
         $section = 'Product Types';
@@ -917,7 +923,6 @@ if ($action == 'search_config_keys') {
         <td class="<?php echo $tdClass;?>" align="center" onclick="document.location.href='<?php echo $viewlink;?>'"><a href="<?php echo $editlink;?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT);?></a></td>
       </tr>
 <?php
-      $groupChanged = FALSE;
       $keySearchResults->MoveNext();
     }
 ?>

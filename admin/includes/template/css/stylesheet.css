@@ -525,6 +525,8 @@ div.clearBoth {
 }
 label.error {color: red; font-weight: bold;}
 
+.wrappable {word-break: break-all;}
+
 .coupon-future, .coupon-expired {font-weight: bold; color: red}
 
 body#indexBody {font-size: 13px}
