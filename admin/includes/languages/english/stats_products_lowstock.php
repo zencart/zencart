@@ -7,6 +7,9 @@
  * @version $Id:$
  */
 
+// NOTE: In v1.6.0, this has been converted to a LEAD page. See:
+// includes/library/zencart/listingBox/src/boxes/ReportStatsProductsLowstock.php
+
 define('HEADING_TITLE', 'Product Stock Report');
 
 define('TABLE_HEADING_NUMBER', 'ID#');

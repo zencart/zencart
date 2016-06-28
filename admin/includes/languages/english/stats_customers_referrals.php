@@ -7,6 +7,9 @@
  * @version GIT: $Id: Author: DrByte  Tue Jul 17 22:56:16 2012 -0400 Modified in v1.6.0 $
  */
 
+// NOTE: As of v1.6.0, this has been converted into a LEAD page.  See:
+// includes/library/zencart/listingBox/src/boxes/ReportStatsCustomersReferrals.php
+
 define('HEADING_TITLE', 'Customers Referral Report');
 define('TABLE_HEADING_CUSTOMER', 'Customer');
 define('TABLE_HEADING_REFERRAL_CODE', 'Referral Code');
