@@ -276,10 +276,10 @@ define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s b
 
 
 define('TEXT_COMPLETION_NGINX_TEXT', "<u>Important security information for Nginx</u>");
-define('TEXT_HELP_TITLE_NGINXCONF', "Securing ZEN CART on Nginx Webservers");
+define('TEXT_HELP_TITLE_NGINXCONF', "Securing Zen Cart on Nginx Webservers");
 define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<p>
-		Your ZEN CART installation comes with security measures in a format native to the Apache Webserver.
+		Your Zen Cart installation comes with security measures in a format native to the Apache Webserver.
 		<br>
 		See below to implement a similar set of measures for the Nginx Webserver. 
 	</p>
@@ -305,7 +305,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for ZEN CART in your Nginx configuration file.
+			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for Zen Cart in your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					The directives may be used for SSL and/or Non SSL server blocks.
@@ -368,7 +368,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<ol>
 </div>
 <div class='alert-box alert'>
-	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for ZEN CART.
+	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.
 </div>
 <hr>");
 
