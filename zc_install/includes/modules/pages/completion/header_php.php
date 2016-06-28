@@ -51,13 +51,14 @@
     "%%slash_folder%%" => $ngx_slash,
   );
   
-  $ngx_file = "includes/nginx_conf/zencart_ngx_server.conf";
-  $ngx_handle = fopen($ngx_file, "r");
-  $ngx_content = fread($ngx_handle, filesize($ngx_file));
+  $ngx_input_file = "includes/nginx_conf/ngx_server_template.txt";
+  $ngx_output_file = "includes/nginx_conf/zencart_ngx_server.conf";
+  $fh = fopen($ngx_input_file, "r");
+  $ngx_content = fread($fh, filesize($ngx_input_file));
+  fclose($fh);
   foreach($ngx_array as $ngx_placeholder => $ngx_string) {
   	$ngx_content = str_replace($ngx_placeholder, $ngx_string, $ngx_content);
   }
-  $ngx_handle = fopen($ngx_file, "w");
-  fwrite($ngx_handle, $ngx_content);
-  fclose($ngx_handle);
-  
+  $fh = fopen($ngx_output_file, "w");
+  fwrite($fh, $ngx_content);
+  fclose($fh);
