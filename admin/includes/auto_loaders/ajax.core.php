@@ -204,6 +204,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[160][] = array('autoType'=>'require',
                                  'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
+  $autoLoadConfig[160][] = array('autoType'=>'require',
+                                 'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'whos_online.php');
 /**
  * Breakpoint 170.
  *
