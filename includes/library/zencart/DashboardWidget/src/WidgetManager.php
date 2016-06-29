@@ -3,7 +3,7 @@
  * Dashboard Widget Manager
  *
  * @package   ZenCart\Admin\DashboardWidget
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version   GIT: $Id: $
  */
@@ -136,6 +136,7 @@ final class WidgetManager
       $tplVars[$widgetkey]['templateFile'] = $widget->getTemplateFile();
       $tplVars[$widgetkey]['widgetTitle']  = $widget->getWidgetTitle();
       $tplVars[$widgetkey]['widgetBaseId'] = $widget->getWidgetBaseId();
+      $tplVars[$widgetkey]['widgetInfo'] = $widget->getWidgetInfo();
       $widget->updatewidgetInfo($widgetList[$widgetkey]->widgetInfo);
     }
 
@@ -145,14 +146,17 @@ final class WidgetManager
   public static function applyPositionSettings($items, $user)
   {
     global $db;
-    $widgetList = self::transformPositions($items);
-    foreach ($widgetList as $key => $detail)
+    foreach ($items as $key => $detail)
     {
-      $sql = "UPDATE " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " SET widget_column = :column:, widget_row = :row:
+      $sql = "UPDATE " . TABLE_DASHBOARD_WIDGETS_TO_USERS . "
+              SET widget_column = :column:, widget_row = :row:,
+                  widget_width = :width:, widget_height = :height:
               WHERE admin_id = :adminId: AND widget_key = :key:";
-      $sql = $db->bindVars($sql, ':column:', $detail['col'], 'integer');
-      $sql = $db->bindVars($sql, ':row:', $detail['row'], 'integer');
-      $sql = $db->bindVars($sql, ':key:', $key, 'string');
+      $sql = $db->bindVars($sql, ':column:', $detail['x'], 'integer');
+      $sql = $db->bindVars($sql, ':row:', $detail['y'], 'integer');
+      $sql = $db->bindVars($sql, ':width:', $detail['width'], 'integer');
+      $sql = $db->bindVars($sql, ':height:', $detail['height'], 'integer');
+      $sql = $db->bindVars($sql, ':key:', $detail['id'], 'string');
       $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
       $db->execute($sql);
     }
@@ -167,32 +171,6 @@ final class WidgetManager
     $db->execute($sql);
   }
 
-  public static function transformPositions($items)
-  {
-    $columns = explode('|', $items);
-    {
-      $colC = 0;
-      foreach ($columns as $rowString)
-      {
-        if ($rowString != '')
-        {
-          $rows = explode(',', $rowString);
-          $rowC = 0;
-          foreach ($rows as $row)
-          {
-            if ($row != '')
-            {
-              //$row = strtoupper(str_replace('-', '_', $row));
-              $widgetEnum[$row] = array('col'=>$colC, 'row'=>$rowC);
-            }
-            $rowC ++;
-          }
-        }
-        $colC ++;
-      }
-    }
-    return $widgetEnum;
-  }
 
   public static function setWidgetRefresh($widgetRefresh, $item, $user)
   {

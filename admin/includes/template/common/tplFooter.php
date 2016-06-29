@@ -1,4 +1,12 @@
 <?php
+/**
+ * Admin Footer Template
+ *
+ * @package templateSystem
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: $
+ */
 ?>
 <footer class="small-12 columns small-centered">
     <!-- The following copyright announcement is in compliance
@@ -17,5 +25,4 @@
 </script>
 <!-- Bootstrap 3.3.2 JS -->
 <!-- AdminLTE App -->
-<script src="includes/template/javascript/dashboard.js"></script>
 <!--<script src="includes/template/AdminLTE2/dist/js/demo.js"></script> -->
