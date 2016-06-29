@@ -117,6 +117,7 @@ final class WidgetManager
         if (!class_exists($className, true) && is_readable($classFile)) {
           require_once($classFile);
         }
+        if (!class_exists($className)) continue;
 
         $widgetClass = new $className($widget['widget_key'], $widget);
         $widgetList[$widget['widget_key']] = $widgetClass;
