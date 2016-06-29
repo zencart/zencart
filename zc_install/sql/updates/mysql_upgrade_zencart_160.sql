@@ -282,6 +282,10 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('logs', 1, 'LOGS_GROUP')
 ;
 
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme) VALUES ('whosonline', 'whosonline', 1, 'fa-area-chart', 'bg-light-blue-gradient');
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('whosonline', 'WHOSONLINE_ACTIVITY', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whosonline', 1, 'WHOSONLINE_GROUP');
+
 # default widgets for first user
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme) VALUES
 ('general-statistics', 1, 0, 0, 'fa-area-chart', 'bg-light-blue-gradient'),
@@ -290,6 +294,7 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ('counter-history', 1, 1, 1, 'fa-calendar', 'bg-light-blue-gradient'),
 ('new-orders', 1, 0, 2, 'fa-shopping-cart', 'bg-light-blue-gradient'),
 ('logs', 1, 1, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient')
+,('whosonline', 1, 1, 0, 'fa-area-chart', 'bg-light-blue-gradient')
 ;
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient');
