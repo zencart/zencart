@@ -34,9 +34,8 @@ abstract class AbstractAdminController extends \base
      */
     protected $useView = true;
     /**
-     * @var bool
+     * @var string
      */
-    protected $useFoundation = false;
     protected $templateLayout = 'default';
 
     /**

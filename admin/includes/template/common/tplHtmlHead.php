@@ -18,10 +18,10 @@
         </script>
     <?php } ?>
     <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <?php /** CDN for jQuery core **/ ?>
-    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.min.js"><\/script>');</script>
+    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script>window.jQuery || document.write('<script src="includes/template/javascript/jquery-2.2.4.min.js"><\/script>');</script>
     <script src="includes/template/javascript/zcJSFramework.js"></script>
     <link rel="stylesheet" type="text/css" href="includes/template/css/jquery-ui.min.css" id="jQueryUIThemeCSS">
     <?php /** CDN for jQuery UI components **/ ?>

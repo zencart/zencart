@@ -21,10 +21,3 @@
   <a href="<?php echo zen_admin_href_link(FILENAME_SERVER_INFO); ?>"><?php echo zen_get_zcversioninfo('footer'); ?></a>
   </div>
 </footer>
-
-<!-- Initialize the Foundation plugins -->
-<script>
-if (window.Foundation) {
-  $(document).foundation();
-}
-</script>
