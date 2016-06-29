@@ -308,6 +308,17 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMA
   return $mdate;
 }
 
+/**
+ * Get number of minutes since $foo
+ * Primarily used for Whos-Online display of "time since last click"
+ */
+function zen_get_minutes_since($timestamp) {
+  $the_seconds = (time() - $timestamp);
+  $the_time_since= gmdate('H:i:s', $the_seconds);
+  return $the_time_since;
+}
+
+
 ////
 // Parse search string into individual objects
   function zen_parse_search_string($search_str = '', &$objects) {
