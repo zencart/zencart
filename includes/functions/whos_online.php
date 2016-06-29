@@ -104,3 +104,112 @@ function whos_online_session_recreate($old_session, $new_session) {
   $sql = $db->bindVars($sql, ':oldSessionID', $old_session, 'string'); 
   $db->Execute($sql);
 }
+
+function zen_wo_get_status_for_sessionid($session_id, $inactive_threshold = WHOIS_TIMER_INACTIVE) {
+  global $db;
+
+  // longer than 2 minutes light color
+  if ((int)$inactive_threshold < 1) $inactive_threshold = 120;
+  $xx_mins_ago_long = (time() - (int)$inactive_threshold);
+
+  $which_query = $db->Execute("select sesskey, value
+                               from " . TABLE_SESSIONS . "
+                               where sesskey= '" . $db->prepare_input($session_id) . "'");
+
+  $who_query = $db->Execute("select session_id, time_entry, time_last_click, host_address, user_agent
+                             from " . TABLE_WHOS_ONLINE . "
+                             where session_id='" . $db->prepare_input($session_id) . "'");
+
+  $session_data = base64_decode($which_query->fields['value']);
+  
+  switch (true) {
+    case ($which_query->RecordCount() == 0):
+    if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
+      return 3;
+    } else {
+      return 2;
+    }
+
+    case (strstr($session_data,'"contents";a:0:')):
+    if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
+      return 3;
+    } else {
+      return 2;
+    }
+
+    case (!strstr($session_data,'"contents";a:0:')):
+    if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
+      return 1;
+    } else {
+      return 0;
+    }
+
+  }
+}
+
+function zen_wo_get_visitor_status_icon($status) {
+  switch($status) {
+    case 3:
+      return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif');
+    case 2:
+      return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+    case 1:
+      return zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif');
+    case 0:
+      return zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
+  }
+}
+
+/**
+ * repatriate $_SESSION data for the specified session id
+ */
+function zen_wo_get_session_data($session_id) {
+    global $db;
+    $result = $db->Execute("select value from " . TABLE_SESSIONS . "
+                            WHERE sesskey = '" . $db->prepare_input($session_id) . "'");
+    $session_data = trim($result->fields['value']);
+
+    if ($session_data == '') return false;
+
+    // -----bof accommodate suhosin-----
+    $hardenedStatus = false;
+    $suhosinExtension = extension_loaded('suhosin');
+    $suhosinSetting = strtoupper(@ini_get('suhosin.session.encrypt'));
+
+//    if (!$suhosinExtension) {
+      if (strpos($session_data, 'cart|O') === 0) $session_data = base64_decode($session_data);
+      if (strpos($session_data, 'cart|O') === 0) $session_data = '';
+//    }
+
+    // uncomment the following line if you have suhosin enabled and see errors on the cart-contents sidebar
+    //$hardenedStatus = ($suhosinExtension == true || $suhosinSetting == 'On' || $suhosinSetting == 1) ? true : false;
+    if ($session_data != '' && $hardenedStatus == true) $session_data = '';
+    // -----eof accommodate suhosin-----
+
+    if (strlen($session_data)) {
+      $start_id = (int)strpos($session_data, 'customer_id|s');
+      $start_currency = (int)strpos($session_data, 'currency|s');
+      $start_country = (int)strpos($session_data, 'customer_country_id|s');
+      $start_zone = (int)strpos($session_data, 'customer_zone_id|s');
+      $start_cart = (int)strpos($session_data, 'cart|O');
+      $end_cart = (int)strpos($session_data, '|', $start_cart+6);
+      $end_cart = (int)strrpos(substr($session_data, 0, $end_cart), ';}');
+
+      $session_data_id = substr($session_data, $start_id, (strpos($session_data, ';', $start_id) - $start_id + 1));
+      $session_data_cart = substr($session_data, $start_cart, ($end_cart - $start_cart+2));
+      $session_data_currency = substr($session_data, $start_currency, (strpos($session_data, ';', $start_currency) - $start_currency + 1));
+      $session_data_country = substr($session_data, $start_country, (strpos($session_data, ';', $start_country) - $start_country + 1));
+      $session_data_zone = substr($session_data, $start_zone, (strpos($session_data, ';', $start_zone) - $start_zone + 1));
+
+      session_decode($session_data_id);
+      session_decode($session_data_currency);
+      session_decode($session_data_country);
+      session_decode($session_data_zone);
+      session_decode($session_data_cart);
+
+      if (is_object($_SESSION['cart'])) {
+        return $_SESSION['cart'];
+      }
+    }
+    return false;
+}
