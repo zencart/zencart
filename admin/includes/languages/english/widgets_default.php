@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -14,11 +14,12 @@
 define('GENERAL_STATISTICS_GROUP', 'General Statistics');
 define('ORDER_STATISTICS_GROUP', 'Order Statistics');
 define('NEW_CUSTOMERS_GROUP', 'New Customers');
-define('COUNTER_HISTORY_GROUP', 'Counter History');
+define('COUNTER_HISTORY_GROUP', 'Counter History Table');
 define('NEW_ORDERS_GROUP', 'New Orders');
 define('LOGS_GROUP', 'Debug Logs');
 define('BANNER_STATISTICS_GROUP', 'Banner Statistics');
 define('WHOSONLINE_GROUP', 'Active Visitors');
+define('COUNTER_HISTORY_GRAPH_GROUP', 'Counter History Graph');
 
 // Entries in dashboard_widgets_description
 define('GENERAL_STATISTICS', 'General Statistics');
@@ -26,10 +27,11 @@ define('ORDER_STATISTICS', 'Order Statistics');
 define('ORDER_SUMMARY', 'Order Summary');
 define('NEW_CUSTOMERS', 'New Customers');
 define('COUNTER_HISTORY', 'Counter History');
-define('NEW_ORDERS', 'New Orders');
+define('NEW_ORDERS', 'Recent Orders');
 define('LOGS', 'Debug Logs');
 define('BANNER_STATISTICS', 'Banner Statistics');
 define('WHOSONLINE_ACTIVITY', 'Active Visitors');
+define('COUNTER_HISTORY_GRAPH', 'Counter History - Last 14 days');
 
 define('TEXT_TOTAL_LOGFILES_FOUND', '<br>Note: Total of %s log files found on server.');
 define('TEXT_DISPLAYING_RECENT_COUNT', ' (Displaying only the most recent %s files.)');
