@@ -2313,6 +2313,9 @@ VALUES ('configCheckoutSettings','BOX_CONFIGURATION_CHECKOUT_SETTINGS','FILENAME
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
 VALUES ('configWidgets','BOX_CONFIGURATION_WIDGET','FILENAME_CONFIGURATION','gID=27', 'configuration', 'Y', 27);
 
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+VALUES ('reportSalesWithGraphs','BOX_REPORTS_SALES_REPORT_GRAPHS','FILENAME_STATS_SALES_REPORT_GRAPHS','', 'reports', 'Y', 4);
+
 # Insert a default profile for managing orders, as a built-in example of profile functionality
 INSERT INTO admin_profiles (profile_name) values ('Order Processing');
 SET @profile_id=last_insert_id();
