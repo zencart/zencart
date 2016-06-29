@@ -3437,6 +3437,10 @@ INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_i
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('whosonline', 'WHOSONLINE_ACTIVITY', '', 1);
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whosonline', 1, 'WHOSONLINE_GROUP');
 
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient');
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('counter-history-graph', 1, 'COUNTER_HISTORY_GRAPH_GROUP');
+
 INSERT INTO listingbox_locations (location_key, location_name) VALUES
 ('INDEX_DEFAULT', 'Index Page - Default'),
 ('MISSING_PRODUCT', 'Missing Product'),
