@@ -89,7 +89,7 @@ abstract class AbstractAdminController extends \base
     {
         if ($this->useView) {
             $cssList [] = array(
-                'href' => 'includes/template/AdminLTE2/bootstrap/css/bootstrap.css',
+                'href' => 'includes/template/css/bootstrap.min.css',
                 'id' => 'bootstrapCSS'
             );
             $cssList [] = array(
@@ -97,12 +97,8 @@ abstract class AbstractAdminController extends \base
                 'id' => 'adminlteCSS'
             );
             $cssList [] = array(
-                'href' => 'includes/template/AdminLTE2/dist/css/skins/skin-blue-light.css',
-                'id' => 'adminlteSkinCSS'
-            );
-            $cssList [] = array(
-                'href' => 'includes/template/css/main_lte.css',
-                'id' => 'adminMainlteCSS'
+                'href' => 'includes/template/css/stylesheet.css',
+                'id' => 'mainCSS'
             );
         }
         $this->tplVars ['cssList'] = $cssList;
