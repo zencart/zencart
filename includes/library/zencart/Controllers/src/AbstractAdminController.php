@@ -96,9 +96,13 @@ abstract class AbstractAdminController extends \base
                 'href' => 'includes/template/AdminLTE2/dist/css/AdminLTE.css',
                 'id' => 'adminlteCSS'
             );
+//            $cssList [] = array(
+//                'href' => 'includes/template/AdminLTE2/dist/css/skins/skin-blue-light.css',
+//                'id' => 'adminlteSkinCSS'
+//            );
             $cssList [] = array(
                 'href' => 'includes/template/css/stylesheet.css',
-                'id' => 'mainCSS'
+                'id' => 'stylesheetCSS'
             );
         }
         $this->tplVars ['cssList'] = $cssList;
