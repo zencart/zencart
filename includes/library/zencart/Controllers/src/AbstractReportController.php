@@ -11,7 +11,7 @@ use ZenCart\Lead\Builder;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
-use ZenCart\ListingBox\PaginatorBuilder as PaginatorBuilder;
+use ZenCart\QueryBuilder\PaginatorBuilder as PaginatorBuilder;
 use ZenCart\Services\LeadRoutes as LeadService;
 use ZenCart\AdminUser\AdminUser as User;
 use Valitron\Validator;
@@ -35,7 +35,7 @@ abstract class AbstractReportController extends AbstractListingController
     {
         $this->service->manageLanguageJoin();
         $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
+            new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->listingBox);
     }
 }

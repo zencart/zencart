@@ -11,7 +11,7 @@ use ZenCart\Lead\Builder;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
-use ZenCart\ListingBox\PaginatorBuilder as PaginatorBuilder;
+use ZenCart\QueryBuilder\PaginatorBuilder as PaginatorBuilder;
 use ZenCart\Services\LeadRoutes as LeadService;
 use ZenCart\AdminUser\AdminUser as User;
 use Valitron\Validator;

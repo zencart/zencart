@@ -158,7 +158,7 @@ if ($category_depth == 'nested')
   // //////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-$listingBoxManager = new ZenCart\ListingBox\Manager('INDEX_DEFAULT', $db, $zcRequest);
+$listingBoxManager = new ZenCart\QueryBuilderDefinitions\Manager('INDEX_DEFAULT', $db, $zcRequest);
 $listingBoxes = $listingBoxManager->getListingBoxes ();
 $tplVars['listingBoxes'] = $listingBoxes;
 
