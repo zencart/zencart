@@ -8,7 +8,7 @@
  */
 
 // NOTE: In v1.6.0, this has been converted to a LEAD page. See:
-// includes/library/zencart/listingBox/src/boxes/ReportStatsProductsPurchased.php
+// includes/library/zencart/QueryBuilderDefinitions/src/definitions/ReportStatsProductsPurchased.php
 
 define('HEADING_TITLE', 'Best Products Purchased');
 

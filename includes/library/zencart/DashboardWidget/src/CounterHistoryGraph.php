@@ -37,6 +37,7 @@ class CounterHistoryGraph extends AbstractWidget
       $counterData = "['" . $counter_startdate_formatted . "'," . $row['session_counter']."," . $row['counter'] ."]" . $counterData  ;
       $i++ ;
     }
+    if ($counterData == '') $counterData = "['', 0, 0]";
     return array('content' => $counterData);
   }
 }

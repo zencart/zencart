@@ -134,10 +134,10 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 $breadcrumb->add(zen_output_string_protected($keywords));
 
 $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
-$box = new ZenCart\ListingBox\boxes\SearchResults($zcRequest);
+$box = new ZenCart\QueryBuilderDefinitions\definitions\SearchResults($zcRequest, $db);
 $paginator = new ZenCart\Paginator\Paginator($zcRequest);
-$builder = new ZenCart\ListingBox\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
-$box->buildResults($qb, $db, new ZenCart\ListingBox\DerivedItemManager, $builder->getPaginator());
+$builder = new ZenCart\QueryBuilder\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
+$box->buildResults($qb, $db, new ZenCart\QueryBuilder\DerivedItemManager, $builder->getPaginator());
 $tplVars['listingBox'] = $box->getTplVars();
 //print_r($qb->getQuery());
 //die();
