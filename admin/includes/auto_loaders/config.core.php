@@ -221,6 +221,8 @@ $autoLoadConfig[60][] = array('autoType'=>'init_script',
  */
   $autoLoadConfig[160][] = array('autoType'=>'require',
                                  'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
+  $autoLoadConfig[160][] = array('autoType'=>'require',
+                                 'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'whos_online.php');
 /**
  * Breakpoint 170.
  *
