@@ -11,7 +11,7 @@ use ZenCart\Lead\BuilderFactory;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
-use ZenCart\ListingBox\PaginatorBuilder as PaginatorBuilder;
+use ZenCart\QueryBuilder\PaginatorBuilder as PaginatorBuilder;
 use ZenCart\Services\LeadRoutes as LeadService;
 use ZenCart\AdminUser\AdminUser as User;
 use Valitron\Validator;
@@ -53,7 +53,7 @@ abstract class AbstractListingController extends AbstractAdminController
     private function initController()
     {
         $listingBox = $this->classPrefix . ucfirst(\base::camelize($this->controllerCommand));
-        $boxClass = NAMESPACE_LISTINGBOX . '\\boxes\\' . $listingBox;
+        $boxClass = NAMESPACE_QUERYBUILDERDEFINITIONS . '\\definitions\\' . $listingBox;
         $this->listingBox = new $boxClass($this->request, $this->dbConn);
         $builderFactory = new BuilderFactory;
         $this->leadDefinitionBuilder = $builderFactory->factory($this->classPrefix, $this->listingBox, $this->request);
@@ -75,7 +75,7 @@ abstract class AbstractListingController extends AbstractAdminController
     {
         $this->service->manageLanguageJoin();
         $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
+            new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->listingBox);
     }
 
@@ -106,7 +106,7 @@ abstract class AbstractListingController extends AbstractAdminController
         $this->useView = false;
         $this->service->doFilter();
         $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
+            new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->listingBox);
         $tplRows = $this->loadTemplateAsString('includes/template/partials/tplAdminLeadItemRows.php', $this->tplVars);
         $paginator = $this->loadTemplateAsString('includes/template/partials/tplPaginatorStandard.php', $this->tplVars);

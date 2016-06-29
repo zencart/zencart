@@ -11,7 +11,7 @@ use ZenCart\Lead\Builder;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
-use ZenCart\ListingBox\PaginatorBuilder as PaginatorBuilder;
+use ZenCart\QueryBuilder\PaginatorBuilder as PaginatorBuilder;
 use ZenCart\Services\LeadRoutes as LeadService;
 use ZenCart\AdminUser\AdminUser as User;
 use Valitron\Validator;
@@ -42,7 +42,7 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVars['languages'] = $languages;
         $this->service->setEditQueryparts();
         $resultItems = $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator(), true);
+            new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator(), true);
         $this->tplVars['legendTitle'] = TEXT_LEAD_EDIT_ENTRY;
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
@@ -106,7 +106,7 @@ abstract class AbstractLeadController extends AbstractListingController
         $languages = $this->service->prepareLanguageTplVars();
         $this->tplVars['languages'] = $languages;
         $resultItems = $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
-            new \ZenCart\ListingBox\DerivedItemManager, $this->paginatorBuilder->getPaginator());
+            new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
         if (isset($outputLayout['editMap'])) {
             foreach ($outputLayout['editMap'] as $key) {

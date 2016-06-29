@@ -7,7 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version  $Id: New in v1.6.0 $
  */
-define('NAMESPACE_LISTINGBOX', 'ZenCart\ListingBox');
+define('NAMESPACE_QUERYBUILDERDEFINITIONS', 'ZenCart\QueryBuilderDefinitions');
 define('NAMESPACE_PAGINATOR', 'ZenCart\Paginator');
 define('NAMESPACE_QUERYBUILDER', 'ZenCart\QueryBuilder');
 define('NAMESPACE_REQUEST', 'ZenCart\Request');
@@ -29,7 +29,7 @@ define('URL_SERVICES', 'zencart/Services/src/');
 define('URL_CONTROLLERS', 'zencart/Controllers/src/');
 define('URL_AJAXDISPATCH', 'zencart/AjaxDispatch/src/');
 define('URL_DASHBOARDWIDGETS', 'zencart/DashboardWidget/src/');
-define('URL_LISTINGBOX', 'zencart/listingBox/src/');
+define('URL_QUERYBUILDERDEFINITIONS', 'zencart/QueryBuilderDefinitions/src/');
 define('URL_PAGINATOR', 'zencart/Paginator/src/');
 define('URL_QUERYBUILDER', 'zencart/QueryBuilder/src/');
 define('URL_REQUEST', 'zencart/Request/src/');
@@ -52,7 +52,7 @@ return array(
     NAMESPACE_CONTROLLERS => DIR_CATALOG_LIBRARY . URL_CONTROLLERS,
     NAMESPACE_AJAXDISPATCH => DIR_CATALOG_LIBRARY . URL_AJAXDISPATCH,
     NAMESPACE_DASHBOARDWIDGETS => DIR_CATALOG_LIBRARY . URL_DASHBOARDWIDGETS,
-    NAMESPACE_LISTINGBOX => DIR_CATALOG_LIBRARY. URL_LISTINGBOX,
+    NAMESPACE_QUERYBUILDERDEFINITIONS => DIR_CATALOG_LIBRARY. URL_QUERYBUILDERDEFINITIONS,
     NAMESPACE_PAGINATOR => DIR_CATALOG_LIBRARY. URL_PAGINATOR,
     NAMESPACE_QUERYBUILDER => DIR_CATALOG_LIBRARY. URL_QUERYBUILDER,
     NAMESPACE_REQUEST => DIR_CATALOG_LIBRARY. URL_REQUEST,
