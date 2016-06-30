@@ -20,6 +20,7 @@ define('LOGS_GROUP', 'Debug Logs');
 define('BANNER_STATISTICS_GROUP', 'Banner Statistics');
 define('WHOSONLINE_GROUP', 'Active Visitors');
 define('COUNTER_HISTORY_GRAPH_GROUP', 'Counter History Graph');
+define('SALES_GRAPH_REPORT_GROUP', 'Sales Activity');
 
 // Entries in dashboard_widgets_description
 define('GENERAL_STATISTICS', 'General Statistics');
@@ -32,6 +33,7 @@ define('LOGS', 'Debug Logs');
 define('BANNER_STATISTICS', 'Banner Statistics');
 define('WHOSONLINE_ACTIVITY', 'Active Visitors');
 define('COUNTER_HISTORY_GRAPH', 'Counter History - Last 14 days');
+define('SALES_GRAPH_REPORT', 'Sales Activity');
 
 define('TEXT_TOTAL_LOGFILES_FOUND', '<br>Note: Total of %s log files found on server.');
 define('TEXT_DISPLAYING_RECENT_COUNT', ' (Displaying only the most recent %s files.)');
@@ -51,6 +53,11 @@ define('WHOS_ONLINE_INACTIVE_TEXT', 'Inactive cart');
 define('WHOS_ONLINE_ACTIVE_NO_CART_TEXT', 'Active no cart');
 define('WHOS_ONLINE_INACTIVE_NO_CART_TEXT', 'Inactive no cart');
 
+// ===== Sales Graph Widget
+define('SALES_GRAPH_TEXT_MONTHLY', 'Monthly Sales (excludes shipping)');
+define('SALES_GRAPH_TEXT_CLICK', 'Click here for complete details...');
+define('SALES_GRAPH_COLUMN_MONTH', 'Month');
+define('SALES_GRAPH_COLUMN_SALES', 'Sales');
 
 
 
