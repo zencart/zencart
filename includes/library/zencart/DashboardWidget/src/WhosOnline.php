@@ -3,7 +3,7 @@
  * Whos Online Dashboard Widget
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  $
  */
@@ -23,10 +23,11 @@ class WhosOnline extends AbstractWidget
     public function prepareContent()
     {
         global $db;
-        $tplVars = array();
         $user_array = array(0=>0, 1=>0, 2=>0, 3=>0);
         $guest_array = array(0=>0, 1=>0, 2=>0, 3=>0);
         $spider_array = array(0=>0, 1=>0, 2=>0, 3=>0);
+        $totalRecords = 0;
+        $tplVars = array('users' => $user_array, 'guests' => $guest_array, 'spiders' => $spider_array, 'total' => $totalRecords);
 
         $result = $db->Execute("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent from " . TABLE_WHOS_ONLINE);
 
@@ -50,8 +51,8 @@ class WhosOnline extends AbstractWidget
                 }
             }
         }
+        $tplVars = array('users' => $user_array, 'guests' => $guest_array, 'spiders' => $spider_array, 'total' => $totalRecords);
 
-
-        return array('users' => $user_array, 'guests' => $guest_array, 'spiders' => $spider_array, 'total' => $totalRecords);
+        return $tplVars;
     }
 }
