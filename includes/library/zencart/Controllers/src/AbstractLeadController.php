@@ -24,15 +24,14 @@ use Valitron\Validator;
 abstract class AbstractLeadController extends AbstractListingController
 {
     /**
-     * @var bool
+     * @var string
      */
-    public $useFoundation = true;
+    public $classPrefix = 'Lead';
     /**
      * @var string
      */
     public $mainTemplate = 'tplAdminLead.php';
 
-    public $classPrefix = 'Lead';
     /**
      *
      */

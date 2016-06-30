@@ -16,11 +16,6 @@ use ZenCart\AdminUser\AdminUser as User;
 class Index extends AbstractAdminController
 {
     /**
-     * @var bool
-     */
-    public $useFoundation = true;
-
-    /**
      * @var
      */
     protected $service;
