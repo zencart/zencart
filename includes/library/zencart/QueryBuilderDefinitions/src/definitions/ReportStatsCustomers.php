@@ -52,6 +52,7 @@ class ReportStatsCustomers extends AbstractLeadDefinition
             ),
             'selectList' => array('sum(op.products_quantity * op.final_price)+sum(op.onetime_charges)  as ordersum'),
             'groupBys' => array('customers_id'),
+            'orderBys' => array(array('field' => 'ordersum DESC')),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(

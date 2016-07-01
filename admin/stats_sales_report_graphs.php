@@ -8,6 +8,7 @@
  */
 
 require('includes/application_top.php');
+$currencies = new currencies();
 
 if (!defined('SALES_REPORT_GRAPHS_FILTER_DEFAULT')) define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
 

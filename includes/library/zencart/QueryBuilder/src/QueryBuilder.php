@@ -82,8 +82,8 @@ class QueryBuilder extends \base
         $this->processJoins();
         $this->query ['table'] .= $this->parts ['mainTableName'] . " AS " . $this->parts ['mainTableAlias'] . " ";
         $this->processWhereClause();
-        $this->processOrderBys();
         $this->processGroupBys();
+        $this->processOrderBys();
         $this->processSelectList();
         $this->setFinalQuery($listingQuery);
         $this->processBindVars();
@@ -93,8 +93,7 @@ class QueryBuilder extends \base
     protected function setFinalQuery($listingQuery)
     {
         $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_START');
-        $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .
-            $this->query ['joins'] . $this->query ['where'] . $this->query ['orderBy'] . $this->query ['groupBy'];
+        $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .  $this->query ['joins'] .  $this->query ['where'] . $this->query ['groupBy'] . $this->query ['orderBy']; 
         if (!isset($this->query['countSql'])) {
             $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($listingQuery, 'isDistinct', false) ? "DISTINCT " : '') .
                 $this->parts ['mainTableAlias'] . "." . $this->parts ['mainTableFkeyField'] . ")
