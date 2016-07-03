@@ -3430,16 +3430,16 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ('counter-history', 1, 1, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
 ('new-orders', 1, 0, 2, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
 ('logs', 1, 1, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
-,('whosonline', 1, 2, 2, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('whos-online', 1, 2, 2, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
 ;
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'BANNER_STATISTICS', '', 1);
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whosonline', 'whosonline', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('whosonline', 'WHOSONLINE_ACTIVITY', '', 1);
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whosonline', 1, 'WHOSONLINE_GROUP');
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whos-online', 1, 'WHOSONLINE_GROUP');
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', '', 1);
