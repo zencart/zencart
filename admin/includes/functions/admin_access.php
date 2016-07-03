@@ -675,7 +675,9 @@ function zen_get_admin_pages($menu_only)
   $result = $db->Execute($sql);
   while (!$result->EOF)
   {
-    $dashboardWidgets['_dashboardwidgets_'.$result->fields['widget_key']] = array('name'=>constant($result->fields['widget_name']), 'file'=>$result->fields['widget_key'], 'params'=>'');
+    if (defined($result->fields['widget_name'])) {
+      $dashboardWidgets['_dashboardwidgets_'.$result->fields['widget_key']] = array('name'=>constant($result->fields['widget_name']), 'file'=>$result->fields['widget_key'], 'params'=>'');
+    }
     $result->MoveNext();
   }
 
@@ -897,12 +899,12 @@ function zen_get_admin_menu_for_user()
             ORDER BY am.sort_order, ap.sort_order";
     $sql = $db->bindVars($sql, ':user:', $_SESSION['admin_id'], 'integer');
     $result = $db->Execute($sql);
-    while (!$result->EOF)
+    foreach($result as $row)
     {
-      $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array('name' => constant($result->fields['pageName']),
-                                                                                'file' => constant($result->fields['main_page']),
-                                                                                'params' => $result->fields['page_params']);
-      $result->MoveNext();
+      if (!defined($row['pageName']) || !defined($row['main_page'])) continue;
+      $retVal[$row['menu_key']][$row['page_key']] = array('name' => constant($row['pageName']),
+                                                          'file' => constant($row['main_page']),
+                                                          'params' => $row['page_params']);
     }
   }
   return $retVal;
@@ -914,10 +916,10 @@ function zen_get_menu_titles()
   $retval = array();
   $sql = "SELECT menu_key, language_key FROM " . TABLE_ADMIN_MENUS . " ORDER BY sort_order";
   $result = $db->Execute($sql);
-  while (!$result->EOF)
+  foreach($result as $row)
   {
-    $retVal[$result->fields['menu_key']] = constant($result->fields['language_key']);
-    $result->MoveNext();
+    if (!defined($row['language_key'])) continue;
+    $retVal[$row['menu_key']] = constant($row['language_key']);
   }
   $retVal['_productTypes'] = BOX_HEADING_PRODUCT_TYPES;
   $retVal['_dashboardWidgets'] = BOX_HEADING_DASHBOARD_WIDGETS;
