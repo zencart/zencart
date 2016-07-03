@@ -1,4 +1,12 @@
 <?php
+/**
+ * Admin html Head Template
+ *
+ * @package templateSystem
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: $
+ */
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,4 +51,8 @@
     <script src="includes/template/javascript/select2-master/select2.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" href="includes/template/javascript/gridstack.js-master/dist/gridstack.css" />
+    <link rel="stylesheet" href="includes/template/javascript/gridstack.js-master/dist/gridstack-extra.css" />
+    <script type="text/javascript" src='includes/template/javascript/lodash.js'></script>
+    <script type="text/javascript" src='includes/template/javascript/gridstack.js-master/dist/gridstack.js'></script>
 </head>
