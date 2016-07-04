@@ -116,12 +116,8 @@
         $comments = zen_db_prepare_input($_POST['comments']);
         $status = (int)zen_db_prepare_input($_POST['status']);
         $order = new order((int)$oID);
-        $emailLanguageQuery = $db->Execute("SELECT directory
-                                        FROM " . TABLE_LANGUAGES . "
-                                        WHERE languages_id = " . (int)$order->info['language_id']);
-        $emailLanguage = $emailLanguageQuery->fields['directory'];
-
-        require(DIR_WS_LANGUAGES . $emailLanguage . '/orders_email.php');
+        $emailLanguage = $lng->get_language_data_by_id((int)$order->info['language_id']);
+        zen_load_language_file('orders_email.php', $emailLanguage['directory']);
 
         if ($status < 1) break;
 
@@ -255,7 +251,6 @@
         }
 
         // trigger any appropriate updates which should be sent back to the payment gateway:
-        $order = new order((int)$oID);
         if ($order->info['payment_module_code']) {
           if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
             require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
@@ -1036,11 +1031,8 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
         if (zen_not_null($oInfo->last_modified)) $contents[] = array('text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . zen_date_short($oInfo->last_modified));
         $contents[] = array('text' => '<br />' . TEXT_INFO_PAYMENT_METHOD . ' '  . $oInfo->payment_method);
         $contents[] = array('text' => '<br />' . ENTRY_SHIPPING . ' '  . $oInfo->shipping_method);
-        $orderLanguageQuery = $db->Execute("SELECT name
-                                            FROM " . TABLE_LANGUAGES . "
-                                            WHERE languages_id = " . $oInfo->language_id);
-        $orderLanguage = $orderLanguageQuery->fields['name'];
-        $contents[] = array('text' => '<br />' . TEXT_INFO_ORDER_LANGUAGE . ' ' . $orderLanguage);
+        $orderLanguage = $lng->get_language_data_by_id((int)$oInfo->language_id);
+        $contents[] = array('text' => '<br />' . TEXT_INFO_ORDER_LANGUAGE . ' ' . $orderLanguage['name']);
 
 // check if order has open gv
         $gv_check = $db->Execute("select order_id, unique_id
