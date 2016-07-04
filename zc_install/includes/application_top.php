@@ -8,6 +8,7 @@
  */
 
 @ini_set("arg_separator.output", "&");
+@ini_set("session.use_trans_sid","0");
 @set_time_limit(250);
 
 if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {

@@ -62,6 +62,7 @@ define('PAGE_PARSE_START_TIME', microtime());
 //  define('DISPLAY_PAGE_PARSE_TIME', 'true');
 @ini_set("arg_separator.output","&");
 @ini_set("html_errors","0");
+@ini_set("session.use_trans_sid","0");
 /**
  * Set the local configuration parameters - mainly for developers
  */
