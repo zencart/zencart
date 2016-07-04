@@ -1,6 +1,6 @@
 #
 # @package Installer
-# @copyright Copyright 2003-2015 Zen Cart Development Team
+# @copyright Copyright 2003-2016 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # @version $Id:  New in v1.6.0 $
 #
@@ -144,12 +144,6 @@ systemChecks:
         parameters:
           sessionName: zenInstallerId
       checkIniGet1:
-        method: checkIniGet
-        parameters:
-          inigetName: session.use_trans_sid
-          expectedValue: FALSE
-        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID . PHP_EOL; ?>
-      checkIniGet2:
         method: checkIniGet
         parameters:
           inigetName: session.auto_start

@@ -15,7 +15,9 @@ $zco_notifier->notify('NOTIFY_MODULE_TEMPLATE_DEPENDENCY_MODULES', $current_page
 
 require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 
-include(DIR_WS_TEMPLATE . 'template_info.php');
+if (file_exists(DIR_WS_TEMPLATE . 'template_info.php')) {
+   include(DIR_WS_TEMPLATE . 'template_info.php');
+}
 
 // dynamically discover and prepare proper markup for relevant stylesheets and javascripts
 if (NULL == $css_js_handler || $css_js_handler == '') $css_js_handler = 'tpl_css_js_generator.php';
