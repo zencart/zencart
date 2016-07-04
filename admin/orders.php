@@ -115,6 +115,14 @@
         $oID = zen_db_prepare_input($_GET['oID']);
         $comments = zen_db_prepare_input($_POST['comments']);
         $status = (int)zen_db_prepare_input($_POST['status']);
+        $order = new order((int)$oID);
+        $emailLanguageQuery = $db->Execute("SELECT directory
+                                        FROM " . TABLE_LANGUAGES . "
+                                        WHERE languages_id = " . (int)$order->info['language_id']);
+        $emailLanguage = $emailLanguageQuery->fields['directory'];
+
+        require(DIR_WS_LANGUAGES . $emailLanguage . '/orders_email.php');
+
         if ($status < 1) break;
 
         $order_updated = false;
@@ -126,6 +134,12 @@
           $db->Execute("update " . TABLE_ORDERS . "
                         set orders_status = '" . zen_db_input($status) . "', last_modified = now()
                         where orders_id = '" . (int)$oID . "'");
+
+          $ordersStatusLocalizedQuery = $db->Execute("SELECT orders_status_name
+                                                      FROM " . TABLE_ORDERS_STATUS . "
+                                                      WHERE language_id = '" . $order->info['language_id'] . "'
+                                                      AND orders_status_id = " . $status);
+          $ordersStatusLocalized = $ordersStatusLocalizedQuery->fields['orders_status_name'];
 
           $customer_notified = '0';
           if (isset($_POST['notify']) && ($_POST['notify'] == '1')) {
@@ -145,7 +159,7 @@
                     EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $oID, 'SSL') . "\n\n" .
                     EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']) . "\n\n" .
                     $notify_comments .
-                    EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status] ) .
+                    EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $ordersStatusLocalized ) .
                     EMAIL_TEXT_STATUS_PLEASE_REPLY;
 
                 $html_msg['EMAIL_CUSTOMERS_NAME']    = $check_status->fields['customers_name'];
@@ -883,7 +897,7 @@ function couponpopupWindow(url) {
 //    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
   }
 } // eof: search orders or orders_products
-    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
+    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address, o.language_id ";
 ?>
 <?php
 
@@ -1022,6 +1036,11 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
         if (zen_not_null($oInfo->last_modified)) $contents[] = array('text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . zen_date_short($oInfo->last_modified));
         $contents[] = array('text' => '<br />' . TEXT_INFO_PAYMENT_METHOD . ' '  . $oInfo->payment_method);
         $contents[] = array('text' => '<br />' . ENTRY_SHIPPING . ' '  . $oInfo->shipping_method);
+        $orderLanguageQuery = $db->Execute("SELECT name
+                                            FROM " . TABLE_LANGUAGES . "
+                                            WHERE languages_id = " . $oInfo->language_id);
+        $orderLanguage = $orderLanguageQuery->fields['name'];
+        $contents[] = array('text' => '<br />' . TEXT_INFO_ORDER_LANGUAGE . ' ' . $orderLanguage);
 
 // check if order has open gv
         $gv_check = $db->Execute("select order_id, unique_id
