@@ -60,7 +60,7 @@ class ServerInfo extends AbstractInfoController
         $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_SERVER_OS, 'content' => $system['system'] . ' ' . $system['kernel']);
         $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_SERVER_DATE, 'content' => $system['date']);
         $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_SERVER_UP_TIME, 'content' => $system['uptime']);
-        $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_HTTP_SERVER, 'content' => $system['http_server']);
+        $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_WEBSERVER, 'content' => $system['webserver']);
         $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_PHP_VERSION, 'content' => $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')');
         $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_PHP_FILE_UPLOADS, 'content' => ($system['php_file_uploads'] != '' && $system['php_file_uploads'] != 'off' && $system['php_file_uploads'] != '0') ? 'On' : 'Off');
         $this->tplVars['systemInfo']['left'][] = array('title' => TITLE_PHP_UPLOAD_MAX, 'content' => $system['php_uploadmaxsize']);

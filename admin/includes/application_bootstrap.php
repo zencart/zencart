@@ -55,29 +55,29 @@ $PHP_SELF = htmlspecialchars($PHP_SELF);
 /**
  * Set the local configuration parameters - mainly for developers
  */
-if (file_exists('includes/local/configure.php')) {
+if (file_exists('../includes/local/configure.php')) {
   /**
    * load any local(user created) configure file.
    */
-  include('includes/local/configure.php');
+  include('../includes/local/configure.php');
 }
 /**
  * check for and load application configuration parameters
  */
-if (file_exists('includes/configure.php')) {
+if (file_exists('../includes/configure.php')) {
   /**
    * load the main configure file.
    */
-  include('includes/configure.php');
+  include('../includes/configure.php');
 }
 if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
   if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
     require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
     exit;
   } elseif (file_exists('../zc_install/index.php')) {
-    echo 'ERROR: Admin configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
+    echo 'ERROR: /includes/configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
   } else {
-    die('ERROR: admin/includes/configure.php file not found. Suggest running zc_install/index.php?');
+    die('ERROR: /includes/configure.php file not found. Suggest running zc_install/index.php?');
   }
 }
 /**
@@ -89,26 +89,15 @@ if (file_exists('includes/defined_paths.php')) {
    */
   require('includes/defined_paths.php');
 } else {
-  die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+  die('ERROR: admin /includes/defined_paths.php file not found. Cannot continue.');
   exit;
-}
-/**
- * ignore version-check if INI file setting has been set
- */
-if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
-  $lines = @file(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini');
-  if (is_array($lines)) {
-    foreach($lines as $line) {
-      if (substr($line,0,14)=='admin_configure_php_check=') $check_cfg=substr(trim(strtolower(str_replace('admin_configure_php_check=','',$line))),0,3);
-    }
-  }
 }
 /**
  * Defined for backwards compatibility only.
  * THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
  */
 if (!defined('HTT'.'PS_SERVER')) {
-  define('HTT'.'PS_SERVER', HTTP_SERVER);
+  define('HTT'.'PS_SERVER', ADMIN_HTTP_SERVER);
 }
 
 // load the default autoload config

@@ -209,7 +209,7 @@
                  'host' => $host,
                  'ip' => gethostbyname($host),
                  'uptime' => $uptime,
-                 'http_server' => $_SERVER['SERVER_SOFTWARE'],
+                 'webserver' => $_SERVER['SERVER_SOFTWARE'],
                  'php' => PHP_VERSION,
                  'zend' => (function_exists('zend_version') ? zend_version() : ''),
                  'db_server' => DB_SERVER,

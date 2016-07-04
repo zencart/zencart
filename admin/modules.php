@@ -12,7 +12,7 @@
 
   $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set'] : ''));
 
-  $is_ssl_protected = (substr(HTTP_SERVER, 0, 5) == 'https') ? TRUE : FALSE;
+  $is_ssl_protected = ($request_type == 'SSL');
   $file_extension = '.php';
 
   if (zen_not_null($set)) {

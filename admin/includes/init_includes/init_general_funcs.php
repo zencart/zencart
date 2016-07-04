@@ -50,7 +50,7 @@ if (isset($_GET) & sizeof($_GET) > 0 ) {
 
 // check for SSL configuration changes:
 if (!defined('SSLPWSTATUSCHECK')) die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
-$e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
+$e = (substr(ADMIN_HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
 if (SSLPWSTATUSCHECK == '') {
   $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '".$e.':'.$e."', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
   $db->Execute($sql);
