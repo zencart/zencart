@@ -41,6 +41,8 @@ TRUNCATE TABLE db_cache;
 TRUNCATE TABLE sessions;
 
 #############
+UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
+
 ALTER TABLE configuration ADD val_function text default NULL AFTER set_function;
 
 DELETE FROM configuration WHERE configuration_key = 'SESSION_WRITE_DIRECTORY';
