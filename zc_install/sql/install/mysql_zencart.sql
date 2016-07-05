@@ -1185,7 +1185,7 @@ CREATE TABLE orders (
   ip_address varchar(96) NOT NULL default '',
   is_guest_order tinyint(1) NOT NULL default 0,
   order_weight float NOT NULL default '0',
-  language_id int(11) NOT NULL DEFAULT '1',
+  language_code VARCHAR(2) NOT NULL DEFAULT 'en',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
