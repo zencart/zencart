@@ -114,7 +114,7 @@ class order extends base {
                         'last_modified' => $order->fields['last_modified'],
                         'ip_address' => $order->fields['ip_address'],
                         'order_weight' => $order->fields['order_weight'],
-                        'language_id' => $order->fields['language_id']
+                        'language_code' => $order->fields['language_code']
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -367,7 +367,7 @@ class order extends base {
                         'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
                         'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . zen_get_ip_address(),
                         'order_weight' => ($shipping_weight * $shipping_num_boxes),
-                        'language_id' => (int)$_SESSION['languages_id']
+                        'language_code' => $_SESSION['languages_code']
                         );
 
     $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
@@ -644,7 +644,7 @@ class order extends base {
                             'currency_value' => $this->info['currency_value'],
                             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . zen_get_ip_address(),
                             'order_weight' => $this->info['order_weight'],
-                            'language_id' => $this->info['language_id'],
+                            'language_code' => $this->info['language_code'],
                             );
 
     $this->notify('NOTIFY_ORDER_CREATE_SET_SQL_DATA_ARRAY', array(), $sql_data_array);

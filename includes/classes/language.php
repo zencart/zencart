@@ -107,6 +107,23 @@ class language extends base {
   }
 
   /**
+   * Lookup language details by language Code
+   * (mainly used in admin for displaying language-icons on attribute option-name pages
+   * @param string $lang_code
+   * @return array|boolean
+   */
+  public function get_language_data_by_code($lang_code = '') {
+    if ($lang_code == '') return false;
+
+    foreach ($this->available_languages as $code => $val) {
+      if ($val['code'] == $lang_code) {
+        return $val;
+      }
+    }
+  }
+
+
+  /**
    * Determine languages supported by the browser, and set the site to use a corresponding language
    * Matching is attempted according to the order of browser preference, as long as the store supports at least one. Else it aborts.
    * @return array|boolean

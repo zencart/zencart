@@ -116,8 +116,9 @@
         $comments = zen_db_prepare_input($_POST['comments']);
         $status = (int)zen_db_prepare_input($_POST['status']);
         $order = new order((int)$oID);
-        $emailLanguage = $lng->get_language_data_by_id((int)$order->info['language_id']);
-        zen_load_language_file('orders_email.php', $emailLanguage['directory']);
+        $orderLanguage = $lng->get_language_data_by_code($order->info['language_code']);
+        $orderLanguageId = (int)$orderLanguage['id'];
+        zen_load_language_file('orders_email.php', $orderLanguage['directory']);
 
         if ($status < 1) break;
 
@@ -133,7 +134,7 @@
 
           $ordersStatusLocalizedQuery = $db->Execute("SELECT orders_status_name
                                                       FROM " . TABLE_ORDERS_STATUS . "
-                                                      WHERE language_id = '" . $order->info['language_id'] . "'
+                                                      WHERE language_id = '" . $orderLanguageId . "'
                                                       AND orders_status_id = " . $status);
           $ordersStatusLocalized = $ordersStatusLocalizedQuery->fields['orders_status_name'];
 
@@ -781,6 +782,12 @@ function couponpopupWindow(url) {
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
+        <td class="main noprint">
+          <?php $orderLanguage = $lng->get_language_data_by_code($order->info['language_code']); ?>
+          <strong><?php echo TEXT_INFO_ORDER_LANGUAGE; ?></strong> <?php echo $orderLanguage['name']; ?>
+        </td>
+      </tr>
+      <tr>
         <td><table border="0" cellspacing="0" cellpadding="2" class="noprint">
           <tr>
             <td><table border="0" cellspacing="0" cellpadding="2">
@@ -892,7 +899,7 @@ function couponpopupWindow(url) {
 //    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
   }
 } // eof: search orders or orders_products
-    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address, o.language_id ";
+    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address, o.language_code ";
 ?>
 <?php
 
@@ -1031,7 +1038,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
         if (zen_not_null($oInfo->last_modified)) $contents[] = array('text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . zen_date_short($oInfo->last_modified));
         $contents[] = array('text' => '<br />' . TEXT_INFO_PAYMENT_METHOD . ' '  . $oInfo->payment_method);
         $contents[] = array('text' => '<br />' . ENTRY_SHIPPING . ' '  . $oInfo->shipping_method);
-        $orderLanguage = $lng->get_language_data_by_id((int)$oInfo->language_id);
+        $orderLanguage = $lng->get_language_data_by_code($oInfo->language_code);
         $contents[] = array('text' => '<br />' . TEXT_INFO_ORDER_LANGUAGE . ' ' . $orderLanguage['name']);
 
 // check if order has open gv
