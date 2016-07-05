@@ -175,7 +175,7 @@ class payeezyjszc extends base {
             array(
                 'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_NUMBER,
                 'field' => zen_draw_input_field($this->code . '_cc_number', '',
-                    'payeezy-data="cc_number" id="' . $this->code . '_cc-number"' . $onFocus . ' autocomplete="off"'),
+                    'payeezy-data="cc_number" id="' . $this->code . '_cc-number"' . $onFocus . ' autocomplete="off"','number'),
                 'tag' => $this->code . '_cc-number'
             ),
             array(
