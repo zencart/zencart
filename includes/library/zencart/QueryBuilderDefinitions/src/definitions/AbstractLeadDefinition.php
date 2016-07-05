@@ -66,10 +66,9 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
         if (count($items) == 0) {
             return array();
         }
+        $page = ''; 
         if ($usePaginator) { 
             $page = '&page=' . $usePaginator->getCurrentPage();
-        } else { 
-            $page = ''; 
         }
         $rows = array();
         foreach ($items as $item) {
