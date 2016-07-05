@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sep 12 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte   Modified in v1.6.0 $
  */
 
 require('includes/application_top.php');
 
 // Check if session has timed out
-if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+if (!isset($_SESSION['admin_id'])) zen_redirect(zen_admin_href_link(FILENAME_LOGIN));
 
 // make a note of the current user - they can't delete themselves (by accident) or change their own status
 $currentUser = $_SESSION['admin_id'];
@@ -40,7 +40,7 @@ elseif(($action=='delete' || $action=='delete_confirm') && isset($_POST['user'])
 elseif (in_array($action, array('edit','password','delete','delete_confirm','update','reset')))
 {
   $messageStack->add_session(ERROR_NO_USER_DEFINED, 'error');
-  zen_redirect(zen_href_link(FILENAME_USERS));
+  zen_redirect(zen_admin_href_link(FILENAME_USERS));
 }
 
 // act upon any specific action specified
@@ -153,7 +153,7 @@ require('includes/admin_html_head.php');
     <tfoot>
 <?php if ($action != 'add' && $action != 'edit' && $action != 'password') { ?>
       <tr>
-        <td colspan="5"><a href="<?php echo zen_href_link(FILENAME_USERS, 'action=add') ?>"><?php echo zen_image_button('button_add_user.gif', IMAGE_ADD_USER) ?></a></td>
+        <td colspan="5"><a href="<?php echo zen_admin_href_link(FILENAME_USERS, 'action=add') ?>"><?php echo zen_image_button('button_add_user.gif', IMAGE_ADD_USER) ?></a></td>
       </tr>
 <?php } ?>
     </tfoot>
@@ -162,13 +162,13 @@ require('includes/admin_html_head.php');
 <?php if ($action == 'add') { ?>
       <tr>
         <td class="id">&nbsp;</td>
-        <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', false, 'text', true) ?></td>
-        <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="field"', false, 'text', true) ?></td>
-        <td class="mobile"><?php echo zen_draw_input_field('mobile', isset($_POST['mobile']) ? $_POST['mobile'] : '', 'class="field"', false, 'text', true) ?></td>
+        <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="field"', true, 'text', true) ?></td>
+        <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="field"', true, 'email', true) ?></td>
+         <td class="mobile"><?php echo zen_draw_input_field('mobile', isset($_POST['mobile']) ? $_POST['mobile'] : '', 'class="field"', false, 'tel', true) ?></td>
         <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0) ?></td>
-        <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="field"', false, 'password'); ?></td>
+        <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="field"', true, 'password'); ?></td>
         <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="field"', false, 'password'); ?></td>
-        <td class="actions"><?php echo zen_image_submit('button_insert.gif', IMAGE_INSERT) ?> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>"> <?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a></td>
+        <td class="actions"><?php echo zen_image_submit('button_insert.gif', IMAGE_INSERT) ?> <a href="<?php echo zen_admin_href_link(FILENAME_USERS) ?>"> <?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a></td>
       </tr>
 <?php } ?>
 <?php if (sizeof($userList) > 0) { ?>
@@ -181,8 +181,8 @@ require('includes/admin_html_head.php');
 <?php } ?>
 <?php if ($action == 'edit' && $user == $userDetails['id']) { ?>
         <td class="name"><?php echo zen_draw_input_field('name', $userDetails['name'], 'class="field"') ?></td>
-        <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"') ?></td>
-        <td class="mobile"><?php echo zen_draw_input_field('mobile', $userDetails['mobile'], 'class="field"') ?></td>
+        <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"', false, 'email') ?></td>
+        <td class="mobile"><?php echo zen_draw_input_field('mobile', $userDetails['mobile'], 'class="field"', false, 'tel') ?></td>
 <?php } else { ?>
         <td class="name"><?php echo $userDetails['name'] ?></td>
         <td class="email"><?php echo $userDetails['email'] ?></td>
@@ -204,7 +204,7 @@ require('includes/admin_html_head.php');
 <?php if ($user == $userDetails['id']) { ?>
         <td class="actions">
           <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
-          <a href="<?php echo zen_href_link(FILENAME_USERS) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_USERS) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
         </td>
 <?php } else { ?>
         <td class="actions">&nbsp;</td>
@@ -212,8 +212,8 @@ require('includes/admin_html_head.php');
 <?php } elseif ($action != 'add') { ?>
         <td class="actions">
 <?php if ($action != 'delete') { ?>
-          <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&amp;user=' . $userDetails['id']) ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
-          <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&amp;user=' . $userDetails['id']) ?>"><?php echo zen_image_button('button_reset_pwd.gif', IMAGE_RESET_PWD) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_USERS, 'action=edit&amp;user=' . $userDetails['id']) ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_USERS, 'action=password&amp;user=' . $userDetails['id']) ?>"><?php echo zen_image_button('button_reset_pwd.gif', IMAGE_RESET_PWD) ?></a>
 <?php } ?>
 <?php if ($userDetails['id'] != $currentUser) {
 
@@ -228,7 +228,7 @@ require('includes/admin_html_head.php');
           <?php echo zen_draw_hidden_field('user', $userDetails['id']); ?>
           <?php echo ($action == 'delete' && $userDetails['id'] == $user ? TEXT_CONFIRM_DELETE : '') . ($btn_img == '' ? '' : zen_image_submit($btn_img, IMAGE_DELETE)) ?>
 <?php if ($action == 'delete' && $userDetails['id'] == $user) { ?>
-            <a href="<?php echo zen_href_link(FILENAME_USERS) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+            <a href="<?php echo zen_admin_href_link(FILENAME_USERS) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
 <?php } ?>
           </form>
 <?php } ?>
@@ -245,10 +245,11 @@ require('includes/admin_html_head.php');
 </div>
 <!-- body_eof //-->
 
+<div class="bottom">
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-<br>
+</div>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

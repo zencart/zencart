@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Modified in v1.6.0 $
@@ -18,7 +18,7 @@
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'gID=' . $_GET['gID'] . '&cID=' . $cID));
+          zen_redirect(zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'gID=' . $_GET['gID'] . '&cID=' . $cID));
         }
         $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
         $cID = zen_db_prepare_input($_GET['cID']);
@@ -39,10 +39,13 @@
                           from ' . TABLE_CONFIGURATION;
 
 
-        zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'gID=' . $_GET['gID'] . '&cID=' . $cID . '&ptID=' . $_GET['ptID'] . '&action=layout'));
+        zen_redirect(zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'gID=' . $_GET['gID'] . '&cID=' . $cID . '&ptID=' . $_GET['ptID'] . '&action=layout'));
         break;
       case 'insert':
       case 'save':
+        if (!isset($_POST['type_name'])) {
+          continue;
+        }
         if (isset($_GET['ptID'])) $type_id = zen_db_prepare_input($_GET['ptID']);
         $type_name = zen_db_prepare_input($_POST['type_name']);
         $handler = zen_db_prepare_input($_POST['handler']);
@@ -87,14 +90,14 @@
           }
         }
 
-        zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ptID=' . $type_id));
+        zen_redirect(zen_admin_href_link(FILENAME_PRODUCT_TYPES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ptID=' . $type_id));
         break;
       case 'deleteconfirm':
         // demo active test
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page']));
+          zen_redirect(zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page']));
         }
         $type_id = zen_db_prepare_input($_POST['ptID']);
 
@@ -128,7 +131,7 @@
                         where products_type = '" . (int)$type_id . "'");
         }
 
-        zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page']));
+        zen_redirect(zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page']));
         break;
     }
   }
@@ -202,14 +205,14 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
     }
 
     if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) {
-      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '\'">' . "\n";
+      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '\'">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=layout_edit') . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=layout_edit') . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $configuration->fields['configuration_title']; ?></td>
                 <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=layout') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=layout') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     $configuration->MoveNext();
@@ -236,7 +239,7 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
       }
       $contents[] = array('text' => TEXT_EDIT_INTRO);
       $contents[] = array('text' => '<br><b>' . $cInfo->configuration_title . '</b><br>' . $cInfo->configuration_description . '<br>' . $value_field);
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . '&nbsp;<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'action=layout&ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'action=layout&ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (isset($cInfo) && is_object($cInfo)) {
@@ -245,7 +248,7 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
         if (ADMIN_CONFIGURATION_KEY_ON == 1) {
           $contents[] = array('text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br />');
         }
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>' . '&nbsp;<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>' . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
         $contents[] = array('text' => '<br>' . $cInfo->configuration_description);
         $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($cInfo->date_added));
         if (zen_not_null($cInfo->last_modified)) $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($cInfo->last_modified));
@@ -309,14 +312,14 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
     }
 
     if (isset($ptInfo) && is_object($ptInfo) && ($product_types->fields['type_id'] == $ptInfo->type_id)) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_types->fields['type_id'] . '&action=layout' ) . '\'">' . "\n";
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_types->fields['type_id'] . '&action=layout' ) . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_types->fields['type_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_types->fields['type_id']) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $product_types->fields['type_name']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $product_types->fields['allow_add_to_cart']; ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($ptInfo) && is_object($ptInfo)) && ($product_types->fields['type_id'] == $ptInfo->type_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_types->fields['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;  </td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($ptInfo) && is_object($ptInfo)) && ($product_types->fields['type_id'] == $ptInfo->type_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_types->fields['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;  </td>
               </tr>
 <?php
     $product_types->MoveNext();
@@ -363,7 +366,7 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
        }
       $contents[] = array('text' => '<br />' . TEXT_MASTER_TYPE . zen_draw_pull_down_menu('master_type', $product_type_array, $ptInfo->type_master_type));
 
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'delete':
       $heading[] = array('text' => '<b>' . TEXT_HEADING_DELETE_PRODUCT_TYPE . '</b>');
@@ -378,14 +381,14 @@ if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
         $contents[] = array('text' => '<br>' . sprintf(TEXT_DELETE_WARNING_PRODUCTS, $ptInfo->products_count));
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . ' <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . ' <a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (isset($ptInfo) && is_object($ptInfo)) {
         $heading[] = array('text' => '<b>' . $ptInfo->type_name . '</b>');
 // remove delete for now to avoid issues
-//        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '">' . zen_image_button('button_layout.gif', IMAGE_LAYOUT) . '</a>' );
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '">' . zen_image_button('button_layout.gif', IMAGE_LAYOUT) . '</a>' );
+//        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a> <a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '">' . zen_image_button('button_layout.gif', IMAGE_LAYOUT) . '</a>' );
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '">' . zen_image_button('button_layout.gif', IMAGE_LAYOUT) . '</a>' );
         $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($ptInfo->date_added));
         if (zen_not_null($ptInfo->last_modified)) $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($ptInfo->last_modified));
         $contents[] = array('text' => '<br>' . zen_info_image($ptInfo->manufacturers_image, $ptInfo->manufacturers_name));

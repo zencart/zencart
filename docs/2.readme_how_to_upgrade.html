@@ -2,9 +2,9 @@
 <!--
 /**
  * @package documentation
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 2.readme_how_to_upgrade.html 20044 2011-12-06 23:09:52Z drbyte $
+ * @version $Id: Author: DrByte  Fri Jan 1 18:00:02 2016 -0500 Modified in v1.5.5 $
  */
 //-->
 <html>
@@ -14,9 +14,9 @@
 <!--
 body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
 fieldset.intro {border-color:#C96E29; }
-.intro{background-color:#EEEEEE ; border-color:#5778ce; font-size:10px; }
-.plainbox, div.callout {border: 1px dashed; border-color: #C96E29; margin:5px 40px 5px 40px;}
-.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.intro{background-color:#EEEEEE ; border-color:#5778ce; font-size:14px; }
+.plainbox, div.callout {background-color: #d7e0f2; border: 1px dashed; border-color: C96E29; padding: 8; margin:5 40 5 40;}
+.heading {background-color:5778CE; font-weight:bold; font-size:14px; width: 100%; }
 .title1 {color:#C96E29; font-weight:bold; font-size:22px; }
 .title2 {color:#C96E29; font-weight:bold; font-size:13px; }
 .small {font-size:10px ;}
@@ -73,12 +73,10 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <fieldset>
 <h1>BEFORE YOU UPGRADE!</h1>
 <p>Have you checked whether your webserver meets the technical requirements?</p>
-<h1>Zen Cart&reg; v1.6.0 Server Requirements:</h1>
+<h1>Zen Cart&reg; Server Requirements:</h1>
 <h2>Server Requirements:</h2>
 <ul>
-<li>PHP 5.4.0 to 5.6.x</li>
-<li>Apache 2.0 to 2.4.x</li>
-<li>MySQL 5.0 to 5.6.x</li>
+<li>For up-to-date requirements, see: <a href="https://www.zen-cart.com/content.php?48-what-are-the-server-requirements-to-run-zen-cart" target="_blank"> Zen Cart&reg; Server Requirements</a></li>
 <li>* Apache must be configured with AllowOverride set to either 'All' or at least both 'Limit' and 'Indexes' parameters, and preferably the 'Options' parameter as well.</li>
 <li>* PHP must be configured to support CURL with OpenSSL</li>
 </ul>
@@ -87,7 +85,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <br>
 <fieldset>
 <h1 class="intro">ONLINE DOCUMENTATION</h1>
-You can find updated upgrade instructions AND alternate ways of looking at upgrading, by visiting: <a href="http://www.zen-cart.com/upgrade">www.zen-cart.com/upgrade</a>.
+You can find updated upgrade instructions AND alternate ways of looking at upgrading, by visiting: <a href="https://www.zen-cart.com/upgrade">www.zen-cart.com/upgrade</a>.
 <p>&nbsp;</p>
 <br>
 <h1 class="intro center">3 EASY STEPS TO UPGRADE ZEN CART&reg;</h1>
@@ -160,9 +158,9 @@ Note that there will be several changes you will have to make to files that you 
   If the last backup you made of your data is older than the last order that might have been processed or customer registration, make a fresh database backup.<br>
   Restore your database from the backup in step #1 earlier into your NEW database just created.<br>
   <br>
-  If your <span class="filename">/zen_new</span> folder doesn't have "<span class="filename">/includes/configure.php</span>" and "<span class="filename">/admin/includes/configure.php</span>" files, copy them from your old store folder.<br>
+  If your <span class="filename">/zen_new</span> folder doesn't have a "<span class="filename">/includes/configure.php</span>" file copy it from your old store folder.<br>
   <br>
-  EDIT your "<span class="filename">/zen_new/includes/configure.php</span>" file and ensure that your DATABASE_NAME matches your NEW database. Also verify database username and password in case that information has changed.  Save this file, and be sure to upload it as part of the next step. Repeat for the <span class="filename">/admin/includes/configure.php</span> file as well:<br>
+  EDIT your "<span class="filename">/zen_new/includes/configure.php</span>" file and ensure that your DATABASE_NAME matches your NEW database. Also verify database username and password in case that information has changed.  Save this file, and be sure to upload it as part of the next step.<br>
   <br>
   Upload the files from your modified "new version" (created in step 2) to your server, into an alternate folder, perhaps called "<span class="filename">/store_new</span>".<br>
   <br>
@@ -190,6 +188,6 @@ For additional help and support issues, check out our <strong><a href="http://ww
 </div>
 </fieldset>
 <br><br>
-<p class="center"><em>Copyright 2003 - 2013 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<p class="center"><em>Copyright 2003 - 2016 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
 </body>
 </html>

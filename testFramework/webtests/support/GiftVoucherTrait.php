@@ -22,7 +22,7 @@ trait GiftVoucherTrait
         $this->url('http://' . BASE_URL . 'index.php?main_page=document_product_info&cPath=21&products_id=32');
         $this->byCss('input[name=cart_quantity]')->clear();
         $this->byCss('input[name=cart_quantity]')->value($gvPurchase);
-        $this->byCss('input[type=image]')->click();
+        $this->byCss('#cartAdd > input[type=submit]')->click();
         $this->url('http://' . BASE_URL . 'index.php?main_page=shopping_cart');
         $this->assertTextPresent('Gift Certificate');
         $amount = number_format(100 * $gvPurchase, 2);
@@ -32,7 +32,7 @@ trait GiftVoucherTrait
         $this->assertTextPresent($amount);
         $this->assertTextPresent('Free Shipping');
         $this->assertTextPresent('Payment Information');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent($amount);
         $this->assertTextPresent('Free Shipping');
         $this->byId('btn_submit')->click();

@@ -38,6 +38,11 @@ class Paginator extends \base
     protected $request;
 
     /**
+     * @var integer
+     */
+    protected $currentPage;
+
+    /**
      * @param \ZenCart\Request\Request $request
      */
     public function __construct(\ZenCart\Request\Request $request)
@@ -55,12 +60,26 @@ class Paginator extends \base
         $mvcCmdName = issetorArray($this->scrollerParams, 'mvcCmdName', 'main_page');
         $this->scrollerParams['cmd'] = $this->request->readGet($mvcCmdName);
         $pagingVarName = issetorArray($this->scrollerParams, 'pagingVarName', 'page');
-        $pagingVarSrc = issetorArray($this->scrollerParams, 'pagingVarSrc', 'get');
-        $currentPage = $this->request->get($pagingVarName, 1, $pagingVarSrc);
-        $this->adapterParams['currentPage'] = $currentPage;
-        $this->scrollerParams['currentPage'] = $currentPage;
+        $this->currentPage = $this->getCurrentPageFromRequest($pagingVarName);
+        $this->adapterParams['currentPage'] = $this->currentPage;
+        $this->scrollerParams['currentPage'] = $this->currentPage;
         $this->adapter = $this->buildAdapter($adapterType, $adapterData, $this->adapterParams);
         $this->scroller = $this->buildScroller($scrollerType, $this->adapter, $this->scrollerParams);
+    }
+
+    /**
+     * @param $pagingVarName
+     * @return int|mixed
+     */
+    protected function getCurrentPageFromRequest($pagingVarName)
+    {
+        if ($this->request->readGet($pagingVarName, null) !== null) {
+            return $this->request->readGet($pagingVarName);
+        }
+        if ($this->request->readPost($pagingVarName, null) !== null) {
+            return $this->request->readPost($pagingVarName);
+        }
+        return 1;
     }
 
     /**
@@ -87,6 +106,14 @@ class Paginator extends \base
         $className = __NAMESPACE__ . '\\scrollers\\' . ucfirst($scrollerType);
         $obj = new $className($adapter, $scrollerParams);
         return $obj;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentPage()
+    {
+        return $this->currentPage;
     }
 
     /**

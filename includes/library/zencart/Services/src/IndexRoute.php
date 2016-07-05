@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:$
  */
 namespace ZenCart\Services;
 use ZenCart\DashboardWidget\WidgetManager;
 use ZenCart\Request\Request as Request;
-use Zencart\Controllers\AbstractController as Controller;
+use Zencart\Controllers\AbstractAdminController as Controller;
 
 /**
  * Class IndexRoute
@@ -39,6 +39,17 @@ class IndexRoute extends AbstractService
         $this->listener->setTplVar('widgetList', $widgetList);
         $this->listener->setTplVar('widgets', WidgetManager::prepareTemplateVariables($widgetList));
         $this->listener->setTplVar('widgetInfoList', $widgetInfoList);
+
+        // Update $widgetInfoList with $widgetList changes
+        foreach ($widgetInfoList as &$widgets) {
+          foreach ($widgets as &$widget) {
+             if ($widgetList[$widget['widget_key']]->widgetInfoChanged) {
+               $widget = $widgetList[$widget['widget_key']]->widgetInfo; 
+             }
+          }
+        }
+
+        $this->listener->setTplVar('widgetInfoList', $widgetInfoList);
     }
 
     /**
@@ -47,18 +58,14 @@ class IndexRoute extends AbstractService
     public function doStartWizardDisplay()
     {
         $this->listener->setMainTemplate('tplIndexStartWizard.php');
-        $storeAddress = $this->request->readPost('store_address',
-            ((STORE_NAME_ADDRESS != '') ? STORE_NAME_ADDRESS : ''));
+        $storeAddress = $this->request->readPost('store_address', ((STORE_NAME_ADDRESS != '') ? STORE_NAME_ADDRESS : ''));
         $storeName = $this->request->readPost('store_name', ((STORE_NAME != '') ? STORE_NAME : ''));
         $storeOwner = $this->request->readPost('store_owner', ((STORE_OWNER != '') ? STORE_OWNER : ''));
-        $storeOwnerEmail = $this->request->readPost('store_owner_email',
-            ((STORE_OWNER_EMAIL_ADDRESS != '') ? STORE_OWNER_EMAIL_ADDRESS : ''));
+        $storeOwnerEmail = $this->request->readPost('store_owner_email', ((STORE_OWNER_EMAIL_ADDRESS != '') ? STORE_OWNER_EMAIL_ADDRESS : ''));
         $storeCountry = $this->request->readPost('store_country', ((STORE_COUNTRY != '') ? STORE_COUNTRY : ''));
         $storeZone = $this->request->readPost('store_zone', ((STORE_ZONE != '') ? STORE_ZONE : ''));
-        $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries(), $storeCountry,
-            'id="store_country" tabindex="4"');
-        $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone,
-            'id="store_zone" tabindex="5"');
+        $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries_for_pulldown(), $storeCountry, 'id="store_country" tabindex="4"');
+        $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone" tabindex="5"');
         $this->listener->setTplVar('storeName', $storeName);
         $this->listener->setTplVar('storeAddress', $storeAddress);
         $this->listener->setTplVar('storeOwner', $storeOwner);
@@ -92,8 +99,7 @@ class IndexRoute extends AbstractService
                                                 'SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO',
                                                 'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO',
                                                 'SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', 'MODULE_PAYMENT_CC_EMAIL')";
-            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_owner_email'),
-                'string');
+            $sql = $this->dbConn->bindVars($sql, ':configValue:', $this->request->readPost('store_owner_email'), 'string');
             $this->dbConn->execute($sql);
         }
         if ($this->request->readPost('store_country', '') != '') {

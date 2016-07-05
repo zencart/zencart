@@ -9,7 +9,7 @@
  */
 ?>
 <input id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-       class="<?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput <?php if ($tplVars['leadDefinition']['fields'][$field]['autocomplete']) echo 'autocomplete'; ?>"
+       class="<?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput"
        style="width:auto"
        type="hidden"
        name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"

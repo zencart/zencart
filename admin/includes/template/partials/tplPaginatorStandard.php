@@ -53,7 +53,7 @@ $(".paginatorItemLink").on('click', function() {
     var pv = $(this).data('value');
     str.push ({name: pn, value: pv});
   zcJS.ajax({
-      url: '<?php echo zen_href_link($_GET['cmd'], 'action=paginator'); ?>',
+      url: "<?php echo zen_admin_href_link($_GET['cmd'], 'action=paginator'); ?>",
       data: str
     }).done(function( response ) {
       if (response.html)

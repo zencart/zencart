@@ -3,18 +3,52 @@
  * File contains common unit/web test resources
  *
  * @package tests
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: zcCommonTestResources.php 19138 2011-07-18 17:37:21Z wilt $
  */
 require_once 'vendor/autoload.php';
 
+
+define('CWD', getcwd());
+echo "\n\nCWD: " . CWD;
+$commandLineConfig = false;
+if (isset($argc) && count($argc) > 0) {
+    $configFile = $argv[0];
+    if (file_exists($configFile)) {
+        require_once($configFile);
+        $commandLineConfig = true;
+    }
+}
+if (!$commandLineConfig) {
+    echo "\nSeeking config file: " . 'testFramework/config/localconfig_' . $_SERVER['USER'] . '.php' . "\n\n";
+    if (isset($_SERVER['TRAVIS']) && $_SERVER['TRAVIS'] == 'true' && file_exists('testFramework/config/localconfig_travis.php')) {
+        require_once('testFramework/config/localconfig_travis.php');
+    } elseif (isset($_SERVER['USER']) && $_SERVER['USER'] != '' && file_exists('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php')) {
+        require_once('testFramework/config/localconfig_' . $_SERVER['USER'] . '.php');
+    } elseif (file_exists('testFramework/config/localconfig_main.php')) {
+        require_once('testFramework/config/localconfig_main.php');
+    } else {
+        die('COULD NOT FIND CONFIG FILE');
+    }
+}
+
+$file_contents = file_get_contents(CWD . '/includes/dist-configure.php');
+chmod(CWD . '/includes/configure.php', 0777);
+$fp = fopen(CWD . '/includes/configure.php', 'w');
+if ($fp) {
+    fputs($fp, $file_contents);
+    fclose($fp);
+}
+
+
 /**
  * Class CommonTestResources
  */
-class CommonTestResources extends baseSeleniumTestClass
+class CommonTestResources extends PHPUnit_Extensions_Selenium2TestCase
 {
 
+    use CompatibilityTestCase;
     use GiftVoucherTrait;
     use GroupDiscountTrait;
     use DiscountVouchersTrait;
@@ -27,6 +61,18 @@ class CommonTestResources extends baseSeleniumTestClass
 
 //    private $VATcreated = false;
 
+
+    protected function setup()
+    {
+        $this->setBrowser('firefox');
+        $this->setBrowserUrl('/');
+
+    }
+
+    public function setUpPage()
+    {
+        $this->timeouts()->implicitWait(15000);
+    }
 
     public function doDbQuery($sql = '')
     {
@@ -67,7 +113,7 @@ class CommonTestResources extends baseSeleniumTestClass
         $this->url('https://' . BASE_URL . 'index.php?main_page=login');
         $this->byId('login-email-address')->value($email);
         $this->byId('login-password')->value($password);
-        $this->byCss('input[type="image"]')->click();
+        $this->byName('login')->submit();
     }
 
     public function loginStandardAdmin($adminName, $adminPass)
@@ -75,11 +121,10 @@ class CommonTestResources extends baseSeleniumTestClass
         $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=logoff');
         $this->url('https://' . DIR_WS_ADMIN);
         $this->assertTextPresent('Admin Login');
-        $this->byId('admin_name')->value($adminName);
-        $this->byId('admin_pass')->value($adminPass);
+        $this->byName('admin_name')->value($adminName);
+        $this->byName('admin_pass')->value($adminPass);
         $continue = $this->byId('btn_submit');
         $continue->click();
-        $this->assertTextPresent('Add Widget');
     }
 
     public function switchToTaxInclusive()

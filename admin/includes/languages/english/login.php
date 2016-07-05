@@ -1,20 +1,22 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Jul 16 14:10:24 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Author: bislewl  Tue Feb 16 23:14:29 2016 -0600 Modified in v1.5.5 $
  */
 
 define('HEADING_TITLE', 'Admin Login');
 define('HEADING_TITLE_EXPIRED', 'Admin Login - Password Expired');
 
-define('TEXT_ADMIN_NAME', 'Admin Username:');
-define('TEXT_ADMIN_PASS', 'Admin Password:');
-define('TEXT_ADMIN_OLD_PASSWORD', 'Old Password:');
-define('TEXT_ADMIN_NEW_PASSWORD', 'New Password:');
-define('TEXT_ADMIN_CONFIRM_PASSWORD', 'Confirm Password:');
+define('TEXT_LOGIN','Login');
+define('TEXT_SUBMIT','Submit');
+define('TEXT_ADMIN_NAME', 'Admin Username');
+define('TEXT_ADMIN_PASS', 'Admin Password');
+define('TEXT_ADMIN_OLD_PASSWORD', 'Old Password');
+define('TEXT_ADMIN_NEW_PASSWORD', 'New Password');
+define('TEXT_ADMIN_CONFIRM_PASSWORD', 'Confirm Password');
 
 define('ERROR_WRONG_LOGIN', 'You entered the wrong username or password.');
 define('ERROR_SECURITY_ERROR', 'There was a security error when trying to login.');

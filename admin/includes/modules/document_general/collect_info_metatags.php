@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: collect_info_metatags.php 19330 2011-08-07 06:32:56Z drbyte $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:53:59 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -182,6 +182,6 @@ echo zen_draw_form('new_product_meta_tags', $type_admin_handler , 'cPath=' . $cP
         <td class="main" align="left"><?php echo TEXT_INFO_META_TAGS_USAGE; ?></td>
       </tr>
       <tr>
-        <td class="main" align="right"><?php echo zen_draw_hidden_field('products_model', $pInfo->products_model) . zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter) . zen_image_submit('button_preview.gif', IMAGE_PREVIEW) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+        <td class="main" align="right"><?php echo zen_draw_hidden_field('products_model', $pInfo->products_model) . zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter) . zen_image_submit('button_preview.gif', IMAGE_PREVIEW) . '&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
       </tr>
     </table></form>

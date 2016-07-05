@@ -2,16 +2,16 @@
 /**
  * Main English language file for installer
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: $
+ * @version $Id: Author: DrByte  Tue Feb 16 15:03:47 2016 -0500 New in v1.5.5 $
  */
 /**
  * defining language components for the page
  */
 define('META_TAG_TITLE', 'Zen Cart&reg; Installer');
 define('HTML_PARAMS','dir="ltr" lang="en"');
-
+define('ZC_VERSION_STRING', '%s v%s');
 define('TEXT_PAGE_HEADING_INDEX', 'System Inspection');
 define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we continue');
 define('TEXT_INDEX_WARN_ERRORS', 'Some other problems');
@@ -32,14 +32,15 @@ define('TEXT_SYSTEM_SETUP_CATALOG_HTTP_URL', 'Storefront HTTP URL');
 define('TEXT_SYSTEM_SETUP_CATALOG_HTTPS_SERVER_DOMAIN', 'Storefront HTTPS Domain');
 define('TEXT_SYSTEM_SETUP_CATALOG_HTTPS_URL', 'Storefront HTTPS URL');
 define('TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH', 'Storefront Physical Path');
-define('TEXT_SYSTEM_SETUP_AGREE_LICENSE', 'Agree to licence terms: ');
-define('TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE', '(Check the box to agree to GPL 2 licence terms. Click the title in the left column to view the license.)');
+define('TEXT_SYSTEM_SETUP_AGREE_LICENSE', 'Agree to license terms: ');
+define('TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE', '(Check the box to agree to GPL 2 license terms. Click the title in the left column to view the license.)');
 define('TEXT_SYSTEM_SETUP_ERROR_DIALOG_TITLE', 'There are some problems');
 define('TEXT_SYSTEM_SETUP_ERROR_DIALOG_CONTINUE', 'Continue anyway');
 define('TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH', 'There appears to be a problem with the ' . TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH);
 
-
 define('TEXT_PAGE_HEADING_DATABASE', 'Database Setup');
+define('TEXT_DATABASE_HEADER_MAIN', 'NOTE: You must create your MySQL database and corresponding Database user, and grant permissions to that user, before proceeding on this page. Click the left-column titles below for help with understanding each component.');
+define('TEXT_DATABASE_ADVANCED_TIPS', 'ADVANCED TIP: If you have custom .sql scripts to run as part of this install, upload them to the zc_install/sql/plugins folder before proceeding. (They need to be named like "mysql_xxxxx.sql" to be recognized and run.)');
 define('TEXT_DATABASE_SETUP_SETTINGS', 'Basic Settings');
 define('TEXT_DATABASE_SETUP_DB_HOST', 'Database Host: ');
 define('TEXT_DATABASE_SETUP_DB_USER', 'Database User: ');
@@ -54,7 +55,7 @@ define('TEXT_DATABASE_SETUP_DB_PREFIX', 'Store Prefix: ');
 define('TEXT_DATABASE_SETUP_SQL_CACHE_METHOD', 'SQL Cache Method: ');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occurred when running the SQL install file');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details<p>');
-define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'UTF-8 (default setting)');
+define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'UTF8 (default setting)');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'Latin1');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_NONE', 'No SQL Caching');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE', 'Database');
@@ -62,7 +63,7 @@ define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE', 'File');
 define('TEXT_EXAMPLE_DB_HOST', "usually 'localhost'");
 define('TEXT_EXAMPLE_DB_USER', 'enter your MySQL username');
 define('TEXT_EXAMPLE_DB_PWD', 'enter the password for your MySQL user');
-define('TEXT_EXAMPLE_DB_PREFIX', "usually best left blank, or use 'zen_'");
+define('TEXT_EXAMPLE_DB_PREFIX', "usually best left blank, or use zen_");
 define('TEXT_EXAMPLE_DB_NAME', 'enter your MySQL database name');
 define('TEXT_EXAMPLE_CACHEDIR', 'usually points to the equivalent of /your/user/home/public_html/zencart/cache folder');
 
@@ -86,22 +87,23 @@ define('TEXT_ADMIN_SETUP_USER_PASSWORD_HELP', '<strong>REMEMBER THIS!!</strong>:
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY', 'Admin Directory: ');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT', 'We were not able to change your admin directory automatically. You will need to change it yourself before you can access your Store Admin.');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED', 'We did not change your admin directory automatically as it already seems to have been changed from the default.');
-define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED', 'Your store Admin directory has been automatically renamed. Please ensure you make a note of the directory below.');
+define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED', 'Your store Admin directory may have been automatically renamed. Please ensure you make a note of the directory below.');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_SETTINGS', 'Newsletter');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_EMAIL', 'Newsletter Email: ');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_OPTIN', 'Opt In: ');
 //define('TEXT_MAIN_ADMIN_SETUP', '');
 
 
-define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finshed');
+define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finished');
 define('TEXT_COMPLETION_HEADER_MAIN', '');
-define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete.');
-define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can access your storefront and your Administration area using the links below.');
+define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation completed.');
+define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can now access your store front and admin backend using the links below.');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "You need to remove the /zc_install/ folder so that someone can't re-install your shop again and wipe out your database! A message will appear and you will not be able to log into your admin until the folder has been removed.");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "Please delete the 'zc_install' folder now");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', "To prevent unauthorized persons from overwriting your installation, administering your installation will be disabled until the folder has been deleted.");
 
-define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
+define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Store Front');
 define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
@@ -128,6 +130,7 @@ define ('TEXT_CONTINUE_FIX', 'Return and Fix');
 define ('TEXT_REFRESH', 'Refresh');
 define ('TEXT_UPGRADE', 'Upgrade ...');
 define ('TEXT_CLEAN_INSTALL', 'Clean Install');
+define ('TEXT_UPDATE_CONFIGURE', 'Update Configure File');
 
 define('TEXT_NAVBAR_SYSTEM_INSPECTION', 'System Inspection');
 define('TEXT_NAVBAR_SYSTEM_SETUP', 'System Setup');
@@ -137,17 +140,20 @@ define('TEXT_NAVBAR_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_NAVBAR_COMPLETION', 'Finished');
 define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
 
+define('TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES', 'There were problems preparing and storing the configure.php file. YOUR INSTALL DID NOT COMPLETE PROPERLY.<br>Additional technical details may be found in your /logs/ folder.');
+define('TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE', 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.');
+define('TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE', 'Could not write the generated config file: %s. Please ensure the file exists and is writable.');
+
 define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not exist (isn't readable) or is not writeable");
-define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is too old, and this version of Zen Cart&reg; cannot be used on this server in its present configuration.</p>
-<p>This version of Zen Cart&reg; is compatible with PHP versions 5.4.2+, 5.5.x, 5.6.x, and 7.0.<br>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.2.9 to 7.0.<br>
 Check the <a href="www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
 define('TEXT_ERROR_PHP_VERSION_RECOMMENDED', 'For maximum security and compatibility you should be using PHP %s or newer. This installer can proceed, but this is just letting you know that your site will not be PCI Compliant when running out-of-date software.');
 define('TEXT_ERROR_PHP_VERSION_MIN', 'PHP Version should be greater than %s');
 define('TEXT_ERROR_PHP_VERSION_MAX', 'PHP Version should be less than %s');
-define('TEXT_ERROR_MYSQL_SUPPORT', 'Problems with your MySQL (mysqli) support');
+define('TEXT_ERROR_MYSQL_SUPPORT', 'Problems with your MySQL (mysqli) support. Your server appears to be missing the mysqli extension for PHP, and without it we cannot connect to your database. Prior to PHP 5.5 it sometimes had to be "added manually" by the server administrator. Talk to your hosting company for assistance.');
 define('TEXT_ERROR_LOG_FOLDER', DIR_FS_LOGS . ' folder is not writeable');
 define('TEXT_ERROR_CACHE_FOLDER', DIR_FS_SQL_CACHE . ' folder is not writeable');
 define('TEXT_ERROR_IMAGES_FOLDER', '/images/ folder is not writeable');
@@ -155,7 +161,9 @@ define('TEXT_ERROR_DEFINEPAGES_FOLDER', '/includes/languages/english/html_includ
 define('TEXT_ERROR_MEDIA_FOLDER', '/media/ folder is not writeable');
 define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable');
 
-define('TEXT_ERROR_HTACCESS_SUPPORT', 'Problems with .htaccess support');
+define('TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE', 'Your configure.php file is an old version and requires updating before we can continue.');
+
+define('TEXT_ERROR_HTACCESS_SUPPORT', 'Problems with .htaccess support (it is not properly denying access to files that ought to be restricted).');
 define('TEXT_ERROR_SESSION_SUPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
 define('TEXT_ERROR_SESSION_SUPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
@@ -166,14 +174,15 @@ define('TEXT_ERROR_SET_TIME_LIMIT', 'max_execution_time setting disabled ');
 define('TEXT_ERROR_GD', 'GD Extension not enabled');
 define('TEXT_ERROR_ZLIB', 'Zlib Extension not enabled');
 define('TEXT_ERROR_OPENSSL', 'Openssl Extension not enabled');
-define('TEXT_ERROR_CURL', 'Problems with the CURL extension');
-define('TEXT_ERROR_UPLOADS', 'Upload Extension not enabled');
-define('TEXT_ERROR_XML', 'XML Extension not enabled');
-define('TEXT_ERROR_GZIP', 'Gzip Extension not enabled');
+define('TEXT_ERROR_CURL', 'Problems with the CURL extension - PHP is reporting that CURL is not present.');
+define('TEXT_ERROR_UPLOADS', 'Upload Extension for PHP is not enabled');
+define('TEXT_ERROR_XML', 'XML Extension in PHP is not enabled');
+define('TEXT_ERROR_GZIP', 'Gzip Extension in PHP is not enabled');
 define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be loaded');
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
 define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use CURL to contact a live server');
 define('TEXT_ERROR_HTTPS', 'PRO TIP: If possible you should already have installed an SSL certificate, and run the installer using https://');
+define('TEXT_ERROR_HTTPS_CONFIGURE', 'As soon as possible, you should install an SSL certificate, and set the URL and ENABLE_SSL settings in your configure.php file.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your database structure if you choose "Upgrade..." below.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your database seems to be current. This suggests you are on a live site. Proceeding with Install will wipe out the current database contents! Are you sure you want to install?');
 define('TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED', 'Multiple Admin directories seem to exist. Either remove old admin directories and click Refresh or select the correct admin directory below and click Refresh.');
@@ -188,8 +197,8 @@ define('TEXT_NAVBAR_INSTALLATION_INSTRUCTIONS', 'Installation Instructions');
 define('TEXT_NAVBAR_FORUM_LINK', 'Forum');
 define('TEXT_NAVBAR_WIKI_LINK', 'Wiki');
 
-define('TEXT_HELP_TITLE_HTACCESSSUPPORT', 'htaccess support');
-define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with the htaccess support on your server. This may be because you are not using Apache as your Web Server or .htaccess support is disabled or not configured correctly.<br><br>htaccess support is used to provide security for certain files/folders on your server.');
+define('TEXT_HELP_TITLE_HTACCESSSUPPORT', '.htaccess support');
+define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with the htaccess support on your server.<br><br>.htaccess support is used to provide security for preventing access to certain files/folders.<br><br>Possible causes of this problem include: maybe you are not using Apache as your Web Server or .htaccess support is disabled or not configured correctly, OR MORE LIKELY: the .htaccess files that come with Zen Cart (in its various subdirectories) have not been uploaded to your server.<br><br><strong>(Note that any file starting with a "." is usually treated as a "hidden" file, so it could be that your FTP program failed to upload these because you have the display/transfer of hidden files turned off in its settings.)</strong><br><br>This message is shown after zc_install attempted to access files on your server that should normally be blocked by the security rules in the built-in .htaccess files.<br><br>You may proceed with installing despite this situation, but be advised that your site is less secure than it ought to be. Your hosting company should be able to assist you with ensuring .htaccess support is enabled in your site.');
 define('TEXT_HELP_TITLE_FOLDERPERMS', 'Folder Permissions');
 define('TEXT_HELP_CONTENT_FOLDERPERMS', 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders" target="_blank">http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders</a>');
 define('TEXT_HELP_TITLE_CONNECTIONDATABASECHECK', 'Initial Database Connection');
@@ -209,24 +218,24 @@ define('TEXT_HELP_CONTENT_HTTPSSERVERCATALOG', "If you have checked the box abov
 define('TEXT_HELP_TITLE_HTTPSURLCATALOG', 'Storefront HTTPS URL');
 define('TEXT_HELP_CONTENT_HTTPSURLCATALOG', "Enter the https URL to your store. This is typically the same as the HTTPS Domain, followed by the foldername in which your store's files are kept. eg: https://www.example.com/zencart");
 define('TEXT_HELP_TITLE_PHYSICALPATH', 'Storefront Physical Path');
-define('TEXT_HELP_CONTENT_PHYSICALPATH', "This is the actual path (according to your server's filesystem) where your Zen Cart&reg; files are located. Common examples look like '/users/home/public_html/zencart'.");
+define('TEXT_HELP_CONTENT_PHYSICALPATH', "This is the actual path (according to your server's filesystem) where your Zen Cart&reg; files are located. Common examples look like '/users/home/public_html/zencart'. <br>It is important to provide the correct complete path, else Zen Cart&reg; will not be able to find its files in order to run.");
 
 
 
 define('TEXT_HELP_TITLE_DBHOST', 'Database Host');
-define('TEXT_HELP_CONTENT_DBHOST', "What is the database host?  The database host can be in the form of a host name, such as 'localhost' or 'db1.myserver.com', or as an IP-address, such as '192.168.0.1'.");
+define('TEXT_HELP_CONTENT_DBHOST', "What is the database host?  The database host can be in the form of a host name, such as 'localhost' or 'db1.myserver.com', or as an IP Address, such as '192.168.0.1'. Most hosting companies use 'localhost' here. <br>Your hosting company can tell you what to use, and this information is usually shown on the screen in their control panel where you create the database and assign user permissions to the database.<br>If you need assistance finding this information, consult your hosting company online FAQ documentation.");
 define('TEXT_HELP_TITLE_DBUSER', 'Database User');
-define('TEXT_HELP_CONTENT_DBUSER', "What is the username used to connect to the database? An example username is 'myusername_store'.<br>For PCI reasons you should NEVER user 'root' here.");
+define('TEXT_HELP_CONTENT_DBUSER', "What is the MySQL username used to connect to the database? An example username is 'myusername_store'.<br>For PCI reasons you should NEVER use 'root' here when running on a server connected to the internet.<br><br>This MySQL user needs the following permissions granted to it: ALTER, CREATE, DELETE, DROP, INDEX, INSERT, LOCK TABLES, SELECT, UPDATE (or just 'Grant All').");
 define('TEXT_HELP_TITLE_DBPASSWORD', 'Database Password');
-define('TEXT_HELP_CONTENT_DBPASSWORD', "What is the password used for your database username account? It was created when the database-username was created.");
+define('TEXT_HELP_CONTENT_DBPASSWORD', "What is the password assigned to the MySQL username you created for this database.");
 define('TEXT_HELP_TITLE_DBNAME', 'Database Name');
-define('TEXT_HELP_CONTENT_DBNAME', "What is the name of the database used to hold the data? An example database name is 'zencart' or 'myaccount_zencart'.");
+define('TEXT_HELP_CONTENT_DBNAME', "What is the name of the database used to hold the data? An example database name is 'zencart' or 'myaccount_zencart'.<br>NOTE: You must create this database BEFORE you can proceed with Zen Cart&reg; installation here.<br>You can create your MySQL database using your hosting company's control panel.");
 define('TEXT_HELP_TITLE_DEMODATA', TEXT_DATABASE_SETUP_LOAD_DEMO);
 define('TEXT_HELP_CONTENT_DEMODATA', "If you choose to load Demo Data, we will install a base set of products and categories, with sales and specials and attributes and more. These are useful for you to play around and see how various combinations can be set up and how they can look on your storefront.<br><br>You can certainly delete the demo products (by hand) later, or once you've toyed with the samples, you can re-run this install and choose to not install the demo data, and thus have a fully clean site for setting up your own new store.");
 define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
 define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8.<br>If you don't have a reason to use something else, use UTF8.");
 define('TEXT_HELP_TITLE_DBPREFIX', 'Database Tablename Prefix');
-define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: 'zen_'  <strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
+define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: <strong>zen_</strong><br><strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
 define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');
 define('TEXT_HELP_CONTENT_SQLCACHEMETHOD', "Default setting is 'none'. Alternatives are 'database' or 'file'. If your server is really slow, use 'none'. If your site is moderately busy, use 'database'. If your site is extremely high traffic, use 'file'. ");
 define('TEXT_HELP_TITLE_SQLCACHEDIRECTORY', 'SQL Cache Directory');
@@ -252,9 +261,119 @@ define('TEXT_ERROR_NEW_VERSION_AVAILABLE', '<a href="http://www.zen-cart.com/get
 
 define('TEXT_DB_VERSION_NOT_FOUND', 'A Zen Cart database for %s was not found!');
 
+define('REASON_TABLE_ALREADY_EXISTS','Cannot create table %s because it already exists');
+define('REASON_TABLE_DOESNT_EXIST','Cannot drop table %s because it does not exist.');
+define('REASON_TABLE_NOT_FOUND','Cannot execute because table %s does not exist.');
+define('REASON_CONFIG_KEY_ALREADY_EXISTS','Cannot insert configuration_key "%s" because it already exists');
+define('REASON_COLUMN_ALREADY_EXISTS','Cannot ADD column %s because it already exists.');
+define('REASON_COLUMN_DOESNT_EXIST_TO_DROP','Cannot DROP column %s because it does not exist.');
+define('REASON_COLUMN_DOESNT_EXIST_TO_CHANGE','Cannot CHANGE column %s because it does not exist.');
+define('REASON_PRODUCT_TYPE_LAYOUT_KEY_ALREADY_EXISTS','Cannot insert prod-type-layout configuration_key "%s" because it already exists');
+define('REASON_INDEX_DOESNT_EXIST_TO_DROP','Cannot drop index %s on table %s because it does not exist.');
+define('REASON_PRIMARY_KEY_DOESNT_EXIST_TO_DROP','Cannot drop primary key on table %s because it does not exist.');
+define('REASON_INDEX_ALREADY_EXISTS','Cannot add index %s to table %s because it already exists.');
+define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
+
+
+define('TEXT_COMPLETION_NGINX_TEXT', "<u>Important security information for Nginx</u>");
+define('TEXT_HELP_TITLE_NGINXCONF', "Securing Zen Cart on Nginx Webservers");
+define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
+	<p>
+		Your Zen Cart installation comes with security measures in a format native to the Apache Webserver.
+		<br>
+		See below to implement a similar set of measures for the Nginx Webserver. 
+	</p>
+	<hr>
+	<ul style='list-style-type:square'>
+		<li>
+			Go to your <strong>'zc_install/includes/nginx_conf'</strong> folder and open the following files using a text editor such as notepad or textedit:
+			<ul style='list-style-type:circle'>
+				<li>
+					zencart_ngx_http.conf
+				</li>
+				<li>
+					zencart_ngx_server.conf
+				</li>
+			</ul>
+		</li>
+		<li>
+			Add the contents of <strong>'zencart_ngx_http.conf'</strong> under the <strong>'http'</strong> section of your Nginx configuration file.
+			<ul style='list-style-type:circle'>
+				<li>
+					Edit the caching durations in the <strong>'map'</strong> block to suit as required
+				</li>
+			</ul>
+		</li>
+		<li>
+			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for Zen Cart in your Nginx configuration file.
+			<ul style='list-style-type:circle'>
+				<li>
+					The directives may be used for SSL and/or Non SSL server blocks.
+				</li>
+				<li>
+					The directives should be placed at the beginning of the server block before any other location blocks.
+					<ul style='list-style-type:none'>
+						<li>
+							- The order in which the directives appear is important.
+						</li>
+						<li>
+							- Do not change this order without fully understanding the directives and implications.
+						</li>
+					</ul>
+			</ul>
+		</li>
+		<li>
+			It is especially critical that these directives appear before any generic php handling location blocks such as ...
+			<br>
+<pre>
+	<code>location ~ \.php { <strong>Nginx PHP Handling Directives;</strong> }</code>
+</pre>
+			... or any other location blocks that might be processed before these are.
+		</li>
+		<li>
+			Instead, edit the <strong>'zencart_php_handler'</strong> location block to match your Nginx PHP Handling Directives.
+			<ul style='list-style-type:circle'>
+				<li>
+					Simply duplicate the contents of your existing PHP handling location block.
+					<ul style='list-style-type:none'>
+						<li>
+							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
+						</li>
+						<li>
+							- If you do not have an existing PHP handling location block, please refer to available guides such as from <a href='https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/' target='_blank'><u>The Nginx Website</u></a>.  
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li>
+			If using plugins for 'Pretty URLs', insert the relevant directives into the specified block.
+		</li>
+		<li>
+			Reload Nginx.
+			<ul style='list-style-type:circle'>
+				<li>
+					Do this before closing this dialog box.
+				</li>
+				<li>
+					Remember to delete the <strong>'zc_install'</strong> folder when done.
+					<ul style='list-style-type:none'>
+						<li>
+							- Including the <strong>'zc_install/includes/nginx_conf'</strong> folder and its contents.
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	<ol>
+</div>
+<div class='alert-box alert'>
+	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.
+</div>
+<hr>");
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
-define('TEXT_HELP_CONTENT_AGREETOTERMS', "<h2>The GNU General Public License (GPL)</h2>
+define('TEXT_HELP_CONTENT_AGREETOTERMS', "<a href='http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html' target='_blank'>Original GPL 2.0 text</a><h2>The GNU General Public License (GPL)</h2>
 
 <h3>Version 2, June 1991</h3>
 
@@ -540,79 +659,4 @@ YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
 PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.</p>
 
-         <p>END OF TERMS AND CONDITIONS</p>
-
-
-
-
-
-
-
-
-<!-- START OF 'HOW TO APPLY' SECTION -->
-<p>
-<strong> How to Apply These Terms to Your New Programs</strong></p>
-
-<p>  If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.</p>
-
- <p> To do so, attach the following notices to the program.  It is safest
-to attach them to the start of each source file to most effectively
-convey the exclusion of warranty; and each file should have at least
-the \"copyright\" line and a pointer to where the full notice is found.</p>
-
-
-<blockquote>
-    <p>one line to give the program's name and a brief idea of what it does.<br>
-    Copyright (C) <year>  <name of author></p>
-
-    <p>This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.</p>
-
-  <p>  This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.</p>
-
-    <p>You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA</p>
-</blockquote>
-<p>
-Also add information on how to contact you by electronic and paper mail.</p>
-
-<p>If the program is interactive, make it output a short notice like this
-when it starts in an interactive mode:</p>
-
-<blockquote>
-   <p> Gnomovision version 69, Copyright (C) year name of author
-    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions; type `show c' for details.</p>
-</blockquote>
-
-<p>The hypothetical commands `show w' and `show c' should show the appropriate
-parts of the General Public License.  Of course, the commands you use may
-be called something other than `show w' and `show c'; they could even be
-mouse-clicks or menu items--whatever suits your program.</p>
-<p>
-You should also get your employer (if you work as a programmer) or your
-school, if any, to sign a \"copyright disclaimer\" for the program, if
-necessary.  Here is a sample; alter the names:</p>
-
-<blockquote>
-  <p>Yoyodyne, Inc., hereby disclaims all copyright interest <br>in the program
-  `Gnomovision' (which makes passes at compilers)<br>written by James Hacker.</p>
-
-  <p>signature of Ty Coon, 1 April 1989<br>
-  Ty Coon, President of Vice</p>
-  </blockquote>
-
-<p>This General Public License does not permit incorporating your program into
-proprietary programs.  If your program is a subroutine library, you may
-consider it more useful to permit linking proprietary applications with the
-library.  If this is what you want to do, use the GNU Library General
-Public License instead of this License.</p>");
+         <p><strong>END OF TERMS AND CONDITIONS</strong></p>");

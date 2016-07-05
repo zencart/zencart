@@ -162,6 +162,7 @@ define('FILENAME_STATS_CUSTOMERS_REFERRALS', 'stats_customers_referrals');
 define('FILENAME_STATS_PRODUCTS_PURCHASED', 'stats_products_purchased');
 define('FILENAME_STATS_PRODUCTS_VIEWED', 'stats_products_viewed');
 define('FILENAME_STATS_PRODUCTS_LOWSTOCK', 'stats_products_lowstock');
+define('FILENAME_STATS_SALES_REPORT_GRAPHS', 'stats_sales_report_graphs');
 define('FILENAME_STORE_MANAGER', 'store_manager');
 define('FILENAME_TAX_CLASSES', 'tax_classes');
 define('FILENAME_TAX_RATES', 'tax_rates');
@@ -169,6 +170,7 @@ define('FILENAME_TEMPLATE_SELECT', 'template_select');
 define('FILENAME_TIME_OUT','time_out');
 define('FILENAME_UNSUBSCRIBE', 'unsubscribe');
 define('FILENAME_USERS', 'users');
+define('FILENAME_VIEW_LOG', 'view_log');
 define('FILENAME_ZONES', 'zones');
 define('FILENAME_WHOS_ONLINE', 'whos_online');
 

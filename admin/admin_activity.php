@@ -264,7 +264,7 @@ if ($action != '')
 <head>
 <meta charset="<?php echo CHARSET; ?>">
 <title><?php echo ADMIN_TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <?php
@@ -293,7 +293,7 @@ if ($action != '')
           unset($f);
         } // endif $save_to_file
       } //end if $records for processing not 0
-      zen_redirect(zen_href_link(FILENAME_ADMIN_ACTIVITY));
+      zen_redirect(zen_admin_href_link(FILENAME_ADMIN_ACTIVITY));
       break;
 
 // clean out the admin_activity_log
@@ -303,7 +303,7 @@ if ($action != '')
         $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_RESET');
         $messageStack->add_session(SUCCESS_CLEAN_ADMIN_ACTIVITY_LOG, 'success');
         unset($_SESSION['reset_admin_activity_log']);
-        zen_redirect(zen_href_link(FILENAME_ADMIN_ACTIVITY));
+        zen_redirect(zen_admin_href_link(FILENAME_ADMIN_ACTIVITY));
       } else {
         $confirmation_needed = TRUE;
       }
@@ -374,7 +374,7 @@ require (DIR_WS_INCLUDES . 'header.php');
               </td>
           </tr>
           <tr>
-            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_ADMIN_ACTIVITY) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
         <tr><td><div style="width:100%;max-width:800px"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></div></td></tr>
         </table>
@@ -388,7 +388,7 @@ require (DIR_WS_INCLUDES . 'header.php');
       <tr><td><h2><?php echo HEADING_SUB2; ?></h2></td></tr>
           <tr>
             <td class="<?php echo ($_SESSION['reset_admin_activity_log'] == true ? "alert" : "main"); ?>" align="left" valign="top"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>'; ?></td>
+            <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>'; ?></td>
           </tr>
         </table></td>
       </tr>

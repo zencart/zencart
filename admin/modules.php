@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  Modified in v1.6.0 $
@@ -12,7 +12,7 @@
 
   $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set'] : ''));
 
-  $is_ssl_protected = (substr(HTTP_SERVER, 0, 5) == 'https') ? TRUE : FALSE;
+  $is_ssl_protected = ($request_type == 'SSL');
   $file_extension = '.php';
 
   if (zen_not_null($set)) {
@@ -74,9 +74,10 @@
         }
         $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED, preg_replace('/[^\d\w]/', '*', $_GET['module']), $admname);
         zen_record_admin_activity($msg, 'warning');
+        $zco_notifier->notify('ADMIN_MODULE_CHANGED', $_GET['module'], $admname, $key, $value);
         $msg .= "\n\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
         zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')));
         break;
       case 'install':
         $class = basename($_POST['module']);
@@ -86,12 +87,13 @@
           $module = new $class;
           $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
           zen_record_admin_activity($msg, 'warning');
+          $zco_notifier->notify('ADMIN_MODULE_ADDED', $_POST['module'], $admname);
           $msg .= "\n\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
           zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
           $result = $module->install();
         }
         if ($result != 'failed') {
-          zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit'));
+          zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit'));
         }
        break;
       case 'removeconfirm':
@@ -101,11 +103,12 @@
           $module = new $class;
           $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
           zen_record_admin_activity($msg, 'warning');
+          $zco_notifier->notify('ADMIN_MODULE_REMOVED', $_POST['module'], $admname);
           $msg .= "\n\n" . sprintf(TEXT_EMAIL_ALERT_IP_ADDRESS, $_SERVER['REMOTE_ADDR']) . "\n";
           zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
           $result = $module->remove();
         }
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+        zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
        break;
       case 'commtest':
         $class = basename($_GET['module']);
@@ -115,12 +118,13 @@
           if (method_exists($module, 'testCommunications')) {
             $result = $module->testCommunications();
             $messageStack->add_session($result['text'], $result['type']);
+            $zco_notifier->notify('ADMIN_MODULE_COMMUNICATIONS_TEST', $_GET['module'], $result['text'], $result['type']);
           } else {
             $result = TEXT_ERROR_NO_COMMTEST_OPTION_AVAILABLE;
             $messageStack->add_session($result, 'caution');
           }
         }
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+        zen_redirect(zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
        break;
     }
   }
@@ -133,33 +137,31 @@ require('includes/admin_html_head.php');
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
+<div class="container-fluid">
 <!-- body_text //-->
-    <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+            <span class="pageHeading"><?php echo HEADING_TITLE; ?></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+            <table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                 <td class="dataTableHeadingContent">&nbsp;</td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                    <td class="dataTableHeadingContent"
+                        align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
                 <td class="dataTableHeadingContent" colspan="2"><?php echo TEXT_MODULE_STATE; ?></td>
 <?php
   if ($set == 'payment') {
 ?>
-                <td class="dataTableHeadingContent" align="center" width="100"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></td>
+                        <td class="dataTableHeadingContent" align="center"
+                            width="100"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></td>
 <?php } ?>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent"
+                        align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
   $directory_array = array();
@@ -175,7 +177,7 @@ require('includes/admin_html_head.php');
     $dir->close();
   }
 
-  $installed_modules = array();
+  $installed_modules = $temp_for_sort = array();
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
     if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
@@ -184,16 +186,12 @@ require('includes/admin_html_head.php');
       $class = substr($file, 0, strrpos($file, '.'));
       if (class_exists($class)) {
         $module = new $class;
-        $check = $module->check();
-        if ($check > 0) {
-          if ($module->sort_order > 0) {
-            if (isset($installed_modules[$module->sort_order]) && $installed_modules[$module->sort_order] != '') {
-              $zc_valid = false;
-            }
-            $installed_modules[$module->sort_order] = $file;
-          } else {
-            $installed_modules[] = $file;
-          }
+        // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
+        if ($check = $module->check()) {
+           // determine sort orders (using up to 6 digits, then filename) and add to list of installed modules
+          $temp_for_sort[$file] = str_pad((int)$module->sort_order, 6, "0", STR_PAD_LEFT) . $file;
+          asort($temp_for_sort);
+          $installed_modules = array_flip($temp_for_sort);
           if (method_exists($module, 'check_enabled_for_zone') && $module->enabled) $module->check_enabled_for_zone();
           if (method_exists($module, 'check_enabled') && $module->enabled) $module->check_enabled_for_zone();
         }
@@ -243,19 +241,19 @@ require('includes/admin_html_head.php');
 
         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
           if ($check > 0) {
-            echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') . '\'">' . "\n";
+            echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
           } else {
             echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
           }
         } else {
-          echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'">' . "\n";
+          echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '\'">' . "\n";
         }
 //print_r($module) . '<br><BR>';
 //echo (!empty($module->enabled) ? 'ENABLED' : 'NOT ENABLED') . ' vs ' . (is_numeric($module->sort_order) ? 'ON' : 'OFF') . '<BR><BR>' ;
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo (strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>
-                <td class="dataTableContent" align="center"><?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
+                            <td class="dataTableContent" align="right"><?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $moduleStatusIcon; ?></td>
                 <td class="dataTableContent"><?php echo $moduleStatusText; ?></td>
 <?php
@@ -266,8 +264,8 @@ require('includes/admin_html_head.php');
 <?php } ?>
                 <td class="dataTableContent" align="right">
 <?php
-  if (method_exists($module, 'testCommunications')) { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=commtest', 'SSL') . '" title="' . IMAGE_ICON_COMM . '"><i class="fa fa-bolt fa-fw"></i></a>'; }
-  if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo '<i class="fa fa-chevron-circle-right fa-fw"></i>'; } else { echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" title="' . IMAGE_ICON_INFO . '">' . '<i class="fa fa-exclamation-circle fa-fw"></i>' . '</a>'; }
+  if (method_exists($module, 'testCommunications')) { echo '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=commtest') . '" title="' . IMAGE_ICON_COMM . '"><i class="fa fa-bolt fa-fw"></i></a>'; }
+  if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo '<i class="fa fa-chevron-circle-right fa-fw"></i>'; } else { echo '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '" title="' . IMAGE_ICON_INFO . '">' . '<i class="fa fa-exclamation-circle fa-fw"></i>' . '</a>'; }
 ?>
                 </td>
               </tr>
@@ -295,9 +293,6 @@ require('includes/admin_html_head.php');
                  values ('Installed Modules', '" . zen_db_input($module_key) . "', '" . zen_db_input(implode(';', $installed_modules)) . "',
                          'This is automatically updated. No need to edit.', '6', '0', now())");
   }
-  if (isset($zc_valid) && $zc_valid == false) {
-    echo '<span class="alert">' . WARNING_MODULES_SORT_ORDER . '</span>';
-  }
 ?>
               <tr>
                 <td colspan="3" class="smallText"><?php echo TEXT_MODULE_DIRECTORY . ' ' . $module_directory; ?></td>
@@ -315,7 +310,7 @@ require('includes/admin_html_head.php');
       $contents[] = array('text' => '<input type="hidden" name="module" value="' . (isset($_GET['module']) ? $_GET['module'] : "") . '"/>');
       $contents[] = array('text' => TEXT_DELETE_INTRO);
 
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_remove.gif', IMAGE_DELETE, 'name="removeButton"') . ' <a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_remove.gif', IMAGE_DELETE, 'name="removeButton"') . ' <a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
       break;
     case 'edit':
       if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
@@ -337,7 +332,7 @@ require('includes/admin_html_head.php');
         $contents[] = array('text' => '<strong>Key: ' . $mInfo->code . '</strong><br />');
       }
       $contents[] = array('text' => $keys);
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE, 'name="saveButton"') . ' <a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE, 'name="saveButton"') . ' <a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL, 'name="cancelButton"') . '</a>');
       break;
     default:
       $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
@@ -351,10 +346,8 @@ require('includes/admin_html_head.php');
             $use_function = $value['use_function'];
             if (preg_match('/->/', $use_function)) {
               $class_method = explode('->', $use_function);
-              if (!class_exists($class_method[0]))
-                include_once(DIR_WS_CLASSES . $class_method[0] . '.php');
-              if (!is_object(${$class_method[0]}))
-                ${$class_method[0]} = new $class_method[0]();
+              if (!class_exists($class_method[0])) include_once(DIR_WS_CLASSES . $class_method[0] . '.php');
+              if (!is_object(${$class_method[0]})) ${$class_method[0]} = new $class_method[0]();
               $keys .= zen_call_function($class_method[1], $value['value'], ${$class_method[0]});
             } else {
               $keys .= zen_call_function($use_function, $value['value']);
@@ -370,11 +363,11 @@ require('includes/admin_html_head.php');
         }
         $keys = substr($keys, 0, strrpos($keys, '<br><br>'));
         if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck')))) {
-          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['module']) ? '&module=' . $_GET['module'] : '') . '&action=edit', 'SSL') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT, 'name="editButton"') . '</a>');
+          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['module']) ? '&module=' . $_GET['module'] : '') . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT, 'name="editButton"') . '</a>');
         } else {
           $contents[] = array('align' => 'center', 'text' => TEXT_WARNING_SSL_EDIT);
         }
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '">' . zen_image_button('button_module_remove.gif', IMAGE_MODULE_REMOVE, 'name="removeButton"') . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . zen_image_button('button_module_remove.gif', IMAGE_MODULE_REMOVE, 'name="removeButton"') . '</a>');
         $contents[] = array('text' => '<br>' . $mInfo->description);
         $contents[] = array('text' => '<br>' . $keys);
       } else {
@@ -387,20 +380,19 @@ require('includes/admin_html_head.php');
       }
       break;
   }
+            ?>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
+            <?php
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
     $box = new box;
     echo $box->infoBox($heading, $contents);
-    echo '            </td>' . "\n";
   }
 ?>
-          </tr>
-        </table></td>
-      </tr>
-    </table></td>
+        </div>
+    </div>
 <!-- body_text_eof //-->
-  </tr>
-</table>
+</div>
 <!-- body_eof //-->
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>

@@ -3,10 +3,10 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
+ * @version $Id: Author: DrByte  Fri Dec 4 16:31:15 2015 -0500 Modified in v1.5.5 $
  */
 
 // This should be first line of the script:
@@ -58,9 +58,9 @@ $flagHasCartContents = ($_SESSION['cart']->count_contents() > 0);
 $cartShowTotal = $currencies->format($_SESSION['cart']->show_total());
 
 $flagAnyOutOfStock = false;
-$flagStockCheck = '';
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+  $flagStockCheck = '';
   if (($i/2) == floor($i/2)) {
     $rowClass="rowEven";
   } else {
@@ -176,10 +176,10 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
 
 if (!$flagHasCartContents) {
-    $listingBoxManager = new ZenCart\ListingBox\Manager('EMPTY_CART', $db, $zcRequest);
+    $listingBoxManager = new ZenCart\QueryBuilderDefinitions\Manager('EMPTY_CART', $db, $zcRequest);
     $listingBoxes = $listingBoxManager->getListingBoxes ();
     $tplVars['listingBoxes'] = $listingBoxes;
 }
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');
-?>
+

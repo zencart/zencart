@@ -1,23 +1,20 @@
 <?php
 /**
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
 namespace ZenCart\Controllers;
 use ZenCart\Services\IndexRoute;
+use ZenCart\Request\Request as Request;
+use ZenCart\AdminUser\AdminUser as User;
 
 /**
  * Class Index
  * @package ZenCart\Controllers
  */
-class Index extends AbstractController
+class Index extends AbstractAdminController
 {
-    /**
-     * @var bool
-     */
-    public $useFoundation = true;
-
     /**
      * @var
      */
@@ -28,9 +25,9 @@ class Index extends AbstractController
      * @param $request
      * @param $db
      */
-    public function __construct($controllerCommand, $request, $db)
+    public function __construct(Request $request, $db, User $user)
     {
-        parent::__construct($controllerCommand, $request, $db);
+        parent::__construct($request, $db, $user);
         $this->service = new IndexRoute($this, $request, $db);
     }
 
@@ -76,7 +73,7 @@ class Index extends AbstractController
             if (count($options) == 0) {
                 array_unshift($options, array('id' => 0, 'text' => TEXT_NONE));
             }
-            $html = zen_draw_pull_down_menu('store_zone', $options, -1, 'id="store_zone"');
+            $html = zen_draw_pull_down_menu('store_zone', $options, -1, 'id="store_zone" tabindex="5"'); // tabindex is here so it gets reinserted when ajax redraws this input field
             $this->response = array('html'=>$html);
         }
     }}

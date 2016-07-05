@@ -20,7 +20,7 @@
   if ($action == 'set_editor') {
     // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
     $action='';
-    zen_redirect(zen_href_link(FILENAME_MAIL));
+    zen_redirect(zen_admin_href_link(FILENAME_MAIL));
   }
 
   if ( ($action == 'send_email_to_user') && isset($_POST['customers_email_address']) && !isset($_POST['back_x']) ) {
@@ -35,7 +35,7 @@
     if (empty($mail_sent_to)) {
       $messageStack->add_session(ERROR_NO_CUSTOMER_SELECTED, 'error');
       $_GET['action']='';
-      zen_redirect(zen_href_link(FILENAME_MAIL));
+      zen_redirect(zen_admin_href_link(FILENAME_MAIL));
     }
 
     $from = zen_db_prepare_input($_POST['from']);
@@ -50,7 +50,7 @@
     if (zen_admin_demo()) {
       $_GET['action']= '';
       $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-      zen_redirect(zen_href_link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
+      zen_redirect(zen_admin_href_link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
     }
 
     //send message using the zen email function
@@ -68,7 +68,7 @@
     } else {
       $messageStack->add_session(sprintf(NOTICE_EMAIL_FAILED_SEND, $mail_sent_to .  ' (' . $recip_count . ')'), 'error');
     }
-    zen_redirect(zen_href_link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count  . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): '') . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer='.zen_output_string_protected($_GET['customer']): '')));
+    zen_redirect(zen_admin_href_link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count  . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): '') . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer='.zen_output_string_protected($_GET['customer']): '')));
   }
 
   if ( EMAIL_ATTACHMENTS_ENABLED && $action == 'preview') {
@@ -272,7 +272,7 @@ function check_form(form_name) {
                 <table border="0" width="100%" cellpadding="0" cellspacing="2">
                   <tr>
                     <td><?php echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="back"'); ?></td>
-                    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_MAIL, 'cID=' . zen_db_prepare_input($_GET['cID']) . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL); ?></td>
+                    <td align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_MAIL, 'cID=' . zen_db_prepare_input($_GET['cID']) . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin='.zen_output_string_protected($_GET['origin']): '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL); ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -361,15 +361,11 @@ function check_form(form_name) {
   } else {
     $origin = FILENAME_DEFAULT;
   }
-  if (isset($_GET['mode']) && $_GET['mode'] == 'SSL') {
-    $mode = 'SSL';
-  } else {
-    $mode = 'NONSSL';
-  }
+  // TODO: Remove "mode" param from calling url
 ?>
             <tr>
               <td colspan="2" align="right"><?php echo zen_image_submit('button_preview.gif', IMAGE_PREVIEW) . '&nbsp;' .
-              '<a href="' . zen_href_link($origin, 'cID=' . zen_db_prepare_input($_GET['cID']), $mode) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+              '<a href="' . zen_admin_href_link($origin, 'cID=' . zen_db_prepare_input($_GET['cID'])) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
             </tr>
           </table></td>
         </form></tr>

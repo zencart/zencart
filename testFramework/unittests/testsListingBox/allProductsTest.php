@@ -16,7 +16,7 @@ class testAllDefaultCase extends zcTestCase
     public function setup()
     {
         parent::setup();
-        require DIR_FS_CATALOG . 'includes/functions/functions_general.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_general.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
         if (!defined('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART')) {
             define('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART', 0);
@@ -40,9 +40,14 @@ class testAllDefaultCase extends zcTestCase
         $_SESSION['customers_authorization'] = 1;
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\ListingBox', DIR_CATALOG_LIBRARY . 'zencart/listingBox/src');
+        $loader->addPrefix('\ZenCart\QueryBuilderDefinitions', DIR_CATALOG_LIBRARY . 'zencart/QueryBuilderDefinitions/src');
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/AuraDi/src');
         $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
+//        require_once DIR_FS_CATALOG . 'includes/diConfigs/AuraWeb.php';
+//        $config = new AuraWeb();
+//        $builder = new \Aura\Di\ContainerBuilder();
+//        $di = $builder->newConfiguredInstance(array($config));
     }
 
     public function testInstantiate()
@@ -51,7 +56,9 @@ class testAllDefaultCase extends zcTestCase
         $scroller->method('getResults')->willReturn(array('resultList' => array()));
         $paginator = $this->getMock('paginator', array('doPagination', 'getScroller'));
         $paginator->method('getScroller')->willReturn($scroller);
-        $r = $this->getMock('\\ZenCart\\Request\\Request');
+        $r = $this->getMockBuilder('\ZenCart\Request\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
             ->getMock();
@@ -64,7 +71,7 @@ class testAllDefaultCase extends zcTestCase
             ->setMethods(array('processQuery', 'getQuery'))
             ->getMock();
         $qb->method('getQuery')->willReturn(array('mainSql' => '', 'countSql' => ''));
-        $lb = new \ZenCart\ListingBox\boxes\AllProductsPage($r);
+        $lb = new \ZenCart\QueryBuilderDefinitions\definitions\AllProductsPage($r, $db);
         $lb->buildResults($qb, $db, $paginator);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: products_price_manager.php 19294 2011-07-28 18:15:46Z drbyte $
@@ -13,7 +13,7 @@
   $chk_products = $db->Execute("select * from " . TABLE_PRODUCTS . " limit 1");
   if ($chk_products->RecordCount() < 1) {
     $messageStack->add_session(ERROR_DEFINE_PRODUCTS, 'caution');
-    zen_redirect(zen_href_link(FILENAME_CATEGORIES));
+    zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES));
   }
 
   $currencies = new currencies();
@@ -40,7 +40,7 @@
             ORDER by pd.products_name";
     $new_product_query = $db->Execute($sql);
     $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
-    zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
+    zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 
 // set categories and products if not set
@@ -60,7 +60,7 @@
     $new_product_query = $db->Execute($sql);
     $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     if ($products_filter != '') {
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
     }
   } else {
     if ($products_filter == '' and $current_category_id == '') {
@@ -95,7 +95,7 @@
       // reset products_price_sorter for searches etc.
       zen_update_products_price_sorter($products_filter);
 
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
     }
   }
 
@@ -104,7 +104,7 @@
     {
       $delete_featured = $db->Execute("delete from " . TABLE_FEATURED . " where products_id='" . (int)$_POST['product_id'] . "'");
 
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
     }
   }
 
@@ -118,7 +118,7 @@
                     values ('" . ($add_id + $add_cnt) . "', '" . $products_filter . "')");
       $add_cnt++;
     }
-    zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
+    zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 
   if (zen_not_null($action)) {
@@ -236,25 +236,25 @@
         zen_update_products_price_sorter($products_filter);
         $messageStack->add_session(PRODUCT_UPDATE_SUCCESS, 'success');
 
-        zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
+        zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
         break;
       case 'set_products_filter':
         $_GET['products_filter'] = $_POST['products_filter'];
 
-        zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_POST['current_category_id']));
+        zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_POST['current_category_id']));
         break;
 
       case 'edit':
       // set edit message
       $messageStack->add_session(PRODUCT_WARNING_UPDATE, 'caution');
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit_update' . '&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit_update' . '&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id));
       break;
       case 'cancel':
       // clean up blank discount_qty
       $db->Execute("delete from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where discount_qty=0");
       // set edit message
       $messageStack->add_session(PRODUCT_WARNING_UPDATE_CANCEL, 'warning');
-      zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id));
+      zen_redirect(zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id));
       break;
     }
   }
@@ -278,7 +278,7 @@ require('includes/admin_html_head.php');
     echo zen_draw_form('search', FILENAME_CATEGORIES, '', 'get');
 // show reset search
     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-      echo '<a href="' . zen_href_link(FILENAME_CATEGORIES) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
+      echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
     }
     echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
@@ -357,18 +357,18 @@ if ($products_filter != '' && zen_get_product_is_linked($products_filter) == 'tr
                 <td class="main" align="center" valign="bottom">
 <?php
   if ($_GET['products_filter'] != '') {
-    echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_details.gif', IMAGE_DETAILS) . '<br />' . TEXT_PRODUCT_DETAILS . '</a>' . '&nbsp;&nbsp;&nbsp;';
+    echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_details.gif', IMAGE_DETAILS) . '<br />' . TEXT_PRODUCT_DETAILS . '</a>' . '&nbsp;&nbsp;&nbsp;';
     echo '</td><td class="main" align="center" valign="bottom">';
-    echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>';
+    echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '">' . zen_image_button('button_edit_product.gif', IMAGE_EDIT_PRODUCT) . '<br />' . TEXT_PRODUCT_EDIT . '</a>';
     echo '</td><td class="main" align="center" valign="bottom">';
-    echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'NONSSL') . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '<br />' . TEXT_ATTRIBUTE_EDIT . '</a>' . '&nbsp;&nbsp;&nbsp;';
+    echo '<a href="' . zen_admin_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '<br />' . TEXT_ATTRIBUTE_EDIT . '</a>' . '&nbsp;&nbsp;&nbsp;';
   }
 ?>
                 </td>
               </tr>
 <?php if ($products_filter != '') { ?>
             <tr>
-            <td class="smallText" align="center" colspan="3"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter) . '">' . IMAGE_PRODUCTS_TO_CATEGORIES . '</a>'; ?></td>
+            <td class="smallText" align="center" colspan="3"><?php echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter) . '">' . IMAGE_PRODUCTS_TO_CATEGORIES . '</a>'; ?></td>
             </tr>
 <?php } ?>
             </table>
@@ -522,6 +522,85 @@ if ($products_filter == '') {
       $tax_class->MoveNext();
     }
 ?>
+<?php if ($pInfo->products_id != '' || $sInfo->products_id !='') { ?>
+<script language="javascript"><!--
+var tax_rates = new Array();
+<?php
+    for ($i=0, $n=sizeof($tax_class_array); $i<$n; $i++) {
+      if ($tax_class_array[$i]['id'] > 0) {
+        echo 'tax_rates["' . $tax_class_array[$i]['id'] . '"] = ' . zen_get_tax_rate_value($tax_class_array[$i]['id']) . ';' . "\n";
+      }
+    }
+?>
+
+function doRound(x, places) {
+  return Math.round(x * Math.pow(10, places)) / Math.pow(10, places);
+}
+
+function getTaxRate() {
+  var selected_value = document.forms["new_prices"].products_tax_class_id.selectedIndex;
+  var parameterVal = document.forms["new_prices"].products_tax_class_id[selected_value].value;
+
+  if ( (parameterVal > 0) && (tax_rates[parameterVal] > 0) ) {
+    return tax_rates[parameterVal];
+  } else {
+    return 0;
+  }
+}
+//--></script>
+<?php } ?>
+<?php if ($pInfo->products_id != '') { ?>
+<script language="javascript"><!--
+function updateGross() {
+  var taxRate = getTaxRate();
+  var grossValue = document.forms["new_prices"].products_price.value;
+
+  if (taxRate > 0) {
+    grossValue = grossValue * ((taxRate / 100) + 1);
+  }
+
+  document.forms["new_prices"].products_price_gross.value = doRound(grossValue, 4);
+}
+
+function updateNet() {
+  var taxRate = getTaxRate();
+  var netValue = document.forms["new_prices"].products_price_gross.value;
+
+  if (taxRate > 0) {
+    netValue = netValue / ((taxRate / 100) + 1);
+  }
+
+  document.forms["new_prices"].products_price.value = doRound(netValue, 4);
+}
+//--></script>
+<?php } ?>
+
+<?php if ($sInfo->products_id != '') { ?>
+<script language="javascript"><!--
+function updateSpecialsGross() {
+  var taxRate = getTaxRate();
+  var grossSpecialsValue = document.forms["new_prices"].specials_price.value;
+
+  if (taxRate > 0) {
+    grossSpecialsValue = grossSpecialsValue * ((taxRate / 100) + 1);
+  }
+
+  document.forms["new_prices"].specials_price_gross.value = doRound(grossSpecialsValue, 4);
+}
+
+function updateSpecialsNet() {
+  var taxRate = getTaxRate();
+  var netSpecialsValue = document.forms["new_prices"].specials_price_gross.value;
+
+  if (taxRate > 0) {
+    netSpecialsValue = netSpecialsValue / ((taxRate / 100) + 1);
+  }
+
+  document.forms["new_prices"].specials_price.value = doRound(netSpecialsValue, 4);
+}
+//--></script>
+<?php } ?>
+
 <?php
 // auto fix bad or missing products master_categories_id
   if (zen_get_product_is_linked($products_filter) == 'false' and $pInfo->master_categories_id != zen_get_products_category_id($products_filter)) {
@@ -554,7 +633,7 @@ if ($products_filter == '') {
               <td class="main" align="left">
               <?php echo zen_draw_form('delete_special', FILENAME_PRODUCTS_PRICE_MANAGER, 'action=delete_special_confirm&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>
               <input type="hidden" name="product_id" value="<?php echo $_GET['products_filter']; ?>" />
-              <?php echo zen_image_submit('button_delete.gif', IMAGE_REMOVE_SPECIAL); ?>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
+              <?php echo zen_image_submit('button_delete.gif', IMAGE_REMOVE_SPECIAL); ?>&nbsp;&nbsp;<a href="<?php echo zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
               </td>
             </tr>
           </table>
@@ -572,7 +651,7 @@ if ($products_filter == '') {
               <td class="main" align="left">
               <?php echo zen_draw_form('delete_special', FILENAME_PRODUCTS_PRICE_MANAGER, 'action=delete_featured_confirm&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>
               <input type="hidden" name="product_id" value="<?php echo $_GET['products_filter']; ?>" />
-              <?php echo zen_image_submit('button_delete.gif', IMAGE_REMOVE_FEATURED); ?>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
+              <?php echo zen_image_submit('button_delete.gif', IMAGE_REMOVE_FEATURED); ?>&nbsp;&nbsp;<a href="<?php echo zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
               </td>
             </tr>
           </table>
@@ -596,9 +675,9 @@ if ($products_filter == '') {
             <td class="main" align="center" valign="middle">
             <?php
             if ($action == '' || $action == 'delete_special' || $action == 'delete_featured') {
-              echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT_PRODUCT) . '</a>' . '<br />' . TEXT_INFO_EDIT_CAUTION;
+              echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT_PRODUCT) . '</a>' . '<br />' . TEXT_INFO_EDIT_CAUTION;
             } else {
-              echo zen_image_submit('button_update.gif', IMAGE_UPDATE_PRICE_CHANGES) . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>' . '<br />' . TEXT_UPDATE_COMMIT;
+              echo zen_image_submit('button_update.gif', IMAGE_UPDATE_PRICE_CHANGES) . '&nbsp;&nbsp;' . '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>' . '<br />' . TEXT_UPDATE_COMMIT;
             }
             ?>
             </td>
@@ -664,14 +743,15 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 ?>
 
 
-          <tr>
+          <tr bgcolor="#ebebff">
             <td class="main" width="200"><?php echo TEXT_PRODUCTS_TAX_CLASS; ?></td>
             <td colspan="4" class="main"><?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id); ?></td>
           </tr>
           <tr>
             <td class="main" width="200"><?php echo TEXT_PRODUCTS_PRICE_INFO; ?></td>
-            <td class="main"><?php echo TEXT_PRICE . '<br />' . zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : '')); ?></td>
-            <td class="main"><?php echo TEXT_PRODUCT_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('product_start', (($pInfo->products_date_available <= '0001-01-01') ? '' : zen_date_short($pInfo->products_date_available)), 'class="datepicker"'); ?></td>
+            <td class="main" bgcolor="#ebebff"><?php echo TEXT_PRICE_NET . '<br />' . zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateGross()"'); ?></td>
+            <td class="main" bgcolor="#ebebff"><?php echo TEXT_PRICE_GROSS . '<br />' . zen_draw_input_field('products_price_gross', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateNet()"'); ?></td>
+             <td class="main"><?php echo TEXT_PRODUCT_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('product_start', (($pInfo->products_date_available <= '0001-01-01') ? '' : zen_date_short($pInfo->products_date_available)), 'class="datepicker"'); ?></td>
             <td colspan="2" class="main"><?php echo zen_draw_radio_field('products_status', '1', $products_in_status) . '&nbsp;' . TEXT_PRODUCT_AVAILABLE . '<br />' . zen_draw_radio_field('products_status', '0', $products_out_status) . '&nbsp;' . TEXT_PRODUCT_NOT_AVAILABLE; ?></td>
           </tr>
 
@@ -730,13 +810,14 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
         <td><br><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" width="200"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></td>
-            <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_PRICE . '<br />' . zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : '')); ?></td>
-            <td class="main"><?php echo TEXT_SPECIALS_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('special_start', (($sInfo->specials_date_available <= '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)), 'class="datepicker"'); ?></td>
+            <td class="main" bgcolor="#ebebff"><?php echo TEXT_SPECIALS_SPECIAL_PRICE_NET . '<br />' . zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsGross()"'); ?></td>
+            <td class="main" bgcolor="#ebebff"><?php echo TEXT_SPECIALS_SPECIAL_PRICE_GROSS . '<br />' . zen_draw_input_field('specials_price_gross', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsNet()"'); ?></td>
+             <td class="main"><?php echo TEXT_SPECIALS_AVAILABLE_DATE; ?><br /><?php echo zen_draw_input_field('special_start', (($sInfo->specials_date_available <= '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)), 'class="datepicker"'); ?></td>
             <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?><br /><?php echo zen_draw_input_field('special_end', (($sInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)), 'class="datepicker"'); ?></td>
             <td class="main"><?php echo TEXT_SPECIALS_PRODUCTS_STATUS; ?><br />
               <?php echo zen_draw_radio_field('special_status', '1', $special_in_status) . '&nbsp;' . TEXT_SPECIALS_PRODUCT_AVAILABLE . '&nbsp;' . zen_draw_radio_field('special_status', '0', $special_out_status) . '&nbsp;' . TEXT_SPECIALS_PRODUCT_NOT_AVAILABLE; ?>
             </td>
-            <td class="main" align="center" width="100"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id . '&action=delete_special') . '">' .  zen_image_button('button_remove.gif', IMAGE_REMOVE_SPECIAL) . '</a>'; ?></td>
+            <td class="main" align="center" width="100"><?php echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id . '&action=delete_special') . '">' .  zen_image_button('button_remove.gif', IMAGE_REMOVE_SPECIAL) . '</a>'; ?></td>
           </tr>
 <?php
   if ($sInfo->status == 0) {
@@ -760,7 +841,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 // Specials cannot be added to Gift Vouchers when false
       if((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true')) ) {
 ?>
-            <td class="main" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . '&sID=' . $sInfo->specials_id . '&go_back=ON' . '&current_category_id=' . $current_category_id) . '">' .  zen_image_button('button_install.gif', IMAGE_INSTALL_SPECIAL) . '</a>'; ?></td>
+            <td class="main" align="center"><?php echo '<a href="' . zen_admin_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . '&sID=' . $sInfo->specials_id . '&go_back=ON' . '&current_category_id=' . $current_category_id) . '">' .  zen_image_button('button_install.gif', IMAGE_INSTALL_SPECIAL) . '</a>'; ?></td>
 <?php  } else { ?>
             <td class="main" align="center"><?php echo TEXT_SPECIALS_NO_GIFTS; ?></td>
 <?php } ?>
@@ -768,6 +849,17 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
         </table></td>
       </tr>
 <?php  } ?>
+
+<?php if ($pInfo->products_id !='') { ?>
+<script language="javascript"><!--
+updateGross();
+//--></script>
+<?php } ?>
+<?php if ($sInfo->products_id !='') { ?>
+<script language="javascript"><!--
+updateSpecialsGross();
+//--></script>
+<?php } ?>
 
 <?php
   if ($fInfo->products_id != '') {
@@ -781,7 +873,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
             <td class="main"><?php echo TEXT_FEATURED_PRODUCTS_STATUS; ?><br />
               <?php echo zen_draw_radio_field('featured_status', '1', $featured_in_status) . '&nbsp;' . TEXT_FEATURED_PRODUCT_AVAILABLE . '&nbsp;' . zen_draw_radio_field('featured_status', '0', $featured_out_status) . '&nbsp;' . TEXT_FEATURED_PRODUCT_NOT_AVAILABLE; ?>
             </td>
-            <td class="main" align="center" width="100"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id . '&action=delete_featured') . '">' .  zen_image_button('button_remove.gif', IMAGE_REMOVE_FEATURED) . '</a>'; ?></td>
+            <td class="main" align="center" width="100"><?php echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id . '&action=delete_featured') . '">' .  zen_image_button('button_remove.gif', IMAGE_REMOVE_FEATURED) . '</a>'; ?></td>
           </tr>
 <?php
   if ($fInfo->status == 0) {
@@ -797,7 +889,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
         <td><br><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" width="200"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></td>
-            <td class="main" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_FEATURED, 'add_products_id=' . $_GET['products_filter'] . '&go_back=ON' . '&action=new' . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_install.gif', IMAGE_INSTALL_FEATURED) . '</a>'; ?></td>
+            <td class="main" align="center"><?php echo '<a href="' . zen_admin_href_link(FILENAME_FEATURED, 'add_products_id=' . $_GET['products_filter'] . '&go_back=ON' . '&action=new' . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_install.gif', IMAGE_INSTALL_FEATURED) . '</a>'; ?></td>
           </tr>
         </table></td>
       </tr>
@@ -834,7 +926,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
               <?php
                 if ($action != '') {
                   echo TEXT_ADD_ADDITIONAL_DISCOUNT . '<br />';
-                  echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&action=add_discount_qty_id') . '">' .  zen_image_button('button_blank_discounts.gif', IMAGE_ADD_BLANK_DISCOUNTS) . '</a>' . '<br />';
+                  echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&action=add_discount_qty_id') . '">' .  zen_image_button('button_blank_discounts.gif', IMAGE_ADD_BLANK_DISCOUNTS) . '</a>' . '<br />';
                   echo TEXT_BLANKS_INFO;
                 } else {
                   echo ($action == '' ? '<span class="alert">' . TEXT_INFO_PREVIEW_ONLY . '</span>' : '');
@@ -946,7 +1038,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
               <?php
                 if ($action != '') {
                   echo TEXT_ADD_ADDITIONAL_DISCOUNT . '<br />';
-                  echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&action=add_discount_qty_id') . '">' .  zen_image_button('button_blank_discounts.gif', IMAGE_ADD_BLANK_DISCOUNTS) . '</a>' . '<br />';
+                  echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&action=add_discount_qty_id') . '">' .  zen_image_button('button_blank_discounts.gif', IMAGE_ADD_BLANK_DISCOUNTS) . '</a>' . '<br />';
                   echo TEXT_BLANKS_INFO;
                 } else {
                   echo ($action == '' ? '<span class="alert">' . TEXT_INFO_PREVIEW_ONLY . '</span>' : '') . '<br />';
@@ -981,9 +1073,9 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
             <td class="main" align="center" valign="middle" width="100%">
             <?php
             if ($action == '' || $action == 'delete_special' || $action == 'delete_featured') {
-              echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT_PRODUCT) . '</a>' . '<br />' . TEXT_INFO_EDIT_CAUTION;
+              echo '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT_PRODUCT) . '</a>' . '<br />' . TEXT_INFO_EDIT_CAUTION;
             } else {
-              echo zen_image_submit('button_update.gif', IMAGE_UPDATE_PRICE_CHANGES) . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>' . '<br />' . TEXT_UPDATE_COMMIT;
+              echo zen_image_submit('button_update.gif', IMAGE_UPDATE_PRICE_CHANGES) . '&nbsp;&nbsp;' . '<a href="' . zen_admin_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>' . '<br />' . TEXT_UPDATE_COMMIT;
             }
             ?>
             </td>

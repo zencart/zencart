@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_progress_bar.php'); ?>
@@ -98,6 +98,7 @@
         <select name="sql_cache_method" id="sql_cache_method" tabindex="8" ><?php echo $sqlCacheTypeOptions; ?></select>
       </div>
     </div>
+    <div class="row"><div class="small-12 columns mainContent"><div class="alert-box"><?php echo TEXT_DATABASE_ADVANCED_TIPS; ?></div></div></div>
   </fieldset>
   <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="10" >
 </form>

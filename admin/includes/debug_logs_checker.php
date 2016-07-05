@@ -13,6 +13,8 @@
 
   $cnt_logs = get_logs_data('count');
   if ($cnt_logs > 0){
-    $messageStack->add(DEBUG_LOGS_DISCOVERED . $cnt_logs);
-    $messageStack->add(DEBUG_LOGS_WARNING);
+
+    $adminNotifications = $di->get('zencart_notifications');
+    $notification = array('type' => 'bell', 'text' => DEBUG_LOGS_DISCOVERED . $cnt_logs, 'class' => 'fa fa-warning text-red');
+    $adminNotifications->addNotification($notification);
   }

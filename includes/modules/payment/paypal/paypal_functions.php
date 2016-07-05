@@ -3,7 +3,7 @@
  * functions used by payment module class for Paypal IPN payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -436,7 +436,7 @@
     }
 
     // send received data back to PayPal for validation
-    $scheme = 'http://';
+    $scheme = 'https://';
     //Parse url
     $web = parse_url($scheme . 'www.paypal.com/cgi-bin/webscr');
     if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox') {
@@ -575,6 +575,12 @@
     $response = curl_exec($ch);
     $commError = curl_error($ch);
     $commErrNo = curl_errno($ch);
+    if ($commErrNo == 35) {
+      curl_setopt($ch, CURLOPT_SSLVERSION, 6);
+      $response = curl_exec($ch);
+      $commError = curl_error($ch);
+      $commErrNo = curl_errno($ch);
+    }
     $commInfo = @curl_getinfo($ch);
     curl_close($ch);
 
@@ -637,7 +643,7 @@
     global $db;
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
     $db->Execute("update " . TABLE_ORDERS  . "
-                  set orders_status = '" . (int)$new_status . "'
+                  set orders_status = '" . (int)$new_status . "', last_modified = now()
                   where orders_id = '" . (int)$ordersID . "'");
 
     $sql_data_array = array('orders_id' => (int)$ordersID,

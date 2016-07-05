@@ -2,11 +2,8 @@
 /**
  * download header_php.php
  *
- * NOTE: Download-by-Redirect often works only on Unix/Linux hosts since
- *       Windows hosts require special setup (and Windows servers couldn't do any symlinking in PHP versions older than 5.3.0)
- *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Modified in v1.6.0 $

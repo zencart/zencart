@@ -62,6 +62,7 @@ define('PAGE_PARSE_START_TIME', microtime());
 //  define('DISPLAY_PAGE_PARSE_TIME', 'true');
 @ini_set("arg_separator.output","&");
 @ini_set("html_errors","0");
+@ini_set("session.use_trans_sid","0");
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -107,7 +108,7 @@ if (file_exists('includes/configure.php')) {
 /**
  * if main configure file doesn't contain valid info (ie: is dummy or doesn't match filestructure, display assistance page to suggest running the installer)
  */
-if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'includes/classes')) {
+if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
   $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
   require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
   exit;

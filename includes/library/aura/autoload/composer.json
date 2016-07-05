@@ -9,7 +9,7 @@
         "SPL autoloader",
         "class loader"
     ],
-    "homepage": "https://github.com/auraphp/Aura.Autoload/releases",
+    "homepage": "https://github.com/auraphp/Aura.Autoload",
     "license": "BSD-2-Clause",
     "authors": [
         {

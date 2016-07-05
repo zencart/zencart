@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: modules.php 19287 2011-07-28 15:51:25Z drbyte $
@@ -34,4 +34,4 @@ define('TEXT_WARNING_SSL_EDIT', 'ALERT: <a href="http://www.zen-cart.com/content
 define('TEXT_WARNING_SSL_INSTALL', 'ALERT: <a href="http://www.zen-cart.com/content.php?56" target="_blank">For security reasons, Installation of this module is disabled until your Admin is configured for SSL</a>.');
 define('TEXT_ERROR_NO_COMMTEST_OPTION_AVAILABLE', 'ERROR: This module does not have a communications-test option. Try a regular transaction via checkout instead.');
 
-define('WARNING_MODULES_MISSING_KEYS', '<span class="alert">Missing keys - Save, Remove, Install and Reconfigure</span>');
+define('WARNING_MODULES_MISSING_KEYS', '<span class="alert">Missing keys - Save (write down), Remove, Install and Reconfigure</span>');

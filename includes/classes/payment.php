@@ -3,7 +3,7 @@
  * Payment Class.
  *
  * @package classes
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson   Modified in v1.6.0 $
@@ -147,22 +147,22 @@ class payment extends base {
         }
       }
 
-       $js .= "\n";
-       $js .= '  if (payment_value == null && submitter != 1) {' . "\n";
-       $js .= '    error_message = error_message + "' . JS_ERROR_NO_PAYMENT_MODULE_SELECTED . '";' . "\n";
-       $js .= '    error = 1;' . "\n";
-       $js .= '  }' . "\n\n";
-       $js .= '  if (error == 1 && submitter != 1) {' . "\n";
-       $js .= '    alert(error_message);' . "\n";
-       $js .= '    return false;' . "\n";
-       $js .= '  } else {' . "\n";
+       $js =  $js . "\n" . '  if (payment_value == null && submitter != 1) {' . "\n";
+       $js =  $js .'    error_message = error_message + "' . JS_ERROR_NO_PAYMENT_MODULE_SELECTED . '";' . "\n";
+       $js =  $js .'    error = 1;' . "\n";
+       $js =  $js .'  }' . "\n\n";
+       $js =  $js .'  if (error == 1 && submitter != 1) {' . "\n";
+       $js =  $js .'    alert(error_message);' . "\n";
+       $js =  $js . '    return false;' . "\n";
+       $js =  $js .'  } else {' . "\n";
+       $js =  $js .' var result = true '  . "\n";
        if ($this->doesCollectsCardDataOnsite == true && PADSS_AJAX_CHECKOUT == '1') {
-         $js .= '   return collectsCardDataOnsite(payment_value);' . "\n";
+         $js .= '      result = !(doesCollectsCardDataOnsite(payment_value));' . "\n";
        }
-       $js .= '    return true;' . "\n";
-       $js .= '  }' . "\n" . '}' . "\n" . '</script>' . "\n";
+       $js =  $js .' if (result == false) doCollectsCardDataOnsite();' . "\n";
+       $js =  $js .'    return result;' . "\n";
+       $js =  $js .'  }' . "\n" . '}' . "\n" . '//--></script>' . "\n";
     }
-
     return $js;
   }
 
@@ -174,6 +174,12 @@ class payment extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $selection = $GLOBALS[$class]->selection();
+          if (isset($GLOBALS[$class]->collectsCardDataOnsite) && $GLOBALS[$class]->collectsCardDataOnsite == true) {
+            $selection['fields'][] = array('title' => '',
+                                         'field' => zen_draw_hidden_field($this->code . '_collects_onsite', 'true', 'id="' . $this->code. '_collects_onsite"'),
+                                         'tag' => '');
+
+          }
           if (is_array($selection)) $selection_array[] = $selection;
         }
       }

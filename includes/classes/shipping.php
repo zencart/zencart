@@ -3,10 +3,10 @@
  * shipping class
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Aug 2 11:37:22 2012 -0400 Modified in v1.5.1 $
+ * @version $Id:  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -18,7 +18,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @package classes
  */
 class shipping extends base {
-  var $modules;
+  public $modules;
+  public $abort_legacy_calculations = false;
 
   // class constructor
   function __construct($module = '') {
@@ -88,7 +89,10 @@ class shipping extends base {
   function calculate_boxes_weight_and_tare() {
     global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
-    $this->abort_legacy_calculations = FALSE;
+    // set this before any overrides/observers
+    $_SESSION['shipping_weight'] = $shipping_weight;
+
+    $this->abort_legacy_calculations = false;
     $this->notify('NOTIFY_SHIPPING_MODULE_PRE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
     if ($this->abort_legacy_calculations) return;
 
@@ -188,7 +192,6 @@ class shipping extends base {
           $quotes = $GLOBALS[$class]->quotes;
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {
-            //              if ($quotes['methods'][$i]['cost']) {
             if (isset($quotes['methods'][$i]['cost'])){
               $rates[] = array('id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
                                'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',

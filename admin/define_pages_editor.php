@@ -63,7 +63,7 @@
       case 'set_editor':
         // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
         $action='';
-        zen_redirect(zen_href_link(FILENAME_DEFINE_PAGES_EDITOR));
+        zen_redirect(zen_admin_href_link(FILENAME_DEFINE_PAGES_EDITOR));
         break;
     case 'save':
       if ( ($_GET['lngdir']) && ($_GET['filename']) ) {
@@ -78,7 +78,7 @@
           fclose($new_file);
         }
         zen_record_admin_activity('Define-Page-Editor was used to save changes to file ' . $file, 'info');
-        zen_redirect(zen_href_link(FILENAME_DEFINE_PAGES_EDITOR));
+        zen_redirect(zen_admin_href_link(FILENAME_DEFINE_PAGES_EDITOR));
       }
       break;
   }
@@ -157,7 +157,7 @@ if (isset($_GET['filename'])) {
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td align="right"><?php if ($file_writeable) { echo zen_image_submit('button_save.gif', IMAGE_SAVE) . '&nbsp;<a href="' . zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'define_it=' .$_GET['define_it'] . '&action=new_page') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>' . '&nbsp;' . '<a href="' . zen_href_link(FILENAME_DEFINE_PAGES_EDITOR . '.php') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; } else { echo '<a href="' . zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language']) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; } ?></td>
+                <td align="right"><?php if ($file_writeable) { echo zen_image_submit('button_save.gif', IMAGE_SAVE) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'define_it=' .$_GET['define_it'] . '&action=new_page') . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>' . '&nbsp;' . '<a href="' . zen_admin_href_link(FILENAME_DEFINE_PAGES_EDITOR . '.php') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; } else { echo '<a href="' . zen_admin_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language']) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; } ?></td>
               </tr>
             </table></td>
           </form></tr>
@@ -171,7 +171,7 @@ if (isset($_GET['filename'])) {
             <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td><?php echo '<a href="' . zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
+            <td><?php echo '<a href="' . zen_admin_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
           </tr>
 <?php
     }
@@ -181,14 +181,14 @@ if (isset($_GET['filename'])) {
           <tr>
             <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td class="smallText"><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $filename); ?>"><b><?php echo $filename; ?></b></a></td>
+                <td class="smallText"><a href="<?php echo zen_admin_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $filename); ?>"><b><?php echo $filename; ?></b></a></td>
 <?php
     $dir = dir(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language']);
     $left = false;
     if ($dir) {
       while ($file = $dir->read()) {
         if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-          echo '                <td class="smallText"><a href="' . zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $file) . '">' . $file . '</a></td>' . "\n";
+          echo '                <td class="smallText"><a href="' . zen_admin_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $file) . '">' . $file . '</a></td>' . "\n";
           if (!$left) {
             echo '              </tr>' . "\n" .
                  '              <tr>' . "\n";

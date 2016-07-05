@@ -2,9 +2,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: currency_cron.php $
+ * @version $Id: Author: DrByte  Sat Oct 17 20:09:58 2015 -0400 New in v1.5.5 $
  */
 // uncomment the following line to disable this script execution in the case of an emergency malfunction when you can't access the server cron settings to kill the scheduled cron job:
 // exit(1);
@@ -47,9 +47,6 @@ if (isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
     }
   }
 }
-
-// backward compatibility for before PHP 5.3:
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 
 // setup
 chdir(__DIR__);

@@ -1,16 +1,20 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: orders.php 6214 2007-04-17 02:24:25Z ajeh $
+ * @version $Id: orders.php  Modified in v1.6.0 $
  */
 
 define('HEADING_TITLE', 'Orders');
+define('HEADING_TITLE_DETAILS', 'Order Details');
 define('HEADING_TITLE_SEARCH', 'Order ID:');
 define('HEADING_TITLE_STATUS', 'Status:');
-define('HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS', 'Search by Product Name or <strong>ID:XX</strong> or Model ');
+define('HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS', 'Product Name or ID:XX or Model');
+define('HEADING_TITLE_SEARCH_ALL','Search: ');
+define('HEADING_TITLE_SEARCH_PRODUCTS','Product search: ');
+define('TEXT_RESET_FILTER', 'Remove search filter');
 define('TEXT_INFO_SEARCH_DETAIL_FILTER_ORDERS_PRODUCTS', 'Search Filter: ');
 define('TABLE_HEADING_PAYMENT_METHOD', 'Payment<br />Shipping');
 define('TABLE_HEADING_ORDERS_ID','ID');
@@ -37,6 +41,7 @@ define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
 define('TABLE_HEADING_DATE_ADDED', 'Date Added');
 
 define('ENTRY_CUSTOMER', 'Customer:');
+define('ENTRY_CUSTOMER_ADDRESS', 'Customer Address:');
 define('ENTRY_SOLD_TO', 'SOLD TO:');
 define('ENTRY_DELIVERY_TO', 'Delivery To:');
 define('ENTRY_SHIP_TO', 'SHIP TO:');
@@ -69,16 +74,6 @@ define('TEXT_PAID', 'Paid');
 define('TEXT_UNPAID', 'Un-paid');
 
 define('TEXT_ALL_ORDERS', 'All Orders');
-
-define('EMAIL_SEPARATOR', '------------------------------------------------------');
-define('EMAIL_TEXT_SUBJECT', 'Order Update');
-define('EMAIL_TEXT_ORDER_NUMBER', 'Order Number:');
-define('EMAIL_TEXT_INVOICE_URL', 'Detailed Invoice:');
-define('EMAIL_TEXT_DATE_ORDERED', 'Date Ordered:');
-define('EMAIL_TEXT_COMMENTS_UPDATE', '<em>The comments for your order are: </em>');
-define('EMAIL_TEXT_STATUS_UPDATED', 'Your order has been updated to the following status:' . "\n");
-define('EMAIL_TEXT_STATUS_LABEL', '<strong>New status:</strong> %s' . "\n\n");
-define('EMAIL_TEXT_STATUS_PLEASE_REPLY', 'Please reply to this email if you have any questions.' . "\n");
 
 define('ERROR_ORDER_DOES_NOT_EXIST', 'Error: Order does not exist.');
 define('SUCCESS_ORDER_UPDATED', 'Success: Order has been successfully updated.');
@@ -118,3 +113,9 @@ define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
 define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
 
 define('TEXT_CUSTOMER_LOOKUP', 'Lookup Customer');
+
+define('TEXT_INVALID_ORDER_STATUS', '<span class="alert">(Invalid Order Status)</span>');
+
+define('BUTTON_TO_LIST', 'Order List');
+define('SELECT_ORDER_LIST', 'Jump to Order:');
+define('TEXT_INFO_ORDER_LANGUAGE', 'Order made in: ');

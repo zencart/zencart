@@ -2,10 +2,10 @@
 /**
  * @package Installer
  * @access private
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: inspect.php 19537 2011-09-20 17:14:44Z drbyte $
+ * @version $Id: Author: DrByte  Mon Feb 15 00:32:48 2016 -0500 New in v1.5.5 $
  */
 /**
  * defining language components for the page
@@ -15,9 +15,9 @@
   define('UPGRADE_BUTTON', 'Upgrade Cfg Files'); // this comes before TEXT_MAIN
   define('DB_UPGRADE_BUTTON', 'Database Upgrade'); // this comes before TEXT_MAIN
 //Button meanings: (to be made into help-text for future version):
-// "Install" = make new configure.php files, regardless of existing contents.  Load new database by dropping old tables.
-// "Upgrade" = read old configure.php files, and write new ones using new structure. Upgrade database, instead of wiping and new install
-// "Database Upgrade" = don't write the configure.php files -- simply jump to the database-upgrade page. Only displayed if detected database version is new enough to not require configure.php file updates.
+// "Install" = make new configure.php file, regardless of existing contents.  Load new database by dropping old tables.
+// "Upgrade" = read old configure.php file, and write new one using new structure. Upgrade database, instead of wiping and new install
+// "Database Upgrade" = don't write the configure.php file -- simply jump to the database-upgrade page. Only displayed if detected database version is new enough to not require configure.php file updates.
 
   define('TITLE_DOCUMENTATION', 'Documentation');
   define('TEXT_DOCUMENTATION', '<h3>Have you read the Installation Instructions yet?</h3>The <a href="%s" target="_blank">Installation Instructions</a> will be a big help if you have not already read them.<br />There you will find information about permissions-levels you will need to set to various folders/files and other details about installation prerequisites, as well as things to do after you are done with installation. There are also links there to the <a href="http://tutorials.zen-cart.com/" target="_blank">online FAQs</a> and other helpful resources.');
@@ -61,7 +61,6 @@
   define('LABEL_CURRENT_CACHE_PATH','Current SQL Cache Folder');
   define('LABEL_SUGGESTED_CACHE_PATH','Suggested SQL Cache Folder');
   define('LABEL_HTTP_HOST','HTTP Host');
-  define('LABEL_PATH_TRANLSATED','Path_Translated');
   define('LABEL_REALPATH', 'Real Path');
   define('LABEL_PHP_API_MODE','PHP API Mode');
   define('LABEL_PHP_MODULES','PHP Modules Active');
@@ -100,7 +99,7 @@
 
   define('LABEL_EXPLAIN','&nbsp;Click here for more info');
   define('LABEL_FOLDER_PERMISSIONS','File and Folder Permissions');
-  define('LABEL_WRITABLE_FILE_INFO', 'In order for the installer to store the setup information you provide in the following pages, the configure.php files shown below need to be "writable".');
+  define('LABEL_WRITABLE_FILE_INFO', 'In order for the installer to store the setup information you provide in the following pages, the configure.php file shown below needs to be "writable".');
   define('LABEL_WRITABLE_FOLDER_INFO','In order for many Zen Cart&reg; administrative and day-to-day functions to work properly,
 You need to mark several files/folders "Writeable".  The following is a list of folders which need to be "read-write",
 along with recommended CHMOD settings. Please correct these settings before continuing installation.

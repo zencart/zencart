@@ -30,9 +30,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
-  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
-                             'className'=>'\\ZenCart\\Request\\Request',
-                             'objectName'=>'zcRequest');
+//  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+//                             'className'=>'\\ZenCart\\Request\\Request',
+//                             'objectName'=>'zcRequest');
 
 /**
  * Breakpoint 10.
@@ -45,8 +45,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_checkout_flow_routes.php');
 
 /**
  * Breakpoint 30.
@@ -79,6 +77,11 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_gzip.php');
   $autoLoadConfig[50][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sefu.php');
+$autoLoadConfig[60][] = array('autoType'=>'init_script',
+                              'loadFile'=> 'init_di_container.php');
+$autoLoadConfig[60][] = array('autoType'=>'init_script',
+                              'loadFile'=> 'init_checkout_flow_routes.php');
+
 /**
  * Breakpoint 60.
  *
@@ -233,6 +236,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_header.php');
 
+/**
+ * Breakpoint 185.
+ *
+ * require('includes/classes/class.phpmailer.php');
+ *
+ */
+  $autoLoadConfig[185][] = array('autoType'=>'class',
+                                 'loadFile'=> 'class.phpmailer.php');
 
 /**
  * NOTE: Most plugins should be added from point 200 onward.

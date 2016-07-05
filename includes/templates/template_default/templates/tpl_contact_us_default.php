@@ -6,7 +6,7 @@
  * Displays contact us page form.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
@@ -62,15 +62,15 @@
 ?>
 
 <label class="inputLabel" for="contactname"><?php echo ENTRY_NAME; ?></label>
-<?php echo zen_draw_input_field('contactname', $name, ' size="40" id="contactname"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
+<?php echo zen_draw_input_field('contactname', $name, ' size="40" id="contactname" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required'); ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
-<?php echo zen_draw_input_field('email', ($email_address), ' size="40" id="email-address" autocomplete="off"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
+<?php echo zen_draw_input_field('email', ($email_address), ' size="40" id="email-address" autocomplete="off" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required', 'email'); ?>
 <br class="clearBoth" />
 
-<label for="enquiry"><?php echo ENTRY_ENQUIRY . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?></label>
-<?php echo zen_draw_textarea_field('enquiry', '30', '7', $enquiry, 'id="enquiry"'); ?>
+<label for="enquiry"><?php echo ENTRY_ENQUIRY; ?></label>
+<?php echo zen_draw_textarea_field('enquiry', '30', '7', $enquiry, 'id="enquiry" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required'); ?>
 
 <?php echo zen_draw_input_field('should_be_empty', '', ' size="40" id="CUAS" style="visibility:hidden; display:none;" autocomplete="off"'); ?>
 

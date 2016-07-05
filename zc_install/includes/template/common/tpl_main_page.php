@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: Author: DrByte  Mon Dec 28 14:43:01 2015 -0500 New in v1.5.5 $
  */
 ?>
 <body id="<?php echo $body_id; ?>">
@@ -11,7 +11,8 @@
     <div class="container">
       <div class="row">
         <div class="small-12 columns small-centered hero-unit">
-        <div class="logo"></div>
+            <div class="logo"></div>
+            <div class="version"><?php echo sprintf(ZC_VERSION_STRING, PROJECT_VERSION_NAME, PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR); ?></div>
         </div>
       </div>
     </div>

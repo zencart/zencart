@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
@@ -19,15 +19,15 @@
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
+          zen_redirect(zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
         }
-        
+
         $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
-        // See if there are any configuration checks 
+        // See if there are any configuration checks
         $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = '" . (int)$cID . "'");
-        if (!$checks->EOF && $checks->fields['val_function'] != NULL) { 
-           require_once('includes/functions/configuration_checks.php'); 
-           zen_validate_configuration_entry($configuration_value, $checks->fields['val_function']); 
+        if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
+           require_once('includes/functions/configuration_checks.php');
+           zen_validate_configuration_entry($configuration_value, $checks->fields['val_function']);
         }
 
         $db->Execute("update " . TABLE_CONFIGURATION . "
@@ -36,23 +36,25 @@
 
         $result = $db->Execute("select configuration_key from " . TABLE_CONFIGURATION . " where configuration_id=" . (int)$cID . " LIMIT 1");
         zen_record_admin_activity('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value, 'warning');
+        $zco_notifier->notify('ADMIN_CONFIGURATION_SETTING_CHANGE', $result->fields['configuration_key'], $configuration_value);
 
         // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
         if ( (WARN_BEFORE_DOWN_FOR_MAINTENANCE == 'true') && (DOWN_FOR_MAINTENANCE == 'true') ) {
         $db->Execute("update " . TABLE_CONFIGURATION . "
                       set configuration_value = 'false', last_modified = '" . NOW . "'
-                      where configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'"); }
+                      where configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'");
+            }
 
-        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
+        zen_redirect(zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
         break;
     }
   }
 
   $gID = (isset($_GET['gID'])) ? $_GET['gID'] : 1;
   $_GET['gID'] = $gID;
-  $cfg_group = $db->Execute("select configuration_group_title
-                             from " . TABLE_CONFIGURATION_GROUP . "
-                             where configuration_group_id = '" . (int)$gID . "'");
+  $cfg_group = $db->Execute("select language_key as constant_name
+                             from " . TABLE_ADMIN_PAGES . "
+                             where page_params = 'gID=" . (int)$gID . "'");
 
 if ($gID == 7) {
         $shipping_errors = '';
@@ -73,91 +75,93 @@ if ($gID == 7) {
 require('includes/admin_html_head.php');
 ?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-<!-- body_text //-->
-    <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo $cfg_group->fields['configuration_group_title']; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                <span class="pageHeading"><?php echo constant($cfg_group->fields['constant_name']); ?></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+
+                <table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent" width="55%"><?php echo TABLE_HEADING_CONFIGURATION_TITLE; ?></td>
+                        <td class="dataTableHeadingContent"
+                            width="55%"><?php echo TABLE_HEADING_CONFIGURATION_TITLE; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONFIGURATION_VALUE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                        <td class="dataTableHeadingContent"
+                            align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $configuration = $db->Execute("select configuration_id, configuration_title, configuration_value, configuration_key,
+  $result = $db->Execute("select configuration_id, configuration_title, configuration_value, configuration_key,
                                         use_function from " . TABLE_CONFIGURATION . "
                                         where configuration_group_id = '" . (int)$gID . "'
                                         order by sort_order");
-  while (!$configuration->EOF) {
-    if (zen_not_null($configuration->fields['use_function'])) {
-      $use_function = $configuration->fields['use_function'];
+  foreach ($result as $config_entry) {
+    if (zen_not_null($config_entry['use_function'])) {
+      $use_function = $config_entry['use_function'];
       if (preg_match('/->/', $use_function)) {
         $class_method = explode('->', $use_function);
         if (!is_object(${$class_method[0]})) {
           include(DIR_WS_CLASSES . $class_method[0] . '.php');
           ${$class_method[0]} = new $class_method[0]();
         }
-        $cfgValue = zen_call_function($class_method[1], $configuration->fields['configuration_value'], ${$class_method[0]});
+        $cfgValue = zen_call_function($class_method[1], $config_entry['configuration_value'], ${$class_method[0]});
       } else {
-        $cfgValue = zen_call_function($use_function, $configuration->fields['configuration_value']);
+        $cfgValue = zen_call_function($use_function, $config_entry['configuration_value']);
       }
     } else {
-      $cfgValue = $configuration->fields['configuration_value'];
+      $cfgValue = $config_entry['configuration_value'];
     }
 
-    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $configuration->fields['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $config_entry['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
       $cfg_extra = $db->Execute("select configuration_key, configuration_description, date_added,
                                         last_modified, use_function, set_function
                                  from " . TABLE_CONFIGURATION . "
-                                 where configuration_id = '" . (int)$configuration->fields['configuration_id'] . "'");
-      $cInfo_array = array_merge($configuration->fields, $cfg_extra->fields);
+                                 where configuration_id = '" . (int)$config_entry['configuration_id'] . "'");
+      $cInfo_array = array_merge($config_entry, $cfg_extra->fields);
       $cInfo = new objectInfo($cInfo_array);
     }
 
-    if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) {
-      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=edit') . '\'">' . "\n";
+    if ( (isset($cInfo) && is_object($cInfo)) && ($config_entry['configuration_id'] == $cInfo->configuration_id) ) {
+      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $configuration->fields['configuration_id'] . '&action=edit') . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $config_entry['configuration_id'] . '&action=edit') . '\'">' . "\n";
     }
 ?>
 <?php
-   // multilanguage support: 
+   // multilanguage support:
    // For example, in admin/includes/languages/spanish/configuration.php
    // define('CFGTITLE_STORE_NAME', 'Nombre de la Tienda');
    // define('CFGDESC_STORE_NAME', 'El nombre de mi tienda');
-    if (defined('CFGTITLE_' . $configuration->fields['configuration_key'])) {
-      $configuration->fields['configuration_title'] = constant('CFGTITLE_' . $configuration->fields['configuration_key']);
+    if (defined('CFGTITLE_' . $config_entry['configuration_key'])) {
+      $config_entry['configuration_title'] = constant('CFGTITLE_' . $config_entry['configuration_key']);
     }
-    if (defined('CFGDESC_' . $configuration->fields['configuration_key'])) {
-      $configuration->fields['configuration_description'] = constant('CFGDESC_' . $configuration->fields['configuration_key']); 
+    if (defined('CFGDESC_' . $config_entry['configuration_key'])) {
+      $config_entry['configuration_description'] = constant('CFGDESC_' . $config_entry['configuration_key']);
     }
 ?>
-                <td class="dataTableContent"><?php echo $configuration->fields['configuration_title']; ?></td>
+                <td class="dataTableContent"><?php echo $config_entry['configuration_title']; ?></td>
                 <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo) && is_object($cInfo)) && ($configuration->fields['configuration_id'] == $cInfo->configuration_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $configuration->fields['configuration_id']) . '" name="link_' . $configuration->fields['configuration_key'] . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                        <td class="dataTableContent"
+                            align="right"><?php if ((isset($cInfo) && is_object($cInfo)) && ($config_entry['configuration_id'] == $cInfo->configuration_id)) {
+                                echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                            } else {
+                                echo '<a href="' . zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $config_entry['configuration_id']) . '" name="link_' . $config_entry['configuration_key'] . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                            } ?>&nbsp;</td>
               </tr>
 <?php
-    $configuration->MoveNext();
   }
 ?>
-            </table></td>
+                </table>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
 <?php
   $heading = array();
   $contents = array();
@@ -167,7 +171,7 @@ require('includes/admin_html_head.php');
       $cInfo->configuration_title = constant('CFGTITLE_' . $cInfo->configuration_key);
     }
     if (defined('CFGDESC_' . $cInfo->configuration_key)) {
-      $cInfo->configuration_description = constant('CFGDESC_' . $cInfo->configuration_key); 
+      $cInfo->configuration_description = constant('CFGDESC_' . $cInfo->configuration_key);
     }
 
   switch ($action) {
@@ -177,7 +181,7 @@ require('includes/admin_html_head.php');
       if ($cInfo->set_function) {
         eval('$value_field = ' . $cInfo->set_function . '"' . htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, TRUE) . '");');
       } else {
-        $value_field = zen_draw_input_field('configuration_value', htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, TRUE), 'size="60"');
+                            $value_field = zen_draw_input_field('configuration_value', htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, TRUE), 'size="60" class="cfgInput" autofocus');
       }
 
       $contents = array('form' => zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=save'));
@@ -186,7 +190,7 @@ require('includes/admin_html_head.php');
       }
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br><b>' . $cInfo->configuration_title . '</b><br>' . $cInfo->configuration_description . '<br>' . $value_field);
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE, 'name="submit' . $cInfo->configuration_key . '"') . '&nbsp;<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE, 'name="submit' . $cInfo->configuration_key . '"') . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (isset($cInfo) && is_object($cInfo)) {
@@ -195,7 +199,7 @@ require('includes/admin_html_head.php');
           $contents[] = array('text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br />');
         }
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
         $contents[] = array('text' => '<br>' . $cInfo->configuration_description);
         $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($cInfo->date_added));
         if (zen_not_null($cInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($cInfo->last_modified));
@@ -204,21 +208,14 @@ require('includes/admin_html_head.php');
   }
 
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
-
     $box = new box;
     echo $box->infoBox($heading, $contents);
-
-    echo '            </td>' . "\n";
   }
 ?>
-          </tr>
-        </table></td>
-      </tr>
-    </table></td>
-<!-- body_text_eof //-->
-  </tr>
-</table>
+            </div>
+        </div>
+    </div>
+
 <!-- body_eof //-->
 
 <!-- footer //-->

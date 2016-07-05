@@ -1,55 +1,15 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
  */
 
   /**
-   * Returns a admin link formatted for use in a href attribute. This should
-   * be used when adding a link to an web resource / page located within the
-   * Zen Cart admin folder. Failure to use this function may result
-   * in broken website links and cause issues with some Zen Cart plugins.
-   *
-   * This function should not be directly called from a language file. Why?
-   * Observers are typically not be loaded until after the language files.
-   * So if this function is used in a language file, any observers may not
-   * receive notification a admin link is being generated.
-   *
-   * <b>Example Usage:</b>
-   * Link to a category:
-   *   <i>zen_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
-   * Link to a category (using an array for the parameters):
-   *   <i>zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
-   * HTTPS (SSL) Link to an EZ Page:
-   *   <i>zen_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
-   * Static link to an PDF:
-   *   <i>zen_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
-   * Static HTTPS (SSL) Link to a PHP script (with parameters):
-   *   <i>zen_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
-   *
-   * @deprecated 1.6.0 use zen_admin_href_link instead.
-   *
-   * @param string $page The Zen Cart page name or the path to a file / web
-   *   resource (relative to the folder containing Zen Cart).
-   *
-   * @param string|array $parameters The urlencoded query string (or an array
-   *   of key => value pairs to urlencode) to append to the link. When an array
-   *   is passed the key / value pairs will be encoded using RFC 3986. Default
-   *   is to not add a query string to the link.
-   *
-   * @param string $connection This parameter is no longer used and will be
-   *   ignored. The value of HTTP_SERVER defined in the admin configure.php is
-   *   always used when generating the href_link for admin pages and resources.
-   *
-   * @param boolean $add_session_id true to add the session id to the link when
-   *   needed (such as when session cookies are disabled, before the session
-   *   cookie exists, or switching connection methods), false otherwise.
-   *   Default is true.
-   *
-   * @return string
+   * Deprecated and will be removed in later versions. 
+   * Use zen_admin_href_link instead
    */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
     return zen_admin_href_link($page, $parameters, $add_session_id);
@@ -68,15 +28,15 @@
    *
    * <b>Example Usage:</b>
    * Link to a category:
-   *   <i>zen_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
+   *   <i>zen_admin_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
    * Link to a category (using an array for the parameters):
-   *   <i>zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
+   *   <i>zen_admin_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
    * HTTPS (SSL) Link to an EZ Page:
-   *   <i>zen_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
+   *   <i>zen_admin_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
    * Static link to an PDF:
-   *   <i>zen_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
+   *   <i>zen_admin_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
    * Static HTTPS (SSL) Link to a PHP script (with parameters):
-   *   <i>zen_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
+   *   <i>zen_admin_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
    *
    * @param string $page The Zen Cart page name or the path to a file / web
    *   resource (relative to the folder containing Zen Cart).
@@ -110,7 +70,7 @@
     );
     $page = str_replace('.php', '', $page);
 
-    $link = HTTP_SERVER . DIR_WS_ADMIN;
+    $link = ADMIN_HTTP_SERVER . DIR_WS_ADMIN;
 
     // Handle parameters passed as an array (using RFC 3986)
     if(is_array($parameters)) {
@@ -163,20 +123,20 @@
    * receive notification a catalog link is being generated.
    *
    * <i>This function does not allow the addition of a session id (zenid) to the
-   * links. In all other ways the function is identical to zen_href_link on
+   * links. In all other ways the function is identical to zen_admin_href_link on
    * the catalog (store) side of Zen Cart.</i>
    *
    * <b>Example Usage:</b>
    * Link to a category:
-   *   <i>zen_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
+   *   <i>zen_catalog_href_link(FILENAME_DEFAULT, 'cPath=1_8');</i>
    * Link to a category (using an array for the parameters):
-   *   <i>zen_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
+   *   <i>zen_catalog_href_link(FILENAME_DEFAULT, array('cPath' => '1_8'));</i>
    * HTTPS (SSL) Link to an EZ Page:
-   *   <i>zen_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
+   *   <i>zen_catalog_href_link(FILENAME_EZPAGES, 'id=4', 'SSL');</i>
    * Static link to an PDF:
-   *   <i>zen_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
+   *   <i>zen_catalog_href_link('specs/keyboard.pdf', '', 'NONSSL', true, true);</i>
    * Static HTTPS (SSL) Link to a PHP script (with parameters):
-   *   <i>zen_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
+   *   <i>zen_catalog_href_link('find-location.php', 'ip=127.0.0.1', 'SSL', true, true);</i>
    *
    * @param string $page The Zen Cart page name or the path to a file / web
    *   resource (relative to the folder containing Zen Cart).
@@ -363,62 +323,13 @@
   }
 
 ////
-// javascript to dynamically update the states/provinces list when the country is changed
-// TABLES: zones
-  function zen_js_zone_list($country, $form, $field) {
-    global $db;
-    $countries = $db->Execute("select distinct zone_country_id
-                               from " . TABLE_ZONES . "
-                               order by zone_country_id");
-
-    $num_country = 1;
-    $output_string = '';
-    while (!$countries->EOF) {
-      if ($num_country == 1) {
-        $output_string .= '  if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
-      } else {
-        $output_string .= '  } else if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
-      }
-
-      $states = $db->Execute("select zone_name, zone_id
-                              from " . TABLE_ZONES . "
-                              where zone_country_id = '" . $countries->fields['zone_country_id'] . "'
-                              order by zone_name");
-
-
-      $num_state = 1;
-      while (!$states->EOF) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
-        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states->fields['zone_name'] . '", "' . $states->fields['zone_id'] . '");' . "\n";
-        $num_state++;
-        $states->MoveNext();
-      }
-      $num_country++;
-      $countries->MoveNext();
-    }
-    $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
-                      '  }' . "\n";
-
-    return $output_string;
-  }
-
-////
 // Output a form
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
-      if ($usessl) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      }
+        $form .= zen_admin_href_link($action, $parameters);
     } else {
-      if ($usessl) {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      }
+        $form .= zen_admin_href_link($action);
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (zen_not_null($params)) {
@@ -450,8 +361,12 @@
 
 ////
 // Output a form password field
-  function zen_draw_password_field($name, $value = '', $required = false) {
-    $field = zen_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
+  function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
+    $parameters .= ' maxlength="40"';
+    if($autocomplete == false){
+      $parameters .= ' autocomplete="off"';
+    }
+    $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
 
     return $field;
   }
@@ -569,6 +484,12 @@
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
+////
+// output label for input fields
+  function zen_draw_label($text, $for, $parameters = ''){
+    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+    return $label;
+  }
 
 /**
  * @param string $page
@@ -582,4 +503,3 @@ function zen_ajax_href_link($page = '', $parameters = '', $connection = 'NONSSL'
     $link = str_replace('&amp;', '&', $link);
     return $link;
 }
-

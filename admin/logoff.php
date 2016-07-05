@@ -11,5 +11,5 @@
   unset($_SESSION['admin_id']);
   zen_session_destroy();
   require('includes/application_bottom.php');
-  zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+  zen_redirect(zen_admin_href_link(FILENAME_LOGIN));
   exit();

@@ -19,10 +19,7 @@ class setUpTaxZonesTest extends CommonTestResources
     {
         $this->url('https://' . DIR_WS_ADMIN);
         $this->assertTextPresent('Admin Login');
-        $this->byId('admin_name')->value(WEBTEST_ADMIN_NAME_INSTALL);
-        $this->byId('admin_pass')->value(WEBTEST_ADMIN_PASSWORD_INSTALL);
-        $continue = $this->byId('btn_submit');
-        $continue->click();
+        $this->loginStandardAdmin(WEBTEST_ADMIN_NAME_INSTALL, WEBTEST_ADMIN_PASSWORD_INSTALL);
         $this->assertTextPresent('Add Widget');
         $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=geo_zones&action=add');
         $this->byId('entry_field_geo_zone_name')->value("UK/VAT");
@@ -108,10 +105,7 @@ class setUpTaxZonesTest extends CommonTestResources
     {
         $this->url('https://' . DIR_WS_ADMIN);
         $this->assertTextPresent('Admin Login');
-        $this->byId('admin_name')->value(WEBTEST_ADMIN_NAME_INSTALL);
-        $this->byId('admin_pass')->value(WEBTEST_ADMIN_PASSWORD_INSTALL);
-        $continue = $this->byId('btn_submit');
-        $continue->click();
+        $this->loginStandardAdmin(WEBTEST_ADMIN_NAME_INSTALL, WEBTEST_ADMIN_PASSWORD_INSTALL);
         $this->assertTextPresent('Add Widget');
         $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=geo_zones&action=add');
         $this->byId('entry_field_geo_zone_name')->value("California");
@@ -176,10 +170,7 @@ class setUpTaxZonesTest extends CommonTestResources
     {
         $this->url('https://' . DIR_WS_ADMIN);
         $this->assertTextPresent('Admin Login');
-        $this->byId('admin_name')->value(WEBTEST_ADMIN_NAME_INSTALL);
-        $this->byId('admin_pass')->value(WEBTEST_ADMIN_PASSWORD_INSTALL);
-        $continue = $this->byId('btn_submit');
-        $continue->click();
+        $this->loginStandardAdmin(WEBTEST_ADMIN_NAME_INSTALL, WEBTEST_ADMIN_PASSWORD_INSTALL);
         $this->assertTextPresent('Add Widget');
         $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=tax_classes&action=add');
         $this->byId("entry_field_tax_class_title")->value("Taxable Postage");

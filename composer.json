@@ -6,22 +6,16 @@
     "authors": [
         {
             "name": "The Zen-Cart Team",
-            "homepage": "https://github.com/zencart/zc-v1-series/graphs/contributors"
+            "homepage": "https://github.com/zencart/zencart/graphs/contributors"
         }
     ],
     "require": {
         "php": ">=5.4"
     },
     "require-dev": {
-        "sauce/sausage": ">=0.15.2",
-        "sauce/connect": ">=3.0",
-        "phpunit/phpunit": "4.*",
-        "phpunit/phpunit-selenium": ">=1.2",
-        "phpmd/phpmd": "~2",
-        "phpdocumentor/phpdocumentor": "2.*",
-        "squizlabs/php_codesniffer": "~2",
-        "satooshi/php-coveralls": "~0.6",
-        "mikey179/vfsStream": "1.*"
+        "phpunit/phpunit": ">4.8",
+        "phpdocumentor/phpdocumentor": ">=2.9",
+        "mikey179/vfsStream": ">1.6"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"],

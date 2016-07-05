@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: server_info.php drbyte  Modified in v1.6.0 $
+ * @version $Id: Author: DrByte  Mon Oct 19 12:00:22 2015 -0400 Modified in v1.5.5 $
  */
 
 define('HEADING_TITLE', 'Server Information');
@@ -13,7 +13,7 @@ define('TITLE_SERVER_HOST', 'Server Host:');
 define('TITLE_SERVER_OS', 'Server OS:');
 define('TITLE_SERVER_DATE', 'Server Date:');
 define('TITLE_SERVER_UP_TIME', 'Server Up Time:');
-define('TITLE_HTTP_SERVER', 'HTTP Server:');
+define('TITLE_WEBSERVER', 'Web Server:');
 define('TITLE_PHP_VERSION', 'PHP Version:');
 define('TITLE_ZEND_VERSION', 'Zend:');
 define('TITLE_DATABASE_HOST', 'Database Host:');

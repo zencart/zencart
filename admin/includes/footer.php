@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: footer.php 19537 2011-09-20 17:14:44Z drbyte $
+ * @version $Id: Author: DrByte  Fri Feb 19 20:48:40 2016 -0500 Modified in v1.6.0 $
  */
 
 /**
@@ -18,11 +18,6 @@
   <a href="http://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" border="0"></a><br>
   <br>
   E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a><br>
-  <a href="<?php echo zen_href_link(FILENAME_SERVER_INFO); ?>"><?php echo zen_get_zcversioninfo('footer'); ?></a>
+  <a href="<?php echo zen_admin_href_link(FILENAME_SERVER_INFO); ?>"><?php echo zen_get_zcversioninfo('footer'); ?></a>
   </div>
 </footer>
-
-<!-- Initialize the Foundation plugins -->
-<script>
-  $(document).foundation();
-</script>

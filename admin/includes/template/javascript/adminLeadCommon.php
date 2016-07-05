@@ -19,12 +19,12 @@
                 myCheckboxes.push($(this).val());
             });
             if (myCheckboxes.length > 0) {
-                $("#rowMultiDeleteModal").foundation('reveal', 'open');
+                $("#rowMultiDeleteModal").modal('show');
                 $( "#rowMultiDeleteConfirm").unbind( "click" );
                 $('#rowMultiDeleteConfirm').on('click', function (e) {
-                    $("#rowMultiDeleteModal").foundation('reveal', 'close');
+                    $("#rowMultiDeleteModal").modal('hide');
                     zcJS.ajax({
-                        url: '<?php echo zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action')) . "action=multiDelete"); ?>',
+                        url: '<?php echo zen_admin_href_link($_GET['cmd'], zen_get_all_get_params(array('action')) . "action=multiDelete"); ?>',
                         data: {'selected[]': myCheckboxes}
                     }).done(function (response) {
                         if (response.html) {
@@ -48,7 +48,7 @@
             str.push({name: 'page', value: <?php echo isset($_GET["page"]) ? $_GET["page"] : 1; ?>});
 
             zcJS.ajax({
-                url: '<?php echo zen_href_link($_GET['cmd'], "action='+action+'+"); ?>',
+                url: '<?php echo zen_admin_href_link($_GET['cmd'], "action='+action+'+"); ?>',
                 data: str
             }).done(function (response) {
                 if (response.html) {
@@ -63,7 +63,7 @@
         $("#paginationQueryLimit").on("change", function (e) {
             var str = 'limit=' + $(this).val();
             zcJS.ajax({
-                url: '<?php echo zen_href_link($_GET['cmd'], "action=paginationLimit"); ?>',
+                url: '<?php echo zen_admin_href_link($_GET['cmd'], "action=paginationLimit"); ?>',
                 type: 'get',
                 data: str
             }).done(function (response) {
@@ -79,7 +79,7 @@
             var str = $("#lead_filter_form").serialize();
             var myform = form;
             zcJS.ajax({
-                url: '<?php echo zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action')) . 'action=filter'); ?>',
+                url: '<?php echo zen_admin_href_link($_GET['cmd'], zen_get_all_get_params(array('action')) . 'action=filter'); ?>',
                 data: str
             }).done(function (response) {
                 if (response.html) {

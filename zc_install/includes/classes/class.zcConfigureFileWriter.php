@@ -2,9 +2,9 @@
 /**
  * file contains zcConfigureFileWriter class
  * @package Installer
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: Author: DrByte  Tue Feb 16 15:03:47 2016 -0500 New in v1.5.5 $
  */
 /**
  *
@@ -13,15 +13,17 @@
  */
 class zcConfigureFileWriter
 {
+  public $errors = array();
+
   public function __construct($inputs)
   {
     $this->inputs = $inputs;
     $replaceVars = array();
     $replaceVars['INSTALLER_METHOD'] = (isset($inputs['installer_method'])) ? trim($inputs['installer_method']) : 'Zen Cart Installer';
-    $replaceVars['DATE_NOW'] = date('D M y H:i:s');
+    $replaceVars['DATE_NOW'] = date('D M d Y H:i:s');
     $replaceVars['CATALOG_HTTP_SERVER'] = trim($inputs['http_server_catalog'], '/ ');
     $replaceVars['CATALOG_HTTPS_SERVER'] = trim($inputs['https_server_catalog'], '/ ');
-    $replaceVars['ENABLE_SSL_CATALOG'] = isset($inputs['enable_ssl_catalog']) ? 'true' : 'false' ;
+    $replaceVars['ENABLE_SSL_CATALOG'] = $inputs['enable_ssl_catalog'];
     $replaceVars['DIR_WS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_http_catalog'], ' /\\') . '/');
     $replaceVars['DIR_WS_HTTPS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_https_catalog'], ' /\\') . '/');
     $replaceVars['DIR_FS_CATALOG'] = rtrim($inputs['physical_path'], ' /\\') . '/';
@@ -41,29 +43,35 @@ class zcConfigureFileWriter
 
 // die('<pre>' . print_r($inputs, true));
 
-    $this->processAllConfigureFiles($adminDir);
+    $this->processAllConfigureFiles();
   }
-  protected function processAllConfigureFiles($adminDir)
+  protected function processAllConfigureFiles()
   {
-    $tplFile = DIR_FS_INSTALL . 'includes/catalog-dist-configure.php';
-    $outputFile = $this->inputs['physical_path'] . '/includes/configure.php';
-    $result = $this->transformConfigureTplFile($tplFile, $outputFile);
-// logDetails('catalog size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
+    $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
+    $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
+    $result1 = $this->transformConfigureTplFile($tplFile, $outputFile);
+    if ((int)$result1 == 0) logDetails('catalogConfig size: ' . (int)$result1 . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
-    $tplFile = DIR_FS_INSTALL . 'includes/admin-dist-configure.php';
-    $outputFile = $this->inputs['physical_path'] . '/'. $adminDir . '/includes/configure.php';
-    $result = $this->transformConfigureTplFile($tplFile, $outputFile);
-// logDetails('admin size: ' . $result . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
-
+    // return a result indicating whether writing the file failed in some way: true=success;
+    return $result1;
   }
   protected function transformConfigureTplFile($tplFile, $outputFile)
   {
-    $tplOriginal = @file_get_contents($tplFile);
+    $tplOriginal = file_get_contents($tplFile);
+    if ($tplOriginal === false) {
+      $this->errors[] = sprintf(TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE, $tplFile);
+      logDetails('Error: Could not read file: ' . $tplFile, 'reading configure.php template');
+      return false;
+    }
     foreach ($this->replaceVars as $varName => $varValue)
     {
       $tplOriginal = str_replace('%%_' . $varName . '_%%', $varValue, $tplOriginal);
     }
     $retval = file_put_contents($outputFile, $tplOriginal);
+    if ($retval === false) {
+      $this->errors[] = sprintf(TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE, $outputFile);
+      logDetails('Error: Could not write configure.php file: ' . $outputFile, 'writing configure.php contents');
+    }
 
     return $retval;
   }

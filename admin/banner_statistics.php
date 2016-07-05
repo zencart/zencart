@@ -1,18 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 17 11:18:56 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte   Modified in v1.6.0 $
  *
  *
  * @TODO - align .flot_chart.flot-x-axis smarter in relation to .flot_chart, and add styling, such as slightly larger font and bold, etc
  * @TODO - expand the functionality to enable hover-points and hover-text describing each point on the graphs
  * @TODO - test on tablet
  * @TODO - test printing and/or emailing from screen, with date-stamp visible near/on the image
- * @TODO - consider adding foundation stuff to this page
- *
  */
 
   require('includes/application_top.php');
@@ -233,7 +231,7 @@ $(document).ready(function () {
   </form>
 
   <p>
-    <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . $banner_id);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
+    <a href="<?php echo zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . $banner_id);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
   </p>
 
 
@@ -326,7 +324,7 @@ $(document).ready(function () {
 
 
   <p>
-    <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
+    <a href="<?php echo zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
   </p>
 </div>
 <!-- body_eof //-->

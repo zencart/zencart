@@ -36,9 +36,10 @@ if (!defined('IS_ADMIN_FLAG')) {
           // reset products_price_sorter for searches etc.
           zen_update_products_price_sorter((int)$products_id);
           zen_record_admin_activity('Moved product ' . (int)$products_id . ' from category ' . (int)$current_category_id . ' to category ' . (int)$new_parent_id, 'notice');
+          $zco_notifier->notify('NOTIFIER_ADMIN_MOVE_PRODUCT', $products_id, $current_category_id, $new_parent_id);
 
         } else {
           $messageStack->add_session(ERROR_CANNOT_MOVE_PRODUCT_TO_CATEGORY_SELF, 'error');
         }
 
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));

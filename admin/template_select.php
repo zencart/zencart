@@ -56,7 +56,7 @@
         $check_query = $db->Execute("select template_language from " . TABLE_TEMPLATE_SELECT . " where template_id = '" . (int)$_POST['tID'] . "'");
         if ( $check_query->fields['template_language'] != 0 ) {
           $db->Execute("delete from " . TABLE_TEMPLATE_SELECT . " where template_id = '" . (int)$_POST['tID'] . "'");
-          zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']));
+          zen_redirect(zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']));
         }
         $action="";
         break;
@@ -102,9 +102,9 @@ require('includes/admin_html_head.php');
     }
 
     if (isset($tInfo) && is_object($tInfo) && ($templates->fields['template_id'] == $tInfo->template_id)) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '\'">' . "\n";
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $templates->fields['template_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $templates->fields['template_id']) . '\'">' . "\n";
     }
     if ($templates->fields['template_language'] == 0) {
       $template_language = "Default(All)";
@@ -119,7 +119,7 @@ require('includes/admin_html_head.php');
                     <td class="dataTableContent"><?php echo $template_info[$templates->fields['template_dir']]['name']; ?></td>
                     <td class="dataTableContent" align="center"><?php echo $templates->fields['template_dir']; ?></td>
                     <td class="dataTableContent" align="right">
-                      <?php if (isset($tInfo) && is_object($tInfo) && ($templates->fields['template_id'] == $tInfo->template_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $templates->fields['template_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
+                      <?php if (isset($tInfo) && is_object($tInfo) && ($templates->fields['template_id'] == $tInfo->template_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $templates->fields['template_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
                       &nbsp;</td>
                     </tr>
 <?php
@@ -136,7 +136,7 @@ require('includes/admin_html_head.php');
   if (empty($action)) {
 ?>
                           <tr>
-                            <td colspan="2" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=new') . '">' . zen_image_button('button_new_language.gif', IMAGE_NEW_TEMPLATE) . '</a>'; ?></td>
+                            <td colspan="2" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=new') . '">' . zen_image_button('button_new_language.gif', IMAGE_NEW_TEMPLATE) . '</a>'; ?></td>
                           </tr>
                           <?php
   }
@@ -164,7 +164,7 @@ require('includes/admin_html_head.php');
       }
       $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_NAME . '<br>' . zen_draw_pull_down_menu('ln', $template_array));
       $contents[] = array('text' => '<br>' . TEXT_INFO_LANGUAGE_NAME . '<br>' . zen_draw_pull_down_menu('lang', $language_array, $_POST['lang']));
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_insert.gif', IMAGE_INSERT) . '&nbsp;<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_insert.gif', IMAGE_INSERT) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'edit':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_TEMPLATE . '</b>');
@@ -176,7 +176,7 @@ require('includes/admin_html_head.php');
         $template_array[] = array('id' => $key, 'text' => $value['name']);
       }
       $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_NAME . '<br>' . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir']));
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . '&nbsp;<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'delete':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_TEMPLATE . '</b>');
@@ -184,15 +184,15 @@ require('includes/admin_html_head.php');
       $contents = array('form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('tID', $tInfo->template_id));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br><b>' . $template_info[$tInfo->template_dir]['name'] . '</b>');
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (isset($tInfo) && is_object($tInfo)) {
         $heading[] = array('text' => '<b>' . $template_info[$tInfo->template_dir]['name'] . '</b>');
         if ($tInfo->template_language == 0) {
-          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
+          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>');
         } else {
-          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
+          $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
         }
         $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_AUTHOR  . $template_info[$tInfo->template_dir]['author']);
         $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_VERSION  . $template_info[$tInfo->template_dir]['version']);

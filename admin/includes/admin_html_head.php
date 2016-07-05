@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: admin_html_head.php  New in v1.6.0 $
@@ -17,11 +17,12 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 
-<link rel="stylesheet" type="text/css" href="includes/template/css/normalize.css" id="normalizeCSS">
-<!-- <link rel="stylesheet" type="text/css" href="includes/template/css/foundation.min.css" id="foundationCSS"> -->
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css" id="stylesheetCSS">
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print" id="printCSS">
+<link rel="stylesheet" type="text/css" href="includes/template/css/bootstrap.min.css" id="normalizeCSS">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css" id="stylesheetCSS">
+    <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print" id="printCSS">
 
 <?php if (isset($extraCss)) { ?>
   <?php foreach ($extraCss as $css) { ?>
@@ -29,16 +30,12 @@
   <?php } ?>
 <?php } ?>
 
-<script src="includes/template/javascript/foundation/modernizr.js"></script>
 
 <?php /** CDN for jQuery core **/ ?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="includes/template/javascript/foundation/jquery.min.js"><\/script>');</script>
+<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>window.jQuery || document.write('<script src="includes/template/javascript/jquery-2.2.4.min.js"><\/script>');</script>
+<script src="includes/template/javascript/bootstrap.min.js"></script>
 
-<?php /** Load Foundation framework core**/ ?>
-<script src="includes/template/javascript/foundation/foundation.min.js"></script>
-
-<?php require "includes/template/javascript/zcJSFramework.js.php"; ?>
 
 <script src="includes/general.js"></script>
 
@@ -62,9 +59,3 @@ $(function(){
 </script>
 
 <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
-<link rel="stylesheet" type="text/css" href="includes/template/css/cssjsmenuhover.css" media="all" id="hoverJS">
-<script src="includes/menu.js"></script>
-<script>
-  $(document).ready(function(){ cssjsmenuinit(); });
-</script>
-

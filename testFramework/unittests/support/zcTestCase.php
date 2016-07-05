@@ -194,4 +194,13 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
         return $this->assertEquals($expected, $url, 'An incorrect URL was generated.');
     }
 
+    public function initDiStuff()
+    {
+        $config1 = new AuraWeb();
+        $config2 = new ZenCartCommon();
+        $builder = new \Aura\Di\ContainerBuilder();
+        $di = $builder->newConfiguredInstance(array($config1, $config2));
+        return $di;
+    }
+
 }

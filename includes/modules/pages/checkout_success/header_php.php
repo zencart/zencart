@@ -3,7 +3,7 @@
  * checkout_success header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Modified in v1.6.0 $
@@ -96,7 +96,7 @@ $flag_global_notifications = $global->fields['global_product_notifications'];
 if ($flag_global_notifications != '1') {
   $products_array = array();
   $counter = 0;
-  $products_query = "SELECT products_id, products_name
+  $products_query = "SELECT DISTINCT products_id, products_name
                      FROM " . TABLE_ORDERS_PRODUCTS . "
                      WHERE orders_id = :ordersID
                      ORDER BY products_name";
@@ -114,7 +114,7 @@ if ($flag_global_notifications != '1') {
 $flag_show_products_notification = (CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS == '1' and sizeof($notificationsArray)>0 and $flag_global_notifications != '1') ? true : false ;
 
 
-$customer_has_gv_balance = FALSE;
+$customer_has_gv_balance = false;
 $gv_query = "SELECT amount
              FROM " . TABLE_COUPON_GV_CUSTOMER . "
              WHERE customer_id = :customersID ";

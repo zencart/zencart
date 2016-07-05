@@ -3,10 +3,10 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2012 Zen Cart Development Team
+# * @copyright Copyright 2003-2016 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:03:47 2012 -0400 New in v1.5.1 $
+# * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -43,6 +43,11 @@ TRUNCATE TABLE sessions;
 
 ALTER TABLE admin_activity_log CHANGE COLUMN ip_address ip_address varchar(45) NOT NULL default '';
 ALTER TABLE whos_online CHANGE COLUMN ip_address ip_address varchar(45) NOT NULL default '';
+ALTER TABLE admin MODIFY COLUMN pwd_last_change_date datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_modified datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_login_date datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00';
+UPDATE admin SET pwd_last_change_date='0001-01-01' where pwd_last_change_date < '0001-01-01';
+UPDATE admin SET last_modified='0001-01-01' where last_modified < '0001-01-01';
+UPDATE admin SET last_login_date='0001-01-01' where last_login_date < '0001-01-01';
+UPDATE admin SET last_failed_attempt='0001-01-01' where last_failed_attempt < '0001-01-01';
 ALTER TABLE admin CHANGE COLUMN last_login_ip last_login_ip varchar(45) NOT NULL default '';
 ALTER TABLE admin CHANGE COLUMN last_failed_ip last_failed_ip varchar(45) NOT NULL default '';
 ALTER TABLE coupon_redeem_track CHANGE COLUMN redeem_ip redeem_ip varchar(45) NOT NULL default '';

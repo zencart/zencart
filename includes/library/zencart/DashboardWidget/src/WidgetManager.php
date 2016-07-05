@@ -3,7 +3,7 @@
  * Dashboard Widget Manager
  *
  * @package   ZenCart\Admin\DashboardWidget
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version   GIT: $Id: $
  */
@@ -103,11 +103,11 @@ final class WidgetManager
    * @return array
    * @todo   Is this necessary or valid with the new autoloading?
    */
-  public static function loadWidgetClasses(array $widgetList)
+  public static function loadWidgetClasses(array $widgetInfoList)
   {
-    $widgetClassList = array();
+    $widgetList = array();
 
-    foreach ($widgetList as $widgets) {
+    foreach ($widgetInfoList as $widgets) {
       foreach ($widgets as $widget) {
         $classNameSpace = __NAMESPACE__ . '\\';
         $className = base::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
@@ -117,13 +117,14 @@ final class WidgetManager
         if (!class_exists($className, true) && is_readable($classFile)) {
           require_once($classFile);
         }
+        if (!class_exists($className)) continue;
 
         $widgetClass = new $className($widget['widget_key'], $widget);
-        $widgetClassList[$widget['widget_key']] = $widgetClass;
+        $widgetList[$widget['widget_key']] = $widgetClass;
       }
     }
 
-    return $widgetClassList;
+    return $widgetList;
   }
 
   public static function prepareTemplateVariables($widgetList)
@@ -135,6 +136,8 @@ final class WidgetManager
       $tplVars[$widgetkey]['templateFile'] = $widget->getTemplateFile();
       $tplVars[$widgetkey]['widgetTitle']  = $widget->getWidgetTitle();
       $tplVars[$widgetkey]['widgetBaseId'] = $widget->getWidgetBaseId();
+      $tplVars[$widgetkey]['widgetInfo'] = $widget->getWidgetInfo();
+      $widget->updatewidgetInfo($widgetList[$widgetkey]->widgetInfo);
     }
 
     return $tplVars;
@@ -143,14 +146,17 @@ final class WidgetManager
   public static function applyPositionSettings($items, $user)
   {
     global $db;
-    $widgetList = self::transformPositions($items);
-    foreach ($widgetList as $key => $detail)
+    foreach ($items as $key => $detail)
     {
-      $sql = "UPDATE " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " SET widget_column = :column:, widget_row = :row:
+      $sql = "UPDATE " . TABLE_DASHBOARD_WIDGETS_TO_USERS . "
+              SET widget_column = :column:, widget_row = :row:,
+                  widget_width = :width:, widget_height = :height:
               WHERE admin_id = :adminId: AND widget_key = :key:";
-      $sql = $db->bindVars($sql, ':column:', $detail['col'], 'integer');
-      $sql = $db->bindVars($sql, ':row:', $detail['row'], 'integer');
-      $sql = $db->bindVars($sql, ':key:', $key, 'string');
+      $sql = $db->bindVars($sql, ':column:', $detail['x'], 'integer');
+      $sql = $db->bindVars($sql, ':row:', $detail['y'], 'integer');
+      $sql = $db->bindVars($sql, ':width:', $detail['width'], 'integer');
+      $sql = $db->bindVars($sql, ':height:', $detail['height'], 'integer');
+      $sql = $db->bindVars($sql, ':key:', $detail['id'], 'string');
       $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
       $db->execute($sql);
     }
@@ -165,32 +171,6 @@ final class WidgetManager
     $db->execute($sql);
   }
 
-  public static function transformPositions($items)
-  {
-    $columns = explode('|', $items);
-    {
-      $colC = 0;
-      foreach ($columns as $rowString)
-      {
-        if ($rowString != '')
-        {
-          $rows = explode(',', $rowString);
-          $rowC = 0;
-          foreach ($rows as $row)
-          {
-            if ($row != '')
-            {
-              //$row = strtoupper(str_replace('-', '_', $row));
-              $widgetEnum[$row] = array('col'=>$colC, 'row'=>$rowC);
-            }
-            $rowC ++;
-          }
-        }
-        $colC ++;
-      }
-    }
-    return $widgetEnum;
-  }
 
   public static function setWidgetRefresh($widgetRefresh, $item, $user)
   {
@@ -263,14 +243,22 @@ final class WidgetManager
   public static function addWidgetForUser($widget, $user)
   {
     global $db;
+    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " WHERE widget_key = :widgetKey:";
+    $sql = $db->bindVars($sql, ':widgetKey:', $widget, 'string');
+    $widgetDetail = $db->execute($sql);
+    $widgetIcon =  $widgetDetail->fields['widget_icon'];
+    $widgetTheme =  $widgetDetail->fields['widget_theme'];
+
     $sql = "SELECT MAX(widget_row) as max FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS;
     $result = $db->execute($sql);
     $max = (int)$result->fields['max'];
     $max++;
     $sql = "INSERT INTO " . TABLE_DASHBOARD_WIDGETS_TO_USERS . "
-            (widget_key, admin_id, widget_row, widget_column) VALUES (:widgetId:, :adminId:, $max, 0) ";
+            (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme) VALUES (:widgetId:, :adminId:, $max, 0, :widgetIcon:, :widgetHeaderColor:) ";
     $sql = $db->bindVars($sql, ':widgetId:', $widget, 'string');
     $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
+    $sql = $db->bindVars($sql, ':widgetIcon:', $widgetIcon, 'string');
+    $sql = $db->bindVars($sql, ':widgetHeaderColor:', $widgetTheme, 'string');
     $db->execute($sql);
   }
 }

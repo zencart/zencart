@@ -33,8 +33,9 @@
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_ALL, 'success');
         zen_record_admin_activity('Store Manager executed [update all products attributes sort order]', 'info');
+        $zco_notifier->notify('ADMIN_STOREMANAGER_UPDATE_ATTRIBUTES_SORT_ALL');
         $action='';
-        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+        zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
       }
       break;
 
@@ -52,8 +53,9 @@
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_PRICE_SORTER, 'success');
         zen_record_admin_activity('Store Manager executed [update all products price sorter]', 'info');
+        $zco_notifier->notify('ADMIN_STOREMANAGER_UPDATE_PRODUCTS_SORT_ALL');
         $action='';
-        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+        zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
       }
     break;
 
@@ -64,10 +66,11 @@
         $sql = "update " . TABLE_PRODUCTS_DESCRIPTION . " set products_viewed= '0'";
         $update_viewed = $db->Execute($sql);
 
+        $zco_notifier->notify('ADMIN_STOREMANAGER_UPDATE_PRODUCT_VIEW_COUNTS', 0);
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
         zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
         $action='';
-        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+        zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
       }
     break;
 
@@ -78,10 +81,11 @@
         $sql = "update " . TABLE_PRODUCTS . " set products_ordered= '0'";
         $update_viewed = $db->Execute($sql);
 
+        $zco_notifier->notify('ADMIN_STOREMANAGER_UPDATE_PRODUCT_ORDER_COUNTS', 0);
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_ORDERED, 'success');
         zen_record_admin_activity('Store Manager executed [update all products ordered]', 'info');
         $action='';
-        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+        zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
       }
     break;
 
@@ -90,20 +94,21 @@
     $sql = "update " . TABLE_COUNTER . " set counter= '" . (int)$_POST['new_counter'] . "'";
     $update_counter = $db->Execute($sql);
 
+    $zco_notifier->notify('ADMIN_STOREMANAGER_UPDATE_COUNTER', (int)$_POST['new_counter']);
     $messageStack->add_session(SUCCESS_UPDATE_COUNTER . (int)$_POST['new_counter'], 'success');
     zen_record_admin_activity('Store Manager executed [update counter], set to ' . (int)$_POST['new_counter'], 'info');
     $action='';
-    zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+    zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
     break;
 
     case ('optimize_db_start'):
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes') {
         $processing_message = TEXT_INFO_OPTIMIZING_DATABASE_TABLES;
-        $processing_action_url = zen_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
-      }
+        $processing_action_url = zen_admin_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
     break;
-    // clean out unused space in database
     case ('optimize_db_do'):
+    // clean out unused space in database
+      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
+      {
         $sql = "SHOW TABLE STATUS FROM `" . DB_DATABASE ."`";
         $tables = $db->Execute($sql);
         while(!$tables->EOF) {
@@ -119,9 +124,11 @@
           $tables->MoveNext();
         }
         $messageStack->add_session(SUCCESS_DB_OPTIMIZE . ' ' . $i, 'success');
+        $zco_notifier->notify('ADMIN_STOREMANAGER_DB_OPTIMIZE_TABLES');
         zen_record_admin_activity('Store Manager executed [optimize database tables]', 'info');
         $action='';
-        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+        zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
+      }
     break;
 
 // clean out old DEBUG logfiles
@@ -153,7 +160,7 @@
           if (substr($file, 0, 1) != '.') {
             if (preg_match('/^(' . $patternString . ').*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
-                zen_remove($purgeFolder . '/' . $file);
+                zen_remove_file($purgeFolder . '/' . $file);
               }
             }
           }
@@ -162,8 +169,9 @@
         unset($dir);
       }
       $messageStack->add_session(SUCCESS_CLEAN_DEBUG_FILES, 'success');
+      $zco_notifier->notify('ADMIN_STOREMANAGER_CLEAR_DEBUG_LOG_FILES');
       zen_record_admin_activity('Store Manager executed [clean debug/log files]', 'info');
-      zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+      zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
     break;
 
     case ('update_all_master_categories_id'):
@@ -184,10 +192,11 @@
           $check_products->MoveNext();
         }
 
+        $zco_notifier->notify('ADMIN_STOREMANAGER_UPDATE_ALL_MASTER_CATEGORIES_ID');
         $messageStack->add_session(SUCCESS_UPDATE_ALL_MASTER_CATEGORIES_ID, 'success');
         zen_record_admin_activity('Store Manager executed [update all master categories id]', 'info');
         $action='';
-        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+        zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
       }
     break;
 
@@ -206,10 +215,11 @@
         $messageStack->add_session(TEXT_MSG_NEXT_ORDER_TOO_LARGE, 'error');
       } else {
         $db->Execute("ALTER TABLE " . TABLE_ORDERS . " AUTO_INCREMENT = " . $new_orders_id);
+        $zco_notifier->notify('ADMIN_STOREMANAGER_UPDATE_NEXT_ORDER_ID', $new_orders_id);
         $messageStack->add_session(sprintf(TEXT_MSG_NEXT_ORDER, $new_orders_id), 'success');
         zen_record_admin_activity('Store Manager executed [update next order id], set to ' . $new_orders_id, 'info');
       }
-      zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+      zen_redirect(zen_admin_href_link(FILENAME_STORE_MANAGER));
     break;
 
     } // eof: action
@@ -267,7 +277,7 @@ if ($processing_message != '') {
 <!-- bof: reset all counter to 0 -->
       <tr>
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
-          <tr><form name = "update_counter" action="<?php echo zen_href_link(FILENAME_STORE_MANAGER, 'action=update_counter', 'NONSSL'); ?>" method="post">
+          <tr><form name = "update_counter" action="<?php echo zen_admin_href_link(FILENAME_STORE_MANAGER, 'action=update_counter'); ?>" method="post">
           <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_COUNTER_UPDATE; ?></td>
             <td class="main" align="left" valign="bottom"><?php echo zen_draw_input_field('new_counter'); ?></td>
@@ -313,7 +323,7 @@ if ($processing_message != '') {
 <!-- bof: reset next order to new order number -->
       <tr>
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
-          <tr><form name="update_orders" action="<?php echo zen_href_link(FILENAME_STORE_MANAGER, 'action=update_orders_id', 'NONSSL'); ?>" method="post">
+          <tr><form name="update_orders" action="<?php echo zen_admin_href_link(FILENAME_STORE_MANAGER, 'action=update_orders_id'); ?>" method="post">
           <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_SET_NEXT_ORDER_NUMBER; ?>
             <br />

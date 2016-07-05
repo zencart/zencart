@@ -72,9 +72,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
-  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
-                             'className'=>'\\ZenCart\\Request\\Request',
-                             'objectName'=>'zcRequest');
 
 /**
  * Breakpoint 10.
@@ -87,6 +84,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
+  $autoLoadConfig[10][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_di_container.php');
 /**
  * Breakpoint 20.
  *
@@ -205,6 +204,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[160][] = array('autoType'=>'require',
                                  'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
+  $autoLoadConfig[160][] = array('autoType'=>'require',
+                                 'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'whos_online.php');
 /**
  * Breakpoint 170.
  *

@@ -2,9 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: New in v1.6.0
+ * @version $Id: Author: DrByte  Thu Mar 21 16:18:21 2016 -0500 New in v1.5.5 $
  *
  */
 /**
@@ -32,7 +32,7 @@ class zcDatabaseInstaller
     $this->dbPassword = $options['db_password'];
     $this->dbName = $options['db_name'];
     $this->dbPrefix = $options['db_prefix'];
-    $this->dbCharset = $options['db_charset'];
+    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8' : $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
     $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
@@ -42,7 +42,7 @@ class zcDatabaseInstaller
     'REPLACE INTO ',
     'INSERT INTO ',
     'INSERT IGNORE INTO ',
-    'ALTER IGNORE TABLE ',
+//    'ALTER IGNORE TABLE ',
     'ALTER TABLE ',
     'TRUNCATE TABLE ',
     'RENAME TABLE ',
@@ -157,10 +157,10 @@ class zcDatabaseInstaller
 //    $this->writeUpgradeExceptions($this->line, '', $this->sqlFile);
 //    logDetails($sql, $this->sqlFile);
     $result = $this->db->execute($sql);
-    if (!$result)
+    if (!$result || $result->link->errno != 0)
     {
-      //echo $this->db->errorText;
-      $this->writeUpgradeExceptions($this->line, $this->db->error_text, $this->sqlFile);
+      $this->writeUpgradeExceptions($this->line, $this->db->error_number . ': ' . $this->db->error_text);
+      error_log("MySQL error " . $this->db->error_number . " encountered during zc_install:\n" . $this->db->error_text . "\n" . $this->line . "\n---------------\n\n");
     }
   }
   public function parserDropTableIfExists ()
@@ -196,6 +196,54 @@ class zcDatabaseInstaller
     } else
     {
       $this->line = 'INSERT INTO ' . $this->dbPrefix . substr($this->line, 12);
+    }
+  }
+  public function parserInsertIgnoreInto()
+  {
+    if (!$this->tableExists($this->lineSplit[3]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[3]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'INSERT IGNORE INTO ' . $this->dbPrefix . substr($this->line, 19);
+    }
+  }
+  public function parserTruncateTable()
+  {
+    if (!$this->tableExists($this->lineSplit[2]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'TRUNCATE TABLE ' . $this->dbPrefix . substr($this->line, 15);
+    }
+  }
+  public function parserFrom()
+  {
+    if (!$this->tableExists($this->lineSplit[1]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[1]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'FROM ' . $this->dbPrefix . substr($this->line, 5);
+    }
+  }
+  public function parserDeleteFrom()
+  {
+    if (!$this->tableExists($this->lineSplit[2]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else
+    {
+      $this->line = 'DELETE FROM ' . $this->dbPrefix . substr($this->line, 12);
     }
   }
   public function parserReplaceInto()
@@ -280,12 +328,12 @@ class zcDatabaseInstaller
       }
     }
   }
-  public function writeUpgradeExceptions($line, $message, $sqlFile)
+  public function writeUpgradeExceptions($line, $message, $sqlFile = '')
   {
     logDetails($line . '  ' . $message . '  ' . $sqlFile, 'upgradeException');
     $this->upgradeExceptions[] = $message;
     $this->createExceptionsTable();
-    $sql="INSERT INTO " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,:file:, :reason:, now(), :line:)";
+    $sql="INSERT INTO " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS . " (sql_file, reason, errordate, sqlstatement) VALUES (:file:, :reason:, now(), :line:)";
     $sql = $this->db->bindVars($sql, ':file:', $sqlFile, 'string');
     $sql = $this->db->bindVars($sql, ':reason:', $message, 'string');
     $sql = $this->db->bindVars($sql, ':line:', $line, 'string');

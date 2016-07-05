@@ -1,10 +1,10 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
  */
 
 if (!file_exists(DIR_FS_INSTALL . 'includes/custom_settings.php')) {

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:
+ * @version $Id: Author: zcwilt  Mon Dec 28 19:34:40 2015 +0000 New in v1.5.5 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
@@ -16,6 +16,10 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
   <input type="hidden" name="detected_detected_https_server_catalog" value="<?php echo $catalogHttpsServer; ?>">
   <input type="hidden" name="adminDir" value="<?php echo $adminDir; ?>">
   <input type="hidden" name="db_type" value="<?php echo $db_type; ?>">
+
+  <?php if ($request_type != 'SSL') { ?>
+  <div class="alert-box warning"><?php echo TEXT_ERROR_HTTPS_CONFIGURE; ?></div>
+  <?php } ?>
   <fieldset>
     <legend>License</legend>
     <div class="row">
@@ -47,7 +51,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <label class="inline" for="enable_ssl_catalog"><a href="#" class="hasHelpText" id="ENABLESSLCATALOG"><?php echo TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input class="checkbox" id="enable_ssl_catalog" type="checkbox" value="true" name="enable_ssl_catalog" tabindex="3" checked="checked"><label class="inline" for="enable_ssl_catalog"><?php echo TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL; ?></label>
+        <input class="checkbox" id="enable_ssl_catalog" type="checkbox" value="true" name="enable_ssl_catalog" tabindex="3" <?php echo $enableSslCatalog; ?>><label class="inline" for="enable_ssl_catalog"><?php echo TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL; ?></label>
       </div>
     </div>
     <div class="row">

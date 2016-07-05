@@ -28,7 +28,7 @@
           $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
 
-        zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
+        zen_redirect(zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
         break;
 
       case 'setbanners_on_ssl':
@@ -40,7 +40,7 @@
           $messageStack->add_session(ERROR_UNKNOWN_BANNER_ON_SSL, 'error');
         }
 
-        zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
+        zen_redirect(zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
         break;
       case 'setbanners_open_new_windows':
         if ( ($_GET['flagbanners_open_new_windows'] == '0') || ($_GET['flagbanners_open_new_windows'] == '1') ) {
@@ -51,7 +51,7 @@
           $messageStack->add_session(ERROR_UNKNOWN_BANNER_OPEN_NEW_WINDOW, 'error');
         }
 
-        zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
+        zen_redirect(zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
         break;
       case 'insert': // deprecated
       case 'update': // deprecated
@@ -66,9 +66,9 @@
         $banners_image_local = zen_db_prepare_input($_POST['banners_image_local']);
         $banners_image_target = zen_db_prepare_input($_POST['banners_image_target']);
         $db_image_location = '';
-        $expires_date = zen_db_prepare_input($_POST['expires_date']) == '' ? 'null' : zen_format_date_raw($_POST['expires_date']);
+        $expires_date = zen_db_prepare_input($_POST['expires_date']) == '' ? 'NULL' : zen_format_date_raw($_POST['expires_date']);
         $expires_impressions = zen_db_prepare_input($_POST['expires_impressions']);
-        $date_scheduled = zen_db_prepare_input($_POST['date_scheduled']) == '' ? 'null' : zen_format_date_raw($_POST['date_scheduled']);
+        $date_scheduled = zen_db_prepare_input($_POST['date_scheduled']) == '' ? 'NULL' : zen_format_date_raw($_POST['date_scheduled']);
         $status = zen_db_prepare_input($_POST['status']);
         $banners_open_new_windows = zen_db_prepare_input($_POST['banners_open_new_windows']);
         $banners_on_ssl = zen_db_prepare_input($_POST['banners_on_ssl']);
@@ -141,7 +141,7 @@
             $sql = $db->bindVars($sql, ':bannersID', $banners_id, 'integer');
             $db->Execute($sql);
 
-          zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id));
+          zen_redirect(zen_admin_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id));
         } else {
           $action = 'new';
         }
@@ -172,7 +172,7 @@
 
         $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
 
-        zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']));
+        zen_redirect(zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']));
         break;
     }
   }
@@ -375,7 +375,7 @@ function popupImageWindow(url) {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_BANNER_NOTE . '<br>' . TEXT_BANNERS_INSERT_NOTE . '<br>' . TEXT_BANNERS_EXPIRCY_NOTE . '<br>' . TEXT_BANNERS_SCHEDULE_NOTE; ?></td>
-            <td class="main" align="right" valign="top" nowrap><?php echo (($form_action == 'add') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)). '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+            <td class="main" align="right" valign="top" nowrap><?php echo (($form_action == 'add') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)). '&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
         </table></td>
       </form></tr>
@@ -435,9 +435,9 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
       $banners_clicked = ($info->fields['banners_clicked'] != '') ? $info->fields['banners_clicked'] : '0';
 
       if (isset($bInfo) && is_object($bInfo) && ($banners->fields['banners_id'] == $bInfo->banners_id)) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '\'">' . "\n";
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id']) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo '<a href="javascript:popupImageWindow(\'' . FILENAME_POPUP_IMAGE . '.php' . '?banner=' . $banners->fields['banners_id']  . '\')">' . zen_image(DIR_WS_IMAGES . 'icon_popup.gif', 'View Banner') . '</a>&nbsp;' . $banners->fields['banners_title']; ?></td>
@@ -446,33 +446,33 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
                 <td class="dataTableContent" align="center">
 <?php
       if ($banners->fields['status'] == '1') {
-        echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setflag&flag=0') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>';
+        echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setflag&flag=0') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>';
       } else {
-        echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setflag&flag=1') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>';
+        echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setflag&flag=1') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>';
       }
 ?>
                 </td>
                 <td class="dataTableContent" align="center">
 <?php
       if ($banners->fields['banners_open_new_windows'] == '1') {
-        echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=0') . '">' . zen_image(DIR_WS_IMAGES . 'icon_orange_on.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON) . '</a>';
+        echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=0') . '">' . zen_image(DIR_WS_IMAGES . 'icon_orange_on.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON) . '</a>';
       } else {
-        echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=1') . '">' . zen_image(DIR_WS_IMAGES . 'icon_orange_off.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF) . '</a>';
+        echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=1') . '">' . zen_image(DIR_WS_IMAGES . 'icon_orange_off.gif', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF) . '</a>';
       }
 ?>
                 </td>
                 <td class="dataTableContent" align="center">
 <?php
       if ($banners->fields['banners_on_ssl'] == '1') {
-        echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=0') . '">' . zen_image(DIR_WS_IMAGES . 'icon_blue_on.gif', IMAGE_ICON_BANNER_ON_SSL_ON) . '</a>';
+        echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=0') . '">' . zen_image(DIR_WS_IMAGES . 'icon_blue_on.gif', IMAGE_ICON_BANNER_ON_SSL_ON) . '</a>';
       } else {
-        echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=1') . '">' . zen_image(DIR_WS_IMAGES . 'icon_blue_off.gif', IMAGE_ICON_BANNER_ON_SSL_OFF) . '</a>';
+        echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=1') . '">' . zen_image(DIR_WS_IMAGES . 'icon_blue_off.gif', IMAGE_ICON_BANNER_ON_SSL_OFF) . '</a>';
       }
 ?>
                 </td>
                 <td class="dataTableContent" align="right"><?php echo $banners->fields['banners_sort_order']; ?></td>
 
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id']) . '">' . zen_image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($banners->fields['banners_id'] == $bInfo->banners_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id']) . '">' . zen_image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($banners->fields['banners_id'] == $bInfo->banners_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners->fields['banners_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $banners->MoveNext();
@@ -485,7 +485,7 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
                     <td class="smallText" align="right"><?php echo $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
                   </tr>
                   <tr>
-                    <td align="right" colspan="2"><?php echo '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'action=new') . '">' . zen_image_button('button_new_banner.gif', IMAGE_NEW_BANNER) . '</a>'; ?></td>
+                    <td align="right" colspan="2"><?php echo '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'action=new') . '">' . zen_image_button('button_new_banner.gif', IMAGE_NEW_BANNER) . '</a>'; ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -502,15 +502,15 @@ if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['bID'] != '') {
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br><b>' . $bInfo->banners_title . '</b>');
       if ($bInfo->banners_image) $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('delete_image', 'on', true) . ' ' . TEXT_INFO_DELETE_IMAGE);
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (is_object($bInfo)) {
         $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=del') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=del') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
         $contents[] = array('text' => '<br>' . TEXT_BANNERS_DATE_ADDED . ' ' . zen_date_short($bInfo->date_added));
-        $contents[] = array('center', 'text' => '<br />' . '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '">' . zen_image_button('button_update.gif', IMAGE_UPDATE) . '</a>' );
+        $contents[] = array('center', 'text' => '<br />' . '<a href="' . zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '">' . zen_image_button('button_update.gif', IMAGE_UPDATE) . '</a>' );
 
 
         $banner_id = $bInfo->banners_id;

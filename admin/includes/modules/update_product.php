@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: ajeh  Wed Jul 9 21:58:03 2014 -0400 Modified in v1.5.5 $
  */
   if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -14,7 +14,7 @@
     $action = 'new_product';
   } elseif ($_POST['products_model'] . $_POST['products_url'] . $_POST['products_name'] . $_POST['products_description'] != '') {
     $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
-    $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
+    $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'NULL';
     // Data-cleaning to prevent MySQL5 data-type mismatch errors:
     $tmp_value = zen_db_prepare_input($_POST['products_quantity']);
     $products_quantity = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
@@ -77,6 +77,7 @@
                     values ('" . (int)$products_id . "', '" . (int)$current_category_id . "')");
 
       zen_record_admin_activity('New product ' . (int)$products_id . ' added via admin console.', 'info');
+      $zco_notifier->notify('NOTIFIER_ADMIN_NEW_PRODUCT_ADDED', $products_id, $current_category_id);
 
       ///////////////////////////////////////////////////////
       //// INSERT PRODUCT-TYPE-SPECIFIC *INSERTS* HERE //////
@@ -93,6 +94,7 @@
       zen_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "'");
 
       zen_record_admin_activity('Updated product ' . (int)$products_id . ' via admin console.', 'info');
+      $zco_notifier->notify('NOTIFIER_ADMIN_PRODUCT_UPDATED', $products_id, $sql_data_array);
 
       // reset products_price_sorter for searches etc.
       zen_update_products_price_sorter((int)$products_id);
@@ -152,7 +154,7 @@
     define('IMAGE_MANAGER_HANDLER', 0);
     define('DIR_IMAGEMAGICK', '');
     if ($new_image == 'true' and IMAGE_MANAGER_HANDLER >= 1) {
-      $src= DIR_FS_CATALOG . DIR_WS_IMAGES . zen_get_products_image((int)$products_id);
+      $src= DIR_FS_CATALOG . DIR_WS_IMAGES . zen_get_products_image_name((int)$products_id);
       $filename_small= $src;
       preg_match("/.*\/(.*)\.(\w*)$/", $src, $fname);
       list($oiwidth, $oiheight, $oitype) = getimagesize($src);
@@ -175,7 +177,7 @@
       $large_width= $oiwidth;
       $large_height= $oiheight;
 
-      $products_image = zen_get_products_image((int)$products_id);
+      $products_image = zen_get_products_image_name((int)$products_id);
       $products_image_extension = substr($products_image, strrpos($products_image, '.'));
       $products_image_base = preg_replace('/'.$products_image_extension.'/', '', $products_image);
 
@@ -192,8 +194,8 @@
       }
     }
 
-    zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '') ));
+    zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '') ));
   } else {
     $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
-    zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '') ));
+    zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '') ));
   }

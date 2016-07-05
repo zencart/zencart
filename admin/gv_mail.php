@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: Author: DrByte  Tue Dec 29 12:22:34 2015 -0500 Modified in v1.5.5 $
  */
 
   require('includes/application_top.php');
@@ -17,7 +17,7 @@
   if ($_GET['action'] == 'set_editor') {
     // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
     $action='';
-    zen_redirect(zen_href_link(FILENAME_GV_MAIL));
+    zen_redirect(zen_admin_href_link(FILENAME_GV_MAIL));
   }
 
   if ( ($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address'] || $_POST['email_to']) && (!$_POST['back_x']) ) {
@@ -32,7 +32,7 @@
     if (zen_admin_demo()) {
       $_GET['action']= '';
       $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-      zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
+      zen_redirect(zen_admin_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
     }
     $from = zen_db_prepare_input($_POST['from']);
     $subject = zen_db_prepare_input($_POST['subject']);
@@ -43,17 +43,17 @@
 
     while (!$mail->EOF) {
 
-      $id1 = create_coupon_code($mail->fields['customers_email_address']);
+      $id1 = zen_create_coupon_code($mail->fields['customers_email_address']);
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
-                                    values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
+                                    values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 
       $insert_id = $db->Insert_ID();
 
       $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . "
                     (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent)
                     values ('" . $insert_id ."', '0', 'Admin',
-                            '" . $mail->fields['customers_email_address'] . "', now() )");
+                            '" . zen_db_input($mail->fields['customers_email_address']) . "', now() )");
 
       $message = $_POST['message'];
       $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
@@ -83,6 +83,7 @@
 
       zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], $subject , $message, $from, $from, $html_msg, 'gv_mail');
       zen_record_admin_activity('GV mail sent to ' . $mail->fields['customers_email_address'] . ' in the amount of ' . $currencies->format($_POST['amount']), 'info');
+      $zco_notifier->notify('ADMIN_GV_EMAIL_SENT', $mail->fields['customers_email_address'], $currencies->format($_POST['amount']));
       $recip_count++;
       if (SEND_EXTRA_GV_ADMIN_EMAILS_TO_STATUS== '1' and SEND_EXTRA_GV_ADMIN_EMAILS_TO != '') {
         zen_mail('', SEND_EXTRA_GV_ADMIN_EMAILS_TO, SEND_EXTRA_GV_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, $from, $from, $html_msg, 'gv_mail_extra');
@@ -93,7 +94,7 @@
     }
 
     if ($_POST['email_to']) {
-      $id1 = create_coupon_code($_POST['email_to']);
+      $id1 = zen_create_coupon_code($_POST['email_to']);
       $message = zen_db_prepare_input($_POST['message']);
       $message .= "\n\n" . TEXT_GV_WORTH  . $currencies->format($_POST['amount']) . "\n\n";
       $message .= TEXT_TO_REDEEM;
@@ -130,17 +131,17 @@
       // Now create the coupon main entry
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
-                                    values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
+                                    values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 
       $insert_id = $db->Insert_id();
 
       $insert_query = $db->Execute("insert into " . TABLE_COUPON_EMAIL_TRACK . "
                                     (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent)
                                     values ('" . $insert_id ."', '0', 'Admin',
-                                            '" . $_POST['email_to'] . "', now() )");
+                                            '" . zen_db_input($_POST['email_to']) . "', now() )");
 
     }
-    zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
+    zen_redirect(zen_admin_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
   }
 
   if ( ($_GET['action'] == 'preview') && (!$_POST['customers_email_address']) && (!$_POST['email_to']) ) {
@@ -322,7 +323,7 @@ function check_form(form_name) {
                 <table border="0" width="100%" cellpadding="0" cellspacing="2">
                   <tr>
                     <td><?php echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="back"'); ?></td>
-                    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_GV_MAIL) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . ($_POST['amount'] <= 0 ? '' : zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL)); ?></td>
+                    <td align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_GV_MAIL) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . ($_POST['amount'] <= 0 ? '' : zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL)); ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -348,7 +349,7 @@ function check_form(form_name) {
               </tr>
                <tr>
                 <td class="main"><?php echo TEXT_TO; ?></td>
-                <td><?php echo zen_draw_input_field('email_to', '', 'size="50"'); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
+                <td><?php echo zen_draw_input_field('email_to', '', 'size="50"', false, 'email'); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

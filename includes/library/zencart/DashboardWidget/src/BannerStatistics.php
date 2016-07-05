@@ -3,7 +3,7 @@
  * BannerStatistics Dashboard Widget
  *
  * @package   ZenCart\Admin\DashboardWidget
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version   GIT: $Id: $
  */
@@ -29,7 +29,7 @@ class BannerStatistics extends AbstractWidget
 
     // which banner to display
     // @TODO - make this configurable by the user, in the widget's settings
-    $banner_id = 9;
+    $banner_id = 6;
 
     $opts = array('series' => array('lines'=> array('show'=>'true'),
                                     'points'=> array('show'=>'true'),

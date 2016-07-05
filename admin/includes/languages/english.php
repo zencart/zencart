@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
@@ -39,10 +39,10 @@ define('TEXT_INFO_META_TAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is 
 
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Admin Home');
-define('HEADER_TITLE_SUPPORT_SITE', 'Support Site');
-define('HEADER_TITLE_ONLINE_CATALOG', 'Online Catalog');
+define('HEADER_TITLE_SUPPORT_SITE', 'Support');
+define('HEADER_TITLE_ONLINE_CATALOG', 'Storefront');
 define('HEADER_TITLE_VERSION', 'Version');
-define('HEADER_TITLE_ACCOUNT', 'Account');
+define('HEADER_TITLE_ACCOUNT', 'My Account');
 define('HEADER_TITLE_LOGOFF', 'Logoff');
 //define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 
@@ -61,6 +61,8 @@ define('FEMALE', 'Female');
 define('TEXT_CHECK_ALL', 'Check All');
 define('TEXT_UNCHECK_ALL', 'Uncheck All');
 define('NONE', 'None');
+
+define('TEXT_UNKNOWN', 'Unknown');
 
 // configuration box text
 define('BOX_HEADING_CONFIGURATION', 'Configuration');
@@ -148,7 +150,6 @@ define('BOX_TOOLS_CACHE', 'Cache Control');
 define('BOX_TOOLS_DEFINE_LANGUAGE', 'Define Languages');
 define('BOX_TOOLS_FILE_MANAGER', 'File Manager');
 define('BOX_TOOLS_MAIL', 'Send Email');
-define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter and Product Notifications Manager');
 define('BOX_TOOLS_SERVER_INFO', 'Server/Version Info');
 define('BOX_TOOLS_WHOS_ONLINE', 'Who\'s Online');
 define('BOX_TOOLS_STORE_MANAGER', 'Store Manager');
@@ -177,7 +178,7 @@ define('BOX_LOCALIZATION_LANGUAGES', 'Languages');
 define('BOX_LOCALIZATION_ORDERS_STATUS', 'Orders Status');
 
 // gift vouchers box text
-define('BOX_HEADING_GV_ADMIN', TEXT_GV_NAME . '/Coupons');
+define('BOX_HEADING_GV_ADMIN', 'Discounts');
 define('BOX_GV_ADMIN_QUEUE',  TEXT_GV_NAMES . ' Queue');
 define('BOX_GV_ADMIN_MAIL', 'Mail ' . TEXT_GV_NAME);
 define('BOX_GV_ADMIN_SENT', TEXT_GV_NAMES . ' sent');
@@ -185,7 +186,7 @@ define('BOX_COUPON_ADMIN','Coupon Admin');
 define('BOX_COUPON_RESTRICT','Coupon Restrictions');
 
 // admin access box text
-define('BOX_HEADING_ADMIN_ACCESS', 'Admin Access Management');
+define('BOX_HEADING_ADMIN_ACCESS', 'Admins');
 define('BOX_ADMIN_ACCESS_USERS',  'Admin Users');
 define('BOX_ADMIN_ACCESS_PROFILES', 'Admin Profiles');
 define('BOX_ADMIN_ACCESS_PAGE_REGISTRATION', 'Admin Page Registration');
@@ -352,6 +353,9 @@ define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
 define('IMAGE_INSTALL_SPECIAL', 'Add Special Price Info');
 define('IMAGE_INSTALL_FEATURED', 'Add Featured Product Info');
 
+define('TEXT_VERSION_CHECK_BUTTON', 'Check for New Version');
+define('TEXT_BUTTON_RESET_ACTIVITY_LOG', 'View Activity Log');
+
 define('ICON_PRODUCTS_PRICE_MANAGER','Products Price Manager');
 define('ICON_COPY_TO', 'Copy to');
 define('ICON_CROSS', 'False');
@@ -418,6 +422,7 @@ define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Error: There is currently no defaul
 
 define('TEXT_NONE', '--none--');
 define('TEXT_TOP', 'Top');
+define('PLEASE_SELECT', 'Please select ...');
 
 define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination does not exist %s');
 define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination not writeable %s');
@@ -431,11 +436,15 @@ define('WARNING_DATABASE_VERSION_OUT_OF_DATE','Your database appears to need pat
 define('WARN_DATABASE_VERSION_PROBLEM','true'); //set to false to turn off warnings about database version mismatches
 define('WARNING_ADMIN_DOWN_FOR_MAINTENANCE', '<strong>WARNING:</strong> Site is currently set to Down for Maintenance ...<br />NOTE: You cannot test most Payment and Shipping Modules in Maintenance mode');
 define('WARNING_BACKUP_CFG_FILES_TO_DELETE', 'WARNING: These files should be deleted to prevent security vulnerability: ');
-define('WARNING_INSTALL_DIRECTORY_EXISTS', 'SECURITY WARNING: Installation directory exists at: ' . DIR_FS_CATALOG . 'zc_install. Please remove this directory for security reasons.');
-define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %sincludes/configure.php. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical).  <a href="http://tutorials.zen-cart.com/index.php?article=90" target="_blank">See this FAQ</a>');
+define('WARNING_INSTALL_DIRECTORY_EXISTS', 'SECURITY WARNING: Installation directory exists at: %s. Please remove this directory for security reasons.');
+define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="http://tutorials.zen-cart.com/index.php?article=90" target="_blank">See this FAQ</a>');
 define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language file: ');
 define('ERROR_MODULE_REMOVAL_PROHIBITED', 'ERROR: Module removal prohibited: ');
 define('WARNING_REVIEW_ROGUE_ACTIVITY', 'ALERT: Please review for possible XSS activity:');
+
+define('ERROR_FILE_NOT_REMOVEABLE', 'Error: Could not remove the file specified. You may have to use FTP to remove the file, due to a server-permissions configuration limitation.');
+define('WARNING_SESSION_AUTO_START', 'Warning: session.auto_start is enabled - please disable this PHP feature in php.ini (restarting your webserver may be necessary to activate the change).');
+define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warning: The downloadable products directory does not exist: ' . DIR_FS_DOWNLOAD . '. Downloadable products will not work until this directory is valid.');
 
 define('TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> gift vouchers)');
 define('TEXT_DISPLAY_NUMBER_OF_COUPONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> coupons)');
@@ -449,7 +458,7 @@ define('TEXT_VALID_CATEGORIES_LIST', 'Categories List');
 define('TEXT_VALID_CATEGORIES_ID', 'Category ID');
 define('TEXT_VALID_CATEGORIES_NAME', 'Category Name');
 
-define('DEFINE_LANGUAGE','Define Language:');
+define('DEFINE_LANGUAGE','Choose Language:');
 
 define('BOX_ENTRY_COUNTER_DATE','Hit Counter Started:');
 define('BOX_ENTRY_COUNTER','Hit Counter:');
@@ -512,8 +521,8 @@ define('NOT_INSTALLED_TEXT','Not Installed');
 // search filters
   define('TEXT_INFO_SEARCH_DETAIL_FILTER','Search Filter: ');
   define('HEADING_TITLE_SEARCH_DETAIL','Search: ');
-  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS', 'Search for Product(s) - Delimited by commas');
-  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL', 'Search for Products Name/Model');
+  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS', 'Search for Product IDs (Delimited by commas)');
+  define('HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL', 'Search for Product Name/Model');
 
   define('PREV_NEXT_PRODUCT', 'Products: ');
   define('TEXT_CATEGORIES_STATUS_INFO_OFF', '<span class="alert">*Category is Disabled</span>');
@@ -525,8 +534,8 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('ERROR_ADMIN_DEMO','Admin Demo is Active ... the feature(s) you are trying to perform have been disabled');
 
 // Version Check notices
-  define('TEXT_VERSION_CHECK_NEW_VER','New Version Available v');
-  define('TEXT_VERSION_CHECK_NEW_PATCH','New PATCH Available: v');
+  define('TEXT_VERSION_CHECK_NEW_VER','<span class="alertVersionNew">New Version Available:</span> v');
+  define('TEXT_VERSION_CHECK_NEW_PATCH','<span class="alertVersionNew">New PATCH Available:</span> v');
   define('TEXT_VERSION_CHECK_PATCH','patch');
   define('TEXT_VERSION_CHECK_DOWNLOAD','Download Here');
   define('TEXT_VERSION_CHECK_CURRENT','Your version of Zen Cart&reg; appears to be current.');
@@ -559,6 +568,8 @@ define('ERROR_USPS_STATUS', '<strong>Warning:</strong> USPS shipping module is e
 
 define('ERROR_SHIPPING_MODULES_NOT_DEFINED', 'NOTE: You have no shipping modules activated. Please go to Modules->Shipping to configure.');
 define('ERROR_PAYMENT_MODULES_NOT_DEFINED', 'NOTE: You have no payment modules activated. Please go to Modules->Payment to configure.');
+
+define('TEXT_TOTAL_WEIGHT', 'Total weight: %s ' . TEXT_PRODUCT_WEIGHT_UNIT);
 
 // text pricing
 define('TEXT_CHARGES_WORD','Calculated Charge:');
@@ -593,6 +604,8 @@ define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING', 'Max:');
 // Sale Maker Sale Price
   define('PRODUCT_PRICE_SALE','Sale:&nbsp;');
 
+define('TEXT_PRICED_BY_ATTRIBUTES', 'Priced by Attributes');
+
 // Rich Text / HTML resources
 define('TEXT_HTML_EDITOR_NOT_DEFINED','If you have no HTML editor defined or JavaScript disabled, you may enter raw HTML text here manually.');
 define('TEXT_WARNING_HTML_DISABLED','<span class = "main">Note: You are using TEXT only email. If you would like to send HTML you need to enable "Enable HTML Emails" under Email Options</span>');
@@ -610,7 +623,6 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
   define('EDITOR_NONE', 'Plain Text');
   define('TEXT_EDITOR_INFO', 'Text Editor');
   define('ERROR_EDITORS_FOLDER_NOT_FOUND', 'You have an HTML editor selected in \'My Store\' but the \'/editors/\' folder cannot be located. Please disable your selection or move your editor files into the \''.DIR_WS_CATALOG.'editors/\' folder');
-
   define('TEXT_CATEGORIES_PRODUCTS_SORT_ORDER_INFO', 'Categories/Product Display Order: ');
   define('TEXT_SORT_PRODUCTS_SORT_ORDER_PRODUCTS_NAME', 'Products Sort Order, Products Name');
   define('TEXT_SORT_PRODUCTS_NAME', 'Products Name');
@@ -722,7 +734,7 @@ define('TEXT_LEAD_EDIT', 'Edit');
 define('TEXT_LEAD_DELETE', 'Delete');
 define('TEXT_LEAD_ADD_ENTRY', 'Add Entry');
 define('TEXT_LEAD_EDIT_ENTRY', 'Edit Entry');
-define('TEXT_PAGINATION_LIMIT_SELECT', 'Select Pagination Items');
+define('TEXT_PAGINATION_LIMIT_SELECT', 'Maximum Number of Rows');
 define('TEXT_LEAD_ACTION', 'Action');
 define('TEXT_ALL', 'All');
 define('TEXT_ENABLED', 'Enabled');
@@ -734,6 +746,22 @@ define('TEXT_CONFIRM_DELETE_TEXT', 'Do you want to delete the selected items?');
 define('TEXT_CONFIRM', 'Confirm');
 define('TEXT_ITEM_DEFAULT', '<strong>(Default)</strong>');
 define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
-define('TEXT_AUTOCOMPLETE_DEFAULT_PLACEHOLDER', 'Search or Select below');
+define('TEXT_FILLBYLOOKUP_DEFAULT_PLACEHOLDER', 'Search or Select below');
 define('TEXT_DELETE_LINKED_ITEMS', 'Delete Linked Products');
 define('TEXT_DELETE_IMAGE', 'Delete Linked Image');
+
+// notifications
+
+define('TEXT_HEADER_NOTIFICATIONS_COUNT', 'You have %s notifications');
+define('TEXT_HEADER_GV_QUEUE', 'Gift Voucher Queue .. %s Item(s)');
+
+
+// date ranges
+
+define('TEXT_SELECT_DATE_RANGE', 'Select Date Range');
+define('TEXT_DATE_RANGE_TODAY', 'Today');
+define('TEXT_DATE_RANGE_YESTERDAY', 'Yesterday');
+define('TEXT_DATE_RANGE_LAST_7_DAYS', 'Last 7 Days');
+define('TEXT_DATE_RANGE_LAST_30_DAYS', 'Last 30 Days');
+define('TEXT_DATE_RANGE_THIS_MONTH', 'This Month');
+define('TEXT_DATE_RANGE_LAST_MONTH', 'Last Month');

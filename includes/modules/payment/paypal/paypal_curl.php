@@ -455,6 +455,14 @@ class paypal_curl extends base {
     $commError = curl_error($ch);
     $commErrNo = curl_errno($ch);
 
+    if ($commErrNo == 35) {
+      trigger_error('ALERT: Could not process PayPal transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
+      $response = curl_exec($ch);
+      $commError = curl_error($ch);
+      $commErrNo = curl_errno($ch);
+    }
+
     $commInfo = @curl_getinfo($ch);
     curl_close($ch);
 

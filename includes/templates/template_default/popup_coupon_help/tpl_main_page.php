@@ -3,10 +3,10 @@
  * Override Template for common/tpl_main_page.php
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_main_page.php 14175 2009-08-16 05:58:34Z drbyte $
+ * @version $Id: Author: DrByte  Fri Jan 8 13:28:20 2016 -0500 Modified in v1.6.0 $
  */
 // Notifier hook to allow for dynamic changes to template operation
 $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
@@ -87,7 +87,7 @@ $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_di
   foreach($cats as $key=>$value) {
     $mycats[] = $value["name"];
   }
-  $cats = '<ul id="couponCatRestrictions">' . '<li>' . implode('<li>', $mycats) . '</ul>';
+  $cats = '<ul id="couponCatRestrictions">' . '<li>' . implode('</li><li>', $mycats) . '</li></ul>';
   $text_coupon_help .= $cats;
 
   $text_coupon_help .= TEXT_COUPON_HELP_PRODUCTS;
@@ -114,7 +114,7 @@ $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_di
   foreach($prods as $key=>$value) {
     $myprods[] = $value["name"];
   }
-  $prods = '<ul id="couponProdRestrictions">' . '<li>' . implode('<li>', $myprods) . '</ul>';
+  $prods = '<ul id="couponProdRestrictions">' . '<li>' . implode('</li><li>', $myprods) . '</li></ul>';
   $text_coupon_help .= $prods . TEXT_COUPON_GV_RESTRICTION;
 
   echo $text_coupon_help;

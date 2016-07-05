@@ -1,7 +1,8 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.6.0 $
  */
@@ -41,8 +42,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'loadFile'=>'logger.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'shopping_cart.php',
-                               );
+                               'loadFile'=>'shopping_cart.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'products.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -75,10 +75,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
-  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
-                               'className'=>'\\ZenCart\\Request\\Request',
-                               'objectName'=>'zcRequest');
-
 /**
  * Breakpoint 10.
  *
@@ -98,12 +94,13 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[20][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
+  $autoLoadConfig[20][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_sanitize.php');
 /**
  * Breakpoint 30.
  *
  * require('includes/init_includes/init_gzip.php');
  * $sniffer = new sniffer();
-
  *
  */
   $autoLoadConfig[30][] = array('autoType'=>'init_script',
@@ -140,6 +137,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_sessions.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_security_token.php');
+$autoLoadConfig[60][] = array('autoType'=>'init_script',
+                              'loadFile'=> 'init_di_container.php');
+
 /**
  * Breakpoint 70.
  *
@@ -221,6 +221,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[160][] = array('autoType'=>'require',
                                  'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'audience.php');
+  $autoLoadConfig[160][] = array('autoType'=>'require',
+                                 'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'whos_online.php');
 /**
  * Breakpoint 170.
  *

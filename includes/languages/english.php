@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: english.php  Modified in v1.6.0 $
@@ -239,10 +239,10 @@
   define('PREVNEXT_TITLE_PAGE_NO', 'Page %d');
   define('PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE', 'Previous Set of %d Pages');
   define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next Set of %d Pages');
-  define('PREVNEXT_BUTTON_FIRST', '&lt;&lt;FIRST');
-  define('PREVNEXT_BUTTON_PREV', '[&lt;&lt;&nbsp;Prev]');
-  define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&gt;&gt;]');
-  define('PREVNEXT_BUTTON_LAST', 'LAST&gt;&gt;');
+  define('PREVNEXT_BUTTON_FIRST', '&laquo;FIRST');
+  define('PREVNEXT_BUTTON_PREV', '[&laquo;&nbsp;Prev]');
+  define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&raquo;]');
+  define('PREVNEXT_BUTTON_LAST', 'LAST&raquo;');
   define('PREVNEXT_TEXT_BACK', 'Back to Listing');
 
   define('TEXT_BASE_PRICE','Starting at: ');
@@ -355,7 +355,7 @@
   define('PRODUCT_PRICE_DISCOUNT_AMOUNT','&nbsp;off');
 
 // Sale Maker Sale Price
-  define('PRODUCT_PRICE_SALE','Sale:&nbsp;');
+  define('PRODUCT_PRICE_SALE','<span class="sale-banner">Sale:</span> ');
 
 // banner_box
   define('BOX_HEADING_BANNER_BOX','Sponsors');
@@ -396,6 +396,7 @@
   define('TEXT_BEFORE_DOWN_FOR_MAINTENANCE', 'NOTICE: This website is scheduled to be down for maintenance on: ');
   define('TEXT_ADMIN_DOWN_FOR_MAINTENANCE', 'NOTICE: The website is currently Down For Maintenance to the public');
 
+  define('TEXT_FREE', 'Free!');
   define('PRODUCTS_PRICE_IS_FREE_TEXT','It\'s Free!');
   define('PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT','Call for Price');
   define('TEXT_CALL_FOR_PRICE','Call for price');
@@ -553,10 +554,13 @@
   define('TEXT_DOWNLOADS_UNLIMITED', 'Unlimited');
   define('TEXT_DOWNLOADS_UNLIMITED_COUNT', '--- *** ---');
 
+  define('PAYMENT_JAVASCRIPT_DISABLED', 'We could not continue with checkout as Javascript is disabled. You must enable it to continue');
+
 // table headings for cart display and upcoming products
   define('TABLE_HEADING_QUANTITY', 'Qty.');
   define('TABLE_HEADING_PRODUCTS', 'Item Name');
   define('TABLE_HEADING_TOTAL', 'Total');
+  define('TEXT_REFRESH', 'Refresh');
 
 // create account - login shared
   define('TABLE_HEADING_PRIVACY_CONDITIONS', 'Privacy Statement');
@@ -587,6 +591,7 @@
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER', '');
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES', 'Items starting with ...');
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES_RESET', '-- Reset --');
+
 
 ///////////////////////////////////////////////////////////
 // include email extras

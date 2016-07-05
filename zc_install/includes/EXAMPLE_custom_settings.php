@@ -3,7 +3,7 @@
  * Custom Settings used by the CLI version of zc_install
  *
  * @package installer
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 $zc_settings = array();
@@ -13,7 +13,7 @@ $zc_settings = array();
  */
 
 /**
- * If you are building a 1-click install, set your vendor name in the installer_method setting.  This will be stamped in the generated configure.php files for reference and future troubleshooting.
+ * If you are building a 1-click install, set your vendor name in the installer_method setting.  This will be stamped in the generated configure.php file for reference and future troubleshooting.
  */
 $zc_settings['installer_method'] = 'Automated Install';
 
