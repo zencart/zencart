@@ -40,7 +40,7 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
             $usePaginator = null;
         }
         $resultItems = $this->processPaginatorResults($usePaginator, $query, $db);
-        $resultItems = $this->transformPaginationItems($resultItems, $paginator->getCurrentPage());
+        $resultItems = $this->transformPaginationItems($resultItems, $usePaginator); 
         $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);
         $formatter = $this->doFormatter($finalItems, $db);
         $this->tplVars['formatter'] = $formatter->getTplVars();
@@ -61,10 +61,15 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
      * @param $items
      * @return array
      */
-    public function transformPaginationItems($items, $currentPage)
+    public function transformPaginationItems($items, $usePaginator)
     {
         if (count($items) == 0) {
             return array();
+        }
+        if ($usePaginator) { 
+            $page = '&page=' . $usePaginator->getCurrentPage();
+        } else { 
+            $page = ''; 
         }
         $rows = array();
         foreach ($items as $item) {
@@ -75,7 +80,7 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
                 $row ['rowActions'] ['edit'] = array(
                     'link' => zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array(
                             'action', 'page', $this->listingQuery ['mainTable']['fkeyFieldLeft']
-                        )) . 'action=edit&' . $this->listingQuery ['mainTable']['fkeyFieldLeft'] . '=' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']] . '&page=' . $currentPage),
+                        )) . 'action=edit&' . $this->listingQuery ['mainTable']['fkeyFieldLeft'] . '=' . $item [$this->listingQuery ['mainTable']['fkeyFieldLeft']] . $page),
                     'linkText' => TEXT_LEAD_EDIT,
                     'linkParameters' => ''
                 );
