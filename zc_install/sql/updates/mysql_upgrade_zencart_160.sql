@@ -131,6 +131,7 @@ ALTER TABLE customers MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT 
 ALTER TABLE admin ADD mobile_phone VARCHAR(20) NOT NULL DEFAULT '' AFTER admin_email;
 
 ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE orders ADD language_code VARCHAR(2) NOT NULL DEFAULT 'en';
 
 ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0' AFTER coupon_is_valid_for_sales;
 

@@ -278,7 +278,13 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
  *
  * @param string $file filename of language file
  */
-function zen_load_language_file($file) {
+function zen_load_language_file($file, $language_directory = '~~') {
+    if ($language_directory != '~~') {
+        if (file_exists(DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file)) {
+            include (DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file);
+            return;
+        }
+    }
     if (file_exists(DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file)) {
         include (DIR_WS_LANGUAGES . $_SESSION ['language'] . '/' . $file);
         return;
