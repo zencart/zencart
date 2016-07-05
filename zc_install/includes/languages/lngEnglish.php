@@ -140,12 +140,11 @@ define('TEXT_NAVBAR_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_NAVBAR_COMPLETION', 'Finished');
 define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
 
-define('TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES', 'There were problems preparing and storing the configure.php files. YOUR INSTALL DID NOT COMPLETE PROPERLY.<br>Additional technical details may be found in your /logs/ folder.');
+define('TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES', 'There were problems preparing and storing the configure.php file. YOUR INSTALL DID NOT COMPLETE PROPERLY.<br>Additional technical details may be found in your /logs/ folder.');
 define('TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE', 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.');
 define('TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE', 'Could not write the generated config file: %s. Please ensure the file exists and is writable.');
 
 define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not exist (isn't readable) or is not writeable");
-define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is too old, and this version of Zen Cart&reg; cannot be used on this server in its present configuration.</p>
 <p>This version of Zen Cart&reg; is compatible with PHP versions 5.2.9 to 7.0.<br>
@@ -183,7 +182,7 @@ define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be load
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
 define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use CURL to contact a live server');
 define('TEXT_ERROR_HTTPS', 'PRO TIP: If possible you should already have installed an SSL certificate, and run the installer using https://');
-define('TEXT_ERROR_HTTPS_CONFIGURE', 'As soon as possible, you should install an SSL certificate, and update your configure.php files.');
+define('TEXT_ERROR_HTTPS_CONFIGURE', 'As soon as possible, you should install an SSL certificate, and set the URL and ENABLE_SSL settings in your configure.php file.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your database structure if you choose "Upgrade..." below.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your database seems to be current. This suggests you are on a live site. Proceeding with Install will wipe out the current database contents! Are you sure you want to install?');
 define('TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED', 'Multiple Admin directories seem to exist. Either remove old admin directories and click Refresh or select the correct admin directory below and click Refresh.');

@@ -50,15 +50,15 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
   <?php } ?>
   <br><br>
   </li>
-  <li>Your <tt><strong>/includes/configure.php</strong></tt> and/or <tt><strong>/admin/includes/configure.php</strong></tt> file contains invalid <em>path information</em> and/or invalid <em>database-connection information</em>.<br>
-  If you recently edited your configure.php files for any reason, or maybe moved your site to a different folder or different server, then you'll need to review and update all your settings to the correct values for your server.<br>
-  Additionally, if the permissions have been changed on your configure.php files, then maybe they're too low for the files to be read.<br>
-  Or the configure.php files could be missing altogether.<br>
+  <li>Your <tt><strong>/includes/configure.php</strong></tt> file contains invalid <em>path information</em> and/or invalid <em>database-connection information</em>.<br>
+  If you recently edited your configure.php file for any reason, or maybe moved your site to a different folder or different server, then you'll need to review and update all your settings to the correct values for your server.<br>
+  Additionally, if the permissions have been changed on your configure.php file, then maybe they're too low for the file to be read.<br>
+  Or the configure.php file could be missing altogether.<br>
   Or your hosting company has recently changed the server's PHP configuration (or upgraded its version) then they may have broken things as well.<br>
   See the <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQ and Tutorials</a> area on the Zen Cart&reg; website for assistance.
   <br><br>
   </li>
-  <?php if (isset($problemString) && $problemString != '') { ?>
+  <?php if (isset($problemString) && $problemString != '') { ?><br>
   <li class="systemError errorDetails">Additional *IMPORTANT* Details: <?php echo $problemString; ?></li>
   <?php } ?>
   </ol>

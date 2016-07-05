@@ -3,7 +3,7 @@
  * File contains main code for loading tests
  *
  * @package tests
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -36,7 +36,6 @@ if (!$commandLineConfig) {
 }
 
 $file_contents = file_get_contents(CWD . '/includes/dist-configure.php');
-chmod(CWD . '/admin/includes/configure.php', 0777);
 chmod(CWD . '/includes/configure.php', 0777);
 $fp = fopen(CWD . '/includes/configure.php', 'w');
 if ($fp) {
