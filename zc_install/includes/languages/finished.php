@@ -12,7 +12,7 @@
  */
   define('TEXT_MAIN',"<h2>Congratulations!</h2><h3>You have successfully installed Zen Cart&reg; on your system!</h3>
 <h2>NEXT STEPS</h2>For security, YOU NEED TO RENAME your /admin/ folder to a name less likely to be 'guessed' by someone probing your site for illegitimate access. There's an FAQ article on <a href=\"http://tutorials.zen-cart.com/index.php?article=33\" target=\"_blank\">Renaming Your Admin Folder</a> which will guide you through the simple steps.<br /><br />
-Also for security, you will need to reset permissions on your <strong>configure.php</strong> files located in the <strong>/admin/includes/</strong> and <strong>/includes/</strong> folders back to read-only mode before allowing people to access your store.<br /><br />
+Also for security, you will need to reset permissions on your <strong>/includes/configure.php</strong> file back to read-only mode before allowing people to access your store.<br /><br />
 Additionally, you need to remove the <strong>/zc_install</strong> folder so that someone can't re-install your shop again and wipe out your database!  Warnings will appear until the folder has been removed.
 <h2>DONATE</h2>You can show your appreciation for our free software, and can support future development by making a donation to the Zen Cart project: <a href=\"http://www.zen-cart.com/donate\">Make a donation of any size by clicking here. Thanks in advance!</a>
 <h2>CONFIGURATION</h2>We encourage you to begin by <a href=\"http://tutorials.zen-cart.com\"><strong>reading the FAQ's</strong> in our online support forums</a> for useful information to assist with configuring and customizing your online shop the way you wish it to look and operate. <br />

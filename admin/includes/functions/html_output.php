@@ -70,7 +70,7 @@
     );
     $page = str_replace('.php', '', $page);
 
-    $link = HTTP_SERVER . DIR_WS_ADMIN;
+    $link = ADMIN_HTTP_SERVER . DIR_WS_ADMIN;
 
     // Handle parameters passed as an array (using RFC 3986)
     if(is_array($parameters)) {

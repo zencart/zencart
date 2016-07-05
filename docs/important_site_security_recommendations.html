@@ -99,12 +99,11 @@ Rename the directory.</p>
 <p>Go to Admin->Configuration->Email Options, and change your Email Transport Protocol to SMTPAUTH, and then fill in all the SMTP credentials in the other settings lower on that same screen.</p>
 <p>This will not only help prevent outgoing emails from ending up in spam folders, but will also prevent the disclosure of your admin foldername when sending emails from your admin screens.</p>
 
-<h1>4. Set configure.php files read-only</h1>
-<p>It's important that you set permissions on the two configure.php files as read-only.<br>
+<h1>4. Set configure.php file read-only</h1>
+<p>It's common practice to set permissions on the configure.php file as read-only.<br>
 Typically this means setting them to &quot;644&quot;, or in some cases &quot;444&quot;.</p>
-<p> The configure.php files are located in:<br>
-/&lt;YourStoreFolder&gt;/includes/configure.php<br>
-/&lt;YourStoreFolder&gt;/renamed_admin/includes/configure.php </p>
+<p> The configure.php file is located in:<br>
+/&lt;YourStoreFolder&gt;/includes/configure.php</p>
 <p>Quite often setting permissions on a file to read only via FTP will not work. Even if the permission looks like it was set to read only, it really may not have been. You must verify the correct setting by entering the store and seeing if there is a warning message on the top of the screen. "Warning: I am able to write to the configuration file:..." In this case you will need to use the "File Manager" supplied with your webhosting account.</p>
 <p>If you're using a Windows server, simply set the file as <em>Read-Only</em> for <em>Everyone</em> and especially the <strong>IUSR_xxxxx (Internet Guest Account)</strong> user if running IIS, or the <em>System</em> account or <em>apache user</em> if running Apache. </p>
 
@@ -167,13 +166,13 @@ Thus, once your site is built and your images have been created/loaded, you shou
 <p>The folders for which installation suggests read-write access for  setup are these. If your site supports .htaccess protection, then you should use it for these folders. (The .htaccess files included with v1.3.9 and newer should already cover the basics.) </p>
 <ul>
   <li><span class="filename">/cache</span><br>
-    This is used to cache database information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting in both configure.php files as well as the setting in your admin for Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
+    This is used to cache database information. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not accessible via a browser. (Requires changes to DIR_FS_SQL_CACHE setting in your configure.php file as well as the setting in your admin for Admin &gt; Configuration &gt; Sessions &gt; Session Directory.)</li>
   <li><span class="filename">/images</span><br>
     This is discussed earlier in this article. </li>
   <li><span class="filename">/includes/languages/english/html_includes</span><br>
     This is discussed earlier in this article. </li>
   <li><span class="filename">/logs</span><br>
-    This is used to store error logs. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_LOGS setting in both configure.php files.)</li>
+    This is used to store error logs. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_LOGS setting in the configure.php file.)</li>
   <li><span class="filename">/media</span><br>
     This is only suggested read-write for the sake of  being able to upload music-product media files via the admin. Could be  done by FTP as an alternative. </li>
   <li><span class="filename">/pub</span><br>

@@ -136,8 +136,10 @@ etc, etc, etc</p>
 </div>
 
 <div>
-<h1><strong>Creating the configure.php files</strong></h1>
-Two files need to be created on the server. These are the configure.php files that identify the settings of your particular server and the location of the files that you just loaded. After they have been created, you will then need to change the permissions on these files.
+<h1><strong>Creating the configure.php file</strong></h1>
+One configuration file drives the configuration of your store's URL, directories, and database details, unique to your specific webserver.<br>
+That's the /includes/configure.php file
+After it has been created, you will then need to change the permissions on the file.
 <br>
 <br>
 NOTE: Changing permissions can be done via your FTP program with the chmod feature. Usually clicking right on a directory or filename will open a menu with this option (perhaps under &quot;Properties&quot;) <br>
@@ -147,12 +149,6 @@ On the server locate the file: <span class="filename"><strong>/catalog/includes/
 <br>
 Rename this file to <span class="filename">configure.php </span>and change the permissions to 777
 <em>(read-write-execute for all)</em> <br>
-<br>
-
-Next, on the server locate the file: <span class="filename"><strong>/catalog/admin/</strong>includes/dist-configure.php</span>
-<br>
-Rename this file to <span class="filename">configure.php </span>and change the permissions to 777 <em>(read-write-execute for all)</em><br>
-<br>
 <br>
 <br>
 <strong>NOTE FOR IIS USERS:</strong> If using IIS for Windows hosting, the &quot;chmod 777&quot; idea for permissions settings is likely foreign to you. In IIS, under Windows, you need to right-click on the file (or folders in the next section below), and choose Properties. Then under the Security tab, ensure that the&quot;<em><strong>Internet Guest Account</strong></em>&quot;, identified usually as: MACHINE_NAME\IUSR_MACHINE_NAME ... has at least &quot;read&quot; and &quot;write&quot; privileges... likely best to give &quot;modify&quot; as well. This should be done on each file/folder indicated. (If the IUSR_MACHINE_NAME account isn't listed, click &quot;Add&quot; and add that account from the list, and then set the required permissions.)  (Note: &quot;_MACHINE_NAME&quot; above refers to the &quot;machine name&quot; or &quot;computer name&quot; configured by the server administrator to &quot;name&quot; the server.) <br>
@@ -235,8 +231,7 @@ Note: If you receive any of the following error messages, go through the above s
 <div class="callout">
 <strong>Warning: Problems Found </strong><br>
 <ul>
-<li><span class="error"> /includes/configure.php does not exist.</span>&nbsp;&nbsp;<span class="pseudolink">more info...</span></li><li><span class="error">/admin/includes/configure.php does not exist.</span>&nbsp;&nbsp;<span class="pseudolink">more info...</span>
-<br></li>
+<li><span class="error"> /includes/configure.php does not exist.</span>&nbsp;&nbsp;<span class="pseudolink">more info...</span><br></li>
 </ul></div>
 <h3>Database Setup</h3>
 On the next screen, you are asked for Database Information about your MySQL database, username and password. These can be obtained from your cPanel or equivalent control screen provided by your host. If you do not have a clean MySQL database setup with a username and password, you will need to create one. <br>
@@ -279,15 +274,14 @@ When you enter the Catalog, you will receive security warnings about the <em>con
 <br>
 <br>
 <strong>configure.php files</strong><br>
-You will now want to change the permissions on the <em>configure.php</em> files with <span class="filename">chmod 644 </span><em>(or 444 depending on your server...and sometimes setting 444 cannot be done via FTP, in which case use your host's control panel or file manager to set the permissions level.)</em><br>
+You will now want to change the permissions on the <em>configure.php</em> file with <span class="filename">chmod 644 </span><em>(or 444 depending on your server...and sometimes setting 444 cannot be done via FTP, in which case use your host's control panel or file manager to set the permissions level.)</em><br>
 <br>
 These are located in:<br>
-<span class="filename">/catalog/includes/configure.php<br>
-/catalog/admin/includes/configure.php </span><br>
+<span class="filename">/catalog/includes/configure.php </span><br>
 <br>
-It would also be a good idea to download a copy of these files to your computer from the server as they have been setup and configured to your server specifications based on the Installation process. <br>
+It would also be a good idea to download a copy of this file to your computer from the server as it is configured to your server specifications based on the Installation process. <br>
 <br>
-If you have any errors or problems, most of these can be corrected by minor adjustments to these two files. <br>
+If you have any errors or problems, most of these can be corrected by minor adjustments to this file. <br>
 <br>
 <br>
 <strong>zc_install directory</strong><br>

@@ -142,7 +142,7 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
 // ignore version check if not enabled or if not on main page or sysinfo page
 if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini !='off' && ($version_check_sysinfo==true || $version_check_index==true) && $zv_db_patch_ok == true) || $version_check_requested==true ) {
   $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
-  $lines = @file(NEW_VERSION_CHECKUP_URL . '?v='.PROJECT_VERSION_MAJOR.'.'.PROJECT_VERSION_MINOR.'&p='.PHP_VERSION.'&a='.$_SERVER['SERVER_SOFTWARE'].'&r='.urlencode(HTTP_SERVER));
+  $lines = @file(NEW_VERSION_CHECKUP_URL . '?v='.PROJECT_VERSION_MAJOR.'.'.PROJECT_VERSION_MINOR.'&p='.urlencode(PHP_VERSION).'&a='.urlencode($_SERVER['SERVER_SOFTWARE']).'&r='.urlencode(ADMIN_HTTP_SERVER));
   //check for major/minor version info
   if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
     $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];

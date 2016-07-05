@@ -13,7 +13,7 @@ $zc_settings = array();
  */
 
 /**
- * If you are building a 1-click install, set your vendor name in the installer_method setting.  This will be stamped in the generated configure.php files for reference and future troubleshooting.
+ * If you are building a 1-click install, set your vendor name in the installer_method setting.  This will be stamped in the generated configure.php file for reference and future troubleshooting.
  */
 $zc_settings['installer_method'] = 'Automated Install';
 
