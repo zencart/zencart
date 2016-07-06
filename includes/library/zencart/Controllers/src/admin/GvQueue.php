@@ -15,7 +15,6 @@ class GvQueue extends AbstractLeadController
 
     public function releaseConfirmExecute()
     {
-        $this->useView = false;
         $result = $this->tryReleaseGV();
         if ($result === true) {
             $this->filterExecute();
