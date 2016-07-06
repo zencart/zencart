@@ -15,7 +15,7 @@ use ZenCart\AdminUser\AdminUser as User;
  * Class AbstractAdminController
  * @package ZenCart\Controllers
  */
-abstract class AbstractAdminController extends \base
+abstract class AbstractAdminController extends AbstractController
 {
     /**
      * @var array
@@ -96,51 +96,6 @@ abstract class AbstractAdminController extends \base
         $this->tplVars ['cssList'] = $cssList;
     }
 
-    /**
-     *
-     */
-    public function invoke()
-    {
-        $this->controllerAction = 'main';
-        $tmp = $this->request->get('action', $this->request->get('action', 'main', 'post'), 'get');
-        if ($tmp = preg_replace('/[^a-zA-Z0-9_-]/', '', $tmp)) {
-            $this->controllerAction = $tmp;
-        }
-        $this->controllerAction .= 'Execute';
-        $this->controllerAction = (method_exists($this, $this->controllerAction)) ? $this->controllerAction : 'mainExecute';
-        $this->{$this->controllerAction}();
-        $this->doOutput();
-    }
-
-    /**
-     *
-     */
-    protected function doOutput()
-    {
-        if (isset($this->response['header_response_code'])) {
-            http_response_code($this->response['header_response_code']);
-        }
-        if (!$this->useView()) {
-            $this->doNonViewOutput();
-        } else {
-            $this->doViewOutput();
-        }
-    }
-
-    /**
-     *
-     */
-    protected function doViewOutput()
-    {
-        if (isset($this->response['redirect'])) {
-            $this->notify('NOTIFIER_ADMIN_BASE_DO_VIEW_OUTPUT_REDIRECT_BEFORE');
-            zen_redirect($this->response['redirect']);
-        }
-        $useTemplate = $this->getMainTemplate();
-        $this->tplVars['mainTemplate'] = $useTemplate;
-        $tplVars = $this->tplVars;
-        require_once('includes/template/layouts/'. $this->templateLayout . '.php');
-    }
 
     /**
      * @return null|string
@@ -157,30 +112,6 @@ abstract class AbstractAdminController extends \base
 
         return null;
     }
-
-    /**
-     *
-     */
-    protected function doNonViewOutput()
-    {
-        echo json_encode($this->response);
-    }
-
-    /**
-     * @param $template
-     * @param $tplVars
-     * @return string
-     */
-    protected function loadTemplateAsString($template, $tplVars)
-    {
-        ob_start();
-        require_once($template);
-        $result = ob_get_clean();
-        ob_flush();
-
-        return $result;
-    }
-
     /**
      * @param $key
      * @param $value
@@ -214,23 +145,4 @@ abstract class AbstractAdminController extends \base
         $this->mainTemplate = $templateName;
     }
 
-    /**
-     * @return bool
-     */
-    protected function useView()
-    {
-        if (!isset($this->response)) {
-            return true;
-        }
-        if (isset($this->response['redirect'])) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     *
-     */
-    protected function preCheck()
-    {
-    }
 }
