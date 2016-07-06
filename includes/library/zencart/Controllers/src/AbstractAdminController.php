@@ -81,18 +81,18 @@ abstract class AbstractAdminController extends \base
      */
     protected function prepareDefaultCSS()
     {
-            $cssList [] = array(
-                'href' => 'includes/template/css/bootstrap.min.css',
-                'id' => 'bootstrapCSS'
-            );
-            $cssList [] = array(
-                'href' => 'includes/template/AdminLTE2/dist/css/AdminLTE.css',
-                'id' => 'adminlteCSS'
-            );
-            $cssList [] = array(
-                'href' => 'includes/template/css/stylesheet.css',
-                'id' => 'stylesheetCSS'
-            );
+        $cssList [] = array(
+            'href' => 'includes/template/css/bootstrap.min.css',
+            'id' => 'bootstrapCSS'
+        );
+        $cssList [] = array(
+            'href' => 'includes/template/AdminLTE2/dist/css/AdminLTE.css',
+            'id' => 'adminlteCSS'
+        );
+        $cssList [] = array(
+            'href' => 'includes/template/css/stylesheet.css',
+            'id' => 'stylesheetCSS'
+        );
         $this->tplVars ['cssList'] = $cssList;
     }
 
