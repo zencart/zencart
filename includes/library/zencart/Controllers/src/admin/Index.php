@@ -66,7 +66,6 @@ class Index extends AbstractAdminController
      */
     public function getZonesExecute()
     {
-        $this->useView = false;
         $this->response = array('html'=>'');
         if ($this->request->readPost('id'))  {
             $options = zen_get_country_zones((int)$this->request->readPost('id'));

@@ -29,7 +29,7 @@ class AbstractAjaxController extends \base
     public function __construct(\ZenCart\Request\Request $request)
     {
         $this->tplVars = array();
-        $this->response = array('data' => NULL);
+        $this->response = null;
         $this->request = $request;
     }
 

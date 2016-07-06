@@ -143,7 +143,6 @@ abstract class AbstractLeadController extends AbstractListingController
      */
     public function deleteExecute()
     {
-        $this->useView = false;
         $result = $this->service->deleteExecute();
         if ($result === true) {
             $this->filterExecute();
@@ -158,7 +157,6 @@ abstract class AbstractLeadController extends AbstractListingController
      */
     public function multiDeleteExecute()
     {
-        $this->useView = false;
         if (count($this->request->readPost('selected')) === 0) {
             return;
         }

@@ -30,10 +30,6 @@ abstract class AbstractAdminController extends \base
      */
     protected $controllerAction;
     /**
-     * @var bool
-     */
-    protected $useView = true;
-    /**
      * @var string
      */
     protected $templateLayout = 'default';
@@ -52,9 +48,7 @@ abstract class AbstractAdminController extends \base
         $this->controllerCommand = $this->request->readGet('cmd');
         $this->tplVars = array();
         $this->tplVars = array('jscriptVars' => ['securityToken' => $request->getSession()->get('securityToken')]);
-        $this->response = array(
-            'data' => null
-        );
+        $this->response = null;
         $this->prepareDefaultCss();
         $this->prepareCommonTplVars();
         $this->buildMainMenu();
@@ -87,7 +81,6 @@ abstract class AbstractAdminController extends \base
      */
     protected function prepareDefaultCSS()
     {
-        if ($this->useView) {
             $cssList [] = array(
                 'href' => 'includes/template/css/bootstrap.min.css',
                 'id' => 'bootstrapCSS'
@@ -96,15 +89,10 @@ abstract class AbstractAdminController extends \base
                 'href' => 'includes/template/AdminLTE2/dist/css/AdminLTE.css',
                 'id' => 'adminlteCSS'
             );
-//            $cssList [] = array(
-//                'href' => 'includes/template/AdminLTE2/dist/css/skins/skin-blue-light.css',
-//                'id' => 'adminlteSkinCSS'
-//            );
             $cssList [] = array(
                 'href' => 'includes/template/css/stylesheet.css',
                 'id' => 'stylesheetCSS'
             );
-        }
         $this->tplVars ['cssList'] = $cssList;
     }
 
@@ -129,7 +117,7 @@ abstract class AbstractAdminController extends \base
      */
     protected function doOutput()
     {
-        if (!$this->useView) {
+        if (!$this->useView()) {
             $this->doNonViewOutput();
         } else {
             $this->doViewOutput();
@@ -223,6 +211,19 @@ abstract class AbstractAdminController extends \base
         $this->mainTemplate = $templateName;
     }
 
+    /**
+     * @return bool
+     */
+    protected function useView()
+    {
+        if (!isset($this->response)) {
+            return true;
+        }
+        if (isset($this->response['redirect'])) {
+            return true;
+        }
+        return false;
+    }
     /**
      *
      */

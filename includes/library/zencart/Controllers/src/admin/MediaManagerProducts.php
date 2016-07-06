@@ -17,8 +17,6 @@ class MediaManagerProducts extends AbstractLeadController
      */
     public function productsFromCategoryExecute()
     {
-        $this->useView = false;
-
         if (!$this->request->has('id', 'post')) {
             return;
         }

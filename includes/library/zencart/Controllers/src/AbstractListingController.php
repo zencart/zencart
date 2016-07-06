@@ -82,7 +82,6 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     public function paginatorExecute()
     {
-        $this->useView = false;
         $this->filterExecute();
     }
 
@@ -91,7 +90,6 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     public function updateFieldExecute()
     {
-        $this->useView = false;
         $this->service->updateField();
         $this->filterExecute();
     }
@@ -101,7 +99,6 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     public function filterExecute()
     {
-        $this->useView = false;
         $this->service->doFilter();
         $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
             new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
@@ -123,7 +120,6 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     public function paginationLimitExecute()
     {
-        $this->useView = false;
         $outputLayout = $this->listingBox->getOutputLayout();
         $listingQuery = $this->listingBox->getListingQuery();
         if (is_numeric($this->request->readGet('limit'))) {
@@ -140,7 +136,6 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     public function fillByLookupExecute()
     {
-        $this->useView = false;
         $retVal = $this->service->fillByLookupExecute();
         $this->response = $retVal;
     }
