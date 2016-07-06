@@ -20,7 +20,7 @@ class GvQueue extends AbstractLeadController
             $this->filterExecute();
             return;
         }
-        header("Status: 403 Forbidden", true, 403);  //@todo REFACTOR  handle header output in main controller
+        $result['header_response_code'] = 403;
         $this->response = $result;
     }
 

@@ -117,6 +117,9 @@ abstract class AbstractAdminController extends \base
      */
     protected function doOutput()
     {
+        if (isset($this->response['header_response_code'])) {
+            http_response_code($this->response['header_response_code']);
+        }
         if (!$this->useView()) {
             $this->doNonViewOutput();
         } else {
