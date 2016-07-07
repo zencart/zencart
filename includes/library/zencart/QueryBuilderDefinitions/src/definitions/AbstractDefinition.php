@@ -235,7 +235,7 @@ abstract class AbstractDefinition extends \base
         return $filterVars;
     }
 
-    public function transformPaginationItems($items)
+    public function transformPaginationItems($items, $usePagination)
     {
         return $items;
     }
