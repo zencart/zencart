@@ -13,5 +13,5 @@ define('TEXT_CHANGE_PASSWORD', 'Change Password');
 define('TEXT_ADMIN_OLD_PASSWORD', 'Old Password:');
 define('TEXT_ADMIN_NEW_PASSWORD', 'New Password:');
 define('TEXT_ADMIN_CONFIRM_PASSWORD', 'Confirm Password:');
-
+define('SUCCESS_PASSWORD_UPDATED', 'Password updated.'); 
 // additional defines shared from users.php

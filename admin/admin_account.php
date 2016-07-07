@@ -96,7 +96,7 @@ require('includes/admin_html_head.php');
 <?php if (isset($formAction)) echo zen_draw_hidden_field('action',$formAction) . zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
   <table cellspacing="0">
     <tr class="headingRow">
-      <th class="name"><?php echo TEXT_NAME ?></th>
+      <th class="name"><?php echo TEXT_ADMIN_NAME ?></th>
       <th class="email"><?php echo TEXT_EMAIL ?></th>
 <?php if ($action == 'password') { ?>
       <th class="password"><?php echo TEXT_ADMIN_NEW_PASSWORD ?></th>
