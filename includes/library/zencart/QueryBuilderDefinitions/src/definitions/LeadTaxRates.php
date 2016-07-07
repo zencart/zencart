@@ -129,9 +129,9 @@ class LeadTaxRates extends AbstractLeadDefinition
                             'align' => 'right'
                         )
                     ),
-                    'validations' => array(
-                        'pattern' => 'integer'
-                    )
+//                    'validations' => array(
+//                        'pattern' => 'integer'
+//                    )
                 ),
                 'tax_rate' => array(
                     'bindVarsType' => 'string',
@@ -146,9 +146,9 @@ class LeadTaxRates extends AbstractLeadDefinition
                             'align' => 'right'
                         )
                     ),
-                    'validations' => array(
-                        'pattern' => 'number'
-                    )
+//                    'validations' => array(
+//                        'pattern' => 'number'
+//                    )
                 ),
                 'tax_description' => array(
                     'bindVarsType' => 'string',
