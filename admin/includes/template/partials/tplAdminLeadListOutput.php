@@ -27,7 +27,7 @@
                 <?php foreach ($tplVars['leadDefinition']['listMap'] as $field) { ?>
                     <th>
                         <?php if (isset($tplVars['leadDefinition']['fields'][$field]['layout']['type'])) { ?>
-                            <?php require('includes/template/partials/leadInputTypes/tpl' . ucfirst($tplVars['leadDefinition']['fields'][$field]['layout']['type']) . '.php'); ?>
+                            <?php require('includes/template/partials/leadInputTypes/tplLeadFilter' . ucfirst($tplVars['leadDefinition']['fields'][$field]['layout']['type']) . '.php'); ?>
                         <?php } else { ?>
                             &nbsp;
                         <?php } ?>

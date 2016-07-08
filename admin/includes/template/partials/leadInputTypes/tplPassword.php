@@ -25,11 +25,9 @@
     >
 </div>
 
-<?php if ($tplVars['leadDefinition']['action'] != 'list') { ?>
 <label class="col-sm-2 control-label" for="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']. '_confirm'; ?>">
     <?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['title_confirm']; ?>
 </label>
-<?php } ?>
 
 <div class=" col-sm-10 <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' error ';}; ?>">
     <input id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"

@@ -7,12 +7,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:   New in v1.6.0 $
  */
-//print_r($tplVars['leadDefinition']['fields'][$field]);
 ?>
 <div class="form-group">
-    <?php require('includes/template/partials/' . $tplVars['leadDefinition']['inputLabelTemplate']); ?>
-    <div class="input-group col-sm-6 <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' has-error ';}; ?>">
-
+    <div class="input-group col-sm-6">
         <button type="button" class="btn btn-default pull-right <?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput" id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field'] . '_daterangepicker'; ?>">
                     <span>
                       <i class="fa fa-calendar"></i><?php echo TEXT_SELECT_DATE_RANGE; ?>
