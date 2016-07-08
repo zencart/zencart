@@ -14,7 +14,7 @@
 ?>
 <div class="centerColumn" id="advSearchDefault">
 
-<?php echo zen_draw_form('advanced_search', zen_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form(this);"') . zen_hide_session_id(); ?>
+<?php echo zen_draw_form('advanced_search', zen_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_search_form(this);"') . zen_hide_session_id(); ?>
 <?php echo zen_draw_hidden_field('main_page', FILENAME_ADVANCED_SEARCH_RESULT); ?>
 
 <h1 id="advSearchDefaultHeading"><?php echo HEADING_TITLE_1; ?></h1>
@@ -23,9 +23,9 @@
 
 <fieldset>
 <legend><?php echo HEADING_SEARCH_CRITERIA; ?></legend>
-<div class="forward"><?php echo '<a href="javascript:popupWindow(\'' . zen_href_link(FILENAME_POPUP_SEARCH_HELP) . '\')">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></div>
+<div class="forward"><?php echo '<a href="javascript:popupWindowAdvSearch(\'' . zen_href_link(FILENAME_POPUP_SEARCH_HELP) . '\')">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></div>
 <br class="clearBoth" />
-    <div class="centeredContent"><?php echo zen_draw_input_field('keyword', $sData['keyword'], 'placeholder="' . KEYWORD_FORMAT_STRING . '" autofocus onfocus="RemoveFormatString(this, \'' . KEYWORD_FORMAT_STRING . '\')"'); ?>
+    <div class="centeredContent"><?php echo zen_draw_input_field('keyword', $sData['keyword'], 'placeholder="' . KEYWORD_FORMAT_STRING . '" autofocus'); ?>
     &nbsp;&nbsp;&nbsp;<?php echo zen_draw_checkbox_field('search_in_description', '1', $sData['search_in_description'], 'id="search-in-description"'); ?>
     <label class="checkboxLabel" for="search-in-description"><?php echo TEXT_SEARCH_IN_DESCRIPTION; ?></label></div>
 <br class="clearBoth" />
@@ -61,11 +61,11 @@
 <legend><?php echo ENTRY_DATE_RANGE; ?></legend>
 <fieldset class="floatLeft">
     <legend><?php echo ENTRY_DATE_FROM; ?></legend>
-    <?php echo zen_draw_input_field('dfrom', $sData['dfrom'], 'placeholder="' . DOB_FORMAT_STRING . '" onfocus="RemoveFormatString(this, \'' . DOB_FORMAT_STRING . '\')"'); ?>
+    <?php echo zen_draw_input_field('dfrom', $sData['dfrom'], 'placeholder="' . DOB_FORMAT_STRING . '"'); ?>
 </fieldset>
 <fieldset class="floatLeft">
     <legend><?php echo ENTRY_DATE_TO; ?></legend>
-    <?php echo zen_draw_input_field('dto', $sData['dto'], 'placeholder="' . DOB_FORMAT_STRING . '" onfocus="RemoveFormatString(this, \'' . DOB_FORMAT_STRING . '\')"'); ?>
+    <?php echo zen_draw_input_field('dto', $sData['dto'], 'placeholder="' . DOB_FORMAT_STRING . '"'); ?>
 </fieldset>
 </fieldset>
 <br class="clearBoth" />

@@ -1,1 +1,0 @@
-<?php // intentionally left blank. Previous content moved to .js file instead.

@@ -26,5 +26,5 @@ define('TEXT_TOTAL_ITEMS', 'Total Items: ');
 define('TEXT_TOTAL_WEIGHT', '&nbsp;&nbsp;Weight: ');
 define('TEXT_TOTAL_AMOUNT', '&nbsp;&nbsp;Amount: ');
 
-define('TEXT_VISITORS_CART', '<a class="help" href="javascript:session_win();"><i class="fa fa-question-circle fa-2x"></i></a>');
+define('TEXT_VISITORS_CART', '<a class="help" href="javascript:popupInfoShoppingCart();"><i class="fa fa-question-circle fa-2x"></i></a>');
 define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
