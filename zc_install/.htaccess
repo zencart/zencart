@@ -21,12 +21,23 @@ DirectoryIndex index.php
 
 # prevents inappropriate browsing
 <FilesMatch ".*\..*">
-  Order Allow,Deny
-  Deny from all
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
 </FilesMatch>
+
 <FilesMatch "(^$|^favicon.ico$|.*\.(php|js|css|jpg|gif|png|html)$)">
-  Order Allow,Deny
-  Allow from all
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Allow from all
+  </IfModule>
 </FilesMatch>
 
 IndexIgnore */*

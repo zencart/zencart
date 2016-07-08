@@ -1,7 +1,7 @@
 #
-# @copyright Copyright 2003-2010 Zen Cart Development Team
+# @copyright Copyright 2003-2016 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: .htaccess 16111 2010-04-29 22:39:02Z drbyte $
+# @version $Id: .htaccess  Modified in v1.6.0 $
 #
 # This is used with Apache WebServers
 #
@@ -17,16 +17,26 @@
 ###############################
 
 <Limit GET POST PUT>
-  Order Allow,Deny
-  Deny from All
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
 </Limit>
 
 #NOBODY SHOULD BE SNOOPING HERE
 
 # deny *everything*
 <FilesMatch ".*">
-  Order Allow,Deny
-  Deny from all
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
 </FilesMatch>
 
 IndexIgnore */*
