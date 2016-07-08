@@ -1,5 +1,5 @@
 #
-# @copyright Copyright 2003-2013 Zen Cart Development Team
+# @copyright Copyright 2003-2016 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # @version $Id: .htaccess 18695 2011-05-04 05:24:19Z drbyte $
 #
@@ -29,14 +29,24 @@ AuthGroupFile /dev/null
 
 # deny *everything*
 <FilesMatch ".*">
-  Order Allow,Deny
-  Deny from all
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
 <FilesMatch "(?i).*\.(zip|gzip|pdf|mp3|swf|wma|wmv|wav|epub|ogg|webm|m4v|m4a)$">
-  Order Allow,Deny
-  Allow from all
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Allow from all
+  </IfModule>
 </FilesMatch>
 
 <IfModule mod_headers.c>
