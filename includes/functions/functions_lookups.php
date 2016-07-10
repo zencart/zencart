@@ -336,7 +336,7 @@
               left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
               where pa.products_id = " . (int)$products_id . "
               and po.language_id = " . (int)$_SESSION['languages_id'] . "
-              group by pa.options_id, pa.products_attributes_id";
+              group by pa.options_id";
     $result = $db->Execute($query);
 
     // if no attributes found, return 0
