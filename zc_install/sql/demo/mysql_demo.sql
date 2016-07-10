@@ -10,14 +10,12 @@ UPDATE configuration SET configuration_value='true' WHERE configuration_key='DOW
 # Dumping data for table `address_book`
 #
 
-DELETE FROM address_book; 
 INSERT INTO address_book (address_book_id, customers_id, entry_gender, entry_company, entry_firstname, entry_lastname, entry_street_address, entry_suburb, entry_postcode, entry_city, entry_state, entry_country_id, entry_zone_id) VALUES (NULL, 1, 'm', 'JustaDemo', 'Bill', 'Smith', '123 Any Avenue', '', '12345', 'Here', '', 223, 12);
 
 #
 # Dumping data for table `categories`
 #
 
-DELETE FROM categories;
 INSERT INTO categories (categories_id, categories_image, parent_id, sort_order, date_added, last_modified, categories_status) VALUES (1, 'categories/category_hardware.gif', 0, 1, '2003-12-23 03:18:19', '2004-05-21 00:32:17', 1),
 (2, 'categories/category_software.gif', 0, 2, '2003-12-23 03:18:19', '2004-05-22 21:14:57', 1),
 (3, 'categories/category_dvd_movies.gif', 0, 3, '2003-12-23 03:18:19', '2004-05-21 00:22:39', 1),
@@ -83,7 +81,6 @@ INSERT INTO categories (categories_id, categories_image, parent_id, sort_order, 
 # Dumping data for table `categories_description`
 #
 
-DELETE FROM categories_description;
 INSERT INTO categories_description (categories_id, language_id, categories_name, categories_description) VALUES (1, 1, 'Hardware', 'We offer a variety of Hardware from printers to graphics cards and mice to keyboards.'),
 (2, 1, 'Software', 'Select from an exciting list of software titles. <br /><br />Not seeing a title that you are looking for?'),
 (3, 1, 'DVD Movies', 'We offer a variety of DVD movies enjoyable for the whole family.<br /><br />Please browse the various categories to find your favorite movie today!'),
@@ -149,21 +146,18 @@ INSERT INTO categories_description (categories_id, language_id, categories_name,
 # Dumping data for table `customers`
 #
 
-DELETE FROM customers;
 INSERT INTO customers (customers_id, customers_gender, customers_firstname, customers_lastname, customers_dob, customers_email_address, customers_nick, customers_default_address_id, customers_telephone, customers_fax, customers_password, customers_newsletter, customers_group_pricing, customers_email_format, customers_authorization, customers_referral) VALUES (NULL, 'm', 'Bill', 'Smith', '2001-01-01 00:00:00', 'root@localhost.com', '', 1, '12345', '', 'd95e8fa7f20a009372eb3477473fcd34:1c', '0', 0, 'TEXT', 0, '');
 
 #
 # Dumping data for table `customers_info`
 #
 
-DELETE FROM customers_info; 
 INSERT INTO customers_info (customers_info_id, customers_info_date_of_last_logon, customers_info_number_of_logons, customers_info_date_account_created, customers_info_date_account_last_modified, global_product_notifications) VALUES (1, '0001-01-01 00:00:00', 0, '2004-01-21 01:35:28', '0001-01-01 00:00:00', 0);
 
 #
 # Dumping data for table ezpages
 #
 
-DELETE FROM ezpages; 
 INSERT INTO ezpages (pages_id, languages_id, pages_title, alt_url, alt_url_external, pages_html_text, status_header, status_sidebox, status_footer, status_toc, header_sort_order, sidebox_sort_order, footer_sort_order, toc_sort_order, page_open_new_window, page_is_ssl, toc_chapter) VALUES (1, 1, 'EZPages', '', '', 'This is the main page listed under the Link EZPages in the Header<br /><br />\r\n\r\n<strong>See: What is EZPages? Link for detailed use of EZPages</strong><br /><br />\r\n\r\nThis Link could show in the Header, Footer or Sidebox or a combination of all three locations.<br /><br />\r\n\r\nThe Chapter and TOC settings are for using this Page in combination with other Pages.<br /><br />\r\n\r\nThe other Pages can be shown either *only* with this Link in the Chapter and TOC or as their own Link in the Header, Footer or Sidebox, depending on how you would like them to appear on your site.<br /><br />\r\n\r\nThere is no true "Master" Link, other than the Links you actually have configured to display. But any Link in a Chapter can be displayed in any of the 3 locations for the Header, Footer or Sidebox or not at all, where it only appears together with the other Links in the Chapter.', 1, 0, 0, 1, 10, 0, 0, 10, 0, 0, 10),
 (2, 1, 'A New Page', '', '', 'This is another page that is linked to the Chapter 10 via the Chapter number used and is sorted based on the TOC Order.<br /><br />\r\n\r\nThere is not a link to this page via the Header, Footer nor the Sidebox.<br /><br />\r\n\r\nThis page is only seen if the "main" link is selected and then it will show in the TOC listing.<br /><br />\r\n\r\nThis is a handy way to have numerous links that are related but only show one main link to get to them all.<br /><br />', 0, 0, 0, 1, 0, 0, 0, 30, 0, 0, 10),
 (3, 1, 'Another New Page', '', '', 'This is yet another new page or link that is part of Chapter 10<br /><br />\r\n\r\nThe numbering of the Chapters can be done in any manner. But, by number in increments such as 10, 20, 30, etc. you can later insert pages, or links, as needed within the existing pages.<br /><br />\r\n\r\nThere is no limit to the number of pages, or links, that can be grouped together using the Chapter.<br /><br />\r\n\r\nThe display of the Previous/Next and TOC listing is a setting that can be turned on or off.', 0, 0, 0, 1, 0, 0, 0, 40, 0, 0, 10),
@@ -183,7 +177,6 @@ INSERT INTO ezpages (pages_id, languages_id, pages_title, alt_url, alt_url_exter
 # Dumping data for table `featured`
 #
 
-DELETE FROM featured; 
 INSERT INTO featured (featured_id, products_id, featured_date_added, featured_last_modified, expires_date, date_status_change, status, featured_date_available) VALUES (1, 34, '2004-02-21 16:34:31', '2004-02-21 16:34:31', '0001-01-01', '2004-02-21 16:34:31', 1, '0001-01-01'),
 (2, 8, '2004-02-21 17:04:54', '2004-02-21 22:31:52', '2004-02-27', '2004-04-25 22:50:50', 0, '2004-02-21'),
 (3, 12, '2004-02-21 17:10:49', '2004-02-21 17:10:49', '0001-01-01', '2004-02-21 17:10:49', 1, '0001-01-01'),
@@ -199,14 +192,12 @@ INSERT INTO featured (featured_id, products_id, featured_date_added, featured_la
 # Dumping data for table `group_pricing`
 #
 
-DELETE FROM group_pricing; 
 INSERT INTO group_pricing (group_id, group_name, group_percentage, last_modified, date_added) VALUES (1, 'Group 10', '10.00', NULL, '2004-04-29 00:21:04');
 
 #
 # Dumping data for table `manufacturers`
 #
 
-DELETE FROM manufacturers; 
 INSERT INTO manufacturers (manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified) VALUES (1, 'Matrox', 'manufacturers/manufacturer_matrox.gif', '2003-12-23 03:18:19', NULL),
 (2, 'Microsoft', 'manufacturers/manufacturer_microsoft.gif', '2003-12-23 03:18:19', NULL),
 (3, 'Warner', 'manufacturers/manufacturer_warner.gif', '2003-12-23 03:18:19', NULL),
@@ -221,7 +212,6 @@ INSERT INTO manufacturers (manufacturers_id, manufacturers_name, manufacturers_i
 # Dumping data for table `manufacturers_info`
 #
 
-DELETE FROM manufacturers_info; 
 INSERT INTO manufacturers_info (manufacturers_id, languages_id, manufacturers_url, url_clicked, date_last_click) VALUES (1, 1, 'http://www.matrox.com', 0, NULL),
 (2, 1, 'http://www.microsoft.com', 0, NULL),
 (3, 1, 'http://www.warner.com', 0, NULL),
@@ -236,7 +226,6 @@ INSERT INTO manufacturers_info (manufacturers_id, languages_id, manufacturers_ur
 # Dumping data for table `media_clips`
 #
 
-DELETE FROM media_clips; 
 INSERT INTO media_clips (clip_id, media_id, clip_type, clip_filename, date_added, last_modified) VALUES (1, 1, 1, 'thehunter.mp3', '2004-06-01 20:57:43', '0001-01-01 00:00:00'),
 (6, 2, 1, 'thehunter.mp3', '2004-07-13 00:45:09', '0001-01-01 00:00:00');
 
@@ -244,7 +233,6 @@ INSERT INTO media_clips (clip_id, media_id, clip_type, clip_filename, date_added
 # Dumping data for table `media_manager`
 #
 
-DELETE FROM media_manager; 
 INSERT INTO media_manager (media_id, media_name, last_modified, date_added) VALUES (1, 'Russ Tippins - The Hunter', '2004-06-01 20:57:43', '2004-06-01 20:42:53'),
 (2, 'Help!', '2004-07-13 01:01:14', '2004-07-12 17:57:45');
 
@@ -252,7 +240,6 @@ INSERT INTO media_manager (media_id, media_name, last_modified, date_added) VALU
 # Dumping data for table `media_to_products`
 #
 
-DELETE FROM media_to_products;
 INSERT INTO media_to_products (media_id, product_id) VALUES (1, 166),
 (2, 169);
 
@@ -266,7 +253,6 @@ INSERT INTO media_to_products (media_id, product_id) VALUES (1, 166),
 # Dumping data for table `music_genre`
 #
 
-DELETE FROM music_genre; 
 INSERT INTO music_genre (music_genre_id, music_genre_name, date_added, last_modified) VALUES (1, 'Rock', '2004-06-01 20:53:26', NULL),
 (2, 'Jazz', '2004-06-01 20:53:45', NULL);
 
@@ -274,7 +260,6 @@ INSERT INTO music_genre (music_genre_id, music_genre_name, date_added, last_modi
 # Dumping data for table `product_music_extra`
 #
 
-DELETE FROM product_music_extra; 
 INSERT INTO product_music_extra (products_id, artists_id, record_company_id, music_genre_id) VALUES (166, 1, 0, 1),
 (169, 1, 1, 2);
 
@@ -282,7 +267,6 @@ INSERT INTO product_music_extra (products_id, artists_id, record_company_id, mus
 # Dumping data for table `product_types_to_category`
 #
 
-DELETE FROM product_types_to_category; 
 INSERT INTO product_types_to_category (product_type_id, category_id) VALUES (3, 63),
 (4, 63), (2, 62);
 
@@ -290,7 +274,6 @@ INSERT INTO product_types_to_category (product_type_id, category_id) VALUES (3, 
 # Dumping data for table `products`
 #
 
-DELETE FROM products; 
 INSERT INTO products (products_id, products_type, products_quantity, products_model, products_image, products_price, products_virtual, products_date_added, products_last_modified, products_date_available, products_weight, products_status, products_tax_class_id, manufacturers_id, products_ordered, products_quantity_order_min, products_quantity_order_units, products_priced_by_attribute, product_is_free, product_is_call, products_quantity_mixed, product_is_always_free_shipping, products_qty_box_status, products_quantity_order_max, products_sort_order, products_discount_type, products_discount_type_from, products_price_sorter, master_categories_id, products_mixed_discount_quantity) VALUES (1, 1, '31', 'MG200MMS', 'matrox/mg200mms.gif', '299.9900', 0, '2003-11-03 12:32:17', '2004-04-26 23:57:34', NULL, '23.00', 1, 1, 1, '1', '1', '1', 0, 0, 0, 0, 0, 1, '0', 0, 0, 0, '299.9900', 4, 1),
 (2, 1, '31', 'MG400-32MB', 'matrox/mg400-32mb.gif', '499.9900', 0, '2003-11-03 12:32:17', NULL, NULL, '23.00', 1, 1, 1, '1', '1', '1', 0, 0, 0, 0, 0, 1, '0', 0, 0, 0, '499.9900', 4, 1),
 (3, 1, '500', 'MSIMPRO', 'microsoft/msimpro.gif', '49.9900', 0, '2003-11-03 12:32:17', NULL, NULL, '7.00', 1, 1, 2, '1', '1', '1', 0, 0, 0, 0, 0, 1, '0', 0, 0, 0, '39.9900', 9, 1),
@@ -436,7 +419,6 @@ UPDATE products SET products_date_available = NOW() + INTERVAL 33 DAY WHERE prod
 # Dumping data for table `products_attributes`
 #
 
-DELETE FROM products_attributes; 
 INSERT INTO products_attributes (products_attributes_id, products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required) VALUES (1, 1, 4, 1, '0.0000', '', 10, 0, '0.0000', '', 0, 0, 1, NULL, 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 0, '0.0000', 0, 0),
 (2, 1, 4, 2, '50.0000', '+', 20, 0, '0.0000', '', 0, 0, 1, NULL, 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 0, '0.0000', 0, 0),
 (3, 1, 4, 3, '70.0000', '+', 30, 0, '0.0000', '', 0, 0, 1, NULL, 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 0, '0.0000', 0, 0),
@@ -966,7 +948,6 @@ INSERT INTO products_attributes (products_attributes_id, products_id, options_id
 # Dumping data for table `products_attributes_download`
 #
 
-DELETE FROM products_attributes_download; 
 INSERT INTO products_attributes_download (products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount) VALUES (26, 'unreal.zip', 7, 3),
 (1040, 'test.zip', 7, 5),
 (1041, 'test2.zip', 7, 5),
@@ -984,7 +965,6 @@ INSERT INTO products_attributes_download (products_attributes_id, products_attri
 # Dumping data for table `products_description`
 #
 
-DELETE FROM products_description; 
 INSERT INTO products_description (products_id, language_id, products_name, products_description, products_url, products_viewed) VALUES (1, 1, 'Matrox G200 MMS', 'Reinforcing its position as a multi-monitor trailblazer, Matrox Graphics Inc. has once again developed the most flexible and highly advanced solution in the industry. Introducing the new Matrox G200 Multi-Monitor Series; the first graphics card ever to support up to four DVI digital flat panel displays on a single 8&quot; PCI board.<br /><br />With continuing demand for digital flat panels in the financial workplace, the Matrox G200 MMS is the ultimate in flexible solutions. The Matrox G200 MMS also supports the new digital video interface (DVI) created by the Digital Display Working Group (DDWG) designed to ease the adoption of digital flat panels. Other configurations include composite video capture ability and onboard TV tuner, making the Matrox G200 MMS the complete solution for business needs.<br /><br />Based on the award-winning MGA-G200 graphics chip, the Matrox G200 Multi-Monitor Series provides superior 2D/3D graphics acceleration to meet the demanding needs of business applications such as real-time stock quotes (Versus), live video feeds (Reuters & Bloombergs), multiple windows applications, word processing, spreadsheets and CAD.', 'www.matrox.com/mga/products/g200_mms/home.cfm', 0),
 (2, 1, 'Matrox G400 32MB', 'Dramatically Different High Performance Graphics<br /><br />Introducing the Millennium G400 Series - a dramatically different, high performance graphics experience. Armed with the industry\'s fastest graphics chip, the Millennium G400 Series takes explosive acceleration two steps further by adding unprecedented image quality, along with the most versatile display options for all your 3D, 2D and DVD applications. As the most powerful and innovative tools in your PC\'s arsenal, the Millennium G400 Series will not only change the way you see graphics, but will revolutionize the way you use your computer.<br /><br />Key features:<ul><li>New Matrox G400 256-bit DualBus graphics chip</li><li>Explosive 3D, 2D and DVD performance</li><li>DualHead Display</li><li>Superior DVD and TV output</li><li>3D Environment-Mapped Bump Mapping</li><li>Vibrant Color Quality rendering </li><li>UltraSharp DAC of up to 360 MHz</li><li>3D Rendering Array Processor</li><li>Support for 16 or 32 MB of memory</li></ul>', 'www.matrox.com/mga/products/mill_g400/home.htm', 0),
 (3, 1, 'Microsoft IntelliMouse Pro', 'Every element of IntelliMouse Pro - from its unique arched shape to the texture of the rubber grip around its base - is the product of extensive customer and ergonomic research. Microsoft\'s popular wheel control, which now allows zooming and universal scrolling functions, gives IntelliMouse Pro outstanding comfort and efficiency.', 'www.microsoft.com/hardware/mouse/intellimouse.asp', 0),
@@ -1116,7 +1096,6 @@ INSERT INTO products_description (products_id, language_id, products_name, produ
 # Dumping data for table `products_discount_quantity`
 #
 
-DELETE FROM products_discount_quantity; 
 INSERT INTO products_discount_quantity (discount_id, products_id, discount_qty, discount_price) VALUES (4, 127, '12', '10.0000'),
 (3, 127, '9', '8.0000'),
 (2, 127, '6', '7.0000'),
@@ -1160,7 +1139,6 @@ INSERT INTO products_discount_quantity (discount_id, products_id, discount_qty, 
 # Dumping data for table `products_options`
 #
 
-DELETE FROM products_options; 
 INSERT INTO products_options (products_options_id, language_id, products_options_name, products_options_sort_order, products_options_type, products_options_length, products_options_comment, products_options_size, products_options_images_per_row, products_options_images_style) VALUES (1, 1, 'Color', 10, 2, 32, '', 32, 5, 0),
 (2, 1, 'Size', 20, 0, 32, '', 32, 5, 0),
 (3, 1, 'Model', 30, 0, 32, '', 32, 5, 0),
@@ -1186,7 +1164,6 @@ INSERT INTO products_options (products_options_id, language_id, products_options
 #
 
 #Remove TEXT
-DELETE FROM products_options_values; 
 INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order) VALUES (1, 1, '4 mb', 10),
 (2, 1, '8 mb', 20),
 (3, 1, '16 mb', 30),
@@ -1258,7 +1235,6 @@ INSERT INTO products_options_values (products_options_values_id, language_id, pr
 #
 
 
-DELETE FROM products_options_values_to_products_options; 
 INSERT INTO products_options_values_to_products_options (products_options_values_to_products_options_id, products_options_id, products_options_values_id) VALUES (1, 4, 1),
 (2, 4, 2),
 (3, 4, 3),
@@ -1335,7 +1311,6 @@ INSERT INTO products_options_values_to_products_options (products_options_values
 # Dumping data for table `products_to_categories`
 #
 
-DELETE FROM products_to_categories; 
 INSERT INTO products_to_categories (products_id, categories_id) VALUES (1, 4),
 (2, 4),
 (3, 9),
@@ -1487,49 +1462,42 @@ INSERT INTO products_to_categories (products_id, categories_id) VALUES (1, 4),
 # Dumping data for table `record_artists`
 #
 
-DELETE FROM record_artists; 
 INSERT INTO record_artists (artists_id, artists_name, artists_image, date_added, last_modified) VALUES (1, 'The Russ Tippins Band', 'sooty.jpg', '2004-06-01 20:53:00', NULL);
 
 #
 # Dumping data for table `record_artists_info`
 #
 
-DELETE FROM record_artists_info; 
 INSERT INTO record_artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'www.russtippins.com/', 0, NULL);
 
 #
 # Dumping data for table `record_company`
 #
 
-DELETE FROM record_company; 
 INSERT INTO record_company (record_company_id, record_company_name, record_company_image, date_added, last_modified) VALUES (1, 'HMV Group', NULL, '2004-07-09 14:11:52', NULL);
 
 #
 # Dumping data for table `record_company_info`
 #
 
-DELETE FROM record_company_info; 
 INSERT INTO record_company_info (record_company_id, languages_id, record_company_url, url_clicked, date_last_click) VALUES (1, 1, 'www.hmvgroup.com', 0, NULL);
 
 #
 # Dumping data for table `reviews`
 #
 
-DELETE FROM reviews; 
 INSERT INTO reviews (reviews_id, products_id, customers_id, customers_name, reviews_rating, date_added, last_modified, reviews_read, status) VALUES (1, 19, 1, 'Bill Smith', 5, '2003-12-23 03:18:19', '0001-01-01 00:00:00', 11, 1);
 
 #
 # Dumping data for table `reviews_description`
 #
 
-DELETE FROM reviews_description; 
 INSERT INTO reviews_description (reviews_id, languages_id, reviews_text) VALUES (1, 1, 'This really is a very funny but old movie!');
 
 #
 # Dumping data for table `salemaker_sales`
 #
 
-DELETE FROM salemaker_sales; 
 INSERT INTO salemaker_sales (sale_id, sale_status, sale_name, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_categories_all, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change) VALUES (1, 1, '10% off Sale', '10.0000', 1, '1.0000', '1000.0000', 2, '25,28,45,47,58', ',25,28,45,47,58,', '2003-12-23', '2008-02-21', '2003-12-23', '2004-05-18', '2004-01-03'),
 (3, 0, 'Mice 20%', '20.0000', 1, '1.0000', '1000.0000', 2, '9', ',9,', '2003-12-24', '2004-04-21', '2003-12-31', '2003-12-31', '2004-04-25'),
 (6, 1, '$5.00 off', '5.0000', 0, '0.0000', '0.0000', 2, '27', ',27,', '0001-01-01', '0001-01-01', '2004-01-04', '2004-01-05', '2004-01-04'),
@@ -1543,7 +1511,6 @@ INSERT INTO salemaker_sales (sale_id, sale_status, sale_name, sale_deduction_val
 # Dumping data for table `specials`
 #
 
-DELETE FROM specials; 
 INSERT INTO specials (specials_id, products_id, specials_new_products_price, specials_date_added, specials_last_modified, expires_date, date_status_change, status, specials_date_available) VALUES (1, 3, '39.9900', '2003-12-23 03:18:19', '0001-01-01 00:00:00', '0001-01-01', '0001-01-01 00:00:00', 1, '0001-01-01'),
 (2, 5, '30.0000', '2003-12-23 03:18:19', '0001-01-01 00:00:00', '0001-01-01', '0001-01-01 00:00:00', 1, '0001-01-01'),
 (3, 6, '30.0000', '2003-12-23 03:18:19', '0001-01-01 00:00:00', '0001-01-01', '0001-01-01 00:00:00', 1, '0001-01-01'),
