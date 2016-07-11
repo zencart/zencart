@@ -40,8 +40,6 @@
   <div class="col-xs-12">&nbsp;</div>
 </div>
 <div class="row">
-  <div class="col-xs-12"><?php echo WO_TOTAL; ?> <?php echo $widget['total']; ?></div>
-</div>
-<div class="row">
+  <div class="col-xs-6"><?php echo WO_TOTAL; ?> <?php echo $widget['total']; ?></div>
   <div class="col-xs-6 right"><?php echo '<a href="' . zen_href_link(FILENAME_WHOS_ONLINE) . '">' . WO_FULL_DETAILS . '</a>'; ?></div>
 </div>
