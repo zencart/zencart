@@ -172,7 +172,8 @@ class paypaldp extends base {
     $this->zone = (int)MODULE_PAYMENT_PAYPALDP_ZONE;
     if (is_object($order)) $this->update_status();
 
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '6.0') $this->enabled = false;
+    // compatibility
+    if (PROJECT_VERSION_MAJOR != '1' || substr(PROJECT_VERSION_MINOR, 0, 3) < '5.5') $this->enabled = false;
 
     // offer credit card choices for pull-down menu -- only needed for UK version
     $this->cards = array();
@@ -1881,7 +1882,7 @@ class paypaldp extends base {
            ((isset($_SESSION['paypal_ec_token']) && isset($response['TOKEN'])) && $_SESSION['paypal_ec_token'] != urldecode($response['TOKEN'])) ) {
             // Error, so send the store owner a complete dump of the transaction.
           if ($this->enableDebugging) {
-            $this->_doDebug('PayPal Error Log - before_process() - DP', "In function: before_process() - Direct Payment \r\nDid first contact attempt return error? " . ($error_occurred ? "Yes" : "No") . " \r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
+            $this->_doDebug('PayPal Error Log - before_process() - DP', "In function: before_process() - Direct Payment \r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_INVALID_RESPONSE;
           $errorNum = urldecode($response['L_ERRORCODE0'] . ' ' . $response['RESULT'] . ' <!-- ' . $response['RESPMSG'] . ' -->');
