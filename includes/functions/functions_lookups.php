@@ -331,12 +331,12 @@
     }
 
     // advanced query
-    $query = "select pa.products_attributes_id, pa.options_id, count(pa.options_values_id) as number_of_choices, po.products_options_type as options_type
+    $query = "select products_options_id, count(pa.options_values_id) as number_of_choices, po.products_options_type as options_type
               from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
               left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
               where pa.products_id = " . (int)$products_id . "
               and po.language_id = " . (int)$_SESSION['languages_id'] . "
-              group by pa.options_id, pa.products_attributes_id";
+              group by products_options_id, options_type";
     $result = $db->Execute($query);
 
     // if no attributes found, return 0
