@@ -108,6 +108,22 @@ class LeadMediaManagerClips extends AbstractLeadDefinition
                 'media_id',
                 'clip_filename',
             ),
+            'autoMap' => array(
+                'add' => array(
+                    array(
+                        'field' => 'date_added',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                ),
+                'edit' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                )
+            ),
             'fields' => array(
                 'clip_filename' => array(
                     'bindVarsType' => 'string',
