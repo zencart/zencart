@@ -73,10 +73,10 @@ class Logs extends AbstractWidget
     if ($this->count > $max_logs_to_list) {
       $final_message .= sprintf(TEXT_DISPLAYING_RECENT_COUNT, $max_logs_to_list);
     }
-    $tplVars['content'][] = array('text'=> $final_message, 'value'=> '');
+    $tplVars['content'][] = array('text'=> $final_message, 'value'=> '', 'fullrow' => true);
 
     $clean_message = '<a href="' . zen_admin_href_link(FILENAME_STORE_MANAGER) . '">' . TEXT_CLEANUP_LOGFILES . '</a>';
-    $tplVars['content'][] = array('text'=> $clean_message, 'value'=> '');
+    $tplVars['content'][] = array('text'=> $clean_message, 'value'=> '', 'span' => 2);
 
     return $tplVars;
   }
