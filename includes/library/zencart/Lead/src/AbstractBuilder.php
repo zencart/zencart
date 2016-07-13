@@ -282,13 +282,7 @@ abstract class AbstractBuilder extends \base
         foreach ($this->outputLayout ['fields'] as $field => $options) {
             $layout = $this->buildActualLayoutFromContext($options);
             $layout['uploadOptions'] = $this->buildUploadFileOptions($layout);
-            $validations = isset($options ['validations']) ? $options ['validations'] : array(
-                'required' => true
-            );
-            $validations ['rules'] = isset($validations ['rules']) ? $validations ['rules'] : array();
-            $validations ['required'] = isset($validations ['required']) ? $validations ['required'] : true;
-            $validations ['pattern'] = isset($validations ['pattern']) ? $validations ['pattern'] : '';
-            $validations ['errorText'] = isset($validations ['errorText']) ? $validations ['errorText'] : (defined('TEXT_FIELD_ERROR_' . strtoupper($field))) ? constant('TEXT_FIELD_ERROR_' . strtoupper($field)) : TEXT_FIELD_ERROR_GENERIC;
+            $validations = $this->getValidationsforField($field);
             $this->leadDefinition ['fields'] [$field] ['fieldType'] = isset($options ['fieldType']) ? $options ['fieldType'] : 'standard';
             $this->leadDefinition ['fields'] [$field] ['layout'] = $layout;
             $this->leadDefinition ['fields'] [$field] ['validations'] = $validations;
@@ -296,7 +290,18 @@ abstract class AbstractBuilder extends \base
             $this->leadDefinition ['fields'] [$field] ['field'] = 'entry_field_' . $field;
             $this->leadDefinition ['fields'] [$field] ['fillByLookup'] = isset($options ['fillByLookup']) ? $options ['fillByLookup'] : false;
         }
+
         $this->notify('NOTIFY_LEADBUILDER_BUILDFIELDDEFINITIONS_END');
+    }
+
+    protected function getValidationsforField($field)
+    {
+        $validations = array();
+        $validations ['required'] = isset($this->outputLayout['validations'][$field]['required']) ? $this->outputLayout['validations'][$field]['required'] : true;
+        $validations ['rules'] = isset($this->outputLayout['validations'][$field]['rules']) ? $this->outputLayout['validations'][$field]['rules'] : array();
+        $validations ['pattern'] = isset($this->outputLayout['validations'][$field]['pattern']) ? $this->outputLayout['validations'][$field]['pattern'] : '';
+        $validations ['errorText'] = isset($this->outputLayout['validations'][$field]['errorText']) ? $this->outputLayout['validations'][$field]['errorText'] : '';
+        return $validations;
     }
 
     protected function buildUploadFileOptions($layout)
