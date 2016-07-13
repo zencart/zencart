@@ -55,25 +55,6 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
     }
 
-    protected function editExecuteWithErrors($formValidation)
-    {
-        $languages = $this->service->prepareLanguageTplVars();
-        $errors = $formValidation->getErrors();
-        $this->tplVars['validationErrors'] = $errors;
-        print_r($errors);
-        $this->tplVars['languages'] = $languages;
-        $this->tplVars['legendTitle'] = TEXT_LEAD_EDIT_ENTRY;
-        $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
-        $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
-        $this->tplVars['leadDefinition']['action'] = 'edit';
-        $this->tplVars['leadDefinition']['formAction'] = 'update';
-        foreach ($this->tplVars['leadDefinition']['fields'] as $key => $value) {
-            $realKey = 'entry_field_' . $key;
-            $this->tplVars['leadDefinition']['fields'][$key]['value'] = $this->request->readPost($realKey);
-//            $this->service->populateLanguageKeys($key, $languages, $resultItems);
-        }
-
-    }
     /**
      *
      */

@@ -48,7 +48,7 @@ abstract class AbstractListingController extends AbstractAdminController
      * @todo REFACTORING DI listingbox factory
      * @todo REFACTORING DI querybuilder
      */
-    private function initController()
+    protected function initController()
     {
         $listingBox = $this->classPrefix . ucfirst(\base::camelize($this->controllerCommand));
         $boxClass = NAMESPACE_QUERYBUILDERDEFINITIONS . '\\definitions\\' . $listingBox;
