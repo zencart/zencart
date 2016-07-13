@@ -328,7 +328,7 @@ class LeadService extends AbstractService
      * @param $languages
      * @param $resultItems
      */
-    public function populateLanguageKeys($mainKey, $languages, $resultItems)
+    public function populateLanguageKeysFromDb($mainKey, $languages)
     {
         $tplVars = $this->listener->getTplVars();
         if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
@@ -342,6 +342,26 @@ class LeadService extends AbstractService
                 " AND " . $this->listingQuery['languageKeyField'] . " = " . $language['languages_id'];
             $lresult = $this->dbConn->execute($sql);
             $tplVars['leadDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $lresult->fields[$mainKey];
+        }
+        $this->listener->setTplVars($tplVars);
+    }
+
+    /**
+     * @param $mainKey
+     * @param $languages
+     * @param $resultItems
+     */
+    public function populateLanguageKeysFromPost($mainKey, $languages)
+    {
+        $tplVars = $this->listener->getTplVars();
+        if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
+            return;
+        }
+        unset($tplVars['leadDefinition']['fields'][$mainKey]['value']);
+        foreach ($languages as $language) {
+            $mainKey = $this->request->readPost('entry_field_' . $mainKey);
+            $languageValue = $mainKey[$language['languages_id']];
+            $tplVars['leadDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $languageValue;
         }
         $this->listener->setTplVars($tplVars);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Index
+ * Class LeadCountries
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -198,6 +198,33 @@ class LeadCountries extends AbstractLeadDefinition
                         'callable' => 'statusIconUpdater'
                     )
                 )
+            ),
+            'validations' => array(
+                'countries_name' => array(
+                    'rules' => array(
+                        array('dotNotation' => '.*', 'type' => 'lengthMin', 'params' => array(2))
+                    ),
+                ),
+                'countries_iso_code_2' => array(
+                    'rules' => array(
+                        array('type' => 'length', 'params' => array(2))
+                    ),
+                ),
+                'countries_iso_code_3' => array(
+                    'rules' => array(
+                        array('type' => 'length', 'params' => array(3))
+                    ),
+                ),
+                'address_format_id' => array(
+                    'rules' => array(
+                        array('type' => 'integer')
+                    ),
+                ),
+                'countries_status' => array(
+                    'rules' => array(
+                        array('type' => 'integer')
+                    ),
+                ),
             ),
             'formatter' => array('class' => 'AdminLead')
         );

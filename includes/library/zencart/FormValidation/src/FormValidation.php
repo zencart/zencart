@@ -51,6 +51,9 @@ class FormValidation
     private function processValitronRules($valitron, $fieldName, $rules)
     {
         foreach ($rules as $rule) {
+            if (isset($rule['dotNotation'])) {
+                $fieldName .= $rule['dotNotation'];
+            }
             $params0 = isset($rule['params'][0]) ? $rule['params'][0]: null;
             $params1 = isset($rule['params'][1]) ? $rule['params'][1]: null;
             $params2 = isset($rule['params'][2]) ? $rule['params'][2]: null;

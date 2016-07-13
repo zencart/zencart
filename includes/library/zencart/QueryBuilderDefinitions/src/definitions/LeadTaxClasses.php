@@ -107,9 +107,6 @@ class LeadTaxClasses extends AbstractLeadDefinition
                             'size' => '155'
                         )
                     )
-                    // 'validations' => array(
-                    // 'pattern' => 'alpha'
-                    // )
                 ),
             ),
         );

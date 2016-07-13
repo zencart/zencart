@@ -19,6 +19,7 @@
             <?php if ($tplVars['leadDefinition']['fields'][$field]['validations']['pattern'] !="") echo ' pattern="' . $tplVars['leadDefinition']['fields'][$field]['validations']['pattern'] . '"'; ?>
             <?php echo ($tplVars['leadDefinition']['fields'][$field]['validations']['required']) ? ' required ' : ''; ?>
         >
+        <?php require('includes/template/partials/' . $tplVars['leadDefinition']['errorTemplate']); ?>
         <div class="input-group-addon"><?php echo $tplVars['languages'][$languageKey]['name']; ?></div>
     </div>
 </div>

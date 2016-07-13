@@ -106,11 +106,6 @@ class LeadUsers extends AbstractLeadDefinition
                             'size' => '10'
                         )
                     ),
-                    'validations' => array(
-                        'rules' => array(
-                            array('type' => 'lengthBetween', 'params'=>array(4,12))
-                        )
-                    )
                 ),
                 'admin_email' => array(
                     'bindVarsType' => 'string',
@@ -122,11 +117,6 @@ class LeadUsers extends AbstractLeadDefinition
                             'size' => '20'
                         )
                     ),
-                    'validations' => array(
-                        'rules' => array(
-                            array('type' => 'email')
-                        )
-                    )
                 ),
                 'admin_profile' => array(
                     'bindVarsType' => 'string',
@@ -161,10 +151,6 @@ class LeadUsers extends AbstractLeadDefinition
                             'size' => '20'
                         )
                     ),
-                    'validations' => array(
-                        'required' => false
-                    )
-
                 ),
                 'password' => array(
                     'bindVarsType' => 'string',
@@ -177,13 +163,28 @@ class LeadUsers extends AbstractLeadDefinition
                             'size' => '40'
                         )
                     ),
-                    'validations' => array(
-                        'required' => false
-                    )
 
                 ),
                 'profile_name' => array(
                     'bindVarsType' => 'integer',
+                ),
+            ),
+            'validations' => array(
+                'admin_name' => array(
+                    'rules' => array(
+                        array('type' => 'lengthBetween', 'params'=>array(4,12))
+                    )
+                ),
+                'admin_email' => array(
+                    'rules' => array(
+                        array('type' => 'email')
+                    )
+                ),
+                'mobile_phone' => array(
+                    'required' => false
+                ),
+                'password' => array(
+                    'required' => false
                 ),
             ),
             'formatter' => array('class' => 'AdminLead')
