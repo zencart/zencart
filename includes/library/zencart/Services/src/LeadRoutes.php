@@ -198,20 +198,24 @@ class LeadRoutes extends LeadService
             $retVal = array('error' => true, 'errorType' => "CUSTOM_ALERT_ERROR", 'errorMessage' => $errorMessage);
             return $retVal;
         }
-        $sql = "DELETE FROM " . $this->listingQuery['mainTable']['table'] . " WHERE " . $this->listingQuery['mainTable']['fkeyFieldLeft'] . " = :id:";
-        $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
-            $this->outputLayout['fields'][$this->listingQuery['mainTable']['fkeyFieldLeft']]['bindVarsType']);
-        $this->dbConn->execute($sql);
-        if (isset($this->outputLayout['language']) && $this->outputLayout['language'] === true) {
-            $sql = "DELETE FROM " . $this->outputLayout['languageInfoTable'] . " WHERE " . $this->outputLayout['mainTableFkeyField'] . " = :id:";
-            $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
-                $this->outputLayout['fields'][$this->listingQuery['mainTable']['fkeyFieldLeft']]['bindVarsType']);
-            $this->dbConn->execute($sql);
-        }
+        $this->deleteTableEntry();
 
         return true;
     }
 
+    protected function deleteTableEntry()
+    {
+        $sql = "DELETE FROM " . $this->listingQuery['mainTable']['table'] . " WHERE " . $this->listingQuery['mainTable']['fkeyFieldLeft'] . " = :id:";
+        $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
+            $this->outputLayout['fields'][$this->listingQuery['mainTable']['fkeyFieldLeft']]['bindVarsType']);
+        $this->dbConn->execute($sql);
+        if (isset($this->listingQuery['language']) && $this->listingQuery['language'] === true) {
+            $sql = "DELETE FROM " . $this->listingQuery['languageInfoTable'] . " WHERE " . $this->listingQuery['mainTable']['fkeyFieldLeft'] . " = :id:";
+            $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
+                $this->outputLayout['fields'][$this->listingQuery['mainTable']['fkeyFieldLeft']]['bindVarsType']);
+            $this->dbConn->execute($sql);
+        }
+    }
     /**
      * @return array|bool
      */
