@@ -75,6 +75,22 @@ class LeadRecordCompany extends AbstractLeadDefinition
                 'record_company_url',
                 'record_company_image'
             ),
+            'autoMap' => array(
+                'add' => array(
+                    array(
+                        'field' => 'date_added',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                ),
+                'edit' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                )
+            ),
             'fields' => array(
                 'record_company_id' => array(
                     'bindVarsType' => 'integer',

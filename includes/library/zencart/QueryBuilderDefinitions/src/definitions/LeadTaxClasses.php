@@ -63,6 +63,22 @@ class LeadTaxClasses extends AbstractLeadDefinition
                 'tax_class_title',
                 'tax_class_description'
             ),
+            'autoMap' => array(
+                'add' => array(
+                    array(
+                        'field' => 'date_added',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                ),
+                'edit' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                )
+            ),
             'fields' => array(
                 'tax_class_id' => array(
                     'bindVarsType' => 'integer',

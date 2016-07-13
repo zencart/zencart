@@ -69,6 +69,22 @@ class LeadMusicGenre extends AbstractLeadDefinition
             'editMap' => array(
                 'music_genre_name',
             ),
+            'autoMap' => array(
+                'add' => array(
+                    array(
+                        'field' => 'date_added',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                ),
+                'edit' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                )
+            ),
             'fields' => array(
                 'music_genre_id' => array(
                     'bindVarsType' => 'integer',

@@ -74,6 +74,22 @@ class LeadMediaManager extends AbstractLeadDefinition
             'editMap' => array(
                 'media_name',
             ),
+            'autoMap' => array(
+                'add' => array(
+                    array(
+                        'field' => 'date_added',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                ),
+                'edit' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                )
+            ),
             'fields' => array(
                 'media_name' => array(
                     'bindVarsType' => 'string',

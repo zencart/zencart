@@ -86,6 +86,22 @@ class LeadUsers extends AbstractLeadDefinition
                 'admin_profile',
 //                'password',
             ),
+            'autoMap' => array(
+                'add' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                ),
+                'edit' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                )
+            ),
             'fields' => array(
                 'admin_id' => array(
                     'bindVarsType' => 'integer',

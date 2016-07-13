@@ -1,7 +1,7 @@
 <?php
 /**
  * @package classes
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:New in v1.6.0  $
  */
@@ -64,6 +64,22 @@ class LeadGeoZones extends AbstractLeadDefinition
                 'geo_zone_id',
                 'geo_zone_name',
                 'geo_zone_description',
+            ),
+            'autoMap' => array(
+                'add' => array(
+                    array(
+                        'field' => 'date_added',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                ),
+                'edit' => array(
+                    array(
+                        'field' => 'last_modified',
+                        'value' => 'now()',
+                        'bindVarsType' => 'passthru'
+                    )
+                )
             ),
             'headerTemplate' => 'tplAdminLeadGeoZonesHeader.php',
             'extraRowActions' => array(
