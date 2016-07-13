@@ -59,6 +59,7 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
     }
 
+
     protected function setValidationErrors($formValidation, $languages)
     {
         if (isset($formValidation)) {

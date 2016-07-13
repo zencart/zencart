@@ -203,6 +203,9 @@ class LeadRoutes extends LeadService
         return true;
     }
 
+    /**
+     *
+     */
     protected function deleteTableEntry()
     {
         $sql = "DELETE FROM " . $this->listingQuery['mainTable']['table'] . " WHERE " . $this->listingQuery['mainTable']['fkeyFieldLeft'] . " = :id:";
