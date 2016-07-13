@@ -44,10 +44,7 @@ class LeadRecordCompanyRoutes extends LeadRoutes
                 $this->outputLayout['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $this->dbConn->execute($sql);
         }
-        $sql = "DELETE FROM " . $this->listingQuery ['mainTable']['table'] . " WHERE " . $mainTableFkeyField . " = :id:";
-        $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
-            $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
-        $this->dbConn->execute($sql);
+        $this->deleteTableEntry();
         return true;
     }
 }
