@@ -84,7 +84,6 @@ $zc_settings['db_prefix'] = '';
 
 /**
  * The character-set to use when talking to the database.
- * Possible values: 'utf8' or 'latin1'.
  * Default: 'utf8'
  */
 $zc_settings['db_charset'] = 'utf8';

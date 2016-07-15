@@ -40,7 +40,7 @@ define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
  */
 define('DB_TYPE', '%%_DB_TYPE_%%'); // always 'mysql'
 define('DB_PREFIX', '%%_DB_PREFIX_%%'); // prefix for database table names -- preferred to be left empty
-define('DB_CHARSET', '%%_DB_CHARSET_%%'); // 'utf8' or 'latin1' are most common
+define('DB_CHARSET', '%%_DB_CHARSET_%%'); // 'utf8' is default
 define('DB_SERVER', '%%_DB_SERVER_%%');  // address of your db server
 define('DB_SERVER_USERNAME', '%%_DB_SERVER_USERNAME_%%');
 define('DB_SERVER_PASSWORD', '%%_DB_SERVER_PASSWORD_%%');
