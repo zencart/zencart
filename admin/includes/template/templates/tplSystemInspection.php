@@ -106,7 +106,7 @@
 <section class="row" >
     <div class="col-lg-8 col-lg-offset-2">
         <h2><?php echo MISSING_ADMIN_PAGES; ?></h2>
-        <h4><?php echo MISSING_ADMIN_PAGES_WHY; ?></h4>
+        <div class="smallText"><?php echo MISSING_ADMIN_PAGES_WHY; ?></div>
         <?php if (!$tplVars['hasMissingAdminPages']) { ?>
             <?php echo NO_MISSING_ADMIN_PAGES; ?>
         <?php } ?>
