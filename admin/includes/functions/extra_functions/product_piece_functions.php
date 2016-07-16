@@ -17,7 +17,7 @@
 // | to obtain it through the world-wide-web, please send a note to       |
 // | license@zen-cart.com so we can mail you a copy immediately.          |
 // +----------------------------------------------------------------------+
-//  $Id: product_music_functions.php 1105 2005-04-04 22:05:35Z birdbrain $
+//  $Id: product_piece_functions.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
  
 ////
@@ -44,14 +44,14 @@
   }
 
 ////
-// Return the Music Genre URL in the needed language
-  function zen_get_music_genre_url($music_genre_id, $language_id) {
+// Return the Piece Genre URL in the needed language
+  function zen_get_piece_genre_url($piece_genre_id, $language_id) {
     global $db;
-    $music_genre = $db->Execute("select music_genre_url
+    $piece_genre = $db->Execute("select piece_genre_url
                                   from " . TABLE_RECORD_COMPANY_INFO . "
-                                  where music_genre_id = '" . (int)$music_genre_id . "'
+                                  where piece_genre_id = '" . (int)$piece_genre_id . "'
                                   and languages_id = '" . (int)$language_id . "'");
 
-    return $music_genre->fields['music_genre_url'];
+    return $piece_genre->fields['piece_genre_url'];
   }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /** 
- * sundry defines for the music product type
+ * sundry defines for the piece product type
  *
  * @package productTypes
  * @copyright Copyright 2003-2005 Zen Cart Development Team

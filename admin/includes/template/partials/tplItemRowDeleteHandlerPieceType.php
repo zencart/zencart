@@ -6,6 +6,7 @@
  * @version $Id: New in v1.6.0 $
  */
 ?>
+
 <div class="modal fade" tabindex="-1" role="dialog" id="rowDeleteModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -16,6 +17,10 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-6" for="delete_image"><?php echo TEXT_DELETE_IMAGE; ?></label>
+                        <input type="checkbox" name="delete_image" id="delete_image">
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-6" for="delete_linked"><?php echo TEXT_DELETE_LINKED_ITEMS; ?></label>
                         <input type="checkbox" name="delete_linked" id="delete_linked">
@@ -31,4 +36,4 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<?php require 'includes/template/javascript/itemRowDeleteHandlerMusicType.php'; ?>
+<?php require 'includes/template/javascript/itemRowDeleteHandlerPieceType.php'; ?>

@@ -36,15 +36,15 @@ switch ($_GET['action']) {
       }
     }
     break;
-  case 'music_arist':
+  case 'piece_arist':
     if (isset($_GET['artists_id']) && zen_not_null($_GET['artists_id'])) {
       $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
       $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
       $result = $db->execute($sql);
       if ($result->RecordCount()) {
-        $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_MUSIC_ARTIST', array(), $_GET['artists_id'], $_SESSION['languages_id']);
-        zen_update_music_artist_clicked($_GET['artists_id'], $_SESSION['languages_id']);
+        $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_PIECE_ARTIST', array(), $_GET['artists_id'], $_SESSION['languages_id']);
+        zen_update_piece_artist_clicked($_GET['artists_id'], $_SESSION['languages_id']);
         zen_redirect(fixup_url($result->fields['artists_url']));
       } else {
         $sql = "SELECT products_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
@@ -52,14 +52,14 @@ switch ($_GET['action']) {
         $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
         $result = $db->execute($sql);
         if ($result->RecordCount()) {
-          $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_MUSIC_ARTIST', array(), $_GET['artists_id'], $_SESSION['languages_id']);
-          zen_update_music_artist_clicked($_GET['artists_id'], DEFAULT_LANGUAGE);
+          $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_PIECE_ARTIST', array(), $_GET['artists_id'], $_SESSION['languages_id']);
+          zen_update_piece_artist_clicked($_GET['artists_id'], DEFAULT_LANGUAGE);
           zen_redirect(fixup_url($result->fields['artists_url']));
         }
       }
     }
     break;
-  case 'music_record_company':
+  case 'piece_record_company':
     if (isset($_GET['record_company_id']) && zen_not_null($_GET['record_company_id'])) {
       $sql = "SELECT record_company_url from " . TABLE_RECORD_COMPANY_INFO . " WHERE record_company_id = :rcId: AND languages_id = :languageId:";
       $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');

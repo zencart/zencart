@@ -50,8 +50,8 @@ class LeadMediaTypes extends AbstractLeadDefinition
                     'href' => zen_href_link(FILENAME_MEDIA_MANAGER)
                 ),
                 array(
-                    'text' => BOX_CATALOG_MUSIC_GENRE,
-                    'href' => zen_href_link(FILENAME_MUSIC_GENRE)
+                    'text' => BOX_CATALOG_PIECE_GENRE,
+                    'href' => zen_href_link(FILENAME_PIECE_GENRE)
                 )
             ),
             'listMap' => array(

@@ -86,7 +86,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <p>REMOVE THE FOLLOWING FOLDERS (and all the files inside them), TO MINIMIZE SECURITY RISKS:<ul><li>/docs</li><li>/extras</li><li>/zc_install</li>
 <li>/install.txt (this file can be removed, too)</li></ul>
 It is safe to keep these files on *your* own computer (not the server), since they can be used as references/documentation, or used to aid in troubleshooting as diagnostic tools, or for upgrading/installing again in the future. But those folders/files should *not* be on a live webserver.</p>
-<p>Optional: Additionally, *IF* you have no intentions of supporting downloadable products or music-media products, you can *also* remove these folders:<ul><li>/download</li><li>/media</li><li>/pub</li></ul>(And you'll need to go to your Admin->Configuration->Attribute Settings->Enable Downloads, and set it to False to turn off the warning message about the missing download folder) In the future, if you choose to add downloadable products to your site or music-products, you will want to re-upload these appropriate folders (and their contents) to your server again, and assign appropriate permissions. </p>
+<p>Optional: Additionally, *IF* you have no intentions of supporting downloadable products, you can *also* remove these folders:<ul><li>/download</li><li>/media</li><li>/pub</li></ul>(And you'll need to go to your Admin->Configuration->Attribute Settings->Enable Downloads, and set it to False to turn off the warning message about the missing download folder) In the future, if you choose to add downloadable products to your site, you will want to re-upload these appropriate folders (and their contents) to your server again, and assign appropriate permissions. </p>
 
 <h1>2. Rename your &quot;/admin&quot; folder </h1>
 <p>Renaming the &quot;admin&quot; folder makes it much harder for would-be hackers to get into your admin area. </p>
@@ -174,7 +174,7 @@ Thus, once your site is built and your images have been created/loaded, you shou
   <li><span class="filename">/logs</span><br>
     This is used to store error logs. The BEST security protection for this is to move it to a  folder "above" the webroot (public_html or htdocs or www) area, so that it's not  accessible via a browser. (Requires changes to DIR_FS_LOGS setting in the configure.php file.)</li>
   <li><span class="filename">/media</span><br>
-    This is only suggested read-write for the sake of  being able to upload music-product media files via the admin. Could be  done by FTP as an alternative. </li>
+    This is only suggested read-write for the sake of  being able to upload media files via the admin. Could be  done by FTP as an alternative. </li>
   <li><span class="filename">/pub</span><br>
     This is used on Linux/Unix hosts to have downloadable products made available to customers via a secure delivery method which  doesn't disclose the 'real' location of files/data on your server (so that people can't share a URL and have their friends steal downloads from your site) </li>
   <li><span class="filename">/admin/backups</span><br>

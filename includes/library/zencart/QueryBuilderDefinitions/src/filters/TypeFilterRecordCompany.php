@@ -22,8 +22,8 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
     {
         $listingQuery['selectList'] [] = "r.record_company_name as manufacturers_name";
 
-        $listingQuery['joinTables'] ['TABLE_PRODUCT_MUSIC_EXTRA'] = array(
-            'table' => TABLE_PRODUCT_MUSIC_EXTRA,
+        $listingQuery['joinTables'] ['TABLE_PRODUCT_PIECE_EXTRA'] = array(
+            'table' => TABLE_PRODUCT_PIECE_EXTRA,
             'alias' => 'pme',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'products_id'
@@ -33,7 +33,7 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
             'alias' => 'r',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'record_company_id',
-            'fkeyTable' => 'TABLE_PRODUCT_MUSIC_EXTRA'
+            'fkeyTable' => 'TABLE_PRODUCT_PIECE_EXTRA'
         );
         if ($this->request->readGet('record_company_id')) {
             $listingQuery['whereClauses'] [] = array(
@@ -96,7 +96,7 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
     protected function getDefaultFilterSql()
     {
         $sql = "SELECT DISTINCT r.record_company_id AS id, r.record_company_name AS name
-                FROM  " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_MUSIC_EXTRA . " pme, " . TABLE_RECORD_COMPANY . " r
+                FROM  " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_RECORD_COMPANY . " r
                 WHERE p.products_status = 1
                 AND pme.record_company_id = r.record_company_id
                 AND p.products_id = p2c.products_id
@@ -112,7 +112,7 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
     protected function getTypeFilterSql()
     {
         $sql = "SELECT DISTINCT c.categories_id AS id, cd.categories_name AS name
-                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_MUSIC_EXTRA . " pme, " . TABLE_RECORD_COMPANY . " r
+                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_RECORD_COMPANY . " r
                 WHERE p.products_status = 1
                 AND p.products_id = pme.products_id
                 AND pme.products_id = p2c.products_id

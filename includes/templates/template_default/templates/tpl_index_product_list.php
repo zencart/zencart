@@ -37,8 +37,8 @@ if ($tplVars['listingBox']['showFilterForm'])
   {
     echo zen_draw_hidden_field ( $get_option_variable, $_GET[$tplVars['getOptionVariable']] );
   }
-  if (isset ( $_GET['music_genre_id'] ) && $_GET['music_genre_id'] != '')
-    echo zen_draw_hidden_field ( 'music_genre_id', $_GET['music_genre_id'] );
+  if (isset ( $_GET['piece_genre_id'] ) && $_GET['piece_genre_id'] != '')
+    echo zen_draw_hidden_field ( 'piece_genre_id', $_GET['piece_genre_id'] );
   if (isset ( $_GET['record_company_id'] ) && $_GET['record_company_id'] != '')
     echo zen_draw_hidden_field ( 'record_company_id', $_GET['record_company_id'] );
   if (isset ( $_GET['typefilter'] ) && $_GET['typefilter'] != '')

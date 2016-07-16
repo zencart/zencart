@@ -18,13 +18,13 @@ if (!defined('IS_ADMIN_FLAG')) {
                        'products_model' => '',
                        'products_image' => '',
                        'products_price' => '',
-                       'products_virtual' => DEFAULT_PRODUCT_MUSIC_PRODUCTS_VIRTUAL,
+                       'products_virtual' => DEFAULT_PRODUCT_PIECE_PRODUCTS_VIRTUAL,
                        'products_weight' => '',
                        'products_date_added' => '',
                        'products_last_modified' => '',
                        'products_date_available' => '',
                        'products_status' => '',
-                       'products_tax_class_id' => DEFAULT_PRODUCT_MUSIC_TAX_CLASS_ID,
+                       'products_tax_class_id' => DEFAULT_PRODUCT_PIECE_TAX_CLASS_ID,
                        'manufacturers_id' => '',
                        'products_quantity_order_min' => '',
                        'products_quantity_order_units' => '',
@@ -32,7 +32,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                        'product_is_free' => '',
                        'product_is_call' => '',
                        'products_quantity_mixed' => '',
-                       'product_is_always_free_shipping' => DEFAULT_PRODUCT_MUSIC_PRODUCTS_IS_ALWAYS_FREE_SHIPPING,
+                       'product_is_always_free_shipping' => DEFAULT_PRODUCT_PIECE_PRODUCTS_IS_ALWAYS_FREE_SHIPPING,
                        'products_qty_box_status' => PRODUCTS_QTY_BOX_STATUS,
                        'products_quantity_order_max' => '0',
                        'products_sort_order' => '0',
@@ -51,7 +51,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                       p.products_date_added, p.products_last_modified,
                                       date_format(p.products_date_available, '%Y-%m-%d') as
                                       products_date_available, p.products_status, p.products_tax_class_id,
-                                      pe.artists_id, pe.record_company_id,pe.music_genre_id,
+                                      pe.artists_id, pe.record_company_id,pe.piece_genre_id,
                                       p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
                                       p.product_is_free, p.product_is_call, p.products_quantity_mixed,
                                       p.product_is_always_free_shipping, p.products_qty_box_status, p.products_quantity_order_max,
@@ -59,7 +59,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                       p.products_discount_type, p.products_discount_type_from,
                                       p.products_price_sorter, p.master_categories_id
                               from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd,
-                                   " . TABLE_PRODUCT_MUSIC_EXTRA . " pe
+                                   " . TABLE_PRODUCT_PIECE_EXTRA . " pe
                               where p.products_id = '" . (int)$_GET['pID'] . "'
                               and p.products_id = pd.products_id and p.products_id = pe.products_id
                               and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
@@ -101,13 +101,13 @@ if (!defined('IS_ADMIN_FLAG')) {
       $record_company->MoveNext();
     }
 
-    $music_genre_array = array(array('id' => '', 'text' => TEXT_NONE));
-    $music_genre = $db->Execute("select music_genre_id, music_genre_name
-                                   from " . TABLE_MUSIC_GENRE . " order by music_genre_name");
-    while (!$music_genre->EOF) {
-      $music_genre_array[] = array('id' => $music_genre->fields['music_genre_id'],
-                                     'text' => $music_genre->fields['music_genre_name']);
-      $music_genre->MoveNext();
+    $piece_genre_array = array(array('id' => '', 'text' => TEXT_NONE));
+    $piece_genre = $db->Execute("select piece_genre_id, piece_genre_name
+                                   from " . TABLE_PIECE_GENRE . " order by piece_genre_name");
+    while (!$piece_genre->EOF) {
+      $piece_genre_array[] = array('id' => $piece_genre->fields['piece_genre_id'],
+                                     'text' => $piece_genre->fields['piece_genre_name']);
+      $piece_genre->MoveNext();
     }
 
     $tax_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
@@ -136,14 +136,14 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
 // Virtual Products
-    if (!isset($pInfo->products_virtual)) $pInfo->products_virtual = DEFAULT_PRODUCT_MUSIC_PRODUCTS_VIRTUAL;
+    if (!isset($pInfo->products_virtual)) $pInfo->products_virtual = DEFAULT_PRODUCT_PIECE_PRODUCTS_VIRTUAL;
     switch ($pInfo->products_virtual) {
       case '0': $is_virtual = false; $not_virtual = true; break;
       case '1': $is_virtual = true; $not_virtual = false; break;
       default: $is_virtual = false; $not_virtual = true;
     }
 // Always Free Shipping
-    if (!isset($pInfo->product_is_always_free_shipping)) $pInfo->product_is_always_free_shipping = DEFAULT_PRODUCT_MUSIC_PRODUCTS_IS_ALWAYS_FREE_SHIPPING;
+    if (!isset($pInfo->product_is_always_free_shipping)) $pInfo->product_is_always_free_shipping = DEFAULT_PRODUCT_PIECE_PRODUCTS_IS_ALWAYS_FREE_SHIPPING;
     switch ($pInfo->product_is_always_free_shipping) {
       case '0': $is_product_is_always_free_shipping = false; $not_product_is_always_free_shipping = true; $special_product_is_always_free_shipping = false; break;
       case '1': $is_product_is_always_free_shipping = true; $not_product_is_always_free_shipping = false; $special_product_is_always_free_shipping = false; break;
@@ -319,8 +319,8 @@ echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorte
             <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('record_company_id', $record_company_array, $pInfo->record_company_id); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo TEXT_PRODUCTS_MUSIC_GENRE; ?></td>
-            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('music_genre_id', $music_genre_array, $pInfo->music_genre_id); ?></td>
+            <td class="main"><?php echo TEXT_PRODUCTS_PIECE_GENRE; ?></td>
+            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('piece_genre_id', $piece_genre_array, $pInfo->piece_genre_id); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

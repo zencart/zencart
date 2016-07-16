@@ -515,7 +515,7 @@ class zcRequest extends base
         'inc_subcat',
         'language',
         'markflow',
-        'music_genre_id',
+        'piece_genre_id',
         'nocache',
         'notify',
         'number_of_uploads',

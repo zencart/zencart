@@ -32,7 +32,7 @@ class LeadRecordArtistsRoutes extends LeadRoutes
             }
         }
         if ($this->request->readPost('delete_linked') === 'true') {
-            $sql = "SELECT products_id FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE artists_id = :id:";
+            $sql = "SELECT products_id FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE artists_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $results = $this->dbConn->execute($sql);
@@ -40,7 +40,7 @@ class LeadRecordArtistsRoutes extends LeadRoutes
                 zen_remove_product($result['products_id']);
             }
         } else {
-            $sql = "UPDATE " . TABLE_PRODUCT_MUSIC_EXTRA . " SET artists_id = '' WHERE artists_id = :id:";
+            $sql = "UPDATE " . TABLE_PRODUCT_PIECE_EXTRA . " SET artists_id = '' WHERE artists_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $this->dbConn->execute($sql);

@@ -8,10 +8,10 @@
 namespace ZenCart\QueryBuilderDefinitions\definitions;
 
 /**
- * Class LeadMusicGenre
+ * Class LeadPieceGenre
  * @package ZenCart\QueryBuilderDefinitions\definitions
  */
-class LeadMusicGenre extends AbstractLeadDefinition
+class LeadPieceGenre extends AbstractLeadDefinition
 {
 
     /**
@@ -27,21 +27,21 @@ class LeadMusicGenre extends AbstractLeadDefinition
 
         $this->listingQuery = array(
             'mainTable' => array(
-                'table' => TABLE_MUSIC_GENRE,
+                'table' => TABLE_PIECE_GENRE,
                 'alias' => 'mg',
-                'fkeyFieldLeft' => 'music_genre_id',
+                'fkeyFieldLeft' => 'piece_genre_id',
             ),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_PIECE_GENRES,
                     'pagingVarSrc' => 'post'
                 )
             ),
         );
 
         $this->outputLayout = array(
-            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicGenre.php',
+            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerPieceGenre.php',
             'allowDelete' => true,
             'relatedLinks' => array(
                 array(
@@ -62,12 +62,12 @@ class LeadMusicGenre extends AbstractLeadDefinition
                 )
             ),
             'listMap' => array(
-                'music_genre_id',
-                'music_genre_name',
+                'piece_genre_id',
+                'piece_genre_name',
                 'linked_products',
             ),
             'editMap' => array(
-                'music_genre_name',
+                'piece_genre_name',
             ),
             'autoMap' => array(
                 'add' => array(
@@ -86,20 +86,20 @@ class LeadMusicGenre extends AbstractLeadDefinition
                 )
             ),
             'fields' => array(
-                'music_genre_id' => array(
+                'piece_genre_id' => array(
                     'bindVarsType' => 'integer',
                     'layout' => array(
                         'list' => array(
-                            'title' => TEXT_ENTRY_MUSIC_GENRE_ID,
+                            'title' => TEXT_ENTRY_PIECE_GENRE_ID,
                             'align' => 'left'
                         )
                     )
                 ),
-                'music_genre_name' => array(
+                'piece_genre_name' => array(
                     'bindVarsType' => 'string',
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_MUSIC_GENRE_NAME,
+                            'title' => TEXT_ENTRY_PIECE_GENRE_NAME,
                             'type' => 'text',
                             'size' => '30'
                         )
@@ -122,13 +122,13 @@ class LeadMusicGenre extends AbstractLeadDefinition
     }
 
     /**
-     * @param $musicGenreId
+     * @param $pieceGenreId
      * @return mixed
      */
-    protected function getLinkedProducts($musicGenreId)
+    protected function getLinkedProducts($pieceGenreId)
     {
-        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE music_genre_id = :id:";
-        $sql = $this->dbConn->bindvars($sql, ':id:', $musicGenreId, 'integer');
+        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE piece_genre_id = :id:";
+        $sql = $this->dbConn->bindvars($sql, ':id:', $pieceGenreId, 'integer');
         $result = $this->dbConn->Execute($sql);
 
         return $result->fields['count'];

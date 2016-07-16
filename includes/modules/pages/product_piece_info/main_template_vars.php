@@ -1,6 +1,6 @@
 <?php
 /**
- *  product_music_info main_template_vars.php
+ *  product_piece_info main_template_vars.php
  *
  * @package productTypes
  * @copyright Copyright 2003-2013 Zen Cart Development Team
@@ -13,7 +13,7 @@
  */
 
   // This should be first line of the script:
-  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_PRODUCT_MUSIC_INFO');
+  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_PRODUCT_PIECE_INFO');
 
   $module_show_categories = PRODUCT_INFO_CATEGORIES;
 
@@ -34,7 +34,7 @@
 
   } else {
 
-    $tpl_page_body = '/tpl_product_music_info_display.php';
+    $tpl_page_body = '/tpl_product_piece_info_display.php';
 
     $zco_notifier->notify('NOTIFY_PRODUCT_VIEWS_HIT_INCREMENTOR', (int)$_GET['products_id']);
 
@@ -62,7 +62,7 @@
     }
 
 // set flag for attributes module usage:
-    $flag_show_weight_attrib_for_this_prod_type = SHOW_PRODUCT_MUSIC_INFO_WEIGHT_ATTRIBUTES;
+    $flag_show_weight_attrib_for_this_prod_type = SHOW_PRODUCT_PIECE_INFO_WEIGHT_ATTRIBUTES;
 // get attributes
     require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_ATTRIBUTES));
 
@@ -124,7 +124,7 @@
   if (file_exists($prod_type_specific_vars_info)) {
     include_once($prod_type_specific_vars_info);
   }
-  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_PRODUCT_TYPE_VARS_PRODUCT_MUSIC_INFO');
+  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_PRODUCT_TYPE_VARS_PRODUCT_PIECE_INFO');
 
 
 /**
@@ -197,12 +197,12 @@
   $flag_show_product_info_additional_images = zen_get_show_product_switch($_GET['products_id'], 'additional_images');
   $flag_show_product_info_free_shipping = zen_get_show_product_switch($_GET['products_id'], 'always_free_shipping_image_switch');
 
-  $flag_show_product_music_info_artist = zen_get_show_product_switch($_GET['products_id'], 'artist');
-  $flag_show_product_music_info_genre = zen_get_show_product_switch($_GET['products_id'], 'genre');
-  $flag_show_product_music_info_record_company = zen_get_show_product_switch($_GET['products_id'], 'record_company');
+  $flag_show_product_piece_info_artist = zen_get_show_product_switch($_GET['products_id'], 'artist');
+  $flag_show_product_piece_info_genre = zen_get_show_product_switch($_GET['products_id'], 'genre');
+  $flag_show_product_piece_info_record_company = zen_get_show_product_switch($_GET['products_id'], 'record_company');
   require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS));
 
-  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_PRODUCT_MUSIC_INFO');
+  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_PRODUCT_PIECE_INFO');
 
 
   require($template->get_template_dir($tpl_page_body,DIR_WS_TEMPLATE, $current_page_base,'templates'). $tpl_page_body);
@@ -210,4 +210,4 @@
   //require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_ALSO_PURCHASED_PRODUCTS));
 
   // This should be last line of the script:
-  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_END_PRODUCT_MUSIC_INFO');
+  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_END_PRODUCT_PIECE_INFO');

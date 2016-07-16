@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: product_music_info.php 6371 2007-05-25 19:55:59Z ajeh $
+ * @version $Id: product_piece_info.php 6371 2007-05-25 19:55:59Z ajeh $
  */
 
 define('TEXT_PRODUCT_NOT_FOUND', 'Sorry, the product was not found.');
@@ -17,7 +17,7 @@ define('TEXT_ALSO_PURCHASED_PRODUCTS', 'Customers who bought this product also p
 define('TEXT_PRODUCT_OPTIONS', 'Please Choose: ');
 define('TEXT_PRODUCT_RECORD_COMPANY', 'Record Company: ');
 define('TEXT_PRODUCT_ARTIST', 'Artist: ');
-define('TEXT_PRODUCT_MUSIC_GENRE', 'Music Genre: ');
+define('TEXT_PRODUCT_PIECE_GENRE', 'Piece Genre: ');
 define('TEXT_PRODUCT_WEIGHT', 'Shipping Weight: ');
 define('TEXT_PRODUCT_QUANTITY', ' Units in Stock');
 define('TEXT_PRODUCT_COLLECTIONS', 'Media Collection: ');

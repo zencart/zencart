@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: product_music.php 15883 2010-04-11 16:41:26Z wilt $
+ * @version $Id: product_piece.php 15883 2010-04-11 16:41:26Z wilt $
  */
 
 define('HEADING_TITLE', 'Categories / Products');
@@ -25,7 +25,7 @@ define('TEXT_SUBCATEGORIES', 'Subcategories:');
 define('TEXT_PRODUCTS', 'Products:');
 define('TEXT_PRODUCTS_RECORD_ARTIST', 'Recording Artist:');
 define('TEXT_PRODUCTS_RECORD_COMPANY', 'Record Company:');
-define('TEXT_PRODUCTS_MUSIC_GENRE', 'Music Genre:');
+define('TEXT_PRODUCTS_PIECE_GENRE', 'Piece Genre:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Price:');
 define('TEXT_PRODUCTS_TAX_CLASS', 'Tax Class:');
 define('TEXT_PRODUCTS_AVERAGE_RATING', 'Average Rating:');

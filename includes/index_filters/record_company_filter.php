@@ -2,7 +2,7 @@
 /**
  * record_company_filter.php  for index filters
  *
- * index filter for the music product type
+ * index filter for the piece product type
  * show the products of a specified record company
  *
  * @package productTypes
@@ -42,7 +42,7 @@ if (!isset($select_column_list)) $select_column_list = "";
       $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, p.products_price, p.products_tax_class_id, pd.products_description, if(s.status = 1, s.specials_new_products_price, NULL) AS specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
+        TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
         TABLE_RECORD_COMPANY . " r
         where r.record_company_id = '" . (int)$_GET['record_company_id'] . "'
@@ -59,7 +59,7 @@ if (!isset($select_column_list)) $select_column_list = "";
       $listing_sql = "select " . $select_column_list . " pme.products_id, p.products_type, p.master_categories_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
+        TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
         TABLE_RECORD_COMPANY . " r
         where r.record_company_id = '" . (int)$_GET['record_company_id'] . "'
           and p.products_id = pme.products_id
@@ -78,7 +78,7 @@ if (!isset($select_column_list)) $select_column_list = "";
         from " . TABLE_PRODUCTS . " p left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
         TABLE_RECORD_COMPANY . " r, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme, " .
+        TABLE_PRODUCT_PIECE_EXTRA . " pme, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c
         where p.products_status = 1
           and pme.record_company_id = r.record_company_id
@@ -94,7 +94,7 @@ if (!isset($select_column_list)) $select_column_list = "";
         $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
+        TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
         TABLE_RECORD_COMPANY . " r
         where  r.record_company_id = pme.record_company_id
@@ -109,7 +109,7 @@ if (!isset($select_column_list)) $select_column_list = "";
         $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
+        TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
         TABLE_RECORD_COMPANY . " r
         where r.record_company_id = pme.record_company_id
@@ -184,7 +184,7 @@ if (!isset($select_column_list)) $select_column_list = "";
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
         TABLE_CATEGORIES . " c, " .
         TABLE_CATEGORIES_DESCRIPTION . " cd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme
+        TABLE_PRODUCT_PIECE_EXTRA . " pme
         where p.products_status = 1
           and pme.products_id = p2c.products_id
           and p.products_id = p2c.products_id
@@ -197,7 +197,7 @@ if (!isset($select_column_list)) $select_column_list = "";
       $filterlist_sql= "select distinct r.record_company_id as id, r.record_company_name as name
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme, " .
+        TABLE_PRODUCT_PIECE_EXTRA . " pme, " .
         TABLE_RECORD_COMPANY . " r
         where p.products_status = 1
           and pme.record_company_id = r.record_company_id
@@ -219,7 +219,7 @@ if (!isset($select_column_list)) $select_column_list = "";
         $get_option_variable = 'record_company_id';
         $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
       } else {
-        $options = array(array('id' => '', 'text' => TEXT_ALL_MUSIC_GENRE));
+        $options = array(array('id' => '', 'text' => TEXT_ALL_PIECE_GENRE));
       }
       while (!$filterlist->EOF) {
         $options[] = array('id' => $filterlist->fields['id'], 'text' => $filterlist->fields['name']);

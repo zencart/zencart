@@ -1,6 +1,6 @@
 <?php
 /**
- * Class TypeFilterMusicGenre
+ * Class TypeFilterPieceGenre
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -9,10 +9,10 @@
 namespace ZenCart\QueryBuilderDefinitions\filters;
 
 /**
- * Class TypeFilterMusicGenre
+ * Class TypeFilterPieceGenre
  * @package ZenCart\QueryBuilderDefinitions\filters
  */
-class TypeFilterMusicGenre extends AbstractTypeFilter
+class TypeFilterPieceGenre extends AbstractTypeFilter
 {
     /**
      * @param $listingQuery
@@ -20,26 +20,26 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
      */
     public function handleParameterFilters($listingQuery)
     {
-        $listingQuery['selectList'] [] = "m.music_genre_name as manufacturers_name";
+        $listingQuery['selectList'] [] = "m.piece_genre_name as manufacturers_name";
 
-        $listingQuery['joinTables'] ['TABLE_PRODUCT_MUSIC_EXTRA'] = array(
-            'table' => TABLE_PRODUCT_MUSIC_EXTRA,
+        $listingQuery['joinTables'] ['TABLE_PRODUCT_PIECE_EXTRA'] = array(
+            'table' => TABLE_PRODUCT_PIECE_EXTRA,
             'alias' => 'pme',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'products_id'
         );
-        $listingQuery['joinTables'] ['TABLE_MUSIC_GENRE'] = array(
-            'table' => TABLE_MUSIC_GENRE,
+        $listingQuery['joinTables'] ['TABLE_PIECE_GENRE'] = array(
+            'table' => TABLE_PIECE_GENRE,
             'alias' => 'm',
             'type' => 'LEFT',
-            'fkeyFieldLeft' => 'music_genre_id',
-            'fkeyTable' => 'TABLE_PRODUCT_MUSIC_EXTRA'
+            'fkeyFieldLeft' => 'piece_genre_id',
+            'fkeyTable' => 'TABLE_PRODUCT_PIECE_EXTRA'
         );
-        if ($this->request->readGet('music_genre_id')) {
+        if ($this->request->readGet('piece_genre_id')) {
             $listingQuery['whereClauses'] [] = array(
-                'table' => TABLE_MUSIC_GENRE,
-                'field' => 'music_genre_id',
-                'value' => (int)$this->request->readGet('music_genre_id'),
+                'table' => TABLE_PIECE_GENRE,
+                'field' => 'piece_genre_id',
+                'value' => (int)$this->request->readGet('piece_genre_id'),
                 'type' => 'AND'
             );
             if ($this->request->readGet('filter_id')) {
@@ -71,8 +71,8 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
             );
             if ($this->request->readGet('filter_id')) {
                 $listingQuery['whereClauses'] [] = array(
-                    'table' => TABLE_MUSIC_GENRE,
-                    'field' => 'music_genre_id',
+                    'table' => TABLE_PIECE_GENRE,
+                    'field' => 'piece_genre_id',
                     'value' => (int)$this->request->readGet('filter_id'),
                     'type' => 'AND'
                 );
@@ -86,7 +86,7 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
      */
     protected function getGetTypeParam()
     {
-        return 'music_genre';
+        return 'piece_genre';
     }
 
     /**
@@ -94,14 +94,14 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
      */
     protected function getDefaultFilterSql()
     {
-        $sql = "SELECT DISTINCT m.music_genre_id AS id, m.music_genre_name AS name
-                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_MUSIC_EXTRA . " pme, " . TABLE_MUSIC_GENRE . " m
+        $sql = "SELECT DISTINCT m.piece_genre_id AS id, m.piece_genre_name AS name
+                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_PIECE_GENRE . " m
                 WHERE p.products_status = 1
-                AND pme.music_genre_id = m.music_genre_id
+                AND pme.piece_genre_id = m.piece_genre_id
                 AND p.products_id = p2c.products_id
                 AND pme.products_id = p.products_id
                 AND p2c.categories_id = '" . (int)$this->params['currentCategoryId'] . "'
-                ORDER BY m.music_genre_name";
+                ORDER BY m.piece_genre_name";
         return $sql;
     }
 
@@ -111,15 +111,15 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
     protected function getTypeFilterSql()
     {
         $sql = "SELECT DISTINCT c.categories_id AS id, cd.categories_name AS name
-                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_MUSIC_EXTRA . " pme, " . TABLE_MUSIC_GENRE . " m
+                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_PIECE_GENRE . " m
                 WHERE p.products_status = 1
                 AND p.products_id = pme.products_id
                 AND pme.products_id = p2c.products_id
-                AND pme.music_genre_id = m.music_genre_id
+                AND pme.piece_genre_id = m.piece_genre_id
                 AND p2c.categories_id = c.categories_id
                 AND p2c.categories_id = cd.categories_id
                 AND cd.language_id = '" . (int)$_SESSION ['languages_id'] . "'
-                AND m.music_genre_id = '" . (int)$this->request->readGet('music_genre_id') . "'
+                AND m.piece_genre_id = '" . (int)$this->request->readGet('piece_genre_id') . "'
                 ORDER BY cd.categories_name";
         return $sql;
     }

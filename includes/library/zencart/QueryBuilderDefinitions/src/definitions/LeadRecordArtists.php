@@ -43,15 +43,15 @@ class LeadRecordArtists extends AbstractLeadDefinition
 
         $this->outputLayout = array(
             'allowDelete' => true,
-            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicType.php',
+            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerPieceType.php',
             'relatedLinks' => array(
                 array(
                     'text' => BOX_CATALOG_RECORD_COMPANY,
                     'href' => zen_href_link(FILENAME_RECORD_COMPANY)
                 ),
                 array(
-                    'text' => BOX_CATALOG_MUSIC_GENRE,
-                    'href' => zen_href_link(FILENAME_MUSIC_GENRE)
+                    'text' => BOX_CATALOG_PIECE_GENRE,
+                    'href' => zen_href_link(FILENAME_PIECE_GENRE)
                 ),
                 array(
                     'text' => BOX_CATALOG_MEDIA_MANAGER,
@@ -161,7 +161,7 @@ class LeadRecordArtists extends AbstractLeadDefinition
      */
     protected function getLinkedProducts($artistsId)
     {
-        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_MUSIC_EXTRA . " WHERE artists_id = :id:";
+        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE artists_id = :id:";
         $sql = $this->dbConn->bindvars($sql, ':id:', $artistsId, 'integer');
         $result = $this->dbConn->Execute($sql);
 

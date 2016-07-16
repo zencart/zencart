@@ -53,7 +53,7 @@ class LeadMediaManagerClips extends AbstractLeadDefinition
 
         $this->outputLayout = array(
             'pageTitle' => $this->getTitle(),
-            //            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicGenre.php',
+            //            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerPieceGenre.php',
             'allowDelete' => true,
             'extraDeleteParameters' => '&media_id=' . $this->request->readGet('media_id'),
             'allowEdit' => false,
@@ -67,8 +67,8 @@ class LeadMediaManagerClips extends AbstractLeadDefinition
                     'href' => zen_href_link(FILENAME_RECORD_COMPANY)
                 ),
                 array(
-                    'text' => BOX_CATALOG_MUSIC_GENRE,
-                    'href' => zen_href_link(FILENAME_MUSIC_GENRE)
+                    'text' => BOX_CATALOG_PIECE_GENRE,
+                    'href' => zen_href_link(FILENAME_PIECE_GENRE)
                 ),
                 array(
                     'text' => BOX_CATALOG_MEDIA_TYPES,

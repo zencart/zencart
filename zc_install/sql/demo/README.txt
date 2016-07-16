@@ -16,8 +16,8 @@ manufacturers_info
 media_clips 
 media_manager 
 media_to_products
-music_genre 
-product_music_extra 
+piece_genre 
+product_piece_extra 
 product_types_to_category 
 products 
 products_attributes 

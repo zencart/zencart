@@ -17,11 +17,11 @@
 // | to obtain it through the world-wide-web, please send a note to       |
 // | license@zen-cart.com so we can mail you a copy immediately.          |
 // +----------------------------------------------------------------------+
-//  $Id: product_music.php 1105 2005-04-04 22:05:35Z birdbrain $
+//  $Id: product_piece.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
 define('BOX_CATALOG_RECORD_ARTISTS', 'Record Artists');
 define('BOX_CATALOG_RECORD_COMPANY', 'Record Companies');
-define('BOX_CATALOG_MUSIC_GENRE', 'Music Genre');
+define('BOX_CATALOG_PIECE_GENRE', 'Piece Genre');
 define('BOX_CATALOG_MEDIA_MANAGER', 'Media Manager');
 define('BOX_CATALOG_MEDIA_TYPES', 'Media Types');
 ?>

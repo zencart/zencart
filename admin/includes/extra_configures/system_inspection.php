@@ -145,7 +145,7 @@ $built_in_boxes = array(
 'BOX_CATALOG_MEDIA_MANAGER',
 'BOX_CATALOG_MEDIA_TYPES',
 'BOX_TOOLS_LAYOUT_CONTROLLER',
-'BOX_CATALOG_MUSIC_GENRE',
+'BOX_CATALOG_PIECE_GENRE',
 'BOX_CONFIGURATION_COWOA', 
 'BOX_CONFIGURATION_WIDGET'
 ); 
@@ -210,7 +210,7 @@ $built_in_tables = array(
 'media_types',
 'meta_tags_categories_description',
 'meta_tags_products_description',
-'music_genre',
+'piece_genre',
 'newsletters',
 'orders',
 'orders_products',
@@ -224,7 +224,7 @@ $built_in_tables = array(
 'paypal_payment_status_history',
 'paypal_session',
 'paypal_testing',
-'product_music_extra',
+'product_piece_extra',
 'product_type_layout',
 'product_types',
 'product_types_to_category',

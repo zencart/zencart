@@ -21,8 +21,8 @@ class testFilterCase extends zcTestCase
         define('PRODUCT_LIST_ALPHA_SORTER', 1);
         define('PRODUCT_LIST_ALPHA_SORTER_LIST', 'A - C:A,B,C;D - F:D,E,F;G - I:G,H,I;J - L:J,K,L;M - N:M,N;O - Q:O,P,Q;R - T:R,S,T;U - W:U,V,W;X - Z:X,Y,Z;#:0,1,2,3,4,5,6,7,8,9');
         define('DOB_FORMAT_STRING', '##/##/##');
-        define('TABLE_PRODUCT_MUSIC_EXTRA', DB_PREFIX . 'product_music_extra');
-        define('TABLE_MUSIC_GENRE', DB_PREFIX . 'music_genre');
+        define('TABLE_PRODUCT_PIECE_EXTRA', DB_PREFIX . 'product_piece_extra');
+        define('TABLE_PIECE_GENRE', DB_PREFIX . 'piece_genre');
         define('TABLE_RECORD_COMPANY', DB_PREFIX . 'record_company');
         define('PRODUCT_LIST_FILTER', 1);
         $_SESSION['languages_id'] = 1;
@@ -456,7 +456,7 @@ class testFilterCase extends zcTestCase
         $f->filterItem($listingQuery);
     }
 
-    public function testTypeFilterMusicGenre()
+    public function testTypeFilterPieceGenre()
     {
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
@@ -473,7 +473,7 @@ class testFilterCase extends zcTestCase
         $request->method('has')
             ->will($this->returnValueMap($map
             ));
-        $map = array(array('typefilter', null, 'music_genre'), array('filter_id', null, '1'));
+        $map = array(array('typefilter', null, 'piece_genre'), array('filter_id', null, '1'));
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
@@ -483,7 +483,7 @@ class testFilterCase extends zcTestCase
         $f->filterItem($listingQuery);
     }
 
-    public function testTypeFilterMusicGenreWithId()
+    public function testTypeFilterPieceGenreWithId()
     {
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
@@ -500,7 +500,7 @@ class testFilterCase extends zcTestCase
         $request->method('has')
             ->will($this->returnValueMap($map
             ));
-        $map = array(array('typefilter', null, 'music_genre'), array('music_genre_id', null, '1'), array('filter_id', null, '1'));
+        $map = array(array('typefilter', null, 'piece_genre'), array('piece_genre_id', null, '1'), array('filter_id', null, '1'));
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);

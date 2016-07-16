@@ -2,8 +2,8 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=product_music_info.<br />
- * Displays details of a music product
+ * Loaded automatically by index.php?main_page=product_piece_info.<br />
+ * Displays details of a piece product
  *
  * @package templateSystem
  * @copyright Copyright 2003-2014 Zen Cart Development Team
@@ -12,7 +12,7 @@
  * @version $Id: $
  */
 ?>
-<div class="centerColumn" id="productMusicDisplay">
+<div class="centerColumn" id="productPieceDisplay">
 
 <!--bof Form start-->
 <?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data"') . "\n"; ?>
@@ -113,14 +113,14 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 <!--eof Add to Cart Box-->
 
 <!--bof Product details list  -->
-<?php if ( (($flag_show_product_info_model == 1 and $products_model != '') or ($flag_show_product_info_weight == 1 and $products_weight !=0) or ($flag_show_product_info_quantity == 1) or ($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name))) or $flag_show_product_music_info_artist == 1 or $flag_show_product_music_info_genre == 1) { ?>
+<?php if ( (($flag_show_product_info_model == 1 and $products_model != '') or ($flag_show_product_info_weight == 1 and $products_weight !=0) or ($flag_show_product_info_quantity == 1) or ($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name))) or $flag_show_product_piece_info_artist == 1 or $flag_show_product_piece_info_genre == 1) { ?>
 <ul id="productDetailsList" class="floatingBox back">
   <?php echo (($flag_show_product_info_model == 1 and $products_model !='') ? '<li>' . TEXT_PRODUCT_MODEL . $products_model . '</li>' : '') . "\n"; ?>
   <?php echo (($flag_show_product_info_weight == 1 and $products_weight !=0) ? '<li>' . TEXT_PRODUCT_WEIGHT .  $products_weight . TEXT_PRODUCT_WEIGHT_UNIT . '</li>'  : '') . "\n"; ?>
   <?php echo (($flag_show_product_info_quantity == 1) ? '<li>' . $products_quantity . TEXT_PRODUCT_QUANTITY . '</li>'  : '') . "\n"; ?>
   <?php echo (($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name)) ? '<li>' . TEXT_PRODUCT_MANUFACTURER . $manufacturers_name . '</li>' : '') . "\n"; ?>
-  <?php echo (($flag_show_product_music_info_artist == 1 and !empty($products_artist_name)) ? '<li>' . TEXT_PRODUCT_ARTIST . $products_artist_name . '</li>' : '') . "\n"; ?>
-  <?php echo (($flag_show_product_music_info_genre == 1 and !empty($products_music_genre_name)) ? '<li>' . TEXT_PRODUCT_MUSIC_GENRE . $products_music_genre_name . '</li>' : '') . "\n"; ?>
+  <?php echo (($flag_show_product_piece_info_artist == 1 and !empty($products_artist_name)) ? '<li>' . TEXT_PRODUCT_ARTIST . $products_artist_name . '</li>' : '') . "\n"; ?>
+  <?php echo (($flag_show_product_piece_info_genre == 1 and !empty($products_piece_genre_name)) ? '<li>' . TEXT_PRODUCT_PIECE_GENRE . $products_piece_genre_name . '</li>' : '') . "\n"; ?>
 </ul>
 <br class="clearBoth" />
 <?php
@@ -156,7 +156,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 <!--eof Quantity Discounts table -->
 
 <!--bof Media Manager -->
-<div id="mediaManager" class="productMusic"><?php
+<div id="mediaManager" class="productPiece"><?php
 /**
  * display the products related media clips
  */
@@ -206,13 +206,13 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
   if ($products_date_available > date('Y-m-d H:i:s')) {
     if ($flag_show_product_info_date_available == 1) {
 ?>
-  <p id="productDateAvailable" class="productMusic centeredContent"><?php echo sprintf(TEXT_DATE_AVAILABLE, zen_date_long($products_date_available)); ?></p>
+  <p id="productDateAvailable" class="productPiece centeredContent"><?php echo sprintf(TEXT_DATE_AVAILABLE, zen_date_long($products_date_available)); ?></p>
 <?php
     }
   } else {
     if ($flag_show_product_info_date_added == 1) {
 ?>
-      <p id="productDateAdded" class="productMusic centeredContent"><?php echo sprintf(TEXT_DATE_ADDED, zen_date_long($products_date_added)); ?></p>
+      <p id="productDateAdded" class="productPiece centeredContent"><?php echo sprintf(TEXT_DATE_ADDED, zen_date_long($products_date_added)); ?></p>
 <?php
     } // $flag_show_product_info_date_added
   }
@@ -222,9 +222,9 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 <!--bof Product URL -->
 <?php
   if (zen_not_null($products_record_company_url)) {
-    if ($flag_show_product_music_info_record_company == 1) {
+    if ($flag_show_product_piece_info_record_company == 1) {
 ?>
-    <p id="productInfoLink" class="productMusic centeredContent"><?php echo sprintf(TEXT_RECORD_COMPANY_URL, zen_href_link(FILENAME_REDIRECT, 'action=music_record_company&record_company_id=' . zen_output_string_protected($music_extras->fields['record_company_id']), 'NONSSL', true, false)); ?></p>
+    <p id="productInfoLink" class="productPiece centeredContent"><?php echo sprintf(TEXT_RECORD_COMPANY_URL, zen_href_link(FILENAME_REDIRECT, 'action=piece_record_company&record_company_id=' . zen_output_string_protected($piece_extras->fields['record_company_id']), 'NONSSL', true, false)); ?></p>
 <?php
     } // $flag_show_product_info_record_company
   }
