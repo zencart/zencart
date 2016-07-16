@@ -8,10 +8,10 @@
 namespace ZenCart\QueryBuilderDefinitions\definitions;
 
 /**
- * Class LeadRecordCompany
+ * Class LeadAgency
  * @package ZenCart\QueryBuilderDefinitions\definitions
  */
-class LeadRecordCompany extends AbstractLeadDefinition
+class LeadAgency extends AbstractLeadDefinition
 {
 
     /**
@@ -26,19 +26,19 @@ class LeadRecordCompany extends AbstractLeadDefinition
 
         $this->listingQuery = array(
             'mainTable' => array(
-                'table' => TABLE_RECORD_COMPANY,
+                'table' => TABLE_AGENCY,
                 'alias' => 'rc',
-                'fkeyFieldLeft' => 'record_company_id',
+                'fkeyFieldLeft' => 'agency_id',
             ),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_AGENCIES,
                     'pagingVarSrc' => 'post'
                 )
             ),
             'language' => true,
-            'languageInfoTable' => TABLE_RECORD_COMPANY_INFO,
+            'languageInfoTable' => TABLE_AGENCY_INFO,
 
         );
 
@@ -65,15 +65,15 @@ class LeadRecordCompany extends AbstractLeadDefinition
             ),
             'hasMediaUpload' => true,
             'listMap' => array(
-                'record_company_id',
-                'record_company_name',
-                'record_company_url',
+                'agency_id',
+                'agency_name',
+                'agency_url',
                 'linked_products',
             ),
             'editMap' => array(
-                'record_company_name',
-                'record_company_url',
-                'record_company_image'
+                'agency_name',
+                'agency_url',
+                'agency_image'
             ),
             'autoMap' => array(
                 'add' => array(
@@ -92,30 +92,30 @@ class LeadRecordCompany extends AbstractLeadDefinition
                 )
             ),
             'fields' => array(
-                'record_company_id' => array(
+                'agency_id' => array(
                     'bindVarsType' => 'integer',
                     'layout' => array(
                         'list' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_ID,
+                            'title' => TEXT_ENTRY_AGENCY_ID,
                             'align' => 'left'
                         )
                     )
                 ),
-                'record_company_name' => array(
+                'agency_name' => array(
                     'bindVarsType' => 'string',
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_NAME,
+                            'title' => TEXT_ENTRY_AGENCY_NAME,
                             'type' => 'text',
                             'size' => '30'
                         )
                     )
                 ),
-                'record_company_image' => array(
+                'agency_image' => array(
                     'bindVarsType' => 'string',
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_IMAGE,
+                            'title' => TEXT_ENTRY_AGENCY_IMAGE,
                             'type' => 'file',
                             'uploadOptions' => array(
                                 'mediaDirectorySelector' => true,
@@ -128,12 +128,12 @@ class LeadRecordCompany extends AbstractLeadDefinition
                         'required' => false
                     )
                 ),
-                'record_company_url' => array(
+                'agency_url' => array(
                     'bindVarsType' => 'string',
                     'language' => true,
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_COMPANY_URL,
+                            'title' => TEXT_ENTRY_AGENCY_URL,
                             'type' => 'text',
                             'size' => '30'
                         )
@@ -156,13 +156,13 @@ class LeadRecordCompany extends AbstractLeadDefinition
     }
 
     /**
-     * @param $recordCompanyId
+     * @param $agencyId
      * @return mixed
      */
-    protected function getLinkedProducts($recordCompanyId)
+    protected function getLinkedProducts($agencyId)
     {
-        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE record_company_id = :id:";
-        $sql = $this->dbConn->bindvars($sql, ':id:', $recordCompanyId, 'integer');
+        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE agency_id = :id:";
+        $sql = $this->dbConn->bindvars($sql, ':id:', $agencyId, 'integer');
         $result = $this->dbConn->Execute($sql);
 
         return $result->fields['count'];

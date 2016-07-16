@@ -51,7 +51,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                       p.products_date_added, p.products_last_modified,
                                       date_format(p.products_date_available, '%Y-%m-%d') as
                                       products_date_available, p.products_status, p.products_tax_class_id,
-                                      pe.artists_id, pe.record_company_id,pe.piece_genre_id,
+                                      pe.artists_id, pe.agency_id,pe.piece_genre_id,
                                       p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
                                       p.product_is_free, p.product_is_call, p.products_quantity_mixed,
                                       p.product_is_always_free_shipping, p.products_qty_box_status, p.products_quantity_order_max,
@@ -92,13 +92,13 @@ if (!defined('IS_ADMIN_FLAG')) {
       $artists->MoveNext();
     }
 
-    $record_company_array = array(array('id' => '', 'text' => TEXT_NONE));
-    $record_company = $db->Execute("select record_company_id, record_company_name
-                                   from " . TABLE_RECORD_COMPANY . " order by record_company_name");
-    while (!$record_company->EOF) {
-      $record_company_array[] = array('id' => $record_company->fields['record_company_id'],
-                                     'text' => $record_company->fields['record_company_name']);
-      $record_company->MoveNext();
+    $agency_array = array(array('id' => '', 'text' => TEXT_NONE));
+    $agency = $db->Execute("select agency_id, agency_name
+                                   from " . TABLE_AGENCY . " order by agency_name");
+    while (!$agency->EOF) {
+      $agency_array[] = array('id' => $agency->fields['agency_id'],
+                                     'text' => $agency->fields['agency_name']);
+      $agency->MoveNext();
     }
 
     $piece_genre_array = array(array('id' => '', 'text' => TEXT_NONE));
@@ -315,8 +315,8 @@ echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorte
             <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('artists_id', $artists_array, $pInfo->artists_id); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo TEXT_PRODUCTS_RECORD_COMPANY; ?></td>
-            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('record_company_id', $record_company_array, $pInfo->record_company_id); ?></td>
+            <td class="main"><?php echo TEXT_PRODUCTS_AGENCY; ?></td>
+            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('agency_id', $agency_array, $pInfo->agency_id); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_PRODUCTS_PIECE_GENRE; ?></td>

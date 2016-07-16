@@ -39,8 +39,8 @@ if ($tplVars['listingBox']['showFilterForm'])
   }
   if (isset ( $_GET['piece_genre_id'] ) && $_GET['piece_genre_id'] != '')
     echo zen_draw_hidden_field ( 'piece_genre_id', $_GET['piece_genre_id'] );
-  if (isset ( $_GET['record_company_id'] ) && $_GET['record_company_id'] != '')
-    echo zen_draw_hidden_field ( 'record_company_id', $_GET['record_company_id'] );
+  if (isset ( $_GET['agency_id'] ) && $_GET['agency_id'] != '')
+    echo zen_draw_hidden_field ( 'agency_id', $_GET['agency_id'] );
   if (isset ( $_GET['typefilter'] ) && $_GET['typefilter'] != '')
     echo zen_draw_hidden_field ( 'typefilter', $_GET['typefilter'] );
   if ($tplVars['getOptionVariable'] != 'manufacturers_id' && isset ( $_GET['manufacturers_id'] ) && $_GET['manufacturers_id'] > 0)

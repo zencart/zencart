@@ -401,7 +401,7 @@ define('TEXT_DISPLAY_NUMBER_OF_PRODUCT_TYPES', 'Displaying <b>%d</b> to <b>%d</b
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> products expected)');
 define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> product reviews)');
 define('TEXT_DISPLAY_NUMBER_OF_RECORD_ARTISTS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> record artists)');
-define('TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> record companies)');
+define('TEXT_DISPLAY_NUMBER_OF_AGENCIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> agencies)');
 define('TEXT_DISPLAY_NUMBER_OF_SALES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> sales)');
 define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> products on special)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax classes)');

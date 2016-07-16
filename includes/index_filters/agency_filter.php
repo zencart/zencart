@@ -1,9 +1,9 @@
 <?php
 /**
- * record_company_filter.php  for index filters
+ * agency_filter.php  for index filters
  *
  * index filter for the piece product type
- * show the products of a specified record company
+ * show the products of a specified agency
  *
  * @package productTypes
  * @copyright Copyright 2003-2013 Zen Cart Development Team
@@ -33,8 +33,8 @@ if (isset($_GET['sort']) && strlen($_GET['sort']) > 3) {
       $alpha_sort = '';
   }
 if (!isset($select_column_list)) $select_column_list = "";
- // show the products of a specified record-company
-  if (isset($_GET['record_company_id']))
+ // show the products of a specified agency
+  if (isset($_GET['agency_id']))
   {
     if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id']))
     {
@@ -44,11 +44,11 @@ if (!isset($select_column_list)) $select_column_list = "";
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
         TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_RECORD_COMPANY . " r
-        where r.record_company_id = '" . (int)$_GET['record_company_id'] . "'
+        TABLE_AGENCY . " r
+        where r.agency_id = '" . (int)$_GET['agency_id'] . "'
           and p.products_id = pme.products_id
           and p.products_status = 1
-          and pme.record_company_id = r.record_company_id
+          and pme.agency_id = r.agency_id
           and pme.products_id = p2c.products_id
           and pd.products_id = p2c.products_id
           and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
@@ -60,13 +60,13 @@ if (!isset($select_column_list)) $select_column_list = "";
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
         TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
-        TABLE_RECORD_COMPANY . " r
-        where r.record_company_id = '" . (int)$_GET['record_company_id'] . "'
+        TABLE_AGENCY . " r
+        where r.agency_id = '" . (int)$_GET['agency_id'] . "'
           and p.products_id = pme.products_id
           and p.products_status = 1
           and pd.products_id = pme.products_id
           and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and pme.record_company_id = r.record_company_id" .
+          and pme.agency_id = r.agency_id" .
           $alpha_sort;
     }
   } else {
@@ -74,15 +74,15 @@ if (!isset($select_column_list)) $select_column_list = "";
     if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id']))
     {
       // We are asked to show only specific category
-      $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
+      $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.agency_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
         from " . TABLE_PRODUCTS . " p left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_RECORD_COMPANY . " r, " .
+        TABLE_AGENCY . " r, " .
         TABLE_PRODUCT_PIECE_EXTRA . " pme, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c
         where p.products_status = 1
-          and pme.record_company_id = r.record_company_id
-          and r.record_company_id = '" . (int)$_GET['filter_id'] . "'
+          and pme.agency_id = r.agency_id
+          and r.agency_id = '" . (int)$_GET['filter_id'] . "'
           and p.products_id = p2c.products_id
           and pd.products_id = p2c.products_id
           and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
@@ -91,13 +91,13 @@ if (!isset($select_column_list)) $select_column_list = "";
     } else {
       // We show them all
       if ($current_categories_id) {
-        $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
+        $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.agency_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
         TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_RECORD_COMPANY . " r
-        where  r.record_company_id = pme.record_company_id
+        TABLE_AGENCY . " r
+        where  r.agency_id = pme.agency_id
           and p.products_id = pme.products_id
           and p.products_status = 1
           and pd.products_id = pme.products_id
@@ -106,13 +106,13 @@ if (!isset($select_column_list)) $select_column_list = "";
           and p2c.categories_id = '" . (int)$current_category_id . "'" .
           $alpha_sort;
       } else {
-        $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
+        $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.agency_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_DESCRIPTION . " pd, " .
         TABLE_PRODUCT_PIECE_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_RECORD_COMPANY . " r
-        where r.record_company_id = pme.record_company_id
+        TABLE_AGENCY . " r
+        where r.agency_id = pme.agency_id
           and p.products_id = pme.products_id
           and p.products_status = 1
           and pd.products_id = pme.products_id
@@ -127,7 +127,7 @@ if (!isset($select_column_list)) $select_column_list = "";
     $_GET['sort'] = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
   }
 
-  $listing_sql = str_replace('m.manufacturers_name', 'r.record_company_name as manufacturers_name', $listing_sql);
+  $listing_sql = str_replace('m.manufacturers_name', 'r.agency_name as manufacturers_name', $listing_sql);
 
   if (isset($column_list)) {
     if ( (!isset($_GET['sort'])) || (isset($_GET['sort']) && !preg_match('/[1-8][ad]/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) )
@@ -157,7 +157,7 @@ if (!isset($select_column_list)) $select_column_list = "";
         $listing_sql .= " order by pd.products_name " . ($sort_order == 'd' ? 'desc' : '');
         break;
         case 'PRODUCT_LIST_MANUFACTURER':
-        $listing_sql .= " order by r.record_company_name " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+        $listing_sql .= " order by r.agency_name " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
         break;
         case 'PRODUCT_LIST_QUANTITY':
         $listing_sql .= " order by p.products_quantity " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
@@ -177,7 +177,7 @@ if (!isset($select_column_list)) $select_column_list = "";
   // optional Product List Filter
   if (PRODUCT_LIST_FILTER > 0)
   {
-    if (isset($_GET['record_company_id']))
+    if (isset($_GET['agency_id']))
     {
       $filterlist_sql = "select distinct c.categories_id as id, cd.categories_name as name
         from " . TABLE_PRODUCTS . " p, " .
@@ -191,20 +191,20 @@ if (!isset($select_column_list)) $select_column_list = "";
           and p2c.categories_id = c.categories_id
           and p2c.categories_id = cd.categories_id
           and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and pme.record_company_id = '" . (int)$_GET['record_company_id'] . "'
+          and pme.agency_id = '" . (int)$_GET['agency_id'] . "'
         order by cd.categories_name";
     } else {
-      $filterlist_sql= "select distinct r.record_company_id as id, r.record_company_name as name
+      $filterlist_sql= "select distinct r.agency_id as id, r.agency_name as name
         from " . TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
         TABLE_PRODUCT_PIECE_EXTRA . " pme, " .
-        TABLE_RECORD_COMPANY . " r
+        TABLE_AGENCY . " r
         where p.products_status = 1
-          and pme.record_company_id = r.record_company_id
+          and pme.agency_id = r.agency_id
           and p.products_id = p2c.products_id
           and pme.products_id = p.products_id
           and p2c.categories_id = '" . (int)$current_category_id . "'
-        order by r.record_company_name";
+        order by r.agency_name";
     }
     $getoption_set =  false;
     $do_filter_list = false;
@@ -213,10 +213,10 @@ if (!isset($select_column_list)) $select_column_list = "";
     if ($filterlist->RecordCount() > 1)
     {
       $do_filter_list = true;
-      if (isset($_GET['record_company_id']))
+      if (isset($_GET['agency_id']))
       {
         $getoption_set =  true;
-        $get_option_variable = 'record_company_id';
+        $get_option_variable = 'agency_id';
         $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
       } else {
         $options = array(array('id' => '', 'text' => TEXT_ALL_PIECE_GENRE));

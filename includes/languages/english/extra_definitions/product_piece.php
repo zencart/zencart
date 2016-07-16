@@ -20,7 +20,7 @@
 // $Id: 
 //
 define('BOX_HEADING_PIECE_GENRES', 'Piece Genres');
-define('BOX_HEADING_RECORD_COMPANY', 'Record Companies');
-define('PULL_DOWN_RECORD_COMPANIES', '- Reset -');
+define('BOX_HEADING_AGENCY', 'Agencies');
+define('PULL_DOWN_AGENCIES', '- Reset -');
 define('PULL_DOWN_PIECE_GENRES', '- Reset -');
 ?>

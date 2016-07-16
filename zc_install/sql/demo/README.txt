@@ -30,8 +30,8 @@ products_options_values_to_products_options
 products_to_categories 
 record_artists 
 record_artists_info 
-record_company 
-record_company_info 
+agency 
+agency_info 
 reviews 
 reviews_description 
 salemaker_sales 

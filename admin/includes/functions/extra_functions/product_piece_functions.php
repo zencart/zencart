@@ -32,15 +32,15 @@
     return $artist->fields['artists_url'];
   }
 ////
-// Return the Record Company URL in the needed language
-  function zen_get_record_company_url($record_company_id, $language_id) {
+// Return the Agency URL in the needed language
+  function zen_get_agency_url($agency_id, $language_id) {
     global $db;
-    $record_company = $db->Execute("select record_company_url
-                                  from " . TABLE_RECORD_COMPANY_INFO . "
-                                  where record_company_id = '" . (int)$record_company_id . "'
+    $agency = $db->Execute("select agency_url
+                                  from " . TABLE_AGENCY_INFO . "
+                                  where agency_id = '" . (int)$agency_id . "'
                                   and languages_id = '" . (int)$language_id . "'");
 
-    return $record_company->fields['record_company_url'];
+    return $agency->fields['agency_url'];
   }
 
 ////
@@ -48,7 +48,7 @@
   function zen_get_piece_genre_url($piece_genre_id, $language_id) {
     global $db;
     $piece_genre = $db->Execute("select piece_genre_url
-                                  from " . TABLE_RECORD_COMPANY_INFO . "
+                                  from " . TABLE_AGENCY_INFO . "
                                   where piece_genre_id = '" . (int)$piece_genre_id . "'
                                   and languages_id = '" . (int)$language_id . "'");
 

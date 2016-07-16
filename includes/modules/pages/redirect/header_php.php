@@ -59,25 +59,25 @@ switch ($_GET['action']) {
       }
     }
     break;
-  case 'piece_record_company':
-    if (isset($_GET['record_company_id']) && zen_not_null($_GET['record_company_id'])) {
-      $sql = "SELECT record_company_url from " . TABLE_RECORD_COMPANY_INFO . " WHERE record_company_id = :rcId: AND languages_id = :languageId:";
-      $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');
+  case 'piece_agency':
+    if (isset($_GET['agency_id']) && zen_not_null($_GET['agency_id'])) {
+      $sql = "SELECT agency_url from " . TABLE_AGENCY_INFO . " WHERE agency_id = :rcId: AND languages_id = :languageId:";
+      $sql = $db->bindVars($sql, ':rcId:', $_GET['agency_id'], 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
       $result = $db->execute($sql);
       if ($result->RecordCount()) {
-        $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_RECORD_COMPANY', array(), $_GET['record_company_id'], $_SESSION['languages_id']);
-        zen_update_record_company_clicked($_GET['record_company_id'], $_SESSION['languages_id']);
-        zen_redirect(fixup_url($result->fields['record_company_url']));
+        $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_AGENCY', array(), $_GET['agency_id'], $_SESSION['languages_id']);
+        zen_update_agency_clicked($_GET['agency_id'], $_SESSION['languages_id']);
+        zen_redirect(fixup_url($result->fields['agency_url']));
       } else {
-        $sql = "SELECT record_company_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE record_company_id = :rcId: AND languages_id = :languageId:";
-        $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');
+        $sql = "SELECT agency_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE agency_id = :rcId: AND languages_id = :languageId:";
+        $sql = $db->bindVars($sql, ':rcId:', $_GET['agency_id'], 'integer');
         $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
         $result = $db->execute($sql);
         if ($result->RecordCount()) {
-          $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_RECORD_COMPANY', array(), $_GET['record_company_id'], $_SESSION['languages_id']);
-          zen_update_record_company_clicked($_GET['record_company_id'], DEFAULT_LANGUAGE);
-          zen_redirect(fixup_url($result->fields['record_company_url']));
+          $zco_notifier->notify('NOTIFY_BEFORE_REDIRECT_ACTION_AGENCY', array(), $_GET['agency_id'], $_SESSION['languages_id']);
+          zen_update_agency_clicked($_GET['agency_id'], DEFAULT_LANGUAGE);
+          zen_redirect(fixup_url($result->fields['agency_url']));
         }
       }
     }

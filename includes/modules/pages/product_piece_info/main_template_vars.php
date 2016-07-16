@@ -199,7 +199,7 @@
 
   $flag_show_product_piece_info_artist = zen_get_show_product_switch($_GET['products_id'], 'artist');
   $flag_show_product_piece_info_genre = zen_get_show_product_switch($_GET['products_id'], 'genre');
-  $flag_show_product_piece_info_record_company = zen_get_show_product_switch($_GET['products_id'], 'record_company');
+  $flag_show_product_piece_info_agency = zen_get_show_product_switch($_GET['products_id'], 'agency');
   require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS));
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_PRODUCT_PIECE_INFO');

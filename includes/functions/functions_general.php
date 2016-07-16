@@ -1717,11 +1717,11 @@ function zen_get_minutes_since($timestamp) {
     $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
     $db->execute($sql);
   }
-  function zen_update_record_company_clicked($recordCompanyId, $languageId)
+  function zen_update_agency_clicked($agencyId, $languageId)
   {
     global $db;
-    $sql = "UPDATE " . TABLE_RECORD_COMPANY_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE record_company_id = :rcId: AND languages_id = :languageId:";
-    $sql = $db->bindVars($sql, ':rcId:', $recordCompanyId, 'integer');
+    $sql = "UPDATE " . TABLE_AGENCY_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE agency_id = :rcId: AND languages_id = :languageId:";
+    $sql = $db->bindVars($sql, ':rcId:', $agencyId, 'integer');
     $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
     $db->execute($sql);
   }

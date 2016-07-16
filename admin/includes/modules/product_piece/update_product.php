@@ -86,14 +86,14 @@
       //// INSERT PRODUCT-TYPE-SPECIFIC *INSERTS* HERE //////
       $tmp_value = zen_db_prepare_input($_POST['artists_id']);
       $artists_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
-      $tmp_value = zen_db_prepare_input($_POST['record_company_id']);
-      $record_company_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
+      $tmp_value = zen_db_prepare_input($_POST['agency_id']);
+      $agency_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
       $tmp_value = zen_db_prepare_input($_POST['piece_genre_id']);
       $piece_genre_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
 
       $sql_data_array = array('products_id' => (int)$products_id,
                               'artists_id' => (int)$artists_id,
-                              'record_company_id' => (int)$record_company_id,
+                              'agency_id' => (int)$agency_id,
                               'piece_genre_id' => (int)$piece_genre_id );
 
       zen_db_perform(TABLE_PRODUCT_PIECE_EXTRA, $sql_data_array);
@@ -118,13 +118,13 @@
 
       $tmp_value = zen_db_prepare_input($_POST['artists_id']);
       $artists_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
-      $tmp_value = zen_db_prepare_input($_POST['record_company_id']);
-      $record_company_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
+      $tmp_value = zen_db_prepare_input($_POST['agency_id']);
+      $agency_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
       $tmp_value = zen_db_prepare_input($_POST['piece_genre_id']);
       $piece_genre_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
 
       $sql_data_array = array('artists_id' => (int)$artists_id,
-                              'record_company_id' => (int)$record_company_id,
+                              'agency_id' => (int)$agency_id,
                               'piece_genre_id' => (int)$piece_genre_id );
 
       zen_db_perform(TABLE_PRODUCT_PIECE_EXTRA, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "'");

@@ -23,7 +23,7 @@ class testFilterCase extends zcTestCase
         define('DOB_FORMAT_STRING', '##/##/##');
         define('TABLE_PRODUCT_PIECE_EXTRA', DB_PREFIX . 'product_piece_extra');
         define('TABLE_PIECE_GENRE', DB_PREFIX . 'piece_genre');
-        define('TABLE_RECORD_COMPANY', DB_PREFIX . 'record_company');
+        define('TABLE_AGENCY', DB_PREFIX . 'agency');
         define('PRODUCT_LIST_FILTER', 1);
         $_SESSION['languages_id'] = 1;
 
@@ -510,7 +510,7 @@ class testFilterCase extends zcTestCase
         $f->filterItem($listingQuery);
     }
 
-    public function testTypeFilterRecordCompany()
+    public function testTypeFilterAgency()
     {
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
@@ -527,7 +527,7 @@ class testFilterCase extends zcTestCase
         $request->method('has')
             ->will($this->returnValueMap($map
             ));
-        $map = array(array('typefilter', null, 'record_company'), array('filter_id', null, '1'));
+        $map = array(array('typefilter', null, 'agency'), array('filter_id', null, '1'));
         $request->method('readGet')
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
@@ -537,7 +537,7 @@ class testFilterCase extends zcTestCase
         $f->filterItem($listingQuery);
     }
 
-    public function testTypeFilterRecordCompanyWithId()
+    public function testTypeFilterAgencyWithId()
     {
         $qfr = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
@@ -555,8 +555,8 @@ class testFilterCase extends zcTestCase
             ->will($this->returnValueMap($map
             ));
         $map = array(
-            array('typefilter', null, 'record_company'),
-            array('record_company_id', null, '1'),
+            array('typefilter', null, 'agency'),
+            array('agency_id', null, '1'),
             array('filter_id', null, '1')
         );
         $request->method('readGet')

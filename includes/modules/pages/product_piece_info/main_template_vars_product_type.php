@@ -39,16 +39,16 @@
 
     $artist_info = $db->Execute($sql);
 
-    $sql = "select * from " . TABLE_RECORD_COMPANY . "
-            where record_company_id = '" . $piece_extras->fields['record_company_id'] . "'";
+    $sql = "select * from " . TABLE_AGENCY . "
+            where agency_id = '" . $piece_extras->fields['agency_id'] . "'";
 
-    $record_company = $db->Execute($sql);
+    $agency = $db->Execute($sql);
 
-    $sql = "select * from " . TABLE_RECORD_COMPANY_INFO . "
-            where record_company_id = '" . $piece_extras->fields['record_company_id'] . "'
+    $sql = "select * from " . TABLE_AGENCY_INFO . "
+            where agency_id = '" . $piece_extras->fields['agency_id'] . "'
             and languages_id = '" . (int)$_SESSION['languages_id'] . "'";
 
-    $record_company_info = $db->Execute($sql);
+    $agency_info = $db->Execute($sql);
 
 
     $sql = "select * from " . TABLE_PIECE_GENRE . "
@@ -62,11 +62,11 @@
  */
   $products_artist_name = $artist->fields['artists_name'];
   $products_artist_url = $artist_info->fields['artists_url'];
-  $products_record_company_name = $record_company->fields['record_company_name'];
-  $products_record_company_url = $record_company_info->fields['record_company_url'];
+  $products_agency_name = $agency->fields['agency_name'];
+  $products_agency_url = $agency_info->fields['agency_url'];
   $products_piece_genre_name = $piece_genre->fields['piece_genre_name'];
   if (!empty($products_artist_url)) $products_artist_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=piece_arist&artists_id=' . zen_output_string_protected($piece_extras->fields['artists_id']), 'NONSSL', true, false) . '" target="_BLANK">'.$products_artist_name.'</a>';
-  if (!empty($products_record_company_url)) $products_record_company_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=piece_record_company&record_company_id=' . zen_output_string_protected($piece_extras->fields['record_company_id']), 'NONSSL', true, false) . '" target="_BLANK">'.$products_record_company_name.'</a>';
+  if (!empty($products_agency_url)) $products_agency_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=piece_agency&agency_id=' . zen_output_string_protected($piece_extras->fields['agency_id']), 'NONSSL', true, false) . '" target="_BLANK">'.$products_agency_name.'</a>';
 
   // This should be last line of the script:
   $zco_notifier->notify('NOTIFY_PRODUCT_TYPE_VARS_END_PRODUCT_PIECE_INFO');

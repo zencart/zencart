@@ -531,7 +531,7 @@ class zcRequest extends base
         'img',
         'products_tax_class_id',
         'pto',
-        'record_company_id',
+        'agency_id',
         'referer',
         'reviews_id',
         'search_in_description',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class LeadRecordCompanyRoutes
+ * Class LeadAgencyRoutes
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -9,10 +9,10 @@
 namespace ZenCart\Services;
 
 /**
- * Class LeadRecordCompanyRoutes
+ * Class LeadAgencyRoutes
  * @package ZenCart\Services
  */
-class LeadRecordCompanyRoutes extends LeadRoutes
+class LeadAgencyRoutes extends LeadRoutes
 {
     /**
      * @return bool
@@ -21,17 +21,17 @@ class LeadRecordCompanyRoutes extends LeadRoutes
     {
         $mainTableFkeyField = $this->listingQuery['mainTable']['fkeyFieldLeft'];
         if ($this->request->readPost('delete_image') === 'true') {
-            $sql = "SELECT record_company_image FROM " . TABLE_RECORD_COMPANY . " WHERE record_company_id = :id:";
+            $sql = "SELECT agency_image FROM " . TABLE_AGENCY . " WHERE agency_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $result = $this->dbConn->execute($sql);
-            $imageLocation = DIR_FS_CATALOG_IMAGES . $result->fields ['record_company_image'];
+            $imageLocation = DIR_FS_CATALOG_IMAGES . $result->fields ['agency_image'];
             if (file_exists($imageLocation)) {
                 @unlink($imageLocation);
             }
         }
         if ($this->request->readPost('delete_linked') === 'true') {
-            $sql = "SELECT products_id FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE record_company_id = :id:";
+            $sql = "SELECT products_id FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE agency_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $results = $this->dbConn->execute($sql);
@@ -39,7 +39,7 @@ class LeadRecordCompanyRoutes extends LeadRoutes
                 zen_remove_product($result['products_id']);
             }
         } else {
-            $sql = "UPDATE " . TABLE_PRODUCT_PIECE_EXTRA . " SET record_company_id = '' WHERE record_company_id = :id:";
+            $sql = "UPDATE " . TABLE_PRODUCT_PIECE_EXTRA . " SET agency_id = '' WHERE agency_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $this->dbConn->execute($sql);

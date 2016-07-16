@@ -10,7 +10,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
   define('FILENAME_RECORD_ARTISTS', 'record_artists');
-  define('FILENAME_RECORD_COMPANY', 'record_company');
+  define('FILENAME_AGENCY', 'agency');
   define('FILENAME_PIECE_GENRE', 'piece_genre');
   define('FILENAME_MEDIA_MANAGER', 'media_manager');
   define('FILENAME_MEDIA_MANAGER_PRODUCTS', 'media_manager_products');

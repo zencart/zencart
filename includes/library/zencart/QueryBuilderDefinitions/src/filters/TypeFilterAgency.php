@@ -1,6 +1,6 @@
 <?php
 /**
- * Class TypeFilterRecordCompany
+ * Class TypeFilterAgency
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -9,10 +9,10 @@
 namespace ZenCart\QueryBuilderDefinitions\filters;
 
 /**
- * Class TypeFilterRecordCompany
+ * Class TypeFilterAgency
  * @package ZenCart\QueryBuilderDefinitions\filters
  */
-class TypeFilterRecordCompany extends AbstractTypeFilter
+class TypeFilterAgency extends AbstractTypeFilter
 {
     /**
      * @param $listingQuery
@@ -20,7 +20,7 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
      */
     public function handleParameterFilters($listingQuery)
     {
-        $listingQuery['selectList'] [] = "r.record_company_name as manufacturers_name";
+        $listingQuery['selectList'] [] = "r.agency_name as manufacturers_name";
 
         $listingQuery['joinTables'] ['TABLE_PRODUCT_PIECE_EXTRA'] = array(
             'table' => TABLE_PRODUCT_PIECE_EXTRA,
@@ -28,18 +28,18 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'products_id'
         );
-        $listingQuery['joinTables'] ['TABLE_RECORD_COMPANY'] = array(
-            'table' => TABLE_RECORD_COMPANY,
+        $listingQuery['joinTables'] ['TABLE_AGENCY'] = array(
+            'table' => TABLE_AGENCY,
             'alias' => 'r',
             'type' => 'LEFT',
-            'fkeyFieldLeft' => 'record_company_id',
+            'fkeyFieldLeft' => 'agency_id',
             'fkeyTable' => 'TABLE_PRODUCT_PIECE_EXTRA'
         );
-        if ($this->request->readGet('record_company_id')) {
+        if ($this->request->readGet('agency_id')) {
             $listingQuery['whereClauses'] [] = array(
-                'table' => TABLE_RECORD_COMPANY,
-                'field' => 'record_company_id',
-                'value' => (int)$this->request->readGet('record_company_id'),
+                'table' => TABLE_AGENCY,
+                'field' => 'agency_id',
+                'value' => (int)$this->request->readGet('agency_id'),
                 'type' => 'AND'
             );
             if ($this->request->readGet('filter_id')) {
@@ -71,8 +71,8 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
             );
             if ($this->request->readGet('filter_id')) {
                 $listingQuery ['whereClauses'] [] = array(
-                    'table' => TABLE_RECORD_COMPANY,
-                    'field' => 'record_company_id',
+                    'table' => TABLE_AGENCY,
+                    'field' => 'agency_id',
                     'value' => (int)$this->request->readGet('filter_id'),
                     'type' => 'AND'
                 );
@@ -87,7 +87,7 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
      */
     protected function getGetTypeParam()
     {
-        return 'record_company';
+        return 'agency';
     }
 
     /**
@@ -95,14 +95,14 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
      */
     protected function getDefaultFilterSql()
     {
-        $sql = "SELECT DISTINCT r.record_company_id AS id, r.record_company_name AS name
-                FROM  " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_RECORD_COMPANY . " r
+        $sql = "SELECT DISTINCT r.agency_id AS id, r.agency_name AS name
+                FROM  " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_AGENCY . " r
                 WHERE p.products_status = 1
-                AND pme.record_company_id = r.record_company_id
+                AND pme.agency_id = r.agency_id
                 AND p.products_id = p2c.products_id
                 AND pme.products_id = p.products_id
                 AND p2c.categories_id = '" . (int)$this->params['currentCategoryId'] . "'
-                ORDER BY r.record_company_name";
+                ORDER BY r.agency_name";
         return $sql;
     }
 
@@ -112,15 +112,15 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
     protected function getTypeFilterSql()
     {
         $sql = "SELECT DISTINCT c.categories_id AS id, cd.categories_name AS name
-                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_RECORD_COMPANY . " r
+                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_AGENCY . " r
                 WHERE p.products_status = 1
                 AND p.products_id = pme.products_id
                 AND pme.products_id = p2c.products_id
-                AND pme.record_company_id = r.record_company_id
+                AND pme.agency_id = r.agency_id
                 AND p2c.categories_id = c.categories_id
                 AND p2c.categories_id = cd.categories_id
                 AND cd.language_id = '" . (int)$_SESSION ['languages_id'] . "'
-                AND r.record_company_id = '" . (int)$this->request->readGet('record_company_id') . "'
+                AND r.agency_id = '" . (int)$this->request->readGet('agency_id') . "'
                 ORDER BY cd.categories_name";
         return $sql;
     }

@@ -54,8 +54,8 @@ class LeadMediaManager extends AbstractLeadDefinition
                     'href' => zen_href_link(FILENAME_RECORD_ARTISTS)
                 ),
                 array(
-                    'text' => BOX_CATALOG_RECORD_COMPANY,
-                    'href' => zen_href_link(FILENAME_RECORD_COMPANY)
+                    'text' => BOX_CATALOG_AGENCY,
+                    'href' => zen_href_link(FILENAME_AGENCY)
                 ),
                 array(
                     'text' => BOX_CATALOG_PIECE_GENRE,

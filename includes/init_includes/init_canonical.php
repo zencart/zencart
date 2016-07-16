@@ -35,7 +35,7 @@ $excludeParams[] = 'number_of_uploads';
 // The following are additional whitelisted params used for sanitizing the generated canonical URL (to prevent rogue params from getting added to canonical maliciously)
 $keepableParams = array('page', 'id', 'chapter', 'keyword', 'products_id', 'product_id', 'cPath', 'manufacturers_id', 'categories_id',
                         'order_id', 'faq_item', 'products_image_large_additional', 'cID', 'pid', 'pID', 'reviews_id', 'typefilter');
-$keepableParams[] = 'record_company_id';
+$keepableParams[] = 'agency_id';
 $keepableParams[] = 'piece_genre_id';
 $keepableParams[] = 'artists_id';
 
@@ -77,7 +77,7 @@ switch (true) {
 /**
  * for piece filters:
  */
-  case ($current_page == FILENAME_DEFAULT && zcRequest::hasGet('typefilter') && zcRequest::readGet('typefilter') != '' && ( (zcRequest::hasGet('piece_genre_id') && zcRequest::readGet('piece_genre_id') != '' ) || (zcRequest::has('record_company_id') && zcRequest::readGet('record_company_id') != '' ) ) ):
+  case ($current_page == FILENAME_DEFAULT && zcRequest::hasGet('typefilter') && zcRequest::readGet('typefilter') != '' && ( (zcRequest::hasGet('piece_genre_id') && zcRequest::readGet('piece_genre_id') != '' ) || (zcRequest::has('agency_id') && zcRequest::readGet('agency_id') != '' ) ) ):
     unset($excludeParams[array_search('typefilter', $excludeParams)]);
     $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
     break;

@@ -260,7 +260,7 @@ INSERT INTO piece_genre (piece_genre_id, piece_genre_name, date_added, last_modi
 # Dumping data for table `product_piece_extra`
 #
 
-INSERT INTO product_piece_extra (products_id, artists_id, record_company_id, piece_genre_id) VALUES (166, 1, 0, 1),
+INSERT INTO product_piece_extra (products_id, artists_id, agency_id, piece_genre_id) VALUES (166, 1, 0, 1),
 (169, 1, 1, 2);
 
 #
@@ -1471,16 +1471,16 @@ INSERT INTO record_artists (artists_id, artists_name, artists_image, date_added,
 INSERT INTO record_artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'www.russtippins.com/', 0, NULL);
 
 #
-# Dumping data for table `record_company`
+# Dumping data for table `agency`
 #
 
-INSERT INTO record_company (record_company_id, record_company_name, record_company_image, date_added, last_modified) VALUES (1, 'HMV Group', NULL, '2004-07-09 14:11:52', NULL);
+INSERT INTO agency (agency_id, agency_name, agency_image, date_added, last_modified) VALUES (1, 'HMV Group', NULL, '2004-07-09 14:11:52', NULL);
 
 #
-# Dumping data for table `record_company_info`
+# Dumping data for table `agency_info`
 #
 
-INSERT INTO record_company_info (record_company_id, languages_id, record_company_url, url_clicked, date_last_click) VALUES (1, 1, 'www.hmvgroup.com', 0, NULL);
+INSERT INTO agency_info (agency_id, languages_id, agency_url, url_clicked, date_last_click) VALUES (1, 1, 'www.hmvgroup.com', 0, NULL);
 
 #
 # Dumping data for table `reviews`

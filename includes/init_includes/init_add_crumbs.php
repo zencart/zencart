@@ -38,7 +38,7 @@ if (isset($cPath_array) && isset($cPath)) {
   }
 }
 /**
- * add get terms (e.g manufacturer, piece genre, record company or other user defined selector) to breadcrumb
+ * add get terms (e.g manufacturer, piece genre, agency or other user defined selector) to breadcrumb
  */
 $sql = "select *
         from " . TABLE_GET_TERMS_TO_FILTER;

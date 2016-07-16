@@ -55,18 +55,18 @@
         $product_media->MoveNext();
       }
 
-      //echo 'SQL=' . "select artists_id, record_company_id, piece_genre_id from " . TABLE_PRODUCT_PIECE_EXTRA . "                                 where products_id = '" . (int)$product_id . "'<br />";
-      $piece_extra = $db->Execute("select artists_id, record_company_id, piece_genre_id from " . TABLE_PRODUCT_PIECE_EXTRA . "
+      //echo 'SQL=' . "select artists_id, agency_id, piece_genre_id from " . TABLE_PRODUCT_PIECE_EXTRA . "                                 where products_id = '" . (int)$product_id . "'<br />";
+      $piece_extra = $db->Execute("select artists_id, agency_id, piece_genre_id from " . TABLE_PRODUCT_PIECE_EXTRA . "
                                        where products_id = '" . (int)$product_id . "'");
       //echo 'media count =' . $piece_extra->RecordCount() . '<br />';
       if ($piece_extra->RecordCount()>0) {
         //echo 'artists_id delete=' . $piece_extra->fields['artists_id'] . '<br />';
-        //echo 'record_company_id delete=' . $piece_extra->fields['record_company_id'] . '<br />';
+        //echo 'agency_id delete=' . $piece_extra->fields['agency_id'] . '<br />';
         //echo 'piece_genre_id delete=' . $piece_extra->fields['piece_genre_id'] . '<br />';
         $db->Execute("delete from " . TABLE_PRODUCT_PIECE_EXTRA . "
                       where products_id = '" . (int)$product_id . "'
                       and artists_id = '" . zen_db_input($piece_extra->fields['artists_id']) . "'
-                      and record_company_id = '" . zen_db_input($piece_extra->fields['record_company_id']) . "'
+                      and agency_id = '" . zen_db_input($piece_extra->fields['agency_id']) . "'
                       and piece_genre_id = '" . zen_db_input($piece_extra->fields['piece_genre_id']) . "'");
       }
     }

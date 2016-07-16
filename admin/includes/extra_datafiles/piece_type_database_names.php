@@ -12,8 +12,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 define('TABLE_RECORD_ARTISTS', DB_PREFIX . 'record_artists');
 define('TABLE_RECORD_ARTISTS_INFO', DB_PREFIX . 'record_artists_info');
-define('TABLE_RECORD_COMPANY', DB_PREFIX . 'record_company');
-define('TABLE_RECORD_COMPANY_INFO', DB_PREFIX . 'record_company_info');
+define('TABLE_AGENCY', DB_PREFIX . 'agency');
+define('TABLE_AGENCY_INFO', DB_PREFIX . 'agency_info');
 define('TABLE_PRODUCT_PIECE_EXTRA', DB_PREFIX . 'product_piece_extra');
 define('TABLE_PIECE_GENRE', DB_PREFIX . 'piece_genre');
 define('TABLE_PIECE_GENRE_INFO', DB_PREFIX . 'piece_genre_info');
