@@ -9,7 +9,7 @@
  */
 ?>
 <div class="row">
-  <div class="col-xs-12"><?php echo SALES_GRAPH_TEXT_MONTHLY; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS) . '">' . SALES_GRAPH_TEXT_CLICK . '</a>'; ?></div>
+  <div class="col-xs-12"><?php echo SALES_GRAPH_TEXT_MONTHLY; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS) . '">' . SALES_GRAPH_TEXT_CLICK . '</a>'; ?></div>
 </div>
 
 <div class="row">

@@ -4,7 +4,7 @@
 <!-- Main Header -->
 <header class="main-header">
     <section>
-        <a href="<?php echo zen_href_link(FILENAME_DEFAULT); ?>">
+        <a href="<?php echo zen_admin_href_link(FILENAME_DEFAULT); ?>">
             <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT); ?>
         </a>
     </section>
@@ -30,7 +30,7 @@
                 <?php require('includes/template/partials/specialMenu/tplStandardLinks.php'); ?>
                 <?php require('includes/template/partials/specialMenu/tplNotificationsBell.php'); ?>
                 <?php require('includes/template/partials/specialMenu/tplUserDropdown.php'); ?>
-                <li><a title="<?php echo HEADER_TITLE_LOGOFF ?>" href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><i class="fa fa-sign-out text-white"></i></a></li>
+                <li><a title="<?php echo HEADER_TITLE_LOGOFF ?>" href="<?php echo zen_admin_href_link(FILENAME_LOGOFF); ?>"><i class="fa fa-sign-out text-white"></i></a></li>
                 <li>
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>

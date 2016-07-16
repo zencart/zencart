@@ -120,7 +120,7 @@
                 <tbody>
                 <?php foreach($tplVars['missingPages'] as $missingPage) { ?>
                     <tr>
-                        <td><?php echo'<a href="' . zen_href_link(FILENAME_CONFIGURATION, "gID=" . (int)$missingPage['gid']) .'">' . $missingPage['name'] . '</a>'; ?></td>
+                        <td><?php echo'<a href="' . zen_admin_href_link(FILENAME_CONFIGURATION, "gID=" . (int)$missingPage['gid']) .'">' . $missingPage['name'] . '</a>'; ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>

@@ -7,7 +7,7 @@
  */
 ?>
 <div class="box-body no-padding">
-<form class="form" name="lead_filter" id="lead_filter_form" action="<?php echo zen_href_link($_GET['cmd'], 'action=multiEdit'); ?>"
+<form class="form" name="lead_filter" id="lead_filter_form" action="<?php echo zen_admin_href_link($_GET['cmd'], 'action=multiEdit'); ?>"
       method="post">
     <input type="hidden" name="securityToken"
            value="<?php echo $_SESSION['securityToken']; ?>">
@@ -35,7 +35,7 @@
                 <?php } ?>
                 <?php if ($tplVars['leadDefinition']['hasRowActions']) { ?>
                 <th>
-                    <a href="<?php echo zen_href_link($_GET['cmd'], zen_get_all_get_params(array('action'))); ?>" id="clearFiltersLink">Clear Filters</a>
+                    <a href="<?php echo zen_admin_href_link($_GET['cmd'], zen_get_all_get_params(array('action'))); ?>" id="clearFiltersLink">Clear Filters</a>
                 </th>
                 <?php } ?>
             </tr>
