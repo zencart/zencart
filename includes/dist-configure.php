@@ -43,7 +43,7 @@ define('DIR_FS_CATALOG', '/var/www/vhost/accountname/public_html/store/');
  */
 define('DB_TYPE', 'mysql'); // always 'mysql'
 define('DB_PREFIX', ''); // prefix for database table names -- preferred to be left empty
-define('DB_CHARSET', 'utf8'); // 'utf8' or 'latin1' are most common
+define('DB_CHARSET', 'utf8'); // 'utf8' is default
 define('DB_SERVER', 'localhost');  // address of your db server
 define('DB_SERVER_USERNAME', '');
 define('DB_SERVER_PASSWORD', '');
