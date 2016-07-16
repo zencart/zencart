@@ -85,7 +85,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     $artists_array = array(array('id' => '', 'text' => TEXT_NONE));
     $artists = $db->Execute("select artists_id, artists_name
-                                   from " . TABLE_RECORD_ARTISTS . " order by artists_name");
+                                   from " . TABLE_ARTISTS . " order by artists_name");
     while (!$artists->EOF) {
       $artists_array[] = array('id' => $artists->fields['artists_id'],
                                      'text' => $artists->fields['artists_name']);
@@ -311,7 +311,7 @@ echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorte
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo TEXT_PRODUCTS_RECORD_ARTIST; ?></td>
+            <td class="main"><?php echo TEXT_PRODUCTS_ARTIST; ?></td>
             <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('artists_id', $artists_array, $pInfo->artists_id); ?></td>
           </tr>
           <tr>

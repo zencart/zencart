@@ -1712,7 +1712,7 @@ function zen_get_minutes_since($timestamp) {
   function zen_update_piece_artist_clicked($artistId, $languageId)
   {
     global $db;
-    $sql = "UPDATE " . TABLE_RECORD_ARTISTS_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE artists_id = :artistId: AND languages_id = :languageId:";
+    $sql = "UPDATE " . TABLE_ARTISTS_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE artists_id = :artistId: AND languages_id = :languageId:";
     $sql = $db->bindVars($sql, ':artistId:', $artistId, 'integer');
     $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
     $db->execute($sql);

@@ -47,8 +47,8 @@ class LeadAgency extends AbstractLeadDefinition
             'allowDelete' => true,
             'relatedLinks' => array(
                 array(
-                    'text' => BOX_CATALOG_RECORD_ARTISTS,
-                    'href' => zen_href_link(FILENAME_RECORD_ARTISTS)
+                    'text' => BOX_CATALOG_ARTISTS,
+                    'href' => zen_href_link(FILENAME_ARTISTS)
                 ),
                 array(
                     'text' => BOX_CATALOG_PIECE_GENRE,

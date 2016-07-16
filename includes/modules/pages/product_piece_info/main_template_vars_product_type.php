@@ -28,12 +28,12 @@
 
     $piece_extras = $db->Execute($sql);
 
-    $sql = "select * from " . TABLE_RECORD_ARTISTS . "
+    $sql = "select * from " . TABLE_ARTISTS . "
             where artists_id = '" . $piece_extras->fields['artists_id'] . "'";
 
     $artist = $db->Execute($sql);
 
-    $sql = "select * from " . TABLE_RECORD_ARTISTS_INFO . "
+    $sql = "select * from " . TABLE_ARTISTS_INFO . "
             where artists_id = '" . $piece_extras->fields['artists_id'] . "'
             and languages_id = '" . (int)$_SESSION['languages_id'] . "'";
 

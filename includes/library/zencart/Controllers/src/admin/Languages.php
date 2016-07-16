@@ -137,7 +137,7 @@ class Languages extends AbstractLeadController
                 )
             ),
             array(
-                'table' => TABLE_RECORD_ARTISTS_INFO,
+                'table' => TABLE_ARTISTS_INFO,
                 'languageKeyField' => 'languages_id',
                 'orderBy' => 'artists_id',
                 'fields' => array(

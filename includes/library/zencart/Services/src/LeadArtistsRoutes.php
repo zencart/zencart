@@ -1,6 +1,6 @@
 <?php
 /**
- * Class LeadRecordArtistsRoutes
+ * Class LeadArtistsRoutes
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -9,10 +9,10 @@
 namespace ZenCart\Services;
 
 /**
- * Class LeadRecordArtistsRoutes
+ * Class LeadArtistsRoutes
  * @package ZenCart\Services
  */
-class LeadRecordArtistsRoutes extends LeadRoutes
+class LeadArtistsRoutes extends LeadRoutes
 {
     /**
      * @return bool
@@ -22,7 +22,7 @@ class LeadRecordArtistsRoutes extends LeadRoutes
         $mainTableFkeyField = $this->listingQuery['mainTable']['fkeyFieldLeft'];
 
         if ($this->request->readPost('delete_image') === 'true') {
-            $sql = "SELECT artists_image FROM " . TABLE_RECORD_ARTISTS . " WHERE artists_id = :id:";
+            $sql = "SELECT artists_image FROM " . TABLE_ARTISTS . " WHERE artists_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $result = $this->dbConn->execute($sql);

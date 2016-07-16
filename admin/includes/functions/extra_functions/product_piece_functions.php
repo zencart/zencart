@@ -25,7 +25,7 @@
   function zen_get_artists_url($artists_id, $language_id) {
     global $db;
     $artist = $db->Execute("select artists_url
-                                  from " . TABLE_RECORD_ARTISTS_INFO . "
+                                  from " . TABLE_ARTISTS_INFO . "
                                   where artists_id = '" . (int)$artists_id . "'
                                   and languages_id = '" . (int)$language_id . "'");
 

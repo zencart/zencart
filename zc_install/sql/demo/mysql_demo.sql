@@ -1459,16 +1459,16 @@ INSERT INTO products_to_categories (products_id, categories_id) VALUES (1, 4),
 (180, 63);
 
 #
-# Dumping data for table `record_artists`
+# Dumping data for table `artists`
 #
 
-INSERT INTO record_artists (artists_id, artists_name, artists_image, date_added, last_modified) VALUES (1, 'The Russ Tippins Band', 'sooty.jpg', '2004-06-01 20:53:00', NULL);
+INSERT INTO artists (artists_id, artists_name, artists_image, date_added, last_modified) VALUES (1, 'The Russ Tippins Band', 'sooty.jpg', '2004-06-01 20:53:00', NULL);
 
 #
-# Dumping data for table `record_artists_info`
+# Dumping data for table `artists_info`
 #
 
-INSERT INTO record_artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'www.russtippins.com/', 0, NULL);
+INSERT INTO artists_info (artists_id, languages_id, artists_url, url_clicked, date_last_click) VALUES (1, 1, 'www.russtippins.com/', 0, NULL);
 
 #
 # Dumping data for table `agency`

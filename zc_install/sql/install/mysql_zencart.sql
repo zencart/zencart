@@ -1891,11 +1891,11 @@ CREATE TABLE query_builder (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'record_artists'
+# Table structure for table 'artists'
 #
 
-DROP TABLE IF EXISTS record_artists;
-CREATE TABLE record_artists (
+DROP TABLE IF EXISTS artists;
+CREATE TABLE artists (
   artists_id int(11) NOT NULL auto_increment,
   artists_name varchar(32) NOT NULL default '',
   artists_image varchar(64) default NULL,
@@ -1908,11 +1908,11 @@ CREATE TABLE record_artists (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'record_artists_info'
+# Table structure for table 'artists_info'
 #
 
-DROP TABLE IF EXISTS record_artists_info;
-CREATE TABLE record_artists_info (
+DROP TABLE IF EXISTS artists_info;
+CREATE TABLE artists_info (
   artists_id int(11) NOT NULL default '0',
   languages_id int(11) NOT NULL default '0',
   artists_url varchar(255) NOT NULL default '',

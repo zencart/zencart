@@ -8,10 +8,10 @@
 namespace ZenCart\QueryBuilderDefinitions\definitions;
 
 /**
- * Class LeadRecordArtists
+ * Class LeadArtists
  * @package ZenCart\QueryBuilderDefinitions\definitions
  */
-class LeadRecordArtists extends AbstractLeadDefinition
+class LeadArtists extends AbstractLeadDefinition
 {
     /**
      *
@@ -25,19 +25,19 @@ class LeadRecordArtists extends AbstractLeadDefinition
 
         $this->listingQuery = array(
             'mainTable' => array(
-                'table' => TABLE_RECORD_ARTISTS,
+                'table' => TABLE_ARTISTS,
                 'alias' => 'ra',
                 'fkeyFieldLeft' => 'artists_id',
             ),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_RECORD_ARTISTS,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_ARTISTS,
                     'pagingVarSrc' => 'post'
                 )
             ),
             'language' => true,
-            'languageInfoTable' => TABLE_RECORD_ARTISTS_INFO,
+            'languageInfoTable' => TABLE_ARTISTS_INFO,
 
         );
 
@@ -95,7 +95,7 @@ class LeadRecordArtists extends AbstractLeadDefinition
                     'bindVarsType' => 'integer',
                     'layout' => array(
                         'list' => array(
-                            'title' => TEXT_ENTRY_RECORD_ARTIST_ID,
+                            'title' => TEXT_ENTRY_ARTIST_ID,
                             'align' => 'left'
                         )
                     )
@@ -104,7 +104,7 @@ class LeadRecordArtists extends AbstractLeadDefinition
                     'bindVarsType' => 'string',
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_ARTIST_NAME,
+                            'title' => TEXT_ENTRY_ARTIST_NAME,
                             'type' => 'text',
                             'size' => '30'
                         )
@@ -115,7 +115,7 @@ class LeadRecordArtists extends AbstractLeadDefinition
                     'upload' => true,
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_ARTIST_IMAGE,
+                            'title' => TEXT_ENTRY_ARTIST_IMAGE,
                             'type' => 'file',
                             'uploadOptions' => array(
                                 'mediaDirectorySelector' => true,
@@ -133,7 +133,7 @@ class LeadRecordArtists extends AbstractLeadDefinition
                     'language' => true,
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_RECORD_ARTIST_URL,
+                            'title' => TEXT_ENTRY_ARTIST_URL,
                             'type' => 'text',
                             'size' => '30'
                         )

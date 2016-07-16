@@ -23,7 +23,7 @@ define('TABLE_HEADING_STATUS', 'Status');
 define('TEXT_CATEGORIES', 'Categories:');
 define('TEXT_SUBCATEGORIES', 'Subcategories:');
 define('TEXT_PRODUCTS', 'Products:');
-define('TEXT_PRODUCTS_RECORD_ARTIST', 'Recording Artist:');
+define('TEXT_PRODUCTS_ARTIST', 'Artist:');
 define('TEXT_PRODUCTS_AGENCY', 'Agency:');
 define('TEXT_PRODUCTS_PIECE_GENRE', 'Piece Genre:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Price:');

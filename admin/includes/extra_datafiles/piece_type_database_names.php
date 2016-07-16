@@ -10,8 +10,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
-define('TABLE_RECORD_ARTISTS', DB_PREFIX . 'record_artists');
-define('TABLE_RECORD_ARTISTS_INFO', DB_PREFIX . 'record_artists_info');
+define('TABLE_ARTISTS', DB_PREFIX . 'artists');
+define('TABLE_ARTISTS_INFO', DB_PREFIX . 'artists_info');
 define('TABLE_AGENCY', DB_PREFIX . 'agency');
 define('TABLE_AGENCY_INFO', DB_PREFIX . 'agency_info');
 define('TABLE_PRODUCT_PIECE_EXTRA', DB_PREFIX . 'product_piece_extra');

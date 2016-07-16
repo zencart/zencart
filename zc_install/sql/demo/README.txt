@@ -28,8 +28,8 @@ products_options
 products_options_values 
 products_options_values_to_products_options 
 products_to_categories 
-record_artists 
-record_artists_info 
+artists 
+artists_info 
 agency 
 agency_info 
 reviews 
