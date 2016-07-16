@@ -13,7 +13,7 @@
 <script src="includes/template/javascript/flot/jquery.flot.resize.min.js"></script>
 
   <div class="flot-x-axis">
-    <div class="flot-tick-label"><?php echo $tplVars['widget']['graphTitle'] ?></div>
+    <div class="flot-tick-label"><?php echo $widget['graphTitle'] ?></div>
   </div>
   <div id="banner-widget" class="flot_chart"></div>
 
@@ -23,8 +23,8 @@
     var boxHeight = bannerWidgetBox.height();
     if (boxHeight < 150) boxHeight = 150;
     $('#banner-widget').width(bannerWidgetBox.width()-10).height(boxHeight);
-    var data = <?php echo json_encode($tplVars['widget']['graphDatasets']); ?> ;
-    var options = <?php echo json_encode(array_merge($tplVars['widget']['graphOptions'], array('xaxis'=>array('ticks'=>$tplVars['widget']['graphTicks'])))); ?> ;
+    var data = <?php echo json_encode($widget['graphDatasets']); ?> ;
+    var options = <?php echo json_encode(array_merge($widget['graphOptions'], array('xaxis'=>array('ticks'=>$widget['graphTicks'])))); ?> ;
     var plot = $("#banner-widget").plot(data, options).data("plot");
   })();
   </script>
