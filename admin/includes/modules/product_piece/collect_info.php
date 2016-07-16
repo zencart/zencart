@@ -51,7 +51,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                       p.products_date_added, p.products_last_modified,
                                       date_format(p.products_date_available, '%Y-%m-%d') as
                                       products_date_available, p.products_status, p.products_tax_class_id,
-                                      pe.artists_id, pe.agency_id,pe.piece_genre_id,
+                                      pe.artists_id, pe.agency_id,pe.piece_style_id,
                                       p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
                                       p.product_is_free, p.product_is_call, p.products_quantity_mixed,
                                       p.product_is_always_free_shipping, p.products_qty_box_status, p.products_quantity_order_max,
@@ -101,13 +101,13 @@ if (!defined('IS_ADMIN_FLAG')) {
       $agency->MoveNext();
     }
 
-    $piece_genre_array = array(array('id' => '', 'text' => TEXT_NONE));
-    $piece_genre = $db->Execute("select piece_genre_id, piece_genre_name
-                                   from " . TABLE_PIECE_GENRE . " order by piece_genre_name");
-    while (!$piece_genre->EOF) {
-      $piece_genre_array[] = array('id' => $piece_genre->fields['piece_genre_id'],
-                                     'text' => $piece_genre->fields['piece_genre_name']);
-      $piece_genre->MoveNext();
+    $piece_style_array = array(array('id' => '', 'text' => TEXT_NONE));
+    $piece_style = $db->Execute("select piece_style_id, piece_style_name
+                                   from " . TABLE_PIECE_STYLE . " order by piece_style_name");
+    while (!$piece_style->EOF) {
+      $piece_style_array[] = array('id' => $piece_style->fields['piece_style_id'],
+                                     'text' => $piece_style->fields['piece_style_name']);
+      $piece_style->MoveNext();
     }
 
     $tax_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
@@ -319,8 +319,8 @@ echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorte
             <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('agency_id', $agency_array, $pInfo->agency_id); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo TEXT_PRODUCTS_PIECE_GENRE; ?></td>
-            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('piece_genre_id', $piece_genre_array, $pInfo->piece_genre_id); ?></td>
+            <td class="main"><?php echo TEXT_PRODUCTS_PIECE_STYLE; ?></td>
+            <td class="main"><?php echo zen_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . zen_draw_pull_down_menu('piece_style_id', $piece_style_array, $pInfo->piece_style_id); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

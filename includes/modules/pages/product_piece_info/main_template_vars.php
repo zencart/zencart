@@ -198,7 +198,7 @@
   $flag_show_product_info_free_shipping = zen_get_show_product_switch($_GET['products_id'], 'always_free_shipping_image_switch');
 
   $flag_show_product_piece_info_artist = zen_get_show_product_switch($_GET['products_id'], 'artist');
-  $flag_show_product_piece_info_genre = zen_get_show_product_switch($_GET['products_id'], 'genre');
+  $flag_show_product_piece_info_style = zen_get_show_product_switch($_GET['products_id'], 'style');
   $flag_show_product_piece_info_agency = zen_get_show_product_switch($_GET['products_id'], 'agency');
   require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS));
 

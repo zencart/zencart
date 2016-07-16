@@ -12,7 +12,7 @@
 // This should be first line of the script:
 $zco_notifier->notify ( 'NOTIFY_HEADER_START_INDEX_MAIN_TEMPLATE_VARS' );
 // die($category_depth);
-// die($_GET['piece_genre_id']);
+// die($_GET['piece_style_id']);
 
 // release manufacturers_id when nothing is there so a blank filter is not setup.
 // this will result in the home page, if used
@@ -22,12 +22,12 @@ if (isset ( $_GET['manufacturers_id'] ) && $_GET['manufacturers_id'] <= 0)
   unset ( $manufacturers_id );
 }
 
-// release piece_genre_id when nothing is there so a blank filter is not setup.
+// release piece_style_id when nothing is there so a blank filter is not setup.
 // this will result in the home page, if used
-if (isset ( $_GET['piece_genre_id'] ) && $_GET['piece_genre_id'] <= 0)
+if (isset ( $_GET['piece_style_id'] ) && $_GET['piece_style_id'] <= 0)
 {
-  unset ( $_GET['piece_genre_id'] );
-  unset ( $piece_genre_id );
+  unset ( $_GET['piece_style_id'] );
+  unset ( $piece_style_id );
 }
 
 // release agency_id when nothing is there so a blank filter is not setup.
@@ -38,9 +38,9 @@ if (isset ( $_GET['agency_id'] ) && $_GET['agency_id'] <= 0)
   unset ( $agency_id );
 }
 
-// only release typefilter if both agency_id and piece_genre_id are blank
+// only release typefilter if both agency_id and piece_style_id are blank
 // this will result in the home page, if used
-if ((isset ( $_GET['agency_id'] ) && $_GET['agency_id'] <= 0) and (isset ( $_GET['piece_genre_id'] ) && $_GET['piece_genre_id'] <= 0))
+if ((isset ( $_GET['agency_id'] ) && $_GET['agency_id'] <= 0) and (isset ( $_GET['piece_style_id'] ) && $_GET['piece_style_id'] <= 0))
 {
   unset ( $_GET['typefilter'] );
   unset ( $typefilter );
@@ -131,7 +131,7 @@ if ($category_depth == 'nested')
   $tpl_page_body = 'tpl_index_categories.php';
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // } elseif ($category_depth == 'products' || isset($_GET['manufacturers_id']) || isset($_GET['piece_genre_id'])) {
+  // } elseif ($category_depth == 'products' || isset($_GET['manufacturers_id']) || isset($_GET['piece_style_id'])) {
 } elseif ($category_depth == 'products' || zen_check_url_get_terms ())
 {
   if (SHOW_PRODUCT_INFO_ALL_PRODUCTS == '1')
@@ -189,10 +189,10 @@ if ($current_categories_name == '' && isset($_GET['agency_id'])) {
                            WHERE agency_id = " . (int)$_GET['agency_id'] . " LIMIT 1");
   if (!$result->EOF) $current_categories_name = $result->fields['agency_name'];
 }
-if ($current_categories_name == '' && isset($_GET['piece_genre_id'])) {
-  $result = $db->Execute( "SELECT * FROM " . TABLE_PIECE_GENRE . "
-                           WHERE piece_genre_id = " . (int)$_GET['piece_genre_id'] . " LIMIT 1");
-  if (!$result->EOF) $current_categories_name = $result->fields['piece_genre_name'];
+if ($current_categories_name == '' && isset($_GET['piece_style_id'])) {
+  $result = $db->Execute( "SELECT * FROM " . TABLE_PIECE_STYLE . "
+                           WHERE piece_style_id = " . (int)$_GET['piece_style_id'] . " LIMIT 1");
+  if (!$result->EOF) $current_categories_name = $result->fields['piece_style_name'];
 }
 $zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body, $current_categories_name);
 

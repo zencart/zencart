@@ -219,7 +219,7 @@ if (!isset($select_column_list)) $select_column_list = "";
         $get_option_variable = 'agency_id';
         $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
       } else {
-        $options = array(array('id' => '', 'text' => TEXT_ALL_PIECE_GENRE));
+        $options = array(array('id' => '', 'text' => TEXT_ALL_PIECE_STYLE));
       }
       while (!$filterlist->EOF) {
         $options[] = array('id' => $filterlist->fields['id'], 'text' => $filterlist->fields['name']);

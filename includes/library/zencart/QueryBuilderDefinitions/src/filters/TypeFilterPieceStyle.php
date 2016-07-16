@@ -1,6 +1,6 @@
 <?php
 /**
- * Class TypeFilterPieceGenre
+ * Class TypeFilterPieceStyle
  *
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -9,10 +9,10 @@
 namespace ZenCart\QueryBuilderDefinitions\filters;
 
 /**
- * Class TypeFilterPieceGenre
+ * Class TypeFilterPieceStyle
  * @package ZenCart\QueryBuilderDefinitions\filters
  */
-class TypeFilterPieceGenre extends AbstractTypeFilter
+class TypeFilterPieceStyle extends AbstractTypeFilter
 {
     /**
      * @param $listingQuery
@@ -20,7 +20,7 @@ class TypeFilterPieceGenre extends AbstractTypeFilter
      */
     public function handleParameterFilters($listingQuery)
     {
-        $listingQuery['selectList'] [] = "m.piece_genre_name as manufacturers_name";
+        $listingQuery['selectList'] [] = "m.piece_style_name as manufacturers_name";
 
         $listingQuery['joinTables'] ['TABLE_PRODUCT_PIECE_EXTRA'] = array(
             'table' => TABLE_PRODUCT_PIECE_EXTRA,
@@ -28,18 +28,18 @@ class TypeFilterPieceGenre extends AbstractTypeFilter
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'products_id'
         );
-        $listingQuery['joinTables'] ['TABLE_PIECE_GENRE'] = array(
-            'table' => TABLE_PIECE_GENRE,
+        $listingQuery['joinTables'] ['TABLE_PIECE_STYLE'] = array(
+            'table' => TABLE_PIECE_STYLE,
             'alias' => 'm',
             'type' => 'LEFT',
-            'fkeyFieldLeft' => 'piece_genre_id',
+            'fkeyFieldLeft' => 'piece_style_id',
             'fkeyTable' => 'TABLE_PRODUCT_PIECE_EXTRA'
         );
-        if ($this->request->readGet('piece_genre_id')) {
+        if ($this->request->readGet('piece_style_id')) {
             $listingQuery['whereClauses'] [] = array(
-                'table' => TABLE_PIECE_GENRE,
-                'field' => 'piece_genre_id',
-                'value' => (int)$this->request->readGet('piece_genre_id'),
+                'table' => TABLE_PIECE_STYLE,
+                'field' => 'piece_style_id',
+                'value' => (int)$this->request->readGet('piece_style_id'),
                 'type' => 'AND'
             );
             if ($this->request->readGet('filter_id')) {
@@ -71,8 +71,8 @@ class TypeFilterPieceGenre extends AbstractTypeFilter
             );
             if ($this->request->readGet('filter_id')) {
                 $listingQuery['whereClauses'] [] = array(
-                    'table' => TABLE_PIECE_GENRE,
-                    'field' => 'piece_genre_id',
+                    'table' => TABLE_PIECE_STYLE,
+                    'field' => 'piece_style_id',
                     'value' => (int)$this->request->readGet('filter_id'),
                     'type' => 'AND'
                 );
@@ -86,7 +86,7 @@ class TypeFilterPieceGenre extends AbstractTypeFilter
      */
     protected function getGetTypeParam()
     {
-        return 'piece_genre';
+        return 'piece_style';
     }
 
     /**
@@ -94,14 +94,14 @@ class TypeFilterPieceGenre extends AbstractTypeFilter
      */
     protected function getDefaultFilterSql()
     {
-        $sql = "SELECT DISTINCT m.piece_genre_id AS id, m.piece_genre_name AS name
-                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_PIECE_GENRE . " m
+        $sql = "SELECT DISTINCT m.piece_style_id AS id, m.piece_style_name AS name
+                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_PIECE_STYLE . " m
                 WHERE p.products_status = 1
-                AND pme.piece_genre_id = m.piece_genre_id
+                AND pme.piece_style_id = m.piece_style_id
                 AND p.products_id = p2c.products_id
                 AND pme.products_id = p.products_id
                 AND p2c.categories_id = '" . (int)$this->params['currentCategoryId'] . "'
-                ORDER BY m.piece_genre_name";
+                ORDER BY m.piece_style_name";
         return $sql;
     }
 
@@ -111,15 +111,15 @@ class TypeFilterPieceGenre extends AbstractTypeFilter
     protected function getTypeFilterSql()
     {
         $sql = "SELECT DISTINCT c.categories_id AS id, cd.categories_name AS name
-                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_PIECE_GENRE . " m
+                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_PIECE_EXTRA . " pme, " . TABLE_PIECE_STYLE . " m
                 WHERE p.products_status = 1
                 AND p.products_id = pme.products_id
                 AND pme.products_id = p2c.products_id
-                AND pme.piece_genre_id = m.piece_genre_id
+                AND pme.piece_style_id = m.piece_style_id
                 AND p2c.categories_id = c.categories_id
                 AND p2c.categories_id = cd.categories_id
                 AND cd.language_id = '" . (int)$_SESSION ['languages_id'] . "'
-                AND m.piece_genre_id = '" . (int)$this->request->readGet('piece_genre_id') . "'
+                AND m.piece_style_id = '" . (int)$this->request->readGet('piece_style_id') . "'
                 ORDER BY cd.categories_name";
         return $sql;
     }

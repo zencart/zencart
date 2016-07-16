@@ -16,7 +16,7 @@ manufacturers_info
 media_clips 
 media_manager 
 media_to_products
-piece_genre 
+piece_style 
 product_piece_extra 
 product_types_to_category 
 products 

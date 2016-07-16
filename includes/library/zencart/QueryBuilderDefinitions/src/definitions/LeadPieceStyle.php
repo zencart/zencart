@@ -8,10 +8,10 @@
 namespace ZenCart\QueryBuilderDefinitions\definitions;
 
 /**
- * Class LeadPieceGenre
+ * Class LeadPieceStyle
  * @package ZenCart\QueryBuilderDefinitions\definitions
  */
-class LeadPieceGenre extends AbstractLeadDefinition
+class LeadPieceStyle extends AbstractLeadDefinition
 {
 
     /**
@@ -27,21 +27,21 @@ class LeadPieceGenre extends AbstractLeadDefinition
 
         $this->listingQuery = array(
             'mainTable' => array(
-                'table' => TABLE_PIECE_GENRE,
+                'table' => TABLE_PIECE_STYLE,
                 'alias' => 'mg',
-                'fkeyFieldLeft' => 'piece_genre_id',
+                'fkeyFieldLeft' => 'piece_style_id',
             ),
             'isPaginated' => true,
             'pagination' => array(
                 'scrollerParams' => array(
-                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_PIECE_GENRES,
+                    'navLinkText' => TEXT_DISPLAY_NUMBER_OF_PIECE_STYLES,
                     'pagingVarSrc' => 'post'
                 )
             ),
         );
 
         $this->outputLayout = array(
-            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerPieceGenre.php',
+            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerPieceStyle.php',
             'allowDelete' => true,
             'relatedLinks' => array(
                 array(
@@ -62,12 +62,12 @@ class LeadPieceGenre extends AbstractLeadDefinition
                 )
             ),
             'listMap' => array(
-                'piece_genre_id',
-                'piece_genre_name',
+                'piece_style_id',
+                'piece_style_name',
                 'linked_products',
             ),
             'editMap' => array(
-                'piece_genre_name',
+                'piece_style_name',
             ),
             'autoMap' => array(
                 'add' => array(
@@ -86,20 +86,20 @@ class LeadPieceGenre extends AbstractLeadDefinition
                 )
             ),
             'fields' => array(
-                'piece_genre_id' => array(
+                'piece_style_id' => array(
                     'bindVarsType' => 'integer',
                     'layout' => array(
                         'list' => array(
-                            'title' => TEXT_ENTRY_PIECE_GENRE_ID,
+                            'title' => TEXT_ENTRY_PIECE_STYLE_ID,
                             'align' => 'left'
                         )
                     )
                 ),
-                'piece_genre_name' => array(
+                'piece_style_name' => array(
                     'bindVarsType' => 'string',
                     'layout' => array(
                         'common' => array(
-                            'title' => TEXT_ENTRY_PIECE_GENRE_NAME,
+                            'title' => TEXT_ENTRY_PIECE_STYLE_NAME,
                             'type' => 'text',
                             'size' => '30'
                         )
@@ -122,13 +122,13 @@ class LeadPieceGenre extends AbstractLeadDefinition
     }
 
     /**
-     * @param $pieceGenreId
+     * @param $pieceStyleId
      * @return mixed
      */
-    protected function getLinkedProducts($pieceGenreId)
+    protected function getLinkedProducts($pieceStyleId)
     {
-        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE piece_genre_id = :id:";
-        $sql = $this->dbConn->bindvars($sql, ':id:', $pieceGenreId, 'integer');
+        $sql = "SELECT count(*) as count FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE piece_style_id = :id:";
+        $sql = $this->dbConn->bindvars($sql, ':id:', $pieceStyleId, 'integer');
         $result = $this->dbConn->Execute($sql);
 
         return $result->fields['count'];

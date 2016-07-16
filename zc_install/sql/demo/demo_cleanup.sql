@@ -16,7 +16,7 @@ TRUNCATE TABLE manufacturers_info;
 TRUNCATE TABLE media_clips; 
 TRUNCATE TABLE media_manager; 
 TRUNCATE TABLE media_to_products;
-TRUNCATE TABLE piece_genre; 
+TRUNCATE TABLE piece_style; 
 TRUNCATE TABLE product_piece_extra; 
 TRUNCATE TABLE product_types_to_category; 
 TRUNCATE TABLE products; 

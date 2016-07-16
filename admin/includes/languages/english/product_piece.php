@@ -25,7 +25,7 @@ define('TEXT_SUBCATEGORIES', 'Subcategories:');
 define('TEXT_PRODUCTS', 'Products:');
 define('TEXT_PRODUCTS_ARTIST', 'Artist:');
 define('TEXT_PRODUCTS_AGENCY', 'Agency:');
-define('TEXT_PRODUCTS_PIECE_GENRE', 'Piece Genre:');
+define('TEXT_PRODUCTS_PIECE_STYLE', 'Piece Style:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Price:');
 define('TEXT_PRODUCTS_TAX_CLASS', 'Tax Class:');
 define('TEXT_PRODUCTS_AVERAGE_RATING', 'Average Rating:');

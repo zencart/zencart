@@ -64,7 +64,7 @@ class CategoryFilter extends AbstractFilter implements FilterInterface
     {
         $npc = ($new_products_category_id != '0');
         $mfi = ($manufacturers_id > 0 && $this->request->readGet('filter_id', 0) == 0);
-        $oef = ($this->request->readGet('piece_genre_id', 0) > 0 || $this->request->readGet('agency_id', 0) > 0);
+        $oef = ($this->request->readGet('piece_style_id', 0) > 0 || $this->request->readGet('agency_id', 0) > 0);
         $retVal = ($mfi || $oef || $npc);
         return $retVal;
     }

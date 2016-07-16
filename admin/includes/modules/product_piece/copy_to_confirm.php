@@ -113,16 +113,16 @@ if (!defined('IS_ADMIN_FLAG')) {
               }
             }
 
-            $piece_extra = $db->Execute("select artists_id, agency_id, piece_genre_id from " . TABLE_PRODUCT_PIECE_EXTRA . "
+            $piece_extra = $db->Execute("select artists_id, agency_id, piece_style_id from " . TABLE_PRODUCT_PIECE_EXTRA . "
                                          where products_id = '" . (int)$products_id . "'");
 
             $db->Execute("insert into " . TABLE_PRODUCT_PIECE_EXTRA . "
-                          (products_id, artists_id, agency_id, piece_genre_id)
+                          (products_id, artists_id, agency_id, piece_style_id)
                           values (
                          '" . (int)$dup_products_id . "',
                          '" . zen_db_input($piece_extra->fields['artists_id']) . "',
                          '" . zen_db_input($piece_extra->fields['agency_id']) . "',
-                         '" . zen_db_input($piece_extra->fields['piece_genre_id']) . "')");
+                         '" . zen_db_input($piece_extra->fields['piece_style_id']) . "')");
 
 
             $description = $db->Execute("select language_id, products_name, products_description,

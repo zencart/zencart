@@ -113,14 +113,14 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 <!--eof Add to Cart Box-->
 
 <!--bof Product details list  -->
-<?php if ( (($flag_show_product_info_model == 1 and $products_model != '') or ($flag_show_product_info_weight == 1 and $products_weight !=0) or ($flag_show_product_info_quantity == 1) or ($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name))) or $flag_show_product_piece_info_artist == 1 or $flag_show_product_piece_info_genre == 1) { ?>
+<?php if ( (($flag_show_product_info_model == 1 and $products_model != '') or ($flag_show_product_info_weight == 1 and $products_weight !=0) or ($flag_show_product_info_quantity == 1) or ($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name))) or $flag_show_product_piece_info_artist == 1 or $flag_show_product_piece_info_style == 1) { ?>
 <ul id="productDetailsList" class="floatingBox back">
   <?php echo (($flag_show_product_info_model == 1 and $products_model !='') ? '<li>' . TEXT_PRODUCT_MODEL . $products_model . '</li>' : '') . "\n"; ?>
   <?php echo (($flag_show_product_info_weight == 1 and $products_weight !=0) ? '<li>' . TEXT_PRODUCT_WEIGHT .  $products_weight . TEXT_PRODUCT_WEIGHT_UNIT . '</li>'  : '') . "\n"; ?>
   <?php echo (($flag_show_product_info_quantity == 1) ? '<li>' . $products_quantity . TEXT_PRODUCT_QUANTITY . '</li>'  : '') . "\n"; ?>
   <?php echo (($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name)) ? '<li>' . TEXT_PRODUCT_MANUFACTURER . $manufacturers_name . '</li>' : '') . "\n"; ?>
   <?php echo (($flag_show_product_piece_info_artist == 1 and !empty($products_artist_name)) ? '<li>' . TEXT_PRODUCT_ARTIST . $products_artist_name . '</li>' : '') . "\n"; ?>
-  <?php echo (($flag_show_product_piece_info_genre == 1 and !empty($products_piece_genre_name)) ? '<li>' . TEXT_PRODUCT_PIECE_GENRE . $products_piece_genre_name . '</li>' : '') . "\n"; ?>
+  <?php echo (($flag_show_product_piece_info_style == 1 and !empty($products_piece_style_name)) ? '<li>' . TEXT_PRODUCT_PIECE_STYLE . $products_piece_style_name . '</li>' : '') . "\n"; ?>
 </ul>
 <br class="clearBoth" />
 <?php

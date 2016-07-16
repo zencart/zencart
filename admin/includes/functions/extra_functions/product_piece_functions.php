@@ -44,14 +44,14 @@
   }
 
 ////
-// Return the Piece Genre URL in the needed language
-  function zen_get_piece_genre_url($piece_genre_id, $language_id) {
+// Return the Piece Style URL in the needed language
+  function zen_get_piece_style_url($piece_style_id, $language_id) {
     global $db;
-    $piece_genre = $db->Execute("select piece_genre_url
+    $piece_style = $db->Execute("select piece_style_url
                                   from " . TABLE_AGENCY_INFO . "
-                                  where piece_genre_id = '" . (int)$piece_genre_id . "'
+                                  where piece_style_id = '" . (int)$piece_style_id . "'
                                   and languages_id = '" . (int)$language_id . "'");
 
-    return $piece_genre->fields['piece_genre_url'];
+    return $piece_style->fields['piece_style_url'];
   }
 ?>

@@ -250,17 +250,17 @@ INSERT INTO media_to_products (media_id, product_id) VALUES (1, 166),
 #INSERT INTO media_types (type_id, type_name, type_ext) VALUES (1, 'MP3', '.mp3');
 
 #
-# Dumping data for table `piece_genre`
+# Dumping data for table `piece_style`
 #
 
-INSERT INTO piece_genre (piece_genre_id, piece_genre_name, date_added, last_modified) VALUES (1, 'Rock', '2004-06-01 20:53:26', NULL),
+INSERT INTO piece_style (piece_style_id, piece_style_name, date_added, last_modified) VALUES (1, 'Rock', '2004-06-01 20:53:26', NULL),
 (2, 'Jazz', '2004-06-01 20:53:45', NULL);
 
 #
 # Dumping data for table `product_piece_extra`
 #
 
-INSERT INTO product_piece_extra (products_id, artists_id, agency_id, piece_genre_id) VALUES (166, 1, 0, 1),
+INSERT INTO product_piece_extra (products_id, artists_id, agency_id, piece_style_id) VALUES (166, 1, 0, 1),
 (169, 1, 1, 2);
 
 #

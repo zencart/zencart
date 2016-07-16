@@ -11,7 +11,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
   define('FILENAME_ARTISTS', 'artists');
   define('FILENAME_AGENCY', 'agency');
-  define('FILENAME_PIECE_GENRE', 'piece_genre');
+  define('FILENAME_PIECE_STYLE', 'piece_style');
   define('FILENAME_MEDIA_MANAGER', 'media_manager');
   define('FILENAME_MEDIA_MANAGER_PRODUCTS', 'media_manager_products');
   define('FILENAME_MEDIA_MANAGER_CLIPS', 'media_manager_clips');

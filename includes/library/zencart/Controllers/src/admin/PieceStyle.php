@@ -7,9 +7,9 @@
 namespace ZenCart\Controllers;
 
 /**
- * Class PieceGenre
+ * Class PieceStyle
  * @package ZenCart\Controllers
  */
-class PieceGenre extends AbstractLeadController
+class PieceStyle extends AbstractLeadController
 {
 }

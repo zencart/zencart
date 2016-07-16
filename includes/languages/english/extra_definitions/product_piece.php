@@ -19,8 +19,8 @@
 // +----------------------------------------------------------------------+
 // $Id: 
 //
-define('BOX_HEADING_PIECE_GENRES', 'Piece Genres');
+define('BOX_HEADING_PIECE_STYLES', 'Piece Styles');
 define('BOX_HEADING_AGENCY', 'Agencies');
 define('PULL_DOWN_AGENCIES', '- Reset -');
-define('PULL_DOWN_PIECE_GENRES', '- Reset -');
+define('PULL_DOWN_PIECE_STYLES', '- Reset -');
 ?>

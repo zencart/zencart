@@ -17,7 +17,7 @@ define('TEXT_ALSO_PURCHASED_PRODUCTS', 'Customers who bought this product also p
 define('TEXT_PRODUCT_OPTIONS', 'Please Choose: ');
 define('TEXT_PRODUCT_AGENCY', 'Agency: ');
 define('TEXT_PRODUCT_ARTIST', 'Artist: ');
-define('TEXT_PRODUCT_PIECE_GENRE', 'Piece Genre: ');
+define('TEXT_PRODUCT_PIECE_STYLE', 'Piece Style: ');
 define('TEXT_PRODUCT_WEIGHT', 'Shipping Weight: ');
 define('TEXT_PRODUCT_QUANTITY', ' Units in Stock');
 define('TEXT_PRODUCT_COLLECTIONS', 'Media Collection: ');

@@ -21,7 +21,7 @@
 //
 define('BOX_CATALOG_ARTISTS', 'Artists');
 define('BOX_CATALOG_AGENCY', 'Agencies');
-define('BOX_CATALOG_PIECE_GENRE', 'Piece Genre');
+define('BOX_CATALOG_PIECE_STYLE', 'Piece Style');
 define('BOX_CATALOG_MEDIA_MANAGER', 'Media Manager');
 define('BOX_CATALOG_MEDIA_TYPES', 'Media Types');
 ?>

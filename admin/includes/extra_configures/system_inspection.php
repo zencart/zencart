@@ -145,7 +145,7 @@ $built_in_boxes = array(
 'BOX_CATALOG_MEDIA_MANAGER',
 'BOX_CATALOG_MEDIA_TYPES',
 'BOX_TOOLS_LAYOUT_CONTROLLER',
-'BOX_CATALOG_PIECE_GENRE',
+'BOX_CATALOG_PIECE_STYLE',
 'BOX_CONFIGURATION_COWOA', 
 'BOX_CONFIGURATION_WIDGET'
 ); 
@@ -210,7 +210,7 @@ $built_in_tables = array(
 'media_types',
 'meta_tags_categories_description',
 'meta_tags_products_description',
-'piece_genre',
+'piece_style',
 'newsletters',
 'orders',
 'orders_products',

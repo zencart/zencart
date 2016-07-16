@@ -7,10 +7,10 @@
 namespace ZenCart\Services;
 
 /**
- * Class LeadPieceGenreRoutes
+ * Class LeadPieceStyleRoutes
  * @package ZenCart\Services
  */
-class LeadPieceGenreRoutes extends LeadRoutes
+class LeadPieceStyleRoutes extends LeadRoutes
 {
     /**
      * @return bool
@@ -20,7 +20,7 @@ class LeadPieceGenreRoutes extends LeadRoutes
         $mainTableFkeyField = $this->listingQuery['mainTable']['fkeyFieldLeft'];
 
         if ($this->request->readPost('delete_linked') === 'true') {
-            $sql = "SELECT products_id FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE piece_genre_id = :id:";
+            $sql = "SELECT products_id FROM " . TABLE_PRODUCT_PIECE_EXTRA . " WHERE piece_style_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $results = $this->dbConn->execute($sql);
@@ -28,7 +28,7 @@ class LeadPieceGenreRoutes extends LeadRoutes
                 zen_remove_product($result['products_id']);
             }
         } else {
-            $sql = "UPDATE " . TABLE_PRODUCT_PIECE_EXTRA . " SET piece_genre_id = '' WHERE piece_genre_id = :id:";
+            $sql = "UPDATE " . TABLE_PRODUCT_PIECE_EXTRA . " SET piece_style_id = '' WHERE piece_style_id = :id:";
             $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('id'),
                 $this->outputLayout ['fields'] [$mainTableFkeyField] ['bindVarsType']);
             $this->dbConn->execute($sql);

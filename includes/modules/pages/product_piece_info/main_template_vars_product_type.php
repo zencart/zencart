@@ -51,10 +51,10 @@
     $agency_info = $db->Execute($sql);
 
 
-    $sql = "select * from " . TABLE_PIECE_GENRE . "
-            where piece_genre_id = '" . $piece_extras->fields['piece_genre_id'] . "'";
+    $sql = "select * from " . TABLE_PIECE_STYLE . "
+            where piece_style_id = '" . $piece_extras->fields['piece_style_id'] . "'";
 
-    $piece_genre = $db->Execute($sql);
+    $piece_style = $db->Execute($sql);
 
 
 /*
@@ -64,7 +64,7 @@
   $products_artist_url = $artist_info->fields['artists_url'];
   $products_agency_name = $agency->fields['agency_name'];
   $products_agency_url = $agency_info->fields['agency_url'];
-  $products_piece_genre_name = $piece_genre->fields['piece_genre_name'];
+  $products_piece_style_name = $piece_style->fields['piece_style_name'];
   if (!empty($products_artist_url)) $products_artist_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=piece_arist&artists_id=' . zen_output_string_protected($piece_extras->fields['artists_id']), 'NONSSL', true, false) . '" target="_BLANK">'.$products_artist_name.'</a>';
   if (!empty($products_agency_url)) $products_agency_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=piece_agency&agency_id=' . zen_output_string_protected($piece_extras->fields['agency_id']), 'NONSSL', true, false) . '" target="_BLANK">'.$products_agency_name.'</a>';
 
