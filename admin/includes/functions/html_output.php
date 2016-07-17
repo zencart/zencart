@@ -11,10 +11,9 @@
    * Deprecated and will be removed in later versions. 
    * Use zen_admin_href_link instead
    */
-  //Disabled until Prerelease Stage to stop delopers from using in core code
-  //function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
-  // return zen_admin_href_link($page, $parameters, $add_session_id);
-  //}
+  function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
+   return zen_admin_href_link($page, $parameters, $add_session_id);
+  }
 
   /**
    * Returns a admin link formatted for use in a href attribute. This should
