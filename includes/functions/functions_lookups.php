@@ -1378,6 +1378,7 @@
 
 /**
  * get customer order comments
+ * @deprecated use $order->status_history[0]['comments'] instead, after instantiating the order, since this data is already in the order object and saves re-querying the db
  */
   function zen_get_orders_comments($orders_id) {
     global $db;

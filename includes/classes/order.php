@@ -18,8 +18,19 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 class order extends base {
-  public $info, $totals, $products, $customer, $billing, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
-  $products_ordered, $products_ordered_email, $attachArray, $currency, $queryReturnFlag;
+  public $id = 0;
+  public $info, $totals, $customer, $billing, $delivery = array();
+  public $products = array();
+  public $attachArray = array();
+  public $queryReturnFlag = null; 
+  public $currency = array();
+  public $language = array();
+  public $content_type = '';
+  public $email_low_stock = '';
+  public $products_ordered_email, $products_ordered, $products_ordered_html, $products_ordered_attributes = '';
+  public $order_statuses_array = array();
+  public $status_history = array();
+  public $downloads = array();
 
   /**
    * Constructor
@@ -29,21 +40,20 @@ class order extends base {
    * @param bool $override_currency
    */
   public function __construct($order_id = 0, $override_currency = false) {
+    global $lng;
 
     $this->currency = ($override_currency === false) ? $_SESSION['currency'] : $override_currency;
-
-    $this->info = array();
-    $this->totals = array();
-    $this->products = array();
-    $this->customer = array();
-    $this->delivery = array();
 
     $this->notify('NOTIFY_ORDER_INSTANTIATE', array(), $order_id);
     if ((int)$order_id > 0) {
       $this->query((int)$order_id);
+      $this->language = $lng->get_language_data_by_code($this->info['language_code']);
     } else {
       $this->cart($_SESSION['cart']);
+      $this->language = $lng->get_language_data_by_id($_SESSION['languages_id']);
     }
+
+    if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
   }
 
   /**
@@ -60,16 +70,15 @@ class order extends base {
     if ($this->queryReturnFlag === TRUE) return;
 
     // cast again in case the notifier changed it
-    $order_id = (int)$order_id;
+    $this->id = (int)$order_id;
 
-    $order_query = "select *
-                        from " . TABLE_ORDERS . "
-                        where orders_id = '" . (int)$order_id . "'";
+    $language_id = (int)$_SESSION['languages_id'];
+    $order_query = "select o.*, os.orders_status_name from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_STATUS . " os WHERE orders_id = " . (int)$this->id . " AND os.language_id = " . (int)$language_id;
     $order = $db->Execute($order_query);
 
     $totals_query = "select title, text, class, value
                          from " . TABLE_ORDERS_TOTAL . "
-                         where orders_id = " . (int)$order_id . "
+                         where orders_id = " . (int)$this->id . "
                          order by sort_order";
     $totals = $db->Execute($totals_query);
     while (!$totals->EOF) {
@@ -88,11 +97,11 @@ class order extends base {
       $totals->MoveNext();
     }
 
-    $order_status_query = "select orders_status_name
-                             from " . TABLE_ORDERS_STATUS . "
-                             where orders_status_id = '" . $order->fields['orders_status'] . "'
-                             and language_id = '" . (int)$_SESSION['languages_id'] . "'";
-    $order_status = $db->Execute($order_status_query);
+    // count unreleased GVs associated with this order
+    $result = $db->Execute("select order_id, unique_id
+                              from " . TABLE_COUPON_GV_QUEUE ."
+                              where order_id = " . $this->id . " and release_flag='N'");
+    $gv_count_in_queue = count($result);
 
     $this->info = array('currency' => $order->fields['currency'],
                         'currency_value' => $order->fields['currency_value'],
@@ -108,13 +117,15 @@ class order extends base {
                         'cc_expires' => $order->fields['cc_expires'],
                         'date_purchased' => $order->fields['date_purchased'],
                         'orders_status' => $order->fields['orders_status'],
-                        'orders_status_name' => $order_status->fields['orders_status_name'],
+                        'orders_status_name' => $order->fields['orders_status_name'],
                         'total' => $order->fields['order_total'],
                         'tax' => $order->fields['order_tax'],
                         'last_modified' => $order->fields['last_modified'],
                         'ip_address' => $order->fields['ip_address'],
                         'order_weight' => $order->fields['order_weight'],
-                        'language_code' => $order->fields['language_code']
+                        'is_guest_order' => $order->fields['is_guest_order'],
+                        'language_code' => $order->fields['language_code'],
+                        'gv_count_in_queue' => $gv_count_in_queue,
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -154,29 +165,28 @@ class order extends base {
                            'country' => $order->fields['billing_country'],
                            'format_id' => $order->fields['billing_address_format_id']);
 
-    $index = 0;
     $orders_products_query = "select *
-                                  from " . TABLE_ORDERS_PRODUCTS . "
-                                  where orders_id = " . (int)$order_id . "
-                                  order by orders_products_id";
-
+                              from " . TABLE_ORDERS_PRODUCTS . "
+                              where orders_id = " . (int)$this->id . "
+                              order by orders_products_id";
     $orders_products = $db->Execute($orders_products_query);
 
-    while (!$orders_products->EOF) {
+    $index = 0;
+    foreach($orders_products as $product) {
       // convert quantity to proper decimals (particularly for account history)
       if (QUANTITY_DECIMALS != 0) {
-        $fix_qty = $orders_products->fields['products_quantity'];
+        $fix_qty = $product['products_quantity'];
         switch (true) {
           case (!strstr($fix_qty, '.')):
           $new_qty = $fix_qty;
           break;
           default:
           // remove trailing 0's
-          $new_qty = preg_replace('/[0]+$/', '', $orders_products->fields['products_quantity']);
+          $new_qty = preg_replace('/[0]+$/', '', $product['products_quantity']);
           break;
         }
       } else {
-        $new_qty = $orders_products->fields['products_quantity'];
+        $new_qty = $product['products_quantity'];
       }
 
       $new_qty = round($new_qty, QUANTITY_DECIMALS);
@@ -186,51 +196,85 @@ class order extends base {
       }
 
       $this->products[$index] = array('qty' => $new_qty,
-                                      'id' => $orders_products->fields['products_id'],
-                                      'name' => $orders_products->fields['products_name'],
-                                      'model' => $orders_products->fields['products_model'],
-                                      'tax' => $orders_products->fields['products_tax'],
-                                      'price' => $orders_products->fields['products_price'],
-                                      'final_price' => $orders_products->fields['final_price'],
-                                      'onetime_charges' => $orders_products->fields['onetime_charges'],
-                                      'products_priced_by_attribute' => $orders_products->fields['products_priced_by_attribute'],
-                                      'product_is_free' => $orders_products->fields['product_is_free'],
-                                      'products_discount_type' => $orders_products->fields['products_discount_type'],
-                                      'products_discount_type_from' => $orders_products->fields['products_discount_type_from'],
-                                      'products_weight' => $orders_products->fields['products_weight'],
-                                      'products_virtual' => $orders_products->fields['products_virtual'],
-                                      'product_is_always_free_shipping' => $orders_products->fields['product_is_always_free_shipping'],
-                                      'products_quantity_order_min' => $orders_products->fields['products_quantity_order_min'],
-                                      'products_quantity_order_units' => $orders_products->fields['products_quantity_order_units'],
-                                      'products_quantity_order_max' => $orders_products->fields['products_quantity_order_max'],
-                                      'products_quantity_mixed' => $orders_products->fields['products_quantity_mixed'],
-                                      'products_mixed_discount_quantity' => $orders_products->fields['products_mixed_discount_quantity']
+                                      'id' => $product['products_id'],
+                                      'name' => $product['products_name'],
+                                      'model' => $product['products_model'],
+                                      'tax' => $product['products_tax'],
+                                      'price' => $product['products_price'],
+                                      'final_price' => $product['final_price'],
+                                      'onetime_charges' => $product['onetime_charges'],
+                                      'products_priced_by_attribute' => $product['products_priced_by_attribute'],
+                                      'product_is_free' => $product['product_is_free'],
+                                      'products_discount_type' => $product['products_discount_type'],
+                                      'products_discount_type_from' => $product['products_discount_type_from'],
+                                      'products_weight' => $product['products_weight'],
+                                      'products_virtual' => $product['products_virtual'],
+                                      'product_is_always_free_shipping' => $product['product_is_always_free_shipping'],
+                                      'products_quantity_order_min' => $product['products_quantity_order_min'],
+                                      'products_quantity_order_units' => $product['products_quantity_order_units'],
+                                      'products_quantity_order_max' => $product['products_quantity_order_max'],
+                                      'products_quantity_mixed' => $product['products_quantity_mixed'],
+                                      'products_mixed_discount_quantity' => $product['products_mixed_discount_quantity']
                                       );
 
       $attributes_query = "select * from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                               where orders_id = " . (int)$order_id . "
-                               and orders_products_id = " . (int)$orders_products->fields['orders_products_id'];
+                           where orders_id = " . (int)$this->id . "
+                           and orders_products_id = " . (int)$product['orders_products_id'];
       $attributes = $db->Execute($attributes_query);
-      if ($attributes->RecordCount()) {
-        while (!$attributes->EOF) {
-          $this->products[$index]['attributes'][] = array('option' => $attributes->fields['products_options'],
-                                                                   'value' => $attributes->fields['products_options_values'],
-                                                                   'option_id' => $attributes->fields['products_options_id'],
-                                                                   'value_id' => $attributes->fields['products_options_values_id'],
-                                                                   'prefix' => $attributes->fields['price_prefix'],
-                                                                   'price' => $attributes->fields['options_values_price'],
-                                                                   'product_attribute_is_free' =>$attributes->fields['product_attribute_is_free'],
-                                                                   );
-          $attributes->MoveNext();
+      if (sizeof($attributes)) {
+        foreach($attributes as $attribute) {
+          $this->products[$index]['attributes'][]  = array('option' => $attribute['products_options'],
+                                                           'value' => $attribute['products_options_values'],
+                                                           'option_id' => $attribute['products_options_id'],
+                                                           'value_id' => $attribute['products_options_values_id'],
+                                                           'prefix' => $attribute['price_prefix'],
+                                                           'price' => $attribute['options_values_price'],
+                                                           'product_attribute_is_free' =>$attribute['product_attribute_is_free'],
+                                                           );
         }
-      }
+      }// endif sizeof attributes
 
-      $this->info['tax_groups']["{$this->products[$index]['tax']}"] = '1';
+      $this->info['tax_groups']["{$this->products[$index]['tax']}"] = 1;
 
       $index++;
-      $orders_products->MoveNext();
+    } // end loop $orders_products as $product
+
+    // retrieve downloads for current order
+    $orders_download_query = "select * from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " where orders_id=" . (int)$this->id;
+    $orders_download = $db->Execute($orders_download_query);
+    foreach($orders_download as $key=>$row) 
+    {
+      $this->downloads[] = $row;
     }
-    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array(), $order_id);
+
+    // get order-status-history including comments
+    $orders_history = $db->Execute("select orders_status_id, date_added, customer_notified, comments
+                                    from " . TABLE_ORDERS_STATUS_HISTORY . "
+                                    where orders_id = " . (int)$this->id . "
+                                    order by date_added asc");
+    foreach($orders_history as $key=>$row) 
+    {
+      $this->status_history[] = $row;
+    }
+
+    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array(), $this->id);
+  }
+  /**
+   * Get list of all order status names and ids for the specified language
+   */
+  public static function get_order_statuses($language_id = null)
+  {
+    global $db;
+    if (!$language_id) $language_id = $_SESSION['languages_id'];
+    $order_statuses_array = array();
+    $result = $db->Execute("select orders_status_id, orders_status_name
+                            from " . TABLE_ORDERS_STATUS . "
+                            where language_id = " . (int)$language_id . "
+                            order by orders_status_id");
+    foreach($result as $row) {
+      $order_statuses_array[$row['orders_status_id']] = $row['orders_status_name'];
+    }
+    return $order_statuses_array;
   }
 
   /**
@@ -255,10 +299,10 @@ class order extends base {
                                    left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                    left join " . TABLE_COUNTRIES . " co on (ab.entry_country_id = co.countries_id)
                                    left join " . TABLE_COUNTRIES_NAME . " cn on (ab.entry_country_id = cn.countries_id)
-                                   where c.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                   and ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                   where c.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                   and ab.customers_id = " . (int)$_SESSION['customer_id'] . "
                                    and c.customers_default_address_id = ab.address_book_id
-                                   and cn.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                                   and cn.language_id = " . (int)$_SESSION['languages_id'];
 
     $customer_address = $db->Execute($customer_address_query);
 
@@ -271,9 +315,9 @@ class order extends base {
                                    left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                    left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id)
                                    left join " . TABLE_COUNTRIES_NAME . " cn on (ab.entry_country_id = cn.countries_id)
-                                   where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                   and ab.address_book_id = '" . (int)$_SESSION['sendto'] . "'
-                                   and cn.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                                   where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                   and ab.address_book_id = " . (int)$_SESSION['sendto'] . "
+                                   and cn.language_id = " . (int)$_SESSION['languages_id'];
 
     $shipping_address = $db->Execute($shipping_address_query);
 
@@ -286,9 +330,9 @@ class order extends base {
                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                   left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id)
                                   left join " . TABLE_COUNTRIES_NAME . " cn on (ab.entry_country_id = cn.countries_id)
-                                  where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                  and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'
-                                  and cn.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                                  where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                  and ab.address_book_id = " . (int)$_SESSION['billto'] . "
+                                  and cn.language_id = " . (int)$_SESSION['languages_id'];
 
     $billing_address = $db->Execute($billing_address_query);
 
@@ -304,15 +348,15 @@ class order extends base {
         $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
                                 from " . TABLE_ADDRESS_BOOK . " ab
                                 left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                and ab.address_book_id = '" . (int)($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'";
+                                where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                and ab.address_book_id = " . (int)($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']);
         break;
         case 'Billing':
         $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
                                 from " . TABLE_ADDRESS_BOOK . " ab
                                 left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'";
+                                where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                and ab.address_book_id = " . (int)$_SESSION['billto'];
         break;
         case 'Store':
         if ($billing_address->fields['entry_zone_id'] == STORE_ZONE) {
@@ -320,14 +364,14 @@ class order extends base {
           $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
                                   from " . TABLE_ADDRESS_BOOK . " ab
                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                  where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                  and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'";
+                                  where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                  and ab.address_book_id = " . (int)$_SESSION['billto'];
         } else {
           $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
                                   from " . TABLE_ADDRESS_BOOK . " ab
                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                  where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                                  and ab.address_book_id = '" . (int)($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'";
+                                  where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                  and ab.address_book_id = " . (int)($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']);
         }
       }
       if ($tax_address_query != '') {
@@ -339,13 +383,15 @@ class order extends base {
       }
     }
 
+    $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_TAX_ZONES', [], $taxCountryId, $taxZoneId, $decimals);
+
     $class =& $_SESSION['payment'];
 
     $coupon_code = '';
     if (isset($_SESSION['cc_id'])) {
       $coupon_code_query = "select coupon_code
                               from " . TABLE_COUPONS . "
-                              where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
+                              where coupon_id = " . (int)$_SESSION['cc_id'];
       $result = $db->Execute($coupon_code_query);
       if ($result->RecordCount()) $coupon_code = $result->fields['coupon_code'];
     }
@@ -367,7 +413,7 @@ class order extends base {
                         'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
                         'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . zen_get_ip_address(),
                         'order_weight' => ($shipping_weight * $shipping_num_boxes),
-                        'language_code' => $_SESSION['languages_code']
+                        'language_code' => $_SESSION['languages_code'],
                         );
 
     $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
@@ -441,7 +487,7 @@ class order extends base {
                                       'products_quantity_order_units' => $products[$i]['products_quantity_order_units'],
                                       'products_quantity_order_max' => $products[$i]['products_quantity_order_max'],
                                       'products_quantity_mixed' => $products[$i]['products_quantity_mixed'],
-                                      'products_mixed_discount_quantity' => $products[$i]['products_mixed_discount_quantity']
+                                      'products_mixed_discount_quantity' => $products[$i]['products_mixed_discount_quantity'],
                                       );
 
       if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
@@ -465,13 +511,13 @@ class order extends base {
                                    from " . TABLE_PRODUCTS_OPTIONS . " popt,
                                         " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval,
                                         " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                   where pa.products_id = '" . (int)$products[$i]['id'] . "'
-                                   and pa.options_id = '" . (int)$option . "'
+                                   where pa.products_id = " . (int)$products[$i]['id'] . "
+                                   and pa.options_id = " . (int)$option . "
                                    and pa.options_id = popt.products_options_id
-                                   and pa.options_values_id = '" . (int)$value . "'
+                                   and pa.options_values_id = " . (int)$value . "
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                   and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                                   and popt.language_id = " . (int)$_SESSION['languages_id'] . "
+                                   and poval.language_id = " . (int)$_SESSION['languages_id'];
 
           $attributes = $db->Execute($attributes_query);
 
@@ -482,6 +528,7 @@ class order extends base {
             $attr_value = $attributes->fields['products_options_values_name'];
           }
 
+          $this->notify('NOTIFY_ORDER_CART_ADD_ATTRIBUTE_LIST', array('index'=>$index, 'subindex'=>$subindex, 'products'=>$products[$i], 'attributes'=>$attributes), $attr_value, $option, $value, $attributes);
           $this->products[$index]['attributes'][$subindex] = array('option' => $attributes->fields['products_options_name'],
                                                                    'value' => $attr_value,
                                                                    'option_id' => $option,
@@ -489,7 +536,6 @@ class order extends base {
                                                                    'prefix' => $attributes->fields['price_prefix'],
                                                                    'price' => $attributes->fields['options_values_price']);
 
-          $this->notify('NOTIFY_ORDER_CART_ADD_ATTRIBUTE_LIST', array('index'=>$index, 'subindex'=>$subindex, 'products'=>$products[$i], 'attributes'=>$attributes));
           $subindex++;
         }
       }
@@ -562,15 +608,15 @@ class order extends base {
 
   /**
    * Creates a new order from the object's arrays built from the cart() method triggered by the constructor
-   * $zf_ot_modules is an array of order-totals calculated by checkout_process during checkout
+   * $order_totals is an array of order-totals calculated by checkout_process during checkout
    *
-   * @param array $zf_ot_modules
+   * @param array $order_totals
    * @return int order number
    */
-  public function create($zf_ot_modules) {
+  public function create($order_totals) {
     global $db;
 
-    $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_DURING_ORDER_CREATE', array(), $zf_ot_modules);
+    $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_DURING_ORDER_CREATE', array(), $order_totals);
 
     if ($this->info['total'] == 0) {
       if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
@@ -650,34 +696,34 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_CREATE_SET_SQL_DATA_ARRAY', array(), $sql_data_array);
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
 
-    $insert_id = $db->Insert_ID();
-    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_HEADER', array_merge(array('orders_id' => $insert_id, 'shipping_weight' => $this->info['order_weight']), $sql_data_array), $insert_id);
+    $this->id = $this->info['id'] = $db->Insert_ID();
+    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_HEADER', array_merge(array('orders_id' => $this->id, 'shipping_weight' => $this->info['order_weight']), $sql_data_array));
 
-    for ($i=0, $n=sizeof($zf_ot_modules); $i<$n; $i++) {
-      $sql_data_array = array('orders_id' => $insert_id,
-                              'title' => $zf_ot_modules[$i]['title'],
-                              'text' => $zf_ot_modules[$i]['text'],
-                              'value' => (is_numeric($zf_ot_modules[$i]['value'])) ? $zf_ot_modules[$i]['value'] : '0',
-                              'class' => $zf_ot_modules[$i]['code'],
-                              'sort_order' => $zf_ot_modules[$i]['sort_order']);
+    for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
+      $sql_data_array = array('orders_id' => $this->id,
+                              'title' => $order_totals[$i]['title'],
+                              'text' => $order_totals[$i]['text'],
+                              'value' => (is_numeric($order_totals[$i]['value'])) ? $order_totals[$i]['value'] : '0',
+                              'class' => $order_totals[$i]['code'],
+                              'sort_order' => $order_totals[$i]['sort_order']);
 
       zen_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
-      $ot_insert_id = $db->insert_ID();
+      $ot_insert_id = $db->Insert_ID();
       $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDERTOTAL_LINE_ITEM', $sql_data_array, $ot_insert_id);
     }
 
     $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
-    $sql_data_array = array('orders_id' => $insert_id,
+    $sql_data_array = array('orders_id' => $this->id,
                             'orders_status_id' => $this->info['order_status'],
                             'date_added' => 'now()',
                             'customer_notified' => $customer_notification,
                             'comments' => $this->info['comments']);
 
     zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-    $osh_insert_id = $db->insert_ID();
+    $osh_insert_id = $db->Insert_ID();
     $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_COMMENT', $sql_data_array, $osh_insert_id);
 
-    return $insert_id;
+    return $this->id;
   }
 
   /**
@@ -705,23 +751,21 @@ class order extends base {
       // Stock Update - Joao Correia
       if ($this->doStockDecrement) {
         if (DOWNLOAD_ENABLED == 'true') {
-          $stock_query_raw = "select p.products_quantity, pad.products_attributes_filename, p.product_is_always_free_shipping
-                              from " . TABLE_PRODUCTS . " p
-                              left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                               on p.products_id=pa.products_id
-                              left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                               on pa.products_attributes_id=pad.products_attributes_id
-                              WHERE p.products_id = '" . zen_get_prid($this->products[$i]['id']) . "'";
+          $stock_query_raw = "SELECT p.products_quantity, pad.products_attributes_filename, p.product_is_always_free_shipping
+                              FROM " . TABLE_PRODUCTS . " p
+                              LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON p.products_id=pa.products_id
+                              LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad ON pa.products_attributes_id=pad.products_attributes_id
+                              WHERE p.products_id = " . zen_get_prid($this->products[$i]['id']);
 
           // Will work with only one option for downloadable products
           // otherwise, we have to build the query dynamically with a loop
           $products_attributes = $this->products[$i]['attributes'];
           if (is_array($products_attributes)) {
-            $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
+            $stock_query_raw .= " AND pa.options_id = " . $products_attributes[0]['option_id'] . " AND pa.options_values_id = " . $products_attributes[0]['value_id'];
           }
           $stock_values = $db->Execute($stock_query_raw, false, false, 0, true);
         } else {
-          $stock_values = $db->Execute("select products_quantity, '' as products_attributes_filename, product_is_always_free_shipping from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'", false, false, 0, true);
+          $stock_values = $db->Execute("select products_quantity, '' as products_attributes_filename, product_is_always_free_shipping from " . TABLE_PRODUCTS . " where products_id = " . zen_get_prid($this->products[$i]['id']), false, false, 0, true);
         }
 
         $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN', $i, $stock_values);
@@ -735,11 +779,11 @@ class order extends base {
             $stock_left = $stock_values->fields['products_quantity'];
           }
 
-          $db->Execute("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+          $db->Execute("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = " . zen_get_prid($this->products[$i]['id']));
           if ($stock_left <= 0) {
             // only set status to off when not displaying sold out
             if (SHOW_PRODUCTS_SOLD_OUT == '0') {
-              $db->Execute("update " . TABLE_PRODUCTS . " set products_status = 0 where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+              $db->Execute("update " . TABLE_PRODUCTS . " set products_status = 0 where products_id = " . zen_get_prid($this->products[$i]['id']));
             }
           }
 
@@ -755,7 +799,7 @@ class order extends base {
       $this->bestSellersUpdate = TRUE;
       $this->notify('NOTIFY_ORDER_PROCESSING_BESTSELLERS_UPDATE', array(), $this->products[$i], $i);
       if ($this->bestSellersUpdate) {
-        $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+        $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " where products_id = " . zen_get_prid($this->products[$i]['id']));
       }
 
       $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END', $i);
@@ -812,16 +856,14 @@ class order extends base {
                                  pa.attributes_price_letters, pa.attributes_price_letters_free,
                                  pad.products_attributes_maxdays, pad.products_attributes_maxcount, pad.products_attributes_filename
                                  from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " .
-            TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                  left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                  on pa.products_attributes_id=pad.products_attributes_id
-                                 where pa.products_id = '" . zen_db_input($this->products[$i]['id']) . "'
-                                  and pa.options_id = '" . $this->products[$i]['attributes'][$j]['option_id'] . "'
+                                  TABLE_PRODUCTS_ATTRIBUTES . " pa LEFT JOIN  " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad on pa.products_attributes_id=pad.products_attributes_id
+                                 where pa.products_id = " . (int)$this->products[$i]['id'] . "
+                                  and pa.options_id = " . (int)$this->products[$i]['attributes'][$j]['option_id'] . "
                                   and pa.options_id = popt.products_options_id
-                                  and pa.options_values_id = '" . $this->products[$i]['attributes'][$j]['value_id'] . "'
+                                  and pa.options_values_id = " . (int)$this->products[$i]['attributes'][$j]['value_id'] . "
                                   and pa.options_values_id = poval.products_options_values_id
-                                  and popt.language_id = '" . $_SESSION['languages_id'] . "'
-                                  and poval.language_id = '" . $_SESSION['languages_id'] . "'";
+                                  and popt.language_id = " . (int)$_SESSION['languages_id'] . "
+                                  and poval.language_id = popt.language_id";
 
             $attributes_values = $db->Execute($attributes_query);
           } else {
@@ -835,13 +877,13 @@ class order extends base {
                                  pa.attributes_price_words, pa.attributes_price_words_free,
                                  pa.attributes_price_letters, pa.attributes_price_letters_free
                                  from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                 where pa.products_id = '" . $this->products[$i]['id'] . "' 
-                                 and pa.options_id = '" . (int)$this->products[$i]['attributes'][$j]['option_id'] . "' 
+                                 where pa.products_id = " . (int)$this->products[$i]['id'] . "
+                                 and pa.options_id = " . (int)$this->products[$i]['attributes'][$j]['option_id'] . "
                                  and pa.options_id = popt.products_options_id 
-                                 and pa.options_values_id = '" . (int)$this->products[$i]['attributes'][$j]['value_id'] . "' 
+                                 and pa.options_values_id = " . (int)$this->products[$i]['attributes'][$j]['value_id'] . "
                                  and pa.options_values_id = poval.products_options_values_id 
-                                 and popt.language_id = '" . $_SESSION['languages_id'] . "' 
-                                 and poval.language_id = '" . $_SESSION['languages_id'] . "'");
+                                 and popt.language_id = " . (int)$_SESSION['languages_id'] . "
+                                 and poval.language_id = popt.language_id");
           }
 
           $sql_data_array = array('orders_id' => $order_id,
@@ -877,7 +919,7 @@ class order extends base {
 
           $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ATTRIBUTE_LINE_ITEM', array_merge(array('orders_products_attributes_id' => $products_attributes_id), $sql_data_array), $products_attributes_id);
 
-          if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values->fields['products_attributes_filename']) && zen_not_null($attributes_values->fields['products_attributes_filename'])) {
+          if (DOWNLOAD_ENABLED == 'true' && isset($attributes_values->fields['products_attributes_filename']) && zen_not_null($attributes_values->fields['products_attributes_filename'])) {
             $sql_data_array = array('orders_id' => $order_id,
                                     'orders_products_id' => $order_products_id,
                                     'orders_products_filename' => $attributes_values->fields['products_attributes_filename'],
@@ -964,22 +1006,30 @@ class order extends base {
   }
 
   /**
+   * Alias to send_order_confirmation_email()
+   */
+  public function send_order_email($order_id) {
+    return $this->send_order_confirmation_email($order_id);
+  }
+
+  /**
    * Sends order-confirmation email to customer and storeowner
    * Depends on the product-related content being prepared in advance by the create_add_products() method
    *
    * @param $order_id
    */
-  public function send_order_email($order_id) {
+  public function send_order_confirmation_email($order_id) {
     global $currencies, $order_totals;
 
     $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $order_id, $order_totals);
-    if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
+
+    if (!$order_id) $order_id = $this->id;
 
     $this->sendLowStockEmails();
 
     // prepare the email confirmation message details
     // make an array to store the html version of the email
-    $html_msg=array();
+    $html_msg = array();
     $email_order = '';
 
     $emailTextInvoiceText = EMAIL_TEXT_INVOICE_URL_CLICK;
@@ -1113,5 +1163,430 @@ class order extends base {
     }
     $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $order_id, $email_order, $extra_info, $html_msg);
   }
+
+  /**
+   * Reset download count and max_days for the specified orders_products_download_id on the current order
+   * Used by toggle on admin order screen, and on update_status_and_comments()
+   */
+  public function resetSingleDownloadToOn($orders_products_download_id = 0, $order_id = null)
+  {
+    global $db;
+    if ((int)$orders_products_download_id == 0) return false;
+    if (!$order_id) $order_id = $this->id;
+
+    // get existing download days and max, if present
+    $sql = "SELECT pad.products_attributes_maxdays, pad.products_attributes_maxcount
+            from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
+            WHERE pa.products_attributes_id = pad.products_attributes_id
+            and pad.products_attributes_filename = opd.orders_products_filename
+            and pa.products_id = opd.products_prid
+            and opd.orders_products_download_id=" . (int)$orders_products_download_id;
+    $result = $db->Execute($sql);
+
+    // defaults
+    $days = DOWNLOAD_MAX_DAYS;
+    $count = DOWNLOAD_MAX_COUNT;
+
+    // override defaults with db values, if exist
+    if (count($result)) {
+      $days = $result->fields['products_attributes_maxdays'];
+      $count = $result->fields['products_attributes_maxcount'];
+    }
+    // prepare and execute SQL
+    $zc_max_days = ($days == 0 ? 0 : zen_date_diff($this->info['date_purchased'], date('Y-m-d H:i:s', time())) + $days);
+    $sql = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays=" . $zc_max_days . ", download_count=" . $count . " where orders_id=" . $order_id . " and orders_products_download_id=" . (int)$orders_products_download_id;
+    $db->Execute($sql);
+  }
+
+  /**
+   * disable specified download item by resetting count to 0
+   */
+  public function resetSingleDownloadToOff($orders_products_download_id = 0)
+  {
+    global $db;
+    if ((int)$orders_products_download_id == 0) return false;
+    $sql = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_count=0 where orders_id=" . (int)$this->id . " and orders_products_download_id=" . (int)$orders_products_download_id;
+    $db->Execute($sql);
+  }
+
+  /**
+   * Re-enable all downloads for the specified or current order
+   */
+  public function reEnableAllDownloads($order_id = null)
+  {
+    global $db;
+    if (!$order_id) $order_id = $this->id;
+
+    // retrieve all downloadable attribute IDs for this order
+    $sql = "SELECT opd.orders_products_download_id from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd, " . TABLE_ORDERS_PRODUCTS . " op
+            WHERE op.orders_id=" . (int)$order_id . "
+            AND opd.orders_products_id = op.orders_products_id";
+    $result = $db->Execute($sql);
+    if ($result->EOF) return false;
+
+    foreach($result as $row) {
+      $this->resetSingleDownloadToOn($row['orders_products_download_id'], $order_id);
+    }
+    return count($result);
+  }
+
+
+  public function update_status_and_comments($status = 0, $comments = '', $send_notify_email = true, $notify_include_comments = 'on', $fields = null)
+  {
+    global $db;
+    $order_updated = $customer_notified = false;
+    $status = (int)$status;
+    $comments = $db->prepare_input($comments);
+    $notify_comments = '';
+    $order_number_string = $this->id; // for email text
+    $html_msg = array();
+    $message = '';
+
+    $this->notify('NOTIFY_ORDER_SEND_STATUS_EMAIL_INITIALIZE', $this->id, $status, $comments, $send_notify_email, $notify_include_comments, $fields);
+
+    // note: this refers to the *admin* language file named orders_email.php
+    zen_load_language_file('orders_email.php', $this->language['directory']);
+
+    // get PayPal Trans ID, if any
+    $paypal_txn = $html_msg['EMAIL_PAYPAL_TRANSID'] = '';
+    $sql = "select txn_id, parent_txn_id from " . TABLE_PAYPAL . " where order_id = :orderID order by last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC ";
+    $sql = $db->bindVars($sql, ':orderID', $this->id, 'integer');
+    $result = $db->Execute($sql);
+    if ($result->RecordCount() > 0) {
+      $paypal_txn = $result->fields['txn_id'];
+    }
+
+    if ($this->info['orders_status'] != $status || zen_not_null($comments)) {
+      $db->Execute("update " . TABLE_ORDERS . "
+                    set orders_status = " . (int)$status . ", last_modified = now()
+                    where orders_id = " . $this->id);
+
+      // obtain localized status name
+      $ordersStatusLocalizedQuery = $db->Execute("SELECT orders_status_name
+                                                  FROM " . TABLE_ORDERS_STATUS . "
+                                                  WHERE language_id = " . (int)$this->language['id'] . "
+                                                  AND orders_status_id = " . $status);
+      $ordersStatusLocalized = $ordersStatusLocalizedQuery->fields['orders_status_name'];
+
+      $customer_notified = 0;
+      if ($send_notify_email == 1) {
+        if ($notify_include_comments == 'on' && zen_not_null($comments)) {
+          $notify_comments = EMAIL_TEXT_COMMENTS_UPDATE . $comments . "\n\n";
+        }
+
+        //send emails
+        if (GUEST_ORDER_STATUS == 'true') {
+          if ($this->info['is_guest_order'] == 1)  {
+
+            $message =
+                EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_number_string . "\n\n" .
+                EMAIL_TEXT_GUEST_ORDER_STATUS_URL . ' ' . zen_catalog_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $this->id, 'SSL') . "\n\n" .
+                EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($this->info['date_purchased']) . "\n\n" .
+                $notify_comments .
+                EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $ordersStatusLocalized ) .
+                EMAIL_TEXT_STATUS_PLEASE_REPLY;
+
+            $html_msg['EMAIL_CUSTOMERS_NAME']    = $this->customer['name'];
+            $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_number_string;
+            $html_msg['EMAIL_TEXT_INVOICE_URL']  = '<a href="' . zen_catalog_href_link(FILENAME_ORDER_STATUS, 'order_id=' . $this->id, 'SSL') .'">'.str_replace(':','',EMAIL_TEXT_GUEST_ORDER_STATUS_URL).'</a>';
+            $html_msg['EMAIL_TEXT_DATE_ORDERED'] = EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($this->info['date_purchased']);
+            $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($notify_comments);
+            $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace('\n','', EMAIL_TEXT_STATUS_UPDATED);
+            $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace('\n','', sprintf(EMAIL_TEXT_STATUS_LABEL, $ordersStatusLocalized));
+            $html_msg['EMAIL_TEXT_NEW_STATUS'] = $ordersStatusLocalized;
+            $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace('\n','', EMAIL_TEXT_STATUS_PLEASE_REPLY);
+
+            if ($paypal_txn != '') {
+              $message .= "\n\n" . ' PayPal Trans ID: ' . $result->fields['txn_id'];
+              $html_msg['EMAIL_PAYPAL_TRANSID'] = $result->fields['txn_id'];
+            }
+
+            zen_mail($this->customer['name'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . ' #' . $order_number_string, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
+            $customer_notified = 1;
+          }
+        }
+        if (GUEST_ORDER_STATUS == 'false') {
+          if ($this->info['is_guest_order'] == 1)  {
+            $message =
+              EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_number_string . "\n\n" .
+              EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($this->info['date_purchased']) . "\n\n" .
+              $notify_comments .
+              EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $ordersStatusLocalized) .
+              EMAIL_TEXT_STATUS_PLEASE_REPLY;
+            $html_msg['EMAIL_CUSTOMERS_NAME']    = $this->customer['name'];
+            $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_number_string;
+            $html_msg['INTRO_URL_TEXT']        = '';
+            $html_msg['INTRO_URL_VALUE']       = '';
+            $html_msg['EMAIL_TEXT_DATE_ORDERED'] = EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($this->info['date_purchased']);
+            $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($notify_comments);
+            $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace('\n','', EMAIL_TEXT_STATUS_UPDATED);
+            $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace('\n','', sprintf(EMAIL_TEXT_STATUS_LABEL, $ordersStatusLocalized));
+            $html_msg['EMAIL_TEXT_NEW_STATUS'] = $ordersStatusLocalized;
+            $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace('\n','', EMAIL_TEXT_STATUS_PLEASE_REPLY);
+
+            if ($paypal_txn != '') {
+              $message .= "\n\n" . ' PayPal Trans ID: ' . $result->fields['txn_id'];
+              $html_msg['EMAIL_PAYPAL_TRANSID'] = $result->fields['txn_id'];
+            }
+
+            zen_mail($this->customer['name'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . ' #' . $order_number_string, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
+            $customer_notified = 1;
+          }
+        }
+        if ($this->info['is_guest_order'] != 1)  {
+          $message =
+            EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_number_string . "\n\n" .
+            EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_number_string, 'SSL') . "\n\n" .
+            EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($this->info['date_purchased']) . "\n\n" .
+            $notify_comments .
+            EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $ordersStatusLocalized) .
+            EMAIL_TEXT_STATUS_PLEASE_REPLY;
+
+          $html_msg['EMAIL_CUSTOMERS_NAME']    = $this->customer['name'];
+          $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_number_string;
+          $html_msg['EMAIL_TEXT_INVOICE_URL']  = '<a href="' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $this->id, 'SSL') .'">'.str_replace(':','',EMAIL_TEXT_INVOICE_URL).'</a>';
+          $html_msg['EMAIL_TEXT_DATE_ORDERED'] = EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($this->info['date_purchased']);
+          $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($notify_comments);
+          $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace('\n','', EMAIL_TEXT_STATUS_UPDATED);
+          $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace('\n','', sprintf(EMAIL_TEXT_STATUS_LABEL, $ordersStatusLocalized));
+          $html_msg['EMAIL_TEXT_NEW_STATUS'] = $ordersStatusLocalized;
+          $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace('\n','', EMAIL_TEXT_STATUS_PLEASE_REPLY);
+
+          if ($paypal_txn != '') {
+            $message .= "\n\n" . ' PayPal Trans ID: ' . $result->fields['txn_id'];
+            $html_msg['EMAIL_PAYPAL_TRANSID'] = $result->fields['txn_id'];
+          }
+
+          zen_mail($this->customer['name'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . ' #' . $order_number_string, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
+          $customer_notified = 1;
+        }
+
+
+        //send extra emails
+        if (SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS == '1' and SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO != '') {
+          zen_mail('', SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . EMAIL_TEXT_SUBJECT . ' #' . $order_number_string, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra');
+        }
+      } elseif ($send_notify_email == -1) {
+        // hide comment
+        $customer_notified = -1;
+      }
+
+      $db->Execute("insert into " . TABLE_ORDERS_STATUS_HISTORY . "
+                  (orders_id, orders_status_id, date_added, customer_notified, comments)
+                  values ('" . (int)$this->id . "',
+                  '" . (int)$status . "',
+                  now(),
+                  '" . (int)$customer_notified . "',
+                  '" . zen_db_input($comments)  . "')");
+      $order_updated = true;
+    }
+
+    // re-enable any downloads, if status matches magic reset status
+    if ($order_updated && $status == DOWNLOADS_ORDERS_STATUS_UPDATED_VALUE) {
+      $this->reEnableAllDownloads();
+    }
+
+    // trigger any appropriate updates which should be sent back to the payment gateway:
+    if ($this->info['payment_module_code']) {
+      if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php')) {
+        require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php');
+        require_once(DIR_FS_CATALOG_LANGUAGES . $this->language['directory'] . '/modules/payment/' . $this->info['payment_module_code'] . '.php');
+        $module = new $this->info['payment_module_code'];
+        if (method_exists($module, '_doStatusUpdate')) {
+          $response = $module->_doStatusUpdate($this->id, $status, $comments, $customer_notified, $this->info['orders_status']);
+        }
+      }
+    }
+
+    zen_record_admin_activity('Order ' . $this->id . ' updated.', 'info');
+    $this->notify('ADMIN_ORDER_UPDATED', $this->id, $fields);
+    return $order_updated;
+  }
+
+  /**
+   * Delete the specified order from the database, optionally returning product counts back into inventory
+   */
+  public function delete_order($order_id, $restock = false) {
+    global $db;
+    $this->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $order_id, $restock);
+    if ($restock === true) {
+      $result = $db->Execute("select products_id, products_quantity
+                             from " . TABLE_ORDERS_PRODUCTS . "
+                             where orders_id = " . (int)$order_id);
+      foreach($result as $row)
+      {
+        $db->Execute("UPDATE " . TABLE_PRODUCTS . "
+                      SET products_quantity = products_quantity + " . $row['products_quantity'] . ", products_ordered = products_ordered - " . $row['products_quantity'] . " 
+                      WHERE products_id = " . (int)$row['products_id']);
+      }
+    }
+
+    $db->Execute("delete from " . TABLE_ORDERS . " where orders_id = " . (int)$order_id);
+    $db->Execute("delete from " . TABLE_ORDERS_TOTAL . " where orders_id = " . (int)$order_id);
+    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS . " where orders_id = " . (int)$order_id);
+    $db->Execute("delete from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = " . (int)$order_id);
+    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " where orders_id = " . (int)$order_id);
+    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " where orders_id = " . (int)$order_id);
+    $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . " where order_id = " . (int)$order_id . " and release_flag = 'N'");
+
+    zen_record_admin_activity('Deleted order ' . (int)$order_id . ' from database via admin console.', 'warning');
+  }
+
+  /**
+   * Purge inappropriately stored cvv data if found
+   * This shouldn't be needed, but is provided in case certain 3rd-party payment modules had done this
+   */
+  public function delete_cvv($order_id) 
+  {
+    global $db;
+    $db->Execute("update " . TABLE_ORDERS . " set cc_cvv = '" . TEXT_DELETE_CVV_REPLACEMENT . "' where orders_id = " . (int)$order_id);
+  }
+
+  /**
+   * Mask inappropriately stored cc data if found
+   * This shouldn't be needed, but is provided in case certain 3rd-party payment modules had done this
+   */
+  public function mask_cc($order_id)
+  {
+    global $db;
+    $result  = $db->Execute("select cc_number from " . TABLE_ORDERS . " where orders_id = " . (int)$order_id);
+    if ($result->EOF) return false;
+    $old_num = $result->fields['cc_number'];
+    $new_num = substr($old_num, 0, 4) . str_repeat('*', (strlen($old_num) - 8)) . substr($old_num, -4);
+    $db->Execute("update " . TABLE_ORDERS . " set cc_number = '" . $new_num . "' where orders_id = " . (int)$order_id);
+  }
+
+  public function doRefund($order_id = null)
+  {
+    if (!$order_id) $order_id = $this->id;
+    if (!$this->info['payment_module_code']) return;
+    if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php')) {
+      require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php');
+      require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $this->info['payment_module_code'] . '.php');
+      $module = new $this->info['payment_module_code'];
+      if (method_exists($module, '_doRefund')) {
+        $module->_doRefund($order_id);
+        $this->notify('ADMIN_ORDER_REFUNDED', $order_id);
+        zen_record_admin_activity('Order ' . $order_id . ' refund processed. See order comments for details.', 'info');
+      }
+    }
+  }
+
+  public function doAuth($order_id = null)
+  {
+    if (!$order_id) $order_id = $this->id;
+    if (!$this->info['payment_module_code']) return;
+    if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php')) {
+      require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php');
+      require_once(DIR_FS_CATALOG_LANGUAGES . $this->language['directory'] . '/modules/payment/' . $this->info['payment_module_code'] . '.php');
+      $module = new $this->info['payment_module_code'];
+      if (method_exists($module, '_doAuth')) {
+        $module->_doAuth($order_id, $this->info['total'], $this->info['currency']);
+        $this->notify('ADMIN_ORDER_PAYMENT_AUTH', $order_id, $this->info['total'], $this->info['currency']);
+        zen_record_admin_activity('Order ' . $order_id . ' auth processed. See order comments for details.', 'info');
+      }
+    }
+  }
+
+  public function doCapture($order_id = null)
+  {
+    if (!$order_id) $order_id = $this->id;
+    if (!$this->info['payment_module_code']) return;
+    if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php')) {
+      require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php');
+      require_once(DIR_FS_CATALOG_LANGUAGES . $this->language['directory'] . '/modules/payment/' . $this->info['payment_module_code'] . '.php');
+      $module = new $this->info['payment_module_code'];
+      if (method_exists($module, '_doCapt')) {
+        $module->_doCapt($order_id, 'Complete', $this->info['total'], $this->info['currency']);
+        $this->notify('ADMIN_ORDER_PAYMENT_CAPTURE', $order_id, $this->info['total'], $this->info['currency']);
+        zen_record_admin_activity('Order ' . $order_id . ' capture processed. See order comments for details.', 'info');
+      }
+    }
+  }
+
+  public function doVoid($order_id = null)
+  {
+    if (!$order_id) $order_id = $this->id;
+    if (!$this->info['payment_module_code']) return;
+    if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php')) {
+      require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php');
+      require_once(DIR_FS_CATALOG_LANGUAGES . $this->language['directory'] . '/modules/payment/' . $this->info['payment_module_code'] . '.php');
+      $module = new $this->info['payment_module_code'];
+      if (method_exists($module, '_doVoid')) {
+        $module->_doVoid($order_id);
+        $this->notify('ADMIN_ORDER_PAYMENT_VOID', $order_id);
+        zen_record_admin_activity('Order ' . $order_id . ' void processed. See order comments for details.', 'info');
+      }
+    }
+  }
+
+  public function doGetPaymentDetailsFromGateway($order_id = null)
+  {
+    if (!$order_id) $order_id = $this->id;
+    if (!$this->info['payment_module_code']) return;
+    // @TODO
+  }
+
+  /**
+   * Build order search query, mainly used in Admin order-search screen
+   */
+  public function build_search_query($keywords = null, $products_search_string = null, $customer_id = null, $status = null, $sort_order = 'desc')
+  {
+    global $db, $zco_notifier;
+    $search = '';
+    $new_table = '';
+    $new_fields = '';
+    $search_distinct = '';
+
+    // Only one or the other search
+    
+    // create search_orders_products filter
+    if (isset($products_search_string) && zen_not_null($products_search_string)) {
+      $keywords = $db->prepare_input($products_search_string);
+      $search_distinct = ' distinct ';
+      $new_table = " left join " . TABLE_ORDERS_PRODUCTS . " op on (op.orders_id = o.orders_id) ";
+      $search = " and (op.products_model like '%" . $keywords . "%' or op.products_name like '" . $keywords . "%')";
+      if (substr(strtoupper($products_search_string), 0, 3) == 'ID:') {
+        $keywords = trim(substr($products_search_string, 3));
+        $search = " and op.products_id = '" . (int)$keywords . "'";
+      }
+    } else {
+      // create search filter
+      if (isset($keywords) && zen_not_null($keywords)) {
+        $keywords = $db->prepare_input($keywords);
+        $search_distinct = ' ';
+        $search = " and (o.customers_city like '%" . $keywords . "%' or o.customers_postcode like '%" . $keywords . "%' or o.date_purchased like '%" . $keywords . "%' or o.billing_name like '%" . $keywords . "%' or o.billing_company like '%" . $keywords . "%' or o.billing_street_address like '%" . $keywords . "%' or o.delivery_city like '%" . $keywords . "%' or o.delivery_postcode like '%" . $keywords . "%' or o.delivery_name like '%" . $keywords . "%' or o.delivery_company like '%" . $keywords . "%' or o.delivery_street_address like '%" . $keywords . "%' or o.billing_city like '%" . $keywords . "%' or o.billing_postcode like '%" . $keywords . "%' or o.customers_email_address like '%" . $keywords . "%' or o.customers_name like '%" . $keywords . "%' or o.customers_company like '%" . $keywords . "%' or o.customers_street_address  like '%" . $keywords . "%' or o.customers_telephone like '%" . $keywords . "%' or o.ip_address  like '%" . $keywords . "%')";
+        $new_table = '';
+      }
+    } // eof: search orders or orders_products
+
+    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address, o.language_code ";
+
+
+    $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
+                          $new_fields . "
+                          from (" . TABLE_ORDERS . " o " .
+                          $new_table . ")
+                          left join " . TABLE_ORDERS_STATUS . " s on (o.orders_status = s.orders_status_id and s.language_id = " . (int)$_SESSION['languages_id'] . ")
+                          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
+
+    if (isset($customer_id)) {
+      $orders_query_raw .= " WHERE o.customers_id = " . (int)$customer_id;
+
+    } elseif ($status) {
+      $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status . $search;
+
+    } else {
+      $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search) : '';
+    }
+
+    if ($sort_order == 'desc') {
+      $orders_query_raw .= " order by o.orders_id DESC";
+    }
+
+    $zco_notifier->notify('NOTIFY_BUILD_ORDER_SEARCH_QUERY_RAW', [], $orders_query_raw);
+    return $orders_query_raw;
+  }
+
 
 }
