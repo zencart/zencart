@@ -137,7 +137,7 @@ class Languages extends AbstractLeadController
                 )
             ),
             array(
-                'table' => TABLE_RECORD_ARTISTS_INFO,
+                'table' => TABLE_ARTISTS_INFO,
                 'languageKeyField' => 'languages_id',
                 'orderBy' => 'artists_id',
                 'fields' => array(
@@ -146,12 +146,12 @@ class Languages extends AbstractLeadController
                 )
             ),
             array(
-                'table' => TABLE_RECORD_COMPANY_INFO,
+                'table' => TABLE_AGENCY_INFO,
                 'languageKeyField' => 'languages_id',
-                'orderBy' => 'record_company_id',
+                'orderBy' => 'agency_id',
                 'fields' => array(
-                    'record_company_id' => 'integer',
-                    'record_company_url' => 'string',
+                    'agency_id' => 'integer',
+                    'agency_url' => 'string',
                 )
             ),
             array(

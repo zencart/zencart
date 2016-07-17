@@ -131,12 +131,12 @@ class testSundryCartOrders extends zcCommonTestResources
     // $this->switchSplitTaxMode('off');
     // }
 // 
-    // public function testAddToCartMusicTypeWithoutRedirect()
+    // public function testAddToCartPieceTypeWithoutRedirect()
     // {
     // $this->switchAddToCartRedirect('false');
     // $this->open('http://' . BASE_URL . 'index.php?main_page=shopping_cart&action=empty_cart');
     // $this->waitForPageToLoad(10000);
-    // $this->open('http://' . BASE_URL . 'index.php?main_page=product_music_info&cPath=62&products_id=166');
+    // $this->open('http://' . BASE_URL . 'index.php?main_page=product_piece_info&cPath=62&products_id=166');
     // $this->waitForPageToLoad(10000);
     // $this->type('css=input[name=cart_quantity]', '1');
     // $this->clickAndWait('css=input[type=image]');

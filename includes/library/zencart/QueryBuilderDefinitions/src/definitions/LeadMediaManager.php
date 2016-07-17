@@ -46,20 +46,20 @@ class LeadMediaManager extends AbstractLeadDefinition
         );
 
         $this->outputLayout = array(
-//            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerMusicGenre.php',
+//            'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandlerPieceStyle.php',
             'allowDelete' => true,
             'relatedLinks' => array(
                 array(
-                    'text' => BOX_CATALOG_RECORD_ARTISTS,
-                    'href' => zen_href_link(FILENAME_RECORD_ARTISTS)
+                    'text' => BOX_CATALOG_ARTISTS,
+                    'href' => zen_href_link(FILENAME_ARTISTS)
                 ),
                 array(
-                    'text' => BOX_CATALOG_RECORD_COMPANY,
-                    'href' => zen_href_link(FILENAME_RECORD_COMPANY)
+                    'text' => BOX_CATALOG_AGENCY,
+                    'href' => zen_href_link(FILENAME_AGENCY)
                 ),
                 array(
-                    'text' => BOX_CATALOG_MUSIC_GENRE,
-                    'href' => zen_href_link(FILENAME_MUSIC_GENRE)
+                    'text' => BOX_CATALOG_PIECE_STYLE,
+                    'href' => zen_href_link(FILENAME_PIECE_STYLE)
                 ),
                 array(
                     'text' => BOX_CATALOG_MEDIA_TYPES,

@@ -7,7 +7,7 @@
 namespace ZenCart\Controllers;
 
 /**
- * Class MusicGenre
+ * Class PieceStyle
  * @package ZenCart\Controllers
  */
 class MediaManagerClips extends AbstractLeadController
