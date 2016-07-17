@@ -12,5 +12,6 @@
 </div>
 <div id="progress-bar-container" class="modal-body">
 <div id="progress-bar" class="progress"></div>
+<div id="error-message"></div>
 </div>
 </div>
