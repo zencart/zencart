@@ -260,13 +260,13 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
 #
 # Set up default widgets
 #
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme) VALUES
-('general-statistics', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient'),
-('order-summary', 'order-statistics', 1, 'fa-shopping-cart', 'bg-light-blue-gradient'),
-('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient'),
-('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient'),
-('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient'),
-('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient')
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
+('order-summary', 'order-statistics', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1,1),
+('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
+('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1,1)
 ;
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
@@ -287,7 +287,7 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('logs', 1, 'LOGS_GROUP')
 ;
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'BANNER_STATISTICS', '', 1);
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS_GROUP');
 
@@ -295,18 +295,18 @@ INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_i
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY', '', 1);
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whos-online', 1, 'WHOSONLINE_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1);
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', '', 1);
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('counter-history-graph', 1, 'COUNTER_HISTORY_GRAPH_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 1, 1);
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT', '', 1);
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('sales-graph-report', 1, 'SALES_GRAPH_REPORT_GROUP');
 
 
 # default widgets for first user
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme, widget_height, widget_width) VALUES
-('general-statistics', 1, 0, 0, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1),
+('general-statistics', 1, 0, 0, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
 ('order-summary', 1, 1, 0, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
 ('new-customers', 1, 0, 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
 ('counter-history', 1, 1, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
