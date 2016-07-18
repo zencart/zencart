@@ -229,11 +229,9 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                   where products_id = '" . (int)$product_id . "'");
 
-
     $product_reviews = $db->Execute("select reviews_id
                                      from " . TABLE_REVIEWS . "
                                      where products_id = '" . (int)$product_id . "'");
-
     while (!$product_reviews->EOF) {
       $db->Execute("delete from " . TABLE_REVIEWS_DESCRIPTION . "
                     where reviews_id = '" . (int)$product_reviews->fields['reviews_id'] . "'");
@@ -268,44 +266,6 @@ while (!$chk_sale_categories_all->EOF) {
       $remove_downloads->MoveNext();
     }
   }
-
-  function zen_remove_order($order_id, $restock = false) {
-    global $db, $zco_notifier;
-    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $order_id, $restock);
-    if ($restock == 'on') {
-      $order = $db->Execute("select products_id, products_quantity
-                             from " . TABLE_ORDERS_PRODUCTS . "
-                             where orders_id = '" . (int)$order_id . "'");
-
-      while (!$order->EOF) {
-        $db->Execute("update " . TABLE_PRODUCTS . "
-                      set products_quantity = products_quantity + " . $order->fields['products_quantity'] . ", products_ordered = products_ordered - " . $order->fields['products_quantity'] . " where products_id = '" . (int)$order->fields['products_id'] . "'");
-        $order->MoveNext();
-      }
-    }
-
-    $db->Execute("delete from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
-    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS . "
-                  where orders_id = '" . (int)$order_id . "'");
-
-    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                  where orders_id = '" . (int)$order_id . "'");
-
-    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
-                  where orders_id = '" . (int)$order_id . "'");
-
-    $db->Execute("delete from " . TABLE_ORDERS_STATUS_HISTORY . "
-                  where orders_id = '" . (int)$order_id . "'");
-
-    $db->Execute("delete from " . TABLE_ORDERS_TOTAL . "
-                  where orders_id = '" . (int)$order_id . "'");
-
-    $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
-                  where order_id = '" . (int)$order_id . "' and release_flag = 'N'");
-
-    zen_record_admin_activity('Deleted order ' . (int)$order_id . ' from database via admin console.', 'warning');
-  }
-
 
 ////
 // Sets the status of a product
