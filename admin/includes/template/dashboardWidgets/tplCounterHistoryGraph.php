@@ -8,7 +8,7 @@
  * @version $Id: $
  */
 ?>
-<div id="counterHistoryGraph"></div>
+<div id="counterHistoryGraph" style="height:150px"></div>
 
 <!--Load the AJAX API FOR GOOGLE GRAPHS, without double-loading in case another widget has already loaded it -->
 <script type="text/javascript">window.google || document.write(unescape('%3Cscript type="text/javascript" src="https://www.google.com/jsapi"%3E%3C/script%3E'));</script>

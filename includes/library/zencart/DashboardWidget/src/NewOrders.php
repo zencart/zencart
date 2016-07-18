@@ -3,7 +3,7 @@
  * NewOrders Dashboard Widget
  *
  * @package classes
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  $
  */
@@ -24,7 +24,11 @@ class NewOrders extends AbstractWidget
   {
     global $db;
     $tplVars = array();
-    $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') order by orders_id DESC limit 5");
+    $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total 
+         from " . TABLE_ORDERS . " o 
+         left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') 
+         order by orders_id DESC 
+         limit 15");
 
     while (!$orders->EOF) {
       $name = $orders->fields['customers_name'];
