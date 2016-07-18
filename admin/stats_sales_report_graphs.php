@@ -179,11 +179,11 @@ require('includes/admin_html_head.php');
                             <tr>
                                 <td align="right" class="menuBoxHeading">
                                     <?php
-                                    echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', 'report=1' . $sales_report_filter_link) . '">' . 'Hourly' . '</a> | ';
-                                    echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', 'report=2' . $sales_report_filter_link) . '">' . 'Daily' . '</a> | ';
-                                    echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', 'report=3' . $sales_report_filter_link) . '">' . 'Weekly' . '</a> | ';
-                                    echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', 'report=4' . $sales_report_filter_link) . '">' . 'Monthly' . '</a> | ';
-                                    echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', 'report=5' . $sales_report_filter_link) . '">' . 'Yearly' . '</a>';
+                                    echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', 'report=1' . $sales_report_filter_link) . '">' . 'Hourly' . '</a> | ';
+                                    echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', 'report=2' . $sales_report_filter_link) . '">' . 'Daily' . '</a> | ';
+                                    echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', 'report=3' . $sales_report_filter_link) . '">' . 'Weekly' . '</a> | ';
+                                    echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', 'report=4' . $sales_report_filter_link) . '">' . 'Monthly' . '</a> | ';
+                                    echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', 'report=5' . $sales_report_filter_link) . '">' . 'Yearly' . '</a>';
                                     ?>
                                 </td>
                             </tr>
@@ -225,7 +225,7 @@ require('includes/admin_html_head.php');
                                                 <td class="dataTableContent">
                                                     <?php
                                                     if (strlen($report->info[$i]['link']) > 0) {
-                                                        echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', $report->info[$i]['link']) . '">';
+                                                        echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', $report->info[$i]['link']) . '">';
                                                     }
                                                     echo $report->info[$i]['text'];
                                                     if (strlen($report->info[$i]['link']) > 0) {
@@ -258,14 +258,14 @@ require('includes/admin_html_head.php');
                                                             <td align="left">
                                                                 <?php
                                                                 if (strlen($report->previous) > 0) {
-                                                                    echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', $report->previous, 'NONSSL') . '">&lt;&lt;&nbsp;Previous</a>';
+                                                                    echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', $report->previous) . '">&lt;&lt;&nbsp;Previous</a>';
                                                                 }
                                                                 ?>
                                                             </td>
                                                             <td align="right">
                                                                 <?php
                                                                 if (strlen($report->next) > 0) {
-                                                                    echo '<a href="' . zen_href_link('stats_sales_report_graphs.php', $report->next, 'NONSSL') . '">Next&nbsp;&gt;&gt;</a>';
+                                                                    echo '<a href="' . zen_admin_href_link('stats_sales_report_graphs.php', $report->next) . '">Next&nbsp;&gt;&gt;</a>';
                                                                     echo "";
                                                                 }
                                                                 ?>
@@ -318,7 +318,7 @@ require('includes/admin_html_head.php');
                                                 <?php
                                                 if (substr($sales_report_filter, $i, 1) == "0") {
                                                     $tmp = substr($sales_report_filter, 0, $i) . "1" . substr($sales_report_filter, $i + 1, $report->status_available_size - ($i + 1));
-                                                    $tmp = zen_href_link('stats_sales_report_graphs.php', $report->filter_link . "&filter=" . $tmp, 'NONSSL');
+                                                    $tmp = zen_admin_href_link('stats_sales_report_graphs.php', $report->filter_link . "&filter=" . $tmp);
                                                     ?>
                                                     <td class="dataTableContent" width="100%" align="right">
                                                         <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?>&nbsp;
@@ -326,7 +326,7 @@ require('includes/admin_html_head.php');
                                                     <?php
                                                 } else {
                                                     $tmp = substr($sales_report_filter, 0, $i) . "0" . substr($sales_report_filter, $i + 1);
-                                                    $tmp = zen_href_link('stats_sales_report_graphs.php', $report->filter_link . "&filter=" . $tmp, 'NONSSL');
+                                                    $tmp = zen_admin_href_link('stats_sales_report_graphs.php', $report->filter_link . "&filter=" . $tmp);
                                                     ?>
                                                     <td class="dataTableContent" width="100%" align="right">
                                                         <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?></a>

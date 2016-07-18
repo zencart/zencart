@@ -26,7 +26,7 @@
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($pages as $page) { ?>
-                                <li><a href="<?php echo zen_href_link($page['file'],
+                                <li><a href="<?php echo zen_admin_href_link($page['file'],
                                         $page['params']) ?>"><?php echo $page['name'] ?></a></li>
                             <?php } ?>
                         </ul>
