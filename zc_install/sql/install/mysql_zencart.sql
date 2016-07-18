@@ -46,7 +46,7 @@ CREATE TABLE upgrade_exceptions (
 DROP TABLE IF EXISTS address_book;
 CREATE TABLE address_book (
   address_book_id int(11) NOT NULL auto_increment,
-  customers_id int(11) NOT NULL default '0' --TEMPORARY, removed comma to force sql error
+  customers_id int(11) NOT NULL default '0',
   entry_gender char(1) NOT NULL default '',
   entry_company varchar(64) default NULL,
   entry_firstname varchar(32) NOT NULL default '',
