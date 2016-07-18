@@ -70,9 +70,9 @@ class Process extends AbstractFlowStep
         $this->notify('NOTIFY_CHECKOUT_SLAMMING_ALERT');
         if ($this->session->get('payment_attempt') > 3) {
             $this->notify('NOTIFY_CHECKOUT_SLAMMING_LOCKOUT');
-            $$this->session->get('cart')->reset(true);
+            $this->session->get('cart')->reset(true);
             zen_session_destroy();
-            throw new CheckoutRedirectException(array('redirect' => zen_href_link(FILENAME_TIMEOUT)));
+            throw new CheckoutRedirectException(array('redirect' => zen_href_link(FILENAME_TIME_OUT)));
         }
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_CREDIT_CARD_SLAMMING_END');
     }
