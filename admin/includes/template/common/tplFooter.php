@@ -8,7 +8,7 @@
  * @version GIT: $Id: $
  */
 ?>
-<footer class="small-12 columns small-centered">
+<footer>
     <!-- The following copyright announcement is in compliance
     to section 2c of the GNU General Public License, and
     thus can not be removed, or can only be modified
