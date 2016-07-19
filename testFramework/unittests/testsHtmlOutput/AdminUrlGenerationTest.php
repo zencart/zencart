@@ -37,7 +37,7 @@ class testAdminUrlGeneration extends zcTestCase
         $this->assertTrue(function_exists('zen_catalog_href_link'), 'zen_catalog_href_link() did not exist');
         $reflect = new ReflectionFunction('zen_catalog_href_link');
         $this->assertEquals(6, $reflect->getNumberOfParameters());
-        $params = array('page', 'parameters', 'connection', 'add_session_id');
+        $params = array('page', 'parameters', 'connection', 'search_engine_safe', 'static', 'use_dir_ws_catalog');
         foreach ($reflect->getParameters() as $param) {
             $this->assertTrue(in_array($param->getName(), $params));
         }
