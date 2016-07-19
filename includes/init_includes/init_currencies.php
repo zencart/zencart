@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_currencies.php  Modified in v1.5.5a $
+ * @version $Id: init_currencies.php  Modified in v1.6.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -17,14 +17,13 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (!isset($_SESSION['currency']) && !isset($_GET['currency']) ) $_SESSION['currency'] = (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
 
 // Validate selected new currency, if any. Is false if valid not found.
-$new_currency = (isset($_GET['currency'])) ? zen_currency_exists($_GET['currency']) : zen_currency_exists($_SESSION['currency']);
+$new_currency = (isset($_GET['currency'])) ? $currencies->isset($_GET['currency']) : $currencies->isset($_SESSION['currency']);
 
 // Validate language-currency and default-currency if relevant. Is false if valid not found.
-if ($new_currency == false || isset($_GET['language'])) $new_currency = (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') ? zen_currency_exists(LANGUAGE_CURRENCY) : $new_currency;
+if ($new_currency == false || isset($_GET['language'])) $new_currency = (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') ? $currencies->isset(LANGUAGE_CURRENCY) : $new_currency;
 
-// Final check -- if selected currency is bad and the "default" is bad, default to the first-found currency in order of exch rate.
-if ($new_currency == false) $new_currency = zen_currency_exists(DEFAULT_CURRENCY, true);
-//echo '<br />NEW = ' . $new_currency . '<br />';
+// Final check -- if selected currency is bad use the default
+if ($new_currency == false) $new_currency = $currencies->isset(DEFAULT_CURRENCY);
 
 // Now apply currency update
 if (

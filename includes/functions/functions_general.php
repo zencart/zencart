@@ -9,9 +9,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: zcwilt  Fri Apr 22 22:16:43 2015 +0000 Modified in v1.5.5 $
  */
-if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
-}
 /**
  * Stop from parsing any further PHP code
 */
@@ -22,8 +19,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Redirect to another page or site
- * @param string The url to redirect to
-*/
+ *
+ * @param string $url url to redirect to
+ * @param string $httpResponseCode
+ */
   function zen_redirect($url, $httpResponseCode = '') {
     global $request_type;
     // Are we loading an SSL page?
@@ -55,24 +54,28 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Parse the data used in the html tags to ensure the tags will not break.
  * Basically just an extension to the php strtr function
- * @param string The string to be parsed
- * @param string The needle to find
-*/
-  function zen_parse_input_field_data($data, $parse) {
+ *
+ * @param string $data string to be parsed
+ * @param array $parse needle to find
+ * @return string
+ */
+  function zen_parse_input_field_data($data, array $parse) {
     return strtr(trim($data), $parse);
   }
 
 /**
  * Returns a string with conversions for security.
- * @param string The string to be parsed
- * @param string contains a string to be translated, otherwise just quote is translated
- * @param boolean Do we run htmlspecialchars over the string
-*/
+ *
+ * @param string $string string to be parsed
+ * @param array|false $translate contains a string to be translated, otherwise just quote is translated
+ * @param boolean $protected Do we run htmlspecialchars over the string
+ * @return string
+ */
   function zen_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
       return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
     } else {
-      if ($translate == false) {
+      if ($translate === false) {
         return zen_parse_input_field_data($string, array('"' => '&quot;'));
       } else {
         return zen_parse_input_field_data($string, $translate);
@@ -87,8 +90,9 @@ if (!defined('IS_ADMIN_FLAG')) {
  * with parameters that run htmlspecialchars over the string
  * and converts quotes to html entities
  *
- * @param string The string to be parsed
-*/
+ * @param string $string string to be parsed
+ * @return string
+ */
   function zen_output_string_protected($string) {
     return zen_output_string($string, false, true);
   }
@@ -96,8 +100,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Returns a string with conversions for security.
  *
- * @param string The string to be parsed
-*/
+ * @param string $string string to be parsed
+ * @return mixed
+ */
 
   function zen_sanitize_string($string) {
     $string = preg_replace('/ +/', ' ', $string);
@@ -108,10 +113,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Break a word in a string if it is longer than a specified length ($len)
  *
- * @param string The string to be broken up
- * @param int The maximum length allowed
- * @param string The character to use at the end of the broken line
-*/
+ * @param string $string string to be broken up
+ * @param int $len maximum length allowed
+ * @param string $break_char character to use at the end of the broken line
+ * @return string
+ */
   function zen_break_string($string, $len, $break_char = '-') {
     $l = 0;
     $output = '';
@@ -137,9 +143,10 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * The return is a urlencoded string
  *
- * @param mixed either a single or array of parameter names to be excluded from output
-*/
-  function zen_get_all_get_params($exclude_array = array(), $search_engine_safe = true) {
+ * @param mixed $exclude_array either a single or array of parameter names to be excluded from output
+ * @return mixed|string
+ */
+  function zen_get_all_get_params($exclude_array = array()) {
     if (!is_array($exclude_array)) $exclude_array = array();
     $exclude_array = array_merge($exclude_array, array('main_page', 'cmd', 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
     if (function_exists('zen_session_name')) {
@@ -170,8 +177,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 /**
  * Return all GET params as (usually hidden) POST params
- * @param array $exclude_array
- * @param boolean $hidden
+ * @param array $exclude_array parameters to exclude
+ * @param boolean $hidden post as hidden
  * @return string
  */
   function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
@@ -207,6 +214,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Returns details about the visitor's browser: pass the string you want to detect and this will return true/false
+ *
+ * @param string $component feature to report
+ * @return string
  */
   function zen_browser_detect($component) {
     return stristr($_SERVER['HTTP_USER_AGENT'], $component);
@@ -215,6 +225,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 ////
 // Wrapper function for round()
+/**
+ * @param float $value
+ * @param int $precision
+ * @return float
+ */
   function zen_round($value, $precision) {
     $value =  round($value *pow(10,$precision),0);
     $value = $value/pow(10,$precision);
@@ -222,8 +237,11 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 
-////
-// default filler is a 0 or pass filler to be used
+/**
+ * @param float $number
+ * @param string $filler  default filler is a 0
+ * @return string
+ */
   function zen_row_number_format($number, $filler='0') {
     if ( ($number < 10) && (substr($number, 0, 1) != '0') ) $number = $filler . $number;
 
@@ -231,8 +249,11 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
+/**
+ * Output a long raw date string in the active locale date format
+ * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
+ * @return bool|string
+ */
   function zen_date_long($raw_date) {
     if ($raw_date <= '0001-01-01 00:00:00' || $raw_date == '') return false;
 
@@ -249,10 +270,13 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 
-////
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
-// NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
+/**
+ * Output a short raw date string in the active locale date format
+ * NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
+ *
+ * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
+ * @return bool|string
+ */
   function zen_date_short($raw_date) {
     if ($raw_date <= '0001-01-01 00:00:00' || empty($raw_date)) return false;
 
@@ -263,7 +287,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-// error on 1969 only allows for leap year
+    // error on 1969 only allows for leap year
     if ($year != 1969 && @date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
       return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
     } else {
@@ -271,6 +295,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
   }
 
+/**
+ * @param string $raw_datetime
+ * @return bool|string
+ */
   function zen_datetime_short($raw_datetime) {
     if ($raw_datetime <= '0001-01-01 00:00:00' || $raw_datetime == '') return false;
 
@@ -285,6 +313,13 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 
+/**
+ * Format date
+ * @param string $date
+ * @param string $formatOut mysql|raw|raw-reverse
+ * @param mixed $formatIn default is DATE_FORMAT_DATEPICKER_ADMIN
+ * @return string
+ */
 function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMAT_DATEPICKER_ADMIN)
 {
   if ($date == 'null' || $date == '') return $date;
@@ -313,6 +348,9 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMA
 /**
  * Get number of minutes since $foo
  * Primarily used for Whos-Online display of "time since last click"
+ *
+ * @param int $timestamp
+ * @return string
  */
 function zen_get_minutes_since($timestamp) {
   $the_seconds = (time() - $timestamp);
@@ -321,8 +359,12 @@ function zen_get_minutes_since($timestamp) {
 }
 
 
-////
-// Parse search string into individual objects
+/**
+ * Parse search string into individual objects
+ * @param string $search_str
+ * @param $objects - this array is passed by reference, and will be updated by this function
+ * @return bool
+ */
   function zen_parse_search_string($search_str = '', &$objects) {
     $search_str = trim(strtolower($search_str));
 
@@ -358,7 +400,7 @@ function zen_get_minutes_since($timestamp) {
       if ( (substr($pieces[$k], -1) != '"') && (substr($pieces[$k], 0, 1) != '"') ) {
         $objects[] = trim($pieces[$k]);
 
-        for ($j=0; $j<count($post_objects); $j++) {
+        for ($j=0, $n=count($post_objects); $j<$n; $j++) {
           $objects[] = $post_objects[$j];
         }
       } else {
@@ -377,7 +419,7 @@ function zen_get_minutes_since($timestamp) {
 
           $objects[] = trim($pieces[$k]);
 
-          for ($j=0; $j<count($post_objects); $j++) {
+          for ($j=0, $n=count($post_objects); $j<$n; $j++) {
             $objects[] = $post_objects[$j];
           }
 
@@ -423,7 +465,7 @@ function zen_get_minutes_since($timestamp) {
 // Push the $tmpstring onto the array of stuff to search for
             $objects[] = trim($tmpstring);
 
-            for ($j=0; $j<count($post_objects); $j++) {
+            for ($j=0, $n=count($post_objects); $j<$n; $j++) {
               $objects[] = $post_objects[$j];
             }
 
@@ -473,8 +515,13 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-////
-// Check date
+/**
+ * Check date
+ * @param string $date_to_check
+ * @param string $format_string
+ * @param string $date_array returned by reference
+ * @return bool
+ */
   function zen_checkdate($date_to_check, $format_string, &$date_array) {
     $separator_idx = -1;
 
@@ -579,8 +626,11 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-////
-// Check if year is a leap year
+/**
+ * Check if year is a leap year
+ * @param int $year
+ * @return bool
+ */
   function zen_is_leap_year($year) {
     if ($year % 100 == 0) {
       if ($year % 400 == 0) return true;
@@ -591,8 +641,13 @@ function zen_get_minutes_since($timestamp) {
     return false;
   }
 
-////
-// Return table heading with sorting capabilities
+/**
+ * Return table heading with sorting capabilities
+ * @param string $sortby
+ * @param string $colnum
+ * @param string $heading
+ * @return string
+ */
   function zen_create_sort_heading($sortby, $colnum, $heading) {
     $sort_prefix = '';
     $sort_suffix = '';
@@ -605,44 +660,50 @@ function zen_get_minutes_since($timestamp) {
     return $sort_prefix . $heading . $sort_suffix;
   }
 
-////
-// Return a product ID with attributes
-  function zen_get_uprid($prid, $params) {
-//print_r($params);
-    $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, ':')) ) {
-      while (list($option, $value) = each($params)) {
-        if (is_array($value)) {
-          while (list($opt, $val) = each($value)) {
-            $uprid = $uprid . '{' . $option . '}' . trim($opt);
-          }
-        } else {
-        //CLR 030714 Add processing around $value. This is needed for text attributes.
-            $uprid = $uprid . '{' . $option . '}' . trim($value);
-        }
-      }      //CLR 030228 Add else stmt to process product ids passed in by other routines.
-      $md_uprid = '';
 
-      $md_uprid = md5($uprid);
-      return $prid . ':' . $md_uprid;
-    } else {
-      return $prid;
+/**
+ * Return a product ID with attributes hash
+ * @param string|int $prid
+ * @param array $params
+ * @return string
+ */
+  function zen_get_uprid($prid, $params) {
+    $uprid = $prid;
+    if ( !is_array($params) || strstr($prid, ':')) return $prid;
+
+    while (list($option, $value) = each($params)) {
+      if (is_array($value)) {
+        while (list($opt, $val) = each($value)) {
+          $uprid = $uprid . '{' . $option . '}' . trim($opt);
+        }
+      } else {
+        $uprid = $uprid . '{' . $option . '}' . trim($value);
+      }
     }
+
+    $md_uprid = md5($uprid);
+    return $prid . ':' . $md_uprid;
   }
 
 
-////
-// Return a product ID from a product ID with attributes
+/**
+ * Return a product ID from a product ID with attributes
+ * Alternate: simply (int) the product id
+ * @param string $uprid   ie: '11:abcdef12345'
+ * @return mixed
+ */
   function zen_get_prid($uprid) {
     $pieces = explode(':', $uprid);
-
     return $pieces[0];
   }
 
 
-
-////
-// Get the number of times a word/character is present in a string
+/**
+ * Get the number of times a word/character is present in a string
+ * @param string $string
+ * @param string $needle
+ * @return int
+ */
   function zen_word_count($string, $needle) {
     $temp_array = preg_split('/'.$needle.'/', $string);
 
@@ -650,7 +711,12 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-////
+/**
+ * Provide a count of the number of modules listed in the constant/string that is passed in (a value that is cached from the admin)
+ * This is used to determine whether any payment/shipping/ot modules are enabled, which affects display on checkout etc
+ * @param string $modules  Usually a constant which contains a cached value that the Admin UI updates automatically
+ * @return int
+ */
   function zen_count_modules($modules = '') {
     $count = 0;
 
@@ -667,21 +733,34 @@ function zen_get_minutes_since($timestamp) {
         }
       }
     }
-
     return $count;
   }
 
-////
+/**
+ * Helper function to zen_count_modules
+ * @return int
+ */
   function zen_count_payment_modules() {
     return zen_count_modules(MODULE_PAYMENT_INSTALLED);
   }
 
-////
+/**
+ * Helper function to zen_count_modules
+ * @return int
+ */
   function zen_count_shipping_modules() {
     return zen_count_modules(MODULE_SHIPPING_INSTALLED);
   }
 
-////
+
+/**
+ * Convert array to string
+ * @param array $array
+ * @param string $exclude
+ * @param string $equals
+ * @param string $separator
+ * @return string
+ */
   function zen_array_to_string($array, $exclude = '', $equals = '=', $separator = '&') {
     if (!is_array($exclude)) $exclude = array();
     if (!is_array($array)) $array = array();
@@ -700,7 +779,11 @@ function zen_get_minutes_since($timestamp) {
     return $get_string;
   }
 
-////
+/**
+ * Determine whether the passed string/array is "not empty/0/NULL"
+ * @param $value
+ * @return bool
+ */
   function zen_not_null($value) {
     if (is_array($value)) {
       if (sizeof($value) > 0) {
@@ -723,38 +806,20 @@ function zen_get_minutes_since($timestamp) {
     }
   }
 
-
-////
-// Checks to see if the currency code exists as a currency
-// TABLES: currencies
-  function zen_currency_exists($code, $getFirstDefault = false) {
-    global $db;
-    $code = zen_db_prepare_input($code);
-
-    $currency_code = "select code
-                      from " . TABLE_CURRENCIES . "
-                      where code = '" . zen_db_input($code) . "' LIMIT 1";
-
-    $currency_first = "select code
-                      from " . TABLE_CURRENCIES . "
-                      order by value ASC LIMIT 1";
-
-    $currency = $db->Execute(($getFirstDefault == false) ? $currency_code : $currency_first);
-
-    if ($currency->RecordCount()) {
-      return strtoupper($currency->fields['code']);
-    } else {
-      return false;
-    }
-  }
-
-////
+/**
+ * @param string $string
+ * @return int
+ */
   function zen_string_to_int($string) {
     return (int)$string;
   }
 
 /**
  * Return a random value
+ *
+ * @param int $min
+ * @param int $max
+ * @return int|null
  */
   function zen_rand($min = null, $max = null) {
     static $seeded;
@@ -775,13 +840,16 @@ function zen_get_minutes_since($timestamp) {
     }
   }
 
-////
+/**
+ * Extract the TLD from the specified URL
+ * @param string $url
+ * @return bool|mixed|string
+ */
   function zen_get_top_level_domain($url) {
     if (strpos($url, '://')) {
       $url = parse_url($url);
       $url = $url['host'];
     }
-
     $domain_array = explode('.', $url);
     $domain_size = sizeof($domain_array);
     if ($domain_size > 1) {
@@ -801,7 +869,15 @@ function zen_get_minutes_since($timestamp) {
     }
   }
 
-////
+/**
+ * Alias to setcookie() but with reasonable defaults
+ * @param string $name cookie name
+ * @param string $value
+ * @param int $expire
+ * @param string $path
+ * @param string $domain
+ * @param int $secure flag
+ */
   function zen_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = 0) {
     setcookie($name, $value, $expire, $path, $domain, $secure);
   }
@@ -856,22 +932,23 @@ function zen_get_minutes_since($timestamp) {
     return $ip;
   }
 
-  function zen_convert_linefeeds($from, $to, $string) {
-    return str_replace($from, $to, $string);
-  }
-
-
-////
+/**
+ * Determine the specified product+coupon combo has any restrictions associated
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool
+ * @TODO - rename this function for more logical meaning such as including "coupon" and "restrictions"
+ */
   function is_product_valid($product_id, $coupon_id) {
     global $db;
     $coupons_query = "SELECT * FROM " . TABLE_COUPON_RESTRICT . "
-                      WHERE coupon_id = '" . (int)$coupon_id . "'
+                      WHERE coupon_id = " . (int)$coupon_id . "
                       ORDER BY coupon_restrict ASC";
 
     $coupons = $db->Execute($coupons_query);
 
     $product_query = "SELECT products_model FROM " . TABLE_PRODUCTS . "
-                      WHERE products_id = '" . (int)$product_id . "'";
+                      WHERE products_id = " . (int)$product_id;
 
     $product = $db->Execute($product_query);
 
@@ -913,9 +990,16 @@ function zen_get_minutes_since($timestamp) {
     }
     return false; //should never get here
   }
+
+/**
+ * Return whether the specified product+coupon combo has any category restrictions associated
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool|string
+ * @TODO rename this function to mention "coupon" and "restrictions"
+ */
   function validate_for_category($product_id, $coupon_id) {
     global $db;
-    $retVal = 'none';
     $productCatPath = zen_get_product_path($product_id);
     $catPathArray = array_reverse(explode('_', $productCatPath));
     $sql = "SELECT count(*) AS total
@@ -938,6 +1022,14 @@ function zen_get_minutes_since($timestamp) {
       return 'none';
     }
   }
+
+/**
+ * Return whether the specified product+coupon combo has any product restrictions associated
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool|string
+ * @TODO rename this function to mention "coupon" and "restrictions"
+ */
   function validate_for_product($product_id, $coupon_id) {
     global $db;
     $sql = "SELECT * FROM " . TABLE_COUPON_RESTRICT . "
@@ -952,13 +1044,17 @@ function zen_get_minutes_since($timestamp) {
     }
   }
 
-////
-// is coupon valid for specials and sales
+/**
+ * is coupon valid for specials and sales
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool
+ */
   function is_coupon_valid_for_sales($product_id, $coupon_id) {
     global $db;
     $sql = "SELECT coupon_id, coupon_is_valid_for_sales
             FROM " . TABLE_COUPONS . "
-            WHERE coupon_id = '" . (int)$coupon_id . "'";
+            WHERE coupon_id = " . (int)$coupon_id;
 
     $result = $db->Execute($sql);
 
@@ -979,33 +1075,47 @@ function zen_get_minutes_since($timestamp) {
     return true; // is on special or sale
   }
 
-////
+/**
+ * Alias to $db->prepareInput() for sanitizing db inserts
+ * @param string $string
+ * @return string
+ */
   function zen_db_input($string) {
     global $db;
     return $db->prepareInput($string);
   }
 
-////
+/**
+ * Recursively apply sanitizations to the string
+ * USAGE: Instead of this function, normally one should use zen_output_string_protected() for data destined for the browser, and zen_db_input() for data destined to the db
+ * @param string|array $string
+ * @param bool $trimspace
+ * @return array|string
+ */
   function zen_db_prepare_input($string, $trimspace = true) {
     if (is_string($string)) {
       if (IS_ADMIN_FLAG === true && $trimspace == true) {
         return trim(stripslashes($string));
       } else {
         return trim(zen_sanitize_string(stripslashes($string)));
-        // return stripslashes($string);
       }
     } elseif (is_array($string)) {
       reset($string);
       while (list($key, $value) = each($string)) {
         $string[$key] = zen_db_prepare_input($value);
       }
-      return $string;
-    } else {
-      return $string;
     }
+    return $string;
   }
 
-////
+/**
+ * Perform a bulk insert/update of the specified array of fields into one record
+ * @param string $table
+ * @param array $data
+ * @param string $action
+ * @param string $parameters
+ * @return queryFactoryResult
+ */
   function zen_db_perform($table, $data, $action = 'insert', $parameters = '') {
     global $db;
     reset($data);
@@ -1051,20 +1161,21 @@ function zen_get_minutes_since($timestamp) {
     return $db->Execute($query);
   }
 
-////
-  function zen_db_output($string) {
-    return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
-  }
-
-////
+/**
+ * Retrieve the autoincrement ID of the last record inserted into the db
+ * @return int
+ */
   function zen_db_insert_id() {
     global $db;
     return $db->insert_ID();
   }
 
 /**
- * function to return field type
- * uses $tbl = table name, $fld = field name
+ * return field type of db field
+ *
+ * @param string $tbl table name
+ * @param string $fld field name
+ * @return string
  */
   function zen_field_type($tbl, $fld) {
     global $db;
@@ -1075,7 +1186,9 @@ function zen_get_minutes_since($timestamp) {
 
 /**
  * function to return field length
- * uses $tbl = table name, $fld = field name
+ * @param string $tbl table name
+ * @param string $fld field name
+ * @return string
  */
   function zen_field_length($tbl, $fld) {
     global $db;
@@ -1086,8 +1199,13 @@ function zen_get_minutes_since($timestamp) {
 
 /**
  * return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 50
- * uses $tbl = table name, $fld = field name
  * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ *
+ * @param string $tbl
+ * @param string $fld
+ * @param int $max
+ * @param bool $override
+ * @return string
  */
   function zen_set_field_length($tbl, $fld, $max=50, $override=false) {
     $field_length= zen_field_length($tbl, $fld);
@@ -1102,9 +1220,11 @@ function zen_get_minutes_since($timestamp) {
     return $length;
   }
 
-
-////
-// Set back button
+/**
+ * Set back button
+ * @param bool $link_only
+ * @return string
+ */
   function zen_back_link($link_only = false) {
     if (sizeof($_SESSION['navigation']->path)-2 >= 0) {
       $back = sizeof($_SESSION['navigation']->path)-2;
@@ -1126,9 +1246,11 @@ function zen_get_minutes_since($timestamp) {
     }
   }
 
-
-////
-// Return a random row from a database query
+/**
+ * Return a random row from a database query resultset
+ * @param string $query
+ * @return queryFactoryResult
+ */
   function zen_random_select($query) {
     global $db;
     $random_product = '';
@@ -1142,8 +1264,13 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-////
-// Truncate a string
+/**
+ * Truncate a string to a specified length, and optionally append a "more..." elipsis
+ * @param string $str
+ * @param int $len
+ * @param string $more
+ * @return string
+ */
   function zen_trunc_string($str = "", $len = 150, $more = 'true') {
     if ($str == "") return $str;
     if (is_array($str)) return $str;
@@ -1173,9 +1300,12 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-
-////
-// set current box id
+/**
+ * Trims the passed filename to remove underscores and trailing '.php'
+ * Used by sidebox builders to set current box id string
+ * @param $box_id
+ * @return mixed
+ */
   function zen_get_box_id($box_id) {
     $box_id = str_replace('_', '', $box_id);
     $box_id = str_replace('.php', '', $box_id);
@@ -1183,8 +1313,13 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-////
-// Switch buy now button based on call for price sold out etc.
+/**
+ * Switch buy now button based on call for price sold out etc.
+ * @param int $product_id
+ * @param string $link
+ * @param bool $additional_link
+ * @return bool|string
+ */
   function zen_get_buy_now_button($product_id, $link, $additional_link = false) {
     global $db;
 
@@ -1202,7 +1337,6 @@ function zen_get_minutes_since($timestamp) {
         // customer must be logged in to browse
         $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         return $login_for_price;
-        break;
         case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
         if (TEXT_LOGIN_FOR_PRICE_PRICE == '') {
           // show room only
@@ -1212,46 +1346,36 @@ function zen_get_minutes_since($timestamp) {
           $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         }
         return $login_for_price;
-        break;
         // show room only
         case (CUSTOMERS_APPROVAL == '3'):
-          $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
-          return $login_for_price;
-        break;
+        $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
+        return $login_for_price;
         case ((CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and CUSTOMERS_APPROVAL_AUTHORIZATION != '3') and $_SESSION['customer_id'] == ''):
         // customer must be logged in to browse
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
-        break;
         case ((CUSTOMERS_APPROVAL_AUTHORIZATION == '3') and $_SESSION['customer_id'] == ''):
         // customer must be logged in and approved to add to cart
         $login_for_price = '<a class="btn-login" href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
         return $login_for_price;
-        break;
         case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customers_authorization'] > '0'):
         // customer must be logged in to browse
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
-        break;
         case ((int)$_SESSION['customers_authorization'] >= 2):
         // customer is logged in and was changed to must be approved to buy
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
-        break;
-        default:
-        // proceed normally
-        break;
       }
 
-    $button_check = $db->Execute("select product_is_call, products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
+    $button_check = $db->Execute("select product_is_call, products_quantity from " . TABLE_PRODUCTS . " where products_id = " . (int)$product_id);
     switch (true) {
 // cannot be added to the cart
     case (zen_get_products_allow_add_to_cart($product_id) == 'N'):
       return $additional_link;
-      break;
     case ($button_check->fields['product_is_call'] == '1'):
       $return_button = '<a class="btn-callforprice" href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
-      $return_button = '';
+//      $return_button = '';
       break;
     case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
       if ($_GET['main_page'] == zen_get_info_page($product_id)) {
@@ -1272,9 +1396,11 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-
 /**
  * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
+ *
+ * @param string $shipping_module
+ * @return bool
  */
   function zen_get_shipping_enabled($shipping_module) {
     global $zcRequest;
@@ -1293,62 +1419,36 @@ function zen_get_minutes_since($timestamp) {
       // left for future expansion
       case (IS_ADMIN_FLAG === true && $zcRequest->readGet('cmd') == FILENAME_MODULES):
         return true;
-        break;
       // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
       case (ORDER_WEIGHT_ZERO_STATUS == '1' and ($check_cart_weight == 0 and $shipping_module == 'freeshipper')):
         return true;
-        break;
       // Free Shipping when 0 weight - disable everyone - ORDER_WEIGHT_ZERO_STATUS must be on
       case (ORDER_WEIGHT_ZERO_STATUS == '1' and ($check_cart_weight == 0 and $shipping_module != 'freeshipper')):
         return false;
-        break;
       case (($_SESSION['cart']->free_shipping_items() == $check_cart_cnt) and $shipping_module == 'freeshipper'):
         return true;
-        break;
       case (($_SESSION['cart']->free_shipping_items() == $check_cart_cnt) and $shipping_module != 'freeshipper'):
         return false;
-        break;
       // Always free shipping only true - enable freeshipper
       case (($check_cart_free == $check_cart_cnt) and $shipping_module == 'freeshipper'):
         return true;
-        break;
       // Always free shipping only true - disable everyone
       case (($check_cart_free == $check_cart_cnt) and $shipping_module != 'freeshipper'):
         return false;
-        break;
       // Always free shipping only is false - disable freeshipper
       case (($check_cart_free != $check_cart_cnt) and $shipping_module == 'freeshipper'):
         return false;
-        break;
       default:
         return true;
-        break;
     }
-  }
-
-
-////
-  function zen_html_entity_decode($given_html, $quote_style = ENT_QUOTES) {
-    $trans_table = array_flip(get_html_translation_table( HTML_SPECIALCHARS, $quote_style ));
-    $trans_table['&#39;'] = "'";
-    return ( strtr( $given_html, $trans_table ) );
-  }
-
-////
-//CLR 030228 Add function zen_decode_specialchars
-// Decode string encoded with htmlspecialchars()
-  function zen_decode_specialchars($string){
-    $string=str_replace('&gt;', '>', $string);
-    $string=str_replace('&lt;', '<', $string);
-    $string=str_replace('&#039;', "'", $string);
-    $string=str_replace('&quot;', "\"", $string);
-    $string=str_replace('&amp;', '&', $string);
-
-    return $string;
   }
 
 /**
  * remove common HTML from text for display as paragraph
+ *
+ * @param string $clean_it
+ * @param string $extraTags
+ * @return mixed|string
  */
   function zen_clean_html($clean_it, $extraTags = '') {
     if (!is_array($extraTags)) $extraTags = array($extraTags);
@@ -1384,12 +1484,15 @@ function zen_get_minutes_since($timestamp) {
     return $clean_it;
   }
 
-
-////
-// find module directory
-// include template specific immediate /modules files
-// new_products, products_new_listing, featured_products, featured_products_listing, product_listing, specials_index, upcoming,
-// products_all_listing, products_discount_prices, also_purchased_products
+/**
+ * template-helper to find module directory based on whether template overrides exist for the specified module
+ * include template specific immediate /modules files
+ * new_products, products_new_listing, featured_products, featured_products_listing, product_listing, specials_index, upcoming,
+ * products_all_listing, products_discount_prices, also_purchased_products
+ * @param string $check_file
+ * @param string $dir_only
+ * @return string
+ */
   function zen_get_module_directory($check_file, $dir_only = 'false') {
     global $template_dir;
 
@@ -1399,7 +1502,7 @@ function zen_get_minutes_since($timestamp) {
     if (file_exists(DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
       $template_dir_select = $template_dir . '/';
     } else if (file_exists(DIR_WS_MODULES . 'shared' . '/' . $zv_filename)) {
-      $template_dir_select = 'shared/'; 
+      $template_dir_select = 'shared/';
     } else {
       $template_dir_select = '';
     }
@@ -1413,7 +1516,12 @@ function zen_get_minutes_since($timestamp) {
 
 
 /**
- * find template or default file
+ * find override template file or default to shared or template_default
+ *
+ * @param string $check_directory
+ * @param string $check_file
+ * @param string $dir_only
+ * @return string
  */
   function zen_get_file_directory($check_directory, $check_file, $dir_only = 'false') {
     global $template_dir;
@@ -1436,21 +1544,29 @@ function zen_get_minutes_since($timestamp) {
     }
   }
 
-// check to see if database stored GET terms are in the URL as $_GET parameters
+/**
+ * check to see if database stored GET terms are in the URL as $_GET parameters
+ * This is used to determine which filters should be applied
+ * @return bool
+ */
   function zen_check_url_get_terms() {
     global $db;
-    $zp_sql = "select * from " . TABLE_GET_TERMS_TO_FILTER;
-    $zp_filter_terms = $db->Execute($zp_sql);
-    $zp_result = false;
-    while (!$zp_filter_terms->EOF) {
-      if (isset($_GET[$zp_filter_terms->fields['get_term_name']]) && zen_not_null($_GET[$zp_filter_terms->fields['get_term_name']])) $zp_result = true;
-      $zp_filter_terms->MoveNext();
+    $sql = "select * from " . TABLE_GET_TERMS_TO_FILTER;
+    $query_result = $db->Execute($sql);
+    $retVal = false;
+    foreach ($query_result as $row) {
+      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) $retVal = true;
+      $query_result->MoveNext();
     }
-    return $zp_result;
+    return $retVal;
   }
 
 /**
  * replacement for fmod to manage values < 1
+ *
+ * @param float $x
+ * @param float $y
+ * @return int|number
  */
   function fmod_round($x, $y) {
     if ($y == 0) {
@@ -1465,8 +1581,13 @@ function zen_get_minutes_since($timestamp) {
      return $results;
   }
 
-////
-// return truncated paragraph
+/**
+ * return truncated paragraph
+ * @param string $paragraph
+ * @param int $size
+ * @param string $word
+ * @return string
+ */
   function zen_truncate_paragraph($paragraph, $size = 100, $word = ' ') {
     $zv_paragraph = "";
     $word = explode(" ", $paragraph);
@@ -1483,21 +1604,22 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-
 /**
- * return an array with zones defined for the specified country
+ * returns a pulldown array with zones defined for the specified country
+ * used by zen_prepare_country_zones_pull_down()
+ *
+ * @param int $country_id
+ * @return array for pulldown
  */
   function zen_get_country_zones($country_id) {
     global $db;
     $zones_array = array();
     $zones = $db->Execute("select zone_id, zone_name
                            from " . TABLE_ZONES . "
-                           where zone_country_id = '" . (int)$country_id . "'
+                           where zone_country_id = " . (int)$country_id . "
                            order by zone_name");
-    while (!$zones->EOF) {
-      $zones_array[] = array('id' => $zones->fields['zone_id'],
-                             'text' => $zones->fields['zone_name']);
-      $zones->MoveNext();
+    foreach ($zones as $zone) {
+      $zones_array[] = array('id' => $zone['zone_id'], 'text' => $zone['zone_name']);
     }
 
     return $zones_array;
@@ -1505,6 +1627,11 @@ function zen_get_minutes_since($timestamp) {
 
 /**
  * return an array with country names and matching zones to be used in pulldown menus
+ *
+ * @TODO - review the Netscape and IE support here
+ *
+ * @param string $country_id
+ * @return array
  */
   function zen_prepare_country_zones_pull_down($country_id = '') {
 // preset the width of the drop-down for Netscape
@@ -1536,6 +1663,12 @@ function zen_get_minutes_since($timestamp) {
  * TABLES: zones
  *
  * return string
+ *
+ * @param int $country
+ * @param string $form
+ * @param string $field
+ * @param bool $showTextField
+ * @return string
  */
   function zen_js_zone_list($country, $form, $field, $showTextField = true) {
     global $db;
@@ -1583,9 +1716,12 @@ function zen_get_minutes_since($timestamp) {
   }
 
 
-
 /**
  * compute the days between two dates
+ *
+ * @param string $date1
+ * @param string $date2
+ * @return int
  */
   function zen_date_diff($date1, $date2) {
   //$date1  today, or any other day
@@ -1610,6 +1746,9 @@ function zen_get_minutes_since($timestamp) {
 
 /**
  * strip out accented characters to reasonable approximations of english equivalents
+ *
+ * @param string $s
+ * @return string
  */
   function replace_accents($s) {
     $skipPreg = (defined('OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES') && OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES == 'TRUE') ? TRUE : FALSE;
@@ -1626,8 +1765,9 @@ function zen_get_minutes_since($timestamp) {
  * attempts to open the specified file for writing. Returns true if successful, false if not.
  * if a directory is specified, uses PHP's is_writable() anyway
  *
- * @var string
- * @return boolean
+ * @var string $filepath
+ * @param bool $make_unwritable
+ * @return bool
  */
   function is__writeable($filepath, $make_unwritable = true) {
     if (is_dir($filepath)) return is_writable($filepath);
@@ -1646,17 +1786,19 @@ function zen_get_minutes_since($timestamp) {
 /**
  * attempts to make the specified file read-only
  *
- * @var string
+ * @var string $filepath
  * @return boolean
  */
   function set_unwritable($filepath) {
     return @chmod($filepath, 0444);
   }
+
 /**
  * convert supplied string to UTF-8, dropping any symbols which cannot be translated easily
  * useful for submitting cleaned-up data to payment gateways or other external services, esp if the data was copy+pasted from windows docs via windows browser to store in database
  *
  * @param string $string
+ * @return string
  */
   function charsetConvertWinToUtf8($string) {
     if (function_exists('iconv')) $string = iconv("Windows-1252", "ISO-8859-1//IGNORE", $string);
@@ -1666,7 +1808,7 @@ function zen_get_minutes_since($timestamp) {
 
 /**
  * Convert supplied string to/from entities between charsets, to sanitize data from payment gateway
- * @param $string
+ * @param string $string
  * @return string
  */
   function charsetClean($string) {
@@ -1677,14 +1819,20 @@ function zen_get_minutes_since($timestamp) {
     return $string;
   }
 
-  // Helper function to check whether the current instance is using SSL or not.
-  // Returns SSL or NONSSL
+/**
+ * Helper function to check whether the current instance is using SSL or not.
+ * @return string SSL or NONSSL
+ */
   function getConnectionType() {
     global $request_type;
     return $request_type;
   }
 
-  // debug utility only
+/**
+ * Dump the requested data to log or screen
+ * @param string $mode
+ * @param string $out
+ */
   function utilDumpRequest($mode='p', $out = 'log') {
     if ($mode =='p') {
       $val = '<pre>DEBUG request: ' . print_r($_REQUEST, TRUE);
@@ -1702,28 +1850,18 @@ function zen_get_minutes_since($timestamp) {
       echo $val;
     }
   }
+
+/**
+ * Prepend 'http://' to the specified URL if not already http:// or https://
+ * @param string $url
+ * @return string
+ */
   function fixup_url($url)
   {
     if (!preg_match('#^https?://#', $url)) {
       $url = 'http://' . $url;
     }
     return $url;
-  }
-  function zen_update_music_artist_clicked($artistId, $languageId)
-  {
-    global $db;
-    $sql = "UPDATE " . TABLE_RECORD_ARTISTS_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE artists_id = :artistId: AND languages_id = :languageId:";
-    $sql = $db->bindVars($sql, ':artistId:', $artistId, 'integer');
-    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
-    $db->execute($sql);
-  }
-  function zen_update_record_company_clicked($recordCompanyId, $languageId)
-  {
-    global $db;
-    $sql = "UPDATE " . TABLE_RECORD_COMPANY_INFO . " set url_clicked = url_clicked +1, date_last_click = NOW() WHERE record_company_id = :rcId: AND languages_id = :languageId:";
-    $sql = $db->bindVars($sql, ':rcId:', $recordCompanyId, 'integer');
-    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
-    $db->execute($sql);
   }
   /**
    * function issetorArray
@@ -1740,7 +1878,10 @@ function zen_get_minutes_since($timestamp) {
   }
 
   /**
-   * @param $mixed_value
+   * Recursively apply htmlentities on the passed string
+   * Useful for preparing json output and ajax responses
+   *
+   * @param string|array $mixed_value
    * @param int $flags
    * @param string $encoding
    * @param bool $double_encode
@@ -1760,7 +1901,7 @@ function zen_get_minutes_since($timestamp) {
       return $result;
   }
 
-  /////////////////////////////////////////////
+/////////////////////////////////////////////
 ////
 // call additional function files
 // prices and quantities
@@ -1777,4 +1918,3 @@ function zen_get_minutes_since($timestamp) {
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_lookups.php');
 ////
 /////////////////////////////////////////////
-
