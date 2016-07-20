@@ -19,3 +19,13 @@ define('TEXT_ENTRY_ADMIN_PROFILE', 'Admin Profile');
 
 define('TEXT_ENTRY_PASSWORD_MAIN', 'Password');
 define('TEXT_ENTRY_PASSWORD_CONFIRM', 'Confirm Password');
+
+
+//Legacy stuff @todo remove when converted to LEAD
+
+define('TEXT_MOBILE', 'Phone Number');
+define('TEXT_PROFILE', 'Admin Profile');
+define('TEXT_ID', 'ID');
+define('TEXT_NAME', 'User Name');
+define('TEXT_PASSWORD', 'Password');
+define('TEXT_CONFIRM_PASSWORD', 'Confirm Password');
