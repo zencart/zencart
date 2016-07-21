@@ -71,13 +71,14 @@ if ($gID == 7) {
           $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
         }
 }
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 
-require('includes/admin_html_head.php');
 ?>
 </head>
-<body>
+<body  class="skin-blue-light">
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
@@ -219,7 +220,7 @@ require('includes/admin_html_head.php');
 <!-- body_eof //-->
 
 <!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+<?php require('includes/template/common/tplFooter.php'); ?>
 <!-- footer_eof //-->
 <br>
 </body>
