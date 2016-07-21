@@ -130,15 +130,18 @@ class AjaxDashboardWidget extends AbstractAjaxController
     {
         $id = str_replace('add-widget-', '', $_POST['id']);
         WidgetManager::addWidgetForUser($id, $_SESSION['admin_id']);
-        $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION['admin_id'], $_SESSION['languages_id']);
+        $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION['admin_id']);
         $widgetList = WidgetManager::loadWidgetClasses($widgetInfoList);
         $tplVars = WidgetManager::prepareTemplateVariables($widgetList);
         $tplVars['widgetInfoList'] = $widgetInfoList;
         $tplVars['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
-        $tplVars ['widgets'] = WidgetManager::prepareTemplateVariables($tplVars['widgetList']);
-        $template = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php';
-        $html = $this->loadTemplateAsString($template, $tplVars);
-        $this->response = array('html' => $html);
+        $tplVars['widgets'] = WidgetManager::prepareTemplateVariables($tplVars['widgetList']);
+// commented out because these lines are not actually needed to install a widget,
+// and since loadClass() isn't also called, the template doesn't have some necessary variables
+// so errors are thrown
+//        $template = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php';
+//        $html = $this->loadTemplateAsString($template, $tplVars);
+//        $this->response = array('html' => $html);
     }
 
     /**
