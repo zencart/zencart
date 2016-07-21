@@ -221,12 +221,12 @@ class shoppingCart extends base {
 
     if (isset($_SESSION['customer_id']) && ($reset_database == true)) {
       $sql = "delete from " . TABLE_CUSTOMERS_BASKET . "
-                where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
+              where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
 
       $db->Execute($sql);
 
       $sql = "delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
+              where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
 
       $db->Execute($sql);
     }
@@ -280,8 +280,7 @@ class shoppingCart extends base {
                               (customers_id, products_id, customers_basket_quantity,
                               customers_basket_date_added)
                               values ('" . (int)$_SESSION['customer_id'] . "', '" . zen_db_input($products_id) . "', '" .
-        $qty . "', '" . date('Ymd') . "')";
-
+                              $qty . "', '" . date('Ymd') . "')";
         $db->Execute($sql);
       }
 
@@ -339,8 +338,7 @@ class shoppingCart extends base {
                                         (customers_id, products_id, products_options_id, products_options_value_id, products_options_sort_order)
                                         values ('" . (int)$_SESSION['customer_id'] . "', '" . zen_db_input($products_id) . "', '" .
                                         (int)$option.'_chk'. (int)$val . "', '" . (int)$val . "',  '" . $products_options_sort_order . "')";
-
-                                        $db->Execute($sql);
+                  $db->Execute($sql);
                 }
               } else {
                 if ($attr_value) {
@@ -351,8 +349,7 @@ class shoppingCart extends base {
                                       (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text, products_options_sort_order)
                                       values ('" . (int)$_SESSION['customer_id'] . "', '" . zen_db_input($products_id) . "', '" .
                                       (int)$option . "', '" . (int)$value . "', '" . $attr_value . "', '" . $products_options_sort_order . "')";
-
-                                      $db->Execute($sql);
+                $db->Execute($sql);
               }
             }
           }
