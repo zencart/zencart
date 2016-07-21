@@ -123,6 +123,7 @@ class LeadRoutes extends LeadService
     public function deleteExecute()
     {
         $deleteCheck = true;
+        $errorMessage = '';
         if (method_exists($this, 'deleteCheck')) {
             list ($deleteCheck, $errorMessage) = $this->deleteCheck();
         }
