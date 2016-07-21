@@ -664,7 +664,7 @@ function zen_get_minutes_since($timestamp) {
 /**
  * Return a product ID with attributes hash
  * @param string|int $prid
- * @param array $params
+ * @param array|string $params
  * @return string
  */
   function zen_get_uprid($prid, $params) {
@@ -1088,9 +1088,9 @@ function zen_get_minutes_since($timestamp) {
 /**
  * Recursively apply sanitizations to the string
  * USAGE: Instead of this function, normally one should use zen_output_string_protected() for data destined for the browser, and zen_db_input() for data destined to the db
- * @param string|array $string
+ * @param string $string
  * @param bool $trimspace
- * @return array|string
+ * @return string
  */
   function zen_db_prepare_input($string, $trimspace = true) {
     if (is_string($string)) {
