@@ -55,4 +55,3 @@
     <link rel="stylesheet" href="includes/template/javascript/gridstack.js-master/dist/gridstack-extra.css" />
     <script type="text/javascript" src='includes/template/javascript/lodash.js'></script>
     <script type="text/javascript" src='includes/template/javascript/gridstack.js-master/dist/gridstack.js'></script>
-</head>
