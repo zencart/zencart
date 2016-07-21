@@ -29,3 +29,4 @@ define('TEXT_ID', 'ID');
 define('TEXT_NAME', 'User Name');
 define('TEXT_PASSWORD', 'Password');
 define('TEXT_CONFIRM_PASSWORD', 'Confirm Password');
+define('TEXT_CHOOSE_PROFILE', 'Choose Profile'); 
