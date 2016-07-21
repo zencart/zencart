@@ -47,7 +47,7 @@ class LeadLanguagesRoutes extends LeadRoutes
     /**
      *
      */
-    public function updateExecuteStandard()
+    public function doUpdateExecute()
     {
         $sql = "SELECT languages_id, code FROM " . TABLE_LANGUAGES . " WHERE languages_id = :id:";
         $sql = $this->dbConn->bindVars($sql, ':id:', $this->request->readPost('entry_field_languages_id'), 'integer');
@@ -67,7 +67,7 @@ class LeadLanguagesRoutes extends LeadRoutes
         if ($this->request->has('entry_field_setAsDefault', 'post') || $defaultLangChange === true) {
             $this->updateDefaultConfigurationSetting('DEFAULT_LANGUAGE', $this->request->readPost('entry_field_code'));
         }
-        parent::updateExecuteStandard();
+        parent::doUpdateExecute();
     }
 
     /**
