@@ -378,26 +378,6 @@ class LeadService extends AbstractService
     }
 
     /**
-     * @param $sql
-     * @return string
-     */
-    public function doAutomapSql($sql)
-    {
-        if (isset($this->outputLayout['autoMap']['edit'])) {
-            foreach ($this->outputLayout['autoMap']['edit'] as $entry) {
-                $fieldType = $entry['bindVarsType'];
-                $sql .= ':' . $entry['field'] . ': = ';
-                $sql = $this->dbConn->bindVars($sql, ':' . $entry['field'] . ':', $entry['field'], 'noquotestring');
-                $sql .= ':' . $entry['field'] . ':, ';
-                $sql = $this->dbConn->bindVars($sql, ':' . $entry['field'] . ':', $entry['value'], $fieldType);
-            }
-        }
-
-        return $sql;
-    }
-
-
-    /**
      * @param $pushedLanguageFields
      * @param $languages
      * @param $queryListId
