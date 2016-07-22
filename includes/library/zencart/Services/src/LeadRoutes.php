@@ -24,47 +24,84 @@ class LeadRoutes extends LeadService
         }
     }
 
-
     /**
      *
      */
     public function doUpdateExecute()
     {
         $languages = $this->getLanguageList();
-        $pushedLanguageFields = array();
+        $requestResults = array('foundKey' => false, 'pushedLanguageFields' => array(), 'setKeys' => array());
         $mainTableFkeyField = $this->listingQuery['mainTable']['fkeyFieldLeft'];
         $sql = "UPDATE " . $this->listingQuery['mainTable']['table'] . " SET ";
-        $foundKey = false;
         foreach ($this->request->all('post') as $key => $value) {
-            $realKey = str_replace('entry_field_', '', $key);
-            if ($this->checkValidUpdateKey($key, $realKey)) {
-                $pushedLanguageFields[$realKey] = $value;
-                if (!isset($this->outputLayout['fields'][$realKey]['language'])) {
-                    $foundKey = true;
-                    unset($pushedLanguageFields[$realKey]);
-                    $fieldType = $this->outputLayout['fields'][$realKey]['bindVarsType'];
-                    $sql .= ':' . str_replace('entry_field_', '', $key) . ': = ';
-                    $sql = $this->dbConn->bindVars($sql, ':' . $realKey . ':', $realKey, 'noquotestring');
-                    $sql .= ':' . $realKey . ':, ';
-                    $sql = $this->dbConn->bindVars($sql, ':' . $realKey . ':', $value, $fieldType);
-                }
-            }
+            $requestResults = $this->doUpdateExecuteProcessRequest($key, $value, $requestResults);
         }
-        $sql = $this->doAutomapSql($sql);
-        if ($foundKey) {
+        $requestResults = $this->getAutomapFields($requestResults, 'edit');
+        foreach ($requestResults['setKeys'] as $key => $detail) {
+            $sql .= ':' . str_replace('entry_field_', '', $key) . ': = ';
+            $sql = $this->dbConn->bindVars($sql, ':' . $detail['realKey'] . ':', $detail['realKey'], 'noquotestring');
+            $sql .= ':' . $detail['realKey'] . ':, ';
+            $sql = $this->dbConn->bindVars($sql, ':' . $detail['realKey'] . ':', $detail['value'], $detail['bindVarsType']);
+        }
+        if ($requestResults['foundKey']) {
             $sql = substr($sql, 0, strlen($sql) - 2);
-            $fieldType = $this->outputLayout['fields'][$mainTableFkeyField]['bindVarsType'];
+            $bindVarsType = $this->outputLayout['fields'][$mainTableFkeyField]['bindVarsType'];
             $sql .= " WHERE " . $mainTableFkeyField . ' = :' . $mainTableFkeyField . ':';
             $sql = $this->dbConn->bindVars($sql, ':' . $mainTableFkeyField . ':',
-                $this->request->readPost('entry_field_' . $mainTableFkeyField), $fieldType);
+                $this->request->readPost('entry_field_' . $mainTableFkeyField), $bindVarsType);
             $this->dbConn->execute($sql);
         }
-        if (count($pushedLanguageFields) > 0) {
-            $this->doPushedLanguageFields($pushedLanguageFields, $languages,
+        if (count($requestResults['pushedLanguageFields']) > 0) {
+            $this->doPushedLanguageFields($requestResults['pushedLanguageFields'], $languages,
                 $this->request->readPost('entry_field_' . $mainTableFkeyField));
         }
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @param $requestResults
+     * @return array
+     */
+    protected function doUpdateExecuteProcessRequest($key, $value, $requestResults)
+    {
+        $realKey = str_replace('entry_field_', '', $key);
+        if (!$this->checkValidUpdateKey($key, $realKey)) {
+            return $requestResults;
+        }
+        $requestResults['pushedLanguageFields'][$realKey] = $value;
+        if (isset($this->outputLayout['fields'][$realKey]['language'])) {
+            return $requestResults;
+        }
+        $requestResults['foundKey'] = true;
+        unset($requestResults['pushedLanguageFields'][$realKey]);
+        $requestResults['setKeys'][$key] = array(
+            'realKey' => $realKey,
+            'value' => $value,
+            'bindVarsType' => $this->outputLayout['fields'][$realKey]['bindVarsType']
+        );
+        return $requestResults;
+    }
+
+    /**
+     * @param $requestResults
+     * @param string $action
+     * @return array
+     */
+    protected function getAutomapFields($requestResults, $action = 'edit')
+    {
+        if (!isset($this->outputLayout['autoMap'][$action])) {
+            return $requestResults;
+        }
+        foreach ($this->outputLayout['autoMap']['edit'] as $entry) {
+            $requestResults['setKeys'][$entry['field']] = array(
+                'realKey' => $entry['field'],
+                'value' => $entry['value'],
+                'bindVarsType' => $entry['bindVarsType']
+            );
+        }
+        return $requestResults;
+    }
     /**
      * @return mixed
      */
@@ -113,7 +150,6 @@ class LeadRoutes extends LeadService
         if (count($pushedLanguageFields) > 0) {
             $this->doPushedLanguageFields($pushedLanguageFields, $languages, $insertId);
         }
-
         return $insertId;
     }
 
