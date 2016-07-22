@@ -129,9 +129,6 @@ class LeadTaxRates extends AbstractLeadDefinition
                             'align' => 'right'
                         )
                     ),
-//                    'validations' => array(
-//                        'pattern' => 'integer'
-//                    )
                 ),
                 'tax_rate' => array(
                     'bindVarsType' => 'string',
@@ -146,9 +143,6 @@ class LeadTaxRates extends AbstractLeadDefinition
                             'align' => 'right'
                         )
                     ),
-//                    'validations' => array(
-//                        'pattern' => 'number'
-//                    )
                 ),
                 'tax_description' => array(
                     'bindVarsType' => 'string',
@@ -175,13 +169,13 @@ class LeadTaxRates extends AbstractLeadDefinition
                         'dataResponseField' => 'tax_class_id'
                     ),
                     'layout' => array(
-                        'common' => array(
+                        'list' => array(
                             'title' => TEXT_ENTRY_TAX_CLASS_TITLE,
                             'align' => 'right',
                             'type' => 'text',
                             'size' => '30'
                         ),
-                        'edit' => array(
+                        'common' => array(
                             'title' => TEXT_ENTRY_TAX_CLASS_TITLE,
                             'align' => 'right',
                             'type' => 'textSelect2',
@@ -210,13 +204,13 @@ class LeadTaxRates extends AbstractLeadDefinition
                         'dataResponseField' => 'tax_zone_id'
                     ),
                     'layout' => array(
-                        'common' => array(
+                        'list' => array(
                             'title' => TEXT_ENTRY_ZONE,
                             'align' => 'right',
                             'type' => 'text',
                             'size' => '30'
                         ),
-                        'edit' => array(
+                        'common' => array(
                             'title' => TEXT_ENTRY_ZONE,
                             'align' => 'right',
                             'type' => 'textSelect2',
