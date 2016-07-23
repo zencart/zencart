@@ -18,9 +18,9 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @package classes
  */
 class currencies extends base {
-  var $currencies;
+  public $currencies;
 
-  function __construct() {
+  public function __construct() {
     global $db;
     $this->currencies = array();
     $currencies_query = "select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value
@@ -104,7 +104,7 @@ class currencies extends base {
     return $value;
   }
 
-  function is_set($code) {
+  public function exists($code) {
     if (isset($this->currencies[$code]) && zen_not_null($this->currencies[$code])) {
       return true;
     } else {
@@ -112,6 +112,12 @@ class currencies extends base {
     }
   }
 
+  /**
+   * @deprecated since v1.6.0 - use exists() instead
+   */
+  function is_set($code) {
+      $this->exists($code);
+  }
   function get_value($code) {
     return $this->currencies[$code]['value'];
   }

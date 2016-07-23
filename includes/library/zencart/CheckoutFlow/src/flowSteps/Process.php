@@ -70,9 +70,9 @@ class Process extends AbstractFlowStep
         $this->notify('NOTIFY_CHECKOUT_SLAMMING_ALERT');
         if ($this->session->get('payment_attempt') > 3) {
             $this->notify('NOTIFY_CHECKOUT_SLAMMING_LOCKOUT');
-            $$this->session->get('cart')->reset(true);
+            $this->session->get('cart')->reset(true);
             zen_session_destroy();
-            throw new CheckoutRedirectException(array('redirect' => zen_href_link(FILENAME_TIMEOUT)));
+            throw new CheckoutRedirectException(array('redirect' => zen_href_link(FILENAME_TIME_OUT)));
         }
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_CREDIT_CARD_SLAMMING_END');
     }
@@ -204,7 +204,7 @@ class Process extends AbstractFlowStep
     protected function manageOrderSendEmails()
     {
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_ORDER_SEND_EMAILS_START');
-        $GLOBALS['order']->send_order_email($GLOBALS['insert_id']);
+        $GLOBALS['order']->send_order_confirmation_email($GLOBALS['insert_id']);
         $this->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
         $this->notify('NOTIFY_CHECKOUTFLOW_PROCESS_MANAGE_ORDER_SEND_EMAILS_END');
     }

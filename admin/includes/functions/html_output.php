@@ -8,11 +8,10 @@
  */
 
   /**
-   * Deprecated and will be removed in later versions. 
-   * Use zen_admin_href_link instead
+   * @deprecated in version 1.6.0. Use zen_admin_href_link() instead
    */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
-    return zen_admin_href_link($page, $parameters, $add_session_id);
+   return zen_admin_href_link($page, $parameters, $add_session_id);
   }
 
   /**

@@ -22,6 +22,7 @@
   }
 
   /**
+   * Return languages in a pulldown list format
    * @param $language_id
    * @return array
    */
@@ -39,7 +40,7 @@
 
   /**
    * build a list of directories in a specified parent folder
-   * (formatted in id/text pairs for SELECT boxes)
+   * (formatted in id/text pairs for pulldown lists)
    *
    * @todo convert to a directory-iterator instead
    * @todo - this will be deprecated after converting remaining admin pages to LEAD format
@@ -358,7 +359,8 @@ function get_logs_data($maxToList = 'count') {
 
     $dir = dir($purgeFolder);
     while ($logfile = $dir->read()) {
-      if (substr($logfile, 0, 1) == '.') continue;
+      if ($logfile == 'notifier_trace.log') continue;
+      if (substr($logfile, 0, 1) == '.') continue; // ignore dot-prefixed files like .htaccess, .DS_Store, etc
       if (!preg_match('/.*(\.log|\.xml)$/', $logfile)) continue; // xml allows for usps debug
 
       if ($maxToList != 'count') {

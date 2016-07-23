@@ -9,16 +9,16 @@
  */
 ?>
 <div class="row">
-  <div class="col-xs-12"><?php echo SALES_GRAPH_TEXT_MONTHLY; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS) . '">' . SALES_GRAPH_TEXT_CLICK . '</a>'; ?></div>
+  <div class="col-xs-12"><?php echo SALES_GRAPH_TEXT_MONTHLY; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS) . '">' . SALES_GRAPH_TEXT_CLICK . '</a>'; ?></div>
 </div>
 
 <div class="row">
-  <div class="col-xs-6">Sales <strong><?php echo TEXT_DATE_RANGE_TODAY; ?></strong> (<?php echo $tplVars['widget']['days'][0]['count']; ?>)&nbsp;&nbsp;<strong><?php echo $tplVars['widget']['days'][0]['sales']; ?></span>&nbsp;&nbsp;</strong></div>
-  <div class="col-xs-6"><strong><?php echo TEXT_DATE_RANGE_YESTERDAY; ?></strong> (<?php echo $tplVars['widget']['days'][1]['count']; ?>)&nbsp;&nbsp;<strong><?php echo $tplVars['widget']['days'][1]['sales']; ?></span></strong></div>
+  <div class="col-xs-6">Sales <strong><?php echo TEXT_DATE_RANGE_TODAY; ?></strong> (<?php echo $widget['days'][0]['count']; ?>)&nbsp;&nbsp;<strong><?php echo $widget['days'][0]['sales']; ?></span>&nbsp;&nbsp;</strong></div>
+  <div class="col-xs-6"><strong><?php echo TEXT_DATE_RANGE_YESTERDAY; ?></strong> (<?php echo $widget['days'][1]['count']; ?>)&nbsp;&nbsp;<strong><?php echo $widget['days'][1]['sales']; ?></span></strong></div>
 </div>
 
 <div class="row">
-<div id="salesGraphWidget"></div>
+<div id="salesGraphWidget" style="height:260px"></div>
 </div>
 
 <!--Load the AJAX API FOR GOOGLE GRAPHS, without double-loading in case another widget has already loaded it -->
@@ -38,7 +38,7 @@
     data = new google.visualization.DataTable();
     data.addColumn('string', '<?php echo SALES_GRAPH_COLUMN_MONTH; ?>');
     data.addColumn('number', '<?php echo SALES_GRAPH_COLUMN_SALES; ?>');
-    data.addRows(<?php echo "[".$tplVars['widget']['graphData']."]" ; ?>);
+    data.addRows(<?php echo "[".$widget['graphData']."]" ; ?>);
 
     var options = {
         trendlines: {
@@ -51,7 +51,7 @@
 //              visibleInLegend: true
           }
         },    // Draw a trendline for data series 0.
-        vAxis: { title: '<?php echo $tplVars['widget']['graphtitle'];?>' },
+        vAxis: { title: '<?php echo $widget['graphtitle'];?>' },
         width: '100%', height: '100%',
         backgroundColor: { fill: "#f7f6ef" },
         legend: { position: 'top' },

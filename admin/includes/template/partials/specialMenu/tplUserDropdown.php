@@ -22,10 +22,10 @@
         <li class="user-body bg-blue-active">
             <div class="row">
                 <div class="col-sm-6 pull-left">
-                    <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT); ?>" class="btn btn-default"><?php echo HEADER_TITLE_ACCOUNT; ?></a>
+                    <a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT); ?>" class="btn btn-default"><?php echo HEADER_TITLE_ACCOUNT; ?></a>
                 </div>
                 <div class="col-sm-6 pull-right">
-                    <a href="<?php echo zen_href_link(FILENAME_LOGOFF); ?>" class="btn btn-default"><?php echo HEADER_TITLE_LOGOFF; ?></a>
+                    <a href="<?php echo zen_admin_href_link(FILENAME_LOGOFF); ?>" class="btn btn-default"><?php echo HEADER_TITLE_LOGOFF; ?></a>
                 </div>
             </div>
         </li>

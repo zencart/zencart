@@ -3,7 +3,7 @@
  * dashboard widget Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -21,7 +21,7 @@
   (function() {
     var bannerWidgetBox = $('#banner-statistics .widget-body');
     var boxHeight = bannerWidgetBox.height();
-    if (boxHeight < 150) boxHeight = 150;
+    if (boxHeight < 115) boxHeight = 115;
     $('#banner-widget').width(bannerWidgetBox.width()-10).height(boxHeight);
     var data = <?php echo json_encode($widget['graphDatasets']); ?> ;
     var options = <?php echo json_encode(array_merge($widget['graphOptions'], array('xaxis'=>array('ticks'=>$widget['graphTicks'])))); ?> ;

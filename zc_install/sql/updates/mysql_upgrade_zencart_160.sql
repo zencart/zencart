@@ -165,7 +165,7 @@ SET @t1=0;
 SELECT (@t1:=configuration_group_id) as t1 FROM configuration_group WHERE configuration_group_title = 'Guest Checkout';
 INSERT INTO admin_pages VALUES ('configGuest','BOX_CONFIGURATION_GUEST','FILENAME_CONFIGURATION',CONCAT('gID=',@t1), 'configuration', 'Y', 31);
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
-  ('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'false', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+  ('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'true', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Order Status for Guest Orders', 'GUEST_ORDER_STATUS', 'true', 'Alloq Guests to see Order Status?<br />Set to True so that a Customer that uses Guest Checkout will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Guest E-Mail Only checkout when free', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Create Account on Success', 'GUEST_ALLOW_CREATE_ACCOUNT', 'true', 'Allow Guest to create a full account on Checkout Success.', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
@@ -303,16 +303,18 @@ INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_i
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT', '', 1);
 INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('sales-graph-report', 1, 'SALES_GRAPH_REPORT_GROUP');
 
-
 # default widgets for first user
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme, widget_height, widget_width) VALUES
-('general-statistics', 1, 0, 0, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
-('order-summary', 1, 1, 0, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('new-customers', 1, 0, 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
-('counter-history', 1, 1, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
-('new-orders', 1, 0, 2, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('logs', 1, 1, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
-,('whos-online', 1, 2, 0, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+('general-statistics', 1, 0, 2, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1)
+,('order-summary', 1, 2, 2, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1)
+,('new-customers', 1, 1, 1, 'fa-user-plus', 'bg-light-blue-gradient', 2, 1)
+,('counter-history', 1, 4, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1)
+,('new-orders', 1, 2, 0, 'fa-shopping-cart', 'bg-light-blue-gradient', 2, 1)
+,('logs', 1, 4, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 2, 1)
+,('whos-online', 1, 0, 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('banner_statistics', 1, 3, 2, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('counter-history-graph', 1, 3, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1)
+,('sales-graph-report', 1, 0, 0, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1)
 ;
 
 
