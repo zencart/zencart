@@ -164,7 +164,7 @@ class zcDatabaseInstaller
         return 1;
     } else 
     {
-    	return 0;
+      return 0;
     }
   }
   public function parserDropTableIfExists ()
@@ -470,15 +470,15 @@ class zcDatabaseInstaller
       if ($fp)
       {
         $arr = array('total'=>'0', 'progress'=>$progress, 'message'=>$this->extendedOptions['message']);
-        
+
         if($error){
-        	$arr['error_message'] = TEXT_ERROR_DATABASE_INSTALL;
+          $arr['error_message'] = TEXT_ERROR_DATABASE_INSTALL;
         }
-        
+
         fwrite($fp, json_encode($arr));
         fclose($fp);
         if($error){
-        	die('!');
+          die('!');
         }
       }
     }
