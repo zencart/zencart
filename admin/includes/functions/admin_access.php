@@ -516,7 +516,7 @@ function zen_reset_password($id, $password, $compare)
   {
     $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
     $sql = "UPDATE " . TABLE_ADMIN . "
-            SET prev_pass3 = prev_pass2, prev_pass2 = prev_pass1, prev_pass1 = admin_pass, admin_pass = :newpwd:, pwd_last_change_date = now()
+            SET prev_pass3 = prev_pass2, prev_pass2 = prev_pass1, prev_pass1 = admin_pass, admin_pass = :newpwd:, failed_logins=0, lockout_expires = 0, pwd_last_change_date = now()
             WHERE admin_id = :adminID:";
     $sql = $db->bindVars($sql, ':adminID:', $id, 'integer');
     $sql = $db->bindVars($sql, ':newpwd:', $encryptedPassword, 'string');
