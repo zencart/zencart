@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id Modified in v1.6.0 $
@@ -22,6 +22,9 @@ if (! isset($_SESSION ['securityToken'])) {
   $_SESSION ['securityToken'] = md5(uniqid(rand(), true));
 }
 if ((zcRequest::hasGet('action') || zcRequest::hasPost('action')) && $_SERVER ['REQUEST_METHOD'] == 'POST') {
+  if (!$session_started) {
+      zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
+  }
   if (! in_array($mainPage, $csrfBlackList)) {
     if ((! isset($_SESSION ['securityToken']) || ! zcRequest::hasPost('securityToken')) || ($_SESSION ['securityToken'] !== zcRequest::readPost('securityToken'))) {
       zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', $request_type));
