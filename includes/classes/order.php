@@ -79,7 +79,7 @@ class order extends base {
     // retrieve language details
     $this->language = $lng->get_language_data_by_code($order->fields['language_code']);
     $result = $db->Execute("SELECT orders_status_name
-                            FROM " . TABLE_ORDERS_STATUS . " o, 
+                            FROM " . TABLE_ORDERS_STATUS . " o 
                             WHERE language_id = " . $this->language['id'] . "
                             AND orders_status_id = " . $order->fields['orders_status']);
     $ordersStatusName = $result->fields['orders_status_name'];
