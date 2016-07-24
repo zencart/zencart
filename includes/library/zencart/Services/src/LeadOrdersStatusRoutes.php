@@ -23,7 +23,7 @@ class LeadOrdersStatusRoutes extends LeadRoutes
         $nextId = $this->dbConn->Execute($sql);
         $ordersStatusId = $nextId->fields['orders_status_id'] + 1;
         foreach ($this->request->readPost('entry_field_orders_status_name') as $language => $value) {
-            $sql = "INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) VALUES (:id:, :languageId:, :NAME:)";
+            $sql = "INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) VALUES (:id:, :languageId:, :name:)";
             $sql = $this->dbConn->bindVars($sql, ':id:', $ordersStatusId, 'integer');
             $sql = $this->dbConn->bindVars($sql, ':languageId:', $language, 'integer');
             $sql = $this->dbConn->bindVars($sql, ':name:', $value, 'string');

@@ -58,6 +58,36 @@ class LeadRoutes extends LeadService
     }
 
     /**
+     * @return mixed
+     */
+    public function doInsertExecute()
+    {
+        $languages = $this->getLanguageList();
+        $fieldKeyEntries = $fieldKeyValues = '';
+        $requestResults = array('foundKey' => false, 'pushedLanguageFields' => array(), 'setKeys' => array());
+        foreach ($this->request->all('post') as $key => $value) {
+            $requestResults = $this->doUpdateExecuteProcessRequest($key, $value, $requestResults);
+        }
+        $requestResults = $this->getAutomapFields($requestResults, 'add');
+        foreach ($requestResults['setKeys'] as $key => $detail) {
+            $fieldKeyEntry = $this->dbConn->bindVars(':' . $detail['realKey'] . ':', ':' . $detail['realKey'] . ':', $detail['realKey'], 'noquotestring');
+            $fieldKeyEntries .= $fieldKeyEntry . ', ';
+
+            $fieldKeyValue = $this->dbConn->bindVars(':' . $detail['realKey'] . ':', ':' . $detail['realKey'] . ':', $detail['value'], $detail['bindVarsType']);
+            $fieldKeyValues .= $fieldKeyValue . ', ';
+        }
+        $fieldKeyEntries = substr($fieldKeyEntries, 0, strlen($fieldKeyEntries) - 2);
+        $fieldKeyValues = substr($fieldKeyValues, 0, strlen($fieldKeyValues) - 2);
+        $sql = "INSERT INTO " . $this->listingQuery['mainTable']['table'] . " (" . $fieldKeyEntries . ") VALUES (" . $fieldKeyValues . ")";
+        $this->dbConn->execute($sql);
+        $insertId = $this->dbConn->insert_ID();
+        if (count($requestResults['pushedLanguageFields']) > 0) {
+            $this->doPushedLanguageFields($requestResults['pushedLanguageFields'], $languages, $insertId);
+        }
+        return $insertId;
+    }
+
+    /**
      * @param $key
      * @param $value
      * @param $requestResults
@@ -93,7 +123,7 @@ class LeadRoutes extends LeadService
         if (!isset($this->outputLayout['autoMap'][$action])) {
             return $requestResults;
         }
-        foreach ($this->outputLayout['autoMap']['edit'] as $entry) {
+        foreach ($this->outputLayout['autoMap'][$action] as $entry) {
             $requestResults['setKeys'][$entry['field']] = array(
                 'realKey' => $entry['field'],
                 'value' => $entry['value'],
@@ -113,45 +143,7 @@ class LeadRoutes extends LeadService
         }
         return $insertId;
     }
-    /**
-     * @return mixed
-     */
-    public function doInsertExecute()
-    {
-        $languages = $this->getLanguageList();
-        $fieldKeyEntries = $fieldValues = '';
-        $pushedLanguageFields = array();
-        $mainTableFkeyField = $this->listingQuery['mainTable']['fkeyFieldLeft'];
-        foreach ($this->request->all('post') as $key => $value) {
-            $realKey = str_replace('entry_field_', '', $key);
-            if ($this->checkValidUpdateKey($key, $realKey)) {
-                if (!isset($this->outputLayout['fields'][$realKey]['language'])) {
-                    $fieldType = $this->outputLayout['fields'][$realKey]['bindVarsType'];
-                    $fieldKey = $fieldKeyEntry = ':' . $realKey . ':, ';
-                    $fieldKeyEntry = $this->dbConn->bindVars($fieldKeyEntry, $fieldKeyEntry, $realKey, 'noquotestring');
-                    $value = $this->dbConn->bindVars($fieldKey, $fieldKey, $value, $fieldType);
-                    $fieldValues .= $value . ', ';
-                    $fieldKeyEntries .= $fieldKeyEntry . ", ";
-                } else {
-                    $pushedLanguageFields[$realKey] = $value;
-                }
-            }
-        }
-        list($fieldValues, $fieldKeyEntries) = $this->manageAutoMapAdd($fieldValues, $fieldKeyEntries);
-        $fieldKeyEntries = substr($fieldKeyEntries, 0, strlen($fieldKeyEntries) - 2);
-        $fieldValues = substr($fieldValues, 0, strlen($fieldValues) - 2);
-        if ($fieldKeyEntries == "") {
-            $fieldKeyEntries = $mainTableFkeyField;
-            $fieldValues = 'null';
-        }
-        $sql = "INSERT INTO " . $this->listingQuery['mainTable']['table'] . " (" . $fieldKeyEntries . ") VALUES (" . $fieldValues . ")";
-        $this->dbConn->execute($sql);
-        $insertId = $this->dbConn->insert_ID();
-        if (count($pushedLanguageFields) > 0) {
-            $this->doPushedLanguageFields($pushedLanguageFields, $languages, $insertId);
-        }
-        return $insertId;
-    }
+
 
     /**
      * @return array|bool
