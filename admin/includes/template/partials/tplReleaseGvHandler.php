@@ -42,7 +42,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo TEXT_CANCEL; ?></button>
-                <button type="button" class="btn btn-primary" id="rowGvReleaseConfirm"><?php echo TEXT_CONFIRME; ?></button>
+                <button type="button" class="btn btn-primary" id="rowGvReleaseConfirm"><?php echo TEXT_CONFIRM; ?></button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
