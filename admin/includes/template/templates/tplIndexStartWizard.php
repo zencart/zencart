@@ -26,21 +26,21 @@ $form_disabled = false;
       <div class="form-group">
         <label class="col-sm-2 control-label"><?php echo TEXT_FORM_LABEL_STORE_NAME; ?></label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" name="store_name" value="<?php echo zen_output_string_protected($tplVars['storeName']); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STORENAME; ?>">
+            <input type="text" class="form-control" name="store_name" id="store_name" value="<?php echo zen_output_string_protected($tplVars['storeName']); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STORENAME; ?>">
           </div>
       </div>
 
         <div class="form-group">
           <label class="col-sm-2 control-label"><?php echo TEXT_FORM_LABEL_STORE_OWNER; ?></label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" name="store_owner" value="<?php echo zen_output_string_protected($tplVars['storeOwner']); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
+            <input type="text" class="form-control" name="store_owner" id="store_owner" value="<?php echo zen_output_string_protected($tplVars['storeOwner']); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNER; ?>">
           </div>
         </div>
 
       <div class="form-group">
         <label class="col-sm-2 control-label"><?php echo TEXT_FORM_LABEL_STORE_OWNER_EMAIL; ?></label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" name="store_owner_email" value="<?php echo zen_output_string_protected($tplVars['storeOwnerEmail']); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNEREMAIL; ?>">
+          <input type="text" class="form-control" name="store_owner_email" id="store_owner_email" value="<?php echo zen_output_string_protected($tplVars['storeOwnerEmail']); ?>" autofocus="autofocus" tabindex="1" placeholder="<?php echo TEXT_EXAMPLE_STOREOWNEREMAIL; ?>">
         </div>
       </div>
 
@@ -72,7 +72,7 @@ $form_disabled = false;
 
 
     </fieldset>
-    <button type="submit" class="btn btn-default">Submit</button>
+    <button type="submit" class="btn btn-default" id="submit_button">Submit</button>
     </form>
     <?php } ?>
 

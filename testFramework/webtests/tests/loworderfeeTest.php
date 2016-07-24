@@ -29,7 +29,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byId('ship-item-item')->click();
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shipping
@@ -51,7 +51,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.28');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchLowOrderFee('off');
     }
@@ -67,7 +67,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.29');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchLowOrderFee('off');
     }
@@ -84,7 +84,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.76');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchItemShippingTax('off');
         $this->switchLowOrderFee('off');
@@ -102,7 +102,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('50.77');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shippimg
@@ -128,7 +128,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('50.77');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('42.79'); //net price
         $this->assertTextPresent('$2.98'); //shippimg
@@ -153,7 +153,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byId('ship-item-item')->click();
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shipping
@@ -178,7 +178,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.29');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->setCustomerGroupDiscount(WEBTEST_DEFAULT_CUSTOMER_EMAIL, 0);
         $this->switchLowOrderFee('off');
@@ -198,7 +198,7 @@ class loworderfeeTest extends CommonTestResources
         $this->byName('cot_gv')->value('46.01');
         $this->byName('dc_redeem_code')->value('test10percent');
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('$2.50'); //shipping

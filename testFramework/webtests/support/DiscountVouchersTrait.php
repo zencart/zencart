@@ -18,7 +18,7 @@ trait DiscountVouchersTrait
     {
         $sql = "SELECT coupon_code FROM " . DB_PREFIX . "coupons WHERE coupon_code = '" . $couponCode . "'";
         $q = $this->doDbQuery($sql);
-        if ($q->num_rows == 0) {
+        if ($q === false || $q->num_rows == 0) {
             return false;
         }
 
@@ -38,7 +38,7 @@ trait DiscountVouchersTrait
         $this->{$methodName}();
     }
 
-    public function createCouponTest10Percent()
+    public function createCouponTest10percent()
     {
         $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=coupon_admin');
         $this->byName('couponInsert')->click();

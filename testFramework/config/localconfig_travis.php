@@ -19,7 +19,7 @@ define('DIR_WS_ADMIN', BASE_URL . DIR_ADMIN . '/');
 define('DIR_FS_ADMIN', DIR_FS_ROOT. DIR_ADMIN . '/');
 define('DIR_FS_CATALOG', DIR_FS_ROOT);
 define('DO_SCREENSHOT', FALSE);
-define('SCREENSHOT_PATH', '/');
+define('SCREENSHOT_PATH', DIR_FS_CATALOG);
 
 define('WEBTEST_STORE_NAME', 'Selenium Test Store on ' . BASE_URL);
 define('WEBTEST_STORE_OWNER', 'Selenium Test ' . BASE_URL);
