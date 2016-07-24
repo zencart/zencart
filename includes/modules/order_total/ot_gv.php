@@ -193,7 +193,7 @@ class ot_gv {
                          'redeem_instructions' => MODULE_ORDER_TOTAL_GV_REDEEM_INSTRUCTIONS,
                          'checkbox' => $this->use_credit_amount(),
                          'fields' => array(array('title' => MODULE_ORDER_TOTAL_GV_TEXT_ENTER_CODE,
-                         'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-'.$this->code.'" onkeyup="submitFunction(0,0)"'),
+                         'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-'.$this->code.'" onkeyup="gvSubmitFunction(0,0)"'),
                          'tag' => 'disc-'.$this->code
                          )));
 

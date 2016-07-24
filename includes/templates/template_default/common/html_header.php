@@ -61,7 +61,7 @@ header('X-Frame-Options:SAMEORIGIN');
 
   // run dynamically-generated jscript_XXXXX.php files
   foreach ($jscriptsTop as $val) {
-    require($page_directory . '/' . $val); echo "\n";
+    require($val); echo "\n";
   }
 
   // output src links to scripts
