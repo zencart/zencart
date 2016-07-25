@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
@@ -15,9 +15,9 @@ class OrdersStatus extends AbstractLeadController
     /**
      *
      */
-    public function editExecute()
+    public function editExecute($formValidation = null)
     {
-        parent::editExecute();
+        parent::editExecute($formValidation);
         if ($this->tplVars ['leadDefinition'] ['fields'] ['orders_status_id'] ['value'] == DEFAULT_ORDERS_STATUS_ID) {
             unset($this->tplVars ['leadDefinition'] ['fields'] ['setAsDefault']);
         }
