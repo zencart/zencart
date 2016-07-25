@@ -21,7 +21,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('-$50.00'); //coupon discount
@@ -36,7 +36,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test100percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('-$499.99'); //coupon discount
@@ -50,7 +50,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('dc_redeem_code')->value('test10fixed');
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('-$10.00'); //coupon discount
@@ -67,7 +67,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percentrestricted');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('579.97'); //coupon discount
         $this->assertTextPresent('-$8.00'); //coupon discount
         $this->assertTextPresent('40.04'); //tax
@@ -86,7 +86,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('534.99'); //net price
 
         $this->assertTextPresent('-$53.50'); //coupon discount
@@ -101,7 +101,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test100percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('534.99'); //net price
         $this->assertTextPresent('-$534.99'); //coupon discount
         $this->assertTextPresent('2.50'); //total
@@ -113,7 +113,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10fixed');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('534.99'); //net price
         $this->assertTextPresent('-$10.65'); //coupon discount
         $this->assertTextPresent('$34.35'); //tax
@@ -128,7 +128,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percentrestricted');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('620.57'); //net price
         $this->assertTextPresent('7.50'); //shipping
         $this->assertTextPresent('-$8.56'); //coupon
@@ -148,7 +148,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('2.50'); //shipping
         $this->assertTextPresent('-$50.00'); //coupon discount
@@ -163,7 +163,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test100percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('-$499.99'); //coupon discount
         $this->assertTextPresent('2.50'); //shipping
@@ -178,7 +178,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10fixed');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('-$10.00'); //coupon discount
         $this->assertTextPresent('34.78'); //tax
@@ -202,7 +202,7 @@ class useCouponsInCatalogTest extends CommonTestResources
 //        $this->byName('checkout_address')->submit();
 //        $this->byId('pmt-cod')->click();
 //        $this->byName('dc_redeem_code')->value('test10percentrestrictedminimum');
-//        $this->byCss('#paymentSubmit')->submit();
+//        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
 //        $this->assertTextPresent('You must spend');
 //        $this->url('http://' . BASE_URL . 'index.php?main_page=product_info&cPath=3_10&products_id=3&action=buy_now');
 //        $this->url('http://' . BASE_URL . 'index.php?main_page=checkout_shipping');
@@ -225,7 +225,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Confirmation');
         $this->assertTextPresent('534.99'); //net price
         $this->assertTextPresent('2.98'); //shipping
@@ -241,7 +241,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test100percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('42.79'); //net price
         $this->assertTextPresent('-$42.79'); //coupon discount
         $this->assertTextPresent('2.98'); //shipping
@@ -256,7 +256,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10fixed');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('534.99'); //net price
         $this->assertTextPresent('-$10.65'); //coupon discount
         $this->assertTextPresent('34.83'); //tax
@@ -278,7 +278,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('testFreeShipping');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('2.50');//shipping
         $this->assertTextPresent('-$2.50'); //coupon discount
@@ -294,7 +294,7 @@ class useCouponsInCatalogTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('testFreeShipping');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('499.99'); //net price
         $this->assertTextPresent('2.50'); //shipping
         $this->assertTextPresent('-$2.50'); //coupon discount

@@ -26,7 +26,7 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('100');
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('-$45.29');
         $this->byId('btn_submit')->click();
     }
@@ -40,7 +40,7 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('45.28');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Please select a payment method for your order');
     }
 
@@ -55,7 +55,7 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('48.73');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('Please select a payment method for your order');
         $this->switchFlatShippingTax('off');
     }
@@ -71,7 +71,7 @@ class giftVoucherPurchasesTest extends CommonTestResources
         $this->byId('pmt-cod')->click();
         $this->byName('cot_gv')->clear();
         $this->byName('cot_gv')->value('20,50');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('SEK24,79');
         $this->byId('btn_submit')->click();
         $this->setConfigurationValue('DEFAULT_CURRENCY', 'USD');

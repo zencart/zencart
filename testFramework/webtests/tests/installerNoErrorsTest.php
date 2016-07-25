@@ -71,7 +71,7 @@ class installerNoErrorsTest extends CommonTestResources
         $this->byId('store_name')->value(WEBTEST_STORE_NAME);
         $this->byId('store_owner')->value(WEBTEST_STORE_OWNER);
         $this->byId('store_owner_email')->value(WEBTEST_STORE_OWNER_EMAIL);
-        $continue = $this->byId('btnsubmit');
+        $continue = $this->byId('submit_button');
         $continue->click();
         $this->assertTextPresent('Add Widget');
     }

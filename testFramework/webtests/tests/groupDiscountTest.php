@@ -23,7 +23,7 @@ class groupDiscountTest extends CommonTestResources
         $this->byId('ship-storepickup-storepickup0')->click();
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('39.99'); //net price
         $this->assertTextPresent('-$4.00');//group discount
         $this->assertTextPresent('2.52');//tax
@@ -37,7 +37,7 @@ class groupDiscountTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('39.99');//net price
         $this->assertTextPresent('-$4.00');//coupon discount
         $this->assertTextPresent('-$3.60');//group discount
@@ -52,7 +52,7 @@ class groupDiscountTest extends CommonTestResources
         $this->byId('ship-storepickup-storepickup0')->click();
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('42.79');//net price
         $this->assertTextPresent('-$4.28');//group discount
         $this->assertTextPresent('2.52');//tax
@@ -65,7 +65,7 @@ class groupDiscountTest extends CommonTestResources
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
         $this->byName('dc_redeem_code')->value('test10percent');
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('42.79');//net price
         $this->assertTextPresent('-$4.28');//coupon discount
         $this->assertTextPresent('-$3.85');//group discount
@@ -80,7 +80,7 @@ class groupDiscountTest extends CommonTestResources
         $this->byId('ship-flat-flat')->click();
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('$5.95');//shipping
         $this->assertTextPresent('-$4.28');//group discount
         $this->assertTextPresent('3.47');//tax
@@ -93,7 +93,7 @@ class groupDiscountTest extends CommonTestResources
         $this->byId('ship-flat-flat')->click();
         $this->byName('checkout_address')->submit();
         $this->byId('pmt-cod')->click();
-        $this->byCss('#paymentSubmit')->submit();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent('42.79');//net price
         $this->assertTextPresent('5.95');//shipping
         $this->assertTextPresent('-$4.28');//group discount

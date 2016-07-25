@@ -61,6 +61,9 @@ class CommonTestResources extends PHPUnit_Extensions_Selenium2TestCase
 
 //    private $VATcreated = false;
 
+    protected $captureScreenshotOnFailure = DO_SCREENSHOT;
+    protected $screenshotPath = SCREENSHOT_PATH;
+
 
     protected function setup()
     {
@@ -100,7 +103,7 @@ class CommonTestResources extends PHPUnit_Extensions_Selenium2TestCase
     {
         $sql = "SELECT customers_id FROM " . DB_PREFIX . "customers WHERE customers_email_address = '" . $customerEmail . "'";
         $q = $this->doDbQuery($sql);
-        if ($q->num_rows == 0) {
+        if ($q === false || $q->num_rows == 0) {
             return false;
         }
         $result = mysqli_fetch_assoc($q);
