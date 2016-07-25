@@ -95,13 +95,16 @@
         continue;
       }
 
-      //define some additional html message blocks available to templates, then build the html portion.
-      if (!isset($block['EMAIL_TO_NAME']) || $block['EMAIL_TO_NAME'] == '')       $block['EMAIL_TO_NAME'] = $to_name;
-      if (!isset($block['EMAIL_TO_ADDRESS']) || $block['EMAIL_TO_ADDRESS'] == '') $block['EMAIL_TO_ADDRESS'] = $to_email_address;
-      if (!isset($block['EMAIL_SUBJECT']) || $block['EMAIL_SUBJECT'] == '')       $block['EMAIL_SUBJECT'] = $email_subject;
-      if (!isset($block['EMAIL_FROM_NAME']) || $block['EMAIL_FROM_NAME'] == '')   $block['EMAIL_FROM_NAME'] = $from_email_name;
-      if (!isset($block['EMAIL_FROM_ADDRESS']) || $block['EMAIL_FROM_ADDRESS'] == '') $block['EMAIL_FROM_ADDRESS'] = $from_email_address;
-      $email_html = (!is_array($block) && substr($block, 0, 6) == '<html>') ? $block : zen_build_html_email_from_template($module, $block);
+      $pass_to_template = array(
+          'to_name' => $to_name,
+          'to_email_address' => $to_email_address,
+          'email_subject' => $email_subject,
+          'from_email_name' => $from_email_name,
+          'from_email_address' => $from_email_address,
+      );
+
+      // build the html portion
+      $email_html = (!is_array($block) && substr($block, 0, 6) == '<html>') ? $block : zen_build_html_email_from_template($module, $block, $pass_to_template);
       if (!is_array($block) && $block == '' || $block == 'none') $email_html = '';
 
       // Build the email based on whether customer has selected HTML or TEXT, and whether we have supplied HTML or TEXT-only components
@@ -455,7 +458,7 @@
  * selectively go thru each template tag and substitute appropriate text
  * finally, build full html content as "return" output from class
 **/
-  function zen_build_html_email_from_template($module='default', $content='') {
+  function zen_build_html_email_from_template($module='default', $content='', array $data) {
     global $messageStack, $current_page_base;
     if (NULL == $current_page_base) $current_page_base = $module;
     $block = array();
@@ -464,6 +467,13 @@
     } else {
       $block['EMAIL_MESSAGE_HTML'] = $content;
     }
+
+    if (!isset($block['EMAIL_TO_NAME']) || $block['EMAIL_TO_NAME'] == '')       $block['EMAIL_TO_NAME'] = $data['to_name'];
+    if (!isset($block['EMAIL_TO_ADDRESS']) || $block['EMAIL_TO_ADDRESS'] == '') $block['EMAIL_TO_ADDRESS'] = $data['to_email_address'];
+    if (!isset($block['EMAIL_SUBJECT']) || $block['EMAIL_SUBJECT'] == '')       $block['EMAIL_SUBJECT'] = $data['email_subject'];
+    if (!isset($block['EMAIL_FROM_NAME']) || $block['EMAIL_FROM_NAME'] == '')   $block['EMAIL_FROM_NAME'] = $data['from_email_name'];
+    if (!isset($block['EMAIL_FROM_ADDRESS']) || $block['EMAIL_FROM_ADDRESS'] == '') $block['EMAIL_FROM_ADDRESS'] = $data['from_email_address'];
+
     // Identify and Read the template file for the type of message being sent
     $langfolder = (strtolower($_SESSION['languages_code']) == 'en') ? '' : strtolower($_SESSION['languages_code']) . '/';
 
