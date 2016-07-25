@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
@@ -15,9 +15,9 @@ class GeoZonesDetail extends AbstractLeadController
     /**
      *
      */
-    public function addExecute()
+    public function addExecute($formValidation = null)
     {
-        parent::addExecute();
+        parent::addExecute($formValidation);
         $this->tplVars ['leadDefinition'] ['fields'] ['geo_zone_id'] ['value'] = $this->request->readGet('geo_zone_id');
     }
 
