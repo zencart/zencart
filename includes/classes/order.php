@@ -1182,8 +1182,8 @@ class order extends base {
   //comments area
     $html_msg['ORDER_COMMENTS'] = '';
     if ($this->info['comments']) {
-      $email_order .= zen_db_output($this->info['comments']) . "\n\n";
-      $html_msg['ORDER_COMMENTS'] = nl2br(zen_db_output($this->info['comments']));
+      $email_order .= zen_output_string_protected($this->info['comments']) . "\n\n";
+      $html_msg['ORDER_COMMENTS'] = nl2br(zen_output_string_protected($this->info['comments']));
     }
 
     $this->notify('NOTIFY_ORDER_EMAIL_BEFORE_PRODUCTS', array(), $email_order, $html_msg);

@@ -478,7 +478,7 @@ function couponpopupWindow(url) {
           echo zen_image(DIR_WS_ICONS . 'unlocked.gif', TEXT_VISIBLE) . "</td>\n";
         }
         echo '            <td class="smallText">' . $orders_status_array[$history['orders_status_id']] . '</td>' . "\n";
-        echo '            <td class="smallText">' . nl2br(zen_db_output($history['comments'])) . '&nbsp;</td>' . "\n" .
+        echo '            <td class="smallText">' . nl2br(zen_output_string_protected($history['comments'])) . '&nbsp;</td>' . "\n" .
              '          </tr>' . "\n";
       }
     } else {
