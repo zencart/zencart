@@ -12,19 +12,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 /**
  * Sniffer Class.
- * This class is used to collect information on the system that Zen Cart is running on
- * and to return error reports
- *
- * @package classes
+ * This class currently provides helper methods to examine database schema,
+ * particularly to assist with changes required when installing/upgrading modules.
  */
 class sniffer extends base {
-
-  function __construct() {
-    $this->browser = Array();
-    $this->php = Array();
-    $this->server = Array();
-    $this->database = Array();
-  }
 
   function table_exists($table_name) {
     global $db;
