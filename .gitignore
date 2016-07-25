@@ -1,34 +1,24 @@
 configure.php
-local/configure.php
-includes/local
 /vendor
 dbencdata*.ini
-
-testFramework/webtests/config/*
-!testFramework/webtests/config/localconfig_EXAMPLE.php
-
+clover.xml
 
 *.php1
 *.bak
 *.old
 Thumbs.db
-*.DS_Store
+.DS_Store
 
 docs/phpdocs*
 phpdoc.xml
-devtools.php
 dev-*.*
 
+# IDE-specific things...
 # Ignore eclipse project files
 .project
 .settings
 .buildpath
-
 # Ignore phpStorm stuff 
 .idea
-
-
 # dbv
 /data/meta/revision
-
-clover.xml
