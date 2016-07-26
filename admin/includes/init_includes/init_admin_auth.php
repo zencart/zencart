@@ -52,9 +52,11 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE) {
         FILENAME_ALT_NAV
     )) && ! zen_is_superuser()) {
       if (check_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == FALSE) {
-        zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
+          if (check_related_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == FALSE) {
+            zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
 
-        zen_redirect(zen_admin_href_link(FILENAME_DENIED));
+            zen_redirect(zen_admin_href_link(FILENAME_DENIED));
+          }
       }
     }
   }
