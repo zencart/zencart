@@ -56,6 +56,13 @@ function check_page($page, $params) {
   return $retVal;
 }
 
+function check_related_page($page, $params) {
+   if ($page == FILENAME_BANNER_STATISTICS) {
+      return check_page(FILENAME_BANNER_MANAGER, $params); 
+   }
+   return false; 
+}
+
 function zen_is_superuser()
 {
   global $db;
