@@ -697,13 +697,11 @@
         if ($digit[$i] > 255) {
           $valid_address = false;
           return $valid_address;
-          exit;
         }
         // stop crafty people from using internal IP addresses
         if (($digit[0] == 192) || ($digit[0] == 10)) {
           $valid_address = false;
           return $valid_address;
-          exit;
         }
       }
     }
@@ -711,7 +709,6 @@
     if (!preg_match('/'.$valid_email_pattern.'/i', $email)) { // validate against valid email pattern
       $valid_address = false;
       return $valid_address;
-      exit;
     }
 
     $zco_notifier->notify('NOTIFY_EMAIL_VALIDATION_TEST', array($email, $valid_address));
