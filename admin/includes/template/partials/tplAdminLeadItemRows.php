@@ -1,7 +1,7 @@
 <?php
 /**
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:   New in v1.6.0 $
  */
@@ -29,6 +29,18 @@
             <?php } ?>
             &nbsp;
         </td>
+        <?php } ?>
+    </tr>
+<?php } ?>
+<?php if ($tplVars['listingBox']['formattedTotals'] != null) { ?>
+<tr>
+<?php $cols = count($tplVars['leadDefinition']['listMap']) + 1; ?>
+<td colspan="<?php echo $cols;?>"><?php zen_draw_separator(); ?></td>
+</tr>
+    <tr>
+        <td>&nbsp;</td> <!-- account for checkbox --> 
+        <?php foreach ($tplVars['listingBox']['formattedTotals'] as $field) { ?>
+            <td><?php echo $field; ?></td>
         <?php } ?>
     </tr>
 <?php } ?>
