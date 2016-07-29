@@ -1803,7 +1803,7 @@ class shoppingCart extends base {
           
 // bof: notify about adjustment to new quantity to be same as current in stock or maximum to add
           if ($adjust_max == 'true') {
-            $messageStack->add_session('shopping_cart', ($_SESSION['cart']->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
+            $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
           }
 // eof: notify about adjustment to new quantity to be same as current in stock or maximum to add
           
