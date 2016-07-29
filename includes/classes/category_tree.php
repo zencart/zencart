@@ -157,24 +157,22 @@ class category_tree extends base {
         }
         $this->box_categories_array[$row]['path'] = $cPath_new;
 
-        if (isset($cPath_array) && in_array($catID, $cPath_array)) {
-            $this->box_categories_array[$row]['current'] = true;
-        } else {
-            $this->box_categories_array[$row]['current'] = false;
-        }
+        $this->box_categories_array[$row]['current'] = 
+            (isset($cPath_array) && in_array($catID, $cPath_array)); 
 
         // display category name
-        # if parent is 0 don't add a prefix to the category name, otherwise repeat CATEGORIES_SUBCATEGORIES_INDENT (int)$this->tree[$catID]['level'] amount of times and add CATEGORIES_SEPARATOR_SUBS before the category name
-        $this->box_categories_array[$row]['name'] = ($this->tree[$catID]['parent'] == (int)TOPMOST_CATEGORY_PARENT_ID ? '' : str_repeat(CATEGORIES_SUBCATEGORIES_INDENT, (int)$this->tree[$catID]['level']) . CATEGORIES_SEPARATOR_SUBS) . $this->tree[$catID]['name'];
+        if ($this->tree[$catID]['parent'] == (int)TOPMOST_CATEGORY_PARENT_ID) { 
+           $this->box_categories_array[$row]['name'] = $this->tree[$catID]['name']; 
+        } else { 
+           $this->box_categories_array[$row]['name'] = str_repeat(CATEGORIES_SUBCATEGORIES_INDENT, (int)$this->tree[$catID]['level']) . CATEGORIES_SEPARATOR_SUBS . $this->tree[$catID]['name'];
+        }
 
         // make category image available in case needed
-        $this->box_categories_array[$row]['image'] = $this->tree[$catID]['image'];
+        $this->box_categories_array[$row]['image'] = 
+            $this->tree[$catID]['image'];
 
-        if (zen_has_category_subcategories($catID)) {
-            $this->box_categories_array[$row]['has_sub_cat'] = true;
-        } else {
-            $this->box_categories_array[$row]['has_sub_cat'] = false;
-        }
+        $this->box_categories_array[$row]['has_sub_cat'] = 
+            zen_has_category_subcategories($catID); 
 
         if (SHOW_COUNTS == 'true') {
             $products_in_category = zen_count_products_in_category($catID);
