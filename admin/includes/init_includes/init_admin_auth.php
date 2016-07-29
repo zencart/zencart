@@ -18,7 +18,9 @@ $val = getenv('HABITAT');
 $habitat = ($val == 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] == 'vagrant'));
 
 // admin folder rename required
-if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '') && ($habitat == false))
+if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '') 
+  && (!defined('DEVELOPER_MODE') || DEVELOPER_MODE == 'false') 
+  && ($habitat == false))
 {
   if ($page != FILENAME_ALERT_PAGE)
   {

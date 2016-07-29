@@ -7,6 +7,7 @@
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
+<?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/developer_mode_helper.php'); ?>
 
 	<div align="center" class="alert-box success">
 		<div align="center" class="showModal button warning radius" id="NGINXCONF">

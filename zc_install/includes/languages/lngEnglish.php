@@ -34,6 +34,47 @@ define('TEXT_SYSTEM_SETUP_CATALOG_HTTPS_URL', 'Storefront HTTPS URL');
 define('TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH', 'Storefront Physical Path');
 define('TEXT_SYSTEM_SETUP_AGREE_LICENSE', 'Agree to license terms: ');
 define('TEXT_SYSTEM_SETUP_CLICK_TO_AGREE_LICENSE', '(Check the box to agree to GPL 2 license terms. Click the title in the left column to view the license.)');
+define('TEXT_SYSTEM_SETUP_DEVELOPER_MODE', 'Install in Developer Mode');
+define('TEXT_SYSTEM_SETUP_CLICK_FOR_DEVELOPER_MODE', 'Install in developer mode');
+define('TEXT_WARN_DEVELOPER_MODE', 'Do not use for production sites as it disables several security features.');
+define('TEXT_HELP_TITLE_DEVELOPERMODE', 'Zen Cart Developer Mode');
+define('TEXT_HELP_CONTENT_DEVELOPERMODE', "<div>
+	<p>
+		Ticking the check box will install Zen Cart in developer mode which will disable several built in and critical security features.
+		<br>
+		The following headline security items are diabled: 
+	</p>
+	<hr>
+	<ul style='list-style-type:square'>
+		<li>
+			The requirement to remove the zc_install folder after installation is not enforced.
+			<ul style='list-style-type:circle'>
+				<li>
+					This can permit unauthorized persons to ovewrite your installation
+				</li>
+			</ul>
+		</li>
+		<li>
+			A constant default password is assigned for the admin interface.
+			<ul style='list-style-type:circle'>
+				<li>
+					This can permit unauthorized persons to take over your installation
+				</li>
+			</ul>
+		</li>
+		<li>
+			The admin folder is not renamed.
+			<ul style='list-style-type:circle'>
+				<li>
+					This can encourage attacks on your installation
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+<div class='alert-box alert'>
+	<strong>IMPORTANT:</strong> Do NOT use this mode for production sites.
+</div>");
 define('TEXT_SYSTEM_SETUP_ERROR_DIALOG_TITLE', 'There are some problems');
 define('TEXT_SYSTEM_SETUP_ERROR_DIALOG_CONTINUE', 'Continue anyway');
 define('TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH', 'There appears to be a problem with the ' . TEXT_SYSTEM_SETUP_CATALOG_PHYSICAL_PATH);
