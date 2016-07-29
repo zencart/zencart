@@ -8,23 +8,29 @@
 
   @unlink(DEBUG_LOG_FOLDER . '/progress.json');
   require (DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
-  $changedDir = (bool)$_POST['changedDir'];
-  $adminDir = $_POST['adminDir'];
-  $adminNewDir = $_POST['adminNewDir'];
-  if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true)
+  require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/developer_mode_helper.php');
+  $adminConfigSettings = $_POST;
+  $changedDir = (bool)$adminConfigSettings['changedDir'];
+  $adminDir = $adminConfigSettings['adminDir'];
+  $adminNewDir = $adminConfigSettings['adminNewDir'];
+  
+  if (DEVELOPER_MODE === true)
   {
+    $adminConfigSettings['developer_mode'] = 'true';
     $admin_password = 'developer1';
   } else {
+    $adminConfigSettings['developer_mode'] = 'false';
     $admin_password = zen_create_PADSS_password();
   }
-  if (isset($_POST['upgrade_mode']) && $_POST['upgrade_mode'] == 'yes')
+  if (isset($adminConfigSettings['upgrade_mode']) && $adminConfigSettings['upgrade_mode'] == 'yes')
   {
     $isUpgrade = TRUE;
-  } else if (isset($_POST['http_server_catalog']))
+  } else if (isset($adminConfigSettings['http_server_catalog']))
   {
     $isUpgrade = FALSE;
     require (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
-    $result = new zcConfigureFileWriter($_POST);
+    $result = new zcConfigureFileWriter($adminConfigSettings);
 
     $errors = $result->errors;
   }
+  

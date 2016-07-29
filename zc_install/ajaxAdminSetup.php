@@ -11,6 +11,7 @@ define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require(DIR_FS_INSTALL . 'includes/application_top.php');
+require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'common/developer_mode_helper.php');
 
 $adminDir = $_POST['adminDir'];
 $wordlist = file(DIR_FS_INSTALL . 'includes/wordlist.csv');
@@ -24,7 +25,8 @@ $word3[$pos] = strtoupper($word3[$pos]);
 $word2 = zen_create_random_value(3, 'chars');
 $adminNewDir = $adminDir;
 $result = FALSE;
-if ($adminDir == 'admin' && (!defined('DEVELOPER_MODE') || DEVELOPER_MODE == false))
+
+if ($adminDir == 'admin' && DEVELOPER_MODE == false)
 {
   $adminNewDir =  $word1 . '-' . $word2 . '-' . $word3;
   $result = @rename(DIR_FS_ROOT . $adminDir, DIR_FS_ROOT . $adminNewDir);

@@ -36,6 +36,7 @@ class zcConfigureFileWriter
     $replaceVars['DB_DATABASE'] = trim($inputs['db_name']);
     $replaceVars['SQL_CACHE_METHOD'] = trim($inputs['sql_cache_method']);
     $replaceVars['HTTP_SERVER_ADMIN'] = trim($inputs['http_server_admin']);
+    $replaceVars['DEVELOPER_MODE'] = trim($inputs['developer_mode']);
     $replaceVars['SESSION_STORAGE'] = 'reserved for future use';
 
     $this->replaceVars = $replaceVars;

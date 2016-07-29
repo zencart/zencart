@@ -53,6 +53,12 @@ define('DB_DATABASE', '%%_DB_DATABASE_%%');
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
 
 /**
+ * Define whether you want to run Zen Cart in developer mode or not.
+ * This should be set to 'false' for production sites as it disables several security features.
+ */
+define('DEVELOPER_MODE', '%%_DEVELOPER_MODE_%%');
+
+/**
  * Reserved for future use
  */
 define('SESSION_STORAGE', '%%_SESSION_STORAGE_%%');
