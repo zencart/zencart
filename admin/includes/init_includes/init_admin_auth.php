@@ -17,9 +17,11 @@ $hasDoneStartWizard = TRUE;
 $val = getenv('HABITAT');
 $habitat = ($val == 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] == 'vagrant'));
 
+$redirectTo = false;
+$authError = false;
+
 // admin folder rename required
-if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '') && ($habitat == false))
-{
+if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '') && ($habitat == false)) {
   if ($page != FILENAME_ALERT_PAGE)
   {
     if (substr(DIR_WS_ADMIN, - 7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, - 7) == '/admin/')
@@ -29,17 +31,19 @@ if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE ==
     $check_path = dirname($_SERVER ['SCRIPT_FILENAME']) . '/../zc_install';
     if (is_dir($check_path))
     {
-      zen_redirect(zen_admin_href_link(FILENAME_ALERT_PAGE));
+        $redirectTo = zen_admin_href_link(FILENAME_ALERT_PAGE);
+        $authError = ADMIN_BLOCK_WARNING;
     }
   }
 }
-if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE) {
+if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
   if (! ($zcRequest->readGet('cmd') == FILENAME_LOGIN)) {
     if (! isset($_SESSION ['admin_id'])) {
       if (! ($zcRequest->readGet('cmd') == FILENAME_PASSWORD_FORGOTTEN)) {
-        zen_redirect(zen_admin_href_link(FILENAME_LOGIN, 'camefrom=' . $zcRequest->readGet('cmd') 
+          $redirectTo = zen_admin_href_link(FILENAME_LOGIN, 'camefrom=' . $zcRequest->readGet('cmd')
           . '&' . zen_get_all_get_params(array('cmd'))
-        ));
+        );
+          $authError = AUTH_ERROR;
       }
     }
     if (! in_array($page, array(
@@ -54,12 +58,14 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE) {
       if (check_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == FALSE) {
           if (check_related_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == FALSE) {
             zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
+              $redirectTo = zen_admin_href_link(FILENAME_DENIED);
+            $authError = AUTH_ERROR;
 
-            zen_redirect(zen_admin_href_link(FILENAME_DENIED));
           }
       }
     }
   }
+
   if (STORE_NAME == '' || STORE_OWNER == '') {
     $hasDoneStartWizard = FALSE;
     if (! in_array($page, array(
@@ -73,4 +79,11 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE) {
       zen_redirect(zen_admin_href_link(FILENAME_DEFAULT));
     }
   }
+}
+if ($zcRequest->getWebFactoryRequest()->isXhr() && $authError) {
+    header("Status: 403 Forbidden", TRUE, 403);
+    echo json_encode(array('error'=>TRUE, 'errorType'=>$authError));
+    exit(1);
+} elseif ($redirectTo) {
+    zen_redirect($redirectTo);
 }
