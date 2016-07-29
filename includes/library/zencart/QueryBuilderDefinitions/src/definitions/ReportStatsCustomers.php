@@ -86,7 +86,8 @@ class ReportStatsCustomers extends AbstractLeadDefinition
                             'title' => TABLE_HEADING_NUMBER,
                             'align' => 'left'
                         )
-                    )
+                    ),
+                    'total' => 'count',
                 ),
                 'customers_name' => array(
                     'bindVarsType' => 'string',
@@ -132,6 +133,7 @@ class ReportStatsCustomers extends AbstractLeadDefinition
                     'fieldFormatter' => array(
                         'callable' => $currencyFormat
                     ),
+                    'total' => 'currencySum',
                 ),
             ),
         );

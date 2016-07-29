@@ -749,7 +749,7 @@ define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
 define('TEXT_FILLBYLOOKUP_DEFAULT_PLACEHOLDER', 'Search or Select below');
 define('TEXT_DELETE_LINKED_ITEMS', 'Delete Linked Products');
 define('TEXT_DELETE_IMAGE', 'Delete Linked Image');
-
+define('TEXT_PAGE_TOTALS', 'Totals'); 
 // notifications
 
 define('TEXT_HEADER_NOTIFICATIONS_COUNT', 'You have %s notifications');

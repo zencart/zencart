@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: currencies.php 15880 2010-04-11 16:24:30Z wilt $
+ * @version $Id: New in v1.6.0 $
  */
 namespace ZenCart\QueryBuilderDefinitions\definitions;
 
@@ -44,7 +44,8 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
         $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);
         $formatter = $this->doFormatter($finalItems, $db);
         $this->tplVars['formatter'] = $formatter->getTplVars();
-        $this->tplVars['formattedItems'] = $formatter->getFormattedResults();
+        $this->tplVars['formattedItems'] = $formatter->getFormattedResults($this->outputLayout);
+        $this->tplVars['formattedTotals'] = $formatter->getFormattedTotals();
         $this->doMultiFormSubmit($finalItems);
         $this->normalizeTplVars($usePaginator);
         return $finalItems;

@@ -2,9 +2,9 @@
 /**
  * Class AbstractFormatter
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: currencies.php 15880 2010-04-11 16:24:30Z wilt $
+ * @version $Id: New in v1.6.0 $
  */
 namespace ZenCart\QueryBuilderDefinitions\formatters;
 
@@ -18,6 +18,11 @@ class AbstractFormatter extends \base
      * @var array
      */
     protected $formattedResults = array();
+
+    /**
+     * @var array
+     */
+    protected $formattedTotals = array();
 
     /**
      * @var array
@@ -111,6 +116,45 @@ class AbstractFormatter extends \base
     public function getFormattedResults()
     {
         return $this->formattedResults;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormattedTotals($outputLayout)
+    {
+        if (sizeof($this->formattedResults[0]) == 0) { 
+           return null; 
+        }
+        $hasTotal = false; 
+        foreach ($this->outputLayout['listMap'] as $id => $key) {
+           $fieldset = false; 
+           if ( isset($this->outputLayout['fields'][$key]) && 
+                isset($this->outputLayout['fields'][$key]['total']) ) {
+              $total = 0; 
+              if ($this->outputLayout['fields'][$key]['total'] == 'currencySum') {
+                 foreach ($this->formattedResults as $rec) { 
+                    $total += preg_replace("/([^0-9\.])/i", "", $rec[$key]); 
+                 }
+                 $currencies = new \currencies();
+                 $total = $currencies->format($total); 
+              } else if ($this->outputLayout['fields'][$key]['total'] == 'sum') {
+                 foreach ($this->formattedResults as $rec) { 
+                    $total += $rec[$key]; 
+                 }
+              } else if ($this->outputLayout['fields'][$key]['total'] == 'count') {
+                $total = count($this->formattedResults); 
+              } 
+              $fieldset = true; 
+              $hasTotal = true; 
+              $this->formattedTotals[] = $total; 
+           }
+           if (!$fieldset) { 
+             $this->formattedTotals[] = '&nbsp;'; 
+           }
+        }
+        if (!$hasTotal) return null; 
+        return $this->formattedTotals;
     }
 
     /**
