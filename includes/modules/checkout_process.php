@@ -48,12 +48,13 @@ if (!isset($credit_covers)) $credit_covers = FALSE;
 // load selected payment module
 require(DIR_WS_CLASSES . 'payment.php');
 $payment_modules = new payment($_SESSION['payment']);
-// load the selected shipping module
-require(DIR_WS_CLASSES . 'shipping.php');
-$shipping_modules = new shipping($_SESSION['shipping']);
 
 require(DIR_WS_CLASSES . 'order.php');
 $order = new order;
+
+// load the selected shipping module
+require(DIR_WS_CLASSES . 'shipping.php');
+$shipping_modules = new shipping($_SESSION['shipping']);
 
 // prevent 0-entry orders from being generated/spoofed
 if (sizeof($order->products) < 1) {
@@ -92,7 +93,7 @@ $order->create_add_products($insert_id);
 $_SESSION['order_number_created'] = $insert_id;
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE_ADD_PRODUCTS');
 //send email notifications
-$order->send_order_email($insert_id, 2);
+$order->send_order_confirmation_email($insert_id);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 
 // clear slamming protection since payment was accepted
@@ -124,6 +125,7 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
   $_SESSION['order_summary']['payment_module_code'] = $order->info['payment_module_code'];
   $_SESSION['order_summary']['shipping_method'] = $order->info['shipping_method'];
   $_SESSION['order_summary']['orders_status'] = $order->info['orders_status'];
+  $_SESSION['order_summary']['orders_status_name'] = $order->info['orders_status_name'];
   $_SESSION['order_summary']['tax'] = $otax;
   $_SESSION['order_summary']['shipping'] = $oshipping;
   $products_array = array();

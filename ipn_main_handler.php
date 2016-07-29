@@ -354,7 +354,7 @@ Processing...
         $_SESSION['order_number_created'] = $insert_id;
         $GLOBALS[$_SESSION['payment']]->transaction_id = $_POST['txn_id'];
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE_ADD_PRODUCTS');
-        $order->send_order_email($insert_id, 2);
+        $order->send_order_confirmation_email($insert_id);
         ipn_debug_email('Breakpoint: 5m - emailing customer');
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 
@@ -466,10 +466,18 @@ Processing...
           break;
       }
       // update order status history with new information
-      ipn_debug_email('IPN NOTICE :: Set new status ' . $new_status . " for order ID = " .  $ordersID . ($_POST['pending_reason'] != '' ? '.   Reason_code = ' . $_POST['pending_reason'] : '') );
       if ((int)$new_status == 0) $new_status = 1;
+      
       if (in_array($_POST['payment_status'], array('Refunded', 'Reversed', 'Denied', 'Failed'))
            || substr($txn_type,0,8) == 'cleared-' || $txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared') {
+        $sql = "select orders_status from " . TABLE_ORDERS . "
+                 where orders_id = :ordersID:";
+        $sql = $db->bindVars($sql, ':ordersID:', $ordersID, 'integer');
+        $old_status = $db->Execute($sql);
+        if ($new_status < $oldstatus->fields['orders_status'] && (substr($txn_type, 0, 8) == 'cleared-' || $txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared')) {
+          $new_status = $old_status->fields['orders_status'];
+        }
+        ipn_debug_email('IPN NOTICE :: Set new status ' . $new_status . " for order ID = " .  $ordersID . ($_POST['pending_reason'] != '' ? '.   Reason_code = ' . $_POST['pending_reason'] : '') );
         ipn_update_orders_status_and_history($ordersID, $new_status, $txn_type);
         $zco_notifier->notify('NOTIFY_PAYPALIPN_STATUS_HISTORY_UPDATE', array($ordersID, $new_status, $txn_type));
       }

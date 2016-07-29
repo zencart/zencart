@@ -10,12 +10,12 @@
 ?>
 <?php if ($tplVars['flagHasWidgets']) { ?>
     <?php foreach ($tplVars['widgets'] as $widget) { ?>
-        <div class="add-widget-list">
-            <p class=""><?php echo $widget['widget_name']; ?></p>
-            <p class="">
+        <div class="row">
+            <p class="col-sm-offset-3"><?php echo $widget['widget_name']; ?></p>
+            <p class="col-sm-offset-3">
                 <?php echo(defined($widget['widget_description']) ? constant($widget['widget_description']) : $widget['widget_description']); ?>
             </p>
-            <a class="button tiny add-widget-button" id="add-widget-<?php echo $widget['widget_key']; ?>" href="#">Add Widget</a>
+            <a class="col-sm-offset-3 button tiny add-widget-button" id="add-widget-<?php echo $widget['widget_key']; ?>" href="#">Add Widget</a>
         </div>
         <br class="clear">
     <?php } ?>
@@ -26,18 +26,13 @@
 <script>
 $(function() {
 
-  $('.add-widget-button').click(function() {
-    $('a.close-reveal-modal').trigger('click');
+  $('.add-widget-button').click(function(e) {
     var id = $(this).attr('id');
     zcJS.ajax({
       url: "zcAjaxHandler.php?act=dashboardWidget&method=addWidget",
       data: {'id': id}
     }).done(function( response ) {
-      if (response.html)
-      {
-        $('#main-sortables').html(response.html);
-        createSortables();
-      }
+        window.location.replace("<?php echo zen_admin_href_link(FILENAME_DEFAULT);?>");
     });
 
   });

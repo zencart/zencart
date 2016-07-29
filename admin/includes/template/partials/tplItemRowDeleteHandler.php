@@ -6,20 +6,21 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<div id="rowDeleteModal" class="reveal-modal small" data-reveal tabindex="-1">
-    <div class="modal-header">
-        <a class="close-reveal-modal">×</a>
-
-        <h3>Confirm Delete</h3>
-    </div>
-    <div class="modal-body">
-        <p> Are you sure you want to delete this item </p>
-    </div>
-    <div class="modal-footer">
-        <a href="#" id="rowDeleteConfirm" data-item="">
-            <button class="radius button">Confirm</button>
-        </a>
-        <button class="radius button dismiss">Cancel</button>
-    </div>
-</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="rowDeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><?php echo TEXT_CONFIRM_DELETE; ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?php echo TEXT_CONFIRM_DELETE_TEXT; ?></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo TEXT_CANCEL; ?></button>
+                <button type="button" class="btn btn-primary" id="rowDeleteConfirm"><?php echo TEXT_CONFIRM; ?></button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <?php require 'includes/template/javascript/itemRowDeleteHandler.php'; ?>

@@ -12,7 +12,7 @@
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent centeredContent">';
 
   $lng_cnt = 0;
-  while (list($key, $value) = each($language_list)) {
+  foreach($language_list as $key=>$value) {
     $content .= '<a href="' . zen_href_link($current_page_base, zen_get_all_get_params(array('language', 'currency')) . 'language=' . $value['code'], $request_type) . '">' . zen_image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name']) . '</a>&nbsp;&nbsp;';
     $lng_cnt ++;
     if ($lng_cnt >= MAX_LANGUAGE_FLAGS_COLUMNS) {

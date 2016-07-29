@@ -56,7 +56,6 @@ define('TEXT_DATABASE_SETUP_SQL_CACHE_METHOD', 'SQL Cache Method: ');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occurred when running the SQL install file');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details<p>');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'UTF8 (default setting)');
-define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'Latin1');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_NONE', 'No SQL Caching');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE', 'Database');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE', 'File');
@@ -87,6 +86,7 @@ define('TEXT_ADMIN_SETUP_USER_PASSWORD_HELP', '<strong>REMEMBER THIS!!</strong>:
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY', 'Admin Directory: ');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT', 'We were not able to change your admin directory automatically. You will need to change it yourself before you can access your Store Admin.');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_NOT_ADMIN_CHANGED', 'We did not change your admin directory automatically as it already seems to have been changed from the default.');
+define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEVELOPER', 'We did not change your admin directory automatically as you are in DEVELOPER_MODE.');
 define('TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_CHANGED', 'Your store Admin directory may have been automatically renamed. Please ensure you make a note of the directory below.');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_SETTINGS', 'Newsletter');
 define('TEXT_ADMIN_SETUP_NEWSLETTER_EMAIL', 'Newsletter Email: ');
@@ -140,12 +140,13 @@ define('TEXT_NAVBAR_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_NAVBAR_COMPLETION', 'Finished');
 define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
 
-define('TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES', 'There were problems preparing and storing the configure.php files. YOUR INSTALL DID NOT COMPLETE PROPERLY.<br>Additional technical details may be found in your /logs/ folder.');
+define('TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES', 'There were problems preparing and storing the configure.php file. YOUR INSTALL DID NOT COMPLETE PROPERLY.<br>Additional technical details may be found in your /logs/ folder.');
 define('TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE', 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.');
 define('TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE', 'Could not write the generated config file: %s. Please ensure the file exists and is writable.');
 
+define('TEXT_ERROR_DATABASE_INSTALL', 'There was a problem during the database installation.  Please check the files in the /logs/ folder for details');
+
 define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not exist (isn't readable) or is not writeable");
-define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is too old, and this version of Zen Cart&reg; cannot be used on this server in its present configuration.</p>
 <p>This version of Zen Cart&reg; is compatible with PHP versions 5.2.9 to 7.0.<br>
@@ -183,6 +184,7 @@ define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be load
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
 define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use CURL to contact a live server');
 define('TEXT_ERROR_HTTPS', 'PRO TIP: If possible you should already have installed an SSL certificate, and run the installer using https://');
+define('TEXT_ERROR_HTTPS_CONFIGURE', 'As soon as possible, you should install an SSL certificate, and set the URL and ENABLE_SSL settings in your configure.php file.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your database structure if you choose "Upgrade..." below.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your database seems to be current. This suggests you are on a live site. Proceeding with Install will wipe out the current database contents! Are you sure you want to install?');
 define('TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED', 'Multiple Admin directories seem to exist. Either remove old admin directories and click Refresh or select the correct admin directory below and click Refresh.');
@@ -276,10 +278,10 @@ define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s b
 
 
 define('TEXT_COMPLETION_NGINX_TEXT', "<u>Important security information for Nginx</u>");
-define('TEXT_HELP_TITLE_NGINXCONF', "Securing ZEN CART on Nginx Webservers");
+define('TEXT_HELP_TITLE_NGINXCONF', "Securing Zen Cart on Nginx Webservers");
 define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<p>
-		Your ZEN CART installation comes with security measures in a format native to the Apache Webserver.
+		Your Zen Cart installation comes with security measures in a format native to the Apache Webserver.
 		<br>
 		See below to implement a similar set of measures for the Nginx Webserver. 
 	</p>
@@ -305,7 +307,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for ZEN CART in your Nginx configuration file.
+			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for Zen Cart in your Nginx configuration file.
 			<ul style='list-style-type:circle'>
 				<li>
 					The directives may be used for SSL and/or Non SSL server blocks.
@@ -368,7 +370,7 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 	<ol>
 </div>
 <div class='alert-box alert'>
-	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for ZEN CART.
+	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.
 </div>
 <hr>");
 

@@ -8,7 +8,7 @@
  */
 namespace ZenCart\Services;
 
-use Zencart\Controllers\AbstractController as Controller;
+use Zencart\Controllers\AbstractAdminController as Controller;
 use ZenCart\Request\Request as Request;
 
 /**
@@ -129,7 +129,7 @@ class LeadService extends AbstractService
      * @param null $insertId
      * @return bool
      */
-    public function manageImageUploads($insertId = null)
+    public function manageMediaUploads($insertId = null)
     {
         foreach ($_FILES as $uploadKey => $uploadEntry) {
             $destination = DIR_FS_CATALOG_IMAGES . $this->request->readPost($uploadKey . '_file_select');
@@ -247,6 +247,27 @@ class LeadService extends AbstractService
                     $this->outputLayout['fields'][$field]['bindVarsType']
                 );
                 break;
+            case 'dateRange':
+                $dateParts = explode(':', $value);
+                $queryBuilderParts['whereClauses'][] = array(
+                    'table' => $table,
+                    'field' => $field,
+                    'value' => ":lower: AND :upper:",
+                    'type' => 'AND',
+                    'test' => 'BETWEEN'
+                );
+                $queryBuilderParts['bindVars'][] = array(
+                    ':lower:',
+                    $dateParts[0],
+                    $this->outputLayout['fields'][$field]['bindVarsType']
+                );
+                $queryBuilderParts['bindVars'][] = array(
+                    ':upper:',
+                    $dateParts[1],
+                    $this->outputLayout['fields'][$field]['bindVarsType']
+                );
+
+                break;
         }
         $this->queryBuilder->setParts($queryBuilderParts);
     }
@@ -307,7 +328,7 @@ class LeadService extends AbstractService
      * @param $languages
      * @param $resultItems
      */
-    public function populateLanguageKeys($mainKey, $languages, $resultItems)
+    public function populateLanguageKeysFromDb($mainKey, $languages)
     {
         $tplVars = $this->listener->getTplVars();
         if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
@@ -326,6 +347,26 @@ class LeadService extends AbstractService
     }
 
     /**
+     * @param $mainKey
+     * @param $languages
+     * @param $resultItems
+     */
+    public function populateLanguageKeysFromPost($mainKey, $languages)
+    {
+        $tplVars = $this->listener->getTplVars();
+        if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
+            return;
+        }
+        unset($tplVars['leadDefinition']['fields'][$mainKey]['value']);
+        foreach ($languages as $language) {
+            $mainKey = $this->request->readPost('entry_field_' . $mainKey);
+            $languageValue = $mainKey[$language['languages_id']];
+            $tplVars['leadDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $languageValue;
+        }
+        $this->listener->setTplVars($tplVars);
+    }
+
+    /**
      * @return array
      */
     public function getEditHiddenField()
@@ -335,26 +376,6 @@ class LeadService extends AbstractService
             'value' => $this->request->readGet($this->listingQuery['mainTable']['fkeyFieldLeft'])
         );
     }
-
-    /**
-     * @param $sql
-     * @return string
-     */
-    public function doAutomapSql($sql)
-    {
-        if (isset($this->outputLayout['autoMap']['edit'])) {
-            foreach ($this->outputLayout['autoMap']['edit'] as $entry) {
-                $fieldType = $entry['bindVarsType'];
-                $sql .= ':' . $entry['field'] . ': = ';
-                $sql = $this->dbConn->bindVars($sql, ':' . $entry['field'] . ':', $entry['field'], 'noquotestring');
-                $sql .= ':' . $entry['field'] . ':, ';
-                $sql = $this->dbConn->bindVars($sql, ':' . $entry['field'] . ':', $entry['value'], $fieldType);
-            }
-        }
-
-        return $sql;
-    }
-
 
     /**
      * @param $pushedLanguageFields

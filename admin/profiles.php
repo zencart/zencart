@@ -31,7 +31,7 @@ elseif (isset($action) && ($action == 'edit' || $action == 'delete' || $action =
 elseif (in_array($action, array('edit','delete','delete_confirm','update','update-name')))
 {
   $messageStack->add_session(ERROR_NO_PROFILE_DEFINED, 'error');
-  zen_redirect(zen_href_link(FILENAME_PROFILES));
+  zen_redirect(zen_admin_href_link(FILENAME_PROFILES));
 }
 
 // take appropriate steps depending upon the action requested
@@ -51,7 +51,7 @@ switch ($action) {
     if ($error != '')
     {
       $messageStack->add_session($error, 'error');
-      zen_redirect(zen_href_link(FILENAME_PROFILES));
+      zen_redirect(zen_admin_href_link(FILENAME_PROFILES));
     }
     else
     {
@@ -71,14 +71,14 @@ switch ($action) {
     else
     {
       $messageStack->add_session(SUCCESS_PROFILE_INSERTED, 'success');
-      zen_redirect(zen_href_link(FILENAME_PROFILES));
+      zen_redirect(zen_admin_href_link(FILENAME_PROFILES));
     }
     break;
   case 'update':
     zen_remove_profile_permits($profile);
     zen_insert_pages_into_profile($profile, $_POST['p']);
     $messageStack->add_session(SUCCESS_PROFILE_UPDATED, 'success');
-    zen_redirect(zen_href_link(FILENAME_PROFILES));
+    zen_redirect(zen_admin_href_link(FILENAME_PROFILES));
     break;
   case 'update_name':
     $profileName = $_POST['profile-name'];
@@ -92,7 +92,7 @@ switch ($action) {
     {
       $messageStack->add_session(ERROR_INVALID_PROFILE_NAME, 'error');
     }
-    zen_redirect(zen_href_link(FILENAME_PROFILES));
+    zen_redirect(zen_admin_href_link(FILENAME_PROFILES));
     break;
   case 'rename':
   case 'delete':
@@ -140,7 +140,7 @@ require('includes/admin_html_head.php');
 <?php if ($action != 'rename' && $action != 'delete') { ?>
     <tfoot>
       <tr>
-        <td colspan="4"><a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=add') ?>"><?php echo zen_image_button('button_add_profile.gif', IMAGE_ADD_PROFILE) ?></a></td>
+        <td colspan="4"><a href="<?php echo zen_admin_href_link(FILENAME_PROFILES, 'action=add') ?>"><?php echo zen_image_button('button_add_profile.gif', IMAGE_ADD_PROFILE) ?></a></td>
       </tr>
     </tfoot>
 <?php } ?>
@@ -157,7 +157,7 @@ require('includes/admin_html_head.php');
             <?php echo zen_draw_hidden_field('profile', $profileDetails['id']); ?>
             <?php echo zen_draw_input_field('profile-name', htmlspecialchars($profileDetails['name'], ENT_COMPAT, CHARSET, TRUE)); ?>
             <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
-            <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+            <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
           </form>
         </td>
 <?php } else { ?>
@@ -166,20 +166,20 @@ require('includes/admin_html_head.php');
 <?php if ($profileDetails['id'] != SUPERUSER_PROFILE) { ?>
         <td class="actions">
 <?php if ($action != 'delete') {  ?>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=edit&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=rename&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_rename.gif', IMAGE_RENAME) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES, 'action=edit&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES, 'action=rename&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_rename.gif', IMAGE_RENAME) ?></a>
 <?php } ?>
 <?php if ($profileDetails['users'] == 0) { ?>
 <?php
 if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($profile)) {
           echo TEXT_CONFIRM_DELETE;
 ?>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=delete_confirm&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_confirm_red.gif', IMAGE_DELETE) ?></a>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES, 'action=delete_confirm&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_confirm_red.gif', IMAGE_DELETE) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
 <?php
           } else if ($action != 'delete') {
 ?>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=delete&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE) ?></a>
+          <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES, 'action=delete&amp;profile=' . $profileDetails['id']) ?>"><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE) ?></a>
 <?php     } ?>
 <?php } ?>
         </td>
@@ -206,7 +206,7 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
     <?php echo zen_draw_hidden_field('profile', $profile); ?>
     <div class="formButtons">
       <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
-      <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+      <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
     </div>
 <?php foreach($pagesByMenu as $menuKey => $pageList) { ?>
     <dl>
@@ -222,7 +222,7 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
 <?php } ?>
     <div class="formButtons">
       <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
-      <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+      <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
     </div>
   </form>
 
@@ -234,7 +234,7 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
     <?php echo zen_draw_hidden_field('action', 'insert'); ?>
     <div class="formButtons">
       <?php echo zen_image_submit('button_save.gif', IMAGE_SAVE) ?>
-      <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+      <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
     </div>
 <?php foreach($pagesByMenu as $menuKey => $pageList) { ?>
     <dl>
@@ -250,7 +250,7 @@ if ($action == 'delete' && $profileDetails['name'] == zen_get_profile_name($prof
 <?php } ?>
     <div class="formButtons">
       <?php echo zen_image_submit('button_save.gif', IMAGE_SAVE) ?>
-      <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+      <a href="<?php echo zen_admin_href_link(FILENAME_PROFILES) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
     </div>
   </form>
 <?php } ?>

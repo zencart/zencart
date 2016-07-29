@@ -13,7 +13,7 @@
   $chk_option_names = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS_OPTIONS . " where language_id='" . (int)$_SESSION['languages_id'] . "' limit 1");
   if ($chk_option_names->fields['count'] < 1) {
     $messageStack->add_session(ERROR_DEFINE_OPTION_NAMES, 'caution');
-    zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER));
+    zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_NAME_MANAGER));
   }
 
   // check for damaged database, caused by users indiscriminately deleting table data
@@ -53,7 +53,7 @@
       case 'set_option_names_values_copier':
         $_SESSION['option_names_values_copier'] = $_GET['reset_option_names_values_copier'];
         $action='';
-        zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
+        zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
         break;
       case 'add_product_option_values':
         $value_name_array = $_POST['value_name'];
@@ -102,7 +102,7 @@
           $messageStack->add_session(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE . ' ' . $duplicate_option_values, 'caution');
         }
 
-        zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
+        zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
         break;
       case 'update_value':
         $value_name_array = $_POST['value_name'];
@@ -152,14 +152,14 @@
           $messageStack->add_session(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE . ' ' . $duplicate_option_values, 'caution');
         }
 
-        zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
+        zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
         break;
       case 'delete_value':
         // demo active test
         if (zen_admin_demo()) {
           $_GET['action']= '';
           $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
+          zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
         }
         $value_id = zen_db_prepare_input($_GET['value_id']);
 
@@ -192,7 +192,7 @@
         $db->Execute("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
                       where products_options_values_id = '" . (int)$value_id . "'");
 
-        zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
+        zen_redirect(zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
         break;
 
 ////////////////////////////////////////////////////
@@ -520,7 +520,7 @@ require('includes/admin_html_head.php');
 <script type="text/javascript">
 function go_option() {
   if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
-    location = "<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
+    location = "<?php echo zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
   }
 }
 </script>
@@ -534,8 +534,8 @@ function go_option() {
            <table width="100%" border="0" cellspacing="0" cellpadding="2">
              <tr>
                <td height="40" valign="bottom">
-                 <a href="<?php echo  zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES); ?></a> &nbsp;
-                 <a href="<?php echo  zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, '', 'NONSSL') ?>"><?php echo zen_image_button('button_option_names.gif', IMAGE_OPTION_NAMES); ?></a>
+                 <a href="<?php echo  zen_admin_href_link(FILENAME_ATTRIBUTES_CONTROLLER) ?>"><?php echo zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES); ?></a> &nbsp;
+                 <a href="<?php echo  zen_admin_href_link(FILENAME_OPTIONS_NAME_MANAGER) ?>"><?php echo zen_image_button('button_option_names.gif', IMAGE_OPTION_NAMES); ?></a>
                </td>
               <td class="main" height="40" valign="bottom">
                 <?php
@@ -592,7 +592,7 @@ function go_option() {
 ?>
                   <tr>
                     <td class="main" colspan="3"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
-                    <td class="main" align="right"><br /><?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_delete.gif', ' delete '); ?></a>&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', ' cancel '); ?></a>&nbsp;</td>
+                    <td class="main" align="right"><br /><?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_delete.gif', ' delete '); ?></a>&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', ' cancel '); ?></a>&nbsp;</td>
                   </tr>
 <?php
   } // extra cancel
@@ -626,7 +626,7 @@ function go_option() {
                   </tr>
                   <tr>
                     <td class="main" colspan="3"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
-                    <td class="main" align="right"><br /><?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_delete.gif', ' delete '); ?></a>&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', ' cancel '); ?></a>&nbsp;</td>
+                    <td class="main" align="right"><br /><?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_delete.gif', ' delete '); ?></a>&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', ' cancel '); ?></a>&nbsp;</td>
                   </tr>
 <?php
     } else {
@@ -635,7 +635,7 @@ function go_option() {
                     <td class="main" colspan="3"><br /><?php echo TEXT_OK_TO_DELETE; ?></td>
                   </tr>
                   <tr>
-                    <td class="main" align="right" colspan="3"><br /><?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_delete.gif', ' delete '); ?></a>&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', ' cancel '); ?></a>&nbsp;</td>
+                    <td class="main" align="right" colspan="3"><br /><?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_delete.gif', ' delete '); ?></a>&nbsp;&nbsp;&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', ' cancel '); ?></a>&nbsp;</td>
                   </tr>
 <?php
     }
@@ -681,12 +681,12 @@ function go_option() {
 
     // Previous
     if ($prev_value_page)  {
-      echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'option_order_by=' . $option_order_by . '&value_page=' . $prev_value_page) . '"> &lt;&lt; </a> | ';
+      echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'option_order_by=' . $option_order_by . '&value_page=' . $prev_value_page) . '"> &lt;&lt; </a> | ';
     }
 
     for ($i = 1; $i <= $num_pages; $i++) {
       if ($i != $_GET['value_page']) {
-         echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($option_order_by) ? 'option_order_by=' . $option_order_by . '&' : '') . 'value_page=' . $i) . '">' . $i . '</a> | ';
+         echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($option_order_by) ? 'option_order_by=' . $option_order_by . '&' : '') . 'value_page=' . $i) . '">' . $i . '</a> | ';
       } else {
          echo '<b><font color=red>' . $i . '</font></b> | ';
       }
@@ -694,7 +694,7 @@ function go_option() {
 
     // Next
     if ($_GET['value_page'] != $num_pages) {
-      echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($option_order_by) ? 'option_order_by=' . $option_order_by . '&' : '') . 'value_page=' . $next_value_page) . '"> &gt;&gt;</a> ';
+      echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($option_order_by) ? 'option_order_by=' . $option_order_by . '&' : '') . 'value_page=' . $next_value_page) . '"> &gt;&gt;</a> ';
     }
 ?>
                 </td>
@@ -733,7 +733,7 @@ function go_option() {
 // FIX HERE
 // edit option values
       if (($action == 'update_option_value') && ($_GET['value_id'] == $values_values->fields['products_options_values_id'])) {
-        echo '<form name="values" action="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '" method="post">';
+        echo '<form name="values" action="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '" method="post">';
         echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']);
         $inputs = '';
         for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
@@ -765,7 +765,7 @@ function go_option() {
                 </select>&nbsp;</td>
                 <td height="50" class="attributeBoxContent"><?php echo $inputs; ?></td>
                 <td class="attributeBoxContent" align="right"><?php echo $inputs2; ?></td>
-                <td align="center" class="attributeBoxContent">&nbsp;<?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE); ?>&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>&nbsp;</td>
+                <td align="center" class="attributeBoxContent">&nbsp;<?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE); ?>&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>&nbsp;</td>
 <?php
         echo '</form>';
       } else {
@@ -785,8 +785,8 @@ function go_option() {
 <?php
   } else {
 ?>
-<!--                <td align="center" class="smallText">&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_values->fields['products_options_values_id'] . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] : ''), 'NONSSL') . '">'; ?><?php echo zen_image_button('button_edit.gif', IMAGE_UPDATE); ?></a>&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_values->fields['products_options_values_id'] . '&option_id=' . $option_id, 'NONSSL') , '">'; ?><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE); ?></a>&nbsp;</td> -->
-                <td align="center" class="smallText">&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_values->fields['products_options_values_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_edit.gif', IMAGE_UPDATE); ?></a>&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_values->fields['products_options_values_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) , '">'; ?><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE); ?></a>&nbsp;</td>
+<!--                <td align="center" class="smallText">&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_values->fields['products_options_values_id'] . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] : '')) . '">'; ?><?php echo zen_image_button('button_edit.gif', IMAGE_UPDATE); ?></a>&nbsp;&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_values->fields['products_options_values_id'] . '&option_id=' . $option_id) , '">'; ?><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE); ?></a>&nbsp;</td> -->
+                <td align="center" class="smallText">&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_values->fields['products_options_values_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '">'; ?><?php echo zen_image_button('button_edit.gif', IMAGE_UPDATE); ?></a>&nbsp;&nbsp;<?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_values->fields['products_options_values_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) , '">'; ?><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE); ?></a>&nbsp;</td>
 <?php
 //    $values_values->MoveNext();
   }
@@ -810,7 +810,7 @@ function go_option() {
 ?>
               <tr class="<?php echo (floor($rows/2) == ($rows/2) ? 'attributes-even' : 'attributes-odd'); ?>">
 <?php
-      echo '<form name="values" action="' . zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '" method="post">';echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']);
+      echo '<form name="values" action="' . zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') ) . '" method="post">';echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']);
 ?>
                 <td align="center" class="smallText">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
                 <td align="center" class="smallText">&nbsp;<select name="option_id">
@@ -934,7 +934,7 @@ example: Copy Color Red to products with Size Small
             <tr class="dataTableHeadingRow">
               <td colspan="5"><table border="1" cellspacing="0" cellpadding="2" width="100%">
                 <tr class="dataTableHeadingRow">
-                  <form name="quick_jump" method="post" action="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another', 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+                  <form name="quick_jump" method="post" action="<?php echo zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                   <td class="dataTableHeadingContent">
                   <?php echo
                   TEXT_SELECT_OPTION_FROM . '<br />' . $option_from_dropdown . '&nbsp;<br />' .
@@ -973,7 +973,7 @@ example: Delete Color Red
             <tr class="dataTableHeadingRow">
               <td colspan="5"><table border="1" cellspacing="0" cellpadding="2" width="100%">
                 <tr class="dataTableHeadingRow">
-                  <form name="quick_jump" method="post" action="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+                  <form name="quick_jump" method="post" action="<?php echo zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                   <td class="dataTableHeadingContent">
                   <?php echo
                   TEXT_SELECT_DELETE_OPTION_FROM . '<br />' . $option_from_dropdown . '&nbsp;<br />' .
@@ -1007,7 +1007,7 @@ example: Copy Color Red to products with Size Small
             <tr class="dataTableHeadingRow">
               <td colspan="5"><table border="1" cellspacing="0" cellpadding="2" width="100%">
                 <tr class="dataTableHeadingRow">
-                  <form name="quick_jump" method="post" action="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+                  <form name="quick_jump" method="post" action="<?php echo zen_admin_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                   <td class="dataTableHeadingContent" valign="top">
                   <?php echo
                   TEXT_SELECT_OPTION_FROM_ADD . '<br />' . $option_from_dropdown . '&nbsp;<br />' .

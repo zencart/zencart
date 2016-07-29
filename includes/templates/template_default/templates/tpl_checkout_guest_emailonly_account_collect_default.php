@@ -21,7 +21,7 @@
 
 <h4 id="createAcctDefaultLoginLink"><?php echo sprintf(TEXT_ORIGIN_LOGIN, zen_href_link(FILENAME_LOGIN, zen_get_all_get_params(array('action')), 'SSL')); ?></h4>
 
-<?php echo zen_draw_form('no_account', zen_href_link(FILENAME_CHECKOUT_FLOW, zen_get_all_get_params(), 'SSL'), 'post', 'onsubmit="return check_form(no_account);"') . '<div>' . zen_draw_hidden_field('action', 'process') . zen_draw_hidden_field('email_pref_html', 'email_format'); ?>
+<?php echo zen_draw_form('no_account', zen_href_link(FILENAME_CHECKOUT_FLOW, zen_get_all_get_params(), 'SSL'), 'post', 'onsubmit="return check_account_address_form(no_account);"') . '<div>' . zen_draw_hidden_field('action', 'process') . zen_draw_hidden_field('email_pref_html', 'email_format'); ?>
 
 
 <?php if ($messageStack->size('no_account') > 0) echo $messageStack->output('no_account'); ?>

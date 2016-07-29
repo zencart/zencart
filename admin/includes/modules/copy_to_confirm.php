@@ -28,6 +28,8 @@ if (!defined('IS_ADMIN_FLAG')) {
                               values ('" . (int)$products_id . "', '" . (int)$categories_id . "')");
 
                 zen_record_admin_activity('Product ' . (int)$products_id . ' copied as link to category ' . (int)$categories_id . ' via admin console.', 'info');
+                $zco_notifier->notify('NOTIFIER_ADMIN_COPY_PRODUCT_AS_LINK', $products_id, $categories_id);
+
               }
             } else {
               $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
@@ -79,7 +81,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                   '" . $products_price . "',
                                   '" . zen_db_input($product->fields['products_virtual']) . "',
                                   now(),
-                                  " . (zen_not_null(zen_db_input($product->fields['products_date_available'])) ? "'" . zen_db_input($product->fields['products_date_available']) . "'" : 'null') . ",
+                                  " . (zen_not_null(zen_db_input($product->fields['products_date_available'])) ? "'" . zen_db_input($product->fields['products_date_available']) . "'" : 'NULL') . ",
                                   '" . $products_weight . "', '0',
                                   '" . (int)$product->fields['products_tax_class_id'] . "',
                                   '" . (int)$product->fields['manufacturers_id'] . "',
@@ -153,10 +155,11 @@ if ( $_POST['copy_attributes']=='copy_attributes_yes' and $_POST['copy_as'] == '
             }
 
             zen_record_admin_activity('Product ' . (int)$old_products_id . ' duplicated as product ' . (int)$dup_products_id . ' via admin console.', 'info');
+            $zco_notifier->notify('NOTIFIER_ADMIN_COPY_PRODUCT_AS_DUPLICATE', $old_products_id, $dup_products_id);
           }
 
           // reset products_price_sorter for searches etc.
           zen_update_products_price_sorter($products_id);
 
         }
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+        zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));

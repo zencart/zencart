@@ -7,14 +7,14 @@
  */
 ?>
 <script type="text/javascript">
-    $('.rowDelete').on('click', function () {
-        $("#rowDeleteModal").foundation('reveal', 'open');
+    $('.rowHandlerDelete').on('click', function () {
+        $("#rowDeleteModal").modal('show');
         $('#rowDeleteConfirm').attr('data-item', $(this).attr('data-item'));
         $('#rowDeleteConfirm').on('click', function (e) {
             e.stopImmediatePropagation()
-            $("#rowDeleteModal").foundation('reveal', 'close');
+            $("#rowDeleteModal").modal('hide');
             zcJS.ajax({
-                url: '<?php echo zen_href_link($_GET['cmd'], "action=delete"); ?>',
+                url: '<?php echo zen_admin_href_link($_GET["cmd"], "action=delete"); ?>',
                 data: {id: $(this).attr('data-item'), delete_image: $('#delete_image').is(":checked"), delete_linked: $('#delete_linked').is(":checked")}
             }).done(function( response ) {
                 if (response.html)

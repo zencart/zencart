@@ -60,6 +60,8 @@
  */
   if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/locale.php')) {
     $template_dir_select = $template_dir . '/';
+  } else if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared' . '/locale.php')) {
+    $template_dir_select = 'shared' . '/';
   } else {
     $template_dir_select = '';
   }

@@ -1,0 +1,38 @@
+{
+    "name": "aura/di",
+    "type": "library",
+    "description": "A serializable dependency injection container with constructor and setter injection, interface and trait awareness, configuration inheritance, and much more.",
+    "keywords": [
+        "container",
+        "dependency injection",
+        "di",
+        "di container",
+        "dependency injection container"
+    ],
+    "homepage": "https://github.com/auraphp/Aura.Di",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aura.Di Contributors",
+            "homepage": "https://github.com/auraphp/Aura.Di/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "container-interop/container-interop": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aura\\Di\\": "src/"
+        }
+    },
+    "require-dev": {
+        "mouf/picotainer": "~1.0",
+        "acclimate/container": "~1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aura\\Di\\": "tests/"
+        }
+    }
+}

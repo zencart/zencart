@@ -13,7 +13,7 @@ class baseSeleniumTestClass extends PHPUnit_Extensions_Selenium2TestCase
 {
     use \CompatibilityTestCase;
 
-    protected function setUp()
+    public function setUp()
     {
         $this->setBrowser('firefox');
         $this->setBrowserUrl('/');

@@ -16,6 +16,10 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
   <input type="hidden" name="detected_detected_https_server_catalog" value="<?php echo $catalogHttpsServer; ?>">
   <input type="hidden" name="adminDir" value="<?php echo $adminDir; ?>">
   <input type="hidden" name="db_type" value="<?php echo $db_type; ?>">
+
+  <?php if ($request_type != 'SSL') { ?>
+  <div class="alert-box warning"><?php echo TEXT_ERROR_HTTPS_CONFIGURE; ?></div>
+  <?php } ?>
   <fieldset>
     <legend>License</legend>
     <div class="row">

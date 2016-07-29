@@ -43,22 +43,17 @@ class zcConfigureFileWriter
 
 // die('<pre>' . print_r($inputs, true));
 
-    $this->processAllConfigureFiles($adminDir);
+    $this->processAllConfigureFiles();
   }
-  protected function processAllConfigureFiles($adminDir)
+  protected function processAllConfigureFiles()
   {
     $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
     $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
     $result1 = $this->transformConfigureTplFile($tplFile, $outputFile);
     if ((int)$result1 == 0) logDetails('catalogConfig size: ' . (int)$result1 . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
-    $tplFile = DIR_FS_INSTALL . 'includes/admin-configure-template.php';
-    $outputFile = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/configure.php';
-    $result2 = $this->transformConfigureTplFile($tplFile, $outputFile);
-    if ((int)$result2 == 0) logDetails('adminConfig size: ' . (int)$result2 . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
-
-    // return a result indicating whether either file failed in some way: true=success; false=one-or-both-failed (bitwise '&' operand here is intentional)
-    return $result1 & $result2;
+    // return a result indicating whether writing the file failed in some way: true=success;
+    return $result1;
   }
   protected function transformConfigureTplFile($tplFile, $outputFile)
   {

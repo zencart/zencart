@@ -48,7 +48,7 @@ class zcPassword extends base
   public function __construct($phpVersion = PHP_VERSION)
   {
     if (version_compare($phpVersion, '5.5.0', '<')) {
-      require_once __DIR__ . '/vendors/password_compat-master/lib/password.php';
+      require_once __DIR__ . '/../library/ircmaxell/password_compat/lib/password.php';
     }
   }
   /**

@@ -13,7 +13,7 @@
  */
 ?>
 <div class="centerColumn" id="accountEditDefault">
-<?php echo zen_draw_form('account_edit', zen_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);"') . zen_draw_hidden_field('action', 'process'); ?>
+<?php echo zen_draw_form('account_edit', zen_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'), 'post', 'onsubmit="return check_account_address_form(account_edit);"') . zen_draw_hidden_field('action', 'process'); ?>
 
 <?php if ($messageStack->size('account_edit') > 0) echo $messageStack->output('account_edit'); ?>
 

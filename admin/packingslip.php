@@ -16,7 +16,7 @@
                           from " . TABLE_ORDERS . "
                           where orders_id = '" . (int)$oID . "'");
 
-  include(DIR_WS_CLASSES . 'order.php');
+  include(DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php');
   $order = new order($oID);
 
   // prepare order-status pulldown list
@@ -185,7 +185,7 @@
         echo '          <tr>' . "\n" .
              '            <td class="smallText" align="center" valign="top">' . zen_datetime_short($orders_history->fields['date_added']) . '</td>' . "\n";
         echo '            <td class="smallText" valign="top">' . $orders_status_array[$orders_history->fields['orders_status_id']] . '</td>' . "\n";
-        echo '            <td class="smallText" valign="top">' . ($orders_history->fields['comments'] == '' ? TEXT_NONE : nl2br(zen_db_output($orders_history->fields['comments']))) . '&nbsp;</td>' . "\n" .
+        echo '            <td class="smallText" valign="top">' . ($orders_history->fields['comments'] == '' ? TEXT_NONE : nl2br(zen_output_string_protected($orders_history->fields['comments']))) . '&nbsp;</td>' . "\n" .
              '          </tr>' . "\n";
         $orders_history->MoveNext();
         if (ORDER_COMMENTS_PACKING_SLIP == 1 && $count_comments >= 1) {

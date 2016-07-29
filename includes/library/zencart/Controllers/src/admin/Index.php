@@ -6,18 +6,15 @@
  */
 namespace ZenCart\Controllers;
 use ZenCart\Services\IndexRoute;
+use ZenCart\Request\Request as Request;
+use ZenCart\AdminUser\AdminUser as User;
 
 /**
  * Class Index
  * @package ZenCart\Controllers
  */
-class Index extends AbstractController
+class Index extends AbstractAdminController
 {
-    /**
-     * @var bool
-     */
-    public $useFoundation = true;
-
     /**
      * @var
      */
@@ -28,9 +25,9 @@ class Index extends AbstractController
      * @param $request
      * @param $db
      */
-    public function __construct($controllerCommand, $request, $db)
+    public function __construct(Request $request, $db, User $user)
     {
-        parent::__construct($controllerCommand, $request, $db);
+        parent::__construct($request, $db, $user);
         $this->service = new IndexRoute($this, $request, $db);
     }
 
@@ -69,7 +66,6 @@ class Index extends AbstractController
      */
     public function getZonesExecute()
     {
-        $this->useView = false;
         $this->response = array('html'=>'');
         if ($this->request->readPost('id'))  {
             $options = zen_get_country_zones((int)$this->request->readPost('id'));

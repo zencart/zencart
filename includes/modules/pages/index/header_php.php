@@ -61,10 +61,10 @@ require (DIR_WS_MODULES . zen_get_module_directory ( 'require_languages.php' ));
 if (true)
 {
   $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
-  $box = new ZenCart\ListingBox\boxes\ProductsPage($zcRequest);
+  $box = new ZenCart\QueryBuilderDefinitions\definitions\ProductsPage($zcRequest, $db);
   $paginator = new ZenCart\Paginator\Paginator($zcRequest);
-  $builder = new ZenCart\ListingBox\PaginatorBuilder($zcRequest,$box->getListingQuery(), $paginator);
-  $box->buildResults($qb, $db, new ZenCart\ListingBox\DerivedItemManager, $builder->getPaginator());
+  $builder = new ZenCart\QueryBuilder\PaginatorBuilder($zcRequest,$box->getListingQuery(), $paginator);
+  $box->buildResults($qb, $db, new ZenCart\QueryBuilder\DerivedItemManager, $builder->getPaginator());
   $tplVars['listingBox'] = $box->getTplVars();
 
   if ($category_depth == 'products' && $box->getTotalItemCount () == 0) $robotsNoIndex = true;

@@ -8,6 +8,9 @@
  */
 namespace ZenCart\Controllers;
 
+use ZenCart\Request\Request as Request;
+use ZenCart\AdminUser\AdminUser as User;
+
 /**
  * Class AbstractController
  * @package ZenCart\Controllers
@@ -27,84 +30,28 @@ abstract class AbstractController extends \base
      */
     protected $controllerAction;
     /**
-     * @var bool
+     * @var string
      */
-    protected $useView = true;
-    /**
-     * @var bool
-     */
-    protected $useFoundation = false;
+    protected $templateLayout = 'default';
 
     /**
-     * @param $controllerCommand
-     * @param $request
+     * AbstractAdminController constructor.
+     * @param Request $request
      * @param $db
+     * @param User $user
      */
-    public function __construct($controllerCommand, $request, $db)
+    public function __construct(Request $request, $db, User $user)
     {
         $this->request = $request;
+        $this->currentUser = $user;
         $this->dbConn = $db;
-        $this->controllerCommand = $controllerCommand;
+        $this->controllerCommand = $this->request->readGet('cmd');
         $this->tplVars = array();
-        $this->response = array(
-            'data' => null
-        );
-        $this->prepareDefaultCss();
-        $this->prepareCommonTplVars();
-        $this->preCheck();
+        $this->tplVars = array('jscriptVars' => ['securityToken' => $request->getSession()->get('securityToken')]);
+        $this->response = null;
     }
 
-    /**
-     *
-     */
-    protected function prepareCommonTplVars()
-    {
-        $this->tplVars['cmd'] = $this->request->readGet('cmd');
-        $this->tplVars['useFoundation'] = $this->useFoundation;
-
-        $this->tplVars['hide_languages'] = $GLOBALS['hide_languages'];
-        $this->tplVars['languages'] = $GLOBALS['languages'];
-        $this->tplVars['languages_array'] = $GLOBALS['languages_array'];
-        $this->tplVars['languages_selected'] = $GLOBALS['languages_selected'];
-
-    }
-
-    /**
-     *
-     */
-    protected function prepareDefaultCSS()
-    {
-        if ($this->useView) {
-            if ($this->useFoundation) {
-                $cssList [] = array(
-                    'href' => 'includes/template/css/normalize.css',
-                    'id' => 'normalizeCSS'
-                );
-                $cssList [] = array(
-                    'href' => 'includes/template/css/foundation.min.css',
-                    'id' => 'foundationCSS'
-                );
-            }
-            $cssList [] = array(
-                'href' => 'includes/template/css/stylesheet.css',
-                'id' => 'stylesheetCSS'
-            );
-            $cssList [] = array(
-                'href' => 'includes/template/css/stylesheet_print.css',
-                'media' => 'print',
-                'id' => 'printCSS'
-            );
-            if ($this->useFoundation) {
-                $cssList [] = array(
-                    'href' => 'includes/template/css/zen-foundation-reset.css',
-                    'id' => 'zenFoundationResetCSS'
-                );
-            }
-        }
-        $this->tplVars ['cssList'] = $cssList;
-    }
-
-    /**
+     /**
      *
      */
     public function invoke()
@@ -125,7 +72,10 @@ abstract class AbstractController extends \base
      */
     protected function doOutput()
     {
-        if (!$this->useView) {
+        if (isset($this->response['header_response_code'])) {
+            http_response_code($this->response['header_response_code']);
+        }
+        if (!$this->useView()) {
             $this->doNonViewOutput();
         } else {
             $this->doViewOutput();
@@ -141,32 +91,10 @@ abstract class AbstractController extends \base
             $this->notify('NOTIFIER_ADMIN_BASE_DO_VIEW_OUTPUT_REDIRECT_BEFORE');
             zen_redirect($this->response['redirect']);
         }
-        $tplVars = $this->tplVars;
-        require('includes/template/common/tplAdminHtmlHead.php');
-        echo "\n" . "</head>";
-        echo "\n" . "<body>";
-        require_once('includes/template/common/tplHeader.php');
         $useTemplate = $this->getMainTemplate();
-        if (isset($useTemplate)) {
-            require($useTemplate);
-        }
-        require('includes/template/common/tplFooter.php');
-    }
-
-    /**
-     * @return null|string
-     */
-    protected function getMainTemplate()
-    {
-        if (isset($this->mainTemplate)) {
-            return ('includes/template/templates/' . $this->mainTemplate);
-        }
-        $tryTemplate = 'tpl' . ucfirst($this->controllerCommand) . '.php';
-        if (file_exists('includes/template/templates/' . $tryTemplate)) {
-            return ('includes/template/templates/' . $tryTemplate);
-        }
-
-        return null;
+        $this->tplVars['mainTemplate'] = $useTemplate;
+        $tplVars = $this->tplVars;
+        require_once('includes/template/layouts/'. $this->templateLayout . '.php');
     }
 
     /**
@@ -225,6 +153,19 @@ abstract class AbstractController extends \base
         $this->mainTemplate = $templateName;
     }
 
+    /**
+     * @return bool
+     */
+    protected function useView()
+    {
+        if (!isset($this->response)) {
+            return true;
+        }
+        if (isset($this->response['redirect'])) {
+            return true;
+        }
+        return false;
+    }
     /**
      *
      */

@@ -6,9 +6,5 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<div class="large-10 columns">
-    <div class="panel multi">
-        <?php require('includes/template/partials/tplAdminLeadListOutput.php'); ?>
-    </div>
+    <?php require('includes/template/partials/tplAdminLeadListOutput.php'); ?>
     <?php require('includes/template/partials/tplPaginatorStandard.php'); ?>
-</div>

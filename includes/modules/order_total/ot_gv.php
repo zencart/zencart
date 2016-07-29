@@ -47,7 +47,7 @@ class ot_gv {
     $this->credit_class = true;
     if (!zen_not_null(ltrim($_SESSION['cot_gv'], ' 0')) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true) {
-      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';" />' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br />' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
+      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="gvSubmitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';" />' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br />' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
     }
     $this->output = array();
     if (IS_ADMIN_FLAG === true) {
@@ -193,7 +193,7 @@ class ot_gv {
                          'redeem_instructions' => MODULE_ORDER_TOTAL_GV_REDEEM_INSTRUCTIONS,
                          'checkbox' => $this->use_credit_amount(),
                          'fields' => array(array('title' => MODULE_ORDER_TOTAL_GV_TEXT_ENTER_CODE,
-                         'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-'.$this->code.'" onkeyup="submitFunction(0,0)"'),
+                         'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-'.$this->code.'" onkeyup="gvSubmitFunction(0,0)"'),
                          'tag' => 'disc-'.$this->code
                          )));
 

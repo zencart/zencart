@@ -16,7 +16,7 @@
   if (zen_admin_demo()) {
     $_GET['action']= '';
     $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-    zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+    zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
   }
 
   $do_delete_flag = false;
@@ -98,4 +98,4 @@
 
   // if this is a single-product delete, redirect to categories page
   // if not, then this file was called by the cascading delete initiated by the category-delete process
-  if ($action == 'delete_product_confirm') zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
+  if ($action == 'delete_product_confirm') zen_redirect(zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));

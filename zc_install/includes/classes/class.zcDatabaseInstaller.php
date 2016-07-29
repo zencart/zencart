@@ -122,8 +122,8 @@ class zcDatabaseInstaller
       if ($this->completeLine)
       {
         if (get_magic_quotes_runtime() > 0) $this->newLine = stripslashes($this->newLine);
-        $output = (trim(str_replace(';','',$this->newLine)) != '' && !$this->ignoreLine) ? $this->tryExecute($this->newLine) : '';
-        $this->doJsonProgressLoggingUpdate();
+        $error = (trim(str_replace(';','',$this->newLine)) != '' && !$this->ignoreLine) ? $this->tryExecute($this->newLine) : '';
+        $this->doJsonProgressLoggingUpdate($error);
         $this->newLine = "";
         $this->ignoreLine = FALSE;
         $this->completeLine = FALSE;
@@ -161,6 +161,10 @@ class zcDatabaseInstaller
     {
       $this->writeUpgradeExceptions($this->line, $this->db->error_number . ': ' . $this->db->error_text);
       error_log("MySQL error " . $this->db->error_number . " encountered during zc_install:\n" . $this->db->error_text . "\n" . $this->line . "\n---------------\n\n");
+        return 1;
+    } else 
+    {
+      return 0;
     }
   }
   public function parserDropTableIfExists ()
@@ -456,7 +460,7 @@ class zcDatabaseInstaller
     $parseString[0] = strtoupper($parseString[0]);
     return $parseString;
   }
-  private function doJsonProgressLoggingUpdate()
+  private function doJsonProgressLoggingUpdate($error)
   {
     if (isset($this->extendedOptions['doJsonProgressLogging']))
     {
@@ -466,8 +470,16 @@ class zcDatabaseInstaller
       if ($fp)
       {
         $arr = array('total'=>'0', 'progress'=>$progress, 'message'=>$this->extendedOptions['message']);
+
+        if($error){
+          $arr['error_message'] = TEXT_ERROR_DATABASE_INSTALL;
+        }
+
         fwrite($fp, json_encode($arr));
         fclose($fp);
+        if($error){
+          die('!');
+        }
       }
     }
   }

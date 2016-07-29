@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 Modified in v1.6.0 $
  */
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
@@ -195,16 +195,18 @@ function zen_get_select_options($optionList, $setDefault)
     $documentRoot = zen_get_document_root();
     $url = ($request_type == 'SSL' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . str_replace('/zc_install/index.php', '', $_SERVER['SCRIPT_NAME']);
     $httpServer = zen_parse_url($url, 'host', true);
-    $adminServer = ($request_type == 'SSL') ? 'https://' : 'http://';
-    $adminServer .= $httpServer;
-    $catalogHttpServer = 'http://' . $httpServer;
-    $catalogHttpUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
-    $catalogHttpsServer = 'https://' . $httpServer;
-    $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+
+    $adminServer = ($request_type == 'SSL' ? 'https://' : 'http://') . $httpServer;
+
+    $catalogHttpsServer = $catalogHttpServer = 'http://' . $httpServer;
+    $catalogHttpsUrl    = $catalogHttpUrl    = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    if ($request_type == 'SSL') { 
+      $catalogHttpsServer = 'https://' . $httpServer;
+      $catalogHttpsUrl    = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    }
+
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';
     $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';
 
     return array($adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $catalogHttpsServer, $catalogHttpsUrl, $dir_ws_http_catalog, $dir_ws_https_catalog);
   }
-
-

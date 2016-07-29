@@ -2,7 +2,7 @@
 /**
  * Class AjaxDashboardWidget
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
  */
@@ -21,7 +21,8 @@ class AjaxDashboardWidget extends AbstractAjaxController
     public function updateWidgetPositionsExecute()
     {
         if (isset($_POST['items'])) {
-            WidgetManager::applyPositionSettings($_POST['items'], $_SESSION['admin_id']);
+            $items = json_decode($_POST['items'], true);
+            WidgetManager::applyPositionSettings($items, $_SESSION['admin_id']);
         }
     }
 
@@ -129,15 +130,18 @@ class AjaxDashboardWidget extends AbstractAjaxController
     {
         $id = str_replace('add-widget-', '', $_POST['id']);
         WidgetManager::addWidgetForUser($id, $_SESSION['admin_id']);
-        $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION['admin_id'], $_SESSION['languages_id']);
+        $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION['admin_id']);
         $widgetList = WidgetManager::loadWidgetClasses($widgetInfoList);
         $tplVars = WidgetManager::prepareTemplateVariables($widgetList);
         $tplVars['widgetInfoList'] = $widgetInfoList;
         $tplVars['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
-        $tplVars ['widgets'] = WidgetManager::prepareTemplateVariables($tplVars['widgetList']);
-        $template = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php';
-        $html = $this->loadTemplateAsString($template, $tplVars);
-        $this->response = array('html' => $html);
+        $tplVars['widgets'] = WidgetManager::prepareTemplateVariables($tplVars['widgetList']);
+// commented out because these lines are not actually needed to install a widget,
+// and since loadClass() isn't also called, the template doesn't have some necessary variables
+// so errors are thrown
+//        $template = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php';
+//        $html = $this->loadTemplateAsString($template, $tplVars);
+//        $this->response = array('html' => $html);
     }
 
     /**

@@ -14,17 +14,13 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package admin
 **/
-
-// include the database functions
-  require(DIR_WS_FUNCTIONS . 'database.php');
-
-// define our general functions used application-wide
-  require(DIR_WS_FUNCTIONS . 'general.php');
-  require(DIR_WS_FUNCTIONS . 'functions_prices.php');
-  require(DIR_WS_FUNCTIONS . 'functions_system.php');
-  require(DIR_WS_FUNCTIONS . 'html_output.php');
-  require(DIR_WS_FUNCTIONS . 'functions_customers.php'); // partial copy of catalog functions customers for now
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
+require(DIR_WS_FUNCTIONS . 'functions_helpers.php');
+require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php');
+require(DIR_WS_FUNCTIONS . 'functions_admin_menu.php');
+require(DIR_WS_FUNCTIONS . 'functions_crud.php');
+require(DIR_WS_FUNCTIONS . 'functions_system.php');
+require(DIR_WS_FUNCTIONS . 'html_output.php');
+require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
 
 /**
  * require the plugin support functions
@@ -54,7 +50,7 @@ if (isset($_GET) & sizeof($_GET) > 0 ) {
 
 // check for SSL configuration changes:
 if (!defined('SSLPWSTATUSCHECK')) die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
-$e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
+$e = (substr(ADMIN_HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
 if (SSLPWSTATUSCHECK == '') {
   $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '".$e.':'.$e."', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
   $db->Execute($sql);

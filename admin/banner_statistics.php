@@ -231,7 +231,7 @@ $(document).ready(function () {
   </form>
 
   <p>
-    <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . $banner_id);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
+    <a href="<?php echo zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . $banner_id);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
   </p>
 
 
@@ -324,7 +324,7 @@ $(document).ready(function () {
 
 
   <p>
-    <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
+    <a href="<?php echo zen_admin_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']);?>"><?php echo zen_image_button('button_back.gif', IMAGE_BACK); ?></a>
   </p>
 </div>
 <!-- body_eof //-->

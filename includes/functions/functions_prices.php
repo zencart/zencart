@@ -16,7 +16,6 @@
     $product = $db->Execute("select products_price, products_model, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
 
     if ($product->RecordCount() > 0) {
-//  	  $product_price = $product->fields['products_price'];
       $product_price = zen_get_products_base_price($product_id);
     } else {
       return false;
@@ -145,7 +144,7 @@
 ////
 // Display Price Retail
 // Specials and Tax Included
-  function zen_get_products_output_price($products_id) {
+  function zen_get_products_output_price($products_id, $use_customer_restrictions = true) {
     global $db, $currencies;
     $priceinfo = array();
 
@@ -156,7 +155,7 @@
     // 1 = Login to shop
     // 2 = Can browse but no prices
     // verify display of prices
-    switch (true) {
+    if ($use_customer_restrictions) switch (true) {
       case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
         // customer must be logged in to browse
         return '';
@@ -181,13 +180,10 @@
         // customer is logged in and was changed to must be approved to see prices
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
-      default:
-        // proceed normally
-        break;
     }
 
-    // show case only
-    if (STORE_STATUS != '0') {
+    // skip prices when in showcase-only mode
+    if (IS_ADMIN_FLAG === false) {
       if (STORE_STATUS == '1') {
         return '';
       }
@@ -308,7 +304,7 @@
 // Display Price Retail
 // Specials and Tax Included
   function zen_get_products_display_price($products_id) {
-    $val = zen_get_products_output_price($products_id);
+    $val = zen_get_products_output_price($products_id, (IS_ADMIN_FLAG===false));
     if (is_array($val) && isset($val['legacy_output'])) $val = $val['legacy_output'];
     return $val;
   }
@@ -399,7 +395,7 @@
   function zen_get_products_quantity_mixed($product_id) {
     global $db;
 
-// don't check for mixed if not attributes
+// don't check for mixed if no attributes
     $chk_attrib = zen_has_product_attributes((int)$product_id);
     if ($chk_attrib == true) {
       $the_products_quantity_mixed = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
@@ -432,7 +428,7 @@
         $the_min_units .= ($the_min_units ? ' ' : '' ) . PRODUCTS_QUANTITY_UNIT_TEXT_LISTING . '&nbsp;' . $check_units;
       }
 
-// don't check for mixed if not attributes
+// don't check for mixed if no attributes
       $chk_mix = zen_get_products_quantity_mixed((int)$product_id);
       if ($chk_mix != 'none') {
         if (($check_min > 0 or $check_units > 0)) {
@@ -554,9 +550,7 @@
       case ($discount_type_id == 5):
         // No Sale and No Special
 //        $sale_maker_discount = 1;
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             if ($special_price_discount != 0) {
@@ -564,10 +558,7 @@
             } else {
               $calc = $attributes_amount;
             }
-
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
 //echo 'How much 3 - ' . $qty . ' : ' . $product_id . ' : ' . $qty . ' x ' .  $attributes_amount . ' vs ' . $check_discount_qty_price . ' - ' . $sale_maker_discount . '<br />';
@@ -575,15 +566,11 @@
       case ($discount_type_id == 59):
         // No Sale and Special
 //        $sale_maker_discount = $special_price_discount;
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -592,30 +579,22 @@
 // BOF: percentage discounts apply to Sale
       case ($discount_type_id == 120):
         // percentage discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $sale_maker_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 1209):
         // percentage discount on Sale and Special with a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $calc2 = $calc - ($calc * $sale_maker_discount);
             $sale_maker_discount = $calc - $calc2;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -624,9 +603,7 @@
 // BOF: percentage discounts skip specials
       case ($discount_type_id == 110):
         // percentage discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $sale_maker_discount);
@@ -639,25 +616,19 @@
 //            $sale_maker_discount = $calc - $calc2;
               $calc = $attributes_amount - ($attributes_amount * $sale_maker_discount);
               $sale_maker_discount = $calc;
-            } else {
-              $sale_maker_discount = $sale_maker_discount;
             }
           }
         }
         break;
       case ($discount_type_id == 1109):
         // percentage discount on Sale and Special with a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
 //            $calc2 = $calc - ($calc * $sale_maker_discount);
 //            $sale_maker_discount = $calc - $calc2;
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -666,30 +637,22 @@
 // BOF: flat amount discounts
       case ($discount_type_id == 20):
         // flat amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount - $sale_maker_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 209):
         // flat amount discount on Sale and Special with a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $calc2 = ($calc - $sale_maker_discount);
             $sale_maker_discount = $calc2;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -698,15 +661,11 @@
 // BOF: flat amount discounts Skip Special
       case ($discount_type_id == 10):
         // flat amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount - $sale_maker_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -719,8 +678,6 @@
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -729,32 +686,23 @@
 // BOF: New Price amount discounts
       case ($discount_type_id == 220):
         // New Price amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 2209):
         // New Price amount discount on Sale and Special with a special
-        if (!$attributes_id) {
-//          $sale_maker_discount = $sale_maker_discount;
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -763,32 +711,23 @@
 // BOF: New Price amount discounts - Skip Special
       case ($discount_type_id == 210):
         // New Price amount discount Sale and Special without a special
-        if (!$attributes_id) {
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
       case ($discount_type_id == 2109):
         // New Price amount discount on Sale and Special with a special
-        if (!$attributes_id) {
-//          $sale_maker_discount = $sale_maker_discount;
-          $sale_maker_discount = $sale_maker_discount;
-        } else {
+        if ($attributes_id) {
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
             $sale_maker_discount = $calc;
-          } else {
-            $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
@@ -808,7 +747,7 @@
 
 ////
 // look up discount in sale makers - attributes only can have discounts if set as percentages
-// this gets the discount amount this does not determin when to apply the discount
+// this gets the discount amount this does not determine when to apply the discount
   function zen_get_products_sale_discount_type($product_id = false, $categories_id = false, $return_value = false) {
     global $currencies;
     global $db;
@@ -898,18 +837,17 @@ If a special exist * 10+9
     }
   }
 
-////
-// look up discount in sale makers - attributes only can have discounts if set as percentages
-// this gets the discount amount this does not determin when to apply the discount
+/**
+ * look up discount in sale makers - attributes only can have discounts if set as percentages
+ * this gets the discount amount this does not determine when to apply the discount
+ * 
+ * NOTE: catalog-side you should use zen_get_discount_calc() instead of this!!!
+ */
   function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
-    global $currencies;
-    global $db;
-
-// NOT USED
-echo '<br />' . 'I SHOULD use zen_get_discount_calc' . '<br />';
+    global $db, $currencies;
+    $sale_maker_discount_type = '';
 
 /*
-
 0 = flat amount off base price with a special
 1 = Percentage off base price with a special
 2 = New Price with a special
@@ -934,10 +872,8 @@ If a special exist * 10
 2+7 + 0+10 = New Price apply to price = 19 or 190
 2+7 + 1+10 = New Price skip Specials = 5 or 50
 2+7 + 2+10 = New Price apply to Special = 21 or 210
-
 */
 
-/*
 // get products category
     if ($categories_id == true) {
       $check_category = $categories_id;
@@ -1000,8 +936,6 @@ If a special exist * 10
       }
     }
     return $sale_maker_discount;
-*/
-
   }
 
 ////
@@ -1324,20 +1258,21 @@ If a special exist * 10
     }
   }
 
-////
-// set the products_price_sorter
+/**
+ * recalculate and set the products_price_sorter field for the specified $product_id
+ */
   function zen_update_products_price_sorter($product_id) {
     global $db;
 
     $products_price_sorter = zen_get_products_actual_price($product_id);
-
     $db->Execute("update " . TABLE_PRODUCTS . " set
                   products_price_sorter='" . zen_db_prepare_input($products_price_sorter) . "'
                   where products_id='" . (int)$product_id . "'");
   }
 
-////
-// salemaker categories array
+/**
+ * salemaker categories array
+ */
   function zen_parse_salemaker_categories($clist) {
     $clist_array = explode(',', $clist);
 
@@ -1352,12 +1287,13 @@ If a special exist * 10
     return $tmp_array;
   }
 
-////
-// update salemaker product prices per category per product
+/**
+ * update salemaker product prices per category per product for the specified $salemaker_id
+ */
   function zen_update_salemaker_product_prices($salemaker_id) {
     global $db;
     $zv_categories = $db->Execute("select sale_categories_selected from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . (int)$salemaker_id . "'");
-
+    if ($zv_categories->EOF) return FALSE;
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
     $n = sizeof($za_salemaker_categories);
     for ($i=0; $i<$n; $i++) {

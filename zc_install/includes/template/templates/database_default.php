@@ -200,6 +200,11 @@ function updateStatus() {
           $("#progress-bar").html('<span class="meter" style="width:'+data.progress+'%;"></span>');
           t = setTimeout("updateStatus()", 200);
         }
+        if(data.error_message)
+        {
+            $('#error-message').html(data.error_message);
+            clearTimeout(t);
+        }    
       } else
       {
         t = setTimeout("updateStatus()", 10);

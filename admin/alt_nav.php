@@ -25,7 +25,7 @@ require('includes/admin_html_head.php');
    $pageList = array();
    foreach ($pages as $page)
    {
-      $pageList[] = '<a href="' . zen_href_link($page['file'], $page['params']) . '">' . $page['name'] . '</a>';
+      $pageList[] = '<a href="' . zen_admin_href_link($page['file'], $page['params']) . '">' . $page['name'] . '</a>';
    }
 ?>
   <div>

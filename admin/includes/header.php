@@ -24,7 +24,7 @@ if ($messageStack->size > 0) {
 <!-- All HEADER_ definitions in the columns below are defined in includes/languages/english.php //-->
   <div class="row">
     <div class="col-xs-8 col-sm-3" id="adminHeaderLogo">
-        <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
+        <?php echo '<a href="' . zen_admin_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
     </div>
 
     <div class="hidden-xs col-sm-3 col-sm-push-6 noprint adminHeaderAlerts">
@@ -35,7 +35,7 @@ if ($messageStack->size > 0) {
     </div>
 
     <div class="hidden-sm hidden-md hidden-lg col-xs-4 noprint adminHeaderAlerts">
-        <a href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><input type="button" class="btn btn-primary" value="<?php echo BOX_CUSTOMERS_ORDERS; ?>"/></a>
+        <a href="<?php echo zen_admin_href_link(FILENAME_ORDERS); ?>"><input type="button" class="btn btn-primary" value="<?php echo BOX_CUSTOMERS_ORDERS; ?>"/></a>
     </div>
 
     <div class="clearfix visible-xs-block"></div>
@@ -43,7 +43,7 @@ if ($messageStack->size > 0) {
 <?php
   if (isset($_SESSION['reset_admin_activity_log']) and ($_SESSION['reset_admin_activity_log'] == true and (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
 ?>
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>"><input type="button" class="btn btn-warning" value="<?php echo TEXT_BUTTON_RESET_ACTIVITY_LOG;?>"/></a><p class="hidden-xs"><br /><?php echo RESET_ADMIN_ACTIVITY_LOG; ?></p>
+        <a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACTIVITY); ?>"><input type="button" class="btn btn-warning" value="<?php echo TEXT_BUTTON_RESET_ACTIVITY_LOG;?>"/></a><p class="hidden-xs"><br /><?php echo RESET_ADMIN_ACTIVITY_LOG; ?></p>
 <?php
   }
 ?>
@@ -82,12 +82,12 @@ if ($messageStack->size > 0) {
     </div>
     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noprint">
         <ul class="nav nav-pills upperMenu">
-            <li><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
+            <li><a href="<?php echo zen_admin_href_link(FILENAME_DEFAULT); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
             <li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
             <li><a href="https://www.zen-cart.com/" class="headerLink" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
-            <li><a href="<?php echo zen_href_link(FILENAME_SERVER_INFO, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
-            <li><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
-            <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
+            <li><a href="<?php echo zen_admin_href_link(FILENAME_SERVER_INFO); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
+            <li><a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
+            <li><a href="<?php echo zen_admin_href_link(FILENAME_LOGOFF); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
         </ul>
     </div>
   </div>

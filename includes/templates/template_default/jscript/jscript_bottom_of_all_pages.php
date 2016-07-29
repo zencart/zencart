@@ -26,10 +26,6 @@ if (file_exists($jqpath)) { ?>
 <?php } ?>
 
 
-<?php
-// @TODO -- mobile detect? vs Modernizr which is already loaded?
-?>
-
 <!--  ================================================== -->
 <!-- Load custom javascript items below here -->
 
@@ -41,6 +37,9 @@ if (file_exists($jqpath)) { ?>
 <!--  load and activate things like a carousel on home page -->
 <?php if ($this_is_home_page) { ?>
  <!-- carousel activation code here -->
+
+
+ 
 <?php } ?>
 
 

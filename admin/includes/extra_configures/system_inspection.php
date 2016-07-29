@@ -33,6 +33,7 @@ $built_in_boxes = array(
 'BOX_CONFIGURATION_INDEX_LISTING',
 'BOX_CONFIGURATION_DEFINE_PAGE_STATUS',
 'BOX_CONFIGURATION_EZPAGES_SETTINGS',
+'BOX_CONFIGURATION_CHECKOUT_SETTINGS',
 
 // modules box text
 'BOX_HEADING_MODULES',
@@ -90,7 +91,6 @@ $built_in_boxes = array(
 'BOX_TOOLS_DEFINE_LANGUAGE',
 'BOX_TOOLS_FILE_MANAGER',
 'BOX_TOOLS_MAIL',
-'BOX_TOOLS_NEWSLETTER_MANAGER',
 'BOX_TOOLS_SERVER_INFO',
 'BOX_TOOLS_WHOS_ONLINE',
 'BOX_TOOLS_STORE_MANAGER',
@@ -170,6 +170,7 @@ $built_in_tables = array(
 'counter',
 'counter_history',
 'countries',
+'countries_name',
 'coupon_email_track',
 'coupon_gv_customer',
 'coupon_gv_queue',

@@ -19,9 +19,10 @@
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 
-<link rel="stylesheet" type="text/css" href="includes/template/css/normalize.css" id="normalizeCSS">
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css" id="stylesheetCSS">
-<link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print" id="printCSS">
+<link rel="stylesheet" type="text/css" href="includes/template/css/bootstrap.min.css" id="normalizeCSS">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet.css" id="stylesheetCSS">
+    <link rel="stylesheet" type="text/css" href="includes/template/css/stylesheet_print.css" media="print" id="printCSS">
 
 <?php if (isset($extraCss)) { ?>
   <?php foreach ($extraCss as $css) { ?>
@@ -29,10 +30,10 @@
   <?php } ?>
 <?php } ?>
 
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
-<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 
-<script src="includes/template/javascript/jquery-1.12.1.min.js"></script>
+<?php /** CDN for jQuery core **/ ?>
+<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>window.jQuery || document.write('<script src="includes/template/javascript/jquery-2.2.4.min.js"><\/script>');</script>
 <script src="includes/template/javascript/bootstrap.min.js"></script>
 
 

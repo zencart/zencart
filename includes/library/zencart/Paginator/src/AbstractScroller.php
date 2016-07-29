@@ -67,7 +67,7 @@ abstract class AbstractScroller extends \base
      */
     protected function getRequestParams(array $params)
     {
-        $linkParams = zen_get_all_get_params($params['exclude'], $params['linkParams']);
+        $linkParams = zen_get_all_get_params(array($params['exclude'], $params['linkParams']));
         return $linkParams;
     }
 

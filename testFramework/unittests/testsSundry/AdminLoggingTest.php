@@ -26,13 +26,16 @@ if (!function_exists('zen_get_admin_name')) {
  */
 class testAdminLoggingCase extends zcTestCase
 {
+    protected $preserveGlobalState = FALSE;
+    protected $runTestInSeparateProcess = TRUE;
+
     public function setUp()
     {
         parent::setUp();
-        require DIR_FS_ADMIN . 'includes/functions/general.php';
-        require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
-        require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
-        require DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';
         vfsStreamWrapper::register();
         vfsStream::useDotFiles(false);
         $_SESSION['securityToken'] = 'abc';
@@ -123,7 +126,8 @@ class testAdminLoggingCase extends zcTestCase
 
         // test for expected notice
         $observer2 = new zcObserverLogEventListener();
-        $result = $observer2->updateNotifyAdminActivityLogEvent(new stdClass(), '', $message_to_log, $requested_severity);
+        $stdClass = new stdClass();
+        $result = $observer2->updateNotifyAdminActivityLogEvent($stdClass, '', $message_to_log, $requested_severity);
 
         // and test that the malicious code doesn't appear in the log
         $var = file($file);
@@ -148,7 +152,8 @@ class testAdminLoggingCase extends zcTestCase
 
         // now trigger the notifier
         $observer = new zcObserverLogEventListener();
-        $result = $observer->updateNotifyAdminActivityLogEvent(new stdClass(), '', $message_to_log, $requested_severity);
+        $stdClass = new stdClass();
+        $result = $observer->updateNotifyAdminActivityLogEvent($stdClass, '', $message_to_log, $requested_severity);
 
         // and test that the message appears in the log
         $var = file($file);
@@ -171,7 +176,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testEmptyLogfile');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
         $this->assertFileExists($file);
 
         $var = file($file);
@@ -193,7 +199,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testMissingLogfile');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
 
         $this->assertFileExists($file, 'File must exist.');
 
@@ -217,7 +224,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testLogWriterUpdate');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
         $this->assertFileExists($file);
 
         $var = file($file);
@@ -263,7 +271,8 @@ class testAdminLoggingCase extends zcTestCase
         $data = array('severity' => 'warning', 'ip_address' => 'localhost', 'page_accessed' => 'testLogWriterUpdate');
 
         $observer = new zcObserverLogWriterTextfile($file);
-        $observer->updateNotifyAdminFireLogWriters(new stdClass(), '', $data);
+        $stdClass = new stdClass();
+        $observer->updateNotifyAdminFireLogWriters($stdClass, '', $data);
         $this->assertFileExists($file);
 
         $var = file($file);

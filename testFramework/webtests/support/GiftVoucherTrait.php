@@ -3,7 +3,7 @@
  * File contains common unit/web test resources
  *
  * @package tests
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  */
@@ -22,7 +22,7 @@ trait GiftVoucherTrait
         $this->url('http://' . BASE_URL . 'index.php?main_page=document_product_info&cPath=21&products_id=32');
         $this->byCss('input[name=cart_quantity]')->clear();
         $this->byCss('input[name=cart_quantity]')->value($gvPurchase);
-        $this->byCss('input[type=image]')->click();
+        $this->byCss('#cartAdd > input[type=submit]')->click();
         $this->url('http://' . BASE_URL . 'index.php?main_page=shopping_cart');
         $this->assertTextPresent('Gift Certificate');
         $amount = number_format(100 * $gvPurchase, 2);
@@ -32,16 +32,16 @@ trait GiftVoucherTrait
         $this->assertTextPresent($amount);
         $this->assertTextPresent('Free Shipping');
         $this->assertTextPresent('Payment Information');
-        $this->byCss('input[type="image"]')->click();
+        $this->byCss('#paymentSubmit > input[type="submit"]')->click();
         $this->assertTextPresent($amount);
         $this->assertTextPresent('Free Shipping');
         $this->byId('btn_submit')->click();
 
         $this->loginStandardAdmin(WEBTEST_ADMIN_NAME_INSTALL, WEBTEST_ADMIN_PASSWORD_INSTALL);
-        $this->url('https://' . DIR_WS_ADMIN . 'gv_queue.php');
+        $this->url('https://' . DIR_WS_ADMIN . 'index.php?cmd=gv_queue');
         $this->assertTextPresent($amount);
-        $this->url('https://' . DIR_WS_ADMIN . 'gv_queue.php?action=release&gid=1&page=1');
-        $this->byCss('input[type=image]')->click();
+        $this->byCss('.rowHandlerRelease_gv')->click();
+        $this->byCss('#rowReleaseGvModal #rowGvReleaseConfirm')->click();
         $this->setConfigurationValue('MODULE_ORDER_TOTAL_GV_QUEUE', 'false');
     }
 

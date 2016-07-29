@@ -10,9 +10,6 @@
  * @private
  */
 
-/*************** NOTE: This file is VERY similar to, but DIFFERENT from the "admin" version of configure.php. ***********/
-/***************       The 2 files should be kept separate and not used to overwrite each other.              ***********/
-
 /**
  * Enter the domain for your store
  * HTTP_SERVER is your Main webserver: eg-http://www.yourdomain.com
@@ -42,11 +39,11 @@ define('DIR_FS_CATALOG', '/var/www/vhost/accountname/public_html/store/');
 
 /**
  * The following settings define your database connection.
- * These must be the SAME as you're using in your non-admin copy of configure.php
+ * NOTE: If you are moving a database from another server, DB_PREFIX should be the same as you had on the old server.
  */
 define('DB_TYPE', 'mysql'); // always 'mysql'
 define('DB_PREFIX', ''); // prefix for database table names -- preferred to be left empty
-define('DB_CHARSET', 'utf8'); // 'utf8' or 'latin1' are most common
+define('DB_CHARSET', 'utf8'); // 'utf8' is default
 define('DB_SERVER', 'localhost');  // address of your db server
 define('DB_SERVER_USERNAME', '');
 define('DB_SERVER_PASSWORD', '');

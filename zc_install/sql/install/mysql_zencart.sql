@@ -377,17 +377,30 @@ CREATE TABLE counter_history (
 DROP TABLE IF EXISTS countries;
 CREATE TABLE countries (
   countries_id int(11) NOT NULL auto_increment,
-  countries_name varchar(64) NOT NULL default '',
   countries_iso_code_2 char(2) NOT NULL default '',
   countries_iso_code_3 char(3) NOT NULL default '',
   address_format_id int(11) NOT NULL default '0',
   status tinyint(1) default 1,
   PRIMARY KEY  (countries_id),
-  KEY idx_countries_name_zen (countries_name),
   KEY idx_address_format_id_zen (address_format_id),
   KEY idx_iso_2_zen (countries_iso_code_2),
   KEY idx_iso_3_zen (countries_iso_code_3),
   KEY idx_status_zen (status, countries_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'countries_name'
+#
+
+DROP TABLE IF EXISTS countries_name;
+CREATE TABLE countries_name (
+  countries_id int(11) NOT NULL,
+  language_id int(11) NOT NULL DEFAULT 1,
+  countries_name varchar(64) NOT NULL,
+  UNIQUE countries (countries_id, language_id),
+  KEY idx_countries_name_zen (countries_name)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -657,6 +670,10 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets (
   widget_key varchar(64) NOT NULL,
   widget_group varchar(64) NOT NULL,
   widget_status int(1) NOT NULL DEFAULT '1',
+  widget_icon varchar(64) NOT NULL,
+  widget_theme varchar(64) NOT NULL,
+  widget_height int(11) NOT NULL DEFAULT '1',
+  widget_width int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (widget_key)
 ) ENGINE=MyISAM;
 
@@ -700,7 +717,11 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
   admin_id int(11) NOT NULL,
   widget_row int(11) NOT NULL DEFAULT '0',
   widget_column int(11) NOT NULL DEFAULT '0',
+  widget_height int(11) NOT NULL DEFAULT '1',
+  widget_width int(11) NOT NULL DEFAULT '1',
   widget_refresh int(11) NOT NULL DEFAULT '0',
+  widget_icon varchar(64) NOT NULL,
+  widget_theme varchar(64) NOT NULL,
   PRIMARY KEY (widget_key,admin_id)
 ) ENGINE=MyISAM;
 
@@ -1032,9 +1053,10 @@ CREATE TABLE media_manager (
 
 DROP TABLE IF EXISTS media_to_products;
 CREATE TABLE media_to_products (
+  association_id int(11) NOT NULL auto_increment,
   media_id int(11) NOT NULL default '0',
-  product_id int(11) NOT NULL default '0',
-  KEY idx_media_product_zen (media_id,product_id)
+  product_id int (11) NOT NULL default '0',
+  PRIMARY KEY  (association_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -1105,26 +1127,6 @@ CREATE TABLE music_genre (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'newsletters'
-#
-
-DROP TABLE IF EXISTS newsletters;
-CREATE TABLE newsletters (
-  newsletters_id int(11) NOT NULL auto_increment,
-  title varchar(255) NOT NULL default '',
-  content text NOT NULL,
-  content_html text NOT NULL,
-  module varchar(255) NOT NULL default '',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
-  date_sent datetime default NULL,
-  status int(1) default NULL,
-  locked int(1) default '0',
-  PRIMARY KEY  (newsletters_id)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
 # Table structure for table 'orders'
 #
 
@@ -1183,6 +1185,7 @@ CREATE TABLE orders (
   ip_address varchar(96) NOT NULL default '',
   is_guest_order tinyint(1) NOT NULL default 0,
   order_weight float NOT NULL default '0',
+  language_code VARCHAR(2) NOT NULL DEFAULT 'en',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
@@ -2286,7 +2289,6 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('layoutController', 'BOX_TOOLS_LAYOUT_CONTROLLER', 'FILENAME_LAYOUT_CONTROLLER', '', 'tools', 'Y', 2),
        ('banners', 'BOX_TOOLS_BANNER_MANAGER', 'FILENAME_BANNER_MANAGER', '', 'tools', 'Y', 3),
        ('mail', 'BOX_TOOLS_MAIL', 'FILENAME_MAIL', '', 'tools', 'Y', 4),
-       ('newsletters', 'BOX_TOOLS_NEWSLETTER_MANAGER', 'FILENAME_NEWSLETTERS', '', 'tools', 'Y', 5),
        ('server', 'BOX_TOOLS_SERVER_INFO', 'FILENAME_SERVER_INFO', '', 'tools', 'Y', 6),
        ('whosOnline', 'BOX_TOOLS_WHOS_ONLINE', 'FILENAME_WHOS_ONLINE', '', 'tools', 'Y', 7),
        ('storeManager', 'BOX_TOOLS_STORE_MANAGER', 'FILENAME_STORE_MANAGER', '', 'tools', 'Y', 9),
@@ -2295,6 +2297,7 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('definePagesEditor', 'BOX_TOOLS_DEFINE_PAGES_EDITOR', 'FILENAME_DEFINE_PAGES_EDITOR', '', 'tools', 'Y', 12),
        ('sqlPatch', 'BOX_TOOLS_SQLPATCH', 'FILENAME_SQLPATCH', '', 'tools', 'Y', 13),
        ('system_inspection', 'BOX_TOOLS_SYSTEM_INSPECTION', 'FILENAME_SYSTEM_INSPECTION', '', 'tools', 'Y', 14), 
+       ('findDuplicateModels', 'BOX_TOOLS_FINDDUPMODELS', 'FILENAME_FINDDUPMODELS', '', 'tools', 'Y', 100), 
        ('couponAdmin', 'BOX_COUPON_ADMIN', 'FILENAME_COUPON_ADMIN', '', 'gv', 'Y', 1),
        ('couponRestrict', 'BOX_COUPON_RESTRICT', 'FILENAME_COUPON_RESTRICT', '', 'gv', 'N', 1),
        ('gvQueue', 'BOX_GV_ADMIN_QUEUE', 'FILENAME_GV_QUEUE', '', 'gv', 'Y', 2),
@@ -2315,6 +2318,9 @@ VALUES ('configCheckoutSettings','BOX_CONFIGURATION_CHECKOUT_SETTINGS','FILENAME
 
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
 VALUES ('configWidgets','BOX_CONFIGURATION_WIDGET','FILENAME_CONFIGURATION','gID=27', 'configuration', 'Y', 27);
+
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+VALUES ('reportSalesWithGraphs','BOX_REPORTS_SALES_REPORT_GRAPHS','FILENAME_STATS_SALES_REPORT_GRAPHS','', 'reports', 'Y', 4);
 
 # Insert a default profile for managing orders, as a built-in example of profile functionality
 INSERT INTO admin_profiles (profile_name) values ('Order Processing');
@@ -2516,8 +2522,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Image - Use Proportional Images on Products and Categories', 'PROPORTIONAL_IMAGES_STATUS', '1', 'Use Proportional Images on Products and Categories?<br /><br />NOTE: Do not use 0 height or width settings for Proportion Images<br />0= off 1= on', 4, 75, 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Image - Click For Larger', 'IMAGE_ENABLE_LARGER_IMAGE_LINKS', '1', 'For Product main-image and additional-images, should a clickable link for popup to see larger image be displayed?<br />0= off<br />1= both<br />2=main image only<br />3=additional images only', 4, 76, 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\'), ', now());
 
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Email Salutation', 'ACCOUNT_GENDER', 'true', 'Display salutation choice during account creation and with account information', '5', '1', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Date of Birth', 'ACCOUNT_DOB', 'true', 'Display date of birth field during account creation and with account information<br />NOTE: Set Minimum Value Date of Birth to blank for not required<br />Set Minimum Value Date of Birth > 0 to require', '5', '2', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Email Salutation', 'ACCOUNT_GENDER', 'false', 'Display salutation choice during account creation and with account information', '5', '1', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Date of Birth', 'ACCOUNT_DOB', 'false', 'Display date of birth field during account creation and with account information<br />NOTE: Set Minimum Value Date of Birth to blank for not required<br />Set Minimum Value Date of Birth > 0 to require', '5', '2', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Company', 'ACCOUNT_COMPANY', 'true', 'Display company field during account creation and with account information', '5', '3', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Address Line 2', 'ACCOUNT_SUBURB', 'true', 'Display address line 2 field during account creation and with account information', '5', '4', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('State', 'ACCOUNT_STATE', 'true', 'Display state field during account creation and with account information', '5', '5', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
@@ -2726,7 +2732,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable GZip Compression', 'GZIP_LEVEL', '0', '0= off 1= on', '14', '1', 'zen_cfg_select_option(array(\'0\', \'1\'),', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Cookie Domain', 'SESSION_USE_FQDN', 'True', 'If True the full domain name will be used to store the cookie, e.g. www.mydomain.com. If False only a partial domain name will be used, e.g. mydomain.com. If you are unsure about this, always leave set to true.', '15', '2', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Force Cookie Use', 'SESSION_FORCE_COOKIE_USE', 'False', 'Force the use of sessions when cookies are only enabled.', '15', '2', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Force Cookie Use', 'SESSION_FORCE_COOKIE_USE', 'True', 'Force the use of sessions when cookies are only enabled.', '15', '2', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Check SSL Session ID', 'SESSION_CHECK_SSL_SESSION_ID', 'False', 'Validate the SSL_SESSION_ID on every secure HTTPS page request.', '15', '3', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Check User Agent', 'SESSION_CHECK_USER_AGENT', 'False', 'Validate the clients browser user agent on every page request.', '15', '4', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Check IP Address', 'SESSION_CHECK_IP_ADDRESS', 'False', 'Validate the clients IP address on every page request.', '15', '5', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
@@ -3040,9 +3046,9 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
-('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'false', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'true', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
 ('Enable Order Status for Guest Orders', 'GUEST_ORDER_STATUS', 'true', 'Alloq Guests to see Order Status?<br />Set to True so that a Customer that uses Guest Checkout will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-('Enable Guest E-Mail Only checkout', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+('Enable Guest E-Mail Only checkout when free', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
 ('Enable Create Account on Success', 'GUEST_ALLOW_CREATE_ACCOUNT', 'true', 'Allow Guest to create a full account on Checkout Success.', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Ajax Checkout?', 'PADSS_AJAX_CHECKOUT', '1', 'PA-DSS Compliance requires that for some inbuilt payment methods, that we use ajax to draw the checkout confirmation screen. While this will only happen if one of those payment methods is actually present, some people may want the traditional checkout flow <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 26, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Show Cart order on checkout success?', 'SHOW_CART_ORDER_CHECKOUT_SUCCESS', 'true', '', 26, 30, now(), now(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
@@ -3391,13 +3397,13 @@ INSERT INTO get_terms_to_filter VALUES ('music_genre_id', 'TABLE_MUSIC_GENRE', '
 INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPANY', 'record_company_name');
 
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
-('general-statistics', 'general-statistics', 1),
-('order-summary', 'order-statistics', 1),
-('new-customers', 'new-customers', 1),
-('counter-history', 'counter-history', 1),
-('new-orders', 'new-orders', 1),
-('logs', 'logs', 1)
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
+('order-summary', 'order-statistics', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
+('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
+('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
 ;
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
@@ -3418,19 +3424,37 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('logs', 1, 'LOGS_GROUP')
 ;
 
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'BANNER_STATISTICS', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS_GROUP');
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whos-online', 1, 'WHOSONLINE_GROUP');
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('counter-history-graph', 1, 'COUNTER_HISTORY_GRAPH_GROUP');
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('sales-graph-report', 1, 'SALES_GRAPH_REPORT_GROUP');
+
+
 # default widgets for first user
-INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
-('general-statistics', 1, 0, 0),
-('order-summary', 1, 1, 0),
-('new-customers', 1, 0, 1),
-('counter-history', 1, 1, 1),
-('new-orders', 1, 0, 2),
-('logs', 1, 1, 2)
+INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 1, 0, 2, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1)
+,('order-summary', 1, 2, 2, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1)
+,('new-customers', 1, 1, 1, 'fa-user-plus', 'bg-light-blue-gradient', 2, 1)
+,('counter-history', 1, 4, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1)
+,('new-orders', 1, 2, 0, 'fa-shopping-cart', 'bg-light-blue-gradient', 2, 1)
+,('logs', 1, 4, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 2, 1)
+,('whos-online', 1, 0, 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('banner_statistics', 1, 3, 2, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('counter-history-graph', 1, 3, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1)
+,('sales-graph-report', 1, 0, 0, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1)
 ;
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES ('banner-statistics', 'banner-statistics', 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'BANNER_STATISTICS_GROUP', '', 1);
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS');
 
 
 INSERT INTO listingbox_locations (location_key, location_name) VALUES

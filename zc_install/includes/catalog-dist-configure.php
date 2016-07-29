@@ -7,9 +7,6 @@
  * File Built by %%_INSTALLER_METHOD_%% on %%_DATE_NOW_%%
  */
 
-/*************** NOTE: This file is VERY similar to, but DIFFERENT from the "admin" version of configure.php. ***********/
-/***************       The 2 files should be kept separate and not used to overwrite each other.              ***********/
-
 /**
  * Enter the domain for your store
  * HTTP_SERVER is your Main webserver: eg-http://www.yourdomain.com
@@ -39,11 +36,11 @@ define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
 
 /**
  * The following settings define your database connection.
- * These must be the SAME as you're using in your non-admin copy of configure.php
+ * NOTE: If you are moving a database from another server, DB_PREFIX should be the same as you had on the old server.
  */
 define('DB_TYPE', '%%_DB_TYPE_%%'); // always 'mysql'
 define('DB_PREFIX', '%%_DB_PREFIX_%%'); // prefix for database table names -- preferred to be left empty
-define('DB_CHARSET', '%%_DB_CHARSET_%%'); // 'utf8' or 'latin1' are most common
+define('DB_CHARSET', '%%_DB_CHARSET_%%'); // 'utf8' is default
 define('DB_SERVER', '%%_DB_SERVER_%%');  // address of your db server
 define('DB_SERVER_USERNAME', '%%_DB_SERVER_USERNAME_%%');
 define('DB_SERVER_PASSWORD', '%%_DB_SERVER_PASSWORD_%%');

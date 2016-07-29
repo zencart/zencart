@@ -159,11 +159,11 @@ echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, '', 'SSL
 <br /><br />
 
 <label class="inputLabel"><?php echo ENTRY_ORDER_NUMBER; ?></label>
-<?php echo zen_draw_input_field('order_id', (int)$_GET['order_id'], 'size="10" id="order_id"'); ?>
+<?php echo zen_draw_input_field('order_id', (int)$_GET['order_id'], 'size="10" id="order_id" required autofocus', 'number'); ?>
 <br />
 <br />
 <label class="inputLabel"><?php echo ENTRY_EMAIL; ?></label>
-<?php echo zen_draw_input_field('query_email_address', '', 'size="35" id="query_email_address"'); ?>
+<?php echo zen_draw_input_field('query_email_address', '', 'size="35" id="query_email_address" required', 'email'); ?>
 <br />
 
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>

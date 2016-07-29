@@ -13,7 +13,7 @@
  */
 ?>
 <div class="centerColumn" id="accountPassword">
-<?php echo zen_draw_form('account_password', zen_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"') . zen_draw_hidden_field('action', 'process'); ?>
+<?php echo zen_draw_form('account_password', zen_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'), 'post', 'onsubmit="return check_account_address_form(account_password);"') . zen_draw_hidden_field('action', 'process'); ?>
 
 <fieldset>
 <legend><?php echo HEADING_TITLE; ?></legend>

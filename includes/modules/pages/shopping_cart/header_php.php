@@ -58,9 +58,9 @@ $flagHasCartContents = ($_SESSION['cart']->count_contents() > 0);
 $cartShowTotal = $currencies->format($_SESSION['cart']->show_total());
 
 $flagAnyOutOfStock = false;
-$flagStockCheck = '';
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+  $flagStockCheck = '';
   if (($i/2) == floor($i/2)) {
     $rowClass="rowEven";
   } else {
@@ -176,7 +176,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
 
 if (!$flagHasCartContents) {
-    $listingBoxManager = new ZenCart\ListingBox\Manager('EMPTY_CART', $db, $zcRequest);
+    $listingBoxManager = new ZenCart\QueryBuilderDefinitions\Manager('EMPTY_CART', $db, $zcRequest);
     $listingBoxes = $listingBoxManager->getListingBoxes ();
     $tplVars['listingBoxes'] = $listingBoxes;
 }

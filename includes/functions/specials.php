@@ -12,11 +12,12 @@
 ////
 // Set the status of a product on special
   function zen_set_specials_status($specials_id, $status) {
-    global $db;
+    global $db, $zco_notifier;
     $sql = "update " . TABLE_SPECIALS . "
             set status = '" . (int)$status . "', date_status_change = now()
             where specials_id = '" . (int)$specials_id . "'";
 
+    $zco_notifier->notify('NOTIFY_TOGGLE_SPECIALS_STATUS', $specials_id, $status);
     return $db->Execute($sql);
    }
 

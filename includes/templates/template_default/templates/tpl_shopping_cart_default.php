@@ -150,7 +150,7 @@
     if (SHOW_SHIPPING_ESTIMATOR_BUTTON == '1') {
 ?>
 
-<div class="buttonRow back"><?php echo '<a href="javascript:popupWindow(\'' . zen_href_link(FILENAME_POPUP_SHIPPING_ESTIMATOR) . '\')">' .
+<div class="buttonRow back"><?php echo '<a href="javascript:popupWindowShoppingCart(\'' . zen_href_link(FILENAME_POPUP_SHIPPING_ESTIMATOR) . '\')">' .
  zen_image_button(BUTTON_IMAGE_SHIPPING_ESTIMATOR, BUTTON_SHIPPING_ESTIMATOR_ALT) . '</a>'; ?></div>
 <?php
     }

@@ -41,6 +41,8 @@ TRUNCATE TABLE db_cache;
 TRUNCATE TABLE sessions;
 
 #############
+UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
+
 ALTER TABLE configuration ADD val_function text default NULL AFTER set_function;
 
 DELETE FROM configuration WHERE configuration_key = 'SESSION_WRITE_DIRECTORY';
@@ -84,18 +86,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Send Copy of Admin GV Queued Emails To', 'SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO', '', 'Send copy of Admin GV Queued Mail emails to the following email addresses, in this format: Name 1 &lt;email@address1&gt;, Name 2 &lt;email@address2&gt;', '12', '20', now());
 
 DELETE FROM configuration where configuration_key = 'PHPBB_LINKS_ENABLED' && configuration_value != 'true';
-
-
-UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
-UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE', 'ITA');
-UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
-UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
-UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
-UPDATE countries set countries_name = 'Bonaire, Sint Eustatius and Saba', countries_iso_code_2 = 'BQ', countries_iso_code_3 = 'BES' WHERE countries_iso_code_3 = 'ANT';
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (247,'Curaçao','CW','CUW','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (248,'Sint Maarten (Dutch part)','SX','SXM','1');
-
-ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
 
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 
@@ -141,6 +131,7 @@ ALTER TABLE customers MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT 
 ALTER TABLE admin ADD mobile_phone VARCHAR(20) NOT NULL DEFAULT '' AFTER admin_email;
 
 ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE orders ADD language_code VARCHAR(2) NOT NULL DEFAULT 'en';
 
 ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0' AFTER coupon_is_valid_for_sales;
 
@@ -150,6 +141,8 @@ UPDATE query_builder set query_string = 'select c.customers_email_address, c.cus
 
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
+DELETE FROM admin_pages WHERE page_key = 'newsletters';
+DELETE FROM admin_pages_to_profiles WHERE page_key = 'newsletters';
 
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_COUNTS_ADMIN';
 UPDATE configuration set configuration_description = 'Show Category Counts in Admin?<br />0=Off<br />1=Always On<br />2=On for subcategories, Off for Top categories' WHERE configuration_key = 'SHOW_CATEGORY_PRODUCTS_LINKED_STATUS';
@@ -172,9 +165,9 @@ SET @t1=0;
 SELECT (@t1:=configuration_group_id) as t1 FROM configuration_group WHERE configuration_group_title = 'Guest Checkout';
 INSERT INTO admin_pages VALUES ('configGuest','BOX_CONFIGURATION_GUEST','FILENAME_CONFIGURATION',CONCAT('gID=',@t1), 'configuration', 'Y', 31);
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
-  ('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'false', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+  ('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'true', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Order Status for Guest Orders', 'GUEST_ORDER_STATUS', 'true', 'Alloq Guests to see Order Status?<br />Set to True so that a Customer that uses Guest Checkout will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
-  ('Enable Guest E-Mail Only checkout', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
+  ('Enable Guest E-Mail Only checkout when free', 'GUEST_ALLOW_EMAIL_ONLY', 'false', 'Enable The E-Mail Order Function for Guests?<br />Set to True so that a Guest Customer will only need to enter their E-Mail Address upon checkout if their Cart Balance is 0 (Free).', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Create Account on Success', 'GUEST_ALLOW_CREATE_ACCOUNT', 'true', 'Allow Guest to create a full account on Checkout Success.', 26, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),');
 
 
@@ -187,8 +180,10 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 ('Max Error Logs', 'MAX_ERROR_LOGS', '20', 'Display this number of error logs', @t1, '1', now(), NULL, NULL);
 
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('system_inspection', 'BOX_TOOLS_SYSTEM_INSPECTION', 'FILENAME_SYSTEM_INSPECTION', '', 'tools', 'Y', 14) ;
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('findDuplicateModels', 'BOX_TOOLS_FINDDUPMODELS', 'FILENAME_FINDDUPMODELS', '', 'tools', 'Y', 100);
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('reportSalesWithGraphs','BOX_REPORTS_SALES_REPORT_GRAPHS','FILENAME_STATS_SALES_REPORT_GRAPHS','', 'reports', 'Y', 4);
 
-INSERT INTO query_builder ( query_id , query_category , query_name , query_description , query_string ) VALUES ( '', 'email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where is_guest_account != 1 order by customers_lastname, customers_firstname, customers_email_address');
+INSERT INTO query_builder (query_category , query_name , query_description , query_string, query_keys_list ) VALUES ('email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where is_guest_account != 1 order by customers_lastname, customers_firstname, customers_email_address', '');
 
 # --------------------------------------------------------
 
@@ -211,6 +206,8 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets (
   widget_key varchar(64) NOT NULL,
   widget_group varchar(64) NOT NULL,
   widget_status int(1) NOT NULL DEFAULT '1',
+  widget_icon varchar(64) NOT NULL,
+  widget_theme varchar(64) NOT NULL,
   PRIMARY KEY (widget_key)
 ) ENGINE=MyISAM;
 
@@ -255,19 +252,21 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
   widget_row int(11) NOT NULL DEFAULT '0',
   widget_column int(11) NOT NULL DEFAULT '0',
   widget_refresh int(11) NOT NULL DEFAULT '0',
+  widget_icon varchar(64) NOT NULL,
+  widget_theme varchar(64) NOT NULL,
   PRIMARY KEY (widget_key,admin_id)
 ) ENGINE=MyISAM;
 
 #
 # Set up default widgets
 #
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES
-('general-statistics', 'general-statistics', 1),
-('order-summary', 'order-statistics', 1),
-('new-customers', 'new-customers', 1),
-('counter-history', 'counter-history', 1),
-('new-orders', 'new-orders', 1),
-('logs', 'logs', 1)
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
+('order-summary', 'order-statistics', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1,1),
+('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
+('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1,1)
 ;
 
 INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES
@@ -288,19 +287,42 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('logs', 1, 'LOGS_GROUP')
 ;
 
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'BANNER_STATISTICS', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS_GROUP');
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whos-online', 1, 'WHOSONLINE_GROUP');
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('counter-history-graph', 1, 'COUNTER_HISTORY_GRAPH_GROUP');
+
+INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
+INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT', '', 1);
+INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('sales-graph-report', 1, 'SALES_GRAPH_REPORT_GROUP');
+
 # default widgets for first user
-INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column) VALUES
-('general-statistics', 1, 0, 0),
-('order-summary', 1, 1, 0),
-('new-customers', 1, 0, 1),
-('counter-history', 1, 1, 1),
-('new-orders', 1, 0, 2),
-('logs', 1, 1, 2);
+INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 1, 0, 2, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1)
+,('order-summary', 1, 2, 2, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1)
+,('new-customers', 1, 1, 1, 'fa-user-plus', 'bg-light-blue-gradient', 2, 1)
+,('counter-history', 1, 4, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1)
+,('new-orders', 1, 2, 0, 'fa-shopping-cart', 'bg-light-blue-gradient', 2, 1)
+,('logs', 1, 4, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 2, 1)
+,('whos-online', 1, 0, 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('banner_statistics', 1, 3, 2, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('counter-history-graph', 1, 3, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1)
+,('sales-graph-report', 1, 0, 0, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1)
+;
 
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status) VALUES ('banner-statistics', 'banner-statistics', 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name, widget_description, language_id) VALUES ('banner-statistics', 'Banner Statistics', '', 1);
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'Banner Statistics');
+
+
+
+ALTER TABLE media_to_products DROP INDEX idx_media_product_zen;
+ALTER TABLE media_to_products ADD COLUMN association_id int(11) NOT NULL auto_increment FIRST, ADD PRIMARY KEY (association_id);
 
 
 # --------------------------------------------------------
@@ -360,6 +382,40 @@ INSERT INTO listingboxes_to_listingboxgroups (listingbox, group_id, sort_order) 
 ('NewProductsCenter', 1, 3),
 ('SpecialsProductsCenter', 1, 2),
 ('UpcomingProductsCenter', 1, 4);
+
+
+UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
+UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE', 'ITA');
+UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
+UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
+UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
+UPDATE countries set countries_name = 'Bonaire, Sint Eustatius and Saba', countries_iso_code_2 = 'BQ', countries_iso_code_3 = 'BES' WHERE countries_iso_code_3 = 'ANT';
+UPDATE countries set countries_name = 'Bosnia and Herzegovina' where countries_iso_code_3 = 'BIH';
+UPDATE countries set countries_name = 'Guinea-Bissau' where countries_iso_code_3 = 'GNB';
+UPDATE countries set countries_name = 'Heard and McDonald Islands' where countries_iso_code_3 = 'HMD';
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (247,'Curaçao','CW','CUW','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (248,'Sint Maarten (Dutch part)','SX','SXM','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (249,'Saint-Barthélemy','BL','BLM','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (250,'Congo - Kinshasa','CD','COD','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (251,'St. Martin','MF','MAF','1');
+ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
+
+CREATE TABLE countries_name (
+  countries_id int(11) NOT NULL,
+  language_id int(11) NOT NULL DEFAULT 1,
+  countries_name varchar(64) NOT NULL,
+  UNIQUE countries (countries_id, language_id),
+  KEY idx_countries_name_zen (countries_name)
+) ENGINE=MyISAM;
+
+INSERT INTO countries_name (countries_id, language_id, countries_name)
+SELECT c.countries_id, l.languages_id, c.countries_name
+FROM countries c
+LEFT JOIN languages l
+ON 1;
+ALTER TABLE countries DROP countries_name;
+
+
 
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
 ## CHANGE-411 increase size of fileds in admin profile related tables

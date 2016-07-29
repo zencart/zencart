@@ -43,13 +43,12 @@ header('X-Frame-Options:SAMEORIGIN');
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
     <link rel="canonical" href="<?php echo $canonicalLink; ?>">
 <?php } ?>
-
 <?php
   // BOF hreflang for multilingual sites
   if (isset($language_list) || $language_list = $lng->get_available_languages()) {
-    while (list($key, $value) = each($language_list)) {
+    foreach($language_list as $key=>$value) {
       if ($value['id'] == $_SESSION['languages_id']) continue;
-      echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type) : $canonicalLink . '&amp;language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+      echo '    <link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $value['code'], $request_type) : $canonicalLink . '&amp;language=' . $value['code']) . '" hreflang="' . $value['code'] . '" />' . "\n";
     }
   }
   // EOF hreflang for multilingual sites
@@ -62,7 +61,7 @@ header('X-Frame-Options:SAMEORIGIN');
 
   // run dynamically-generated jscript_XXXXX.php files
   foreach ($jscriptsTop as $val) {
-    require($page_directory . '/' . $val); echo "\n";
+    require($val); echo "\n";
   }
 
   // output src links to scripts

@@ -21,7 +21,7 @@ class language extends base {
   /**
    * @var Array of all available languages in the store
    */
-  protected $available_languages = array();
+  protected $available_languages = array('en'=> array('id' => 1, 'name' => 'english', 'image' => 'icon.gif', 'code' => 'en', 'directory' => 'english'));
   /**
    * @var string comma-delimited list of languages supported by the user's browser
    */
@@ -32,6 +32,7 @@ class language extends base {
   protected $language = '';
 
   /**
+   * @deprecated since v1.6.0
    * @var array DEPRECATED - This is old, and only present for compatibility reasons. Use get_available_languages() instead.
    */
   public $catalog_languages = array();
@@ -55,11 +56,6 @@ class language extends base {
               'code' => $val['code'],
               'directory' => $val['directory'],
               );
-    }
-
-    if (!sizeof($this->available_languages)) {
-      // if none were found, there's gonna be trouble, but here we set a default, so we can avoid having to test for it later
-      $this->available_languages['en'] = array('id' => 1, 'name' => 'english', 'image' => 'icon.gif', 'code' => 'en', 'directory' => 'english');
     }
 
     // for legacy compatibility only:
@@ -105,6 +101,22 @@ class language extends base {
       }
     }
   }
+
+  /**
+   * Lookup language details by 2-letter language Code
+   * @param string $lang_code
+   * @return array|boolean
+   */
+  public function get_language_data_by_code($lang_code = '') {
+    if ($lang_code == '') return false;
+
+    foreach ($this->available_languages as $code => $val) {
+      if ($val['code'] == $lang_code) {
+        return $val;
+      }
+    }
+  }
+
 
   /**
    * Determine languages supported by the browser, and set the site to use a corresponding language

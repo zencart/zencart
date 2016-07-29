@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
@@ -42,7 +42,7 @@ define('HEADER_TITLE_TOP', 'Admin Home');
 define('HEADER_TITLE_SUPPORT_SITE', 'Support');
 define('HEADER_TITLE_ONLINE_CATALOG', 'Storefront');
 define('HEADER_TITLE_VERSION', 'Version');
-define('HEADER_TITLE_ACCOUNT', 'Account');
+define('HEADER_TITLE_ACCOUNT', 'My Account');
 define('HEADER_TITLE_LOGOFF', 'Logoff');
 //define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 
@@ -150,7 +150,6 @@ define('BOX_TOOLS_CACHE', 'Cache Control');
 define('BOX_TOOLS_DEFINE_LANGUAGE', 'Define Languages');
 define('BOX_TOOLS_FILE_MANAGER', 'File Manager');
 define('BOX_TOOLS_MAIL', 'Send Email');
-define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter and Product Notifications Manager');
 define('BOX_TOOLS_SERVER_INFO', 'Server/Version Info');
 define('BOX_TOOLS_WHOS_ONLINE', 'Who\'s Online');
 define('BOX_TOOLS_STORE_MANAGER', 'Store Manager');
@@ -570,6 +569,8 @@ define('ERROR_USPS_STATUS', '<strong>Warning:</strong> USPS shipping module is e
 define('ERROR_SHIPPING_MODULES_NOT_DEFINED', 'NOTE: You have no shipping modules activated. Please go to Modules->Shipping to configure.');
 define('ERROR_PAYMENT_MODULES_NOT_DEFINED', 'NOTE: You have no payment modules activated. Please go to Modules->Payment to configure.');
 
+define('TEXT_TOTAL_WEIGHT', 'Total weight: %s ' . TEXT_PRODUCT_WEIGHT_UNIT);
+
 // text pricing
 define('TEXT_CHARGES_WORD','Calculated Charge:');
 define('TEXT_PER_WORD','<br />Price per word: ');
@@ -733,7 +734,7 @@ define('TEXT_LEAD_EDIT', 'Edit');
 define('TEXT_LEAD_DELETE', 'Delete');
 define('TEXT_LEAD_ADD_ENTRY', 'Add Entry');
 define('TEXT_LEAD_EDIT_ENTRY', 'Edit Entry');
-define('TEXT_PAGINATION_LIMIT_SELECT', 'Select Pagination Items');
+define('TEXT_PAGINATION_LIMIT_SELECT', 'Maximum Number of Rows');
 define('TEXT_LEAD_ACTION', 'Action');
 define('TEXT_ALL', 'All');
 define('TEXT_ENABLED', 'Enabled');
@@ -745,6 +746,22 @@ define('TEXT_CONFIRM_DELETE_TEXT', 'Do you want to delete the selected items?');
 define('TEXT_CONFIRM', 'Confirm');
 define('TEXT_ITEM_DEFAULT', '<strong>(Default)</strong>');
 define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
-define('TEXT_AUTOCOMPLETE_DEFAULT_PLACEHOLDER', 'Search or Select below');
+define('TEXT_FILLBYLOOKUP_DEFAULT_PLACEHOLDER', 'Search or Select below');
 define('TEXT_DELETE_LINKED_ITEMS', 'Delete Linked Products');
 define('TEXT_DELETE_IMAGE', 'Delete Linked Image');
+
+// notifications
+
+define('TEXT_HEADER_NOTIFICATIONS_COUNT', 'You have %s notifications');
+define('TEXT_HEADER_GV_QUEUE', 'Gift Voucher Queue .. %s Item(s)');
+
+
+// date ranges
+
+define('TEXT_SELECT_DATE_RANGE', 'Select Date Range');
+define('TEXT_DATE_RANGE_TODAY', 'Today');
+define('TEXT_DATE_RANGE_YESTERDAY', 'Yesterday');
+define('TEXT_DATE_RANGE_LAST_7_DAYS', 'Last 7 Days');
+define('TEXT_DATE_RANGE_LAST_30_DAYS', 'Last 30 Days');
+define('TEXT_DATE_RANGE_THIS_MONTH', 'This Month');
+define('TEXT_DATE_RANGE_LAST_MONTH', 'Last Month');

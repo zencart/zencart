@@ -12,7 +12,7 @@ if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php')) {
   include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php');
 }
 // Check if session has timed out
-if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+if (!isset($_SESSION['admin_id'])) zen_redirect(zen_admin_href_link(FILENAME_LOGIN));
 $user = $_SESSION['admin_id'];
 
 // determine whether an action has been requested
@@ -26,7 +26,7 @@ if (isset($_POST['action']) && in_array($_POST['action'], array('update','reset'
 // validate form input as not expired and not spoofed
 if ($action != '' && isset($_POST['action']) && $_POST['action'] != '' && $_POST['securityToken'] != $_SESSION['securityToken']) {
   $messageStack->add_session(ERROR_TOKEN_EXPIRED_PLEASE_RESUBMIT, 'error');
-  zen_redirect(zen_href_link(FILENAME_ADMIN_ACCOUNT));
+  zen_redirect(zen_admin_href_link(FILENAME_ADMIN_ACCOUNT));
 }
 
 // act upon any specific action specified
@@ -92,11 +92,11 @@ require('includes/admin_html_head.php');
 
   <h1><?php echo HEADING_TITLE ?></h1>
 
-<form action="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT) ?>" method="post">
+<form action="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT) ?>" method="post">
 <?php if (isset($formAction)) echo zen_draw_hidden_field('action',$formAction) . zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
   <table cellspacing="0">
     <tr class="headingRow">
-      <th class="name"><?php echo TEXT_NAME ?></th>
+      <th class="name"><?php echo TEXT_ADMIN_NAME ?></th>
       <th class="email"><?php echo TEXT_EMAIL ?></th>
 <?php if ($action == 'password') { ?>
       <th class="password"><?php echo TEXT_ADMIN_NEW_PASSWORD ?></th>
@@ -122,15 +122,15 @@ require('includes/admin_html_head.php');
 <?php if ($user == $userDetails['id']) { ?>
       <td class="actions">
         <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+        <a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
       </td>
 <?php } else { ?>
       <td class="actions">&nbsp;</td>
 <?php } ?>
 <?php } else { ?>
       <td class="actions">
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit') ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>"><?php echo zen_image_button('button_reset_pwd.gif', IMAGE_RESET_PWD) ?></a>
+        <a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit') ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
+        <a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>"><?php echo zen_image_button('button_reset_pwd.gif', IMAGE_RESET_PWD) ?></a>
       </td>
     </tr>
 <?php } ?>

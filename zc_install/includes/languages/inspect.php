@@ -15,9 +15,9 @@
   define('UPGRADE_BUTTON', 'Upgrade Cfg Files'); // this comes before TEXT_MAIN
   define('DB_UPGRADE_BUTTON', 'Database Upgrade'); // this comes before TEXT_MAIN
 //Button meanings: (to be made into help-text for future version):
-// "Install" = make new configure.php files, regardless of existing contents.  Load new database by dropping old tables.
-// "Upgrade" = read old configure.php files, and write new ones using new structure. Upgrade database, instead of wiping and new install
-// "Database Upgrade" = don't write the configure.php files -- simply jump to the database-upgrade page. Only displayed if detected database version is new enough to not require configure.php file updates.
+// "Install" = make new configure.php file, regardless of existing contents.  Load new database by dropping old tables.
+// "Upgrade" = read old configure.php file, and write new one using new structure. Upgrade database, instead of wiping and new install
+// "Database Upgrade" = don't write the configure.php file -- simply jump to the database-upgrade page. Only displayed if detected database version is new enough to not require configure.php file updates.
 
   define('TITLE_DOCUMENTATION', 'Documentation');
   define('TEXT_DOCUMENTATION', '<h3>Have you read the Installation Instructions yet?</h3>The <a href="%s" target="_blank">Installation Instructions</a> will be a big help if you have not already read them.<br />There you will find information about permissions-levels you will need to set to various folders/files and other details about installation prerequisites, as well as things to do after you are done with installation. There are also links there to the <a href="http://tutorials.zen-cart.com/" target="_blank">online FAQs</a> and other helpful resources.');
@@ -99,7 +99,7 @@
 
   define('LABEL_EXPLAIN','&nbsp;Click here for more info');
   define('LABEL_FOLDER_PERMISSIONS','File and Folder Permissions');
-  define('LABEL_WRITABLE_FILE_INFO', 'In order for the installer to store the setup information you provide in the following pages, the configure.php files shown below need to be "writable".');
+  define('LABEL_WRITABLE_FILE_INFO', 'In order for the installer to store the setup information you provide in the following pages, the configure.php file shown below needs to be "writable".');
   define('LABEL_WRITABLE_FOLDER_INFO','In order for many Zen Cart&reg; administrative and day-to-day functions to work properly,
 You need to mark several files/folders "Writeable".  The following is a list of folders which need to be "read-write",
 along with recommended CHMOD settings. Please correct these settings before continuing installation.

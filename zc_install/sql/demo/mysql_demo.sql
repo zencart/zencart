@@ -398,7 +398,8 @@ INSERT INTO products (products_id, products_type, products_quantity, products_mo
 (176, 1, '1000', 'Normal', 'small_00.jpg', '100.0000', 0, '2004-10-05 16:45:25', '2004-10-05 16:47:22', NULL, '2.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 0, 1, 0, '100.0000', 55, 1),
 (177, 1, '1000', 'Special', '2_small.jpg', '100.0000', 0, '2004-10-05 16:47:45', '2004-10-06 00:05:48', NULL, '2.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 0, 1, 1, '75.0000', 55, 1),
 (179, 1, '1000', 'DOWNLOAD1', '1_small.jpg', '39.0000', 0, '2004-10-06 00:08:33', '2004-10-06 00:18:51', NULL, '0.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 0, 0, 0, '39.0000', 60, 1),
-(178, 1, '1000', 'Normal', '1_small.jpg', '60.0000', 0, '2004-10-05 16:54:52', '2004-10-05 17:15:02', NULL, '2.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 0, 0, 1, '0', 0, 1, 0, '50.0000', 55, 1);
+(178, 1, '1000', 'Normal', '1_small.jpg', '60.0000', 0, '2004-10-05 16:54:52', '2004-10-05 17:15:02', NULL, '2.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 0, 0, 1, '0', 0, 1, 0, '50.0000', 55, 1), 
+(180, 4, '1000', 'DPT', 'samples/4_small.jpg', '0.9346', 0, '2004-07-12 15:32:40', '2004-07-12 17:46:49', NULL, '0.00', 1, 1, 0, '0', '1', '1', 0, 0, 0, 1, 0, 1, '0', 40, 0, 0, '0.9300', 63, 1);
 
 #New Products
 UPDATE products SET products_date_added = NOW() WHERE products_id = 168 or products_id = 169 or products_id = 170;
@@ -940,7 +941,8 @@ INSERT INTO products_attributes (products_attributes_id, products_id, options_id
 (1098, 178, 1, 16, '100.0000', '+', 10, 0, '0.0000', '+', 0, 1, 1, '', 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '', '', '0.0000', 0, '0.0000', 0, 0),
 (1099, 178, 1, 26, '100.0000', '+', 40, 0, '0.0000', '+', 0, 0, 0, '', 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '', '', '0.0000', 0, '0.0000', 0, 0),
 (1100, 179, 17, 63, '0.0000', '+', 20, 0, '0.0000', '+', 0, 0, 1, '', 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '', '', '0.0000', 0, '0.0000', 0, 0),
-(1103, 179, 17, 62, '0.0000', '+', 10, 0, '0.0000', '+', 0, 1, 1, '', 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '', '', '0.0000', 0, '0.0000', 0, 0);
+(1103, 179, 17, 62, '0.0000', '+', 10, 0, '0.0000', '+', 0, 1, 1, '', 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '', '', '0.0000', 0, '0.0000', 0, 0), 
+(1105, 180, 17, 62, '0.0000', '+', 10, 0, 0, '+', 0, 0, 1, '', 1, '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '', '', '0.0000', 0, '0.0000', 0, 0);
 
 #
 # Dumping data for table `products_attributes_download`
@@ -1087,7 +1089,8 @@ INSERT INTO products_description (products_id, language_id, products_name, produ
 (176, 1, 'Normal Product by the dozen', '<p>This is a normal product priced at $100</p><p>There are quantity discounts setup which will be discounted from the Products Price by the dozen.</p><p>Discounts are added on the Products Price Manager.</p>', '', 0),
 (177, 1, 'Special Product by the dozen', '<p>This is a Special product priced at $100 with a $75 Special</p><p>There are quantity discounts setup which will be discounted from the Special Price discounted by the dozen.</p><p>Discounts are added on the Products Price Manager.</p>', '', 0),
 (178, 1, 'Qty Discounts by 1 Special', '<p>This is a normal product priced at $60 with a special of $50</p><p>There are quantity discounts setup which will be discounted from the Products Price.</p><p>Discounts are added on the Products Price Manager.</p><p>The Discounts are offered in increments of 1.</p><p>Note: Attributes do not inherit the Discount Qty discounts.</p><p>Attributes will inherit Discounts from Specials or sales. This can be customized per attribute by marking the Attribute to Include Product Price Special or Sale Discounts.</p><p>Red is $100.00 and marked to include the Price to Special discount but will not inherit the Discount Qty discount.</p><p>Green is $100 and marked not to include the Price to Special discount and will not inherit the Discount Qty discount.</p>', '', 0),
-(179, 1, 'Single Download', '<p>This product is set up to have a single download.</p><p>The Product Price is $39.99</p><p>The attributes are setup with 1 Option Name, for the download to allow for one download but of various types.</p><p>The Download is listed under:</p><p>Option Name: Documentation<br />Option Value: PDF - English<br />Option Value: MS Word - English</p>', '', 0);
+(179, 1, 'Single Download', '<p>This product is set up to have a single download.</p><p>The Product Price is $39.99</p><p>The attributes are setup with 1 Option Name, for the download to allow for one download but of various types.</p><p>The Download is listed under:</p><p>Option Name: Documentation<br />Option Value: PDF - English<br />Option Value: MS Word - English</p>', '', 0),
+(180, 1, 'Single Download, Single Type', '<p>This product is set up to have a single download of PDF only.  In 1.6.0 and above, products like this can be added to the cart from the listing  page.</p><p>The Product Price is $39.99</p><p>The Download is listed under:</p><p>Option Name: Documentation<br />Option Value: PDF - English<br /></p>', '', 0);
 
 #
 # Dumping data for table `products_discount_quantity`
@@ -1230,6 +1233,7 @@ INSERT INTO products_options_values (products_options_values_id, language_id, pr
 #
 # Dumping data for table `products_options_values_to_products_options`
 #
+
 
 INSERT INTO products_options_values_to_products_options (products_options_values_to_products_options_id, products_options_id, products_options_values_id) VALUES (1, 4, 1),
 (2, 4, 2),
@@ -1451,7 +1455,8 @@ INSERT INTO products_to_categories (products_id, categories_id) VALUES (1, 4),
 (176, 55),
 (177, 55),
 (178, 55),
-(179, 60);
+(179, 60),
+(180, 63);
 
 #
 # Dumping data for table `record_artists`

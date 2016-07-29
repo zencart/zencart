@@ -16,17 +16,23 @@ class testRequest extends zcTestCase
     public function setUp()
     {
         parent::setUp();
+        $GLOBALS['db'] = new stdClass();
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/di/src');
         $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
+        $loader->addPrefix('Interop\Container', DIR_CATALOG_LIBRARY . 'container-interop/container-interop/src/Interop/Container/');
+        require_once DIR_FS_CATALOG . 'includes/diConfigs/AuraWeb.php';
+        require_once DIR_FS_CATALOG . 'includes/diConfigs/ZenCartCommon.php';
     }
 
     public function testRequestInitEmpty()
     {
         $_GET = array();
         $_POST = array();
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         $this->assertTrue(count($zcRequest->all('get')) == 0);
         $this->assertTrue(count($zcRequest->all('post')) == 0);
     }
@@ -41,7 +47,8 @@ class testRequest extends zcTestCase
             'cPath' => 'test1',
             'action' => 'test2'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         $this->assertTrue(count($zcRequest->all('get')) == 2);
         $this->assertTrue(count($zcRequest->all('post')) == 2);
     }
@@ -62,7 +69,8 @@ class testRequest extends zcTestCase
             'products_id' => '<>\'&&valid*',
             'blah' => 'x'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         $this->assertEquals($expected, $zcRequest->readGet($param, $default));
     }
 
@@ -89,7 +97,8 @@ class testRequest extends zcTestCase
             'cPath' => 'test1',
             'action' => 'test2'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         $this->assertEquals($expected, $zcRequest->readPost($param, $default));
     }
 
@@ -117,7 +126,8 @@ class testRequest extends zcTestCase
             'cPath1' => 'test1',
             'action1' => 'test2'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         $this->assertTrue($zcRequest->has('action', 'post'));
         $this->assertFalse($zcRequest->has('cPat', 'post'));
         $this->assertTrue($zcRequest->has('action1'));
@@ -136,7 +146,8 @@ class testRequest extends zcTestCase
             'cPath1' => 'test1',
             'action1' => 'test2'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         try {
             $zcRequest->has('cPat', 'foo');
         } catch (Exception $e) {
@@ -166,7 +177,8 @@ class testRequest extends zcTestCase
             'cPath' => 'test1',
             'action1' => 'test2'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         $result = $zcRequest->all('get');
         $this->assertTrue($result ['action'] == 'test1');
         $this->assertTrue(!isset($result ['action1']));
@@ -196,7 +208,8 @@ class testRequest extends zcTestCase
             'cPath' => 'test1',
             'action1' => 'test2'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         try {
             $zcRequest->all('foo');
         } catch (Exception $e) {
@@ -226,7 +239,8 @@ class testRequest extends zcTestCase
             'cPath' => 'test1',
             'action1' => 'test2'
         );
-        $zcRequest = new Request();
+        $di = $this->initDiStuff();
+        $zcRequest = $di->get('zencart_request');
         $result = $zcRequest->getWebFactoryRequest();
         $this->assertInstanceOf('\Aura\Web\Request', $result);
     }

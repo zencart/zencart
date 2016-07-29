@@ -23,8 +23,6 @@ if (!defined('IS_ADMIN_FLAG')) {
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=> 'class.phpmailer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=> 'class.smtp.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'template_func.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'language.php');

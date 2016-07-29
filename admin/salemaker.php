@@ -32,9 +32,11 @@
                                       'sale_date_last_modified' => 'now()',
                                       'sale_date_status_change' => 'now()');
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_data_array, 'update', "sale_id = '" . zen_db_prepare_input($_GET['sID']) . "'");
+          $zco_notifier->notify('NOTIFY_SALEMAKER_TOGGLE', (int)$_GET['sID'], $_POST['flag']);
+
           // update prices for products in sale
           zen_update_salemaker_product_prices($_GET['sID']);
-          zen_redirect(zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $_GET['sID'], 'NONSSL'));
+          zen_redirect(zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $_GET['sID']));
         }
         break;
       case 'insert':
@@ -61,8 +63,8 @@
           asort($categories_all);
           $categories_all_string = ',' . implode(',', array_unique($categories_all)) . ',';
         } else {
-          $categories_selected_string = 'null';
-          $categories_all_string = 'null';
+          $categories_selected_string = 'NULL';
+          $categories_all_string = 'NULL';
         }
 
         $salemaker_sales_data_array = array('sale_name' => zen_db_prepare_input($_POST['name']),
@@ -84,16 +86,18 @@
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_sales_data_array, 'insert');
 
           $_POST['sID'] = $db->Insert_ID();
+          $zco_notifier->notify('NOTIFY_SALEMAKER_ADDED', $_POST['sID']);
 
         } else {
           $salemaker_sales_data_array['sale_date_last_modified'] = 'now()';
           zen_db_perform(TABLE_SALEMAKER_SALES, $salemaker_sales_data_array, 'update', "sale_id = '" . zen_db_input($_POST['sID']) . "'");
+          $zco_notifier->notify('NOTIFY_SALEMAKER_UPDATED', $_POST['sID'], $sql_data_array);
         }
 
         // update prices for products in sale
         zen_update_salemaker_product_prices($_POST['sID']);
 
-        zen_redirect(zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $_POST['sID']));
+        zen_redirect(zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $_POST['sID']));
         break;
       case 'copyconfirm':
         $newname = zen_db_prepare_input($_POST['newname']);
@@ -101,8 +105,7 @@
           $salemaker_sales = $db->Execute("select * from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . zen_db_input($_GET['sID']) . "'");
           if ($salemaker_sales->RecordCount() > 0) {
 
-          $sql_data_array = array('sale_id' => 'null',
-                                  'sale_status' => 0,
+          $sql_data_array = array('sale_status' => 0,
                                   'sale_name' => $newname,
                                   'sale_date_added' => 'now()',
                                   'sale_date_last_modified' => '0001-01-01',
@@ -121,25 +124,28 @@
             zen_db_perform(TABLE_SALEMAKER_SALES, $sql_data_array, 'insert');
 
             $sale_id = $db->Insert_ID();
+            $zco_notifier->notify('NOTIFY_SALEMAKER_COPIED', $sale_id, $sql_data_array);
+
             // update prices for products in sale
             zen_update_salemaker_product_prices($sale_id);
           }
         }
 
-        zen_redirect(zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $db->Insert_ID()));
+        zen_redirect(zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $db->Insert_ID()));
         break;
       case 'deleteconfirm':
         $sale_id = zen_db_prepare_input($_POST['sID']);
 
         // set sale off to update prices before removing
         $db->Execute("update " . TABLE_SALEMAKER_SALES . " set sale_status=0 where sale_id='" . (int)$sale_id . "'");
+        $zco_notifier->notify('NOTIFY_SALEMAKER_DELETED', $sale_id);
 
         // update prices for products in sale
         zen_update_salemaker_product_prices($sale_id);
 
         $db->Execute("delete from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . (int)$sale_id . "'");
 
-        zen_redirect(zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page']));
+        zen_redirect(zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page']));
         break;
     }
   }
@@ -149,13 +155,13 @@ require('includes/admin_html_head.php');
 ?>
 <script type="text/javascript">
 function session_win() {
-  window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
+  window.open("<?php echo zen_admin_href_link(FILENAME_SALEMAKER_INFO); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
 }
 function popupWindow(url) {
   window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
 }
 function session_win1() {
-  window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid='.$category['categories_id']); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
+  window.open("<?php echo zen_admin_href_link(FILENAME_SALEMAKER_POPUP, 'cid='.$category['categories_id']); ?>","salemaker_info","height=460,width=600,scrollbars=yes,resizable=yes").focus();
 }
 function RowClick(RowValue) {
   for (i=0; i<document.sale_form.length; i++) {
@@ -265,7 +271,7 @@ function SetCategories() {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_SALEMAKER_POPUP; ?></td>
-            <td class="main" align="right" valign="top"><br><?php echo (($form_action == 'insert') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)). '&nbsp;&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . ($_GET['sID'] > 0 ? '&sID=' . $_GET['sID'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></td>
+            <td class="main" align="right" valign="top"><br><?php echo (($form_action == 'insert') ? zen_image_submit('button_insert.gif', IMAGE_INSERT) : zen_image_submit('button_update.gif', IMAGE_UPDATE)). '&nbsp;&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . ($_GET['sID'] > 0 ? '&sID=' . $_GET['sID'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -381,7 +387,7 @@ function SetCategories() {
       echo '        <td>' . "\n";
 ?>
 <script type="text/javascript">
-document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']) . '\\\')">'.TEXT_MORE_INFO.'</a>'; ?>');
+document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_admin_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']) . '\\\')">'.TEXT_MORE_INFO.'</a>'; ?>');
 </script>
 <?php
     }
@@ -420,9 +426,9 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
       }
 
       if (isset($sInfo) && is_object($sInfo) && ($salemaker_sales->fields['sale_id'] == $sInfo->sale_id)) {
-        echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=edit') . '\'">' . "\n";
+        echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=edit') . '\'">' . "\n";
       } else {
-        echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '\'">' . "\n";
+        echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '\'">' . "\n";
       }
 ?>
                 <td  class="dataTableContent" align="left"><?php echo $salemaker_sales->fields['sale_name']; ?></td>
@@ -447,7 +453,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
       }
 ?>
                 </td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($sInfo)) && ($salemaker_sales->fields['sale_id'] == $sInfo->sale_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (is_object($sInfo)) && ($salemaker_sales->fields['sale_id'] == $sInfo->sale_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sales->fields['sale_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
       </tr>
 <?php
       $salemaker_sales->MoveNext();
@@ -463,7 +469,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
   if (empty($action)) {
 ?>
                   <tr>
-                    <td colspan="2" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&action=new') . '">' . zen_image_button('button_new_sale.gif', IMAGE_NEW_SALE) . '</a>'; ?></td>
+                    <td colspan="2" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&action=new') . '">' . zen_image_button('button_new_sale.gif', IMAGE_NEW_SALE) . '</a>'; ?></td>
                   </tr>
 <?php
   }
@@ -482,7 +488,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
       $contents = array('form' => zen_draw_form('sales', FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=copyconfirm'));
       $contents[] = array('text' => sprintf(TEXT_INFO_COPY_INTRO, $sInfo->sale_name));
       $contents[] = array('text' => '<br>&nbsp;' . zen_draw_input_field('newname', htmlspecialchars($sInfo->sale_name . '_', ENT_COMPAT, CHARSET, TRUE), 'size="31"'));
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_copy.gif', IMAGE_COPY) . '&nbsp;<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_copy.gif', IMAGE_COPY) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     case 'delete':
       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_SALE . '</b>');
@@ -490,13 +496,13 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . zen_href_lin
       $contents = array('form' => zen_draw_form('sales', FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('sID', $sInfo->sale_id));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br><b>' . $sInfo->sale_name . '</b>');
-      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
       if (is_object($sInfo)) {
         $heading[] = array('text' => '<b>' . $sInfo->sale_name . '</b>');
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=copy') . '">' . zen_image_button('button_copy_to.gif', IMAGE_COPY_TO) . '</a> <a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
+        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=copy') . '">' . zen_image_button('button_copy_to.gif', IMAGE_COPY_TO) . '</a> <a href="' . zen_admin_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
         $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->sale_date_added));
         $contents[] = array('text' => '' . TEXT_INFO_DATE_MODIFIED . ' ' . (($sInfo->sale_date_last_modified == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_last_modified)));
         $contents[] = array('text' => '' . TEXT_INFO_DATE_STATUS_CHANGE . ' ' . (($sInfo->sale_date_status_change == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_status_change)));

@@ -18,13 +18,6 @@
   <a href="http://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" border="0"></a><br>
   <br>
   E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a><br>
-  <a href="<?php echo zen_href_link(FILENAME_SERVER_INFO); ?>"><?php echo zen_get_zcversioninfo('footer'); ?></a>
+  <a href="<?php echo zen_admin_href_link(FILENAME_SERVER_INFO); ?>"><?php echo zen_get_zcversioninfo('footer'); ?></a>
   </div>
 </footer>
-
-<!-- Initialize the Foundation plugins -->
-<script>
-if (window.Foundation) {
-  $(document).foundation();
-}
-</script>

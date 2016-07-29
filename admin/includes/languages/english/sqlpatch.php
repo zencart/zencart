@@ -20,7 +20,7 @@
                               'field here, or by uploading a supplied script (.SQL) file.<br />' .
                               'When preparing scripts to be used by this tool, DO NOT include a table prefix, as this tool will ' .
                               'automatically insert the required prefix for the active database, based on settings in the store\'s ' .
-                              'admin/includes/configure.php file (DB_PREFIX definition).<br /><br />' .
+                              '/includes/configure.php file (DB_PREFIX definition).<br /><br />' .
                               'The commands entered or uploaded may only begin with the following statements, and MUST be in UPPERCASE:'.
                               '<br /><ul><li>DROP TABLE IF EXISTS</li><li>CREATE TABLE</li><li>INSERT INTO</li><li>INSERT IGNORE INTO</li><li>ALTER TABLE</li>' .
                               '<li>UPDATE (just a single table)</li><li>UPDATE IGNORE (just a single table)</li><li>DELETE FROM</li><li>DROP INDEX</li><li>CREATE INDEX</li>' .

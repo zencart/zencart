@@ -43,6 +43,8 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
             @ini_set('include_path', '.' . PATH_SEPARATOR . @ini_get('include_path'));
         }
 
+        date_default_timezone_set('UTC');
+
         if (file_exists(TESTCWD . 'localTestSetup.php')) {
             require_once TESTCWD . 'localTestSetup.php';
         }
@@ -192,6 +194,15 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
     protected function assertURLGenerated($url, $expected)
     {
         return $this->assertEquals($expected, $url, 'An incorrect URL was generated.');
+    }
+
+    public function initDiStuff()
+    {
+        $config1 = new AuraWeb();
+        $config2 = new ZenCartCommon();
+        $builder = new \Aura\Di\ContainerBuilder();
+        $di = $builder->newConfiguredInstance(array($config1, $config2));
+        return $di;
     }
 
 }

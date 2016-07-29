@@ -355,7 +355,7 @@
   define('PRODUCT_PRICE_DISCOUNT_AMOUNT','&nbsp;off');
 
 // Sale Maker Sale Price
-  define('PRODUCT_PRICE_SALE','Sale:&nbsp;');
+  define('PRODUCT_PRICE_SALE','<span class="sale-banner">Sale:</span> ');
 
 // banner_box
   define('BOX_HEADING_BANNER_BOX','Sponsors');
@@ -396,6 +396,7 @@
   define('TEXT_BEFORE_DOWN_FOR_MAINTENANCE', 'NOTICE: This website is scheduled to be down for maintenance on: ');
   define('TEXT_ADMIN_DOWN_FOR_MAINTENANCE', 'NOTICE: The website is currently Down For Maintenance to the public');
 
+  define('TEXT_FREE', 'Free!');
   define('PRODUCTS_PRICE_IS_FREE_TEXT','It\'s Free!');
   define('PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT','Call for Price');
   define('TEXT_CALL_FOR_PRICE','Call for price');
@@ -559,6 +560,7 @@
   define('TABLE_HEADING_QUANTITY', 'Qty.');
   define('TABLE_HEADING_PRODUCTS', 'Item Name');
   define('TABLE_HEADING_TOTAL', 'Total');
+  define('TEXT_REFRESH', 'Refresh');
 
 // create account - login shared
   define('TABLE_HEADING_PRIVACY_CONDITIONS', 'Privacy Statement');
