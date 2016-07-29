@@ -636,3 +636,7 @@ td.actions a:last-child {
 #leadMultipleActions a {
   float: right;
 }
+td.underline {
+    border-bottom: 1px solid #000;
+    padding: 0px 7px;
+}

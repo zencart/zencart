@@ -35,10 +35,10 @@
 <?php if ($tplVars['listingBox']['formattedTotals'] != null) { ?>
 <tr>
 <?php $cols = count($tplVars['leadDefinition']['listMap']) + 1; ?>
-<td colspan="<?php echo $cols;?>"><?php zen_draw_separator(); ?></td>
+<td class="underline" colspan="<?php echo $cols;?>"></td>
 </tr>
     <tr>
-        <td>&nbsp;</td> <!-- account for checkbox --> 
+        <td><?php echo TEXT_PAGE_TOTALS; ?></td>
         <?php foreach ($tplVars['listingBox']['formattedTotals'] as $field) { ?>
             <td><?php echo $field; ?></td>
         <?php } ?>

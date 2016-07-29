@@ -134,7 +134,7 @@ class AbstractFormatter extends \base
               $total = 0; 
               if ($this->outputLayout['fields'][$key]['total'] == 'currencySum') {
                  foreach ($this->formattedResults as $rec) { 
-                    $total += preg_replace("/([^0-9\\.])/i", "", $rec[$key]); 
+                    $total += preg_replace("/([^0-9\.])/i", "", $rec[$key]); 
                  }
                  $currencies = new \currencies();
                  $total = $currencies->format($total); 
