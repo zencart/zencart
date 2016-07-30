@@ -12,7 +12,7 @@ if (! defined('IS_ADMIN_FLAG'))
 
 define('SUPERUSER_PROFILE', 1);
 $page = $zcRequest->readGet('cmd', basename($PHP_SELF, ".php"));
-$hasDoneStartWizard = TRUE;
+$hasDoneStartWizard = true;
 
 $val = getenv('HABITAT');
 $habitat = ($val == 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] == 'vagrant'));
@@ -55,10 +55,10 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
         FILENAME_DENIED,
         FILENAME_ALT_NAV
     )) && ! zen_is_superuser()) {
-      if (check_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == FALSE) {
-          if (check_related_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == FALSE) {
+      if (check_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == false) {
+          if (check_related_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == false) {
             zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
-              $redirectTo = zen_admin_href_link(FILENAME_DENIED);
+            $redirectTo = zen_admin_href_link(FILENAME_DENIED);
             $authError = AUTH_ERROR;
 
           }
@@ -67,7 +67,7 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
   }
 
   if (STORE_NAME == '' || STORE_OWNER == '') {
-    $hasDoneStartWizard = FALSE;
+    $hasDoneStartWizard = false;
     if (! in_array($page, array(
         FILENAME_DEFAULT,
         FILENAME_LOGOFF,
@@ -81,8 +81,8 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
   }
 }
 if ($zcRequest->getWebFactoryRequest()->isXhr() && $authError) {
-    header("Status: 403 Forbidden", TRUE, 403);
-    echo json_encode(array('error'=>TRUE, 'errorType'=>$authError));
+    header("Status: 403 Forbidden", true, 403);
+    echo json_encode(array('error'=>true, 'errorType'=>$authError));
     exit(1);
 } elseif ($redirectTo) {
     zen_redirect($redirectTo);
