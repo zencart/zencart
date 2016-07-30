@@ -157,22 +157,18 @@ class category_tree extends base {
         }
         $this->box_categories_array[$row]['path'] = $cPath_new;
 
-        $this->box_categories_array[$row]['current'] = 
-            (isset($cPath_array) && in_array($catID, $cPath_array)); 
+        $this->box_categories_array[$row]['current'] = (isset($cPath_array) && in_array($catID, $cPath_array)); 
 
         // display category name
-        if ($this->tree[$catID]['parent'] == (int)TOPMOST_CATEGORY_PARENT_ID) { 
-           $this->box_categories_array[$row]['name'] = $this->tree[$catID]['name']; 
-        } else { 
-           $this->box_categories_array[$row]['name'] = str_repeat(CATEGORIES_SUBCATEGORIES_INDENT, (int)$this->tree[$catID]['level']) . CATEGORIES_SEPARATOR_SUBS . $this->tree[$catID]['name'];
+        if ($this->tree[$catID]['parent'] != (int)TOPMOST_CATEGORY_PARENT_ID) { 
+           $this->box_categories_array[$row]['name'] = str_repeat(CATEGORIES_SUBCATEGORIES_INDENT, (int)$this->tree[$catID]['level']) . CATEGORIES_SEPARATOR_SUBS; 
         }
+        $this->box_categories_array[$row]['name'] .= $this->tree[$catID]['name']; 
 
         // make category image available in case needed
-        $this->box_categories_array[$row]['image'] = 
-            $this->tree[$catID]['image'];
+        $this->box_categories_array[$row]['image'] = $this->tree[$catID]['image'];
 
-        $this->box_categories_array[$row]['has_sub_cat'] = 
-            zen_has_category_subcategories($catID); 
+        $this->box_categories_array[$row]['has_sub_cat'] = zen_has_category_subcategories($catID); 
 
         if (SHOW_COUNTS == 'true') {
             $products_in_category = zen_count_products_in_category($catID);
