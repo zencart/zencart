@@ -171,12 +171,7 @@ class category_tree extends base {
         $this->box_categories_array[$row]['has_sub_cat'] = zen_has_category_subcategories($catID); 
 
         if (SHOW_COUNTS == 'true') {
-            $products_in_category = zen_count_products_in_category($catID);
-            if ($products_in_category > 0) {
-                $this->box_categories_array[$row]['count'] = $products_in_category;
-            } else {
-                $this->box_categories_array[$row]['count'] = 0;
-            }
+            $this->box_categories_array[$row]['count'] = zen_count_products_in_category($catID);
         }
         # break loop if there's no next_id
         if (empty($this->tree[$catID]['next_id']))
