@@ -167,7 +167,7 @@ class testQueryBuilder extends zcTestCase
 
     public function testProcessBindVars()
     {
-        $qf = $this->getMock('queryFactory');
+        $qf = $this->getMockBuilder('queryFactory')->getMock();
         $o = new ZenCart\QueryBuilder\QueryBuilder($qf, array('bindVars' => array(array('id', 1, 'integer'))));
         $o->processQuery(array());
         $p = $o->getParts();

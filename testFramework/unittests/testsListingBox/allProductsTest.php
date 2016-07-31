@@ -52,9 +52,9 @@ class testAllDefaultCase extends zcTestCase
 
     public function testInstantiate()
     {
-        $scroller = $this->getMock('paginator', array('getResults'));
+        $scroller = $this->getMockBuilder('paginator')->setMethods(array('getResults'))->getMock();
         $scroller->method('getResults')->willReturn(array('resultList' => array()));
-        $paginator = $this->getMock('paginator', array('doPagination', 'getScroller'));
+        $paginator = $this->getMockBuilder('paginator')->setMethods(array('doPagination', 'getScroller'))->getMock();
         $paginator->method('getScroller')->willReturn($scroller);
         $r = $this->getMockBuilder('\ZenCart\Request\Request')
             ->disableOriginalConstructor()
