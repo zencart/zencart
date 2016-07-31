@@ -33,13 +33,25 @@ class NewProductsPage extends AbstractDefinition
             ),
             'derivedItems' => array(
                 array(
+                    'field' => 'productCpath',
+                    'handler' => 'productCpathBuilder'
+                ),
+                array( // must happen after productCpathBuilder
+                    'field' => 'link',
+                    'handler' => 'productLinkBuilder'
+                ),
+                array( // must happen after productLinkBuilder
                     'field' => 'displayPrice',
                     'handler' => 'displayPriceBuilder'
                 ),
-                array(
-                    'field' => 'productCpath',
-                    'handler' => 'productCpathBuilder'
-                )
+                array( // must happen after displayPriceBuilder
+                    'field' => 'displayFreeTag',
+                    'handler' => 'displayFreeTagBuilder'
+                ),
+                array( // must happen after displayPriceBuilder
+                    'field' => 'priceBlock',
+                    'handler' => 'priceBlockBuilder'
+                ),
             ),
             'joinTables' => array(
                 'TABLE_PRODUCTS_DESCRIPTION' => array(

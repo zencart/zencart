@@ -251,7 +251,7 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
      */
     protected function processorListPrice($item, $key)
     {
-        $this->displayValues[$key] = TEXT_PRICE . ' ' . $item ['displayPrice'] . str_repeat('<br clear="all" />', substr(constant($this->prefix . $key), 3, 1)) . (zen_get_show_product_switch($item ['products_id'], 'ALWAYS_FREE_SHIPPING_IMAGE_SWITCH') ? (zen_get_product_is_always_free_shipping($item ['products_id']) ? TEXT_PRODUCT_FREE_SHIPPING_ICON . '<br />' : '') : '');
+        $this->displayValues[$key] = TEXT_PRICE . ' ' . $item ['priceBlock'] . str_repeat('<br clear="all" />', substr(constant($this->prefix . $key), 3, 1)) . (zen_get_show_product_switch($item ['products_id'], 'ALWAYS_FREE_SHIPPING_IMAGE_SWITCH') ? (zen_get_product_is_always_free_shipping($item ['products_id']) ? TEXT_PRODUCT_FREE_SHIPPING_ICON . '<br />' : '') : '');
 
     }
 
