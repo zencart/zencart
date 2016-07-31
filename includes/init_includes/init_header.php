@@ -84,4 +84,6 @@ if (!$skipCountryCheck) {
     }
 }
 $zcTplManager = new \ZenCart\View\TplVarManager();
-$zcView = new \ZenCart\View\View($zcTplManager, $messageStack, $breadcrumb);
+$zcView = new \ZenCart\View\StoreView($zcTplManager);
+$zcView->setBreadCrumb($breadcrumb);
+$zcView->setMessageStack($messageStack);
