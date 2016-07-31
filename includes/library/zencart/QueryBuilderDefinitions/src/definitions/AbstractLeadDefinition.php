@@ -45,7 +45,7 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
         $formatter = $this->doFormatter($finalItems, $db);
         $this->tplVars['formatter'] = $formatter->getTplVars();
         $this->tplVars['formattedItems'] = $formatter->getFormattedResults($this->outputLayout);
-        $this->tplVars['formattedTotals'] = $formatter->getFormattedTotals();
+        $this->tplVars['formattedTotals'] = $formatter->getFormattedTotals($this->outputLayout);
         $this->doMultiFormSubmit($finalItems);
         $this->normalizeTplVars($usePaginator);
         return $finalItems;
