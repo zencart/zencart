@@ -97,8 +97,8 @@
       $authenticate_data_array = array('transaction_id' => $_SESSION['3Dsecure_transactionId'],
                                        'payload' => $_POST["PaRes"]);
 
-      if (is_object($$payment_module)) {
-        $authenticate_resp_array = $$payment_module->get3DSecureAuthenticateResponse($authenticate_data_array);
+      if (is_object(${$payment_module})) {
+        $authenticate_resp_array = ${$payment_module}->get3DSecureAuthenticateResponse($authenticate_data_array);
       }
 
       $shouldContinue = $authenticate_resp_array['continue_flag'];
@@ -150,9 +150,9 @@
         ////////////////////////////////////////////////////////////////////
         // Business rules are set to prompt for another form of payment
         ////////////////////////////////////////////////////////////////////
-        $error = $$payment_module->get_authentication_error();
+        $error = ${$payment_module}->get_authentication_error();
 
-        $messageStack->add_session('checkout_payment', $error . '<!-- ['.$$payment_module->code.'] -->', 'error');
+        $messageStack->add_session('checkout_payment', $error . '<!-- ['.${$payment_module}->code.'] -->', 'error');
         $redirectPage = zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false);
       }
 
@@ -184,9 +184,9 @@ header("Cache-Control: max-age=1");  // stores for only 1 second, which prevents
 
 <?php
   // Call pre_confirmation_check on the underlying payment module.
-  $$payment_module->pre_confirmation_check();
+  ${$payment_module}->pre_confirmation_check();
   // output the appropriate POST vars so form can be processed for submission to gateway
-  echo $$payment_module->process_button();
+  echo ${$payment_module}->process_button();
 ?>
 <noscript>
   <br><br>
