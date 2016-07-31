@@ -8,7 +8,7 @@
 namespace Zencart\CheckoutFlow;
 
 use ZenCart\Request\Request;
-use ZenCart\View\View;
+use ZenCart\View\StoreView as View;
 
 /**
  * Interface FlowFactoryInterface

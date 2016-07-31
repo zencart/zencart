@@ -9,7 +9,7 @@ namespace ZenCart\CheckoutFlow\flows;
 use ZenCart\CheckoutFlow\CheckoutRedirectException;
 use ZenCart\CheckoutFlow\CheckoutManager as CheckoutManager;
 use ZenCart\Request\Request as Request;
-use ZenCart\View\View as View;
+use ZenCart\View\StoreView as View;
 
 /**
  * Class AbstractFlow
