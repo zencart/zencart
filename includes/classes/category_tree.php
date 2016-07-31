@@ -3,7 +3,7 @@
  * category_tree Class.
  *
  * @package classes
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: category_tree.php  Modified in v1.6.0 $
@@ -137,64 +137,51 @@ class category_tree extends base {
         }
       }
     }
-    $row = 0;
-    return $this->zen_show_category($first_element, $row);
+    return $this->zen_show_category($first_element);
   }
 
-
-  function zen_show_category($counter,$ii) {
+  function zen_show_category($first_element) {
     global $cPath_array;
+    $catID = (int)$first_element;
+    $row = 0;
+    # checks that the item is not 0, false or not set
+    while (!empty($this->tree[$catID]))
+    {
+        # NOTE: $this->tree[$catID]['parent'] is a string, but would make more sense as integer - consider forcing (int) when setting the var
+        if ($this->tree[$catID]['parent'] == (int)TOPMOST_CATEGORY_PARENT_ID) {
+            $cPath_new = 'cPath=' . $catID;
+            $this->box_categories_array[$row]['top'] = 'true';
+        } else {
+            $this->box_categories_array[$row]['top'] = 'false';
+            $cPath_new = 'cPath=' . $this->tree[$catID]['path'];
+        }
+        $this->box_categories_array[$row]['path'] = $cPath_new;
 
-    $this->categories_string = "";
+        $this->box_categories_array[$row]['current'] = (isset($cPath_array) && in_array($catID, $cPath_array)); 
 
-    for ($i=0; $i<$this->tree[$counter]['level']; $i++) {
-      if ($this->tree[$counter]['parent'] != (int)TOPMOST_CATEGORY_PARENT_ID) {
-        $this->categories_string .= CATEGORIES_SUBCATEGORIES_INDENT;
-      }
-    }
+        // display category name
+        if ($this->tree[$catID]['parent'] != (int)TOPMOST_CATEGORY_PARENT_ID) { 
+           $this->box_categories_array[$row]['name'] = str_repeat(CATEGORIES_SUBCATEGORIES_INDENT, (int)$this->tree[$catID]['level']) . CATEGORIES_SEPARATOR_SUBS; 
+        }
+        $this->box_categories_array[$row]['name'] .= $this->tree[$catID]['name']; 
 
+        // make category image available in case needed
+        $this->box_categories_array[$row]['image'] = $this->tree[$catID]['image'];
 
-    if ($this->tree[$counter]['parent'] == (int)TOPMOST_CATEGORY_PARENT_ID) {
-      $cPath_new = 'cPath=' . $counter;
-      $this->box_categories_array[$ii]['top'] = 'true';
-    } else {
-      $this->box_categories_array[$ii]['top'] = 'false';
-      $cPath_new = 'cPath=' . $this->tree[$counter]['path'];
-      $this->categories_string .= CATEGORIES_SEPARATOR_SUBS;
-    }
-    $this->box_categories_array[$ii]['path'] = $cPath_new;
+        $this->box_categories_array[$row]['has_sub_cat'] = zen_has_category_subcategories($catID); 
 
-    if (isset($cPath_array) && in_array($counter, $cPath_array)) {
-      $this->box_categories_array[$ii]['current'] = true;
-    } else {
-      $this->box_categories_array[$ii]['current'] = false;
-    }
-
-    // display category name
-    $this->box_categories_array[$ii]['name'] = $this->categories_string . $this->tree[$counter]['name'];
-
-    // make category image available in case needed
-    $this->box_categories_array[$ii]['image'] = $this->tree[$counter]['image'];
-
-    if (zen_has_category_subcategories($counter)) {
-      $this->box_categories_array[$ii]['has_sub_cat'] = true;
-    } else {
-      $this->box_categories_array[$ii]['has_sub_cat'] = false;
-    }
-
-    if (SHOW_COUNTS == 'true') {
-      $products_in_category = zen_count_products_in_category($counter);
-      if ($products_in_category > 0) {
-        $this->box_categories_array[$ii]['count'] = $products_in_category;
-      } else {
-        $this->box_categories_array[$ii]['count'] = 0;
-      }
-    }
-
-    if ($this->tree[$counter]['next_id'] != false) {
-      $ii++;
-      $this->zen_show_category($this->tree[$counter]['next_id'], $ii);
+        if (SHOW_COUNTS == 'true') {
+            $this->box_categories_array[$row]['count'] = zen_count_products_in_category($catID);
+        }
+        # break loop if there's no next_id
+        if (empty($this->tree[$catID]['next_id']))
+        {
+            break;
+        }
+        # get next category ID
+        $catID = (int)$this->tree[$catID]['next_id'];
+        $row++;
     }
     return $this->box_categories_array;
-  }
+  }  
 }
