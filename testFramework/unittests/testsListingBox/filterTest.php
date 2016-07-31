@@ -173,7 +173,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $GLOBALS['db'] = $db;
         $db->method('Execute')->willReturn($qfr);
-        $currencies = $this->getMock('currencies');
+        $currencies = $this->getMockBuilder('currencies')->getMock();
         $request = $this->getMockBuilder('\ZenCart\Request\Request')
             ->disableOriginalConstructor()
             ->getMock();
@@ -202,7 +202,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $GLOBALS['db'] = $db;
         $db->method('Execute')->willReturn($qfr);
-        $currencies = $this->getMock('currencies');
+        $currencies = $this->getMockBuilder('currencies')->getMock();
         $request = $this->getMockBuilder('\ZenCart\Request\Request')
             ->disableOriginalConstructor()
             ->getMock();
@@ -231,7 +231,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $GLOBALS['db'] = $db;
         $db->method('Execute')->willReturn($qfr);
-        $currencies = $this->getMock('currencies');
+        $currencies = $this->getMockBuilder('currencies')->getMock();
         $request = $this->getMockBuilder('\ZenCart\Request\Request')
             ->disableOriginalConstructor()
             ->getMock();

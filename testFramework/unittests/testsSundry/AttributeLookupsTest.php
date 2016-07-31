@@ -24,7 +24,7 @@ class AttributeLookupsTest extends zcTestCase
         define('DOWNLOAD_ENABLED', 'false');
 
         global $db;
-        $db = $this->getMock('queryFactory');
+        $db = $this->getMockBuilder('queryFactory')->getMock();
         $db->expects($this->never())
             ->method('Execute');
 
@@ -45,7 +45,7 @@ class AttributeLookupsTest extends zcTestCase
             ->will($this->returnValue(1));
 
         global $db;
-        $db = $this->getMock('queryFactory');
+        $db = $this->getMockBuilder('queryFactory')->getMock();
         $db->expects($this->once())
             ->method('Execute')
             ->will($this->returnValue($result));

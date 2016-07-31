@@ -38,7 +38,7 @@ class testPaginationCase extends zcTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $r->method('get')->willReturn(1);
-        $db = $this->getMock('queryFactory');
+        $db = $this->getMockBuilder('queryFactory')->getMock();
         $db0 = clone($db);
         $db1 = array(array('foo' => 'bar'), array('foo' => 'bar1'));
         $db0->fields = array('total' => '2');
