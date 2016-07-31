@@ -13,7 +13,6 @@ use ZenCart\AjaxDispatch\AjaxDispatch;
  *
  * @package admin
  */
-$loaderPrefix = 'ajax';
 require('includes/application_top.php');
 $getAct = $zcRequest->get('act');
 $postAct = $zcRequest->get('act', null, 'post');

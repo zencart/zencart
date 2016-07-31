@@ -9,7 +9,7 @@
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
-    DEFINE('DO_STRICT_SANITIZATION', true);
+    DEFINE('DO_STRICT_SANITIZATION', false);
 }
 
 if (!defined('DO_DEBUG_SANITIZATION')) {
