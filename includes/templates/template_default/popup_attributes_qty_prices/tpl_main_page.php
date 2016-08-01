@@ -11,7 +11,7 @@
 // Notifier hook to allow for dynamic changes to template operation
 $zco_notifier->notify('NOTIFY_TPL_MAIN_PAGE_BEFORE_BODY', $body_id, $template_dir);
 ?>
-<body id="popupAtrribsQuantityPricesHelp">
+<body id="<?php echo $body_id; ?>"<?php if ($bodyClasses) echo ' class="' . $bodyClasses . '"';?>>
 <p class="button forward"><?php echo '<a href="javascript:window.close()">' . TEXT_CURRENT_CLOSE_WINDOW . '</a>'; ?></p>
 <div class="popupattributeqty">
 <h2 class="pageHeading"><?php echo TEXT_ATTRIBUTES_QTY_PRICES_HELP ?></h2>
