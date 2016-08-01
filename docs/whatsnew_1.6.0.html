@@ -97,45 +97,48 @@ The <a href="http://www.zen-cart.com/upgrades">standard complete site upgrade</a
 <h1>Whats New ... Changes from v1.5.5 to v1.6.0 </h1>
 <h3><strong>The following improvements and bugfixes are included in v1.6.0 since v1.5.5: </strong></h3>
 <br />
-<b>Admin side new features:</b>
-<ul>
-<li>Admin LEAD pages for reports and utilities</li>
-<li>Dashboard widgets on the Admin page</li>
-<li>Improved appearance for many admin pages</li>
-<li>Ajax support in the admin</li>
-<li>Template system in the admin, which sets the stage for restyling and modernizing the admin console</li>
-<li>Spiffycal replaced with a more modern jQuery plugin</li>
-<li>Numerous improvements to Coupon capabilities</li>
-<li>New Reports:
-   <ul>
-   <li> find duplicate model numbers</li>
-   <li>showing differences from a default installation</li>
-   </ul>
-</li>
-<li>Admin configure.php file no longer used</li>
-<li>Consolidation of functions from admin and catalog side</li>
-</ul>
-
-<b>Catalog side new features:</b>
-<ul>
-<li>Catalog LEAD pages for reports and utilities</li>
-<li>Added a middle-tier to the template structure, to allow for "shared" customizations which might apply to multiple templates</li>
-<li>Support for externally-hosted downloadable virtual products (storable on AWS S3,Dropbox, etc.)</li>
-<li>Product-stock "availability" and product-"condition" indicators available</li>
-<li>Language files simplified to relocate locale-specific content into a new locale.php file</li>
-<li>Products with single valued attributes (e.g. PDF-only downloads) can now be added to the cart from the listing page</li>
-<li>shipping supports insurance calculations for carriers that offer it in their modules</li>
-<li>orders remember the customer's language, so order updates are sent in that language</li>
-<li>guest checkout and other checkout flows (no password required until end of checkout; optional abbreviated checkout for virtual+free purchases)</li>
-</ul>
-
-<b>Common features:</b>
-<ul>
-<li>Simplified looping over query results</li>
-<li>Updated all files for PHP7 compatibility</li>
-<li>Consolidated Javascript files to remove duplication</li>
-</ul>
-
+Easier install/setup:<br />
+- no more need for /admin/includes/configure.php !!!!!!  The site will run from just a single /includes/configure.php file for all its settings.<br />
+<br />
+Checkout:<br />
+- guest checkout and other checkout flows (no password required until end of checkout; optional abbreviated checkout for virtual+free purchases)<br />
+- shipping supports insurance calculations for carriers that offer it in their modules<br />
+<br />
+Languages:<br />
+- language files simplified to relocate locale-specific content into a new locale.php file ... so most sites will now touch fewer files for customization<br />
+- multilingual &quot;country names&quot;, configuration menu<br />
+- orders remember the customer's language, so order updates are sent in that language<br />
+<br />
+Product Features:<br />
+- single-attribute products can be added-to-cart from product-listing (instead of via “more info” taking you to the product page first)<br />
+- support for externally-hosted downloadable virtual products (storable on AWS S3, and other places including Dropbox URLs and whatever else someone writes a plugin for)<br />
+- product microdata markup<br />
+- product-stock &quot;availability&quot; and product-&quot;condition&quot; indicators available <br />
+<br />
+Admin improvements:<br />
+- the Admin has a templating system, which allows for restyling to suit own theme preferences<br />
+- added a dashboard widget system for the admin home page, which includes new things like Current Customer Activity, banner-imprint graphs, sales history graph from last several days<br />
+- spiffycal replaced with a more modern jQuery plugin for date-selection<br />
+<br />
+Promotional Tools:<br />
+- numerous improvements to Coupon capabilities (combine Free Shipping with amount or percent discount, support more rules such as combining with sales, minimum order amount, limit by number of orders, export option, and more)<br />
+- allow Gift Certificates to be put on special, or disallowed for specials<br />
+<br />
+Developers will love:<br />
+- more cart-content helper/inspector functions to allow for more custom actions to be built around what’s in the shopping basket, including reacting to product weight, category, value, and more<br />
+- additional notifier hooks for things like customizing category-tabs, reviews, cart contents, downloads, product images and popups<br />
+- several features which lend support to multi-tenancy capability<br />
+- code modernization, progressively incorporating namespaced OOP rewrites of various segments<br />
+- functions consolidation: functions that were &quot;duplicates&quot; (or partial-duplicates) in both the admin and non-admin, are now shared from one place: no more duplication<br />
+- nginx configuration template<br />
+<br />
+Designers will love:<br />
+- modernized for HTML5<br />
+- templating system allows for various CSS frameworks (think Bootstrap etc) to be adapted using simple hooks<br />
+- template hooks which could be used to trigger minification of CSS, JS, etc<br />
+- more flexibility for custom per-page CSS and javascript placement-on-page<br />
+- using font-icons and CSS buttons instead of requiring creation of custom graphics<br />
+- added a middle-tier to the template structure, to allow for &quot;shared&quot; customizations which might apply to multiple templates<br />
 <br />
 Developer Documentation on the new 1.6.0 features is available on the 
 <a href="http://docs.zencart.com/Developer_Documentation/intro">Zen Cart Documentation Site</a>. 
