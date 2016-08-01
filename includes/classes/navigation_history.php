@@ -34,7 +34,7 @@ class navigationHistory extends base {
     if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && zcRequest::readGet('act', '') != '') return;
 
     global $request_type, $cPath;
-    $get_vars = "";
+    $get_vars = [];
 
     if (count(zcRequest::all('get')) > 0) {
       $tmp = zcRequest::all('get');
