@@ -56,7 +56,12 @@
 
 /**
  * Return the number of products in a category
- * TABLES: products, products_to_categories, categories
+ *
+ * @param int $categories_id
+ * @param bool $include_deactivated
+ * @param bool $include_child
+ * @param bool $limit
+ * @return int
  */
   function zen_count_products_in_category($categories_id, $include_deactivated = false, $include_child = true, $limit = false) {
     global $db;
@@ -70,7 +75,7 @@
 
     $products = $db->Execute("select count(*) as total
                               from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                              where p.products_id = p2c.products_id " . 
+                              where p.products_id = p2c.products_id " .
                               ($include_deactivated ? ' and p.products_status = 1 ' : '') . "
                               and p2c.categories_id = " . (int)$categories_id . $limit_count);
 
@@ -91,7 +96,9 @@
 
 /**
  * Returns true if the category has subcategories
- * TABLES: categories
+ *
+ * @param int $category_id
+ * @return bool
  */
   function zen_has_category_subcategories($category_id) {
     global $db;
@@ -104,7 +111,13 @@
     return ($child_category->fields['count'] > 0);
   }
 
-////
+/**
+ * @param array $categories_array
+ * @param int $parent_id
+ * @param string $indent
+ * @param string $status_setting
+ * @return array|string
+ */
   function zen_get_categories($categories_array = '', $parent_id = TOPMOST_CATEGORY_PARENT_ID, $indent = '', $status_setting = '') {
     global $db;
 
@@ -142,7 +155,10 @@
 
 ////
 // Return all subcategory IDs
-// TABLES: categories
+/**
+ * @param array $subcategories_array
+ * @param int $parent_id
+ */
   function zen_get_subcategories(&$subcategories_array, $parent_id = TOPMOST_CATEGORY_PARENT_ID) {
     global $db;
     $subcategories_query = "select categories_id
@@ -162,8 +178,11 @@
 
 
 /**
- * Recursively go through the categories and retreive all parent categories IDs
- * TABLES: categories
+ * Recursively go through the categories and retrieve all parent categories IDs
+ *
+ * @param array $categories
+ * @param int $categories_id
+ * @return bool
  */
   function zen_get_parent_categories(&$categories, $categories_id) {
     global $db;
@@ -825,6 +844,10 @@
 /**
  * check if linked
  * NOTE: returns stringified boolean, until legacy code using these string responses is rewritten
+ *
+ * @param int $product_id
+ * @param bool $show_count
+ * @return int|string
  */
   function zen_get_product_is_linked($product_id, $show_count = false) {
     global $db;
@@ -844,7 +867,9 @@
 
 /**
  * Lookup and return product's master_categories_id
- * TABLES: categories
+ *
+ * @param int $product_id
+ * @return string
  */
   function zen_get_parent_category_id($product_id) {
     global $db;
@@ -856,9 +881,12 @@
     return $categories_lookup->fields['master_categories_id'];
   }
 
-////
-// Count how many subcategories exist in a category
-// TABLES: categories
+/**
+ * Count how many subcategories exist in a category
+ *
+ * @param int $categories_id
+ * @return int
+ */
   function zen_childs_in_category_count($categories_id) {
     global $db;
     $categories_count = 0;
