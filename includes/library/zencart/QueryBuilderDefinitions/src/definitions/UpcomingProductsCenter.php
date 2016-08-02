@@ -90,6 +90,7 @@ class UpcomingProductsCenter extends AbstractDefinition
                                  'params' => array(
                                      'ignoreMultiAddToCart' => true,
                                  ),
+                                 'sortMainPage' => SHOW_PRODUCT_INFO_MAIN_UPCOMING 
             ),
             'columns' => array(
                 'products_name' => array(
