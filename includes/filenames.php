@@ -4,15 +4,15 @@
  * Defines the filenames used in the project
  *
  * @package general
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: filenames.php  Modified in v1.6.0 $
- * @private
  */
 /**
  * define project filenames
  */
+define('FILENAME_ABOUT_US', 'about_us');
 define('FILENAME_ACCOUNT', 'account');
 define('FILENAME_ACCOUNT_EDIT', 'account_edit');
 define('FILENAME_ACCOUNT_HISTORY', 'account_history');
@@ -60,6 +60,7 @@ define('FILENAME_CURRENCIES', 'currencies');
 define('FILENAME_CUSTOMERS', 'customers');
 define('FILENAME_DEFAULT', 'index');
 define('FILENAME_DEFINE_PAGES_EDITOR', 'define_pages_editor');
+define('FILENAME_DEFINE_ABOUT_US', 'define_about_us');
 define('FILENAME_DEFINE_MAIN_PAGE', 'define_main_page');
 define('FILENAME_DEFINE_CHECKOUT_SUCCESS', 'define_checkout_success');
 define('FILENAME_DEFINE_CONDITIONS', 'define_conditions');
