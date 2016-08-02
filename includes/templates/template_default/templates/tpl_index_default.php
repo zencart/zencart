@@ -29,8 +29,20 @@
 <div id="indexDefaultMainContent" class="content"><?php require($define_page); ?></div>
 <?php } ?>
 
-<?php foreach ($tplVars['listingBoxes'] as $tplVars['listingBox']) { ?>
-<?php require($template->get_template_dir($tplVars['listingBox']['formatter']['template'], DIR_WS_TEMPLATE, $current_page_base, 'listingboxes') . '/' . $tplVars['listingBox']['formatter']['template']); ?>
-<?php } ?>
+<?php 
+   function mainBoxSort($a, $b) {
+     if ($a['formatter']['sortMainPage'] == $b['formatter']['sortMainPage'])
+        return 0;
+     if ($a['formatter']['sortMainPage'] < $b['formatter']['sortMainPage'])
+        return -1;
+     return 1;
+   }
+   usort($tplVars['listingBoxes'], "mainBoxSort");
+   foreach ($tplVars['listingBoxes'] as $tplVars['listingBox']) {
+     if ($tplVars['listingBox']['formatter']['sortMainPage'] != 0) { 
+        require($template->get_template_dir($tplVars['listingBox']['formatter']['template'], DIR_WS_TEMPLATE, $current_page_base, 'listingboxes') . '/' . $tplVars['listingBox']['formatter']['template']); 
+     }
+   }
+?>
 
 </div>

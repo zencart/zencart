@@ -76,6 +76,7 @@ class NewProductsCenter extends AbstractDefinition
                                  'template' => 'tpl_listingbox_columnar.php',
                                  'params' => array(
                                      'columnCount' => SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS),
+                                 'sortMainPage' => SHOW_PRODUCT_INFO_MAIN_NEW_PRODUCTS 
             ),
         );
     }
