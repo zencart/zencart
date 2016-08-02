@@ -1,13 +1,13 @@
 <?php
 /**
- * PayEezy payment module
+ * Payeezy payment module
  *
  * Payeezy does token-based transactions, to avoid the risks of onsite handling of card data, thereby not interfering with PCI Compliance.
  * The customer stays on-site but card-processing is done remotely over secure channels, preventing any unnecessary processing of sensitive data.
- *
- * NOTE: You will need TransArmor enabled on your merchant account to do token based transactions.
+ * 
+ * NOTE: You will need TransArmor enabled on your merchant account to do token based transactions. 
  * Contact your merchant account representative for more details on how to enable this or call 1-855-799-0790.
- * For merchants domiciled outside the U.S. please contact your local technical support team for assistance with preparing your account to work with PayEezyJS and Token-Based transactions.
+ * For merchants domiciled outside the U.S. please contact your local technical support team for assistance with preparing your account to work with Payeezy JS and Token-Based transactions.
  *
  * @package payeezy
  * @copyright Copyright 2003-2016 Zen Cart Development Team
@@ -15,7 +15,7 @@
  * @version $Id: Author: Ian Wilson <ian@zen-cart.com> New in v1.5.5 $
  */
 /**
- * PayEezy Payment module class
+ * Payeezy Payment module class
  */
 class payeezyjszc extends base {
   /**
@@ -27,7 +27,7 @@ class payeezyjszc extends base {
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '0.90';
+  var $moduleVersion = '0.91';
   /**
    * $title is the displayed name for this payment method
    *
@@ -62,7 +62,11 @@ class payeezyjszc extends base {
   /**
    * internal vars
    */
-  private $avs_codes, $cvv_codes;
+  private $avs_codes, $cvv_codes, $mode;
+  /**
+   * Advanced setting to enable expedited processing
+   */
+  private $etppid = 'a77026b9457c8cf7'.'7ac73268ce5873cb'.'02f41c0413f1f43d'; 
 
 
   /**
@@ -73,11 +77,12 @@ class payeezyjszc extends base {
 
     $this->code = 'payeezyjszc';
     $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CATALOG_TITLE; // Payment module title in Catalog
+    $this->mode = MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE;
     if (IS_ADMIN_FLAG === true) {
       $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ADMIN_TITLE;
       if (defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS')) {
         if (MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET == '')          $this->title .= '<span class="alert"> (not configured; API details needed)</span>';
-        if (MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox') $this->title .= '<span class="alert"> (Sandbox mode)</span>';
+        if ($this->mode == 'Sandbox') $this->title .= '<span class="alert"> (Sandbox mode)</span>';
         $new_version_details = plugin_version_check_for_updates(2050, $this->moduleVersion);
         if ($new_version_details !== false) {
             $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
@@ -134,7 +139,7 @@ class payeezyjszc extends base {
   function selection() {
     global $order;
 
-    // PayEezy currently only accepts  "American Express", "Visa", "Mastercard", "Discover", "JCB", "Diners Club"
+    // Payeezy currently only accepts  "American Express", "Visa", "Mastercard", "Discover", "JCB", "Diners Club"
     $cc_types = array();
     if (CC_ENABLED_VISA == 1)     $cc_types[] = array('id' => 'Visa', 'text'=> 'Visa');
     if (CC_ENABLED_MC == 1)       $cc_types[] = array('id' => 'Mastercard', 'text'=> 'Mastercard');
@@ -175,7 +180,7 @@ class payeezyjszc extends base {
             array(
                 'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_NUMBER,
                 'field' => zen_draw_input_field($this->code . '_cc_number', '',
-                    'payeezy-data="cc_number" id="' . $this->code . '_cc-number"' . $onFocus . ' autocomplete="off"','number'),
+                    'payeezy-data="cc_number" id="' . $this->code . '_cc-number"' . $onFocus . ' autocomplete="off"'),
                 'tag' => $this->code . '_cc-number'
             ),
             array(
@@ -233,6 +238,7 @@ class payeezyjszc extends base {
     $process_button_string .= zen_draw_hidden_field('cc_owner', zen_output_string_protected($_POST[$this->code . '_cc_owner']));
     $process_button_string .= zen_draw_hidden_field('cc_type', zen_output_string_protected($_POST[$this->code . '_cc_type']));
     $process_button_string .= zen_draw_hidden_field('cc_number', zen_output_string_protected($_POST[$this->code . '_cc_number']));
+    $process_button_string .= zen_draw_hidden_field('cc_cvv', (int)$_POST[$this->code . '_cc_cvv']);
     $process_button_string .= zen_draw_hidden_field('cc_expires', (int)$_POST[$this->code . '_cc_expires_month'] . (int)$_POST[$this->code . '_cc_expires_year']);
     return $process_button_string;
   }
@@ -244,7 +250,7 @@ class payeezyjszc extends base {
       $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_MISSING_FDTOKEN, 'error');
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
     }
-
+    
     $order->info['cc_owner']   = $_POST['cc_owner'];
     $order->info['cc_type'] = $_POST['cc_type'];
     $order->info['cc_number']  = $_POST['cc_number'];
@@ -258,7 +264,7 @@ class payeezyjszc extends base {
     // @TODO - consider converting currencies if the gateway requires
 
 
-    // format purchase amount
+    // format purchase amount 
     $payment_amount = $order->info['total'];
     $decimal_places = $currencies->get_decimal_places($order->info['currency']);
     if ($decimal_places > 0) {
@@ -270,24 +276,25 @@ class payeezyjszc extends base {
 
     // prepare data for submission
     $payload = array();
-    $payload['merchant_ref'] = substr(htmlentities(STORE_NAME), 0, 20);
+    $payload['merchant_ref'] = substr(bin2hex(openssl_random_pseudo_bytes(64)), 0, 20);
     $payload['transaction_type'] = MODULE_PAYMENT_PAYEEZYJSZC_TRANSACTION_TYPE;
     $payload['method'] = 'token';
     $payload['amount'] = (int)$payment_amount;
     $payload['currency_code'] = strtoupper($order->info['currency']);
     $payload['token'] = array('token_type' => 'FDToken');
-    $payload['token']['token_data']['value'] = preg_replace('/[^0-9a-z]/i', '', $_POST[$this->code . '_fdtoken']);
+    $payload['token']['token_data']['value'] = preg_replace('/[^0-9a-z\-]/i', '', $_POST[$this->code . '_fdtoken']);
     $payload['token']['token_data']['cardholder_name'] = htmlentities($order->info['cc_owner']);
     $payload['token']['token_data']['exp_date'] = str_pad(preg_replace('/[^0-9]/', '', $_POST['cc_expires']), 4, '0', STR_PAD_LEFT); // ensure month is 2 digits
+    $payload['token']['token_data']['cvv'] = strval((int)$_POST['cc_cvv']);
     $payload['token']['token_data']['type'] = preg_replace('/[^a-z ]/i', '', $_POST['cc_type']);
 
-
+    $payload_logged = $payload; 
     $payload = json_encode($payload, JSON_FORCE_OBJECT);
     // submit transaction
     $response = $this->postTransaction($payload, $this->hmacAuthorizationToken($payload));
 
     // log the response data
-    $this->logTransactionData($response, $payload);
+    $this->logTransactionData($response, $payload_logged);
 
     // analyze the response
 
@@ -299,10 +306,10 @@ class payeezyjszc extends base {
     // 404 = requested resource did not exist
     // 500, 502, 503, 504 = server error on Payeezy end
 
-    // transaction_status:
-    // Approved = Card Approved
-    // Declined = Gateway declined
-    // Not Processed = For any internal errors this status is returned.
+    // transaction_status: 
+    // Approved = Card Approved 
+    // Declined = Gateway declined 
+    // Not Processed = For any internal errors this status is returned. 
 
     // validation_status: values - “success” / ”failure” based on input validation
 
@@ -338,7 +345,7 @@ class payeezyjszc extends base {
         $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
         if (isset($response['avs']) && isset($this->avs_codes[$response['avs']])) $this->transaction_messages .= "\n" . 'AVS: ' . $this->avs_codes[$response['avs']];
         if (isset($response['cvv2']) && isset($this->cvv_codes[$response['cvv2']])) $this->transaction_messages .= "\n" . 'CVV: ' . $this->cvv_codes[$response['cvv2']];
-        return true;
+        return true;        
       }
 
       if ($response['transaction_status'] == 'declined') {
@@ -400,7 +407,7 @@ class payeezyjszc extends base {
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
     }
 
-    // error at PayEezy. Call tech support
+    // error at Payeezy. Call tech support
     if (in_array($response['http_code'], array(500,502,503,504))) {
       $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_MISCONFIGURATION . 'PAYEEZY-500-CALL_TECH_SUPPORT', 'error');
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
@@ -443,16 +450,18 @@ class payeezyjszc extends base {
   function install() {
     global $db;
 
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Payeezy JS Module', 'MODULE_PAYMENT_PAYEEZYJSZC_STATUS', 'True', 'Do you want to accept PayEezy (First Data) payments?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Payeezy JS Module', 'MODULE_PAYMENT_PAYEEZYJSZC_STATUS', 'True', 'Do you want to accept Payeezy (First Data) payments?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER', '0', 'Sort order of displaying payment options to the customer. Lowest is displayed first.', '6', '0', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYEEZYJSZC_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID', '2', 'Set the status of orders made with this payment module to this value', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Type', 'MODULE_PAYMENT_PAYEEZYJSZC_TRANSACTION_TYPE', 'purchase', 'Should payments be [authorized] only, or be completed [purchases]?', '6', '0', 'zen_cfg_select_option(array(\'authorize\', \'purchase\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Key', 'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY', '', 'Enter the API Key assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Secret', 'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET', '', 'Enter the API Secret assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Merchant Token', 'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN', '', 'Enter the Merchant Token from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY', '', 'Enter the JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Trans Armour Token', 'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN', '', 'Enter the TA Token from your GGe4 account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Merchant Token - Live', 'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN', '', 'Enter the [Live] Merchant Token from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key - Live', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY', '', 'Enter the [Live] JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Merchant Token - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN_SANDBOX', '', 'Enter the [Sandbox/Demo] Merchant Token from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX', '', 'Enter the [Sandbox/Demo] JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Trans Armor Token', 'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN', '', 'Enter the TA Token from your GGe4 account settings (non-US merchants can leave this blank).<br><br>For US Merchants the TransArmor token can be obtained by logging in to https://globalgatewaye4.firstdata.com, navigating to the Terminals page and selecting your terminal. If the Transarmor token is blank, it means that your account has not been enabled for Transarmor yet. To enable Transarmor for your account, you will need to reach out to your account representative or call 1-855-799-0790', '6', '0',  now(), 'zen_cfg_password_display')");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sandbox/Live Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE', 'Live', 'Use [Live] for real transactions<br>Use [Sandbox] for developer testing', '6', '0', 'zen_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Log Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING', 'Log on Failures and Email on Failures', 'Would you like to enable debug mode?  A complete detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Log Always\', \'Log on Failures\', \'Log Always and Email on Failures\', \'Log on Failures and Email on Failures\', \'Email Always\', \'Email on Failures\'), ', now())");
   }
@@ -469,20 +478,21 @@ class payeezyjszc extends base {
        'MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID',
        'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY',
        'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET',
-       'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN',
+       'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN', 
        'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY',
        'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN',
        'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE',
+       'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN_SANDBOX', 
+       'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX',
        'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING',
      );
   }
-
 
   private function hmacAuthorizationToken($payload)
   {
     $nonce = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
     $timestamp = strval(time()*1000); //time stamp in milli seconds
-    $data = MODULE_PAYMENT_PAYEEZYJSZC_API_KEY . $nonce . $timestamp . MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN . $payload;
+    $data = MODULE_PAYMENT_PAYEEZYJSZC_API_KEY . $nonce . $timestamp . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $this->etppid . $payload;
     $hashAlgorithm = "sha256";
     $hmac = hash_hmac($hashAlgorithm, $data, MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET, false);    // HMAC Hash in hex
     $authorization = base64_encode($hmac);
@@ -495,16 +505,19 @@ class payeezyjszc extends base {
 
   private function postTransaction($payload, $headers)
   {
+    $endpoint = $this->mode == 'Sandbox' ? 'api-cert.payeezy.com' : 'api.payeezy.com';
     $curlHeaders = array(
         'Content-Type: application/json',
-        'apikey:'.strval(MODULE_PAYMENT_PAYEEZYJSZC_API_KEY),
-        'token:'.strval(MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN),
-        'Authorization:'.$headers['authorization'],
-        'nonce:'.$headers['nonce'],
-        'timestamp:'.$headers['timestamp'],
+        'apikey:' . strval(MODULE_PAYMENT_PAYEEZYJSZC_API_KEY),
+        'token:' . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
+        'Authorization:' . $headers['authorization'],
+        'nonce:' . $headers['nonce'],
+        'timestamp:' . $headers['timestamp'],
+        'ext_tppid:' . $this->etppid,
+
     );
     $request = curl_init();
-    curl_setopt($request, CURLOPT_URL, "https://api-cert.payeezy.com/v1/transactions");
+    curl_setopt($request, CURLOPT_URL, "https://" . $endpoint . "/v1/transactions");
     curl_setopt($request, CURLOPT_POST, true);
     curl_setopt($request, CURLOPT_POSTFIELDS, $payload);
     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
@@ -515,7 +528,9 @@ class payeezyjszc extends base {
     $commErrNo = curl_errno($request);
     if ($commErrNo == 35) {
       trigger_error('ALERT: Could not process Payeezy transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
-      curl_setopt($request, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
+      // Reset CURL to TLS 1.2 using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
+      curl_setopt($request, CURLOPT_SSLVERSION, 6);
+      // and attempt resubmit
       $response = curl_exec($request);
     }
 
@@ -538,7 +553,6 @@ class payeezyjszc extends base {
     return $response;
   }
 
-
   /**
    * Log transaction errors if enabled
    */
@@ -554,20 +568,20 @@ class payeezyjszc extends base {
                     'Transaction Status: ' . $response['transaction_status'] . "\n" .
                     'Bank Message: ' . $response['bank_message'] . "\n" .
                     'HTTP Response Code: ' . $response['http_code'] . "\n\n" .
-                    'Sent to Payeezy: ' . print_r($payload, true) . "\n\n" .
+                    'Sent to Payeezy: ' . str_replace($_POST['cc_cvv'], '***', print_r($payload, true)) . "\n\n" .
                     'Results Received back from Payeezy: ' . print_r($response, true) . "\n\n" .
                     'CURL communication info: ' . print_r($this->commInfo, true) . "\n";
 
     if (strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Log Always') || ($response['transaction_status'] != 'approved' && strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Log on Failures'))) {
       $key = $response['transaction_id'] . '_' . preg_replace('/[^a-z]/i', '', $response['transaction_status']) . '_' . time() . '_' . zen_create_random_value(4);
-      $file = $this->_logDir . '/' . 'PayEezy_' . $key . '.log';
+      $file = $this->_logDir . '/' . 'Payeezy_' . $key . '.log';
       if ($fp = @fopen($file, 'a')) {
         fwrite($fp, $logMessage);
         fclose($fp);
       }
     }
     if (($response['transaction_status'] != 'approved' && stristr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Email on Failures')) || strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Email Always')) {
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'PayEezy Alert ' . $response['transaction_status'] . ' ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($logMessage)), 'debug');
+      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Payeezy Alert ' . $response['transaction_status'] . ' ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($logMessage)), 'debug');
     }
   }
 
