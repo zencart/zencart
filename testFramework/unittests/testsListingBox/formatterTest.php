@@ -163,6 +163,7 @@ class testFormatterCase extends zcTestCase
                 'products_date_added' => '',
                 'manufacturers_name' => '',
                 'displayPrice' => '',
+                'priceBlock' => '',
                 'products_description' => '',
                 'products_qty_box_status' => ''
             ),
@@ -177,6 +178,7 @@ class testFormatterCase extends zcTestCase
                 'products_date_added' => '',
                 'manufacturers_name' => '',
                 'displayPrice' => '',
+                'priceBlock' => '',
                 'products_description' => '',
                 'products_qty_box_status' => ''
             ),
@@ -191,6 +193,7 @@ class testFormatterCase extends zcTestCase
                 'products_date_added' => '',
                 'manufacturers_name' => '',
                 'displayPrice' => '',
+                'priceBlock' => '',
                 'products_description' => '',
                 'products_qty_box_status' => ''
             )
@@ -247,6 +250,7 @@ class testFormatterCase extends zcTestCase
                 'products_date_added' => '',
                 'manufacturers_name' => '',
                 'displayPrice' => '',
+                'priceBlock' => '',
                 'products_description' => '',
                 'products_qty_box_status' => ''
             ),
@@ -261,6 +265,7 @@ class testFormatterCase extends zcTestCase
                 'products_date_added' => '',
                 'manufacturers_name' => '',
                 'displayPrice' => '',
+                'priceBlock' => '',
                 'products_description' => '',
                 'products_qty_box_status' => ''
             ),
@@ -275,6 +280,7 @@ class testFormatterCase extends zcTestCase
                 'products_date_added' => '',
                 'manufacturers_name' => '',
                 'displayPrice' => '',
+                'priceBlock' => '',
                 'products_description' => '',
                 'products_qty_box_status' => ''
             )

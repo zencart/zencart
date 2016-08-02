@@ -25,7 +25,8 @@
 <?php echo zen_image ( DIR_WS_IMAGES . $tplVars['listingBox']['formattedItems'][$row][$col]['products_image'], $tplVars['listingBox']['formattedItems'][$row][$col]['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT ); ?>
 </a><br>
 <?php } ?>
-<a href="<?php echo zen_href_link ( zen_get_info_page ($tplVars['listingBox']['formattedItems'][$row][$col]['products_id'] ), 'cPath=' . $tplVars['listingBox']['formattedItems'][$row][$col]['productCpath'] . '&products_id=' . $tplVars['listingBox']['formattedItems'][$row][$col]['products_id'] ); ?>"><?php echo $tplVars['listingBox']['formattedItems'][$row][$col]['products_name']; ?></a><br /><?php echo $tplVars['listingBox']['formattedItems'][$row][$col]['displayPrice']; ?>
+<a href="<?php echo zen_href_link ( zen_get_info_page ($tplVars['listingBox']['formattedItems'][$row][$col]['products_id'] ), 'cPath=' . $tplVars['listingBox']['formattedItems'][$row][$col]['productCpath'] . '&products_id=' . $tplVars['listingBox']['formattedItems'][$row][$col]['products_id'] ); ?>"><?php echo $tplVars['listingBox']['formattedItems'][$row][$col]['products_name']; ?></a><br />
+<?php echo $tplVars['listingBox']['formattedItems'][$row][$col]['priceBlock']; ?>
 </div>
 <?php } ?><br class="clearBoth" />
 <?php } ?>

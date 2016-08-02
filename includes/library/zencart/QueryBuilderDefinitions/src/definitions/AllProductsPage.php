@@ -28,25 +28,37 @@ class AllProductsPage extends AbstractDefinition
                     'name' => 'DisplayOrderSorter',
                     'parameters' => array(
                         'defaultSortOrder' => PRODUCT_ALL_LIST_SORT_DEFAULT
-                    )
+                    ),
                 ),
                 array(
                     'name' => 'CategoryFilter',
                     'parameters' => array(
                         'new_products_category_id' => $GLOBALS['new_products_category_id'],
                         'cPath' => $this->request->readGet('cPath', '')
-                    )
-                )
+                    ),
+                ),
             ),
             'derivedItems' => array(
                 array(
+                    'field' => 'productCpath',
+                    'handler' => 'productCpathBuilder'
+                ),
+                array( // must happen after productCpathBuilder
+                    'field' => 'link',
+                    'handler' => 'productLinkBuilder'
+                ),
+                array( // must happen after productLinkBuilder
                     'field' => 'displayPrice',
                     'handler' => 'displayPriceBuilder'
                 ),
-                array(
-                    'field' => 'productCpath',
-                    'handler' => 'productCpathBuilder'
-                )
+                array( // must happen after displayPriceBuilder
+                    'field' => 'displayFreeTag',
+                    'handler' => 'displayFreeTagBuilder'
+                ),
+                array( // must happen after displayPriceBuilder
+                    'field' => 'priceBlock',
+                    'handler' => 'priceBlockBuilder'
+                ),
             ),
             'joinTables' => array(
                 'TABLE_PRODUCTS_DESCRIPTION' => array(

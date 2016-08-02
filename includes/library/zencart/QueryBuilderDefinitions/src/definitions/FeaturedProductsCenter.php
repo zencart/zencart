@@ -19,13 +19,25 @@ class FeaturedProductsCenter extends AbstractDefinition
         $this->listingQuery = array(
             'derivedItems' => array(
                 array(
+                    'field' => 'productCpath',
+                    'handler' => 'productCpathBuilder'
+                ),
+                array( // must happen after productCpathBuilder
+                    'field' => 'link',
+                    'handler' => 'productLinkBuilder'
+                ),
+                array( // must happen after productLinkBuilder
                     'field' => 'displayPrice',
                     'handler' => 'displayPriceBuilder'
                 ),
-                array(
-                    'field' => 'productCpath',
-                    'handler' => 'productCpathBuilder'
-                )
+                array( // must happen after displayPriceBuilder
+                    'field' => 'displayFreeTag',
+                    'handler' => 'displayFreeTagBuilder'
+                ),
+                array( // must happen after displayPriceBuilder
+                    'field' => 'priceBlock',
+                    'handler' => 'priceBlockBuilder'
+                ),
             ),
             'filters' => array(
                 array(
