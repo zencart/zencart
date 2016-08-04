@@ -12,7 +12,7 @@
 <ul>
   <?php foreach ($checkoutStepsList as $checkoutStep) { ?>
   <li <?php echo (($checkoutStep == $checkoutCurrentStep) ? 'class="active"' : ''); ?> >
-      <a href="#" onclick="return false"><?php echo constant('TEXT_ORDER_STEPS_' . strtoupper($checkoutStep)); ?></a>  
+      <a onclick="return false"><?php echo constant('TEXT_ORDER_STEPS_' . strtoupper($checkoutStep)); ?></a>  
     </li>
   <?php } ?>
 </ul>
