@@ -40,10 +40,8 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
   if (! ($zcRequest->readGet('cmd') == FILENAME_LOGIN)) {
     if (! isset($_SESSION ['admin_id'])) {
       if (! ($zcRequest->readGet('cmd') == FILENAME_PASSWORD_FORGOTTEN)) {
-          $redirectTo = zen_admin_href_link(FILENAME_LOGIN, 'camefrom=' . $zcRequest->readGet('cmd')
-          . '&' . zen_get_all_get_params(array('cmd'))
-        );
-          $authError = AUTH_ERROR;
+          $redirectTo = zen_admin_href_link(FILENAME_LOGIN, 'camefrom=' . $zcRequest->readGet('cmd') . '&' . zen_get_all_get_params(array('cmd')));
+          zen_redirect($redirectTo);
       }
     }
     if (! in_array($page, array(
