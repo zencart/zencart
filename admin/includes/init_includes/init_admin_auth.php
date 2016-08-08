@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Mar 14 20:41:52 2013 -0400 Modified in v1.5.4 $
+ * @version Modified in v1.6.0 $
  */
 
 
@@ -26,7 +26,8 @@ if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE ==
   {
     if (substr(DIR_WS_ADMIN, - 7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, - 7) == '/admin/')
     {
-      zen_redirect(zen_admin_href_link(FILENAME_ALERT_PAGE));
+        $redirectTo = zen_admin_href_link(FILENAME_ALERT_PAGE);
+        $authError = ADMIN_BLOCK_WARNING;
     }
     $check_path = dirname($_SERVER ['SCRIPT_FILENAME']) . '/../zc_install';
     if (is_dir($check_path))
@@ -36,6 +37,7 @@ if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE ==
     }
   }
 }
+
 if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
   if (! ($zcRequest->readGet('cmd') == FILENAME_LOGIN)) {
     if (! isset($_SESSION ['admin_id'])) {
@@ -54,7 +56,7 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
         FILENAME_PASSWORD_FORGOTTEN,
         FILENAME_DENIED,
         FILENAME_ALT_NAV
-    )) && ! zen_is_superuser()) {
+    )) && ! zen_is_superuser() && !$authError) {
       if (check_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == false) {
           if (check_related_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == false) {
             zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
@@ -80,9 +82,10 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
     }
   }
 }
+
 if ($zcRequest->getWebFactoryRequest()->isXhr() && $authError) {
     header("Status: 403 Forbidden", true, 403);
-    echo json_encode(array('error'=>true, 'errorType'=>$authError));
+    echo json_encode(array('error'=>true, 'errorType'=>$authError, 'redirect' => $redirectTo));
     exit(1);
 } elseif ($redirectTo) {
     zen_redirect($redirectTo);
