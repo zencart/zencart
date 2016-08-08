@@ -68,7 +68,7 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
     }
   }
 
-  if ((STORE_NAME == '' || STORE_OWNER == '')) {
+  if (STORE_NAME == '' || STORE_OWNER == '') {
     $hasDoneStartWizard = false;
     if (! in_array($page, array(
         FILENAME_DEFAULT,
