@@ -96,6 +96,7 @@
 
 // information box text in sideboxes/information.php
   define('BOX_HEADING_INFORMATION', 'Information');
+  define('BOX_INFORMATION_ABOUT_US', 'About Us');
   define('BOX_INFORMATION_PRIVACY', 'Privacy Notice');
   define('BOX_INFORMATION_CONDITIONS', 'Conditions of Use');
   define('BOX_INFORMATION_SHIPPING', 'Shipping &amp; Returns');
