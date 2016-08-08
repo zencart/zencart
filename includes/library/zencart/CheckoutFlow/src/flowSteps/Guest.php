@@ -150,7 +150,6 @@ class Guest extends AbstractFlowStep
             'fax' => 'customers_fax',
             'email-address' => 'customers_email_address',
             'customers_referral' => 'customers_referral',
-            'email-address' => 'customers_email_address',
             'email_format' => 'customers_email_format',
             'newsletter' => 'customers_newsletter',
         );
