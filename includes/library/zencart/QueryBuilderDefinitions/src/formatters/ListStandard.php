@@ -133,7 +133,7 @@ class ListStandard extends AbstractFormatter implements FormatterInterface
      */
     protected function getColumnSql()
     {
-        $groupId = zen_get_configuration_key_value($this->prefix . 'LIST_GROUP_ID');
+        $groupId = constant($this->prefix . 'LIST_GROUP_ID');
         $sql = array();
         $sql['one'] = "SELECT configuration_key, configuration_value
                 FROM " . TABLE_CONFIGURATION . " WHERE configuration_group_id='" . $groupId . "'
