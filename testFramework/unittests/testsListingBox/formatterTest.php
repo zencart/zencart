@@ -104,6 +104,7 @@ class testFormatterCase extends zcTestCase
 
     public function testListStandardFormatterMultiRow()
     {
+        define('TEST_LIST_GROUP_ID', 1);
         define('TEST_BUY_NOW', 1);
         define('STORE_STATUS', 1);
         define('ENABLE_SSL', 1);
@@ -207,6 +208,7 @@ class testFormatterCase extends zcTestCase
 
     public function testListStandardFormatterMultiRow1()
     {
+        define('TEST_LIST_GROUP_ID', 1);
         define('TEST_BUY_NOW', 0);
         define('SEARCH_ENGINE_FRIENDLY_URLS', 0);
         define('PROPORTIONAL_IMAGES_STATUS', 0);
