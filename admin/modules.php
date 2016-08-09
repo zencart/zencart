@@ -208,8 +208,21 @@ require('includes/admin_html_head.php');
         }
 
         if (in_array($set, array('payment', 'shipping'))) {
-          $moduleStatusIcon = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
-          $moduleStatusText = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? TEXT_MODULE_STATUS_ENABLED : ((empty($module->enabled) && is_numeric($module->sort_order)) ? TEXT_MODULE_STATUS_AMBER : ''));
+        //   $moduleStatusIcon = ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
+          if (!empty($module->enabled) && is_numeric($module->sort_order)) {
+             $moduleStatusIcon = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
+             $moduleStatusText = TEXT_MODULE_STATUS_ENABLED;
+          } else if (!$module->enabled && is_numeric($module->sort_order)) {
+             $moduleStatusIcon = zen_image(DIR_WS_IMAGES . 'icon_status_black.gif'); 
+             $moduleStatusText = TEXT_MODULE_STATUS_DISABLED;
+          } else if (empty($module->enabled) && is_numeric($module->sort_order)) {
+             $moduleStatusIcon = zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); 
+             $moduleStatusText = TEXT_MODULE_STATUS_AMBER;
+          } else { 
+            $moduleStatusIcon = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+             $moduleStatusText = '';
+
+          }
         } else {
           $moduleStatusIcon = (is_numeric($module->sort_order) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'));
           $moduleStatusText = (is_numeric($module->sort_order) ? TEXT_MODULE_STATUS_ENABLED : '');
