@@ -19,7 +19,7 @@ define('TABLE_HEADING_ACTION', 'Action');
 define('TEXT_MODULE_STATE', 'Module State');
 define('TEXT_MODULE_STATUS_ENABLED', ' <span style="color:#5FC000";>Enabled</span>');
 define('TEXT_MODULE_STATUS_AMBER', ' <span style="color:#FFBB00";>Enabled</span>');
-define('TEXT_MODULE_STATUS_DISABLED', ' <span style="color:red";>Disabled</span>');
+define('TEXT_MODULE_STATUS_DISABLED', ' <span style="color:black";>Disabled</span>');
 define('TEXT_DO_COMMUNICATIONS_TEST', 'Test Communications');
 
 define('TEXT_MODULE_DIRECTORY', 'Module Directory:');
