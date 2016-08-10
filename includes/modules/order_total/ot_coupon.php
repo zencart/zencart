@@ -187,7 +187,7 @@ class ot_coupon {
         if ($coupon_result->RecordCount() < 1 ) {
           $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON . ' ' . $dc_check,'caution');
           $this->clear_posts();
-          return;
+          return false;
         }
 
         // display all error messages at once
@@ -213,7 +213,7 @@ class ot_coupon {
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_REDEEM_COUPON_MINIMUM, $currencies->format($coupon_result->fields['coupon_minimum_order'])) . ($dc_link_count == 0 ? $dc_link : ''), 'caution');
           $error_issues ++;
           $dc_link_count ++;
-          return; 
+          return false; 
         }
 
         // JTD - added missing code here to handle coupon product restrictions
@@ -397,7 +397,7 @@ class ot_coupon {
           // display all error messages
           if ($error_issues > 0 || !$foundvalid) {
             $this->clear_posts();
-            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+            return false; 
           }
 
           if ($foundvalid) {
@@ -407,10 +407,11 @@ class ot_coupon {
       } else {
         $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON . ' ' . $dc_check,'caution');
         $this->clear_posts();
-        zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
+        return false; 
       }
 
     }
+    return true; 
   }
 
   /**

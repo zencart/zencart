@@ -160,13 +160,20 @@ class order_total extends base {
   function collect_posts() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
+      $collect_posts_rc = true; 
       while (list(, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ( $GLOBALS[$class]->credit_class ) {
           $post_var = 'c' . $GLOBALS[$class]->code;
           if ($_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
-          $GLOBALS[$class]->collect_posts();
+          $rc = $GLOBALS[$class]->collect_posts();
+          if (isset($rc) && $rc != true) { 
+               $collect_posts_rc = false; 
+          }
         }
+      }
+      if (!$collect_posts_rc) { 
+            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
       }
     }
   }
