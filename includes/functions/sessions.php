@@ -135,7 +135,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
   function zen_session_write_close() {
-    return session_write_close();
+    session_write_close();
+    return;
   }
 
   function zen_session_destroy() {
