@@ -282,7 +282,6 @@
         zen_redirect(zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action'))));
         break;
         default:
-          //@TODO - this "default" section is never run -- See GH Issue #936
         $customers = $db->Execute("select c.customers_id, c.customers_gender, c.customers_firstname,
                                           c.customers_lastname, c.customers_dob, c.customers_email_address,
                                           a.entry_company, a.entry_street_address, a.entry_suburb,
