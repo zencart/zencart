@@ -44,7 +44,7 @@ final class WidgetManager
   {
     global $db;
     $widgets = array();
-    if (zen_is_superuser($user))
+    if (zen_is_superuser())
     {
       $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw
                  LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key";
