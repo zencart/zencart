@@ -66,7 +66,7 @@ class payeezyjszc extends base {
   /**
    * Advanced setting to enable expedited processing
    */
-  private $etppid = 'a77026b9457c8cf7'.'7ac73268ce5873cb'.'02f41c0413f1f43d'; 
+  private $etppid = 'a77026b9457c8cf77ac73268ce5873cb02f41c0413f1f43d'; 
 
 
   /**
