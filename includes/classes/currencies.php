@@ -91,7 +91,7 @@ class currencies extends base {
       }
       $currency_value = zen_round($number * $rate, $this->currencies[$currency_type]['decimal_places']);
     } else {
-      $currency_value = zen_round($number, $this->currencies[$currency_type]['decimal_places']);
+      $currency_value = $number; 
     }
 
     return $currency_value;
