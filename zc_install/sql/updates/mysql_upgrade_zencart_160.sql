@@ -208,9 +208,10 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets (
   widget_status int(1) NOT NULL DEFAULT '1',
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
+  widget_height int(11) NOT NULL DEFAULT '1',
+  widget_width int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (widget_key)
 ) ENGINE=MyISAM;
-
 # --------------------------------------------------------
 
 #
@@ -251,12 +252,13 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
   admin_id int(11) NOT NULL,
   widget_row int(11) NOT NULL DEFAULT '0',
   widget_column int(11) NOT NULL DEFAULT '0',
+  widget_height int(11) NOT NULL DEFAULT '1',
+  widget_width int(11) NOT NULL DEFAULT '1',
   widget_refresh int(11) NOT NULL DEFAULT '0',
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
   PRIMARY KEY (widget_key,admin_id)
 ) ENGINE=MyISAM;
-
 #
 # Set up default widgets
 #
@@ -393,11 +395,11 @@ UPDATE countries set countries_name = 'Bonaire, Sint Eustatius and Saba', countr
 UPDATE countries set countries_name = 'Bosnia and Herzegovina' where countries_iso_code_3 = 'BIH';
 UPDATE countries set countries_name = 'Guinea-Bissau' where countries_iso_code_3 = 'GNB';
 UPDATE countries set countries_name = 'Heard and McDonald Islands' where countries_iso_code_3 = 'HMD';
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (247,'Curaçao','CW','CUW','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (248,'Sint Maarten (Dutch part)','SX','SXM','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (249,'Saint-Barthélemy','BL','BLM','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (250,'Congo - Kinshasa','CD','COD','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (251,'St. Martin','MF','MAF','1');
+INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('Curaçao','CW','CUW','1');
+INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('Sint Maarten (Dutch part)','SX','SXM','1');
+INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('Saint-Barthélemy','BL','BLM','1');
+INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('Congo - Kinshasa','CD','COD','1');
+INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('St. Martin','MF','MAF','1');
 ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
 
 CREATE TABLE countries_name (
