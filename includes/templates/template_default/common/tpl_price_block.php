@@ -3,7 +3,7 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
@@ -25,6 +25,10 @@
 $block = '';
 if (is_array($price_array)) {
 // $block .= '<pre>'.print_r($price_array, true).'</pre>';
+  if (isset($link) && $link != '') {
+    $block .= '<a class="PriceBarLink" href="' . $link . '">' . "\n";
+  }
+
   $block .= '<div class="priceBox' . ($price_array['starting_at'] ? ' starting-at' : '') . '">' . "\n";
   if ($price_array['call_tag'] != '') {
     $block .= '  <div class="call4price">' . $price_array['call_tag'] . '</div>' . "\n";
@@ -68,7 +72,7 @@ if (is_array($price_array)) {
     if ($price_array['show_sale_discount'] . $price_array['show_discount_amount']) $block .= '  <div class="productPriceDiscount">' . $price_array['show_sale_discount'] . $price_array['show_discount_amount']. '</div>' . "\n";
   }
   if (isset($link) && $link != '') {
-    $block .= '  <a class="linkArrow" href="' . $link . '"><i class="fa fa-chevron-right fa-2x"></i><span>' . MORE_INFO_TEXT . '</span></a>';
+    $block .= "\n</a>";
   }
 
   $block .= '</div>' . "\n";
