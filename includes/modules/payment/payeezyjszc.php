@@ -27,7 +27,7 @@ class payeezyjszc extends base {
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '0.91';
+  var $moduleVersion = '0.92';
   /**
    * $title is the displayed name for this payment method
    *
@@ -445,25 +445,32 @@ class payeezyjszc extends base {
       $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYEEZYJSZC_STATUS'");
       $this->_check = $check_query->RecordCount();
     }
+    // if module is already installed, then we can call install() to update any missing/new keys
+    if ($this->_check) $this->install();
     return $this->_check;
   }
+  /**
+   * install/update configuration keys for this module
+   */
   function install() {
     global $db;
-
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Payeezy JS Module', 'MODULE_PAYMENT_PAYEEZYJSZC_STATUS', 'True', 'Do you want to accept Payeezy (First Data) payments?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER', '0', 'Sort order of displaying payment options to the customer. Lowest is displayed first.', '6', '0', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYEEZYJSZC_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID', '2', 'Set the status of orders made with this payment module to this value', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Type', 'MODULE_PAYMENT_PAYEEZYJSZC_TRANSACTION_TYPE', 'purchase', 'Should payments be [authorized] only, or be completed [purchases]?', '6', '0', 'zen_cfg_select_option(array(\'authorize\', \'purchase\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Key', 'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY', '', 'Enter the API Key assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Secret', 'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET', '', 'Enter the API Secret assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Merchant Token - Live', 'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN', '', 'Enter the [Live] Merchant Token from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key - Live', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY', '', 'Enter the [Live] JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Merchant Token - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN_SANDBOX', '', 'Enter the [Sandbox/Demo] Merchant Token from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX', '', 'Enter the [Sandbox/Demo] JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Trans Armor Token', 'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN', '', 'Enter the TA Token from your GGe4 account settings (non-US merchants can leave this blank).<br><br>For US Merchants the TransArmor token can be obtained by logging in to https://globalgatewaye4.firstdata.com, navigating to the Terminals page and selecting your terminal. If the Transarmor token is blank, it means that your account has not been enabled for Transarmor yet. To enable Transarmor for your account, you will need to reach out to your account representative or call 1-855-799-0790', '6', '0',  now(), 'zen_cfg_password_display')");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sandbox/Live Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE', 'Live', 'Use [Live] for real transactions<br>Use [Sandbox] for developer testing', '6', '0', 'zen_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Log Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING', 'Log on Failures and Email on Failures', 'Would you like to enable debug mode?  A complete detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Log Always\', \'Log on Failures\', \'Log Always and Email on Failures\', \'Log on Failures and Email on Failures\', \'Email Always\', \'Email on Failures\'), ', now())");
+    // NOTE: each of these tests for its own defined key before inserting.
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Payeezy JS Module', 'MODULE_PAYMENT_PAYEEZYJSZC_STATUS', 'True', 'Do you want to accept Payeezy (First Data) payments?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER', '0', 'Sort order of displaying payment options to the customer. Lowest is displayed first.', '6', '0', now())");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_ZONE')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYEEZYJSZC_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID', '2', 'Set the status of orders made with this payment module to this value', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_TRANSACTION_TYPE')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Type', 'MODULE_PAYMENT_PAYEEZYJSZC_TRANSACTION_TYPE', 'purchase', 'Should payments be [authorized] only, or be completed [purchases]?', '6', '0', 'zen_cfg_select_option(array(\'authorize\', \'purchase\'), ', now())");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Key', 'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY', '', 'Enter the API Key assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Secret', 'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET', '', 'Enter the API Secret assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Merchant Token - Live', 'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN', '', 'Enter the [Live] Merchant Token from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key - Live', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY', '', 'Enter the [Live] JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY_SANDBOX')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Key - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY_SANDBOX', '', 'Enter the [Sandbox/Demo] API Key assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET_SANDBOX')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('API Secret - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET_SANDBOX', '', 'Enter the [Sandbox/Demo] API Secret assigned to your account', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN_SANDBOX')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Merchant Token - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN_SANDBOX', '', 'Enter the [Sandbox/Demo] Merchant Token from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('JS Security Key - Sandbox (optional)', 'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX', '', 'Enter the [Sandbox/Demo] JS Security key from your account settings', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Trans Armor Token', 'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN', '', 'Enter the TA Token from your GGe4 account settings (non-US merchants can leave this blank).<br><br>For US Merchants the TransArmor token can be obtained by logging in to https://globalgatewaye4.firstdata.com, navigating to the Terminals page and selecting your terminal. If the Transarmor token is blank, it means that your account has not been enabled for Transarmor yet. To enable Transarmor for your account, you will need to reach out to your account representative or call 1-855-799-0790', '6', '0',  now(), 'zen_cfg_password_display')");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sandbox/Live Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE', 'Live', 'Use [Live] for real transactions<br>Use [Sandbox] for developer testing', '6', '0', 'zen_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
+    if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_LOGGING')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Log Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING', 'Log on Failures and Email on Failures', 'Would you like to enable debug mode?  A complete detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Log Always\', \'Log on Failures\', \'Log Always and Email on Failures\', \'Log on Failures and Email on Failures\', \'Email Always\', \'Email on Failures\'), ', now())");
   }
   function remove() {
     global $db;
@@ -482,6 +489,8 @@ class payeezyjszc extends base {
        'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY',
        'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN',
        'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE',
+       'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY_SANDBOX',
+       'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET_SANDBOX',
        'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN_SANDBOX', 
        'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX',
        'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING',
@@ -491,10 +500,10 @@ class payeezyjszc extends base {
   private function hmacAuthorizationToken($payload)
   {
     $nonce = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
-    $timestamp = strval(time()*1000); //time stamp in milli seconds
-    $data = MODULE_PAYMENT_PAYEEZYJSZC_API_KEY . $nonce . $timestamp . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $this->etppid . $payload;
+    $timestamp = sprintf('%s', strval(time()) . '000'); //time stamp in milli seconds as string
+    $data = strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $nonce . $timestamp . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $this->etppid . $payload;
     $hashAlgorithm = "sha256";
-    $hmac = hash_hmac($hashAlgorithm, $data, MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET, false);    // HMAC Hash in hex
+    $hmac = hash_hmac($hashAlgorithm, $data, strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))), false);    // HMAC Hash in hex
     $authorization = base64_encode($hmac);
     return array(
         'authorization' => $authorization,
@@ -508,11 +517,11 @@ class payeezyjszc extends base {
     $endpoint = $this->mode == 'Sandbox' ? 'api-cert.payeezy.com' : 'api.payeezy.com';
     $curlHeaders = array(
         'Content-Type: application/json',
-        'apikey:' . strval(MODULE_PAYMENT_PAYEEZYJSZC_API_KEY),
+        'apikey:' . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
         'token:' . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
         'Authorization:' . $headers['authorization'],
         'nonce:' . $headers['nonce'],
-        'timestamp:' . $headers['timestamp'],
+        'timestamp:' . strval($headers['timestamp']),
         'ext_tppid:' . $this->etppid,
 
     );
@@ -562,8 +571,8 @@ class payeezyjszc extends base {
     // Don't log headers if we get a success response
     if (substr($response['http_code'], 0, 2) == '20') unset($response['curlHeaders']);
 
-    $logMessage = date('M-d-Y h:i:s') .
-                    "\n=================================\n\n" .
+    $logMessage = date('M-d-Y h:i:s') . ' ' . $this->code . ' ' . $this->moduleVersion .
+                    "\n=====================================\n\n" .
                     ($this->commError !='' ? 'Comm results: ' . $this->commErrNo . ' ' . $this->commError . "\n\n" : '') .
                     'Transaction Status: ' . $response['transaction_status'] . "\n" .
                     'Bank Message: ' . $response['bank_message'] . "\n" .
