@@ -1,6 +1,6 @@
 <?php
 /**
- * PayEezy payment module language defines
+ * Payeezy payment module language defines
  *
  * @package payeezy
  * @copyright Copyright 2003-2016 Zen Cart Development Team

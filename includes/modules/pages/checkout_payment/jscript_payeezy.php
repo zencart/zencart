@@ -1,13 +1,13 @@
 <?php
 /**
- * Javascript to prep functionality for PayEezy payment module
+ * Javascript to prep functionality for Payeezy payment module
  *
  * @package payeezy
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: DrByte  Wed Feb 10 12:44:52 2016 -0500 New in v1.5.5 $
  */
-if (defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY != '' && defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) && MODULE_PAYMENT_PAYEEZYJSZC_STATUS == 'True') {
+if (defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) && MODULE_PAYMENT_PAYEEZYJSZC_STATUS == 'True' && ((defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY != '') || defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') && MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX != '')) {
 ?>
 <script type="text/javascript"><!--
 
@@ -50,11 +50,6 @@ var Payeezy = function() {
     }
     return {
         createToken: function(e) {
-            // Live
-            //var n = "api.payeezy.com";
-            // Sandbox
-            //var n = "api-cert.payeezy.com";
-
             this["clientCallback"] = e;
             var r = t();
             var i = 0;
@@ -94,10 +89,10 @@ var Payeezy = function() {
                 return false
             }
 
-            var a = "https://" + this.apiEndpoint + "/v1/securitytokens?apikey=" + this.apikey + "&js_security_key=" + this.js_security_key
-                  + "&callback=Payeezy.callback&auth=" + this.auth + "&ta_token=" + this.ta_token + "&type=FDToken&credit_card.type=" + encodeURIComponent(r["card_type"])
-                  + "&credit_card.cardholder_name=" + encodeURIComponent(r["cardholder_name"]) + "&credit_card.card_number=" + r["cc_number"].replace(/[^0-9]/g,'')
-                  + "&credit_card.exp_date=" + r["exp_month"].replace(/[^0-9]/g,'') + r["exp_year"].replace(/[^0-9]/g,'')
+            var a = "https://" + this.apiEndpoint + "/v1/securitytokens?apikey=" + this.apikey + "&js_security_key=" + this.js_security_key 
+                  + "&callback=Payeezy.callback&auth=" + this.auth + "&ta_token=" + this.ta_token + "&type=FDToken&credit_card.type=" + encodeURIComponent(r["card_type"]) 
+                  + "&credit_card.cardholder_name=" + encodeURIComponent(r["cardholder_name"]) + "&credit_card.card_number=" + r["cc_number"].replace(/[^0-9]/g,'') 
+                  + "&credit_card.exp_date=" + r["exp_month"].replace(/[^0-9]/g,'') + r["exp_year"].replace(/[^0-9]/g,'') 
                   + "&credit_card.cvv=" + r["cvv_code"].replace(/[^0-9]/g,'');
 
             if (r["currency"]        != undefined) a = a + "&currency=" + encodeURIComponent(r["currency"]);
@@ -181,7 +176,7 @@ var responseHandler = function(status, response) {
     }
 };
 var apiKey = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_API_KEY; ?>';
-var js_security_key = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY; ?>';
+var js_security_key = '<?php echo constant('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY' . (MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox' ? '_SANDBOX' : '')); ?>';
 var ta_token = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox' ? 'NOIW' : MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN; ?>';
 var auth = 'false'; // true is for $0 auths
 var apiEndpoint = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox' ? 'api-cert.payeezy.com' : 'api.payeezy.com'; ?>';
