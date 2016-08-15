@@ -5,9 +5,11 @@
  * @package payeezy
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Feb 10 12:44:52 2016 -0500 New in v1.5.5 $
+ * @version GIT: $Id: Author: Ian Wilson   New in v1.5.5 $
  */
-if (defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) && MODULE_PAYMENT_PAYEEZYJSZC_STATUS == 'True' && ((defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY != '') || defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') && MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX != '')) {
+if (!defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) || MODULE_PAYMENT_PAYEEZYJSZC_STATUS != 'True' || (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && !defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') )) {
+	return false;
+}
 ?>
 <script type="text/javascript"><!--
 
@@ -175,10 +177,10 @@ var responseHandler = function(status, response) {
         setTimeout($form.submit(), 800);
     }
 };
-var apiKey = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_API_KEY; ?>';
+var apiKey = '<?php echo constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . (MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox' ? '_SANDBOX' : '')); ?>';
 var js_security_key = '<?php echo constant('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY' . (MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox' ? '_SANDBOX' : '')); ?>';
 var ta_token = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox' ? 'NOIW' : MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN; ?>';
-var auth = 'false'; // true is for $0 auths
+var auth = 'true';
 var apiEndpoint = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbox' ? 'api-cert.payeezy.com' : 'api.payeezy.com'; ?>';
 
 jQuery(function($) {
@@ -200,5 +202,3 @@ jQuery(function($) {
 });
 
 --></script>
-
-<?php } ?>
