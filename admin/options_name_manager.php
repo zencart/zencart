@@ -806,7 +806,7 @@ function go_option() {
         }
 ?>
                   </select>&nbsp;</td>
-                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_PRODUCT; ?><br /><?php echo zen_draw_products_pull_down_attributes('product_to_update', 'size="5"', '', true, $_GET['products_filter'], true); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_PRODUCT; ?><br /><?php echo zen_draw_products_pull_down_attributes('product_to_update', 'size="5"', ''); ?></td>
 
                   <td align="center" class="dataTableHeadingContent">&nbsp;<?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE); ?>&nbsp;</td>
                   </form>
@@ -834,7 +834,7 @@ function go_option() {
         }
 ?>
                   </select>&nbsp;</td>
-                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_CATEGORY; ?><br /><?php echo zen_draw_products_pull_down_categories('category_to_update', 'size="5"', '', true, $_GET['products_filter'], true); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_CATEGORY; ?><br /><?php echo zen_draw_products_pull_down_categories('category_to_update', 'size="5"', '', true);?></td>
 
                   <td align="lef" class="dataTableHeadingContent">&nbsp;<?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE); ?>&nbsp;</td>
                   </form>
@@ -912,7 +912,7 @@ function go_option() {
         }
 ?>
                   </select>&nbsp;</td>
-                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_PRODUCT; ?><br /><?php echo zen_draw_products_pull_down_attributes('product_to_update', 'size="5"', '', true, $_GET['products_filter'], true); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_PRODUCT; ?><br /><?php echo zen_draw_products_pull_down_attributes('product_to_update', 'size="5"', '');?></td>
 
                   <td align="center" class="dataTableHeadingContent">&nbsp;<?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE); ?>&nbsp;</td>
                   </form>
@@ -940,7 +940,7 @@ function go_option() {
         }
 ?>
                   </select>&nbsp;</td>
-                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_CATEGORY; ?><br /><?php echo zen_draw_products_pull_down_categories('category_to_update', 'size="5"', '', true, $_GET['products_filter'], true); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TEXT_SELECT_CATEGORY; ?><br /><?php echo zen_draw_products_pull_down_categories('category_to_update', 'size="5"', '', true); ?></td>
 
                   <td align="lef" class="dataTableHeadingContent">&nbsp;<?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE); ?>&nbsp;</td>
                   </form>
