@@ -93,27 +93,6 @@ class currencies extends base
     }
 
     /**
-     * @param $number
-     * @param bool $calculate_currency_value
-     * @param string $currency_code
-     * @param float $currency_value
-     * @return float
-     */
-    public function rateAdjusted($number, $calculate_currency_value = true, $currency_code = '', $currency_value = null)
-    {
-        if (empty($currency_code)) {
-            $currency_code = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
-        }
-
-        $rate = 1;
-        if ($calculate_currency_value == true) {
-            $rate = (!empty($currency_value)) ? $currency_value : $this->currencies[$currency_code]['value'];
-        }
-
-        return zen_round($number * $rate, $this->currencies[$currency_code]['decimal_places']);
-    }
-
-    /**
      * Calculated converted amount based on exchange rate
      * and return rounded amount according to specified currency's defined number of decimal places
      *
