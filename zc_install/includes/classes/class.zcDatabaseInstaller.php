@@ -366,10 +366,10 @@ class zcDatabaseInstaller
     $title  =  $values[3];
     $sql = "select configuration_group_title from " . $this->dbPrefix . "configuration_group where configuration_group_title='".$title."'";
     $result = $this->db->Execute($sql);
-    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIGURATION_GROUP_KEY_ALREADY_EXISTS,$title);
+    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIG_GROUP_KEY_ALREADY_EXISTS,$title);
     $sql = "select configuration_group_title from " . $this->dbPrefix . "configuration_group where configuration_group_id='".$id."'";
     $result = $this->db->Execute($sql);
-    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIGURATION_GROUP_ID_ALREADY_EXISTS,$id);
+    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIG_GROUP_ID_ALREADY_EXISTS,$id);
     return FALSE;
   }
   public function checkProductTypeLayoutKey($line)
