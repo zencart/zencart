@@ -50,3 +50,5 @@ if (isset ($_GET['act'])&&isset ($_GET['method'])) {
         }
     }
 }
+
+require ('includes/application_bottom.php');
