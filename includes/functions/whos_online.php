@@ -3,7 +3,7 @@
  * whos_online functions
  *
  * @package functions
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: whos_online.php 6113 2007-04-04 06:11:02Z drbyte $
@@ -38,9 +38,9 @@ function zen_update_whos_online() {
     $uri = $_SERVER['REQUEST_URI'];
    } else {
     if (isset($_SERVER['QUERY_STRING'])) {
-     $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
+     $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
     } else {
-     $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
+     $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['argv'][0];
     }
   }
   if (substr($uri, -1)=='?') $uri = substr($uri,0,strlen($uri)-1);
@@ -104,4 +104,3 @@ function whos_online_session_recreate($old_session, $new_session) {
   $sql = $db->bindVars($sql, ':oldSessionID', $old_session, 'string'); 
   $db->Execute($sql);
 }
-?>
