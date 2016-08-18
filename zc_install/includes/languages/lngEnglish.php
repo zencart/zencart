@@ -267,6 +267,8 @@ define('REASON_TABLE_ALREADY_EXISTS','Cannot create table %s because it already 
 define('REASON_TABLE_DOESNT_EXIST','Cannot drop table %s because it does not exist.');
 define('REASON_TABLE_NOT_FOUND','Cannot execute because table %s does not exist.');
 define('REASON_CONFIG_KEY_ALREADY_EXISTS','Cannot insert configuration_key "%s" because it already exists');
+define('REASON_CONFIG_GROUP_KEY_ALREADY_EXISTS','Cannot insert configuration_group_key "%s" because it already exists');
+define('REASON_CONFIG_GROUP_ID_ALREADY_EXISTS','Cannot insert configuration_group_id "%s" because it already exists');
 define('REASON_COLUMN_ALREADY_EXISTS','Cannot ADD column %s because it already exists.');
 define('REASON_COLUMN_DOESNT_EXIST_TO_DROP','Cannot DROP column %s because it does not exist.');
 define('REASON_COLUMN_DOESNT_EXIST_TO_CHANGE','Cannot CHANGE column %s because it does not exist.');
