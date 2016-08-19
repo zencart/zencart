@@ -42,7 +42,7 @@ if (isset($_POST['action']) && $_POST['action'] != '')
     } else
     {
       list($error, $expired, $message, $redirect) = zen_validate_user_login($admin_name, $admin_pass);
-      if ($redirect != '') zen_redirect($redirect);
+      if ($error == false && $redirect != '') zen_redirect($redirect);
     }
   } elseif ($_POST['action'] == 'rs' . $_SESSION['securityToken'])
   {
