@@ -17,8 +17,6 @@ foreach ($var as $key)
   $jsLanguageLookupArray .= "  lang[" . $key['id'] . "] = '" . $key['code'] . "';\n";
 }
 ?>
-<script type="text/javascript" src="//www.google.com/jsapi"></script>
-<script type="text/javascript">if (typeof jQuery == 'undefined') google.load("jquery", "1");</script>
 <script type="text/javascript" src="../<?php echo DIR_WS_EDITORS ?>ckeditor/ckeditor.js"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
