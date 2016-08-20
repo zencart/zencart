@@ -7,7 +7,7 @@
  */
 ?>
 <?php
-  $jspath = $template->get_template_dir('jquery(\.min)?\.js',DIR_WS_TEMPLATE, $current_page_base,'js');
+  $jspath = $template->get_template_dir('jquery-2.2.4(\.min)?\.js',DIR_WS_TEMPLATE, $current_page_base,'js');
   $jqpath = $jspath . '/jquery.min.js';
 ?>
 
@@ -16,7 +16,7 @@
 <!-- This javascript placed at the end of the document so pages load faster -->
 
 <?php /** CDN for jQuery core **/ ?>
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="//code.jquery.com/jquery-1.12.1.min.js"%3E%3C/script%3E'));</script>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
 
 <?php
 // now check to see if we have a local copy of jQuery and use it as a fall back to local if CDN copy didn't load or if operating offline on a laptop dev machine or something
