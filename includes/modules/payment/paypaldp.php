@@ -678,7 +678,7 @@ class paypaldp extends base {
       $order->info['ip_address'] = $cc_owner_ip;
 
       // Set currency
-      $my_currency = $this->selectCurrency($order->info['currency'], 'DP');
+      $my_currency = $this->selectCurrency($order->info['currency']); 
 
       // if CC is maestro or solo, must be GBP
       if (in_array($cc_type, array('Solo', 'Maestro'))) {
