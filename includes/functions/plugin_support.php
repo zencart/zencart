@@ -84,6 +84,6 @@
     // compare versions
     if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
     // check whether present ZC version is compatible with the latest available plugin version
-    if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
+    if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . substr(PROJECT_VERSION_MINOR, 0, 3), $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
     return ($new_version_available) ? $data[$lookup_index] : FALSE;
   }
