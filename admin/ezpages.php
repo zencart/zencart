@@ -243,9 +243,7 @@ require('includes/admin_html_head.php');
                         'status_header' => '',
                         'status_sidebox' => '',
                         'status_footer' => '',
-                        'status_toc' => '',
-                        'page_open_new_window' => '',
-                        'page_is_ssl' => ''
+                        'status_toc' => ''
                         );
 
     $ezInfo = new objectInfo($parameters);
