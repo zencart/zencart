@@ -446,14 +446,15 @@ class systemChecker
 //       curl_setopt($ch, CURLOPT_POST, 1);
 //       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 11);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 24);
+      curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // This is intentionally set to FALSE within zc_install since this test is not about whether certificates are good.
       $result = curl_exec($ch);
       $errtext = curl_error($ch);
       $errnum = curl_errno($ch);
       $commInfo = @curl_getinfo($ch);
-// error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" . print_r($commInfo, TRUE));
+if ($errnum != 0) error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" . print_r($commInfo, TRUE));
 // error_log('CURL Response: ' . $result);
       curl_close ($ch);
        if ($errnum != 0 || trim($result) != 'PASS')
