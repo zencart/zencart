@@ -84,7 +84,7 @@ if (!isset($_SESSION['payment']) && $credit_covers === FALSE) {
 $payment_modules->before_process();
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_PAYMENT_MODULES_BEFOREPROCESS');
 // create the order record
-$insert_id = $order->create($order_totals, 2);
+$insert_id = $order->create($order_totals);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE');
 $payment_modules->after_order_create($insert_id);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_PAYMENT_MODULES_AFTER_ORDER_CREATE');
