@@ -70,7 +70,7 @@ $zco_notifier->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_LIST', NULL, $im
 
 // Build output based on images found
 $num_images = sizeof($images_array);
-$list_box_contents = '';
+$list_box_contents = array();
 $title = '';
 
 if ($num_images) {
