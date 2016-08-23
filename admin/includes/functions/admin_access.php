@@ -400,10 +400,10 @@ function zen_validate_user_login($admin_name, $admin_pass)
         $sql = "UPDATE " . TABLE_ADMIN . " SET lockout_expires = " . (time() + ADMIN_LOGIN_LOCKOUT_TIMER) . " WHERE admin_name = :adminname: ";
         $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
         $db->Execute($sql);
-        zen_session_destroy();
         zen_record_admin_activity('Too many login failures. Account locked for ' . ADMIN_LOGIN_LOCKOUT_TIMER / 60 . ' minutes', 'warning');
         sleep(15);
-        $redirect = zen_admin_href_link(FILENAME_DEFAULT);
+        $message = ERROR_SECURITY_ERROR;
+        $redirect = '';
         return array($error, $expired, $message, $redirect);
       } else
       {
