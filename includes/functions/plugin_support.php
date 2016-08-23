@@ -41,10 +41,11 @@
     curl_setopt($ch, CURLOPT_URL,$url1);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 9);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 19);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 19);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     $response = curl_exec($ch);
     $error = curl_error($ch);
     $errno = curl_errno($ch);
@@ -83,6 +84,6 @@
     // compare versions
     if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
     // check whether present ZC version is compatible with the latest available plugin version
-    if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
+    if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . substr(PROJECT_VERSION_MINOR, 0, 3), $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
     return ($new_version_available) ? $data[$lookup_index] : FALSE;
   }
