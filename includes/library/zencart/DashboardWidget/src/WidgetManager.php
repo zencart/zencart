@@ -79,6 +79,14 @@ final class WidgetManager
     if (defined($name)) $name = constant($name);
     return $name;
   }
+  public static function setWidgetDescription($name) {
+    if (defined($name."_DESCRIPTION")) {
+        $desc = constant($name."_DESCRIPTION");
+    } else {
+        $desc = "";
+    }
+    return $desc;
+  }
 
   public static function getWidgetInfoForUser($user)
   {
@@ -211,6 +219,7 @@ final class WidgetManager
     $groups = self::getWidgetGroups();
     $installableWidgets = self::getInstallableWidgetsList($_SESSION['admin_id']);
     foreach ($installableWidgets as &$w) {
+      $w['widget_description'] = self::setWidgetDescription($w['widget_name']);
       $w['widget_name'] = self::setWidgetTitle($w['widget_name']);
     }
     return $installableWidgets;

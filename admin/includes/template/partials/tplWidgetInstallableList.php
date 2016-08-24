@@ -13,7 +13,7 @@
         <div class="row">
             <p class="col-sm-offset-3"><?php echo $widget['widget_name']; ?></p>
             <p class="col-sm-offset-3">
-                <?php echo(defined($widget['widget_description']) ? constant($widget['widget_description']) : $widget['widget_description']); ?>
+                <?php echo $widget['widget_description']; ?>
             </p>
             <a class="col-sm-offset-3 button tiny add-widget-button" id="add-widget-<?php echo $widget['widget_key']; ?>" href="#">Add Widget</a>
         </div>
