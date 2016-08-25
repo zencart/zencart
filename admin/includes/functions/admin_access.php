@@ -671,8 +671,7 @@ function zen_get_admin_pages($menu_only)
     $productTypes['_productTypes_'.$row['type_handler']] = array('name'=>$row['type_name'], 'file'=>$row['type_handler'], 'params'=>'');
   }
   $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw
-          LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key
-          WHERE tdwd.language_id = " . (int)$_SESSION['languages_id'];
+          LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key"; 
   $result = $db->Execute($sql);
   foreach($result as $row)
   {

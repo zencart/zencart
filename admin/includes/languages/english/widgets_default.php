@@ -24,16 +24,25 @@ define('SALES_GRAPH_REPORT_GROUP', 'Sales Activity');
 
 // Entries in dashboard_widgets_description
 define('GENERAL_STATISTICS', 'General Statistics');
-define('ORDER_STATISTICS', 'Order Statistics');
+define('GENERAL_STATISTICS_DESCRIPTION', 'Current value of various counters');
 define('ORDER_SUMMARY', 'Order Summary');
+define('ORDER_SUMMARY', 'Counts of orders in each state');
 define('NEW_CUSTOMERS', 'New Customers');
+define('NEW_CUSTOMERS', 'Customers who have created accounts recently');
 define('COUNTER_HISTORY', 'Counter History');
+define('COUNTER_HISTORY', 'Hit counter over last 14 days');
 define('NEW_ORDERS', 'Recent Orders');
+define('NEW_ORDERS', 'Recently received orders with names and amounts');
 define('LOGS', 'Debug Logs');
+define('LOGS', 'Shows debug logs if any exist');
 define('BANNER_STATISTICS', 'Banner Statistics');
+define('BANNER_STATISTICS_DESCRIPTION', 'Shows statistics for last 12 months');
 define('WHOSONLINE_ACTIVITY', 'Active Visitors');
-define('COUNTER_HISTORY_GRAPH', 'Counter History - Last 14 days');
+define('WHOSONLINE_ACTIVITY_DESCRIPTION', 'Counts of active visitors with and without carts');
+define('COUNTER_HISTORY_GRAPH', 'Counter History Graph');
+define('COUNTER_HISTORY_GRAPH_DESCRIPTION', 'Shows counter history graph for last 14 days');
 define('SALES_GRAPH_REPORT', 'Sales Activity');
+define('SALES_GRAPH_REPORT_DESCRIPTION', 'Graph of recent sales activity');
 
 define('TEXT_TOTAL_LOGFILES_FOUND', '<br>Note: Total of %s log files found on server.');
 define('TEXT_DISPLAYING_RECENT_COUNT', ' (Displaying only the most recent %s files.)');
