@@ -73,12 +73,12 @@ if (isset($_GET['type']) && $_GET['type'] == 'ec') {
       // We have not gone to PayPal's website yet in order to grab
       // a token at this time.  This will send the customer over to PayPal's
       // website to login and return a token
-      $$paypalwpp_module->ec_step1();
+      ${$paypalwpp_module}->ec_step1();
     } else {
       // This will push on the second step of the paypal ec payment
       // module, as we already have a PayPal express checkout token
       // at this point.
-      $$paypalwpp_module->ec_step2();
+      ${$paypalwpp_module}->ec_step2();
     }
   }
 ?>

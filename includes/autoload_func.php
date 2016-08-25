@@ -87,7 +87,7 @@ foreach ($autoLoadConfig as $actionPoint => $row) {
         $_SESSION[$objectName]->$methodName();
         $debugOutput .= '$_SESSION[' . $objectName . ']->' . $methodName . '();<br />';
       } else {
-        $$objectName->$methodName();
+        ${$objectName}->$methodName();
         $debugOutput .= '$' . $objectName . '->' . $methodName . '();<br />';
       }
       break;
