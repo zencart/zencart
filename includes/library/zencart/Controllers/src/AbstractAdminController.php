@@ -49,6 +49,11 @@ abstract class AbstractAdminController
     protected $view;
 
     /**
+     * @var string
+     */
+    protected $mainTemplate = null;
+
+    /**
      * AbstractAdminController constructor.
      * @param Request $request
      * @param $db
