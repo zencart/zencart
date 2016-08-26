@@ -26,11 +26,11 @@ abstract class AbstractLeadController extends AbstractListingController
     /**
      * @var string
      */
-    public $classPrefix = 'Lead';
+    protected $classPrefix = 'Lead';
     /**
      * @var string
      */
-    public $mainTemplate = 'tplAdminLead.php';
+    protected $mainTemplate = 'tplAdminLead.php';
 
     /**
      *
@@ -60,6 +60,10 @@ abstract class AbstractLeadController extends AbstractListingController
     }
 
 
+    /**
+     * @param $formValidation
+     * @param $languages
+     */
     protected function setValidationErrors($formValidation, $languages)
     {
         if (isset($formValidation)) {

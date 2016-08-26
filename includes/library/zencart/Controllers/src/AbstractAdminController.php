@@ -39,7 +39,7 @@ abstract class AbstractAdminController
     protected $dbConn;
 
     /**
-     * @var null
+     * @var mixed
      */
     protected $response;
 

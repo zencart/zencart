@@ -26,13 +26,46 @@ abstract class AbstractListingController extends AbstractAdminController
     /**
      * @var string
      */
-    public $classPrefix = 'Lead';
+    protected $classPrefix = 'Lead';
     /**
      * @var string
      */
-    public $mainTemplate = 'tplAdminLead.php';
+    protected $mainTemplate = 'tplAdminLead.php';
+
+    /**
+     * @var
+     */
+    protected $service;
+
+    /**
+     * @var
+     */
+    protected $queryBuilderDefinition;
+
+    /**
+     * @var
+     */
+    protected $leadDefinitionBuilder;
+
+    /**
+     * @var
+     */
+    protected $queryBuilder;
+
+    /**
+     * @var Paginator
+     */
+    protected $paginator;
 
 
+    /**
+     * AbstractListingController constructor.
+     * @param Request $request
+     * @param $db
+     * @param User $user
+     * @param View $view
+     * @param Paginator $paginator
+     */
     public function __construct(Request $request, $db, User $user, View $view, Paginator $paginator)
     {
         parent::__construct($request, $db, $user, $view);

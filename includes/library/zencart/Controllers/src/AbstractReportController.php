@@ -24,12 +24,14 @@ use Valitron\Validator;
 abstract class AbstractReportController extends AbstractListingController
 {
 
-    public $classPrefix = 'Report';
-
     /**
      * @var string
      */
-    public $mainTemplate = 'tplAdminReport.php';
+    protected $classPrefix = 'Report';
+    /**
+     * @var string
+     */
+    protected $mainTemplate = 'tplAdminReport.php';
 
     public function mainExecute()
     {
