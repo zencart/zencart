@@ -656,27 +656,30 @@ class order extends base {
   {
       global $currencies;
       $shown_price = $currencies->value(zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']), false, $this->currency)
-          + $currencies->value(zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']), false, $this->currency);
+                   + $currencies->value(zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']), false, $this->currency);
+
+      $this->notify('NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price), $shown_price);
+
       $this->info['subtotal'] += $shown_price;
-      $this->notify('NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
 
       // find product's tax rate and description
-      $products_tax = $this->products[$index]['tax'];
-      $products_tax_description = $this->products[$index]['tax_description'];
+      $product_tax_rate = $this->products[$index]['tax'];
 
       if (DISPLAY_PRICE_WITH_TAX == 'true') {
           // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
-          $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
+          $tax_add = $shown_price - ($shown_price / (($product_tax_rate < 10) ? "1.0" . str_replace('.', '', $product_tax_rate) : "1." . str_replace('.', '', $product_tax_rate)));
       } else {
           // calculate the amount of tax for this product (assuming tax is NOT included in the price)
-          $tax_add = ($products_tax/100) * $shown_price;
+          $tax_add = ($product_tax_rate/100) * $shown_price;
       }
+
       $tax_add = $currencies->value($tax_add, false, $this->currency);
       $this->info['tax'] += $tax_add;
+
       foreach ($taxRates as $taxDescription=>$taxRate)
       {
           $taxAdd = $currencies->value(zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate), false, $this->currency)
-              + $currencies->value(zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate), false, $this->currency);
+                  + $currencies->value(zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate), false, $this->currency);
           if (isset($this->info['tax_groups'][$taxDescription]))
           {
               $this->info['tax_groups'][$taxDescription] += $taxAdd;
