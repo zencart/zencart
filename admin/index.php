@@ -39,8 +39,8 @@ if (file_exists($controllerFile))
     {
         $foundAction = TRUE;
         $actionClass = $di->newInstance($controllerName);
-//        $actionClass = new $controllerName($zcRequest, $db, new AdminUser($_SESSION['admin_id']));
-        $actionClass->invoke();
+        $response = $actionClass->dispatch();
+        $actionClass->handleResponse($response);
     }
 }
 if ($foundAction)

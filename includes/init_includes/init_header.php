@@ -84,6 +84,6 @@ if (!$skipCountryCheck) {
     }
 }
 $zcTplManager = new \ZenCart\View\TplVarManager();
-$zcView = new \ZenCart\View\StoreView($zcTplManager);
+$zcView = new \ZenCart\View\StoreView(null, $zcTplManager); // @todo should eventually use a factory to get store view
 $zcView->setBreadCrumb($breadcrumb);
 $zcView->setMessageStack($messageStack);

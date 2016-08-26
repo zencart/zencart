@@ -34,8 +34,8 @@ abstract class AbstractReportController extends AbstractListingController
     public function mainExecute()
     {
         $this->service->manageLanguageJoin();
-        $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
+        $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
             new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
-        $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->listingBox);
+        $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->queryBuilderDefinition);
     }
 }

@@ -2,7 +2,7 @@
 /**
  * Class AbstractAdminController
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
  */
@@ -10,29 +10,43 @@ namespace ZenCart\Controllers;
 
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
+use ZenCart\View\ViewFactory as View;
 
 /**
  * Class AbstractAdminController
  * @package ZenCart\Controllers
  */
-abstract class AbstractAdminController extends AbstractController
+abstract class AbstractAdminController
 {
     /**
      * @var array
      */
     protected $tplVars;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     * @var User
+     */
+    protected $currentUser;
+
     /**
      * @var
      */
-    protected $controllerCommand;
+    protected $dbConn;
+
     /**
-     * @var
+     * @var null
      */
-    protected $controllerAction;
+    protected $response;
+
     /**
-     * @var string
+     * @var mixed
      */
-    protected $templateLayout = 'default';
+    protected $view;
 
     /**
      * AbstractAdminController constructor.
@@ -40,78 +54,61 @@ abstract class AbstractAdminController extends AbstractController
      * @param $db
      * @param User $user
      */
-    public function __construct(Request $request, $db, User $user)
+    public function __construct(Request $request, $db, User $user, View $view)
     {
         $this->request = $request;
         $this->currentUser = $user;
         $this->dbConn = $db;
-        $this->controllerCommand = $this->request->readGet('cmd');
         $this->tplVars = array();
         $this->tplVars = array('jscriptVars' => ['securityToken' => $request->getSession()->get('securityToken')]);
         $this->response = null;
-        $this->prepareDefaultCss();
+        $c = (new \ReflectionClass($this))->getShortName();
+        $this->view = $view->factory($c);
+        $this->view->setMainTemplate($this->mainTemplate);
         $this->prepareCommonTplVars();
-        $this->buildMainMenu();
-        $this->preCheck();
     }
 
+    /**
+     *
+     */
+    public function dispatch()
+    {
+        $controllerAction = 'main';
+        $tmp = $this->request->get('action', $this->request->get('action', 'main', 'post'), 'get');
+        if ($tmp = preg_replace('/[^a-zA-Z0-9_-]/', '', $tmp)) {
+            $controllerAction = $tmp;
+        }
+        $controllerAction .= 'Execute';
+        $controllerAction = (method_exists($this, $controllerAction)) ? $controllerAction : 'mainExecute';
+        $this->{$controllerAction}();
+        return $this->response;
+    }
+
+
+    /**
+     * @param $response
+     */
+    public function handleResponse($response)
+    {
+        $this->view->getTplVarManager()->addTplVars($this->tplVars);
+        $this->view->doOutput($response);
+    }
     /**
      *
      */
     protected function prepareCommonTplVars()
     {
-        $this->tplVars['cmd'] = $this->request->readGet('cmd');
-        $this->tplVars['hide_languages'] = $GLOBALS['hide_languages'];
-        $this->tplVars['languages'] = $GLOBALS['languages'];
-        $this->tplVars['languages_array'] = $GLOBALS['languages_array'];
-        $this->tplVars['languages_selected'] = $GLOBALS['languages_selected'];
-        $this->tplVars['user'] = $this->currentUser->getCurrentUser();
-        $this->tplVars['messageStack'] = $GLOBALS['messageStack'];
-        $this->tplVars['notifications'] = $this->currentUser->getNotifications()->getNotificationList();
+        $this->view->getTplVarManager()->set('cmd', $this->request->readGet('cmd'));
+        $this->view->getTplVarManager()->set('hide_languages', $GLOBALS['hide_languages']);
+        $this->view->getTplVarManager()->set('languages', $GLOBALS['languages']);
+        $this->view->getTplVarManager()->set('languages_array', $GLOBALS['languages_array']);
+        $this->view->getTplVarManager()->set('languages_selected', $GLOBALS['languages_selected']);
+        $this->view->getTplVarManager()->set('user', $this->currentUser->getCurrentUser());
+        $this->view->getTplVarManager()->set('messageStack', $GLOBALS['messageStack']);
+        $this->view->getTplVarManager()->set('notifications', $this->currentUser->getNotifications()->getNotificationList());
     }
 
 
-    protected function buildMainMenu()
-    {
-        $this->tplVars['menuTitles'] = zen_get_menu_titles();
-        $this->tplVars['adminMenuForUser'] = zen_get_admin_menu_for_user();
-    }
-    /**
-     *
-     */
-    protected function prepareDefaultCSS()
-    {
-        $cssList [] = array(
-            'href' => 'includes/template/css/bootstrap.min.css',
-            'id' => 'bootstrapCSS'
-        );
-        $cssList [] = array(
-            'href' => 'includes/template/AdminLTE2/dist/css/AdminLTE.css',
-            'id' => 'adminlteCSS'
-        );
-        $cssList [] = array(
-            'href' => 'includes/template/css/stylesheet.css',
-            'id' => 'stylesheetCSS'
-        );
-        $this->tplVars ['cssList'] = $cssList;
-    }
-
-
-    /**
-     * @return null|string
-     */
-    protected function getMainTemplate()
-    {
-        if (isset($this->mainTemplate)) {
-            return ('includes/template/templates/' . $this->mainTemplate);
-        }
-        $tryTemplate = 'tpl' . ucfirst($this->controllerCommand) . '.php';
-        if (file_exists('includes/template/templates/' . $tryTemplate)) {
-            return ('includes/template/templates/' . $tryTemplate);
-        }
-
-        return null;
-    }
     /**
      * @param $key
      * @param $value
@@ -136,13 +133,4 @@ abstract class AbstractAdminController extends AbstractController
     {
         return $this->tplVars;
     }
-
-    /**
-     * @param $templateName
-     */
-    public function setMainTemplate($templateName)
-    {
-        $this->mainTemplate = $templateName;
-    }
-
 }

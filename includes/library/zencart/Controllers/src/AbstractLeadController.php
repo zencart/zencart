@@ -47,7 +47,7 @@ abstract class AbstractLeadController extends AbstractListingController
 
         if (!isset($formValidation)) {
             $this->service->setEditQueryparts();
-            $resultItems = $this->listingBox->buildResults($this->queryBuilder, $this->dbConn,
+            $resultItems = $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
                 new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator(), true);
             foreach ($this->tplVars['leadDefinition']['fields'] as $key => $value) {
                 $this->tplVars['leadDefinition']['fields'][$key]['value'] = $resultItems[0][$key];
@@ -100,7 +100,7 @@ abstract class AbstractLeadController extends AbstractListingController
      */
     public function addExecute($formValidation = null)
     {
-        $outputLayout = $this->listingBox->getOutputLayout();
+        $outputLayout = $this->queryBuilderDefinition->getOutputLayout();
         $languages = $this->service->prepareLanguageTplVars();
         $this->tplVars['languages'] = $languages;
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();

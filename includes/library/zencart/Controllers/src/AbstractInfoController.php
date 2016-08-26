@@ -6,15 +6,11 @@
  */
 namespace ZenCart\Controllers;
 
-use ZenCart\FormValidation\FormValidation;
 use ZenCart\Lead\Builder;
-use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
-use ZenCart\Paginator\Paginator as Paginator;
-use ZenCart\QueryBuilder\PaginatorBuilder as PaginatorBuilder;
-use ZenCart\Services\LeadRoutes as LeadService;
 use ZenCart\AdminUser\AdminUser as User;
-use Valitron\Validator;
+use ZenCart\View\ViewFactory as View;
+
 /**
  * Class AbstractLeadController
  * @package ZenCart\Controllers
@@ -32,9 +28,9 @@ abstract class AbstractInfoController extends AbstractAdminController
      * @param $db
      * @param User $user
      */
-    public function __construct(Request $request, $db, User $user)
+    public function __construct(Request $request, $db, User $user, View $view)
     {
-        parent::__construct($request, $db, $user);
+        parent::__construct($request, $db, $user, $view);
     }
 
     /**
