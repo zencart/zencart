@@ -8,6 +8,7 @@ namespace ZenCart\Controllers;
 use ZenCart\Services\IndexRoute;
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
+use ZenCart\View\ViewFactory as View;
 
 /**
  * Class Index
@@ -25,17 +26,18 @@ class Index extends AbstractAdminController
      * @param $request
      * @param $db
      */
-    public function __construct(Request $request, $db, User $user)
+    public function __construct(Request $request, $db, User $user, View $view)
     {
-        parent::__construct($request, $db, $user);
+        parent::__construct($request, $db, $user, $view);
         $this->service = new IndexRoute($this, $request, $db);
     }
 
     /**
      *
      */
-    public function preCheck()
+    public function prepareDefaultCSS()
     {
+        parent::prepareDefaultCSS();
         $this->tplVars['cssList'] [] = array(
             'href' => 'includes/template/css/index.css',
             'id' => 'indexCSS'

@@ -20,6 +20,7 @@ class ZenCartCommon extends Config
         $di->set('zencart_request', $di->lazyNew('ZenCart\Request\Request'));
         $di->set('zencart_paginator', $di->lazyNew('ZenCart\Paginator\Paginator'));
         $di->set('zencart_notifications', $di->lazyNew('ZenCart\AdminNotifications\AdminNotifications'));
+        $di->set('zencart_view', $di->lazyNew('ZenCart\View\ViewFactory'));
 
 
         $di->params['ZenCart\AdminNotifications\AdminNotifications'] = array(
@@ -41,6 +42,7 @@ class ZenCartCommon extends Config
             'request' => $di->lazyGet('zencart_request'),
             'db' => $di->lazyGet('zencart_db'),
             'user' => $di->lazyGet('zencart_adminuser'),
+            'view' => $di->lazyGet('zencart_view'),
         );
 
         $di->params['ZenCart\Paginator\Paginator'] = array(
@@ -51,6 +53,7 @@ class ZenCartCommon extends Config
             'request' => $di->lazyGet('zencart_request'),
             'db' => $di->lazyGet('zencart_db'),
             'user' => $di->lazyGet('zencart_adminuser'),
+            'view' => $di->lazyGet('zencart_view'),
             'paginator' => $di->lazyGet('zencart_paginator'),
         );
 

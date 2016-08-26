@@ -2,9 +2,9 @@
 /**
  * Class IndexRoute
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id:$
+ * @version  $Id: New in v1.6.0 $
  */
 namespace ZenCart\Services;
 
@@ -211,7 +211,12 @@ class LeadService extends AbstractService
      * @param $value
      */
     protected function manageFilterTypes($layout, $field, $value)
-    {
+    {    /**
+     * @param $mainKey
+     * @param $languages
+     * @param $resultItems
+     */
+
         $queryBuilderParts = $this->queryBuilder->getParts();
         $table = issetorArray($this->outputLayout['fields'][$field], 'parentTable',
             $this->listingQuery['mainTable']['table']);
@@ -220,7 +225,12 @@ class LeadService extends AbstractService
                 if (isset($this->outputLayout['fields'][$field]['language'])) {
                     $table = $this->listingQuery['languageInfoTable'];
                 }
-                $queryBuilderParts['whereClauses'][] = array(
+         /**
+     * @param $mainKey
+     * @param $languages
+     * @param $resultItems
+     */
+           $queryBuilderParts['whereClauses'][] = array(
                     'table' => $table,
                     'field' => $field,
                     'value' => "'%:" . $field . ":%'",
@@ -326,7 +336,6 @@ class LeadService extends AbstractService
     /**
      * @param $mainKey
      * @param $languages
-     * @param $resultItems
      */
     public function populateLanguageKeysFromDb($mainKey, $languages)
     {
@@ -349,7 +358,6 @@ class LeadService extends AbstractService
     /**
      * @param $mainKey
      * @param $languages
-     * @param $resultItems
      */
     public function populateLanguageKeysFromPost($mainKey, $languages)
     {
@@ -421,12 +429,12 @@ class LeadService extends AbstractService
     }
 
     /**
-     * @param $listingBox
+     * @param $queryBuilderDefinition
      */
-    public function setListingBox($listingBox)
+    public function setQueryBuilderDefinition($queryBuilderDefinition)
     {
-        $this->outputLayout = $listingBox->getOutputLayout();
-        $this->listingQuery = $listingBox->getListingQuery();
+        $this->outputLayout = $queryBuilderDefinition->getOutputLayout();
+        $this->listingQuery = $queryBuilderDefinition->getListingQuery();
     }
 
     /**
