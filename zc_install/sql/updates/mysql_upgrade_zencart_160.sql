@@ -163,7 +163,7 @@ INSERT INTO configuration_group VALUES (NULL, 'Guest Checkout', 'Set Checkout Wi
 #NEXT_X_ROWS_AS_ONE_COMMAND:4
 SET @t1=0;
 SELECT (@t1:=configuration_group_id) as t1 FROM configuration_group WHERE configuration_group_title = 'Guest Checkout';
-INSERT INTO admin_pages VALUES ('configGuest','BOX_CONFIGURATION_GUEST','FILENAME_CONFIGURATION',CONCAT('gID=',@t1), 'configuration', 'Y', 31);
+INSERT INTO admin_pages VALUES ('configGuest','BOX_CONFIGURATION_CHECKOUT_SETTINGS','FILENAME_CONFIGURATION',CONCAT('gID=',@t1), 'configuration', 'Y', 31);
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES
   ('Guest Checkout allowed?', 'GUEST_CHECKOUT_ALLOWED', 'true', 'Enable Guest Checkout? <br />Set to True to allow a customer to checkout without an account.', 26, 10, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
   ('Enable Order Status for Guest Orders', 'GUEST_ORDER_STATUS', 'true', 'Alloq Guests to see Order Status?<br />Set to True so that a Customer that uses Guest Checkout will receive an E-Mail with instructions on how to view the status of their order.', 26, 11, NOW(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),'),
