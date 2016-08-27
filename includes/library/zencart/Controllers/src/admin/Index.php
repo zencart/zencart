@@ -84,7 +84,7 @@ class Index extends AbstractAdminController
      */
     public function doWidgetsDisplay()
     {
-        $widgetInfoList = WidgetManager::getWidgetInfoForUser($this->request->getSession()->get('admin_id'), $this->request->getSession()->get('languages_id'));
+        $widgetInfoList = WidgetManager::getWidgetInfoForUser($this->request->getSession()->get('admin_id'));
         $widgetList = widgetManager::loadWidgetClasses($widgetInfoList);
         $this->setTplVar('widgetList', $widgetList);
         $this->setTplVar('widgets', WidgetManager::prepareTemplateVariables($widgetList));
