@@ -93,7 +93,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 50.25);
         $this->assertTrue($GLOBALS['order']->info['total'] == 452.24);
@@ -123,7 +123,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 50);
         $this->assertTrue($GLOBALS['order']->info['total'] == 452.49);
@@ -153,7 +153,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 502.49);
         $this->assertTrue($GLOBALS['order']->info['total'] == 0);
@@ -183,7 +183,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 499.99);
         $this->assertTrue($GLOBALS['order']->info['total'] == 2.50);
@@ -213,7 +213,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 499.99);
         $this->assertTrue($GLOBALS['order']->info['total'] == 2.50);
@@ -243,7 +243,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 501);
         $this->assertEquals($GLOBALS['order']->info['total'], 1.49);
@@ -273,7 +273,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 501);
         $this->assertEquals($GLOBALS['order']->info['total'], 1.5893);
@@ -303,7 +303,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 499.99);
         $this->assertEquals($GLOBALS['order']->info['total'], 2.4992999999999483);
@@ -333,7 +333,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'false';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 402.50);
         $this->assertEquals($GLOBALS['order']->info['total'], 99.99);
@@ -363,7 +363,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         ));
         $this->coupon = new ot_coupon();
         $this->coupon->include_shipping = 'true';
-        $this->coupon->process(null);
+        $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 33.25);
         $this->assertEquals($GLOBALS['order']->info['total'], 0);
