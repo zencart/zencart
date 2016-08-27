@@ -5,9 +5,6 @@
  * @version GIT: $Id:$
  */
 namespace ZenCart\Services;
-use ZenCart\DashboardWidget\WidgetManager;
-use ZenCart\Request\Request as Request;
-use Zencart\Controllers\AbstractAdminController as Controller;
 
 /**
  * Class IndexRoute
@@ -19,61 +16,6 @@ class IndexRoute extends AbstractService
     /**
      *
      */
-    public function displayHomePage()
-    {
-        if (STORE_NAME == '' || STORE_OWNER == '') {
-            $this->doStartWizardDisplay();
-        } else {
-            $this->doWidgetsDisplay();
-        }
-
-    }
-
-    /**
-     *
-     */
-    public function doWidgetsDisplay()
-    {
-        $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION ['admin_id'], $_SESSION ['languages_id']);
-        $widgetList = widgetManager::loadWidgetClasses($widgetInfoList);
-        $this->listener->setTplVar('widgetList', $widgetList);
-        $this->listener->setTplVar('widgets', WidgetManager::prepareTemplateVariables($widgetList));
-        $this->listener->setTplVar('widgetInfoList', $widgetInfoList);
-
-        // Update $widgetInfoList with $widgetList changes
-        foreach ($widgetInfoList as &$widgets) {
-          foreach ($widgets as &$widget) {
-             if ($widgetList[$widget['widget_key']]->widgetInfoChanged) {
-               $widget = $widgetList[$widget['widget_key']]->widgetInfo; 
-             }
-          }
-        }
-
-        $this->listener->setTplVar('widgetInfoList', $widgetInfoList);
-    }
-
-    /**
-     *
-     */
-    public function doStartWizardDisplay()
-    {
-        $this->listener->setMainTemplate('tplIndexStartWizard.php');
-        $storeAddress = $this->request->readPost('store_address', ((STORE_NAME_ADDRESS != '') ? STORE_NAME_ADDRESS : ''));
-        $storeName = $this->request->readPost('store_name', ((STORE_NAME != '') ? STORE_NAME : ''));
-        $storeOwner = $this->request->readPost('store_owner', ((STORE_OWNER != '') ? STORE_OWNER : ''));
-        $storeOwnerEmail = $this->request->readPost('store_owner_email', ((STORE_OWNER_EMAIL_ADDRESS != '') ? STORE_OWNER_EMAIL_ADDRESS : ''));
-        $storeCountry = $this->request->readPost('store_country', ((STORE_COUNTRY != '') ? STORE_COUNTRY : ''));
-        $storeZone = $this->request->readPost('store_zone', ((STORE_ZONE != '') ? STORE_ZONE : ''));
-        $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries_for_pulldown(), $storeCountry, 'id="store_country" tabindex="4"');
-        $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone" tabindex="5"');
-        $this->listener->setTplVar('storeName', $storeName);
-        $this->listener->setTplVar('storeAddress', $storeAddress);
-        $this->listener->setTplVar('storeOwner', $storeOwner);
-        $this->listener->setTplVar('storeOwnerEmail', $storeOwnerEmail);
-        $this->listener->setTplVar('countryString', $country_string);
-        $this->listener->setTplVar('zoneString', $zone_string);
-    }
-
     /**
      *
      */
