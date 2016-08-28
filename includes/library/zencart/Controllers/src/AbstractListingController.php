@@ -82,12 +82,12 @@ abstract class AbstractListingController extends AbstractAdminController
         $this->queryBuilderDefinition = new $definitionClass($this->request, $this->dbConn);
         $this->leadDefinitionBuilder = $leadDefinitionBuilder->factory($this->classPrefix, $this->queryBuilderDefinition, $this->request);
         $this->queryBuilder = new QueryBuilder($this->dbConn, $this->queryBuilderDefinition->getListingQuery());
-        $leadDef = $this->leadDefinitionBuilder->getleadDefinition();
+        $leadDef = $this->leadDefinitionBuilder->getLeadDefinition();
         $this->paginator->setScrollerParams(array('mvcCmdName' => 'cmd'));
         $this->paginatorBuilder = new PaginatorBuilder($this->request, $this->queryBuilderDefinition->getListingQuery(),
             $this->paginator);
         $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
-        $this->queryBuilderDefinition->setLeadDefinition($this->leadDefinitionBuilder->getleadDefinition());
+        $this->queryBuilderDefinition->setLeadDefinition($this->leadDefinitionBuilder->getLeadDefinition());
         $this->service = $serviceFactory->factory('Lead', 'Routes', $this, $this->request, $this->dbConn);
         $this->service->setQueryBuilderDefinition($this->queryBuilderDefinition);
         $this->service->setQueryBuilder($this->queryBuilder);
@@ -187,7 +187,7 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     protected function setDefaultTplVars($builder, $listingBox)
     {
-        $this->tplVars['leadDefinition'] = $builder->getleadDefinition();
+        $this->tplVars['leadDefinition'] = $builder->getLeadDefinition();
         $this->tplVars['listingBox'] = $listingBox->getTplVars();
     }
 

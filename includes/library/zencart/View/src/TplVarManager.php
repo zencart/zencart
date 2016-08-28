@@ -52,7 +52,6 @@ class TplVarManager
     {
         return $this->tplVars[$key];
     }
-
     /**
      * @param $key
      * @param $value
