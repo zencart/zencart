@@ -39,7 +39,7 @@ abstract class AbstractLeadController extends AbstractListingController
     {
         $languages = $this->service->prepareLanguageTplVars();
         $this->view->getTplVarManager()->set('legendTitle', TEXT_LEAD_EDIT_ENTRY);
-        $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
+        $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getLeadDefinition();
         $this->tplVars['leadDefinition']['languages'] = $languages;
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
         $this->tplVars['leadDefinition']['action'] = 'edit';
@@ -107,7 +107,7 @@ abstract class AbstractLeadController extends AbstractListingController
     {
         $outputLayout = $this->queryBuilderDefinition->getOutputLayout();
         $languages = $this->service->prepareLanguageTplVars();
-        $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
+        $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getLeadDefinition();
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
         $this->view->getTplVarManager()->set('legendTitle', TEXT_LEAD_ADD_ENTRY);
         $this->tplVars['leadDefinition']['languages'] = $languages;
@@ -177,7 +177,7 @@ abstract class AbstractLeadController extends AbstractListingController
      */
     public function buildValidationEntries()
     {
-        $leadDefinition = $this->leadDefinitionBuilder->getleadDefinition();
+        $leadDefinition = $this->leadDefinitionBuilder->getLeadDefinition();
         $validationEntries = array();
         foreach ($this->request->all('post') as $key => $value ) {
             $realKey = str_replace('entry_field_', '', $key);
