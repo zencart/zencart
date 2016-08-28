@@ -31,9 +31,9 @@ class Languages extends AbstractLeadController
     /**
      *
      */
-    protected function initController()
+    protected function initController($leadDefinitionBuilder, $serviceFactory)
     {
-        parent::initController();
+        parent::initController($leadDefinitionBuilder, $serviceFactory);
         $this->tableList = $this->setTableList();
     }
 
