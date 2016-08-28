@@ -166,9 +166,9 @@
 
     if (IS_ADMIN_FLAG === true) {
       if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
-        return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']) + zen_calculate_tax($price, $tax);
+        return $price + zen_calculate_tax($price, $tax);
       } else {
-        return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
+        return $price; 
       }
     } else {
       if ( (DISPLAY_PRICE_WITH_TAX == 'true') && ($tax > 0) ) {
