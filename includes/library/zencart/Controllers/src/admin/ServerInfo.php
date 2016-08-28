@@ -82,7 +82,7 @@ class ServerInfo extends AbstractInfoController
     {
         $versionInfo = [];
         $versionInfo[] = '<a href="http://www.zen-cart.com"><img border="0" src="images/small_zen_logo.gif" alt="Zen Cart"></a>';
-        $versionInfo[] = PROJECT_VERSION_NAME . PROJECT_VERSION_MAJOR . PROJECT_VERSION_MINOR ;
+        $versionInfo[] = PROJECT_VERSION_NAME . ' ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR ;
         if (PROJECT_VERSION_PATCH1 != '') {
             $versionInfo[] = 'Patch: ' . PROJECT_VERSION_PATCH1 . '::' .  PROJECT_VERSION_PATCH1_SOURCE ;
         }
