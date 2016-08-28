@@ -202,7 +202,6 @@ a:focus {
 
 .main-header {
   position: relative;
-  max-height: 100px;
   z-index: 1030
 }
 
