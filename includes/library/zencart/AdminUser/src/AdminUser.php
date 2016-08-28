@@ -25,7 +25,7 @@ class AdminUser extends \base
         $result = $this->dbConn->execute($sql);
         $this->adminName = $result->fields['admin_name'];
         $this->adminEmail = $result->fields['admin_email'];
-        $this->adminGravatar = $this->getGravatar($this->adminEmail);
+        $this->adminGravatar = $this->getGravatar($this->adminEmail, 90);
     }
 
     protected function getGravatar( $email, $s = 20, $d = 'mm', $r = 'g', $img = false, $atts = array() )

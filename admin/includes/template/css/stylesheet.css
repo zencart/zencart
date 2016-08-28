@@ -640,3 +640,4 @@ td.underline {
     border-bottom: 1px solid #000;
     padding: 0px 7px;
 }
+.navbar-nav .user-menu .dropdown-menu li.user-header p {color: black}
