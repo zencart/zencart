@@ -59,7 +59,7 @@ class TplVarManager
      */
     public function push($key, $value)
     {
-        $this->tplvars[$key][] = $value;
+        $this->tplVars[$key][] = $value;
     }
 
     /**
