@@ -54,6 +54,15 @@ class TplVarManager
     }
 
     /**
+     * @param $key
+     * @param $value
+     */
+    public function push($key, $value)
+    {
+        $this->tplVars[$key][] = $value;
+    }
+
+    /**
      * @return array
      */
     public function getTplVars()
