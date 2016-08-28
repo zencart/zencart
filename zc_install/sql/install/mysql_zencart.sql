@@ -654,7 +654,6 @@ CREATE TABLE customers_info (
 DROP TABLE IF EXISTS dashboard_widgets_groups;
 CREATE TABLE IF NOT EXISTS dashboard_widgets_groups (
   widget_group varchar(64) NOT NULL,
-  language_id int(11) NOT NULL DEFAULT '1',
   widget_group_name varchar(255) NOT NULL,
   PRIMARY KEY (widget_group,language_id)
 ) ENGINE=MyISAM;
@@ -3414,30 +3413,30 @@ INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES
 ('logs', 'LOGS')
 ;
 
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
-('general-statistics', 1, 'GENERAL_STATISTICS_GROUP'),
-('order-summary', 1, 'ORDER_SUMMARY_GROUP'),
-('new-customers', 1, 'NEW_CUSTOMERS_GROUP'),
-('counter-history', 1, 'COUNTER_HISTORY_GROUP'),
-('new-orders', 1, 'NEW_ORDERS_GROUP'),
-('logs', 1, 'LOGS_GROUP')
+INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES
+('general-statistics', 'GENERAL_STATISTICS_GROUP'),
+('order-summary', 'ORDER_SUMMARY_GROUP'),
+('new-customers', 'NEW_CUSTOMERS_GROUP'),
+('counter-history', 'COUNTER_HISTORY_GROUP'),
+('new-orders', 'NEW_ORDERS_GROUP'),
+('logs', 'LOGS_GROUP')
 ;
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('banner-statistics', 'BANNER_STATISTICS');
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('banner-statistics', 1, 'BANNER_STATISTICS_GROUP');
+INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('banner-statistics', 'BANNER_STATISTICS_GROUP');
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY');
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('whos-online', 1, 'WHOSONLINE_GROUP');
+INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('whos-online', 'WHOSONLINE_GROUP');
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH');
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('counter-history-graph', 1, 'COUNTER_HISTORY_GRAPH_GROUP');
+INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH_GROUP');
 
 INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT');
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES ('sales-graph-report', 1, 'SALES_GRAPH_REPORT_GROUP');
+INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT_GROUP');
 
 
 # default widgets for first user
