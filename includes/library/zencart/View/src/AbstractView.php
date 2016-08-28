@@ -25,7 +25,7 @@ Abstract class AbstractView
      * AbstractView constructor.
      * @param TplVarManager $tplVarManager
      */
-    public function __construct($command, \ZenCart\View\TplVarManager $tplVarManager)
+    public function __construct($command, TplVarManager $tplVarManager)
     {
         $this->command = $command;
         $this->tplVarManager = $tplVarManager;

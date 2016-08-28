@@ -14,8 +14,7 @@ use ZenCart\QueryBuilder\PaginatorBuilder as PaginatorBuilder;
 use ZenCart\Services\LeadRoutes as LeadService;
 use ZenCart\AdminUser\AdminUser as User;
 use ZenCart\View\ViewFactory as View;
-use ZenCart\QueryBuilder\QueryBuilderFactory;
-
+use ZenCart\Services\ServiceFactory;
 
 /**
  * Class AbstractLeadController
@@ -70,14 +69,14 @@ abstract class AbstractListingController extends AbstractAdminController
     {
         parent::__construct($request, $db, $user, $view);
         $this->paginator = $paginator;
-        $this->initController(new LeadBuilderFactory());
+        $this->initController(new LeadBuilderFactory(), new ServiceFactory() );
     }
 
     /**
      * @todo REFACTORING DI listingbox factory
      * @todo REFACTORING DI querybuilder
      */
-    protected function initController($leadDefinitionBuilder)
+    protected function initController($leadDefinitionBuilder, $serviceFactory)
     {
         $leadType = $this->classPrefix . ucfirst(\base::camelize($this->request->readGet('cmd')));
         $definitionClass = NAMESPACE_QUERYBUILDERDEFINITIONS . '\\definitions\\' . $leadType;
@@ -90,7 +89,7 @@ abstract class AbstractListingController extends AbstractAdminController
             $this->paginator);
         $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
         $this->queryBuilderDefinition->setLeadDefinition($this->leadDefinitionBuilder->getleadDefinition());
-        $this->service = LeadService::factory('Lead', 'Routes', $this, $this->request, $this->dbConn);
+        $this->service = $serviceFactory->factory('Lead', 'Routes', $this, $this->request, $this->dbConn);
         $this->service->setQueryBuilderDefinition($this->queryBuilderDefinition);
         $this->service->setQueryBuilder($this->queryBuilder);
     }

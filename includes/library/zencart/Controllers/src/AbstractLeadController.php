@@ -38,9 +38,9 @@ abstract class AbstractLeadController extends AbstractListingController
     public function editExecute($formValidation = null)
     {
         $languages = $this->service->prepareLanguageTplVars();
-        $this->tplVars['languages'] = $languages;
         $this->tplVars['legendTitle'] = TEXT_LEAD_EDIT_ENTRY;
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
+        $this->tplVars['leadDefinition']['languages'] = $languages;
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
         $this->tplVars['leadDefinition']['action'] = 'edit';
         $this->tplVars['leadDefinition']['formAction'] = 'update';
@@ -106,10 +106,10 @@ abstract class AbstractLeadController extends AbstractListingController
     {
         $outputLayout = $this->queryBuilderDefinition->getOutputLayout();
         $languages = $this->service->prepareLanguageTplVars();
-        $this->tplVars['languages'] = $languages;
         $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getleadDefinition();
         $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
         $this->tplVars['legendTitle'] = TEXT_LEAD_ADD_ENTRY;
+        $this->tplVars['leadDefinition']['languages'] = $languages;
         $this->tplVars['leadDefinition']['action'] = 'add';
         $this->tplVars['leadDefinition']['formAction'] = 'insert';
         $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
@@ -171,8 +171,9 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->response = $result;
     }
 
-
-
+    /**
+     * @return array
+     */
     public function buildValidationEntries()
     {
         $leadDefinition = $this->leadDefinitionBuilder->getleadDefinition();
@@ -185,5 +186,4 @@ abstract class AbstractLeadController extends AbstractListingController
         }
         return $validationEntries;
     }
-
 }
