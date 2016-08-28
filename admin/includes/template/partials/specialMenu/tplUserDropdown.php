@@ -8,7 +8,7 @@
 ?>
 <li class="dropdown user user-menu">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <img class="img-circle" src="<?php echo $tplVars['user']['adminGravatar']; ?>" alt="User Image">
+        <img class="img-circle" src="<?php echo $tplVars['user']['adminGravatar']; ?>" alt="User Image" height="20">
         <span class="hidden-xs"><?php echo $tplVars['user']['adminName']; ?></span>
     </a>
     <ul class="dropdown-menu">
