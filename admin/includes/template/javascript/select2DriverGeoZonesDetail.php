@@ -20,7 +20,7 @@ function getDependant()
 {
 
  dependant = $('#entry_field_zone_country_id').val();
- var urlLink = '<?php echo zen_ajax_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')) . 'action=fillByLookup'); ?>';
+ var urlLink = '<?php echo zen_ajax_href_link($tplVars['cmd'], zen_get_all_get_params(array('action')) . 'action=fillByLookup'); ?>';
  var dataTable = '&dataTable='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['dataTable'];?>';
  var dataSearchField = '&dataSearchField='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['dataSearchField'];?>';
  var dataResponse = '&dataResponse='+'<?php echo $tplVars['leadDefinition']['fields'][$field]['fillByLookup']['dataResponse'];?>';
