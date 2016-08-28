@@ -23,7 +23,25 @@ class TplVarManager
      */
     public function set($key, $value)
     {
-        $this->tplVars[$key] = $value;
+        $this->setKeyUsinDot($this->tplVars, $key, $value);
+    }
+
+    /**
+     * @param $root
+     * @param $compositeKey
+     * @param $value
+     */
+    function setKeyUsinDot(&$root, $compositeKey, $value) {
+        $keys = explode('.', $compositeKey);
+        while(count($keys) > 1) {
+            $key = array_shift($keys);
+            if(!isset($root[$key])) {
+                $root[$key] = array();
+            }
+            $root = &$root[$key];
+        }
+        $key = reset($keys);
+        $root[$key] = $value;
     }
 
     /**

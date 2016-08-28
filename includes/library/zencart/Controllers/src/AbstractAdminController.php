@@ -65,7 +65,6 @@ abstract class AbstractAdminController
         $this->currentUser = $user;
         $this->dbConn = $db;
         $this->tplVars = array();
-        $this->tplVars = array('jscriptVars' => ['securityToken' => $request->getSession()->get('securityToken')]);
         $this->response = null;
         $c = (new \ReflectionClass($this))->getShortName();
         $this->view = $view->factory($c);
@@ -111,6 +110,7 @@ abstract class AbstractAdminController
         $this->view->getTplVarManager()->set('user', $this->currentUser->getCurrentUser());
         $this->view->getTplVarManager()->set('messageStack', $GLOBALS['messageStack']);
         $this->view->getTplVarManager()->set('notifications', $this->currentUser->getNotifications()->getNotificationList());
+        $this->view->getTplVarManager()->set('jscriptVars', ['securityToken' => $this->request->getSession()->get('securityToken')]);
     }
 
 
@@ -120,7 +120,7 @@ abstract class AbstractAdminController
      */
     public function setTplVar($key, $value)
     {
-        $this->tplVars[$key] = $value;
+        $this->view->getTplVarManager()->set($key, $value);
     }
 
     /**

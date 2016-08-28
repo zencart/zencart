@@ -8,8 +8,6 @@
  */
 namespace ZenCart\Services;
 
-use Zencart\Controllers\AbstractAdminController as Controller;
-use ZenCart\Request\Request as Request;
 
 /**
  * Class LeadService
@@ -30,30 +28,6 @@ class LeadService extends AbstractService
      * @var
      */
     protected $queryBuilder;
-
-    /**
-     * @param $servicePrefix
-     * @param $serviceSuffix
-     * @param Controller $listener
-     * @param Request $request
-     * @param $dbConn
-     * @return mixed
-     */
-    public static function factory($servicePrefix, $serviceSuffix, Controller $listener, Request $request, $dbConn)
-    {
-        $classname = get_class($listener);
-        if (preg_match('@\\\\([\w]+)$@', $classname, $matches)) {
-            $classname = $matches[1];
-        }
-        $testClass = __NAMESPACE__ . '\\' . $servicePrefix . $classname . $serviceSuffix;
-        if (class_exists($testClass)) {
-            return new $testClass($listener, $request, $dbConn);
-        } else {
-            $serviceName = __NAMESPACE__ . '\\' . $servicePrefix . $serviceSuffix;
-
-            return new $serviceName($listener, $request, $dbConn);
-        }
-    }
 
     /**
      *
