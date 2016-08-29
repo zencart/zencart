@@ -3448,7 +3448,7 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ,('new-orders', 1, 2, 0, 'fa-shopping-cart', 'bg-light-blue-gradient', 2, 1)
 ,('logs', 1, 4, 2, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 2, 1)
 ,('whos-online', 1, 0, 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
-,('banner_statistics', 1, 3, 2, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
+,('banner-statistics', 1, 3, 2, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1)
 ,('counter-history-graph', 1, 3, 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1)
 ,('sales-graph-report', 1, 0, 0, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1)
 ;
