@@ -11,7 +11,7 @@
 if (MAX_DISPLAY_PRODUCTS_NEW > 0 )
 {
     $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
-    $box = new ZenCart\QueryBuilderDefinitions\definitions\NewProductsPage($zcRequest, $db);
+    $box = new ZenCart\ListingQueryAndOutput\definitions\NewProductsPage($zcRequest, $db);
     $paginator = new ZenCart\Paginator\Paginator($zcRequest);
  //   $paginator->setScrollerParams(array('cmd'=>'index'));
     $builder = new ZenCart\QueryBuilder\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);

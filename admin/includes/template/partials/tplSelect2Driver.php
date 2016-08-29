@@ -8,10 +8,10 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<?php   if ($tplVars['leadDefinition']['fields'][$field]['fillByLookup']) { ?>
-    <?php     if (!isset($tplVars['leadDefinition']['fields'][$field]['fillByLookup']['custom'])) { ?>
+<?php   if ($tplVars['pageDefinition']['fields'][$field]['fillByLookup']) { ?>
+    <?php     if (!isset($tplVars['pageDefinition']['fields'][$field]['fillByLookup']['custom'])) { ?>
         <?php       require('includes/template/javascript/select2DriverStandard.php'); ?>
     <?php     } else { ?>
-        <?php       require('includes/template/javascript/'.$tplVars['leadDefinition']['fields'][$field]['fillByLookup']['custom']); ?>
+        <?php       require('includes/template/javascript/'.$tplVars['pageDefinition']['fields'][$field]['fillByLookup']['custom']); ?>
     <?php     } ?>
 <?php   } ?>

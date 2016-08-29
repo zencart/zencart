@@ -8,7 +8,7 @@
  */
 
 // NOTE: As of v1.6.0, this has been converted into a LEAD page.  See:
-// includes/library/zencart/QueryBuilderDefinitions/src/definitions/ReportStatsCustomers.php
+// includes/library/zencart/ListingQueryAndOutput/src/definitions/ReportStatsCustomers.php
 
 define('HEADING_TITLE', 'Best Customer Orders-Total');
 

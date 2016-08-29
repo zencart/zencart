@@ -40,7 +40,7 @@ class testAllDefaultCase extends zcTestCase
         $_SESSION['customers_authorization'] = 1;
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\QueryBuilderDefinitions', DIR_CATALOG_LIBRARY . 'zencart/QueryBuilderDefinitions/src');
+        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_CATALOG_LIBRARY . 'zencart/ListingQueryAndOutput/src');
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
         $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/AuraDi/src');
         $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
@@ -71,7 +71,7 @@ class testAllDefaultCase extends zcTestCase
             ->setMethods(array('processQuery', 'getQuery'))
             ->getMock();
         $qb->method('getQuery')->willReturn(array('mainSql' => '', 'countSql' => ''));
-        $lb = new \ZenCart\QueryBuilderDefinitions\definitions\AllProductsPage($r, $db);
+        $lb = new \ZenCart\ListingQueryAndOutput\definitions\AllProductsPage($r, $db);
         $lb->buildResults($qb, $db, $paginator);
     }
 }

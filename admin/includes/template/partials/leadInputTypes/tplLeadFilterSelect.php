@@ -14,13 +14,13 @@
     <div
         class="input-group col-sm-6 ">
         <select
-            value="<?php echo htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value']); ?>"
-            class="form-control <?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput"
-            name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>">
-            <?php foreach ($tplVars['leadDefinition']['fields'][$field]['layout']['options'] as $option) { ?>
+            value="<?php echo htmlspecialchars($tplVars['pageDefinition']['fields'][$field]['value']); ?>"
+            class="form-control <?php echo $tplVars['pageDefinition']['action']; ?>LeadFilterInput"
+            name="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>">
+            <?php foreach ($tplVars['pageDefinition']['fields'][$field]['layout']['options'] as $option) { ?>
                 <option
                     value="<?php echo zen_output_string_protected($option['id']); ?>"
-                    <?php if ($tplVars['leadDefinition']['fields'][$field]['value'] == $option['id']) {
+                    <?php if ($tplVars['pageDefinition']['fields'][$field]['value'] == $option['id']) {
                         echo ' selected="selected" ';
                     } ?>>
                     <?php echo zen_output_string_protected($option['text']); ?>

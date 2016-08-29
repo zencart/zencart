@@ -6,4 +6,4 @@
  * @version $Id:New in v1.6.0  $
  */
 ?>
-<br><?php echo '&nbsp;' . htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value']); ?>
+<br><?php echo '&nbsp;' . htmlspecialchars($tplVars['pageDefinition']['fields'][$field]['value']); ?>

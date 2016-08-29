@@ -9,17 +9,17 @@
  */
 ?>
 <div class="form-group">
-    <?php require('includes/template/partials/' . $tplVars['leadDefinition']['inputLabelTemplate']); ?>
+    <?php require('includes/template/partials/' . $tplVars['pageDefinition']['inputLabelTemplate']); ?>
     <div class="input-group col-sm-6">
-        <input id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-               class=" form-control <?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput  <?php if (isset($tplVars['validationErrors'][$tplVars['leadDefinition']['fields'][$field]['field']])) { echo ' error ';}; ?>"
+        <input id="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>"
+               class=" form-control <?php echo $tplVars['pageDefinition']['action']; ?>LeadFilterInput  <?php if (isset($tplVars['validationErrors'][$tplVars['pageDefinition']['fields'][$field]['field']])) { echo ' error ';}; ?>"
                type="text"
-               name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field'].'['.$languageKey .']'; ?>"
-               value="<?php echo htmlspecialchars($entry); ?>" size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
-            <?php if ($tplVars['leadDefinition']['fields'][$field]['validations']['pattern'] !="") echo ' pattern="' . $tplVars['leadDefinition']['fields'][$field]['validations']['pattern'] . '"'; ?>
-            <?php echo ($tplVars['leadDefinition']['fields'][$field]['validations']['required']) ? ' required ' : ''; ?>
+               name="<?php echo $tplVars['pageDefinition']['fields'][$field]['field'].'['.$languageKey .']'; ?>"
+               value="<?php echo htmlspecialchars($entry); ?>" size="<?php echo $tplVars['pageDefinition']['fields'][$field]['layout']['size']; ?>"
+            <?php if ($tplVars['pageDefinition']['fields'][$field]['validations']['pattern'] !="") echo ' pattern="' . $tplVars['pageDefinition']['fields'][$field]['validations']['pattern'] . '"'; ?>
+            <?php echo ($tplVars['pageDefinition']['fields'][$field]['validations']['required']) ? ' required ' : ''; ?>
         >
-        <?php require('includes/template/partials/' . $tplVars['leadDefinition']['errorTemplate']); ?>
-        <div class="input-group-addon"><?php echo $tplVars['leadDefinition']['languages'][$languageKey]['name']; ?></div>
+        <?php require('includes/template/partials/' . $tplVars['pageDefinition']['errorTemplate']); ?>
+        <div class="input-group-addon"><?php echo $tplVars['pageDefinition']['languages'][$languageKey]['name']; ?></div>
     </div>
 </div>

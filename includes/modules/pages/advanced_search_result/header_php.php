@@ -134,7 +134,7 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 $breadcrumb->add(zen_output_string_protected($keywords));
 
 $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
-$box = new ZenCart\QueryBuilderDefinitions\definitions\SearchResults($zcRequest, $db);
+$box = new ZenCart\ListingQueryAndOutput\definitions\SearchResults($zcRequest, $db);
 $paginator = new ZenCart\Paginator\Paginator($zcRequest);
 $builder = new ZenCart\QueryBuilder\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);
 $box->buildResults($qb, $db, new ZenCart\QueryBuilder\DerivedItemManager, $builder->getPaginator());

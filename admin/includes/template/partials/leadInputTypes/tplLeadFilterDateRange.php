@@ -10,18 +10,18 @@
 ?>
 <div class="form-group">
     <div class="input-group col-sm-6">
-        <button type="button" class="btn btn-default pull-right <?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput" id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field'] . '_daterangepicker'; ?>">
+        <button type="button" class="btn btn-default pull-right <?php echo $tplVars['pageDefinition']['action']; ?>LeadFilterInput" id="<?php echo $tplVars['pageDefinition']['fields'][$field]['field'] . '_daterangepicker'; ?>">
                     <span>
                       <i class="fa fa-calendar"></i><?php echo TEXT_SELECT_DATE_RANGE; ?>
                     </span>
             <i class="fa fa-caret-down"></i>
         </button>
-        <input type="hidden" name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>" id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>">
-        <?php require('includes/template/partials/' . $tplVars['leadDefinition']['errorTemplate']); ?>
+        <input type="hidden" name="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>" id="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>">
+        <?php require('includes/template/partials/' . $tplVars['pageDefinition']['errorTemplate']); ?>
     </div>
 </div>
 <script>
-    $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>_daterangepicker').daterangepicker(
+    $('#<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>_daterangepicker').daterangepicker(
         {
             ranges: {
                 <?php //foreach ($foo) { ?>
@@ -37,13 +37,13 @@
             endDate: moment()
         },
         function (start, end) {
-            $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>_daterangepicker span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            $('#<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>_daterangepicker span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
     );
 
-    $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>_daterangepicker').on('apply.daterangepicker', function(ev, picker) {
+    $('#<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>_daterangepicker').on('apply.daterangepicker', function(ev, picker) {
         var daterange = picker.startDate.format('YYYY-MM-DD') + ':' + picker.endDate.format('YYYY-MM-DD');
-        $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>').val(daterange);
-        $('#<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>_daterangepicker').trigger('mouseup');
+        $('#<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>').val(daterange);
+        $('#<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>_daterangepicker').trigger('mouseup');
     });
 </script>

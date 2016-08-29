@@ -23,17 +23,17 @@ class Languages extends AbstractLeadController
     public function editExecute($formValidation = null)
     {
         parent::editExecute($formValidation);
-        if ($this->tplVars ['leadDefinition'] ['fields'] ['code'] ['value'] == DEFAULT_LANGUAGE) {
-            unset($this->tplVars ['leadDefinition'] ['fields'] ['setAsDefault']);
+        if ($this->tplVars ['pageDefinition'] ['fields'] ['code'] ['value'] == DEFAULT_LANGUAGE) {
+            unset($this->tplVars ['pageDefinition'] ['fields'] ['setAsDefault']);
         }
     }
 
     /**
      *
      */
-    protected function initController($leadDefinitionBuilder, $serviceFactory)
+    protected function initController($pageDefinitionBuilder, $serviceFactory)
     {
-        parent::initController($leadDefinitionBuilder, $serviceFactory);
+        parent::initController($pageDefinitionBuilder, $serviceFactory);
         $this->tableList = $this->setTableList();
     }
 

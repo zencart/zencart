@@ -6,6 +6,6 @@
  * @version $Id:New in v1.6.0  $
  */
 ?>
-<br><?php echo '&nbsp;' . htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value']); ?>
-<br><?php echo zen_info_image($tplVars['leadDefinition']['fields'][$field]['value'], '', 100); ?><br>
+<br><?php echo '&nbsp;' . htmlspecialchars($tplVars['pageDefinition']['fields'][$field]['value']); ?>
+<br><?php echo zen_info_image($tplVars['pageDefinition']['fields'][$field]['value'], '', 100); ?><br>
 

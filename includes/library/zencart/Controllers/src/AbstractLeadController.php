@@ -7,7 +7,7 @@
 namespace ZenCart\Controllers;
 
 use ZenCart\FormValidation\FormValidation;
-use ZenCart\Lead\Builder;
+use ZenCart\Page\Builder;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
@@ -39,25 +39,25 @@ abstract class AbstractLeadController extends AbstractListingController
     {
         $languages = $this->service->prepareLanguageTplVars();
         $this->view->getTplVarManager()->set('legendTitle', TEXT_LEAD_EDIT_ENTRY);
-        $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getLeadDefinition();
-        $this->tplVars['leadDefinition']['languages'] = $languages;
-        $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
-        $this->tplVars['leadDefinition']['action'] = 'edit';
-        $this->tplVars['leadDefinition']['formAction'] = 'update';
+        $this->tplVars['pageDefinition'] = $this->pageDefinitionBuilder->getPageDefinition();
+        $this->tplVars['pageDefinition']['languages'] = $languages;
+        $this->tplVars['pageDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
+        $this->tplVars['pageDefinition']['action'] = 'edit';
+        $this->tplVars['pageDefinition']['formAction'] = 'update';
 
         if (!isset($formValidation)) {
             $this->service->setEditQueryparts();
             $resultItems = $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
                 new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator(), true);
-            foreach ($this->tplVars['leadDefinition']['fields'] as $key => $value) {
-                $this->tplVars['leadDefinition']['fields'][$key]['value'] = $resultItems[0][$key];
+            foreach ($this->tplVars['pageDefinition']['fields'] as $key => $value) {
+                $this->tplVars['pageDefinition']['fields'][$key]['value'] = $resultItems[0][$key];
                 $this->service->populateLanguageKeysFromDb($key, $languages);
             }
         }
         $this->setValidationErrors($formValidation, $languages);
         $this->view->getTplVarManager()->push('hiddenFields', $this->service->getEditHiddenField());
 //        $this->tplVars['hiddenFields'][] = $this->service->getEditHiddenField();
-        $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
+        $this->tplVars['pageDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
     }
 
 
@@ -70,9 +70,9 @@ abstract class AbstractLeadController extends AbstractListingController
         if (isset($formValidation)) {
             $errors = $formValidation->getErrors();
             $this->tplVars['validationErrors'] = $errors;
-            foreach ($this->tplVars['leadDefinition']['fields'] as $key => $value) {
+            foreach ($this->tplVars['pageDefinition']['fields'] as $key => $value) {
                 $realKey = 'entry_field_' . $key;
-                $this->tplVars['leadDefinition']['fields'][$key]['value'] = $this->request->readPost($realKey);
+                $this->tplVars['pageDefinition']['fields'][$key]['value'] = $this->request->readPost($realKey);
                 $this->service->populateLanguageKeysFromPost($key, $languages);
             }
         }
@@ -107,13 +107,13 @@ abstract class AbstractLeadController extends AbstractListingController
     {
         $outputLayout = $this->queryBuilderDefinition->getOutputLayout();
         $languages = $this->service->prepareLanguageTplVars();
-        $this->tplVars['leadDefinition'] = $this->leadDefinitionBuilder->getLeadDefinition();
-        $this->tplVars['leadDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
+        $this->tplVars['pageDefinition'] = $this->pageDefinitionBuilder->getPageDefinition();
+        $this->tplVars['pageDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
         $this->view->getTplVarManager()->set('legendTitle', TEXT_LEAD_ADD_ENTRY);
-        $this->tplVars['leadDefinition']['languages'] = $languages;
-        $this->tplVars['leadDefinition']['action'] = 'add';
-        $this->tplVars['leadDefinition']['formAction'] = 'insert';
-        $this->tplVars['leadDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
+        $this->tplVars['pageDefinition']['languages'] = $languages;
+        $this->tplVars['pageDefinition']['action'] = 'add';
+        $this->tplVars['pageDefinition']['formAction'] = 'insert';
+        $this->tplVars['pageDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
         if (isset($outputLayout['editMap'])) {
             foreach ($outputLayout['editMap'] as $key) {
                 $this->resetLanguageKeys($key, $languages);
@@ -177,12 +177,12 @@ abstract class AbstractLeadController extends AbstractListingController
      */
     public function buildValidationEntries()
     {
-        $leadDefinition = $this->leadDefinitionBuilder->getLeadDefinition();
+        $pageDefinition = $this->pageDefinitionBuilder->getPageDefinition();
         $validationEntries = array();
         foreach ($this->request->all('post') as $key => $value ) {
             $realKey = str_replace('entry_field_', '', $key);
             if ($this->service->checkValidUpdateKey($key, $realKey)) {
-                $validationEntries[] = array('name' => $realKey, 'value' => $value, 'validations' => $leadDefinition['validations'][$realKey]);
+                $validationEntries[] = array('name' => $realKey, 'value' => $value, 'validations' => $pageDefinition['validations'][$realKey]);
             }
         }
         return $validationEntries;

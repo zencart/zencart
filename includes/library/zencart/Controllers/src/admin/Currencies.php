@@ -18,8 +18,8 @@ class Currencies extends AbstractLeadController
     public function editExecute($formValidation = null)
     {
         parent::editExecute($formValidation);
-        if ($this->tplVars ['leadDefinition'] ['fields'] ['code'] ['value'] == DEFAULT_CURRENCY) {
-            unset($this->tplVars ['leadDefinition'] ['fields'] ['setAsDefault']);
+        if ($this->tplVars ['pageDefinition'] ['fields'] ['code'] ['value'] == DEFAULT_CURRENCY) {
+            unset($this->tplVars ['pageDefinition'] ['fields'] ['setAsDefault']);
         }
     }
 

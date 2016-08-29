@@ -6,6 +6,6 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<?php foreach ($tplVars['leadDefinition']['fields'][$field]['value'] as $languageKey => $entry) {
+<?php foreach ($tplVars['pageDefinition']['fields'][$field]['value'] as $languageKey => $entry) {
    require('includes/template/partials/leadInputTypes/tplLanguageText.php');
 }

@@ -15,25 +15,25 @@
         <thead>
             <tr>
                 <th>&nbsp;</th>
-                <?php foreach ($tplVars['leadDefinition']['listMap'] as $field) { ?>
-                    <th><?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['title']; ?></th>
+                <?php foreach ($tplVars['pageDefinition']['listMap'] as $field) { ?>
+                    <th><?php echo $tplVars['pageDefinition']['fields'][$field]['layout']['title']; ?></th>
                 <?php } ?>
-                <?php if ($tplVars['leadDefinition']['hasRowActions']) { ?>
+                <?php if ($tplVars['pageDefinition']['hasRowActions']) { ?>
                 <th><?php echo TEXT_LEAD_ACTION; ?></th>
                 <?php } ?>
             </tr>
             <tr>
                 <th>&nbsp;</th>
-                <?php foreach ($tplVars['leadDefinition']['listMap'] as $field) { ?>
+                <?php foreach ($tplVars['pageDefinition']['listMap'] as $field) { ?>
                     <th>
-                        <?php if (isset($tplVars['leadDefinition']['fields'][$field]['layout']['type'])) { ?>
-                            <?php require('includes/template/partials/leadInputTypes/tplLeadFilter' . ucfirst($tplVars['leadDefinition']['fields'][$field]['layout']['type']) . '.php'); ?>
+                        <?php if (isset($tplVars['pageDefinition']['fields'][$field]['layout']['type'])) { ?>
+                            <?php require('includes/template/partials/leadInputTypes/tplLeadFilter' . ucfirst($tplVars['pageDefinition']['fields'][$field]['layout']['type']) . '.php'); ?>
                         <?php } else { ?>
                             &nbsp;
                         <?php } ?>
                     </th>
                 <?php } ?>
-                <?php if ($tplVars['leadDefinition']['hasRowActions']) { ?>
+                <?php if ($tplVars['pageDefinition']['hasRowActions']) { ?>
                 <th>
                     <a href="<?php echo zen_admin_href_link($_GET['cmd'], zen_get_all_get_params(array('action'))); ?>" id="clearFiltersLink">Clear Filters</a>
                 </th>

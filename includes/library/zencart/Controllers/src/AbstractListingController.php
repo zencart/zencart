@@ -6,7 +6,7 @@
  */
 namespace ZenCart\Controllers;
 
-use ZenCart\Lead\BuilderFactory as LeadBuilderFactory;
+use ZenCart\Page\BuilderFactory as LeadBuilderFactory;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
@@ -43,7 +43,7 @@ abstract class AbstractListingController extends AbstractAdminController
     /**
      * @var
      */
-    protected $leadDefinitionBuilder;
+    protected $pageDefinitionBuilder;
 
     /**
      * @var
@@ -75,19 +75,19 @@ abstract class AbstractListingController extends AbstractAdminController
      * @todo REFACTORING DI listingbox factory
      * @todo REFACTORING DI querybuilder
      */
-    protected function initController($leadDefinitionBuilder, $serviceFactory)
+    protected function initController($pageDefinitionBuilder, $serviceFactory)
     {
         $leadType = $this->classPrefix . ucfirst(\base::camelize($this->request->readGet('cmd')));
-        $definitionClass = NAMESPACE_QUERYBUILDERDEFINITIONS . '\\definitions\\' . $leadType;
+        $definitionClass = NAMESPACE_LISTINGQUERYANDOUTPUT . '\\definitions\\' . $leadType;
         $this->queryBuilderDefinition = new $definitionClass($this->request, $this->dbConn);
-        $this->leadDefinitionBuilder = $leadDefinitionBuilder->factory($this->classPrefix, $this->queryBuilderDefinition, $this->request);
+        $this->pageDefinitionBuilder = $pageDefinitionBuilder->factory($this->classPrefix, $this->queryBuilderDefinition, $this->request);
         $this->queryBuilder = new QueryBuilder($this->dbConn, $this->queryBuilderDefinition->getListingQuery());
-        $leadDef = $this->leadDefinitionBuilder->getLeadDefinition();
+        $leadDef = $this->pageDefinitionBuilder->getPageDefinition();
         $this->paginator->setScrollerParams(array('mvcCmdName' => 'cmd'));
         $this->paginatorBuilder = new PaginatorBuilder($this->request, $this->queryBuilderDefinition->getListingQuery(),
             $this->paginator);
         $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
-        $this->queryBuilderDefinition->setLeadDefinition($this->leadDefinitionBuilder->getLeadDefinition());
+        $this->queryBuilderDefinition->setPageDefinition($this->pageDefinitionBuilder->getPageDefinition());
         $this->service = $serviceFactory->factory('Lead', 'Routes', $this, $this->request, $this->dbConn);
         $this->service->setQueryBuilderDefinition($this->queryBuilderDefinition);
         $this->service->setQueryBuilder($this->queryBuilder);
@@ -100,7 +100,7 @@ abstract class AbstractListingController extends AbstractAdminController
         $this->service->manageLanguageJoin();
         $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
             new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
-        $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->queryBuilderDefinition);
+        $this->setDefaultTplVars($this->pageDefinitionBuilder, $this->queryBuilderDefinition);
     }
 
     /**
@@ -128,7 +128,7 @@ abstract class AbstractListingController extends AbstractAdminController
         $this->service->doFilter();
         $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
             new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
-        $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->queryBuilderDefinition);
+        $this->setDefaultTplVars($this->pageDefinitionBuilder, $this->queryBuilderDefinition);
         $tplRows = $this->view->loadTemplateAsString('includes/template/partials/tplAdminLeadItemRows.php', $this->tplVars);
         $paginator = $this->view->loadTemplateAsString('includes/template/partials/tplPaginatorStandard.php', $this->tplVars);
         $ma = $this->view->loadTemplateAsString('includes/template/partials/tplAdminLeadMultipleActions.php', $this->tplVars);
@@ -177,7 +177,7 @@ abstract class AbstractListingController extends AbstractAdminController
             return;
         }
         foreach ($languages as $languageKey => $languageValue) {
-            $this->tplVars['leadDefinition']['fields'][$mainKey]['value'][$languageKey] = "";
+            $this->tplVars['pageDefinition']['fields'][$mainKey]['value'][$languageKey] = "";
         }
     }
 
@@ -187,7 +187,7 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     protected function setDefaultTplVars($builder, $listingBox)
     {
-        $this->tplVars['leadDefinition'] = $builder->getLeadDefinition();
+        $this->tplVars['pageDefinition'] = $builder->getPageDefinition();
         $this->tplVars['listingBox'] = $listingBox->getTplVars();
     }
 
