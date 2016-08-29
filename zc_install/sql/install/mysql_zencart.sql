@@ -655,7 +655,7 @@ DROP TABLE IF EXISTS dashboard_widgets_groups;
 CREATE TABLE IF NOT EXISTS dashboard_widgets_groups (
   widget_group varchar(64) NOT NULL,
   widget_group_name varchar(255) NOT NULL,
-  PRIMARY KEY (widget_group,language_id)
+  PRIMARY KEY (widget_group)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
