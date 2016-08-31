@@ -1710,7 +1710,6 @@ class order extends base {
     global $db, $zco_notifier;
     $search = '';
     $new_table = '';
-    $new_fields = '';
     $search_distinct = '';
 
     // Only one or the other search
