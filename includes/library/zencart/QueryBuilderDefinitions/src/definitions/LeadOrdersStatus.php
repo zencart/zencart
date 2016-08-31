@@ -52,11 +52,11 @@ class LeadOrdersStatus extends AbstractLeadDefinition
             'relatedLinks' => array(
                 array(
                     'text' => BOX_LOCALIZATION_CURRENCIES,
-                    'href' => zen_href_link(FILENAME_COUNTRIES)
+                    'href' => zen_href_link(FILENAME_CURRENCIES)
                 ),
                 array(
                     'text' => BOX_LOCALIZATION_LANGUAGES,
-                    'href' => zen_href_link(FILENAME_GEO_ZONES)
+                    'href' => zen_href_link(FILENAME_LANGUAGES)
                 ),
             ),
             'listMap' => array(

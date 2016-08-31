@@ -50,7 +50,7 @@ class LeadLanguages extends AbstractLeadDefinition
                     'href' => zen_href_link(FILENAME_COUNTRIES)
                 ),
                 array(
-                    'text' => BOX_LOCALIZATION_ORDERS_STATUS,
+                    'text' => BOX_TAXES_ZONES,
                     'href' => zen_href_link(FILENAME_ZONES)
                 ),
             ),
