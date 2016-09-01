@@ -349,7 +349,7 @@ Processing...
           zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
         ipn_debug_email('Breakpoint: 5k - OSH update done');
-        $order->create_add_products($insert_id, 2);
+        $order->create_add_products($insert_id);
         ipn_debug_email('Breakpoint: 5L - adding products');
         $_SESSION['order_number_created'] = $insert_id;
         $GLOBALS[$_SESSION['payment']]->transaction_id = $_POST['txn_id'];
