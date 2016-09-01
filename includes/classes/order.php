@@ -1705,12 +1705,11 @@ class order extends base {
      * @param string $sort_order
      * @return string
      */
-  public function build_search_query($keywords = null, $products_search_string = null, $customer_id = null, $status = null, $sort_order = 'desc')
+  public static function build_search_query($keywords = null, $products_search_string = null, $customer_id = null, $status = null, $sort_order = 'desc')
   {
     global $db, $zco_notifier;
     $search = '';
     $new_table = '';
-    $new_fields = '';
     $search_distinct = '';
 
     // Only one or the other search
