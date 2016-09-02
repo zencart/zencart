@@ -78,7 +78,7 @@
     if ($from_email_name == $from_email_address) $from_email_name = STORE_NAME;
 
     // loop thru multiple email recipients if more than one listed  --- (esp for the admin's "Extra" emails)...
-    foreach(explode(',',$to_address) as $key=>$value) {
+    foreach(explode(',',$to_address) as $value) {
       if (preg_match("/ *([^<]*) *<([^>]*)> */i",$value,$regs)) {
         $to_name = str_replace('"', '', trim($regs[1]));
         $to_email_address = $regs[2];
@@ -279,20 +279,20 @@
       $zco_notifier->notify('NOTIFY_EMAIL_BEFORE_PROCESS_ATTACHMENTS', array('attachments'=>$attachments_list, 'module'=>$module));
       if (isset($newAttachmentsList) && is_array($newAttachmentsList)) $attachments_list = $newAttachmentsList;
       if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED && is_array($attachments_list) && sizeof($attachments_list) > 0) {
-        foreach($attachments_list as $key => $val) {
-          $fname = (isset($val['name']) ? $val['name'] : null);
-          $mimeType = (isset($val['mime_type']) && $val['mime_type'] != '' && $val['mime_type'] != 'application/octet-stream') ? $val['mime_type'] : '';
+        foreach($attachments_list as $attachment) {
+          $fname = (isset($attachment['name']) ? $attachment['name'] : null);
+          $mimeType = (isset($attachment['mime_type']) && $attachment['mime_type'] != '' && $attachment['mime_type'] != 'application/octet-stream') ? $attachment['mime_type'] : '';
           switch (true) {
-            case (isset($val['raw_data']) && $val['raw_data'] != ''):
-              $fdata = $val['raw_data'];
+            case (isset($attachment['raw_data']) && $attachment['raw_data'] != ''):
+              $fdata = $attachment['raw_data'];
               if ($mimeType != '') {
                 $mail->AddStringAttachment($fdata, $fname, "base64", $mimeType);
               } else {
                 $mail->AddStringAttachment($fdata, $fname);
               }
               break;
-            case (isset($val['file']) && file_exists($val['file'])): //'file' portion must contain the full path to the file to be attached
-              $fdata = $val['file'];
+            case (isset($attachment['file']) && file_exists($attachment['file'])): //'file' portion must contain the full path to the file to be attached
+              $fdata = $attachment['file'];
               if ($mimeType != '') {
                 $mail->AddAttachment($fdata, $fname, "base64", $mimeType);
               } else {
@@ -361,8 +361,8 @@
         $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . '<br />' : '';
       }
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND');
-      foreach($oldVars as $key => $val) {
-        $_SERVER[$key] = $val;
+      foreach($oldVars as $oldkey => $oldval) {
+        $_SERVER[$oldkey] = $oldval;
       }
 
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_WITH_ALL_PARAMS', array($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo));
