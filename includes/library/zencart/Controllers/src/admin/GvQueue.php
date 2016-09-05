@@ -103,7 +103,7 @@ class GvQueue extends AbstractLeadController
         zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $this->orderId , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
         // send copy to Admin if enabled
         if (SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO_STATUS== '1' and SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO != '') {
-            zen_mail('', SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO, SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO_SUBJECT . ' ' . TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $this->orderId , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
+            zen_mail('', SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO, SEND_EXTRA_GV_QUEUE_ADMIN_EMAILS_TO_SUBJECT . ' ' . TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $this->orderId , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue_extra');
         }
 
         zen_record_admin_activity('GV Queue entry released in the amount of ' . $gv_amount . ' for ' . $mail->fields['customers_email_address'], 'info');
