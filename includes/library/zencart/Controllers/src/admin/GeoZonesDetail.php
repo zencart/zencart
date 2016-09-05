@@ -18,7 +18,7 @@ class GeoZonesDetail extends AbstractLeadController
     public function addExecute($formValidation = null)
     {
         parent::addExecute($formValidation);
-        $this->tplVars ['leadDefinition'] ['fields'] ['geo_zone_id'] ['value'] = $this->request->readGet('geo_zone_id');
+        $this->tplVars ['pageDefinition'] ['fields'] ['geo_zone_id'] ['value'] = $this->request->readGet('geo_zone_id');
     }
 
     /**

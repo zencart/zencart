@@ -317,14 +317,14 @@ class LeadService extends AbstractService
         if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
             return;
         }
-        unset($tplVars['leadDefinition']['fields'][$mainKey]['value']);
+        unset($tplVars['pageDefinition']['fields'][$mainKey]['value']);
         foreach ($languages as $language) {
             $sql = "SELECT * FROM " . $this->listingQuery['languageInfoTable'] .
                 " WHERE " . $this->listingQuery['mainTable']['fkeyFieldLeft'] . " = " .
                 $this->request->readGet($this->listingQuery['mainTable']['fkeyFieldLeft']) .
                 " AND " . $this->listingQuery['languageKeyField'] . " = " . $language['languages_id'];
             $lresult = $this->dbConn->execute($sql);
-            $tplVars['leadDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $lresult->fields[$mainKey];
+            $tplVars['pageDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $lresult->fields[$mainKey];
         }
         $this->listener->setTplVars($tplVars);
     }
@@ -339,11 +339,11 @@ class LeadService extends AbstractService
         if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
             return;
         }
-        unset($tplVars['leadDefinition']['fields'][$mainKey]['value']);
+        unset($tplVars['pageDefinition']['fields'][$mainKey]['value']);
         foreach ($languages as $language) {
             $mainKey = $this->request->readPost('entry_field_' . $mainKey);
             $languageValue = $mainKey[$language['languages_id']];
-            $tplVars['leadDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $languageValue;
+            $tplVars['pageDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $languageValue;
         }
         $this->listener->setTplVars($tplVars);
     }

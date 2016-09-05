@@ -6,7 +6,7 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<?php if ($tplVars['leadDefinition']['action'] == 'list') { ?>
+<?php if ($tplVars['pageDefinition']['action'] == 'list') { ?>
     <?php echo TEXT_LEGEND; ?>&nbsp;
     <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . TEXT_LEGEND_TAX_AND_ZONES; ?>&nbsp;&nbsp;&nbsp;
     <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . TEXT_LEGEND_ONLY_ZONES; ?>&nbsp;&nbsp;&nbsp;

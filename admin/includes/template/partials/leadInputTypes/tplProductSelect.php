@@ -10,7 +10,7 @@
 ?>
 
 <div class="form-group">
-    <?php require('includes/template/partials/' . $tplVars['leadDefinition']['inputLabelTemplate']); ?>
+    <?php require('includes/template/partials/' . $tplVars['pageDefinition']['inputLabelTemplate']); ?>
     <?php echo zen_draw_pull_down_menu('current_category_id', zen_get_category_tree('', '', '0'), '', 'id="current_category_id" class="input-group col-sm-6"') ?>
     <div class="input-group col-sm-offset-4 col-sm-6" id="products_from_categories"></div>
 

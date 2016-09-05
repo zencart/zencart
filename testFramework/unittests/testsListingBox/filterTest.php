@@ -33,7 +33,7 @@ class testFilterCase extends zcTestCase
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'currencies.php';
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\QueryBuilderDefinitions', DIR_CATALOG_LIBRARY . 'zencart/QueryBuilderDefinitions/src');
+        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_CATALOG_LIBRARY . 'zencart/ListingQueryAndOutput/src');
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
         $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
     }
@@ -46,7 +46,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $params = array();
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\AlphaFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\AlphaFilter($request, $params);
         $f->filterItem($listingQuery);
     }
 
@@ -59,7 +59,7 @@ class testFilterCase extends zcTestCase
         $request->method('readGet')->willReturn(1);
         $params = array();
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\AlphaFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\AlphaFilter($request, $params);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq['whereClauses']) == 1);
     }
@@ -71,7 +71,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $params = array('new_products_category_id' => 0, 'cPath' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\CategoryFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\CategoryFilter($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 0);
@@ -86,7 +86,7 @@ class testFilterCase extends zcTestCase
             ->will($this->onConsecutiveCalls(2));
         $params = array('new_products_category_id' => 0, 'cPath' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\CategoryFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\CategoryFilter($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 0);
@@ -108,7 +108,7 @@ class testFilterCase extends zcTestCase
             ->will($this->onConsecutiveCalls(2, 1, 1, 1));
         $params = array('new_products_category_id' => 0, 'cPath' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\CategoryFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\CategoryFilter($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 0);
@@ -130,7 +130,7 @@ class testFilterCase extends zcTestCase
             ->will($this->onConsecutiveCalls(2, 1, 1, 1));
         $params = array('new_products_category_id' => 0, 'cPath' => '1_3');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\CategoryFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\CategoryFilter($request, $params);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 3);
     }
@@ -142,7 +142,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $params = array('defaultSortOrder' => 0);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\DisplayOrderSorter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\DisplayOrderSorter($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 1);
@@ -156,7 +156,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
@@ -185,7 +185,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => $currencies);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 3);
@@ -211,7 +211,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => $currencies);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         //print_r($pq);
@@ -241,7 +241,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => $currencies);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 3);
@@ -267,7 +267,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
@@ -293,7 +293,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         //print_r($pq);
@@ -312,7 +312,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
@@ -327,7 +327,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
@@ -345,7 +345,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
@@ -363,7 +363,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
@@ -381,7 +381,7 @@ class testFilterCase extends zcTestCase
         $_SESSION ['currency'] = "USD";
         $params = array('defaultSortOrder' => 0, 'currencies' => '');
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\SearchResults($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\SearchResults($request, $params);
         $f->filterItem($listingQuery);
         $pq = $f->filterItem($listingQuery);
         $this->assertTrue(count($pq) === 2);
@@ -403,7 +403,7 @@ class testFilterCase extends zcTestCase
             ->getMock();
         $params = array('currentCategoryId' => 1);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\TypeFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
         $f->filterItem($listingQuery);
     }
@@ -427,7 +427,7 @@ class testFilterCase extends zcTestCase
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\TypeFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
         $f->filterItem($listingQuery);
     }
@@ -451,7 +451,7 @@ class testFilterCase extends zcTestCase
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\TypeFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
         $f->filterItem($listingQuery);
     }
@@ -478,7 +478,7 @@ class testFilterCase extends zcTestCase
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\TypeFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
         $f->filterItem($listingQuery);
     }
@@ -505,7 +505,7 @@ class testFilterCase extends zcTestCase
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\TypeFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
         $f->filterItem($listingQuery);
     }
@@ -532,7 +532,7 @@ class testFilterCase extends zcTestCase
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\TypeFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
         $f->filterItem($listingQuery);
     }
@@ -563,7 +563,7 @@ class testFilterCase extends zcTestCase
             ->will($this->returnValueMap($map));
         $params = array('currentCategoryId' => 1);
         $listingQuery = array();
-        $f = new \ZenCart\QueryBuilderDefinitions\filters\TypeFilter($request, $params);
+        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
         $f->setDBConnection($db);
         $f->filterItem($listingQuery);
     }

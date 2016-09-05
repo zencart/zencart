@@ -18,7 +18,7 @@ class MediaManagerClips extends AbstractLeadController
     public function addExecute($formValidation = null)
     {
         parent::addExecute($formValidation);
-        $this->tplVars ['leadDefinition'] ['fields'] ['media_id'] ['value'] = $this->request->readGet('media_id');
+        $this->tplVars ['pageDefinition'] ['fields'] ['media_id'] ['value'] = $this->request->readGet('media_id');
     }
 
     /**

@@ -7,7 +7,7 @@
 namespace ZenCart\Controllers;
 
 use ZenCart\FormValidation\FormValidation;
-use ZenCart\Lead\Builder;
+use ZenCart\Page\Builder;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
@@ -38,6 +38,6 @@ abstract class AbstractReportController extends AbstractListingController
         $this->service->manageLanguageJoin();
         $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
             new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
-        $this->setDefaultTplVars($this->leadDefinitionBuilder, $this->queryBuilderDefinition);
+        $this->setDefaultTplVars($this->pageDefinitionBuilder, $this->queryBuilderDefinition);
     }
 }

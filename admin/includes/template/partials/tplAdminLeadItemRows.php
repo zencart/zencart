@@ -5,22 +5,21 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:   New in v1.6.0 $
  */
-//print_r($tplVars['leadDefinition']);
 ?>
 <?php foreach ($tplVars['listingBox']['formattedItems'] as $row) { ?>
     <tr>
-        <?php if ($tplVars['leadDefinition']['showMultiActions']) { ?>
+        <?php if ($tplVars['pageDefinition']['showMultiActions']) { ?>
             <td>
                 <input type="checkbox" class="leadMultiSelect" name="leadMultiSelect[]" value="
-                <?php echo $row[$tplVars['leadDefinition']['mainTableFkeyField']]; ?>">
+                <?php echo $row[$tplVars['pageDefinition']['mainTableFkeyField']]; ?>">
             </td>
         <?php } else { ?>
             <td>&nbsp;</td>
         <?php } ?>
-        <?php foreach ($tplVars['leadDefinition']['listMap'] as $field) { ?>
+        <?php foreach ($tplVars['pageDefinition']['listMap'] as $field) { ?>
             <td><?php echo $row[$field]; ?></td>
         <?php } ?>
-        <?php if ($tplVars['leadDefinition']['hasRowActions']) { ?>
+        <?php if ($tplVars['pageDefinition']['hasRowActions']) { ?>
         <td class="actions">
             <?php foreach ($row['rowActions'] as $action => $rowAction) { ?>
                 <a class="btn btn-xs <?php echo 'rowHandler'. ucfirst($action); ?>" href="<?php echo $rowAction['link']; ?>" <?php echo $rowAction['linkParameters']; ?>>
@@ -34,7 +33,7 @@
 <?php } ?>
 <?php if ($tplVars['listingBox']['formattedTotals'] != null) { ?>
 <tr>
-<?php $cols = count($tplVars['leadDefinition']['listMap']) + 1; ?>
+<?php $cols = count($tplVars['pageDefinition']['listMap']) + 1; ?>
 <td class="underline" colspan="<?php echo $cols;?>"></td>
 </tr>
     <tr>
@@ -44,4 +43,4 @@
         <?php } ?>
     </tr>
 <?php } ?>
-<?php require 'includes/template/partials/' . $tplVars['leadDefinition']['deleteItemHandlerTemplate']; ?>
+<?php require 'includes/template/partials/' . $tplVars['pageDefinition']['deleteItemHandlerTemplate']; ?>

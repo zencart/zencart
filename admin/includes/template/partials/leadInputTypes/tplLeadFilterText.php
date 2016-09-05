@@ -10,12 +10,12 @@
 ?>
 <div class="form-group">
     <div class="input-group col-sm-6 ">
-        <input id="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-               class="form-control <?php echo $tplVars['leadDefinition']['action']; ?>LeadFilterInput"
+        <input id="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>"
+               class="form-control <?php echo $tplVars['pageDefinition']['action']; ?>LeadFilterInput"
                type="text"
-               name="<?php echo $tplVars['leadDefinition']['fields'][$field]['field']; ?>"
-               value="<?php echo htmlspecialchars($tplVars['leadDefinition']['fields'][$field]['value']); ?>"
-               size="<?php echo $tplVars['leadDefinition']['fields'][$field]['layout']['size']; ?>"
+               name="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>"
+               value="<?php echo htmlspecialchars($tplVars['pageDefinition']['fields'][$field]['value']); ?>"
+               size="<?php echo $tplVars['pageDefinition']['fields'][$field]['layout']['size']; ?>"
         >
     </div>
 </div>
