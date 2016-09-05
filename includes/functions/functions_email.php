@@ -368,7 +368,18 @@
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_WITH_ALL_PARAMS', array($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo));
       // Archive this message to storage log
       // don't archive pwd-resets and CC numbers
-      if (EMAIL_ARCHIVE == 'true'  && $module != 'password_forgotten_admin' && $module != 'cc_middle_digs' && $module != 'no_archive') {
+
+      // if so configured, don't copy emails. 
+      $skip_copy_archive = false; 
+      if (EMAIL_ARCHIVE == 'All Except Copies') { 
+         if (strpos($module, '_extra') !== false) { 
+            if ($module != 'reviews_extra') { 
+                // it's a copy; skip it.
+                $skip_copy_archive = true; 
+            }
+         }
+      }
+      if (EMAIL_ARCHIVE != 'None'  && $module != 'password_forgotten_admin' && $module != 'cc_middle_digs' && $module != 'no_archive' && !$skip_copy_archive) {
         zen_mail_archive_write($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo );
       } // endif archiving
     } // end foreach loop thru possible multiple email addresses
