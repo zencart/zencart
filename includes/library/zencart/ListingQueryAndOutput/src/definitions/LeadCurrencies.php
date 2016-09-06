@@ -135,9 +135,6 @@ class LeadCurrencies extends AbstractLeadDefinition
                             'size' => '5'
                         )
                     ),
-                    'validations' => array(
-                        'required' => false
-                    )
                 ),
                 'decimal_point' => array(
                     'bindVarsType' => 'string',
@@ -207,8 +204,11 @@ class LeadCurrencies extends AbstractLeadDefinition
                     )
                 )
             ),
-            'formatter' => array('class' => 'AdminLead')
+            'validations' => array(
+                'symbol_right' => array(
+                    'required' => false,
+                ),
+            ),
         );
     }
-
 }
