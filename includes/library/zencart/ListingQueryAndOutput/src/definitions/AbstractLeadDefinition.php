@@ -29,29 +29,15 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
      * @param $queryBuilder
      * @param $db
      * @param $derivedItemsManager
-     * @param null $paginator
      * @return array
-     * @throws \Exception
      */
-    public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null, $singleItem = false)
+    public function getEditableFields($queryBuilder, $db, $derivedItemsManager)
     {
-        $this->tplVars['filter'] = $this->doFilters($db);
         $queryBuilder->processQuery($this->getListingQuery());
         $query = $queryBuilder->getQuery();
-        $this->dbConn = $query['dbConn'] = $db;
-        $usePaginator = $paginator;
-        if ($singleItem) {
-            $usePaginator = null;
-        }
-        $resultItems = $this->processPaginatorResults($usePaginator, $query, $db);
-        $resultItems = $this->transformPaginationItems($resultItems, $usePaginator); 
+        $query['dbConn'] = $db;
+        $resultItems = $this->getResultItems($query, $db);
         $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);
-        $formatter = $this->doFormatter($finalItems, $db);
-        $this->tplVars['formatter'] = $formatter->getTplVars();
-        $this->tplVars['formattedItems'] = $formatter->getFormattedResults($this->outputLayout);
-        $this->tplVars['formattedTotals'] = $formatter->getFormattedTotals($this->outputLayout);
-        $this->doMultiFormSubmit($finalItems);
-        $this->normalizeTplVars($usePaginator);
         return $finalItems;
     }
 

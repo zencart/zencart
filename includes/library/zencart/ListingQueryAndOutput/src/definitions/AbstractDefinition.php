@@ -50,14 +50,19 @@ abstract class AbstractDefinition extends \base
      */
     public function buildResults($queryBuilder, $db, $derivedItemsManager, $paginator = null)
     {
-
-        $this->notify('NOTIFY_LISTINGBOX_BUILDRESULTS_START');
         $this->tplVars['filter'] = $this->doFilters($db);
         $queryBuilder->processQuery($this->getListingQuery());
         $query = $queryBuilder->getQuery();
         $query['dbConn'] = $db;
         $resultItems = $this->processPaginatorResults($paginator, $query, $db);
+        $resultItems = $this->transformPaginationItems($resultItems, $paginator);
         $finalItems = $this->processDerivedItems($resultItems, $derivedItemsManager);
+        $this->formatResults($finalItems, $db, $paginator);
+    }
+
+
+    public function formatResults($finalItems, $db, $paginator)
+    {
         $formatter = $this->doFormatter($finalItems, $db);
         $this->tplVars['formatter'] = $formatter->getTplVars();
         $this->tplVars['formattedItems'] = $formatter->getFormattedResults();
