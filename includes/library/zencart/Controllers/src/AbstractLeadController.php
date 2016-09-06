@@ -44,20 +44,22 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVars['pageDefinition']['contentTemplate'] = 'tplAdminLeadAddEditContent.php';
         $this->tplVars['pageDefinition']['action'] = 'edit';
         $this->tplVars['pageDefinition']['formAction'] = 'update';
-
-        if (!isset($formValidation)) {
-            $this->service->setEditQueryparts();
-            $resultItems = $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
-                new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator(), true);
-            foreach ($this->tplVars['pageDefinition']['fields'] as $key => $value) {
-                $this->tplVars['pageDefinition']['fields'][$key]['value'] = $resultItems[0][$key];
-                $this->service->populateLanguageKeysFromDb($key, $languages);
-            }
-        }
+        $this->tplVars['pageDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'),
+            zen_get_all_get_params(array('action')));
         $this->setValidationErrors($formValidation, $languages);
         $this->view->getTplVarManager()->push('hiddenFields', $this->service->getEditHiddenField());
-//        $this->tplVars['hiddenFields'][] = $this->service->getEditHiddenField();
-        $this->tplVars['pageDefinition']['cancelButtonAction'] = zen_href_link($this->request->readGet('cmd'), zen_get_all_get_params(array('action')));
+
+        if (isset($formValidation)) {
+            return;
+        }
+
+        $this->service->setEditQueryparts();
+        $resultItems = $this->queryBuilderDefinition->getEditableFields($this->queryBuilder, $this->dbConn,
+            new \ZenCart\QueryBuilder\DerivedItemManager);
+        foreach ($this->tplVars['pageDefinition']['fields'] as $key => $value) {
+            $this->tplVars['pageDefinition']['fields'][$key]['value'] = $resultItems[0][$key];
+            $this->service->populateLanguageKeysFromDb($key, $languages);
+        }
     }
 
 
