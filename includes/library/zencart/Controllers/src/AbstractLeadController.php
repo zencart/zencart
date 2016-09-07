@@ -48,14 +48,14 @@ abstract class AbstractLeadController extends AbstractListingController
             zen_get_all_get_params(array('action')));
         $this->setValidationErrors($formValidation, $languages);
         $this->view->getTplVarManager()->push('hiddenFields', $this->service->getEditHiddenField());
+        $this->service->setEditQueryparts();
+        $resultItems = $this->queryBuilderDefinition->getEditableFields($this->queryBuilder, $this->dbConn,
+            new \ZenCart\QueryBuilder\DerivedItemManager);
 
         if (isset($formValidation)) {
             return;
         }
 
-        $this->service->setEditQueryparts();
-        $resultItems = $this->queryBuilderDefinition->getEditableFields($this->queryBuilder, $this->dbConn,
-            new \ZenCart\QueryBuilder\DerivedItemManager);
         foreach ($this->tplVars['pageDefinition']['fields'] as $key => $value) {
             $this->tplVars['pageDefinition']['fields'][$key]['value'] = $resultItems[0][$key];
             $this->service->populateLanguageKeysFromDb($key, $languages);
@@ -69,14 +69,16 @@ abstract class AbstractLeadController extends AbstractListingController
      */
     protected function setValidationErrors($formValidation, $languages)
     {
-        if (isset($formValidation)) {
-            $errors = $formValidation->getErrors();
-            $this->tplVars['validationErrors'] = $errors;
-            foreach ($this->tplVars['pageDefinition']['fields'] as $key => $value) {
-                $realKey = 'entry_field_' . $key;
-                $this->tplVars['pageDefinition']['fields'][$key]['value'] = $this->request->readPost($realKey);
-                $this->service->populateLanguageKeysFromPost($key, $languages);
-            }
+        if (!isset($formValidation)) {
+            return;
+        }
+
+        $errors = $formValidation->getErrors();
+        $this->tplVars['validationErrors'] = $errors;
+        foreach ($this->tplVars['pageDefinition']['fields'] as $key => $value) {
+            $realKey = 'entry_field_' . $key;
+            $this->tplVars['pageDefinition']['fields'][$key]['value'] = $this->request->readPost($realKey);
+            $this->service->populateLanguageKeysFromPost($key, $languages);
         }
     }
 

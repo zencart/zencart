@@ -110,18 +110,18 @@ class LeadZones extends AbstractLeadDefinition
                         'placeholder' => TEXT_PLACEHOLDER_CHOOSE_COUNTRY
                     ),
                     'layout' => array(
-                        'common' => array(
+                        'list' => array(
                             'title' => TEXT_ENTRY_COUNTRY_NAME,
                             'align' => 'right',
                             'type' => 'text',
                             'size' => '30'
                         ),
-                        'edit' => array(
+                        'common' => array(
                             'title' => TEXT_ENTRY_COUNTRY_NAME,
                             'align' => 'right',
                             'type' => 'textSelect2',
                             'size' => '30'
-                        )
+                        ),
                     )
                 ),
                 'zone_country_id' => array(
@@ -156,6 +156,18 @@ class LeadZones extends AbstractLeadDefinition
                         )
                     )
                 )
+            ),
+            'validations' => array(
+                'zone_name' => array(
+                    'rules' => array(
+                        array('type' => 'length', 'params' => array(2))
+                    ),
+                ),
+                'zone_code' => array(
+                    'rules' => array(
+                        array('type' => 'length', 'params' => array(2))
+                    ),
+                ),
             ),
         );
     }
