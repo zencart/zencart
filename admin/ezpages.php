@@ -601,7 +601,10 @@ while (!$pages->EOF) {
 
         $contents[] = array('align' => 'left', 'text' => TEXT_ALT_URL . (empty($ezInfo->alt_url) ? '&nbsp;' . TEXT_NONE : '<br />' . $ezInfo->alt_url));
         $contents[] = array('align' => 'left', 'text' => '<br />' . TEXT_ALT_URL_EXTERNAL . (empty($ezInfo->alt_url_external) ? '&nbsp;' . TEXT_NONE : '<br />' . $ezInfo->alt_url_external));
-        $contents[] = array('align' => 'left', 'text' => '<br />' . TEXT_PAGES_HTML_TEXT . '<br />' . substr(strip_tags($ezInfo->pages_html_text),0,100));
+        $content = strip_tags($ezInfo->pages_html_text); 
+        $sub_content = substr($content, 0,100); 
+        if (strlen($content)>100) $sub_content .= "..."; 
+        $contents[] = array('align' => 'left', 'text' => '<br />' . TEXT_PAGES_HTML_TEXT . '<br />' . $sub_content); 
 
         $contents[] = array('align' => 'left', 'text' => '<br /><a href="' . zen_admin_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $ezInfo->pages_id . '&action=new') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_admin_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $ezInfo->pages_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a><br /><br /><br />');
 
