@@ -1,8 +1,8 @@
 <?php
 /**
- * Class QueryFactory
+ * Class SqlQuery
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -12,10 +12,10 @@ use ZenCart\Paginator\AdapterInterface;
 use ZenCart\Paginator\AbstractAdapter;
 
 /**
- * Class QueryFactory
+ * Class SqlQuery
  * @package ZenCart\Paginator\adapters
  */
-class QueryFactory extends AbstractAdapter implements AdapterInterface
+class SqlQuery extends AbstractAdapter implements AdapterInterface
 {
 
     /**
@@ -25,7 +25,6 @@ class QueryFactory extends AbstractAdapter implements AdapterInterface
      */
     public function getResultList($data, array $params)
     {
-//        print_r($data['mainSql']);
         $limit = $params['currentItem'] - 1 . ',' . $params['itemsPerPage'];
         $results = $data['dbConn']->execute($data['mainSql'], $limit);
         $resultList = array();

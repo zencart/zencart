@@ -3,14 +3,14 @@
  * File contains paginator adapter test cases
  *
  * @package tests
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
 use ZenCart\Request\Request;
 
-//use ZenCart\Platform\Paginator\adapters\QueryFactory;
+//use ZenCart\Platform\Paginator\adapters\SqlQuery;
 /**
  * Testing Library
  */

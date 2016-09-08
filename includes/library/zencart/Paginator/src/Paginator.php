@@ -2,7 +2,7 @@
 /**
  * Class Paginator
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
  */
@@ -55,7 +55,7 @@ class Paginator extends \base
      * @param string $adapterType
      * @param string $scrollerType
      */
-    public function doPagination($adapterData, $adapterType = 'QueryFactory', $scrollerType = 'Standard')
+    public function doPagination($adapterData, $adapterType = 'SqlQuery', $scrollerType = 'Standard')
     {
         $mvcCmdName = issetorArray($this->scrollerParams, 'mvcCmdName', 'main_page');
         $this->scrollerParams['cmd'] = $this->request->readGet($mvcCmdName);

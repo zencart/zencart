@@ -3,7 +3,7 @@
  * File contains Paginator test cases
  *
  * @package tests
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id$
  */
@@ -50,7 +50,7 @@ class testPaginationCase extends zcTestCase
         $p = new Paginator($r);
         $p->setScrollerParams($scrollerParams);
         $p->setAdapterParams(array());
-        $p->doPagination($adapterData, 'QueryFactory', 'Standard');
+        $p->doPagination($adapterData, 'SqlQuery', 'Standard');
         $a = $p->getAdapter();
         $s = $p->getScroller();
     }
