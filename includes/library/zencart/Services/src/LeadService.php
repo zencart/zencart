@@ -341,8 +341,8 @@ class LeadService extends AbstractService
         }
         unset($tplVars['pageDefinition']['fields'][$mainKey]['value']);
         foreach ($languages as $language) {
-            $mainKey = $this->request->readPost('entry_field_' . $mainKey);
-            $languageValue = $mainKey[$language['languages_id']];
+            $languagePost = $this->request->readPost('entry_field_' . $mainKey);
+            $languageValue = $languagePost[$language['languages_id']];
             $tplVars['pageDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $languageValue;
         }
         $this->listener->setTplVars($tplVars);

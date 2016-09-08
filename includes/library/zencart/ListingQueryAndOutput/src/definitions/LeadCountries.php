@@ -226,7 +226,6 @@ class LeadCountries extends AbstractLeadDefinition
                     ),
                 ),
             ),
-            'formatter' => array('class' => 'AdminLead')
         );
     }
 }
