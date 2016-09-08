@@ -34,7 +34,7 @@ class navigationHistory extends base {
     if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && $_GET['act'] != '') return;
 
     global $request_type, $cPath;
-    $get_vars = "";
+    $get_vars = array();
 
     if (is_array($_GET)) {
       reset($_GET);
