@@ -79,7 +79,6 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     $buttonDelete = true;
     $checkBoxDelete = true;
     break;
-    $cur_row++;
   } // end switch
   $attributeHiddenField = "";
   $attrArray = false;
