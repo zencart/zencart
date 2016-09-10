@@ -21,13 +21,13 @@ class LeadMediaManager extends AbstractLeadDefinition
     {
 
         $linkedProducts = function ($item, $key, $pkey) {
-            $count = $this->getLinkedProducts($item[$pkey]);
-            return $count;
+            $productCount = $this->mainModel->withCount('products')->find($item[$pkey])->products_count;
+            return $productCount;
         };
 
         $linkedClips = function ($item, $key, $pkey) {
-            $count = $this->getLinkedClips($item[$pkey]);
-            return $count;
+            $clipCount = $this->mainModel->withCount('clips')->find($item[$pkey])->clips_count;
+            return $clipCount;
         };
 
         $this->listingQuery = array(
@@ -166,21 +166,5 @@ class LeadMediaManager extends AbstractLeadDefinition
                 ),
             ),
         );
-    }
-
-
-    protected function getLinkedProducts($mediaId)
-    {
-        $sql = "SELECT count(*) AS count FROM " . TABLE_MEDIA_TO_PRODUCTS . " WHERE media_id = :id:";
-        $sql = $this->dbConn->bindvars($sql, ':id:', $mediaId, 'integer');
-        $result = $this->dbConn->Execute($sql);
-        return $result->fields['count'];
-    }
-    protected function getLinkedClips($mediaId)
-    {
-        $sql = "SELECT count(*) AS count FROM " . TABLE_MEDIA_CLIPS . " WHERE media_id = :id:";
-        $sql = $this->dbConn->bindvars($sql, ':id:', $mediaId, 'integer');
-        $result = $this->dbConn->Execute($sql);
-        return $result->fields['count'];
     }
 }

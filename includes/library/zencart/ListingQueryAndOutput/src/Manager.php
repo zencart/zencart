@@ -24,19 +24,20 @@ class Manager extends \base
      * @param $db
      * @param $request
      */
-    public function __construct($location, $db, $request)
+    public function __construct($location, $modelFactory, $request)
     {
         $this->listingBoxes = array();
-        $listingBoxesEnabled = $this->findListingBoxesEnabled($location, $db);
+        $dbConn = $modelFactory->getConnection();
+        $listingBoxesEnabled = $this->findListingBoxesEnabled($location, $dbConn);
         $this->notify('NOTIFY_LISTING_BOX_MANAGER_BUILDLISTINGBOXES_START');
         foreach ($listingBoxesEnabled as $listingBox => $entry) {
             $paginator = new Paginator($request);
             $derivedIemManager = new DerivedItemManager();
-            $qb = new QueryBuilder($db);
+            $qb = new QueryBuilder($dbConn);
             $boxClass = '\\ZenCart\\ListingQueryAndOutput\\definitions\\' . $listingBox;
-            $box = new $boxClass($request, $db);
+            $box = new $boxClass($request, $modelFactory);
             $builder = new \ZenCart\QueryBuilder\PaginatorBuilder($request, $box->getListingQuery(), $paginator);
-            $box->buildResults($qb, $db, $derivedIemManager, $builder->getPaginator());
+            $box->buildResults($qb, $dbConn, $derivedIemManager, $builder->getPaginator());
             if ($box->getFormattedItemsCount() > 0) {
                 $this->listingBoxes [] = $box->getTplVars();
             }

@@ -20,6 +20,11 @@ class SpecialsProductsPage extends AbstractDefinition
     public function initQueryAndOutput()
     {
         $this->listingQuery = array(
+            'mainTable' => array(
+                'table' => TABLE_PRODUCTS,
+                'alias' => 'p',
+                'fkeyFieldLeft' => 'products_id',
+            ),
             'isRandom' => false,
             'isPaginated' => true,
             'pagination' => array('adapterParams' => array('itemsPerPage' => MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX)),

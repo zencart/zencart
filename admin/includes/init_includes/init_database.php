@@ -9,6 +9,10 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+  use Illuminate\Database\Capsule\Manager as Capsule;
+  require(DIR_CATALOG_LIBRARY . 'illuminate/support/helpers.php');
+
 // include the cache class
   require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'cache.php');
   $zc_cache = new cache;
@@ -50,3 +54,17 @@ if (!defined('IS_ADMIN_FLAG')) {
 
   // gc on cache history
   $zc_cache->sql_cache_flush_cache();
+
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => DB_SERVER,
+    'database'  => DB_DATABASE,
+    'username'  => DB_SERVER_USERNAME,
+    'password'  => DB_SERVER_PASSWORD,
+    'charset'   => 'utf8',
+    'collation' => 'utf8_general_ci',
+    'prefix'    => ''
+]);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();

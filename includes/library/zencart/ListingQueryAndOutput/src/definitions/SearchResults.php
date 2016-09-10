@@ -20,6 +20,11 @@ class SearchResults extends AbstractDefinition
     public function initQueryAndOutput()
     {
         $this->listingQuery = array(
+            'mainTable' => array(
+                'table' => TABLE_PRODUCTS,
+                'alias' => 'p',
+                'fkeyFieldLeft' => 'products_id',
+            ),
             'isRandom' => false,
             'isDistinct' => true,
             'isPaginated' => true,

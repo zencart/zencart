@@ -64,9 +64,9 @@ abstract class AbstractListingController extends AbstractAdminController
      * @param View $view
      * @param Paginator $paginator
      */
-    public function __construct(Request $request, $db, User $user, View $view, Paginator $paginator)
+    public function __construct(Request $request, $modelFactory, User $user, View $view, Paginator $paginator)
     {
-        parent::__construct($request, $db, $user, $view);
+        parent::__construct($request, $modelFactory, $user, $view);
         $this->paginator = $paginator;
         $this->initController(new LeadBuilderFactory(), new ServiceFactory() );
     }
@@ -79,7 +79,7 @@ abstract class AbstractListingController extends AbstractAdminController
     {
         $leadType = $this->classPrefix . ucfirst(\base::camelize($this->request->readGet('cmd')));
         $definitionClass = NAMESPACE_LISTINGQUERYANDOUTPUT . '\\definitions\\' . $leadType;
-        $this->queryBuilderDefinition = new $definitionClass($this->request, $this->dbConn);
+        $this->queryBuilderDefinition = new $definitionClass($this->request, $this->modelFactory);
         $this->pageDefinitionBuilder = $pageDefinitionBuilder->factory($this->classPrefix, $this->queryBuilderDefinition, $this->request);
         $this->queryBuilder = new QueryBuilder($this->dbConn, $this->queryBuilderDefinition->getListingQuery());
         $leadDef = $this->pageDefinitionBuilder->getPageDefinition();
@@ -88,7 +88,7 @@ abstract class AbstractListingController extends AbstractAdminController
             $this->paginator);
         $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
         $this->queryBuilderDefinition->setPageDefinition($this->pageDefinitionBuilder->getPageDefinition());
-        $this->service = $serviceFactory->factory('Lead', 'Routes', $this, $this->request, $this->dbConn);
+        $this->service = $serviceFactory->factory('Lead', 'Routes', $this, $this->request, $this->modelFactory);
         $this->service->setQueryBuilderDefinition($this->queryBuilderDefinition);
         $this->service->setQueryBuilder($this->queryBuilder);
     }

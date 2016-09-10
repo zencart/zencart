@@ -29,10 +29,10 @@ class Index extends AbstractAdminController
      * @param User $user
      * @param View $view
      */
-    public function __construct(Request $request, $db, User $user, View $view)
+    public function __construct(Request $request, $modelFactory, User $user, View $view)
     {
-        parent::__construct($request, $db, $user, $view);
-        $this->service = new IndexRoute($this, $request, $db);
+        parent::__construct($request, $modelFactory, $user, $view);
+        $this->service = new IndexRoute($this, $request, $modelFactory);
     }
 
     /**

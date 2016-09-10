@@ -36,12 +36,12 @@ abstract class AbstractBuilder extends \base
      * @param $listingBox
      * @param $request
      */
-    public function __construct($listingBox, $request, $type = null)
+    public function __construct($listingBox, $request)
     {
         $this->notify('NOTIFY_LEADBUILDER_CONSTRUCTOR_START');
         $this->request = $request;
-        $this->outputLayout = $listingBox->getOutputLayout($type);
-        $this->listingQuery = $listingBox->getListingQuery($type);
+        $this->outputLayout = $listingBox->getOutputLayout();
+        $this->listingQuery = $listingBox->getListingQuery();
         $this->pageDefinition = array();
         $this->buildPageDefinition();
         $this->notify('NOTIFY_LEADBUILDER_CONSTRUCTOR_END');
