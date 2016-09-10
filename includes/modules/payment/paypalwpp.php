@@ -749,9 +749,6 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    */
   function alterShippingEditButton() {
     return false;
-    if ($this->in_special_checkout() && empty($_SESSION['paypal_ec_markflow'])) {
-      return zen_href_link('ipn_main_handler.php', 'type=ec&clearSess=1', 'SSL', true,true, true);
-    }
   }
   /**
    * Debug Logging support
