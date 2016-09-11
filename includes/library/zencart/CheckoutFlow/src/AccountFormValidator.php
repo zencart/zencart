@@ -191,19 +191,17 @@ trait AccountFormValidator
         $zone = $this->getZoneFromDatabase();
         $foundExactIsoMatch = ($zone->RecordCount() == 1);
         if ($zone->RecordCount() > 1) {
-            $foundExactIsoMatch = tryFindExactZoneMatch($zone, $foundExactIsoMatch);
+            $foundExactIsoMatch = $this->tryFindExactZoneMatch($zone, $foundExactIsoMatch);
         }
         if ($foundExactIsoMatch) {
             $this->addressEntries['state']['zone_id'] = $zone->fields['zone_id'];
             $this->addressEntries['state']['zone_name'] = $zone->fields['zone_name'];
 
             return false;
-        }
-        if (!$foundExactIsoMatch) {
-            $this->addressEntries['state']['stateInputError'] = true;
-            $this->addressEntries[$fieldName]['errorMsg'] = ENTRY_STATE_ERROR_SELECT;
-            return true;
-        }
+        } 
+        $this->addressEntries['state']['stateInputError'] = true;
+        $this->addressEntries[$fieldName]['errorMsg'] = ENTRY_STATE_ERROR_SELECT;
+        return true;
     }
 
     /**
