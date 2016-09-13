@@ -10,7 +10,7 @@
 
 $adminNotifications = $di->get('zencart_notifications');
 $session = $zcRequest->getSession();
-$currentUser = new ZenCart\AdminUser\AdminUser($session, $db, $adminNotifications);
+$currentUser = new ZenCart\AdminUser\AdminUser($session, new ZenCart\Model\ModelFactory(), $adminNotifications);
 $cssList [] = array(
     'href' => 'includes/template/css/bootstrap.min.css',
     'id' => 'bootstrapCSS'
