@@ -36,7 +36,7 @@
     $dbInstaller = new zcDatabaseInstaller($options);
     $result = $dbInstaller->getConnection();
     $extendedOptions = array();
-    $error = $dbInstaller->doCompletion($options);
+    $dbInstaller->doCompletion($options);
   }
   
   // Update Nginx Conf Template
