@@ -44,7 +44,7 @@ define('URL_FORMVALIDATION', 'zencart/FormValidation/src/');
 define('URL_AURADI', 'aura/di/src/');
 define('URL_INTEROPCONTAINER', 'container-interop/container-interop/src/Interop/Container/');
 define('URL_ADMINNOTIFICATIONS', 'zencart/AdminNotifications/src/');
-define('URL_MODEL', 'zencart/Model/src/');
+define('URL_MODEL', '/app/Model/');
 
 /**
  * An array of namespace => basedir configurations
@@ -74,5 +74,5 @@ return array(
     NAMESPACE_AURADI => DIR_CATALOG_LIBRARY. URL_AURADI,
     NAMESPACE_INTEROPCONTAINER => DIR_CATALOG_LIBRARY. URL_INTEROPCONTAINER,
     NAMESPACE_ADMINNOTIFICATIONS => DIR_CATALOG_LIBRARY. URL_ADMINNOTIFICATIONS,
-    NAMESPACE_MODEL => DIR_CATALOG_LIBRARY. URL_MODEL,
+    NAMESPACE_MODEL => DIR_FS_CATALOG .  URL_MODEL,
 );
