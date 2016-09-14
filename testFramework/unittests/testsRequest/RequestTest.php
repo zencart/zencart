@@ -17,6 +17,7 @@ class testRequest extends zcTestCase
     {
         parent::setUp();
         $GLOBALS['db'] = new stdClass();
+        $GLOBALS['capsule'] = new stdClass();
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
         $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');

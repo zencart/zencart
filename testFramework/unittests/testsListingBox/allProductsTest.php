@@ -71,7 +71,11 @@ class testAllDefaultCase extends zcTestCase
             ->setMethods(array('processQuery', 'getQuery'))
             ->getMock();
         $qb->method('getQuery')->willReturn(array('mainSql' => '', 'countSql' => ''));
-        $lb = new \ZenCart\ListingQueryAndOutput\definitions\AllProductsPage($r, $db);
+        $mf = $this->getMockBuilder('queryBuilder')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getConnection', 'factory'))
+            ->getMock();
+        $lb = new \ZenCart\ListingQueryAndOutput\definitions\AllProductsPage($r, $mf);
         $lb->buildResults($qb, $db, $paginator);
     }
 }
