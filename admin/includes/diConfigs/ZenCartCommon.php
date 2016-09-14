@@ -21,18 +21,26 @@ class ZenCartCommon extends Config
         $di->set('zencart_paginator', $di->lazyNew('ZenCart\Paginator\Paginator'));
         $di->set('zencart_notifications', $di->lazyNew('ZenCart\AdminNotifications\AdminNotifications'));
         $di->set('zencart_view', $di->lazyNew('ZenCart\View\ViewFactory'));
-
+        $di->set('zencart_eloquent', $GLOBALS['capsule']);
 
         $di->params['ZenCart\AdminNotifications\AdminNotifications'] = array(
             'session' => $di->lazyGet('zencart_session'),
             'db' => $di->lazyGet('zencart_db'),
         );
 
+        $di->params['ZenCart\Model\ModelFactory'] = array(
+            'db' => $di->lazyGet('zencart_db'),
+            'capsule' => $di->lazyGet('zencart_eloquent'),
+        );
+
+        $di->set('zencart_model', $di->lazyNew('ZenCart\Model\ModelFactory'));
+
         $di->params['ZenCart\AdminUser\AdminUser'] = array(
             'session' => $di->lazyGet('zencart_session'),
-            'db' => $di->lazyGet('zencart_db'),
+            'modelFactory' => $di->lazyGet('zencart_model'),
             'notifications' => $di->lazyGet('zencart_notifications'),
         );
+
 
         $di->params['ZenCart\Request\Request'] = array(
             'webRequest' => $di->lazyNew('Aura\Web\Request'),
@@ -40,7 +48,7 @@ class ZenCartCommon extends Config
         );
         $di->params['ZenCart\Controllers\AbstractAdminController'] = array(
             'request' => $di->lazyGet('zencart_request'),
-            'db' => $di->lazyGet('zencart_db'),
+            'modelFactory' => $di->lazyGet('zencart_model'),
             'user' => $di->lazyGet('zencart_adminuser'),
             'view' => $di->lazyGet('zencart_view'),
         );
@@ -51,17 +59,17 @@ class ZenCartCommon extends Config
 
         $di->params['ZenCart\Controllers\AbstractListingController'] = array(
             'request' => $di->lazyGet('zencart_request'),
-            'db' => $di->lazyGet('zencart_db'),
+            'modelFactory' => $di->lazyGet('zencart_model'),
             'user' => $di->lazyGet('zencart_adminuser'),
             'view' => $di->lazyGet('zencart_view'),
             'paginator' => $di->lazyGet('zencart_paginator'),
         );
 
-        $di->params['ZenCart\Controllers\AbstractLeadController'] = array(
-            'request' => $di->lazyGet('zencart_request'),
-            'db' => $di->lazyGet('zencart_db'),
-            'user' => $di->lazyGet('zencart_adminuser'),
-            'paginator' => $di->lazyGet('zencart_paginator'),
-        );
+//        $di->params['ZenCart\Controllers\AbstractLeadController'] = array(
+//            'request' => $di->lazyGet('zencart_request'),
+//            'modelFactory' => $di->lazyGet('zencart_model'),
+//            'user' => $di->lazyGet('zencart_adminuser'),
+//            'paginator' => $di->lazyGet('zencart_paginator'),
+//        );
     }
 }

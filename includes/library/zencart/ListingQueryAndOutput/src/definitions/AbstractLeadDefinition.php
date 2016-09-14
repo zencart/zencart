@@ -19,9 +19,9 @@ abstract class AbstractLeadDefinition extends AbstractDefinition
      * @param Request $request
      * @param $db
      */
-    public function __construct(Request $request, $db)
+    public function __construct(Request $request, $modelFactory)
     {
-        parent::__construct($request, $db);
+        parent::__construct($request, $modelFactory);
         $this->setDefaults();
     }
 

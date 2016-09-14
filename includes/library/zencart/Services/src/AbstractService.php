@@ -33,10 +33,10 @@ Abstract class AbstractService extends \base
      * @param $request
      * @param $dbConn
      */
-    public function __construct(Controller $listener, Request $request, $dbConn)
+    public function __construct(Controller $listener, Request $request, $modelFactory)
     {
         $this->listener = $listener;
         $this->request = $request;
-        $this->dbConn = $dbConn;
+        $this->dbConn = $modelFactory->getConnection();
     }
 }

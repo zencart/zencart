@@ -20,6 +20,11 @@ class NewProductsCenter extends AbstractDefinition
     public function initQueryAndOutput()
     {
         $this->listingQuery = array(
+            'mainTable' => array(
+                'table' => TABLE_PRODUCTS,
+                'alias' => 'p',
+                'fkeyFieldLeft' => 'products_id',
+            ),
             'derivedItems' => array(
                 array(
                     'field' => 'productCpath',

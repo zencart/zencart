@@ -1,14 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: wilt
- * Date: 14/05/16
- * Time: 12:30
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: $
  */
-
 namespace ZenCart\Page;
 
-
+/**
+ * Class BuilderFactory
+ * @package ZenCart\Page
+ */
 class BuilderFactory
 {
     public function factory($factoryType, $listingBox, $request, $listingBoxType = null)

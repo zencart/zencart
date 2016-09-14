@@ -33,11 +33,13 @@ abstract class AbstractDefinition extends \base
      * @param Request $request
      * @param $db
      */
-    public function __construct(Request $request, $db)
+    public function __construct(Request $request, $modelFactory)
     {
         $this->request = $request;
-        $this->dbConn = $db;
+        $this->dbConn = $modelFactory->getConnection();
         $this->initQueryAndOutput();
+        $this->modelFactory = $modelFactory;
+        $this->mainModel = $modelFactory->factory($this->listingQuery['mainTable']['table']);
         $this->notify('NOTIFY_LISTINGBOX_CONSTRUCT_END');
     }
 
@@ -282,9 +284,6 @@ abstract class AbstractDefinition extends \base
     public function getListingQuery($type = null)
     {
         $result = $this->listingQuery;
-        if (!isset($type) && isset($this->listingQuery['main'])) {
-            $result = $this->listingQuery['main'];
-        }
         if (isset($type)) {
             $result = $this->listingQuery[$type];
         }
@@ -294,16 +293,9 @@ abstract class AbstractDefinition extends \base
     /**
      * @return array
      */
-    public function getOutputLayout($type = null)
+    public function getOutputLayout()
     {
-        $result = $this->outputLayout;
-        if (!isset($type) && isset($this->outputLayout['main'])) {
-            $result = $this->outputLayout['main'];
-        }
-        if (isset($type)) {
-            $result = $this->outputLayout[$type];
-        }
-        return $result;
+        return $this->outputLayout;
     }
 
     /**

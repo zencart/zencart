@@ -12,6 +12,10 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+require(DIR_CATALOG_LIBRARY . 'illuminate/support/helpers.php');
+
 /**
  * require the query_factory clsss based on the DB_TYPE
  */
@@ -55,3 +59,17 @@ if ($result->RecordCount() == 0) {
   die('<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
 }
 $db->dieOnErrors = TRUE;
+
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => DB_SERVER,
+    'database'  => DB_DATABASE,
+    'username'  => DB_SERVER_USERNAME,
+    'password'  => DB_SERVER_PASSWORD,
+    'charset'   => 'utf8',
+    'collation' => 'utf8_general_ci',
+    'prefix'    => ''
+]);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();

@@ -59,11 +59,12 @@ abstract class AbstractAdminController
      * @param $db
      * @param User $user
      */
-    public function __construct(Request $request, $db, User $user, View $view)
+    public function __construct(Request $request, $modelFactory, User $user, View $view)
     {
         $this->request = $request;
         $this->currentUser = $user;
-        $this->dbConn = $db;
+        $this->dbConn = $modelFactory->getConnection();
+        $this->modelFactory = $modelFactory;
         $this->tplVars = array();
         $this->response = null;
         $c = (new \ReflectionClass($this))->getShortName();

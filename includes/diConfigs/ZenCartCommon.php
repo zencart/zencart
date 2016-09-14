@@ -13,6 +13,13 @@ class ZenCartCommon extends Config
         $di->set('zencart_session', $di->lazyNew('ZenCart\Request\Session'));
         $di->set('zencart_request', $di->lazyNew('ZenCart\Request\Request'));
         $di->set('zencart_paginator', $di->lazyNew('ZenCart\Paginator\Paginator'));
+        $di->set('zencart_eloquent', $GLOBALS['capsule']);
+
+
+        $di->params['ZenCart\Model\ModelFactory'] = array(
+            'db' => $di->lazyGet('zencart_db'),
+            'capsule' => $di->lazyGet('zencart_eloquent'),
+        );
 
         $di->params['ZenCart\Request\Request'] = array(
             'webRequest' => $di->lazyNew('Aura\Web\Request'),

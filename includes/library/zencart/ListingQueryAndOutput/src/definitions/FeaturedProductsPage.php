@@ -20,6 +20,11 @@ class FeaturedProductsPage extends AbstractDefinition
     public function initQueryAndOutput()
     {
         $this->listingQuery = array(
+            'mainTable' => array(
+                'table' => TABLE_PRODUCTS,
+                'alias' => 'p',
+                'fkeyFieldLeft' => 'products_id',
+            ),
             'isPaginated' => true,
             'pagination' => array('adapterParams'=>array('itemsPerPage' => MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS )),
             'filters' => array(

@@ -30,6 +30,11 @@ class UpcomingProductsCenter extends AbstractDefinition
         };
 
         $this->listingQuery = array(
+            'mainTable' => array(
+                'table' => TABLE_PRODUCTS,
+                'alias' => 'p',
+                'fkeyFieldLeft' => 'products_id',
+            ),
             'isDistinct' => false,
             'queryLimit' => MAX_DISPLAY_UPCOMING_PRODUCTS,
             'derivedItems' => array(

@@ -21,7 +21,7 @@ class LeadGroupPricing extends AbstractLeadDefinition
     {
 
         $linkedCustomers = function ($item, $key, $pkey) {
-            $count = $this->getLinkedCustomers($item[$pkey]);
+            $count = $this->mainModel->withCount('customers')->find($item[$pkey])->customers_count;
             return $count;
         };
 
@@ -122,17 +122,5 @@ class LeadGroupPricing extends AbstractLeadDefinition
                 ),
             ),
         );
-    }
-
-    /**
-     * @param $groupId
-     * @return mixed
-     */
-    protected function getLinkedCustomers($groupId)
-    {
-        $sql = "SELECT count(*) as count FROM " . TABLE_CUSTOMERS . " WHERE customers_group_pricing = :id:";
-        $sql = $this->dbConn->bindvars($sql, ':id:', $groupId, 'integer');
-        $result = $this->dbConn->Execute($sql);
-        return $result->fields['count'];
     }
 }

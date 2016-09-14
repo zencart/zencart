@@ -20,7 +20,7 @@ class ReportStatsProductsPurchased extends AbstractLeadDefinition
     public function initQueryAndOutput()
     {
 
-        $this->listingQuery['main'] = array(
+        $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_PRODUCTS,
                 'alias' => 'p',
@@ -41,7 +41,7 @@ class ReportStatsProductsPurchased extends AbstractLeadDefinition
 
         );
 
-        $this->outputLayout['main'] = array(
+        $this->outputLayout = array(
 
 
             'listMap' => array(
