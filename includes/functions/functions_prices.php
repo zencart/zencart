@@ -904,14 +904,9 @@ If a special exist * 10
       case ($sale_maker_discount_type == 1):
         $sale_maker_discount = (1 - ($sale_maker_discount / 100));
         break;
-      case ($sale_maker_discount_type == 0 and $display_type == true):
-        $sale_maker_discount = $sale_maker_discount;
-        break;
-      case ($sale_maker_discount_type == 0 and $display_type == false):
-        $sale_maker_discount = $sale_maker_discount;
+      case ($sale_maker_discount_type == 0): 
         break;
       case ($sale_maker_discount_type == 2 and $display_type == true):
-        $sale_maker_discount = $sale_maker_discount;
         break;
       default:
         $sale_maker_discount = 1;
