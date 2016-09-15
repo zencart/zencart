@@ -52,7 +52,7 @@ systemChecks:
   checkIniSet:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <? echo TEXT_ERROR_INI_SET . PHP_EOL; ?>
+    mainErrorText: <?php echo TEXT_ERROR_INI_SET . PHP_EOL; ?>
     methods:
       checkIniSet:
   checkZCversion:
