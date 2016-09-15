@@ -49,6 +49,12 @@ systemChecks:
         parameters:
           version: 5.6.0
           versionTest: ge
+  checkIniSet:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <? echo TEXT_ERROR_INI_SET . PHP_EOL; ?>
+    methods:
+      checkIniSet:
   checkZCversion:
     runLevel: always
     errorLevel: WARN
