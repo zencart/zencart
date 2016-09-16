@@ -55,14 +55,11 @@ echo 'Connecting to UPS (port 80)...<br>';
 doCurlTest('http://www.ups.com/using/services/rave/qcostcgi.cgi');
 dofsockTest('www.ups.com', 80);
 
-echo 'Connecting to UPSXML (SSL) (wwwcie.ups.com) ...<br>';
-doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
-
-echo 'Connecting to UPSXML (SSL) (www.ups.com) ...<br>';
-doCurlTest('https://www.ups.com/ups.app/xml/Rate');
-
-echo 'Connecting to UPSXML (SSL) (onlinetools.ups.com) ...<br>';
+echo 'Connecting to UPSXML (onlinetools.ups.com) ...<br>';
 doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
+
+echo 'Connecting to UPSXML (sandbox) ...<br>';
+doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
 
 echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
@@ -112,6 +109,12 @@ doCurlTest('https://api.payeezy.com/v1/transactions');
 
 echo 'Connecting to Payeezy Sandbox Server...<br>';
 doCurlTest('https://api-cert.payeezy.com/v1/transactions');
+
+echo 'Connecting to Elavon Server...<br>';
+doCurlTest('https://www.myvirtualmerchant.com/VirtualMerchant/process.do');
+
+echo 'Connecting to Elavon Sandbox Server...<br>';
+doCurlTest('https://demo.myvirtualmerchant.com/VirtualMerchantDemo/process.do');
 
 ?>
 
