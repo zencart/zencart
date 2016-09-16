@@ -190,6 +190,7 @@ define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure
 define('TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED', 'Multiple Admin directories seem to exist. Either remove old admin directories and click Refresh or select the correct admin directory below and click Refresh.');
 define('TEXT_ERROR_MULTIPLE_ADMINS_SELECTED', 'Multiple Admin directories seem to exist. If the selected directory below is incorrect, please choose another and click Refresh.');
 define('TEXT_ERROR_SUCCESS_NO_ERRORS', 'No errors or warnings were detected on your system. You may continue with the installation.');
+define('TEXT_ERROR_INI_SET', 'The PHP function ini_set is not enabled.  Some hosts do this as a security precaution. With ini_set disabled, the Zen Cart error logging feature does not work as expected.');
 
 define('TEXT_FORM_VALIDATION_REQUIRED', 'Required');
 define('TEXT_FORM_VALIDATION_AGREE_LICENSE', 'You must agree to the license terms');

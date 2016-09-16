@@ -690,4 +690,22 @@ if ($errnum != 0) error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" .
       }
     }
   }
+  public function checkIniSet() {
+      $funcs = array_map('trim', explode(',', ini_get('disable_functions')));
+      if (in_array('ini_set', $funcs)) {
+          return false;
+      }
+
+      $orig = ini_get('error_log');
+      if ($orig !== 'test_log') {
+          ini_set('error_log', 'test_log');
+      } else {
+          ini_set('error_log', 'test_log456');
+      }
+      if ($orig !== ini_get('error_log')) {
+          ini_set('error_log', $orig);
+          return true;
+      }
+      return false;
+  }
 }
