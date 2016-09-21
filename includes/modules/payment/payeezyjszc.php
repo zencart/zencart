@@ -27,7 +27,7 @@ class payeezyjszc extends base {
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '0.92';
+  var $moduleVersion = '0.93';
   /**
    * $title is the displayed name for this payment method
    *
@@ -238,8 +238,8 @@ class payeezyjszc extends base {
     $process_button_string .= zen_draw_hidden_field('cc_owner', zen_output_string_protected($_POST[$this->code . '_cc_owner']));
     $process_button_string .= zen_draw_hidden_field('cc_type', zen_output_string_protected($_POST[$this->code . '_cc_type']));
     $process_button_string .= zen_draw_hidden_field('cc_number', zen_output_string_protected($_POST[$this->code . '_cc_number']));
-    $process_button_string .= zen_draw_hidden_field('cc_cvv', (int)$_POST[$this->code . '_cc_cvv']);
-    $process_button_string .= zen_draw_hidden_field('cc_expires', (int)$_POST[$this->code . '_cc_expires_month'] . (int)$_POST[$this->code . '_cc_expires_year']);
+    $process_button_string .= zen_draw_hidden_field('cc_cvv', preg_replace('/[^0-9]/', '', $_POST[$this->code . '_cc_cvv']));
+    $process_button_string .= zen_draw_hidden_field('cc_expires', preg_replace('/[^0-9]/', '', $_POST[$this->code . '_cc_expires_month']) . (int)$_POST[$this->code . '_cc_expires_year']);
     return $process_button_string;
   }
 
@@ -285,7 +285,7 @@ class payeezyjszc extends base {
     $payload['token']['token_data']['value'] = preg_replace('/[^0-9a-z\-]/i', '', $_POST[$this->code . '_fdtoken']);
     $payload['token']['token_data']['cardholder_name'] = htmlentities($order->info['cc_owner']);
     $payload['token']['token_data']['exp_date'] = str_pad(preg_replace('/[^0-9]/', '', $_POST['cc_expires']), 4, '0', STR_PAD_LEFT); // ensure month is 2 digits
-    $payload['token']['token_data']['cvv'] = strval((int)$_POST['cc_cvv']);
+    $payload['token']['token_data']['cvv'] = strval(preg_replace('/[^0-9]/', '', $_POST['cc_cvv']));
     $payload['token']['token_data']['type'] = preg_replace('/[^a-z ]/i', '', $_POST['cc_type']);
 
     $payload_logged = $payload; 
