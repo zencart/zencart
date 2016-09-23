@@ -108,19 +108,7 @@ $autoloadNamespaces = require DIR_FS_CATALOG . DIR_WS_INCLUDES . '/autoload_name
 
 /**
  * include the list of extra configure files
- * first include the files from the storefront and then from the admin
  */
-if ($za_dir = @dir(DIR_FS_CATALOG . 'includes/extra_configures')) {
-        while ($zv_file = $za_dir->read()) {
-                if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-            /**
-             * load any user/contribution specific configuration files.
-             */
-            include DIR_FS_CATALOG . 'includes/extra_configures/' . $zv_file;
-                    }
-     }
- $za_dir->close();
- }
 
 if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
     while ($zv_file = $za_dir->read()) {
