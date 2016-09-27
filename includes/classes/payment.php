@@ -155,7 +155,7 @@ class payment extends base {
        $js =  $js .'    alert(error_message);' . "\n";
        $js =  $js . '    return false;' . "\n";
        $js =  $js .'  } else {' . "\n";
-       $js =  $js .' var result = true '  . "\n";
+       $js =  $js .' var result = true; '  . "\n";
        if ($this->doesCollectsCardDataOnsite == true && PADSS_AJAX_CHECKOUT == '1') {
          $js .= '      result = !(doesCollectsCardDataOnsite(payment_value));' . "\n";
        }
