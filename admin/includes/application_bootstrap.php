@@ -38,17 +38,19 @@ define('PAGE_PARSE_START_TIME', microtime());
  *
  */
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
-  @ini_set('display_errors', TRUE);
-  error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+    @ini_set('display_errors', true);
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 } else {
-  error_reporting(0);
+    error_reporting(0);
 }
 // set php_self in the local scope
-if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+if (!isset($PHP_SELF)) {
+    $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+}
 $PHP_SELF = htmlspecialchars($PHP_SELF);
 // Suppress html from error messages
-@ini_set("html_errors","0");
-@ini_set("session.use_trans_sid","0");
+@ini_set("html_errors", "0");
+@ini_set("session.use_trans_sid", "0");
 /*
  * Get time zone info from PHP config
 */
@@ -57,66 +59,67 @@ $PHP_SELF = htmlspecialchars($PHP_SELF);
  * Set the local configuration parameters - mainly for developers
  */
 if (file_exists('../includes/local/configure.php')) {
-  /**
-   * load any local(user created) configure file.
-   */
-  include('../includes/local/configure.php');
+    /**
+     * load any local(user created) configure file.
+     */
+    include('../includes/local/configure.php');
 }
 /**
  * check for and load application configuration parameters
  */
 if (file_exists('../includes/configure.php')) {
-  /**
-   * load the main configure file.
-   */
-  include('../includes/configure.php');
+    /**
+     * load the main configure file.
+     */
+    include('../includes/configure.php');
 }
-if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
-  if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
-    require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
-    exit;
-  } elseif (file_exists('../zc_install/index.php')) {
-    echo 'ERROR: /includes/configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
-  } else {
-    die('ERROR: /includes/configure.php file not found. Suggest running zc_install/index.php?');
-  }
+if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG . 'includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
+    if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
+        require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
+        exit;
+    } elseif (file_exists('../zc_install/index.php')) {
+        echo 'ERROR: /includes/configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
+    } else {
+        die('ERROR: /includes/configure.php file not found. Suggest running zc_install/index.php?');
+    }
 }
 /**
  * check for and load system defined path constants
  */
 if (file_exists('includes/defined_paths.php')) {
-  /**
-   * load the system-defined path constants
-   */
-  require('includes/defined_paths.php');
+    /**
+     * load the system-defined path constants
+     */
+    require('includes/defined_paths.php');
 } else {
-  die('ERROR: admin /includes/defined_paths.php file not found. Cannot continue.');
-  exit;
+    die('ERROR: admin /includes/defined_paths.php file not found. Cannot continue.');
+    exit;
 }
 /**
  * Defined for backwards compatibility only.
  * THESE SHOULD NOT BE EDITED HERE! THEY SHOULD ONLY BE SET IN YOUR CONFIGURE.PHP FILE!
  */
-if (!defined('HTT'.'PS_SERVER')) {
-  define('HTT'.'PS_SERVER', ADMIN_HTTP_SERVER);
+if (!defined('HTT' . 'PS_SERVER')) {
+    define('HTT' . 'PS_SERVER', ADMIN_HTTP_SERVER);
 }
 
 // load the default autoload config
-$autoloadNamespaces = require DIR_FS_CATALOG . DIR_WS_INCLUDES .  '/autoload_namespaces.php';
+$autoloadNamespaces = require DIR_FS_CATALOG . DIR_WS_INCLUDES . '/autoload_namespaces.php';
 
 /**
  * include the list of extra configure files
  */
+
 if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
-  while ($zv_file = $za_dir->read()) {
-    if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-      /**
-       * load any user/contribution specific configuration files.
-       */
-      include DIR_WS_INCLUDES . 'extra_configures/' . $zv_file;
+    while ($zv_file = $za_dir->read()) {
+        if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
+            /**
+             * load any user/contribution specific configuration files.
+             */
+            include DIR_WS_INCLUDES . 'extra_configures/' . $zv_file;
+        }
     }
-  }
-  $za_dir->close();
+    $za_dir->close();
 }
 
 require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
@@ -124,7 +127,7 @@ $loader = new \Aura\Autoload\Loader;
 $loader->register();
 
 foreach ($autoloadNamespaces as $autoloadNamespace => $autoloadBaseDir) {
-  $loader->addPrefix($autoloadNamespace, $autoloadBaseDir);
+    $loader->addPrefix($autoloadNamespace, $autoloadBaseDir);
 }
 
 /**
@@ -133,5 +136,5 @@ foreach ($autoloadNamespaces as $autoloadNamespace => $autoloadBaseDir) {
 $systemContext = 'admin';
 $template_dir = '';
 if (!defined('DIR_WS_TEMPLATES')) {
-  define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
+    define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 }
