@@ -665,13 +665,13 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and (int)$oID > 0) {
         $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_admin_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id) . '" target="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id) . '" target="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a>');
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS', $oInfo, $contents);
 
-        $contents[] = array('text' => '<br />' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));
-        $contents[] = array('text' => '<br />' . $oInfo->customers_email_address);
+        $contents[] = array('text' => TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));
+        $contents[] = array('text' => $oInfo->customers_email_address);
         $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address);
         if (zen_not_null($oInfo->last_modified)) $contents[] = array('text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . zen_date_short($oInfo->last_modified));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_PAYMENT_METHOD . ' '  . $oInfo->payment_method);
-        $contents[] = array('text' => '<br />' . ENTRY_SHIPPING . ' '  . $oInfo->shipping_method);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_ORDER_LANGUAGE . ' ' . $order->language['name']);
+        $contents[] = array('text' => TEXT_INFO_PAYMENT_METHOD . ' '  . $oInfo->payment_method);
+        $contents[] = array('text' => ENTRY_SHIPPING . ' '  . $oInfo->shipping_method);
+        $contents[] = array('text' => TEXT_INFO_ORDER_LANGUAGE . ' ' . $order->language['name']);
 
 // check if order has open gv
         if ($order->info['gv_count_in_queue'] > 0) {
