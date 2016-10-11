@@ -1270,6 +1270,9 @@ class order extends base {
       $extra_info = email_collect_extra_info('', '', $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], $this->customer['telephone']);
       $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
 
+      // Alternatively specify a different HTML email template for the admin-copy of the confirmation email (useful for specialized layouts)
+      // $html_msg['EMAIL_TEMPLATE_FILENAME'] = DIR_FS_EMAIL_TEMPLATES . "email_template_admin_orders"; // (".html" is auto-appended, so don't add it here)
+
       // include authcode and transaction id in admin-copy of email
       if ($GLOBALS[$payment_class]->auth_code || $GLOBALS[$payment_class]->transaction_id) {
         $pmt_details = ($GLOBALS[$payment_class]->auth_code != '' ? 'AuthCode: ' . $GLOBALS[$payment_class]->auth_code . '  ' : '') . ($GLOBALS[$payment_class]->transaction_id != '' ?  'TransID: ' . $GLOBALS[$payment_class]->transaction_id : '') . "\n\n";
