@@ -45,10 +45,9 @@ header('X-Frame-Options:SAMEORIGIN');
 <?php } ?>
 <?php
   // BOF hreflang for multilingual sites
-  if (isset($language_list) || $language_list = $lng->get_available_languages()) {
+  if (isset($language_list) || $language_list = $lng->get_available_languages() && sizeof($language_list) > 1) {
     foreach($language_list as $key=>$value) {
-      if ($value['id'] == $_SESSION['languages_id']) continue;
-      echo '    <link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $value['code'], $request_type) : $canonicalLink . '&amp;language=' . $value['code']) . '" hreflang="' . $value['code'] . '" />' . "\n";
+      echo '    <link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $value['code'], $request_type) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $value['code']) . '" hreflang="' . $value['code'] . '" />' . "\n";
     }
   }
   // EOF hreflang for multilingual sites
