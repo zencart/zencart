@@ -627,8 +627,9 @@ label.error {
     margin: 5px;
     padding: 5px;
 }
-img[alt="Cancel"], img[alt="Reset"]{
-    vertical-align: top;
+img[alt="Cancel"], img[alt="Reset"],
+img[src*="button_cancel"], img[src*="button_reset"]{
+  vertical-align: top;
 }
 .versionCurrent{
   color:green;
