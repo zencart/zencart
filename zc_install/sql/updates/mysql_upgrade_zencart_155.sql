@@ -129,6 +129,35 @@ INSERT INTO admin_pages_to_profiles (profile_id, page_key) VALUES
 
 #############
 
+INSERT INTO `layout_boxes` (`layout_template`, `layout_box_name`, `layout_box_status`, `layout_box_location`, `layout_box_sort_order`, `layout_box_sort_order_single`, `layout_box_status_single`) VALUES
+('responsive_classic', 'banner_box.php', 1, 0, 300, 1, 127),
+('responsive_classic', 'banner_box2.php', 1, 1, 15, 1, 15),
+('responsive_classic', 'banner_box_all.php', 1, 1, 5, 0, 0),
+('responsive_classic', 'best_sellers.php', 1, 1, 30, 70, 1),
+('responsive_classic', 'categories.php', 1, 0, 10, 10, 1),
+('responsive_classic', 'currencies.php', 0, 1, 80, 60, 0),
+('responsive_classic', 'document_categories.php', 1, 0, 0, 0, 0),
+('responsive_classic', 'ezpages.php', 1, 1, -1, 2, 1),
+('responsive_classic', 'featured.php', 1, 0, 45, 0, 0),
+('responsive_classic', 'information.php', 1, 0, 50, 40, 1),
+('responsive_classic', 'languages.php', 0, 1, 70, 50, 0),
+('responsive_classic', 'manufacturers.php', 1, 0, 30, 20, 1),
+('responsive_classic', 'manufacturer_info.php', 1, 1, 35, 95, 1),
+('responsive_classic', 'more_information.php', 1, 0, 200, 200, 1),
+('responsive_classic', 'music_genres.php', 1, 1, 0, 0, 0),
+('responsive_classic', 'order_history.php', 1, 1, 0, 0, 0),
+('responsive_classic', 'product_notifications.php', 1, 1, 55, 85, 1),
+('responsive_classic', 'record_companies.php', 1, 1, 0, 0, 0),
+('responsive_classic', 'reviews.php', 1, 0, 40, 0, 0),
+('responsive_classic', 'search.php', 1, 1, 10, 0, 0),
+('responsive_classic', 'search_header.php', 0, 0, 0, 0, 1),
+('responsive_classic', 'shopping_cart.php', 1, 1, 20, 30, 1),
+('responsive_classic', 'specials.php', 1, 1, 45, 0, 0),
+('responsive_classic', 'whats_new.php', 1, 0, 20, 0, 0),
+('responsive_classic', 'whos_online.php', 1, 1, 200, 200, 1);
+
+#############
+
 #### VERSION UPDATE STATEMENTS
 ## THE FOLLOWING 2 SECTIONS SHOULD BE THE "LAST" ITEMS IN THE FILE, so that if the upgrade fails prematurely, the version info is not updated.
 ##The following updates the version HISTORY to store the prior version info (Essentially "moves" the prior version info from the "project_version" to "project_version_history" table
