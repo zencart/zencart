@@ -155,7 +155,7 @@ if (isset($_SESSION['cart']->cartID)) {
          * check to be sure submitted data hasn't been tampered with
          */
         if ($_POST['shipping'] == 'free_free' && ($order->content_type != 'virtual' && !$pass)) {
-          $quote['error'] = 'Invalid input. Please make another selection.';
+          $quote['error'] = ERROR_TEXT_INVALID_INPUT_MAKE_ANOTHER_SELECTION;
         }
         list($module, $method) = explode('_', $_POST['shipping']);
         if ( is_object($$module) || ($_POST['shipping'] == 'free_free') ) {
