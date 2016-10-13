@@ -3,7 +3,7 @@
  * cc_validation Class.
  *
  * @package classes
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: cc_validation.php drbyte  Modified in v1.6.0 $
@@ -31,8 +31,8 @@ class cc_validation extends base {
       $this->cc_type = "Maestro"; // SWITCH is now Maestro
     } elseif (preg_match('/^4[0-9]{12}([0-9]{3})?$/', $this->cc_number) && CC_ENABLED_VISA=='1') {
       $this->cc_type = 'Visa';
-    } elseif (preg_match('/^5[1-5][0-9]{14}$/', $this->cc_number) && CC_ENABLED_MC=='1') {
-      $this->cc_type = 'MasterCard';
+	} elseif (preg_match('/^(5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/', $this->cc_number) && CC_ENABLED_MC=='1') {
+      $this->cc_type = 'MasterCard'; // 510000-550000, 222100-272099
     } elseif (preg_match('/^3[47][0-9]{13}$/', $this->cc_number) && CC_ENABLED_AMEX=='1') {
       $this->cc_type = 'American Express';
     } elseif (preg_match('/^3(0[0-5]|[68][0-9])[0-9]{11}$/', $this->cc_number) && CC_ENABLED_DINERS_CLUB=='1') {
