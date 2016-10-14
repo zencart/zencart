@@ -85,7 +85,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 
 <fieldset>
 <h1>About PHP versions</h1>
-<p>Zen Cart&reg; v1.5.5 is designed for PHP 5.6 and PHP 7.0, with MySQL 5.1 thru 5.7 and Apache 2.2/2.4</p>
+<p>Zen Cart&reg; v1.5.5 is designed for PHP 5.6 to 7.1, with MySQL 5.1 thru 5.7 and Apache 2.2/2.4</p>
 <p class="small">It is compatible with PHP 5.2.10 through PHP 7.0, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.5 is considered obsolete.</a> You should be using PHP 5.6 or greater by now.)</em></p>
 
 <h1>Upgrade Instructions</h1>
@@ -143,6 +143,33 @@ OSI Certified is a certification mark of the Open Source Initiative.
   various tables and may not be affected by this change.)</p>
   <p>A few CSS changes were made in template_default to change IDs of repeating elements to be classes instead.
   Of note <span class="code">#cartDisplay</span> is now <span class="code">.cartDisplay</span>, and <span class="code">#cartImage</span> is <span class="code">.cartImage</span></p>
+
+<h1>v1.5.5b vs v1.5.5a</h1>
+<h3>Since the release of v1.5.5a on 5-May-2016, the following changes have been applied to become v1.5.5b ...</h3>
+<ul>
+<li>Several fixes to the Admin Sanitizer rules, to stop translating special characters to html entities unexpectedly</li>
+<li>Fix some HTML markup "strict" errors, and CSS alignments in various admin pages</li>
+<li>Relocate shipping-calculation logic in checkout page, to be consistent with other checkout calculations and prevent some shipping rate errors</li>
+<li>Template fix to Responsive Classic to change postal-code to no longer be numeric-only</li>
+<li>Change authorize.net module to use Akamai servers</li>
+<li>Fix Payeezy payment module tokenization problem, and fix sandbox mode problem</li>
+<li>Fix some javascript on checkout pages related to form submission</li>
+<li>Fix out-of-stock alert inconsistency</li>
+<li>Trigger E_USER_ERROR when wrong bindVars rule set</li>
+<li>Update gv_faq language file with community contributions</li>
+<li>Change use of PHP_SELF to SCRIPT_NAME for consistency and to avoid legacy-related problems</li>
+<li>Fix false-positives in error-reporting logic</li>
+<li>Fix leftover indirection variables for PHP7 compatibility </li>
+<li>Fixes to AJAX handlers: reject fake requests; persist session data more effectively</li>
+<li>Change CKEditor trigger to use jQuery CDN instead of Google CDN, for broader global access</li>
+<li>Upgrade PHPMailer to accommodate broader TLS compatibility</li>
+<li>Accommodate MasterCard's recent BIN 2 addition</li>
+<li>Include responsive-classic template layout-boxes in upgrades, even if not using it, for sake of cloning simplicity</li>
+<li>Template fix: fax field was showing even if disabled</li>
+<li>Template fix: fix "back" button on address-book edit screens during checkout</li>
+<li>Multilanguage: make hreflang tag appear for all languages, instead of only for "other than current" language</li>
+<li>Fix admin link to whois resource</li>
+</ul>
 
 <h1>v1.5.5a vs v1.5.5</h1>
 <h3>Since the first iteration of v1.5.5 on 17-March-2016, the following changes have been applied to become v1.5.5a ...</h3>
