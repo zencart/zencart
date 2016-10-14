@@ -10,13 +10,13 @@ It's free software, with free community-driven support available 24/7 on the Zen
 --------------------
 
 
-Zen Cart&reg; v1.5.5
+Zen Cart&reg; v1.5.5b
 --------------------
 
 Compatibility
 -------------
 Zen Cart v1.5.5 is designed for:
- * PHP 5.6 and PHP 7.0  (but is compatible with as far back as 5.2.10)
+ * PHP 5.6 to PHP 7.1  (but is compatible with as far back as 5.2.10)
  * Apache 2.2 (and 2.4 with access_compat mod installed for custom .htaccess rule support)
  * MySQL 5.1 to 5.7
 
@@ -41,7 +41,7 @@ If some of the terms used in these brief instructions are things you don't under
 
 Guidance for Secure Installations
 ---------------------------------
-__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.
+__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resilience against troublesome access attempted by any undesired/unauthorized visitors.
 
 
 Documentation
@@ -51,7 +51,7 @@ Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/ind
 
 Developer Documentation
 -----------------------
-Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zc-v1-series](https://github.com/zencart/zc-v1-series) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
+Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
 
 Visit [docs.zen-cart.com](http://docs.zen-cart.com/Developer_Documentation/v1.5.5/) for v1.5.5-specific guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.
 
