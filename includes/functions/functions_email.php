@@ -644,7 +644,7 @@
       '<tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>';
 
     foreach($moreinfo as $key => $val) {
-      $extra_info['TEXT'] .= $key . ": \t" . $val . "\n";
+      $extra_info['TEXT'] .= $key . (strlen(strip_tags($key)) < 8 ? "\t\t" : "\t") . $val . "\n";
       $extra_info['HTML'] .= '<tr><td class="extra-info-bold">' . $key . '</td><td>' . $val . '</td></tr>';
     }
 
