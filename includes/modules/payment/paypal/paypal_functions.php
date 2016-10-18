@@ -650,7 +650,7 @@
                             'orders_status_id' => (int)$new_status,
                             'date_added' => 'now()',
                             'comments' => 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'],
-                            'customer_notified' => false
+                            'customer_notified' => (int)false,
                            );
     zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     ipn_debug_email('IPN NOTICE :: Update complete.');
