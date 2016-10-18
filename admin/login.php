@@ -69,7 +69,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
         <meta name="robots" content="noindex, nofollow"/>
         <script language="javascript" type="text/javascript"><!--
-            function animate(f) {
+            function waiting_spinner(f) {
                 var button = document.getElementById("btn_submit");
                 var img = document.getElementById("actionImg");
                 button.style.cursor = "wait";
@@ -86,7 +86,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
             <div class="row">
             <div id="loginFormDiv" class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
                 <?php
-                echo zen_draw_form('loginForm',FILENAME_LOGIN,zen_get_all_get_params(),'post','id="loginForm" onsubmit="animate(this)" class="form-horizontal"','true');
+                echo zen_draw_form('loginForm',FILENAME_LOGIN,zen_get_all_get_params(),'post','id="loginForm" onsubmit="waiting_spinner(this)" class="form-horizontal"','true');
                 echo zen_draw_hidden_field('action','do'.$_SESSION['securityToken'],'id="action1"');
                 ?>
                   <fieldset>
@@ -129,7 +129,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
             <div class="row">
             <div id="loginFormDiv" class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
                 <?php
-                echo zen_draw_form('loginForm',FILENAME_LOGIN,'','post','id="loginForm" onsubmit="animate(this)" class="form-horizontal"','true');
+                echo zen_draw_form('loginForm',FILENAME_LOGIN,'','post','id="loginForm" onsubmit="waiting_spinner(this)" class="form-horizontal"','true');
                 echo zen_draw_hidden_field('action','rs'.$_SESSION['securityToken'],'id="action1"');
                 ?>
                 <fieldset>
