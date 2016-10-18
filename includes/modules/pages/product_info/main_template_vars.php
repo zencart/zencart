@@ -32,7 +32,7 @@
 
     $tpl_page_body = '/tpl_product_info_noproduct.php';
     if (!$flagHasCartContents) {
-        $listingBoxManager = new ZenCart\ListingQueryAndOutput\Manager('MISSING_PRODUCT', $db, $zcRequest);
+        $listingBoxManager = new ZenCart\ListingQueryAndOutput\Manager('MISSING_PRODUCT', new ZenCart\Model\ModelFactory($db, $capsule), $zcRequest);
         $listingBoxes = $listingBoxManager->getListingBoxes ();
         $tplVars['listingBoxes'] = $listingBoxes;
     }

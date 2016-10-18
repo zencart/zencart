@@ -175,7 +175,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
 
 if (!$flagHasCartContents) {
-    $listingBoxManager = new ZenCart\ListingQueryAndOutput\Manager('EMPTY_CART', $db, $zcRequest);
+    $listingBoxManager = new ZenCart\ListingQueryAndOutput\Manager('EMPTY_CART', new ZenCart\Model\ModelFactory($db, $capsule), $zcRequest);
     $listingBoxes = $listingBoxManager->getListingBoxes ();
     $tplVars['listingBoxes'] = $listingBoxes;
 }
