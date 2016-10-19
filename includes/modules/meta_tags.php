@@ -278,7 +278,7 @@ switch ($metatag_page_name) {
       $meta_products_description = zen_clean_html($meta_products_description);
 
       define('META_TAG_TITLE', str_replace($bad_characters,'',$review_on . $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TAGLINE));
-      define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description . ' '));
+      define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description));
       define('META_TAG_KEYWORDS', str_replace($bad_characters,'',$meta_products_name . METATAGS_DIVIDER . KEYWORDS));
 
     } // CUSTOM META TAGS
