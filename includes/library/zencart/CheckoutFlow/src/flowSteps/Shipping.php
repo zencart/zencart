@@ -341,8 +341,7 @@ class Shipping extends AbstractFlowStep
                 $checklist[] = $val['id'] . '_' . $method['id'];
             }
         }
-        $checkval = $this->session->get('shipping')['id'];
-        if (!in_array($checkval, $checklist) && $checkval != 'free_free') {
+        if (!in_array($this->session->get('shipping')['id'], $checklist)) {
             $this->view->getMessageStack()->add('checkout_shipping', ERROR_PLEASE_RESELECT_SHIPPING_METHOD, 'error');
         }
     }

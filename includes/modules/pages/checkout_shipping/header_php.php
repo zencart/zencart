@@ -199,12 +199,9 @@ if (isset($_SESSION['cart']->cartID)) {
         foreach($val['methods'] as $key2=>$method) {
           $checklist[] = $val['id'] . '_' . $method['id'];
         }
-      } else {
-        // skip
       }
     }
-    $checkval = $_SESSION['shipping']['id'];
-    if (!in_array($checkval, $checklist) && $_SESSION['shipping']['id'] != 'free_free') {
+    if (!in_array($_SESSION['shipping']['id'], $checklist)) {
       $messageStack->add('checkout_shipping', ERROR_PLEASE_RESELECT_SHIPPING_METHOD, 'error');
     }
   }
