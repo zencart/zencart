@@ -4,7 +4,7 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Modified in v1.6.0 $
  */
@@ -77,10 +77,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_gzip.php');
   $autoLoadConfig[50][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sefu.php');
-$autoLoadConfig[60][] = array('autoType'=>'init_script',
-                              'loadFile'=> 'init_di_container.php');
-$autoLoadConfig[60][] = array('autoType'=>'init_script',
-                              'loadFile'=> 'init_checkout_flow_routes.php');
 
 /**
  * Breakpoint 60.
@@ -89,6 +85,12 @@ $autoLoadConfig[60][] = array('autoType'=>'init_script',
  * require('includes/init_includes/init_tlds.php');
  *
  */
+
+  $autoLoadConfig[60][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_di_container.php');
+  $autoLoadConfig[60][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_checkout_flow_routes.php');
+
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
