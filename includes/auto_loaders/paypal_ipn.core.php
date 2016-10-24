@@ -88,6 +88,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_di_container.php');
+  $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
