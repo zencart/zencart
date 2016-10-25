@@ -224,7 +224,7 @@ class ot_coupon {
 //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
         }
 
-        // JTD - added missing code here to handle coupon product restrictions
+        // JTD - handle coupon product restrictions
         // look through the items in the cart to see if this coupon is valid for any item in the cart
         $products = $_SESSION['cart']->get_products();
         $foundvalid = true;
@@ -270,8 +270,7 @@ class ot_coupon {
           }
         }
 
-
-        // JTD - end of additions of missing code to handle coupon product restrictions
+        // JTD - end of handling coupon product restrictions
 
         $date_query=$db->Execute("select coupon_start_date from " . TABLE_COUPONS . "
                                   where coupon_start_date <= now() and
@@ -497,6 +496,7 @@ class ot_coupon {
             }
           //  $messageStack->add_session('checkout_payment', 'Coupon cont: ' . $coupon_product_count, 'caution');
           }
+          $coupon_is_free_shipping = false;
           switch($coupon->fields['coupon_type'])
           {
             case 'S': // Free Shipping
@@ -520,7 +520,7 @@ class ot_coupon {
               $od_amount['total'] = zen_round($coupon_total*($coupon->fields['coupon_amount']/100), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type'];
               // add in Free Shipping
-              $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
+              $coupon_is_free_shipping = true;
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
               $ratio = $od_amount['total']/$coupon_total;
               if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
@@ -540,9 +540,7 @@ class ot_coupon {
               //$od_amount['total'] = zen_round($coupon->fields['coupon_amount'] * ($coupon_total>0), $currencyDecimalPlaces);
               $od_amount['type'] = $coupon->fields['coupon_type']; // amount off 'F' or amount off and free shipping 'O'
               // add in Free Shipping
-              if ($this->include_shipping == 'false') {
-                  $od_amount['total'] = $od_amount['total'] + $orderTotalDetails['shipping'];
-              }
+              $coupon_is_free_shipping = true;
               $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
               $ratio = $od_amount['total']/$coupon_total;
               if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
@@ -571,6 +569,9 @@ class ot_coupon {
               $od_amount['tax'] = zen_calculate_tax($od_amount['total'], $tax_rate);
               $tax_description = zen_get_tax_description($this->tax_class);
               $od_amount['tax_groups'][$tax_description] = $od_amount['tax'];
+          }
+          if ($coupon_is_free_shipping) {
+              $od_amount['total'] += $orderTotalDetails['shipping'];
           }
         }
       }
