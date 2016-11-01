@@ -1945,8 +1945,13 @@ class shoppingCart extends base {
                 $real_ids[TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] = $_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i];
               }
             }
+
+            // remove helper param from URI of the upcoming redirect
+            $parameters[] = 'number_of_uploads';
+            unset($_GET['number_of_uploads']);
           }
 
+          // do the actual add to cart
           $this->add_cart($_POST['products_id'], $this->get_quantity(zen_get_uprid($_POST['products_id'], $real_ids))+($new_qty), $real_ids);
           // iii 030813 end of changes.
         } // eof: set error message
@@ -2246,4 +2251,231 @@ class shoppingCart extends base {
         }
      return $new_qty;
   }
+/**
+ * calculate the number of items in a cart based on an attribute option_id and option_values_id combo
+ * USAGE:  $chk_attrib_1_16 = $this->in_cart_check_attrib_quantity(1, 16);
+ * USAGE:  $chk_attrib_1_16 = $_SESSION['cart']->in_cart_check_attrib_quantity(1, 16);
+ *
+ * @param integer $check_option_id
+ * @param integer $check_option_values_id
+ * @return float
+ */
+  function in_cart_check_attrib_quantity($check_option_id, $check_option_values_id) {
+    // if nothing is in cart return 0
+    if (!is_array($this->contents)) return 0;
+
+    // compute total quantity for match
+    $in_cart_check_qty = 0;
+    // get products in cart to check
+    $chk_products = $this->get_products();
+    for ($i=0, $n=sizeof($chk_products); $i<$n; $i++) {
+      if (is_array($chk_products[$i]['attributes'])) {
+        foreach ($chk_products[$i]['attributes'] as $option => $value) {
+          if ($option == $check_option_id && $value == $check_option_values_id) {
+  //          echo 'Attribute FOUND FOR $option: ' . $option . ' $value: ' . $value . ' quantity: ' . $chk_products[$i]['quantity'] . '<br><br>';
+            $in_cart_check_qty += $chk_products[$i]['quantity'];
+          }
+        }
+      }
+    }
+    return $in_cart_check_qty;
+  }
+/**
+ * calculate products_id price in cart
+ * USAGE:  $product_total_price = $this->in_cart_product_total_price(12);
+ * USAGE:  $chk_product_cart_total_price = $_SESSION['cart']->in_cart_product_total_price(12);
+ *
+ * @param mixed $product_id
+ */
+  function in_cart_product_total_price($product_id) {
+    $products = $this->get_products();
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      $productsName = $products[$i]['name'];
+      $ppe = $products[$i]['final_price'];
+      $ppt = $ppe * $products[$i]['quantity'];
+      $productsPriceEach = $ppe + $products[$i]['onetime_charges'];
+      $productsPriceTotal = $ppt + $products[$i]['onetime_charges'];
+      if ((int)$product_id == (int)$products[$i]['id']) {
+//        echo 'GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $productsPriceEach: ' . $productsPriceEach . ' $productsPriceTotal: ' . $productsPriceTotal . '<br><br>';
+        $in_cart_product_price += $productsPriceTotal;
+      } else {
+//        echo 'NOT GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $productsPriceEach: ' . $productsPriceEach . ' $productsPriceTotal: ' . $productsPriceTotal . '<br><br>';
+      }
+    } // end FOR loop
+    return $in_cart_product_price;
+  }
+/**
+ * calculate products_id quantity in cart regardless of attributes
+ * USAGE:  $product_total_quantity = $this->in_cart_product_total_quantity(12);
+ * USAGE:  $chk_product_cart_total_quantity = $_SESSION['cart']->in_cart_product_total_quantity(12);
+ *
+ * @param mixed $product_id
+ */
+  function in_cart_product_total_quantity($product_id) {
+    $products = $this->get_products();
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+    $in_cart_product_quantity = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      if ((int)$product_id == (int)$products[$i]['id']) {
+//        echo 'GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $in_cart_product_quantity: ' . $in_cart_product_quantity . '<br><br>';
+        $in_cart_product_quantity += $products[$i]['quantity'];
+      } else {
+//        echo 'NOT GOOD id: ' . $products[$i]['id'] . ' vs ' . ' $product_id: ' . $product_id . ' $products[$i][name]: ' . $products[$i]['name'] . ' $in_cart_product_quantity: ' . $in_cart_product_quantity . '<br><br>';
+      }
+    } // end FOR loop
+    return $in_cart_product_quantity;
+  }
+
+/**
+ * calculate products_id weight in cart regardless of attributes
+ * USAGE:  $product_total_weight = $this->in_cart_product_total_weight(12);
+ * USAGE:  $chk_product_cart_total_weight = $_SESSION['cart']->in_cart_product_total_weight(12);
+ *
+ * @param mixed $product_id
+ * @return float
+ */
+  function in_cart_product_total_weight($product_id) {
+    $products = $this->get_products();
+    $in_cart_product_weight = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      if ((int)$product_id == (int)$products[$i]['id']) {
+        $in_cart_product_weight += $products[$i]['weight'] * $products[$i]['quantity'];
+      }
+    } // end FOR loop
+    return $in_cart_product_weight;
+  }
+
+/**
+ * calculate weight in cart for a category without subcategories
+ * USAGE:  $category_total_weight_cat = $this->in_cart_product_total_weight_category(9);
+ * USAGE:  $chk_category_cart_total_weight_cat = $_SESSION['cart']->in_cart_product_total_weight_category(9);
+ *
+ * @param integer $category_id
+ * @return float
+ */
+  function in_cart_product_total_weight_category($category_id) {
+    $products = $this->get_products();
+    $in_cart_product_weight = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      if ($products[$i]['category'] == $category_id) {
+        $in_cart_product_weight += $products[$i]['weight'] * $products[$i]['quantity'];
+      }
+    } // end FOR loop
+    return $in_cart_product_weight;
+  }
+
+/**
+ * calculate price in cart for a category without subcategories
+ * USAGE:  $category_total_price_cat = $this->in_cart_product_total_price_category(9);
+ * USAGE:  $chk_category_cart_total_price_cat = $_SESSION['cart']->in_cart_product_total_price_category(9);
+ *
+ * @param integer $category_id
+ * @return float
+ */
+  function in_cart_product_total_price_category($category_id) {
+    $products = $this->get_products();
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      $productsName = $products[$i]['name'];
+      $ppe = $products[$i]['final_price'];
+      $ppt = $ppe * $products[$i]['quantity'];
+      $productsPriceEach = $ppe + $products[$i]['onetime_charges'];
+      $productsPriceTotal = $ppt + $products[$i]['onetime_charges'];
+      if ($products[$i]['category'] == $category_id) {
+        $in_cart_product_price += $productsPriceTotal;
+      }
+    } // end FOR loop
+    return $in_cart_product_price;
+  }
+
+/**
+ * calculate quantity in cart for a category without subcategories
+ * USAGE:  $category_total_quantity_cat = $this->in_cart_product_total_quantity_category(9);
+ * USAGE:  $chk_category_cart_total_quantity_cat = $_SESSION['cart']->in_cart_product_total_quantity_category(9);
+ *
+ * @param integer $category_id
+ * @return float
+ */
+  function in_cart_product_total_quantity_category($category_id) {
+    $products = $this->get_products();
+//echo '<pre>'; echo print_r($products); echo '</pre>';
+    $in_cart_product_quantity = 0;
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      if ($products[$i]['category'] == $category_id) {
+        $in_cart_product_quantity += $products[$i]['quantity'];
+      }
+    } // end FOR loop
+    return $in_cart_product_quantity;
+  }
+
+/**
+ * calculate weight in cart for a category with or without subcategories
+ * USAGE:  $category_total_weight_cat = $this->in_cart_product_total_weight_category_sub(3);
+ * USAGE:  $chk_category_cart_total_weight_cat = $_SESSION['cart']->in_cart_product_total_weight_category_sub(3);
+ *
+ * @param integer $category_id
+ * @return float
+ */
+  function in_cart_product_total_weight_category_sub($category_id) {
+    $chk_cart_weight = 0;
+    if (zen_has_category_subcategories($category_id)) {
+      $subcategories_array = array();
+      $chk_cat = $category_id; // parent categories_id
+      zen_get_subcategories($subcategories_array, $chk_cat);
+      for ($i=0, $n=sizeof($subcategories_array); $i<$n; $i++ ) {
+        $chk_cart_weight += $this->in_cart_product_total_weight_category($subcategories_array[$i]);
+      }
+    } else {
+      $chk_cart_weight = $this->in_cart_product_total_weight_category($category_id);
+    }
+    return $chk_cart_weight;
+  }
+
+/**
+ * calculate price in cart for a category with or without subcategories
+ * USAGE:  $category_total_price_cat = $this->in_cart_product_total_price_category_sub(3);
+ * USAGE:  $chk_category_cart_total_price_cat = $_SESSION['cart']->in_cart_product_total_price_category_sub(3);
+ *
+ * @param integer $category_id
+ * @return float
+ */
+  function in_cart_product_total_price_category_sub($category_id) {
+    $chk_cart_price = 0;
+    if (zen_has_category_subcategories($category_id)) {
+      $subcategories_array = array();
+      $chk_cat = $category_id; // parent categories_id
+      zen_get_subcategories($subcategories_array, $chk_cat);
+      for ($i=0, $n=sizeof($subcategories_array); $i<$n; $i++ ) {
+        $chk_cart_price += $this->in_cart_product_total_price_category($subcategories_array[$i]);
+      }
+    } else {
+      $chk_cart_price = $this->in_cart_product_total_price_category($category_id);
+    }
+    return $chk_cart_price;
+  }
+
+/**
+ * calculate quantity in cart for a category with or without subcategories
+ * USAGE:  $category_total_quantity_cat = $this->in_cart_product_total_quantity_category_sub(3);
+ * USAGE:  $chk_category_cart_total_quantity_cat = $_SESSION['cart']->in_cart_product_total_quantity_category_sub(3);
+ *
+ * @param integer $category_id
+ * @return float
+ */
+  function in_cart_product_total_quantity_category_sub($category_id) {
+    $chk_cart_quantity = 0;
+    if (zen_has_category_subcategories($category_id)) {
+      $subcategories_array = array();
+      $chk_cat = $category_id; // parent categories_id
+      zen_get_subcategories($subcategories_array, $chk_cat);
+      for ($i=0, $n=sizeof($subcategories_array); $i<$n; $i++ ) {
+        $chk_cart_quantity += $this->in_cart_product_total_quantity_category($subcategories_array[$i]);
+      }
+    } else {
+      $chk_cart_quantity = $this->in_cart_product_total_quantity_category($category_id);
+    }
+    return $chk_cart_quantity;
+  }
+
 }
