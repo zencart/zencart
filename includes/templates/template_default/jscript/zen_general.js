@@ -70,7 +70,7 @@ function characterCount(field, count, maxchars) {
  * Concatenates fields used during checkout for expiration data entry when ajax is used to redraw the page
  */
 function concatExpiresFields(fields) {
-    return $(":input[name=" + fields[0] + "]").val() + $(":input[name=" + fields[1] + "]").val();
+    return jQuery(":input[name=" + fields[0] + "]").val() + jQuery(":input[name=" + fields[1] + "]").val();
 }
 
 /**
@@ -83,19 +83,19 @@ function collectsCardDataOnsite(paymentValue)
     data: {paymentValue: paymentValue}
   }).done(function( response ) {
   if (response.data === true) {
-    var str = $('form[name="checkout_payment"]').serializeArray();
+    var str = jQuery('form[name="checkout_payment"]').serializeArray();
 
     zcJS.ajax({
       url: "ajax.php?act=ajaxPayment&method=prepareConfirmation",
       data: str
     }).done(function( response ) {
-      $('#checkoutPayment').hide();
-      $('#navBreadCrumb').html(response.breadCrumbHtml);
-      $('#checkoutPayment').before(response.confirmationHtml);
-      $(document).attr('title', response.pageTitle);
+      jQuery('#checkoutPayment').hide();
+      jQuery('#navBreadCrumb').html(response.breadCrumbHtml);
+      jQuery('#checkoutPayment').before(response.confirmationHtml);
+      jQuery(document).attr('title', response.pageTitle);
     });
   } else {
-    $('form[name="checkout_payment"]')[0].submit();
+    jQuery('form[name="checkout_payment"]')[0].submit();
   }
 });
  return false;
