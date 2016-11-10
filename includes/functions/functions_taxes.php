@@ -161,7 +161,7 @@
 /**
  * Add tax to a products price based on whether we are displaying tax "in" the price
  */
-  function zen_add_tax($price, $tax) {
+  function zen_add_tax($price, $tax = 0) {
     global $currencies;
 
     if (IS_ADMIN_FLAG === true) {
@@ -182,7 +182,7 @@
 /**
  * Calculates Tax rounding the result
  */
-  function zen_calculate_tax($price, $tax) {
+  function zen_calculate_tax($price, $tax = 0) {
     return $price * $tax / 100;
   }
   
