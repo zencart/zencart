@@ -167,7 +167,7 @@
   }
 
  // Calculates Tax rounding the result
-  function zen_calculate_tax($price, $tax) {
+  function zen_calculate_tax($price, $tax = 0) {
     global $currencies;
     return $price * $tax / 100;
   }
