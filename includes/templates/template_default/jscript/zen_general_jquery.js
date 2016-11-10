@@ -6,12 +6,12 @@
  */
 
 // Shipping Estimator auto-submit form after selecting an address from address-book
-$(".autosubmit select, SELECT#seAddressPulldown").change(function() {
-    $(this).closest('form').submit();
+jQuery(".autosubmit select, SELECT#seAddressPulldown").change(function() {
+    jQuery(this).closest('form').submit();
 });
 
 /**
  * On multiple-product pages where cart-quantity is displayed, set focus on first item
  */
-$('form[name="multiple_products_cart_quantity"]').find(':input[type="number"]:enabled:visible:first, :input:text:enabled:visible:first').focus();
+jQuery('form[name="multiple_products_cart_quantity"]').find(':input[type="number"]:enabled:visible:first, :input:text:enabled:visible:first').focus();
 

@@ -184,16 +184,16 @@
 <input type="hidden" name="<?php echo $newField; ?>" value="">
 <?php if (!is_array($oldField)) { ?>
 <script>
-$(document).ready(function () {
-    $(":input[name='<?php echo $newField; ?>']").val($(":input[name='<?php echo $oldField; ?>']").val());
+jQuery(document).ready(function () {
+    jQuery(":input[name='<?php echo $newField; ?>']").val(jQuery(":input[name='<?php echo $oldField; ?>']").val());
 });
 </script>
 <?php } else { ?>
 
 <script>
-    $(document).ready(function () {
+    jQuery(document).ready(function () {
      var oldField = window['<?php echo $oldField['name']; ?>'](<?php echo $oldField['args']; ?>);
-     $(":input[name='<?php echo $newField; ?>']").val(oldField);
+     jQuery(":input[name='<?php echo $newField; ?>']").val(oldField);
     });
 </script>
 <?php } ?>
