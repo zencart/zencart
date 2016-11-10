@@ -9,6 +9,7 @@
             "homepage": "https://github.com/zencart/zencart/graphs/contributors"
         }
     ],
+    "__comment": "compatible with PHP 5.5-7.1",
     "require": {
         "php": ">=5.5"
     },
@@ -28,5 +29,9 @@
     "autoload-dev": {
         "classmap": ["testFramework"]
     },
-    "include-path": ["includes/"]
+    "include-path": ["includes/"],
+    "scripts": {
+        "tests": "phpunit --verbose -c testFramework/unittests/phpunit.xml",
+        "webtests": "phpunit --verbose -c testFramework/webtests/phpunit.xml --debug"
+    }
 }

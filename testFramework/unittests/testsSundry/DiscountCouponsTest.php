@@ -365,7 +365,7 @@ class testDiscountCoupons extends zcDiscountCouponTest
         $this->coupon->include_shipping = 'true';
         $this->coupon->process();
         $result = $this->coupon->output;
-        $this->assertTrue($result[0]['value'] == 33.25);
+        $this->assertTrue($result[0]['value'] == 39.00);
         $this->assertEquals($GLOBALS['order']->info['total'], 0);
         $this->assertEquals($GLOBALS['order']->info['shipping_cost'], 0);
     }
