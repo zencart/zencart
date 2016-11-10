@@ -53,7 +53,7 @@ class zen_categories_ul_generator {
         }
     }
     
-    function buildBranch($parent_id, $level, $submenu=true, $parent_link='')
+    function buildBranch($parent_id, $level = 0, $submenu=true, $parent_link='')
     {
         $result = sprintf($this->parent_group_start_string, ($submenu==true) ? ' class="level'. ($level+1) . '"' : '' );
         
