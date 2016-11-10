@@ -20,7 +20,7 @@
             <ul class="nav navbar-nav">
                 <?php foreach ($tplVars['adminMenuForUser'] as $menuKey => $pages) { ?>
                     <li class="dropdown">
-                        <a href="#" role="button" aria-haspopup="true"
+                        <a href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>" role="button" aria-haspopup="true"
                            aria-expanded="false"><?php echo $tplVars['menuTitles'][$menuKey] ?><span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
