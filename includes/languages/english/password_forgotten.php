@@ -18,3 +18,6 @@ define('EMAIL_PASSWORD_REMINDER_SUBJECT', STORE_NAME . ' - New Password');
 define('EMAIL_PASSWORD_REMINDER_BODY', 'A new password was requested from ' . $_SERVER['REMOTE_ADDR']  . '.' . "\n\n" . 'Your new password to \'' . STORE_NAME . '\' is:' . "\n\n" . '   %s' . "\n\nAfter you have logged in using the new password, you may change it by going to the 'My Account' area.");
 
 define('SUCCESS_PASSWORD_SENT', 'Thank you. If that email address is in our system, we will send password recovery instructions to that email address.');
+
+define('SUCCESS_PASSWORD_SENT_CONFIRM', 'Thank you.  We have sent password recovery instructions to that email address.');
+define('EMAIL_ADDRESS_NOT_FOUND', 'Sorry, we have no record of that email in our system.');
