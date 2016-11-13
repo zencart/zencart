@@ -39,7 +39,8 @@ function methodSelect(theMethod) {
 function submitonce()
 {
   var button = document.getElementById("btn_submit");
-  $("#btn_submit").replaceWith("<img id='btn_submit' src='includes/templates/template_default/images/processing.gif' border='0' alt='Processing' title='Processing'>");
+  if ($processingGif == undefined) $processingGif = '<img id="btn_submit" src="includes/templates/template_default/images/processing.gif" border="0" alt="Processing" title="Processing">';
+  $("#btn_submit").replaceWith($processingGif);
   button.style.cursor="wait";
   button.disabled = true;
   //setTimeout('button_timeout()', 4000);
