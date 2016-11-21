@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "jakoch/phantomjs-installer": "^2.1",
-        "phpunit/phpunit": "=4.8",
+        "phpunit/phpunit": ">4.8",
         "mikey179/vfsStream": ">1.6",
         "behat/behat": "^3.2",
         "behat/mink": "^1.7",
