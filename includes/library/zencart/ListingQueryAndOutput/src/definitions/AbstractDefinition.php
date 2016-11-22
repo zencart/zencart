@@ -117,7 +117,7 @@ abstract class AbstractDefinition extends \base
     {
         $showFilterForm = false;
         if (isset($this->tplVars['filter'])) {
-            $showFilterForm = count($this->tplVars['filter'] > 0);
+            $showFilterForm = count($this->tplVars['filter']) > 0;
         }
         $this->tplVars ['showFilterForm'] = $showFilterForm;
         $this->tplVars ['title'] = issetorArray($this->outputLayout, 'boxTitle', '');

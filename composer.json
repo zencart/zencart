@@ -14,10 +14,14 @@
         "php": ">=5.5"
     },
     "require-dev": {
+        "jakoch/phantomjs-installer": "^2.1",
         "phpunit/phpunit": ">4.8",
-        "phpdocumentor/phpdocumentor": ">=2.9",
         "mikey179/vfsStream": ">1.6",
-        "phpunit/phpunit-selenium": ">=1.2"
+        "behat/behat": "^3.2",
+        "behat/mink": "^1.7",
+        "behat/mink-goutte-driver": "^1.2",
+        "behat/mink-selenium2-driver": "^1.3",
+        "behat/mink-extension": "^2.2"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"],
@@ -30,8 +34,18 @@
         "classmap": ["testFramework"]
     },
     "include-path": ["includes/"],
+    "config": {
+        "bin-dir": "vendor/bin"
+    },
     "scripts": {
+        "post-install-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ],
+        "post-update-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ],
         "tests": "phpunit --verbose -c testFramework/unittests/phpunit.xml",
-        "webtests": "phpunit --verbose -c testFramework/webtests/phpunit.xml --debug"
+        "webtests": "phpunit --verbose -c testFramework/webtests/phpunit.xml --debug",
+        "behat": "vendor/bin/behat"
     }
 }

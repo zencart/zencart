@@ -1,0 +1,36 @@
+default:
+  autoload:
+    - %paths.base%/testFramework/behat/features/bootstrap
+  suites:
+    installer_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/testInstaller.feature ]
+      contexts: [ MainContext ]
+    taxzone_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/testTaxZones.feature ]
+      contexts: [ MainContext ]
+    customer_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/createCustomers.feature ]
+      contexts: [ MainContext ]
+    gv_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/giftVoucherPurchase.feature ]
+      contexts: [ MainContext ]
+    create_coupons_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/createCoupons.feature ]
+      contexts: [ MainContext ]
+    use_coupons_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/useCoupons.feature ]
+      contexts: [ MainContext ]
+    group_discount_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/groupDiscount.feature ]
+      contexts: [ MainContext ]
+    low_order_fee_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/lowOrderFee.feature ]
+      contexts: [ MainContext ]
+
+  extensions:
+    Behat\MinkExtension:
+      goutte:
+        guzzle_parameters:
+          verify: false
+      selenium2:
+        wd_host: "http://localhost:8643/wd/hub"
