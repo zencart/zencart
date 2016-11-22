@@ -3,6 +3,7 @@ Feature: Installer
 
   Scenario: Load the default page with a clean configure.php
     Then I should reset install
+    Then I wait "5"
     Given I am on "/"
     Then I should see "Hello. Thank you for loading Zen Cart"
 
