@@ -9,6 +9,7 @@ Feature: Gift Voucher Purchase Tests
     And I set a configuration value "MODULE_ORDER_TOTAL_GV_QUEUE", false
 
 
+  @javascript
   Scenario: Make a purchase with a gift voucher
 
     Given I do a standard customer login with <param>'default_customer_email', <param>'default_customer_password'
@@ -25,6 +26,7 @@ Feature: Gift Voucher Purchase Tests
     Then I click on the element with xpath "//*[@id='csNotifications']/form/div/input"
 
 
+  @javascript
   Scenario: Make a purchase with a gift voucher where credit does not cover
 
     Given I do a standard customer login with <param>'default_customer_email', <param>'default_customer_password'
@@ -36,8 +38,7 @@ Feature: Gift Voucher Purchase Tests
     Then I click on the element with xpath "//*[@id='paymentSubmit']/input"
     Then I should see "Please select a payment method"
 
-
-
+  @javascript
   Scenario: Make a purchase with a gift voucher where credit does not cover and with shipping tax
 
     Given I switch shipping tax "on"
@@ -53,6 +54,7 @@ Feature: Gift Voucher Purchase Tests
     Given I switch shipping tax "off"
 
 
+  @javascript
   Scenario: Make a purchase with a gift voucher using Swedish Kroner
     Given I set a configuration value "DEFAULT_CURRENCY", "SEK"
     Given I do a standard customer login with <param>'default_customer_email', <param>'default_customer_password'
@@ -65,6 +67,7 @@ Feature: Gift Voucher Purchase Tests
     Then I should see "SEK24,79"
     Given I set a configuration value "DEFAULT_CURRENCY", "USD"
 
+  @javascript
   Scenario: Send Gift Voucher using Swedish Kroner
     Given I set a configuration value "DEFAULT_CURRENCY", "SEK"
     Given I do a standard customer login with <param>'default_customer_email', <param>'default_customer_password'

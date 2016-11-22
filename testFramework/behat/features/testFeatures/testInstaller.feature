@@ -1,9 +1,9 @@
 Feature: Installer
   Test the Zen Cart Installer
 
+  @javascript
   Scenario: Load the default page with a clean configure.php
     Then I should reset install
-    Then I wait "5"
     Given I am on "/"
     Then I should see "Hello. Thank you for loading Zen Cart"
 
@@ -42,13 +42,14 @@ Feature: Installer
     And I press button "submit_button"
     Then I should see "Add Widget"
 
+  @javascript
   Scenario: Enable COD payment method
 
     Given I do a standard admin login with <param>"admin_user_main", <param>"admin_password_main"
     Then I visit "admin/index.php?cmd=modules&set=payment&module=cod"
     Then I press button by name "installButton"
 
-
+  @javascript
   Scenario: After Install, Check some Catalog Pages
     Given I am on "/"
     Then I should see "Sales Message Goes Here"
@@ -57,6 +58,6 @@ Feature: Installer
     Then I should see "CDROM Drives"
     And I should see "Keyboards"
 
-
+  @javascript
   Scenario: After Install, Enable Swedish Kroner
     Given I add swedish kroner

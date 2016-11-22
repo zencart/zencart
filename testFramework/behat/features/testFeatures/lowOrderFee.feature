@@ -1,6 +1,7 @@
 Feature: Low Order Fee
   Test the use of low order fees in catalog
 
+  @javascript
   Scenario: I Test low order fees
 
     Given I ensure gift voucher balance is "300" for customer "default_customer_email", "default_customer_password"

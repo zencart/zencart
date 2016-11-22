@@ -2,6 +2,7 @@ Feature: Customer Group Discounts
   Test the use of Group Discounts in catalog
 
 
+  @javascript
   Scenario: I Test group discounts
     Given I set customer "default_customer_email" to group discount id "1"
     Then I create a discount coupon "test10percent"

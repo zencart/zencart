@@ -1,6 +1,7 @@
 Feature: Customer Accounts
   Test the creation of customer accounts
 
+  @javascript
   Scenario: Create US Account
     Given I am on "/"
     And I follow "Log In"
@@ -19,6 +20,7 @@ Feature: Customer Accounts
     Then I click on the element with xpath "//*[@id='createAccountForm']/div/input"
     Then I should see "Your Account Has Been Created"
 
+  @javascript
   Scenario: Create UK Account
     Given I am on "/"
     And I follow "Log In"
@@ -37,6 +39,7 @@ Feature: Customer Accounts
     Then I click on the element with xpath "//*[@id='createAccountForm']/div/input"
     Then I should see "Your Account Has Been Created"
 
+  @javascript
   Scenario: Create Canada Account
     Given I am on "/"
     And I follow "Log In"

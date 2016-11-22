@@ -2,6 +2,7 @@ Feature: Customer Discount Coupons
   Test the use of coupons in catalog
 
 
+  @javascript
   Scenario: I Test tax non inclusive excluding shipping tax
     Given I do a standard customer login with <param>"default_customer_email", <param>"default_customer_password"
     Then I visit "index.php?main_page=shopping_cart&action=empty_cart"
@@ -62,9 +63,7 @@ Feature: Customer Discount Coupons
     And I should see "612.01"
     Then I press button "btn_submit"
 
-
-
-
+  @javascript
   Scenario: I Test tax inclusive excluding shipping tax
     Given I switch to tax "inclusive"
     Then I do a standard customer login with <param>"default_customer_email", <param>"default_customer_password"
@@ -130,6 +129,7 @@ Feature: Customer Discount Coupons
     Given I switch to tax "non-inclusive"
 
 
+  @javascript
   Scenario: I Test tax non-inclusive including shipping tax
     Given I switch item shipping tax "on"
 
@@ -179,6 +179,7 @@ Feature: Customer Discount Coupons
     Given I switch item shipping tax "off"
 
 
+  @javascript
   Scenario: I Test tax inclusive including shipping tax
     Given I switch item shipping tax "on"
     Given I switch to tax "inclusive"
@@ -233,6 +234,7 @@ Feature: Customer Discount Coupons
     Then I switch item shipping tax "off"
 
 
+  @javascript
   Scenario: I Test free shipping coupon
 
     Given I do a standard customer login with <param>"default_customer_email", <param>"default_customer_password"
