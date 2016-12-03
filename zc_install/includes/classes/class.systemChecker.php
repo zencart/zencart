@@ -332,8 +332,15 @@ class systemChecker
       {
         $result = TRUE;
       } else
-      {
-        $result = FALSE;
+      { // test again with redirects enabled
+	      $resultCurl = self::curlGetUrl($testPath, true);
+	      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
+	      {
+	        $result = TRUE;
+	      } else
+	      {
+	        $result = FALSE;
+	      }
       }
 
     } else
@@ -566,12 +573,12 @@ if ($errnum != 0) error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" .
     return false;
   }
 
-  function curlGetUrl( $url )
+  function curlGetUrl( $url , $follow_redirects = false)
   {
     $options = array(
         CURLOPT_RETURNTRANSFER => true,     // return web page
         CURLOPT_HEADER         => false,    // don't return headers
-        CURLOPT_FOLLOWLOCATION => false,    // follow redirects
+        CURLOPT_FOLLOWLOCATION => $follow_redirects,    // follow redirects
         CURLOPT_ENCODING       => "",       // handle all encodings
         CURLOPT_AUTOREFERER    => true,     // set referer on redirect
         CURLOPT_CONNECTTIMEOUT => 3,        // timeout on connect
