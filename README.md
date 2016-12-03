@@ -6,7 +6,7 @@
 
 You are currently viewing code for the upcoming Zen Cart&reg; v1.6.0 release, which brings increased flexibility for customizing each storeowner's own preferences.
 
-The latest stable version is currently [v1.5.5a](https://github.com/zencart/zencart/releases).
+The latest stable version is currently [v1.5.5b](https://github.com/zencart/zencart/releases).
 
 [![Download Latest Official Zen Cart&reg; Release](https://a.fsdn.com/con/app/sf-download-button)<br>Download Latest Official Zen Cart&reg; Release](http://sourceforge.net/projects/zencart/files/latest/download)
 
