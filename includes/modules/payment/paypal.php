@@ -267,7 +267,7 @@ class paypal extends base {
                    'item_name' => MODULE_PAYMENT_PAYPAL_PURCHASE_DESCRIPTION_TITLE,
                    'item_number' => MODULE_PAYMENT_PAYPAL_PURCHASE_DESCRIPTION_ITEMNUM,
                    //'num_cart_items' => sizeof($order->products),
-                   'amount' => number_format($this->transaction_amount, $currencies->get_decimal_places($my_currency)),
+                   'amount' => round($this->transaction_amount, $currencies->get_decimal_places($my_currency)),
                    'shipping' => '0.00',
                     );
     if (MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE == 'true') $optionsAggregate['tax'] = '0.00';
