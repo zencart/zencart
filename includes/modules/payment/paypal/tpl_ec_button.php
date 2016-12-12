@@ -5,7 +5,7 @@
  * @package paymentMethod
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Dec 30 13:42:03 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: mc12345678  Wed Aug 24 20:20:09 2016 -0500 Modified in v1.6.0 $
  */
 
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
@@ -60,7 +60,18 @@ if ($paypalec_enabled) {
     include zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/','paypalwpp.php', 'false');
 ?>
 <div id="PPECbutton" class="buttonRow">
+<?php 
+  if ( defined('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE') && MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE == 'InContext' 
+    && defined('MODULE_PAYMENT_PAYPALWPP_MERCHANTID')    && MODULE_PAYMENT_PAYPALWPP_MERCHANTID    != '' 
+    && defined('MODULE_PAYMENT_PAYPALWPP_STATUS')        && MODULE_PAYMENT_PAYPALWPP_STATUS        == 'True') { 
+?>
+  <a href="<?php echo zen_href_link('ipn_main_handler.php', 'type=ec', 'SSL', true, true, true); ?>" id="ecicButton" data-paypal-button="true" data-paypal-id="<?php echo MODULE_PAYMENT_PAYPALWPP_MERCHANTID; ?>"><noscript><img src="<?php echo MODULE_PAYMENT_PAYPALWPP_EC_BUTTON_IMG; ?>" alt="<?php echo MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT; ?>" id="ecButton"></noscript></a>
+<?php
+  } else { 
+?>
   <a href="<?php echo zen_href_link('ipn_main_handler.php', 'type=ec', 'SSL', true, true, true); ?>"><img src="<?php echo MODULE_PAYMENT_PAYPALWPP_EC_BUTTON_IMG ?>" alt="<?php echo MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT; ?>" id="ecButton"></a>
+<?php
+  }?>
 </div>
 <?php
 }
