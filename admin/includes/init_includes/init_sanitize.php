@@ -211,7 +211,7 @@ $sanitizer->addComplexSanitization($group);
 $group = array('customers_email_address');
 $sanitizer->addSimpleSanitization('SANITIZE_EMAIL', $group);
 
-$group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text', 'pages_html_text', 'comments');
+$group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text', 'pages_html_text', 'comments', 'products_options_comment');
 $sanitizer->addSimpleSanitization('PRODUCT_DESC_REGEX', $group);
 
 $group = array('products_url');
