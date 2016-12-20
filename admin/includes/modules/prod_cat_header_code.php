@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: prod_cat_header_code.php 3009 2006-02-11 15:41:10Z wilt $
+ * @version $Id: prod_cat_header_code.php  Modified in v1.5.5c$
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -12,12 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
-
-  if (isset($_GET['product_type'])) {
-    $product_type = zen_db_prepare_input($_GET['product_type']);
-  } else {
-    $product_type='1';
-  }
+  $product_type = (isset($_POST['products_id']) ? zen_get_products_type($_POST['products_id']) : isset($_GET['product_type']) ? $_GET['product_type'] : 1);
 
   $type_admin_handler = $zc_products->get_admin_handler($product_type);
 
