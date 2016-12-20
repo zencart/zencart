@@ -383,6 +383,7 @@
     $db->Execute("delete from " . TABLE_CUSTOMERS_INFO . " where customers_info_id = " . $customer_id);
     $db->Execute("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = " . $customer_id);
     $db->Execute("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = " . $customer_id);
+    $db->Execute("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . " where customers_id = " . $customer_id);
     $db->Execute("delete from " . TABLE_WHOS_ONLINE . " where customer_id = " . $customer_id);
     zen_record_admin_activity('Customer with customer ID ' . $customer_id . ' deleted.', 'warning');
 
