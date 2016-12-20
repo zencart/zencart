@@ -33,7 +33,6 @@
       } else {
         $delete_linked = 'true';
       }
-      $product_type = zen_get_products_type($_POST['products_id']);
         if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php')) {
           require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php');
          } else {
