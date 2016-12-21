@@ -5,7 +5,7 @@
  * @package initSystem
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt Tue May 31 18:26:42 2016 +0000 Modified in v1.5.5a $
+ * @version $Id: Author: zcwilt Tue May 31 18:26:42 2016 +0000 Modified in v1.5.5c $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -205,7 +205,7 @@ $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
 $sanitizer->addSimpleSanitization('META_TAGS', $group);
 
-$group = array('customers_email_address' => array('sanitizerType' => 'SANITIZE_EMAIL_AUDIENCE', 'method' => 'post', 'pages' => array('mail')));
+$group = array('customers_email_address' => array('sanitizerType' => 'SANITIZE_EMAIL_AUDIENCE', 'method' => 'post', 'pages' => array('coupon_admin', 'gv_mail', 'mail')));
 $sanitizer->addComplexSanitization($group);
 
 $group = array('customers_email_address');
