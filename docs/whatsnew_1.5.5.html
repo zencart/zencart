@@ -4,7 +4,7 @@
  * @package documentation
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 13:03:28 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: DrByte  Dec 26 2016 -0500 New in v1.5.5 $
  */
 //-->
 <html>
@@ -143,6 +143,20 @@ OSI Certified is a certification mark of the Open Source Initiative.
   various tables and may not be affected by this change.)</p>
   <p>A few CSS changes were made in template_default to change IDs of repeating elements to be classes instead.
   Of note <span class="code">#cartDisplay</span> is now <span class="code">.cartDisplay</span>, and <span class="code">#cartImage</span> is <span class="code">.cartImage</span></p>
+
+<h1>v1.5.5c vs v1.5.5b</h1>
+<h3>Since the release of v1.5.5b on 2-Nov-2016, the following changes have been applied to become v1.5.5c ...</h3>
+<ul>
+<li>Fix serious PHPMailer bug (upgraded to 5.2.19)</li>
+<li>Fix some variable strict-type rule enforcement issues for better PHP 7 compatibility</li>
+<li>Fix sanitizer (admin) overzealous cleaning for Attribute Option Comments</li>
+<li>Fixed bug preventing sending Coupon and GV emails to "all customers"</li>
+<li>Fixed rarely-triggered bug with product-type overrides for delete/copy logic</li>
+<li>Fixed problem where deleting a customer wouldn't delete old product-notification requests associated with that customer</li>
+<li>Fixed PayPal Standard to no longer transmit a comma as thousands-separator. (PayPal is being more strict about this in 2017.)</li>
+<li>Fixed shopping-basket quantity alert problem where changing quantities didn't always fire if min/mix rules were set</li>
+<li>Make null-exception treatment consistent in admin to match catalog</li>
+</ul>
 
 <h1>v1.5.5b vs v1.5.5a</h1>
 <h3>Since the release of v1.5.5a on 5-May-2016, the following changes have been applied to become v1.5.5b ...</h3>
