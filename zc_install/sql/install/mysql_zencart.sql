@@ -207,7 +207,7 @@ CREATE TABLE authorizenet (
   response_code int(1) NOT NULL default '0',
   response_text varchar(255) NOT NULL default '',
   authorization_type varchar(50) NOT NULL default '',
-  transaction_id bigint(20) default NULL,
+  transaction_id varchar(32) default NULL,
   sent longtext NOT NULL,
   received longtext NOT NULL,
   time varchar(50) NOT NULL default '',
