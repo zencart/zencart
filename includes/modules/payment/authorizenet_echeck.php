@@ -716,9 +716,9 @@ class authorizenet_echeck extends base {
    */
   function tableCheckup() {
     global $db, $sniffer;
-    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'bigint(20)', true) : -1;
+    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'varchar(32)', true) : -1;
     if ($fieldOkay1 !== true) {
-      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " CHANGE transaction_id transaction_id bigint(20) default NULL");
+      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " CHANGE transaction_id transaction_id varchar(32) default NULL");
     }
   }
   /**
