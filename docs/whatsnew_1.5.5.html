@@ -144,6 +144,14 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <p>A few CSS changes were made in template_default to change IDs of repeating elements to be classes instead.
   Of note <span class="code">#cartDisplay</span> is now <span class="code">.cartDisplay</span>, and <span class="code">#cartImage</span> is <span class="code">.cartImage</span></p>
 
+<h1>v1.5.5d vs v1.5.5c</h1>
+<h3>Since the release of v1.5.5c on 26-Dec-2016, the following changes have been applied to become v1.5.5d ...</h3>
+<ul>
+<li>Upgrade PHPMailer from 5.2.19 to 5.2.21 to fix critical security bug CVE-2016-10045</li>
+<li>Update Authorize.net storage field type in database to accommodate different values returned by Authnet emulator gateways using these modules</li>
+<li>Fix zc_install to prevent DB_CHARSET from being set to blank during upgrades when upgrading v1.3.x configure.php files to new format</li>
+</ul>
+
 <h1>v1.5.5c vs v1.5.5b</h1>
 <h3>Since the release of v1.5.5b on 2-Nov-2016, the following changes have been applied to become v1.5.5c ...</h3>
 <ul>
