@@ -63,7 +63,7 @@ update orders set cc_cvv = '' where cc_cvv != '' and orders_status != 1;
 # force USPS module into production mode if not already
 UPDATE configuration SET configuration_value = 'production' where configuration_key = 'MODULE_SHIPPING_USPS_SERVER';
 
-ALTER TABLE authorizenet CHANGE transaction_id transaction_id bigint(20) default NULL;
+#ALTER TABLE authorizenet CHANGE transaction_id transaction_id bigint(20) default NULL;
 ALTER TABLE paypal CHANGE COLUMN notify_version notify_version varchar(6) NOT NULL default '';
 
 ALTER TABLE orders_products ADD INDEX idx_prod_id_orders_id_zen (products_id,orders_id);
