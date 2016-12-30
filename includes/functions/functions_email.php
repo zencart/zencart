@@ -183,7 +183,7 @@
 
       // now lets build the mail object with the phpmailer class
       $mail = new PHPMailer();
-      $mail->XMailer = 'PHPMailer '. $mail->Version . ' for Zen Cart';
+      $mail->XMailer = ''; //'PHPMailer '. $mail->Version . ' for Zen Cart';
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
       $mail->SetLanguage($lang_code, DIR_FS_CATALOG . DIR_WS_CLASSES . 'support/');
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";
