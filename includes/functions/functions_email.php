@@ -352,6 +352,7 @@
       // If emails are being rejected, comment out the following line and try again:
       $mail->Hostname = defined('EMAIL_HOSTNAME') ? EMAIL_HOSTNAME : $defaultHostname;
 
+      // Ready to send. Observer hook here to allow last-minute rules to be applied.
       $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', array($mail), $mail);
       /**
        * Send the email. If an error occurs, trap it and display it in the messageStack
