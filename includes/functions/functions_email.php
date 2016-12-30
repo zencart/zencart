@@ -192,6 +192,8 @@
 
       // now lets build the mail object with the phpmailer class
       $mail = new PHPMailer();
+      // optionally intercept to use something like XOAUTH2 for Google, using an observer which watches the following hook, and replaces $mail with an alterate
+      $zco_notifier->notify('NOTIFY_EMAIL_INTERCEPT_MAILER_OBJECT', array(), $mail);
 
       // hide the X-Mailer header:
       $mail->XMailer = ''; //'PHPMailer '. $mail->Version . ' for Zen Cart';
