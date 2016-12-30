@@ -29,7 +29,7 @@
 
 /**
  * If you need to force an authentication protocol, enter appropriate option here: 'ssl' or 'tls'
- * Note that selecting a gmail server or port 465 will automatically select 'ssl' for you.
+ * Note that selecting a gmail server or port 587 will automatically select 'tls' for you.
  */
   if (!defined('SMTPAUTH_EMAIL_PROTOCOL')) define('SMTPAUTH_EMAIL_PROTOCOL', 'none');
 
@@ -199,8 +199,8 @@
         case ('Gmail'):
           $mail->IsSMTP();
           $mail->SMTPAuth = true;
-          $mail->SMTPSecure = 'ssl';
-          $mail->Port = 465;
+          $mail->SMTPSecure = 'tls';
+          $mail->Port = 587;
           $mail->Host = 'smtp.gmail.com';
           $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
@@ -212,9 +212,9 @@
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           $mail->Host = (trim(EMAIL_SMTPAUTH_MAIL_SERVER) != '') ? trim(EMAIL_SMTPAUTH_MAIL_SERVER) : 'localhost';
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
-          if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 465;
+          if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 587;
           //set encryption protocol to allow support for secured email protocols
-          if ($mail->Port == '465' || $mail->Host == 'smtp.gmail.com') $mail->SMTPSecure = 'ssl';
+          if ($mail->Port == '465') $mail->SMTPSecure = 'ssl';
           if ($mail->Port == '587') $mail->SMTPSecure = 'tls';
           if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
             $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
