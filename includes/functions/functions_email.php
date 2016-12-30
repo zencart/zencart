@@ -190,10 +190,7 @@
       if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD != '') $mail->Encoding = EMAIL_ENCODING_METHOD;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
       if ((int)EMAIL_SYSTEM_DEBUG > 4 ) $mail->Debugoutput = 'error_log';
-//       $mail->WordWrap = 76;    // set word wrap to 76 characters
 
-      // set proper line-endings based on switch ... important for windows vs linux hosts:
-//       $mail->LE = (EMAIL_LINEFEED == 'CRLF') ? "\r\n" : "\n";
 
       switch (EMAIL_TRANSPORT) {
         case ('Gmail'):
@@ -219,13 +216,11 @@
           if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
             $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
           }
-//           $mail->LE = "\r\n";
           break;
         case 'smtp':
           $mail->IsSMTP();
           $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
-//           $mail->LE = "\r\n";
           break;
         case 'PHP':
           $mail->IsMail();
@@ -235,7 +230,6 @@
           break;
         case 'sendmail':
         case 'sendmail-f':
-//           $mail->LE = "\n";
         default:
           $mail->IsSendmail();
           if (defined('EMAIL_SENDMAIL_PATH') && file_exists(trim(EMAIL_SENDMAIL_PATH))) $mail->Sendmail = trim(EMAIL_SENDMAIL_PATH);
