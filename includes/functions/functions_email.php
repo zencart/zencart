@@ -2,25 +2,35 @@
 /**
  * functions_email.php
  * Processes all outbound email from Zen Cart
- * Hooks into phpMailer class for actual email encoding and sending
+ * Hooks into PHPMailer class for actual email encoding and sending
  *
  * @package functions
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Modified in v1.6.0 $
+ * @version GIT: $Id: Author: drbyte  Modified in v1.6.0 $
+ */
+/**
+ * ABOUT EMAIL TRANSPORT METHOD:
+ * We recommend using SMTPAUTH for the Email Transport Method, as it's the best balance between security and maximum deliverability to your recipients.
+ * If using "PHP" transport method, the SMTP Server or other mail application must be configured correctly in server's php.ini, else will not work.
  */
 
 /**
  * Set email system debugging off or on
  * 0=off
- * 1=show SMTP status errors
- * 2=show SMTP server responses
- * 4=show SMTP readlines if applicable
- * 5=maximum information, and output it to error_log
+ * 1=show client-to-server messages only. Don't use this - it's very unlikely to tell you anything useful.
+ * 2=show client-to-server and server-to-client messages - this is usually the setting you want
+ * 3=As 2, but also show details about the initial connection; only use this if you're having trouble connecting (e.g. connection timing out)
+ * 4=As 3, but also shows detailed low-level traffic. Only really useful for analysing protocol-level bugs, very verbose, probably not what you need.
+ * 5=As 4, maximum information, and output it to error_log
  * 'preview' to show HTML-emails on-screen while sending
  */
   if (!defined('EMAIL_SYSTEM_DEBUG')) define('EMAIL_SYSTEM_DEBUG', 0);
+
+/**
+ * Whether to support attachments or not. Default is true.
+ */
   if (!defined('EMAIL_ATTACHMENTS_ENABLED')) define('EMAIL_ATTACHMENTS_ENABLED', true);
 /**
  * enable embedded image support
@@ -35,7 +45,6 @@
 
 /**
  * Send email. This is the central mail function.
- * If using "PHP" transport method, the SMTP Server or other mail application should be configured correctly in server's php.ini
  *
  * @param string $to_name           The name of the recipient, e.g. "Jim Johanssen"
  * @param string $to_email_address  The email address of the recipient, e.g. john.smith@hzq.com
@@ -183,7 +192,11 @@
 
       // now lets build the mail object with the phpmailer class
       $mail = new PHPMailer();
+
+      // hide the X-Mailer header:
       $mail->XMailer = ''; //'PHPMailer '. $mail->Version . ' for Zen Cart';
+
+      // Set mailer object parameters
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
       $mail->SetLanguage($lang_code, DIR_FS_CATALOG . DIR_WS_CLASSES . 'support/');
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";
@@ -211,8 +224,8 @@
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
           if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 587;
           //set encryption protocol to allow support for secured email protocols
-          if ($mail->Port == '465') $mail->SMTPSecure = 'ssl';
-          if ($mail->Port == '587') $mail->SMTPSecure = 'tls';
+          if ($mail->Port == 465) $mail->SMTPSecure = 'ssl';
+          if ($mail->Port == 587) $mail->SMTPSecure = 'tls';
           if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
             $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
           }
