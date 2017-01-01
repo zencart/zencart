@@ -47,10 +47,10 @@ branches:
 
 before_script:
   - touch includes/configure.php
-  - touch admin/includes/configure.php
   # php
 #  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # mysql
+  - mysql --version
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
   # set up apache server and vhost
 #  - bash testFramework/setup/do-apache.sh
