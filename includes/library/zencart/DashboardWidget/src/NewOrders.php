@@ -24,7 +24,7 @@ class NewOrders extends AbstractWidget
   {
     global $db;
     $tplVars = array();
-    $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total 
+    $orders = $db->Execute("select o.orders_id, o.customers_name, o.customers_id, o.date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total 
          from " . TABLE_ORDERS . " o 
          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') 
          order by orders_id DESC 
@@ -34,7 +34,7 @@ class NewOrders extends AbstractWidget
       $name = $orders->fields['customers_name'];
       $order_value = $orders->fields['order_total'];
       $order_date = zen_date_short($orders->fields['date_purchased']);
-      $tplVars['content'][] = array('text'=> '<a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '">' . $name . '</a><br />' . $order_date, 'value'=>$order_value);
+      $tplVars['content'][] = array('text'=> '<a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id']) . '">' . $name . '</a><br />' . $order_date, 'value'=>$order_value);
       $orders->MoveNext();
     }
     return $tplVars;
