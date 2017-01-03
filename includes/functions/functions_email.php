@@ -2,25 +2,35 @@
 /**
  * functions_email.php
  * Processes all outbound email from Zen Cart
- * Hooks into phpMailer class for actual email encoding and sending
+ * Hooks into PHPMailer class for actual email encoding and sending
  *
  * @package functions
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Modified in v1.6.0 $
+ * @version GIT: $Id: Author: drbyte  Modified in v1.6.0 $
+ */
+/**
+ * ABOUT EMAIL TRANSPORT METHOD:
+ * We recommend using SMTPAUTH for the Email Transport Method, as it's the best balance between security and maximum deliverability to your recipients.
+ * If using "PHP" transport method, the SMTP Server or other mail application must be configured correctly in server's php.ini, else will not work.
  */
 
 /**
  * Set email system debugging off or on
  * 0=off
- * 1=show SMTP status errors
- * 2=show SMTP server responses
- * 4=show SMTP readlines if applicable
- * 5=maximum information, and output it to error_log
+ * 1=show client-to-server messages only. Don't use this - it's very unlikely to tell you anything useful.
+ * 2=show client-to-server and server-to-client messages - this is usually the setting you want
+ * 3=As 2, but also show details about the initial connection; only use this if you're having trouble connecting (e.g. connection timing out)
+ * 4=As 3, but also shows detailed low-level traffic. Only really useful for analysing protocol-level bugs, very verbose, probably not what you need.
+ * 5=As 4, maximum information, and output it to error_log
  * 'preview' to show HTML-emails on-screen while sending
  */
   if (!defined('EMAIL_SYSTEM_DEBUG')) define('EMAIL_SYSTEM_DEBUG', 0);
+
+/**
+ * Whether to support attachments or not. Default is true.
+ */
   if (!defined('EMAIL_ATTACHMENTS_ENABLED')) define('EMAIL_ATTACHMENTS_ENABLED', true);
 /**
  * enable embedded image support
@@ -29,13 +39,12 @@
 
 /**
  * If you need to force an authentication protocol, enter appropriate option here: 'ssl' or 'tls'
- * Note that selecting a gmail server or port 465 will automatically select 'ssl' for you.
+ * Note that selecting a gmail server or port 587 will automatically select 'tls' for you.
  */
   if (!defined('SMTPAUTH_EMAIL_PROTOCOL')) define('SMTPAUTH_EMAIL_PROTOCOL', 'none');
 
 /**
  * Send email. This is the central mail function.
- * If using "PHP" transport method, the SMTP Server or other mail application should be configured correctly in server's php.ini
  *
  * @param string $to_name           The name of the recipient, e.g. "Jim Johanssen"
  * @param string $to_email_address  The email address of the recipient, e.g. john.smith@hzq.com
@@ -183,24 +192,27 @@
 
       // now lets build the mail object with the phpmailer class
       $mail = new PHPMailer();
-      $mail->XMailer = 'PHPMailer '. $mail->Version . ' for Zen Cart';
+      // optionally intercept to use something like XOAUTH2 for Google, using an observer which watches the following hook, and replaces $mail with an alterate
+      $zco_notifier->notify('NOTIFY_EMAIL_INTERCEPT_MAILER_OBJECT', array(), $mail);
+
+      // hide the X-Mailer header:
+      $mail->XMailer = ''; //'PHPMailer '. $mail->Version . ' for Zen Cart';
+
+      // Set mailer object parameters
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
       $mail->SetLanguage($lang_code, DIR_FS_CATALOG . DIR_WS_CLASSES . 'support/');
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";
       if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD != '') $mail->Encoding = EMAIL_ENCODING_METHOD;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
       if ((int)EMAIL_SYSTEM_DEBUG > 4 ) $mail->Debugoutput = 'error_log';
-//       $mail->WordWrap = 76;    // set word wrap to 76 characters
 
-      // set proper line-endings based on switch ... important for windows vs linux hosts:
-//       $mail->LE = (EMAIL_LINEFEED == 'CRLF') ? "\r\n" : "\n";
 
       switch (EMAIL_TRANSPORT) {
         case ('Gmail'):
           $mail->IsSMTP();
           $mail->SMTPAuth = true;
-          $mail->SMTPSecure = 'ssl';
-          $mail->Port = 465;
+          $mail->SMTPSecure = 'tls';
+          $mail->Port = 587;
           $mail->Host = 'smtp.gmail.com';
           $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
@@ -212,20 +224,18 @@
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           $mail->Host = (trim(EMAIL_SMTPAUTH_MAIL_SERVER) != '') ? trim(EMAIL_SMTPAUTH_MAIL_SERVER) : 'localhost';
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
-          if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 465;
+          if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 587;
           //set encryption protocol to allow support for secured email protocols
-          if ($mail->Port == '465' || $mail->Host == 'smtp.gmail.com') $mail->SMTPSecure = 'ssl';
-          if ($mail->Port == '587') $mail->SMTPSecure = 'tls';
+          if ($mail->Port == 465) $mail->SMTPSecure = 'ssl';
+          if ($mail->Port == 587) $mail->SMTPSecure = 'tls';
           if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
             $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
           }
-//           $mail->LE = "\r\n";
           break;
         case 'smtp':
           $mail->IsSMTP();
           $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
-//           $mail->LE = "\r\n";
           break;
         case 'PHP':
           $mail->IsMail();
@@ -235,7 +245,6 @@
           break;
         case 'sendmail':
         case 'sendmail-f':
-//           $mail->LE = "\n";
         default:
           $mail->IsSendmail();
           if (defined('EMAIL_SENDMAIL_PATH') && file_exists(trim(EMAIL_SENDMAIL_PATH))) $mail->Sendmail = trim(EMAIL_SENDMAIL_PATH);
@@ -343,6 +352,7 @@
       // If emails are being rejected, comment out the following line and try again:
       $mail->Hostname = defined('EMAIL_HOSTNAME') ? EMAIL_HOSTNAME : $defaultHostname;
 
+      // Ready to send. Observer hook here to allow last-minute rules to be applied.
       $zco_notifier->notify('NOTIFY_EMAIL_READY_TO_SEND', array($mail), $mail);
       /**
        * Send the email. If an error occurs, trap it and display it in the messageStack
