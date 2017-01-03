@@ -772,7 +772,7 @@ class order extends base {
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
                             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . zen_get_ip_address(),
-                            'order_weight' => $this->info['order_weight'],
+                            'order_weight' => $this->info['order_weight'] ?: 0, // can't insert empty string into float field
                             'language_code' => $this->info['language_code'],
                             );
 
