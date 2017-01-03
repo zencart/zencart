@@ -50,8 +50,8 @@ class ReportStatsCustomers extends AbstractLeadDefinition
                     'fkeyFieldRight' => 'orders_id',
                 ),
             ),
-            'selectList' => array('sum(op.products_quantity * op.final_price)+sum(op.onetime_charges)  as ordersum'),
-            'groupBys' => array('customers_id'),
+            'selectList' => array('c.customers_id, c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price)+sum(op.onetime_charges)  as ordersum'),
+            'groupBys' => array('customers_id, customers_firstname, customers_lastname'),
             'orderBys' => array(array('field' => 'ordersum DESC')),
             'isPaginated' => true,
             'pagination' => array(

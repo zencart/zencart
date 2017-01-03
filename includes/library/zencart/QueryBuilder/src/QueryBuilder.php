@@ -75,7 +75,9 @@ class QueryBuilder extends \base
             $this->initParts($listingQuery);
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSQUERY_START');
-        $this->query ['select'] = "SELECT " . (issetorArray($listingQuery, 'isDistinct', false) ? ' DISTINCT ' : '') . $this->parts ['mainTableAlias'] . ".*";
+        $this->query ['select'] = "SELECT " . (issetorArray($listingQuery, 'isDistinct', false) ? ' DISTINCT ' : '');
+        if (count($this->parts ['groupBys']) == 0) $this->query ['select'] .= $this->parts ['mainTableAlias'] . ".*";
+        $this->processSelectList();
         $this->preProcessJoins();
         $this->query ['joins'] = '';
         $this->query ['table'] = ' FROM ';
@@ -84,7 +86,6 @@ class QueryBuilder extends \base
         $this->processWhereClause();
         $this->processGroupBys();
         $this->processOrderBys();
-        $this->processSelectList();
         $this->setFinalQuery($listingQuery);
         $this->processBindVars();
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSQUERY_END');
@@ -315,7 +316,8 @@ class QueryBuilder extends \base
             return;
         }
         foreach ($this->parts ['selectList'] as $selectList) {
-            $this->query ['select'] .= ", " . $selectList;
+            if (trim($this->query ['select']) != 'SELECT') $this->query ['select'] .= ", ";
+            $this->query ['select'] .= $selectList;
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSSELECTLIST_END');
     }
