@@ -2,60 +2,56 @@
 use ZenCart\AdminUser\AdminUser;
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
 require('includes/application_bootstrap.php');
 
-if (!isset($_GET['cmd']))
-{
-    $cmd = str_replace('.php', '', basename($_SERVER['SCRIPT_FILENAME']));
-    $_GET['cmd'] = $cmd;
+$cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'index';
 
+if (!isset($cmd)) {
+    $cmd = str_replace('.php', '', basename($_SERVER['SCRIPT_FILENAME']));
     // Only redirect if not a request for "index.php"
     if($cmd != 'index') {
         require('includes/application_top.php');
         zen_redirect(zen_admin_href_link(str_replace('.php', '', basename($_SERVER ['SCRIPT_FILENAME'])), zen_get_all_get_params()));
     }
-
-    // Populate the command and continue
-    unset($cmd);
 }
-$controllerCommand = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET ['cmd']);
-$foundAction = FALSE;
-if ($controllerCommand != $_GET['cmd'])
-{
+$controllerCommand = preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd);
+$foundAction = false;
+if ($controllerCommand != $cmd) {
     $controllerCommand = 'index';
 }
 $controllerName = 'ZenCart\\Controllers\\'. ucfirst(zcCamelize($controllerCommand, true));
 $controllerFile =  DIR_CATALOG_LIBRARY . URL_CONTROLLERS . '/admin/' . ucfirst(zcCamelize($controllerCommand, true)) . '.php';
-if (file_exists($controllerFile))
-{
+if (file_exists($controllerFile)) {
     require('includes/application_top.php');
     require_once ($controllerFile);
-    if (class_exists($controllerName))
-    {
-        $foundAction = TRUE;
+    if (class_exists($controllerName)) {
+        $foundAction = true;
         $actionClass = $di->newInstance($controllerName);
         $response = $actionClass->dispatch();
         $actionClass->handleResponse($response);
     }
 }
-if ($foundAction)
-{
-    die(0);
-} else
-{
-    require(preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET ['cmd']) . '.php');
+if ($foundAction) {
+    exit(0);
+} else {
+    require(preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd) . '.php');
 }
-function zcCamelize($rawName, $camelFirst = FALSE)
+
+/**
+ * @param $rawName
+ * @param bool $camelFirst
+ * @return mixed
+ */
+function zcCamelize($rawName, $camelFirst = false)
 {
     if ($rawName == "")
         return $rawName;
-    if ($camelFirst)
-    {
+    if ($camelFirst) {
         $rawName[0] = strtoupper($rawName[0]);
     }
     return preg_replace_callback('/[_-]([0-9,a-z])/', create_function('$matches', 'return strtoupper($matches[1]);'), $rawName);
