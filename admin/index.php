@@ -11,14 +11,6 @@ require('includes/application_bootstrap.php');
 
 $cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'index';
 
-if (!isset($cmd)) {
-    $cmd = str_replace('.php', '', basename($_SERVER['SCRIPT_FILENAME']));
-    // Only redirect if not a request for "index.php"
-    if($cmd != 'index') {
-        require('includes/application_top.php');
-        zen_redirect(zen_admin_href_link(str_replace('.php', '', basename($_SERVER ['SCRIPT_FILENAME'])), zen_get_all_get_params()));
-    }
-}
 $controllerCommand = preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd);
 $foundAction = false;
 if ($controllerCommand != $cmd) {
