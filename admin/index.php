@@ -11,23 +11,56 @@ require('includes/application_bootstrap.php');
 
 $cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'index';
 
+$controllerMap = [
+    'countries' => ['type' => 'lead'],
+    'group_pricing' => ['type' => 'lead'],
+    'currencies' => ['type' => 'lead'],
+    'zones' => ['type' => 'lead'],
+    'geo_zones' => ['type' => 'lead'],
+    'geo_zones_detail' => ['type' => 'lead'],
+    'tax_classes' => ['type' => 'lead'],
+    'tax_rates' => ['type' => 'lead'],
+    'languages' => ['type' => 'lead'],
+    'orders_status' => ['type' => 'lead'],
+    'record_artists' => ['type' => 'lead'],
+    'record_company' => ['type' => 'lead'],
+    'music_genre' => ['type' => 'lead'],
+    'media_manager' => ['type' => 'lead'],
+    'media_manager_clips' => ['type' => 'lead'],
+    'media_manager_products' => ['type' => 'lead'],
+    'media_types' => ['type' => 'lead'],
+    'dup_models' => ['type' => 'lead'],
+    'gv_queue' => ['type' => 'lead'],
+    'gv_sent' => ['type' => 'report'],
+    'stats_customers' => ['type' => 'report'],
+    'stats_customers_referrals' => ['type' => 'report'],
+    'stats_products_lowstock' => ['type' => 'report'],
+    'stats_products_purchased' => ['type' => 'report'],
+    'stats_products_viewed' => ['type' => 'report'],
+    'index' => ['type' => 'admin'],
+    'server_info' => ['type' => 'info'],
+    'system_inspection' => ['type' => 'info'],
+];
+
+
 $controllerCommand = preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd);
 $foundAction = false;
 if ($controllerCommand != $cmd) {
     $controllerCommand = 'index';
 }
-$controllerName = 'ZenCart\\Controllers\\'. ucfirst(zcCamelize($controllerCommand, true));
-$controllerFile =  DIR_CATALOG_LIBRARY . URL_CONTROLLERS . '/admin/' . ucfirst(zcCamelize($controllerCommand, true)) . '.php';
-if (file_exists($controllerFile)) {
+
+$controllerFinder = new \ZenCart\Controllers\ControllerFinder();
+$actualController = $controllerFinder->getControllerName($controllerMap, $controllerCommand);
+
+if ($actualController) {
     require('includes/application_top.php');
-    require_once ($controllerFile);
-    if (class_exists($controllerName)) {
-        $foundAction = true;
-        $actionClass = $di->newInstance($controllerName);
-        $response = $actionClass->dispatch();
-        $actionClass->handleResponse($response);
-    }
+    require_once($controllerFinder->getControllerFile());
+    $foundAction = true;
+    $actionClass = $di->newInstance($actualController);
+    $response = $actionClass->dispatch();
+    $actionClass->handleResponse($response);
 }
+
 if ($foundAction) {
     exit(0);
 } else {
