@@ -1,5 +1,6 @@
 <?php
 use ZenCart\AdminUser\AdminUser;
+use App\Controllers\ControllerFinder;
 /**
  * @package admin
  * @copyright Copyright 2003-2017 Zen Cart Development Team
@@ -48,10 +49,8 @@ $foundAction = false;
 if ($controllerCommand != $cmd) {
     $controllerCommand = 'index';
 }
-
-$controllerFinder = new \ZenCart\Controllers\ControllerFinder();
+$controllerFinder = new ControllerFinder();
 $actualController = $controllerFinder->getControllerName($controllerMap, $controllerCommand);
-
 if ($actualController) {
     require('includes/application_top.php');
     require_once($controllerFinder->getControllerFile());

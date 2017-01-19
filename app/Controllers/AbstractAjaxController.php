@@ -2,15 +2,15 @@
 /**
  * Class AbstractAjaxController
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
  */
-namespace ZenCart\Controllers;
+namespace App\Controllers;
 
 /**
  * Class AbstractAjaxController
- * @package ZenCart\Controllers
+ * @package App\Controllers
  */
 class AbstractAjaxController extends \base
 {

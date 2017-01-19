@@ -20,8 +20,8 @@ class AjaxDispatch extends \base
     public static function run($action, $request)
     {
         $className = 'Ajax' . self::camelize($action, TRUE);
-        $namespaceClassName = 'ZenCart\\Controllers\\' . $className;
-        $fileName =  DIR_CATALOG_LIBRARY . URL_CONTROLLERS . $className . '.php';
+        $namespaceClassName = 'App\\Controllers\\' . $className;
+        $fileName =  DIR_FS_CATALOG . URL_CONTROLLERS . $className . '.php';
         $headerResponse = array("Status: 403 Forbidden", TRUE, 403);
         $jsonResponse = array('error' => TRUE, 'errorType' => "MISSING_DISPATCHER_FILE");
         $exitResponse = 1;

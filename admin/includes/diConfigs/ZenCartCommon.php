@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:$
@@ -46,7 +46,7 @@ class ZenCartCommon extends Config
             'webRequest' => $di->lazyNew('Aura\Web\Request'),
             'session' => $di->lazyGet('zencart_session'),
         );
-        $di->params['ZenCart\Controllers\AbstractAdminController'] = array(
+        $di->params['App\Controllers\AbstractAdminController'] = array(
             'request' => $di->lazyGet('zencart_request'),
             'modelFactory' => $di->lazyGet('zencart_model'),
             'user' => $di->lazyGet('zencart_adminuser'),
@@ -57,7 +57,7 @@ class ZenCartCommon extends Config
             'request' => $di->lazyGet('zencart_request'),
         );
 
-        $di->params['ZenCart\Controllers\AbstractListingController'] = array(
+        $di->params['App\Controllers\AbstractListingController'] = array(
             'request' => $di->lazyGet('zencart_request'),
             'modelFactory' => $di->lazyGet('zencart_model'),
             'user' => $di->lazyGet('zencart_adminuser'),

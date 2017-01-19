@@ -2,16 +2,16 @@
 /**
  * Class AjaxDashboardWidget
  *
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
  */
-namespace ZenCart\Controllers;
+namespace App\Controllers;
 use ZenCart\DashboardWidget\WidgetManager;
 
 /**
  * Class AjaxDashboardWidget
- * @package ZenCart\Controllers
+ * @package App\Controllers
  */
 class AjaxDashboardWidget extends AbstractAjaxController
 {
