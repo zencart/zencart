@@ -4,11 +4,11 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
-namespace ZenCart\Controllers;
+namespace App\Controllers;
 
 /**
  * Class ControllerFinder
- * @package ZenCart\Controllers
+ * @package App\Controllers
  */
 class ControllerFinder
 {
@@ -30,13 +30,13 @@ class ControllerFinder
         }
         $scope = isset($controllerMap[$controllerName]['scope']) ? $controllerMap[$controllerName]['scope']: 'admin';
         $realName = ucfirst(zcCamelize($controllerName, true));
-        $this->controllerFile =  DIR_CATALOG_LIBRARY . URL_CONTROLLERS . $scope . '/' . $realName . '.php';
+        $this->controllerFile =  DIR_FS_CATALOG . URL_CONTROLLERS . $scope . '/' . $realName . '.php';
         if (file_exists($this->controllerFile)) {
-            return 'ZenCart\\Controllers\\'. $realName;
+            return 'App\\Controllers\\' . $realName;
         }
         $baseClass = 'Base' . ucfirst($controllerMap[$controllerName]['type']) . 'Controller';
-        $this->controllerFile =  DIR_CATALOG_LIBRARY . URL_CONTROLLERS . $scope . '/' . $baseClass . '.php';
-        return 'ZenCart\\Controllers\\'. $baseClass;
+        $this->controllerFile =  DIR_FS_CATALOG . URL_CONTROLLERS . $scope . '/' . $baseClass . '.php';
+        return 'App\\Controllers\\'. $baseClass;
     }
 
     /**

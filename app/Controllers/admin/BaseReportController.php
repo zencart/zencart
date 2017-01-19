@@ -4,13 +4,14 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
-namespace ZenCart\Controllers;
+
+namespace App\Controllers;
 
 /**
- * Class BaseLeadController
- * @package ZenCart\Controllers
+ * Class BaseReportController
+ * @package App\Controllers
  */
-class BaseInfoController extends AbstractInfoController
+class BaseReportController extends AbstractReportController
 {
 
 }

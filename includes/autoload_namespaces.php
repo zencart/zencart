@@ -12,7 +12,7 @@ define('NAMESPACE_PAGINATOR', 'ZenCart\Paginator');
 define('NAMESPACE_QUERYBUILDER', 'ZenCart\QueryBuilder');
 define('NAMESPACE_REQUEST', 'ZenCart\Request');
 define('NAMESPACE_DASHBOARDWIDGETS', 'ZenCart\DashboardWidget');
-define('NAMESPACE_CONTROLLERS', 'ZenCart\Controllers');
+define('NAMESPACE_CONTROLLERS', 'App\Controllers');
 define('NAMESPACE_SERVICES', 'ZenCart\Services');
 define('NAMESPACE_AJAXDISPATCH', 'ZenCart\AjaxDispatch');
 define('NAMESPACE_PAGE', 'ZenCart\Page');
@@ -28,7 +28,7 @@ define('NAMESPACE_MODEL', 'ZenCart\Model');
 
 
 define('URL_SERVICES', 'zencart/Services/src/');
-define('URL_CONTROLLERS', 'zencart/Controllers/src/');
+define('URL_CONTROLLERS', 'app/Controllers/');
 define('URL_AJAXDISPATCH', 'zencart/AjaxDispatch/src/');
 define('URL_DASHBOARDWIDGETS', 'zencart/DashboardWidget/src/');
 define('URL_LISTINGQUERYANDOUTPUT', 'zencart/ListingQueryAndOutput/src/');
@@ -58,7 +58,7 @@ return array(
     'Doctrine\Common\Inflector' => DIR_CATALOG_LIBRARY . 'doctrine/inflector/lib/Doctrine/Common/Inflector',
 
     NAMESPACE_SERVICES => DIR_CATALOG_LIBRARY . URL_SERVICES,
-    NAMESPACE_CONTROLLERS => DIR_CATALOG_LIBRARY . URL_CONTROLLERS,
+    NAMESPACE_CONTROLLERS => DIR_FS_CATALOG . URL_CONTROLLERS,
     NAMESPACE_AJAXDISPATCH => DIR_CATALOG_LIBRARY . URL_AJAXDISPATCH,
     NAMESPACE_DASHBOARDWIDGETS => DIR_CATALOG_LIBRARY . URL_DASHBOARDWIDGETS,
     NAMESPACE_LISTINGQUERYANDOUTPUT => DIR_CATALOG_LIBRARY. URL_LISTINGQUERYANDOUTPUT,

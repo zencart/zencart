@@ -1,18 +1,18 @@
 <?php
 /**
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
-namespace ZenCart\Controllers;
+namespace App\Controllers;
 
 use ZenCart\Services\IndexRoute;
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
 
 /**
- * Class Index
- * @package ZenCart\Controllers
+ * Class ServerInfo
+ * @package App\Controllers
  */
 class ServerInfo extends AbstractInfoController
 {
