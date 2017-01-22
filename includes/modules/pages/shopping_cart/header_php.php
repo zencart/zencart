@@ -60,9 +60,9 @@ $flagHasCartContents = ($_SESSION['cart']->count_contents() > 0);
 $cartShowTotal = $currencies->format($_SESSION['cart']->show_total());
 
 $flagAnyOutOfStock = false;
-$flagStockCheck = '';
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+  $flagStockCheck = '';
   if (($i/2) == floor($i/2)) {
     $rowClass="rowEven";
   } else {

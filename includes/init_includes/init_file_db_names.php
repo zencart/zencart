@@ -31,7 +31,7 @@ $request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) ==
 /**
  * set php_self in the local scope
  */
-if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
+if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
 /**
  * require global definitons for Filenames
  */

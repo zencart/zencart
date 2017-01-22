@@ -62,7 +62,11 @@ class payeezyjszc extends base {
   /**
    * internal vars
    */
-  private $avs_codes, $cvv_codes;
+  private $avs_codes, $cvv_codes, $mode;
+  /**
+   * Advanced setting to enable expedited processing
+   */
+  private $etppid = 'a77026b9457c8cf77ac73268ce5873cb02f41c0413f1f43d'; 
 
 
   /**
