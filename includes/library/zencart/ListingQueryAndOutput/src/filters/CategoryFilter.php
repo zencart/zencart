@@ -38,11 +38,9 @@ class CategoryFilter extends AbstractFilter implements FilterInterface
         }
         $listingQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
             'table' => TABLE_PRODUCTS_TO_CATEGORIES,
-            'alias' => 'ptc',
             'type' => 'left',
             'addColumns' => FALSE
         );
-        $listingQuery ['tableAliases'] [TABLE_PRODUCTS_TO_CATEGORIES] = 'ptc';
         $categories = zenGetCategoryArrayWithChildren($categoryId);
         $listingBoxCategoryList = implode(',', $categories);
         $listingQuery['whereClauses'] [] = array(

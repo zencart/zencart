@@ -1389,17 +1389,17 @@ function zen_has_product_attributes_downloads($products_id, $check_valid=false) 
       break;
     case (SHOW_NEW_PRODUCTS_LIMIT == 1):
       $zc_new_date = date('Ym', time()) . '01';
-      $new_range = ' and p.products_date_added >=' . $zc_new_date;
+      $new_range = ' and ' . TABLE_PRODUCTS . ' .products_date_added >=' . $zc_new_date;
       break;
     default:
-      $new_range = ' and p.products_date_added >=' . $zc_new_date;
+      $new_range = ' and ' . TABLE_PRODUCTS . '.products_date_added >=' . $zc_new_date;
     }
 
     if (SHOW_NEW_PRODUCTS_UPCOMING_MASKED == 0) {
       // do nothing upcoming shows in new
     } else {
       // do not include upcoming in new
-      $new_range .= " and (p.products_date_available <=" . $upcoming_mask . " or p.products_date_available IS NULL)";
+      $new_range .= " and ( ' . TABLE_PRODUCTS . ' .products_date_available <=" . $upcoming_mask . " or ' . TABLE_PRODUCTS . '.products_date_available IS NULL)";
     }
     return $new_range;
   }
@@ -1415,7 +1415,7 @@ function zen_has_product_attributes_downloads($products_id, $check_valid=false) 
     $zc_new_date = date('Ymd', $date_range);
 // @TODO need to check speed on this for larger sites
 //    $new_range = ' and date_format(p.products_date_available, \'%Y%m%d\') >' . $zc_new_date;
-    $new_range = ' and p.products_date_available >' . $zc_new_date . '235959';
+    $new_range = ' and ' . TABLE_PRODUCTS . '.products_date_available >' . $zc_new_date . '235959';
 
     return $new_range;
   }

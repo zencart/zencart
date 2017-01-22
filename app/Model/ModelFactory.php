@@ -1,5 +1,5 @@
 <?php
-namespace ZenCart\Model;
+namespace App\Model;
 
 class ModelFactory
 {
@@ -11,6 +11,7 @@ class ModelFactory
 
     public function factory($table, $namespace = __NAMESPACE__)
     {
+        $table = str_replace(DB_PREFIX, '' , $table);
         $class = $namespace . '\\' . ucfirst(\base::camelize($table));
         return new $class;
     }

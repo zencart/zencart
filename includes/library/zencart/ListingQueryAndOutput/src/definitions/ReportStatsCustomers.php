@@ -30,13 +30,11 @@ class ReportStatsCustomers extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_CUSTOMERS,
-                'alias' => 'c',
                 'fkeyFieldLeft' => 'customers_id',
             ),
             'joinTables' => array(
                 'TABLE_ORDERS' => array(
                     'table' => TABLE_ORDERS,
-                    'alias' => 'o',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'customers_id',
                     'fkeyFieldRight' => 'customers_id',
@@ -44,7 +42,6 @@ class ReportStatsCustomers extends AbstractLeadDefinition
                 'TABLE_ORDERS_PRODUCTS' => array(
                     'table' => TABLE_ORDERS_PRODUCTS,
                     'fkeyTable' => 'TABLE_ORDERS',
-                    'alias' => 'op',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'orders_id',
                     'fkeyFieldRight' => 'orders_id',

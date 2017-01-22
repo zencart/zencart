@@ -27,7 +27,6 @@ class LeadRecordCompany extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_RECORD_COMPANY,
-                'alias' => 'rc',
                 'fkeyFieldLeft' => 'record_company_id',
             ),
             'isPaginated' => true,

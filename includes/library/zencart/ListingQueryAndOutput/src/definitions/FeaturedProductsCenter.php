@@ -19,7 +19,6 @@ class FeaturedProductsCenter extends AbstractDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_PRODUCTS,
-                'alias' => 'p',
                 'fkeyFieldLeft' => 'products_id',
             ),
             'derivedItems' => array(
@@ -54,13 +53,11 @@ class FeaturedProductsCenter extends AbstractDefinition
             'joinTables' => array(
                 'TABLE_FEATURED' => array(
                     'table' => TABLE_FEATURED,
-                    'alias' => 'f',
                     'type' => 'left',
                     'addColumns' => true
                 ),
                 'TABLE_PRODUCTS_DESCRIPTION' => array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
-                    'alias' => 'pd',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'products_id',
                     'addColumns' => true

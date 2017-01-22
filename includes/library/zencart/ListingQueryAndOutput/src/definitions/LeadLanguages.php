@@ -29,7 +29,6 @@ class LeadLanguages extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_LANGUAGES,
-                'alias' => 'l',
                 'fkeyFieldLeft' => 'languages_id',
             ),
             'isPaginated' => true,

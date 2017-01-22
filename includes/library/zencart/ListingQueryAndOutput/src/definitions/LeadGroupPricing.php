@@ -28,7 +28,6 @@ class LeadGroupPricing extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_GROUP_PRICING,
-                'alias' => 'gp',
                 'fkeyFieldLeft' => 'group_id',
             ),
             'isPaginated' => true,

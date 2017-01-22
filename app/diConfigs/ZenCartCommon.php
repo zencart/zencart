@@ -28,12 +28,12 @@ class ZenCartCommon extends Config
             'db' => $di->lazyGet('zencart_db'),
         );
 
-        $di->params['ZenCart\Model\ModelFactory'] = array(
+        $di->params['App\Model\ModelFactory'] = array(
             'db' => $di->lazyGet('zencart_db'),
             'capsule' => $di->lazyGet('zencart_eloquent'),
         );
 
-        $di->set('zencart_model', $di->lazyNew('ZenCart\Model\ModelFactory'));
+        $di->set('zencart_model', $di->lazyNew('App\Model\ModelFactory'));
 
         $di->params['ZenCart\AdminUser\AdminUser'] = array(
             'session' => $di->lazyGet('zencart_session'),

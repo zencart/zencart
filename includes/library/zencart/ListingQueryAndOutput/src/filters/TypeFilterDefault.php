@@ -20,11 +20,10 @@ class TypeFilterDefault extends AbstractTypeFilter
      */
     public function handleParameterFilters($listingQuery)
     {
-        $listingQuery['selectList'] [] = "m.manufacturers_name";
+        $listingQuery['selectList'] [] = TABLE_MANUFACTURERS . ".manufacturers_name";
 
         $listingQuery['joinTables'] ['TABLE_MANUFACTURERS'] = array(
             'table' => TABLE_MANUFACTURERS,
-            'alias' => 'm',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'manufacturers_id'
         );
@@ -38,7 +37,6 @@ class TypeFilterDefault extends AbstractTypeFilter
             if ($this->request->readGet('filter_id', '') != '') {
                 $listingQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                     'table' => TABLE_PRODUCTS_TO_CATEGORIES,
-                    'alias' => 'p2c',
                     'type' => 'LEFT',
                     'fkeyFieldLeft' => 'products_id'
                 );
@@ -52,7 +50,6 @@ class TypeFilterDefault extends AbstractTypeFilter
         } else {
             $listingQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                 'table' => TABLE_PRODUCTS_TO_CATEGORIES,
-                'alias' => 'p2c',
                 'type' => 'LEFT',
                 'fkeyFieldLeft' => 'products_id'
             );

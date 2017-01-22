@@ -23,7 +23,6 @@ class ReportStatsProductsLowstock extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_PRODUCTS,
-                'alias' => 'p',
                 'fkeyFieldLeft' => 'products_id',
             ),
             'orderBys' => array(

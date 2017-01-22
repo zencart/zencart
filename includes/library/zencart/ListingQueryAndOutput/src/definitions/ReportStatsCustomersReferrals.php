@@ -27,13 +27,11 @@ class ReportStatsCustomersReferrals extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_CUSTOMERS,
-                'alias' => 'c',
                 'fkeyFieldLeft' => 'customers_id',
             ),
             'joinTables' => array(
                 'TABLE_ORDERS' => array(
                     'table' => TABLE_ORDERS,
-                    'alias' => 'o',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'customers_id',
                     'fkeyFieldRight' => 'customers_id',

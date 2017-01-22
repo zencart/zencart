@@ -4,17 +4,18 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
-namespace ZenCart\Model;
-
-use Illuminate\Database\Eloquent\Model as Eloquent;
+namespace App\Model;
 
 /**
  * Class Countries
  * @package ZenCart\Model
  */
-class Countries extends Eloquent
+class Countries extends TranslatedModel
 {
     //protected $table = TABLE_ADMIN;
     protected $primaryKey = 'countries_id';
+    protected $translationTable = TABLE_COUNTRIES_NAME;
+    public $translatedAttributes = ['countries_name'];
+
 
 }

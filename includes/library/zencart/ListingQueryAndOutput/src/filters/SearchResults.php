@@ -56,7 +56,6 @@ class SearchResults extends AbstractFilter implements FilterInterface
         }
         $this->listingQuery['joinTables'] ['TABLE_TAX_RATES'] = array(
             'table' => TABLE_TAX_RATES,
-            'alias' => 'tr',
             'type' => 'left',
             'fkeyFieldLeft' => 'products_tax_class_id',
             'fkeyFieldRight' => 'tax_class_id',
@@ -64,7 +63,6 @@ class SearchResults extends AbstractFilter implements FilterInterface
         );
         $this->listingQuery['joinTables'] ['TABLE_ZONES_TO_GEO_ZONES'] = array(
             'table' => TABLE_ZONES_TO_GEO_ZONES,
-            'alias' => 'gz',
             'type' => 'left',
             'fkeyFieldLeft' => 'tax_zone_id',
             'fkeyFieldRight' => 'geo_zone_id',
@@ -91,10 +89,10 @@ class SearchResults extends AbstractFilter implements FilterInterface
     protected function startWhereClauses()
     {
         $this->listingQuery['whereClauses'] [] = array(
-            'custom' => ' AND (p.products_status = 1 '
+            'custom' => ' AND (' . TABLE_PRODUCTS . '.products_status = 1 '
         );
         $this->listingQuery ['whereClauses'] [] = array(
-            'custom' => ' AND pd.language_id = :languageId: '
+            'custom' => ' AND ' . TABLE_PRODUCTS_DESCRIPTION . '.language_id = :languageId: '
         );
         $this->listingQuery['bindVars'] [] = array(
             ':languageId:',

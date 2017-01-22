@@ -29,14 +29,16 @@ class ControllerFinder
             return false;
         }
         $scope = isset($controllerMap[$controllerName]['scope']) ? $controllerMap[$controllerName]['scope']: 'admin';
-        $realName = ucfirst(zcCamelize($controllerName, true));
+        $realName = ucfirst(camel_case($controllerName));
         $this->controllerFile =  DIR_FS_CATALOG . URL_CONTROLLERS . $scope . '/' . $realName . '.php';
         if (file_exists($this->controllerFile)) {
             return 'App\\Controllers\\' . $realName;
         }
         $baseClass = 'Base' . ucfirst($controllerMap[$controllerName]['type']) . 'Controller';
         $this->controllerFile =  DIR_FS_CATALOG . URL_CONTROLLERS . $scope . '/' . $baseClass . '.php';
-        return 'App\\Controllers\\'. $baseClass;
+        if (file_exists($this->controllerFile)) {
+            return 'App\\Controllers\\' . $baseClass;
+        }
     }
 
     /**

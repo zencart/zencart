@@ -30,7 +30,6 @@ class LeadOrdersStatus extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_ORDERS_STATUS,
-                'alias' => 'os',
                 'fkeyFieldLeft' => 'orders_status_id',
             ),
             'language' => true,
