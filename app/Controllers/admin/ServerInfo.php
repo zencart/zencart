@@ -27,6 +27,7 @@ class ServerInfo extends AbstractInfoController
         $this->buildPHPInfoSection();
         $this->buildSystemInfo();
         $this->buildVersionInfo();
+        $this->buildDatabaseInfoSection();
 
     }
 
@@ -115,5 +116,24 @@ class ServerInfo extends AbstractInfoController
             $versionInfo[] =  $sInfo;
         }
         $this->view->getTplVarManager()->set('versionInfo', $versionInfo);
+    }
+    
+    private function buildDatabaseInfoSection ()
+    {
+        $databaseInfo = [];
+        $system = zen_get_system_information();
+        $databaseInfo['heading'] = TITLE_DATABASE_VARIABLES . $system['db_version'] . ($system['mysql_strict_mode'] == true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : '');
+        
+        $databaseInfo['fields'] = [];
+        $show_variables = $this->dbConn->Execute ("SHOW VARIABLES");
+        while (!$show_variables->EOF) {
+            $databaseInfo['fields'][] = array (
+                'name' => $show_variables->fields['Variable_name'],
+                'value' => zen_not_null ($show_variables->fields['Value']) ? $show_variables->fields['Value'] : '&nbsp;'
+            );
+            $show_variables->MoveNext ();
+        }
+        
+        $this->view->getTplVarManager()->set('databaseInfo', $databaseInfo);
     }
 }
