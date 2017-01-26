@@ -91,7 +91,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
 } // end action==send
 
 
-if (ENABLE_SSL == 'true' && $request_type != 'SSL') {
+if ($request_type != 'SSL' && (ENABLE_SSL == 'true' || substr(HTTP_SERVER, 0, 5) == 'https')) {
   zen_redirect(zen_href_link(FILENAME_CONTACT_US, '', 'SSL'));
 }
 
