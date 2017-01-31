@@ -84,8 +84,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   $counter = 0;
 // if invalid product id skip
   if (sizeof($id_array)) {
-    reset ($id_array);
-    while (list($key, $value) = each ($id_array)) {
+    foreach($id_array as $key => $value) {
       if ($value == $products_filter) {
         $position = $counter;
         if ($key == 0) {

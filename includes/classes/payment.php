@@ -35,7 +35,6 @@ class payment extends base {
 
         $include_modules[] = array('class' => $module, 'file' => $module . '.php');
       } else {
-        reset($this->modules);
 
         // Free Payment Only shows
         if (constant('MODULE_PAYMENT_FREECHARGER_STATUS') and ($_SESSION['cart']->show_total()==0 and (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0))) {
@@ -45,7 +44,7 @@ class payment extends base {
           }
         } else {
           // All Other Payment Modules show
-          while (list(, $value) = each($this->modules)) {
+          foreach($this->modules as $value) {
             // double check that the module really exists before adding to the array
             if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . '/payment/' . $value)) {
               $class = substr($value, 0, strrpos($value, '.'));
@@ -139,8 +138,7 @@ class payment extends base {
       '    }' . "\n" .
       '  }' . "\n\n";
 
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $js .= $GLOBALS[$class]->javascript_validation();
@@ -169,8 +167,7 @@ class payment extends base {
   function selection() {
     $selection_array = array();
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $selection = $GLOBALS[$class]->selection();
@@ -189,8 +186,7 @@ class payment extends base {
   function in_special_checkout() {
     $result = false;
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'in_special_checkout')) {
           $module_result = $GLOBALS[$class]->in_special_checkout();

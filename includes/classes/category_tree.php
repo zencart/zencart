@@ -71,8 +71,7 @@ class category_tree extends base {
     }
     if (zen_not_null($cPath)) {
       $new_path = '';
-      reset($cPath_array);
-      while (list($key, $value) = each($cPath_array)) {
+      foreach($cPath_array as $key => $value) {
         unset($parent_id);
         unset($first_id);
         if ($product_type == 'all') {

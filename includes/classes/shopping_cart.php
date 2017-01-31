@@ -101,8 +101,7 @@ class shoppingCart extends base {
     $this->notify('NOTIFIER_CART_RESTORE_CONTENTS_START');
     // insert current cart contents in database
     if (is_array($this->contents)) {
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach($this->contents as $products_id => $data) {
         //          $products_id = urldecode($products_id);
         $qty = $this->contents[$products_id]['qty'];
         $product_query = "select products_id
@@ -122,8 +121,7 @@ class shoppingCart extends base {
           $db->Execute($sql);
 
           if (isset($this->contents[$products_id]['attributes'])) {
-            reset($this->contents[$products_id]['attributes']);
-            while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+            foreach($this->contents[$products_id]['attributes'] as $option => $value) {
 
               //clr 031714 udate query to include attribute value. This is needed for text attributes.
               $attr_value = $this->contents[$products_id]['attributes_values'][$option];
@@ -285,8 +283,7 @@ class shoppingCart extends base {
       }
 
       if (is_array($attributes)) {
-        reset($attributes);
-        while (list($option, $value) = each($attributes)) {
+        foreach($attributes as $option => $value) {
           //CLR 020606 check if input was from text box.  If so, store additional attribute information
           //CLR 020708 check if text input is blank, if so do not add to attribute lists
           //CLR 030228 add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
@@ -317,8 +314,7 @@ class shoppingCart extends base {
 
           if (!$blank_value) {
             if (is_array($value) ) {
-              reset($value);
-              while (list($opt, $val) = each($value)) {
+              foreach($value as $opt => $val) {
                 $this->contents[$products_id]['attributes'][$option.'_chk'.$val] = $val;
               }
             } else {
@@ -331,8 +327,7 @@ class shoppingCart extends base {
 
               //              if (zen_session_is_registered('customer_id')) zen_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text) values ('" . (int)$customer_id . "', '" . zen_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "', '" . zen_db_input($attr_value) . "')");
               if (is_array($value) ) {
-                reset($value);
-                while (list($opt, $val) = each($value)) {
+                foreach($value as $opt => $val) {
                   $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $opt);
                   $sql = "insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                                         (customers_id, products_id, products_options_id, products_options_value_id, products_options_sort_order)
@@ -410,8 +405,7 @@ class shoppingCart extends base {
     }
 
     if (is_array($attributes)) {
-      reset($attributes);
-      while (list($option, $value) = each($attributes)) {
+      foreach($attributes as $option => $value) {
         //CLR 020606 check if input was from text box.  If so, store additional attribute information
         //CLR 030108 check if text input is blank, if so do not update attribute lists
         //CLR 030228 add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
@@ -430,8 +424,7 @@ class shoppingCart extends base {
 
         if (!$blank_value) {
           if (is_array($value) ) {
-            reset($value);
-            while (list($opt, $val) = each($value)) {
+            foreach($value as $opt => $val) {
               $this->contents[$products_id]['attributes'][$option.'_chk'.$val] = $val;
             }
           } else {
@@ -446,8 +439,7 @@ class shoppingCart extends base {
             $attr_value = zen_db_input($attr_value);
           }
           if (is_array($value) ) {
-            reset($value);
-            while (list($opt, $val) = each($value)) {
+            foreach($value as $opt => $val) {
               $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $opt);
               $sql = "update " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                         set products_options_value_id = '" . (int)$val . "'
@@ -488,8 +480,7 @@ class shoppingCart extends base {
   function cleanup() {
     global $db;
     $this->notify('NOTIFIER_CART_CLEANUP_START');
-    reset($this->contents);
-    while (list($key,) = each($this->contents)) {
+    foreach($this->contents as $key => $data) {
       if (!isset($this->contents[$key]['qty']) || $this->contents[$key]['qty'] <= 0) {
         unset($this->contents[$key]);
         // remove from database
@@ -525,8 +516,7 @@ class shoppingCart extends base {
     $this->notify('NOTIFIER_CART_COUNT_CONTENTS_START');
     $total_items = 0;
     if (is_array($this->contents)) {
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach($this->contents as $products_id => $data) {
         $total_items += $this->get_quantity($products_id);
       }
     }
@@ -628,9 +618,8 @@ class shoppingCart extends base {
     if (!is_array($this->contents)) {
       return '';
     }
-    reset($this->contents);
     $product_id_list = array();
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $product_id_list[] = $products_id;
     }
     return implode(',', $product_id_list);
@@ -657,8 +646,7 @@ class shoppingCart extends base {
 // By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
 // Setting a define for ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL to 1 to calculate the Price Factor from Special rather than Price switches this to be based on Special, if it exists
     if (!defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL')) define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
-    reset($this->contents);
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $total_before_discounts = 0;
       $freeShippingTotal = $productTotal = $totalOnetimeCharge = $totalOnetimeChargeNoDiscount = 0;
       $qty = $this->contents[$products_id]['qty'];
@@ -731,8 +719,7 @@ class shoppingCart extends base {
       $savedProductTotal = $productTotal;
       $attributesTotal = 0;
       if (isset($this->contents[$products_id]['attributes'])) {
-        reset($this->contents[$products_id]['attributes']);
-        while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+        foreach($this->contents[$products_id]['attributes'] as $option => $value) {
           $productTotal = 0;
           $adjust_downloads ++;
           /*
@@ -902,8 +889,7 @@ class shoppingCart extends base {
       $productTotal = $savedProductTotal + $attributesTotal;
       // attributes weight
       if (isset($this->contents[$products_id]['attributes'])) {
-        reset($this->contents[$products_id]['attributes']);
-        while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+        foreach($this->contents[$products_id]['attributes'] as $option => $value) {
           $attribute_weight_query = "select products_attributes_weight, products_attributes_weight_prefix
                                        from " . TABLE_PRODUCTS_ATTRIBUTES . "
                                        where products_id = '" . (int)$prid . "'
@@ -978,8 +964,7 @@ class shoppingCart extends base {
 
     if (isset($this->contents[$products_id]['attributes'])) {
 
-      reset($this->contents[$products_id]['attributes']);
-      while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+      foreach($this->contents[$products_id]['attributes'] as $option => $value) {
         $attributes_price = 0;
         $attribute_price_query = "select *
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
@@ -1079,9 +1064,7 @@ class shoppingCart extends base {
     $attributes_price_onetime = 0;
 
     if (isset($this->contents[$products_id]['attributes'])) {
-
-      reset($this->contents[$products_id]['attributes']);
-      while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+      foreach($this->contents[$products_id]['attributes'] as $option => $value) {
 
         $attribute_price_query = "select *
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
@@ -1149,8 +1132,7 @@ class shoppingCart extends base {
     $attribute_weight = 0;
 
     if (isset($this->contents[$products_id]['attributes'])) {
-      reset($this->contents[$products_id]['attributes']);
-      while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+      foreach($this->contents[$products_id]['attributes'] as $option => $value) {
         $attribute_weight_query = "select products_attributes_weight, products_attributes_weight_prefix
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
                                     where products_id = '" . (int)$products_id . "'
@@ -1195,8 +1177,7 @@ class shoppingCart extends base {
     if (!is_array($this->contents)) return false;
 
     $products_array = array();
-    reset($this->contents);
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $products_query = "select p.products_id, p.master_categories_id, p.products_status, pd.products_name, p.products_model, p.products_image,
                                   p.products_price, p.products_weight, p.products_tax_class_id,
                                   p.products_quantity_order_min, p.products_quantity_order_units, p.products_quantity_order_max,
@@ -1259,9 +1240,8 @@ class shoppingCart extends base {
             $this->remove($products_id);
           } else {
             if (isset($this->contents[$products_id]['attributes'])) {
-              reset($this->contents[$products_id]['attributes']);
               $chkcount = 0;
-              while (list(, $value) = each($this->contents[$products_id]['attributes'])) {
+              foreach($this->contents[$products_id]['attributes'] as $value) {
                 $chkcount ++;
                 $chk_attributes_exist_query = "select products_id
                                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -1438,8 +1418,7 @@ class shoppingCart extends base {
     $gift_voucher = 0;
 
     if ( $this->count_contents() > 0 ) {
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach($this->contents as $products_id => $data) {
         $free_ship_check = $db->Execute("select products_virtual, products_model, products_price, product_is_always_free_shipping from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($products_id) . "'");
         $virtual_check = false;
         if (preg_match('/^GIFT/', addslashes($free_ship_check->fields['products_model']))) {
@@ -1456,8 +1435,7 @@ class shoppingCart extends base {
         // product_is_always_free_shipping = 2 is special requires shipping
         // Example: Product with download
         if (isset($this->contents[$products_id]['attributes']) and $free_ship_check->fields['product_is_always_free_shipping'] != 2) {
-          reset($this->contents[$products_id]['attributes']);
-          while (list(, $value) = each($this->contents[$products_id]['attributes'])) {
+          foreach($this->contents[$products_id]['attributes'] as $value) {
             $virtual_check_query = "select count(*) as total
                                       from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, "
                                       . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
@@ -1568,7 +1546,7 @@ class shoppingCart extends base {
    * @private
    */
   function unserialize($broken) {
-    for(reset($broken);$kv=each($broken);) {
+    foreach($broken as $kv) {
       $key=$kv['key'];
       if (gettype($this->$key)!="user function")
       $this->$key=$kv['value'];
@@ -1603,8 +1581,7 @@ class shoppingCart extends base {
 
     // reset($this->contents); // breaks cart
     $check_contents = $this->contents;
-    reset($check_contents);
-    while (list($products_id, ) = each($check_contents)) {
+    foreach($check_contents as $products_id => $data) {
       $test_id = zen_get_prid($products_id);
 //$messageStack->add_session('header', 'Product: ' . $products_id . ' test_id: ' . $test_id . '<br>', 'error');
       if ($test_id == $chk_products_id) {
@@ -1642,8 +1619,7 @@ class shoppingCart extends base {
 
     // reset($this->contents); // breaks cart
     $check_contents = $this->contents;
-    reset($check_contents);
-    while (list($products_id, ) = each($check_contents)) {
+    foreach($check_contents as $products_id => $data) {
       $test_id = zen_get_prid($products_id);
       if ($test_id == $chk_products_id) {
         $in_cart_mixed_qty_discount_quantity += $check_contents[$products_id]['qty'];
@@ -1670,8 +1646,7 @@ class shoppingCart extends base {
     // compute total quantity for field
     $in_cart_check_qty=0;
 
-    reset($this->contents);
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $testing_id = zen_get_prid($products_id);
       // check if field it true
       $product_check = $db->Execute("select " . $check_what . " as check_it from " . TABLE_PRODUCTS . " where products_id='" . $testing_id . "' limit 1");
@@ -2080,7 +2055,7 @@ class shoppingCart extends base {
     if (is_array($_POST['products_id']) && sizeof($_POST['products_id']) > 0) {
 //echo '<pre>'; echo var_dump($_POST['products_id']); echo '</pre>';
       $products_list = $_POST['products_id'];
-      while ( list( $key, $val ) = each($products_list) ) {
+      foreach($products_list as $key => $val) {
         $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
         if (is_numeric($val) && $val > 0) {
 

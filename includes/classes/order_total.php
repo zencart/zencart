@@ -27,8 +27,7 @@ class order_total extends base {
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && zen_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
-      reset($module_list);
-      while (list(, $value) = each($module_list)) {
+      foreach($module_list as $value) {
         $lang_file = null;
         $module_file = DIR_WS_MODULES . 'order_total/' . $value;
         if (IS_ADMIN_FLAG === true) {
@@ -60,8 +59,7 @@ class order_total extends base {
     global $order;
     $order_total_array = array();
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if (!isset($GLOBALS[$class])) continue;
         $GLOBALS[$class]->process();
@@ -84,8 +82,7 @@ class order_total extends base {
     global $template, $current_page_base;
     $output_string = '';
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         $size = sizeof($GLOBALS[$class]->output);
 
@@ -119,8 +116,7 @@ class order_total extends base {
   function credit_selection() {
     $selection_array = array();
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->credit_class ) {
           $selection = $GLOBALS[$class]->credit_selection();
@@ -140,8 +136,7 @@ class order_total extends base {
   //
   function update_credit_account($i) {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ( $GLOBALS[$class]->credit_class ) {
           $GLOBALS[$class]->update_credit_account($i);
@@ -159,8 +154,7 @@ class order_total extends base {
 
   function collect_posts() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ( $GLOBALS[$class]->credit_class ) {
           $post_var = 'c' . $GLOBALS[$class]->code;
@@ -178,9 +172,8 @@ class order_total extends base {
   function pre_confirmation_check($returnOrderTotalOnly = false) {
     global $order, $credit_covers;
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
       $orderInfoSaved = $order->info;
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         $GLOBALS[$class]->process();
         $GLOBALS[$class]->output = array();
@@ -199,8 +192,7 @@ class order_total extends base {
   //
   function apply_credit() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ( $GLOBALS[$class]->credit_class) {
           $GLOBALS[$class]->apply_credit();
@@ -213,8 +205,7 @@ class order_total extends base {
   //
   function clear_posts() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ( $GLOBALS[$class]->credit_class && method_exists($GLOBALS[$class], 'clear_posts')) {
           $GLOBALS[$class]->clear_posts();

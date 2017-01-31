@@ -206,8 +206,9 @@ require('includes/admin_html_head.php');
 <?php
     if (zen_not_null($_POST)) {
 /* Re-Post all POST'ed variables */
-      reset($_POST);
-      while(list($key, $value) = each($_POST)) echo zen_draw_hidden_field($key, $value);
+      foreach($_POST as $key => $value) {
+        echo zen_draw_hidden_field($key, $value);
+      }
 ?>
       <tr>
         <td align="right" class="smallText"><?php echo '<a href="' . zen_admin_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a> ' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . ' <a href="' . zen_admin_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>

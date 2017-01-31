@@ -63,9 +63,8 @@ class ot_coupon {
     }
     $this->deduction = $od_amount['total'];
     if ($od_amount['total'] > 0) {
-      reset($order->info['tax_groups']);
       $tax = 0;
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach($order->info['tax_groups'] as $key => $value) {
         if ($od_amount['tax_groups'][$key]) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $order->info['tax_groups'][$key] = zen_round($order->info['tax_groups'][$key], $currencies->get_decimal_places($_SESSION['currency']));

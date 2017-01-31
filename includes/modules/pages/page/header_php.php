@@ -78,7 +78,7 @@ $last_v = 0;
 $previous_vssl = '0';
 $next_item_v = 0;
 $next_vssl = 0;
-while (list($key, $value) = each ($vert_links)) {
+foreach($vert_links as $key => $value) {
   if ($value == $ezpage_id) {
     $position_v = $counter;
     $previous_vssl = '0';
@@ -103,7 +103,7 @@ if ($previous_v == -1) $previous_v = $last_v;
 //prev/next for horiz now
 reset ($horiz_links);
 $counter = 0;
-while (list($key, $value) = each ($horiz_links)) {
+foreach($horiz_links as $key => $value) {
 if ($value == $ezpage_id) {
 $position_h = $counter;
 $previous_hssl = '0';

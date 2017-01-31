@@ -44,8 +44,8 @@
   $salemaker_sales = $db->Execute($salemaker_sales_query_raw);
   while (!$salemaker_sales->EOF) {
     $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-  while (list($key,$value) = each($categories)) {
-    if ($value == $_GET['cid']) {
+    foreach($categories as $key => $value) {
+      if ($value == $_GET['cid']) {
 ?>
               <tr>
                 <td  class="dataTableContent" align="left"><?php echo $salemaker_sales->fields['sale_name']; ?></td>

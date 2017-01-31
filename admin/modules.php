@@ -59,7 +59,7 @@
     switch ($action) {
       case 'save':
         if (!$is_ssl_protected && in_array($class, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
-        while (list($key, $value) = each($_POST['configuration'])) {
+        foreach($_POST['configuration'] as $key => $value) {
           if (is_array( $value ) ) {
             $value = implode( ", ", $value);
             $value = preg_replace ("/, --none--/", "", $value);
@@ -328,8 +328,7 @@ require('includes/admin_html_head.php');
     case 'edit':
       if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
       $keys = '';
-      reset($mInfo->keys);
-      while (list($key, $value) = each($mInfo->keys)) {
+      foreach($mInfo->keys as $key => $value) {
         $keys .= '<b>' . $value['title'] . '</b><br>' . $value['description'] . '<br>';
         if ($value['set_function']) {
           eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
@@ -352,8 +351,7 @@ require('includes/admin_html_head.php');
 
       if ($mInfo->status == '1') {
         $keys = '';
-        reset($mInfo->keys);
-        while (list(, $value) = each($mInfo->keys)) {
+        foreach($mInfo->keys as $value) {
           $keys .= '<b>' . $value['title'] . '</b><br>';
           if ($value['use_function']) {
             $use_function = $value['use_function'];

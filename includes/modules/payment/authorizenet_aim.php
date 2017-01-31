@@ -648,7 +648,7 @@ class authorizenet_aim extends base {
 
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
-    while(list($key, $value) = each($submit_data)) {
+    foreach($submit_data as $key => $value) {
       if ($key != 'x_delim_char' && $key != 'x_encap_char') {
         $value = str_replace(array($this->delimiter, $this->encapChar,'"',"'",'&amp;','&', '='), '', $value);
       }
