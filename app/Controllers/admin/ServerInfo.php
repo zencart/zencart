@@ -126,14 +126,12 @@ class ServerInfo extends AbstractInfoController
         
         $databaseInfo['fields'] = [];
         $show_variables = $this->dbConn->Execute ("SHOW VARIABLES");
-        while (!$show_variables->EOF) {
+        foreach ($show_variables as $show_variable) {
             $databaseInfo['fields'][] = array (
-                'name' => $show_variables->fields['Variable_name'],
-                'value' => zen_not_null ($show_variables->fields['Value']) ? $show_variables->fields['Value'] : '&nbsp;'
+                'name' => $show_variable['Variable_name'],
+                'value' => zen_not_null ($show_variable['Value']) ? $show_variable['Value'] : '&nbsp;'
             );
-            $show_variables->MoveNext ();
         }
-        
         $this->view->getTplVarManager()->set('databaseInfo', $databaseInfo);
     }
 }
