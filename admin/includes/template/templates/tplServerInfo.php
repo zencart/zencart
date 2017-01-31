@@ -9,6 +9,8 @@
  */
 //print_r($tplVars['versionInfo']);
 ?>
+<p class="center"><?php echo TEXT_DATABASE_QUICKLINK; ?></p>
+<hr />
 
 <section class="row">
 <div class="col-lg-4 col-lg-offset-2">
@@ -43,4 +45,24 @@
 <?php phpinfo(); ?>
 <?php } ?>
 </div>
+</section>
+
+<section class="row" id="database-info">
+    <h2 class="center"><?php echo $tplVars['databaseInfo']['heading']; ?></h2>
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="center">
+            <table class="table table-bordered table-striped" style="table-layout: fixed;word-wrap: break-word;">
+<?php
+foreach ($tplVars['databaseInfo']['fields'] as $databaseInfo) {
+?>
+                <tr>
+                    <td class="e"><?php echo $databaseInfo['name']; ?></td>
+                    <td class="v"><?php echo $databaseInfo['value']; ?></td>
+                </tr>
+<?php
+}
+?>
+            </table>
+        </div>
+    </div>
 </section>

@@ -30,3 +30,6 @@ define('TITLE_MYSQL_STRICT_MODE', '(in Strict mode)');
 define('TITLE_DATABASE_MYSQL_MODE', 'MySQL Mode:');
 define('TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS', 'MySQL Slow Query Log Status:');
 define('TITLE_DATABASE_MYSQL_SLOW_LOG_FILE', 'MySQL Slow Query Log File:');
+
+define ('TEXT_DATABASE_QUICKLINK', 'Click <a href="#database-info">here</a> to view the database configuration variables.');
+define ('TITLE_DATABASE_VARIABLES', 'Database Variables: ');
