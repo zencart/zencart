@@ -11,7 +11,7 @@
    * @deprecated in version 1.6.0. Use zen_admin_href_link() instead
    */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
-    trigger_error ('The function zen_href_link is deprecated, use zen_admin_href_link instead. Note that the parameters are different too.', E_USER_NOTICE);
+    //trigger_error ('The function zen_href_link is deprecated, use zen_admin_href_link instead. Note that the parameters are different too.', E_USER_NOTICE);
     return zen_admin_href_link($page, $parameters, $add_session_id);
   }
 
