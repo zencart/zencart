@@ -153,7 +153,7 @@
       }
     } else {
       // no tax at this level, set rate to 0 and description of unknown
-      $rates_array[0] = TEXT_UNKNOWN_TAX_RATE;
+      $rates_array[TEXT_UNKNOWN_TAX_RATE] = 0;
     }
     return $rates_array;
   }
