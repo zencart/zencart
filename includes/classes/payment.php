@@ -289,4 +289,14 @@ class payment extends base {
     }
     return array(false, '');
   }
+
+  function process_form_params() {
+    if (is_array($this->modules)) {
+      if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+        if (method_exists($GLOBALS[$this->selected_module], 'process_form_params')) {
+          return $GLOBALS[$this->selected_module]->process_form_params();
+        }
+      }
+    }
+  }
 }
