@@ -16,7 +16,7 @@ use ZenCart\View\ViewFactory as View;
  * Class AbstractAdminController
  * @package App\Controllers
  */
-abstract class AbstractAdminController
+abstract class AbstractAdminController extends \base
 {
     /**
      * @var array

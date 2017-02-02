@@ -30,11 +30,11 @@ trait ZenCartSpecificSteps
         if (!defined('CWD')) {
             define('CWD', getcwd());
         }
-        $file_contents = file_get_contents(CWD . '/includes/dist-configure.php');
+//        $file_contents = file_get_contents(CWD . '/includes/dist-configure.php');
         $fp = fopen(CWD . '/includes/configure.php', 'w');
         chmod(CWD . '/includes/configure.php', 0777);
         if ($fp) {
-            fputs($fp, $file_contents);
+//            fputs($fp, $file_contents);
             fclose($fp);
         }
 

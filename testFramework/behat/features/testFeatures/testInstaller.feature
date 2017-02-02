@@ -32,6 +32,7 @@ Feature: Installer
     And I press button "btnsubmit"
 
     Then I should see "Installation completed"
+    Then I set a configuration value "SEND_EMAILS", "false"
 
     Given I do a first admin login with <param>"admin_user_main", <param>"admin_password_install", <param>"admin_password_main"
     Then I should see "Initial Setup Wizard"
