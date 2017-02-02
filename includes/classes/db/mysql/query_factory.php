@@ -132,6 +132,10 @@ class queryFactory extends base {
     unset($this->link);
   }
 
+  function __destruct() {
+    $this->close();
+  }
+
   function set_error($zp_err_num, $zp_err_text, $dieOnErrors = true) {
     $this->error_number = $zp_err_num;
     $this->error_text = $zp_err_text;
