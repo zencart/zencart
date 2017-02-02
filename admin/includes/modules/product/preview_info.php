@@ -139,8 +139,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         <td align="right" class="smallText">
 <?php
 /* Re-Post all POST'ed variables */
-      reset($_POST);
-      while (list($key, $value) = each($_POST)) {
+      foreach($_POST as $key => $value) {
         if (!is_array($_POST[$key])) {
           echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE)) . "\n";
         }

@@ -154,7 +154,7 @@ require('includes/admin_html_head.php');
 
       $contents = array('form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      while (list ($key, $value) = each($template_info) ) {
+      foreach($template_info as $key => $value) {
         $template_array[] = array('id' => $key, 'text' => $value['name']);
       }
       $lns = $db->Execute("select name, languages_id from " . TABLE_LANGUAGES);
@@ -171,8 +171,7 @@ require('includes/admin_html_head.php');
 
       $contents = array('form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      reset($template_info);
-      while (list ($key, $value) = each($template_info) ) {
+      foreach($template_info as $key => $value) {
         $template_array[] = array('id' => $key, 'text' => $value['name']);
       }
       $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_NAME . '<br>' . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir']));
@@ -198,7 +197,7 @@ require('includes/admin_html_head.php');
         $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_VERSION  . $template_info[$tInfo->template_dir]['version']);
         $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_DESCRIPTION  . '<br />' . $template_info[$tInfo->template_dir]['description']);
         $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_INSTALLED  . '<br />');
-        while (list ($key, $value) = each($template_info) ) {
+        foreach($template_info as $key => $value) {
           $contents[] = array('text' => '<a href="' . DIR_WS_CATALOG_TEMPLATE . $key . '/images/' . $value['screenshot'] . '" target = "_blank">' . zen_image_button('button_preview.gif', IMAGE_PREVIEW) . '</a>&nbsp;&nbsp;' . $value['name']);
         }
       }

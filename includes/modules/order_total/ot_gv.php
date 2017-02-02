@@ -66,9 +66,8 @@ class ot_gv {
       $od_amount = $this->calculate_deductions($this->get_order_total());
       $this->deduction = $od_amount['total'];
       if ($od_amount['total'] > 0) {
-        reset($order->info['tax_groups']);
         $tax = 0;
-        while (list($key, $value) = each($order->info['tax_groups'])) {
+        foreach($order->info['tax_groups'] as $key => $value) {
           if ($od_amount['tax_groups'][$key]) {
             $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
             $tax += $od_amount['tax_groups'][$key];

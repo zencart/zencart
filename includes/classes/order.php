@@ -525,8 +525,7 @@ class order extends base {
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
       if ($products[$i]['attributes']) {
         $subindex = 0;
-        reset($products[$i]['attributes']);
-        while (list($option, $value) = each($products[$i]['attributes'])) {
+        foreach ($products[$i]['attributes'] as $option => $value) {
 
           $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
                                       pa.options_values_price, pa.price_prefix

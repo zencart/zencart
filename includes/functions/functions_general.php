@@ -154,8 +154,7 @@
     }
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -186,8 +185,7 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'cmd', 'error', 'x', 'y'));
     $fields = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -671,9 +669,9 @@ function zen_get_minutes_since($timestamp) {
     $uprid = $prid;
     if ( !is_array($params) || strstr($prid, ':')) return $prid;
 
-    while (list($option, $value) = each($params)) {
+    foreach($params as $option => $value) {
       if (is_array($value)) {
-        while (list($opt, $val) = each($value)) {
+        foreach($value as $opt => $val) {
           $uprid = $uprid . '{' . $option . '}' . trim($opt);
         }
       } else {
@@ -767,7 +765,7 @@ function zen_get_minutes_since($timestamp) {
 
     $get_string = '';
     if (sizeof($array) > 0) {
-      while (list($key, $value) = each($array)) {
+      foreach($array as $key => $value) {
         if ( (!in_array($key, $exclude)) && ($key != 'x') && ($key != 'y') ) {
           $get_string .= $key . $equals . $value . $separator;
         }
@@ -1100,8 +1098,7 @@ function zen_get_minutes_since($timestamp) {
         return trim(zen_sanitize_string(stripslashes($string)));
       }
     } elseif (is_array($string)) {
-      reset($string);
-      while (list($key, $value) = each($string)) {
+      foreach($string as $key => $value) {
         $string[$key] = zen_db_prepare_input($value);
       }
     }
@@ -1118,15 +1115,13 @@ function zen_get_minutes_since($timestamp) {
  */
   function zen_db_perform($table, $data, $action = 'insert', $parameters = '') {
     global $db;
-    reset($data);
     if (strtolower($action) == 'insert') {
       $query = 'INSERT INTO ' . $table . ' (';
-      while (list($columns, ) = each($data)) {
+      foreach($data as $columns => $value) {
         $query .= $columns . ', ';
       }
       $query = substr($query, 0, -2) . ') VALUES (';
-      reset($data);
-      while (list(, $value) = each($data)) {
+      foreach($data as $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= 'now(), ';
@@ -1142,7 +1137,7 @@ function zen_get_minutes_since($timestamp) {
       $query = substr($query, 0, -2) . ')';
     } elseif (strtolower($action) == 'update') {
       $query = 'UPDATE ' . $table . ' SET ';
-      while (list($columns, $value) = each($data)) {
+      foreach($data as $columns => $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= $columns . ' = now(), ';

@@ -336,7 +336,7 @@ function SetCategories() {
   $prev_sales = $db->Execute("select sale_categories_all from " . TABLE_SALEMAKER_SALES);
   while (!$prev_sales->EOF) {
     $prev_categories = explode(',', $prev_sales->fields['sale_categories_all']);
-    while(list($key,$value) = each($prev_categories)) {
+    foreach($prev_categories as $key => $value) {
       if ($value) $prev_categories_array[$value]++;
     }
     $prev_sales->MoveNext();
