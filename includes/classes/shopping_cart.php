@@ -70,6 +70,7 @@ class shoppingCart extends base {
    */
   var $display_debug_messages = FALSE;
   var $flag_duplicate_msgs_set = FALSE;
+  var $flag_duplicate_quantity_msgs_set = FALSE;
   /**
    * constructor method
    *
@@ -1299,27 +1300,30 @@ class shoppingCart extends base {
 
           // Check Quantity Max if not already an error on Minimum
           if ($fix_once == 0) {
-            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max']) {
+            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max'] && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['max']) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MAX_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
+              $this->flag_duplicate_quantity_msgs_set[(int)$prid]['max'] = true;
             }
           }
 
           if ($fix_once == 0) {
-            if ($check_quantity < $check_quantity_min) {
+            if ($check_quantity < $check_quantity_min && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['min']) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MIN_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
+              $this->flag_duplicate_quantity_msgs_set[(int)$prid]['min'] = true;
             }
           }
 
           // Check Quantity Units if not already an error on Quantity Minimum
           if ($fix_once == 0) {
             $check_units = $products->fields['products_quantity_order_units'];
-            if ( fmod_round($check_quantity,$check_units) != 0 ) {
+            if ( fmod_round($check_quantity,$check_units) != 0 && !$this->flag_duplicate_quantity_msgs_set[$products_id]['units'] ) {
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
+              $this->flag_duplicate_quantity_msgs_set[$products_id]['units'] = true;
             }
           }
 
@@ -1741,6 +1745,8 @@ class shoppingCart extends base {
     global $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
+    $change_state = array();
+    $this->flag_duplicate_quantity_msgs_set = FALSE;
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
@@ -1750,18 +1756,39 @@ class shoppingCart extends base {
         // adjust quantity when not a value
         $chk_link = '<a href="' . zen_href_link(zen_get_info_page($_POST['products_id'][$i]), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($_POST['products_id'][$i]))) . '&products_id=' . $_POST['products_id'][$i]) . '">' . zen_get_products_name($_POST['products_id'][$i]) . '</a>';
         $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity'][$i]), 'caution');
-        $_POST['cart_quantity'][$i] = 0;
+//        $_POST['cart_quantity'][$i] = 0; // On an update, if an incorrect value was given, then with expectation that product is already in the cart, then the post quantity should equal what is in the cart, not 0...
+        $_POST['cart_quantity'][$i] = $this->get_quantity($_POST['products_id'][$i]);
         continue;
       }
       if ( in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array())) or $_POST['cart_quantity'][$i]==0) {
         $this->remove($_POST['products_id'][$i]);
       } else {
         $add_max = zen_get_products_quantity_order_max($_POST['products_id'][$i]); // maximum allowed
+        $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
+        // Adjust in cart quantities for product that have other cart 
+        //   product dependencies and reduction of product to allow a larger increase 
+        //   at each product's modification.  
+        //   This will maximize the maximum product quantities available.
+        if ($chk_mixed == true && !array_key_exists(zen_get_prid($_POST['products_id'][$i]), $change_state)) {
+          $change_state[zen_get_prid($_POST['products_id'][$i])] = $this->in_cart_product_mixed_changed($_POST['products_id'][$i], 'decrease'); // Returns full data on products.
+          if (count($change_state[zen_get_prid($_POST['products_id'][$i])]['decrease']) > 0) {
+            // Verify minuses are good, and effect the items to be changed
+            //  This leaves only increases or netzero to be at play.
+            foreach ($change_state[zen_get_prid($_POST['products_id'][$i])]['decrease'] as /*$key => */$prod_id) {
+              $attributes = ($_POST['id'][$prod_id]) ? $_POST['id'][$prod_id] : '';
+              $this_curr_qty = $this->get_quantity($prod_id);
+              $this_new_qty = $this_curr_qty + $change_state[zen_get_prid($_POST['products_id'][$i])]['changed'][$prod_id];
+              $this->add_cart($prod_id, $this_new_qty, $attributes, false);
+              if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' prod_id: ' . $prod_id . ' this_new_qty: ' . $this_new_qty . ' this_curr_qty: ' . $this_curr_qty . ' change_state[zen_get_prid(_POST[products_id][i])][changed][prod_id]: ' . $change_state[zen_get_prid($_POST['products_id'][$i])]['changed'][$prod_id] . ' attributes: ' . print_r($attributes, true) . ' change_state: ' . print_r($change_state, true) . ' <br>', 'caution');
+            }
+            unset($prod_num, $prod_id, $attributes, $this_curr_qty, $this_new_qty);
+          }
+        }
         $cart_qty = $this->in_cart_mixed($_POST['products_id'][$i]); // total currently in cart
         if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' cart_qty: ' . $cart_qty . ' <br>', 'caution');
         $new_qty = $_POST['cart_quantity'][$i]; // new quantity
         $current_qty = $this->get_quantity($_POST['products_id'][$i]); // how many currently in cart for attribute
-        $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
+//        $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
 
         $new_qty = $this->adjust_quantity($new_qty, $_POST['products_id'][$i], 'shopping_cart');
 // bof: adjust new quantity to be same as current in stock
@@ -1790,12 +1817,16 @@ class shoppingCart extends base {
           case (($add_max - $cart_qty + $new_qty >= $add_max) && $new_qty > $add_max && $chk_mixed == true):
             $adjust_max= 'true';
             $requested_qty = $new_qty;
-            $new_qty = $current_qty;
+//            $new_qty = $current_qty;
+            $alter_qty = $add_max - $cart_qty + $current_qty;
+            $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           case (($cart_qty + $new_qty - $current_qty > $add_max) && $chk_mixed == true):
             $adjust_max= 'true';
             $requested_qty = $new_qty;
-            $new_qty = $current_qty;
+//            $new_qty = $current_qty;
+            $alter_qty = $add_max - $cart_qty + $current_qty;
+            $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           default:
             $adjust_max= 'false';
@@ -2536,6 +2567,104 @@ class shoppingCart extends base {
       $chk_cart_quantity = $this->in_cart_product_total_quantity_category($category_id);
     }
     return $chk_cart_quantity;
+  }
+
+
+/**
+ * calculate shopping cart stats for a products_id to obtain data about submitted (posted) items as compared to what is in the cart.
+ * USAGE:  $mix_increase = in_cart_product_mixed_changed($product_id, 'increase');
+ * USAGE:  $mix_decrease = in_cart_product_mixed_changed($product_id, 'decrease');
+ * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id);
+ * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id, 'all'); (Second value anything other than 'increase' or 'decrease')
+ *
+ * @param mixed $product_id
+ * return array 
+ */
+  function in_cart_product_mixed_changed($product_id, $chk = false) {
+    global $db;
+    
+    // check if mixed is on
+    $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id=" . zen_get_prid($product_id) . " limit 1");
+
+    // if mixed attributes is off identify that this product is the last of its kind (which is also the first of its kind).
+    if ($product->fields['products_quantity_mixed'] == '0') {
+      return true;
+    }
+
+    $product_changed = array();
+    $product_total_change = array();
+    $product_tracked_changed = array();
+    $product_last_changed = array();
+    $product_increase = array();
+    $product_decrease = array();
+    
+    for ($i=0, $n=sizeof($_POST['products_id']/*$products*/); $i<$n; $i++) {
+      $products_id = $_POST['products_id'][$i];
+      $current_qty = $this->get_quantity($products_id); // $products[$i]['quantity']
+      if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
+        $_POST['cart_quantity'][$i] = $current_qty; // Default response behavior in cart.
+      }
+      if ($_POST['cart_quantity'][$i] != $current_qty) { // identify that quantity changed
+        $product_changed[$products_id] = $_POST['cart_quantity'][$i] - $current_qty;  // Identify that the specific product changed and by how much the customer increased it.
+        if (array_key_exists(zen_get_prid($products_id), $product_total_change)) {
+          $product_total_change[zen_get_prid($products_id)] = $product_total_change[zen_get_prid($products_id)] + $product_changed[$products_id];
+        } else {
+          $product_total_change[zen_get_prid($products_id)] = $product_changed[$products_id];
+        }
+
+        switch (true) {
+          case ($chk == 'increase'): // track only increases
+            if ($_POST['cart_quantity'][$i] > $current_qty) {
+              $product_tracked_changed[$products_id] = true;  // Identify that the specific product changed
+              $product_last_changed[zen_get_prid($products_id)] = $products_id; // Identify what the last changed product was.
+              $product_increase[] = $products_id;
+            }
+            break;
+          case ($chk == 'decrease'): // track only decreases
+            if ($_POST['cart_quantity'][$i] < $current_qty) {
+              $product_tracked_changed[$products_id] = true;  // Identify that the specific product changed
+              $product_last_changed[zen_get_prid($products_id)] = $products_id; // Identify what the last changed product was.
+              $product_decrease[] = $products_id;
+            }
+            break;
+          default: // track the last that had a difference in quantity.
+            $product_tracked_changed[$products_id] = true;  // Identify that the specific product changed
+            $product_last_changed[zen_get_prid($products_id)] = $products_id; // Identify what the last changed product was.
+            if ($_POST['cart_quantity'][$i] > $current_qty) {
+              $product_increase[] = $products_id;
+            }
+            if ($_POST['cart_quantity'][$i] < $current_qty) {
+              $product_decrease[] = $products_id;
+            }
+        } 
+      }
+    }
+
+    $changed_array = array(
+                       'state'=>false, 
+                       'changed' => $product_changed, 
+                       'total_change' => $product_total_change[zen_get_prid($product_id)],
+                       'last_changed' => $product_last_changed[zen_get_prid($product_id)],
+                       'increase' => $product_increase,
+                       'decrease' => $product_decrease
+                     );
+    
+    if (array_key_exists($product_id, $product_changed)) {
+      if ($product_total_change[zen_get_prid($product_id)] == '0') {
+        $changed_array['state'] = 'netzero';
+        return $changed_array;
+      }
+
+      if (array_key_exists($product_id, $product_tracked_changed)) {
+        if ($product_last_changed[zen_get_prid($product_id)] == $product_id) {
+          $changed_array['state'] = true;
+          return $changed_array;
+        }
+      }
+    }
+
+    return $changed_array;
+
   }
 
 }
