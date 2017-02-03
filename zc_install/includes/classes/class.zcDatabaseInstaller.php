@@ -37,7 +37,7 @@ class zcDatabaseInstaller
     $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
     $this->basicParseStrings = array(
-    'DROP TABLE IF EXISTS ',
+    'DROP TABLE ',
     'CREATE TABLE ',
     'REPLACE INTO ',
     'INSERT INTO ',
@@ -163,9 +163,23 @@ class zcDatabaseInstaller
       error_log("MySQL error " . $this->db->error_number . " encountered during zc_install:\n" . $this->db->error_text . "\n" . $this->line . "\n---------------\n\n");
     }
   }
-  public function parserDropTableIfExists ()
+  public function parserDropTable()
   {
-    $this->line = 'DROP TABLE IF EXISTS ' . $this->dbPrefix . substr($this->line, 21);
+    $table = (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) == 'IF EXISTS') ? $this->lineSplit[4] : $this->lineSplit[2];
+
+    if (!$this->tableExists($table) && (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS'))
+    {
+      $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else {
+      if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS')
+      {
+        $this->line = 'DROP TABLE ' . $this->dbPrefix . substr($this->line, 11);
+      } else {
+        $this->line = 'DROP TABLE IF EXISTS ' . $this->dbPrefix . substr($this->line, 21);
+      }
+    }
   }
   public function parserCreateTable()
   {
@@ -325,6 +339,24 @@ class zcDatabaseInstaller
             break;
           default:
             // Do nothing
+      }
+    }
+  }
+  public function parserRenameTable()
+  {
+    if (!$this->tableExists($this->lineSplit[2])) 
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else {
+      if ($this->tableExists($this->lineSplit[4]))
+      {
+        if (!isset($result)) $result = sprintf(REASON_TABLE_ALREADY_EXISTS, $table);
+        $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+        $this->ignoreLine = true;
+      } else {
+        $this->line = 'RENAME TABLE ' . $this->dbPrefix . $this->lineSplit[2] . ' TO ' . $this->dbPrefix . substr($this->line, (13 + strlen($this->lineSplit[2]) + 4));
       }
     }
   }
