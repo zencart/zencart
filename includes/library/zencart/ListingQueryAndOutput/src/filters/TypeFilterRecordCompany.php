@@ -20,7 +20,7 @@ class TypeFilterRecordCompany extends AbstractTypeFilter
      */
     public function handleParameterFilters($listingQuery)
     {
-        $listingQuery['selectList'] [] = "r.record_company_name as manufacturers_name";
+        $listingQuery['selectList'] [] = TABLE_RECORD_COMPANY . ".record_company_name as manufacturers_name";
 
         $listingQuery['joinTables'] ['TABLE_PRODUCT_MUSIC_EXTRA'] = array(
             'table' => TABLE_PRODUCT_MUSIC_EXTRA,

@@ -54,9 +54,11 @@ class QueryBuilder extends \base
         $this->parts ['joinTables'] = issetorArray($listingQuery, 'joinTables', array());
         $this->parts ['whereClauses'] = issetorArray($listingQuery, 'whereClauses', array());
         $this->parts ['mainTableName'] = TABLE_PRODUCTS;
+        $this->parts ['mainTableFkeyField'] = 'products_id';
         if (isset($listingQuery['mainTable'])) {
             $this->parts ['mainTableName'] = $listingQuery['mainTable'] ['table'];
-            $this->parts ['mainTableFkeyField'] = $listingQuery['mainTable'] ['fkeyFieldLeft'];
+            $this->parts ['mainTableFkeyField'] =
+                $listingQuery['mainTable'] ['fkeyFieldLeft'];
         }
         $this->notify('NOTIFY_QUERYBUILDER_INIT_END');
     }

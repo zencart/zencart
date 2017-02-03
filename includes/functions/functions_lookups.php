@@ -1389,7 +1389,7 @@ function zen_has_product_attributes_downloads($products_id, $check_valid=false) 
       break;
     case (SHOW_NEW_PRODUCTS_LIMIT == 1):
       $zc_new_date = date('Ym', time()) . '01';
-      $new_range = ' and ' . TABLE_PRODUCTS . ' .products_date_added >=' . $zc_new_date;
+      $new_range = ' and ' . TABLE_PRODUCTS . '.products_date_added >=' . $zc_new_date;
       break;
     default:
       $new_range = ' and ' . TABLE_PRODUCTS . '.products_date_added >=' . $zc_new_date;
@@ -1399,7 +1399,7 @@ function zen_has_product_attributes_downloads($products_id, $check_valid=false) 
       // do nothing upcoming shows in new
     } else {
       // do not include upcoming in new
-      $new_range .= " and ( ' . TABLE_PRODUCTS . ' .products_date_available <=" . $upcoming_mask . " or ' . TABLE_PRODUCTS . '.products_date_available IS NULL)";
+      $new_range .= " and ( ' . TABLE_PRODUCTS . '.products_date_available <=" . $upcoming_mask . " or ' . TABLE_PRODUCTS . '.products_date_available IS NULL)";
     }
     return $new_range;
   }

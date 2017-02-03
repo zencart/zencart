@@ -20,7 +20,7 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
      */
     public function handleParameterFilters($listingQuery)
     {
-        $listingQuery['selectList'] [] = "m.music_genre_name as manufacturers_name";
+        $listingQuery['selectList'] [] = TABLE_MUSIC_GENRE . ".music_genre_name as manufacturers_name";
 
         $listingQuery['joinTables'] ['TABLE_PRODUCT_MUSIC_EXTRA'] = array(
             'table' => TABLE_PRODUCT_MUSIC_EXTRA,
