@@ -164,19 +164,16 @@
   function zen_add_tax($price, $tax = 0) {
     global $currencies;
 
-    if (IS_ADMIN_FLAG === true) {
-      if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
+    if ($tax == 0) return $price;
+
+    if (IS_ADMIN_FLAG === true && DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
         return $price + zen_calculate_tax($price, $tax);
-      } else {
-        return $price; 
-      }
-    } else {
-      if ( (DISPLAY_PRICE_WITH_TAX == 'true') && ($tax > 0) ) {
-        return $price + zen_calculate_tax($price, $tax);
-      } else {
-        return $price;
-      }
     }
+    if (DISPLAY_PRICE_WITH_TAX == 'true') {
+        return $price + zen_calculate_tax($price, $tax);
+    }
+
+    return $price;
   }
 
 /**
