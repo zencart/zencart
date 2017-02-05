@@ -21,7 +21,7 @@ if (defined('SESSION_USE_ROOT_COOKIE_PATH') && SESSION_USE_ROOT_COOKIE_PATH  == 
 $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
 $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PREFIX == 'True') ? '.' : '';
 if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) $domainPrefix = '';
-$secureFlag = ((ENABLE_SSL_ADMIN == 'true' && substr(HTTP_SERVER, 0, 6) == 'https:' && substr(HTTPS_SERVER, 0, 6) == 'https:') || (ENABLE_SSL_ADMIN == 'false' && substr(HTTP_SERVER, 0, 6) == 'https:')) ? TRUE : FALSE;
+$secureFlag = (substr(HTTP_SERVER, 0, 6) == 'https:') ? TRUE : FALSE;
 
 session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, TRUE);
 
