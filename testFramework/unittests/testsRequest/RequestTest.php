@@ -24,8 +24,8 @@ class testRequest extends zcTestCase
         $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/di/src');
         $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
         $loader->addPrefix('Interop\Container', DIR_CATALOG_LIBRARY . 'container-interop/container-interop/src/Interop/Container/');
-        require_once DIR_FS_CATALOG . 'includes/diConfigs/AuraWeb.php';
-        require_once DIR_FS_CATALOG . 'includes/diConfigs/ZenCartCommon.php';
+        require_once DIR_FS_CATALOG . 'app/diConfigs/AuraWeb.php';
+        require_once DIR_FS_CATALOG . 'app/diConfigs/ZenCartCommon.php';
     }
 
     public function testRequestInitEmpty()

@@ -139,3 +139,12 @@ $template_dir = '';
 if (!defined('DIR_WS_TEMPLATES')) {
     define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 }
+
+/**
+ * Load configuration stuff
+ */
+require(DIR_CATALOG_LIBRARY . 'illuminate/support/helpers.php');
+
+$configLoader = new ZenCart\ConfigLoader\ConfigLoader();
+$configLoader->load();
+

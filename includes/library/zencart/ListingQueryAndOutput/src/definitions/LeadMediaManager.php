@@ -33,7 +33,6 @@ class LeadMediaManager extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_MEDIA_MANAGER,
-                'alias' => 'mg',
                 'fkeyFieldLeft' => 'media_id',
             ),
             'isPaginated' => true,

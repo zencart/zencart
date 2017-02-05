@@ -11,6 +11,7 @@ namespace App\Controllers;
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
 use ZenCart\View\ViewFactory as View;
+use App\Model\ModelFactory;
 
 /**
  * Class AbstractAdminController
@@ -59,7 +60,7 @@ abstract class AbstractAdminController extends \base
      * @param $db
      * @param User $user
      */
-    public function __construct(Request $request, $modelFactory, User $user, View $view)
+    public function __construct(Request $request, ModelFactory $modelFactory, User $user, View $view)
     {
         $this->request = $request;
         $this->currentUser = $user;
@@ -85,6 +86,9 @@ abstract class AbstractAdminController extends \base
         }
         $controllerAction .= 'Execute';
         $controllerAction = (method_exists($this, $controllerAction)) ? $controllerAction : 'mainExecute';
+        if (!method_exists($this, $controllerAction)) {
+            die ('No Dispatch Method ' . $controllerAction);
+        }
         $this->{$controllerAction}();
         return $this->response;
     }

@@ -22,7 +22,6 @@ class NewProductsPage extends AbstractDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_PRODUCTS,
-                'alias' => 'p',
                 'fkeyFieldLeft' => 'products_id',
             ),
             'isRandom' => false,
@@ -61,14 +60,12 @@ class NewProductsPage extends AbstractDefinition
             'joinTables' => array(
                 'TABLE_PRODUCTS_DESCRIPTION' => array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
-                    'alias' => 'pd',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'products_id',
                     'addColumns' => true
                 ),
                 'TABLE_MANUFACTURERS' => array(
                     'table' => TABLE_MANUFACTURERS,
-                    'alias' => 'm',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'manufacturers_id',
                     'addColumns' => true

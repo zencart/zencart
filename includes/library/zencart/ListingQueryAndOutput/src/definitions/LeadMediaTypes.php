@@ -22,7 +22,6 @@ class LeadMediaTypes extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_MEDIA_TYPES,
-                'alias' => 'mt',
                 'fkeyFieldLeft' => 'type_id',
             ),
             'isPaginated' => true,

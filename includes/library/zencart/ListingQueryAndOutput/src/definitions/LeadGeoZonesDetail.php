@@ -38,7 +38,6 @@ class LeadGeoZonesDetail extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_ZONES_TO_GEO_ZONES,
-                'alias' => 'zgz',
                 'fkeyFieldLeft' => 'association_id',
             ),
             'whereClauses' => array(
@@ -70,7 +69,6 @@ class LeadGeoZonesDetail extends AbstractLeadDefinition
             'joinTables' => array(
                 'TABLE_COUNTRIES_NAME' => array(
                     'table' => TABLE_COUNTRIES_NAME,
-                    'alias' => 'c',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'zone_country_id',
                     'fkeyFieldRight' => 'countries_id',
@@ -78,7 +76,6 @@ class LeadGeoZonesDetail extends AbstractLeadDefinition
                 ),
                 'TABLE_ZONES' => array(
                     'table' => TABLE_ZONES,
-                    'alias' => 'tz',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'zone_id',
                     'fkeyFieldRight' => 'zone_id',

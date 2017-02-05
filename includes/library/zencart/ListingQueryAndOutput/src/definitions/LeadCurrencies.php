@@ -32,7 +32,6 @@ class LeadCurrencies extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_CURRENCIES,
-                'alias' => 'c',
                 'fkeyFieldLeft' => 'currencies_id',
             ),
             'isPaginated' => true,

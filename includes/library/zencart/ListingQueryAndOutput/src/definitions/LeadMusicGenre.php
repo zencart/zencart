@@ -28,7 +28,6 @@ class LeadMusicGenre extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_MUSIC_GENRE,
-                'alias' => 'mg',
                 'fkeyFieldLeft' => 'music_genre_id',
             ),
             'isPaginated' => true,

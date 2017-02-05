@@ -28,7 +28,6 @@ class ReportStatsProductsViewed extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_PRODUCTS_DESCRIPTION,
-                'alias' => 'p',
                 'fkeyFieldLeft' => 'products_id',
             ),
             'orderBys' => array(array('field' => 'products_viewed DESC')),

@@ -22,13 +22,11 @@ class LeadTaxRates extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_TAX_RATES,
-                'alias' => 'tr',
                 'fkeyFieldLeft' => 'tax_rates_id',
             ),
             'joinTables' => array(
                 'TABLE_GEO_ZONES' => array(
                     'table' => TABLE_GEO_ZONES,
-                    'alias' => 'tz',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'tax_zone_id',
                     'fkeyFieldRight' => 'geo_zone_id',
@@ -36,7 +34,6 @@ class LeadTaxRates extends AbstractLeadDefinition
                 ),
                 'TABLE_COUNTRIES' => array(
                     'table' => TABLE_TAX_CLASS,
-                    'alias' => 'tc',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'tax_class_id',
                     'fkeyFieldRight' => 'tax_class_id',

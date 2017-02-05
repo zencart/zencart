@@ -8,7 +8,6 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<div class="form-group">
     <div class="input-group col-sm-6 ">
         <input id="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>"
                class="form-control <?php echo $tplVars['pageDefinition']['action']; ?>LeadFilterInput"
@@ -18,4 +17,3 @@
                size="<?php echo $tplVars['pageDefinition']['fields'][$field]['layout']['size']; ?>"
         >
     </div>
-</div>

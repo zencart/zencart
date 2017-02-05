@@ -8,7 +8,6 @@
  * @version $Id:   New in v1.6.0 $
  */
 ?>
-<div class="form-group">
     <div class="input-group col-sm-6">
         <button type="button" class="btn btn-default pull-right <?php echo $tplVars['pageDefinition']['action']; ?>LeadFilterInput" id="<?php echo $tplVars['pageDefinition']['fields'][$field]['field'] . '_daterangepicker'; ?>">
                     <span>
@@ -19,7 +18,6 @@
         <input type="hidden" name="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>" id="<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>">
         <?php require('includes/template/partials/' . $tplVars['pageDefinition']['errorTemplate']); ?>
     </div>
-</div>
 <script>
     $('#<?php echo $tplVars['pageDefinition']['fields'][$field]['field']; ?>_daterangepicker').daterangepicker(
         {

@@ -38,13 +38,11 @@ class ReportGvSent extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_COUPONS,
-                'alias' => 'c',
                 'fkeyFieldLeft' => 'coupon_id',
             ),
             'joinTables' => array(
                 'TABLE_COUPON_REDEEM_TRACK' => array(
                     'table' => TABLE_COUPON_REDEEM_TRACK,
-                    'alias' => 'crt',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'coupon_id',
                     'fkeyFieldRight' => 'coupon_id',
@@ -53,7 +51,6 @@ class ReportGvSent extends AbstractLeadDefinition
                 'TABLE_COUPON_EMAIL_TRACK' => array(
                     'table' => TABLE_COUPON_EMAIL_TRACK,
                     'fkeyTable' => 'TABLE_COUPONS',
-                    'alias' => 'cet',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'coupon_id',
                     'fkeyFieldRight' => 'coupon_id',

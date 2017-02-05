@@ -20,17 +20,15 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
      */
     public function handleParameterFilters($listingQuery)
     {
-        $listingQuery['selectList'] [] = "m.music_genre_name as manufacturers_name";
+        $listingQuery['selectList'] [] = TABLE_MUSIC_GENRE . ".music_genre_name as manufacturers_name";
 
         $listingQuery['joinTables'] ['TABLE_PRODUCT_MUSIC_EXTRA'] = array(
             'table' => TABLE_PRODUCT_MUSIC_EXTRA,
-            'alias' => 'pme',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'products_id'
         );
         $listingQuery['joinTables'] ['TABLE_MUSIC_GENRE'] = array(
             'table' => TABLE_MUSIC_GENRE,
-            'alias' => 'm',
             'type' => 'LEFT',
             'fkeyFieldLeft' => 'music_genre_id',
             'fkeyTable' => 'TABLE_PRODUCT_MUSIC_EXTRA'
@@ -45,7 +43,6 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
             if ($this->request->readGet('filter_id')) {
                 $listingQuery ['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                     'table' => TABLE_PRODUCTS_TO_CATEGORIES,
-                    'alias' => 'p2c',
                     'type' => 'LEFT',
                     'fkeyFieldLeft' => 'products_id'
                 );
@@ -59,7 +56,6 @@ class TypeFilterMusicGenre extends AbstractTypeFilter
         } else {
             $listingQuery['joinTables'] ['TABLE_PRODUCTS_TO_CATEGORIES'] = array(
                 'table' => TABLE_PRODUCTS_TO_CATEGORIES,
-                'alias' => 'p2c',
                 'type' => 'LEFT',
                 'fkeyFieldLeft' => 'products_id'
             );

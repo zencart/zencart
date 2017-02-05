@@ -21,7 +21,6 @@ class LeadGeoZones extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_GEO_ZONES,
-                'alias' => 'gz',
                 'fkeyFieldLeft' => 'geo_zone_id',
             ),
             'isPaginated' => true,

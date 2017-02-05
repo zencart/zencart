@@ -27,7 +27,6 @@ class LeadUsers extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_ADMIN,
-                'alias' => 'a',
                 'fkeyFieldLeft' => 'admin_id',
             ),
             'isPaginated' => true,
@@ -40,7 +39,6 @@ class LeadUsers extends AbstractLeadDefinition
             'joinTables' => array(
                 'TABLE_ADMIN_PROFILES' => array(
                     'table' => TABLE_ADMIN_PROFILES,
-                    'alias' => 'ap',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'admin_profile',
                     'fkeyFieldRight' => 'profile_id',

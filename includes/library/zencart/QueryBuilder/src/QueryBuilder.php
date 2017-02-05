@@ -54,14 +54,12 @@ class QueryBuilder extends \base
         $this->parts ['joinTables'] = issetorArray($listingQuery, 'joinTables', array());
         $this->parts ['whereClauses'] = issetorArray($listingQuery, 'whereClauses', array());
         $this->parts ['mainTableName'] = TABLE_PRODUCTS;
-        $this->parts ['mainTableAlias'] = 'p';
         $this->parts ['mainTableFkeyField'] = 'products_id';
         if (isset($listingQuery['mainTable'])) {
             $this->parts ['mainTableName'] = $listingQuery['mainTable'] ['table'];
-            $this->parts ['mainTableAlias'] = $listingQuery['mainTable'] ['alias'];
-            $this->parts ['mainTableFkeyField'] = $listingQuery['mainTable'] ['fkeyFieldLeft'];
+            $this->parts ['mainTableFkeyField'] =
+                $listingQuery['mainTable'] ['fkeyFieldLeft'];
         }
-        $this->parts ['tableAliases'] [$this->parts ['mainTableName']] = $this->parts ['mainTableAlias'];
         $this->notify('NOTIFY_QUERYBUILDER_INIT_END');
     }
 
@@ -76,13 +74,13 @@ class QueryBuilder extends \base
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSQUERY_START');
         $this->query ['select'] = "SELECT " . (issetorArray($listingQuery, 'isDistinct', false) ? ' DISTINCT ' : '');
-        if (count($this->parts ['groupBys']) == 0) $this->query ['select'] .= $this->parts ['mainTableAlias'] . ".*";
+        if (count($this->parts ['groupBys']) == 0) $this->query ['select'] .= $this->parts ['mainTableName'] . ".*";
         $this->processSelectList();
         $this->preProcessJoins();
         $this->query ['joins'] = '';
         $this->query ['table'] = ' FROM ';
         $this->processJoins();
-        $this->query ['table'] .= $this->parts ['mainTableName'] . " AS " . $this->parts ['mainTableAlias'] . " ";
+        $this->query ['table'] .= $this->parts ['mainTableName'] . " AS " . $this->parts ['mainTableName'] . " ";
         $this->processWhereClause();
         $this->processGroupBys();
         $this->processOrderBys();
@@ -97,7 +95,7 @@ class QueryBuilder extends \base
         $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .  $this->query ['joins'] .  $this->query ['where'] . $this->query ['groupBy'] . $this->query ['orderBy']; 
         if (!isset($this->query['countSql'])) {
             $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($listingQuery, 'isDistinct', false) ? "DISTINCT " : '') .
-                $this->parts ['mainTableAlias'] . "." . $this->parts ['mainTableFkeyField'] . ")
+                $this->parts ['mainTableName'] . "." . $this->parts ['mainTableFkeyField'] . ")
                                  AS total " . $this->query ['table'] . $this->query ['joins'] .
                 $this->query ['where'];;
         }
@@ -112,9 +110,6 @@ class QueryBuilder extends \base
         $this->notify('NOTIFY_QUERYBUILDER_PREPROCESSJOINS_START');
         if (count($this->parts ['joinTables']) == 0) {
             return;
-        }
-        foreach ($this->parts ['joinTables'] as $joinTable) {
-            $this->parts ['tableAliases'] [$joinTable ['table']] = $joinTable ['alias'];
         }
         $this->query ['joins'] = '';
         $this->notify('NOTIFY_QUERYBUILDER_PREPROCESSJOINS_END');
@@ -131,7 +126,7 @@ class QueryBuilder extends \base
             return;
         }
         foreach ($this->parts ['joinTables'] as $joinTable) {
-            $this->query ['joins'] .= strtoupper($joinTable ['type']) . " JOIN " . $joinTable ['table'] . ' AS ' . $joinTable ['alias'];
+            $this->query ['joins'] .= strtoupper($joinTable ['type']) . " JOIN " . $joinTable ['table'] . ' AS ' . $joinTable ['table'];
             $this->processJoinFkeyField($joinTable);
             $this->processJoinCustomAnd($joinTable);
             $this->processJoinAddColumns($joinTable);
@@ -164,11 +159,11 @@ class QueryBuilder extends \base
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINADDCOLUMN_START');
         if (isset($joinTable ['addColumns']) && $joinTable ['addColumns']) {
-            $this->query ['select'] .= ", " . $joinTable ['alias'] . ".*";
+            $this->query ['select'] .= ", " . $joinTable ['table'] . ".*";
         }
         if (isset($joinTable ['selectColumns'])) {
             foreach ($joinTable ['selectColumns'] as $column)
-            $this->query ['select'] .= ", " . $joinTable ['alias'] . "." . $column;
+            $this->query ['select'] .= ", " . $joinTable ['table'] . "." . $column;
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINADDCOLUMN_ENDT');
     }
@@ -181,21 +176,21 @@ class QueryBuilder extends \base
     protected function processJoinFkeyField($joinTable)
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINFKEYFIELD_START');
-        $fkeyFieldLeft = $this->parts ['mainTableAlias'] . '.' . $this->parts ['mainTableFkeyField'];
-        $fkeyFieldRight = $joinTable ['alias'] . '.' . $this->parts ['mainTableFkeyField'];
+        $fkeyFieldLeft = $this->parts ['mainTableName'] . '.' . $this->parts ['mainTableFkeyField'];
+        $fkeyFieldRight = $joinTable ['table'] . '.' . $this->parts ['mainTableFkeyField'];
         if (!isset($joinTable ['fkeyFieldLeft'])) {
             $this->query ['joins'] .= " ON " . $fkeyFieldLeft . " = " . $fkeyFieldRight . " ";
             return;
 
         }
-        $fkeyFieldLeft = $this->parts ['mainTableAlias'] . '.' . $joinTable ['fkeyFieldLeft'];
+        $fkeyFieldLeft = $this->parts ['mainTableName'] . '.' . $joinTable ['fkeyFieldLeft'];
         if (isset($joinTable ['fkeyTable'])) {
            // print_r($this->parts);
-            $fkeyFieldLeft = $this->parts ['tableAliases'] [constant($joinTable ['fkeyTable'])] . '.' . $joinTable ['fkeyFieldLeft'];
+            $fkeyFieldLeft =  constant($joinTable ['fkeyTable']) . '.' . $joinTable ['fkeyFieldLeft'];
         }
-        $fkeyFieldRight = $joinTable ['alias'] . '.' . $joinTable ['fkeyFieldLeft'];
+        $fkeyFieldRight = $joinTable ['table'] . '.' . $joinTable ['fkeyFieldLeft'];
         if (isset($joinTable ['fkeyFieldRight'])) {
-            $fkeyFieldRight = $joinTable ['alias'] . '.' . $joinTable ['fkeyFieldRight'];
+            $fkeyFieldRight = $joinTable ['table'] . '.' . $joinTable ['fkeyFieldRight'];
         }
         $this->query ['joins'] .= " ON " . $fkeyFieldLeft . " = " . $fkeyFieldRight . " ";
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINFKEYFIELD_END');
@@ -237,7 +232,7 @@ class QueryBuilder extends \base
                          'LIKE' => " LIKE " . $whereClause ['value'] . " ");
 
         $addTest = (isset($hashMap[strtoupper($whereClause ['test'])])) ? $hashMap[strtoupper($whereClause ['test'])] : $default;
-        $this->query['where'] .= " " . $whereClause ['type'] . " " . $this->parts ['tableAliases'] [$whereClause ['table']] . "." . $whereClause ['field'] . $addTest;
+        $this->query['where'] .= " " . $whereClause ['type'] . " " . $whereClause ['table'] . "." . $whereClause ['field'] . $addTest;
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSETEST_END');
     }
 
@@ -300,7 +295,7 @@ class QueryBuilder extends \base
             return true;
         }
         if (isset($orderBy ['table'])) {
-            $this->query ['orderBy'] .= $this->parts ['tableAliases'] [$orderBy ['table']] . ".";
+            $this->query ['orderBy'] .= $orderBy ['table'] . ".";
         }
         $this->query ['orderBy'] .= $orderBy ['field'] . ", ";
         return false;

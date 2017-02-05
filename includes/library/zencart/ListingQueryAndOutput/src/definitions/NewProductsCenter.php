@@ -22,7 +22,6 @@ class NewProductsCenter extends AbstractDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_PRODUCTS,
-                'alias' => 'p',
                 'fkeyFieldLeft' => 'products_id',
             ),
             'derivedItems' => array(
@@ -57,7 +56,6 @@ class NewProductsCenter extends AbstractDefinition
             'joinTables' => array(
                 'TABLE_PRODUCTS_DESCRIPTION' => array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
-                    'alias' => 'pd',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'products_id',
                     'addColumns' => true

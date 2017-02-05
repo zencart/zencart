@@ -9,8 +9,6 @@
  */
 ?>
 
-<div class="form-group">
-
     <div
         class="input-group col-sm-6 ">
         <select
@@ -28,4 +26,3 @@
             <?php } ?>
         </select>
     </div>
-</div>

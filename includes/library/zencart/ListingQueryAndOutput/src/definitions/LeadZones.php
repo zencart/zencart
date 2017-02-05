@@ -21,13 +21,11 @@ class LeadZones extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_ZONES,
-                'alias' => 'z',
                 'fkeyFieldLeft' => 'zone_id',
             ),
             'joinTables' => array(
                 'TABLE_COUNTRIES_NAME' => array(
                     'table' => TABLE_COUNTRIES_NAME,
-                    'alias' => 'c',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'zone_country_id',
                     'fkeyFieldRight' => 'countries_id',

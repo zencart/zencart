@@ -31,13 +31,11 @@ class LeadGvQueue extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_COUPON_GV_QUEUE,
-                'alias' => 'cgq',
                 'fkeyFieldLeft' => 'unique_id',
             ),
             'joinTables' => array(
                 'TABLE_CUSTOMERS' => array(
                     'table' => TABLE_CUSTOMERS,
-                    'alias' => 'c',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'customer_id',
                     'fkeyFieldRight' => 'customers_id',

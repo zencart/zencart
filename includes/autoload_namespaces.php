@@ -3,7 +3,7 @@
  * Default autoloader namespace configuration
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version  $Id: New in v1.6.0 $
  */
@@ -24,7 +24,8 @@ define('NAMESPACE_FORMVALIDATION', 'ZenCart\FormValidation');
 define('NAMESPACE_AURADI', 'Aura\Di');
 define('NAMESPACE_INTEROPCONTAINER', 'Interop\Container');
 define('NAMESPACE_ADMINNOTIFICATIONS', 'ZenCart\AdminNotifications');
-define('NAMESPACE_MODEL', 'ZenCart\Model');
+define('NAMESPACE_MODEL', 'App\Model');
+define('NAMESPACE_CONFIGLOADER', 'ZenCart\ConfigLoader');
 
 
 define('URL_SERVICES', 'zencart/Services/src/');
@@ -45,6 +46,7 @@ define('URL_AURADI', 'aura/di/src/');
 define('URL_INTEROPCONTAINER', 'container-interop/container-interop/src/Interop/Container/');
 define('URL_ADMINNOTIFICATIONS', 'zencart/AdminNotifications/src/');
 define('URL_MODEL', '/app/Model/');
+define('URL_CONFIGLOADER', 'zencart/ConfigLoader/src/');
 
 /**
  * An array of namespace => basedir configurations
@@ -75,4 +77,5 @@ return array(
     NAMESPACE_INTEROPCONTAINER => DIR_CATALOG_LIBRARY. URL_INTEROPCONTAINER,
     NAMESPACE_ADMINNOTIFICATIONS => DIR_CATALOG_LIBRARY. URL_ADMINNOTIFICATIONS,
     NAMESPACE_MODEL => DIR_FS_CATALOG . URL_MODEL,
+    NAMESPACE_CONFIGLOADER => DIR_CATALOG_LIBRARY. URL_CONFIGLOADER,
 );
