@@ -53,6 +53,7 @@ Feature: Installer
   @javascript
   Scenario: After Install, Check some Catalog Pages
     Given I am on "/"
+    And I set a configuration value "SHOW_NEW_PRODUCTS_LIMIT", 1
     Then I should see "Sales Message Goes Here"
 
     Given I am on "index.php?main_page=index&cPath=1"

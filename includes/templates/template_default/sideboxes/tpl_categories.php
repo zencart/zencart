@@ -75,9 +75,9 @@
 //      $display_limit = zen_get_products_new_timelimit();
       $display_limit = zen_get_new_date_range();
 
-      $show_this = $db->Execute("select p.products_id
-                                 from " . TABLE_PRODUCTS . " p
-                                 where p.products_status = 1 " . $display_limit . " limit 1");
+      $show_this = $db->Execute("select " . TABLE_PRODUCTS . ".products_id
+                                 from " . TABLE_PRODUCTS . "
+                                 where " . TABLE_PRODUCTS . ".products_status = 1 " . $display_limit . " limit 1");
       if ($show_this->RecordCount() > 0) {
         $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a>' . '<br />' . "\n";
       }

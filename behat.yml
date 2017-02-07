@@ -26,6 +26,9 @@ default:
     low_order_fee_features:
       paths:    [ %paths.base%/testFramework/behat/features/testFeatures/lowOrderFee.feature ]
       contexts: [ MainContext ]
+    admin_report_features:
+      paths:    [ %paths.base%/testFramework/behat/features/testFeatures/adminReports.feature ]
+      contexts: [ MainContext ]
 
   extensions:
     Behat\MinkExtension:
