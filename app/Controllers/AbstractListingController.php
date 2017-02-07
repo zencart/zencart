@@ -6,7 +6,7 @@
  */
 namespace App\Controllers;
 
-use ZenCart\Page\BuilderFactory as LeadBuilderFactory;
+use ZenCart\Page\BuilderFactory;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
@@ -14,6 +14,7 @@ use ZenCart\QueryBuilder\PaginatorBuilder as PaginatorBuilder;
 use ZenCart\AdminUser\AdminUser as User;
 use ZenCart\View\ViewFactory as View;
 use ZenCart\Services\ServiceFactory;
+use ZenCart\ListingQueryAndOutput\ViewDefinitionFactory;
 
 /**
  * Class AbstractListingController
@@ -59,7 +60,7 @@ abstract class AbstractListingController extends AbstractAdminController
     /**
      * AbstractListingController constructor.
      * @param Request $request
-     * @param $db
+     * @param \App\Model\ModelFactory $modelFactory
      * @param User $user
      * @param View $view
      * @param Paginator $paginator
@@ -68,18 +69,18 @@ abstract class AbstractListingController extends AbstractAdminController
     {
         parent::__construct($request, $modelFactory, $user, $view);
         $this->paginator = $paginator;
-        $this->initController(new LeadBuilderFactory(), new ServiceFactory() );
+        $this->initController(new BuilderFactory(), new ViewDefinitionFactory(), new ServiceFactory());
+        $this->setService(new ServiceFactory());
     }
 
     /**
-     * @todo REFACTORING DI listingbox factory
      * @todo REFACTORING DI querybuilder
      */
-    protected function initController($pageDefinitionBuilder, $serviceFactory)
+    protected function initController(BuilderFactory $pageDefinitionBuilder, ViewDefinitionFactory $viewDefinitionFactory)
     {
-        $leadType = $this->classPrefix . ucfirst(\base::camelize($this->request->readGet('cmd')));
-        $definitionClass = NAMESPACE_LISTINGQUERYANDOUTPUT . '\\definitions\\' . $leadType;
-        $this->queryBuilderDefinition = new $definitionClass($this->request, $this->modelFactory);
+        $type = $this->classPrefix . ucfirst(\base::camelize($this->request->readGet('cmd')));
+        $this->queryBuilderDefinition = $viewDefinitionFactory->factory($type, $this->request, $this->modelFactory);
+
         $this->pageDefinitionBuilder = $pageDefinitionBuilder->factory($this->classPrefix, $this->queryBuilderDefinition, $this->request);
         $this->queryBuilder = new QueryBuilder($this->dbConn, $this->queryBuilderDefinition->getListingQuery());
         $leadDef = $this->pageDefinitionBuilder->getPageDefinition();
@@ -88,9 +89,17 @@ abstract class AbstractListingController extends AbstractAdminController
             $this->paginator);
         $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
         $this->queryBuilderDefinition->setPageDefinition($this->pageDefinitionBuilder->getPageDefinition());
+    }
+
+    /**
+     * @param $serviceFactory
+     */
+    protected function setService($serviceFactory)
+    {
         $this->service = $serviceFactory->factory('Lead', 'Routes', $this, $this->request, $this->modelFactory);
         $this->service->setQueryBuilderDefinition($this->queryBuilderDefinition);
         $this->service->setQueryBuilder($this->queryBuilder);
+
     }
     /**
      *

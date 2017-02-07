@@ -150,7 +150,7 @@ class LeadService extends AbstractService
                 'addColumns' => true
             );
             $queryBuilderParts['whereClauses'][] = array(
-                'custom' => 'AND ' . 'lit.' . $this->listingQuery['languageKeyField'] . ' = ' . (int)$_SESSION['languages_id']
+                'custom' => 'AND ' . $this->listingQuery['languageInfoTable'] . "."  . $this->listingQuery['languageKeyField'] . ' = ' . (int)$_SESSION['languages_id']
             );
         }
         $this->queryBuilder->setParts($queryBuilderParts);
