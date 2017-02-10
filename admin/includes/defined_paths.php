@@ -84,3 +84,4 @@ if (!defined('DIR_CATALOG_LIBRARY')) {
 
 //catchall for old things that still use it ... but should be rewritten so this can be removed fully.
 if (!defined('DIR_WS_HTTPS_ADMIN')) define('DIR_WS_HTTPS_ADMIN', DIR_WS_ADMIN);
+if (!defined('ENABLE_SSL_ADMIN')) define('ENABLE_SSL_ADMIN', substr(HTTP_SERVER, 0, 6) == 'https:' ? 'true' : 'false');
