@@ -66,11 +66,13 @@ abstract class AbstractAdminController extends \base
         $this->currentUser = $user;
         $this->dbConn = $modelFactory->getConnection();
         $this->modelFactory = $modelFactory;
+        //$this->modelLanguages = $modelFactory->factory('languages');
         $this->tplVars = array();
         $this->response = null;
         $c = (new \ReflectionClass($this))->getShortName();
         $this->view = $view->factory($c);
         $this->view->setMainTemplate($this->mainTemplate);
+        $this->tplVarManager = $this->view->getTplVarManager();
         $this->prepareCommonTplVars();
     }
 
@@ -107,40 +109,14 @@ abstract class AbstractAdminController extends \base
      */
     protected function prepareCommonTplVars()
     {
-        $this->view->getTplVarManager()->set('cmd', $this->request->readGet('cmd'));
-        $this->view->getTplVarManager()->set('hide_languages', $GLOBALS['hide_languages']);
-        $this->view->getTplVarManager()->set('languages', $GLOBALS['languages']);
-        $this->view->getTplVarManager()->set('languages_array', $GLOBALS['languages_array']);
-        $this->view->getTplVarManager()->set('languages_selected', $GLOBALS['languages_selected']);
-        $this->view->getTplVarManager()->set('user', $this->currentUser->getCurrentUser());
-        $this->view->getTplVarManager()->set('messageStack', $GLOBALS['messageStack']);
-        $this->view->getTplVarManager()->set('notifications', $this->currentUser->getNotifications()->getNotificationList());
-        $this->view->getTplVarManager()->set('jscriptVars', ['securityToken' => $this->request->getSession()->get('securityToken')]);
-    }
-
-
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function setTplVar($key, $value)
-    {
-        $this->view->getTplVarManager()->set($key, $value);
-    }
-
-    /**
-     * @param $tplVars
-     */
-    public function setTplVars($tplVars)
-    {
-        $this->tplVars = $tplVars;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTplVars()
-    {
-        return $this->tplVars;
+        $this->tplVarManager->set('cmd', $this->request->readGet('cmd'));
+        $this->tplVarManager->set('hide_languages', $GLOBALS['hide_languages']);
+        $this->tplVarManager->set('languages', $GLOBALS['languages']);
+        $this->tplVarManager->set('languages_array', $GLOBALS['languages_array']);
+        $this->tplVarManager->set('languages_selected', $GLOBALS['languages_selected']);
+        $this->tplVarManager->set('user', $this->currentUser->getCurrentUser());
+        $this->tplVarManager->set('messageStack', $GLOBALS['messageStack']);
+        $this->tplVarManager->set('notifications', $this->currentUser->getNotifications()->getNotificationList());
+        $this->tplVarManager->set('jscriptVars', ['securityToken' => $this->request->getSession()->get('securityToken')]);
     }
 }

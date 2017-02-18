@@ -209,7 +209,7 @@ abstract class AbstractListingController extends AbstractAdminController
             return;
         }
         foreach ($languages as $languageKey => $languageValue) {
-            $this->tplVars['pageDefinition']['fields'][$mainKey]['value'][$languageKey] = "";
+            $this->tplVarManager->set('pageDefinition.fields.' . $mainKey . '.value' , array($languageKey => ''));
         }
     }
 

@@ -25,7 +25,7 @@ class Index extends AbstractAdminController
     /**
      * Index constructor.
      * @param Request $request
-     * @param $db
+     * @param \App\Model\ModelFactory $modelFactory
      * @param User $user
      * @param View $view
      */
@@ -33,18 +33,6 @@ class Index extends AbstractAdminController
     {
         parent::__construct($request, $modelFactory, $user, $view);
         $this->service = new IndexRoute($this, $request, $modelFactory);
-    }
-
-    /**
-     *
-     */
-    public function prepareDefaultCSS()
-    {
-        parent::prepareDefaultCSS();
-        $this->tplVars['cssList'] [] = array(
-            'href' => 'includes/template/css/index.css',
-            'id' => 'indexCSS'
-        );
     }
 
     /**
@@ -86,10 +74,8 @@ class Index extends AbstractAdminController
     {
         $widgetInfoList = WidgetManager::getWidgetInfoForUser($this->request->getSession()->get('admin_id'));
         $widgetList = widgetManager::loadWidgetClasses($widgetInfoList);
-        $this->setTplVar('widgetList', $widgetList);
-        $this->setTplVar('widgets', WidgetManager::prepareTemplateVariables($widgetList));
-        $this->setTplVar('widgetInfoList', $widgetInfoList);
-
+        $this->tplVarManager->set('widgetList', $widgetList);
+        $this->tplVarManager->set('widgets', WidgetManager::prepareTemplateVariables($widgetList));
         // Update $widgetInfoList with $widgetList changes
         foreach ($widgetInfoList as &$widgets) {
             foreach ($widgets as &$widget) {
@@ -98,8 +84,7 @@ class Index extends AbstractAdminController
                 }
             }
         }
-
-        $this->setTplVar('widgetInfoList', $widgetInfoList);
+        $this->tplVarManager->set('widgetInfoList', $widgetInfoList);
     }
 
     /**
@@ -116,12 +101,12 @@ class Index extends AbstractAdminController
         $storeZone = $this->request->readPost('store_zone', ((STORE_ZONE != '') ? STORE_ZONE : ''));
         $country_string = zen_draw_pull_down_menu('store_country', zen_get_countries_for_pulldown(), $storeCountry, 'id="store_country" tabindex="4"');
         $zone_string = zen_draw_pull_down_menu('store_zone', zen_get_country_zones($storeCountry), $storeZone, 'id="store_zone" tabindex="5"');
-        $this->setTplVar('storeName', $storeName);
-        $this->setTplVar('storeAddress', $storeAddress);
-        $this->setTplVar('storeOwner', $storeOwner);
-        $this->setTplVar('storeOwnerEmail', $storeOwnerEmail);
-        $this->setTplVar('countryString', $country_string);
-        $this->setTplVar('zoneString', $zone_string);
+        $this->tplVarManager->set('storeName', $storeName);
+        $this->tplVarManager->set('storeAddress', $storeAddress);
+        $this->tplVarManager->set('storeOwner', $storeOwner);
+        $this->tplVarManager->set('storeOwnerEmail', $storeOwnerEmail);
+        $this->tplVarManager->set('countryString', $country_string);
+        $this->tplVarManager->set('zoneString', $zone_string);
     }
 
 

@@ -63,43 +63,6 @@ class LeadService extends AbstractService
     }
 
     /**
-     *
-     */
-    public function setEditQueryParts()
-    {
-        $queryBuilderParts = $this->queryBuilder->getParts();
-        $queryBuilderParts['whereClauses'][] = array(
-            'table' => $this->listingQuery['mainTable']['table'],
-            'field' => $this->listingQuery['mainTable']['fkeyFieldLeft'],
-            'value' => ':indexId:',
-            'type' => 'AND'
-        );
-        $queryBuilderParts['bindVars'][] = array(
-            ':indexId:',
-            $this->request->readGet($this->listingQuery['mainTable']['fkeyFieldLeft']),
-            $this->outputLayout['fields'][$this->listingQuery['mainTable']['fkeyFieldLeft']]['bindVarsType']
-        );
-        $this->queryBuilder->setParts($queryBuilderParts);
-    }
-
-    /**
-     * @return array
-     */
-    public function prepareLanguageTplVars()
-    {
-        $languages = array();
-        if (isset($this->listingQuery['language'])) {
-            $sql = "SELECT * FROM " . TABLE_LANGUAGES;
-            $results = $this->dbConn->execute($sql);
-            foreach ($results as $result) {
-                $languages[$result['languages_id']] = $result;
-            }
-        }
-
-        return $languages;
-    }
-
-    /**
      * @param null $insertId
      * @return bool
      */
@@ -307,46 +270,7 @@ class LeadService extends AbstractService
         return true;
     }
 
-    /**
-     * @param $mainKey
-     * @param $languages
-     */
-    public function populateLanguageKeysFromDb($mainKey, $languages)
-    {
-        $tplVars = $this->listener->getTplVars();
-        if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
-            return;
-        }
-        unset($tplVars['pageDefinition']['fields'][$mainKey]['value']);
-        foreach ($languages as $language) {
-            $sql = "SELECT * FROM " . $this->listingQuery['languageInfoTable'] .
-                " WHERE " . $this->listingQuery['mainTable']['fkeyFieldLeft'] . " = " .
-                $this->request->readGet($this->listingQuery['mainTable']['fkeyFieldLeft']) .
-                " AND " . $this->listingQuery['languageKeyField'] . " = " . $language['languages_id'];
-            $lresult = $this->dbConn->execute($sql);
-            $tplVars['pageDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $lresult->fields[$mainKey];
-        }
-        $this->listener->setTplVars($tplVars);
-    }
 
-    /**
-     * @param $mainKey
-     * @param $languages
-     */
-    public function populateLanguageKeysFromPost($mainKey, $languages)
-    {
-        $tplVars = $this->listener->getTplVars();
-        if (!isset($this->outputLayout['fields'][$mainKey]['language'])) {
-            return;
-        }
-        unset($tplVars['pageDefinition']['fields'][$mainKey]['value']);
-        foreach ($languages as $language) {
-            $languagePost = $this->request->readPost('entry_field_' . $mainKey);
-            $languageValue = $languagePost[$language['languages_id']];
-            $tplVars['pageDefinition']['fields'][$mainKey]['value'][$language['languages_id']] = $languageValue;
-        }
-        $this->listener->setTplVars($tplVars);
-    }
 
     /**
      * @return array
