@@ -98,6 +98,7 @@ class zcDatabaseInstaller
     if (substr($this->line,0,28) == '#NEXT_X_ROWS_AS_ONE_COMMAND:') $this->keepTogetherLines = substr($this->line,28);
     if (substr($this->line,0,1) != '#' && substr($this->line,0,1) != '-' && $this->line != '')
     {
+      $this->line = str_replace('`','', $this->line);
       $this->parseLineContent();
       $this->newLine .= $this->line . ' ';
       if ( substr($this->line,-1) ==  ';')
