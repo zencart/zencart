@@ -129,7 +129,7 @@ INSERT INTO admin_pages_to_profiles (profile_id, page_key) VALUES
 
 #############
 
-INSERT INTO `layout_boxes` (`layout_template`, `layout_box_name`, `layout_box_status`, `layout_box_location`, `layout_box_sort_order`, `layout_box_sort_order_single`, `layout_box_status_single`) VALUES
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES
 ('responsive_classic', 'banner_box.php', 1, 0, 300, 1, 127),
 ('responsive_classic', 'banner_box2.php', 1, 1, 15, 1, 15),
 ('responsive_classic', 'banner_box_all.php', 1, 1, 5, 0, 0),
