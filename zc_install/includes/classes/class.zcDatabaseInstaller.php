@@ -103,6 +103,7 @@ class zcDatabaseInstaller
       if ( substr($this->line,-1) ==  ';')
       {
         if (substr($this->newLine,-1)==' ') $this->newLine = substr($this->newLine,0,(strlen($this->newLine)-1));
+        if (substr($this->newLine,-1)==')') $this->newLine = substr($this->newLine,0,(strlen($this->newLine)-1)) . ' )';
         $this->keepTogetherCount++;
         if ($this->keepTogetherCount == $this->keepTogetherLines)
         {
