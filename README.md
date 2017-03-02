@@ -10,14 +10,14 @@ It's free software, with free community-driven support available 24/7 on the Zen
 --------------------
 
 
-Zen Cart&reg; v1.5.5d
---------------------
+Zen Cart&reg; v1.5.5e
+---------------------
 
 Compatibility
 -------------
 Zen Cart v1.5.5 is designed for:
- * PHP 5.6 to PHP 7.1  (but is compatible with as far back as 5.2.10)
- * Apache 2.2 (and 2.4 with access_compat mod installed for custom .htaccess rule support)
+ * PHP 5.6 to PHP 7.1  (but is compatible with as far back as 5.2.10), but not alpha of PHP 7.2
+ * Apache 2.2 and 2.4
  * MySQL 5.1 to 5.7
 
 
@@ -73,5 +73,5 @@ Subscribe to [Critical News Updates And Release Announcements](http://www.zen-ca
 
 &nbsp;  
 
-*&copy;Copyright 2003-2016, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2017, Zen Cart&reg;. All rights reserved.*
 
