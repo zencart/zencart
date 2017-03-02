@@ -21,7 +21,7 @@ class firstdata_hco extends base {
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '1.00';
+  var $moduleVersion = '1.02';
 
   /**
    * $title is the displayed name for this payment method
@@ -199,7 +199,6 @@ class firstdata_hco extends base {
       'x_currency_code' => $_SESSION['currency'],
       'x_type' => MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
       'x_email_customer' => ((MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_EMAIL_CUSTOMER == 'True') ? 'TRUE': 'FALSE'),
-      'enable_level3_processing' => 'TRUE',
       'x_cust_id' => $_SESSION['customer_id'],
       'x_company' => $order->billing['company'],
       'x_first_name' => $order->billing['firstname'],
@@ -223,8 +222,14 @@ class firstdata_hco extends base {
       'x_customer_ip' => zen_get_ip_address(),
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
       'x_invoice_num' => $next_order_id,
+      'x_po_num' => $next_order_id, // customer reference number; in this case we pass the proposed order ID value.
 //       'x_method' => 'CC', // if not passed, then the payment types can be configured in the PaymentPage including enabling PayPal and other features.
+//       'x_ga_tracking_id' => '', // Enter Google Analytics Tracking ID if you want this payment page included in your funnel
     );
+
+    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3 == 'Yes') {
+      $submit_data_core['enable_level3_processing'] = 'TRUE';
+    }
 
     // lookup shipping and discount amounts
     if (sizeof($order_totals)) {
@@ -262,11 +267,11 @@ class firstdata_hco extends base {
 
 
     // Add line-item data to transaction
+    $items = '';
+    $item_log = array();
     if (sizeof($order->products) < 100) {
-      $items = '';
       $delim = '<|>';
       $product_code = $commodity_code = ''; // not submitted
-      $item_log = array();
       for ($i=0; $i<sizeof($order->products); $i++) {
         $p = $order->products[$i];
         // Item ID<|>Item Title<|>Item Description<|>Quantity<|>Unit Price<|>Taxable (Y or N)<|>Product Code<|>Commodity Code<|>Unit of Measure<|>Tax Rate<|>Tax Type<|>Tax Amount<|>Discount Indicator<|>Discount Amount<|>Line Item Total
@@ -394,6 +399,10 @@ class firstdata_hco extends base {
    */
   function check() {
     global $db;
+    // install newer switches, if relevant
+    if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS') && !defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3')) {
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Level 3 Support', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3', 'No', 'Should transactions be sent with Level 3 Processing enabled? (This is usually only to support Government cards) (You must enable Level 3 processing in your account Terminal and Hosted Page settings, else this will result in errors and reversals.)', '6', '0', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
+    }
     if (!isset($this->_check)) {
       $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS'");
       $this->_check = $check_query->RecordCount();
@@ -424,6 +433,7 @@ class firstdata_hco extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Debug Mode', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_DEBUGGING', 'Alerts Only', 'Would you like to enable debug mode?  A  detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Alerts Only\', \'Log File\', \'Log and Email\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Currency Supported', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY', 'USD', 'Which currency is your First Data Payment Page Account configured to accept?<br>(Purchases in any other currency will be pre-converted to this currency before submission using the exchange rates in your store admin.)', '6', '0', 'zen_cfg_select_option(array(\'USD\', \'CAD\', \'GBP\', \'EUR\', \'AUD\', \'NZD\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('HMAC Calculation', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_HMAC_MODE', 'MD5', 'The HMAC Encryption Type (from Payment Page Settings, under 9:Security)', '6', '0', 'zen_cfg_select_option(array(\'MD5\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Level 3 Support', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3', 'No', 'Should transactions be sent with Level 3 Processing enabled? (This is usually only to support Government cards) (You must enable Level 3 processing in your account Terminal and Hosted Page settings, else this will result in errors and reversals.)', '6', '0', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
   }
   /**
    * Remove the module and all its settings
@@ -450,6 +460,7 @@ class firstdata_hco extends base {
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_AUTHORIZATION_TYPE',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_EMAIL_CUSTOMER',
+            'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_HMAC_MODE',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_DEBUGGING');
   }
