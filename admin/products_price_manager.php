@@ -621,22 +621,30 @@ function updateSpecialsGross() {
   var taxRate = getTaxRate();
   var grossSpecialsValue = document.forms["new_prices"].specials_price.value;
 
-  if (taxRate > 0) {
-    grossSpecialsValue = grossSpecialsValue * ((taxRate / 100) + 1);
-  }
+  if (/^\d+(\.\d+)?%$/.test(grossSpecialsValue)) {
+    document.forms["new_prices"].specials_price_gross.value = grossSpecialsValue.slice(0, grossSpecialsValue.length - 1) + "%";
+  } else {
+    if (taxRate > 0) {
+      grossSpecialsValue = grossSpecialsValue * ((taxRate / 100) + 1);
+    }
 
-  document.forms["new_prices"].specials_price_gross.value = doRound(grossSpecialsValue, 4);
+    document.forms["new_prices"].specials_price_gross.value = doRound(grossSpecialsValue, 4);
+  }
 }
 
 function updateSpecialsNet() {
   var taxRate = getTaxRate();
   var netSpecialsValue = document.forms["new_prices"].specials_price_gross.value;
 
-  if (taxRate > 0) {
-    netSpecialsValue = netSpecialsValue / ((taxRate / 100) + 1);
-  }
+  if (/^\d+(\.\d+)?%$/.test(netSpecialsValue)) {
+    document.forms["new_prices"].specials_price.value = netSpecialsValue.slice(0, netSpecialsValue.length - 1) + "%";
+  } else {
+    if (taxRate > 0) {
+      netSpecialsValue = netSpecialsValue / ((taxRate / 100) + 1);
+    }
 
-  document.forms["new_prices"].specials_price.value = doRound(netSpecialsValue, 4);
+    document.forms["new_prices"].specials_price.value = doRound(netSpecialsValue, 4);
+  }
 }
 //--></script>
 <?php } ?>
