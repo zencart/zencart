@@ -115,7 +115,7 @@ abstract class AbstractListingController extends AbstractAdminController
     }
 
     /**
-     * @param $serviceFactory
+     * @param ServiceFactory $serviceFactory
      */
     protected function setService(ServiceFactory $serviceFactory)
     {
