@@ -22,7 +22,7 @@ class upload extends base
 {
     var $file, $filename, $destination, $permissions, $extensions, $tmp_filename, $message_location;
 
-    function __construct($file = '', $destination = '', $permissions = '644', $extensions = [])
+    function __construct($file = '', $destination = '', $permissions = '644', $extensions = array())
     {
         $this->set_file($file);
         $this->set_destination($destination);
@@ -62,27 +62,27 @@ class upload extends base
     {
         if (isset($_FILES[$this->file])) {
             if (zen_not_null($key)) {
-                $file = [
+                $file = array(
                     'name'     => $_FILES[$this->file]['name'][$key],
                     'type'     => $_FILES[$this->file]['type'][$key],
                     'size'     => $_FILES[$this->file]['size'][$key],
                     'tmp_name' => $_FILES[$this->file]['tmp_name'][$key],
-                ];
+                );
             } else {
-                $file = [
+                $file = array(
                     'name'     => $_FILES[$this->file]['name'],
                     'type'     => $_FILES[$this->file]['type'],
                     'size'     => $_FILES[$this->file]['size'],
                     'tmp_name' => $_FILES[$this->file]['tmp_name'],
-                ];
+                );
             }
         } else {
-            $file = [
+            $file = array(
                 'name'     => (isset($GLOBALS[$this->file . '_name']) ? $GLOBALS[$this->file . '_name'] : ''),
                 'type'     => (isset($GLOBALS[$this->file . '_type']) ? $GLOBALS[$this->file . '_type'] : ''),
                 'size'     => (isset($GLOBALS[$this->file . '_size']) ? $GLOBALS[$this->file . '_size'] : ''),
                 'tmp_name' => (isset($GLOBALS[$this->file]) ? $GLOBALS[$this->file] : ''),
-            ];
+            );
         }
         //if (!zen_not_null($file['tmp_name'])) return false;
         //if ($file['tmp_name'] == 'none') return false;
