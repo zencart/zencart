@@ -6,7 +6,7 @@
  */
 namespace App\Controllers;
 
-use ZenCart\Page\BuilderFactory;
+use ZenCart\Page\BuilderFactory as PageBuilderFactory;
 use ZenCart\QueryBuilder\QueryBuilder;
 use ZenCart\Request\Request as Request;
 use ZenCart\Paginator\Paginator as Paginator;
@@ -69,32 +69,55 @@ abstract class AbstractListingController extends AbstractAdminController
     {
         parent::__construct($request, $modelFactory, $user, $view);
         $this->paginator = $paginator;
-        $this->initController(new BuilderFactory(), new ViewDefinitionFactory(), new ServiceFactory());
+        $this->initQueryBuilderDefinition(new ViewDefinitionFactory());
+        $this->initPageBuilderFactory(new PageBuilderFactory());
+        $this->initQueryBuilder(new QueryBuilder($this->dbConn, $this->queryBuilderDefinition->getListingQuery()));
+        $this->initPagination(new PaginatorBuilder($this->request, $this->queryBuilderDefinition->getListingQuery(),
+            $this->paginator));
+        $this->queryBuilderDefinition->setPageDefinition($this->pageDefinitionBuilder->getPageDefinition());
         $this->setService(new ServiceFactory());
     }
 
     /**
-     * @todo REFACTORING DI querybuilder
+     * @param ViewDefinitionFactory $viewDefinitionFactory
      */
-    protected function initController(BuilderFactory $pageDefinitionBuilder, ViewDefinitionFactory $viewDefinitionFactory)
+    protected function initQueryBuilderDefinition(ViewDefinitionFactory $viewDefinitionFactory)
     {
         $type = $this->classPrefix . ucfirst(\base::camelize($this->request->readGet('cmd')));
         $this->queryBuilderDefinition = $viewDefinitionFactory->factory($type, $this->request, $this->modelFactory);
-
-        $this->pageDefinitionBuilder = $pageDefinitionBuilder->factory($this->classPrefix, $this->queryBuilderDefinition, $this->request);
-        $this->queryBuilder = new QueryBuilder($this->dbConn, $this->queryBuilderDefinition->getListingQuery());
-        $leadDef = $this->pageDefinitionBuilder->getPageDefinition();
-        $this->paginator->setScrollerParams(array('mvcCmdName' => 'cmd'));
-        $this->paginatorBuilder = new PaginatorBuilder($this->request, $this->queryBuilderDefinition->getListingQuery(),
-            $this->paginator);
-        $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
-        $this->queryBuilderDefinition->setPageDefinition($this->pageDefinitionBuilder->getPageDefinition());
     }
 
     /**
-     * @param $serviceFactory
+     * @param PageBuilderFactory $pageDefinitionBuilder
      */
-    protected function setService($serviceFactory)
+    protected function initPageBuilderFactory(PageBuilderFactory $pageDefinitionBuilder)
+    {
+        $this->pageDefinitionBuilder = $pageDefinitionBuilder->factory($this->classPrefix, $this->queryBuilderDefinition, $this->request);
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function initQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        $leadDef = $this->pageDefinitionBuilder->getPageDefinition();
+        $this->paginator->setScrollerParams(array('mvcCmdName' => 'cmd'));
+        $this->queryBuilder = $queryBuilder;
+        $this->paginator->setAdapterParams(array('itemsPerPage' => $leadDef['paginationLimitDefault']));
+    }
+
+    /**
+     * @param PaginatorBuilder $paginatorBuilder
+     */
+    protected function initPagination(PaginatorBuilder $paginatorBuilder)
+    {
+        $this->paginatorBuilder = $paginatorBuilder;
+    }
+
+    /**
+     * @param ServiceFactory $serviceFactory
+     */
+    protected function setService(ServiceFactory $serviceFactory)
     {
         $this->service = $serviceFactory->factory('Lead', 'Routes', $this, $this->request, $this->modelFactory);
         $this->service->setQueryBuilderDefinition($this->queryBuilderDefinition);
