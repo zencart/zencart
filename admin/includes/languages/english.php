@@ -446,6 +446,7 @@ define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination does not exist %s
 define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination not writeable %s');
 define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed  %s');
+define('ERROR_FILE_TOO_BIG', 'Warning: File is larger than allowed sizes. See Image configuration settings.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully %s');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
 define('WARNING_FILE_UPLOADS_DISABLED', 'Warning: File uploads are disabled in the php.ini configuration file.');

@@ -84,7 +84,7 @@ class upload extends base
                 'tmp_name' => (isset($GLOBALS[$this->file]) ? $GLOBALS[$this->file] : ''),
             );
         }
-        //if (!zen_not_null($file['tmp_name'])) return false;
+        if (!zen_not_null($file['tmp_name'])) return false;
         //if ($file['tmp_name'] == 'none') return false;
         //if (!is_uploaded_file($file['tmp_name'])) return false;
 
