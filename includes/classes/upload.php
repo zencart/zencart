@@ -202,10 +202,10 @@ class upload extends base
             if (is_array($extensions)) {
                 $this->extensions = $extensions;
             } else {
-                $this->extensions = [$extensions];
+                $this->extensions = array($extensions);
             }
         } else {
-            $this->extensions = [];
+            $this->extensions = array();
         }
     }
 
