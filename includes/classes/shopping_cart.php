@@ -979,6 +979,7 @@ class shoppingCart extends base {
 
     if (isset($this->contents[$products_id]['attributes'])) {
 
+      if(!defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL')) define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
       reset($this->contents[$products_id]['attributes']);
       while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
         $attributes_price = 0;

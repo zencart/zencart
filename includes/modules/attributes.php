@@ -123,7 +123,7 @@ $sql = "select count(*) as total
                       // apply product discount to attributes if discount is on
                       //              $new_attributes_price = $products_options->fields['options_values_price'];
                       $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false');
-                      $new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
+                      //$new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
                     } else {
                       // discount is off do not apply
                       $new_attributes_price = $products_options->fields['options_values_price'];
