@@ -99,6 +99,10 @@ class MainContext extends MinkContext
      */
     public function doDbQuery($sql = '')
     {
+        $dbHost = $this->configParams['db_host'];
+        if (isset($this->configParams['db_host_vm'])) {
+            $dbHost = $this->configParams['db_host_vm'];
+        }
         if (!isset($this->dbActive)) {
             $this->dbActive = false;
         }
@@ -106,7 +110,7 @@ class MainContext extends MinkContext
             return false;
         }
         if (!$this->dbActive) {
-            $this->dbLink = mysqli_connect($this->configParams['db_host'], $this->configParams['db_user'],
+            $this->dbLink = mysqli_connect($dbHost, $this->configParams['db_user'],
                 $this->configParams['db_password']);
             if ($this->dbLink) {
                 mysqli_select_db($this->dbLink, $this->configParams['db_name']);
