@@ -18,8 +18,8 @@ class OrdersStatus extends AbstractLeadController
     public function editExecute($formValidation = null)
     {
         parent::editExecute($formValidation);
-        if ($this->tplVars ['pageDefinition'] ['fields'] ['orders_status_id'] ['value'] == DEFAULT_ORDERS_STATUS_ID) {
-            unset($this->tplVars ['pageDefinition'] ['fields'] ['setAsDefault']);
+        if ($this->pageDefinitionBuilder->getPageDefinition()['fields']['code']['value'] == DEFAULT_ORDERS_STATUS_ID) {
+            $this->tplVarManager->forget('pageDefinition.fields.setAsDefault');
         }
     }
 

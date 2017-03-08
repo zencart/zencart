@@ -23,8 +23,8 @@ class Languages extends AbstractLeadController
     public function editExecute($formValidation = null)
     {
         parent::editExecute($formValidation);
-        if ($this->tplVars ['pageDefinition'] ['fields'] ['code'] ['value'] == DEFAULT_LANGUAGE) {
-            unset($this->tplVars ['pageDefinition'] ['fields'] ['setAsDefault']);
+        if ($this->pageDefinitionBuilder->getPageDefinition()['fields']['code']['value'] == DEFAULT_LANGUAGE) {
+            $this->tplVarManager->forget('pageDefinition.fields.setAsDefault');
         }
     }
 

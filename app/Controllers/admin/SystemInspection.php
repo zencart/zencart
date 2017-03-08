@@ -22,7 +22,7 @@ class SystemInspection extends AbstractInfoController
      */
     public function mainExecute()
     {
-        $this->tplVars['contentTemplate'] = 'tplSystemInspection.php';
+        $this->tplVarManager->set('contentTemplate', 'tplSystemInspection.php');
         $this->buildNewAdminPages();
         $this->buildNewDBTables();
         $this->buildNewModules();
@@ -31,13 +31,13 @@ class SystemInspection extends AbstractInfoController
 
     private function buildNewAdminPages()
     {
-        $this->tplVars['hasAdminPages'] = false;
-        $this->tplVars['hasFoundAdminPages'] = false;
+        $this->tplVarManager->set('hasAdminPages', false);
+        $this->tplVarManager->set('hasFoundAdminPages', false);
         $sql = " SELECT * FROM " . TABLE_ADMIN_PAGES;
         $pages = $this->dbConn->Execute($sql);
         $foundPages = 0;
         if ($pages->RecordCount() > 0) {
-            $this->tplVars['hasAdminPages'] = true;
+            $this->tplVarManager->set('hasAdminPages', true);
             foreach ($pages as $page) {
                 $key = $page['language_key'];
                 if (in_array($key, $GLOBALS['built_in_boxes'])) {
@@ -53,28 +53,28 @@ class SystemInspection extends AbstractInfoController
                     $pageLink = '<a href="' . zen_href_link(constant($page['main_page']),
                             $page['page_params']) . '">' . constant($page['language_key']) . '</a>';
                 }
-                $this->tplVars['newAdminPages'][] = array(
+                $this->tplVarManager->push('newAdminPages', array(
                     'name' => $languageKey,
                     'menuKey' => $page['menu_key'],
                     'display' => $page['display_on_menu'],
                     'pageLink' => $pageLink
-                );
+                ));
             }
             if ($foundPages != 0) {
-                $this->tplVars['hasFoundAdminPages'] = true;
+                $this->tplVarManager->set('hasFoundAdminPages', true);
             }
         }
     }
 
     private function buildNewDBTables()
     {
-        $this->tplVars['hasDBShemaTable'] = false;
-        $this->tplVars['hasFoundDBTables'] = false;
+        $this->tplVarManager->set('hasFoundDBTables', false);
+        $this->tplVarManager->set('newDBTables', array());
         $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'";
         $tables = $this->dbConn->Execute($sql);
         $foundTables = 0;
         if ($tables->RecordCount() > 0) {
-            $this->tplVars['hasDBShemaTable'] = true;
+            $this->tplVarManager->set('hasDBShemaTable', true);
             foreach ($tables as $table) {
                 $key = $table['TABLE_NAME'];
                 if (DB_PREFIX != '') {
@@ -84,41 +84,41 @@ class SystemInspection extends AbstractInfoController
                     continue;
                 }
                 $foundTables++;
-                $this->tplVars['newDBTables'][] = $table['TABLE_NAME'];
+                $this->tplVarManager->push('newDBTables', $table['TABLE_NAME']);
             }
             if ($foundTables != 0) {
-                $this->tplVars['hasFoundDBTables'] = true;
+                $this->tplVarManager->set('hasFoundDBTables', true);
             }
         }
     }
 
     private function buildNewModules()
     {
-        $this->tplVars['hasFoundModules'] = false;
+        $this->tplVarManager->set('hasFoundModules', false);
         $count = 0;
         $list = explode (';', MODULE_PAYMENT_INSTALLED);
         foreach ($list as $item) {
             if (!in_array($item, $GLOBALS['built_in_payments'])) {
                 $count++;
-                $this->tplVars['newModules'][] = array('type' => BOX_MODULES_PAYMENT, 'value' => $item);
+                $this->tplVarManager->push('newModules', array('type' => BOX_MODULES_PAYMENT, 'value' => $item));
             }
         }
         $list = explode (';', MODULE_SHIPPING_INSTALLED);
         foreach ($list as $item) {
             if (!in_array($item, $GLOBALS['built_in_shippings'])) {
                 $count++;
-                $this->tplVars['newModules'][] = array('type' => BOX_MODULES_SHIPPING, 'value' => $item);
-            }
+                $this->tplVarManager->push('newModules', array('type' => BOX_MODULES_SHIPPING, 'value' => $item));
+           }
         }
         $list = explode (';', MODULE_ORDER_TOTAL_INSTALLED);
         foreach ($list as $item) {
             if (!in_array($item, $GLOBALS['built_in_order_totals'])) {
                 $count++;
-                $this->tplVars['newModules'][] = array('type' => BOX_MODULES_ORDER_TOTAL, 'value' => $item);
+                $this->tplVarManager->push('newModules', array('type' => BOX_MODULES_ORDER_TOTAL, 'value' => $item));
             }
         }
         if ($count > 0) {
-            $this->tplVars['hasFoundModules'] = true;
+            $this->tplVarManager->set('hasFoundModules', true);
         }
     }
 
@@ -136,8 +136,7 @@ class SystemInspection extends AbstractInfoController
                                          'name' => $page['configuration_group_title']);
             }
         }
-        $this->tplVars['missingPages'] = $missing_pages;
-        $this->tplVars['hasMissingAdminPages'] = (count($missing_pages) > 0) ? true : false;;
-
+        $this->tplVarManager->set('missingPages', $missing_pages);
+        $this->tplVarManager->set('hasMissingAdminPages', (count($missing_pages) > 0) ? true : false);
     }
 }
