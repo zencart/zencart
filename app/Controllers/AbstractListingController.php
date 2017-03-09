@@ -209,7 +209,7 @@ abstract class AbstractListingController extends AbstractAdminController
             return;
         }
         foreach ($languages as $languageKey => $languageValue) {
-            $this->tplVars['pageDefinition']['fields'][$mainKey]['value'][$languageKey] = "";
+            $this->tplVarManager->set('pageDefinition.fields.' . $mainKey . '.value' , array($languageKey => ''));
         }
     }
 
@@ -219,8 +219,8 @@ abstract class AbstractListingController extends AbstractAdminController
      */
     protected function setDefaultTplVars($builder, $listingBox)
     {
-        $this->tplVars['pageDefinition'] = $builder->getPageDefinition();
-        $this->tplVars['listingBox'] = $listingBox->getTplVars();
+        $this->tplVarManager->set('pageDefinition' , $builder->getPageDefinition());
+        $this->tplVarManager->set('listingBox' , $listingBox->getTplVars());
     }
 
     /**

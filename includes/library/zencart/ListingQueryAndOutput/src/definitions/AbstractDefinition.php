@@ -305,4 +305,12 @@ abstract class AbstractDefinition extends \base
     {
         $this->listingQuery = $listingQuery;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMainModel()
+    {
+        return $this->mainModel;
+    }
 }

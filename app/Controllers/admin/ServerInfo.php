@@ -51,7 +51,7 @@ class ServerInfo extends AbstractInfoController
         $phpinfo = str_replace('</table>', '</tbody></table>', $phpinfo);
         $phpinfo = preg_replace('#>(on|enabled|active)#i', '><span class="text-success">$1</span>', $phpinfo);
         $phpinfo = preg_replace('#>(off|disabled)#i', '><span class="text-error">$1</span>', $phpinfo);
-        $this->view->getTplVarManager()->set('cachedPHPInfo',$phpinfo);
+        $this->tplVarManager->set('cachedPHPInfo',$phpinfo);
     }
 
     private function buildSystemInfo()
@@ -77,7 +77,7 @@ class ServerInfo extends AbstractInfoController
         $systemInfo['right'][] = array('title' => TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS, 'content' => $system['mysql_slow_query_log_status'] != '0' ? 'On' : 'Off');
         $systemInfo['right'][] = array('title' => TITLE_DATABASE_MYSQL_SLOW_LOG_FILE, 'content' => zen_output_string_protected($system['mysql_slow_query_log_file']));
         $systemInfo['right'][] = array('title' => TITLE_DATABASE_MYSQL_MODE, 'content' => $system['mysql_mode'] == '' ? '(None set)' : zen_output_string_protected(str_replace(',', ', ', $system['mysql_mode'])));
-        $this->view->getTplVarManager()->set('systemInfo', $systemInfo);
+        $this->tplVarManager->set('systemInfo', $systemInfo);
     }
     private function buildVersionInfo()
     {
@@ -115,7 +115,7 @@ class ServerInfo extends AbstractInfoController
             if (zen_not_null($result['project_version_comment'])) $sInfo .= ' &nbsp;&nbsp;(' . $result['project_version_comment'] . ')';
             $versionInfo[] =  $sInfo;
         }
-        $this->view->getTplVarManager()->set('versionInfo', $versionInfo);
+        $this->tplVarManager->set('versionInfo', $versionInfo);
     }
     
     private function buildDatabaseInfoSection ()
@@ -132,6 +132,6 @@ class ServerInfo extends AbstractInfoController
                 'value' => zen_not_null ($show_variable['Value']) ? $show_variable['Value'] : '&nbsp;'
             );
         }
-        $this->view->getTplVarManager()->set('databaseInfo', $databaseInfo);
+        $this->tplVarManager->set('databaseInfo', $databaseInfo);
     }
 }

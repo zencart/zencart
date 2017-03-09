@@ -24,7 +24,6 @@ class MediaManagerProducts extends AbstractLeadController
         $productList = $products->get_products_in_category($this->request->readPost('id'), false);
         $result = TEXT_NO_PRODUCTS;
         if ($productList) {
-            $result = "Has products in this Category";
             $result = zen_draw_pull_down_menu('current_product_id', $productList);
         }
         $this->response =  array('html'=>$result);
