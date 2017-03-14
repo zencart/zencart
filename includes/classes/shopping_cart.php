@@ -786,7 +786,8 @@ class shoppingCart extends base {
                 }
               if ($attribute_price->fields['attributes_discounted'] == '1') {
                 // calculate proper discount for attributes
-                $new_attributes_price = zen_get_discount_calc($product->fields['products_id'], $attribute_price->fields['products_attributes_id'], $attribute_price->fields['options_values_price'], $qty);
+                $new_attributes_price = zen_get_discount_calc($product->fields['products_id'], $attribute_price->fields['products_attributes_id'], /*$attribute_price->fields['options_values_price']*/ $attribute_price->fields["options_values_price"] + (zen_get_products_price_is_priced_by_attributes($attribute_price->fields["products_id"]) ? zen_products_lookup($attribute_price->fields["products_id"], 'products_price') : 0), $qty);
+                $new_attributes_price = $new_attributes_price - (zen_get_products_price_is_priced_by_attributes($attribute_price->fields["products_id"]) ? zen_products_lookup($attribute_price->fields["products_id"], 'products_price') : 0);
                 $productTotal += $new_attributes_price;
               } else {
                 $productTotal += $attribute_price->fields['options_values_price'];
@@ -1015,7 +1016,8 @@ class shoppingCart extends base {
               // calculate proper discount for attributes
               $discount_type_id = '';
               $sale_maker_discount = '';
-              $new_attributes_price = zen_get_discount_calc($products_id, $attribute_price->fields['products_attributes_id'], $attribute_price->fields['options_values_price'], $qty);
+              $new_attributes_price = zen_get_discount_calc($products_id, $attribute_price->fields['products_attributes_id'], /*$attribute_price->fields['options_values_price']*/$attribute_price->fields["options_values_price"] + (zen_get_products_price_is_priced_by_attributes($attribute_price->fields["products_id"]) ? zen_products_lookup($attribute_price->fields["products_id"], 'products_price') : 0), $qty);
+              $new_attributes_price = $new_attributes_price - (zen_get_products_price_is_priced_by_attributes($attribute_price->fields["products_id"]) ? zen_products_lookup($attribute_price->fields["products_id"], 'products_price') : 0);
               $attributes_price += ($new_attributes_price);
             } else {
               $attributes_price += $attribute_price->fields['options_values_price'];
