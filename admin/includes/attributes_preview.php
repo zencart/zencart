@@ -58,6 +58,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       $discount_amount = zen_get_discount_calc((int)$_GET['products_id']);
       $show_onetime_charges_description = 'false';
       $show_attributes_qty_prices_description = 'false';
+      $products_price_is_priced_by_attributes = zen_get_products_price_is_priced_by_attributes((int)$_GET['products_id']);
 
       while (!$products_options_names->EOF) {
         $products_options_array = array();
@@ -114,8 +115,8 @@ if (!defined('IS_ADMIN_FLAG')) {
             if ($products_options->fields['attributes_discounted'] == 1) {
 // apply product discount to attributes if discount is on
 //              $new_attributes_price = $products_options->fields['options_values_price'];
-              $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false');
-              $new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
+              $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false', $products_price_is_priced_by_attributes);
+//              $new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
             } else {
 // discount is off do not apply
               $new_attributes_price = $products_options->fields['options_values_price'];
