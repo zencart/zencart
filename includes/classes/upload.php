@@ -102,7 +102,7 @@ class upload extends base
                 return false;
             }
             if (substr($file['name'], -9) == '.htaccess' || (sizeof($this->extensions) > 0 && !in_array(strtolower(substr($file['name'], strrpos($file['name'], '.') + 1)), $this->extensions))) {
-                $this->message_stack(ERROR_FILETYPE_NOT_ALLOWED . ' ' . UPLOAD_FILENAME_EXTENSIONS, 'error');
+                $this->message_stack(ERROR_FILETYPE_NOT_ALLOWED . ' .' . implode(', .', $this->extensions), 'error');
 
                 return false;
             }
@@ -112,6 +112,7 @@ class upload extends base
             $this->set_tmp_filename($file['tmp_name']);
 
             return $this->check_destination();
+            
         } elseif ($file['name'] != '' && $file['tmp_name'] != '') {
             $this->message_stack(WARNING_NO_FILE_UPLOADED, 'warning');
 
