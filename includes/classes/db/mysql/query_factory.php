@@ -290,6 +290,14 @@ class queryFactory extends base {
     }
     return($obj);
   }
+    // -----
+    // Use this form of the Execute method to ensure that any SELECT result is pulled from the
+    // database, bypassing the cache.
+    //
+    function ExecuteNoCache ($zf_sql)
+    {
+        return $this->Execute ($zf_sql, false, false, 0, true);
+    }
 
   function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     $this->zf_sql = $zf_sql;
@@ -349,6 +357,14 @@ class queryFactory extends base {
     $this->count_queries++;
     return($obj);
   }
+    // -----
+    // Use this form of the Execute method to ensure that any SELECT result is pulled from the
+    // database, bypassing the cache.
+    //
+    function ExecuteRandomMultiNoCache ($zf_sql)
+    {
+        return $this->ExecuteRandomMulti ($zf_sql, 0, false, 0, true);
+    }
 
   function insert_ID() {
     return @mysqli_insert_id($this->link);
