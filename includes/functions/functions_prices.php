@@ -525,7 +525,7 @@
         break;
 
       case (zen_get_discount_qty($product_id, $qty) and zen_get_products_price_is_priced_by_attributes($product_id)):
-        // discount quanties exist and this is not an attribute
+        // discount quanties exist and this is priced by attribute
         // $this->contents[$products_id]['qty']
         $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
 //echo 'How much 2 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
@@ -535,7 +535,16 @@
 
       case ($discount_type_id == 5):
         // No Sale and No Special
-//        $sale_maker_discount = 1;
+//        $sale_maker_discount_type = 0; 
+/*
+          Possible reasons to be in this discount_type_id:
+          
+          No Sale nor special, 
+          a sale without a special and sale price is to apply against the price, 
+          a sale without a special and percentage is to apply against the price,
+          a sale without a special and sale's new price is to apply against the price
+*/
+
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
         } else {
@@ -556,11 +565,19 @@
         break;
       case ($discount_type_id == 59):
         // No Sale and Special OR Sale as special
-//        $sale_maker_discount = $special_price_discount;
+//        $sale_maker_discount = $sale_price_discount;
+/*
+          Possible reasons to be in this discount_type_id:
+          
+          No Sale but a special,
+          a sale with a special and sale price is to apply against the price,
+          a sale with a special and percentage is to apply against the price,
+          a sale with a special and sale's new price is to apply against the price
+*/
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
         } else {
-          // compute attribute amount
+          // compute attribute amount sale_price_discount will have either the sale price or if no sale the special price
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
@@ -646,7 +663,7 @@
 // EOF: percentage discounts skip specials
 
 // BOF: flat amount discounts
-      case ($discount_type_id == 20):
+      case ($discount_type_id == 20): // This option is not possible/does not exist
         // flat amount discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -660,7 +677,7 @@
           }
         }
         break;
-      case ($discount_type_id == 209):
+      case ($discount_type_id == 209): // This option is not possible/does not exist
         // flat amount discount on Sale and Special with a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -678,7 +695,7 @@
 // EOF: flat amount discounts
 
 // BOF: flat amount discounts Skip Special
-      case ($discount_type_id == 10):
+      case ($discount_type_id == 10): // This option is not possible/does not exist
         // flat amount discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -692,7 +709,7 @@
           }
         }
         break;
-      case ($discount_type_id == 109):
+      case ($discount_type_id == 109): // This option is not possible/does not exist
         // flat amount discount on Sale and Special with a special
         if (!$attributes_id) {
           $sale_maker_discount = 1;
@@ -776,7 +793,7 @@
         break;
 // EOF: New Price amount discounts - Skip Special
 
-      case ($discount_type_id == 0 or $discount_type_id == 9):
+      case ($discount_type_id == 0 or $discount_type_id == 9): // Neither of these values are possible nor occur
       // flat discount
         return $sale_maker_discount;
         break;
@@ -796,31 +813,58 @@
     global $db;
 
 /*
-
+$salemaker_discount_type / sale_deduction_type field optional database value
 0 = flat amount off base price with a special
 1 = Percentage off base price with a special
 2 = New Price with a special
 
-5 = No Sale or Skip Products with Special
+5 = No Sale or Skip Products with Special or skip product if there is a sale and sale condition is to ignore a special and apply to Price: Result of function 
 
+$sale_maker_special_condition / sale_specials_condition field optional database value
+if a sale exists then is used in the following equation
 special options + option * 10
-0 = Ignore special and apply to Price
-1 = Skip Products with Specials switch to 5
+which is like:
+special options * 100 + option * 10 or specifically:
+$salemaker_discount_type * 100 + $salemaker_discount_type * 10 though does not apply if the $sale_maker_special_condition is 0
+0 = Ignore special and apply to Price switch to 5
+1 = Skip Products with Specials
 2 = Apply to Special Price
 
 If a special exist * 10+9
+Where special exist = special options * option * 10 and then multiplies by 10 and adds 9 to it
 
-0*100 + 0*10 = flat apply to price = 0 or 9
-0*100 + 1*10 = flat skip Specials = 5 or 59
-0*100 + 2*10 = flat apply to special = 20 or 209
+No Sale No special: 5
+No Sale but a special: 59
 
-1*100 + 0*10 = Percentage apply to price = 100 or 1009
-1*100 + 1*10 = Percentage skip Specials = 110 or 1109 / 5 or 59
-1*100 + 2*10 = Percentage apply to special = 120 or 1209
+(sale_maker_discount_type, sale_maker_special_condition)
+Results shown on right are No special with a sale OR special with a sale
+(0, 0) 5 or 5 * 10 + 9= flat apply to price = 5 or 59
+(0, 1) 0*100 + 1*10 = flat skip Specials = 10 or 109
+(0, 2) 0*100 + 2*10 = flat apply to special = 20 or 209
 
-2*100 + 0*10 = New Price apply to price = 200 or 2009
-2*100 + 1*10 = New Price skip Specials = 210 or 2109 / 5 or 59
-2*100 + 2*10 = New Price apply to Special = 220 or 2209
+(1, 0) 5 or 5 * 10 + 9 = Percentage apply to price = 5 or 59
+(1, 1) 1*100 + 1*10 = Percentage skip Specials = 110 or 1109
+(1, 2) 1*100 + 2*10 = Percentage apply to special = 120 or 1209
+
+(2, 0) 5 or 5 * 10 + 9 = New Price apply to price = 5 or 59
+(2, 1) 2*100 + 1*10 = New Price skip Specials = 210 or 2109
+(2, 2) 2*100 + 2*10 = New Price apply to Special = 220 or 2209
+
+In result:
+5 if:
+   No Sale nor special, 
+   a sale without a special and sale price is to apply against the price, 
+   a sale without a special and percentage is to apply against the price,
+   a sale without a special and sale's new price is to apply against the price
+
+59 if:
+   No Sale but a special, 
+   a sale with a special and sale price is to apply against the price, 
+   a sale with a special and percentage is to apply against the price,
+   a sale with a special and sale's new price is to apply against the price
+
+possible return values in numerical order:
+5, 59, 110, 120, 210, 220, 1109, 1209, 2109, 2209
 
 */
 
