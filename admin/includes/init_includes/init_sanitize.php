@@ -177,7 +177,7 @@ $group = array(
 );
 $sanitizer->addSimpleSanitization('CONVERT_INT', $group);
 
-$group = array('img_dir', 'products_previous_image', 'products_image_manual', 'products_attributes_filename');
+$group = array('img_dir', 'products_previous_image', 'products_image_manual', 'products_attributes_filename', 'manufacturers_image_manual');
 $sanitizer->addSimpleSanitization('FILE_DIR_REGEX', $group);
 
 $group = array(
@@ -214,7 +214,7 @@ $sanitizer->addSimpleSanitization('SANITIZE_EMAIL', $group);
 $group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text', 'pages_html_text', 'comments', 'products_options_comment');
 $sanitizer->addSimpleSanitization('PRODUCT_DESC_REGEX', $group);
 
-$group = array('products_url');
+$group = array('products_url', 'manufacturers_url');
 $sanitizer->addSimpleSanitization('PRODUCT_URL_REGEX', $group);
 
 $group = array('coupon_min_order');
