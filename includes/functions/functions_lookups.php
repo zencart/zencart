@@ -259,8 +259,8 @@ function zen_get_zone_class_title($zone_class_id) {
  * @param int $products_quantity  Quantity to compare against
  * @return string status message
 */
-  function zen_check_stock($products_id, $products_quantity) {
-    $stock_left = zen_get_products_stock($products_id) - $products_quantity;
+  function zen_check_stock($products_id, $products_quantity, $products_quantity_on_hand) {
+    $stock_left = $products_quantity_on_hand - $products_quantity;
 
     return ($stock_left < 0) ? '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>' : '';
   }
