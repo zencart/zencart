@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: gv_faq.php $
@@ -71,7 +71,7 @@ validated and the amount added to your ' . TEXT_GV_NAME . ' Balance. You can the
   case '5':
   define('SUB_HEADING_TITLE','When problems occur.');
   define('SUB_HEADING_TEXT','For any queries regarding the ' . TEXT_GV_NAME . ' System, please contact the store
-  by email at '. STORE_OWNER_EMAIL_ADDRESS . '. Please make sure you give
+  using our <a href="index.php?main_page=contact_us">Contact Us page</a>. Please make sure you give
   as much information as possible regarding the issue so that we can fully address the problem.');
   break;
   default:
