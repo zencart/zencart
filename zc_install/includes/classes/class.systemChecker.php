@@ -264,6 +264,13 @@ class systemChecker
   }
   public function checkWriteableDir($parameters)
   {
+    if ($parameters['makeWritable'] === true) {
+      foreach(['666', '766'] as $perm) {
+        if (!is_writeable($parameters['fileDir'])) {
+          chmod($parameters['fileDir'], octdec($perm));
+        }
+      }
+    }
     return is_writeable($parameters['fileDir']);
   }
 
