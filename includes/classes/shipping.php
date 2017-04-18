@@ -214,7 +214,7 @@ class shipping extends base {
           }
         }
       }
-      $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest, $cheapest, $rates);
+      $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest, $rates);
       return $cheapest;
     }
   }
