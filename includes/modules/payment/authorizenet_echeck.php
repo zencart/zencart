@@ -145,7 +145,7 @@ class authorizenet_echeck extends base {
    * @return string
    */
   function javascript_validation() {
-    $js = '  if (payment_value == "' . $this->code . '") {' . "\n" .
+    $js = '  if (payment_value == "' . $this->code . '") {' . "\n" ;
     $js .= '    var echeck_custname = document.checkout_payment.authorizenet_echeck_bank_accountholder.value;' . "\n";
     $js .= '    var echeck_bank_aba = document.checkout_payment.authorizenet_echeck_bank_aba_code.value;' . "\n";
     $js .= '    var echeck_bank_acctnum = document.checkout_payment.authorizenet_echeck_bank_acct_num.value;' . "\n";
