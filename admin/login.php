@@ -34,7 +34,7 @@ if (isset($_POST['action']) && $_POST['action'] != '') {
             zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_ADMIN_LOGIN_WITHOUT_USERNAME, 'warning');
         } else {
             list($error, $expired, $message, $redirect) = zen_validate_user_login($admin_name, $admin_pass);
-            if ($redirect != '') zen_redirect($redirect);
+            if ($error == false && $redirect != '') zen_redirect($redirect);
         }
     } elseif ($_POST['action'] == 'rs' . $_SESSION['securityToken']) {
         $expired = true;
