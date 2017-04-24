@@ -31,7 +31,7 @@ $pr_attr = $db->Execute($sql);
 
 if ($pr_attr->fields['total'] > 0) {
   if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
-    $options_order_by= ' order by LPAD(popt.products_options_sort_order,11,"0")';
+    $options_order_by= ' order by LPAD(popt.products_options_sort_order,11,"0"), popt.products_options_name';
   } else {
     $options_order_by= ' order by popt.products_options_name';
   }
