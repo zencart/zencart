@@ -867,19 +867,6 @@ function zen_get_minutes_since($timestamp) {
     }
   }
 
-/**
- * Alias to setcookie() but with reasonable defaults
- * @param string $name cookie name
- * @param string $value
- * @param int $expire
- * @param string $path
- * @param string $domain
- * @param int $secure flag
- */
-  function zen_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = 0) {
-    setcookie($name, $value, $expire, $path, $domain, $secure);
-  }
-
   /**
    * Determine visitor's IP address, resolving any proxies where possible.
    *
