@@ -157,7 +157,6 @@ define('FILENAME_SHOPPING_CART', 'shopping_cart');
 define('FILENAME_SITE_MAP', 'site_map');
 define('FILENAME_SPECIALS', 'specials');
 define('FILENAME_SQLPATCH','sqlpatch');
-define('FILENAME_SSL_CHECK', 'ssl_check');
 define('FILENAME_STATS_CUSTOMERS', 'stats_customers');
 define('FILENAME_STATS_CUSTOMERS_REFERRALS', 'stats_customers_referrals');
 define('FILENAME_STATS_PRODUCTS_PURCHASED', 'stats_products_purchased');

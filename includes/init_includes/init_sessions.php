@@ -85,6 +85,7 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     zen_session_start();
     $session_started = true;
   } else {
+    // if a spider has a zenid in the URL, redirect it back without the zenid
     if (isset($_GET['zenid']) && $_GET['zenid'] != '') {
       $tmp = zcRequest::readGet('main_page', FILENAME_DEFAULT);
       @header("HTTP/1.1 301 Moved Permanently");
@@ -103,43 +104,4 @@ unset($spiders);
  */
 if (!isset($_SESSION['customers_host_address'])) {
   $_SESSION['customers_host_address'] = (SESSION_IP_TO_HOST_ADDRESS == 'true') ? @gethostbyaddr($_SERVER['REMOTE_ADDR']) : $_SERVER['REMOTE_ADDR'];
-}
-/**
- * verify the ssl_session_id if the feature is enabled
- */
-if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == 'true') && ($session_started == true) ) {
-  $ssl_session_id = $_SERVER['SSL_SESSION_ID'];
-  if (!$_SESSION['SSL_SESSION_ID']) {
-    $_SESSION['SSL_SESSION_ID'] = $ssl_session_id;
-  }
-  if ($_SESSION['SSL_SESSION_ID'] != $ssl_session_id) {
-    zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_SSL_CHECK));
-  }
-}
-/**
- * verify the browser user agent if the feature is enabled
- */
-if (SESSION_CHECK_USER_AGENT == 'True') {
-  $http_user_agent = $_SERVER['HTTP_USER_AGENT'];
-  if (!$_SESSION['SESSION_USER_AGENT']) {
-    $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
-  }
-  if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
-    zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
-}
-/**
- * verify the IP address if the feature is enabled
- */
-if (SESSION_CHECK_IP_ADDRESS == 'True') {
-  $ip_address = zen_get_ip_address();
-  if (!$_SESSION['SESSION_IP_ADDRESS']) {
-    $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
-  }
-  if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
-    zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
 }
