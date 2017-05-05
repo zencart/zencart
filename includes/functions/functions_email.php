@@ -182,7 +182,7 @@
       $mail = new PHPMailer();
       $mail->XMailer = 'PHPMailer '. $mail->Version . ' for Zen Cart';
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
-      $mail->SetLanguage($lang_code, DIR_FS_CATALOG . DIR_WS_CLASSES . 'support/');
+      $mail->SetLanguage($lang_code);
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";
       if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD != '') $mail->Encoding = EMAIL_ENCODING_METHOD;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
