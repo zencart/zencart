@@ -168,7 +168,7 @@ div#shoppingCartDefault tr td:nth-child(5) {display:block;padding-right:20px;wid
 div#shoppingCartDefault tr td:nth-child(6) {display:block;width:20%;padding-right:20px;float:right;clear:both;text-align:right;}
 div#shoppingCartDefault tr th {display:none;}
 #shoppingCartDefault .rowEven{background:#eee;}
-.rowEven, .roeOdd{overflow:hidden;}
+.rowEven, .rowOdd{overflow:hidden;}
 td.cartQuantity br, td.cartQuantityUpdate br{display:none;}
 td.cartQuantity{padding:20px 10px 0 20px;}
 td.cartQuantityUpdate{padding:25px 0 0 0;}
