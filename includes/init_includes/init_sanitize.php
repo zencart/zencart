@@ -4,7 +4,7 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id Modified in v1.6.0 $
@@ -76,6 +76,7 @@ if (! is_dir(DIR_WS_MODULES . 'pages/' . $mainPage)) {
     $mainPage = FILENAME_PAGE_NOT_FOUND;
   }
 }
-$current_page = $current_page_base = $mainPage;
+zcRequest::set('main_page', $mainPage);
+$current_page = $current_page_base = $_GET['main_page'] = $mainPage;
 $code_page_directory = DIR_WS_MODULES . 'pages/' . $current_page_base;
 $page_directory = $code_page_directory;
