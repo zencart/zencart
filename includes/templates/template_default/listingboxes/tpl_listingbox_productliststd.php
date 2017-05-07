@@ -3,7 +3,7 @@
  * Module Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
@@ -15,7 +15,7 @@
   <h2 class="centerBoxHeading"><?php echo $tplVars['listingBox']['title']; ?></h2>
 <?php
     if (isset($tplVars['listingBox']['showMultiForm']) && $tplVars['listingBox']['showMultiForm']) {
-      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
+      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link($mainPage, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
     }
 ?>
 <?php if (isset($tplVars['listingBox']['paginator']) && $tplVars['listingBox']['paginator']['show'] && $tplVars['listingBox']['paginator']['showTop']) { ?>

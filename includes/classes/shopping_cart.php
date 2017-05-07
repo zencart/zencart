@@ -372,7 +372,7 @@ class shoppingCart extends base {
    * @global object access to the db object
    */
   function update_quantity($products_id, $quantity = '', $attributes = '') {
-    global $db, $messageStack;
+    global $db, $messageStack, $mainPage;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' $products_id: ' . $products_id . ' $quantity: ' . $quantity, 'caution');
 
     if (!is_numeric($quantity) || $quantity < 0) {
@@ -389,7 +389,7 @@ class shoppingCart extends base {
     if (STOCK_ALLOW_CHECKOUT == 'false' && ($quantity > $chk_current_qty)) {
       $quantity = $chk_current_qty;
       if (!$this->flag_duplicate_msgs_set) {
-        $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$_GET[main_page]: ' . $_GET['main_page'] . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
+        $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$mainPage: ' . $mainPage . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
       }
     }
 // eof: adjust new quantity to be same as current in stock
@@ -2170,7 +2170,7 @@ class shoppingCart extends base {
    * @param url parameters
    */
   function actionNotify($goto, $parameters) {
-    global $db;
+    global $db, $mainPage;
     if ($_SESSION['customer_id']) {
       if (isset($_GET['products_id'])) {
         $notify = $_GET['products_id'];
@@ -2179,7 +2179,7 @@ class shoppingCart extends base {
       } elseif (isset($_POST['notify'])) {
         $notify = $_POST['notify'];
       } else {
-        zen_redirect(zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action', 'notify', 'main_page'))));
+        zen_redirect(zen_href_link($mainPage, zen_get_all_get_params(array('action', 'notify', 'main_page'))));
       }
       if (!is_array($notify)) $notify = array($notify);
       for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
@@ -2195,7 +2195,7 @@ class shoppingCart extends base {
           $db->Execute($sql);
         }
       }
-     zen_redirect(zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action', 'notify', 'main_page'))));
+     zen_redirect(zen_href_link($mainPage, zen_get_all_get_params(array('action', 'notify', 'main_page'))));
 
     } else {
       $_SESSION['navigation']->set_snapshot();
@@ -2209,7 +2209,7 @@ class shoppingCart extends base {
    * @param url parameters
    */
   function actionNotifyRemove($goto, $parameters) {
-    global $db;
+    global $db, $mainPage;
     if ($_SESSION['customer_id'] && isset($_GET['products_id'])) {
       $check_query = "select count(*) as count
                         from " . TABLE_PRODUCTS_NOTIFICATIONS . "
@@ -2223,7 +2223,7 @@ class shoppingCart extends base {
                   and customers_id = '" . $_SESSION['customer_id'] . "'";
         $db->Execute($sql);
       }
-      zen_redirect(zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action', 'main_page'))));
+      zen_redirect(zen_href_link($mainPage, zen_get_all_get_params(array('action', 'main_page'))));
     } else {
       $_SESSION['navigation']->set_snapshot();
       zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
