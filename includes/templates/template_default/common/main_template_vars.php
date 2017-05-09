@@ -29,14 +29,14 @@
  * }<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: main_template_vars.php 2620 2005-12-20 00:52:57Z drbyte $
  */
   // Notifier hook to allow for dynamic changes to template operation
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START', $template_dir);
 
-  $body_id = ($this_is_home_page) ? 'indexHome' : base::camelize($_GET['main_page']) . 'Body';
+  $body_id = ($this_is_home_page) ? 'indexHome' : base::camelize($mainPage) . 'Body';
   $bodyClasses = (isset($bodyClasses)) ? trim($bodyClasses) : FALSE; // just in case someone has left junk in it from an observer class, or has done something to prevent it from being set
 
   $homepage_link = zen_href_link(FILENAME_DEFAULT . '.php', '', $request_type, TRUE, TRUE, TRUE);
@@ -94,7 +94,7 @@
   if (file_exists(DIR_WS_MODULES . 'pages/' . $current_page_base . '/main_template_vars.php')) {
     $body_code = DIR_WS_MODULES . 'pages/' . $current_page_base . '/main_template_vars.php';
   } else {
-    $body_code = $template->get_template_dir('tpl_' . preg_replace('/.php/', '',$_GET['main_page']) . '_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_' . $_GET['main_page'] . '_default.php';
+    $body_code = $template->get_template_dir('tpl_' . preg_replace('/.php/', '',$mainPage) . '_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_' . $mainPage . '_default.php';
   }
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_END', $template_dir, $body_code);
