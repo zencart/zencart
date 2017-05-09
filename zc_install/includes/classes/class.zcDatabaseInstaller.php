@@ -16,7 +16,6 @@ class zcDatabaseInstaller
 {
   public function __construct($options)
   {
-    $this->func = create_function('$matches', 'return strtoupper($matches[1]);');
     $dbtypes = array();
     $path = DIR_FS_ROOT . 'includes/classes/db/';
     $dir = dir($path);
@@ -456,7 +455,7 @@ class zcDatabaseInstaller
   }
   private function camelize($parseString)
   {
-    $parseString = preg_replace_callback('/\s([0-9,a-z])/', $this->func, strtolower($parseString));
+    $parseString = preg_replace_callback('/\s([0-9,a-z])/', function($matches) {return strtoupper($matches[1]);}, strtolower($parseString));
     $parseString[0] = strtoupper($parseString[0]);
     return $parseString;
   }
