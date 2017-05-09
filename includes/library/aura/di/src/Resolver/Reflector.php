@@ -134,7 +134,7 @@ class Reflector
         } while ($class = get_parent_class($class));
 
         // get traits from ancestor traits
-        while (list($trait) = each($traits)) {
+        foreach($traits as &$trait) {
             foreach (class_uses($trait) as $key => $name) {
                 $traits[$key] = $name;
             }
