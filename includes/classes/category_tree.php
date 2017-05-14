@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class category_tree extends base {
 
-  function zen_category_tree($product_type = "all") {
+  function __construct($product_type = "all") {
     global $db, $cPath, $cPath_array;
     if ($product_type != 'all') {
       $sql = "select type_master_type from " . TABLE_PRODUCT_TYPES . "
