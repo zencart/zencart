@@ -28,11 +28,15 @@
     },
     "require-dev": {
         "mouf/picotainer": "~1.0",
-        "acclimate/container": "~1.0"
+        "acclimate/container": "~1.0",
+        "phpunit/phpunit": "~5.7 || ~4.8"
     },
     "autoload-dev": {
         "psr-4": {
             "Aura\\Di\\": "tests/"
         }
+    },
+    "provide": {
+        "container-interop/container-interop-implementation": "^1.0"
     }
 }

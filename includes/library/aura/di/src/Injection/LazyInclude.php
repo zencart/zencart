@@ -21,7 +21,7 @@ class LazyInclude implements LazyInterface
      *
      * The file to include.
      *
-     * @var string
+     * @var string|LazyInterface
      *
      */
     protected $file;
@@ -30,7 +30,7 @@ class LazyInclude implements LazyInterface
      *
      * Constructor.
      *
-     * @param string $file The file to include.
+     * @param string|LazyInterface $file The file to include.
      *
      */
     public function __construct($file)
@@ -47,6 +47,10 @@ class LazyInclude implements LazyInterface
      */
     public function __invoke()
     {
-        return include $this->file;
+        $filename = $this->file;
+        if ($filename instanceof LazyInterface) {
+            $filename = $filename->__invoke();
+        }
+        return include $filename;
     }
 }
