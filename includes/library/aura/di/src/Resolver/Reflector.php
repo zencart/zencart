@@ -73,10 +73,10 @@ class Reflector
      */
     public function getClass($class)
     {
-        if (isset($this->classes[$class])) {
-            return $this->classes[$class];
+        if (! isset($this->classes[$class])) {
+            $this->classes[$class] = new ReflectionClass($class);
         }
-        $this->classes[$class] = new ReflectionClass($class);
+
         return $this->classes[$class];
     }
 
@@ -93,14 +93,12 @@ class Reflector
      */
     public function getParams($class)
     {
-        if (isset($this->params[$class])) {
-            return $this->params[$class];
-        }
-
-        $this->params[$class] = [];
-        $constructor = $this->getClass($class)->getConstructor();
-        if ($constructor) {
-            $this->params[$class] = $constructor->getParameters();
+        if (! isset($this->params[$class])) {
+            $this->params[$class] = [];
+            $constructor = $this->getClass($class)->getConstructor();
+            if ($constructor) {
+                $this->params[$class] = $constructor->getParameters();
+            }
         }
 
         return $this->params[$class];
@@ -122,25 +120,29 @@ class Reflector
      */
     public function getTraits($class)
     {
-        if (isset($this->traits[$class])) {
-            return $this->traits[$class];
-        }
+        if (! isset($this->traits[$class])) {
+            $traits = [];
 
-        $traits = [];
+            // get traits from ancestor classes
+            do {
+                $traits += class_uses($class);
+            } while ($class = get_parent_class($class));
 
-        // get traits from ancestor classes
-        do {
-            $traits += class_uses($class);
-        } while ($class = get_parent_class($class));
+            // get traits from ancestor traits
+            $traitsToSearch = $traits;
+            while (!empty($traitsToSearch)) {
+                $newTraits = class_uses(array_pop($traitsToSearch));
+                $traits += $newTraits;
+                $traitsToSearch += $newTraits;
+            };
 
-        // get traits from ancestor traits
-        foreach($traits as &$trait) {
-            foreach (class_uses($trait) as $key => $name) {
-                $traits[$key] = $name;
+            foreach ($traits as $trait) {
+                $traits += class_uses($trait);
             }
+
+            $this->traits[$class] = array_unique($traits);
         }
 
-        $this->traits[$class] = $traits;
         return $this->traits[$class];
     }
 }
