@@ -3,7 +3,7 @@
  * Javascript to prep functionality for Payeezy payment module
  *
  * @package payeezy
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson   New in v1.5.5 $
  */
@@ -17,7 +17,7 @@ var Payeezy = function() {
     function e(e) {
         var t = {
             visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
-            mastercard: /^5[1-5][0-9]{14}$/,
+            mastercard: /^(5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/,
             amex: /^3[47][0-9]{13}$/,
             diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
             discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
