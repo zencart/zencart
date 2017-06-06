@@ -3,10 +3,10 @@
  * plugin_support.php
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-  * @version $Id: Author: DrByte  Thu Mar 3 14:25:45 2016 -0500 Modified in v1.5.5 $
+  * @version $Id: Author: DrByte  June 4 2017 Modified in v1.5.5 $
  */
 /**
  * Functions to support plugin usage
@@ -29,10 +29,10 @@
    *     }
    *   }
    */
-  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '')
+  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
   {
-    if ($plugin_file_id == 0) return FALSE;
-    $new_version_available = FALSE;
+    if ($plugin_file_id == 0) return false;
+    $new_version_available = false;
     $lookup_index = 0;
     $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
     $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
@@ -81,8 +81,10 @@
     $data = json_decode($response, true);
     if (!$data || !is_array($data)) return false;
     // compare versions
-    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
+    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
     // check whether present ZC version is compatible with the latest available plugin version
-    if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
-    return ($new_version_available) ? $data[$lookup_index] : FALSE;
+    $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
+    if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+    if (!in_array('v'. $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+    return ($new_version_available) ? $data[$lookup_index] : false;
   }
