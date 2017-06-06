@@ -1180,7 +1180,7 @@ class shoppingCart extends base {
       $products_query = "select p.products_id, p.master_categories_id, p.products_status, pd.products_name, p.products_model, p.products_image,
                                   p.products_price, p.products_weight, p.products_tax_class_id,
                                   p.products_quantity_order_min, p.products_quantity_order_units, p.products_quantity_order_max,
-                                  p.product_is_free, p.products_priced_by_attribute,
+                                  p.product_is_free, p.products_priced_by_attribute, p.products_quantity,
                                   p.products_discount_type, p.products_discount_type_from, p.products_virtual, p.product_is_always_free_shipping,
                                   p.products_quantity_mixed, p.products_mixed_discount_quantity
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -1340,6 +1340,7 @@ class shoppingCart extends base {
                                   'image' => $products->fields['products_image'],
                                   'price' => ($products->fields['product_is_free'] =='1' ? 0 : $products_price),
         //                                    'quantity' => $this->contents[$products_id]['qty'],
+                                  'quantity_on_hand' => $products->fields['products_quantity'],
                                   'quantity' => $new_qty,
                                   'weight' => $products->fields['products_weight'] + $this->attributes_weight($products_id),
                                   // fix here

@@ -120,7 +120,7 @@ class zcAjaxPayment extends base
     $stock_check = array();
     if (STOCK_CHECK=='true') {
       for($i = 0, $n = sizeof ($order->products); $i<$n; $i++) {
-        if ($stock_check[$i] = zen_check_stock ($order->products[$i]['id'], $order->products[$i]['qty'])) {
+        if ($stock_check[$i] = zen_check_stock ($order->products[$i]['id'], $order->products[$i]['qty'], $order->products[$i]['quantity_on_hand'])) {
           $flagAnyOutOfStock = true;
         }
       }

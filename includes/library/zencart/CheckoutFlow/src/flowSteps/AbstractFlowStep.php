@@ -87,7 +87,7 @@ abstract class AbstractFlowStep extends \base
         if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
             $products = $this->session->get('cart')->get_products();
             for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-                if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
+                if (zen_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['quantity_on_hand'])) {
                     throw new CheckoutRedirectException(array('redirect' => zen_href_link(FILENAME_SHOPPING_CART)));
                     break;
                 }
