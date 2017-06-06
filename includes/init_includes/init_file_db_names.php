@@ -1,10 +1,10 @@
 <?php
 /**
- * load the filename/database table names and the compatiblity functions
+ * load the filename/database table names and the compatability functions
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.6.0 $
@@ -34,11 +34,11 @@ $request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) ==
  */
 if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
 /**
- * require global definitons for Filenames
+ * require global definitions for Filenames
  */
 require(DIR_WS_INCLUDES . 'filenames.php');
 /**
- * require global definitons for Database Table Names
+ * require global definitions for Database Table Names
  */
 require(DIR_WS_INCLUDES . 'database_tables.php');
 /**
@@ -76,7 +76,7 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
 
   if (file_exists($ws_extra_datafiles_directory . $file)) {
       /**
-       * require 3rd party datafiles (ussually to add extra filename/DB Table name definitions)
+       * require 3rd party datafiles (usually to add extra filename/DB Table name definitions)
        */
     include($ws_extra_datafiles_directory . $file);
     //    echo 'LOADING: ' . $ws_extra_datafiles_directory . $file . ' ' . $file_cnt . '<br />';

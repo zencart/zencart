@@ -39,6 +39,12 @@ before_install:
   - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
 
 install:
+# remove xdebug for speed; caveat is it can't generate code-coverage (not concerned about that presently)
+  - phpenv config-rm xdebug.ini
+  - echo $TRAVIS_PHP_VERSION
+# downgrade phpunit for older PHP version
+  - if [ "${TRAVIS_PHP_VERSION}" == "5.5" ]; then rm composer.lock && cp testFramework/composer-php55.lock composer.lock ; fi
+# do composer install
   - travis_wait composer install --no-interaction
 
 branches:

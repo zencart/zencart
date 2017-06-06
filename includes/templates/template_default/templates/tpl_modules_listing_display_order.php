@@ -3,7 +3,7 @@
  * Module Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
@@ -16,8 +16,8 @@
 <div id="sorter">
 <label for="disp-order-sorter"><?php echo TEXT_INFO_SORT_BY; ?></label>
 <?php
-  echo zen_draw_form('sorter_form', zen_href_link($_GET['main_page']), 'get');
-  echo zen_draw_hidden_field('main_page', $_GET['main_page']);
+  echo zen_draw_form('sorter_form', zen_href_link($mainPage), 'get');
+  echo zen_draw_hidden_field('main_page', $mainPage);
 //  echo zen_draw_hidden_field('disp_order', $_GET['disp_order']);
   echo zen_hide_session_id();
 ?>
@@ -32,4 +32,6 @@
     <option value="5" <?php echo ($tplVars['listingBox']['filter']['displayOrder'] == '5' ? 'selected="selected"' : ''); ?>><?php echo TEXT_INFO_SORT_BY_PRODUCTS_MODEL; ?></option>
     <option value="6" <?php echo ($tplVars['listingBox']['filter']['displayOrder'] == '6' ? 'selected="selected"' : ''); ?>><?php echo TEXT_INFO_SORT_BY_PRODUCTS_DATE_DESC; ?></option>
     <option value="7" <?php echo ($tplVars['listingBox']['filter']['displayOrder'] == '7' ? 'selected="selected"' : ''); ?>><?php echo TEXT_INFO_SORT_BY_PRODUCTS_DATE; ?></option>
-    </select></form></div>
+    </select>
+  </form>
+</div>

@@ -87,7 +87,7 @@
     if ($from_email_name == $from_email_address) $from_email_name = STORE_NAME;
 
     // loop thru multiple email recipients if more than one listed  --- (esp for the admin's "Extra" emails)...
-    foreach(explode(',',$to_address) as $value) {
+    foreach(explode(',',$to_address) as $key=>$value) {
       if (preg_match("/ *([^<]*) *<([^>]*)> */i",$value,$regs)) {
         $to_name = str_replace('"', '', trim($regs[1]));
         $to_email_address = $regs[2];
@@ -191,21 +191,20 @@
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_EMAIL_FORMAT_DETERMINED');
 
       // now lets build the mail object with the phpmailer class
-      $mail = new PHPMailer();
+      $mail = new PHPMailer\PHPMailer\PHPMailer;
       // optionally intercept to use something like XOAUTH2 for Google, using an observer which watches the following hook, and replaces $mail with an alterate
       $zco_notifier->notify('NOTIFY_EMAIL_INTERCEPT_MAILER_OBJECT', array(), $mail);
 
       // hide the X-Mailer header:
-      $mail->XMailer = ''; //'PHPMailer '. $mail->Version . ' for Zen Cart';
+      $mail->XMailer = ''; //'PHPMailer '. $mail::VERSION . ' for Zen Cart';
 
       // Set mailer object parameters
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
-      $mail->SetLanguage($lang_code, DIR_FS_CATALOG . DIR_WS_CLASSES . 'support/');
+      $mail->SetLanguage($lang_code);
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";
       if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD != '') $mail->Encoding = EMAIL_ENCODING_METHOD;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
-      if ((int)EMAIL_SYSTEM_DEBUG > 4 ) $mail->Debugoutput = 'error_log';
-
+      if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->Debugoutput = 'error_log';
 
       switch (EMAIL_TRANSPORT) {
         case ('Gmail'):
@@ -226,8 +225,8 @@
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
           if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 587;
           //set encryption protocol to allow support for secured email protocols
-          if ($mail->Port == 465) $mail->SMTPSecure = 'ssl';
-          if ($mail->Port == 587) $mail->SMTPSecure = 'tls';
+          if ($mail->Port == '465') $mail->SMTPSecure = 'ssl';
+          if ($mail->Port == '587') $mail->SMTPSecure = 'tls';
           if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
             $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
           }
@@ -288,20 +287,20 @@
       $zco_notifier->notify('NOTIFY_EMAIL_BEFORE_PROCESS_ATTACHMENTS', array('attachments'=>$attachments_list, 'module'=>$module));
       if (isset($newAttachmentsList) && is_array($newAttachmentsList)) $attachments_list = $newAttachmentsList;
       if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED && is_array($attachments_list) && sizeof($attachments_list) > 0) {
-        foreach($attachments_list as $attachment) {
-          $fname = (isset($attachment['name']) ? $attachment['name'] : null);
-          $mimeType = (isset($attachment['mime_type']) && $attachment['mime_type'] != '' && $attachment['mime_type'] != 'application/octet-stream') ? $attachment['mime_type'] : '';
+        foreach($attachments_list as $key => $val) {
+          $fname = (isset($val['name']) ? $val['name'] : null);
+          $mimeType = (isset($val['mime_type']) && $val['mime_type'] != '' && $val['mime_type'] != 'application/octet-stream') ? $val['mime_type'] : '';
           switch (true) {
-            case (isset($attachment['raw_data']) && $attachment['raw_data'] != ''):
-              $fdata = $attachment['raw_data'];
+            case (isset($val['raw_data']) && $val['raw_data'] != ''):
+              $fdata = $val['raw_data'];
               if ($mimeType != '') {
                 $mail->AddStringAttachment($fdata, $fname, "base64", $mimeType);
               } else {
                 $mail->AddStringAttachment($fdata, $fname);
               }
               break;
-            case (isset($attachment['file']) && file_exists($attachment['file'])): //'file' portion must contain the full path to the file to be attached
-              $fdata = $attachment['file'];
+            case (isset($val['file']) && file_exists($val['file'])): //'file' portion must contain the full path to the file to be attached
+              $fdata = $val['file'];
               if ($mimeType != '') {
                 $mail->AddAttachment($fdata, $fname, "base64", $mimeType);
               } else {
@@ -371,8 +370,8 @@
         $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . '<br />' : '';
       }
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND');
-      foreach($oldVars as $oldkey => $oldval) {
-        $_SERVER[$oldkey] = $oldval;
+      foreach($oldVars as $key => $val) {
+        $_SERVER[$key] = $val;
       }
 
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_WITH_ALL_PARAMS', array($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo));

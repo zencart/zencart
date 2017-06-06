@@ -149,6 +149,6 @@ class base {
     {
       $rawName[0] = strtoupper($rawName[0]);
     }
-    return preg_replace_callback('/[_-]([0-9,a-z])/', create_function('$matches', 'return strtoupper($matches[1]);'), $rawName);
+    return preg_replace_callback('/[_-]([0-9,a-z])/', function($matches) {return strtoupper($matches[1]);}, $rawName);
   }
 }

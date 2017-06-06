@@ -61,6 +61,11 @@ class LazyValue implements LazyInterface
      */
     public function __invoke()
     {
-        return $this->resolver->values[$this->key];
+        $value = $this->resolver->values[$this->key];
+        // convert Lazy objects
+        if ($value instanceof LazyInterface) {
+            $value = $value();
+        }
+        return $value;
     }
 }
