@@ -621,7 +621,7 @@
 // EOF: percentage discounts apply to Sale
 
 // BOF: percentage discounts skip specials
-      case ($discount_type_id == 110):
+      case ($discount_type_id == 110): // Verified Attributes Correct mc12345678
         // percentage discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -632,7 +632,7 @@
             $sale_maker_discount = $calc;
           } else {
 //            $sale_maker_discount = $sale_maker_discount;
-            if ($attributes_amount != 0) {
+            if ($attributes_amount != 0) { // This code is never run.
 //            $calc = ($attributes_amount * $special_price_discount);
 //            $calc2 = $calc - ($calc * $sale_maker_discount);
 //            $sale_maker_discount = $calc - $calc2;
@@ -644,7 +644,7 @@
           }
         }
         break;
-      case ($discount_type_id == 1109):
+      case ($discount_type_id == 1109): // mc12345678 Verified Attributes correct.
         // percentage discount on Sale and Special with a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -695,7 +695,7 @@
 // EOF: flat amount discounts
 
 // BOF: flat amount discounts Skip Special
-      case ($discount_type_id == 10): // This option is not possible/does not exist
+      case ($discount_type_id == 10): // Verified attributes Correct.
         // flat amount discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -709,7 +709,7 @@
           }
         }
         break;
-      case ($discount_type_id == 109): // This option is not possible/does not exist
+      case ($discount_type_id == 109):
         // flat amount discount on Sale and Special with a special
         if (!$attributes_id) {
           $sale_maker_discount = 1;
@@ -726,14 +726,14 @@
 // EOF: flat amount discounts Skip Special
 
 // BOF: New Price amount discounts
-      case ($discount_type_id == 220):
+      case ($discount_type_id == 220): //mc12345678 Verified 220 attributes change correct
         // New Price amount discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            $calc = ($attributes_amount * $special_price_discount);
+            $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
           } else {
@@ -741,7 +741,7 @@
           }
         }
         break;
-      case ($discount_type_id == 2209):
+      case ($discount_type_id == 2209): //mc12345678 Verified 2209 attributes change correct
         // New Price amount discount on Sale and Special with a special
         if (!$attributes_id) {
 //          $sale_maker_discount = $sale_maker_discount;
@@ -760,14 +760,14 @@
 // EOF: New Price amount discounts
 
 // BOF: New Price amount discounts - Skip Special
-      case ($discount_type_id == 210):
+      case ($discount_type_id == 210): // Attributes verified correct mc12345678
         // New Price amount discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            $calc = ($attributes_amount * $special_price_discount);
+            $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
           } else {
@@ -775,7 +775,7 @@
           }
         }
         break;
-      case ($discount_type_id == 2109):
+      case ($discount_type_id == 2109): // mc12345678 Attributes Verified correct
         // New Price amount discount on Sale and Special with a special
         if (!$attributes_id) {
 //          $sale_maker_discount = $sale_maker_discount;
@@ -839,15 +839,15 @@ No Sale but a special: 59
 (sale_maker_discount_type, sale_maker_special_condition)
 Results shown on right are No special with a sale OR special with a sale
 (0, 0) 5 or 5 * 10 + 9= flat apply to price = 5 or 59
-(0, 1) 0*100 + 1*10 = flat skip Specials = 10 or 109
+(0, 1) 0*100 + 1*10 = flat skip Specials = 10 or 109 (First use sale price, second use special)
 (0, 2) 0*100 + 2*10 = flat apply to special = 20 or 209
 
 (1, 0) 5 or 5 * 10 + 9 = Percentage apply to price = 5 or 59
-(1, 1) 1*100 + 1*10 = Percentage skip Specials = 110 or 1109
+(1, 1) 1*100 + 1*10 = Percentage skip Specials = 110 or 1109 (First use sale price, second use special)
 (1, 2) 1*100 + 2*10 = Percentage apply to special = 120 or 1209
 
 (2, 0) 5 or 5 * 10 + 9 = New Price apply to price = 5 or 59
-(2, 1) 2*100 + 1*10 = New Price skip Specials = 210 or 2109
+(2, 1) 2*100 + 1*10 = New Price skip Specials = 210 or 2109 (First use sale price, second use special)
 (2, 2) 2*100 + 2*10 = New Price apply to Special = 220 or 2209
 
 In result:
