@@ -6,4 +6,3 @@
  * @version $Id: $ 
  */
 define('FILENAME_FINDDUPMODELS', 'dup_models');
-define('BOX_TOOLS_FINDDUPMODELS', 'Find Duplicate Models');
