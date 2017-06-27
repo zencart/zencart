@@ -82,6 +82,7 @@ define('FILENAME_DOWNLOAD_TIME_OUT','download_time_out');
 define('FILENAME_DOWNLOADS_MANAGER','downloads_manager');
 define('FILENAME_EZPAGES', 'page');
 define('FILENAME_EZPAGES_ADMIN', 'ezpages');
+define('FILENAME_FINDDUPMODELS', 'dup_models');
 define('FILENAME_GEO_ZONES', 'geo_zones');
 define('FILENAME_GEO_ZONES_DETAIL', 'geo_zones_detail');
 define('FILENAME_GROUP_PRICING', 'group_pricing');
