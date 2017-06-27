@@ -856,10 +856,10 @@ class payeezyjszc extends base
 
 // for backward compatibility with older ZC versions before v152 which didn't have this function:
 if (!function_exists('plugin_version_check_for_updates')) {
-    function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '')
+    function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
     {
-        if ($plugin_file_id == 0) return FALSE;
-        $new_version_available = FALSE;
+        if ($plugin_file_id == 0) return false;
+        $new_version_available = false;
         $lookup_index = 0;
         $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
         $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
@@ -908,9 +908,12 @@ if (!function_exists('plugin_version_check_for_updates')) {
         $data = json_decode($response, true);
         if (!$data || !is_array($data)) return false;
         // compare versions
-        if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
+        if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
         // check whether present ZC version is compatible with the latest available plugin version
-        if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
-        return ($new_version_available) ? $data[$lookup_index] : FALSE;
+        $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
+        if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+        if (!in_array('v'. $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+        return ($new_version_available) ? $data[$lookup_index] : false;
     }
+
 }
