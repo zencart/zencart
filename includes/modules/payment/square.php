@@ -3,7 +3,7 @@
  * Square payments module
  * www.squareup.com
  *
- * Integrated using SquareConnect PHP SDK v2.1.0
+ * Integrated using SquareConnect PHP SDK v2.2.0
  *
  * @package square
  * @copyright Copyright 2003-2017 Zen Cart Development Team
@@ -27,7 +27,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.80';
+    public $moduleVersion = '0.81';
     /**
      * $title is the displayed name for this payment method
      *
@@ -642,7 +642,11 @@ class square extends base
             $first_location     = $locations[0];
             $location->id       = $first_location->getId();
             $location->name     = $first_location->getName();
-            $location->currency = $first_location->getCurrencyCode();
+            if (method_exists($first_location, 'getCurrencyCode')) {
+                $location->currency = $first_location->getCurrencyCode();
+            } else {
+                $location->currency = DEFAULT_CURRENCY;
+            }
         }
 
         return $location;
