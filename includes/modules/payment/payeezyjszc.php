@@ -712,7 +712,7 @@ class payeezyjszc extends base
         return (int)(string)(round($amount, $decimal_places) * pow(10, $decimal_places));
 
         // Requires PHP 5.6 or newer:
-        return (int)(string)(round($amount, $decimal_places) * 10 ** $decimal_places);
+        //return (int)(string)(round($amount, $decimal_places) * 10 ** $decimal_places);
     }
 
     private function hmacAuthorizationToken($payload)
