@@ -31,7 +31,7 @@ class payeezyjszc extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    var $moduleVersion = '0.941';
+    var $moduleVersion = '0.95';
     /**
      * $title is the displayed name for this payment method
      *
@@ -128,20 +128,22 @@ class payeezyjszc extends base
         if ($this->enabled == false || (int)MODULE_PAYMENT_PAYEEZYJSZC_ZONE == 0) {
             return;
         }
-        $check_flag = false;
-        $sql        = "SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . (int)MODULE_PAYMENT_PAYEEZYJSZC_ZONE . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id";
-        $checks     = $db->Execute($sql);
-        foreach ($checks as $check) {
-            if ($check['zone_id'] < 1) {
-                $check_flag = true;
-                break;
-            } elseif ($check['zone_id'] == $order->billing['zone_id']) {
-                $check_flag = true;
-                break;
+        if (isset($order->billing['country']) && isset($order->billing['country']['id'])) {
+            $check_flag = false;
+            $sql        = "SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . (int)MODULE_PAYMENT_PAYEEZYJSZC_ZONE . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id";
+            $checks     = $db->Execute($sql);
+            foreach ($checks as $check) {
+                if ($check['zone_id'] < 1) {
+                    $check_flag = true;
+                    break;
+                } elseif ($check['zone_id'] == $order->billing['zone_id']) {
+                    $check_flag = true;
+                    break;
+                }
             }
-        }
-        if ($check_flag == false) {
-            $this->enabled = false;
+            if ($check_flag == false) {
+                $this->enabled = false;
+            }
         }
     }
 
@@ -306,8 +308,8 @@ class payeezyjszc extends base
 
         // lookup shipping and discount amounts
         $args['x_freight'] = $args['x_tax'] = $args['discount_amount'] = 0;
-        if (sizeof($order_totals)) {
-            for ($i = 0, $n = sizeof($order_totals); $i < $n; $i++) {
+        if (count($order_totals)) {
+            for ($i = 0, $n = count($order_totals); $i < $n; $i++) {
                 if ($order_totals[$i]['code'] == '') {
                     continue;
                 }
@@ -349,7 +351,7 @@ class payeezyjszc extends base
         $payload['token']['token_data']['value']           = preg_replace('/[^0-9a-z\-]/i', '', $_POST[$this->code . '_fdtoken']);
         $payload['token']['token_data']['cardholder_name'] = htmlentities($order->info['cc_owner']);
         $payload['token']['token_data']['exp_date']        = str_pad(preg_replace('/[^0-9]/', '', $_POST['cc_expires']), 4, '0', STR_PAD_LEFT); // ensure month is 2 digits
-        $payload['token']['token_data']['cvv']             = strval(preg_replace('/[^0-9]/', '', $_POST['cc_cvv']));
+        $payload['token']['token_data']['cvv']             = (string)(preg_replace('/[^0-9]/', '', $_POST['cc_cvv']));
         $payload['token']['token_data']['type']            = preg_replace('/[^a-z ]/i', '', $_POST['cc_type']);
 
         $payload['soft_descriptors'] = [
@@ -404,11 +406,11 @@ class payeezyjszc extends base
         ];
 
         // Add line-item data to transaction payload
-        if (sizeof($order->products) < 100) {
-            $product_code                    = $commodity_code = ''; // not submitted
+        if (count($order->products) < 100) {
+            $product_code = $commodity_code = ''; // not submitted
+
             $payload['level3']['line_items'] = [];
-            for ($i = 0; $i < sizeof($order->products); $i++) {
-                $p                                 = $order->products[$i];
+            foreach ($order->products as $p) {
                 $payload['level3']['line_items'][] = (object)[
                     'description'     => $p['name'],
                     'quantity'        => $p['qty'],
@@ -704,20 +706,22 @@ class payeezyjszc extends base
         if (isset($order) && isset($order->info['currency'])) {
             $decimal_places = $currencies->get_decimal_places($order->info['currency']);
         }
-        if ($decimal_places > 0) {
-            $amount = $amount * pow(10, $decimal_places); // Future: Exponentiation Operator ** requires PHP 5.6
-        }
+        if ((int)$decimal_places === 0) return (int)$amount;
 
-        return $amount;
+        // older way
+        return (int)(string)(round($amount, $decimal_places) * pow(10, $decimal_places));
+
+        // Requires PHP 5.6 or newer:
+        return (int)(string)(round($amount, $decimal_places) * 10 ** $decimal_places);
     }
 
     private function hmacAuthorizationToken($payload)
     {
-        $nonce         = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
-        $timestamp     = sprintf('%s', strval(time()) . '000'); //time stamp in milli seconds as string
-        $data          = strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $nonce . $timestamp . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $this->etppid . $payload;
+        $nonce         = (string)(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
+        $timestamp     = sprintf('%s', (string)(time()) . '000'); //time stamp in milli seconds as string
+        $data          = (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $nonce . $timestamp . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $this->etppid . $payload;
         $hashAlgorithm = "sha256";
-        $hmac          = hash_hmac($hashAlgorithm, $data, strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))), false);    // HMAC Hash in hex
+        $hmac          = hash_hmac($hashAlgorithm, $data, (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))), false);    // HMAC Hash in hex
         $authorization = base64_encode($hmac);
 
         return [
@@ -732,11 +736,11 @@ class payeezyjszc extends base
         $endpoint    = $this->mode == 'Sandbox' ? 'api-cert.payeezy.com' : 'api.payeezy.com';
         $curlHeaders = [
             'Content-Type: application/json',
-            'apikey:' . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
-            'token:' . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
+            'apikey:' . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
+            'token:' . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
             'Authorization:' . $headers['authorization'],
             'nonce:' . $headers['nonce'],
-            'timestamp:' . strval($headers['timestamp']),
+            'timestamp:' . (string)($headers['timestamp']),
             'ext_tppid:' . $this->etppid,
         ];
         $request     = curl_init();
@@ -860,12 +864,12 @@ if (!function_exists('plugin_version_check_for_updates')) {
     {
         if ($plugin_file_id == 0) return false;
         $new_version_available = false;
-        $lookup_index = 0;
-        $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
-        $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+        $lookup_index          = 0;
+        $url1                  = 'https://plugins.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
+        $url2                  = 'https://www.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$url1);
+        curl_setopt($ch, CURLOPT_URL, $url1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
@@ -873,27 +877,27 @@ if (!function_exists('plugin_version_check_for_updates')) {
         curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
-        $error = curl_error($ch);
-        $errno = curl_errno($ch);
+        $error    = curl_error($ch);
+        $errno    = curl_errno($ch);
 
         if ($error > 0) {
             trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
             curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
             $response = curl_exec($ch);
-            $error = curl_error($ch);
-            $errno = curl_errno($ch);
+            $error    = curl_error($ch);
+            $errno    = curl_errno($ch);
         }
         if ($error > 0) {
             trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
             curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
             $response = curl_exec($ch);
-            $error = curl_error($ch);
-            $errno = curl_errno($ch);
+            $error    = curl_error($ch);
+            $errno    = curl_errno($ch);
         }
         curl_close($ch);
         if ($error > 0 || $response == '') {
             trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
-            $ctx = stream_context_create(array('http' => array('timeout' => 5)));
+            $ctx      = stream_context_create(['http' => ['timeout' => 5]]);
             $response = file_get_contents($url1, null, $ctx);
             if ($response === false) {
                 trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
@@ -901,6 +905,7 @@ if (!function_exists('plugin_version_check_for_updates')) {
             }
             if ($response === false) {
                 trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
+
                 return false;
             }
         }
@@ -912,7 +917,8 @@ if (!function_exists('plugin_version_check_for_updates')) {
         // check whether present ZC version is compatible with the latest available plugin version
         $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
         if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
-        if (!in_array('v'. $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+        if (!in_array('v' . $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+
         return ($new_version_available) ? $data[$lookup_index] : false;
     }
 
