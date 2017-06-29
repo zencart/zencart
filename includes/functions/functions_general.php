@@ -693,7 +693,7 @@ function zen_get_minutes_since($timestamp) {
  */
   function zen_get_prid($uprid) {
     $pieces = explode(':', $uprid);
-    return $pieces[0];
+    return (int)$pieces[0];
   }
 
 
