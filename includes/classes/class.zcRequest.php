@@ -528,6 +528,7 @@ class zcRequest extends base
         'pID',
         'pos',
         'product_id',
+        'products_id',
         'img',
         'products_tax_class_id',
         'pto',
@@ -543,7 +544,6 @@ class zcRequest extends base
         'typefilter',
         'main_page',
         'sort',
-        'products_id',
         'manufacturers_id',
         'categories_id',
         'cPath'
