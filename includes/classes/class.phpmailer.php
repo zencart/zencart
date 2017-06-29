@@ -26,8 +26,7 @@ function PHPMailerAutoload($classname)
     // bust namespace limitations
     $classname = substr($classname, strrpos($classname, '\\')+1);
 
-    //Can't use __DIR__ as it's only in PHP 5.3+
-    $filename = dirname(__FILE__).DIRECTORY_SEPARATOR.'vendors'.DIRECTORY_SEPARATOR.'PHPMailer'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.$classname.'.php';
+    $filename = DIR_FS_CATALOG.DIRECTORY_SEPARATOR.'includes'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'PHPMailer'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.$classname.'.php';
     if (is_readable($filename)) {
         require $filename;
     }
