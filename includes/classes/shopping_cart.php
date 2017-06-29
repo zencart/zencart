@@ -297,7 +297,7 @@ class shoppingCart extends base {
               $option = substr($option, strlen(TEXT_PREFIX));
               $attr_value = stripslashes($value);
               $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
-              
+
               // -----
               // Check that the length of this TEXT attribute is less than or equal to its "Max Length" definition. While there
               // is some javascript on a product details' page that limits the number of characters entered, the customer
@@ -1566,7 +1566,6 @@ class shoppingCart extends base {
     if (!is_array($this->contents)) return 0;
 
     // check if mixed is on
-    //      $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id='" . (int)$products_id . "' limit 1");
     $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id='" . zen_get_prid($products_id) . "' limit 1");
 
     // if mixed attributes is off return qty for current attribute selection
@@ -1738,9 +1737,9 @@ class shoppingCart extends base {
       } else {
         $add_max = zen_get_products_quantity_order_max($_POST['products_id'][$i]); // maximum allowed
         $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
-        // Adjust in cart quantities for product that have other cart 
-        //   product dependencies and reduction of product to allow a larger increase 
-        //   at each product's modification.  
+        // Adjust in cart quantities for product that have other cart
+        //   product dependencies and reduction of product to allow a larger increase
+        //   at each product's modification.
         //   This will maximize the maximum product quantities available.
         if ($chk_mixed == true && !array_key_exists(zen_get_prid($_POST['products_id'][$i]), $change_state)) {
           $change_state[zen_get_prid($_POST['products_id'][$i])] = $this->in_cart_product_mixed_changed($_POST['products_id'][$i], 'decrease'); // Returns full data on products.
@@ -1804,13 +1803,13 @@ class shoppingCart extends base {
           default:
             $adjust_max= 'false';
           }
-          
+
 // bof: notify about adjustment to new quantity to be same as current in stock or maximum to add
           if ($adjust_max == 'true') {
             $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
           }
 // eof: notify about adjustment to new quantity to be same as current in stock or maximum to add
-          
+
           $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
           $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
         } else {
@@ -2551,11 +2550,11 @@ class shoppingCart extends base {
  * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id, 'all'); (Second value anything other than 'increase' or 'decrease')
  *
  * @param mixed $product_id
- * return array 
+ * return array
  */
   function in_cart_product_mixed_changed($product_id, $chk = false) {
     global $db;
-    
+
     // check if mixed is on
     $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id=" . zen_get_prid($product_id) . " limit 1");
 
@@ -2570,7 +2569,7 @@ class shoppingCart extends base {
     $product_last_changed = array();
     $product_increase = array();
     $product_decrease = array();
-    
+
     for ($i=0, $n=sizeof($_POST['products_id']/*$products*/); $i<$n; $i++) {
       $products_id = $_POST['products_id'][$i];
       $current_qty = $this->get_quantity($products_id); // $products[$i]['quantity']
@@ -2609,19 +2608,19 @@ class shoppingCart extends base {
             if ($_POST['cart_quantity'][$i] < $current_qty) {
               $product_decrease[] = $products_id;
             }
-        } 
+        }
       }
     }
 
     $changed_array = array(
-                       'state'=>false, 
-                       'changed' => $product_changed, 
+                       'state'=>false,
+                       'changed' => $product_changed,
                        'total_change' => $product_total_change[zen_get_prid($product_id)],
                        'last_changed' => $product_last_changed[zen_get_prid($product_id)],
                        'increase' => $product_increase,
                        'decrease' => $product_decrease
                      );
-    
+
     if (array_key_exists($product_id, $product_changed)) {
       if ($product_total_change[zen_get_prid($product_id)] == '0') {
         $changed_array['state'] = 'netzero';
