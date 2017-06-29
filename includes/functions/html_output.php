@@ -429,7 +429,7 @@
       $style = ' style="min-width: ' . $width . 'px;"';
     }
 
-    if (CSS_BUTTON_POPUPS_IS_ARRAY == 'true' || CSS_BUTTON_POPUPS_IS_ARRAY === true) {
+    if (defined('CSS_BUTTON_POPUPS_IS_ARRAY') && (CSS_BUTTON_POPUPS_IS_ARRAY == 'true' || CSS_BUTTON_POPUPS_IS_ARRAY === true)) {
       global $css_button_text, $css_button_opts;
       $popuptext = (!empty($css_button_text[$button_name])) ? $css_button_text[$button_name] : ($button_name . CSSBUTTONS_CATALOG_POPUPS_SHOW_BUTTON_NAMES_TEXT);
       $tooltip = ' title="' . $popuptext . '"';
