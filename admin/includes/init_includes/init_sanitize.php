@@ -3,9 +3,9 @@
  * init_sanitize
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt Tue May 31 18:26:42 2016 +0000 Modified in v1.5.5c $
+ * @version $Id: Author: zcwilt June 2017 Modified in v1.5.5f $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -199,7 +199,7 @@ $group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name',
                'title', 'coupon_name', 'banners_title', 'coupon_code', 'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-               'symbol_left', 'symbol_right');
+               'symbol_left', 'symbol_right', 'products_model');
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
