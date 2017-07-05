@@ -241,6 +241,9 @@ class order extends base {
 
       $this->info['tax_groups']["{$this->products[$index]['tax']}"] = 1;
 
+      $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $product, $index);
+
+
       $index++;
     } // end loop $orders_products as $product
 
@@ -412,6 +415,7 @@ class order extends base {
           $taxCountryId = $tax_address->fields['entry_country_id'];
           $taxZoneId = $tax_address->fields['entry_zone_id'];
         }
+        $this->notify('NOTIFY_ORDER_CART_TAX_ADDRESS', $tax_address);
       }
     }
 
@@ -687,6 +691,8 @@ class order extends base {
               $this->info['tax_groups'][$taxDescription] = $taxAdd;
           }
       }
+      
+      $this->notify('NOTIFY_ORDER_CART_TAX_CALCULATIONS_END', array('index' => $index, 'tax_add' => $tax_add, 'shown_price' => $shown_price, 'taxRates' => $taxRates));
   }
   /**
    * Creates a new order from the object's arrays built from the cart() method triggered by the constructor
