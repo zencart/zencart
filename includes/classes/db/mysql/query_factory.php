@@ -358,12 +358,20 @@ class queryFactory extends base {
     return($obj);
   }
     // -----
-    // Use this form of the Execute method to ensure that any SELECT result is pulled from the
+    // Use this form of the ExecuteRandomMulti method to ensure that any SELECT result is pulled from the
     // database, bypassing the cache.
     //
     function ExecuteRandomMultiNoCache ($zf_sql)
     {
         return $this->ExecuteRandomMulti ($zf_sql, 0, false, 0, true);
+    }
+    
+    // -----
+    // This function returns the number of rows affected by the last INSERT, UPDATE, REPLACE or DELETE query.
+    //
+    public function affectedRows()
+    {
+        return ($this->link) ? $this->link->affected_rows : 0;
     }
 
   function insert_ID() {
