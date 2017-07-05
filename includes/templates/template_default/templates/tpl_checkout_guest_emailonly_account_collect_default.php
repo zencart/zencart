@@ -44,13 +44,13 @@
 
     <?php if ($tplVars['addressEntries']['term_conditions']['show']) { ?>
         <fieldset>
-            <legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
+            <legend class="termsconditions"><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
             <div class="row">
-                <div class="small-3 columns">
+                <div class="small-3 columns termsdescription">
                     <?php echo TEXT_CONDITIONS_DESCRIPTION;?>
                 </div>
                 <div class="small-9 columns">
-                    <label for="privacy"><?php echo TEXT_CONDITIONS_CONFIRM;?></label>
+                    <label for="privacy" class="termsiagree"><?php echo TEXT_CONDITIONS_CONFIRM;?></label>
                     <input type="checkbox" name="term_conditions" id="privacy" <?php echo ($tplVars['addressEntries']['term_conditions']['value'] == 'on' ? 'checked' : '') ?>>
                 </div>
             </div>
