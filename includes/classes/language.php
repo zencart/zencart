@@ -3,7 +3,7 @@
  * language Class.
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: language.php drbyte  Modified in v1.6.0 $
@@ -68,13 +68,34 @@ class language extends base {
    * @param string $language The language we want to set the site to, as long as it exists in the db
    * @return array
    */
-  public function set_language($language = DEFAULT_LANGUAGE) {
+  public function set_language($language = DEFAULT_LANGUAGE) 
+  {
     if (empty($language)) $language = DEFAULT_LANGUAGE;
 
     if (isset($this->available_languages[$language])) {
       $this->language = $this->available_languages[$language];
     }
+
+    // ensure the now-selected language hasn't been deleted
+    if (empty($this->language['id'])) $this->language = $this->get_default_language();
+
     return $this->language;
+  }
+
+  /**
+   * Return the Default language if valid, else the first available defined language
+   *
+   * @return array of elements for selected default language
+   */
+  public function get_default_language()
+  {
+    if (isset($this->available_languages[DEFAULT_LANGUAGE])) {
+        return $this->available_languages[DEFAULT_LANGUAGE];
+    }
+    // if we get here, then the default language setting may be invalid, so we'll pick the first one from the array instead
+    $list = array_keys($this->available_languages);
+    $first_language_in_array = $list[0];
+    return $this->available_languages[$first_language_in_array];
   }
 
   /**
