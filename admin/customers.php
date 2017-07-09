@@ -1,13 +1,15 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  Modified in v1.6.0 $
  */
 
   require('includes/application_top.php');
+
+  if (!defined('ENTRY_EMAIL_NEVER_SEND_EMAILS')) define('ENTRY_EMAIL_NEVER_SEND_EMAILS', 'Never (Note: this will prevent ALL emails, including important order-confirmation messages!)');
 
   $currencies = new currencies();
 
@@ -768,9 +770,9 @@ if ($processed == true) {
     echo $customers_email_format . zen_draw_hidden_field('customers_email_format');
   }
 } else {
-  $email_pref_text = ($cInfo->customers_email_format == 'TEXT') ? true : false;
-  $email_pref_html = !$email_pref_text;
-  echo zen_draw_radio_field('customers_email_format', 'HTML', $email_pref_html) . '&nbsp;' . ENTRY_EMAIL_HTML_DISPLAY . '&nbsp;&nbsp;&nbsp;' . zen_draw_radio_field('customers_email_format', 'TEXT', $email_pref_text) . '&nbsp;' . ENTRY_EMAIL_TEXT_DISPLAY ;
+  echo zen_draw_radio_field('customers_email_format', 'HTML', $cInfo->customers_email_format == 'HTML') . '&nbsp;' . ENTRY_EMAIL_HTML_DISPLAY . '&nbsp;&nbsp;&nbsp;' 
+  . zen_draw_radio_field('customers_email_format', 'TEXT', $cInfo->customers_email_format == 'TEXT') . '&nbsp;' . ENTRY_EMAIL_TEXT_DISPLAY . '&nbsp;&nbsp;&nbsp;' 
+  . zen_draw_radio_field('customers_email_format', 'NONE', $cInfo->customers_email_format == 'NONE') . '&nbsp;' . ENTRY_EMAIL_NEVER_SEND_EMAILS ;
 }
 ?></td>
       </tr>
