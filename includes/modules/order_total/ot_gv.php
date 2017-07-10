@@ -43,7 +43,7 @@ class ot_gv {
     $this->calculate_tax = MODULE_ORDER_TOTAL_GV_CALC_TAX;
     $this->credit_tax = MODULE_ORDER_TOTAL_GV_CREDIT_TAX;
     $this->tax_class  = MODULE_ORDER_TOTAL_GV_TAX_CLASS;
-    $this->show_redeem_box = MODULE_ORDER_TOTAL_GV_REDEEM_BOX;
+    // $this->show_redeem_box = MODULE_ORDER_TOTAL_GV_REDEEM_BOX;
     $this->credit_class = true;
     if (!zen_not_null(ltrim($_SESSION['cot_gv'], ' 0')) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true) {
