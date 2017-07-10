@@ -33,38 +33,44 @@
   {
     if ($plugin_file_id == 0) return false;
     $new_version_available = false;
-    $lookup_index = 0;
+    $lookup_index = $errno = 0;
+    $response = $error = '';
     $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
     $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$url1);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 9);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    $error = curl_error($ch);
-    $errno = curl_errno($ch);
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 9);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        $errno = curl_errno($ch);
 
-    if ($error > 0) {
-      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
-      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
-      $response = curl_exec($ch);
-      $error = curl_error($ch);
-      $errno = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
+        }
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
+        }
+        curl_close($ch);
+    } else {
+        $errono = 9999;
+        $error = 'curl_init not found in PHP';
     }
-    if ($error > 0) {
-      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
-      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
-      $response = curl_exec($ch);
-      $error = curl_error($ch);
-      $errno = curl_errno($ch);
-    }
-    curl_close($ch);
-    if ($error > 0 || $response == '') {
+    if ($errno > 0 || $response == '') {
       trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
       $ctx = stream_context_create(array('http' => array('timeout' => 5)));
       $response = file_get_contents($url1, null, $ctx);
