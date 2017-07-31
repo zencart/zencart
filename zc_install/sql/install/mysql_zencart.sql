@@ -1611,7 +1611,7 @@ CREATE TABLE products_options (
   products_options_sort_order int(11) NOT NULL default '0',
   products_options_type int(5) NOT NULL default '0',
   products_options_length smallint(2) NOT NULL default '32',
-  products_options_comment varchar(64) default NULL,
+  products_options_comment varchar(255) default NULL,
   products_options_size smallint(2) NOT NULL default '32',
   products_options_images_per_row int(2) default '5',
   products_options_images_style int(1) default '0',
