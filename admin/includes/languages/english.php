@@ -519,7 +519,6 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('BOX_TOOLS_LAYOUT_CONTROLLER','Layout Boxes Controller');
 
 // check GV release queue and alert store owner
-  define('SHOW_GV_QUEUE',true);
   define('TEXT_SHOW_GV_QUEUE','%s waiting approval ');
   define('IMAGE_GIFT_QUEUE', TEXT_GV_NAME . ' Queue');
   define('IMAGE_ORDER','Order');
