@@ -3,10 +3,10 @@
  * authorize.net echeck payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Mar 16 16:12:21 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  July 2017 Modified in v1.5.6 $
  */
 /**
  * Authorize.net echeck Payment Module
@@ -443,19 +443,6 @@ class authorizenet_echeck extends base {
     $sql = $db->bindVars($sql, ':orderStatus', $this->order_status, 'integer');
     $db->Execute($sql);
     return false;
-  }
-  /**
-    * Build admin-page components
-    *
-    * @param int $zf_order_id
-    * @return string
-    */
-  function RENAME_admin_notification($zf_order_id) {
-    global $db;
-    $output = '';
-    $echeckdata->fields = array();
-    require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/authorizenet/authorizenet_admin_notification.php');
-    return $output;
   }
   /**
    * Used to display error message details
