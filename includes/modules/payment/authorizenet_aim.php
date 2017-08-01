@@ -352,7 +352,7 @@ class authorizenet_aim extends base {
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
                          'x_method' => 'CC',
-                         'x_amount' => number_format($order->info['total'], 2),
+                         'x_amount' => round($order->info['total'], 2),
                          'x_currency_code' => $order->info['currency'],
                          'x_market_type' => 0,
                          'x_card_num' => $_POST['cc_number'],
@@ -383,9 +383,9 @@ class authorizenet_aim extends base {
                          'x_recurring_billing' => 'NO',
                          'x_customer_ip' => zen_get_ip_address(),
                          'x_po_num' => date('M-d-Y h:i:s'), //$order->info['po_number'],
-                         'x_freight' => number_format((float)$order->info['shipping_cost'],2),
+                         'x_freight' => round((float)$order->info['shipping_cost'],2),
                          'x_tax_exempt' => 'FALSE', /* 'TRUE' or 'FALSE' */
-                         'x_tax' => number_format((float)$order->info['tax'],2),
+                         'x_tax' => round((float)$order->info['tax'],2),
                          'x_duty' => '0',
                          'x_device_type' => 8,
                          'x_allow_partial_Auth' => 'FALSE', // unable to accept partial authorizations at this time
@@ -403,7 +403,7 @@ class authorizenet_aim extends base {
     // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
     if ($order->info['currency'] != $this->gateway_currency) {
       global $currencies;
-      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data['x_amount'] = round($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data['x_currency_code'] = $this->gateway_currency;
       $submit_data['x_description'] .= ' (Converted from: ' . number_format($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
       unset($submit_data['x_tax'], $submit_data['x_freight']);
@@ -817,7 +817,7 @@ class authorizenet_aim extends base {
     if ($proceedToRefund) {
       $submit_data = array('x_type' => 'CREDIT',
                            'x_card_num' => trim($_POST['cc_number']),
-                           'x_amount' => number_format($refundAmt, 2),
+                           'x_amount' => round($refundAmt, 2),
                            'x_trans_id' => trim($_POST['trans_id'])
                            );
       unset($response);
@@ -889,7 +889,7 @@ class authorizenet_aim extends base {
       unset($submit_data);
       $submit_data = array(
                            'x_type' => 'PRIOR_AUTH_CAPTURE',
-                           'x_amount' => number_format($captureAmt, 2),
+                           'x_amount' => round($captureAmt, 2),
                            'x_trans_id' => strip_tags(trim($_POST['captauthid'])),
 //                         'x_invoice_num' => $new_order_id,
 //                         'x_po_num' => $order->info['po_number'],

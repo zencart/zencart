@@ -254,9 +254,9 @@ class square extends base
         // force conversion to Square Account's currency:
         if ($order->info['currency'] != $location->currency) {
             global $currencies;
-            $payment_amount         = number_format($order->info['total'] * $currencies->get_value($location->currency), 2);
+            $payment_amount         = round($order->info['total'] * $currencies->get_value($location->currency), 2);
             $currency_code          = $location->currency;
-            $this->currency_comment = '(Converted from: ' . number_format($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
+            $this->currency_comment = '(Converted from: ' . round($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
             // @TODO - if Square adds support for transmission of tax and shipping amounts, these may need recalculation here too
         }
 

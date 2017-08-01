@@ -340,7 +340,7 @@ class authorizenet_echeck extends base {
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
                          'x_type' => MODULE_PAYMENT_AUTHORIZENET_ECHECK_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
-                         'x_amount' => number_format($order->info['total'], 2),
+                         'x_amount' => round($order->info['total'], 2),
                          'x_currency_code' => $order->info['currency'],
                          'x_method' => 'ECHECK',
                          'x_bank_aba_code' => $_POST['bank_aba_code'],
@@ -374,9 +374,9 @@ class authorizenet_echeck extends base {
                          'x_description' => $description,
                          'x_customer_ip' => zen_get_ip_address(),
                          'x_po_num' => date('M-d-Y h:i:s'), //$order->info['po_number'],
-                         'x_freight' => number_format((float)$order->info['shipping_cost'],2),
+                         'x_freight' => round((float)$order->info['shipping_cost'],2),
                          'x_tax_exempt' => 'FALSE', /* 'TRUE' or 'FALSE' */
-                         'x_tax' => number_format((float)$order->info['tax'],2),
+                         'x_tax' => round((float)$order->info['tax'],2),
                          'x_duty' => '0',
 
                          // Additional Merchant-defined variables go here
@@ -399,7 +399,7 @@ class authorizenet_echeck extends base {
     // force conversion to USD
     if ($order->info['currency'] != 'USD') {
       global $currencies;
-      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value('USD'), 2);
+      $submit_data['x_amount'] = round($order->info['total'] * $currencies->get_value('USD'), 2);
       $submit_data['x_currency_code'] = 'USD';
       unset($submit_data['x_tax'], $submit_data['x_freight']);
     }
@@ -720,7 +720,7 @@ class authorizenet_echeck extends base {
     if ($proceedToRefund) {
       $submit_data = array('x_type' => 'CREDIT',
                            'x_card_num' => trim($_POST['cc_number']),
-                           'x_amount' => number_format($refundAmt, 2),
+                           'x_amount' => round($refundAmt, 2),
                            'x_trans_id' => trim($_POST['trans_id'])
                            );
       unset($response);
@@ -792,7 +792,7 @@ class authorizenet_echeck extends base {
       unset($submit_data);
       $submit_data = array(
                            'x_type' => 'PRIOR_AUTH_CAPTURE',
-                           'x_amount' => number_format($captureAmt, 2),
+                           'x_amount' => round($captureAmt, 2),
                            'x_trans_id' => strip_tags(trim($_POST['captauthid'])),
 //                         'x_invoice_num' => $new_order_id,
 //                         'x_po_num' => $order->info['po_number'],
