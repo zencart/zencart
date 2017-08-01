@@ -27,7 +27,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.81';
+    public $moduleVersion = '0.82';
     /**
      * $title is the displayed name for this payment method
      *
@@ -695,11 +695,11 @@ class square extends base
      * format purchase amount
      * Monetary amounts are specified in the smallest unit of the applicable currency. ie: for USD the amount is in cents.
      */
-    protected function convert_to_cents($amount, $currency = null)
+    protected function convert_to_cents($amount, $currency_code = null)
     {
         global $currencies, $order;
-        if (empty($currency)) $currency = (isset($order) && isset($order->info['currency'])) ? $order->info['currency'] : $this->gateway_currency;
-        $decimal_places = $currencies->get_decimal_places($currency);
+        if (empty($currency_code)) $currency_code = (isset($order) && isset($order->info['currency'])) ? $order->info['currency'] : $this->gateway_currency;
+        $decimal_places = $currencies->get_decimal_places($currency_code);
 
         // if this currency is "already" in cents, just use the amount directly
         if ((int)$decimal_places === 0) return (int)$amount;
@@ -716,8 +716,8 @@ class square extends base
     protected function convert_from_cents($amount, $currency_code = null)
     {
         global $currencies, $order;
-        if (empty($currency)) $currency = (isset($order) && isset($order->info['currency'])) ? $order->info['currency'] : $this->gateway_currency;
-        $decimal_places = $currencies->get_decimal_places($currency);
+        if (empty($currency_code)) $currency_code = (isset($order) && isset($order->info['currency'])) ? $order->info['currency'] : $this->gateway_currency;
+        $decimal_places = $currencies->get_decimal_places($currency_code);
 
         // if this currency is "already" in cents, just use the amount directly
         if ((int)$decimal_places === 0) return (int)$amount;
