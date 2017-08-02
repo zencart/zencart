@@ -53,9 +53,9 @@ function zen_update_currencies($cli_Output = FALSE)
       if (zen_not_null($rate) && $rate > 0) {
         $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_SINGLE', $currency->fields['code'], $rate);
         $db->Execute("update " . TABLE_CURRENCIES . "
-                            set value = '" . (float)$rate . "', last_updated = now()
-                            where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
-        $msg = sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], $rate, $server_used);
+                      set value = '" . round((float)$rate, 8) . "', last_updated = now()
+                      where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
+        $msg = sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], round((float)$rate, 8), $server_used);
         if (is_object($messageStack)) {
           $messageStack->add_session($msg, 'success');
         } elseif ($cli_Output) {
