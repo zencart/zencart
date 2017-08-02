@@ -27,3 +27,8 @@ if (!defined('IS_ADMIN_FLAG')) {
       @ini_set('zlib.output_compression_level', (int)GZIP_LEVEL);
     }
   }
+
+/**
+ * tell any proxies to store both the compressed and uncompressed versions of content, so output doesn't get served mangled
+ */
+header("Vary: Accept-Encoding");
