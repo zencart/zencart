@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Feb 28 02:42:59 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -55,6 +55,11 @@
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
     }
   }
+
+
+if (!empty($oID) && !empty($action)) {
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDER_PREDISPLAY_HOOK', $oID, $action);
+}
 
   if (zen_not_null($action) && $order_exists == true) {
     switch ($action) {
@@ -495,6 +500,10 @@ function couponpopupWindow(url) {
                 <td class="main"><?php echo zen_address_format($order->customer['format_id'], $order->customer, 1, '', '<br />'); ?></td>
               </tr>
               <tr>
+		<td class="main"><strong>&nbsp;</strong></td>
+                <td class="main noprint"><a href="http://maps.google.com/maps?q=<?php echo $order->customer['street_address']; ?>, <?php echo $order->customer['city']; ?> <?php echo $order->customer['state']; ?>, <?php echo $order->customer['postcode']; ?>" target="map"><i class="fa fa-map"></i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
+              </tr>
+              <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
               </tr>
               <tr>
@@ -516,8 +525,8 @@ function couponpopupWindow(url) {
                 <?php } ?>
               </tr>
               <tr>
-                <td class="main"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
-                <td class="main"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '" . >' . TEXT_CUSTOMER_LOOKUP . '</a>'; ?></td>
+                <td class="main noprint"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
+                <td class="main noprint"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '" . >' . TEXT_CUSTOMER_LOOKUP . '</a>'; ?></td>
               </tr>
             </table></td>
             <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
@@ -525,11 +534,19 @@ function couponpopupWindow(url) {
                 <td class="main" valign="top"><strong><?php echo ENTRY_SHIPPING_ADDRESS; ?></strong></td>
                 <td class="main"><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?></td>
               </tr>
+	      <tr>
+	       <td class="main"><strong>&nbsp;</strong></td>
+               <td class="main noprint"><a href="http://maps.google.com/maps?q=<?php echo $order->delivery['street_address']; ?>, <?php echo $order->delivery['city']; ?> <?php echo $order->delivery['state']; ?>, <?php echo $order->delivery['postcode']; ?>" target="map"><i class="fa fa-map"></i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
+              </tr>
             </table></td>
             <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
               <tr>
                 <td class="main" valign="top"><strong><?php echo ENTRY_BILLING_ADDRESS; ?></strong></td>
                 <td class="main"><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'); ?></td>
+              </tr>
+              <tr>
+                <td class="main"><strong>&nbsp;</strong></td>
+                <td class="main noprint"><a href="http://maps.google.com/maps?q=<?php echo $order->billing['street_address']; ?>, <?php echo $order->billing['city']; ?> <?php echo $order->billing['state']; ?>, <?php echo $order->billing['postcode']; ?>" target="map"><i class="fa fa-map"></i> <u><?php echo TEXT_MAP_BILLING_ADDRESS; ?></u></a></td>
               </tr>
             </table></td>
           </tr>
@@ -582,7 +599,9 @@ function couponpopupWindow(url) {
 <?php
     }
 ?>
-        </table></td>
+        </table>
+        <?php   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PAYMENTDATA_COLUMN2', $oID, $order); ?>
+        </td>
       </tr>
 <?php
       if (is_object($module) && method_exists($module, 'admin_notification')) {
@@ -918,7 +937,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
                 <td class="dataTableContent" align="center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <td class="dataTableContent" align="center"><?php echo (zen_get_orders_comments($orders->fields['orders_id']) == '' ? '' : zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16)); ?></td>
-
+<?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', (isset($oInfo) ? $oInfo : array()), $orders->fields); ?>
                 <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?><?php if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
