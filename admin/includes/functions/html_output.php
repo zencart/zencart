@@ -1,15 +1,15 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 20:52:53 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte   Modified in v1.5.6 $
  */
 
 ////
 // The HTML href link wrapper function
-  function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
+  function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
     global $request_type, $session_started, $http_domain, $https_domain;
     if ($page == '') {
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
