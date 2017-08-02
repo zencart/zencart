@@ -173,7 +173,12 @@ $group = array(
     'padID',
     'coupon_uses_coupon',
     'coupon_uses_user',
-    'coupon_zone_restriction'
+    'coupon_zone_restriction',
+    'coupon_copy_to_count',
+    'coupon_product_count',
+    'coupon_calc_base',
+    'coupon_order_limit',
+    'coupon_is_valid_for_sales',
 );
 $sanitizer->addSimpleSanitization('CONVERT_INT', $group);
 
@@ -183,6 +188,7 @@ $sanitizer->addSimpleSanitization('FILE_DIR_REGEX', $group);
 $group = array(
     'handler',
     'action',
+    'oldaction',
     'product_attribute_is_free',
     'attributes_default',
     'attributes_price_base_included',
@@ -196,7 +202,8 @@ $group = array(
 $sanitizer->addSimpleSanitization('ALPHANUM_DASH_UNDERSCORE', $group);
 
 $group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name',
-               'title', 'coupon_name', 'banners_title', 'coupon_code', 'group_name', 'geo_zone_name', 'geo_zone_description',
+               'title', 'coupon_name', 'coupon_copy_to_dup_name', 'banners_title', 'coupon_code', 'coupon_delete_duplicate_code', 'coupon_type', 
+               'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
                'symbol_left', 'symbol_right', 'products_model');
