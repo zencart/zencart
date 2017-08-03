@@ -1051,6 +1051,7 @@ CREATE TABLE orders (
   order_tax decimal(14,2) default NULL,
   paypal_ipn_id int(11) NOT NULL default '0',
   ip_address varchar(96) NOT NULL default '',
+  order_weight float NOT NULL default '0',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
@@ -1080,7 +1081,15 @@ CREATE TABLE orders_products (
   product_is_free tinyint(1) NOT NULL default '0',
   products_discount_type tinyint(1) NOT NULL default '0',
   products_discount_type_from tinyint(1) NOT NULL default '0',
-  products_prid tinytext NOT NULL,
+  products_prid tinytext NOT NULL default '',
+  products_weight FLOAT NOT NULL DEFAULT '0',
+  products_virtual tinyint(1) NOT NULL default '0',
+  product_is_always_free_shipping tinyint(1) NOT NULL default '0',
+  products_quantity_order_min float NOT NULL default '1',
+  products_quantity_order_units float NOT NULL default '1',
+  products_quantity_order_max float NOT NULL default '0',
+  products_quantity_mixed tinyint(1) NOT NULL default '0',
+  products_mixed_discount_quantity tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (orders_products_id),
   KEY idx_orders_id_prod_id_zen (orders_id,products_id),
   KEY idx_prod_id_orders_id_zen (products_id,orders_id)
@@ -1119,7 +1128,7 @@ CREATE TABLE orders_products_attributes (
   attributes_price_letters_free int(4) NOT NULL default '0',
   products_options_id int(11) NOT NULL default '0',
   products_options_values_id int(11) NOT NULL default '0',
-  products_prid tinytext NOT NULL,
+  products_prid tinytext NOT NULL default '',
   PRIMARY KEY  (orders_products_attributes_id),
   KEY idx_orders_id_prod_id_zen (orders_id,orders_products_id)
 ) ENGINE=MyISAM;
@@ -1138,7 +1147,8 @@ CREATE TABLE orders_products_download (
   orders_products_filename varchar(255) NOT NULL default '',
   download_maxdays int(2) NOT NULL default '0',
   download_count int(2) NOT NULL default '0',
-  products_prid tinytext NOT NULL,
+  products_prid tinytext NOT NULL default '',
+  products_attributes_id int(11) NOT NULL default '0',
   PRIMARY KEY  (orders_products_download_id),
   KEY idx_orders_id_zen (orders_id),
   KEY idx_orders_products_id_zen (orders_products_id)

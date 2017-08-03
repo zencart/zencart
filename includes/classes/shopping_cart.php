@@ -3,10 +3,10 @@
  * Class for managing the Shopping Cart
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 01:35:35 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -1204,7 +1204,8 @@ class shoppingCart extends base {
                                   p.products_price, p.products_weight, p.products_tax_class_id,
                                   p.products_quantity_order_min, p.products_quantity_order_units, p.products_quantity_order_max,
                                   p.product_is_free, p.products_priced_by_attribute,
-                                  p.products_discount_type, p.products_discount_type_from, p.products_virtual, p.product_is_always_free_shipping
+                                  p.products_discount_type, p.products_discount_type_from, p.products_virtual, p.product_is_always_free_shipping,
+                                  p.products_quantity_mixed, p.products_mixed_discount_quantity
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            where p.products_id = '" . (int)$products_id . "'
                            and pd.products_id = p.products_id
@@ -1353,10 +1354,6 @@ class shoppingCart extends base {
           $new_qty = round($new_qty, 0);
         }
 
-//@@TODO - should be okay to remove
-        if (false && $new_qty == (int)$new_qty) {
-          $new_qty = (int)$new_qty;
-        }
         $products_array[] = array('id' => $products_id,
                                   'category' => $products->fields['master_categories_id'],
                                   'name' => $products->fields['products_name'],
@@ -1366,7 +1363,6 @@ class shoppingCart extends base {
         //                                    'quantity' => $this->contents[$products_id]['qty'],
                                   'quantity' => $new_qty,
                                   'weight' => $products->fields['products_weight'] + $this->attributes_weight($products_id),
-                                  // fix here
                                   'final_price' => ($products_price + $this->attributes_price($products_id)),
                                   'onetime_charges' => ($this->attributes_price_onetime_charges($products_id, $new_qty)),
                                   'tax_class_id' => $products->fields['products_tax_class_id'],
@@ -1376,8 +1372,13 @@ class shoppingCart extends base {
                                   'product_is_free' => $products->fields['product_is_free'],
                                   'products_discount_type' => $products->fields['products_discount_type'],
                                   'products_discount_type_from' => $products->fields['products_discount_type_from'],
-                                  'products_virtual' => $products->fields['products_virtual'],
-                                  'product_is_always_free_shipping' => $products->fields['product_is_always_free_shipping']
+                                  'products_virtual' => (int)$products->fields['products_virtual'],
+                                  'product_is_always_free_shipping' => (int)$products->fields['product_is_always_free_shipping'],
+                                  'products_quantity_order_min' => (float)$products->fields['products_quantity_order_min'],
+                                  'products_quantity_order_units' => (float)$products->fields['products_quantity_order_units'],
+                                  'products_quantity_order_max' => (float)$products->fields['products_quantity_order_max'],
+                                  'products_quantity_mixed' => (int)$products->fields['products_quantity_mixed'],
+                                  'products_mixed_discount_quantity' => (int)$products->fields['products_mixed_discount_quantity'],
                                   );
       }
     }

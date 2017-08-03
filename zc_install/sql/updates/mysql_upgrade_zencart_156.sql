@@ -54,6 +54,24 @@ ALTER TABLE coupons ADD coupon_is_valid_for_sales TINYINT(1) NOT NULL DEFAULT 1;
 ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0';
 ALTER TABLE coupons_description MODIFY coupon_name VARCHAR(64) NOT NULL DEFAULT '';
 
+# Add fields for easier order reconstruction/edit
+ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
+ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
+ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '0';
+ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) NOT NULL default '0';
+ALTER TABLE orders_products ADD products_quantity_order_min float NOT NULL default '1';
+ALTER TABLE orders_products ADD products_quantity_order_units float NOT NULL default '1';
+ALTER TABLE orders_products ADD products_quantity_order_max float NOT NULL default '0';
+ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) NOT NULL default '0';
+ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) NOT NULL default '1';
+ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL default '0';
+# set a default
+ALTER TABLE orders_products MODIFY products_prid tinytext NOT NULL default '';
+ALTER TABLE orders_products_attributes MODIFY products_prid tinytext NOT NULL default '';
+ALTER TABLE orders_products_download MODIFY products_prid tinytext NOT NULL default '';
+
+
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
