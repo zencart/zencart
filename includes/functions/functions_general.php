@@ -1044,7 +1044,7 @@ function zen_get_minutes_since($timestamp) {
 
     $result = $db->Execute($sql);
 
-    // check whether coupon has been flagged for not valid with sales
+    // check whether coupon has been flagged as valid for sales
     if ($result->fields['coupon_is_valid_for_sales']) {
       return true;
     }
@@ -1058,7 +1058,7 @@ function zen_get_minutes_since($timestamp) {
     if ($chk_product_on_sale) {
       return false;
     }
-    return true; // is on special or sale
+    return true; // is not on special or sale
   }
 
 /**
