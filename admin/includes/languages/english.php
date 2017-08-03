@@ -4,12 +4,14 @@
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Mar 23 14:21:26 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: english.php Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
   die('Illegal Access');
 }
+
+define('CONNECTION_TYPE_UNKNOWN', '\'%s\' is not a valid connection type for generating URLs' . PHP_EOL . '%s' . PHP_EOL);
 
 // added defines for header alt and text
 define('HEADER_ALT_TEXT', 'Admin Powered by Zen Cart :: The Art of E-Commerce');
@@ -39,17 +41,18 @@ function zen_date_raw($date, $reverse = false) {
   }
 }
 
-// removed for meta tags
-// page title
-//define('TITLE', 'Zen Cart');
+// // include template specific meta tags defines
+//   if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
+//     $template_dir_select = $template_dir . '/';
+//   } else {
+//     $template_dir_select = '';
+//   }
+//   require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
 
-// include template specific meta tags defines
-  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
-    $template_dir_select = $template_dir . '/';
-  } else {
-    $template_dir_select = '';
-  }
-  require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
+// used for prefix to browser tabs in admin pages
+define('TEXT_ADMIN_TAB_PREFIX', 'Webstore ');
+// if you have multiple stores and want the Store Name to be part of the admin title (ie: for browser tabs), swap this line with the one above
+//define('TEXT_ADMIN_TAB_PREFIX', 'Webstore ' . STORE_NAME);
 
 // meta tags
 define('ICON_METATAGS_ON', 'Meta Tags Defined');

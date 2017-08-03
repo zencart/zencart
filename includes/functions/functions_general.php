@@ -915,7 +915,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
   }
 
-////
+/**
+ * Alias to $db->prepareInput() for sanitizing db inserts
+ * @param string $string
+ * @return string
+ */
   function zen_db_input($string) {
     global $db;
     return $db->prepareInput($string);
