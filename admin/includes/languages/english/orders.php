@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Feb 28 02:42:59 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
  */
 
 define('HEADING_TITLE', 'Orders');
@@ -129,3 +129,8 @@ define('TEXT_INVALID_ORDER_STATUS', '<span class="alert">(Invalid Order Status)<
 
 define('BUTTON_TO_LIST', 'Order List');
 define('SELECT_ORDER_LIST', 'Jump to Order:');
+
+define('TEXT_MAP_CUSTOMER_ADDRESS', 'Map Customer Address');
+define('TEXT_MAP_SHIPPING_ADDRESS', 'Map Shipping Address');
+define('TEXT_MAP_BILLING_ADDRESS', 'Map Billing Address');
+
