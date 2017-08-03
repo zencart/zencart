@@ -48,6 +48,11 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 # Updates
 ALTER TABLE product_options MODIFY products_options_comment varchar(256) default NULL;
 
+ALTER TABLE coupons ADD coupon_calc_base TINYINT(1) NOT NULL DEFAULT '0';
+ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT '0';
+ALTER TABLE coupons ADD coupon_is_valid_for_sales TINYINT(1) NOT NULL DEFAULT 1;
+ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0';
+ALTER TABLE coupons_description MODIFY coupon_name VARCHAR(64) NOT NULL DEFAULT '';
 
 
 
