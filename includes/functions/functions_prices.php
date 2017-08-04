@@ -199,8 +199,12 @@
 
     $show_display_price = $show_sale_discount = '';
     $priceinfo['normal']  = $display_normal_price  = zen_get_products_base_price($products_id);
-    $priceinfo['special'] = $display_special_price = zen_get_products_special_price($products_id, true);
     $priceinfo['sale']    = $display_sale_price    = zen_get_products_special_price($products_id, false);
+    if ($priceinfo['sale'] !== false) {
+      $priceinfo['special'] = $display_special_price = zen_get_products_special_price($products_id, true);
+    } else {
+      $priceinfo['special'] = $display_special_price = false;
+    }
 
     if (SHOW_SALE_DISCOUNT_STATUS == '1' and ($display_special_price != 0 or $display_sale_price != 0)) {
       if ($display_sale_price) {
@@ -508,8 +512,12 @@
     }
 
     $new_products_price = zen_get_products_base_price($product_id);
-    $new_special_price = zen_get_products_special_price($product_id, true);
     $new_sale_price = zen_get_products_special_price($product_id, false);
+    if ($new_sale_price !== false) {
+      $new_special_price = zen_get_products_special_price($product_id, true);
+    } else {
+      $new_special_price = false;
+    }
 
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
@@ -942,8 +950,12 @@ If a special exist * 10
 
     $show_display_price = '';
     $display_normal_price = zen_get_products_base_price($products_id);
-    $display_special_price = zen_get_products_special_price($products_id, true);
     $display_sale_price = zen_get_products_special_price($products_id, false);
+    if ($display_sale_price !== false) {
+      $display_special_price = zen_get_products_special_price($products_id, true);
+    } else {
+      $display_special_price = false;
+    }
 
     $products_actual_price = $display_normal_price;
 
