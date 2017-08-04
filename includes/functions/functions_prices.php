@@ -3,10 +3,10 @@
  * functions_prices
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 22 10:56:26 2016 +0000 Modified in v1.5.5 $
+ * @version GIT: $Id: Author: DrByte Modified in v1.5.6 $
  */
 
 ////
@@ -403,15 +403,16 @@
 
     if ($check_min != 1 or $check_units != 1) {
       if ($check_min != 1) {
-        $the_min_units .= PRODUCTS_QUANTITY_MIN_TEXT_LISTING . '&nbsp;' . $check_min;
+        $the_min_units .= '<span class="qmin">' . PRODUCTS_QUANTITY_MIN_TEXT_LISTING . '&nbsp;' . $check_min . '</span>';
       }
       if ($check_units != 1) {
-        $the_min_units .= ($the_min_units ? ' ' : '' ) . PRODUCTS_QUANTITY_UNIT_TEXT_LISTING . '&nbsp;' . $check_units;
+        $the_min_units .= '<span class="qunit">' . ($the_min_units ? ' ' : '' ) . PRODUCTS_QUANTITY_UNIT_TEXT_LISTING . '&nbsp;' . $check_units . '</span>';
       }
 
 // don't check for mixed if not attributes
       $chk_mix = zen_get_products_quantity_mixed((int)$product_id);
       if ($chk_mix != 'none') {
+        $the_min_units .= '<span class="qmix">';
         if (($check_min > 0 or $check_units > 0)) {
           if ($include_break == true) {
             $the_min_units .= '<br />' . ($shopping_cart_msg == false ? TEXT_PRODUCTS_MIX_OFF : TEXT_PRODUCTS_MIX_OFF_SHOPPING_CART);
@@ -425,6 +426,7 @@
             $the_min_units .= '&nbsp;&nbsp;' . ($shopping_cart_msg == false ? TEXT_PRODUCTS_MIX_ON : TEXT_PRODUCTS_MIX_ON_SHOPPING_CART);
           }
         }
+        $the_min_units .= '</span>';
       }
     }
 
@@ -432,11 +434,13 @@
     $check_max = zen_get_products_quantity_order_max($product_id);
 
     if ($check_max != 0) {
+      $the_min_units .= '<span class="qmax">';
       if ($include_break == true) {
         $the_min_units .= ($the_min_units != '' ? '<br />' : '') . PRODUCTS_QUANTITY_MAX_TEXT_LISTING . '&nbsp;' . $check_max;
       } else {
         $the_min_units .= ($the_min_units != '' ? '&nbsp;&nbsp;' : '') . PRODUCTS_QUANTITY_MAX_TEXT_LISTING . '&nbsp;' . $check_max;
       }
+      $the_min_units .= '</span>';
     }
 
     return $the_min_units;
