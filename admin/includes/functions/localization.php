@@ -159,7 +159,8 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_USERAGENT, empty($_SERVER['HTTP_USER_AGENT']) ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_REFERER, HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     if (strtoupper($method) == 'POST' && $vars != '') {
