@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<!--
+/**
+ * @package documentation
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Author: DrByte  August 2017 New in v1.5.6 $
+ */
+//-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
+fieldset.intro {border-color:#C96E29; }
+.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
+td.plainbox, div.callout {border: 1px dashed;border-color: #C96E29;margin:5px 40px 5px 40px;}
+.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
+.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
+.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
+.small {font-size:11px ;}
+.smaller {font-size:10px ;}
+.error {color:#FF0000; }
+.code {font-family: "Lucida Console", Monaco, monospace; font-size:14px; color:#c96e29;}
+.pseudolink {text-decoration:underline; color:#5778CE;}
+h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
+h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
+h2 { color: #c96e29;  font-size: 18px;}
+h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
+h4 { color: #c96e29;  font-size: 14px;}
+h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
+.style1 {
+  font-size: 18px;
+  font-weight: bold;
+}
+.emphasize {color: #336600;}
+.caps {text-transform: uppercase;font-size:0.8em;}
+fieldset {max-width: 748px; margin: auto}
+.center {text-align: center}
+
+
+-->
+</style>
+<title>What's New in Zen Cart(R) v1.5.6</title>
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="author" content="The Zen Cart&reg; Team">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<fieldset class="intro">
+<h1 class="intro" style="text-align: center;">Welcome to Zen Cart&reg; v1.5.6</h1>
+<br>
+The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
+<br>
+<br>
+While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
+<br>
+<br>
+Donations can be made at:
+<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
+<br>
+<br>
+We appreciate your support.<br>
+<em>The Zen Cart&reg; Team</em><br>
+<br>
+
+<p class="smaller center">
+Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
+and is redistributable under the GNU General Public License<br><br>
+</p>
+</fieldset>
+
+<br>
+<fieldset>
+<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
+This software is OSI Certified Open Source Software.<br>
+OSI Certified is a certification mark of the Open Source Initiative.
+</p>
+</fieldset>
+<br>
+
+<fieldset>
+<h1>About PHP versions</h1>
+<p>Zen Cart&reg; v1.5.6 is designed for PHP 5.6 to 7.2, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.2) and Apache 2.2/2.4</p>
+<p class="small">It is compatible with PHP 5.2.10 through PHP 7.2, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.5 is considered obsolete.</a> You should be using PHP 5.6 or greater by now.)</em></p>
+
+<h1>Upgrade Instructions</h1>
+<p>This document only mentions the actual changes specific to v1.5.6 since v1.5.5.</p>
+<h2>From v1.5.5</h2>
+<p>Simple: if you are using v1.5.5 already and have not customized any of the files listed in the changed_files-v1-5-6.html document, then simply replace those files with the new files as listed.</p>
+<p>If you HAVE customized or altered certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.</p>
+<p>If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original Zen Cart files for the version those plugins were built for, and see what changes were there ... and then re-build those changes in the v1.5.6 file.</p>
+<h2>To v1.5.6 from v1.5.4 or older</h2>
+<p>If you are upgrading from a version OLDER than v1.5.5, then please do a <a href="https://www.zen-cart.com/upgrades" target="_blank">standard site upgrade</a>. Be sure to review all the links in this article, including tips on staging the upgrade in a separate directory/folder.</p>
+
+<h1>CHANGELOG - List of Changed Files </h1>
+<p>For a list of files that have been changed since v1.5.5, see the <a href="changed_files-v1-5-6.html" target="_blank">changed_files-v1-5-6.html</a> document.</p>
+
+
+<h1>A NOTE ABOUT UPGRADING TO THE NEW RESPONSIVE_CLASSIC TEMPLATE ADDED IN v1.5.5</h1>
+<p>While Zen Cart&reg; v1.5.5 introduced a newer "responsive_classic" template, if you are upgrading from a version older than v1.5.5, we STRONGLY recommend that upgraders <strong>first upgrade their site using everything (including template_default) <u>except the responsive_classic template</u> contents.</strong><br>
+ <br>
+ Then once the upgraded site is working properly you can consider what changes you might want to make to your own active template. <br>
+ <br>
+ <em>(Important notes about <span class="code">template_default</span> are shown below)</em><br>
+ <br>
+ AGAIN: The responsive_classic template should NOT be implemented immediately as part of an upgrade; it should be a separate step ...
+ if it is even used at all. IT IS NOT NECESSARY TO USE responsive_classic ON YOUR EXISTING SITE, AND YOU SHOULD UPGRADE THE REST OF
+ YOUR SITE FIRST BEFORE ATTEMPTING TO CONVERT/ADAPT IT TO YOUR USE.</p>
+
+<h1>UPGRADER Notes about changes to <span class="caps">template_default</span></h1>
+<p><strong>UPGRADERS SHOULD BE SURE TO UPDATE BOTH template_default AND YOUR CUSTOM TEMPLATE as described here:</strong></p>
+<p>In Zen Cart the <span class="code">template_default</span> directory contains the master copy of all storefront page templates. 
+ The normal procedure for customizing template files for use in your own personalized template is to make a copy of the corresponding file from 
+ template_default, put it into your own template folder (and matching folder structure), and make your customizations in that copy of the file.
+ This way the only files you need in your personalized template folder are those that you have altered in some way from template_default.<br><br>
+ With that explained, it is important that whenever you upgrade your site, you should also inspect ALL the template_default files to determine
+ which changes in those files need to be replicated in your customized files.<br>
+ Often a tool like <a href="http://www.scootersoftware.com/download.php" target="_blank">Beyond Compare</a> or Araxis Merge or GnuDiff
+ can be helpful for this. The process is simple: compare the template_default directory files from your *old* version against the
+ template_default files in the *new) version, and use those results as a reference to copy those updated changes into each of the files 
+ you've customized in your custom/personalized template in your store.<br>
+ Then, and only after you've done all those comparisons and updated your customized files in your custom template folder, you will
+ copy the template_default files from the new version into the template_default directory of your store. This way you'll be left with
+ updated personalized files *and* updated template_default files.
+</p>
+
+
+<h1>What's New ... Changes from v1.5.5e to v1.5.6 </h1>
+<h3><strong>The most notable improvements and bugfixes in v1.5.6 since v1.5.5 include:</strong></h3>
+<ul>
+  <li>All known v1.5.5 bugfixes and security fixes are included in v1.5.6</li>
+  <li>Checkout - customer confirmation emails now include customer delivery telephone number</li>
+  <li>Checkout - Square Payment support is now built-in. Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup </li>
+  <li>Checkout - Authorize.net AIM module now allows more detailed display of AVS failures</li>
+  <li>Checkout - FirstData soft-descriptors now optional via module settings</li>
+  <li>Checkout - PayPal - Australia settings explained better in configuration screen</li>
+  <li>Checkout - Credit Card Slamming threshold now customizable via Observer code or plugin</li>
+  <li>Template - hreflang URL correction</li>
+  <li>Template - jQuery noconflict improvements</li>
+  <li>Template - CSS spans added around product-qty min/max/unit output, so that these items can be selectively hidden if needed. (Credits @lat9)</li>
+  <li>Added - Coupon features: search, export, reactivate, delete duplicates, clone existing coupons</li>
+  <li>Added - Coupons can now be restricted to amount of an order or of a specific product</li>
+  <li>Added - Coupons can now be restricted to customers having a specified number of previous purchases</li>
+  <li>Added - Coupons can now be restricted to products not on sale</li>
+  <li>Added - Coupons restrictions can now be bulk-added via manufacturer filter</li>
+  <li>Added - Coupon Usage Reporting</li>
+  <li>Added - Admin pages now show their name in browser tabs, instead of generic "Admin"</li>
+  <li>Added - GV Queue indicator in Admin Header bar can be enabled/disabled in GV Module settings</li>
+  <li>Fixed - date display on Admin warning about log data is now formatted with store's default date format</li>
+  <li>Security: CVE-2017-11675 - Low-Risk vulnerability (required your Admin login to be hijacked first). Now prevents exporting to invalid filenames.</li>
+  <li>Mobile - Updated MobileDetect support to latest version</li>
+  <li>Enhancement - Cache-bypass added for certain db queries, so retrieved data is always fresh</li>
+  <li>Enhancement - Updated database to store more order-related data for easier order-reconstruction. This can help allow plugins to do more with completed order details.</li>
+  <li>Enhancement - Uploading now gives more detailed feedback about failures related to invalid file types.</li>
+  <li>Utility - CurlTester has more links to external diagnostic tools</li>
+  <li>Utility - Plugin version-check utility optimized to allow specific version-comparisons, and adapt to timeouts more quickly.</li>
+  <li>Core - Fixed: PHP error could be triggered if an invalid or non-existent tax rate was encountered.</li>
+  <li>Core - Updated dozens of files for compatibility with PHP 7.2 deprecations</li>
+
+
+
+  <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>
+</ul>
+<p>A very long detailed list of individual code changes can be viewed <a href="https://github.com/zencart/zc-v1-series/compare/v1.5.5...v1.5.6" target="_blank">on github</a> </p>
+
+</fieldset>
+<br><br>
+<p class="center"><em>Copyright 2003 - 2017 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<br><br>
+</body>
+</html>
