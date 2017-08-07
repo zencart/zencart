@@ -66,10 +66,6 @@ ALTER TABLE orders_products ADD products_quantity_order_max float NOT NULL defau
 ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) NOT NULL default '0';
 ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) NOT NULL default '1';
 ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL default '0';
-# set a default
-ALTER TABLE orders_products MODIFY products_prid tinytext NOT NULL default '';
-ALTER TABLE orders_products_attributes MODIFY products_prid tinytext NOT NULL default '';
-ALTER TABLE orders_products_download MODIFY products_prid tinytext NOT NULL default '';
 
 
 
