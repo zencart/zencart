@@ -1926,7 +1926,7 @@ while (!$chk_sale_categories_all->EOF) {
   /**
    * alias to zen_create_coupon_code()
    * 
-   * @deprecated: use zen_create_coupon_code() instead
+   * @deprecated: use zen_create_coupon_code() instead (since v1.5.6)
    */
   function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
     return zen_create_coupon_code($salt, $length, $prefix);
@@ -3854,7 +3854,7 @@ function get_logs_data($maxToList = 'count') {
 
     $result = $db->Execute($sql);
 
-    // check whether coupon has been flagged for not valid with sales
+    // check whether coupon has been flagged for valid with sales
     if ($result->fields['coupon_is_valid_for_sales']) {
       return true;
     }
@@ -3868,6 +3868,6 @@ function get_logs_data($maxToList = 'count') {
     if ($chk_product_on_sale) {
       return false;
     }
-    return true; // is on special or sale
+    return true; // is not on special or sale
   }
   
