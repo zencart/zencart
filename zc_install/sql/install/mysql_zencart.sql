@@ -1081,7 +1081,7 @@ CREATE TABLE orders_products (
   product_is_free tinyint(1) NOT NULL default '0',
   products_discount_type tinyint(1) NOT NULL default '0',
   products_discount_type_from tinyint(1) NOT NULL default '0',
-  products_prid tinytext NOT NULL default '',
+  products_prid tinytext NOT NULL,
   products_weight FLOAT NOT NULL DEFAULT '0',
   products_virtual tinyint(1) NOT NULL default '0',
   product_is_always_free_shipping tinyint(1) NOT NULL default '0',
@@ -1128,7 +1128,7 @@ CREATE TABLE orders_products_attributes (
   attributes_price_letters_free int(4) NOT NULL default '0',
   products_options_id int(11) NOT NULL default '0',
   products_options_values_id int(11) NOT NULL default '0',
-  products_prid tinytext NOT NULL default '',
+  products_prid tinytext NOT NULL,
   PRIMARY KEY  (orders_products_attributes_id),
   KEY idx_orders_id_prod_id_zen (orders_id,orders_products_id)
 ) ENGINE=MyISAM;
@@ -1147,7 +1147,7 @@ CREATE TABLE orders_products_download (
   orders_products_filename varchar(255) NOT NULL default '',
   download_maxdays int(2) NOT NULL default '0',
   download_count int(2) NOT NULL default '0',
-  products_prid tinytext NOT NULL default '',
+  products_prid tinytext NOT NULL,
   products_attributes_id int(11) NOT NULL default '0',
   PRIMARY KEY  (orders_products_download_id),
   KEY idx_orders_id_zen (orders_id),
