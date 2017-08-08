@@ -1,60 +1,236 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 00:34:34 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
  */
-$customers = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS);
 
-$products = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = '1'");
+$number_of_customers = 15;
+$number_of_orders = 25;
+$number_of_visitors_history = 15;
 
-$products_off = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = '0'");
 
-$reviews = $db->Execute("select count(*) as count from " . TABLE_REVIEWS);
-$reviews_pending = $db->Execute("select count(*) as count from " . TABLE_REVIEWS . " where status='0'");
+require(DIR_WS_CLASSES . 'currencies.php');
+$currencies = new currencies();
 
-$newsletters = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
+$customers    = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS, false,true, 1800);
+$products     = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = 1", false,true, 1800);
+$products_off = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS . " where products_status = 0", false,true, 1800);
 
-$counter_query = "select startdate, counter from " . TABLE_COUNTER;
-$counter = $db->Execute($counter_query);
+$reviews         = $db->Execute("select count(*) as count from " . TABLE_REVIEWS);
+$reviews_pending = $db->Execute("select count(*) as count from " . TABLE_REVIEWS . " where status=0", false,true, 1800);
+
+$newsletters = $db->Execute("select count(*) as count from " . TABLE_CUSTOMERS . " where customers_newsletter = 1", false,true, 1800);
+
+$counter = $db->Execute("select startdate, counter from " . TABLE_COUNTER, false,true, 7200);
 $counter_startdate = $counter->fields['startdate'];
-//  $counter_startdate_formatted = strftime(DATE_FORMAT_LONG, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
 if ($counter->RecordCount()) $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
 
-$specials = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= '0'");
-$specials_act = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= '1'");
-$featured = $db->Execute("select count(*) as count from " . TABLE_FEATURED . " where status= '0'");
-$featured_act = $db->Execute("select count(*) as count from " . TABLE_FEATURED . " where status= '1'");
-$salemaker = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER_SALES . " where sale_status = '0'");
-$salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER_SALES . " where sale_status = '1'");
+$specials      = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= 0", false,true, 1800);
+$specials_act  = $db->Execute("select count(*) as count from " . TABLE_SPECIALS . " where status= 1", false,true, 1800);
+$featured      = $db->Execute("select count(*) as count from " . TABLE_FEATURED . " where status= 0", false,true, 1800);
+$featured_act  = $db->Execute("select count(*) as count from " . TABLE_FEATURED . " where status= 1", false,true, 1800);
+$salemaker     = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER_SALES . " where sale_status = 0", false,true, 1800);
+$salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER_SALES . " where sale_status = 1", false,true, 1800);
+
+
+$i = 0;
+$visit_history = array();
+//  Get the visitor history data
+$visits_query = "select startdate, counter, session_counter from " . TABLE_COUNTER_HISTORY . " order by startdate DESC";
+$visits       = $db->Execute($visits_query, $number_of_visitors_history,true, 1800);
+foreach ($visits as $data) {
+    // table
+    $countdate = $data['startdate'];
+    $visit_date = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($countdate, 4, 2), substr($countdate, -2), substr($countdate, 0, 4)));
+    $visit_history[] = array('date' => $visit_date, 'sessions' => $data['session_counter'], 'count' => $data['counter']);
+    // graph
+    if ($i > 0) {
+        $counterData = "," . $counterData;
+    }
+    $date = strftime('%a %d', mktime(0, 0, 0, substr($data['startdate'], 4, 2), substr($data['startdate'], -2)));
+    $counterData = "['$date'," . $data['session_counter'] . "," . $data['counter'] . "]" . $counterData;
+    $i++;
+}
+
+//  Build the sales stats
+$report = 4;
+require_once DIR_WS_CLASSES . 'stats_sales_report_graph.php';
+$endDate = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+//$startDate = mktime() - (365 + 182) * 3600 * 24;
+$startDate = mktime() - (365 * 2) * 3600 * 24;
+
+//$startDate = mktime() - (365)*3600*24;
+$report = new statsSalesReportGraph($report, $startDate, $endDate, $sales_report_filter);
+for ($i = 0; $i < $report->size; $i++) {
+    $month     = $report->info[$i]['text'];
+    $salesData .= "['$month'," . round($report->info[$i]['sum'], 2) . "]";
+    if ($i < $report->size - 1) {
+        $salesData .= ",";
+    }
+}
+
+// Build the whos-online graph
+$whos_online  = $db->Execute("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent from " . TABLE_WHOS_ONLINE);
+$user_array   = [];
+$guest_array  = [];
+$spider_array = [];
+$status       = 0;
+
+foreach ($whos_online as $session) {
+    $which_query = $db->Execute("select sesskey, value from " . TABLE_SESSIONS . " where sesskey= '" . $session['session_id'] . "'");
+    $who_query   = $db->Execute("select session_id, time_entry, time_last_click, host_address, user_agent from " . TABLE_WHOS_ONLINE . " where session_id='" . $session['session_id'] . "'");
+
+// longer than 3 minutes light color
+    $xx_mins_ago_long = (time() - 180);
+
+    switch (true) {
+        case ($which_query->RecordCount() == 0):
+            if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
+                $status = 3;
+            } else {
+                $status = 2;
+            }
+            break;
+        case (strstr($which_query->fields['value'], '"contents";a:0:')):
+            if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
+                $status = 3;
+            } else {
+                $status = 2;
+            }
+            break;
+        case (!strstr($which_query->fields['value'], '"contents";a:0:')):
+            if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
+                $status = 1;
+            } else {
+                $status = 0;
+            }
+            break;
+    }
+
+    if (empty($session['session_id'])) {
+        $spider_array[$status] += 1;
+    } else {
+        if ($session['full_name'] == "&yen;Guest") {
+            $guest_array[$status] += 1;
+        } else {
+            $user_array[$status] += 1;
+        }
+    }
+}
+
 
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
-    <script language="JavaScript" src="includes/menu.js" type="text/javascript"></script>
-    <script type="text/javascript">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <script type="text/javascript" src="includes/menu.js"></script>
+    <script type="text/javascript" title="menu_init">
         <!--
-            function init()
-            {
-                cssjsmenu('navbar');
-                if (document.getElementById)
-                {
-                    var kill = document.getElementById('hoverJS');
-                    kill.disabled = true;
-                }
+        function init() {
+            cssjsmenu('navbar');
+            if (document.getElementById) {
+                var kill = document.getElementById('hoverJS');
+                kill.disabled = true;
             }
+        }
 
         // -->
     </script>
+
+    <!--Load the AJAX API FOR GOOGLE GRAPHS -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" title="build_graphs">
+        var data;
+        var chart;
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1', {'packages': ['corechart']});
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.setOnLoadCallback(drawCharts);
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and draws it.
+        function drawCharts() {
+
+            data = new google.visualization.arrayToDataTable([['<?php echo DASHBOARD_DAY; ?>', '<?php echo DASHBOARD_SESSIONS; ?>', '<?php echo DASHBOARD_TOTAL; ?>'],
+                <?php echo $counterData; ?>]);
+
+            var options = {
+                width: '100%', height: '100%',
+                backgroundColor: {fill: "#f7f6ef"},
+                legend: {position: 'top'},
+                colors: ['dodgerblue', 'navy'],
+//        trendlines: { 1: {        type: 'exponential',
+//        visibleInLegend: true,} }    // Draw a trendline for data series 0.
+            };
+            // Instantiate and draw our chart, passing in some options.
+            chart = new google.visualization.ColumnChart(document.getElementById('graph'));
+            //    google.visualization.events.addListener(chart, 'select', selectHandler);
+            chart.draw(data, options);
+
+            // Sales //
+            data = new google.visualization.DataTable();
+            data.addColumn('string', '<?php echo DASHBOARD_MONTH; ?>');
+            data.addColumn('number', '<?php echo DASHBOARD_SALES; ?>');
+            data.addRows(<?php echo "[" . $salesData . "]"; ?>);
+
+            var options = {
+                trendlines: {
+                    0: {
+//              type: 'linear',
+//              pointSize: 20,
+//              opacity: 0.6,
+//              pointsVisible: true,
+//              showR2: true,
+//              visibleInLegend: true
+                    }
+
+                },    // Draw a trendline for data series 0.
+
+
+                vAxis: {title: '<?php echo DASHBOARD_DOLLARS; ?>'},
+
+                width: '100%', height: '100%',
+                backgroundColor: {fill: "#f7f6ef"},
+                legend: {position: 'top'},
+                colors: ['dodgerblue']
+
+            };
+
+            chart = new google.visualization.ColumnChart(document.getElementById('graph2'));
+            chart.draw(data, options);
+        }
+    </script>
+
+
+    <style>
+        #colone, #coltwo, #colthree { padding: 15px; }
+        #colone { width: 24%; }
+        #coltwo { width: 31%; }
+        #colthree { width: 44%; }
+        #coltwo div.row span.left { float: left; text-align: left; width: 50%; white-space: nowrap; }
+        #colthree div.row span.left { float: left; text-align: left; width: 50%; white-space: nowrap; }
+        /*#div.row span.left {float: left;text-align: left;width: 50%;white-space: nowrap;}*/
+        #div.row span.center { margin-right: 30px; }
+        .reportBox div.row span.right { float: right; text-align: right; white-space: nowrap; width: auto; }
+        .indented { padding-left: 5%; margin-right: 5%;}
+        /*
+        div.reportBox { background: dodgerblue;}
+        ul.nde-menu-system { background-color: #6666FF;}
+        .headerBar { background-color: navy;}
+        */
+        div.first { float: left; width: 90px; }
+        div.col { float: left; width: 18%; }
+    </style>
+
 </head>
 <body class="indexDashboard" onLoad="init()">
 <!-- header //-->
@@ -66,88 +242,186 @@ $salemaker_act = $db->Execute("select count(*) as count from " . TABLE_SALEMAKER
         <div class="header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
         <?php
         if ($counter->RecordCount()) {
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER_DATE . '</span><span class="rigth"> ' . $counter_startdate_formatted . '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER . '</span><span class="rigth"> ' . $counter->fields['counter'] . '</span></div>';
+            echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER_DATE . '</span><span class="right"> ' . $counter_startdate_formatted . '</span></div>';
+            echo '<div class="row"><span class="left">' . BOX_ENTRY_COUNTER . '</span><span class="right"> ' . $counter->fields['counter'] . '</span></div>';
         }
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS . '</span><span class="rigth"> ' . $customers->fields['count'] . '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS . ' </span><span class="rigth">' . $products->fields['count'] . '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS_OFF . ' </span><span class="rigth">' . $products_off->fields['count'] . '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_REVIEWS . '</span><span class="rigth">' . $reviews->fields['count']. '</span></div>';
-        if (REVIEWS_APPROVAL=='1') {
-            echo '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_REVIEWS, 'status=1', 'NONSSL') . '">' . BOX_ENTRY_REVIEWS_PENDING . '</a></span><span class="rigth">' . $reviews_pending->fields['count']. '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_CUSTOMERS . '</span><span class="right"> ' . $customers->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS . ' </span><span class="right">' . $products->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_PRODUCTS_OFF . ' </span><span class="right">' . $products_off->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_REVIEWS . '</span><span class="right">' . $reviews->fields['count'] . '</span></div>';
+        if (REVIEWS_APPROVAL == '1') {
+            echo '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_REVIEWS,
+                    'status=1') . '">' . BOX_ENTRY_REVIEWS_PENDING . '</a></span><span class="right">' . $reviews_pending->fields['count'] . '</span></div>';
         }
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_NEWSLETTERS . '</span><span class="rigth"> ' . $newsletters->fields['count']. '</span></div>';
-
-        echo '<br /><div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_EXPIRED . '</span><span class="rigth"> ' . $specials->fields['count']. '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_ACTIVE . '</span><span class="rigth"> ' . $specials_act->fields['count']. '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_EXPIRED . '</span><span class="rigth"> ' . $featured->fields['count']. '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_ACTIVE . '</span><span class="rigth"> ' . $featured_act->fields['count']. '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_EXPIRED . '</span><span class="rigth"> ' . $salemaker->fields['count']. '</span></div>';
-        echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_ACTIVE . '</span><span class="rigth"> ' . $salemaker_act->fields['count']. '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_NEWSLETTERS . '</span><span class="right"> ' . $newsletters->fields['count'] . '</span></div>';
+        ?>
+    </div>
+    <div class="reportBox">
+        <div class="header"><?php echo BOX_TITLE_FEATURES_SALES; ?></div>
+        <?php
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_EXPIRED . '</span><span class="right"> ' . $specials->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_SPECIALS_ACTIVE . '</span><span class="right"> ' . $specials_act->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_EXPIRED . '</span><span class="right"> ' . $featured->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_FEATURED_ACTIVE . '</span><span class="right"> ' . $featured_act->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_EXPIRED . '</span><span class="right"> ' . $salemaker->fields['count'] . '</span></div>';
+        echo '<div class="row"><span class="left">' . BOX_ENTRY_SALEMAKER_ACTIVE . '</span><span class="right"> ' . $salemaker_act->fields['count'] . '</span></div>';
 
         ?>
     </div>
     <div class="reportBox">
         <div class="header"><?php echo BOX_TITLE_ORDERS; ?> </div>
-        <?php   $orders_contents = '';
-        $orders_status = $db->Execute("select orders_status_name, orders_status_id from " . TABLE_ORDERS_STATUS . " where language_id = '" . $_SESSION['languages_id'] . "'");
+        <?php
+        $orders_status = $db->Execute("select orders_status_name, orders_status_id from " . TABLE_ORDERS_STATUS . " where language_id = " . (int)$_SESSION['languages_id'], false,true, 3600);
 
-        while (!$orders_status->EOF) {
-            $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . $orders_status->fields['orders_status_id'] . "'");
-
-            $orders_contents .= '<div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $orders_status->fields['orders_status_id'], 'NONSSL') . '">' . $orders_status->fields['orders_status_name'] . '</a>:</span><span class="rigth"> ' . $orders_pending->fields['count'] . '</span>   </div>';
-            $orders_status->MoveNext();
+        foreach ($orders_status as $row) {
+            $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = " . (int)$row['orders_status_id'], false,true, 1800);
+            ?>
+            <div class="row"><span class="left"><a href="<?php echo zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $row['orders_status_id']); ?>"><?php echo $row['orders_status_name']; ?></a>:</span>
+                <span class="right"> <?php echo $orders_pending->fields['count']; ?></span>
+            </div>
+            <?php
         }
-
-        echo $orders_contents;
         ?>
     </div>
 </div>
 <div id="coltwo" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
     <div class="reportBox">
         <div class="header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
-        <?php  $customers = $db->Execute("select c.customers_id as customers_id, c.customers_firstname as customers_firstname, c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address, a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id order by a.customers_info_date_account_created DESC limit 5");
+        <?php
+        $customers = $db->Execute(
+                "select c.customers_id as customers_id, c.customers_firstname as customers_firstname, 
+                c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address, 
+                a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id 
+                from " . TABLE_CUSTOMERS . " c left join " . TABLE_CUSTOMERS_INFO . " a on c.customers_id = a.customers_info_id 
+                order by a.customers_info_date_account_created DESC",
+                $number_of_customers,true, 1800);
 
-        while (!$customers->EOF) {
-            $customers->fields['customers_firstname'] = zen_output_string_protected($customers->fields['customers_firstname']);
-            $customers->fields['customers_lastname'] = zen_output_string_protected($customers->fields['customers_lastname']);
-            echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customers->fields['customers_email_address'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink">'. $customers->fields['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . '</a></span><span class="rigth">' . "\n";
-            echo zen_date_short($customers->fields['customers_info_date_account_created']);
-            echo '              </span></div>' . "\n";
-            $customers->MoveNext();
-        }
+        foreach ($customers as $customer) {
+            $customer['customers_firstname'] = zen_output_string_protected($customer['customers_firstname']);
+            $customer['customers_lastname']  = zen_output_string_protected($customer['customers_lastname']);
         ?>
+        <div class="row">
+            <span class="left">
+                <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customer['customers_email_address'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink">
+                    <?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?>
+                </a>
+            </span>
+            <span class="right"><?php echo zen_date_short($customer['customers_info_date_account_created']); ?></span>
+        </div>
+        <?php } ?>
     </div>
 
     <div class="reportBox">
-        <?php
-        $counter_query = "select startdate, counter, session_counter from " . TABLE_COUNTER_HISTORY . " order by startdate DESC limit 10";
-        $counter = $db->Execute($counter_query);
-        ?>
-        <div class="header"><?php echo sprintf(LAST_10_DAYS, $counter->RecordCount()); ?><?php echo '<span class="rigth"> &nbsp;&nbsp;&nbsp;' . SESSION . ' - ' . TOTAL . '</span>'; ?></div>
-        <?php
-
-        while (!$counter->EOF) {
-            $counter_startdate = $counter->fields['startdate'];
-            $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
-            echo '              <div class="row"><span class="left">' . $counter_startdate_formatted . '</span><span class="rigth"> ' . $counter->fields['session_counter'] . ' - ' . $counter->fields['counter'] . '</span>   </div>' . "\n";
-            $counter->MoveNext();
-        }
-        ?>
-
+        <div class="header"><?php echo WO_GRAPH_TITLE . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_WHOS_ONLINE) . '">' . WO_GRAPH_MORE . '</a>'; ?></div>
+        <div class="row">
+            <div class="first"><?php echo WO_GRAPH_REGISTERED; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo $user_array[0]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo $user_array[1]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo $user_array[2]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo $user_array[3]; ?></div>&nbsp;
+        </div>
+        <div class="row">
+            <div class="first"><?php echo WO_GRAPH_GUEST; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo $guest_array[0]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo $guest_array[1]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo $guest_array[2]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo $guest_array[3]; ?></div>&nbsp;
+        </div>
+        <div class="row">
+            <div class="first"><?php echo WO_GRAPH_SPIDER; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo $spider_array[0]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo $spider_array[1]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo $spider_array[2]; ?></div>
+            <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo $spider_array[3]; ?></div>&nbsp;
+        </div>
+        <div class="row">
+            <div class="first"><?php echo WO_GRAPH_TOTAL; ?></div>
+            <div class="col"><?php echo $whos_online->RecordCount(); ?></div>&nbsp;
+        </div>
+        <div class="row smallText">
+            <?php echo
+                zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_TEXT . '&nbsp;&nbsp;' .
+                zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_TEXT . '&nbsp;&nbsp;' .
+                zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_NO_CART_TEXT . '&nbsp;&nbsp;' .
+                zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_NO_CART_TEXT;
+            ?>
+        </div>
     </div>
+
+    <!--// Counters graph = populated by javascript  //-->
+    <div class="reportBox">
+        <div class="header"><?php echo TEXT_COUNTER_HISTORY_TITLE; ?></div>
+        <div id="graph"></div>
+        <div class="row">
+            <span class="left indented"><?php echo DASHBOARD_DAY;?></span>
+            <span class="right indented"> <?php echo DASHBOARD_SESSIONS;?> - <?php echo DASHBOARD_TOTAL;?></span>
+        </div>
+        <?php
+        // table
+        foreach ($visit_history as $row) {
+        ?>
+            <div class="row">
+                <span class="left indented"><?php echo $row['date'];?></span>
+                <span class="right indented"> <?php echo $row['sessions'];?> - <?php echo $row['count'];?></span>
+            </div>
+        <?php } ?>
+    </div>
+
+
 </div>
 <div id="colthree" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
     <div class="reportBox">
         <div class="header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
-        <?php  $orders = $db->Execute("select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') order by orders_id DESC limit 5");
+        <?php
+        $orders = $db->Execute(
+                "select o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id, 
+                o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total, ot.value as order_value 
+                from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') 
+                order by orders_id DESC",
+                $number_of_orders,true, 1800);
 
-        while (!$orders->EOF) {
-            echo '              <div class="row"><span class="left"><a href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $orders->fields['orders_id'] . '&origin=' . FILENAME_DEFAULT, 'NONSSL') . '" class="contentlink"> ' . $orders->fields['customers_name'] . '</a></span><span class="center">' . $orders->fields['order_total'] . '</span><span class="rigth">' . "\n";
-            echo zen_date_short($orders->fields['date_purchased']);
-            echo '              </span></div>' . "\n";
-            $orders->MoveNext();
-        }
-        ?>
+        $ds = $dsc = $ys = $ysc = $msc = 0;
+
+        $now       = date("d/m/Y");
+        $yesterday = date("d/m/Y", strtotime('-1 days'));
+
+        foreach ($orders as $order) {
+
+            if (zen_date_short($order['date_purchased']) == $now) {
+                $ds += (float)$order['order_value'];
+                $dsc++;
+            }
+            if (zen_date_short($order['date_purchased']) == $yesterday) {
+                $ys += (float)$order['order_value'];
+                $ysc++;
+            }
+
+            $order['customers_name'] = str_replace("N/A", "", $order['customers_name']);
+
+            $amt = $currencies->format($order['order_value'], false);
+            if ($order['currency'] != DEFAULT_CURRENCY) {
+                $amt .= " (" . $order['order_total'] . ")";
+            }
+            ?>
+            <div class="row">
+                <span class="left">
+                    <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink">
+                        <?php echo substr($order['customers_name'], 0, 20); ?>
+                    </a>
+                </span>
+                <span class="center"><?php echo $amt; ?></span>
+                <span class="right"><?php echo zen_date_short($order['date_purchased']); ?></span></div>
+        <?php } ?>
     </div>
+
+    <!--//  sales graph  populated by javascript  //-->
+    <div class="reportBox">
+        <div class="header"><?php echo TEXT_MONTHLY_SALES_TITLE; ?><a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS); ?>"><?php echo TEXT_CLICK_FOR_COMPLETE_DETAILS; ?></a></div>
+        <div id="graph2"></div>
+        <div class="row">
+            <span class="left"><?php echo sprintf(TEXT_SALES_TODAY, $dsc, number_format($ds, 2)); ?></span> &nbsp;
+            <span class="right"><?php echo sprintf(TEXT_SALES_YESTERDAY, $ysc, number_format($ys, 2)); ?></span>
+        </div>
+    </div>
+
 </div>
