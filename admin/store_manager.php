@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -166,8 +166,8 @@
         $sql = "select products_id from " . TABLE_PRODUCTS;
         $check_products = $db->Execute($sql);
         while (!$check_products->EOF) {
-
-          $sql = "select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $check_products->fields['products_id'] . "'";
+          // Note: USE INDEX () is intentional, to retrieve results in original insert order
+          $sql = "select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $check_products->fields['products_id'] . "' USE INDEX ()";
           $check_category = $db->Execute($sql);
 
           $sql = "update " . TABLE_PRODUCTS . " set master_categories_id='" . $check_category->fields['categories_id'] . "' where products_id='" . $check_products->fields['products_id'] . "'";
