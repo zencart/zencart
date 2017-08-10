@@ -202,7 +202,7 @@ $group = array(
 $sanitizer->addSimpleSanitization('ALPHANUM_DASH_UNDERSCORE', $group);
 
 $group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name',
-               'title', 'coupon_name', 'coupon_copy_to_dup_name', 'banners_title', 'coupon_code', 'coupon_delete_duplicate_code', 'coupon_type', 
+               'title', 'coupon_name', 'coupon_copy_to_dup_name', 'banners_title', 'coupon_code', 'coupon_delete_duplicate_code', 'coupon_type',
                'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
@@ -233,8 +233,8 @@ $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 $group = array('configuration_value', 'configuration_key', 'search', 'query_string');
 $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
 
-$group = array();
-$sanitizer->addSimpleSanitization('STRICT_SANITIZE_KEYS', $group);
+$group = array('report', 'startDate', 'endDate', 'filter');
+$sanitizer->addSimpleSanitization('FLOAT_VALUE_REGEX', $group);
 
 $group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post', 'pages' => array('reviews')));
 $sanitizer->addComplexSanitization($group);
