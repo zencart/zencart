@@ -27,7 +27,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.82';
+    public $moduleVersion = '0.90';
     /**
      * $title is the displayed name for this payment method
      *
@@ -495,7 +495,6 @@ class square extends base
         // refreshes can't be done if the token has expired longer than 15 days.
         if ($this->isTokenExpired('-15 days')) {
             $this->disableDueToInvalidAccessToken();
-
             return 'failure';
         }
 
@@ -508,9 +507,8 @@ class square extends base
             $result = $this->getRefreshToken();
             if ($result) {
                 return 'refreshed';
-            } else {
-                return 'not refreshed';
             }
+            return 'not refreshed';
         }
 
         return 'not expired';
@@ -521,10 +519,11 @@ class square extends base
         if (MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT == '' || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '') return;
         global $db;
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'False' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_STATUS'");
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_ACCESS_TOKEN'");
         $msg = "This is an alert from your Zen Cart store.\n\nYour Square Payment Module access-token has expired, or cannot be refreshed automatically. Please login to your store Admin, go to the Payment Module settings, click on the Square module, and click the button to Re/Authorize your account.\n\nSquare Payments are disabled until a new valid token can be established.";
         $msg .= "\n\n" . ' The token expired on ' . MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT;
         zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, 'Square Payment Module Problem: Critical', $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $msg], 'payment_module_error');
-        trigger_error('Square Payment Module token expired' . (MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT != '' ? ' on ' . MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT : '') . '. Payment module has been disabled. Please login to Admin and re-authorize the module.',
+        if (IS_ADMIN_FLAG !== true) trigger_error('Square Payment Module token expired' . (MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT != '' ? ' on ' . MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT : '') . '. Payment module has been disabled. Please login to Admin and re-authorize the module.',
             E_USER_ERROR);
     }
 
@@ -540,7 +539,7 @@ class square extends base
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Client ' . MODULE_PAYMENT_SQUARE_APPLICATION_SECRET]);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart token refresh [' . preg_replace('#https?://#', '', HTTP_SERVER) . '] ');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -550,13 +549,10 @@ class square extends base
         curl_close($ch);
 
         if ($error == 0) {
-            $this->setAccessToken($response);
-
-            return true;
-        } else {
-            error_log('Could not refresh Square token. Response: ' . "\n" . print_r($response, true) . "\n" . $errno . ' ' . $error . ' HTTP: ' . $httpcode);
+            return $this->setAccessToken($response);
         }
 
+        error_log('Could not refresh Square token. Response: ' . "\n" . print_r($response, true) . "\n" . $errno . ' ' . $error . ' HTTP: ' . $httpcode);
         return false;
     }
 
@@ -569,6 +565,7 @@ class square extends base
         $expires = preg_replace('[^0-9A-Za-z\-:]', '', $payload['expires_at']);
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . $token . "' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_ACCESS_TOKEN'");
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . $expires . "' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT'");
+        return true;
     }
 
 

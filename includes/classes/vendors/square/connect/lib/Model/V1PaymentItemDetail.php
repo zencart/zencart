@@ -25,7 +25,7 @@ class V1PaymentItemDetail implements ArrayAccess
       */
     static $swaggerTypes = array(
         'category_name' => 'string',
-        'sku' => 'float',
+        'sku' => 'string',
         'item_id' => 'string',
         'item_variation_id' => 'string'
     );
@@ -70,7 +70,7 @@ class V1PaymentItemDetail implements ArrayAccess
     protected $category_name;
     /**
       * $sku The item's merchant-defined SKU, if any.
-      * @var float
+      * @var string
       */
     protected $sku;
     /**
@@ -134,7 +134,7 @@ class V1PaymentItemDetail implements ArrayAccess
     }
     /**
      * Gets sku
-     * @return float
+     * @return string
      */
     public function getSku()
     {
@@ -143,7 +143,7 @@ class V1PaymentItemDetail implements ArrayAccess
   
     /**
      * Sets sku
-     * @param float $sku The item's merchant-defined SKU, if any.
+     * @param string $sku The item's merchant-defined SKU, if any.
      * @return $this
      */
     public function setSku($sku)

@@ -272,12 +272,13 @@ class V1TransactionsApi
      * @param string $location_id The ID of the location to list online store orders for. (required)
      * @param string $order TThe order in which payments are listed in the response. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return \SquareConnect\Model\V1Order[]
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listOrders($location_id, $order = null, $limit = null)
+    public function listOrders($location_id, $order = null, $limit = null, $batch_token = null)
     {
-        list($response, $statusCode, $httpHeader) = $this->listOrdersWithHttpInfo ($location_id, $order, $limit);
+        list($response, $statusCode, $httpHeader) = $this->listOrdersWithHttpInfo ($location_id, $order, $limit, $batch_token);
         return $response; 
     }
 
@@ -290,10 +291,11 @@ class V1TransactionsApi
      * @param string $location_id The ID of the location to list online store orders for. (required)
      * @param string $order TThe order in which payments are listed in the response. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return Array of \SquareConnect\Model\V1Order[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listOrdersWithHttpInfo($location_id, $order = null, $limit = null)
+    public function listOrdersWithHttpInfo($location_id, $order = null, $limit = null, $batch_token = null)
     {
         
         // verify the required parameter 'location_id' is set
@@ -319,6 +321,9 @@ class V1TransactionsApi
         }// query params
         if ($limit !== null) {
             $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
+        }// query params
+        if ($batch_token !== null) {
+            $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
         }
         
         // path params
@@ -379,12 +384,13 @@ class V1TransactionsApi
      * @param string $begin_time The beginning of the requested reporting period, in ISO 8601 format. If this value is before January 1, 2013 (2013-01-01T00:00:00Z), this endpoint returns an error. Default value: The current time minus one year. (optional)
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return \SquareConnect\Model\V1Payment[]
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listPayments($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null)
+    public function listPayments($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null)
     {
-        list($response, $statusCode, $httpHeader) = $this->listPaymentsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit);
+        list($response, $statusCode, $httpHeader) = $this->listPaymentsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit, $batch_token);
         return $response; 
     }
 
@@ -399,10 +405,11 @@ class V1TransactionsApi
      * @param string $begin_time The beginning of the requested reporting period, in ISO 8601 format. If this value is before January 1, 2013 (2013-01-01T00:00:00Z), this endpoint returns an error. Default value: The current time minus one year. (optional)
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return Array of \SquareConnect\Model\V1Payment[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listPaymentsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null)
+    public function listPaymentsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null)
     {
         
         // verify the required parameter 'location_id' is set
@@ -434,6 +441,9 @@ class V1TransactionsApi
         }// query params
         if ($limit !== null) {
             $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
+        }// query params
+        if ($batch_token !== null) {
+            $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
         }
         
         // path params
@@ -494,12 +504,13 @@ class V1TransactionsApi
      * @param string $begin_time The beginning of the requested reporting period, in ISO 8601 format. If this value is before January 1, 2013 (2013-01-01T00:00:00Z), this endpoint returns an error. Default value: The current time minus one year. (optional)
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return \SquareConnect\Model\V1Refund[]
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listRefunds($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null)
+    public function listRefunds($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null)
     {
-        list($response, $statusCode, $httpHeader) = $this->listRefundsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit);
+        list($response, $statusCode, $httpHeader) = $this->listRefundsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit, $batch_token);
         return $response; 
     }
 
@@ -514,10 +525,11 @@ class V1TransactionsApi
      * @param string $begin_time The beginning of the requested reporting period, in ISO 8601 format. If this value is before January 1, 2013 (2013-01-01T00:00:00Z), this endpoint returns an error. Default value: The current time minus one year. (optional)
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return Array of \SquareConnect\Model\V1Refund[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listRefundsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null)
+    public function listRefundsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null)
     {
         
         // verify the required parameter 'location_id' is set
@@ -549,6 +561,9 @@ class V1TransactionsApi
         }// query params
         if ($limit !== null) {
             $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
+        }// query params
+        if ($batch_token !== null) {
+            $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
         }
         
         // path params
@@ -610,12 +625,13 @@ class V1TransactionsApi
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
      * @param string $status Provide this parameter to retrieve only settlements with a particular status (SENT or FAILED). (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return \SquareConnect\Model\V1Settlement[]
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listSettlements($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $status = null)
+    public function listSettlements($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $status = null, $batch_token = null)
     {
-        list($response, $statusCode, $httpHeader) = $this->listSettlementsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit, $status);
+        list($response, $statusCode, $httpHeader) = $this->listSettlementsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit, $status, $batch_token);
         return $response; 
     }
 
@@ -631,10 +647,11 @@ class V1TransactionsApi
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
      * @param string $status Provide this parameter to retrieve only settlements with a particular status (SENT or FAILED). (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return Array of \SquareConnect\Model\V1Settlement[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listSettlementsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $status = null)
+    public function listSettlementsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $status = null, $batch_token = null)
     {
         
         // verify the required parameter 'location_id' is set
@@ -669,6 +686,9 @@ class V1TransactionsApi
         }// query params
         if ($status !== null) {
             $queryParams['status'] = $this->apiClient->getSerializer()->toQueryValue($status);
+        }// query params
+        if ($batch_token !== null) {
+            $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
         }
         
         // path params
