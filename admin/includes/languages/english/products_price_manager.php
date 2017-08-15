@@ -26,8 +26,9 @@ define('TEXT_PRICE_NET', 'Price (Net)');
 define('TEXT_PRICE_GROSS', 'Price (Gross)');
 define('TEXT_PRODUCT_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_PRODUCTS_STATUS', 'Products Status:');
-define('TEXT_PRODUCT_AVAILABLE', 'In Stock');
-define('TEXT_PRODUCT_NOT_AVAILABLE', 'Out of Stock');
+define('TEXT_PRODUCT_AVAILABLE', 'Enabled');
+define('TEXT_PRODUCT_NOT_AVAILABLE', 'Disabled');
+
 
 define('TEXT_PRODUCT_INFO_NONE', 'Please select a Product from above ...');
   define('TEXT_PRODUCT_IS_FREE','Product is Free:');

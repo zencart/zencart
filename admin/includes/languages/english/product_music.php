@@ -76,8 +76,8 @@ define('TEXT_PRODUCTS_VIRTUAL', 'Product is Virtual:');
 define('TEXT_PRODUCTS_IS_ALWAYS_FREE_SHIPPING', 'Always Free Shipping:');
 define('TEXT_PRODUCTS_QTY_BOX_STATUS', 'Products Quantity Box Shows:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date Available:');
-define('TEXT_PRODUCT_AVAILABLE', 'In Stock');
-define('TEXT_PRODUCT_NOT_AVAILABLE', 'Out of Stock');
+define('TEXT_PRODUCT_AVAILABLE', 'Enabled');
+define('TEXT_PRODUCT_NOT_AVAILABLE', 'Disabled');
 define('TEXT_PRODUCT_IS_VIRTUAL', 'Yes, Skip Shipping Address');
 define('TEXT_PRODUCT_NOT_VIRTUAL', 'No, Shipping Address Required');
 define('TEXT_PRODUCT_IS_ALWAYS_FREE_SHIPPING', 'Yes, Always Free Shipping');
@@ -181,4 +181,3 @@ define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
   define('TEXT_META_TAGS_KEYWORDS','<strong>Meta Tag Keywords:</strong>');
   define('TEXT_META_TAGS_DESCRIPTION','<strong>Meta Tag Description:</strong>');
   define('TEXT_META_EXCLUDED', '<span class="alert">EXCLUDED</span>');
-  
