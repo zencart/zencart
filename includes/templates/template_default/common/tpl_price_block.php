@@ -71,11 +71,12 @@ if (is_array($price_array)) {
 
     if ($price_array['show_sale_discount'] . $price_array['show_discount_amount']) $block .= '  <div class="productPriceDiscount">' . $price_array['show_sale_discount'] . $price_array['show_discount_amount']. '</div>' . "\n";
   }
+
+  $block .= '</div>' . "\n";
+
   if (isset($link) && $link != '') {
     $block .= "\n</a>";
   }
-
-  $block .= '</div>' . "\n";
 
 } elseif (is_string($price_array)) {
   $products_price = $block = $price_array;
