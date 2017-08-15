@@ -70,7 +70,7 @@ ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NU
 
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
-
+ALTER TABLE customers_basket DROP final_price;
 
 #############
 
