@@ -488,7 +488,6 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('BOX_TOOLS_LAYOUT_CONTROLLER','Layout Boxes Controller');
 
 // check GV release queue and alert store owner
-  define('SHOW_GV_QUEUE',true);
   define('TEXT_SHOW_GV_QUEUE','%s waiting approval ');
   define('IMAGE_GIFT_QUEUE', TEXT_GV_NAME . ' Queue');
   define('IMAGE_ORDER','Order');
@@ -749,7 +748,7 @@ define('TEXT_FIELD_ERROR_GENERIC', 'Please enter the correct information here');
 define('TEXT_FILLBYLOOKUP_DEFAULT_PLACEHOLDER', 'Search or Select below');
 define('TEXT_DELETE_LINKED_ITEMS', 'Delete Linked Products');
 define('TEXT_DELETE_IMAGE', 'Delete Linked Image');
-define('TEXT_PAGE_TOTALS', 'Totals'); 
+define('TEXT_PAGE_TOTALS', 'Totals');
 // notifications
 
 define('TEXT_HEADER_NOTIFICATIONS_COUNT', 'You have %s notifications');
