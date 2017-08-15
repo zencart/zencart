@@ -26,6 +26,7 @@
   }
 
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
+  if (isset($_GET['reports_page'])) $_GET['reports_page'] = (int)$_GET['reports_page'];
   if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YNA]/','',$_GET['status']);
   if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
   if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
