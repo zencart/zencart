@@ -161,9 +161,9 @@ abstract class AbstractListingController extends AbstractAdminController
         $this->queryBuilderDefinition->buildResults($this->queryBuilder, $this->dbConn,
             new \ZenCart\QueryBuilder\DerivedItemManager, $this->paginatorBuilder->getPaginator());
         $this->setDefaultTplVars($this->pageDefinitionBuilder, $this->queryBuilderDefinition);
-        $tplRows = $this->view->loadTemplateAsString('includes/template/partials/tplAdminLeadItemRows.php', $this->tplVars);
-        $paginator = $this->view->loadTemplateAsString('includes/template/partials/tplPaginatorStandard.php', $this->tplVars);
-        $ma = $this->view->loadTemplateAsString('includes/template/partials/tplAdminLeadMultipleActions.php', $this->tplVars);
+        $tplRows = $this->view->loadTemplateAsString('includes/template/partials/tplAdminLeadItemRows.php', $this->tplVarManager->getTplVars());
+        $paginator = $this->view->loadTemplateAsString('includes/template/partials/tplPaginatorStandard.php', $this->tplVarManager->getTplVars());
+        $ma = $this->view->loadTemplateAsString('includes/template/partials/tplAdminLeadMultipleActions.php', $this->tplVarManager->getTplVars());
         $this->response = array(
             'html' => array(
                 'itemRows' => $tplRows,
