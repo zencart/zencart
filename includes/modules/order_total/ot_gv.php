@@ -355,7 +355,7 @@ class ot_gv {
    */
   function user_has_gv_account($c_id) {
     global $db;
-    $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$c_id . "'");
+    $gv_result = $db->ExecuteNoCache("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$c_id . "'");
     if ($gv_result->RecordCount() > 0) {
       return $gv_result->fields['amount'];
     }
