@@ -2,9 +2,9 @@
 /**
  * Class AjaxDispatch
  *
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
+ * @version GIT: $Id: Author: Ian Wilson   $
  */
 namespace ZenCart\AjaxDispatch;
 
@@ -40,6 +40,9 @@ class AjaxDispatch extends \base
         }
         header($headerResponse[0], $headerResponse[1], $headerResponse[2]);
         echo json_encode($jsonResponse);
+
+        require DIR_WS_INCLUDES . 'application_bottom.php';
+
         exit($exitResponse);
     }
 }
