@@ -8,6 +8,7 @@ cache:
     - $HOME/.composer/cache
 
 php:
+  - 7.2
   - 7.1
   - 7.0
   - 5.6
@@ -40,8 +41,9 @@ before_install:
   - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
 
 install:
-# remove xdebug for speed; caveat is it can't generate code-coverage (not concerned about that presently)
-  - phpenv config-rm xdebug.ini
+# remove xdebug for speed; caveat is it can't generate code-coverage (not concerned about that presently). The "|| true" prevents false failures if xdebug doesn't even exist.
+  - "phpenv config-rm xdebug.ini || true"
+# show version, just for quick reference when viewing output in the UI
   - echo $TRAVIS_PHP_VERSION
 # downgrade phpunit for older PHP version
   - if [ "${TRAVIS_PHP_VERSION}" == "5.5" ]; then rm composer.lock && cp testFramework/composer-php55.lock composer.lock ; fi
@@ -60,10 +62,7 @@ before_script:
   - mysql --version
   - mysql -uroot <<<"GRANT ALL PRIVILEGES ON *.* TO 'travis';"
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
-  # set up apache server and vhost
-#  - bash testFramework/setup/do-apache.sh
-  # sauce setup
-#  - bash testFramework/setup/do-sauce.sh
+# logs, just in case
   - mkdir -p build/logs
 # start PHP webserver
   - "php -S 127.0.0.1:8000 > /dev/null &"
