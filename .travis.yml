@@ -1,5 +1,6 @@
 language: php
 
+dist: trusty
 sudo: false
 
 cache:
@@ -57,6 +58,7 @@ before_script:
 #  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # mysql
   - mysql --version
+  - mysql -uroot <<<"GRANT ALL PRIVILEGES ON *.* TO 'travis';"
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
   # set up apache server and vhost
 #  - bash testFramework/setup/do-apache.sh
