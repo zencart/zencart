@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: product.php 15883 2010-04-11 16:41:26Z wilt $
@@ -111,8 +111,8 @@ define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
   define('TEXT_COPY_ATTRIBUTES_NO','No');
 
 // Products and Discount Copy Options
-  define('TEXT_COPY_DISCOUNTS_ONLY','Only used for Duplicate Products with Discounts ...');
-  define('TEXT_COPY_DISCOUNTS','Copy Product Discounts to Duplicate?');
+  define('TEXT_COPY_DISCOUNTS_ONLY','Only used for Duplicate Products with Quantity Discounts ...');
+  define('TEXT_COPY_DISCOUNTS','Copy Product Quantity Discounts to Duplicate?');
   define('TEXT_COPY_DISCOUNTS_YES','Yes');
   define('TEXT_COPY_DISCOUNTS_NO','No');
 
