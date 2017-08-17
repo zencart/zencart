@@ -151,6 +151,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <li>Added - Coupon Usage Reporting</li>
   <li>Added - Admin pages now show their name in browser tabs, instead of generic "Admin"</li>
   <li>Added - GV Queue indicator in Admin Header bar can be enabled/disabled in GV Module settings</li>
+  <li>Fixed - if an invalid or non-existent tax rate was encountered, would get: PHP Warning: A non-numeric value encountered in /includes/functions/functions_taxes.php on line 172</li>
   <li>Fixed - date display on Admin warning about log data is now formatted with store's default date format</li>
   <li>Security: CVE-2017-11675 - Low-Risk vulnerability (required your Admin login to be hijacked first). Now prevents exporting to invalid filenames.</li>
   <li>Mobile - Updated embedded MobileDetect to latest version</li>
@@ -162,9 +163,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <li>Enhancement - Ajax handler improvements</li>
   <li>Utility - CurlTester has more links to external diagnostic tools</li>
   <li>Utility - Plugin version-check utility optimized to allow specific version-comparisons, and adapt to timeouts more quickly.</li>
-  <li>Core - Fixed: PHP error could be triggered if an invalid or non-existent tax rate was encountered.</li>
   <li>Core - Updated dozens of files for compatibility with PHP 7.2 deprecations</li>
-
 
 
   <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>
