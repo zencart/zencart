@@ -4,10 +4,10 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Fri Apr 22 22:16:43 2015 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Aug 2017 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -152,7 +152,8 @@ if (!defined('IS_ADMIN_FLAG')) {
               $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
             }
           } else {
-            foreach(array_filter($value) as $arr){
+            foreach (array_filter($value) as $arr){
+              if (is_array($arr)) continue;
               $get_url .= zen_sanitize_string($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
             }
           }
@@ -188,7 +189,8 @@ if (!defined('IS_ADMIN_FLAG')) {
               }
             }
           } else {
-            foreach(array_filter($value) as $arr){
+            foreach (array_filter($value) as $arr){
+              if (is_array($arr)) continue;
               if ($hidden) {
                 $fields .= zen_draw_hidden_field($key . '[]', $arr);
               } else {
