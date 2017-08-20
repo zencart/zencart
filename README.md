@@ -4,7 +4,7 @@
 
 ===============
 
-You are currently viewing code for the upcoming Zen Cart&reg; v1.6.0 release, which brings increased flexibility for customizing each storeowner's own preferences.
+You are currently viewing code for our development branch, which will be our next larger release, initially dubbed as Zen Cart&reg; v1.6.0, which brings architectural improvements to allow for increased flexibility for customizing each storeowner's own preferences.
 
 The latest stable version is currently [v1.5.5e](https://github.com/zencart/zencart/releases).
 
@@ -16,7 +16,7 @@ Zen Cart is free software, with free support available 24/7 on the Zen Cart&reg;
 --------------------
 
 
-Zen Cart&reg; v1.6.0
+Zen Cart&reg; v1.6.0 - Development Branch
 --------------------
 [Download latest in-development version from github](https://github.com/zencart/zencart/archive/v160.zip)
 
