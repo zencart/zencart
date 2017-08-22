@@ -166,8 +166,8 @@
         $sql = "select products_id from " . TABLE_PRODUCTS;
         $check_products = $db->Execute($sql);
         while (!$check_products->EOF) {
-          // Note: USE INDEX () is intentional, to retrieve results in original insert order
-          $sql = "select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $check_products->fields['products_id'] . "' USE INDEX ()";
+          // Note: "USE INDEX ()" is intentional, to retrieve results in original insert order
+          $sql = "select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " USE INDEX () where products_id='" . $check_products->fields['products_id'] . "'";
           $check_category = $db->Execute($sql);
 
           $sql = "update " . TABLE_PRODUCTS . " set master_categories_id='" . $check_category->fields['categories_id'] . "' where products_id='" . $check_products->fields['products_id'] . "'";
