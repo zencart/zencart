@@ -373,8 +373,8 @@
 
 ////
 // Output a form filefield
-  function zen_draw_file_field($name, $required = false) {
-    $field = zen_draw_input_field($name, '', ' size="50" ', $required, 'file');
+  function zen_draw_file_field($name, $required = false, $parameters = '') {
+    $field = zen_draw_input_field($name, '', ' size="50" ' . $parameters, $required, 'file');
 
     return $field;
   }
