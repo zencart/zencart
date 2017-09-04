@@ -201,15 +201,15 @@
       return '';
     }
 
-    $show_display_price = '';
     $display_normal_price = zen_get_products_base_price($products_id);
     $display_sale_price = zen_get_products_special_price($products_id, false);
+
     if ($display_sale_price !== false) {
       $display_special_price = zen_get_products_special_price($products_id, true);
     } else {
       $display_special_price = false;
     }
-    
+
     $show_sale_discount = '';
     if (SHOW_SALE_DISCOUNT_STATUS == '1' and ($display_special_price != 0 or $display_sale_price != 0)) {
       if ($display_sale_price) {
@@ -520,7 +520,7 @@
 // BOF: percentage discounts apply to price
     switch (true) {
       case (zen_get_discount_qty($product_id, $qty) and !$attributes_id):
-        // discount quanties exist and this is not an attribute
+        // discount quantities exist and this is not an attribute
         // $this->contents[$products_id]['qty']
         $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
 //echo 'How much 1 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
@@ -528,7 +528,7 @@
         break;
 
       case (zen_get_discount_qty($product_id, $qty) and zen_get_products_price_is_priced_by_attributes($product_id)):
-        // discount quanties exist and this is not an attribute
+        // discount quantities exist and this is not an attribute
         // $this->contents[$products_id]['qty']
         $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
 //echo 'How much 2 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
@@ -993,33 +993,28 @@ If a special exist * 10
 // Actual Price Retail
 // Specials and Tax Included
   function zen_get_products_actual_price($products_id) {
-    global $db, $currencies;
+    global $db;
     $product_check = $db->Execute("select products_tax_class_id, products_price, products_priced_by_attribute, product_is_free, product_is_call from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'" . " limit 1");
-
-    $show_display_price = '';
-    $display_normal_price = zen_get_products_base_price($products_id);
-    $display_sale_price = zen_get_products_special_price($products_id, false);
-    if ($display_sale_price !== false) {
-      $display_special_price = zen_get_products_special_price($products_id, true);
-    } else {
-      $display_special_price = false;
-    }
-
-    $products_actual_price = $display_normal_price;
-
-    if ($display_special_price) {
-      $products_actual_price = $display_special_price;
-    }
-    if ($display_sale_price) {
-      $products_actual_price = $display_sale_price;
-    }
 
     // If Free, Show it
     if ($product_check->fields['product_is_free'] == '1') {
-      $products_actual_price = 0;
+      return 0;
     }
 
-    return $products_actual_price;
+    $display_sale_price = zen_get_products_special_price($products_id, false);
+
+    if ($display_sale_price) {
+      return $display_sale_price;
+    }
+
+    $display_special_price = zen_get_products_special_price($products_id, true);
+
+    if ($display_special_price) {
+      return $display_special_price;
+    }
+
+    $display_normal_price = zen_get_products_base_price($products_id);
+    return $display_normal_price;
   }
 
 ////
@@ -1131,7 +1126,7 @@ If a special exist * 10
 
 // one time charges
     // onetime charge
-      $attributes_price_final_onetime += $pre_selected_onetime->fields["attributes_price_onetime"];
+      $attributes_price_final_onetime = $pre_selected_onetime->fields["attributes_price_onetime"];
 
     // price factor
     $display_normal_price = zen_get_products_actual_price($pre_selected_onetime->fields["products_id"]);
