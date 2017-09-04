@@ -493,13 +493,7 @@
     }
 
     $new_products_price = zen_get_products_base_price($product_id);
-    $new_sale_price = zen_get_products_special_price($product_id, false);
-    if ($new_sale_price !== false) {
-      $new_special_price = zen_get_products_special_price($product_id, true);
-    } else {
-      $new_special_price = false;
-    }
-
+    $new_special_price = zen_get_products_special_price($product_id, true);
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
     if ($new_products_price != 0) {
