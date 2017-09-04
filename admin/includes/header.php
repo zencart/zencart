@@ -192,11 +192,6 @@ if (MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN == 'true') {
         </ul>
     </div>
   </div>
-<?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
 
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
-<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
-
-<script src="includes/javascript/jquery-1.12.1.min.js"></script>
-<script src="includes/javascript/bootstrap.min.js"></script>
+<?php require(DIR_WS_INCLUDES . 'javascript_loader.php'); ?>
