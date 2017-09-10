@@ -67,7 +67,7 @@
 		return 418;
 	}
 	## Allow all requests to specific static file types
-	location ~ %%store_folder%%/[^/]+\.(md|ico|txt|html) {
+	location ~ %%store_folder%%/.+\.(md|ico|txt|html)$ {
 		expires $zencart_expires;
 	}
 	
