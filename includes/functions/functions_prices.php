@@ -1062,7 +1062,7 @@ If a special exist * 10
 ////
 // return attributes_price_factor
   function zen_get_attributes_price_factor($price, $special, $factor, $offset) {
-    if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
+    if (defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL') && ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
       // calculate from specials_new_products_price
       $calculated_price = $special * ($factor - $offset);
     } else {
