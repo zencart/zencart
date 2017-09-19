@@ -285,17 +285,20 @@
  */
   function zen_has_product_attributes_values($products_id) {
     global $db;
-    $attributes_query = "select sum(options_values_price) as total
+    $attributes_query = "select distinct count(options_values_price) as total, options_values_price as price
                          from " . TABLE_PRODUCTS_ATTRIBUTES . "
-                         where products_id = '" . (int)$products_id . "'";
+                         where products_id = " . (int)$products_id;
 
     $attributes = $db->Execute($attributes_query);
 
     if ($attributes->fields['total'] != 0) {
-      return true;
-    } else {
-      return false;
-    }
+      foreach ($attributes as $attribute) {
+        if ($attribute['price'] != 0) {
+          return true;
+        }
+      }
+    } 
+    return false;
   }
 
 /*
