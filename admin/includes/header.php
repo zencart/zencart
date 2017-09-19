@@ -1,14 +1,18 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Mar 23 14:21:26 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Sept 2017 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
+
+// pull in any necessary JS for the page
+require(DIR_WS_INCLUDES . 'javascript_loader.php');
+
 
 $version_check_requested = (isset($_GET['vcheck']) && $_GET['vcheck'] != '') ? true : false;
 
@@ -192,11 +196,4 @@ if (MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN == 'true') {
         </ul>
     </div>
   </div>
-<?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
-
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
-<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
-
-<script src="includes/javascript/jquery-1.12.1.min.js"></script>
-<script src="includes/javascript/bootstrap.min.js"></script>
