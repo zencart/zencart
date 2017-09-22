@@ -442,6 +442,7 @@ class zcDatabaseInstaller
   }
   public function tableColumnExists($table, $column)
   {
+    if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
     $check = $this->db->Execute(
       'SHOW COLUMNS FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
       'WHERE `Field` = \'' . $this->db->prepare_input($column) . '\''
@@ -450,6 +451,7 @@ class zcDatabaseInstaller
   }
   public function tableIndexExists($table, $index)
   {
+    if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
     $check = $this->db->Execute(
       'SHOW INDEX FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
       'WHERE `Key_name` = \'' . $this->db->prepare_input($index) . '\''

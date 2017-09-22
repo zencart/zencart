@@ -39,7 +39,7 @@ define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
 
 /**
  * The following settings define your database connection.
- * These must be the SAME as you're using in your non-admin copy of configure.php
+ * These must be the SAME as you're using in your admin copy of configure.php
  */
 define('DB_TYPE', '%%_DB_TYPE_%%'); // always 'mysql'
 define('DB_PREFIX', '%%_DB_PREFIX_%%'); // prefix for database table names -- preferred to be left empty
