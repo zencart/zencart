@@ -112,7 +112,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ENTRY_DOB_MIN_LENGTH > 0 or !empty($_POST['dob'])) {
       // Support ISO-8601 style date
       if (preg_match('/^([0-9]{4})(|-|\/)([0-9]{2})\2([0-9]{2})$/', $dob)) {
-        $_POST['dob'] $dob = date(DATE_FORMAT, strtotime($dob));
+        $_POST['dob'] = $dob = date(DATE_FORMAT, strtotime($dob));
       }
       if (substr_count($dob,'/') > 2 || checkdate((int)substr(zen_date_raw($dob), 4, 2), (int)substr(zen_date_raw($dob), 6, 2), (int)substr(zen_date_raw($dob), 0, 4)) == false) {
         $error = true;
