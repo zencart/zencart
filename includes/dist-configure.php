@@ -42,7 +42,7 @@ define('DIR_FS_CATALOG', '/var/www/vhost/accountname/public_html/store/');
 
 /**
  * The following settings define your database connection.
- * These must be the SAME as you're using in your non-admin copy of configure.php
+ * These must be the SAME as you're using in your admin copy of configure.php
  */
 define('DB_TYPE', 'mysql'); // always 'mysql'
 define('DB_PREFIX', ''); // prefix for database table names -- preferred to be left empty
