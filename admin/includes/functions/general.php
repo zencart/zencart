@@ -1925,7 +1925,7 @@ while (!$chk_sale_categories_all->EOF) {
 ////
   /**
    * alias to zen_create_coupon_code()
-   * 
+   *
    * @deprecated: use zen_create_coupon_code() instead (since v1.5.6)
    */
   function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
@@ -3870,4 +3870,16 @@ function get_logs_data($maxToList = 'count') {
     }
     return true; // is not on special or sale
   }
-  
+
+/**
+ * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
+ * @param int|float|string $input
+ * @return float|int
+ */
+    function convertToFloat($input = 0) {
+        if ($input === null) return 0;
+        $val = preg_replace('/[^0-9,\.\-]/', '', $input);
+        // do a non-strict compare here:
+        if ($val == 0) return 0;
+        return (float)$val;
+    }
