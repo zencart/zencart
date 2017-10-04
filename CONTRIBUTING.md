@@ -4,10 +4,10 @@
 
 There are numerous ways to contribute to [Zen Cart&reg;](https://www.zen-cart.com/):
 
-1. Post duplicatable bug reports as Issues on github.
-2. Code containing bug fixes or new features or fixing issues on github
-3. Plugins as 3rd party contributions which shopowners can install to their own site
-4. Snippets of bugfixes or minor tweaks to assist with solving specific questions posted on our support forum at [https://www.zen-cart.com/forum.php](https://www.zen-cart.com/forum.php)
+1. Submit reproducible bug reports as Issues [on Github](https://github.com/zencart/zencart/).
+2. Create PRs containing bug fixes or new features on Github.
+3. Build plugins which shopowners can install on their own site, and submit them to the [Zen Cart Plugins and Addons Directory](https://www.zen-cart.com/downloads.php). 
+4. Post snippets of bugfixes or minor tweaks to assist with solving specific questions posted on our [support forum](https://www.zen-cart.com/forum.php). 
 
 ## Guidelines
 When submitting bug reports, issues, plugins, or code as pull requests, please adhere to the following guidelines:
@@ -25,5 +25,5 @@ Thank you for your contributions!
 
 &nbsp;  
   
-*&copy;Copyright 2003-2015, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2017, Zen Cart&reg;. All rights reserved.*
 
