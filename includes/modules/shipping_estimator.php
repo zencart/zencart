@@ -7,7 +7,7 @@
  * - Shows Free Shipping on Virtual products
  *
  * @package modules
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -18,11 +18,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 if (isset($_POST['zone_country_id'])) $_POST['zone_country_id'] = (int)$_POST['zone_country_id'];
 if (isset($_POST['scid'])) $_POST['scid'] = preg_replace('/[^a-z_0-9\- ]/i', '', $_POST['scid']);
-
-// load JS updater
-if ($current_page_base != 'popup_shipping_estimator') {
-  require(DIR_WS_MODULES . '/pages/popup_shipping_estimator/jscript_addr_pulldowns.php');
-}
 ?>
 <!-- shipping_estimator //-->
 
