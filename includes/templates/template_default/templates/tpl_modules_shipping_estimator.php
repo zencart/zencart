@@ -3,7 +3,7 @@
  * Module Template - for shipping-estimator display
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: DrByte  Wed Jan 6 16:47:38 2016 -0500 Modified in v1.5.5 $
@@ -106,7 +106,7 @@
           // simple shipping method
           $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][0]['id'];
 ?>
-     <tr class="<?php echo $extra; ?>">
+     <tr>
 <?php
           if($quotes[$i]['error']){
 ?>
@@ -133,7 +133,7 @@
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
             $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'];
 ?>
-    <tr class="<?php echo $extra; ?>">
+    <tr>
 <?php
             if($quotes[$i]['error']){
 ?>
