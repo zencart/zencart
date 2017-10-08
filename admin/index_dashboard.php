@@ -351,6 +351,7 @@ foreach ($whos_online as $session) {
     <!--// Counters graph = populated by javascript  //-->
     <div class="reportBox">
         <div class="header"><?php echo TEXT_COUNTER_HISTORY_TITLE; ?></div>
+    <?php if (count($visit_history)) { ?>
         <div id="graph"></div>
         <div class="row">
             <span class="left indented"><?php echo DASHBOARD_DAY;?></span>
@@ -365,6 +366,11 @@ foreach ($whos_online as $session) {
                 <span class="right indented"> <?php echo $row['sessions'];?> - <?php echo $row['count'];?></span>
             </div>
         <?php } ?>
+    <?php } else { ?>
+        <div class="row">
+        <p><?php echo TEXT_NONE; ?></p>
+        </div>
+    <?php } ?>
     </div>
 
 
