@@ -1,3 +1,3 @@
 <?php
-$autoLoadConfig[15][] = array('autoType' => 'init_script',
-                              'loadFile' => 'init_https.php');
+$autoLoadConfig[15][] = array('autoType' => 'require',
+                              'loadFile' => DIR_FS_CATALOG . 'includes/init_includes/init_https.php');
