@@ -1234,7 +1234,7 @@ if ($action == 'attributes_preview') {
             </tr>
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-              <td class="dataTableHeadingContent">&nbsp;<?php // echo TABLE_HEADING_PRODUCT;    ?>&nbsp;</td>
+              <td class="dataTableHeadingContent">&nbsp;<?php // echo TABLE_HEADING_PRODUCT;     ?>&nbsp;</td>
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
               <td class="dataTableHeadingContent" align="right">&nbsp;<?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?>&nbsp;</td>
@@ -1697,7 +1697,7 @@ if ($action == 'attributes_preview') {
             $attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
             ?>
           <td class="smallText">&nbsp;<?php echo $attributes_values->fields["products_attributes_id"]; ?>&nbsp;</td>
-          <td class="smallText">&nbsp;<?php // echo $products_name_only;   ?>&nbsp;</td>
+          <td class="smallText">&nbsp;<?php // echo $products_name_only;    ?>&nbsp;</td>
           <td class="smallText">&nbsp;<?php echo $options_name; ?>&nbsp;</td>
           <td class="smallText">&nbsp;<?php echo ($attributes_values->fields['attributes_image'] != '' ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' : '&nbsp;&nbsp;') . $values_name; ?>&nbsp;</td>
           <td align="right" class="smallText">&nbsp;<?php echo $attributes_values->fields["price_prefix"]; ?>&nbsp;<?php echo $attributes_values->fields["options_values_price"]; ?>&nbsp;</td>
@@ -1876,66 +1876,49 @@ if ($action == 'attributes_preview') {
             <!-- bof Option Names and Values -->
             <tr class="attributeBoxContent">
               <td class="pageHeading">
-                <table border='0' width="100%">
-                  <tr>
-                    <td class="attributeBoxContent">
-                      <table border="0" cellpadding="4" cellspacing="2">
-                        <tr class="attributeBoxContent">
-                          <td>
-                            <table>
-                              <tr>
-                                <td class="attributeBoxContent" width="40">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
-                                <td class="pageHeading" valign="top">&nbsp;
-                                  <input type="hidden" name="products_id" value="<?php echo $products_filter; ?>">
-                                  <input type="hidden" name="current_category_id" value="<?php echo $current_category_id; ?>">
-                                  <?php
-                                  $show_model = zen_get_products_model($products_filter);
-                                  if (!empty($show_model)) {
-                                    $show_model = " - (" . $show_model . ")";
-                                  }
-                                  echo zen_clean_html(zen_get_products_name($products_filter)) . $show_model;
-                                  ?>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                        <tr class="attributeBoxContent">
-                          <td>
-                            <table>
-                              <tr>
-                                <td class="attributeBoxContent" width="40">&nbsp;</td>
-                                <?php
-                                      $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
+                <table border="0" cellpadding="4" cellspacing="2" width="100%">
+                  <tr class="attributeBoxContent">
+                    <td class="attributeBoxContent" width="40"><?php echo $next_id; ?></td>
+                    <td class="pageHeading" valign="top" colspan="2">
+                      <input type="hidden" name="products_id" value="<?php echo $products_filter; ?>">
+                      <input type="hidden" name="current_category_id" value="<?php echo $current_category_id; ?>">
+                      <?php
+                      $show_model = zen_get_products_model($products_filter);
+                      if (!empty($show_model)) {
+                        $show_model = " - (" . $show_model . ")";
+                      }
+                      echo zen_clean_html(zen_get_products_name($products_filter)) . $show_model;
+                      ?>
+                    </td>
+                  </tr>
+                  <tr class="attributeBoxContent">
+                    <td class="attributeBoxContent" width="40">&nbsp;</td>
+                    <?php
+                    $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
                                                                       FROM " . TABLE_PRODUCTS_OPTIONS . "
                                                                       WHERE language_id = '" . (int)$_SESSION['languages_id'] . "'
                                                                       ORDER BY products_options_name");
 
-                                      $optionsDropDownArray = [];
-                                      foreach ($options_values as $options_value) {
-                                        $optionsDropDownArray[] = [
-                                          'id' => $options_value['products_options_id'],
-                                          'text' => $options_value['products_options_name'] . '&nbsp;&nbsp;&nbsp;[' . translate_type_to_name($options_value['products_options_type']) . ']' . ($show_name_numbers ? ' &nbsp; [ #' . $options_value['products_options_id'] . ' ] ' : '' )
-                                          ];
-                                      }
-                                      ?>
-                                <td class="attributeBoxContent">
-                                  <?php echo TABLE_HEADING_OPT_NAME . '<br />'; ?>
-                                  <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)"'); ?>
-                                </td>
-                                <td class="attributeBoxContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE . '<br />'; ?>
-                                  <select name="values_id[]" id="OptionValue" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
-                                    <option selected>&lt;-- Please select an Option Name from the list ... </option>
-                                  </select>&nbsp;</td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-
-                        <?php // split here ?>
-                      </table>
+                    $optionsDropDownArray = [];
+                    foreach ($options_values as $options_value) {
+                      $optionsDropDownArray[] = [
+                        'id' => $options_value['products_options_id'],
+                        'text' => $options_value['products_options_name'] . '&nbsp;&nbsp;&nbsp;[' . translate_type_to_name($options_value['products_options_type']) . ']' . ($show_name_numbers ? ' &nbsp; [ #' . $options_value['products_options_id'] . ' ] ' : '' )
+                      ];
+                    }
+                    ?>
+                    <td class="attributeBoxContent">
+                        <?php echo TABLE_HEADING_OPT_NAME . '<br />'; ?>
+                        <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)"'); ?>
+                    </td>
+                    <td class="attributeBoxContent"><?php echo TABLE_HEADING_OPT_VALUE . '<br />'; ?>
+                      <select name="values_id[]" id="OptionValue" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
+                        <option selected>&lt;-- Please select an Option Name from the list ... </option>
+                      </select>
                     </td>
                   </tr>
+
+                  <?php // split here ?>
                 </table>
               </td>
             </tr>
