@@ -687,9 +687,9 @@ function translate_type_to_name($opt_type) {
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
-<script language="javascript"><!--
+<script type="text/javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/general.js"></script>
+<script type="text/javascript">
 function go_option() {
   if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
     location = "<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
@@ -698,9 +698,8 @@ function go_option() {
 function popupWindow(url) {
   window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
 }
-//--></script>
+</script>
 <script type="text/javascript">
-  <!--
   function init()
   {
     cssjsmenu('navbar');
@@ -710,7 +709,6 @@ function popupWindow(url) {
       kill.disabled = true;
     }
   }
-  // -->
 </script>
 </head>
 <!-- <body onload="init()"> -->
@@ -1800,7 +1798,7 @@ if ($action == '') {
   <option selected>&lt;-- Please select an Option Name from the list ... </option>
 </select>&nbsp;</td>
 
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript">
   function update_option(theForm) {
     // if nothing to do, abort
     if (!theForm || !theForm.elements["options_id"] || !theForm.elements["values_id[]"]) return;
@@ -1825,7 +1823,6 @@ if ($action == '') {
     // turn off hourglass
     document.body.style.cursor = "default";
   }
--->
 </script>
 <?php
 
