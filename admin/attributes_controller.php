@@ -1912,12 +1912,16 @@ if ($action == 'attributes_preview') {
                                                                       ORDER BY products_options_name");
 
                                       $optionsDropDownArray = [];
+                                      foreach ($options_values as $options_value) {
                                         $optionsDropDownArray[] = [
+                                          'id' => $options_value['products_options_id'],
+                                          'text' => $options_value['products_options_name'] . '&nbsp;&nbsp;&nbsp;[' . translate_type_to_name($options_value['products_options_type']) . ']' . ($show_name_numbers ? ' &nbsp; [ #' . $options_value['products_options_id'] . ' ] ' : '' )
                                           ];
                                       }
                                       ?>
                                 <td class="attributeBoxContent">
                                   <?php echo TABLE_HEADING_OPT_NAME . '<br />'; ?>
+                                  <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)"'); ?>
                                 </td>
                                 <td class="attributeBoxContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE . '<br />'; ?>
                                   <select name="values_id[]" id="OptionValue" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
