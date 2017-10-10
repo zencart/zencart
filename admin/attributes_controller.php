@@ -54,16 +54,21 @@ $_GET['products_filter'] = $products_filter = (isset($_GET['products_filter']) ?
 $_GET['attributes_id'] = (isset($_GET['attributes_id']) ? (int)$_GET['attributes_id'] : 0);
 
 $_GET['current_category_id'] = $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
-if (isset($_POST['products_filter']))
+if (isset($_POST['products_filter'])) {
   $_POST['products_filter'] = (int)$_POST['products_filter'];
-if (isset($_POST['current_category_id']))
+}
+if (isset($_POST['current_category_id'])) {
   $_POST['current_category_id'] = (int)$_POST['current_category_id'];
-if (isset($_POST['products_options_id_all']))
+}
+if (isset($_POST['products_options_id_all'])) {
   $_POST['products_options_id_all'] = (int)$_POST['products_options_id_all'];
-if (isset($_POST['current_category_id']))
+}
+if (isset($_POST['current_category_id'])) {
   $_POST['current_category_id'] = (int)$_POST['current_category_id'];
-if (isset($_POST['categories_update_id']))
+}
+if (isset($_POST['categories_update_id'])) {
   $_POST['categories_update_id'] = (int)$_POST['categories_update_id'];
+}
 
 if ($action == 'new_cat') {
   $sql = "select ptc.*
@@ -112,16 +117,21 @@ require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
 
 if (zen_not_null($action)) {
   $_SESSION['page_info'] = '';
-  if (isset($_GET['option_page']))
+  if (isset($_GET['option_page'])) {
     $_SESSION['page_info'] .= 'option_page=' . $_GET['option_page'] . '&';
-  if (isset($_GET['value_page']))
+  }
+  if (isset($_GET['value_page'])) {
     $_SESSION['page_info'] .= 'value_page=' . $_GET['value_page'] . '&';
-  if (isset($_GET['attribute_page']))
+  }
+  if (isset($_GET['attribute_page'])) {
     $_SESSION['page_info'] .= 'attribute_page=' . $_GET['attribute_page'] . '&';
-  if (isset($_GET['products_filter']))
+  }
+  if (isset($_GET['products_filter'])) {
     $_SESSION['page_info'] .= 'products_filter=' . $_GET['products_filter'] . '&';
-  if (isset($_GET['current_category_id']))
+  }
+  if (isset($_GET['current_category_id'])) {
     $_SESSION['page_info'] .= 'current_category_id=' . $_GET['current_category_id'] . '&';
+  }
 
   if (zen_not_null($_SESSION['page_info'])) {
     $_SESSION['page_info'] = substr($_SESSION['page_info'], 0, -1);
@@ -238,12 +248,15 @@ if (zen_not_null($action)) {
     case 'add_product_attributes':
       $current_image_name = '';
       for ($i = 0; $i < sizeof($_POST['values_id']); $i++) {
-        if (isset($_POST['values_id'][$i]))
+        if (isset($_POST['values_id'][$i])) {
           $_POST['values_id'][$i] = (int)$_POST['values_id'][$i];
-        if (isset($_POST['options_id']))
+        }
+        if (isset($_POST['options_id'])) {
           $_POST['options_id'] = (int)$_POST['options_id'];
-        if (isset($_POST['products_id']))
+        }
+        if (isset($_POST['products_id'])) {
           $_POST['products_id'] = (int)$_POST['products_id'];
+        }
 // check for duplicate and block them
         $check_duplicate = $db->Execute("select * from " . TABLE_PRODUCTS_ATTRIBUTES . "
                                            where products_id ='" . (int)$_POST['products_id'] . "'
@@ -714,7 +727,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
   <!-- <body onload="init()"> -->
   <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="init()">
     <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
 
     <!-- body //-->
@@ -783,9 +796,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                   } else {
                     // show the attributes
                     ?>
-                    <?php
-                    if ($products_filter != '' and $action != 'attribute_features_copy_to_product' and $action != 'attribute_features_copy_to_category' and $action != 'delete_all_attributes_confirm') {
-                      ?>
+  <?php
+  if ($products_filter != '' and $action != 'attribute_features_copy_to_product' and $action != 'attribute_features_copy_to_category' and $action != 'delete_all_attributes_confirm') {
+    ?>
                       <tr>
                         <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
                       </tr>
@@ -795,7 +808,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                           <table border="1" cellspacing="2" cellpadding="4" align="left">
                             <tr>
                               <td colspan="7" class="main" align="center">
-                                  <?php echo TEXT_PRODUCTS_LISTING . TEXT_PRODUCTS_ID . $products_filter . TEXT_PRODUCT_IN_CATEGORY_NAME . zen_get_category_name(zen_get_products_category_id($products_filter), (int)$_SESSION['languages_id']) . '<br />' . zen_get_products_name($products_filter); ?>
+    <?php echo TEXT_PRODUCTS_LISTING . TEXT_PRODUCTS_ID . $products_filter . TEXT_PRODUCT_IN_CATEGORY_NAME . zen_get_category_name(zen_get_products_category_id($products_filter), (int)$_SESSION['languages_id']) . '<br />' . zen_get_products_name($products_filter); ?>
                               </td>
                             </tr>
                             <tr>
@@ -809,9 +822,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                                   }
                                   ?>
                               </td>
-                              <?php
-                              if (zen_has_product_attributes($products_filter, 'false')) {
-                                ?>
+    <?php
+    if (zen_has_product_attributes($products_filter, 'false')) {
+      ?>
                                 <td class="smallText" align="center"><?php echo zen_draw_form('update_sort', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute_sort' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?><?php echo zen_image_submit('button_update_sort.gif', IMAGE_UPDATE_SORT); ?><?php echo zen_draw_hidden_field('confirm', 'y'); ?></form><br /><?php echo TEXT_ATTRIBUTES_UPDATE_SORT_ORDER; ?></td>
                                 <td class="smallText" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&action=attributes_preview' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_preview.gif', IMAGE_PREVIEW) . '<br />' . TEXT_ATTRIBUTES_PREVIEW . '</a>'; ?></td>
                                 <td class="smallText" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&action=delete_all_attributes_confirm' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '<br />' . TEXT_ATTRIBUTES_DELETE . '</a>'; ?></td>
@@ -821,9 +834,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                               } else {
                                 ?>
                                 <td class="main" align="center" width="200"><?php echo TEXT_NO_ATTRIBUTES_DEFINED . $products_filter; ?></td>
-                                <?php
-                              }
-                              ?>
+      <?php
+    }
+    ?>
                             </tr>
                             <tr>
                               <td class="smallText" align="center" colspan="7"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">' . IMAGE_PRODUCTS_TO_CATEGORIES . '</a>'; ?></td>
@@ -874,9 +887,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
               ?>
               <tr>
               <form name="delete_all"<?php echo 'action="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_option_name_values') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-                  <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
-                  <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
-                  <?php echo zen_draw_hidden_field('products_options_id_all', $_GET['products_options_id_all']); ?>
+  <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
+  <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
+  <?php echo zen_draw_hidden_field('products_options_id_all', $_GET['products_options_id_all']); ?>
                 <td colspan="2">
                   <table border="2" cellspacing="2" cellpadding="4">
                     <tr>
@@ -933,9 +946,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
     }
     ?>
 
-    <?php
-    if ($action == 'attribute_features_copy_to_category') {
-      ?>
+<?php
+if ($action == 'attribute_features_copy_to_category') {
+  ?>
       <tr>
       <form name="product_copy_to_category"<?php echo 'action="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']) . zen_draw_hidden_field('products_id', $_GET['products_filter']) . zen_draw_hidden_field('products_update_id', $_GET['products_update_id']) . zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes']) . zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
         <td colspan="2">
@@ -990,9 +1003,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
 
           <tr>
             <td colspan="2" class="main" align="center">
-                <?php
-                if ($pr_attr->fields['total'] > 0) {
-                  ?>
+  <?php
+  if ($pr_attr->fields['total'] > 0) {
+    ?>
                 <table border="0" width="90%" cellspacing="0" cellpadding="2">
                   <tr>
                     <td colspan="2" class="main" align="left"><?php echo TEXT_PRODUCT_OPTIONS; ?></td>
@@ -1000,15 +1013,15 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                   <?php
                   for ($i = 0; $i < sizeof($options_name); $i++) {
                     ?>
-                    <?php
-                    if ($options_comment[$i] != '' and $options_comment_position[$i] == '0') {
-                      ?>
+      <?php
+      if ($options_comment[$i] != '' and $options_comment_position[$i] == '0') {
+        ?>
                       <tr>
                         <td colspan="2" class="ProductInfoComments" align="left" valign="bottom"><?php echo $options_comment[$i]; ?></td>
                       </tr>
-                      <?php
-                    }
-                    ?>
+        <?php
+      }
+      ?>
                     <tr>
                       <td class="main" align="left" valign="top"><?php echo $options_name[$i] . ':'; ?></td>
                       <td class="main" align="left" valign="top" width="75%"><?php echo $options_menu[$i]; ?></td>
@@ -1019,14 +1032,14 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       </tr>
                     <?php } ?>
 
-                    <?php
-                    if ($options_attributes_image[$i] != '') {
-                      ?>
+      <?php
+      if ($options_attributes_image[$i] != '') {
+        ?>
                       <tr>
                         <td colspan="2">
                           <table border= "0" align="center" valign="top" cellpadding="2" cellspacing="2">
                             <tr>
-                                <?php echo $options_attributes_image[$i]; ?>
+        <?php echo $options_attributes_image[$i]; ?>
                             </tr>
                           </table>
                         </td>
@@ -1034,13 +1047,13 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       <?php
                     }
                     ?>
-                    <?php
-                  }
-                  ?>
+                  <?php
+                }
+                ?>
                 </table>
-                <?php
-              }
-              ?>
+    <?php
+  }
+  ?>
             </td>
           </tr>
       </td>
@@ -1072,7 +1085,7 @@ if ($action == 'attributes_preview') {
     <tr>
       <td colspan="2">
         <table>
-            <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
+    <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
         </table>
       </td>
     </tr>
@@ -1082,9 +1095,9 @@ if ($action == 'attributes_preview') {
       <td colspan="2">
         <table border="0" cellspacing="0" cellpadding="2">
 
-          <?php
-          if ($_GET['products_filter'] != '') {
-            ?>
+    <?php
+    if ($_GET['products_filter'] != '') {
+      ?>
             <tr>
               <td class="main" width="200" align="left" valign="top">&nbsp;</td>
               <td colspan="2" class="main"><?php echo TEXT_PRODUCT_TO_VIEW; ?></td>
@@ -1170,9 +1183,9 @@ if ($action == 'attributes_preview') {
           </table>
         </td>
       <?php } ?>
-      <?php
+    <?php
 // fix here border width
-      ?>
+    ?>
     <tr>
       <td>
         <form name="attributes" action="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter); ?>" method="post" enctype="multipart/form-data"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
@@ -1234,7 +1247,7 @@ if ($action == 'attributes_preview') {
             </tr>
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-              <td class="dataTableHeadingContent">&nbsp;<?php // echo TABLE_HEADING_PRODUCT;     ?>&nbsp;</td>
+              <td class="dataTableHeadingContent">&nbsp;<?php // echo TABLE_HEADING_PRODUCT;        ?>&nbsp;</td>
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
               <td class="dataTableHeadingContent" align="right">&nbsp;<?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?>&nbsp;</td>
@@ -1259,22 +1272,22 @@ if ($action == 'attributes_preview') {
               </tr>
               <tr class="attributes-even">
                 <td colspan="10" class="pageHeading" align="center">
-                    <?php echo ($products_filter == '' ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
+      <?php echo ($products_filter == '' ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
                 </td>
               </tr>
               <tr class="dataTableHeadingRow">
                 <td colspan="10" class="dataTableHeadingContent">&nbsp;</td>
               </tr>
 
-              <?php
-            } else {
-              ?>
+      <?php
+    } else {
+      ?>
               <tr class="attributeBoxContent">
                 <td colspan="10" class="dataTableHeadingContent">&nbsp;</td>
               </tr>
               <tr class="attributes-even">
                 <td colspan="10" class="pageHeading" align="center">
-                    <?php echo TEXT_INFO_ID . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter); ?>
+      <?php echo TEXT_INFO_ID . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter); ?>
                 </td>
               </tr>
               <tr class="attributeBoxContent">
@@ -1310,11 +1323,11 @@ if ($action == 'attributes_preview') {
                   </td>
                   <td class="pageHeading"><?php echo $current_options_name; ?></td>
                 </tr>
-              <?php } // option name delete ?>
+                  <?php } // option name delete   ?>
               <tr class="<?php echo (floor($rows / 2) == ($rows / 2) ? 'attributes-even' : 'attributes-odd'); ?>">
-                  <?php
-                  if (($action == 'update_attribute') && ($_GET['attribute_id'] == $attributes_values->fields['products_attributes_id'])) {
-                    ?>
+      <?php
+      if (($action == 'update_attribute') && ($_GET['attribute_id'] == $attributes_values->fields['products_attributes_id'])) {
+        ?>
                 <tr>
                   <td colspan="10"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
                 </tr>
@@ -1327,7 +1340,7 @@ if ($action == 'attributes_preview') {
                       <tr>
                         <td class="pageHeading"><?php echo PRODUCTS_ATTRIBUTES_EDITING; ?>
 
-                          <?php // fix here edit  ?>
+        <?php // fix here edit     ?>
                       <tr>
                         <td class="attributeBoxContent">
                           <table border="0" cellpadding="4" cellspacing="2">
@@ -1356,7 +1369,7 @@ if ($action == 'attributes_preview') {
                               <td class="smallText" valign="top" width="40">&nbsp;</td>
                               <td class="pageHeading">&nbsp;
                                 <input type="hidden" name="options_id" value="<?php echo $attributes_values->fields['options_id']; ?>">
-                                <?php echo zen_get_option_name_language($attributes_values->fields['options_id'], $_SESSION['languages_id']); ?>:
+                                      <?php echo zen_get_option_name_language($attributes_values->fields['options_id'], $_SESSION['languages_id']); ?>:
                               </td>
                               <td class="smallText">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE . '<br />'; ?><select name="values_id" size="10">
                                       <?php
@@ -1490,7 +1503,7 @@ if ($action == 'attributes_preview') {
                                 </table>
                               </td>
 
-                              <?php if (ATTRIBUTES_ENABLED_PRICE_FACTOR == 'true') { ?>
+        <?php if (ATTRIBUTES_ENABLED_PRICE_FACTOR == 'true') { ?>
                                 <td class="attributeBoxContent">
                                   <table border="1" cellpadding="4" cellspacing="2" align="left">
                                     <tr>
@@ -1513,7 +1526,7 @@ if ($action == 'attributes_preview') {
                         </td>
                       </tr>
 
-                      <?php if (ATTRIBUTES_ENABLED_QTY_PRICES == 'true') { ?>
+        <?php if (ATTRIBUTES_ENABLED_QTY_PRICES == 'true') { ?>
                         <tr>
                           <td class="attributeBoxContent">
                             <table border="1" cellpadding="4" cellspacing="2" align="left">
@@ -1531,7 +1544,7 @@ if ($action == 'attributes_preview') {
                       } // ATTRIBUTES_ENABLED_QTY_PRICES
                       ?>
 
-                      <?php if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { ?>
+        <?php if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { ?>
                         <tr>
                           <td class="attributeBoxContent">
                             <table border="1" cellpadding="4" cellspacing="2" align="left">
@@ -1639,9 +1652,9 @@ if ($action == 'attributes_preview') {
                     </td>
                   </tr>
 
-                  <?php
-                }
-                ?>
+          <?php
+        }
+        ?>
 
                 </td>
                 </tr>
@@ -1697,7 +1710,7 @@ if ($action == 'attributes_preview') {
             $attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
             ?>
           <td class="smallText">&nbsp;<?php echo $attributes_values->fields["products_attributes_id"]; ?>&nbsp;</td>
-          <td class="smallText">&nbsp;<?php // echo $products_name_only;    ?>&nbsp;</td>
+          <td class="smallText">&nbsp;<?php // echo $products_name_only;       ?>&nbsp;</td>
           <td class="smallText">&nbsp;<?php echo $options_name; ?>&nbsp;</td>
           <td class="smallText">&nbsp;<?php echo ($attributes_values->fields['attributes_image'] != '' ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' : '&nbsp;&nbsp;') . $values_name; ?>&nbsp;</td>
           <td align="right" class="smallText">&nbsp;<?php echo $attributes_values->fields["price_prefix"]; ?>&nbsp;<?php echo $attributes_values->fields["options_values_price"]; ?>&nbsp;</td>
@@ -1738,9 +1751,9 @@ if ($action == 'attributes_preview') {
           if ($action != '') {
             ?>
             <td width='120' align="center" class="smallText">&nbsp;</td>
-            <?php
-          } else {
-            ?>
+          <?php
+        } else {
+          ?>
             <td align="center" class="smallText">&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute&attribute_id=' . $attributes_values->fields['products_attributes_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '">'; ?><?php echo zen_image_button('button_edit.gif', IMAGE_UPDATE); ?></a>&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_product_attribute&attribute_id=' . $attributes_values->fields['products_attributes_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id), '">'; ?><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE); ?></a>&nbsp;</td>
           <?php
         }
@@ -1908,8 +1921,8 @@ if ($action == 'attributes_preview') {
                     }
                     ?>
                     <td class="attributeBoxContent">
-                        <?php echo TABLE_HEADING_OPT_NAME . '<br />'; ?>
-                        <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)"'); ?>
+      <?php echo TABLE_HEADING_OPT_NAME . '<br />'; ?>
+      <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)"'); ?>
                     </td>
                     <td class="attributeBoxContent"><?php echo TABLE_HEADING_OPT_VALUE . '<br />'; ?>
                       <select name="values_id[]" id="OptionValue" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
@@ -1918,7 +1931,7 @@ if ($action == 'attributes_preview') {
                     </td>
                   </tr>
 
-                  <?php // split here ?>
+      <?php // split here  ?>
                 </table>
               </td>
             </tr>
@@ -1968,7 +1981,7 @@ if ($action == 'attributes_preview') {
                       </table>
                     </td>
 
-                    <?php if (ATTRIBUTES_ENABLED_PRICE_FACTOR == 'true') { ?>
+      <?php if (ATTRIBUTES_ENABLED_PRICE_FACTOR == 'true') { ?>
                       <td class="attributeBoxContent">
                         <table border="1" cellpadding="4" cellspacing="2">
                           <tr>
@@ -1982,7 +1995,7 @@ if ($action == 'attributes_preview') {
                   } // ATTRIBUTES_ENABLED_PRICE_FACTOR
                   ?>
 
-                  <?php if (ATTRIBUTES_ENABLED_QTY_PRICES == 'true') { ?>
+      <?php if (ATTRIBUTES_ENABLED_QTY_PRICES == 'true') { ?>
                     <tr>
                       <td colspan="2" class="attributeBoxContent">
                         <table border="1" cellpadding="4" cellspacing="2">
@@ -1993,9 +2006,9 @@ if ($action == 'attributes_preview') {
                         </table>
                       </td>
                     </tr>
-                  <?php } // ATTRIBUTES_ENABLED_QTY_PRICES  ?>
+      <?php } // ATTRIBUTES_ENABLED_QTY_PRICES     ?>
 
-                  <?php if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { ?>
+      <?php if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { ?>
                     <tr>
                       <td colspan="2" class="attributeBoxContent">
                         <table border="1" cellpadding="4" cellspacing="2">
@@ -2006,7 +2019,7 @@ if ($action == 'attributes_preview') {
                         </table>
                       </td>
                     </tr>
-                  <?php } // ATTRIBUTES_ENABLED_TEXT_PRICES ?>
+      <?php } // ATTRIBUTES_ENABLED_TEXT_PRICES    ?>
 
                 </table>
               </td>
@@ -2135,9 +2148,9 @@ if ($action == 'attributes_preview') {
               </tr>
               <!-- eof Downloads ON -->
 
-              <?php
-            } else {
-              ?>
+        <?php
+      } else {
+        ?>
               <!-- bof Down loads OFF -->
               <tr class="attributeBoxContent">
                 <td class="pageHeading">
@@ -2164,9 +2177,9 @@ if ($action == 'attributes_preview') {
               <?php
             } // end of DOWNLOAD_ENABLED section
             ?>
-            <?php
-          }
-          ?>
+      <?php
+    }
+    ?>
         </table>
       </form>
     </td>
