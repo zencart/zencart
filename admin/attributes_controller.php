@@ -731,13 +731,12 @@ function zen_js_option_values_list($selectedName, $fieldName) {
     <!-- header_eof //-->
 
     <!-- body //-->
-    <table width="100%" cellspacing="2" cellpadding="2">
-      <tr>
-        <!-- body_text //-->
-        <td width="100%" valign="top">
-          <table width="100%" cellspacing="0" cellpadding="0">
-            <tr>
-              <td class="smallText" align="right">
+    <div class="container-fluid">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <!-- body_text //-->
+
+            <div class="smallText text-right">
                   <?php
                   echo zen_draw_form('search', FILENAME_CATEGORIES, '', 'get');
 // show reset search
@@ -751,12 +750,10 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                   }
                   echo '</form>';
                   ?>
-              </td>
-            </tr>
+              </div>
 
-            <tr>
-              <td width="100%">
-                <table width="100%" cellspacing="0" cellpadding="0">
+          <div class="table-responsive">
+                <table width="100%">
                   <!-- products_attributes //-->
                   <tr>
                     <td width="100%">
@@ -770,7 +767,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                   </tr>
                   <tr>
                     <td width="100%">
-                      <table width="100%" cellspacing="0" cellpadding="0">
+                      <table width="100%">
                         <tr>
                           <td class="pageHeading">&nbsp;<?php echo HEADING_TITLE_ATRIB; ?>&nbsp;</td>
                         </tr>
@@ -915,7 +912,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     <tr>
                       <td>
                         <form name="product_copy_to_product"<?php echo 'action="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_product') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']) . zen_draw_hidden_field('products_id', $_GET['products_filter']) . zen_draw_hidden_field('products_update_id', $_GET['products_update_id']) . zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes']); ?><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-                          <table border="2" cellspacing="0" cellpadding="2">
+                          <table border="2" cellpadding="2">
                             <tr>
                               <td class="main" align="center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT . $products_filter . '<br />' . zen_get_products_name($products_filter); ?></td>
                               <td class="main" align="left"><?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_delete', true) . ' ' . TEXT_COPY_ATTRIBUTES_DELETE . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_update') . ' ' . TEXT_COPY_ATTRIBUTES_UPDATE . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_ignore') . ' ' . TEXT_COPY_ATTRIBUTES_IGNORE; ?></td>
@@ -972,7 +969,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     <tr>
                       <td>
                         <form name="set_products_filter_id" <?php echo 'action="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_products_filter') . '"'; ?> method="post"><?php echo zen_draw_hidden_field('products_filter', $products_filter); ?><?php echo zen_draw_hidden_field('current_category_id', $current_category_id); ?><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-                          <table cellspacing="0" cellpadding="2">
+                          <table cellpadding="2">
 
                             <?php
                             if ($_GET['products_filter'] != '') {
@@ -1069,7 +1066,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     <tr>
                       <td>
                         <form name="attributes" action="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter); ?>" method="post" enctype="multipart/form-data"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-                          <table cellspacing="0" cellpadding="2">
+                          <table cellpadding="2">
                             <tr>
                               <td colspan="10" class="smallText">
                                   <?php
@@ -1127,7 +1124,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                             </tr>
                             <tr class="dataTableHeadingRow">
                               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-                              <td class="dataTableHeadingContent">&nbsp;<?php // echo TABLE_HEADING_PRODUCT;                             ?>&nbsp;</td>
+                              <td class="dataTableHeadingContent">&nbsp;</td>
                               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
                               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
                               <td class="dataTableHeadingContent" align="right">&nbsp;<?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?>&nbsp;</td>
@@ -1622,7 +1619,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                                 } else {
                                   ?>
                                   <tr>
-                                    <td colspan="10" align="center" class="smallText">&nbsp;<a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute&attribute_id=' . $attributes_values->fields['products_attributes_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_UPDATE); ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_product_attribute&attribute_id=' . $attributes_values->fields['products_attributes_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE); ?></a>&nbsp;</td>
+                                    <td colspan="10" align="right" class="smallText">&nbsp;<a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute&attribute_id=' . $attributes_values->fields['products_attributes_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_UPDATE); ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_product_attribute&attribute_id=' . $attributes_values->fields['products_attributes_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo zen_image_button('button_delete.gif', IMAGE_DELETE); ?></a>&nbsp;</td>
                                   </tr>
                                   <?php
                                 }
@@ -1635,11 +1632,6 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                               where products_attributes_id='" . $attributes_values->fields['products_attributes_id'] . "'";
                                   $download_display = $db->Execute($download_display_query_raw);
                                   if ($download_display->RecordCount() > 0) {
-
-// Moved to /admin/includes/configure.php
-                                    if (!defined('DIR_FS_DOWNLOAD'))
-                                      define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
-
                                     $filename_is_missing = '';
                                     if (!file_exists(DIR_FS_DOWNLOAD . $download_display->fields['products_attributes_filename'])) {
                                       $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
@@ -2016,7 +2008,6 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                                   }
                                   ?>
                                 </table>
-                                <!--             </form> -->
                               </td>
                             </tr>
                             <?php
@@ -2027,60 +2018,58 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     </td>
                   </tr>
                 </table>
-              </td>
-            </tr>
+              </div>
             <!-- eof_adding -->
 
             <!-- products_attributes_eof //-->
-          </table>
           <!-- body_text_eof //-->
-          <!-- footer //-->
-          <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-          <!-- footer_eof //-->
-          <form id="divertClickProto" action="#" method="post">
-            <input type="hidden" name="divertClickProto" value="" />
-            <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>" />
-          </form>
-          <script type="text/javascript">
-            function divertClick(href)
-            {
-                document.getElementById('divertClickProto').action = href;
-                document.getElementById('divertClickProto').submit();
-                return false;
-            }
+        </div>
+      </div>
+    </div>
+    <!-- footer //-->
+    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+    <!-- footer_eof //-->
+    <form id="divertClickProto" action="#" method="post">
+      <input type="hidden" name="divertClickProto" value="" />
+      <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>" />
+    </form>
+    <script type="text/javascript">
+      function divertClick(href)
+      {
+          document.getElementById('divertClickProto').action = href;
+          document.getElementById('divertClickProto').submit();
+          return false;
+      }
 
-          </script>
-          <script type="text/javascript">
-            function update_option(theForm) {
-                // if nothing to do, abort
-                if (!theForm || !theForm.elements["options_id"] || !theForm.elements["values_id[]"])
-                    return;
-                if (!theForm.options_id.options[theForm.options_id.selectedIndex])
-                    return;
+    </script>
+    <script type="text/javascript">
+      function update_option(theForm) {
+          // if nothing to do, abort
+          if (!theForm || !theForm.elements["options_id"] || !theForm.elements["values_id[]"])
+              return;
+          if (!theForm.options_id.options[theForm.options_id.selectedIndex])
+              return;
 
-                // enable hourglass
-                document.body.style.cursor = "wait";
+          // enable hourglass
+          document.body.style.cursor = "wait";
 
-                // set initial values
-                var SelectedOption = theForm.options_id.options[theForm.options_id.selectedIndex].value;
-                var theField = document.getElementById("OptionValue");
+          // set initial values
+          var SelectedOption = theForm.options_id.options[theForm.options_id.selectedIndex].value;
+          var theField = document.getElementById("OptionValue");
 
-                // reset the array of pulldown options so it can be repopulated
-                var Opts = theField.options.length;
-                while (Opts > 0) {
-                    Opts = Opts - 1;
-                    theField.options[Opts] = null;
-                }
+          // reset the array of pulldown options so it can be repopulated
+          var Opts = theField.options.length;
+          while (Opts > 0) {
+              Opts = Opts - 1;
+              theField.options[Opts] = null;
+          }
 
 <?php echo zen_js_option_values_list('SelectedOption', 'theField'); ?>
 
-                // turn off hourglass
-                document.body.style.cursor = "default";
-            }
-          </script>
-        </td>
-      </tr>
-    </table>
+          // turn off hourglass
+          document.body.style.cursor = "default";
+      }
+    </script>
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
