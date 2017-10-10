@@ -1905,24 +1905,24 @@ if ($action == 'attributes_preview') {
                             <table>
                               <tr>
                                 <td class="attributeBoxContent" width="40">&nbsp;</td>
-                                <td class="attributeBoxContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME . '<br />'; ?>
-                                  <select name="options_id" id="OptionName" onChange="update_option(this.form)" size="<?php echo ($action != 'delete_attribute' ? "15" : "1"); ?>">
-                                      <?php
-                                      $options_values = $db->Execute("select * from " . TABLE_PRODUCTS_OPTIONS . "
-                                    where language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                    order by products_options_name");
+                                <?php
+                                      $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
+                                                                      FROM " . TABLE_PRODUCTS_OPTIONS . "
+                                                                      WHERE language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                                                      ORDER BY products_options_name");
 
-                                      while (!$options_values->EOF) {
-                                        echo '              <option name="' . $options_values->fields['products_options_name'] . '" value="' . $options_values->fields['products_options_id'] . '">' . $options_values->fields['products_options_name'] . '&nbsp;&nbsp;&nbsp;[' . translate_type_to_name($options_values->fields['products_options_type']) . ']' . ($show_name_numbers ? ' &nbsp; [ #' . $options_values->fields['products_options_id'] . ' ] ' : '' ) . '</option>' . "\n";
-                                        $options_values->MoveNext();
+                                      $optionsDropDownArray = [];
+                                        $optionsDropDownArray[] = [
+                                          ];
                                       }
                                       ?>
-                                  </select>&nbsp;</td>
+                                <td class="attributeBoxContent">
+                                  <?php echo TABLE_HEADING_OPT_NAME . '<br />'; ?>
+                                </td>
                                 <td class="attributeBoxContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE . '<br />'; ?>
-                                  <select name="values_id[]" id="OptionValue" multiple="multiple" size="<?php echo ($action != 'delete_attribute' ? "15" : "1"); ?>">
+                                  <select name="values_id[]" id="OptionValue" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
                                     <option selected>&lt;-- Please select an Option Name from the list ... </option>
                                   </select>&nbsp;</td>
-                                </select>&nbsp;</td>
                               </tr>
                             </table>
                           </td>
