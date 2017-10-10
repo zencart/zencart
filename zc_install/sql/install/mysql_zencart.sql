@@ -496,6 +496,10 @@ CREATE TABLE coupons (
   date_created datetime NOT NULL default '0001-01-01 00:00:00',
   date_modified datetime NOT NULL default '0001-01-01 00:00:00',
   coupon_zone_restriction int(11) NOT NULL default '0',
+  coupon_calc_base tinyint(1) NOT NULL DEFAULT '0',
+  coupon_order_limit int(4) NOT NULL default '0',
+  coupon_is_valid_for_sales tinyint(1) NOT NULL DEFAULT '1',
+  coupon_product_count tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (coupon_id),
   KEY idx_active_type_zen (coupon_active,coupon_type),
   KEY idx_coupon_code_zen (coupon_code),
@@ -584,7 +588,6 @@ CREATE TABLE customers_basket (
   customers_id int(11) NOT NULL default '0',
   products_id tinytext NOT NULL,
   customers_basket_quantity float NOT NULL default '0',
-  final_price decimal(15,4) NOT NULL default '0.0000',
   customers_basket_date_added varchar(8) default NULL,
   PRIMARY KEY  (customers_basket_id),
   KEY idx_customers_id_zen (customers_id)
@@ -1047,6 +1050,7 @@ CREATE TABLE orders (
   order_tax decimal(14,2) default NULL,
   paypal_ipn_id int(11) NOT NULL default '0',
   ip_address varchar(96) NOT NULL default '',
+  order_weight float NOT NULL default '0',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
@@ -1077,6 +1081,14 @@ CREATE TABLE orders_products (
   products_discount_type tinyint(1) NOT NULL default '0',
   products_discount_type_from tinyint(1) NOT NULL default '0',
   products_prid tinytext NOT NULL,
+  products_weight FLOAT NOT NULL DEFAULT '0',
+  products_virtual tinyint(1) NOT NULL default '0',
+  product_is_always_free_shipping tinyint(1) NOT NULL default '0',
+  products_quantity_order_min float NOT NULL default '1',
+  products_quantity_order_units float NOT NULL default '1',
+  products_quantity_order_max float NOT NULL default '0',
+  products_quantity_mixed tinyint(1) NOT NULL default '0',
+  products_mixed_discount_quantity tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (orders_products_id),
   KEY idx_orders_id_prod_id_zen (orders_id,products_id),
   KEY idx_prod_id_orders_id_zen (products_id,orders_id)
@@ -1135,6 +1147,7 @@ CREATE TABLE orders_products_download (
   download_maxdays int(2) NOT NULL default '0',
   download_count int(2) NOT NULL default '0',
   products_prid tinytext NOT NULL,
+  products_attributes_id int(11) NOT NULL default '0',
   PRIMARY KEY  (orders_products_download_id),
   KEY idx_orders_id_zen (orders_id),
   KEY idx_orders_products_id_zen (orders_products_id)
@@ -1611,7 +1624,7 @@ CREATE TABLE products_options (
   products_options_sort_order int(11) NOT NULL default '0',
   products_options_type int(5) NOT NULL default '0',
   products_options_length smallint(2) NOT NULL default '32',
-  products_options_comment varchar(64) default NULL,
+  products_options_comment varchar(255) default NULL,
   products_options_size smallint(2) NOT NULL default '32',
   products_options_images_per_row int(2) default '5',
   products_options_images_style int(1) default '0',
@@ -3249,10 +3262,10 @@ INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPA
 # Dumping data for table project_version
 #
 
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.5e', '', '', '', '', 'New Installation-v155e', now());
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.5', '', '', '', '', 'New Installation-v155e', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.5e', '', 'New Installation-v155e', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.5', '', 'New Installation-v155e', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.6-alpha', '', '', '', '', 'New Installation-v156-alpha', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.6-alpha', '', '', '', '', 'New Installation-v156-alpha', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.6-alpha', '', 'New Installation-v156-alpha', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.6-alpha', '', 'New Installation-v156-alpha', now());
 
 ##### End of SQL setup for Zen Cart.
 

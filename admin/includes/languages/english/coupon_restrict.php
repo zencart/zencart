@@ -35,3 +35,17 @@ define('TEXT_MANUFACTURER', 'Manufacturer: ');
 define('TEXT_CATEGORY', 'Category: ');
 define('ERROR_DISCOUNT_COUPON_DEFINED_CATEGORY', 'Category Not Completed');
 define('ERROR_DISCOUNT_COUPON_DEFINED_PRODUCT', 'Product Not Completed');
+
+define('HEADER_MANUFACTURER_NAME', '<br> -- OR -- <br>' . 'Manufacturer: ');
+define('TEXT_ALL_MANUFACTURERS_ADD', 'Add All Manufacturer Products');
+define('TEXT_ALL_MANUFACTURERS_REMOVE', 'Remove All Manufacturer Products');
+
+define('HEADER_PRODUCT_STATUS', 'Status');
+define('HEADER_PRODUCT_MODEL', 'Model');
+
+define('ERROR_RESET_CATEGORY_MANUFACTURER', 'Category and Manufacturer filters reset. Use filters individually.');
+
+define('TEXT_PULLDOWN_ALLOW', 'Allow');
+define('TEXT_PULLDOWN_DENY', 'Deny');
+define('TEXT_SUBMIT_CATEGORY_ADD', 'Add');
+define('TEXT_SUBMIT_PRODUCT_UPDATE', 'Update');

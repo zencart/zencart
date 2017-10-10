@@ -16,7 +16,7 @@
 
 function zen_update_currencies($cli_Output = FALSE)
 {
-  global $db, $messageStack;
+  global $db, $messageStack, $zco_notifier;
   zen_set_time_limit(600);
   $currency = $db->Execute("select currencies_id, code, title, decimal_places from " . TABLE_CURRENCIES);
   while (!$currency->EOF) {
@@ -39,8 +39,10 @@ function zen_update_currencies($cli_Output = FALSE)
     }
     if (zen_not_null($rate) && $rate > 0) {
       /* Add currency uplift */
-      if ($rate != 1 && defined('CURRENCY_UPLIFT_RATIO') && (int)CURRENCY_UPLIFT_RATIO != 0) {
-        $rate = (string)((float)$rate * (float)CURRENCY_UPLIFT_RATIO);
+      $multiplier = (defined('CURRENCY_UPLIFT_RATIO') && (int)CURRENCY_UPLIFT_RATIO != 0) ? CURRENCY_UPLIFT_RATIO : 0;
+      $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_MULTIPLIER', $currency->fields['code'], $multiplier, $rate);
+      if ($rate != 1 && $multiplier > 0) {
+        $rate = (string)((float)$rate * (float)$multiplier);
       }
 
       // special handling for currencies which don't support decimal places
@@ -49,10 +51,11 @@ function zen_update_currencies($cli_Output = FALSE)
       }
 
       if (zen_not_null($rate) && $rate > 0) {
+        $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_SINGLE', $currency->fields['code'], $rate);
         $db->Execute("update " . TABLE_CURRENCIES . "
-                            set value = '" . (float)$rate . "', last_updated = now()
-                            where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
-        $msg = sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], $rate, $server_used);
+                      set value = '" . round((float)$rate, 8) . "', last_updated = now()
+                      where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
+        $msg = sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], round((float)$rate, 8), $server_used);
         if (is_object($messageStack)) {
           $messageStack->add_session($msg, 'success');
         } elseif ($cli_Output) {
@@ -70,6 +73,7 @@ function zen_update_currencies($cli_Output = FALSE)
     $currency->MoveNext();
   }
   if (function_exists('zen_record_admin_activity')) zen_record_admin_activity('Currency exchange rates updated: ' . $msg, 'info');
+  $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATES_UPDATED', $msg);
 }
 
 /**
@@ -155,7 +159,8 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_USERAGENT, empty($_SERVER['HTTP_USER_AGENT']) ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_REFERER, HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     if (strtoupper($method) == 'POST' && $vars != '') {

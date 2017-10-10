@@ -1923,6 +1923,14 @@ while (!$chk_sale_categories_all->EOF) {
     return $tmp_array;
   }
 ////
+  /**
+   * alias to zen_create_coupon_code()
+   *
+   * @deprecated: use zen_create_coupon_code() instead (since v1.5.6)
+   */
+  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
+    return zen_create_coupon_code($salt, $length, $prefix);
+  }
 /**
  * Create a Coupon Code. Returns blank if cannot generate a unique code using the passed criteria.
  * @param string $salt - this is an optional string to help seed the random code with greater entropy
@@ -1930,7 +1938,7 @@ while (!$chk_sale_categories_all->EOF) {
  * @param string $prefix - include a prefix string if you want to force the generated code to start with a specific string
  * @return string (new coupon code) (will be blank if the function failed)
  */
-  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
+  function zen_create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
     global $db;
     $length = (int)$length;
     static $max_db_length;
@@ -1945,13 +1953,16 @@ while (!$chk_sale_categories_all->EOF) {
     $ccid .= md5(uniqid("",$salt));
     srand((double)microtime()*1000000); // seed the random number generator
     $good_result = 0;
+    $id1 = '';
     while ($good_result == 0) {
       $random_start = @rand(0, (128-$length));
       $id1=substr($ccid, $random_start, $length);
-      $query = $db->Execute("select coupon_code
-                             from " . TABLE_COUPONS . "
-                             where coupon_code = '" . $prefix . $id1 . "'");
-      if ($query->RecordCount() < 1 ) $good_result = 1;
+      $sql = "select coupon_code
+              from " . TABLE_COUPONS . "
+              where coupon_code = :couponcode";
+      $sql = $db->bindVars($sql, ':couponcode', $prefix . $id1, 'string');
+      $result = $db->Execute($sql);
+      if ($result->RecordCount() < 1 ) $good_result = 1;
     }
     return ($good_result == 1) ? $prefix . $id1 : ''; // blank means couldn't generate a unique code (typically because the max length was encountered before being able to generate unique)
   }
@@ -3827,3 +3838,48 @@ function get_logs_data($maxToList = 'count') {
   function set_unwritable($filepath) {
     return @chmod($filepath, 0444);
   }
+
+
+/**
+ * is coupon valid for specials and sales
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool
+ */
+  function is_coupon_valid_for_sales($product_id, $coupon_id) {
+    global $db;
+    $sql = "SELECT coupon_id, coupon_is_valid_for_sales
+            FROM " . TABLE_COUPONS . "
+            WHERE coupon_id = " . (int)$coupon_id;
+
+    $result = $db->Execute($sql);
+
+    // check whether coupon has been flagged for valid with sales
+    if ($result->fields['coupon_is_valid_for_sales']) {
+      return true;
+    }
+
+    // check for any special on $product_id
+    $chk_product_on_sale = zen_get_products_special_price($product_id, true);
+    if (!$chk_product_on_sale) {
+      // check for any sale on $product_id
+      $chk_product_on_sale = zen_get_products_special_price($product_id, false);
+    }
+    if ($chk_product_on_sale) {
+      return false;
+    }
+    return true; // is not on special or sale
+  }
+
+/**
+ * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
+ * @param int|float|string $input
+ * @return float|int
+ */
+    function convertToFloat($input = 0) {
+        if ($input === null) return 0;
+        $val = preg_replace('/[^0-9,\.\-]/', '', $input);
+        // do a non-strict compare here:
+        if ($val == 0) return 0;
+        return (float)$val;
+    }

@@ -2590,12 +2590,13 @@ class V1ItemsApi
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param int $limit The maximum number of inventory entries to return in a single response. This value cannot exceed 1000. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return \SquareConnect\Model\V1InventoryEntry[]
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listInventory($location_id, $limit = null)
+    public function listInventory($location_id, $limit = null, $batch_token = null)
     {
-        list($response, $statusCode, $httpHeader) = $this->listInventoryWithHttpInfo ($location_id, $limit);
+        list($response, $statusCode, $httpHeader) = $this->listInventoryWithHttpInfo ($location_id, $limit, $batch_token);
         return $response; 
     }
 
@@ -2607,10 +2608,11 @@ class V1ItemsApi
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param int $limit The maximum number of inventory entries to return in a single response. This value cannot exceed 1000. (optional)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return Array of \SquareConnect\Model\V1InventoryEntry[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listInventoryWithHttpInfo($location_id, $limit = null)
+    public function listInventoryWithHttpInfo($location_id, $limit = null, $batch_token = null)
     {
         
         // verify the required parameter 'location_id' is set
@@ -2633,6 +2635,9 @@ class V1ItemsApi
         // query params
         if ($limit !== null) {
             $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
+        }// query params
+        if ($batch_token !== null) {
+            $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
         }
         
         // path params
@@ -2689,12 +2694,13 @@ class V1ItemsApi
      * Provides summary information for all of a location's items.
      *
      * @param string $location_id The ID of the location to list items for. (required)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return \SquareConnect\Model\V1Item[]
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listItems($location_id)
+    public function listItems($location_id, $batch_token = null)
     {
-        list($response, $statusCode, $httpHeader) = $this->listItemsWithHttpInfo ($location_id);
+        list($response, $statusCode, $httpHeader) = $this->listItemsWithHttpInfo ($location_id, $batch_token);
         return $response; 
     }
 
@@ -2705,10 +2711,11 @@ class V1ItemsApi
      * Provides summary information for all of a location's items.
      *
      * @param string $location_id The ID of the location to list items for. (required)
+     * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return Array of \SquareConnect\Model\V1Item[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listItemsWithHttpInfo($location_id)
+    public function listItemsWithHttpInfo($location_id, $batch_token = null)
     {
         
         // verify the required parameter 'location_id' is set
@@ -2728,7 +2735,10 @@ class V1ItemsApi
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
   
-        
+        // query params
+        if ($batch_token !== null) {
+            $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
+        }
         
         // path params
         if ($location_id !== null) {

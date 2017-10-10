@@ -251,14 +251,14 @@ class paypal_curl extends base {
       $values['ORIGID'] = $txnID;
       $values['TENDER'] = 'C';
       $values['TRXTYPE'] = 'C';
-      $values['AMT'] = number_format((float)$amount, 2);
+      $values['AMT'] = round((float)$amount, 2);
       if ($note != '') $values['COMMENT2'] = $note;
     } elseif ($this->_mode == 'nvp') {
       $values['TRANSACTIONID'] = $txnID;
       if ($amount != 'Full' && (float)$amount > 0) {
         $values['REFUNDTYPE'] = 'Partial';
         $values['CURRENCYCODE'] = $curCode;
-        $values['AMT'] = number_format((float)$amount, 2);
+        $values['AMT'] = round((float)$amount, 2);
       } else {
         $values['REFUNDTYPE'] = 'Full';
       }
@@ -291,7 +291,7 @@ class paypal_curl extends base {
    */
   function DoAuthorization($txnID, $amount = 0, $currency = 'USD', $entity = 'Order') {
     $values['TRANSACTIONID'] = $txnID;
-    $values['AMT'] = number_format($amount, 2, '.', ',');
+    $values['AMT'] = round((float)$amount, 2);
     $values['TRANSACTIONENTITY'] = $entity;
     $values['CURRENCYCODE'] = $currency;
     return $this->_request($values, 'DoAuthorization');
@@ -304,7 +304,7 @@ class paypal_curl extends base {
    */
   function DoReauthorization($txnID, $amount = 0, $currency = 'USD') {
     $values['AUTHORIZATIONID'] = $txnID;
-    $values['AMT'] = number_format($amount, 2, '.', ',');
+    $values['AMT'] = round((float)$amount, 2);
     $values['CURRENCYCODE'] = $currency;
     return $this->_request($values, 'DoReauthorization');
   }
@@ -325,7 +325,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $values['AUTHORIZATIONID'] = $txnID;
       $values['COMPLETETYPE'] = $captureType;
-      $values['AMT'] = number_format((float)$amount, 2);
+      $values['AMT'] = round((float)$amount, 2);
       $values['CURRENCYCODE'] = $currency;
       if ($invNum != '') $values['INVNUM'] = $invNum;
       if ($note != '') $values['NOTE'] = $note;
@@ -437,7 +437,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.5';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.6';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();
