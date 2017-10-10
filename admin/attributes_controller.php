@@ -1234,7 +1234,7 @@ if ($action == 'attributes_preview') {
             </tr>
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-              <td class="dataTableHeadingContent">&nbsp;<?php // echo TABLE_HEADING_PRODUCT;   ?>&nbsp;</td>
+              <td class="dataTableHeadingContent">&nbsp;<?php // echo TABLE_HEADING_PRODUCT;    ?>&nbsp;</td>
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
               <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
               <td class="dataTableHeadingContent" align="right">&nbsp;<?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?>&nbsp;</td>
@@ -1697,7 +1697,7 @@ if ($action == 'attributes_preview') {
             $attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
             ?>
           <td class="smallText">&nbsp;<?php echo $attributes_values->fields["products_attributes_id"]; ?>&nbsp;</td>
-          <td class="smallText">&nbsp;<?php // echo $products_name_only;  ?>&nbsp;</td>
+          <td class="smallText">&nbsp;<?php // echo $products_name_only;   ?>&nbsp;</td>
           <td class="smallText">&nbsp;<?php echo $options_name; ?>&nbsp;</td>
           <td class="smallText">&nbsp;<?php echo ($attributes_values->fields['attributes_image'] != '' ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' : '&nbsp;&nbsp;') . $values_name; ?>&nbsp;</td>
           <td align="right" class="smallText">&nbsp;<?php echo $attributes_values->fields["price_prefix"]; ?>&nbsp;<?php echo $attributes_values->fields["options_values_price"]; ?>&nbsp;</td>
@@ -1922,32 +1922,6 @@ if ($action == 'attributes_preview') {
                                   <select name="values_id[]" id="OptionValue" multiple="multiple" size="<?php echo ($action != 'delete_attribute' ? "15" : "1"); ?>">
                                     <option selected>&lt;-- Please select an Option Name from the list ... </option>
                                   </select>&nbsp;</td>
-                                <?php
-                                $chk_defaults = $db->Execute("select products_type from " . TABLE_PRODUCTS . " where products_id=" . $products_filter);
-// set defaults for adding attributes
-
-                                $on_product_attribute_is_free = (zen_get_show_product_switch($products_filter, 'ATTRIBUTE_IS_FREE', 'DEFAULT_', '') == 1 ? true : false);
-                                $off_product_attribute_is_free = ($on_product_attribute_is_free == 1 ? false : true);
-                                $on_attributes_display_only = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_DISPLAY_ONLY', 'DEFAULT_', '') == 1 ? true : false);
-                                $off_attributes_display_only = ($on_attributes_display_only == 1 ? false : true);
-                                $on_attributes_default = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_DEFAULT', 'DEFAULT_', '') == 1 ? true : false);
-                                $off_attributes_default = ($on_attributes_default == 1 ? false : true);
-                                $on_attributes_discounted = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_DISCOUNTED', 'DEFAULT_', '') == 1 ? true : false);
-                                $off_attributes_discounted = ($on_attributes_discounted == 1 ? false : true);
-                                $on_attributes_price_base_included = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_PRICE_BASE_INCLUDED', 'DEFAULT_', '') == 1 ? true : false);
-                                $off_attributes_price_base_included = ($on_attributes_price_base_included == 1 ? false : true);
-                                $on_attributes_required = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_REQUIRED', 'DEFAULT_', '') == 1 ? true : false);
-                                $off_attributes_required = ($on_attributes_required == 1 ? false : true);
-
-                                $default_price_prefix = zen_get_show_product_switch($products_filter, 'PRICE_PREFIX', 'DEFAULT_', '');
-                                $default_price_prefix = ($default_price_prefix == 1 ? '+' : ($default_price_prefix == 2 ? '-' : ''));
-                                $default_products_attributes_weight_prefix = zen_get_show_product_switch($products_filter, 'PRODUCTS_ATTRIBUTES_WEIGHT_PREFIX', 'DEFAULT_', '');
-                                $default_products_attributes_weight_prefix = ($default_products_attributes_weight_prefix == 1 ? '+' : ($default_products_attributes_weight_prefix == 2 ? '-' : ''));
-
-// set defaults for copying
-                                $on_overwrite = true;
-                                $off_overwrite = false;
-                                ?>
                                 </select>&nbsp;</td>
                               </tr>
                             </table>
@@ -1962,7 +1936,32 @@ if ($action == 'attributes_preview') {
               </td>
             </tr>
             <!-- eof Option Name and Value -->
+            <?php
+            $chk_defaults = $db->Execute("select products_type from " . TABLE_PRODUCTS . " where products_id=" . $products_filter);
+// set defaults for adding attributes
 
+            $on_product_attribute_is_free = (zen_get_show_product_switch($products_filter, 'ATTRIBUTE_IS_FREE', 'DEFAULT_', '') == 1 ? true : false);
+            $off_product_attribute_is_free = ($on_product_attribute_is_free == 1 ? false : true);
+            $on_attributes_display_only = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_DISPLAY_ONLY', 'DEFAULT_', '') == 1 ? true : false);
+            $off_attributes_display_only = ($on_attributes_display_only == 1 ? false : true);
+            $on_attributes_default = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_DEFAULT', 'DEFAULT_', '') == 1 ? true : false);
+            $off_attributes_default = ($on_attributes_default == 1 ? false : true);
+            $on_attributes_discounted = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_DISCOUNTED', 'DEFAULT_', '') == 1 ? true : false);
+            $off_attributes_discounted = ($on_attributes_discounted == 1 ? false : true);
+            $on_attributes_price_base_included = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_PRICE_BASE_INCLUDED', 'DEFAULT_', '') == 1 ? true : false);
+            $off_attributes_price_base_included = ($on_attributes_price_base_included == 1 ? false : true);
+            $on_attributes_required = (zen_get_show_product_switch($products_filter, 'ATTRIBUTES_REQUIRED', 'DEFAULT_', '') == 1 ? true : false);
+            $off_attributes_required = ($on_attributes_required == 1 ? false : true);
+
+            $default_price_prefix = zen_get_show_product_switch($products_filter, 'PRICE_PREFIX', 'DEFAULT_', '');
+            $default_price_prefix = ($default_price_prefix == 1 ? '+' : ($default_price_prefix == 2 ? '-' : ''));
+            $default_products_attributes_weight_prefix = zen_get_show_product_switch($products_filter, 'PRODUCTS_ATTRIBUTES_WEIGHT_PREFIX', 'DEFAULT_', '');
+            $default_products_attributes_weight_prefix = ($default_products_attributes_weight_prefix == 1 ? '+' : ($default_products_attributes_weight_prefix == 2 ? '-' : ''));
+
+// set defaults for copying
+            $on_overwrite = true;
+            $off_overwrite = false;
+            ?>
             <!-- bof Prices and Weight -->
             <tr>
               <td class="attributeBoxContent">
