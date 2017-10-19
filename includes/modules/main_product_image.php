@@ -9,7 +9,7 @@
  * @version $Id: main_product_image.php 4663 2006-10-02 04:08:32Z drbyte $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 $zco_notifier->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_START');
 
@@ -22,18 +22,18 @@ $products_image_large = DIR_WS_IMAGES . 'large/' . $products_image_base . IMAGE_
 
 
 if (!isset($images_skip_graceful_degradation) || $images_skip_graceful_degradation !== TRUE) {
-  // check for a medium image else use small
-  if (!file_exists($products_image_medium)) {
-    $products_image_medium = DIR_WS_IMAGES . $products_image;
-  }
-  // check for a large image else use medium else use small
-  if (!file_exists($products_image_large)) {
+    // check for a medium image else use small
     if (!file_exists($products_image_medium)) {
-      $products_image_large = DIR_WS_IMAGES . $products_image;
-    } else {
-      $products_image_large = $products_image_medium;
+        $products_image_medium = DIR_WS_IMAGES . $products_image;
     }
-  }
+    // check for a large image else use medium else use small
+    if (!file_exists($products_image_large)) {
+        if (!file_exists($products_image_medium)) {
+            $products_image_large = DIR_WS_IMAGES . $products_image;
+        } else {
+            $products_image_large = $products_image_medium;
+        }
+    }
 }
 
 /* DEBUG */
