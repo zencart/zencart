@@ -55,7 +55,7 @@
 
     if ($action == 'insert_product') {
       $sql_data_array['products_date_added'] = 'now()';
-      $sql_data_array['master_categories_id'] = (int)$current_category_id);
+      $sql_data_array['master_categories_id'] = (int)$current_category_id;
 
       zen_db_perform(TABLE_PRODUCTS, $sql_data_array);
       $products_id = zen_db_insert_id();
@@ -77,7 +77,7 @@
       ///////////////////////////////////////////////////////
     } elseif ($action == 'update_product') {
       $sql_data_array['products_date_added'] = 'now()';
-      $sql_data_array['master_categories_id'] = ((int)$_POST['master_category'] > 0 ? (int)$_POST['master_category'] : (int)$_POST['master_categories_id']));
+      $sql_data_array['master_categories_id'] = ((int)$_POST['master_category'] > 0 ? (int)$_POST['master_category'] : (int)$_POST['master_categories_id']);
 
       zen_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = " . (int)$products_id);
 
