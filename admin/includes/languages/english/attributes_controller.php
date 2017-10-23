@@ -86,7 +86,7 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTES_IMAGE','Attributes Image Swatch:');
   define('TEXT_ATTRIBUTES_IMAGE_DIR','Attributes Image Directory:');
 
-  define('TEXT_ATTRIBUTES_FLAGS','Attribute<br />Flags:');
+  define('TEXT_ATTRIBUTES_FLAGS','Attribute Flags:');
   define('TEXT_ATTRIBUTES_DISPLAY_ONLY', 'Used For<br />Display Purposes Only:');
   define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free<br />When Product is Free:');
   define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute<br />to be Marked Selected:');
