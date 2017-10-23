@@ -713,24 +713,6 @@ function zen_js_option_values_list($selectedName, $fieldName) {
           display: -ms-flexbox;
           display: flex;
       }
-      .form-control-zc {
-          /*      display: block;*/
-          /*      width: 100%;*/
-          height: 34px;
-          padding: 6px 12px;
-          font-size: 14px;
-          line-height: 1.42857143;
-          color: #555;
-          background-color: #fff;
-          background-image: none;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-          box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-          -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-          -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-          transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-      }
     </style>
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
@@ -1234,9 +1216,10 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                               );
                             }
                             ?>
-                            <?php echo zen_draw_pull_down_menu('values_id', $optionValuesArray, $attributes_value['options_values_id'], 'class="form-control"') ?>
+                            <?php echo zen_draw_pull_down_menu('values_id', $optionValuesArray, $attributes_value['options_values_id'], 'class="form-control"'); ?>
                         </div>
                       </div>
+                      <hr style="border: inherit; margin: 10px 0;">
                       <!-- bof: Edit Prices -->
                       <h5><?php echo TEXT_PRICES_AND_WEIGHTS; ?></h5>
                       <div class="row">
@@ -1314,33 +1297,47 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                           $on_image_delete = false;
                           $off_image_delete = true;
                           ?>
-                        <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_OPT_PRICE; ?><br />
-                            <?php echo zen_draw_input_field('price_prefix', $attributes_value['price_prefix'], 'size="2" class="form-control-zc"'); ?>
-                          &nbsp;
-                          <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'size="6" class="form-control-zc"'); ?>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                            <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE_PREFIX, 'price_prefix', 'class="control-label"'); ?>
+                            <?php echo zen_draw_input_field('price_prefix', $attributes_value['price_prefix'], 'size="2" class="form-control"'); ?>
                         </div>
-                        <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_OPT_WEIGHT; ?><br />
-                            <?php echo zen_draw_input_field('products_attributes_weight_prefix', $attributes_value['products_attributes_weight_prefix'], 'size="2" class="form-control-zc"'); ?>
-                          &nbsp;
-                          <?php echo zen_draw_input_field('products_attributes_weight', $attributes_value['products_attributes_weight'], 'size="6" class="form-control-zc"'); ?>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                            <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
+                            <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'size="6" class="form-control"'); ?>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-1 text-center"><?php echo TABLE_HEADING_OPT_SORT_ORDER; ?><br />
-                            <?php echo zen_draw_input_field('products_options_sort_order', $attributes_value['products_options_sort_order'], 'size="4" class="form-control-zc"'); ?>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                            <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT_PREFIX, 'products_attributes_weight_prefix', 'class="control-label"'); ?>
+                            <?php echo zen_draw_input_field('products_attributes_weight_prefix', $attributes_value['products_attributes_weight_prefix'], 'size="2" class="form-control"'); ?>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-1 text-center"><?php echo TABLE_HEADING_ATTRIBUTES_PRICE_ONETIME; ?><br />
-                            <?php echo zen_draw_input_field('attributes_price_onetime', $attributes_value['attributes_price_onetime'], 'size="6" class="form-control-zc"'); ?>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                            <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
+                            <?php echo zen_draw_input_field('products_attributes_weight', $attributes_value['products_attributes_weight'], 'size="6" class="form-control"'); ?>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                            <?php echo zen_draw_label(TABLE_HEADING_OPT_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
+                            <?php echo zen_draw_input_field('products_options_sort_order', $attributes_value['products_options_sort_order'], 'size="4" class="form-control"'); ?>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                            <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_ONETIME, 'attributes_price_onetime', 'class="control-label"'); ?>
+                            <?php echo zen_draw_input_field('attributes_price_onetime', $attributes_value['attributes_price_onetime'], 'size="6" class="form-control"'); ?>
                         </div>
 
                         <?php if (ATTRIBUTES_ENABLED_PRICE_FACTOR == 'true') { ?>
-                          <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR . ' ' . TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR_OFFSET; ?><br />
-                              <?php echo zen_draw_input_field('attributes_price_factor', $attributes_value['attributes_price_factor'], 'size="6" class="form-control-zc"'); ?>
-                            &nbsp;&nbsp;
-                            <?php echo zen_draw_input_field('attributes_price_factor_offset', $attributes_value['attributes_price_factor_offset'], 'size="6" class="form-control-zc"'); ?>
+                          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR, 'attributes_price_factor', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_factor', $attributes_value['attributes_price_factor'], 'size="6" class="form-control"'); ?>
                           </div>
-                          <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR_ONETIME . ' ' . TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR_OFFSET_ONETIME; ?><br />
-                              <?php echo zen_draw_input_field('attributes_price_factor_onetime', $attributes_value['attributes_price_factor_onetime'], 'size="6" class="form-control-zc"'); ?>
-                            &nbsp;&nbsp;
-                            <?php echo zen_draw_input_field('attributes_price_factor_onetime_offset', $attributes_value['attributes_price_factor_onetime_offset'], 'size="6" class="form-control-zc"'); ?>
+                          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR_OFFSET, 'attributes_price_factor_offset', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_factor_offset', $attributes_value['attributes_price_factor_offset'], 'size="6" class="form-control"'); ?>
+                          </div>
+                          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR_ONETIME, 'attributes_price_factor_onetime', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_factor_onetime', $attributes_value['attributes_price_factor_onetime'], 'size="6" class="form-control"'); ?>
+                          </div>
+                          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR_OFFSET_ONETIME, 'attributes_price_factor_onetime_offset', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_factor_onetime_offset', $attributes_value['attributes_price_factor_onetime_offset'], 'size="6" class="form-control"'); ?>
                           </div>
 
                           <?php
@@ -1352,15 +1349,19 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                         } // ATTRIBUTES_ENABLED_PRICE_FACTOR
                         ?>
                       </div>
+                      <hr style="border: inherit; margin: 10px 0;">
                       <?php if (ATTRIBUTES_ENABLED_QTY_PRICES == 'true') { ?>
                         <div class="row">
-                          <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_ATTRIBUTES_QTY_PRICES; ?><br />
-                              <?php echo zen_draw_input_field('attributes_qty_prices', $attributes_value['attributes_qty_prices'], 'size="6" class="form-control-zc"'); ?>
+                          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_QTY_PRICES, '', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_qty_prices', $attributes_value['attributes_qty_prices'], 'size="6" class="form-control"'); ?>
                           </div>
-                          <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_ATTRIBUTES_QTY_PRICES_ONETIME; ?><br />
-                              <?php echo zen_draw_input_field('attributes_qty_prices_onetime', $attributes_value['attributes_qty_prices_onetime'], 'size="6" class="form-control-zc"'); ?>
+                          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_QTY_PRICES_ONETIME, '', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_qty_prices_onetime', $attributes_value['attributes_qty_prices_onetime'], 'size="6" class="form-control"'); ?>
                           </div>
                         </div>
+                        <hr style="border: inherit; margin: 10px 0;">
                         <?php
                       } else {
                         echo zen_draw_hidden_field('attributes_qty_prices', $attributes_value['attributes_qty_prices']);
@@ -1369,17 +1370,24 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       ?>
                       <?php if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { ?>
                         <div class="row">
-                          <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_ATTRIBUTES_PRICE_WORDS . ' ' . TABLE_HEADING_ATTRIBUTES_PRICE_WORDS_FREE; ?><br />
-                              <?php echo zen_draw_input_field('attributes_price_words', $attributes_value['attributes_price_words'], 'size="6" class="form-control-zc"'); ?>
-                            &nbsp;&nbsp;
-                            <?php echo zen_draw_input_field('attributes_price_words_free', $attributes_value['attributes_price_words_free'], 'size="6" class="form-control-zc"'); ?>
+                          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_WORDS, 'attributes_price_words', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_words', $attributes_value['attributes_price_words'], 'size="6" class="form-control"'); ?>
                           </div>
-                          <div class="col-sm-2 text-center"><?php echo TABLE_HEADING_ATTRIBUTES_PRICE_LETTERS . ' ' . TABLE_HEADING_ATTRIBUTES_PRICE_LETTERS_FREE; ?><br />
-                              <?php echo zen_draw_input_field('attributes_price_letters', $attributes_value['attributes_price_letters'], 'size="6" class="form-control-zc"'); ?>
-                            &nbsp;&nbsp;
-                            <?php echo zen_draw_input_field('attributes_price_letters_free', $attributes_value['attributes_price_letters_free'], 'size="6" class="form-control-zc"'); ?>
+                          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_WORDS_FREE, 'attributes_price_words_free', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_words_free', $attributes_value['attributes_price_words_free'], 'size="6" class="form-control"'); ?>
+                          </div>
+                          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_LETTERS, 'attributes_price_letters', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_letters', $attributes_value['attributes_price_letters'], 'size="6" class="form-control"'); ?>
+                          </div>
+                          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_LETTERS_FREE, 'attributes_price_letters_free', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('attributes_price_letters_free', $attributes_value['attributes_price_letters_free'], 'size="6" class="form-control"'); ?>
                           </div>
                         </div>
+                        <hr style="border: inherit; margin: 10px 0;">
                         <?php
                       } else {
                         echo zen_draw_hidden_field('attributes_price_words', $attributes_value['attributes_price_words']);
@@ -1456,6 +1464,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                             </div>
                           </div>
                         </div>
+                        <hr style="border: inherit; margin: 10px 0;">
                         <?php
                       } else {
                         echo zen_draw_hidden_field('attributes_previous_image', $attributes_value['attributes_image']);
@@ -1465,8 +1474,8 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       <?php
                       if (DOWNLOAD_ENABLED == 'true') {
                         $download_query_raw = "SELECT products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
-                                                     FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
-                                                     WHERE products_attributes_id='" . $attributes_value['products_attributes_id'] . "'";
+                                               FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
+                                               WHERE products_attributes_id='" . $attributes_value['products_attributes_id'] . "'";
                         $download = $db->Execute($download_query_raw);
                         if ($download->RecordCount() > 0) {
                           $products_attributes_filename = $download->fields['products_attributes_filename'];
@@ -1476,9 +1485,18 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                         ?>
                         <h5><?php echo TABLE_HEADING_DOWNLOAD; ?></h5>
                         <div class="row">
-                          <div class="col-sm-3 col-lg-2"><?php echo zen_draw_label(TABLE_TEXT_FILENAME, 'products_attributes_filename') . zen_draw_input_field('products_attributes_filename', $products_attributes_filename, zen_set_field_length(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename', 35) . 'class="form-control"'); ?></div>
-                          <div class="col-sm-3 col-lg-2"><?php echo zen_draw_label(TABLE_TEXT_MAX_DAYS, 'products_attributes_maxdays') . zen_draw_input_field('products_attributes_maxdays', $products_attributes_maxdays, 'size="5" class="form-control"'); ?></div>
-                          <div class="col-sm-3 col-lg-2"><?php echo zen_draw_label(TABLE_TEXT_MAX_COUNT, 'products_attributes_maxcount') . zen_draw_input_field('products_attributes_maxcount', $products_attributes_maxcount, 'size="5" class="form-control"'); ?></div>
+                          <div class="col-sm-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_TEXT_FILENAME, 'products_attributes_filename', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('products_attributes_filename', $products_attributes_filename, zen_set_field_length(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename', 35) . 'class="form-control"'); ?>
+                          </div>
+                          <div class="col-sm-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_TEXT_MAX_DAYS, 'products_attributes_maxdays', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('products_attributes_maxdays', $products_attributes_maxdays, 'size="5" class="form-control"'); ?>
+                          </div>
+                          <div class="col-sm-3 col-lg-2">
+                              <?php echo zen_draw_label(TABLE_TEXT_MAX_COUNT, 'products_attributes_maxcount', 'class="control-label"'); ?>
+                              <?php echo zen_draw_input_field('products_attributes_maxcount', $products_attributes_maxcount, 'size="5" class="form-control"'); ?>
+                          </div>
                         </div>
                         <?php
                       } else {
@@ -1807,6 +1825,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       } // ATTRIBUTES_ENABLED_PRICE_FACTOR
                       ?>
                     </div>
+                    <hr style="border: inherit; margin: 10px 0;">
                     <?php if (ATTRIBUTES_ENABLED_QTY_PRICES == 'true') { ?>
                       <div class="row">
                         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
@@ -1818,6 +1837,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                             <?php echo zen_draw_input_field('attributes_qty_prices_onetime', '', 'size="6" class="form-control"'); ?>
                         </div>
                       </div>
+                      <hr style="border: inherit; margin: 10px 0;">
                       <?php
                     } // ATTRIBUTES_ENABLED_QTY_PRICES
                     ?>
@@ -1840,6 +1860,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                             <?php echo zen_draw_input_field('attributes_price_letters_free', '', 'size="6" class="form-control"'); ?>
                         </div>
                       </div>
+                      <hr style="border: inherit; margin: 10px 0;">
                       <?php
                     } // ATTRIBUTES_ENABLED_TEXT_PRICES
                     ?>
@@ -1897,6 +1918,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                           </div>
                         </div>
                       </div>
+                      <hr style="border: inherit; margin: 10px 0;">
                       <?php
                     } // ATTRIBUTES_ENABLED_IMAGES
                     ?>
@@ -1916,7 +1938,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                             <?php echo zen_draw_input_field('products_attributes_maxdays', $products_attributes_maxdays, 'size="5" class="form-control"'); ?>
                         </div>
                         <div class="col-sm-3 col-lg-2">
-                            <?php echo zen_draw_label(TABLE_TEXT_MAX_COUNT, 'products_attributes_maxcount', 'class="control-label"') ?>
+                            <?php echo zen_draw_label(TABLE_TEXT_MAX_COUNT, 'products_attributes_maxcount', 'class="control-label"'); ?>
                             <?php echo zen_draw_input_field('products_attributes_maxcount', $products_attributes_maxcount, 'size="5" class="form-control"'); ?>
                         </div>
                       </div>
@@ -1929,6 +1951,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       <?php
                     } // end of DOWNLOAD_ENABLED section
                     ?>
+                      <hr style="border: inherit; margin: 10px 0;">
                     <div class="row">
                       <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                     </div>
