@@ -1321,8 +1321,10 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                             <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_ONETIME, 'attributes_price_onetime', 'class="control-label"'); ?>
                             <?php echo zen_draw_input_field('attributes_price_onetime', $attributes_value['attributes_price_onetime'], 'size="6" class="form-control"'); ?>
                         </div>
-
-                        <?php if (ATTRIBUTES_ENABLED_PRICE_FACTOR == 'true') { ?>
+                      </div>
+                      <hr style="border: inherit; margin: 10px 0;">
+                      <?php if (ATTRIBUTES_ENABLED_PRICE_FACTOR == 'true') { ?>
+                        <div class="row">
                           <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                               <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR, 'attributes_price_factor', 'class="control-label"'); ?>
                               <?php echo zen_draw_input_field('attributes_price_factor', $attributes_value['attributes_price_factor'], 'size="6" class="form-control"'); ?>
@@ -1339,17 +1341,16 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                               <?php echo zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR_OFFSET_ONETIME, 'attributes_price_factor_onetime_offset', 'class="control-label"'); ?>
                               <?php echo zen_draw_input_field('attributes_price_factor_onetime_offset', $attributes_value['attributes_price_factor_onetime_offset'], 'size="6" class="form-control"'); ?>
                           </div>
-
-                          <?php
-                        } else {
-                          echo zen_draw_hidden_field('attributes_price_factor', $attributes_value['attributes_price_factor']);
-                          echo zen_draw_hidden_field('attributes_price_factor_offset', $attributes_value['attributes_price_factor_offset']);
-                          echo zen_draw_hidden_field('attributes_price_factor_onetime', $attributes_value['attributes_price_factor_onetime']);
-                          echo zen_draw_hidden_field('attributes_price_factor_onetime_offset', $attributes_value['attributes_price_factor_onetime_offset']);
-                        } // ATTRIBUTES_ENABLED_PRICE_FACTOR
-                        ?>
-                      </div>
-                      <hr style="border: inherit; margin: 10px 0;">
+                        </div>
+                        <hr style="border: inherit; margin: 10px 0;">
+                        <?php
+                      } else {
+                        echo zen_draw_hidden_field('attributes_price_factor', $attributes_value['attributes_price_factor']);
+                        echo zen_draw_hidden_field('attributes_price_factor_offset', $attributes_value['attributes_price_factor_offset']);
+                        echo zen_draw_hidden_field('attributes_price_factor_onetime', $attributes_value['attributes_price_factor_onetime']);
+                        echo zen_draw_hidden_field('attributes_price_factor_onetime_offset', $attributes_value['attributes_price_factor_onetime_offset']);
+                      } // ATTRIBUTES_ENABLED_PRICE_FACTOR
+                      ?>
                       <?php if (ATTRIBUTES_ENABLED_QTY_PRICES == 'true') { ?>
                         <div class="row">
                           <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
@@ -1704,7 +1705,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
 
                 <?php
               }
-              if (($action != 'update_attribute' && $action != 'delete_product_attribute')) {
+              if (($action == '')) {
                 ?>
                 <tr>
                   <td colspan="10"><?php echo zen_black_line(); ?></td>
@@ -1951,7 +1952,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       <?php
                     } // end of DOWNLOAD_ENABLED section
                     ?>
-                      <hr style="border: inherit; margin: 10px 0;">
+                    <hr style="border: inherit; margin: 10px 0;">
                     <div class="row">
                       <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                     </div>
