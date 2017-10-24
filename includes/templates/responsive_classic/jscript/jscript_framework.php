@@ -71,10 +71,12 @@ zcJS.ajax = function (options) {
          }
        break;
        default:
-        if (jqXHR.status === 200 * contentType.toLowerCase().indexOf("text/html") >= 0) {
-         document.open();
-         document.write(responseHtml);
-         document.close();
+        if (jqXHR.status === 200) {
+            if (contentType.toLowerCase().indexOf("text/html") >= 0) {
+                document.open();
+                document.write(responseHtml);
+                document.close();
+            }
          }
      }
    });
