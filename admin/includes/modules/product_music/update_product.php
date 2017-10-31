@@ -55,7 +55,7 @@
 
     if ($action == 'insert_product') {
       $sql_data_array['products_date_added'] = 'now()';
-      $sql_data_array['master_categories_id'] = (int)$current_category_id);
+      $sql_data_array['master_categories_id'] = (int)$current_category_id;
 
       zen_db_perform(TABLE_PRODUCTS, $sql_data_array);
       $products_id = zen_db_insert_id();
