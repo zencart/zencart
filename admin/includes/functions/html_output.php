@@ -95,7 +95,6 @@
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
   function zen_image_submit($image, $alt = '', $parameters = '') {
-    global $language;
 
     $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" border="0" alt="' . zen_output_string($alt) . '"';
 
@@ -123,7 +122,6 @@
 ////
 // Output a function button in the selected language
   function zen_image_button($image, $alt = '', $params = '') {
-    global $language;
 
     return zen_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $params);
   }
