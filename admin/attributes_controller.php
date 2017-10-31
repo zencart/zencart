@@ -1175,7 +1175,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                   <tr>
                     <td colspan="10">
                       <div class="row">
-                        <div class="col-xs-6 col-sm-6"><h4><?php echo PRODUCTS_ATTRIBUTES_EDITING; ?></h4></div>
+                        <div class="col-xs-6 col-sm-6"><h3><?php echo PRODUCTS_ATTRIBUTES_EDITING; ?></h3></div>
                         <div class="col-xs-6 col-sm-6 text-right">
                           <?php echo TEXT_SAVE_CHANGES; ?>&nbsp;
                           <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
@@ -1221,7 +1221,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       </div>
                       <hr style="border: inherit; margin: 10px 0;">
                       <!-- bof: Edit Prices -->
-                      <h5><?php echo TEXT_PRICES_AND_WEIGHTS; ?></h5>
+                      <h4><?php echo TEXT_PRICES_AND_WEIGHTS; ?></h4>
                       <div class="row">
                           <?php
 // set radio values attributes_display_only
@@ -1398,7 +1398,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       } // ATTRIBUTES_ENABLED_TEXT_PRICES
                       ?>
                       <!-- eof: Edit Prices -->
-                      <h5><?php echo TEXT_ATTRIBUTES_FLAGS; ?></h5>
+                      <h4><?php echo TEXT_ATTRIBUTES_FLAGS; ?></h4>
                       <div class="row row-eq-height">
                         <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="background-color: #ff0;">
                           <strong><?php echo TEXT_ATTRIBUTES_DISPLAY_ONLY; ?></strong><br/>
@@ -1436,7 +1436,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                           $default_directory = 'attributes/';
                         }
                         ?>
-                        <h5><?php echo TEXT_ATTRIBUTES_IMAGE; ?></h5>
+                        <h4><?php echo TEXT_ATTRIBUTES_IMAGE; ?></h4>
                         <div class="row">
                           <div class="col-sm-2">
                               <?php echo ($attributes_value['attributes_image'] != '' ? zen_image(DIR_WS_CATALOG_IMAGES . $attributes_value['attributes_image']) . '<br>' . $attributes_value['attributes_image'] : ''); ?>
@@ -1484,7 +1484,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                           $products_attributes_maxcount = $download->fields['products_attributes_maxcount'];
                         }
                         ?>
-                        <h5><?php echo TABLE_HEADING_DOWNLOAD; ?></h5>
+                        <h4><?php echo TABLE_HEADING_DOWNLOAD; ?></h4>
                         <div class="row">
                           <div class="col-sm-3 col-lg-2">
                               <?php echo zen_draw_label(TABLE_TEXT_FILENAME, 'products_attributes_filename', 'class="control-label"'); ?>
@@ -1715,7 +1715,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                 <tr>
                   <td colspan="10">
                     <div class="row">
-                      <div class="col-xs-6 col-sm-6"><h4><?php echo PRODUCTS_ATTRIBUTES_ADDING; ?></h4></div>
+                      <div class="col-xs-6 col-sm-6"><h3><?php echo PRODUCTS_ATTRIBUTES_ADDING; ?></h3></div>
                       <div class="col-xs-6 col-sm-6 text-right">
                         <?php echo TEXT_ATTRIBUTES_INSERT_INFO; ?>&nbsp;
                         <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
@@ -1751,7 +1751,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       </div>
                     </div>
                     <!-- bof: Edit Prices -->
-                    <h5><?php echo TEXT_PRICES_AND_WEIGHTS; ?></h5>
+                    <h4><?php echo TEXT_PRICES_AND_WEIGHTS; ?></h4>
                     <div class="row">
                         <?php
                         $chk_defaults = $db->Execute("SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id = " . $products_filter);
@@ -1866,7 +1866,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     } // ATTRIBUTES_ENABLED_TEXT_PRICES
                     ?>
                     <!-- eof: Edit Prices -->
-                    <h5><?php echo TEXT_ATTRIBUTES_FLAGS; ?></h5>
+                    <h4><?php echo TEXT_ATTRIBUTES_FLAGS; ?></h4>
                     <div class="row row-eq-height">
                       <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="background-color: #ff0;">
                         <strong><?php echo TEXT_ATTRIBUTES_DISPLAY_ONLY; ?></strong><br/>
@@ -1900,7 +1900,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
                       $default_directory = 'attributes/';
                       ?>
-                      <h5><?php echo TEXT_ATTRIBUTES_IMAGE; ?></h5>
+                      <h4><?php echo TEXT_ATTRIBUTES_IMAGE; ?></h4>
                       <div class="row">
                         <div class="col-sm-2">
                         </div>
@@ -1928,7 +1928,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                       $products_attributes_maxdays = DOWNLOAD_MAX_DAYS;
                       $products_attributes_maxcount = DOWNLOAD_MAX_COUNT;
                       ?>
-                      <h5><?php echo TABLE_HEADING_DOWNLOAD; ?></h5>
+                      <h4><?php echo TABLE_HEADING_DOWNLOAD; ?></h4>
                       <div class="row">
                         <div class="col-sm-3 col-lg-2">
                             <?php echo zen_draw_label(TABLE_TEXT_FILENAME, 'products_attributes_filename', 'class="control-label"'); ?>
