@@ -1858,10 +1858,16 @@ class shoppingCart extends base {
           }
         }
       }
-      if (!is_numeric($_POST['cart_quantity']) || $_POST['cart_quantity'] < 0) {
+      if (!is_numeric($_POST['cart_quantity']) || $_POST['cart_quantity'] <= 0) {
         // adjust quantity when not a value
-        $chk_link = '<a href="' . zen_href_link(zen_get_info_page($_POST['products_id']), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($_POST['products_id']))) . '&products_id=' . $_POST['products_id']) . '">' . zen_get_products_name($_POST['products_id']) . '</a>';
-        $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity']), 'caution');
+        // If use an extra_cart_actions file to prevent processing by this function,
+        //   then be sure to set $_POST['shopping_cart_zero_or_less'] to a value other than true
+        //   to display success on add to cart and not display the below message.
+        if (!isset($_POST['shopping_cart_zero_or_less'])) {
+          $chk_link = '<a href="' . zen_href_link(zen_get_info_page($_POST['products_id']), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($_POST['products_id']))) . '&products_id=' . $_POST['products_id']) . '">' . zen_get_products_name($_POST['products_id']) . '</a>';
+          $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity']), 'caution');
+          $_POST['shopping_cart_zero_or_less'] = true;
+        }
         $_POST['cart_quantity'] = 0;
       }
       // verify qty to add
@@ -1966,7 +1972,9 @@ class shoppingCart extends base {
       // no errors
 // display message if all is good and not on shopping_cart page
       if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {
-        $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
+        if (!isset($_POST['shopping_cart_zero_or_less']) || $_POST['shopping_cart_zero_or_less'] !== true) {
+          $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
+        }
         zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
       } else {
         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
