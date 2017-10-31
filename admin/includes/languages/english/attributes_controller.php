@@ -86,7 +86,7 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTES_IMAGE','Attributes Image Swatch:');
   define('TEXT_ATTRIBUTES_IMAGE_DIR','Attributes Image Directory:');
 
-  define('TEXT_ATTRIBUTES_FLAGS','Attribute<br />Flags:');
+  define('TEXT_ATTRIBUTES_FLAGS','Attribute Flags:');
   define('TEXT_ATTRIBUTES_DISPLAY_ONLY', 'Used For<br />Display Purposes Only:');
   define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free<br />When Product is Free:');
   define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute<br />to be Marked Selected:');
@@ -169,3 +169,16 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_INFO_PRODUCTS_OPTION_ID', '<strong>ID#</strong>');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
   
+  define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');
+  define('TEXT_UPDATE_DEFAULTE_SORT_ORDER', 'Update sort order to default');
+  define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
+  define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
+  define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');
+  define('TEXT_SAVE_PRODUCT_FIRST', 'Please save the new product first. You need a product_id before you can add attributes');
+  define('TEXT_ATTRIBUTES_FLAGS', 'Attribute Flags:');
+  define('TEXT_ATTRIBUTES_DISPLAY_ONLY', 'Used For Display Purposes Only:');
+  define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free When Product is Free:');
+  define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute to be Marked Selected:');
+  define('TEXT_ATTRIBUTE_IS_DISCOUNTED', 'Apply Discounts Used by Product Special/Sale:');
+  define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED', 'Include in Base Price When Priced by Attributes');
+  define('TEXT_ATTRIBUTES_REQUIRED', 'Attribute Required for Text:');
