@@ -180,5 +180,5 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free When Product is Free:');
   define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute to be Marked Selected:');
   define('TEXT_ATTRIBUTE_IS_DISCOUNTED', 'Apply Discounts Used by Product Special/Sale:');
-  define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED', 'Include in Base Pric When Priced by Attributes');
+  define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED', 'Include in Base Price When Priced by Attributes');
   define('TEXT_ATTRIBUTES_REQUIRED', 'Attribute Required for Text:');
