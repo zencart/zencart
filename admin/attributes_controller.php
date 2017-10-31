@@ -538,10 +538,10 @@ if (zen_not_null($action)) {
     case 'delete_all_attributes':
       $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_ALL', array('pID' => $_POST['products_filter']));
 
-      zen_delete_products_attributes($_POST['products_filter']);
-      $messageStack->add_session(SUCCESS_ATTRIBUTES_DELETED . ' ID#' . $products_filter, 'success');
       $action = '';
       $products_filter = (int)$_POST['products_filter'];
+      zen_delete_products_attributes($_POST['products_filter']);
+      $messageStack->add_session(SUCCESS_ATTRIBUTES_DELETED . ' ID#' . $products_filter, 'success');
 
       // reset products_price_sorter for searches etc.
       zen_update_products_price_sorter($products_filter);
