@@ -8,6 +8,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 3162 2006-03-11 01:39:16Z drbyte $
  */
+// This should be first line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_NEWSLETTERS');
+
 if (!$_SESSION['customer_id']) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -41,6 +44,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $db->Execute($sql);
   }
 
+  $zco_notifier->notify('NOTIFY_HEADER_ACCOUNT_NEWSLETTER_UPDATED', $newsletter_general);
+
   $messageStack->add_session('account', SUCCESS_NEWSLETTER_UPDATED, 'success');
 
   zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
@@ -48,4 +53,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2);
-?>
+
+// This should be last line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_END_ACCOUNT_NEWSLETTERS');
+
