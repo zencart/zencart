@@ -108,7 +108,9 @@ function zen_delete_user($id)
     $db->Execute($sql);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), 'warning');
-    zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), STORE_NAME, EMAIL_FROM, array(), 'admin_settings_changed');
+    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname); 
+    $block = array('EMAIL_MESSAGE_HTML' => $email_text); 
+    zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
   }
 }
 
@@ -173,7 +175,9 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
     $newname = preg_replace('/[^\d\w._-]/', '*', $name);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
-    zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), STORE_NAME, EMAIL_FROM, array(), 'admin_settings_changed');
+    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname); 
+    $block = array('EMAIL_MESSAGE_HTML' => $email_text); 
+    zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
   }
   return $errors;
 }
