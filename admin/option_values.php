@@ -163,10 +163,11 @@ switch ($_GET['action']) {
               foreach ($rows as $row) {
                 ?>
                 <tr>
-                  <td class="dataTableContent text-right"><?php echo $row['products_options_values_id']; ?></td>
+                  <td class="dataTableContent"><?php echo $row['products_options_values_id']; ?></td>
                   <td class="dataTableContent"><?php echo $row['products_options_values_name']; ?></td>
-                  <td class="dataTableContent text-center">
-                    <?php echo zen_draw_input_field('options_values_new_sort_order[' . $row['products_options_values_id'] . ']', $row['products_options_values_sort_order'], 'size="4" class="form-control"'); ?></td>
+                  <td class="dataTableContent">
+                    <?php echo zen_draw_input_field('options_values_new_sort_order[' . $row['products_options_values_id'] . ']', $row['products_options_values_sort_order'], 'size="4" class="form-control"'); ?>
+                  </td>
                 </tr>
                 <?php
               }
@@ -183,13 +184,13 @@ switch ($_GET['action']) {
                 <?php
                 if ($option_values_exist == true) {
                   ?>
-                <td colspan="2" class="dataTableHeadingContent text-center">
+                <td colspan="2" class="dataTableHeadingContent text-right">
                   <button type="submit" class="btn btn-primary"><?php echo TEXT_UPDATE_SUBMIT; ?></button>
                 </td>
                 <?php
               }
               ?>
-              <td colspan="<?php echo ($option_values_exist == true ? '1' : '3'); ?>" class="dataTableHeadingContent text-center">
+              <td <?php echo ($option_values_exist == true ? '' : 'colspan="3"'); ?> class="dataTableHeadingContent text-left">
                 <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
               </td>
             </tr>
@@ -198,77 +199,78 @@ switch ($_GET['action']) {
           <?php
         } // which table
         ?>
-        <?php
+
+      </div>
+      <?php
 //////////////////////////////////////////
 // BOF: Update by Product, Category or All products
 // only show when not updating Option Value Sort Order
-        if (empty($_GET['options_id'])) {
+      if (empty($_GET['options_id'])) {
 
 // select from all product with attributes
-          ?>
-          <div class="row">
-              <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
-          </div>
+        ?>
+        <div class="row">
+            <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
+        </div>
 
-          <div class="row">
-              <?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS; ?>
-          </div>
+        <div class="row">
+            <?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS; ?>
+        </div>
 
-          <div class="row">
-              <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
+        <div class="row">
+            <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
+        </div>
+        <div class="row">
+            <?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS_PRODUCTS; ?>
+        </div>
+        <div class="row">
+            <?php echo zen_draw_form('update_product_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_product', 'post', 'class="form-horizontal"'); ?>
+            <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
+          <div class="col-sm-6"><?php echo zen_draw_products_pull_down_attributes('products_update_id', 'class="form-control"'); ?></div>
+          <div class="col-sm-2">
+            <button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button>
           </div>
-          <div class="row">
-              <?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS_PRODUCTS; ?>
-          </div>
-          <div class="row">
-              <?php echo zen_draw_form('update_product_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_product', 'post', 'class="form-horizontal"'); ?>
-              <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
-            <div class="col-sm-6"><?php echo zen_draw_products_pull_down_attributes('products_update_id', 'class="form-control"'); ?></div>
-            <div class="col-sm-2">
-              <button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button>
-            </div>
-            <?php echo'</form>'; ?>
-          </div>
+          <?php echo'</form>'; ?>
+        </div>
 
-          <?php
+        <?php
 // select from all categories with products with attributes
-          ?>
-          <div class="row">
-              <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
-          </div>
-          <div class="row">
-              <?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS_CATEGORIES; ?>
-          </div>
-          <div class="row">
-              <?php echo zen_draw_form('update_categories_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_categories_attributes', 'post', 'class="form-horizontal"'); ?>
-              <?php echo zen_draw_hidden_field('categories_update_id', $_GET['categories_update_id']); ?>
-            <div class="col-sm-3"><?php echo zen_draw_products_pull_down_categories_attributes('categories_update_id', 'class="form-control"'); ?></div>
-            <div class="col-sm-2"><button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button></div>
+        ?>
+        <div class="row">
+            <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
+        </div>
+        <div class="row">
+            <?php echo TEXT_UPDATE_SORT_ORDERS_OPTIONS_CATEGORIES; ?>
+        </div>
+        <div class="row">
+            <?php echo zen_draw_form('update_categories_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_categories_attributes', 'post', 'class="form-horizontal"'); ?>
+            <?php echo zen_draw_hidden_field('categories_update_id', $_GET['categories_update_id']); ?>
+          <div class="col-sm-3"><?php echo zen_draw_products_pull_down_categories_attributes('categories_update_id', 'class="form-control"'); ?></div>
+          <div class="col-sm-2"><button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button></div>
+          <?php echo '</form>'; ?>
+        </div>
+
+        <?php
+// select the catalog and update all products with attributes
+        ?>
+        <div class="row">
+            <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
+        </div>
+        <div class="row">
+          <div class="col-sm-3"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES; ?></div>
+          <div class="col-sm-2">
+              <?php echo zen_draw_form('update_all_sort', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_all_products_attributes_sort_order', 'post', 'class="form-horizontal"') ?>
+              <?php echo zen_draw_hidden_field('confirm', 'y'); ?>
+            <button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button>
             <?php echo '</form>'; ?>
           </div>
-
-          <?php
-// select the catalog and update all products with attributes
-          ?>
-          <div class="row">
-              <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
-          </div>
-          <div class="row">
-            <div class="col-sm-3"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES; ?></div>
-            <div class="col-sm-2">
-                <?php echo zen_draw_form('update_all_sort', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_all_products_attributes_sort_order', 'post', 'class="form-horizontal"') ?>
-                <?php echo zen_draw_hidden_field('confirm', 'y'); ?>
-              <button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button>
-              <?php echo '</form>'; ?>
-            </div>
-          </div>
-          <?php
-        }
+        </div>
+        <?php
+      }
 // EOF: Update by Product, Category or All products
 //////////////////////////////////////////
-        ?>
-        <!-- body_text_eof //-->
-      </div>
+      ?>
+      <!-- body_text_eof //-->
     </div>
     <!-- body_eof //-->
     <!-- footer //-->
