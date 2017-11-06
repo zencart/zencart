@@ -100,7 +100,7 @@ if ($_GET['action'] == "update_sort_order") {
                   ?>
                 <th class="dataTableHeadingContent">&nbsp;</th>
                 <th class="dataTableHeadingContent"><?php echo TEXT_CURRENT_NAME; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TEXT_SORT_ORDER; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TEXT_SORT_ORDER; ?></th>
               <?php } ?>
               <th class="dataTableHeadingContent">&nbsp;</th>
               <th class="dataTableHeadingContent"><?php echo TEXT_OPTION_ID; ?></th>
@@ -142,10 +142,10 @@ if ($_GET['action'] == "update_sort_order") {
                   <td class="dataTableContent text-right"><?php echo zen_get_option_name_language_sort_order($row['products_options_id'], $_SESSION['languages_id']); ?></td>
                 <?php } ?>
                 <td class="dataTableContent text-center"><?php echo zen_get_language_icon($_GET['lng_id']); ?></td>
-                <td class="dataTableContent text-right"><?php echo $row['products_options_id']; ?></td>
-                <td class="dataTableContent text-center"><?php echo $the_attributes_type; ?></td>
+                <td class="dataTableContent"><?php echo $row['products_options_id']; ?></td>
+                <td class="dataTableContent"><?php echo $the_attributes_type; ?></td>
                 <td class="dataTableContent"><?php echo $row['products_options_name']; ?></td>
-                <td class="dataTableContent text-center">
+                <td class="dataTableContent">
                     <?php echo zen_draw_input_field('products_options_sort_order[' . $row['products_options_id'] . ']', $row['products_options_sort_order'], 'size="4" class="form-control"'); ?>
                 </td>
               </tr>
@@ -153,7 +153,7 @@ if ($_GET['action'] == "update_sort_order") {
             }
             ?>
             <tr class="dataTableHeadingRow">
-              <td colspan="<?php echo ($_GET['lng_id'] == $_SESSION['languages_id'] ? '1' : '4'); ?>" class="dataTableHeadingContent">&nbsp;</td>
+              <td <?php echo ($_GET['lng_id'] == $_SESSION['languages_id'] ? '' : 'colspan="4"'); ?> class="dataTableHeadingContent">&nbsp;</td>
               <td colspan="4" class="dataTableHeadingContent text-center align-middle">
                 <button type="submit" class="btn btn-primary">Update Sort Order</button>
               </td>
