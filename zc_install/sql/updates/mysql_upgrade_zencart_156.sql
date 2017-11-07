@@ -57,6 +57,9 @@ ALTER TABLE coupons_description MODIFY coupon_name VARCHAR(64) NOT NULL DEFAULT 
 # Add fields for easier order reconstruction/edit
 ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
 ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE orders MODIFY order_total decimal(15,4) default NULL;
+ALTER TABLE orders MODIFY order_tax decimal(15,4) default NULL;
+
 ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
 ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '0';
 ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) NOT NULL default '0';
