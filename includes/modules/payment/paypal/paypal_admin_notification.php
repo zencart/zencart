@@ -16,7 +16,7 @@
   }
 
 // display all paypal status fields (in admin Orders page):
-          $output = '<td><table>'."\n";
+          $output = '<table>'."\n";
           $output .= '<tr style="background-color : #cccccc; border-style : dotted;">'."\n";
 
           $output .= '<td valign="top"><table>'."\n";
@@ -199,4 +199,4 @@
           $output .= '</table></td>'."\n";
         }
           $output .= '</tr>'."\n";
-          $output .='</table></td>'."\n";
+          $output .='</table>'."\n";
