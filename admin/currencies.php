@@ -61,33 +61,27 @@ if (zen_not_null($action)) {
       zen_record_admin_activity('Currency code ' . $code . ' added/updated.', 'info');
 
       if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
-        $db->Execute("update " . TABLE_CONFIGURATION . "
-                      set configuration_value = '" . zen_db_input($code) . "'
-                      where configuration_key = 'DEFAULT_CURRENCY'");
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
+                      SET configuration_value = '" . zen_db_input($code) . "'
+                      WHERE configuration_key = 'DEFAULT_CURRENCY'");
         zen_record_admin_activity('Default currency code changed to ' . $code, 'info');
       }
 
       zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id));
       break;
     case 'deleteconfirm':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action'] = '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
-      }
       $currencies_id = zen_db_prepare_input($_POST['cID']);
 
-      $currency = $db->Execute("select currencies_id
-                                from " . TABLE_CURRENCIES . "
-                                where code = '" . zen_db_input(DEFAULT_CURRENCY) . "'");
+      $currency = $db->Execute("SELECT currencies_id
+                                FROM " . TABLE_CURRENCIES . "
+                                WHERE code = '" . zen_db_input(DEFAULT_CURRENCY) . "'");
       if ($currency->fields['currencies_id'] == $currencies_id) {
-        $db->Execute("update " . TABLE_CONFIGURATION . "
-                      set configuration_value = ''
-                      where configuration_key = 'DEFAULT_CURRENCY'");
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
+                      SET configuration_value = ''
+                      WHERE configuration_key = 'DEFAULT_CURRENCY'");
       }
-      $db->Execute("delete from " . TABLE_CURRENCIES . "
-                    where currencies_id = " . (int)$currencies_id);
+      $db->Execute("DELETE FROM " . TABLE_CURRENCIES . "
+                    WHERE currencies_id = " . (int)$currencies_id);
 
       zen_record_admin_activity('Deleted currency with currencies_id of ' . $currencies_id, 'notice');
       zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
@@ -105,9 +99,9 @@ if (zen_not_null($action)) {
       }
       $currencies_id = zen_db_prepare_input($_GET['cID']);
 
-      $currency = $db->Execute("select code
-                                from " . TABLE_CURRENCIES . "
-                                where currencies_id = " . (int)$currencies_id);
+      $currency = $db->Execute("SELECT code
+                                FROM " . TABLE_CURRENCIES . "
+                                WHERE currencies_id = " . (int)$currencies_id);
 
       $remove_currency = true;
       if ($currency->fields['code'] == DEFAULT_CURRENCY) {
