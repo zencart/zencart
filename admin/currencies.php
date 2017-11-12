@@ -285,10 +285,10 @@ if (zen_not_null($action)) {
             <tr>
               <td><?php
                   if (CURRENCY_SERVER_PRIMARY) {
-                    echo '<a href="' . zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update_currencies') . '">' . zen_image_button('button_update_currencies.gif', IMAGE_UPDATE_CURRENCIES) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update_currencies') . '" class="btn btn-primary" role="button">' . zen_image_button('button_update_currencies.gif', IMAGE_UPDATE_CURRENCIES) . '</a>';
                   }
                   ?></td>
-              <td class="text-right"><?php echo '<a href="' . zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new') . '">' . zen_image_button('button_new_currency.gif', IMAGE_NEW_CURRENCY) . '</a>'; ?></td>
+              <td class="text-right"><a href="<?php echo zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_CURRENCY; ?></a></td>
             </tr>
             <?php
           }
