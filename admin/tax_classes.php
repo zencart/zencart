@@ -109,29 +109,28 @@ if (zen_not_null($action)) {
                                       order by tax_class_title";
                 $classes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $classes_query_raw, $classes_query_numrows);
                 $classes = $db->Execute($classes_query_raw);
-                while (!$classes->EOF) {
-                  if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $classes->fields['tax_class_id']))) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
-                    $tcInfo = new objectInfo($classes->fields);
+                foreach ($classes as $class) {
+                  if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $class['tax_class_id']))) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
+                    $tcInfo = new objectInfo($class);
                   }
 
-                  if (isset($tcInfo) && is_object($tcInfo) && ($classes->fields['tax_class_id'] == $tcInfo->tax_class_id)) {
+                  if (isset($tcInfo) && is_object($tcInfo) && ($class['tax_class_id'] == $tcInfo->tax_class_id)) {
                     echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '\'" role="button">' . "\n";
                   } else {
-                    echo'              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $classes->fields['tax_class_id']) . '\'" role="button">' . "\n";
+                    echo'              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $class['tax_class_id']) . '\'" role="button">' . "\n";
                   }
                   ?>
-              <td class="dataTableContent"><?php echo $classes->fields['tax_class_id']; ?></td>
-              <td class="dataTableContent"><?php echo $classes->fields['tax_class_title']; ?></td>
+              <td class="dataTableContent"><?php echo $class['tax_class_id']; ?></td>
+              <td class="dataTableContent"><?php echo $class['tax_class_title']; ?></td>
               <td class="dataTableContent" align="right"><?php
-                  if (isset($tcInfo) && is_object($tcInfo) && ($classes->fields['tax_class_id'] == $tcInfo->tax_class_id)) {
+                  if (isset($tcInfo) && is_object($tcInfo) && ($class['tax_class_id'] == $tcInfo->tax_class_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $classes->fields['tax_class_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $class['tax_class_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                   }
                   ?>&nbsp;</td>
               </tr>
               <?php
-              $classes->MoveNext();
             }
             ?>
 
