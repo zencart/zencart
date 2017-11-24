@@ -609,24 +609,30 @@
       return $default_zone;
     }
   }
-
-  function zen_get_uprid($prid, $params) {
+  
+function zen_get_uprid($prid, $params) 
+{
     $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-      while (list($option, $value) = each($params)) {
-        $uprid = $uprid . '{' . $option . '}' . $value;
-      }
+    if (is_array($params) && strpos($prid, ':') === false) {
+        foreach ($params as $option => $value) {
+            if (is_array($value)) {
+                foreach ($value as $opt => $val) {
+                    $uprid .= ('{' . $option . '}' . trim($opt));
+                }
+            } else {
+                $uprid .= ('{' . $option . '}' . trim($value));
+            }
+        }
+        $uprid = $prid . ':' . md5($uprid);
     }
-
     return $uprid;
-  }
+}
 
-
-  function zen_get_prid($uprid) {
-    $pieces = explode('{', $uprid);
-
+function zen_get_prid($uprid) 
+{
+    $pieces = explode(':', $uprid);
     return $pieces[0];
-  }
+}
 
 
   function zen_get_languages() {
