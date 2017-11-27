@@ -572,29 +572,23 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 ////
 // Return a product ID with attributes
-  function zen_get_uprid($prid, $params) {
-//print_r($params);
+function zen_get_uprid($prid, $params) 
+{
     $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, ':')) ) {
-      while (list($option, $value) = each($params)) {
-        if (is_array($value)) {
-          while (list($opt, $val) = each($value)) {
-            $uprid = $uprid . '{' . $option . '}' . trim($opt);
-          }
-        } else {
-        //CLR 030714 Add processing around $value. This is needed for text attributes.
-            $uprid = $uprid . '{' . $option . '}' . trim($value);
+    if (is_array($params) && strpos($prid, ':') === false) {
+        foreach ($params as $option => $value) {
+            if (is_array($value)) {
+                foreach ($value as $opt => $val) {
+                    $uprid .= ('{' . $option . '}' . trim($opt));
+                }
+            } else {
+                $uprid .= ('{' . $option . '}' . trim($value));
+            }
         }
-      }      //CLR 030228 Add else stmt to process product ids passed in by other routines.
-      $md_uprid = '';
-
-      $md_uprid = md5($uprid);
-      return $prid . ':' . $md_uprid;
-    } else {
-      return $prid;
+        $uprid = $prid . ':' . md5($uprid);
     }
-  }
-
+    return $uprid;
+}
 
 ////
 // Return a product ID from a product ID with attributes
