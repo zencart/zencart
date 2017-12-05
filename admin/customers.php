@@ -569,7 +569,7 @@ if (zen_not_null($action)) {
             if (ACCOUNT_GENDER == 'true') {
               ?>
             <div class="form-group">
-              <?php echo zen_draw_label(ENTRY_GENDER, 'customers_gender', 'class="col-sm-3 control-label"'); ?></td>
+              <?php echo zen_draw_label(ENTRY_GENDER, 'customers_gender', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9">
                   <?php
                   if ($error == true && $entry_gender_error == true) {
@@ -798,7 +798,7 @@ if (zen_not_null($action)) {
                 ?></div>
           </div>
           <div class="form-group">
-            <?php echo zen_draw_label(ENTRY_CITY, 'suburb', 'class="col-sm-3 control-label"'); ?></td>
+            <?php echo zen_draw_label(ENTRY_CITY, 'suburb', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9">
                 <?php
                 if ($error == true) {
