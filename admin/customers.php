@@ -46,26 +46,6 @@ if (zen_not_null($action)) {
           'format_id' => $format_id,
           'address' => $address);
       }
-      ?>
-      <fieldset>
-        <legend><?php echo ADDRESS_BOOK_TITLE; ?></legend>
-        <div class="alert forward"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
-        <br class="clearBoth" />
-        <?php
-        /**
-         * Used to loop thru and display address book entries
-         */
-        foreach ($addressArray as $addresses) {
-          ?>
-          <h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']); ?><?php if ($addresses['address_book_id'] == zen_get_customers_address_primary($_GET['cID'])) echo '&nbsp;' . PRIMARY_ADDRESS; ?></h3>
-          <address><?php echo zen_address_format($addresses['format_id'], $addresses['address'], true, ' ', '<br />'); ?></address>
-
-          <br class="clearBoth" />
-        <?php } // end list ?>
-        <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses_done' . '&cID=' . $_GET['cID'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?>
-      </fieldset>
-      <?php
-      die();
       break;
     case 'list_addresses_done':
       $action = '';
@@ -1003,6 +983,28 @@ if (zen_not_null($action)) {
           <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button> <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('action'))); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php echo '</form>'; ?>
+        <?php
+      } elseif ($action == 'list_addresses') {
+        ?>
+        <div class="row">
+          <fieldset>
+            <legend><?php echo ADDRESS_BOOK_TITLE; ?></legend>
+            <div class="alert forward"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
+            <br class="clearBoth" />
+            <?php
+            /**
+             * Used to loop thru and display address book entries
+             */
+            foreach ($addressArray as $addresses) {
+              ?>
+              <h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']); ?><?php if ($addresses['address_book_id'] == zen_get_customers_address_primary($_GET['cID'])) echo '&nbsp;' . PRIMARY_ADDRESS; ?></h3>
+              <address><?php echo zen_address_format($addresses['format_id'], $addresses['address'], true, ' ', '<br />'); ?></address>
+
+              <br class="clearBoth">
+            <?php } // end list ?>
+            <div class="buttonRow forward"><a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses_done' . '&cID=' . $_GET['cID'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL'); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
+          </fieldset>
+        </div>
         <?php
       } else {
         ?>
