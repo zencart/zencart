@@ -54,10 +54,12 @@ if (zen_not_null($action)) {
     case 'status':
       if (isset($_POST['current']) && is_numeric($_POST['current'])) {
         if ($_POST['current'] == CUSTOMERS_APPROVAL_AUTHORIZATION) {
-          $sql = "update " . TABLE_CUSTOMERS . " set customers_authorization=0 where customers_id='" . (int)$customers_id . "'";
-          $custinfo = $db->Execute("select customers_email_address, customers_firstname, customers_lastname
-                                      from " . TABLE_CUSTOMERS . "
-                                      where customers_id = '" . (int)$customers_id . "'");
+          $sql = "UPDATE " . TABLE_CUSTOMERS . "
+                  SET customers_authorization = 0
+                  WHERE customers_id = " . (int)$customers_id;
+          $custinfo = $db->Execute("SELECT customers_email_address, customers_firstname, customers_lastname
+                                    FROM " . TABLE_CUSTOMERS . "
+                                    WHERE customers_id = " . (int)$customers_id);
           if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current'] > 0 && $custinfo->RecordCount() > 0) {
             $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
             $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
@@ -65,7 +67,9 @@ if (zen_not_null($action)) {
           }
           zen_record_admin_activity('Customer-approval-authorization set customer auth status to 0 for customer ID ' . (int)$customers_id, 'info');
         } else {
-          $sql = "update " . TABLE_CUSTOMERS . " set customers_authorization='" . CUSTOMERS_APPROVAL_AUTHORIZATION . "' where customers_id='" . (int)$customers_id . "'";
+          $sql = "UPDATE " . TABLE_CUSTOMERS . "
+                  SET customers_authorization = '" . CUSTOMERS_APPROVAL_AUTHORIZATION . "'
+                  WHERE customers_id = " . (int)$customers_id;
           zen_record_admin_activity('Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . (int)$customers_id, 'info');
         }
         $db->Execute($sql);
@@ -186,16 +190,16 @@ if (zen_not_null($action)) {
         } else {
           $zone_id = 0;
           $entry_state_error = false;
-          $check_value = $db->Execute("select count(*) as total
-                                         from " . TABLE_ZONES . "
-                                         where zone_country_id = '" . (int)$entry_country_id . "'");
+          $check_value = $db->Execute("SELECT COUNT(*) AS total
+                                       FROM " . TABLE_ZONES . "
+                                       WHERE zone_country_id = " . (int)$entry_country_id);
 
           $entry_state_has_zones = ($check_value->fields['total'] > 0);
           if ($entry_state_has_zones == true) {
-            $zone_query = $db->Execute("select zone_id
-                                          from " . TABLE_ZONES . "
-                                          where zone_country_id = '" . (int)$entry_country_id . "'
-                                          and zone_name = '" . zen_db_input($entry_state) . "'");
+            $zone_query = $db->Execute("SELECT zone_id
+                                        FROM " . TABLE_ZONES . "
+                                        WHERE zone_country_id = " . (int)$entry_country_id . "
+                                        AND zone_name = '" . zen_db_input($entry_state) . "'");
 
             if ($zone_query->RecordCount() > 0) {
               $entry_zone_id = $zone_query->fields['zone_id'];
@@ -219,10 +223,10 @@ if (zen_not_null($action)) {
         $entry_telephone_error = false;
       }
 
-      $check_email = $db->Execute("select customers_email_address
-                                   from " . TABLE_CUSTOMERS . "
-                                   where customers_email_address = '" . zen_db_input($customers_email_address) . "'
-                                   and customers_id != '" . (int)$customers_id . "'");
+      $check_email = $db->Execute("SELECT customers_email_address
+                                   FROM " . TABLE_CUSTOMERS . "
+                                   WHERE customers_email_address = '" . zen_db_input($customers_email_address) . "'
+                                   AND customers_id != " . (int)$customers_id);
 
       if ($check_email->RecordCount() > 0) {
         $error = true;
@@ -256,9 +260,9 @@ if (zen_not_null($action)) {
 
         $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "'");
 
-        $db->Execute("update " . TABLE_CUSTOMERS_INFO . "
-                      set customers_info_date_account_last_modified = now()
-                      where customers_info_id = '" . (int)$customers_id . "'");
+        $db->Execute("UPDATE " . TABLE_CUSTOMERS_INFO . "
+                      SET customers_info_date_account_last_modified = now()
+                      WHERE customers_info_id = " . (int)$customers_id);
 
         if ($entry_zone_id > 0) {
           $entry_state = '';
@@ -319,8 +323,8 @@ if (zen_not_null($action)) {
         }
         if ($error == FALSE) {
           $sql = "SELECT customers_email_address, customers_firstname, customers_lastname
-                     FROM " . TABLE_CUSTOMERS . "
-                     WHERE customers_id = :customersID";
+                  FROM " . TABLE_CUSTOMERS . "
+                  WHERE customers_id = :customersID";
           $sql = $db->bindVars($sql, ':customersID', $customers_id, 'integer');
           $custinfo = $db->Execute($sql);
           if ($custinfo->RecordCount() == 0) {
@@ -328,14 +332,14 @@ if (zen_not_null($action)) {
           }
 
           $sql = "UPDATE " . TABLE_CUSTOMERS . "
-                    SET customers_password = :password
-                    WHERE customers_id = :customersID";
+                  SET customers_password = :password
+                  WHERE customers_id = :customersID";
           $sql = $db->bindVars($sql, ':customersID', $customers_id, 'integer');
           $sql = $db->bindVars($sql, ':password', zen_encrypt_password($password_new), 'string');
           $db->Execute($sql);
           $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
-                    SET    customers_info_date_account_last_modified = now()
-                    WHERE  customers_info_id = :customersID";
+                  SET customers_info_date_account_last_modified = now()
+                  WHERE customers_info_id = :customersID";
           $sql = $db->bindVars($sql, ':customersID', $customers_id, 'integer');
           $db->Execute($sql);
 
@@ -366,59 +370,60 @@ if (zen_not_null($action)) {
       $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_CUSTOMERS_DELETE_CONFIRM', array('customers_id' => $customers_id));
 
       if (isset($_POST['delete_reviews']) && ($_POST['delete_reviews'] == 'on')) {
-        $reviews = $db->Execute("select reviews_id
-                                   from " . TABLE_REVIEWS . "
-                                   where customers_id = '" . (int)$customers_id . "'");
+        $reviews = $db->Execute("SELECT reviews_id
+                                 FROM " . TABLE_REVIEWS . "
+                                 WHERE customers_id = " . (int)$customers_id);
         while (!$reviews->EOF) {
-          $db->Execute("delete from " . TABLE_REVIEWS_DESCRIPTION . "
-                          where reviews_id = '" . (int)$reviews->fields['reviews_id'] . "'");
+          $db->Execute("DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
+                        WHERE reviews_id = " . (int)$reviews->fields['reviews_id']);
           $reviews->MoveNext();
         }
 
-        $db->Execute("delete from " . TABLE_REVIEWS . "
-                        where customers_id = '" . (int)$customers_id . "'");
+        $db->Execute("DELETE FROM " . TABLE_REVIEWS . "
+                      WHERE customers_id = '" . (int)$customers_id . "'");
       } else {
-        $db->Execute("update " . TABLE_REVIEWS . "
-                        set customers_id = null
-                        where customers_id = '" . (int)$customers_id . "'");
+        $db->Execute("UPDATE " . TABLE_REVIEWS . "
+                      SET customers_id = null
+                      WHERE customers_id = " . (int)$customers_id);
       }
 
-      $db->Execute("delete from " . TABLE_ADDRESS_BOOK . "
-                      where customers_id = '" . (int)$customers_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_ADDRESS_BOOK . "
+                    WHERE customers_id = " . (int)$customers_id);
 
-      $db->Execute("delete from " . TABLE_CUSTOMERS . "
-                      where customers_id = '" . (int)$customers_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS . "
+                    WHERE customers_id = " . (int)$customers_id);
 
-      $db->Execute("delete from " . TABLE_CUSTOMERS_INFO . "
-                      where customers_info_id = '" . (int)$customers_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_INFO . "
+                    WHERE customers_info_id = " . (int)$customers_id);
 
-      $db->Execute("delete from " . TABLE_CUSTOMERS_BASKET . "
-                      where customers_id = '" . (int)$customers_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . "
+                    WHERE customers_id = " . (int)$customers_id);
 
-      $db->Execute("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                      where customers_id = '" . (int)$customers_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
+                    WHERE customers_id = " . (int)$customers_id);
 
-      $db->Execute("delete from " . TABLE_WHOS_ONLINE . "
-                      where customer_id = '" . (int)$customers_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . "
+                    WHERE customer_id = " . (int)$customers_id);
 
-      $db->Execute("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . " where customers_id = " . (int)$customers_id);
+      $db->Execute("DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
+                    WHERE customers_id = " . (int)$customers_id);
 
       zen_record_admin_activity('Customer with customer ID ' . (int)$customers_id . ' deleted.', 'warning');
       zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')), 'NONSSL'));
       break;
     default:
-      $customers = $db->Execute("select c.customers_id, c.customers_gender, c.customers_firstname,
-                                          c.customers_lastname, c.customers_dob, c.customers_email_address,
-                                          a.entry_company, a.entry_street_address, a.entry_suburb,
-                                          a.entry_postcode, a.entry_city, a.entry_state, a.entry_zone_id,
-                                          a.entry_country_id, c.customers_telephone, c.customers_fax,
-                                          c.customers_newsletter, c.customers_default_address_id,
-                                          c.customers_email_format, c.customers_group_pricing,
-                                          c.customers_authorization, c.customers_referral
-                                  from " . TABLE_CUSTOMERS . " c left join " . TABLE_ADDRESS_BOOK . " a
-                                  on c.customers_default_address_id = a.address_book_id
-                                  where a.customers_id = c.customers_id
-                                  and c.customers_id = '" . (int)$customers_id . "'");
+      $customers = $db->Execute("SELECT c.customers_id, c.customers_gender, c.customers_firstname,
+                                        c.customers_lastname, c.customers_dob, c.customers_email_address,
+                                        a.entry_company, a.entry_street_address, a.entry_suburb,
+                                        a.entry_postcode, a.entry_city, a.entry_state, a.entry_zone_id,
+                                        a.entry_country_id, c.customers_telephone, c.customers_fax,
+                                        c.customers_newsletter, c.customers_default_address_id,
+                                        c.customers_email_format, c.customers_group_pricing,
+                                        c.customers_authorization, c.customers_referral
+                                 FROM " . TABLE_CUSTOMERS . " c
+                                 LEFT JOIN " . TABLE_ADDRESS_BOOK . " a ON c.customers_default_address_id = a.address_book_id
+                                 WHERE a.customers_id = c.customers_id
+                                 AND c.customers_id = " . (int)$customers_id);
 
       $cInfo = new objectInfo($customers->fields);
   }
