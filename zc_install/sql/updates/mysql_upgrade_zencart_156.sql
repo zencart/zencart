@@ -70,6 +70,13 @@ ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) NOT NULL de
 ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) NOT NULL default '1';
 ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL default '0';
 
+# Clean up expired prids from baskets
+DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) not IN (
+SELECT products_id 
+FROM products WHERE products_status > 0);
+DELETE FROM customers_basket_attributes WHERE CAST(products_id AS unsigned) not IN (
+SELECT products_id 
+FROM products WHERE products_status > 0);
 
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
