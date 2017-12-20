@@ -137,12 +137,12 @@ class CatalogObject implements ArrayAccess
       */
     protected $is_deleted;
     /**
-      * $catalog_v1_ids The Connect V1 IDs for this object at each [location][#type-location] where it is present, where they differ from the object's Connect V2 ID. The field will only be present for objects that have been created or modified by legacy APIs.
+      * $catalog_v1_ids The Connect V1 IDs for this object at each [location](#type-location) where it is present, where they differ from the object's Connect V2 ID. The field will only be present for objects that have been created or modified by legacy APIs.
       * @var \SquareConnect\Model\CatalogV1Id[]
       */
     protected $catalog_v1_ids;
     /**
-      * $present_at_all_locations If `true`, this object is present at all locations (including future locations), except where specified in the `absent_at_location_ids` field. If `false`, this object is not present at any locations (including future locations), except where specified in the `present_at_location_ids` field.
+      * $present_at_all_locations If `true`, this object is present at all locations (including future locations), except where specified in the `absent_at_location_ids` field. If `false`, this object is not present at any locations (including future locations), except where specified in the `present_at_location_ids` field. If not specified, defaults to `true`.
       * @var bool
       */
     protected $present_at_all_locations;
@@ -387,7 +387,7 @@ class CatalogObject implements ArrayAccess
   
     /**
      * Sets catalog_v1_ids
-     * @param \SquareConnect\Model\CatalogV1Id[] $catalog_v1_ids The Connect V1 IDs for this object at each [location][#type-location] where it is present, where they differ from the object's Connect V2 ID. The field will only be present for objects that have been created or modified by legacy APIs.
+     * @param \SquareConnect\Model\CatalogV1Id[] $catalog_v1_ids The Connect V1 IDs for this object at each [location](#type-location) where it is present, where they differ from the object's Connect V2 ID. The field will only be present for objects that have been created or modified by legacy APIs.
      * @return $this
      */
     public function setCatalogV1Ids($catalog_v1_ids)
@@ -406,7 +406,7 @@ class CatalogObject implements ArrayAccess
   
     /**
      * Sets present_at_all_locations
-     * @param bool $present_at_all_locations If `true`, this object is present at all locations (including future locations), except where specified in the `absent_at_location_ids` field. If `false`, this object is not present at any locations (including future locations), except where specified in the `present_at_location_ids` field.
+     * @param bool $present_at_all_locations If `true`, this object is present at all locations (including future locations), except where specified in the `absent_at_location_ids` field. If `false`, this object is not present at any locations (including future locations), except where specified in the `present_at_location_ids` field. If not specified, defaults to `true`.
      * @return $this
      */
     public function setPresentAtAllLocations($present_at_all_locations)

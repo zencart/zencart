@@ -27,6 +27,10 @@ class CreateOrderRequestLineItem implements ArrayAccess
         'name' => 'string',
         'quantity' => 'string',
         'base_price_money' => '\SquareConnect\Model\Money',
+        'variation_name' => 'string',
+        'note' => 'string',
+        'catalog_object_id' => 'string',
+        'modifiers' => '\SquareConnect\Model\CreateOrderRequestModifier[]',
         'taxes' => '\SquareConnect\Model\CreateOrderRequestTax[]',
         'discounts' => '\SquareConnect\Model\CreateOrderRequestDiscount[]'
     );
@@ -39,6 +43,10 @@ class CreateOrderRequestLineItem implements ArrayAccess
         'name' => 'name',
         'quantity' => 'quantity',
         'base_price_money' => 'base_price_money',
+        'variation_name' => 'variation_name',
+        'note' => 'note',
+        'catalog_object_id' => 'catalog_object_id',
+        'modifiers' => 'modifiers',
         'taxes' => 'taxes',
         'discounts' => 'discounts'
     );
@@ -51,6 +59,10 @@ class CreateOrderRequestLineItem implements ArrayAccess
         'name' => 'setName',
         'quantity' => 'setQuantity',
         'base_price_money' => 'setBasePriceMoney',
+        'variation_name' => 'setVariationName',
+        'note' => 'setNote',
+        'catalog_object_id' => 'setCatalogObjectId',
+        'modifiers' => 'setModifiers',
         'taxes' => 'setTaxes',
         'discounts' => 'setDiscounts'
     );
@@ -63,32 +75,56 @@ class CreateOrderRequestLineItem implements ArrayAccess
         'name' => 'getName',
         'quantity' => 'getQuantity',
         'base_price_money' => 'getBasePriceMoney',
+        'variation_name' => 'getVariationName',
+        'note' => 'getNote',
+        'catalog_object_id' => 'getCatalogObjectId',
+        'modifiers' => 'getModifiers',
         'taxes' => 'getTaxes',
         'discounts' => 'getDiscounts'
     );
   
     /**
-      * $name The name of the line item. This value cannot exceed 500 characters.
+      * $name Only used for ad hoc line items. The name of the line item. This value cannot exceed 500 characters.  Do not provide a value for this field if you provide values in catalog_object_id.
       * @var string
       */
     protected $name;
     /**
-      * $quantity The quantity to purchase, as a string representation of a number. Currently, only integer values are supported.
+      * $quantity The quantity to purchase, as a string representation of a number.  This string must have a positive integer value.
       * @var string
       */
     protected $quantity;
     /**
-      * $base_price_money The base price for a single unit of the line item's associated variation. If a line item represents a Custom Amount instead of a particular product, this field indicates that amount.
+      * $base_price_money Only used for ad hoc line items. The base price for a single unit of the line item's associated variation.  Do not provide a value for this field if you provide a value for the `catalog_object_id`.
       * @var \SquareConnect\Model\Money
       */
     protected $base_price_money;
     /**
-      * $taxes The taxes include the custom taxes.
+      * $variation_name Only used for ad hoc line items. The variation name of the line item. This value cannot exceed 255 characters.  If this value is not set for an ad hoc line item, the default value of `Regular` is used.  Do not provide a value for this field if you provide a value for the `catalog_object_id`.
+      * @var string
+      */
+    protected $variation_name;
+    /**
+      * $note The note of the line item. This value cannot exceed 50 characters.
+      * @var string
+      */
+    protected $note;
+    /**
+      * $catalog_object_id Only used for Catalog line items. The catalog object ID from existing [CatalogItemVariation](#type-catalogitemvariation).  Do not provide a value for this field if you provide a value for `name` and `base_price_money`.
+      * @var string
+      */
+    protected $catalog_object_id;
+    /**
+      * $modifiers Only used for Catalog line items. The modifiers to include on the line item.
+      * @var \SquareConnect\Model\CreateOrderRequestModifier[]
+      */
+    protected $modifiers;
+    /**
+      * $taxes The taxes to include on the line item.
       * @var \SquareConnect\Model\CreateOrderRequestTax[]
       */
     protected $taxes;
     /**
-      * $discounts The discounts include the custom discounts.
+      * $discounts The discounts to include on the line item.
       * @var \SquareConnect\Model\CreateOrderRequestDiscount[]
       */
     protected $discounts;
@@ -115,6 +151,26 @@ class CreateOrderRequestLineItem implements ArrayAccess
             } else {
               $this->base_price_money = null;
             }
+            if (isset($data["variation_name"])) {
+              $this->variation_name = $data["variation_name"];
+            } else {
+              $this->variation_name = null;
+            }
+            if (isset($data["note"])) {
+              $this->note = $data["note"];
+            } else {
+              $this->note = null;
+            }
+            if (isset($data["catalog_object_id"])) {
+              $this->catalog_object_id = $data["catalog_object_id"];
+            } else {
+              $this->catalog_object_id = null;
+            }
+            if (isset($data["modifiers"])) {
+              $this->modifiers = $data["modifiers"];
+            } else {
+              $this->modifiers = null;
+            }
             if (isset($data["taxes"])) {
               $this->taxes = $data["taxes"];
             } else {
@@ -138,7 +194,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The name of the line item. This value cannot exceed 500 characters.
+     * @param string $name Only used for ad hoc line items. The name of the line item. This value cannot exceed 500 characters.  Do not provide a value for this field if you provide values in catalog_object_id.
      * @return $this
      */
     public function setName($name)
@@ -157,7 +213,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets quantity
-     * @param string $quantity The quantity to purchase, as a string representation of a number. Currently, only integer values are supported.
+     * @param string $quantity The quantity to purchase, as a string representation of a number.  This string must have a positive integer value.
      * @return $this
      */
     public function setQuantity($quantity)
@@ -176,12 +232,88 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets base_price_money
-     * @param \SquareConnect\Model\Money $base_price_money The base price for a single unit of the line item's associated variation. If a line item represents a Custom Amount instead of a particular product, this field indicates that amount.
+     * @param \SquareConnect\Model\Money $base_price_money Only used for ad hoc line items. The base price for a single unit of the line item's associated variation.  Do not provide a value for this field if you provide a value for the `catalog_object_id`.
      * @return $this
      */
     public function setBasePriceMoney($base_price_money)
     {
         $this->base_price_money = $base_price_money;
+        return $this;
+    }
+    /**
+     * Gets variation_name
+     * @return string
+     */
+    public function getVariationName()
+    {
+        return $this->variation_name;
+    }
+  
+    /**
+     * Sets variation_name
+     * @param string $variation_name Only used for ad hoc line items. The variation name of the line item. This value cannot exceed 255 characters.  If this value is not set for an ad hoc line item, the default value of `Regular` is used.  Do not provide a value for this field if you provide a value for the `catalog_object_id`.
+     * @return $this
+     */
+    public function setVariationName($variation_name)
+    {
+        $this->variation_name = $variation_name;
+        return $this;
+    }
+    /**
+     * Gets note
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+  
+    /**
+     * Sets note
+     * @param string $note The note of the line item. This value cannot exceed 50 characters.
+     * @return $this
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+        return $this;
+    }
+    /**
+     * Gets catalog_object_id
+     * @return string
+     */
+    public function getCatalogObjectId()
+    {
+        return $this->catalog_object_id;
+    }
+  
+    /**
+     * Sets catalog_object_id
+     * @param string $catalog_object_id Only used for Catalog line items. The catalog object ID from existing [CatalogItemVariation](#type-catalogitemvariation).  Do not provide a value for this field if you provide a value for `name` and `base_price_money`.
+     * @return $this
+     */
+    public function setCatalogObjectId($catalog_object_id)
+    {
+        $this->catalog_object_id = $catalog_object_id;
+        return $this;
+    }
+    /**
+     * Gets modifiers
+     * @return \SquareConnect\Model\CreateOrderRequestModifier[]
+     */
+    public function getModifiers()
+    {
+        return $this->modifiers;
+    }
+  
+    /**
+     * Sets modifiers
+     * @param \SquareConnect\Model\CreateOrderRequestModifier[] $modifiers Only used for Catalog line items. The modifiers to include on the line item.
+     * @return $this
+     */
+    public function setModifiers($modifiers)
+    {
+        $this->modifiers = $modifiers;
         return $this;
     }
     /**
@@ -195,7 +327,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets taxes
-     * @param \SquareConnect\Model\CreateOrderRequestTax[] $taxes The taxes include the custom taxes.
+     * @param \SquareConnect\Model\CreateOrderRequestTax[] $taxes The taxes to include on the line item.
      * @return $this
      */
     public function setTaxes($taxes)
@@ -214,7 +346,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets discounts
-     * @param \SquareConnect\Model\CreateOrderRequestDiscount[] $discounts The discounts include the custom discounts.
+     * @param \SquareConnect\Model\CreateOrderRequestDiscount[] $discounts The discounts to include on the line item.
      * @return $this
      */
     public function setDiscounts($discounts)

@@ -27,9 +27,9 @@ class V1PageCell implements ArrayAccess
         'page_id' => 'string',
         'row' => 'int',
         'column' => 'int',
-        'object_type' => 'string[]',
+        'object_type' => 'string',
         'object_id' => 'string',
-        'placeholder_type' => 'string[]'
+        'placeholder_type' => 'string'
     );
   
     /** 
@@ -88,7 +88,7 @@ class V1PageCell implements ArrayAccess
     protected $column;
     /**
       * $object_type The type of entity represented in the cell (ITEM, DISCOUNT, CATEGORY, or PLACEHOLDER).
-      * @var string[]
+      * @var string
       */
     protected $object_type;
     /**
@@ -98,7 +98,7 @@ class V1PageCell implements ArrayAccess
     protected $object_id;
     /**
       * $placeholder_type For a cell with an object_type of PLACEHOLDER, this value indicates the cell's special behavior.
-      * @var string[]
+      * @var string
       */
     protected $placeholder_type;
 
@@ -200,7 +200,7 @@ class V1PageCell implements ArrayAccess
     }
     /**
      * Gets object_type
-     * @return string[]
+     * @return string
      */
     public function getObjectType()
     {
@@ -209,7 +209,7 @@ class V1PageCell implements ArrayAccess
   
     /**
      * Sets object_type
-     * @param string[] $object_type The type of entity represented in the cell (ITEM, DISCOUNT, CATEGORY, or PLACEHOLDER).
+     * @param string $object_type The type of entity represented in the cell (ITEM, DISCOUNT, CATEGORY, or PLACEHOLDER).
      * @return $this
      */
     public function setObjectType($object_type)
@@ -238,7 +238,7 @@ class V1PageCell implements ArrayAccess
     }
     /**
      * Gets placeholder_type
-     * @return string[]
+     * @return string
      */
     public function getPlaceholderType()
     {
@@ -247,7 +247,7 @@ class V1PageCell implements ArrayAccess
   
     /**
      * Sets placeholder_type
-     * @param string[] $placeholder_type For a cell with an object_type of PLACEHOLDER, this value indicates the cell's special behavior.
+     * @param string $placeholder_type For a cell with an object_type of PLACEHOLDER, this value indicates the cell's special behavior.
      * @return $this
      */
     public function setPlaceholderType($placeholder_type)

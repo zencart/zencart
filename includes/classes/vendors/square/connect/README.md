@@ -52,29 +52,69 @@ If you cannot access the command line for your server, you can also install the 
 require('connect-php-sdk-master/autoload.php');
 ```
 *Note: you might have to change the path depending on where you place the SDK in relation to your other `php` files.*
+
 ## Getting Started
 
-Please follow the [installation procedure](#installation--usage) and then run the following:
+Please follow the [installation procedure](#installation--usage):
 
+
+### Retrieve your location IDs
 ```php
-<?php
-require_once(__DIR__ . '/vendor/autoload.php');
+require 'vendor/autoload.php';
 
-// Configure OAuth2 access token for authorization: oauth2
-SquareConnect\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
-
-$api_instance = new SquareConnect\Api\CatalogApi();
-$body = new \SquareConnect\Model\BatchDeleteCatalogObjectsRequest(); // \SquareConnect\Model\BatchDeleteCatalogObjectsRequest | An object containing the fields to POST for the request.  See the corresponding object definition for field details.
+# setup authorization
+\SquareConnect\Configuration::getDefaultConfiguration()->setAccessToken($access_token);
+# create an instance of the Location API $locations_api = new \SquareConnect\Api\LocationsApi();
 
 try {
-    $result = $api_instance->batchDeleteCatalogObjects($body);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling CatalogApi->batchDeleteCatalogObjects: ', $e->getMessage(), PHP_EOL;
+  $locations = $locations_api->listLocations();
+  print_r($locations->getLocations());
+} catch (\SquareConnect\ApiException $e) {
+  echo "Caught exception!<br/>";
+  print_r("<strong>Response body:</strong><br/>");
+  echo "<pre>"; var_dump($e->getResponseBody()); echo "</pre>";
+  echo "<br/><strong>Response headers:</strong><br/>";
+  echo "<pre>"; var_dump($e->getResponseHeaders()); echo "</pre>";
+  exit(1);
 }
-
-?>
 ```
+
+### Charge the card nonce
+```php
+require 'vendor/autoload.php';
+
+
+# setup authorization
+\SquareConnect\Configuration::getDefaultConfiguration()->setAccessToken($access_token);
+# create an instance of the Transaction API class
+$transactions_api = new \SquareConnect\Api\TransactionsApi();
+$location_id = 'YOUR_LOCATION_ID'
+$nonce = 'YOUR_NONCE'
+
+$request_body = array (
+    "card_nonce" => $nonce,
+    # Monetary amounts are specified in the smallest unit of the applicable currency.
+    # This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
+    "amount_money" => array (
+        "amount" => 100,
+        "currency" => "USD"
+    ),
+    # Every payment you process with the SDK must have a unique idempotency key.
+    # If you're unsure whether a particular payment succeeded, you can reattempt
+    # it with the same idempotency key without worrying about double charging
+    # the buyer.
+    "idempotency_key" => uniqid()
+);
+
+try {
+    $result = $transactions_api->charge($location_id,  $request_body);
+    print_r($result);
+} catch (\SquareConnect\ApiException $e) {
+    echo "Exception when calling TransactionApi->charge:";
+    var_dump($e->getResponseBody());
+}
+```
+
 
 ## Documentation for API Endpoints
 
@@ -82,6 +122,7 @@ All URIs are relative to *https://connect.squareup.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*ApplePayApi* | [**registerDomain**](docs/Api/ApplePayApi.md#registerdomain) | **POST** /v2/apple-pay/domains | RegisterDomain
 *CatalogApi* | [**batchDeleteCatalogObjects**](docs/Api/CatalogApi.md#batchdeletecatalogobjects) | **POST** /v2/catalog/batch-delete | BatchDeleteCatalogObjects
 *CatalogApi* | [**batchRetrieveCatalogObjects**](docs/Api/CatalogApi.md#batchretrievecatalogobjects) | **POST** /v2/catalog/batch-retrieve | BatchRetrieveCatalogObjects
 *CatalogApi* | [**batchUpsertCatalogObjects**](docs/Api/CatalogApi.md#batchupsertcatalogobjects) | **POST** /v2/catalog/batch-upsert | BatchUpsertCatalogObjects
@@ -102,6 +143,10 @@ Class | Method | HTTP request | Description
 *CustomersApi* | [**retrieveCustomer**](docs/Api/CustomersApi.md#retrievecustomer) | **GET** /v2/customers/{customer_id} | RetrieveCustomer
 *CustomersApi* | [**updateCustomer**](docs/Api/CustomersApi.md#updatecustomer) | **PUT** /v2/customers/{customer_id} | UpdateCustomer
 *LocationsApi* | [**listLocations**](docs/Api/LocationsApi.md#listlocations) | **GET** /v2/locations | ListLocations
+*OrdersApi* | [**batchRetrieveOrders**](docs/Api/OrdersApi.md#batchretrieveorders) | **POST** /v2/locations/{location_id}/orders/batch-retrieve | BatchRetrieveOrders
+*OrdersApi* | [**createOrder**](docs/Api/OrdersApi.md#createorder) | **POST** /v2/locations/{location_id}/orders | CreateOrder
+*ReportingApi* | [**listAdditionalRecipientReceivableRefunds**](docs/Api/ReportingApi.md#listadditionalrecipientreceivablerefunds) | **GET** /v2/locations/{location_id}/additional-recipient-receivable-refunds | ListAdditionalRecipientReceivableRefunds
+*ReportingApi* | [**listAdditionalRecipientReceivables**](docs/Api/ReportingApi.md#listadditionalrecipientreceivables) | **GET** /v2/locations/{location_id}/additional-recipient-receivables | ListAdditionalRecipientReceivables
 *TransactionsApi* | [**captureTransaction**](docs/Api/TransactionsApi.md#capturetransaction) | **POST** /v2/locations/{location_id}/transactions/{transaction_id}/capture | CaptureTransaction
 *TransactionsApi* | [**charge**](docs/Api/TransactionsApi.md#charge) | **POST** /v2/locations/{location_id}/transactions | Charge
 *TransactionsApi* | [**createRefund**](docs/Api/TransactionsApi.md#createrefund) | **POST** /v2/locations/{location_id}/transactions/{transaction_id}/refund | CreateRefund
@@ -182,11 +227,16 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AdditionalRecipient](docs/Model/AdditionalRecipient.md)
+ - [AdditionalRecipientReceivable](docs/Model/AdditionalRecipientReceivable.md)
+ - [AdditionalRecipientReceivableRefund](docs/Model/AdditionalRecipientReceivableRefund.md)
  - [Address](docs/Model/Address.md)
  - [BatchDeleteCatalogObjectsRequest](docs/Model/BatchDeleteCatalogObjectsRequest.md)
  - [BatchDeleteCatalogObjectsResponse](docs/Model/BatchDeleteCatalogObjectsResponse.md)
  - [BatchRetrieveCatalogObjectsRequest](docs/Model/BatchRetrieveCatalogObjectsRequest.md)
  - [BatchRetrieveCatalogObjectsResponse](docs/Model/BatchRetrieveCatalogObjectsResponse.md)
+ - [BatchRetrieveOrdersRequest](docs/Model/BatchRetrieveOrdersRequest.md)
+ - [BatchRetrieveOrdersResponse](docs/Model/BatchRetrieveOrdersResponse.md)
  - [BatchUpsertCatalogObjectsRequest](docs/Model/BatchUpsertCatalogObjectsRequest.md)
  - [BatchUpsertCatalogObjectsResponse](docs/Model/BatchUpsertCatalogObjectsResponse.md)
  - [CaptureTransactionRequest](docs/Model/CaptureTransactionRequest.md)
@@ -223,6 +273,7 @@ Class | Method | HTTP request | Description
  - [CatalogTax](docs/Model/CatalogTax.md)
  - [CatalogV1Id](docs/Model/CatalogV1Id.md)
  - [ChargeRequest](docs/Model/ChargeRequest.md)
+ - [ChargeRequestAdditionalRecipient](docs/Model/ChargeRequestAdditionalRecipient.md)
  - [ChargeResponse](docs/Model/ChargeResponse.md)
  - [Checkout](docs/Model/Checkout.md)
  - [Country](docs/Model/Country.md)
@@ -235,7 +286,9 @@ Class | Method | HTTP request | Description
  - [CreateOrderRequest](docs/Model/CreateOrderRequest.md)
  - [CreateOrderRequestDiscount](docs/Model/CreateOrderRequestDiscount.md)
  - [CreateOrderRequestLineItem](docs/Model/CreateOrderRequestLineItem.md)
+ - [CreateOrderRequestModifier](docs/Model/CreateOrderRequestModifier.md)
  - [CreateOrderRequestTax](docs/Model/CreateOrderRequestTax.md)
+ - [CreateOrderResponse](docs/Model/CreateOrderResponse.md)
  - [CreateRefundRequest](docs/Model/CreateRefundRequest.md)
  - [CreateRefundResponse](docs/Model/CreateRefundResponse.md)
  - [Currency](docs/Model/Currency.md)
@@ -254,6 +307,10 @@ Class | Method | HTTP request | Description
  - [ErrorCode](docs/Model/ErrorCode.md)
  - [InventoryAlertType](docs/Model/InventoryAlertType.md)
  - [ItemVariationLocationOverrides](docs/Model/ItemVariationLocationOverrides.md)
+ - [ListAdditionalRecipientReceivableRefundsRequest](docs/Model/ListAdditionalRecipientReceivableRefundsRequest.md)
+ - [ListAdditionalRecipientReceivableRefundsResponse](docs/Model/ListAdditionalRecipientReceivableRefundsResponse.md)
+ - [ListAdditionalRecipientReceivablesRequest](docs/Model/ListAdditionalRecipientReceivablesRequest.md)
+ - [ListAdditionalRecipientReceivablesResponse](docs/Model/ListAdditionalRecipientReceivablesResponse.md)
  - [ListCatalogRequest](docs/Model/ListCatalogRequest.md)
  - [ListCatalogResponse](docs/Model/ListCatalogResponse.md)
  - [ListCustomersRequest](docs/Model/ListCustomersRequest.md)
@@ -266,16 +323,22 @@ Class | Method | HTTP request | Description
  - [ListTransactionsResponse](docs/Model/ListTransactionsResponse.md)
  - [Location](docs/Model/Location.md)
  - [LocationCapability](docs/Model/LocationCapability.md)
+ - [LocationStatus](docs/Model/LocationStatus.md)
+ - [LocationType](docs/Model/LocationType.md)
  - [Money](docs/Model/Money.md)
  - [Order](docs/Model/Order.md)
  - [OrderLineItem](docs/Model/OrderLineItem.md)
  - [OrderLineItemDiscount](docs/Model/OrderLineItemDiscount.md)
  - [OrderLineItemDiscountScope](docs/Model/OrderLineItemDiscountScope.md)
  - [OrderLineItemDiscountType](docs/Model/OrderLineItemDiscountType.md)
+ - [OrderLineItemModifier](docs/Model/OrderLineItemModifier.md)
  - [OrderLineItemTax](docs/Model/OrderLineItemTax.md)
  - [OrderLineItemTaxType](docs/Model/OrderLineItemTaxType.md)
  - [Refund](docs/Model/Refund.md)
  - [RefundStatus](docs/Model/RefundStatus.md)
+ - [RegisterDomainRequest](docs/Model/RegisterDomainRequest.md)
+ - [RegisterDomainResponse](docs/Model/RegisterDomainResponse.md)
+ - [RegisterDomainResponseStatus](docs/Model/RegisterDomainResponseStatus.md)
  - [RetrieveCatalogObjectRequest](docs/Model/RetrieveCatalogObjectRequest.md)
  - [RetrieveCatalogObjectResponse](docs/Model/RetrieveCatalogObjectResponse.md)
  - [RetrieveCustomerRequest](docs/Model/RetrieveCustomerRequest.md)
@@ -368,6 +431,13 @@ Class | Method | HTTP request | Description
  - **EMPLOYEES_WRITE**: POST, PUT, and DELETE endpoints related to employee management
  - **TIMECARDS_READ**: GET endpoints related to employee timecards
  - **TIMECARDS_WRITE**: POST, PUT, and DELETE endpoints related to employee timecards
+ - **PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS**: Allow third party applications to deduct a portion of each transaction amount.
+
+## oauth2ClientSecret
+
+- **Type**: API key
+- **API key parameter name**: Authorization
+- **Location**: HTTP header
 
 
 ## Pagination of V1 Endpoints

@@ -24,6 +24,7 @@ class CreateOrderRequestTax implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
+        'catalog_object_id' => 'string',
         'name' => 'string',
         'type' => 'string',
         'percentage' => 'string'
@@ -34,6 +35,7 @@ class CreateOrderRequestTax implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
+        'catalog_object_id' => 'catalog_object_id',
         'name' => 'name',
         'type' => 'type',
         'percentage' => 'percentage'
@@ -44,6 +46,7 @@ class CreateOrderRequestTax implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
+        'catalog_object_id' => 'setCatalogObjectId',
         'name' => 'setName',
         'type' => 'setType',
         'percentage' => 'setPercentage'
@@ -54,23 +57,29 @@ class CreateOrderRequestTax implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
+        'catalog_object_id' => 'getCatalogObjectId',
         'name' => 'getName',
         'type' => 'getType',
         'percentage' => 'getPercentage'
     );
   
     /**
-      * $name The tax's name.
+      * $catalog_object_id Only used for catalog taxes. The catalog object ID of an existing [CatalogTax](#type-catalogtax).  Do not provide a value for this field if you provide values in other fields for an ad hoc tax.
+      * @var string
+      */
+    protected $catalog_object_id;
+    /**
+      * $name Only used for ad hoc taxes. The tax's name.  Do not provide a value for this field if you set catalog_object_id.
       * @var string
       */
     protected $name;
     /**
-      * $type Indicates the calculation method used to apply the line item tax.  Default: `ADDITIVE`; See [OrderLineItemTaxType](#type-orderlineitemtaxtype) for possible values.
+      * $type Only used for ad hoc taxes. Indicates the calculation method used to apply the line item tax.  Default: `ADDITIVE`; See [OrderLineItemTaxType](#type-orderlineitemtaxtype) for possible values.
       * @var string
       */
     protected $type;
     /**
-      * $percentage The percentage of the tax, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
+      * $percentage Only used for ad hoc taxes. The percentage of the tax, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
       * @var string
       */
     protected $percentage;
@@ -82,6 +91,11 @@ class CreateOrderRequestTax implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["catalog_object_id"])) {
+              $this->catalog_object_id = $data["catalog_object_id"];
+            } else {
+              $this->catalog_object_id = null;
+            }
             if (isset($data["name"])) {
               $this->name = $data["name"];
             } else {
@@ -100,6 +114,25 @@ class CreateOrderRequestTax implements ArrayAccess
         }
     }
     /**
+     * Gets catalog_object_id
+     * @return string
+     */
+    public function getCatalogObjectId()
+    {
+        return $this->catalog_object_id;
+    }
+  
+    /**
+     * Sets catalog_object_id
+     * @param string $catalog_object_id Only used for catalog taxes. The catalog object ID of an existing [CatalogTax](#type-catalogtax).  Do not provide a value for this field if you provide values in other fields for an ad hoc tax.
+     * @return $this
+     */
+    public function setCatalogObjectId($catalog_object_id)
+    {
+        $this->catalog_object_id = $catalog_object_id;
+        return $this;
+    }
+    /**
      * Gets name
      * @return string
      */
@@ -110,7 +143,7 @@ class CreateOrderRequestTax implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The tax's name.
+     * @param string $name Only used for ad hoc taxes. The tax's name.  Do not provide a value for this field if you set catalog_object_id.
      * @return $this
      */
     public function setName($name)
@@ -129,7 +162,7 @@ class CreateOrderRequestTax implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type Indicates the calculation method used to apply the line item tax.  Default: `ADDITIVE`; See [OrderLineItemTaxType](#type-orderlineitemtaxtype) for possible values.
+     * @param string $type Only used for ad hoc taxes. Indicates the calculation method used to apply the line item tax.  Default: `ADDITIVE`; See [OrderLineItemTaxType](#type-orderlineitemtaxtype) for possible values.
      * @return $this
      */
     public function setType($type)
@@ -148,7 +181,7 @@ class CreateOrderRequestTax implements ArrayAccess
   
     /**
      * Sets percentage
-     * @param string $percentage The percentage of the tax, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
+     * @param string $percentage Only used for ad hoc taxes. The percentage of the tax, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
      * @return $this
      */
     public function setPercentage($percentage)

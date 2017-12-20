@@ -96,7 +96,7 @@ class SearchCatalogObjectsRequest implements ArrayAccess
       */
     protected $include_related_objects;
     /**
-      * $begin_time Return only objects that have been modified after this [timestamp](#workingwithdates) (in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\"). The timestamp is exclusive - objects whose timestamp is equal to `begin_time` will not be included in the response.
+      * $begin_time Return objects modified after this [timestamp](#workingwithdates), in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\". The timestamp is exclusive - objects with a timestamp equal to `begin_time` will not be included in the response.
       * @var string
       */
     protected $begin_time;
@@ -242,7 +242,7 @@ class SearchCatalogObjectsRequest implements ArrayAccess
   
     /**
      * Sets begin_time
-     * @param string $begin_time Return only objects that have been modified after this [timestamp](#workingwithdates) (in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\"). The timestamp is exclusive - objects whose timestamp is equal to `begin_time` will not be included in the response.
+     * @param string $begin_time Return objects modified after this [timestamp](#workingwithdates), in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\". The timestamp is exclusive - objects with a timestamp equal to `begin_time` will not be included in the response.
      * @return $this
      */
     public function setBeginTime($begin_time)

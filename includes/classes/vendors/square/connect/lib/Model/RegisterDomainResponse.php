@@ -9,7 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CatalogV1Id Class Doc Comment
+ * RegisterDomainResponse Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
@@ -17,15 +17,15 @@ use \ArrayAccess;
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
  */
-class CatalogV1Id implements ArrayAccess
+class RegisterDomainResponse implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_v1_id' => 'string',
-        'location_id' => 'string'
+        'errors' => '\SquareConnect\Model\Error[]',
+        'status' => 'string'
     );
   
     /** 
@@ -33,8 +33,8 @@ class CatalogV1Id implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_v1_id' => 'catalog_v1_id',
-        'location_id' => 'location_id'
+        'errors' => 'errors',
+        'status' => 'status'
     );
   
     /**
@@ -42,8 +42,8 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_v1_id' => 'setCatalogV1Id',
-        'location_id' => 'setLocationId'
+        'errors' => 'setErrors',
+        'status' => 'setStatus'
     );
   
     /**
@@ -51,20 +51,20 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_v1_id' => 'getCatalogV1Id',
-        'location_id' => 'getLocationId'
+        'errors' => 'getErrors',
+        'status' => 'getStatus'
     );
   
     /**
-      * $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
-      * @var string
+      * $errors Any errors that occurred during the request.
+      * @var \SquareConnect\Model\Error[]
       */
-    protected $catalog_v1_id;
+    protected $errors;
     /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+      * $status Status of the domain registration.  See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values.
       * @var string
       */
-    protected $location_id;
+    protected $status;
 
     /**
      * Constructor
@@ -73,54 +73,54 @@ class CatalogV1Id implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["catalog_v1_id"])) {
-              $this->catalog_v1_id = $data["catalog_v1_id"];
+            if (isset($data["errors"])) {
+              $this->errors = $data["errors"];
             } else {
-              $this->catalog_v1_id = null;
+              $this->errors = null;
             }
-            if (isset($data["location_id"])) {
-              $this->location_id = $data["location_id"];
+            if (isset($data["status"])) {
+              $this->status = $data["status"];
             } else {
-              $this->location_id = null;
+              $this->status = null;
             }
         }
     }
     /**
-     * Gets catalog_v1_id
-     * @return string
+     * Gets errors
+     * @return \SquareConnect\Model\Error[]
      */
-    public function getCatalogV1Id()
+    public function getErrors()
     {
-        return $this->catalog_v1_id;
+        return $this->errors;
     }
   
     /**
-     * Sets catalog_v1_id
-     * @param string $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
+     * Sets errors
+     * @param \SquareConnect\Model\Error[] $errors Any errors that occurred during the request.
      * @return $this
      */
-    public function setCatalogV1Id($catalog_v1_id)
+    public function setErrors($errors)
     {
-        $this->catalog_v1_id = $catalog_v1_id;
+        $this->errors = $errors;
         return $this;
     }
     /**
-     * Gets location_id
+     * Gets status
      * @return string
      */
-    public function getLocationId()
+    public function getStatus()
     {
-        return $this->location_id;
+        return $this->status;
     }
   
     /**
-     * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+     * Sets status
+     * @param string $status Status of the domain registration.  See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values.
      * @return $this
      */
-    public function setLocationId($location_id)
+    public function setStatus($status)
     {
-        $this->location_id = $location_id;
+        $this->status = $status;
         return $this;
     }
     /**

@@ -34,7 +34,9 @@ class ChargeRequest implements ArrayAccess
         'customer_id' => 'string',
         'billing_address' => '\SquareConnect\Model\Address',
         'shipping_address' => '\SquareConnect\Model\Address',
-        'buyer_email_address' => 'string'
+        'buyer_email_address' => 'string',
+        'order_id' => 'string',
+        'additional_recipients' => '\SquareConnect\Model\AdditionalRecipient[]'
     );
   
     /** 
@@ -52,7 +54,9 @@ class ChargeRequest implements ArrayAccess
         'customer_id' => 'customer_id',
         'billing_address' => 'billing_address',
         'shipping_address' => 'shipping_address',
-        'buyer_email_address' => 'buyer_email_address'
+        'buyer_email_address' => 'buyer_email_address',
+        'order_id' => 'order_id',
+        'additional_recipients' => 'additional_recipients'
     );
   
     /**
@@ -70,7 +74,9 @@ class ChargeRequest implements ArrayAccess
         'customer_id' => 'setCustomerId',
         'billing_address' => 'setBillingAddress',
         'shipping_address' => 'setShippingAddress',
-        'buyer_email_address' => 'setBuyerEmailAddress'
+        'buyer_email_address' => 'setBuyerEmailAddress',
+        'order_id' => 'setOrderId',
+        'additional_recipients' => 'setAdditionalRecipients'
     );
   
     /**
@@ -88,7 +94,9 @@ class ChargeRequest implements ArrayAccess
         'customer_id' => 'getCustomerId',
         'billing_address' => 'getBillingAddress',
         'shipping_address' => 'getShippingAddress',
-        'buyer_email_address' => 'getBuyerEmailAddress'
+        'buyer_email_address' => 'getBuyerEmailAddress',
+        'order_id' => 'getOrderId',
+        'additional_recipients' => 'getAdditionalRecipients'
     );
   
     /**
@@ -146,6 +154,16 @@ class ChargeRequest implements ArrayAccess
       * @var string
       */
     protected $buyer_email_address;
+    /**
+      * $order_id The ID of the order to associate with this transaction.  If you provide this value, the `amount_money` value of your request must __exactly match__ the `total_money` value of the order's `order_amounts` field.
+      * @var string
+      */
+    protected $order_id;
+    /**
+      * $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `amount_money` value in you charge's request. The `location_id` must be the valid location of the app owner merchant.  This field requires `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
+      * @var \SquareConnect\Model\AdditionalRecipient[]
+      */
+    protected $additional_recipients;
 
     /**
      * Constructor
@@ -208,6 +226,16 @@ class ChargeRequest implements ArrayAccess
               $this->buyer_email_address = $data["buyer_email_address"];
             } else {
               $this->buyer_email_address = null;
+            }
+            if (isset($data["order_id"])) {
+              $this->order_id = $data["order_id"];
+            } else {
+              $this->order_id = null;
+            }
+            if (isset($data["additional_recipients"])) {
+              $this->additional_recipients = $data["additional_recipients"];
+            } else {
+              $this->additional_recipients = null;
             }
         }
     }
@@ -418,6 +446,44 @@ class ChargeRequest implements ArrayAccess
     public function setBuyerEmailAddress($buyer_email_address)
     {
         $this->buyer_email_address = $buyer_email_address;
+        return $this;
+    }
+    /**
+     * Gets order_id
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->order_id;
+    }
+  
+    /**
+     * Sets order_id
+     * @param string $order_id The ID of the order to associate with this transaction.  If you provide this value, the `amount_money` value of your request must __exactly match__ the `total_money` value of the order's `order_amounts` field.
+     * @return $this
+     */
+    public function setOrderId($order_id)
+    {
+        $this->order_id = $order_id;
+        return $this;
+    }
+    /**
+     * Gets additional_recipients
+     * @return \SquareConnect\Model\AdditionalRecipient[]
+     */
+    public function getAdditionalRecipients()
+    {
+        return $this->additional_recipients;
+    }
+  
+    /**
+     * Sets additional_recipients
+     * @param \SquareConnect\Model\AdditionalRecipient[] $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `amount_money` value in you charge's request. The `location_id` must be the valid location of the app owner merchant.  This field requires `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
+     * @return $this
+     */
+    public function setAdditionalRecipients($additional_recipients)
+    {
+        $this->additional_recipients = $additional_recipients;
         return $this;
     }
     /**

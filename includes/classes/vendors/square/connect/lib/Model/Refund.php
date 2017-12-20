@@ -32,7 +32,8 @@ class Refund implements ArrayAccess
         'reason' => 'string',
         'amount_money' => '\SquareConnect\Model\Money',
         'status' => 'string',
-        'processing_fee_money' => '\SquareConnect\Model\Money'
+        'processing_fee_money' => '\SquareConnect\Model\Money',
+        'additional_recipients' => '\SquareConnect\Model\AdditionalRecipient[]'
     );
   
     /** 
@@ -48,7 +49,8 @@ class Refund implements ArrayAccess
         'reason' => 'reason',
         'amount_money' => 'amount_money',
         'status' => 'status',
-        'processing_fee_money' => 'processing_fee_money'
+        'processing_fee_money' => 'processing_fee_money',
+        'additional_recipients' => 'additional_recipients'
     );
   
     /**
@@ -64,7 +66,8 @@ class Refund implements ArrayAccess
         'reason' => 'setReason',
         'amount_money' => 'setAmountMoney',
         'status' => 'setStatus',
-        'processing_fee_money' => 'setProcessingFeeMoney'
+        'processing_fee_money' => 'setProcessingFeeMoney',
+        'additional_recipients' => 'setAdditionalRecipients'
     );
   
     /**
@@ -80,7 +83,8 @@ class Refund implements ArrayAccess
         'reason' => 'getReason',
         'amount_money' => 'getAmountMoney',
         'status' => 'getStatus',
-        'processing_fee_money' => 'getProcessingFeeMoney'
+        'processing_fee_money' => 'getProcessingFeeMoney',
+        'additional_recipients' => 'getAdditionalRecipients'
     );
   
     /**
@@ -128,6 +132,11 @@ class Refund implements ArrayAccess
       * @var \SquareConnect\Model\Money
       */
     protected $processing_fee_money;
+    /**
+      * $additional_recipients Additional recipients (other than the merchant) receiving a portion of this refund. For example, fees assessed on a refund of a purchase by a third party integration.
+      * @var \SquareConnect\Model\AdditionalRecipient[]
+      */
+    protected $additional_recipients;
 
     /**
      * Constructor
@@ -180,6 +189,11 @@ class Refund implements ArrayAccess
               $this->processing_fee_money = $data["processing_fee_money"];
             } else {
               $this->processing_fee_money = null;
+            }
+            if (isset($data["additional_recipients"])) {
+              $this->additional_recipients = $data["additional_recipients"];
+            } else {
+              $this->additional_recipients = null;
             }
         }
     }
@@ -352,6 +366,25 @@ class Refund implements ArrayAccess
     public function setProcessingFeeMoney($processing_fee_money)
     {
         $this->processing_fee_money = $processing_fee_money;
+        return $this;
+    }
+    /**
+     * Gets additional_recipients
+     * @return \SquareConnect\Model\AdditionalRecipient[]
+     */
+    public function getAdditionalRecipients()
+    {
+        return $this->additional_recipients;
+    }
+  
+    /**
+     * Sets additional_recipients
+     * @param \SquareConnect\Model\AdditionalRecipient[] $additional_recipients Additional recipients (other than the merchant) receiving a portion of this refund. For example, fees assessed on a refund of a purchase by a third party integration.
+     * @return $this
+     */
+    public function setAdditionalRecipients($additional_recipients)
+    {
+        $this->additional_recipients = $additional_recipients;
         return $this;
     }
     /**

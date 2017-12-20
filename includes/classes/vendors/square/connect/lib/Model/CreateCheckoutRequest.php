@@ -30,7 +30,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'merchant_support_email' => 'string',
         'pre_populate_buyer_email' => 'string',
         'pre_populate_shipping_address' => '\SquareConnect\Model\Address',
-        'redirect_url' => 'string'
+        'redirect_url' => 'string',
+        'additional_recipients' => '\SquareConnect\Model\ChargeRequestAdditionalRecipient[]'
     );
   
     /** 
@@ -44,7 +45,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'merchant_support_email' => 'merchant_support_email',
         'pre_populate_buyer_email' => 'pre_populate_buyer_email',
         'pre_populate_shipping_address' => 'pre_populate_shipping_address',
-        'redirect_url' => 'redirect_url'
+        'redirect_url' => 'redirect_url',
+        'additional_recipients' => 'additional_recipients'
     );
   
     /**
@@ -58,7 +60,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'merchant_support_email' => 'setMerchantSupportEmail',
         'pre_populate_buyer_email' => 'setPrePopulateBuyerEmail',
         'pre_populate_shipping_address' => 'setPrePopulateShippingAddress',
-        'redirect_url' => 'setRedirectUrl'
+        'redirect_url' => 'setRedirectUrl',
+        'additional_recipients' => 'setAdditionalRecipients'
     );
   
     /**
@@ -72,7 +75,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'merchant_support_email' => 'getMerchantSupportEmail',
         'pre_populate_buyer_email' => 'getPrePopulateBuyerEmail',
         'pre_populate_shipping_address' => 'getPrePopulateShippingAddress',
-        'redirect_url' => 'getRedirectUrl'
+        'redirect_url' => 'getRedirectUrl',
+        'additional_recipients' => 'getAdditionalRecipients'
     );
   
     /**
@@ -110,6 +114,11 @@ class CreateCheckoutRequest implements ArrayAccess
       * @var string
       */
     protected $redirect_url;
+    /**
+      * $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `total_money` calculated by Square for your order. The `location_id` must be the valid location of the app owner merchant.  This field requires `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
+      * @var \SquareConnect\Model\ChargeRequestAdditionalRecipient[]
+      */
+    protected $additional_recipients;
 
     /**
      * Constructor
@@ -152,6 +161,11 @@ class CreateCheckoutRequest implements ArrayAccess
               $this->redirect_url = $data["redirect_url"];
             } else {
               $this->redirect_url = null;
+            }
+            if (isset($data["additional_recipients"])) {
+              $this->additional_recipients = $data["additional_recipients"];
+            } else {
+              $this->additional_recipients = null;
             }
         }
     }
@@ -286,6 +300,25 @@ class CreateCheckoutRequest implements ArrayAccess
     public function setRedirectUrl($redirect_url)
     {
         $this->redirect_url = $redirect_url;
+        return $this;
+    }
+    /**
+     * Gets additional_recipients
+     * @return \SquareConnect\Model\ChargeRequestAdditionalRecipient[]
+     */
+    public function getAdditionalRecipients()
+    {
+        return $this->additional_recipients;
+    }
+  
+    /**
+     * Sets additional_recipients
+     * @param \SquareConnect\Model\ChargeRequestAdditionalRecipient[] $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `total_money` calculated by Square for your order. The `location_id` must be the valid location of the app owner merchant.  This field requires `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
+     * @return $this
+     */
+    public function setAdditionalRecipients($additional_recipients)
+    {
+        $this->additional_recipients = $additional_recipients;
         return $this;
     }
     /**
