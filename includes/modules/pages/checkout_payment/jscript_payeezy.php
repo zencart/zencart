@@ -10,6 +10,9 @@
 if (!defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) || MODULE_PAYMENT_PAYEEZYJSZC_STATUS != 'True' || (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && !defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') )) {
 	return false;
 }
+if ($payment_modules->in_special_checkout()) {
+    return false;
+}
 ?>
 <script type="text/javascript"><!--
 
