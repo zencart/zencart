@@ -26,9 +26,14 @@ class OrderLineItem implements ArrayAccess
     static $swaggerTypes = array(
         'name' => 'string',
         'quantity' => 'string',
+        'note' => 'string',
+        'catalog_object_id' => 'string',
+        'variation_name' => 'string',
+        'modifiers' => '\SquareConnect\Model\OrderLineItemModifier[]',
         'taxes' => '\SquareConnect\Model\OrderLineItemTax[]',
         'discounts' => '\SquareConnect\Model\OrderLineItemDiscount[]',
         'base_price_money' => '\SquareConnect\Model\Money',
+        'gross_sales_money' => '\SquareConnect\Model\Money',
         'total_tax_money' => '\SquareConnect\Model\Money',
         'total_discount_money' => '\SquareConnect\Model\Money',
         'total_money' => '\SquareConnect\Model\Money'
@@ -41,9 +46,14 @@ class OrderLineItem implements ArrayAccess
     static $attributeMap = array(
         'name' => 'name',
         'quantity' => 'quantity',
+        'note' => 'note',
+        'catalog_object_id' => 'catalog_object_id',
+        'variation_name' => 'variation_name',
+        'modifiers' => 'modifiers',
         'taxes' => 'taxes',
         'discounts' => 'discounts',
         'base_price_money' => 'base_price_money',
+        'gross_sales_money' => 'gross_sales_money',
         'total_tax_money' => 'total_tax_money',
         'total_discount_money' => 'total_discount_money',
         'total_money' => 'total_money'
@@ -56,9 +66,14 @@ class OrderLineItem implements ArrayAccess
     static $setters = array(
         'name' => 'setName',
         'quantity' => 'setQuantity',
+        'note' => 'setNote',
+        'catalog_object_id' => 'setCatalogObjectId',
+        'variation_name' => 'setVariationName',
+        'modifiers' => 'setModifiers',
         'taxes' => 'setTaxes',
         'discounts' => 'setDiscounts',
         'base_price_money' => 'setBasePriceMoney',
+        'gross_sales_money' => 'setGrossSalesMoney',
         'total_tax_money' => 'setTotalTaxMoney',
         'total_discount_money' => 'setTotalDiscountMoney',
         'total_money' => 'setTotalMoney'
@@ -71,9 +86,14 @@ class OrderLineItem implements ArrayAccess
     static $getters = array(
         'name' => 'getName',
         'quantity' => 'getQuantity',
+        'note' => 'getNote',
+        'catalog_object_id' => 'getCatalogObjectId',
+        'variation_name' => 'getVariationName',
+        'modifiers' => 'getModifiers',
         'taxes' => 'getTaxes',
         'discounts' => 'getDiscounts',
         'base_price_money' => 'getBasePriceMoney',
+        'gross_sales_money' => 'getGrossSalesMoney',
         'total_tax_money' => 'getTotalTaxMoney',
         'total_discount_money' => 'getTotalDiscountMoney',
         'total_money' => 'getTotalMoney'
@@ -85,10 +105,30 @@ class OrderLineItem implements ArrayAccess
       */
     protected $name;
     /**
-      * $quantity The quantity of the product to purchase. Currently, this string must have an integer value.
+      * $quantity The quantity purchased, as a string representation of a number.
       * @var string
       */
     protected $quantity;
+    /**
+      * $note The note of the line item.
+      * @var string
+      */
+    protected $note;
+    /**
+      * $catalog_object_id The [CatalogItemVariation](#type-catalogitemvariation) id applied to this line item.
+      * @var string
+      */
+    protected $catalog_object_id;
+    /**
+      * $variation_name The name of the variation applied to this line item.
+      * @var string
+      */
+    protected $variation_name;
+    /**
+      * $modifiers The [CatalogModifier](#type-catalogmodifier)s applied to this line item.
+      * @var \SquareConnect\Model\OrderLineItemModifier[]
+      */
+    protected $modifiers;
     /**
       * $taxes The taxes applied to this line item.
       * @var \SquareConnect\Model\OrderLineItemTax[]
@@ -104,6 +144,11 @@ class OrderLineItem implements ArrayAccess
       * @var \SquareConnect\Model\Money
       */
     protected $base_price_money;
+    /**
+      * $gross_sales_money The gross sales amount of money calculated as (item base price + modifiers price) * quantity.
+      * @var \SquareConnect\Model\Money
+      */
+    protected $gross_sales_money;
     /**
       * $total_tax_money The total tax amount of money to collect for the line item.
       * @var \SquareConnect\Model\Money
@@ -137,6 +182,26 @@ class OrderLineItem implements ArrayAccess
             } else {
               $this->quantity = null;
             }
+            if (isset($data["note"])) {
+              $this->note = $data["note"];
+            } else {
+              $this->note = null;
+            }
+            if (isset($data["catalog_object_id"])) {
+              $this->catalog_object_id = $data["catalog_object_id"];
+            } else {
+              $this->catalog_object_id = null;
+            }
+            if (isset($data["variation_name"])) {
+              $this->variation_name = $data["variation_name"];
+            } else {
+              $this->variation_name = null;
+            }
+            if (isset($data["modifiers"])) {
+              $this->modifiers = $data["modifiers"];
+            } else {
+              $this->modifiers = null;
+            }
             if (isset($data["taxes"])) {
               $this->taxes = $data["taxes"];
             } else {
@@ -151,6 +216,11 @@ class OrderLineItem implements ArrayAccess
               $this->base_price_money = $data["base_price_money"];
             } else {
               $this->base_price_money = null;
+            }
+            if (isset($data["gross_sales_money"])) {
+              $this->gross_sales_money = $data["gross_sales_money"];
+            } else {
+              $this->gross_sales_money = null;
             }
             if (isset($data["total_tax_money"])) {
               $this->total_tax_money = $data["total_tax_money"];
@@ -199,12 +269,88 @@ class OrderLineItem implements ArrayAccess
   
     /**
      * Sets quantity
-     * @param string $quantity The quantity of the product to purchase. Currently, this string must have an integer value.
+     * @param string $quantity The quantity purchased, as a string representation of a number.
      * @return $this
      */
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
+        return $this;
+    }
+    /**
+     * Gets note
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+  
+    /**
+     * Sets note
+     * @param string $note The note of the line item.
+     * @return $this
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+        return $this;
+    }
+    /**
+     * Gets catalog_object_id
+     * @return string
+     */
+    public function getCatalogObjectId()
+    {
+        return $this->catalog_object_id;
+    }
+  
+    /**
+     * Sets catalog_object_id
+     * @param string $catalog_object_id The [CatalogItemVariation](#type-catalogitemvariation) id applied to this line item.
+     * @return $this
+     */
+    public function setCatalogObjectId($catalog_object_id)
+    {
+        $this->catalog_object_id = $catalog_object_id;
+        return $this;
+    }
+    /**
+     * Gets variation_name
+     * @return string
+     */
+    public function getVariationName()
+    {
+        return $this->variation_name;
+    }
+  
+    /**
+     * Sets variation_name
+     * @param string $variation_name The name of the variation applied to this line item.
+     * @return $this
+     */
+    public function setVariationName($variation_name)
+    {
+        $this->variation_name = $variation_name;
+        return $this;
+    }
+    /**
+     * Gets modifiers
+     * @return \SquareConnect\Model\OrderLineItemModifier[]
+     */
+    public function getModifiers()
+    {
+        return $this->modifiers;
+    }
+  
+    /**
+     * Sets modifiers
+     * @param \SquareConnect\Model\OrderLineItemModifier[] $modifiers The [CatalogModifier](#type-catalogmodifier)s applied to this line item.
+     * @return $this
+     */
+    public function setModifiers($modifiers)
+    {
+        $this->modifiers = $modifiers;
         return $this;
     }
     /**
@@ -262,6 +408,25 @@ class OrderLineItem implements ArrayAccess
     public function setBasePriceMoney($base_price_money)
     {
         $this->base_price_money = $base_price_money;
+        return $this;
+    }
+    /**
+     * Gets gross_sales_money
+     * @return \SquareConnect\Model\Money
+     */
+    public function getGrossSalesMoney()
+    {
+        return $this->gross_sales_money;
+    }
+  
+    /**
+     * Sets gross_sales_money
+     * @param \SquareConnect\Model\Money $gross_sales_money The gross sales amount of money calculated as (item base price + modifiers price) * quantity.
+     * @return $this
+     */
+    public function setGrossSalesMoney($gross_sales_money)
+    {
+        $this->gross_sales_money = $gross_sales_money;
         return $this;
     }
     /**

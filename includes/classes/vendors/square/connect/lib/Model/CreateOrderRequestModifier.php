@@ -9,7 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CatalogV1Id Class Doc Comment
+ * CreateOrderRequestModifier Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
@@ -17,15 +17,14 @@ use \ArrayAccess;
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
  */
-class CatalogV1Id implements ArrayAccess
+class CreateOrderRequestModifier implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_v1_id' => 'string',
-        'location_id' => 'string'
+        'catalog_object_id' => 'string'
     );
   
     /** 
@@ -33,8 +32,7 @@ class CatalogV1Id implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_v1_id' => 'catalog_v1_id',
-        'location_id' => 'location_id'
+        'catalog_object_id' => 'catalog_object_id'
     );
   
     /**
@@ -42,8 +40,7 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_v1_id' => 'setCatalogV1Id',
-        'location_id' => 'setLocationId'
+        'catalog_object_id' => 'setCatalogObjectId'
     );
   
     /**
@@ -51,20 +48,14 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_v1_id' => 'getCatalogV1Id',
-        'location_id' => 'getLocationId'
+        'catalog_object_id' => 'getCatalogObjectId'
     );
   
     /**
-      * $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
+      * $catalog_object_id The catalog object ID of a [CatalogModifier](#type-catalogmodifier).
       * @var string
       */
-    protected $catalog_v1_id;
-    /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
-      * @var string
-      */
-    protected $location_id;
+    protected $catalog_object_id;
 
     /**
      * Constructor
@@ -73,54 +64,30 @@ class CatalogV1Id implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["catalog_v1_id"])) {
-              $this->catalog_v1_id = $data["catalog_v1_id"];
+            if (isset($data["catalog_object_id"])) {
+              $this->catalog_object_id = $data["catalog_object_id"];
             } else {
-              $this->catalog_v1_id = null;
-            }
-            if (isset($data["location_id"])) {
-              $this->location_id = $data["location_id"];
-            } else {
-              $this->location_id = null;
+              $this->catalog_object_id = null;
             }
         }
     }
     /**
-     * Gets catalog_v1_id
+     * Gets catalog_object_id
      * @return string
      */
-    public function getCatalogV1Id()
+    public function getCatalogObjectId()
     {
-        return $this->catalog_v1_id;
+        return $this->catalog_object_id;
     }
   
     /**
-     * Sets catalog_v1_id
-     * @param string $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
+     * Sets catalog_object_id
+     * @param string $catalog_object_id The catalog object ID of a [CatalogModifier](#type-catalogmodifier).
      * @return $this
      */
-    public function setCatalogV1Id($catalog_v1_id)
+    public function setCatalogObjectId($catalog_object_id)
     {
-        $this->catalog_v1_id = $catalog_v1_id;
-        return $this;
-    }
-    /**
-     * Gets location_id
-     * @return string
-     */
-    public function getLocationId()
-    {
-        return $this->location_id;
-    }
-  
-    /**
-     * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
-     * @return $this
-     */
-    public function setLocationId($location_id)
-    {
-        $this->location_id = $location_id;
+        $this->catalog_object_id = $catalog_object_id;
         return $this;
     }
     /**

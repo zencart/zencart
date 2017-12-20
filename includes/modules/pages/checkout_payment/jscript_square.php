@@ -10,14 +10,18 @@
 if (!defined(MODULE_PAYMENT_SQUARE_STATUS) || MODULE_PAYMENT_SQUARE_STATUS != 'True' || (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID') || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '')) {
     return false;
 }
+if ($payment_modules->in_special_checkout()) {
+    return false;
+}
 ?>
-<script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+<script type="text/javascript" src="https://js.squareup.com/v2/paymentform" title="square js"></script>
 
 
-<script type="text/javascript">
+<script type="text/javascript" title="square">
     var cardNonce;
     var paymentForm = new SqPaymentForm({
         applicationId: '<?php echo MODULE_PAYMENT_SQUARE_APPLICATION_ID; ?>',
+        locationId: '<?php echo MODULE_PAYMENT_SQUARE_LOCATION; ?>',
         inputClass: 'paymentInput',
         inputStyles: [
             {
@@ -41,6 +45,9 @@ if (!defined(MODULE_PAYMENT_SQUARE_STATUS) || MODULE_PAYMENT_SQUARE_STATUS != 'T
         postalCode: {
             elementId: 'square_cc-postcode',
             placeholder: '11111'
+        },
+        applePay: {
+          elementId: 'sq-apple-pay'
         },
         callbacks: {
             cardNonceResponseReceived: function (errors, nonce, cardData) {
@@ -80,6 +87,41 @@ if (!defined(MODULE_PAYMENT_SQUARE_STATUS) || MODULE_PAYMENT_SQUARE_STATUS != 'T
                         break;
                 }
             },
+            methodsSupported: function (methods) {
+             if (methods.applePay === true) {
+              var element = document.getElementById('sq-apple-pay');
+              element.style.display = 'inline-block';
+             }
+            },
+            createPaymentRequest: function () {
+                return {
+                    requestShippingAddress: true,
+                    currencyCode: "USD",
+                    countryCode: "US",
+                    total: {
+                        label: "{{ MERCHANT NAME }}",
+                        amount: "{{TOTAL AMOUNT}}",
+                        pending: false,
+                    },
+                    lineItems: [
+                        {
+                            label: "Subtotal",
+                            amount: "{{SUBTOTAL AMOUNT}}",
+                            pending: false,
+                        },
+                        {
+                            label: "Shipping",
+                            amount: "{{SHIPPING AMOUNT}}",
+                            pending: true,
+                        },
+                        {
+                            label: "Tax",
+                            amount: "{{TAX AMOUNT}}",
+                            pending: false,
+                        }
+                    ]
+                };
+            },
             paymentFormLoaded: function () {
                 paymentForm.setPostalCode('<?php echo $order->billing['postcode']; ?>');
             }
@@ -98,7 +140,7 @@ if (!defined(MODULE_PAYMENT_SQUARE_STATUS) || MODULE_PAYMENT_SQUARE_STATUS != 'T
         });
     });
 </script>
-<style>
+<style title="square styles">
 .paymentInput {display:inline;font-size:1em;margin:0 0.1em 10px 0;height:35px;padding-left:5px;width:50%;}
 .paymentInput {background-color: white;border:3px solid #ccc;}
 .paymentInput--error {color: red; border-color: red;}

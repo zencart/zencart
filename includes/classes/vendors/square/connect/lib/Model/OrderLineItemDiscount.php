@@ -24,6 +24,7 @@ class OrderLineItemDiscount implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
+        'catalog_object_id' => 'string',
         'name' => 'string',
         'type' => 'string',
         'percentage' => 'string',
@@ -37,6 +38,7 @@ class OrderLineItemDiscount implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
+        'catalog_object_id' => 'catalog_object_id',
         'name' => 'name',
         'type' => 'type',
         'percentage' => 'percentage',
@@ -50,6 +52,7 @@ class OrderLineItemDiscount implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
+        'catalog_object_id' => 'setCatalogObjectId',
         'name' => 'setName',
         'type' => 'setType',
         'percentage' => 'setPercentage',
@@ -63,6 +66,7 @@ class OrderLineItemDiscount implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
+        'catalog_object_id' => 'getCatalogObjectId',
         'name' => 'getName',
         'type' => 'getType',
         'percentage' => 'getPercentage',
@@ -71,6 +75,11 @@ class OrderLineItemDiscount implements ArrayAccess
         'scope' => 'getScope'
     );
   
+    /**
+      * $catalog_object_id The catalog object id referencing [CatalogDiscount](#type-catalogdiscount).
+      * @var string
+      */
+    protected $catalog_object_id;
     /**
       * $name The discount's name.
       * @var string
@@ -109,6 +118,11 @@ class OrderLineItemDiscount implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["catalog_object_id"])) {
+              $this->catalog_object_id = $data["catalog_object_id"];
+            } else {
+              $this->catalog_object_id = null;
+            }
             if (isset($data["name"])) {
               $this->name = $data["name"];
             } else {
@@ -140,6 +154,25 @@ class OrderLineItemDiscount implements ArrayAccess
               $this->scope = null;
             }
         }
+    }
+    /**
+     * Gets catalog_object_id
+     * @return string
+     */
+    public function getCatalogObjectId()
+    {
+        return $this->catalog_object_id;
+    }
+  
+    /**
+     * Sets catalog_object_id
+     * @param string $catalog_object_id The catalog object id referencing [CatalogDiscount](#type-catalogdiscount).
+     * @return $this
+     */
+    public function setCatalogObjectId($catalog_object_id)
+    {
+        $this->catalog_object_id = $catalog_object_id;
+        return $this;
     }
     /**
      * Gets name

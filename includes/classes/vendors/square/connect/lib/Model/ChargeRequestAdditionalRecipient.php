@@ -9,7 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CatalogV1Id Class Doc Comment
+ * ChargeRequestAdditionalRecipient Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
@@ -17,15 +17,16 @@ use \ArrayAccess;
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
  */
-class CatalogV1Id implements ArrayAccess
+class ChargeRequestAdditionalRecipient implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_v1_id' => 'string',
-        'location_id' => 'string'
+        'location_id' => 'string',
+        'description' => 'string',
+        'amount_money' => '\SquareConnect\Model\Money'
     );
   
     /** 
@@ -33,8 +34,9 @@ class CatalogV1Id implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_v1_id' => 'catalog_v1_id',
-        'location_id' => 'location_id'
+        'location_id' => 'location_id',
+        'description' => 'description',
+        'amount_money' => 'amount_money'
     );
   
     /**
@@ -42,8 +44,9 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_v1_id' => 'setCatalogV1Id',
-        'location_id' => 'setLocationId'
+        'location_id' => 'setLocationId',
+        'description' => 'setDescription',
+        'amount_money' => 'setAmountMoney'
     );
   
     /**
@@ -51,20 +54,26 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_v1_id' => 'getCatalogV1Id',
-        'location_id' => 'getLocationId'
+        'location_id' => 'getLocationId',
+        'description' => 'getDescription',
+        'amount_money' => 'getAmountMoney'
     );
   
     /**
-      * $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
-      * @var string
-      */
-    protected $catalog_v1_id;
-    /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+      * $location_id The location ID for a recipient (other than the merchant) receiving a portion of the tender.
       * @var string
       */
     protected $location_id;
+    /**
+      * $description The description of the additional recipient.
+      * @var string
+      */
+    protected $description;
+    /**
+      * $amount_money The amount of money distributed to the recipient.
+      * @var \SquareConnect\Model\Money
+      */
+    protected $amount_money;
 
     /**
      * Constructor
@@ -73,36 +82,22 @@ class CatalogV1Id implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["catalog_v1_id"])) {
-              $this->catalog_v1_id = $data["catalog_v1_id"];
-            } else {
-              $this->catalog_v1_id = null;
-            }
             if (isset($data["location_id"])) {
               $this->location_id = $data["location_id"];
             } else {
               $this->location_id = null;
             }
+            if (isset($data["description"])) {
+              $this->description = $data["description"];
+            } else {
+              $this->description = null;
+            }
+            if (isset($data["amount_money"])) {
+              $this->amount_money = $data["amount_money"];
+            } else {
+              $this->amount_money = null;
+            }
         }
-    }
-    /**
-     * Gets catalog_v1_id
-     * @return string
-     */
-    public function getCatalogV1Id()
-    {
-        return $this->catalog_v1_id;
-    }
-  
-    /**
-     * Sets catalog_v1_id
-     * @param string $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
-     * @return $this
-     */
-    public function setCatalogV1Id($catalog_v1_id)
-    {
-        $this->catalog_v1_id = $catalog_v1_id;
-        return $this;
     }
     /**
      * Gets location_id
@@ -115,12 +110,50 @@ class CatalogV1Id implements ArrayAccess
   
     /**
      * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+     * @param string $location_id The location ID for a recipient (other than the merchant) receiving a portion of the tender.
      * @return $this
      */
     public function setLocationId($location_id)
     {
         $this->location_id = $location_id;
+        return $this;
+    }
+    /**
+     * Gets description
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+  
+    /**
+     * Sets description
+     * @param string $description The description of the additional recipient.
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+    /**
+     * Gets amount_money
+     * @return \SquareConnect\Model\Money
+     */
+    public function getAmountMoney()
+    {
+        return $this->amount_money;
+    }
+  
+    /**
+     * Sets amount_money
+     * @param \SquareConnect\Model\Money $amount_money The amount of money distributed to the recipient.
+     * @return $this
+     */
+    public function setAmountMoney($amount_money)
+    {
+        $this->amount_money = $amount_money;
         return $this;
     }
     /**

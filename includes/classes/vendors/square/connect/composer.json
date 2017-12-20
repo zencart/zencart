@@ -1,6 +1,6 @@
 {
     "name": "square/connect",
-    "version": "2.2.1",
+    "version": "2.5.1",
     "description": "PHP client library for the Square Connect v2 API",
     "keywords": [
         "swagger",

@@ -32,7 +32,8 @@ class Checkout implements ArrayAccess
         'pre_populate_shipping_address' => '\SquareConnect\Model\Address',
         'redirect_url' => 'string',
         'order' => '\SquareConnect\Model\Order',
-        'created_at' => 'string'
+        'created_at' => 'string',
+        'additional_recipients' => '\SquareConnect\Model\AdditionalRecipient[]'
     );
   
     /** 
@@ -48,7 +49,8 @@ class Checkout implements ArrayAccess
         'pre_populate_shipping_address' => 'pre_populate_shipping_address',
         'redirect_url' => 'redirect_url',
         'order' => 'order',
-        'created_at' => 'created_at'
+        'created_at' => 'created_at',
+        'additional_recipients' => 'additional_recipients'
     );
   
     /**
@@ -64,7 +66,8 @@ class Checkout implements ArrayAccess
         'pre_populate_shipping_address' => 'setPrePopulateShippingAddress',
         'redirect_url' => 'setRedirectUrl',
         'order' => 'setOrder',
-        'created_at' => 'setCreatedAt'
+        'created_at' => 'setCreatedAt',
+        'additional_recipients' => 'setAdditionalRecipients'
     );
   
     /**
@@ -80,7 +83,8 @@ class Checkout implements ArrayAccess
         'pre_populate_shipping_address' => 'getPrePopulateShippingAddress',
         'redirect_url' => 'getRedirectUrl',
         'order' => 'getOrder',
-        'created_at' => 'getCreatedAt'
+        'created_at' => 'getCreatedAt',
+        'additional_recipients' => 'getAdditionalRecipients'
     );
   
     /**
@@ -128,6 +132,11 @@ class Checkout implements ArrayAccess
       * @var string
       */
     protected $created_at;
+    /**
+      * $additional_recipients Additional recipients (other than the merchant) receiving a portion of this checkout. For example, fees assessed on the purchase by a third party integration.
+      * @var \SquareConnect\Model\AdditionalRecipient[]
+      */
+    protected $additional_recipients;
 
     /**
      * Constructor
@@ -180,6 +189,11 @@ class Checkout implements ArrayAccess
               $this->created_at = $data["created_at"];
             } else {
               $this->created_at = null;
+            }
+            if (isset($data["additional_recipients"])) {
+              $this->additional_recipients = $data["additional_recipients"];
+            } else {
+              $this->additional_recipients = null;
             }
         }
     }
@@ -352,6 +366,25 @@ class Checkout implements ArrayAccess
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+        return $this;
+    }
+    /**
+     * Gets additional_recipients
+     * @return \SquareConnect\Model\AdditionalRecipient[]
+     */
+    public function getAdditionalRecipients()
+    {
+        return $this->additional_recipients;
+    }
+  
+    /**
+     * Sets additional_recipients
+     * @param \SquareConnect\Model\AdditionalRecipient[] $additional_recipients Additional recipients (other than the merchant) receiving a portion of this checkout. For example, fees assessed on the purchase by a third party integration.
+     * @return $this
+     */
+    public function setAdditionalRecipients($additional_recipients)
+    {
+        $this->additional_recipients = $additional_recipients;
         return $this;
     }
     /**
