@@ -224,17 +224,17 @@ class V1Payment implements ArrayAccess
       */
     protected $refunded_money;
     /**
-      * $swedish_rounding_money 
+      * $swedish_rounding_money The total of all sales, including any applicable taxes, rounded to the smallest legal unit of currency (e.g., the nearest penny in USD, the nearest nickel in CAD)
       * @var \SquareConnect\Model\V1Money
       */
     protected $swedish_rounding_money;
     /**
-      * $gross_sales_money 
+      * $gross_sales_money The total of all sales, including any applicable taxes.
       * @var \SquareConnect\Model\V1Money
       */
     protected $gross_sales_money;
     /**
-      * $net_sales_money 
+      * $net_sales_money The total of all sales, minus any applicable taxes.
       * @var \SquareConnect\Model\V1Money
       */
     protected $net_sales_money;
@@ -708,7 +708,7 @@ class V1Payment implements ArrayAccess
   
     /**
      * Sets swedish_rounding_money
-     * @param \SquareConnect\Model\V1Money $swedish_rounding_money 
+     * @param \SquareConnect\Model\V1Money $swedish_rounding_money The total of all sales, including any applicable taxes, rounded to the smallest legal unit of currency (e.g., the nearest penny in USD, the nearest nickel in CAD)
      * @return $this
      */
     public function setSwedishRoundingMoney($swedish_rounding_money)
@@ -727,7 +727,7 @@ class V1Payment implements ArrayAccess
   
     /**
      * Sets gross_sales_money
-     * @param \SquareConnect\Model\V1Money $gross_sales_money 
+     * @param \SquareConnect\Model\V1Money $gross_sales_money The total of all sales, including any applicable taxes.
      * @return $this
      */
     public function setGrossSalesMoney($gross_sales_money)
@@ -746,7 +746,7 @@ class V1Payment implements ArrayAccess
   
     /**
      * Sets net_sales_money
-     * @param \SquareConnect\Model\V1Money $net_sales_money 
+     * @param \SquareConnect\Model\V1Money $net_sales_money The total of all sales, minus any applicable taxes.
      * @return $this
      */
     public function setNetSalesMoney($net_sales_money)

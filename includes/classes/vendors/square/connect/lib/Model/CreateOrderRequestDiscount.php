@@ -24,6 +24,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
+        'catalog_object_id' => 'string',
         'name' => 'string',
         'percentage' => 'string',
         'amount_money' => '\SquareConnect\Model\Money'
@@ -34,6 +35,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
+        'catalog_object_id' => 'catalog_object_id',
         'name' => 'name',
         'percentage' => 'percentage',
         'amount_money' => 'amount_money'
@@ -44,6 +46,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
+        'catalog_object_id' => 'setCatalogObjectId',
         'name' => 'setName',
         'percentage' => 'setPercentage',
         'amount_money' => 'setAmountMoney'
@@ -54,23 +57,29 @@ class CreateOrderRequestDiscount implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
+        'catalog_object_id' => 'getCatalogObjectId',
         'name' => 'getName',
         'percentage' => 'getPercentage',
         'amount_money' => 'getAmountMoney'
     );
   
     /**
-      * $name The discount's name.
+      * $catalog_object_id Only used for catalog taxes. The catalog object ID from exsiting [CatalogDiscount](#type-catalogdiscount).  Do not provide a value for this field if you provide values in other fields for an ad hoc discount.
+      * @var string
+      */
+    protected $catalog_object_id;
+    /**
+      * $name Only used for ad hoc discounts. The discount's name.
       * @var string
       */
     protected $name;
     /**
-      * $percentage The percentage of the discount, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
+      * $percentage Only used for ad hoc discounts. The percentage of the discount, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
       * @var string
       */
     protected $percentage;
     /**
-      * $amount_money The monetary amount of the discount.
+      * $amount_money Only used for ad hoc discounts. The monetary amount of the discount.
       * @var \SquareConnect\Model\Money
       */
     protected $amount_money;
@@ -82,6 +91,11 @@ class CreateOrderRequestDiscount implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["catalog_object_id"])) {
+              $this->catalog_object_id = $data["catalog_object_id"];
+            } else {
+              $this->catalog_object_id = null;
+            }
             if (isset($data["name"])) {
               $this->name = $data["name"];
             } else {
@@ -100,6 +114,25 @@ class CreateOrderRequestDiscount implements ArrayAccess
         }
     }
     /**
+     * Gets catalog_object_id
+     * @return string
+     */
+    public function getCatalogObjectId()
+    {
+        return $this->catalog_object_id;
+    }
+  
+    /**
+     * Sets catalog_object_id
+     * @param string $catalog_object_id Only used for catalog taxes. The catalog object ID from exsiting [CatalogDiscount](#type-catalogdiscount).  Do not provide a value for this field if you provide values in other fields for an ad hoc discount.
+     * @return $this
+     */
+    public function setCatalogObjectId($catalog_object_id)
+    {
+        $this->catalog_object_id = $catalog_object_id;
+        return $this;
+    }
+    /**
      * Gets name
      * @return string
      */
@@ -110,7 +143,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The discount's name.
+     * @param string $name Only used for ad hoc discounts. The discount's name.
      * @return $this
      */
     public function setName($name)
@@ -129,7 +162,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
   
     /**
      * Sets percentage
-     * @param string $percentage The percentage of the discount, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
+     * @param string $percentage Only used for ad hoc discounts. The percentage of the discount, as a string representation of a decimal number.  A value of `7.25` corresponds to a percentage of 7.25%. This value range between 0.0 up to 100.0
      * @return $this
      */
     public function setPercentage($percentage)
@@ -148,7 +181,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
   
     /**
      * Sets amount_money
-     * @param \SquareConnect\Model\Money $amount_money The monetary amount of the discount.
+     * @param \SquareConnect\Model\Money $amount_money Only used for ad hoc discounts. The monetary amount of the discount.
      * @return $this
      */
     public function setAmountMoney($amount_money)

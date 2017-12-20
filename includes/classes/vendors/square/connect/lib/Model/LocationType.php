@@ -9,7 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CatalogV1Id Class Doc Comment
+ * LocationType Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
@@ -17,15 +17,14 @@ use \ArrayAccess;
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
  */
-class CatalogV1Id implements ArrayAccess
+class LocationType implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_v1_id' => 'string',
-        'location_id' => 'string'
+        
     );
   
     /** 
@@ -33,8 +32,7 @@ class CatalogV1Id implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_v1_id' => 'catalog_v1_id',
-        'location_id' => 'location_id'
+        
     );
   
     /**
@@ -42,8 +40,7 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_v1_id' => 'setCatalogV1Id',
-        'location_id' => 'setLocationId'
+        
     );
   
     /**
@@ -51,20 +48,9 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_v1_id' => 'getCatalogV1Id',
-        'location_id' => 'getLocationId'
+        
     );
   
-    /**
-      * $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
-      * @var string
-      */
-    protected $catalog_v1_id;
-    /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
-      * @var string
-      */
-    protected $location_id;
 
     /**
      * Constructor
@@ -73,55 +59,7 @@ class CatalogV1Id implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["catalog_v1_id"])) {
-              $this->catalog_v1_id = $data["catalog_v1_id"];
-            } else {
-              $this->catalog_v1_id = null;
-            }
-            if (isset($data["location_id"])) {
-              $this->location_id = $data["location_id"];
-            } else {
-              $this->location_id = null;
-            }
         }
-    }
-    /**
-     * Gets catalog_v1_id
-     * @return string
-     */
-    public function getCatalogV1Id()
-    {
-        return $this->catalog_v1_id;
-    }
-  
-    /**
-     * Sets catalog_v1_id
-     * @param string $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
-     * @return $this
-     */
-    public function setCatalogV1Id($catalog_v1_id)
-    {
-        $this->catalog_v1_id = $catalog_v1_id;
-        return $this;
-    }
-    /**
-     * Gets location_id
-     * @return string
-     */
-    public function getLocationId()
-    {
-        return $this->location_id;
-    }
-  
-    /**
-     * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
-     * @return $this
-     */
-    public function setLocationId($location_id)
-    {
-        $this->location_id = $location_id;
-        return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.

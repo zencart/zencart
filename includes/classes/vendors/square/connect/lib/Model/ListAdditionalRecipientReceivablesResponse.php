@@ -9,7 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CatalogV1Id Class Doc Comment
+ * ListAdditionalRecipientReceivablesResponse Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
@@ -17,15 +17,16 @@ use \ArrayAccess;
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
  */
-class CatalogV1Id implements ArrayAccess
+class ListAdditionalRecipientReceivablesResponse implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_v1_id' => 'string',
-        'location_id' => 'string'
+        'errors' => '\SquareConnect\Model\Error[]',
+        'receivables' => '\SquareConnect\Model\AdditionalRecipientReceivable[]',
+        'cursor' => 'string'
     );
   
     /** 
@@ -33,8 +34,9 @@ class CatalogV1Id implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_v1_id' => 'catalog_v1_id',
-        'location_id' => 'location_id'
+        'errors' => 'errors',
+        'receivables' => 'receivables',
+        'cursor' => 'cursor'
     );
   
     /**
@@ -42,8 +44,9 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_v1_id' => 'setCatalogV1Id',
-        'location_id' => 'setLocationId'
+        'errors' => 'setErrors',
+        'receivables' => 'setReceivables',
+        'cursor' => 'setCursor'
     );
   
     /**
@@ -51,20 +54,26 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_v1_id' => 'getCatalogV1Id',
-        'location_id' => 'getLocationId'
+        'errors' => 'getErrors',
+        'receivables' => 'getReceivables',
+        'cursor' => 'getCursor'
     );
   
     /**
-      * $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
-      * @var string
+      * $errors Any errors that occurred during the request.
+      * @var \SquareConnect\Model\Error[]
       */
-    protected $catalog_v1_id;
+    protected $errors;
     /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+      * $receivables An array of AdditionalRecipientReceivables that match your query.
+      * @var \SquareConnect\Model\AdditionalRecipientReceivable[]
+      */
+    protected $receivables;
+    /**
+      * $cursor A pagination cursor for retrieving the next set of results, if any remain. Provide this value as the `cursor` parameter in a subsequent request to this endpoint.  See [Paginating results](#paginatingresults) for more information.
       * @var string
       */
-    protected $location_id;
+    protected $cursor;
 
     /**
      * Constructor
@@ -73,54 +82,78 @@ class CatalogV1Id implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["catalog_v1_id"])) {
-              $this->catalog_v1_id = $data["catalog_v1_id"];
+            if (isset($data["errors"])) {
+              $this->errors = $data["errors"];
             } else {
-              $this->catalog_v1_id = null;
+              $this->errors = null;
             }
-            if (isset($data["location_id"])) {
-              $this->location_id = $data["location_id"];
+            if (isset($data["receivables"])) {
+              $this->receivables = $data["receivables"];
             } else {
-              $this->location_id = null;
+              $this->receivables = null;
+            }
+            if (isset($data["cursor"])) {
+              $this->cursor = $data["cursor"];
+            } else {
+              $this->cursor = null;
             }
         }
     }
     /**
-     * Gets catalog_v1_id
-     * @return string
+     * Gets errors
+     * @return \SquareConnect\Model\Error[]
      */
-    public function getCatalogV1Id()
+    public function getErrors()
     {
-        return $this->catalog_v1_id;
+        return $this->errors;
     }
   
     /**
-     * Sets catalog_v1_id
-     * @param string $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
+     * Sets errors
+     * @param \SquareConnect\Model\Error[] $errors Any errors that occurred during the request.
      * @return $this
      */
-    public function setCatalogV1Id($catalog_v1_id)
+    public function setErrors($errors)
     {
-        $this->catalog_v1_id = $catalog_v1_id;
+        $this->errors = $errors;
         return $this;
     }
     /**
-     * Gets location_id
-     * @return string
+     * Gets receivables
+     * @return \SquareConnect\Model\AdditionalRecipientReceivable[]
      */
-    public function getLocationId()
+    public function getReceivables()
     {
-        return $this->location_id;
+        return $this->receivables;
     }
   
     /**
-     * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+     * Sets receivables
+     * @param \SquareConnect\Model\AdditionalRecipientReceivable[] $receivables An array of AdditionalRecipientReceivables that match your query.
      * @return $this
      */
-    public function setLocationId($location_id)
+    public function setReceivables($receivables)
     {
-        $this->location_id = $location_id;
+        $this->receivables = $receivables;
+        return $this;
+    }
+    /**
+     * Gets cursor
+     * @return string
+     */
+    public function getCursor()
+    {
+        return $this->cursor;
+    }
+  
+    /**
+     * Sets cursor
+     * @param string $cursor A pagination cursor for retrieving the next set of results, if any remain. Provide this value as the `cursor` parameter in a subsequent request to this endpoint.  See [Paginating results](#paginatingresults) for more information.
+     * @return $this
+     */
+    public function setCursor($cursor)
+    {
+        $this->cursor = $cursor;
         return $this;
     }
     /**

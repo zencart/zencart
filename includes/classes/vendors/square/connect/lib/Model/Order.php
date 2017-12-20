@@ -24,6 +24,7 @@ class Order implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
+        'id' => 'string',
         'location_id' => 'string',
         'reference_id' => 'string',
         'line_items' => '\SquareConnect\Model\OrderLineItem[]',
@@ -37,6 +38,7 @@ class Order implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
+        'id' => 'id',
         'location_id' => 'location_id',
         'reference_id' => 'reference_id',
         'line_items' => 'line_items',
@@ -50,6 +52,7 @@ class Order implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
+        'id' => 'setId',
         'location_id' => 'setLocationId',
         'reference_id' => 'setReferenceId',
         'line_items' => 'setLineItems',
@@ -63,6 +66,7 @@ class Order implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
+        'id' => 'getId',
         'location_id' => 'getLocationId',
         'reference_id' => 'getReferenceId',
         'line_items' => 'getLineItems',
@@ -71,6 +75,11 @@ class Order implements ArrayAccess
         'total_discount_money' => 'getTotalDiscountMoney'
     );
   
+    /**
+      * $id The order's unique ID.  This value is only present for Order objects created by the Orders API through the [CreateOrder](#endpoint-createorder) endpoint.
+      * @var string
+      */
+    protected $id;
     /**
       * $location_id The ID of the merchant location this order is associated with.
       * @var string
@@ -109,6 +118,11 @@ class Order implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["id"])) {
+              $this->id = $data["id"];
+            } else {
+              $this->id = null;
+            }
             if (isset($data["location_id"])) {
               $this->location_id = $data["location_id"];
             } else {
@@ -140,6 +154,25 @@ class Order implements ArrayAccess
               $this->total_discount_money = null;
             }
         }
+    }
+    /**
+     * Gets id
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+  
+    /**
+     * Sets id
+     * @param string $id The order's unique ID.  This value is only present for Order objects created by the Orders API through the [CreateOrder](#endpoint-createorder) endpoint.
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
     /**
      * Gets location_id

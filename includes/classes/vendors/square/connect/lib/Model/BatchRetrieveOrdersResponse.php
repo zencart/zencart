@@ -9,7 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CatalogV1Id Class Doc Comment
+ * BatchRetrieveOrdersResponse Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
@@ -17,15 +17,15 @@ use \ArrayAccess;
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
  */
-class CatalogV1Id implements ArrayAccess
+class BatchRetrieveOrdersResponse implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_v1_id' => 'string',
-        'location_id' => 'string'
+        'orders' => '\SquareConnect\Model\Order[]',
+        'errors' => '\SquareConnect\Model\Error[]'
     );
   
     /** 
@@ -33,8 +33,8 @@ class CatalogV1Id implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_v1_id' => 'catalog_v1_id',
-        'location_id' => 'location_id'
+        'orders' => 'orders',
+        'errors' => 'errors'
     );
   
     /**
@@ -42,8 +42,8 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_v1_id' => 'setCatalogV1Id',
-        'location_id' => 'setLocationId'
+        'orders' => 'setOrders',
+        'errors' => 'setErrors'
     );
   
     /**
@@ -51,20 +51,20 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_v1_id' => 'getCatalogV1Id',
-        'location_id' => 'getLocationId'
+        'orders' => 'getOrders',
+        'errors' => 'getErrors'
     );
   
     /**
-      * $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
-      * @var string
+      * $orders The requested orders. This will omit any requested orders that do not exist or are not charged.
+      * @var \SquareConnect\Model\Order[]
       */
-    protected $catalog_v1_id;
+    protected $orders;
     /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
-      * @var string
+      * $errors Any errors that occurred during the request.
+      * @var \SquareConnect\Model\Error[]
       */
-    protected $location_id;
+    protected $errors;
 
     /**
      * Constructor
@@ -73,54 +73,54 @@ class CatalogV1Id implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["catalog_v1_id"])) {
-              $this->catalog_v1_id = $data["catalog_v1_id"];
+            if (isset($data["orders"])) {
+              $this->orders = $data["orders"];
             } else {
-              $this->catalog_v1_id = null;
+              $this->orders = null;
             }
-            if (isset($data["location_id"])) {
-              $this->location_id = $data["location_id"];
+            if (isset($data["errors"])) {
+              $this->errors = $data["errors"];
             } else {
-              $this->location_id = null;
+              $this->errors = null;
             }
         }
     }
     /**
-     * Gets catalog_v1_id
-     * @return string
+     * Gets orders
+     * @return \SquareConnect\Model\Order[]
      */
-    public function getCatalogV1Id()
+    public function getOrders()
     {
-        return $this->catalog_v1_id;
+        return $this->orders;
     }
   
     /**
-     * Sets catalog_v1_id
-     * @param string $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
+     * Sets orders
+     * @param \SquareConnect\Model\Order[] $orders The requested orders. This will omit any requested orders that do not exist or are not charged.
      * @return $this
      */
-    public function setCatalogV1Id($catalog_v1_id)
+    public function setOrders($orders)
     {
-        $this->catalog_v1_id = $catalog_v1_id;
+        $this->orders = $orders;
         return $this;
     }
     /**
-     * Gets location_id
-     * @return string
+     * Gets errors
+     * @return \SquareConnect\Model\Error[]
      */
-    public function getLocationId()
+    public function getErrors()
     {
-        return $this->location_id;
+        return $this->errors;
     }
   
     /**
-     * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+     * Sets errors
+     * @param \SquareConnect\Model\Error[] $errors Any errors that occurred during the request.
      * @return $this
      */
-    public function setLocationId($location_id)
+    public function setErrors($errors)
     {
-        $this->location_id = $location_id;
+        $this->errors = $errors;
         return $this;
     }
     /**

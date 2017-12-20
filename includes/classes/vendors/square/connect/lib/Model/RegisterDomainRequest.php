@@ -9,7 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CatalogV1Id Class Doc Comment
+ * RegisterDomainRequest Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
@@ -17,15 +17,14 @@ use \ArrayAccess;
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
  */
-class CatalogV1Id implements ArrayAccess
+class RegisterDomainRequest implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_v1_id' => 'string',
-        'location_id' => 'string'
+        'domain_name' => 'string'
     );
   
     /** 
@@ -33,8 +32,7 @@ class CatalogV1Id implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_v1_id' => 'catalog_v1_id',
-        'location_id' => 'location_id'
+        'domain_name' => 'domain_name'
     );
   
     /**
@@ -42,8 +40,7 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_v1_id' => 'setCatalogV1Id',
-        'location_id' => 'setLocationId'
+        'domain_name' => 'setDomainName'
     );
   
     /**
@@ -51,20 +48,14 @@ class CatalogV1Id implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_v1_id' => 'getCatalogV1Id',
-        'location_id' => 'getLocationId'
+        'domain_name' => 'getDomainName'
     );
   
     /**
-      * $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
+      * $domain_name A domain name as described in RFC-1034 that will be registered with ApplePay
       * @var string
       */
-    protected $catalog_v1_id;
-    /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
-      * @var string
-      */
-    protected $location_id;
+    protected $domain_name;
 
     /**
      * Constructor
@@ -73,54 +64,30 @@ class CatalogV1Id implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["catalog_v1_id"])) {
-              $this->catalog_v1_id = $data["catalog_v1_id"];
+            if (isset($data["domain_name"])) {
+              $this->domain_name = $data["domain_name"];
             } else {
-              $this->catalog_v1_id = null;
-            }
-            if (isset($data["location_id"])) {
-              $this->location_id = $data["location_id"];
-            } else {
-              $this->location_id = null;
+              $this->domain_name = null;
             }
         }
     }
     /**
-     * Gets catalog_v1_id
+     * Gets domain_name
      * @return string
      */
-    public function getCatalogV1Id()
+    public function getDomainName()
     {
-        return $this->catalog_v1_id;
+        return $this->domain_name;
     }
   
     /**
-     * Sets catalog_v1_id
-     * @param string $catalog_v1_id The ID for an object in Connect V1, if different from its Connect V2 ID.
+     * Sets domain_name
+     * @param string $domain_name A domain name as described in RFC-1034 that will be registered with ApplePay
      * @return $this
      */
-    public function setCatalogV1Id($catalog_v1_id)
+    public function setDomainName($domain_name)
     {
-        $this->catalog_v1_id = $catalog_v1_id;
-        return $this;
-    }
-    /**
-     * Gets location_id
-     * @return string
-     */
-    public function getLocationId()
-    {
-        return $this->location_id;
-    }
-  
-    /**
-     * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
-     * @return $this
-     */
-    public function setLocationId($location_id)
-    {
-        $this->location_id = $location_id;
+        $this->domain_name = $domain_name;
         return $this;
     }
     /**
