@@ -254,6 +254,11 @@ systemChecks:
             fieldName: products_options_comment
             fieldCheck: Type
             expectedResult: 'VARCHAR(255)'
+          - checkType: fieldSchema
+            tableName: orders_products
+            fieldName: products_virtual
+            fieldCheck: Type
+            expectedResult: 'tinyint(1)'
 
   checkDBVersion155:
     runLevel: dbVersion
