@@ -8,7 +8,7 @@
  * @package square
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.6 $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5f $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -1129,17 +1129,18 @@ function zen_cfg_pull_down_square_locations($location, $key = '')
 
 // for backward compatibility with older ZC versions before v152 which didn't have this function:
 if (!function_exists('plugin_version_check_for_updates')) {
-    function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '')
-    {
-        if ($plugin_file_id == 0) return false;
-        $new_version_available = false;
+  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
+  {
+    if ($plugin_file_id == 0) return false;
+    $new_version_available = false;
+    $lookup_index = $errno = 0;
+    $response = $error = '';
+    $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+    $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
-        $lookup_index = 0;
-        $url1         = 'https://plugins.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
-        $url2         = 'https://www.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
-
+    if (function_exists('curl_init')) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url1);
+        curl_setopt($ch, CURLOPT_URL,$url1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
@@ -1147,46 +1148,50 @@ if (!function_exists('plugin_version_check_for_updates')) {
         curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
-        $error    = curl_error($ch);
-        $errno    = curl_errno($ch);
+        $error = curl_error($ch);
+        $errno = curl_errno($ch);
 
-        if ($error > 0) {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
-            curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
-            $response = curl_exec($ch);
-            $error    = curl_error($ch);
-            $errno    = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
         }
-        if ($error > 0) {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
-            curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
-            $response = curl_exec($ch);
-            $error    = curl_error($ch);
-            $errno    = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
         }
         curl_close($ch);
-        if ($error > 0 || $response == '') {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
-            $ctx      = stream_context_create(['http' => ['timeout' => 5]]);
-            $response = file_get_contents($url1, null, $ctx);
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
-                $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
-            }
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
-
-                return false;
-            }
-        }
-
-        $data = json_decode($response, true);
-        if (!$data || !is_array($data)) return false;
-        // compare versions
-        if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
-        // check whether present ZC version is compatible with the latest available plugin version
-        if (!in_array('v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = false;
-
-        return ($new_version_available) ? $data[$lookup_index] : false;
+    } else {
+        $errono = 9999;
+        $error = 'curl_init not found in PHP';
     }
+    if ($errno > 0 || $response == '') {
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
+      $ctx = stream_context_create(array('http' => array('timeout' => 5)));
+      $response = file_get_contents($url1, null, $ctx);
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
+        $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
+      }
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
+        return false;
+      }
+    }
+
+    $data = json_decode($response, true);
+    if (!$data || !is_array($data)) return false;
+    // compare versions
+    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
+    // check whether present ZC version is compatible with the latest available plugin version
+    $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
+    if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+    if (!in_array('v'. $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+    return ($new_version_available) ? $data[$lookup_index] : false;
+  }
 }
