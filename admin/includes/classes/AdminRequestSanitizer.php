@@ -358,7 +358,7 @@ class AdminRequestSanitizer extends base
      */
     private function filterFileDirRegex($parameterName)
     {
-        $filedirRegex = '~[^0-9a-z' . preg_quote('.!@#$%^& ()`_+-~/' . '\\', '~') . ']~i';
+        $filedirRegex = '~[^0-9a-z' . preg_quote('.!@#$%&()_-~/`+^ ' . '\\', '~') . ']~i';
         if (isset($_POST[$parameterName])) {
             $this->debugMessages[] = 'PROCESSING FILE_DIR_REGEX == ' . $parameterName;
             $_POST[$parameterName] = preg_replace($filedirRegex, '', $_POST[$parameterName]);
@@ -475,13 +475,32 @@ class AdminRequestSanitizer extends base
      */
     private function filterProductUrlRegex($parameterName)
     {
-        $urlRegex = '~([^a-z0-9\'!#$&%@();:/=?_\~\[\]-]|[><])~i';
+        $urlRegex = '~([^0-9a-z' . preg_quote("'.!@#$%&()_-~/;:=?[]", '~') . ']|[><])~i';
         if (isset($_POST[$parameterName])) {
             $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $parameterName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {
                     $newValue = preg_replace($urlRegex, '', $_POST[$parameterName][$pKey]);
+                }
+                $_POST[$parameterName][$pKey] = $newValue;
+                $this->postKeysAlreadySanitized[] = $parameterName;
+            }
+        }
+    }
+
+    /**
+     * @param $parameterName
+     */
+    private function filterFilePathOrUrlRegex($parameterName)
+    {
+        $regex = '~([^0-9a-z' . preg_quote("'.!@#$%&()_-~/;:=?[]`+^ " . '\\', '~') . ']|[><])~i';
+        if (isset($_POST[$parameterName])) {
+            $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $parameterName;
+            foreach ($_POST[$parameterName] as $pKey => $pValue) {
+                $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
+                if ($newValue === false) {
+                    $newValue = preg_replace($regex, '', $_POST[$parameterName][$pKey]);
                 }
                 $_POST[$parameterName][$pKey] = $newValue;
                 $this->postKeysAlreadySanitized[] = $parameterName;
