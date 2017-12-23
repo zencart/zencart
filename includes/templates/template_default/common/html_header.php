@@ -54,9 +54,8 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 if (!isset($lng) || (isset($lng) && !is_object($lng))) {
   $lng = new language;
 }
-reset($lng->catalog_languages);
 if (sizeof($lng->catalog_languages) > 1) {
-  while (list($key, $value) = each($lng->catalog_languages)) {
+    foreach($lng->catalog_languages as $key=>$value) {
     echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
   }
 }
