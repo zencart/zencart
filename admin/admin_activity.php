@@ -30,6 +30,7 @@ $save_to_file_checked = (isset($_POST['savetofile']) && zen_not_null($_POST['sav
 $post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
 $file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . date('Y-m-d_H-i-s') . '.csv');
+if (!preg_match('/.*\.(csv|txt|html?|xml)$/', $file)) $file .= '.txt';
 $filter_options = array();
 $filter_options[0] = array('id' => '0', 'text' => TEXT_EXPORTFILTER0, 'filter' => 'all');
 $filter_options[1] = array('id' => '1', 'text' => TEXT_EXPORTFILTER1, 'filter' => 'info');
