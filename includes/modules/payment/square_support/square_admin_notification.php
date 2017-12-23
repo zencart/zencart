@@ -6,7 +6,7 @@
  * @package square
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.6 $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5f $
  */
 
 $outputStartBlock = '';
@@ -19,10 +19,10 @@ $outputEndBlock   = '';
 $output           = '';
 
 
-$outputStartBlock .= '<td><table class="noprint">' . "\n";
+$outputStartBlock .= '<table class="noprint">' . "\n";
 $outputStartBlock .= '<tr style="background-color : #bbbbbb; border-style : dotted;">' . "\n";
 $outputEndBlock   .= '</tr>' . "\n";
-$outputEndBlock   .= '</table></td>' . "\n";
+$outputEndBlock   .= '</table>' . "\n";
 
 
 if (!empty($transaction) && $transaction->getId()) {

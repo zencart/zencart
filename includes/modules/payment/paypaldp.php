@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Mar 16 10:28:02 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.5f $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -806,9 +806,9 @@ class paypaldp extends base {
         if (isset($optionsAll['STREET2'])) unset($optionsAll['STREET2']);
       }
       if (isset($optionsAll['DESC']) && $optionsAll['DESC'] == '') unset($optionsAll['DESC']);
-      $this->zcLog('before_process - DP-4', 'options: ' . print_r(array_merge($optionsAll, $optionsNVP, $optionsShip), true) . "\n" . 'Rest of data: ' . "\n" . number_format($order_amount, 2) . ' ' . $cc_expdate_month . ' ' . substr($cc_expdate_year, -2) . ' ' . $cc_first_name . ' ' . $cc_last_name . ' ' . $cc_type);
+      $this->zcLog('before_process - DP-4', 'options: ' . print_r(array_merge($optionsAll, $optionsNVP, $optionsShip), true) . "\n" . 'Rest of data: ' . "\n" . round($order_amount, 2) . ' ' . $cc_expdate_month . ' ' . substr($cc_expdate_year, -2) . ' ' . $cc_first_name . ' ' . $cc_last_name . ' ' . $cc_type);
 
-      if (!isset($optionsAll['AMT'])) $optionsAll['AMT'] = number_format($order_amount, 2, '.', '');
+      if (!isset($optionsAll['AMT'])) $optionsAll['AMT'] = round($order_amount, 2);
       $response = $doPayPal->DoDirectPayment($cc_number,
                                            $cc_checkcode,
                                            $cc_expdate_month . substr($cc_expdate_year, -2),
@@ -1415,7 +1415,7 @@ class paypaldp extends base {
       $amount = (int)$amount;
       $applyFormatting = FALSE;
     }
-    return ($applyFormatting ? number_format($amount, $currencies->get_decimal_places($paypalCurrency)) : $amount);
+    return ($applyFormatting ? round($amount, $currencies->get_decimal_places($paypalCurrency)) : $amount);
   }
   /**
    * Set the state field depending on what PayPal requires for that country.
@@ -1754,21 +1754,21 @@ class paypaldp extends base {
     if (isset($optionsST['HANDLINGAMT']) && $optionsST['HANDLINGAMT'] == 0) unset($optionsST['HANDLINGAMT']);
     if (isset($optionsST['INSURANCEAMT']) && $optionsST['INSURANCEAMT'] == 0) unset($optionsST['INSURANCEAMT']);
 
-    // tidy up all values so that they comply with proper format (number_format(xxxx,2) for PayPal US use )
+    // tidy up all values so that they comply with proper format (rounded to 2 decimals for PayPal US use )
     if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], array('JPY', 'NOK', 'HUF', 'TWD'))) {
       if (is_array($optionsST)) foreach ($optionsST as $key=>$value) {
-        $optionsST[$key] = number_format($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
+        $optionsST[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
       }
       if (is_array($optionsLI)) foreach ($optionsLI as $key=>$value) {
         if (substr($key, 0, 8) == 'L_TAXAMT' && ($optionsLI[$key] == '' || $optionsLI[$key] == 0)) {
           unset($optionsLI[$key]);
         } else {
-          if (strstr($key, 'AMT')) $optionsLI[$key] = number_format($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
+          if (strstr($key, 'AMT')) $optionsLI[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
         }
       }
     }
 
-    $this->zcLog('getLineItemDetails 8', 'checking subtotals... ' . "\n" . print_r(array_merge(array('calculated total'=>number_format($stAll, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2))), $optionsST), true) . "\n-------------------\ndifference: " . ($stDiff + 0) . '  (abs+rounded: ' . ($stDiffRounded + 0) . ')');
+    $this->zcLog('getLineItemDetails 8', 'checking subtotals... ' . "\n" . print_r(array_merge(array('calculated total'=>round($stAll, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2))), $optionsST), true) . "\n-------------------\ndifference: " . ($stDiff + 0) . '  (abs+rounded: ' . ($stDiffRounded + 0) . ')');
 
     if ( $stDiffRounded != 0) {
       $this->zcLog('getLineItemDetails 9', 'Subtotals Bad. Skipping line-item/subtotal details');
