@@ -4,15 +4,11 @@
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sept 2017 Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Sept 2017 Modified in v1.5.5f $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-
-// pull in any necessary JS for the page
-require(DIR_WS_INCLUDES . 'javascript_loader.php');
-
 
 $version_check_requested = (isset($_GET['vcheck']) && $_GET['vcheck'] != '') ? true : false;
 
@@ -197,3 +193,11 @@ if (SHOW_GV_QUEUE == true) {
     </div>
   </div>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
+
+<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"><\/script>');</script>
+<script>window.jQuery || document.write('<script src="includes/javascript/jquery-1.12.4.min.js"><\/script>');</script>
+
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+<script src="includes/javascript/bootstrap.min.js"></script>
+
+<?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
