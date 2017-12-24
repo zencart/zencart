@@ -438,9 +438,9 @@
     // send received data back to PayPal for validation
     $scheme = 'https://';
     //Parse url
-    $web = parse_url($scheme . 'www.paypal.com/cgi-bin/webscr');
+    $web = parse_url($scheme . 'ipnpb.paypal.com/cgi-bin/webscr');
     if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox') {
-      $web = parse_url($scheme . 'www.sandbox.paypal.com/cgi-bin/webscr');
+      $web = parse_url($scheme . 'ipnpb.sandbox.paypal.com/cgi-bin/webscr');
     }
     //Set the port number
     if($web['scheme'] == "https") {
