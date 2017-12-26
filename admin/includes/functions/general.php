@@ -609,8 +609,8 @@
       return $default_zone;
     }
   }
-  
-function zen_get_uprid($prid, $params) 
+
+function zen_get_uprid($prid, $params)
 {
     $uprid = $prid;
     if (is_array($params) && strpos($prid, ':') === false) {
@@ -628,7 +628,7 @@ function zen_get_uprid($prid, $params)
     return $uprid;
 }
 
-function zen_get_prid($uprid) 
+function zen_get_prid($uprid)
 {
     $pieces = explode(':', $uprid);
     return $pieces[0];
@@ -1107,8 +1107,8 @@ function zen_get_prid($uprid)
   }
 
 ////
-// Retreive server information
-  function zen_get_system_information() {
+// Collect server information
+  function zen_get_system_information($privacy = false) {
     global $db;
 
     // determine database size stats
@@ -1147,7 +1147,6 @@ function zen_get_prid($uprid)
     $uptime = (DISPLAY_SERVER_UPTIME == 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
-    $php_disabled_functions = '';
     $exec_disabled = false;
     $php_disabled_functions = @ini_get("disable_functions");
     if ($php_disabled_functions != '') {
@@ -1167,7 +1166,10 @@ function zen_get_prid($uprid)
       }
     }
 
-    return array('date' => zen_datetime_short(date('Y-m-d H:i:s')),
+    $timezone = date_default_timezone_get();
+
+    $systemInfo = array('date' => zen_datetime_short(date('Y-m-d H:i:s')),
+                 'timezone' => $timezone,
                  'system' => $system,
                  'kernel' => $kernel,
                  'host' => $host,
@@ -1191,7 +1193,13 @@ function zen_get_prid($uprid)
                  'mysql_slow_query_log_status' => $mysql_slow_query_log_status,
                  'mysql_slow_query_log_file' => $mysql_slow_query_log_file,
                  );
-  }
+
+    if ($privacy) {
+        unset ($systemInfo['mysql_slow_query_log_file']);
+    }
+
+    return $systemInfo;
+}
 
   function zen_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
     global $db;
