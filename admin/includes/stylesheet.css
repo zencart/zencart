@@ -387,6 +387,7 @@ tr.attributeBoxContent {
     border-color: #666;
     border-style: solid;
     border-width: 1px;
+    padding: 15px;
 }
 
 .formAreaTitle {
@@ -397,7 +398,8 @@ tr.attributeBoxContent {
 
 .infoBoxContent {
     background-color: #e7e6e0;
-    color: #333333;
+    color: #333;
+    padding: 5px;
 }
 
 .infoBoxContent a img, .infoBoxContent input[type="image"] {
@@ -406,7 +408,8 @@ tr.attributeBoxContent {
 
 .infoBoxHeading {
     background-color: #333;
-    color: #ffffff;
+    color: #fff;
+    padding: 5px;
 }
 
 .main a img {

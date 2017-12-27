@@ -25,18 +25,19 @@ if (!defined('IS_ADMIN_FLAG')) {
 */
 
   class box extends boxTableBlock {
+
     function __construct() {
       $this->heading = array();
       $this->contents = array();
     }
 
     function infoBox($heading, $contents) {
-      $this->table_row_parameters = 'class="infoBoxHeading"';
-      $this->table_data_parameters = 'class="infoBoxHeading"';
+      $this->table_row_parameters = 'infoBoxHeading';
+      $this->table_data_parameters = 'infoBoxHeading';
       $this->heading = $this->tableBlock($heading);
 
       $this->table_row_parameters = '';
-      $this->table_data_parameters = 'class="infoBoxContent"';
+      $this->table_data_parameters = 'infoBoxContent';
       $this->contents = $this->tableBlock($contents);
 
       return $this->heading . $this->contents;

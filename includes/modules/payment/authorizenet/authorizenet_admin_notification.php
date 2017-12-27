@@ -17,10 +17,10 @@
   $outputEndBlock = '';
   $output = '';
 
-    $outputStartBlock .= '<td><table class="noprint">'."\n";
+    $outputStartBlock .= '<table class="noprint">'."\n";
     $outputStartBlock .= '<tr style="background-color : #bbbbbb; border-style : dotted;">'."\n";
     $outputEndBlock .= '</tr>'."\n";
-    $outputEndBlock .='</table></td>'."\n";
+    $outputEndBlock .='</table>'."\n";
 
 
   if (method_exists($this, '_doRefund')) {
