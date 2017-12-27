@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 Modified in v1.5.5 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -71,10 +71,13 @@ if (isset($_POST['categories_update_id'])) {
 }
 
 if ($action == 'new_cat') {
-  $sql = "SELECT *
-          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-          WHERE categories_id = '" . $current_category_id . "'
-          ORDER BY products_id";
+  $sql = "SELECT ptc.*, products_name
+          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
+          LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+          ON ptc.products_id = pd.products_id
+          AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+          WHERE ptc.categories_id = '" . $current_category_id . "'
+          ORDER BY products_name";
   $new_product_query = $db->Execute($sql);
   $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
   zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
@@ -1644,7 +1647,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     $download_display = $db->Execute($download_display_query_raw);
                     if ($download_display->RecordCount() > 0) {
                       $filename_is_missing = '';
-                      if (!file_exists(DIR_FS_DOWNLOAD . $download_display->fields['products_attributes_filename'])) {
+                      if ( !zen_orders_products_downloads($download_display->fields['products_attributes_filename']) ) {
                         $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
                       } else {
                         $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');

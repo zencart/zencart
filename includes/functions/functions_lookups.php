@@ -247,7 +247,7 @@
     if (!is_array($option_name_id)) {
       $option_name_id = array($option_name_id);
     }
-    
+
     $sql = "SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id :option_name_id:";
     if (sizeof($option_name_id) > 1 ) {
       $sql2 = 'in (';
@@ -261,11 +261,11 @@
       $sql2 = ' = :option_id:';
       $sql2 = $db->bindVars($sql2, ':option_id:', $option_name_id[0], 'integer');
     }
-      
+
     $sql = $db->bindVars($sql, ':option_name_id:', $sql2, 'noquotestring');
-    
+
     $sql_result = $db->Execute($sql);
-    
+
     foreach($sql_result as $opt_type) {
 
       $test_var = true; // Set to false in observer if the name is not supposed to have a value associated
@@ -276,7 +276,7 @@
         break;
       }
     }
-    
+
     return $option_name_no_value;
   }
 
@@ -285,20 +285,14 @@
  */
   function zen_has_product_attributes_values($products_id) {
     global $db;
-    $attributes_query = "select distinct count(options_values_price) as total, options_values_price as price
+    $attributes_query = "select count(options_values_price) as total
                          from " . TABLE_PRODUCTS_ATTRIBUTES . "
-                         where products_id = " . (int)$products_id;
+                         where products_id = " . (int)$products_id . "
+                         and options_values_price <> 0";
 
     $attributes = $db->Execute($attributes_query);
 
-    if ($attributes->fields['total'] != 0) {
-      foreach ($attributes as $attribute) {
-        if ($attribute['price'] != 0) {
-          return true;
-        }
-      }
-    } 
-    return false;
+    return ($attributes->fields['total'] != 0);
   }
 
 /*

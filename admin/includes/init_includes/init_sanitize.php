@@ -31,6 +31,7 @@ $adminSanitizerTypes = array(
     'SANITIZE_EMAIL_AUDIENCE' => array('type' => 'builtin'),
     'PRODUCT_DESC_REGEX' => array('type' => 'builtin'),
     'PRODUCT_URL_REGEX' => array('type' => 'builtin'),
+    'FILE_PATH_OR_URL' => array('type' => 'builtin'),
     'CURRENCY_VALUE_REGEX' => array('type' => 'builtin'),
     'FLOAT_VALUE_REGEX' => array('type' => 'builtin'),
     'PRODUCT_NAME_DEEP_REGEX' => array('type' => 'builtin'),
@@ -182,7 +183,7 @@ $group = array(
 );
 $sanitizer->addSimpleSanitization('CONVERT_INT', $group);
 
-$group = array('img_dir', 'products_previous_image', 'products_image_manual', 'products_attributes_filename', 'manufacturers_image_manual');
+$group = array('img_dir', 'products_previous_image', 'products_image_manual', 'manufacturers_image_manual');
 $sanitizer->addSimpleSanitization('FILE_DIR_REGEX', $group);
 
 $group = array(
@@ -206,7 +207,7 @@ $group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name',
                'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-               'symbol_left', 'symbol_right', 'products_model');
+               'symbol_left', 'symbol_right', 'products_model', 'alt_url');
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
@@ -223,6 +224,9 @@ $sanitizer->addSimpleSanitization('PRODUCT_DESC_REGEX', $group);
 
 $group = array('products_url', 'manufacturers_url');
 $sanitizer->addSimpleSanitization('PRODUCT_URL_REGEX', $group);
+
+$group = array('products_attributes_filename');
+$sanitizer->addSimpleSanitization('FILE_PATH_OR_URL', $group);
 
 $group = array('coupon_min_order');
 $sanitizer->addSimpleSanitization('CURRENCY_VALUE_REGEX', $group);

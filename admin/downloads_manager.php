@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id:  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -131,12 +131,10 @@ if (zen_not_null($action)) {
                     $padInfo = new objectInfo($padInfo_array);
                   }
 
-// Moved to /admin/includes/configure.php
-                  if (!defined('DIR_FS_DOWNLOAD'))
-                    define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
+                  if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 
                   $filename_is_missing = '';
-                  if (!file_exists(DIR_FS_DOWNLOAD . $products_downloads['products_attributes_filename'])) {
+                  if (!zen_orders_products_downloads(DIR_FS_DOWNLOAD . $products_downloads['products_attributes_filename'])) {
                     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
                   } else {
                     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');

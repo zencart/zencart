@@ -3,12 +3,12 @@
  * Square payments module
  * www.squareup.com
  *
- * Integrated using SquareConnect PHP SDK v2.2.0
+ * Integrated using SquareConnect PHP SDK v2.5.1
  *
  * @package square
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.6 $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5f $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -27,7 +27,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.90';
+    public $moduleVersion = '0.91';
     /**
      * $title is the displayed name for this payment method
      *
@@ -178,6 +178,10 @@ class square extends base
                         '<input type="hidden" id="card-four" name="' . $this->code . '_cc_four">' .
                         '<input type="hidden" id="card-exp" name="' . $this->code . '_cc_exp">',
                 ],
+                [
+                    'title' => '',
+                    'field' => '<button id="sq-apple-pay" class="button-apple-pay"></button>',
+                ],
             ],
         ];
 
@@ -303,6 +307,10 @@ class square extends base
 
         $api_instance = new \SquareConnect\Api\TransactionsApi();
         $body         = new \SquareConnect\Model\ZenCartChargeRequest($request_body);
+// @TODO - customer creation  https://docs.connect.squareup.com/api/connect/v2#navsection-customers
+// @TODO - https://docs.connect.squareup.com/api/connect/v2#endpoint-createorder
+// @TODO - https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
+        $squareOrder  = new \SquareConnect\Model\Order($orderDetails);
 
         try {
             $result        = $api_instance->charge($location->id, $body);
@@ -313,6 +321,14 @@ class square extends base
             $errors_object = $e->getResponseBody()->errors;
             $error         = $this->parse_error_response($errors_object);
             $this->logTransactionData([$e->getCode() => $e->getMessage()], $request_body, print_r($e->getResponseBody(), true));
+
+            // location configuration error
+            if ($error['category'] === 'INVALID_REQUEST_ERROR') {
+                trigger_error("Square Connect [configuration] error. \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
+                $messageStack->add_session('checkout_payment', MODULE_PAYMENT_SQUARE_TEXT_MISCONFIGURATION, 'error');
+                zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+            } 
+            else
 
             // only display payment-related errors to customers
             if ($error['category'] != 'PAYMENT_METHOD_ERROR') {
@@ -575,7 +591,7 @@ class square extends base
         $params = http_build_query(
             [
                 'client_id' => MODULE_PAYMENT_SQUARE_APPLICATION_ID,
-                'scope'     => 'MERCHANT_PROFILE_READ PAYMENTS_WRITE PAYMENTS_READ',
+                'scope'     => 'MERCHANT_PROFILE_READ PAYMENTS_WRITE PAYMENTS_READ ORDERS_WRITE ORDERS_READ CUSTOMERS_WRITE CUSTOMERS_READ ITEMS_WRITE ITEMS_READ',
                 'state'     => uniqid(),
                 'session'   => 'false',
             ]);
@@ -751,7 +767,7 @@ class square extends base
         if (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Application ID', 'MODULE_PAYMENT_SQUARE_APPLICATION_ID', 'sq0idp-', 'Enter the Application ID from your App settings', '6', '0',  now(), 'zen_cfg_password_display')");
         if (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_SECRET')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Application Secret (OAuth)', 'MODULE_PAYMENT_SQUARE_APPLICATION_SECRET', 'sq0csp-', 'Enter the Application Secret from your App OAuth settings', '6', '0',  now(), 'zen_cfg_password_display')");
         if (!defined('MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Type', 'MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE', 'purchase', 'Should payments be [authorized] only, or be completed [purchases]?<br>NOTE: If you use [authorize] then you must manually capture each payment within 6 days or it will be voided automatically.', '6', '0', 'zen_cfg_select_option(array(\'authorize\', \'purchase\'), ', now())");
-        if (!defined('MODULE_PAYMENT_SQUARE_LOCATION')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) values ('<hr>Location ID', 'MODULE_PAYMENT_SQUARE_LOCATION', '', 'Enter the (Store) Location ID from your account settings. You can have multiple locations configured in your account; this setting lets you specify which location your sales should be attributed to.', '6', '0',  now(), 'zen_cfg_pull_down_square_locations(')");
+        if (!defined('MODULE_PAYMENT_SQUARE_LOCATION')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) values ('<hr>Location ID', 'MODULE_PAYMENT_SQUARE_LOCATION', '', 'Enter the (Store) Location ID from your account settings. You can have multiple locations configured in your account; this setting lets you specify which location your sales should be attributed to. If you want to enable Apple Pay support, this location must already be verified for Apple Pay in your Square account.', '6', '0',  now(), 'zen_cfg_pull_down_square_locations(')");
         if (!defined('MODULE_PAYMENT_SQUARE_SORT_ORDER')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('<hr>Sort order of display.', 'MODULE_PAYMENT_SQUARE_SORT_ORDER', '0', 'Sort order of displaying payment options to the customer. Lowest is displayed first.', '6', '0', now())");
         if (!defined('MODULE_PAYMENT_SQUARE_ZONE')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SQUARE_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
         if (!defined('MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID', '2', 'Set the status of Paid orders made with this payment module to this value', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
@@ -1113,17 +1129,18 @@ function zen_cfg_pull_down_square_locations($location, $key = '')
 
 // for backward compatibility with older ZC versions before v152 which didn't have this function:
 if (!function_exists('plugin_version_check_for_updates')) {
-    function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '')
-    {
-        if ($plugin_file_id == 0) return false;
-        $new_version_available = false;
+  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
+  {
+    if ($plugin_file_id == 0) return false;
+    $new_version_available = false;
+    $lookup_index = $errno = 0;
+    $response = $error = '';
+    $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+    $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
-        $lookup_index = 0;
-        $url1         = 'https://plugins.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
-        $url2         = 'https://www.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
-
+    if (function_exists('curl_init')) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url1);
+        curl_setopt($ch, CURLOPT_URL,$url1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
@@ -1131,46 +1148,50 @@ if (!function_exists('plugin_version_check_for_updates')) {
         curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
-        $error    = curl_error($ch);
-        $errno    = curl_errno($ch);
+        $error = curl_error($ch);
+        $errno = curl_errno($ch);
 
-        if ($error > 0) {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
-            curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
-            $response = curl_exec($ch);
-            $error    = curl_error($ch);
-            $errno    = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
         }
-        if ($error > 0) {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
-            curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
-            $response = curl_exec($ch);
-            $error    = curl_error($ch);
-            $errno    = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
         }
         curl_close($ch);
-        if ($error > 0 || $response == '') {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
-            $ctx      = stream_context_create(['http' => ['timeout' => 5]]);
-            $response = file_get_contents($url1, null, $ctx);
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
-                $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
-            }
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
-
-                return false;
-            }
-        }
-
-        $data = json_decode($response, true);
-        if (!$data || !is_array($data)) return false;
-        // compare versions
-        if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
-        // check whether present ZC version is compatible with the latest available plugin version
-        if (!in_array('v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = false;
-
-        return ($new_version_available) ? $data[$lookup_index] : false;
+    } else {
+        $errono = 9999;
+        $error = 'curl_init not found in PHP';
     }
+    if ($errno > 0 || $response == '') {
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
+      $ctx = stream_context_create(array('http' => array('timeout' => 5)));
+      $response = file_get_contents($url1, null, $ctx);
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
+        $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
+      }
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
+        return false;
+      }
+    }
+
+    $data = json_decode($response, true);
+    if (!$data || !is_array($data)) return false;
+    // compare versions
+    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
+    // check whether present ZC version is compatible with the latest available plugin version
+    $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
+    if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+    if (!in_array('v'. $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+    return ($new_version_available) ? $data[$lookup_index] : false;
+  }
 }

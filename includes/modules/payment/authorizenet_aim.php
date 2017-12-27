@@ -68,6 +68,7 @@ class authorizenet_aim extends base {
   var $authorize = '';
   var $commErrNo = 0;
   var $commError = '';
+  var $transaction_id = null;
   /**
    * this module collects card-info onsite
    */
@@ -426,7 +427,7 @@ class authorizenet_aim extends base {
     $response_msg_to_customer = $response_text . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
 
     if ($this->display_specific_failure_reason_for_cvv_and_date) {
-        if (($response_code == '2' && in_array($response[2], array('44', '45', '65'))) || $response_code == '3' && $response[2] == '78') {
+        if (($response_code == '2' && in_array($response[2], array('44', '45', '65'))) || ($response_code == '3' && $response[2] == '78')) {
           $response_msg_to_customer = 'CVV problem ';
         }
         if ($response_code == '3' && in_array($response[2], array('7', '8'))) {
@@ -777,9 +778,9 @@ class authorizenet_aim extends base {
    */
   function tableCheckup() {
     global $db, $sniffer;
-    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'varchar(32)', true) : -1;
+    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'varchar(64)', false) : false;
     if ($fieldOkay1 !== true) {
-      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " CHANGE transaction_id transaction_id varchar(32) default NULL");
+      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " MODIFY transaction_id varchar(64) default NULL");
     }
   }
  /**

@@ -86,7 +86,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <fieldset>
 <h1>About PHP versions</h1>
 <p>Zen Cart&reg; v1.5.6 is designed for PHP 5.6 to 7.2, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.2) and Apache 2.2/2.4</p>
-<p class="small">It is compatible with PHP 5.2.10 through PHP 7.2, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.5 is considered obsolete.</a> You should be using PHP 5.6 or greater by now.)</em></p>
+<p class="small">It is compatible with PHP 5.2.10 through PHP 7.2, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.6 is considered obsolete.</a> You should be using PHP 7.1 or greater by now.)</em></p>
 
 <h1>Upgrade Instructions</h1>
 <p>This document only mentions the actual changes specific to v1.5.6 since v1.5.5.</p>
@@ -130,45 +130,43 @@ OSI Certified is a certification mark of the Open Source Initiative.
 </p>
 
 
-<h1>What's New ... Changes from v1.5.5e to v1.5.6 </h1>
+<h1>What's New ... Changes from v1.5.5f to v1.5.6 </h1>
 <h3><strong>The most notable improvements and bugfixes in v1.5.6 since v1.5.5 include:</strong></h3>
 <ul>
   <li>All known v1.5.5 bugfixes and security fixes are included in v1.5.6</li>
+  <li>Admin - Sales-Report graphs on Admin dashboard</li>
   <li>Checkout - customer confirmation emails now include customer delivery telephone number</li>
   <li>Checkout - Square Payment support is now built-in. Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup </li>
-  <li>Checkout - Authorize.net AIM module now allows more detailed display of AVS failures</li>
-  <li>Checkout - FirstData soft-descriptors now optional via module settings</li>
-  <li>Checkout - PayPal - Australia settings explained better in configuration screen</li>
-  <li>Checkout - Credit Card Slamming threshold now customizable via Observer code or plugin</li>
-  <li>Template - hreflang URL correction</li>
-  <li>Template - jQuery noconflict improvements</li>
-  <li>Template - CSS spans added around product-qty min/max/unit output, so that these items can be selectively hidden if needed. (Credits @lat9)</li>
+  <li>Admin - Reworded "in stock"/"out of stock" to "enabled"/"disabled" on product-edit pages due to popular request</li>
+  <li>Admin - Attribute-related pages updated to cleaner styling (credits @Zen4All)</li>
+  <li>Admin - Admin pages now show their name in browser tabs, instead of generic "Admin"</li>
+  <li>Admin - Order pages now have some observer hooks to allow plugins to display "more data" with less code-changes</li>
   <li>Added - Coupon features: search, export, reactivate, delete duplicates, clone existing coupons</li>
   <li>Added - Coupons can now be restricted to amount of an order or of a specific product</li>
   <li>Added - Coupons can now be restricted to customers having a specified number of previous purchases</li>
   <li>Added - Coupons can now be restricted to products not on sale</li>
   <li>Added - Coupons restrictions can now be bulk-added via manufacturer filter</li>
-  <li>Added - Coupon Usage Reporting</li>
-  <li>Added - Admin pages now show their name in browser tabs, instead of generic "Admin"</li>
+  <li>Added - Coupon Usage Report added</li>
   <li>Added - GV Queue indicator in Admin Header bar can be enabled/disabled in GV Module settings</li>
-  <li>Fixed - if an invalid or non-existent tax rate was encountered, would get: PHP Warning: A non-numeric value encountered in /includes/functions/functions_taxes.php on line 172</li>
-  <li>Fixed - date display on Admin warning about log data is now formatted with store's default date format</li>
-  <li>Security: CVE-2017-11675 - Low-Risk vulnerability (required your Admin login to be hijacked first). Now prevents exporting to invalid filenames.</li>
-  <li>Mobile - Updated embedded MobileDetect to latest version</li>
-  <li>Email - Updated embedded PHPMailer to latest version</li>
-  <li>Admin - Reworded "in stock"/"out of stock" to "enabled"/"disabled" on product-edit pages due to popular request</li>
-  <li>Enhancement - Cache-bypass added for certain db queries, so retrieved data is always fresh</li>
+  <li>Template - CSS spans added around product-qty min/max/unit output, so that these items can be selectively hidden if needed. (Credits @lat9)</li>
+  <li>Template - Compatibility updates to accommodate OnePageCheckout plugin integration </li>
   <li>Enhancement - Updated database to store more order-related data for easier order-reconstruction. This can help allow plugins to do more with completed order details.</li>
   <li>Enhancement - Uploading now gives more detailed feedback about failures related to invalid file types.</li>
-  <li>Enhancement - Ajax handler improvements</li>
-  <li>Utility - CurlTester has more links to external diagnostic tools</li>
+  <li>Fixed in v155f - if an invalid or non-existent tax rate was encountered, would get: PHP Warning: A non-numeric value encountered in /includes/functions/functions_taxes.php on line 172</li>
+  <li>Fixed - date display on Admin warning about log data is now formatted with store's default date format</li>
+  <li>Security: CVE-2017-11675 - Low-Risk vulnerability (required your Admin login to be hijacked first). Now prevents exporting to invalid filenames. Fixed in v155f</li>
+  <li>Mobile - Updated embedded MobileDetect to latest version</li>
+  <li>Email - Updated embedded PHPMailer to latest version</li>
+  <li>Utility - CurlTester has more links to external diagnostic tools, including TLS Testing verification</li>
   <li>Utility - Plugin version-check utility optimized to allow specific version-comparisons, and adapt to timeouts more quickly.</li>
-  <li>Core - Updated dozens of files for compatibility with PHP 7.2 deprecations</li>
+  <li>DB: Remove unused basket 'final_price' field from database</li>
+  <li>Core: Added language-change notifier hooks</li>
 
+  <li>Core - Updated dozens of files for compatibility with PHP 7.2 deprecations</li>
 
   <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>
 </ul>
-<p>A very long detailed list of individual code changes can be viewed <a href="https://github.com/zencart/zc-v1-series/compare/v1.5.5...v1.5.6" target="_blank">on github</a> </p>
+<p>A very long detailed list of individual code changes can be viewed <a href="https://github.com/zencart/zencart/compare/v1.5.5...v1.5.6" target="_blank">on github</a> </p>
 
 </fieldset>
 <br><br>

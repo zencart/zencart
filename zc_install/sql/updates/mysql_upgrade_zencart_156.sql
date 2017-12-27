@@ -70,9 +70,57 @@ ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) NOT NULL de
 ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) NOT NULL default '1';
 ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL default '0';
 
+# Clean up expired prids from baskets
+DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) NOT IN (
+SELECT products_id 
+FROM products WHERE products_status > 0);
+DELETE FROM customers_basket_attributes WHERE CAST(products_id AS unsigned) NOT IN (
+SELECT products_id 
+FROM products WHERE products_status > 0);
+
+# Clean up missing relations for deleted products
+DELETE FROM specials WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM products_to_categories WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM products_description WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM meta_tags_products_description WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM products_attributes WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM reviews WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM reviews_description WHERE reviews_id NOT IN (
+SELECT reviews_id 
+FROM reviews);
+DELETE FROM featured WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM products_discount_quantity WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM coupon_restrict WHERE product_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM products_notifications WHERE products_id NOT IN (
+SELECT products_id 
+FROM products);
+DELETE FROM products_attributes_download WHERE products_attributes_id IN (
+SELECT products_attributes_id FROM products_attributes WHERE products_id NOT IN (
+SELECT products_id 
+FROM products));
+
 
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
+
 ALTER TABLE customers_basket DROP final_price;
 
 #############

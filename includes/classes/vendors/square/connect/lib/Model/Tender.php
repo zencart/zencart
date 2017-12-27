@@ -30,11 +30,13 @@ class Tender implements ArrayAccess
         'created_at' => 'string',
         'note' => 'string',
         'amount_money' => '\SquareConnect\Model\Money',
+        'tip_money' => '\SquareConnect\Model\Money',
         'processing_fee_money' => '\SquareConnect\Model\Money',
         'customer_id' => 'string',
         'type' => 'string',
         'card_details' => '\SquareConnect\Model\TenderCardDetails',
-        'cash_details' => '\SquareConnect\Model\TenderCashDetails'
+        'cash_details' => '\SquareConnect\Model\TenderCashDetails',
+        'additional_recipients' => '\SquareConnect\Model\AdditionalRecipient[]'
     );
   
     /** 
@@ -48,11 +50,13 @@ class Tender implements ArrayAccess
         'created_at' => 'created_at',
         'note' => 'note',
         'amount_money' => 'amount_money',
+        'tip_money' => 'tip_money',
         'processing_fee_money' => 'processing_fee_money',
         'customer_id' => 'customer_id',
         'type' => 'type',
         'card_details' => 'card_details',
-        'cash_details' => 'cash_details'
+        'cash_details' => 'cash_details',
+        'additional_recipients' => 'additional_recipients'
     );
   
     /**
@@ -66,11 +70,13 @@ class Tender implements ArrayAccess
         'created_at' => 'setCreatedAt',
         'note' => 'setNote',
         'amount_money' => 'setAmountMoney',
+        'tip_money' => 'setTipMoney',
         'processing_fee_money' => 'setProcessingFeeMoney',
         'customer_id' => 'setCustomerId',
         'type' => 'setType',
         'card_details' => 'setCardDetails',
-        'cash_details' => 'setCashDetails'
+        'cash_details' => 'setCashDetails',
+        'additional_recipients' => 'setAdditionalRecipients'
     );
   
     /**
@@ -84,11 +90,13 @@ class Tender implements ArrayAccess
         'created_at' => 'getCreatedAt',
         'note' => 'getNote',
         'amount_money' => 'getAmountMoney',
+        'tip_money' => 'getTipMoney',
         'processing_fee_money' => 'getProcessingFeeMoney',
         'customer_id' => 'getCustomerId',
         'type' => 'getType',
         'card_details' => 'getCardDetails',
-        'cash_details' => 'getCashDetails'
+        'cash_details' => 'getCashDetails',
+        'additional_recipients' => 'getAdditionalRecipients'
     );
   
     /**
@@ -122,6 +130,11 @@ class Tender implements ArrayAccess
       */
     protected $amount_money;
     /**
+      * $tip_money The tip's amount of the tender.
+      * @var \SquareConnect\Model\Money
+      */
+    protected $tip_money;
+    /**
       * $processing_fee_money The amount of any Square processing fees applied to the tender.  This field is not immediately populated when a new transaction is created. It is usually available after about ten seconds.
       * @var \SquareConnect\Model\Money
       */
@@ -146,6 +159,11 @@ class Tender implements ArrayAccess
       * @var \SquareConnect\Model\TenderCashDetails
       */
     protected $cash_details;
+    /**
+      * $additional_recipients Additional recipients (other than the merchant) receiving a portion of this tender. For example, fees assessed on the purchase by a third party integration.
+      * @var \SquareConnect\Model\AdditionalRecipient[]
+      */
+    protected $additional_recipients;
 
     /**
      * Constructor
@@ -184,6 +202,11 @@ class Tender implements ArrayAccess
             } else {
               $this->amount_money = null;
             }
+            if (isset($data["tip_money"])) {
+              $this->tip_money = $data["tip_money"];
+            } else {
+              $this->tip_money = null;
+            }
             if (isset($data["processing_fee_money"])) {
               $this->processing_fee_money = $data["processing_fee_money"];
             } else {
@@ -208,6 +231,11 @@ class Tender implements ArrayAccess
               $this->cash_details = $data["cash_details"];
             } else {
               $this->cash_details = null;
+            }
+            if (isset($data["additional_recipients"])) {
+              $this->additional_recipients = $data["additional_recipients"];
+            } else {
+              $this->additional_recipients = null;
             }
         }
     }
@@ -326,6 +354,25 @@ class Tender implements ArrayAccess
         return $this;
     }
     /**
+     * Gets tip_money
+     * @return \SquareConnect\Model\Money
+     */
+    public function getTipMoney()
+    {
+        return $this->tip_money;
+    }
+  
+    /**
+     * Sets tip_money
+     * @param \SquareConnect\Model\Money $tip_money The tip's amount of the tender.
+     * @return $this
+     */
+    public function setTipMoney($tip_money)
+    {
+        $this->tip_money = $tip_money;
+        return $this;
+    }
+    /**
      * Gets processing_fee_money
      * @return \SquareConnect\Model\Money
      */
@@ -418,6 +465,25 @@ class Tender implements ArrayAccess
     public function setCashDetails($cash_details)
     {
         $this->cash_details = $cash_details;
+        return $this;
+    }
+    /**
+     * Gets additional_recipients
+     * @return \SquareConnect\Model\AdditionalRecipient[]
+     */
+    public function getAdditionalRecipients()
+    {
+        return $this->additional_recipients;
+    }
+  
+    /**
+     * Sets additional_recipients
+     * @param \SquareConnect\Model\AdditionalRecipient[] $additional_recipients Additional recipients (other than the merchant) receiving a portion of this tender. For example, fees assessed on the purchase by a third party integration.
+     * @return $this
+     */
+    public function setAdditionalRecipients($additional_recipients)
+    {
+        $this->additional_recipients = $additional_recipients;
         return $this;
     }
     /**
