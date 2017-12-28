@@ -120,7 +120,7 @@ if (sizeof($lng->catalog_languages) > 1) {
 /** CDN for jQuery core **/
 ?>
 
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
 <script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
