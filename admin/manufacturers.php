@@ -48,12 +48,13 @@ if (zen_not_null($action)) {
         $manufacturers_image->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg'));
         $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ($manufacturers_image->parse() && $manufacturers_image->save()) {
-          // remove image from database if none
           if ($manufacturers_image->filename != 'none') {
+            $db_filename = zen_limit_image_filename($manufacturers_image->filename, TABLE_MANUFACTURERS, 'manufacturers_image');
             $db->Execute("UPDATE " . TABLE_MANUFACTURERS . "
-                          SET manufacturers_image = '" . zen_db_input($_POST['img_dir'] . $manufacturers_image->filename) . "'
+                          SET manufacturers_image = '" . zen_db_input($_POST['img_dir'] . $db_filename) . "'
                           WHERE manufacturers_id = " . (int)$manufacturers_id);
           } else {
+              // remove image from database if 'none'
             $db->Execute("UPDATE " . TABLE_MANUFACTURERS . "
                           SET manufacturers_image = ''
                           WHERE manufacturers_id = " . (int)$manufacturers_id);
