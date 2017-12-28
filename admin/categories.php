@@ -227,8 +227,9 @@
           }
           if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != 1) {
             // save filename when not set to none and not blank
-            $db->Execute("update " . TABLE_CATEGORIES . "
-                          set categories_image = '" . $categories_image_name . "'
+              $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
+              $db->Execute("update " . TABLE_CATEGORIES . "
+                          set categories_image = '" . $db_filename . "'
                           where categories_id = '" . (int)$categories_id . "'");
           } else {
             // remove filename when set to none and not blank

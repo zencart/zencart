@@ -2333,6 +2333,32 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   } // end of no attributes or other errors
 } // eof: zen_copy_products_attributes
 
+/**
+ * Get a shortened filename to fit within the db field constraints
+ *
+ * @param string $filename (could also be a URL)
+ * @param string $table_name
+ * @param string $field_name
+ * @param string $extension String to denote the extension. The right-most "." is used as a fallback.
+ * @return string
+ */
+function zen_limit_image_filename($filename, $table_name, $field_name, $extension = '.') {
+    if ($filename === 'none') return $filename;
+
+    $max_length = zen_field_length($table_name, $field_name);
+    $filename_length = function_exists('mb_strlen') ? mb_strlen($filename) : strlen($filename);
+
+    if ($filename_length <= $max_length) return $filename;
+    $divider_position = function_exists('mb_strrpos') ? mb_strrpos($filename, $extension) : strrpos($filename, $extension);
+    $base = substr($filename, 0, $divider_position);
+    $original_suffix = substr($filename, $divider_position);
+    $suffix_length = function_exists('mb_strlen') ? mb_strlen($original_suffix) : strlen($original_suffix);
+    $chop_length = $filename_length - $max_length;
+    $shorter_length = $filename_length - $suffix_length - $chop_length;
+    $shorter_base = substr($base, 0, $shorter_length);
+
+    return $shorter_base . $original_suffix;
+}
 
 /**
  * function to return field type

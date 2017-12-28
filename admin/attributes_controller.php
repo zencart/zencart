@@ -322,6 +322,7 @@ if (zen_not_null($action)) {
           } else {
             $attributes_image_name = $current_image_name;
           }
+          $attributes_image_name = zen_limit_image_filename($attributes_image_name, TABLE_PRODUCTS_ATTRIBUTES, 'attributes_image');
 
           $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
                         VALUES ('" . (int)$products_id . "',
@@ -354,7 +355,8 @@ if (zen_not_null($action)) {
           if (DOWNLOAD_ENABLED == 'true') {
             $products_attributes_id = $db->Insert_ID();
 
-            $products_attributes_filename = zen_db_prepare_input($_POST['products_attributes_filename']);
+            $products_attributes_filename = zen_limit_image_filename($_POST['products_attributes_filename'], TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
+            $products_attributes_filename = zen_db_prepare_input($products_attributes_filename);
             $products_attributes_maxdays = (int)zen_db_prepare_input($_POST['products_attributes_maxdays']);
             $products_attributes_maxcount = (int)zen_db_prepare_input($_POST['products_attributes_maxcount']);
 
@@ -458,6 +460,9 @@ if (zen_not_null($action)) {
           if ($_POST['image_delete'] == 1) {
             $attributes_image_name = '';
           }
+
+          $attributes_image_name = zen_limit_image_filename($attributes_image_name, TABLE_PRODUCTS_ATTRIBUTES, 'attributes_image');
+
 // turned off until working
           $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
                         SET attributes_image = '" . zen_db_input($attributes_image_name) . "'
@@ -492,7 +497,8 @@ if (zen_not_null($action)) {
                         WHERE products_attributes_id = '" . (int)$attribute_id . "'");
 
           if (DOWNLOAD_ENABLED == 'true') {
-            $products_attributes_filename = zen_db_prepare_input($_POST['products_attributes_filename']);
+            $products_attributes_filename = zen_limit_image_filename($_POST['products_attributes_filename'], TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
+            $products_attributes_filename = zen_db_prepare_input($products_attributes_filename);
             $products_attributes_maxdays = zen_db_prepare_input($_POST['products_attributes_maxdays']);
             $products_attributes_maxcount = zen_db_prepare_input($_POST['products_attributes_maxcount']);
 

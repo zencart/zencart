@@ -103,6 +103,8 @@ if (zen_not_null($action)) {
 
       if ($banner_error == false) {
         $db_image_location = (zen_not_null($banners_image_local)) ? $banners_image_local : $banners_image_target . $banners_image->filename;
+        $db_image_location = zen_limit_image_filename($db_image_location, TABLE_BANNERS, 'banners_image');
+        $banners_url = zen_limit_image_filename($banners_url, TABLE_BANNERS, 'banners_url');
         $sql_data_array = array(
           'banners_title' => $banners_title,
           'banners_url' => $banners_url,

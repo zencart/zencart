@@ -46,13 +46,13 @@
         $record_company_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $record_company_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $record_company_image->parse() &&  $record_company_image->save()) {
-          // remove image from database if none
           if ($record_company_image->filename != 'none') {
-          // remove image from database if none
+            $db_filename = zen_limit_image_filename($record_company_image->filename, TABLE_RECORD_COMPANY, 'record_company_image');
             $db->Execute("update " . TABLE_RECORD_COMPANY . "
-                          set record_company_image = '" .  zen_db_input($_POST['img_dir'] . $record_company_image->filename) . "'
+                          set record_company_image = '" .  zen_db_input($_POST['img_dir'] . $db_filename) . "'
                           where record_company_id = '" . (int)$record_company_id . "'");
           } else {
+            // remove image from database if 'none'
             $db->Execute("update " . TABLE_RECORD_COMPANY . "
                           set record_company_image = ''
                           where record_company_id = '" . (int)$record_company_id . "'");
