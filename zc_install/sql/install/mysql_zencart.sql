@@ -2,10 +2,10 @@
 # * Main Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2016 Zen Cart Development Team
+# * @copyright Copyright 2003-2017 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Author: DrByte  Mar 2 2017 +0000 New in v1.5.5 $
+# * @version $Id: Author: DrByte  Modified in v1.5.6 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -223,7 +223,7 @@ CREATE TABLE banners (
   banners_id int(11) NOT NULL auto_increment,
   banners_title varchar(64) NOT NULL default '',
   banners_url varchar(255) NOT NULL default '',
-  banners_image varchar(64) NOT NULL default '',
+  banners_image varchar(255) NOT NULL default '',
   banners_group varchar(15) NOT NULL default '',
   banners_html_text text,
   expires_impressions int(7) default '0',
@@ -268,7 +268,7 @@ CREATE TABLE banners_history (
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   categories_id int(11) NOT NULL auto_increment,
-  categories_image varchar(64) default NULL,
+  categories_image varchar(255) default NULL,
   parent_id int(11) NOT NULL default '0',
   sort_order int(3) default NULL,
   date_added datetime default NULL,
@@ -835,7 +835,7 @@ DROP TABLE IF EXISTS manufacturers;
 CREATE TABLE manufacturers (
   manufacturers_id int(11) NOT NULL auto_increment,
   manufacturers_name varchar(32) NOT NULL default '',
-  manufacturers_image varchar(64) default NULL,
+  manufacturers_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
   PRIMARY KEY  (manufacturers_id),
@@ -1467,7 +1467,7 @@ CREATE TABLE products (
   products_type int(11) NOT NULL default '1',
   products_quantity float NOT NULL default '0',
   products_model varchar(32) default NULL,
-  products_image varchar(64) default NULL,
+  products_image varchar(255) default NULL,
   products_price decimal(15,4) NOT NULL default '0.0000',
   products_virtual tinyint(1) NOT NULL default '0',
   products_date_added datetime NOT NULL default '0001-01-01 00:00:00',
@@ -1530,7 +1530,7 @@ CREATE TABLE products_attributes (
   attributes_display_only tinyint(1) NOT NULL default '0',
   attributes_default tinyint(1) NOT NULL default '0',
   attributes_discounted tinyint(1) NOT NULL default '1',
-  attributes_image varchar(64) default NULL,
+  attributes_image varchar(255) default NULL,
   attributes_price_base_included tinyint(1) NOT NULL default '1',
   attributes_price_onetime decimal(15,4) NOT NULL default '0.0000',
   attributes_price_factor decimal(15,4) NOT NULL default '0.0000',
@@ -1763,7 +1763,7 @@ DROP TABLE IF EXISTS record_artists;
 CREATE TABLE record_artists (
   artists_id int(11) NOT NULL auto_increment,
   artists_name varchar(32) NOT NULL default '',
-  artists_image varchar(64) default NULL,
+  artists_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
   PRIMARY KEY  (artists_id),
@@ -1796,7 +1796,7 @@ DROP TABLE IF EXISTS record_company;
 CREATE TABLE record_company (
   record_company_id int(11) NOT NULL auto_increment,
   record_company_name varchar(32) NOT NULL default '',
-  record_company_image varchar(64) default NULL,
+  record_company_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
   PRIMARY KEY  (record_company_id),
