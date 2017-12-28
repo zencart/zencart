@@ -1,31 +1,21 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 03:43:51 2015 -0400 Modified in v1.5.5 $
+ * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.6.0 $
  */
+
 require('includes/application_top.php');
+  require('includes/functions/functions_graphs.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-if (isset($_GET['flagbanners_on_ssl'])) {
-  $_GET['flagbanners_on_ssl'] = (int)$_GET['flagbanners_on_ssl'];
-}
-if (isset($_GET['bID'])) {
-  $_GET['bID'] = (int)$_GET['bID'];
-}
-if (isset($_GET['flag'])) {
-  $_GET['flag'] = (int)$_GET['flag'];
-}
-if (isset($_GET['page'])) {
-  $_GET['page'] = (int)$_GET['page'];
-}
-if (isset($_GET['flagbanners_open_new_windows'])) {
-  $_GET['flagbanners_open_new_windows'] = (int)$_GET['flagbanners_open_new_windows'];
-}
-
-$banner_extension = zen_banner_image_extension();
+  if (isset($_GET['flagbanners_on_ssl'])) $_GET['flagbanners_on_ssl'] = (int)$_GET['flagbanners_on_ssl'];
+  if (isset($_GET['bID'])) $_GET['bID'] = (int)$_GET['bID'];
+  if (isset($_GET['flag'])) $_GET['flag'] = (int)$_GET['flag'];
+  if (isset($_GET['page'])) $_GET['page'] = (int)$_GET['page'];
+  if (isset($_GET['flagbanners_open_new_windows'])) $_GET['flagbanners_open_new_windows'] = (int)$_GET['flagbanners_open_new_windows'];
 
 if (zen_not_null($action)) {
   switch ($action) {
@@ -71,9 +61,7 @@ if (zen_not_null($action)) {
     case 'update': // deprecated
     case 'add':
     case 'upd':
-      if (isset($_POST['banners_id'])) {
-        $banners_id = zen_db_prepare_input($_POST['banners_id']);
-      }
+        if (isset($_POST['banners_id'])) $banners_id = zen_db_prepare_input($_POST['banners_id']);
       $banners_title = zen_db_prepare_input($_POST['banners_title']);
       $banners_url = zen_db_prepare_input($_POST['banners_url']);
       $new_banners_group = zen_db_prepare_input($_POST['new_banners_group']);
@@ -187,32 +175,6 @@ if (zen_not_null($action)) {
       $db->Execute("DELETE FROM " . TABLE_BANNERS_HISTORY . "
                     WHERE banners_id = " . (int)$banners_id);
 
-      if (function_exists('imagecreate') && zen_not_null($banner_extension)) {
-        if (is_file(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
-          if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
-            unlink(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension);
-          }
-        }
-
-        if (is_file(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension)) {
-          if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension)) {
-            unlink(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension);
-          }
-        }
-
-        if (is_file(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension)) {
-          if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension)) {
-            unlink(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension);
-          }
-        }
-
-        if (is_file(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension)) {
-          if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension)) {
-            unlink(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension);
-          }
-        }
-      }
-
       $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
 
       zen_redirect(zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']));
@@ -220,19 +182,6 @@ if (zen_not_null($action)) {
   }
 }
 
-// check if the graphs directory exists
-$dir_ok = false;
-if (function_exists('imagecreate') && zen_not_null($banner_extension)) {
-  if (is_dir(DIR_WS_IMAGES . 'graphs')) {
-    if (is_writeable(DIR_WS_IMAGES . 'graphs')) {
-      $dir_ok = true;
-    } else {
-      $messageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
-    }
-  } else {
-    $messageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
-  }
-}
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -241,6 +190,7 @@ if (function_exists('imagecreate') && zen_not_null($banner_extension)) {
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <link rel="stylesheet" type="text/css" href="includes/banner_tools.css" />
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
     <script>
@@ -266,6 +216,10 @@ if (function_exists('imagecreate') && zen_not_null($banner_extension)) {
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
+
+    <!--[if lte IE 8]><script type="text/javascript" src="includes/javascript/flot/excanvas.min.js"></script><![endif]-->
+    <script type="text/javascript" src="includes/javascript/flot/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="includes/javascript/flot/jquery.flot.orderbars.js"></script>
 
     <!-- body //-->
     <div class="container-fluid">
@@ -624,17 +578,27 @@ if (function_exists('imagecreate') && zen_not_null($banner_extension)) {
                     $contents[] = array('text' => '<br>' . TEXT_BANNERS_DATE_ADDED . ' ' . zen_date_short($bInfo->date_added));
                     $contents[] = array('text-center', 'text' => '<br>' . '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '" class="btn btn-default" role="button">' . IMAGE_UPDATE . '</a>');
 
-                    if ((function_exists('imagecreate')) && ($dir_ok) && ($banner_extension)) {
-                      $banner_id = $bInfo->banners_id;
-                      $days = '3';
-                      include(DIR_WS_INCLUDES . 'graphs/banner_infobox.php');
-                      $contents[] = array('align' => 'text-center', 'text' => '<br>' . zen_image(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner_id . '.' . $banner_extension));
-                    } else {
-                      include(DIR_WS_FUNCTIONS . 'html_graphs.php');
-                      $contents[] = array('align' => 'text-center', 'text' => '<br>' . zen_banner_graph_infoBox($bInfo->banners_id, '3'));
-                    }
-
-                    $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'graph_hbar_blue.gif', 'Blue', '5', '5') . ' ' . TEXT_BANNERS_BANNER_VIEWS . '<br>' . zen_image(DIR_WS_IMAGES . 'graph_hbar_red.gif', 'Red', '5', '5') . ' ' . TEXT_BANNERS_BANNER_CLICKS);
+        $banner_id = $bInfo->banners_id;
+        $days = 3;
+        $stats = zen_get_banner_data_recent($banner_id, $days);
+        $data = array(array('label'=>TEXT_BANNERS_BANNER_VIEWS, 'data'=>$stats[0], 'bars'=> array('order'=>1) ), array('label'=>TEXT_BANNERS_BANNER_CLICKS, 'data'=>$stats[1], 'bars'=>array('order'=>2)));
+        $settings = array('series' => array('bars'=> array('show'=>'true', 'barWidth' => 0.4, 'align'=>'center'), 'lines, points'=> array('show'=>'false'), ),
+                          'xaxis' => array('tickDecimals' => 0, 'ticks' => sizeof($stats[0]), 'tickLength' => 0),
+                          'yaxis' => array('tickLength' => 0),
+                          'colors'=> array('blue', 'red'),
+                          );
+        $opts = json_encode($settings);
+        $contents[] = array('align' => 'center', 'text' => '<br>
+          <div id="banner-infobox" style="width:200px;height:220px;"></div>
+          <div class="flot-x-axis">
+            <div class="flot-tick-label">' . sprintf(TEXT_BANNERS_LAST_3_DAYS) . '</div>
+          </div>
+          <script>
+            var data = ' . json_encode($data) . ' ;
+            var options = ' . $opts . ' ;
+            var plot = $("#banner-infobox").plot(data, options).data("plot");
+          </script>
+        ');
 
                     if ($bInfo->date_scheduled) {
                       $contents[] = array('text' => '<br>' . sprintf(TEXT_BANNERS_SCHEDULED_AT_DATE, zen_date_short($bInfo->date_scheduled)));
@@ -682,6 +646,17 @@ if (function_exists('imagecreate') && zen_not_null($banner_extension)) {
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
+  <script>
+    $(function() {
+      $( ".datepicker" ).datepicker({
+        showOn: "both",
+        buttonImage: "images/calendar.gif",
+        dateFormat: '<?php echo DATE_FORMAT_SPIFFYCAL; ?>',
+        changeMonth: true,
+        changeYear: true
+      });
+    });
+  </script>
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
