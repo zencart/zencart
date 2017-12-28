@@ -27,7 +27,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.91';
+    public $moduleVersion = '0.92';
     /**
      * $title is the displayed name for this payment method
      *
@@ -71,8 +71,8 @@ class square extends base
 
         global $order;
         $this->code        = 'square';
-        $this->enabled     = ((MODULE_PAYMENT_SQUARE_STATUS == 'True') ? true : false);
-        $this->sort_order  = MODULE_PAYMENT_SQUARE_SORT_ORDER;
+        $this->enabled     = (defined('MODULE_PAYMENT_SQUARE_STATUS') && MODULE_PAYMENT_SQUARE_STATUS == 'True');
+        $this->sort_order  = defined('MODULE_PAYMENT_SQUARE_SORT_ORDER') ? MODULE_PAYMENT_SQUARE_SORT_ORDER : null;
         $this->title       = MODULE_PAYMENT_SQUARE_TEXT_CATALOG_TITLE; // Payment module title in Catalog
         $this->description = '<strong>Square Payments Module ' . $this->moduleVersion . '</strong><br><br>' . MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION;
         if (IS_ADMIN_FLAG === true) {
@@ -82,6 +82,19 @@ class square extends base
                 if (MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '') {
                     $this->title       .= '<span class="alert"> (Access Token needed)</span>';
                     $this->description .= "\n" . '<br><br>' . sprintf(MODULE_PAYMENT_SQUARE_TEXT_NEED_ACCESS_TOKEN, $this->getAuthorizeURL());
+                    $this->description .= '<script>
+                    function tokenCheckSqH(){
+                        $.ajax({
+                            url: "' . str_replace(['index.php?main_page=index', 'http://'], ['square_handler.php?nocache=1', 'https://'], zen_catalog_href_link(FILENAME_DEFAULT, '', 'SSL')) . '",
+                            cache: false,
+                            success: function() {
+                              window.location.reload();
+                            }
+                          });
+                          return true;
+                    }
+                    $(".onClickStartCheck").click(function(){setInterval(function() {tokenCheckSqH()}, 4000)});
+                    </script>';
                 }
                 if (MODULE_PAYMENT_SQUARE_TESTING_MODE == 'Sandbox') $this->title .= '<span class="alert"> (Sandbox mode)</span>';
                 $new_version_details = plugin_version_check_for_updates(156, $this->moduleVersion);
@@ -92,18 +105,18 @@ class square extends base
         }
 
         // determine order-status for transactions
-        if ((int)MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID > 0) {
+        if (defined('MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID > 0) {
             $this->order_status = MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID;
         }
         // Reset order status to pending if capture pending:
-        if (MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE == 'authorize') {
+        if (defined('MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE') && MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE == 'authorize') {
             $this->order_status = 1;
         }
 
         $this->_logDir = DIR_FS_LOGS;
 
         // module can't work without a token; must be configured with OAUTH refreshable token
-        if ((MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '' || MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT == '') && MODULE_PAYMENT_SQUARE_TESTING_MODE == 'Live') {
+        if (!defined('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN') || ((MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '' || MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT == '') && MODULE_PAYMENT_SQUARE_TESTING_MODE == 'Live')) {
             $this->enabled = false;
         }
 
@@ -177,10 +190,6 @@ class square extends base
                         '<input type="hidden" id="card-type" name="' . $this->code . '_cc_type">' .
                         '<input type="hidden" id="card-four" name="' . $this->code . '_cc_four">' .
                         '<input type="hidden" id="card-exp" name="' . $this->code . '_cc_exp">',
-                ],
-                [
-                    'title' => '',
-                    'field' => '<button id="sq-apple-pay" class="button-apple-pay"></button>',
                 ],
             ],
         ];
@@ -307,10 +316,6 @@ class square extends base
 
         $api_instance = new \SquareConnect\Api\TransactionsApi();
         $body         = new \SquareConnect\Model\ZenCartChargeRequest($request_body);
-// @TODO - customer creation  https://docs.connect.squareup.com/api/connect/v2#navsection-customers
-// @TODO - https://docs.connect.squareup.com/api/connect/v2#endpoint-createorder
-// @TODO - https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
-        $squareOrder  = new \SquareConnect\Model\Order($orderDetails);
 
         try {
             $result        = $api_instance->charge($location->id, $body);
@@ -483,11 +488,7 @@ class square extends base
         if ($difference == '') $difference = '+1 hour';
         $now = new DateTime($difference);
 
-        if ($expiry < $now) {
-            return true;
-        }
-
-        return false;
+        return $expiry < $now;
     }
 
     // called by module and by cron job
@@ -504,7 +505,6 @@ class square extends base
                 $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_NEED_ACCESS_TOKEN, $this->getAuthorizeURL()), 'error');
             }
             $this->disableDueToInvalidAccessToken();
-
             return 'failure';
         }
 
@@ -743,7 +743,6 @@ class square extends base
 
         // modern way
         // return ((int)$amount / 10 ** $decimal_places);
-
     }
 
     public function check()
