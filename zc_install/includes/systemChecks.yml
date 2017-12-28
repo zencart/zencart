@@ -48,16 +48,16 @@ systemChecks:
         parameters:
           version: 7.2.0
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.1.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.2') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '5.5') . PHP_EOL; ?>
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.1') . PHP_EOL; ?>
     methods:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 5.5.0
+          version: 7.1.0
           versionTest: ge
   checkZCversion:
     runLevel: always
