@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 1 12:23:19 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  July 2017 -0500 Modified in v1.5.6 $
  */
 /**
  * order class
@@ -210,7 +210,16 @@ class order extends base {
                                       'products_priced_by_attribute' => $orders_products->fields['products_priced_by_attribute'],
                                       'product_is_free' => $orders_products->fields['product_is_free'],
                                       'products_discount_type' => $orders_products->fields['products_discount_type'],
-                                      'products_discount_type_from' => $orders_products->fields['products_discount_type_from']);
+                                      'products_discount_type_from' => $orders_products->fields['products_discount_type_from'],
+                                      'products_weight' => $orders_products->fields['products_weight'],
+                                      'products_virtual' => (int)$orders_products->fields['products_virtual'],
+                                      'product_is_always_free_shipping' => (int)$orders_products->fields['product_is_always_free_shipping'],
+                                      'products_quantity_order_min' => $orders_products->fields['products_quantity_order_min'],
+                                      'products_quantity_order_units' => $orders_products->fields['products_quantity_order_units'],
+                                      'products_quantity_order_max' => $orders_products->fields['products_quantity_order_max'],
+                                      'products_quantity_mixed' => (int)$orders_products->fields['products_quantity_mixed'],
+                                      'products_mixed_discount_quantity' => (int)$orders_products->fields['products_mixed_discount_quantity'],
+                                      );
 
       $subindex = 0;
       $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
@@ -226,7 +235,9 @@ class order extends base {
                                                                    'option_id' => $attributes->fields['products_options_id'],
                                                                    'value_id' => $attributes->fields['products_options_values_id'],
                                                                    'prefix' => $attributes->fields['price_prefix'],
-                                                                   'price' => $attributes->fields['options_values_price']);
+                                                                   'price' => $attributes->fields['options_values_price'],
+                                                                   'product_attribute_is_free' => (int)$attributes->fields['product_attribute_is_free'],
+);
 
           $subindex++;
           $attributes->MoveNext();
@@ -461,7 +472,18 @@ class order extends base {
                                       'products_discount_type' => $products[$i]['products_discount_type'],
                                       'products_discount_type_from' => $products[$i]['products_discount_type_from'],
                                       'id' => $products[$i]['id'],
-                                      'rowClass' => $rowClass);
+                                      'rowClass' => $rowClass,
+                                      'products_weight' => (float)$products[$i]['weight'],
+                                      'products_virtual' => (int)$products[$i]['products_virtual'],
+                                      'product_is_always_free_shipping' => (int)$products[$i]['product_is_always_free_shipping'],
+                                      'products_quantity_order_min' => (float)$products[$i]['products_quantity_order_min'],
+                                      'products_quantity_order_units' => (float)$products[$i]['products_quantity_order_units'],
+                                      'products_quantity_order_max' => (float)$products[$i]['products_quantity_order_max'],
+                                      'products_quantity_mixed' => (int)$products[$i]['products_quantity_mixed'],
+                                      'products_mixed_discount_quantity' => (int)$products[$i]['products_mixed_discount_quantity'],
+                                      'tax' => zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId),
+                                      );
+
 
       if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE) 
       {
@@ -795,7 +817,16 @@ class order extends base {
                               'product_is_free' => $this->products[$i]['product_is_free'],
                               'products_discount_type' => $this->products[$i]['products_discount_type'],
                               'products_discount_type_from' => $this->products[$i]['products_discount_type_from'],
-                              'products_prid' => $this->products[$i]['id']);
+                              'products_prid' => $this->products[$i]['id'],
+                              'products_weight' => (float)$this->products[$i]['weight'],
+                              'products_virtual' => (int)$this->products[$i]['products_virtual'],
+                              'product_is_always_free_shipping' => (int)$this->products[$i]['product_is_always_free_shipping'],
+                              'products_quantity_order_min' => (float)$this->products[$i]['products_quantity_order_min'],
+                              'products_quantity_order_units' => (float)$this->products[$i]['products_quantity_order_units'],
+                              'products_quantity_order_max' => (float)$this->products[$i]['products_quantity_order_max'],
+                              'products_quantity_mixed' => (int)$this->products[$i]['products_quantity_mixed'],
+                              'products_mixed_discount_quantity' => (int)$this->products[$i]['products_mixed_discount_quantity'],
+                              );
       zen_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
       $order_products_id = $db->Insert_ID();
@@ -891,7 +922,8 @@ class order extends base {
                                     'orders_products_filename' => $attributes_values->fields['products_attributes_filename'],
                                     'download_maxdays' => $attributes_values->fields['products_attributes_maxdays'],
                                     'download_count' => $attributes_values->fields['products_attributes_maxcount'],
-                                    'products_prid' => $this->products[$i]['id']
+                                    'products_prid' => $this->products[$i]['id'],
+                                    'products_attributes_id' => $opa_insert_id,
                                     );
 
             zen_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
@@ -1045,6 +1077,7 @@ class order extends base {
       EMAIL_SEPARATOR . "\n" .
       zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
     }
+    $email_order .= EMAIL_TEXT_TELEPHONE . $this->customer['telephone'] . "\n\n";
 
     //addresses area: Billing
     $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .

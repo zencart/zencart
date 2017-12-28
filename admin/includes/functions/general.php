@@ -610,23 +610,29 @@
     }
   }
 
-  function zen_get_uprid($prid, $params) {
+function zen_get_uprid($prid, $params)
+{
     $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-      while (list($option, $value) = each($params)) {
-        $uprid = $uprid . '{' . $option . '}' . $value;
-      }
+    if (is_array($params) && strpos($prid, ':') === false) {
+        foreach ($params as $option => $value) {
+            if (is_array($value)) {
+                foreach ($value as $opt => $val) {
+                    $uprid .= ('{' . $option . '}' . trim($opt));
+                }
+            } else {
+                $uprid .= ('{' . $option . '}' . trim($value));
+            }
+        }
+        $uprid = $prid . ':' . md5($uprid);
     }
-
     return $uprid;
-  }
+}
 
-
-  function zen_get_prid($uprid) {
-    $pieces = explode('{', $uprid);
-
+function zen_get_prid($uprid)
+{
+    $pieces = explode(':', $uprid);
     return $pieces[0];
-  }
+}
 
 
   function zen_get_languages() {
@@ -1101,8 +1107,8 @@
   }
 
 ////
-// Retreive server information
-  function zen_get_system_information() {
+// Collect server information
+  function zen_get_system_information($privacy = false) {
     global $db;
 
     // determine database size stats
@@ -1141,7 +1147,6 @@
     $uptime = (DISPLAY_SERVER_UPTIME == 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
-    $php_disabled_functions = '';
     $exec_disabled = false;
     $php_disabled_functions = @ini_get("disable_functions");
     if ($php_disabled_functions != '') {
@@ -1161,7 +1166,10 @@
       }
     }
 
-    return array('date' => zen_datetime_short(date('Y-m-d H:i:s')),
+    $timezone = date_default_timezone_get();
+
+    $systemInfo = array('date' => zen_datetime_short(date('Y-m-d H:i:s')),
+                 'timezone' => $timezone,
                  'system' => $system,
                  'kernel' => $kernel,
                  'host' => $host,
@@ -1185,7 +1193,13 @@
                  'mysql_slow_query_log_status' => $mysql_slow_query_log_status,
                  'mysql_slow_query_log_file' => $mysql_slow_query_log_file,
                  );
-  }
+
+    if ($privacy) {
+        unset ($systemInfo['mysql_slow_query_log_file']);
+    }
+
+    return $systemInfo;
+}
 
   function zen_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
     global $db;
@@ -1923,6 +1937,14 @@ while (!$chk_sale_categories_all->EOF) {
     return $tmp_array;
   }
 ////
+  /**
+   * alias to zen_create_coupon_code()
+   *
+   * @deprecated: use zen_create_coupon_code() instead (since v1.5.6)
+   */
+  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
+    return zen_create_coupon_code($salt, $length, $prefix);
+  }
 /**
  * Create a Coupon Code. Returns blank if cannot generate a unique code using the passed criteria.
  * @param string $salt - this is an optional string to help seed the random code with greater entropy
@@ -1930,7 +1952,7 @@ while (!$chk_sale_categories_all->EOF) {
  * @param string $prefix - include a prefix string if you want to force the generated code to start with a specific string
  * @return string (new coupon code) (will be blank if the function failed)
  */
-  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
+  function zen_create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
     global $db;
     $length = (int)$length;
     static $max_db_length;
@@ -1945,13 +1967,16 @@ while (!$chk_sale_categories_all->EOF) {
     $ccid .= md5(uniqid("",$salt));
     srand((double)microtime()*1000000); // seed the random number generator
     $good_result = 0;
+    $id1 = '';
     while ($good_result == 0) {
       $random_start = @rand(0, (128-$length));
       $id1=substr($ccid, $random_start, $length);
-      $query = $db->Execute("select coupon_code
-                             from " . TABLE_COUPONS . "
-                             where coupon_code = '" . $prefix . $id1 . "'");
-      if ($query->RecordCount() < 1 ) $good_result = 1;
+      $sql = "select coupon_code
+              from " . TABLE_COUPONS . "
+              where coupon_code = :couponcode";
+      $sql = $db->bindVars($sql, ':couponcode', $prefix . $id1, 'string');
+      $result = $db->Execute($sql);
+      if ($result->RecordCount() < 1 ) $good_result = 1;
     }
     return ($good_result == 1) ? $prefix . $id1 : ''; // blank means couldn't generate a unique code (typically because the max length was encountered before being able to generate unique)
   }
@@ -2584,7 +2609,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       if ($check_valid == true) {
         $valid_downloads = '';
         while (!$download_display->EOF) {
-          if (!file_exists(DIR_FS_DOWNLOAD . $download_display->fields['products_attributes_filename'])) {
+          if (!file_exists(zen_get_download_handler($download_display->fields['products_attributes_filename']))) {
             $valid_downloads .= '<br />&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . ' Invalid: ' . $download_display->fields['products_attributes_filename'];
             // break;
           } else {
@@ -3344,19 +3369,41 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * check that the specified download filename exists on the filesystem
  */
   function zen_orders_products_downloads($check_filename) {
-    global $db;
+    global $zco_notifier;
 
-    $valid_downloads = true;
-    if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
+    $handler = zen_get_download_handler($check_filename);
 
-    if (!file_exists(DIR_FS_DOWNLOAD . $check_filename)) {
-      $valid_downloads = false;
-    // break;
-    } else {
-      $valid_downloads = true;
+    if ($handler == 'local') {
+      return file_exists(DIR_FS_DOWNLOAD . $check_filename);
     }
 
-    return $valid_downloads;
+    /**
+     * An observer hooking this notifier should set $handler to blank if it tries a validation and fails.
+     * Or, if validation passes, simply set $handler to the service name (first chars before first colon in filename)
+     * Or, or there is no way to verify, do nothing to $handler.
+     */
+    $zco_notifier->notify('NOTIFY_TEST_DOWNLOADABLE_FILE_EXISTS', $check_filename, $handler);
+
+    // if handler is set but isn't local (internal) then we simply return true since there's no way to "test"
+    if ($handler != '') return true;
+
+    // else if the notifier caused $handler to be empty then that means it failed verification, so we return false
+    return false;
+  }
+
+/**
+ * check if the specified download filename matches a handler for an external download service
+ * If yes, it will be because the filename contains colons as delimiters ... service:filename:filesize
+ */
+  function zen_get_download_handler($filename) {
+    $file_parts = explode(':', $filename);
+
+    // if the filename doesn't contain any colons, then there's no delimiter to return, so must be using built-in file handling
+    if (sizeof($file_parts) < 2) {
+      return 'local';
+    }
+
+    return $file_parts[0];
   }
 
 /**
@@ -3827,3 +3874,48 @@ function get_logs_data($maxToList = 'count') {
   function set_unwritable($filepath) {
     return @chmod($filepath, 0444);
   }
+
+
+/**
+ * is coupon valid for specials and sales
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool
+ */
+  function is_coupon_valid_for_sales($product_id, $coupon_id) {
+    global $db;
+    $sql = "SELECT coupon_id, coupon_is_valid_for_sales
+            FROM " . TABLE_COUPONS . "
+            WHERE coupon_id = " . (int)$coupon_id;
+
+    $result = $db->Execute($sql);
+
+    // check whether coupon has been flagged for valid with sales
+    if ($result->fields['coupon_is_valid_for_sales']) {
+      return true;
+    }
+
+    // check for any special on $product_id
+    $chk_product_on_sale = zen_get_products_special_price($product_id, true);
+    if (!$chk_product_on_sale) {
+      // check for any sale on $product_id
+      $chk_product_on_sale = zen_get_products_special_price($product_id, false);
+    }
+    if ($chk_product_on_sale) {
+      return false;
+    }
+    return true; // is not on special or sale
+  }
+
+/**
+ * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
+ * @param int|float|string $input
+ * @return float|int
+ */
+    function convertToFloat($input = 0) {
+        if ($input === null) return 0;
+        $val = preg_replace('/[^0-9,\.\-]/', '', $input);
+        // do a non-strict compare here:
+        if ($val == 0) return 0;
+        return (float)$val;
+    }

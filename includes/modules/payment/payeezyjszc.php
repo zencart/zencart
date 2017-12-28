@@ -31,7 +31,7 @@ class payeezyjszc extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    var $moduleVersion = '0.941';
+    var $moduleVersion = '0.97';
     /**
      * $title is the displayed name for this payment method
      *
@@ -128,20 +128,22 @@ class payeezyjszc extends base
         if ($this->enabled == false || (int)MODULE_PAYMENT_PAYEEZYJSZC_ZONE == 0) {
             return;
         }
-        $check_flag = false;
-        $sql        = "SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . (int)MODULE_PAYMENT_PAYEEZYJSZC_ZONE . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id";
-        $checks     = $db->Execute($sql);
-        foreach ($checks as $check) {
-            if ($check['zone_id'] < 1) {
-                $check_flag = true;
-                break;
-            } elseif ($check['zone_id'] == $order->billing['zone_id']) {
-                $check_flag = true;
-                break;
+        if (isset($order->billing['country']) && isset($order->billing['country']['id'])) {
+            $check_flag = false;
+            $sql        = "SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . (int)MODULE_PAYMENT_PAYEEZYJSZC_ZONE . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id";
+            $checks     = $db->Execute($sql);
+            foreach ($checks as $check) {
+                if ($check['zone_id'] < 1) {
+                    $check_flag = true;
+                    break;
+                } elseif ($check['zone_id'] == $order->billing['zone_id']) {
+                    $check_flag = true;
+                    break;
+                }
             }
-        }
-        if ($check_flag == false) {
-            $this->enabled = false;
+            if ($check_flag == false) {
+                $this->enabled = false;
+            }
         }
     }
 
@@ -306,8 +308,8 @@ class payeezyjszc extends base
 
         // lookup shipping and discount amounts
         $args['x_freight'] = $args['x_tax'] = $args['discount_amount'] = 0;
-        if (sizeof($order_totals)) {
-            for ($i = 0, $n = sizeof($order_totals); $i < $n; $i++) {
+        if (count($order_totals)) {
+            for ($i = 0, $n = count($order_totals); $i < $n; $i++) {
                 if ($order_totals[$i]['code'] == '') {
                     continue;
                 }
@@ -349,20 +351,22 @@ class payeezyjszc extends base
         $payload['token']['token_data']['value']           = preg_replace('/[^0-9a-z\-]/i', '', $_POST[$this->code . '_fdtoken']);
         $payload['token']['token_data']['cardholder_name'] = htmlentities($order->info['cc_owner']);
         $payload['token']['token_data']['exp_date']        = str_pad(preg_replace('/[^0-9]/', '', $_POST['cc_expires']), 4, '0', STR_PAD_LEFT); // ensure month is 2 digits
-        $payload['token']['token_data']['cvv']             = strval(preg_replace('/[^0-9]/', '', $_POST['cc_cvv']));
+        $payload['token']['token_data']['cvv']             = (string)(preg_replace('/[^0-9]/', '', $_POST['cc_cvv']));
         $payload['token']['token_data']['type']            = preg_replace('/[^a-z ]/i', '', $_POST['cc_type']);
 
-        $payload['soft_descriptors'] = [
-            'dba_name'              => STORE_NAME, // recommended max 22 chars
-            // 'street' => '',
-            'city'                  => preg_replace('~https?://~', '', HTTP_SERVER), // for ecommerce sites they suggest using the site URL here
-            // 'region' => '',
-            // 'mid' => '',
-            // 'mcc' => '',
-            'postal_code'           => SHIPPING_ORIGIN_ZIP,
-            // 'country_code' => '',
-            'merchant_contact_info' => STORE_TELEPHONE_CUSTSERVICE,
-        ];
+        if (MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS == 'Yes') {
+            $payload['soft_descriptors'] = [
+                'dba_name'              => STORE_NAME, // recommended max 22 chars
+                // 'street' => '',
+                'city'                  => preg_replace('~https?://~', '', HTTP_SERVER), // for ecommerce sites they suggest using the site URL here
+                // 'region' => '',
+                // 'mid' => '',
+                // 'mcc' => '',
+                'postal_code'           => SHIPPING_ORIGIN_ZIP,
+                // 'country_code' => '',
+                'merchant_contact_info' => STORE_TELEPHONE_CUSTSERVICE,
+            ];
+        }
 
         $payload['billing_address'] = [
             'name'            => $order->billing['firstname'] . ' ' . $order->billing['lastname'],
@@ -375,58 +379,61 @@ class payeezyjszc extends base
             'phone'           => ['type' => 'D', 'number' => $order->customer['telephone']],
         ];
 
-        $payload['level2'] = [
-            'tax1_amount'  => $this->format_amount_for_payeezy($args['x_tax']),
-            // 'tax1_number'=> '',  // number of the tax type, per the API chart
-            // 'tax2_amount'=> $this->format_amount_for_payeezy($args['x_tax2']),
-            // 'tax2_number'=> '',  // number of the tax type, per the API chart
-            'customer_ref' => $_SESSION['customer_id'],  // customer number, or PO number, or invoice number, or order number
-        ];
-
-        $payload['level3'] = [
-            'alt_tax_amount'  => 0,
-            'alt_tax_id'      => 0,
-            'discount_amount' => $this->format_amount_for_payeezy($args['discount_amount']),
-            // 'duty_amount'=> 0,
-            'freight_amount'  => $this->format_amount_for_payeezy($args['x_freight']),
-            'ship_from_zip'   => SHIPPING_ORIGIN_ZIP,
-            'ship_to_address' => [
-                'customer_number' => $_SESSION['customer_id'],
-                'address_1'       => $order->delivery['street_address'],
-                'city'            => $order->delivery['city'],
-                'state'           => $order->delivery['state'],
-                'zip'             => $order->delivery['postcode'],
-                'country'         => $order->delivery['country']['title'],
-                'email'           => $order->customer['email_address'],
-                'name'            => $order->delivery['firstname'] . ' ' . $order->delivery['lastname'],
-                'phone'           => $order->customer['telephone'],
-            ],
-        ];
-
-        // Add line-item data to transaction payload
-        if (sizeof($order->products) < 100) {
-            $product_code                    = $commodity_code = ''; // not submitted
-            $payload['level3']['line_items'] = [];
-            for ($i = 0; $i < sizeof($order->products); $i++) {
-                $p                                 = $order->products[$i];
-                $payload['level3']['line_items'][] = (object)[
-                    'description'     => $p['name'],
-                    'quantity'        => $p['qty'],
-                    // 'commodity_code'=> $commodity_code,
-                    // 'discount_amount'=> '',
-                    // 'discount_indicator'=> '',
-                    // 'gross_net_indicator'=> '',
-                    'line_item_total' => $this->format_amount_for_payeezy(round(zen_add_tax($p['final_price'] * $exchange_factor, $p['tax']) * $p['qty'], 2)),
-                    // 'product_code'=> $product_code,
-                    'tax_amount'      => $this->format_amount_for_payeezy(round(zen_calculate_tax($p['final_price'] * $exchange_factor, $p['tax']), 2)),
-                    'tax_rate'        => round($p['tax'], 8),
-                    // 'tax_type'=> '',
-                    'unit_cost'       => $this->format_amount_for_payeezy(round($p['final_price'] * $exchange_factor, 2)),
-                    // 'unit_of_measure'=> '',
-                ];
-            }
+        if (MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL2 == 'Yes') {
+            $payload['level2'] = [
+                'tax1_amount'  => $this->format_amount_for_payeezy($args['x_tax']),
+                // 'tax1_number'=> '',  // number of the tax type, per the API chart
+                // 'tax2_amount'=> $this->format_amount_for_payeezy($args['x_tax2']),
+                // 'tax2_number'=> '',  // number of the tax type, per the API chart
+                'customer_ref' => $_SESSION['customer_id'],  // customer number, or PO number, or invoice number, or order number
+            ];
         }
 
+        if (MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL3 == 'Yes') {
+            $payload['level3'] = [
+                'alt_tax_amount'  => 0,
+                'alt_tax_id'      => 0,
+                'discount_amount' => $this->format_amount_for_payeezy($args['discount_amount']),
+                // 'duty_amount'=> 0,
+                'freight_amount'  => $this->format_amount_for_payeezy($args['x_freight']),
+                'ship_from_zip'   => SHIPPING_ORIGIN_ZIP,
+                'ship_to_address' => [
+                    'customer_number' => $_SESSION['customer_id'],
+                    'address_1'       => $order->delivery['street_address'],
+                    'city'            => $order->delivery['city'],
+                    'state'           => $order->delivery['state'],
+                    'zip'             => $order->delivery['postcode'],
+                    'country'         => $order->delivery['country']['title'],
+                    'email'           => $order->customer['email_address'],
+                    'name'            => $order->delivery['firstname'] . ' ' . $order->delivery['lastname'],
+                    'phone'           => $order->customer['telephone'],
+                ],
+            ];
+
+            // Add line-item data to transaction payload
+            if (count($order->products) < 100) {
+                $product_code = $commodity_code = ''; // not submitted
+
+                $payload['level3']['line_items'] = [];
+                foreach ($order->products as $p) {
+                    $payload['level3']['line_items'][] = (object)[
+                        'description'     => $p['name'],
+                        'quantity'        => $p['qty'],
+                        // 'commodity_code'=> $commodity_code,
+                        // 'discount_amount'=> '',
+                        // 'discount_indicator'=> '',
+                        // 'gross_net_indicator'=> '',
+                        'line_item_total' => $this->format_amount_for_payeezy(round(zen_add_tax($p['final_price'] * $exchange_factor, $p['tax']) * $p['qty'], 2)),
+                        // 'product_code'=> $product_code,
+                        'tax_amount'      => $this->format_amount_for_payeezy(round(zen_calculate_tax($p['final_price'] * $exchange_factor, $p['tax']), 2)),
+                        'tax_rate'        => round($p['tax'], 8),
+                        // 'tax_type'=> '',
+                        'unit_cost'       => $this->format_amount_for_payeezy(round($p['final_price'] * $exchange_factor, 2)),
+                        // 'unit_of_measure'=> '',
+                    ];
+                }
+            }
+        }
 
 // FOR TROUBLESHOOTING ONLY
 // TO TEMPORARILY DISABLE TRANSMISSION OF soft_descriptors OR level 2/3 data, UNCOMMENT THE FOLLOWING LINES:
@@ -444,6 +451,8 @@ class payeezyjszc extends base
 
         // log the response data
         $this->logTransactionData($response, $payload_logged);
+
+
 
         // analyze the response
 
@@ -463,68 +472,6 @@ class payeezyjszc extends base
         // validation_status: values - “success” / ”failure” based on input validation
 
         // transaction_id and transaction_tag (auth code) -- are used for follow-on processing such as recurring billing, void/capture/refund, etc
-
-
-        // successful submission; now need to ensure it was not declined
-        if (in_array($response['http_code'], [200, 201, 202])) {
-            // success example:
-            // {"correlation_id":"228.1100035528625",
-            // "transaction_status":"approved",
-            // "validation_status":"success",
-            // "transaction_type":"purchase",
-            // "transaction_id":"ET159009",
-            // "transaction_tag":"74080064",
-            // "method":"token",
-            // "amount":"200",
-            // "currency":"USD",
-            // "cvv2":"I",
-            // "token":{"token_type":"FDToken",
-            //   "token_data":{"type":"Mastercard",
-            //   "cardholder_name":"xyz",
-            //   "exp_date":"0430",
-            //   "value":"2833693200041732"}
-            // },
-            // "bank_resp_code":"100",
-            // "bank_message":"Approved",
-            // "gateway_resp_code":"00",
-            // "gateway_message":"Transaction Normal"}
-
-            if ($response['transaction_status'] == 'approved') {
-                $this->auth_code            = $response['transaction_tag'];
-                $this->transaction_id       = $response['transaction_id'] . ' Auth/Tag: ' . $response['transaction_tag'] . ' Amount: ' . number_format($response['amount'] / 100, 2, '.', '');
-                $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
-                if (isset($response['avs']) && isset($this->avs_codes[$response['avs']])) {
-                    $this->transaction_messages .= "\n" . 'AVS: ' . $this->avs_codes[$response['avs']];
-                }
-                if (isset($response['cvv2']) && isset($this->cvv_codes[$response['cvv2']])) {
-                    $this->transaction_messages .= "\n" . 'CVV: ' . $this->cvv_codes[$response['cvv2']];
-                }
-
-                return true;
-            }
-
-            if ($response['transaction_status'] == 'declined') {
-
-                // check if card is flagged for fraud
-                if (in_array($response['bank_resp_code'], [500, 501, 502, 503, 596, 534, 524, 519])) {
-                    global $zco_notifier;
-                    $_SESSION['payment_attempt'] = 500;
-                    $zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_LOCKOUT', $response);
-                    $_SESSION['cart']->reset(true);
-                    zen_session_destroy();
-                    $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_DECLINED, 'error');
-                    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
-                }
-
-                // generic "declined" message response
-                $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_DECLINED, 'error');
-                zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
-            }
-
-            // Should never get here if we have a 200-204 response; if we get here, the transaction could not be processed for some other reason
-            $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ERROR . '[' . zen_output_string_protected($response['bank_resp_code'] . '/' . $response['gateway_resp_code']) . ']', 'error');
-            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
-        }
 
 
         // failed
@@ -567,6 +514,136 @@ class payeezyjszc extends base
             $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_MISCONFIGURATION . 'PAYEEZY-500-CALL_TECH_SUPPORT', 'error');
             zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
+
+
+
+
+
+        // successful submission; now need to ensure it was not declined
+        if (in_array($response['http_code'], [200, 201, 202])) {
+            // success example:
+            // {"correlation_id":"228.1100035528625",
+            // "transaction_status":"approved",
+            // "validation_status":"success",
+            // "transaction_type":"purchase",
+            // "transaction_id":"ET159009",
+            // "transaction_tag":"74080064",
+            // "method":"token",
+            // "amount":"200",
+            // "currency":"USD",
+            // "cvv2":"I",
+            // "token":{"token_type":"FDToken",
+            //   "token_data":{"type":"Mastercard",
+            //   "cardholder_name":"xyz",
+            //   "exp_date":"0430",
+            //   "value":"2833693200041732"}
+            // },
+            // "bank_resp_code":"100",
+            // "bank_message":"Approved",
+            // "gateway_resp_code":"00",
+            // "gateway_message":"Transaction Normal"}
+
+            if ($response['transaction_status'] == 'approved') {
+                $this->auth_code            = $response['transaction_tag'];
+                $this->transaction_id       = $response['transaction_id'] . ' Auth/Tag: ' . $response['transaction_tag'] . ' Amount: ' . number_format($response['amount'] / 100, 2, '.', '');
+                $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
+                if (isset($response['avs']) && isset($this->avs_codes[$response['avs']])) {
+                    $this->transaction_messages .= "\n" . 'AVS: ' . $this->avs_codes[$response['avs']];
+                }
+                if (isset($response['cvv2']) && isset($this->cvv_codes[$response['cvv2']])) {
+                    $this->transaction_messages .= "\n" . 'CVV: ' . $this->cvv_codes[$response['cvv2']];
+                }
+
+                return true;
+            }
+
+            if ($response['transaction_status'] == 'declined') {
+
+                // 238 = invalid currency
+                // 243 = invalid Level 3 data, or card not suited for Level 3
+                // 258 = soft_descriptors not allowed/configured on this merchant account
+                // 260 = AVS - Authorization network could not reach the bank which issued the card
+                // 264 = Duplicate transaction; rejected.
+                // 301 = Issuer Unavailable. Try again. 
+                // 303 = (Generic) Processor Decline: no other explanation offered
+                // 351, 353, 354 = Transarmor errors
+
+                // 301 means timeout, try again, because Authorization network could not reach the bank which issued the card
+                // if ($response['bank_resp_code'] == 301) {
+                //     $response = $this->postTransaction($payload, $this->hmacAuthorizationToken($payload));
+                //     $this->logTransactionData($response, $payload_logged);
+                // }
+
+                // check for soft-descriptor failure, and resubmit without 
+                if ($response['bank_resp_code'] == 258 && MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS == 'Yes') {
+                    $payload = $payload_logged;
+                    unset($payload['soft_descriptors']);
+                    $payload_logged = $payload;
+                    $payload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    $response = $this->postTransaction($payload, $this->hmacAuthorizationToken($payload));
+                    $this->logTransactionData($response, $payload_logged);
+                    if (in_array($response['http_code'], [200, 201, 202]) && $response['transaction_status'] == 'approved') {
+                        $this->auth_code            = $response['transaction_tag'];
+                        $this->transaction_id       = $response['transaction_id'] . ' Auth/Tag: ' . $response['transaction_tag'] . ' Amount: ' . number_format($response['amount'] / 100, 2, '.', '');
+                        $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
+                        if (isset($response['avs']) && isset($this->avs_codes[$response['avs']])) {
+                            $this->transaction_messages .= "\n" . 'AVS: ' . $this->avs_codes[$response['avs']];
+                        }
+                        if (isset($response['cvv2']) && isset($this->cvv_codes[$response['cvv2']])) {
+                            $this->transaction_messages .= "\n" . 'CVV: ' . $this->cvv_codes[$response['cvv2']];
+                        }
+
+                        return true;
+                    }
+                }
+
+                // check for level 3 failure, and resubmit without 
+                if ($response['bank_resp_code'] == 243 && MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL3 == 'Yes') {
+                    $payload = $payload_logged;
+                    unset($payload['level3']);
+                    $payload_logged = $payload;
+                    $payload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    $response = $this->postTransaction($payload, $this->hmacAuthorizationToken($payload));
+                    $this->logTransactionData($response, $payload_logged);
+                    if (in_array($response['http_code'], [200, 201, 202]) && $response['transaction_status'] == 'approved') {
+                        $this->auth_code            = $response['transaction_tag'];
+                        $this->transaction_id       = $response['transaction_id'] . ' Auth/Tag: ' . $response['transaction_tag'] . ' Amount: ' . number_format($response['amount'] / 100, 2, '.', '');
+                        $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
+                        if (isset($response['avs']) && isset($this->avs_codes[$response['avs']])) {
+                            $this->transaction_messages .= "\n" . 'AVS: ' . $this->avs_codes[$response['avs']];
+                        }
+                        if (isset($response['cvv2']) && isset($this->cvv_codes[$response['cvv2']])) {
+                            $this->transaction_messages .= "\n" . 'CVV: ' . $this->cvv_codes[$response['cvv2']];
+                        }
+
+                        return true;
+                    }
+                }
+
+
+                // check if card is flagged for fraud
+                if (in_array($response['bank_resp_code'], [500, 501, 502, 503, 596, 534, 524, 519])) {
+                    global $zco_notifier;
+                    $_SESSION['payment_attempt'] = 500;
+                    $zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_LOCKOUT', $response);
+                    $_SESSION['cart']->reset(true);
+                    zen_session_destroy();
+                    $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_DECLINED, 'error');
+                    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+                }
+
+                // generic "declined" message response
+                $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_ERROR_DECLINED, 'error');
+                zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+            }
+
+            // Should never get here if we have a 200-204 response; if we get here, the transaction could not be processed for some other reason
+            $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ERROR . '[' . zen_output_string_protected($response['bank_resp_code'] . '/' . $response['gateway_resp_code']) . ']', 'error');
+            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+        }
+
+
+
 
         // communications/CURL error
         if ($this->commError != '') {
@@ -661,6 +738,15 @@ class payeezyjszc extends base
         if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN')) {
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) values ('Trans Armor Token', 'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN', '', 'Enter the TA Token from your GGe4 account settings (non-US merchants can leave this blank).<br><br>For US Merchants the TransArmor token can be obtained by logging in to https://globalgatewaye4.firstdata.com, navigating to the Terminals page and selecting your terminal. If the Transarmor token is blank, it means that your account has not been enabled for Transarmor yet. To enable Transarmor for your account, you will need to reach out to your account representative or call 1-855-799-0790', '6', '0',  now(), 'zen_cfg_password_display')");
         }
+        if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS')) {
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Send Soft Descriptor Data', 'MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS', 'No', 'Soft-Descriptor data is typically used to differentiate between multiple stores in one merchant account, by sending the store-name and other data in each transaction. The feature must be enabled in your Merchant Account.', '6', '0', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
+        }
+        if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL2')) {
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Send Level II Card Data', 'MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL2', 'No', 'Level II data includes extra tax information, and is usually related to government-issued cards. The feature must be enabled in your Merchant Account.', '6', '0', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
+        }
+        if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL3')) {
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Send Level III Card Data', 'MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL3', 'No', 'Level III data includes detailed transaction line-items, and is usually related to government-issued cards. Using the feature can often result in reduced fees. The feature must be enabled in your Merchant Account.', '6', '0', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
+        }
         if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE')) {
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sandbox/Live Mode', 'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE', 'Live', 'Use [Live] for real transactions<br>Use [Sandbox] for developer testing', '6', '0', 'zen_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
         }
@@ -688,6 +774,9 @@ class payeezyjszc extends base
             'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN',
             'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY',
             'MODULE_PAYMENT_PAYEEZYJSZC_TATOKEN',
+            'MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS',
+            'MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL2',
+            'MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL3',
             'MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE',
             'MODULE_PAYMENT_PAYEEZYJSZC_API_KEY_SANDBOX',
             'MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET_SANDBOX',
@@ -704,20 +793,22 @@ class payeezyjszc extends base
         if (isset($order) && isset($order->info['currency'])) {
             $decimal_places = $currencies->get_decimal_places($order->info['currency']);
         }
-        if ($decimal_places > 0) {
-            $amount = $amount * pow(10, $decimal_places); // Future: Exponentiation Operator ** requires PHP 5.6
-        }
+        if ((int)$decimal_places === 0) return (int)$amount;
 
-        return $amount;
+        // older way
+        return (int)(string)(round($amount, $decimal_places) * pow(10, $decimal_places));
+
+        // Requires PHP 5.6 or newer:
+//        return (int)(string)(round($amount, $decimal_places) * 10 ** $decimal_places);
     }
 
     private function hmacAuthorizationToken($payload)
     {
-        $nonce         = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
-        $timestamp     = sprintf('%s', strval(time()) . '000'); //time stamp in milli seconds as string
-        $data          = strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $nonce . $timestamp . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $this->etppid . $payload;
+        $nonce         = (string)(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
+        $timestamp     = sprintf('%s', (string)(time()) . '000'); //time stamp in milli seconds as string
+        $data          = (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $nonce . $timestamp . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))) . $this->etppid . $payload;
         $hashAlgorithm = "sha256";
-        $hmac          = hash_hmac($hashAlgorithm, $data, strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))), false);    // HMAC Hash in hex
+        $hmac          = hash_hmac($hashAlgorithm, $data, (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))), false);    // HMAC Hash in hex
         $authorization = base64_encode($hmac);
 
         return [
@@ -732,11 +823,11 @@ class payeezyjszc extends base
         $endpoint    = $this->mode == 'Sandbox' ? 'api-cert.payeezy.com' : 'api.payeezy.com';
         $curlHeaders = [
             'Content-Type: application/json',
-            'apikey:' . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
-            'token:' . strval(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
+            'apikey:' . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
+            'token:' . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
             'Authorization:' . $headers['authorization'],
             'nonce:' . $headers['nonce'],
-            'timestamp:' . strval($headers['timestamp']),
+            'timestamp:' . (string)($headers['timestamp']),
             'ext_tppid:' . $this->etppid,
         ];
         $request     = curl_init();
@@ -856,14 +947,16 @@ class payeezyjszc extends base
 
 // for backward compatibility with older ZC versions before v152 which didn't have this function:
 if (!function_exists('plugin_version_check_for_updates')) {
-    function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '')
-    {
-        if ($plugin_file_id == 0) return FALSE;
-        $new_version_available = FALSE;
-        $lookup_index = 0;
-        $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
-        $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
+  {
+    if ($plugin_file_id == 0) return false;
+    $new_version_available = false;
+    $lookup_index = $errno = 0;
+    $response = $error = '';
+    $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
+    $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
+    if (function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -876,41 +969,47 @@ if (!function_exists('plugin_version_check_for_updates')) {
         $error = curl_error($ch);
         $errno = curl_errno($ch);
 
-        if ($error > 0) {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
-            curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
-            $response = curl_exec($ch);
-            $error = curl_error($ch);
-            $errno = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
         }
-        if ($error > 0) {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
-            curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
-            $response = curl_exec($ch);
-            $error = curl_error($ch);
-            $errno = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
         }
         curl_close($ch);
-        if ($error > 0 || $response == '') {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
-            $ctx = stream_context_create(array('http' => array('timeout' => 5)));
-            $response = file_get_contents($url1, null, $ctx);
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
-                $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
-            }
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
-                return false;
-            }
-        }
-
-        $data = json_decode($response, true);
-        if (!$data || !is_array($data)) return false;
-        // compare versions
-        if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
-        // check whether present ZC version is compatible with the latest available plugin version
-        if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
-        return ($new_version_available) ? $data[$lookup_index] : FALSE;
+    } else {
+        $errono = 9999;
+        $error = 'curl_init not found in PHP';
     }
+    if ($errno > 0 || $response == '') {
+      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
+      $ctx = stream_context_create(array('http' => array('timeout' => 5)));
+      $response = file_get_contents($url1, null, $ctx);
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
+        $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
+      }
+      if ($response === false) {
+        trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
+        return false;
+      }
+    }
+
+    $data = json_decode($response, true);
+    if (!$data || !is_array($data)) return false;
+    // compare versions
+    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
+    // check whether present ZC version is compatible with the latest available plugin version
+    $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
+    if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+    if (!in_array('v'. $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+    return ($new_version_available) ? $data[$lookup_index] : false;
+  }
 }

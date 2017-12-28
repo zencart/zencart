@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 20:52:53 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Aug 2017  Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -130,22 +130,15 @@
 <!-- body_text //-->
     <td width="100%" valign="top">
 <?php
-  if ($action == 'new_product' or $action == 'new_product_meta_tags') {
-
-    if ($action == 'new_product_meta_tags') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info_metatags.php');
-    } else {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info.php');
-    }
-
-  } elseif ($action == 'new_product_preview' or $action == 'new_product_preview_meta_tags') {
-    if ($action == 'new_product_preview_meta_tags') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info_meta_tags.php');
-    } else {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info.php');
-    }
-
-  } else {
+if ($action == 'new_product_meta_tags') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info_metatags.php');
+} elseif ($action == 'new_product') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info.php');
+} elseif ($action == 'new_product_preview_meta_tags') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info_meta_tags.php');
+} elseif ($action == 'new_product_preview') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info.php');
+} else {
 
   require(DIR_WS_MODULES . 'category_product_listing.php');
 
@@ -241,13 +234,11 @@
           $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
         }
 
-        // only ask if product has discounts
+        // only ask if product has qty discounts
         if (zen_has_product_discounts($pInfo->products_id) == 'true') {
           $contents[] = array('text' => '<br />' . TEXT_COPY_DISCOUNTS_ONLY);
           $contents[] = array('text' => '<br />' . TEXT_COPY_DISCOUNTS . '<br />' . zen_draw_radio_field('copy_discounts', 'copy_discounts_yes', true) . ' ' . TEXT_COPY_DISCOUNTS_YES . '<br />' . zen_draw_radio_field('copy_discounts', 'copy_discounts_no') . ' ' . TEXT_COPY_DISCOUNTS_NO);
           $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
-        } else {
-          $contents[] = array('text' => '<br />' . 'NO DISCOUNTS');
         }
 
         $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_copy.gif', IMAGE_COPY) . ' <a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');

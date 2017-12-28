@@ -7,12 +7,12 @@
  */
 
 @import url("css/bootstrap.min.css");
-/* @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"); */
+/* @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"); */
 
 @import url("menu.css");
 
 @import url("css/font-awesome.min.css");
-/* @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"); */
+/* @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"); */
 
 a {
     color: #0000ff;
@@ -387,6 +387,7 @@ tr.attributeBoxContent {
     border-color: #666;
     border-style: solid;
     border-width: 1px;
+    padding: 15px;
 }
 
 .formAreaTitle {
@@ -397,7 +398,8 @@ tr.attributeBoxContent {
 
 .infoBoxContent {
     background-color: #e7e6e0;
-    color: #333333;
+    color: #333;
+    padding: 5px;
 }
 
 .infoBoxContent a img, .infoBoxContent input[type="image"] {
@@ -406,7 +408,8 @@ tr.attributeBoxContent {
 
 .infoBoxHeading {
     background-color: #333;
-    color: #ffffff;
+    color: #fff;
+    padding: 5px;
 }
 
 .main a img {
@@ -510,7 +513,7 @@ div.reportBox {
 .reportBox div.row span.right {
     float: right;
     text-align: right;
-    width: 34%;
+    width: 21%;
 }
 
 div.warrantyrow {

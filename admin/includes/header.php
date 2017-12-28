@@ -1,14 +1,18 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Mar 23 14:21:26 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Sept 2017 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
+
+// pull in any necessary JS for the page
+require(DIR_WS_INCLUDES . 'javascript_loader.php');
+
 
 $version_check_requested = (isset($_GET['vcheck']) && $_GET['vcheck'] != '') ? true : false;
 
@@ -27,8 +31,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
             if (file_exists($test_file) and file_exists($test_directory)) {
                 $count++;
                 $languages_array[] = array('id' => $languages[$i]['code'],
-                    'text' => $languages[$i]['name']);
-//        if ($languages[$i]['directory'] == $language) {
+                                           'text' => $languages[$i]['name']);
                 if ($languages[$i]['directory'] == $_SESSION['language']) {
                     $languages_selected = $languages[$i]['code'];
                 }
@@ -77,43 +80,63 @@ if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
         if (substr(trim($line), 0, 46) == 'display_update_link_on_index_and_sysinfo_page=') $version_ini_index_sysinfo = trim(strtolower(str_replace('display_update_link_only_on_sysinfo_page=', '', $line)));
     }
 }
+
+$doVersionCheck = false;
+$versionCheckError = false;
+
 // ignore version check if not enabled or if not on main page or sysinfo page
 if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($version_check_sysinfo == true || $version_check_index == true) && $zv_db_patch_ok == true) || $version_check_requested == true) {
+    $doVersionCheck = true;
+    $versionServer = new VersionServer();
+    $newinfo = $versionServer->getProjectVersion();
     $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
-    $lines = @file(NEW_VERSION_CHECKUP_URL . '?v='.PROJECT_VERSION_MAJOR.'.'.PROJECT_VERSION_MINOR.'&p='.PHP_VERSION.'&a='.$_SERVER['SERVER_SOFTWARE'].'&r='.urlencode(HTTP_SERVER));
-    //check for major/minor version info
-    if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
-        $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];
+    if (isset($newinfo['error'])) {
+        $isCurrent = true;
+        $versionCheckError = true;
+    } else {
+        $isCurrent = $versionServer->isProjectCurrent($newinfo);
     }
-    //check for patch version info
-    // first confirm that we're at latest major/minor -- otherwise no need to check patches:
-    if (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) == PROJECT_VERSION_MINOR) {
-        //check to see if either patch needs to be applied
-        if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1) || trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
-            // reset update message, since we WILL be advising of an available upgrade
-            if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
-            //check for patch #1
-            if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
-//          if ($new_version != '') $new_version .= '<br />';
-                $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
-            }
-            if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
-//          if ($new_version != '') $new_version .= '<br />';
-                $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
-            }
-        }
+
+    $hasPatches = 0;
+
+    if (!$isCurrent) {
+        $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' :: ' . $newinfo['versionDetail'];
     }
+    if ($isCurrent) {
+        $hasPatches = $versionServer->hasProjectPatches($newinfo);
+    }
+
+    if ($isCurrent && $hasPatches && $new_version == TEXT_VERSION_CHECK_CURRENT) {
+        $new_version = '';
+    }
+
+    if ($isCurrent && $hasPatches != 2 && $hasPatches) {
+        $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($newinfo['versionPatch1']) . '] :: ' . $newinfo['versionPatchDetail'] . '</span>';
+    }
+
+    if ($isCurrent && $hasPatches > 1) {
+        $new_version .= (($new_version != '') ? '<br />' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($newinfo['versionPatch2']) . '] :: ' . $newinfo['versionPatchDetail'] . '</span>';
+    }
+
     // display download link
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $lines[6] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
-} else {
+    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $newinfo['versionDownloadURI'] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
+}
+
+if (!$doVersionCheck || ($versionCheckError && $version_check_requested == true)) {
+    $new_version = '';
+    if ($versionCheckError) {
+        $new_version = ERROR_CONTACTING_PROJECT_VERSION_SERVER . '<br>';
+    }
     // display the "check for updated version" button.  The button link should be the current page and all params
     $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
     $url .= (strpos($url, '?') > 5 ? '&' : '?') . 'vcheck=yes';
-    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version = '<a href="' . $url . '">' . '<input type="button" class="btn btn-link" value="' . TEXT_VERSION_CHECK_BUTTON . '"/></a>';
+    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version .= '<a href="' . $url . '">' . '<input type="button" class="btn btn-link" value="' . TEXT_VERSION_CHECK_BUTTON . '"/></a>';
 }
+/////////////////
+
 
 // check GV release queue and alert store owner
-if (SHOW_GV_QUEUE == true) {
+if (MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN == 'true') {
     $new_gv_queue = $db->Execute("select * from " . TABLE_COUPON_GV_QUEUE . " where release_flag='N'");
     $new_gv_queue_cnt = 0;
     if ($new_gv_queue->RecordCount() > 0) {
@@ -192,11 +215,4 @@ if (SHOW_GV_QUEUE == true) {
         </ul>
     </div>
   </div>
-<?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
-
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
-<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
-
-<script src="includes/javascript/jquery-1.12.1.min.js"></script>
-<script src="includes/javascript/bootstrap.min.js"></script>

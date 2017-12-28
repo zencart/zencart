@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  May 5 2016  Modified in v1.5.5a $
+ * @version $Id: Author: DrByte  July 2017  Modified in v1.5.6 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -68,6 +68,7 @@ class authorizenet_aim extends base {
   var $authorize = '';
   var $commErrNo = 0;
   var $commError = '';
+  var $transaction_id = null;
   /**
    * this module collects card-info onsite
    */
@@ -352,7 +353,7 @@ class authorizenet_aim extends base {
                          'x_encap_char' => $this->encapChar,  // The divider to encapsulate response fields
                          'x_version' => '3.1',  // 3.1 is required to use CVV codes
                          'x_method' => 'CC',
-                         'x_amount' => number_format($order->info['total'], 2),
+                         'x_amount' => round($order->info['total'], 2),
                          'x_currency_code' => $order->info['currency'],
                          'x_market_type' => 0,
                          'x_card_num' => $_POST['cc_number'],
@@ -383,9 +384,9 @@ class authorizenet_aim extends base {
                          'x_recurring_billing' => 'NO',
                          'x_customer_ip' => zen_get_ip_address(),
                          'x_po_num' => date('M-d-Y h:i:s'), //$order->info['po_number'],
-                         'x_freight' => number_format((float)$order->info['shipping_cost'],2),
+                         'x_freight' => round((float)$order->info['shipping_cost'],2),
                          'x_tax_exempt' => 'FALSE', /* 'TRUE' or 'FALSE' */
-                         'x_tax' => number_format((float)$order->info['tax'],2),
+                         'x_tax' => round((float)$order->info['tax'],2),
                          'x_duty' => '0',
                          'x_device_type' => 8,
                          'x_allow_partial_Auth' => 'FALSE', // unable to accept partial authorizations at this time
@@ -403,7 +404,7 @@ class authorizenet_aim extends base {
     // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
     if ($order->info['currency'] != $this->gateway_currency) {
       global $currencies;
-      $submit_data['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data['x_amount'] = round($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data['x_currency_code'] = $this->gateway_currency;
       $submit_data['x_description'] .= ' (Converted from: ' . number_format($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
       unset($submit_data['x_tax'], $submit_data['x_freight']);
@@ -426,7 +427,7 @@ class authorizenet_aim extends base {
     $response_msg_to_customer = $response_text . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
 
     if ($this->display_specific_failure_reason_for_cvv_and_date) {
-        if (($response_code == '2' && in_array($response[2], array('44', '45', '65'))) || $response_code == '3' && $response[2] == '78') {
+        if (($response_code == '2' && in_array($response[2], array('44', '45', '65'))) || ($response_code == '3' && $response[2] == '78')) {
           $response_msg_to_customer = 'CVV problem ';
         }
         if ($response_code == '3' && in_array($response[2], array('7', '8'))) {
@@ -508,10 +509,7 @@ class authorizenet_aim extends base {
     * @return string
     */
   function admin_notification($zf_order_id) {
-    global $db;
     $output = '';
-    $aimdata = new stdClass;
-    $aimdata->fields = array();
     require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/authorizenet/authorizenet_admin_notification.php');
     return $output;
   }
@@ -780,9 +778,9 @@ class authorizenet_aim extends base {
    */
   function tableCheckup() {
     global $db, $sniffer;
-    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'varchar(32)', true) : -1;
+    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'varchar(64)', false) : false;
     if ($fieldOkay1 !== true) {
-      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " CHANGE transaction_id transaction_id varchar(32) default NULL");
+      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " MODIFY transaction_id varchar(64) default NULL");
     }
   }
  /**
@@ -820,7 +818,7 @@ class authorizenet_aim extends base {
     if ($proceedToRefund) {
       $submit_data = array('x_type' => 'CREDIT',
                            'x_card_num' => trim($_POST['cc_number']),
-                           'x_amount' => number_format($refundAmt, 2),
+                           'x_amount' => round($refundAmt, 2),
                            'x_trans_id' => trim($_POST['trans_id'])
                            );
       unset($response);
@@ -892,7 +890,7 @@ class authorizenet_aim extends base {
       unset($submit_data);
       $submit_data = array(
                            'x_type' => 'PRIOR_AUTH_CAPTURE',
-                           'x_amount' => number_format($captureAmt, 2),
+                           'x_amount' => round($captureAmt, 2),
                            'x_trans_id' => strip_tags(trim($_POST['captauthid'])),
 //                         'x_invoice_num' => $new_order_id,
 //                         'x_po_num' => $order->info['po_number'],

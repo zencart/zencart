@@ -624,9 +624,11 @@ class systemChecker
     if (VERBOSE_SYSTEMCHECKER == 'screen' || VERBOSE_SYSTEMCHECKER === TRUE || VERBOSE_SYSTEMCHECKER == 'TRUE')
     {
       echo $methodName . "<br>";
-      foreach ($methodDetail['parameters'] as $key=>$value)
-      {
-        echo $key . " : " . $value . "<br>";
+      if (is_array($methodDetail['parameters'])) {
+        foreach ($methodDetail['parameters'] as $key=>$value)
+        {
+          echo $key . " : " . $value . "<br>";
+        }
       }
       echo (($result == 1) ? 'PASSED' : 'FAILED') . "<br>";
       echo "------------------<br><br>";

@@ -10,6 +10,9 @@
 if (!defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) || MODULE_PAYMENT_PAYEEZYJSZC_STATUS != 'True' || (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && !defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') )) {
 	return false;
 }
+if ($payment_modules->in_special_checkout()) {
+    return false;
+}
 ?>
 <script type="text/javascript"><!--
 
@@ -185,7 +188,7 @@ var apiEndpoint = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbo
 
 jQuery(function($) {
     $('form[name="checkout_payment"]').submit(function(e) {
-        if($('#pmt-payeezyjszc').is(':checked') || this['payment'].value == 'payeezyjszc') {
+        if($('#pmt-payeezyjszc').is(':checked') || this['payment'].value == 'payeezyjszc' || document.getElementById('pmt-payeezyjszc').checked == true) {
             var $form = $(this);
             $form.find('button').prop('disabled', true);
             e.preventDefault();

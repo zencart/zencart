@@ -191,28 +191,28 @@ class AdminRequestSanitizer extends base
     }
 
     /**
-     * @param $paramaterName
+     * @param $parameterName
      * @param $parameterDefinition
      */
-    private function runSpecificSanitizer($paramaterName, $parameterDefinition)
+    private function runSpecificSanitizer($parameterName, $parameterDefinition)
     {
         if ($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'builtin') {
-            $this->processBuiltIn($parameterDefinition['sanitizerType'], $paramaterName, $parameterDefinition);
+            $this->processBuiltIn($parameterDefinition['sanitizerType'], $parameterName, $parameterDefinition);
         }
         if ($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'custom') {
-            $this->processCustom($parameterDefinition['sanitizerType'], $paramaterName, $parameterDefinition);
+            $this->processCustom($parameterDefinition['sanitizerType'], $parameterName, $parameterDefinition);
         }
     }
 
     /**
-     * @param $parameterDefinitions
+     * @param array $parameterDefinitions
      * @return bool
      */
     private function findSanitizerFromContext($parameterDefinitions)
     {
         foreach ($parameterDefinitions as $parameterDefinition) {
             $result = false;
-            if (count($parameterDefinition['pages'])) {
+            if (!empty($parameterDefinition['pages'])) {
                 if (in_array($this->currentPage, $parameterDefinition['pages'])) {
                     $result = $parameterDefinition;
                     break;
@@ -231,7 +231,7 @@ class AdminRequestSanitizer extends base
     {
         foreach ($parameterDefinitions as $parameterDefinition) {
             $result = false;
-            if (count($parameterDefinition['pages'])) {
+            if (!empty($parameterDefinition['pages'])) {
                 continue;
             }
             if ($this->parameterExistsForMethod($parameterName, $parameterDefinition)) {
@@ -358,7 +358,7 @@ class AdminRequestSanitizer extends base
      */
     private function filterFileDirRegex($parameterName)
     {
-        $filedirRegex = '~[^0-9a-z' . preg_quote('.!@#$%^& ()`_+-~/' . '\\', '~') . ']~i';
+        $filedirRegex = '~[^0-9a-z' . preg_quote('.!@#$%&()_-~/`+^ ' . '\\', '~') . ']~i';
         if (isset($_POST[$parameterName])) {
             $this->debugMessages[] = 'PROCESSING FILE_DIR_REGEX == ' . $parameterName;
             $_POST[$parameterName] = preg_replace($filedirRegex, '', $_POST[$parameterName]);
@@ -475,13 +475,32 @@ class AdminRequestSanitizer extends base
      */
     private function filterProductUrlRegex($parameterName)
     {
-        $urlRegex = '~([^a-z0-9\'!#$&%@();:/=?_\~\[\]-]|[><])~i';
+        $urlRegex = '~([^0-9a-z' . preg_quote("'.!@#$%&()_-~/;:=?[]", '~') . ']|[><])~i';
         if (isset($_POST[$parameterName])) {
             $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $parameterName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {
                     $newValue = preg_replace($urlRegex, '', $_POST[$parameterName][$pKey]);
+                }
+                $_POST[$parameterName][$pKey] = $newValue;
+                $this->postKeysAlreadySanitized[] = $parameterName;
+            }
+        }
+    }
+
+    /**
+     * @param $parameterName
+     */
+    private function filterFilePathOrUrlRegex($parameterName)
+    {
+        $regex = '~([^0-9a-z' . preg_quote("'.!@#$%&()_-~/;:=?[]`+^ " . '\\', '~') . ']|[><])~i';
+        if (isset($_POST[$parameterName])) {
+            $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $parameterName;
+            foreach ($_POST[$parameterName] as $pKey => $pValue) {
+                $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
+                if ($newValue === false) {
+                    $newValue = preg_replace($regex, '', $_POST[$parameterName][$pKey]);
                 }
                 $_POST[$parameterName][$pKey] = $newValue;
                 $this->postKeysAlreadySanitized[] = $parameterName;

@@ -86,7 +86,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <fieldset>
 <h1>About PHP versions</h1>
 <p>Zen Cart&reg; v1.5.5 is designed for PHP 5.6 to 7.1, with MySQL 5.1 thru 5.7 and Apache 2.2/2.4</p>
-<p class="small">It is compatible with PHP 5.2.10 through PHP 7.0, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.5 is considered obsolete.</a> You should be using PHP 5.6 or greater by now.)</em></p>
+<p class="small">It is compatible with PHP 5.2.10 through PHP 7.1, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.6 is considered obsolete.</a> You should be using PHP 7.1 or greater by now.)</em></p>
 
 <h1>Upgrade Instructions</h1>
 <p>This document only mentions the actual changes specific to v1.5.5 since v1.5.4.</p>
@@ -143,6 +143,49 @@ OSI Certified is a certification mark of the Open Source Initiative.
   various tables and may not be affected by this change.)</p>
   <p>A few CSS changes were made in template_default to change IDs of repeating elements to be classes instead.
   Of note <span class="code">#cartDisplay</span> is now <span class="code">.cartDisplay</span>, and <span class="code">#cartImage</span> is <span class="code">.cartImage</span></p>
+
+<h1>v1.5.5f vs v1.5.5e</h1>
+<h3>Since the release of v1.5.5e on 6-March-2017, the following changes have been applied to become v1.5.5f ...</h3>
+<ul>
+    <li>All known v1.5.5 bugfixes and security fixes are included in v1.5.5f</li>
+    <li>Checkout - As a help to people getting PayPal TLS notifications, the CURL Testing tool now reports compatibility with tlstest.paypal.com</li>
+    <li>Checkout - Square Payments support is now built-in. Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup </li>
+    <li>Checkout - FirstData soft-descriptors now optional via module settings</li>
+    <li>Checkout - PayPal - Australia settings explained better in configuration screen</li>
+    <li>Checkout - PayPal IPN-handler now gracefully ignore unrecognized new notification types</li>
+    <li>Checkout - Payeezy module now accommodates 2-series MC BINs</li>
+    <li>Checkout - Internal fix to payment modules to avoid thousands-rounding errors</li>
+    <li>Checkout - Authorize.net AIM module now allows more detailed display of AVS failures</li>
+    <li>Checkout - Authorizenet AIM - add option to display reason for CVV or date failure</li>
+    <li>Checkout - Authorizenet AIM - improvements to detect always-SSL site configuration</li>
+    <li>Checkout - Credit Card Slamming threshold now customizable via Observer code or plugin</li>
+    <li>Fix upload-class bug related to filtering desired file-extensions</li>
+    <li>Fix multi-language error (since v155a) in functions_email for PHPMailer</li>
+    <li>Fix possible bug in subdomain handling of secure cookie session handling</li>
+    <li>Fix attribute sort-order rules </li>
+    <li>Admin: Fix percent calculators on Products Price Manager</li>
+    <li>Admin: Fix a few sanitizer fields to avoid over-cleaning</li>
+    <li>Admin: Update currency-exchange calculators since BOC changed formats
+    <li>Template - Improvements for jQuery conflict prevention, and support older browsers</li>
+    <li>Template - Compatibility updates to accommodate OnePageCheckout plugin integration </li>
+    <li>Template - Support ISO-8601 style date-of-birth date</li>
+    <li>Template - Fix CSS typo in colors</li>
+    <li>Template - hreflang URL correction</li>
+    <li>Template - Fix incorrect use of logo image height </li>
+    <li>Fixed - if an invalid or non-existent tax rate was encountered, would get: PHP Warning: A non-numeric value encountered in /includes/functions/functions_taxes.php on line 172</li>
+    <li>Security: CVE-2017-11675 - Low-Risk vulnerability (required your Admin login to be hijacked first). Now prevents exporting to invalid filenames.</li>
+    <li>Enhancement - Cache-bypass added for certain db queries, so retrieved data is always fresh</li>
+    <li>Enhancement - Uploading now gives more detailed feedback about failures related to invalid file types.</li>
+    <li>Utility - Plugin version-check utility optimized to allow specific version-comparisons, and adapt to timeouts more quickly.</li>
+    <li>Internal - Upgrade PHPMailer from 5.2.22 to 5.2.26</li>
+    <li>Internal - Upgraded MobileDetect from 2.8.17 to 2.8.30 </li>
+    <li>Optimization - Abort ajax requests from spiders</li>
+    <li>CKEditor integration fixes </li>
+
+    <li>No database updates necessary</li>
+
+</ul>
+<p>The techy, detailed list of individual code changes can be viewed <a href="https://github.com/zencart/zencart/compare/v1.5.5e...v1.5.5f" target="_blank">on github</a> </p>
 
 <h1>v1.5.5e vs v1.5.5d</h1>
 <h3>Since the release of v1.5.5d on 31-Dec-2016, the following changes have been applied to become v1.5.5e ...</h3>
