@@ -64,7 +64,7 @@ if (!empty($transaction) && $transaction->getId()) {
         $outputSquare .= '</td></tr>' . "\n";
     }
     $refunds = $transaction->getRefunds();
-    if (count($refunds)) {
+    if ($refunds && count($refunds)) {
         $outputSquare .= '<tr><td class="main">' . "\n";
         $outputSquare .= '<strong>Refunds: </strong>' . "\n";
         $outputSquare .= '</td><td class="main">&nbsp;</td></tr>' . "\n";
