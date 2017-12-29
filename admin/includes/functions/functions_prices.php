@@ -454,8 +454,12 @@ if (false) {
     }
 
     $new_products_price = zen_get_products_base_price($product_id);
-    $new_special_price = zen_get_products_special_price($product_id, true);
+    $new_special_price = false;
     $new_sale_price = zen_get_products_special_price($product_id, false);
+
+    if ($new_sale_price !== false) {
+      $new_special_price = zen_get_products_special_price($product_id, true);
+    }
 
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
@@ -464,11 +468,12 @@ if (false) {
     } else {
       $special_price_discount = '';
     }
+
+    $sale_price_discount = '';
     if ($new_products_price != 0) {
       $sale_price_discount = ($new_sale_price != 0 ? ($new_sale_price/$new_products_price) : 1);
-    } else {
-      $sale_price_discount = '';
     }
+
     $sale_maker_discount = zen_get_products_sale_discount_type($product_id, '', 'amount');
 
     // percentage adjustment of discount
@@ -948,7 +953,7 @@ If a special exist * 10+9
 ////
 // return attributes_price_factor
   function zen_get_attributes_price_factor($price, $special, $factor, $offset) {
-    if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
+    if (defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL') && ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
       // calculate from specials_new_products_price
       $calculated_price = $special * ($factor - $offset);
     } else {
@@ -998,6 +1003,8 @@ If a special exist * 10+9
 // attributes final price
   function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false') {
     global $db;
+
+    $attributes_price_final = 0;
 
     if ($pre_selected == '' or $attribute != $pre_selected->fields["products_attributes_id"]) {
       $pre_selected = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
