@@ -351,8 +351,9 @@ if (zen_not_null($action)) {
                                 '" . (int)zen_db_input($attributes_price_letters_free) . "',
                                 '" . (int)zen_db_input($attributes_required) . "')");
 
+          $products_attributes_id = $db->Insert_ID();
+
           if (DOWNLOAD_ENABLED == 'true') {
-            $products_attributes_id = $db->Insert_ID();
 
             $products_attributes_filename = zen_db_prepare_input($_POST['products_attributes_filename']);
             $products_attributes_maxdays = (int)zen_db_prepare_input($_POST['products_attributes_maxdays']);
@@ -367,6 +368,8 @@ if (zen_not_null($action)) {
                                    '" . zen_db_input($products_attributes_maxcount) . "')");
             }
           }
+
+          $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADD_PRODUCT_ATTRIBUTES', $products_attributes_id);
         }
       }
 
@@ -504,6 +507,7 @@ if (zen_not_null($action)) {
                                 products_attributes_maxcount = '" . zen_db_input($products_attributes_maxcount) . "'");
             }
           }
+          $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_UPDATE_PRODUCT_ATTRIBUTE', $attribute_id);
         }
       }
 
