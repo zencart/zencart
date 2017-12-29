@@ -107,7 +107,7 @@
 
         if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
           $products = $db->Execute("select products_id
-                                    from " . TABLE_PRODUCTS_MUSIC_EXTRA . "
+                                    from " . TABLE_PRODUCT_MUSIC_EXTRA . "
                                     where record_company_id = '" . (int)$record_company_id . "'");
 
           while (!$products->EOF) {
