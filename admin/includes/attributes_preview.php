@@ -184,11 +184,11 @@ if (!defined('IS_ADMIN_FLAG')) {
               $products_options_details = '';
             }
             if ($products_options_names->fields['products_options_images_style'] >= 3) {
-              $products_options_details .= $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '<br />' . $products_options_display_weight : '');
-              $products_options_details_noname = $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '<br />' . $products_options_display_weight : '');
+              $products_options_details .= $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '<br />' . $products_options_display_weight : '');
+              $products_options_details_noname = $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '<br />' . $products_options_display_weight : '');
             } else {
-              $products_options_details .= $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
-              $products_options_details_noname = $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
+              $products_options_details .= $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
+              $products_options_details_noname = $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
             }
           }
 
@@ -219,7 +219,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                   }
                 }
               } else {
-                $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : false);
+                $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : ($products_options->RecordCount() == 1 ? true : false));
               }
             }
 
@@ -570,7 +570,8 @@ if (!defined('IS_ADMIN_FLAG')) {
             $options_comment[] = $products_options_names->fields['products_options_comment'];
             $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
           break;
-          default:
+
+          case ($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_SELECT):
             // normal dropdown menu display
             if (isset($_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']])) {
               $selected_attribute = $_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']];
@@ -591,10 +592,17 @@ if (!defined('IS_ADMIN_FLAG')) {
             $options_comment[] = $products_options_names->fields['products_options_comment'];
             $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
           break;
+
+            default:
+            $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_DEFAULT_SWITCH', $products_options_names->fields, $options_name, $options_menu, $options_comment, $options_comment_position, $options_html_id);
+          break;
         }
 
         // attributes images table
-        $options_attributes_image[] = $tmp_attributes_image;
+        $options_attributes_image[] = trim($tmp_attributes_image);
+
+        $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_OPTION_BUILT', $products_options_names->fields, $options_name, $options_menu, $options_comment, $options_comment_position, $options_html_id, $options_attributes_image);
+
         $products_options_names->MoveNext();
       }
       // manage filename uploads
