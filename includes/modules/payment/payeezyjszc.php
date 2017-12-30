@@ -157,7 +157,7 @@ class payeezyjszc extends base
         global $order;
 
         // Payeezy currently only accepts  "American Express", "Visa", "Mastercard", "Discover", "JCB", "Diners Club"
-        $cc_types = arrya();
+        $cc_types = array();
         if (CC_ENABLED_VISA == 1) {
             $cc_types[] = ['id' => 'Visa', 'text' => 'Visa'];
         }
