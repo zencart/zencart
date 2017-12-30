@@ -31,7 +31,7 @@ class payeezyjszc extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    var $moduleVersion = '0.97';
+    var $moduleVersion = '0.98';
     /**
      * $title is the displayed name for this payment method
      *
@@ -157,7 +157,7 @@ class payeezyjszc extends base
         global $order;
 
         // Payeezy currently only accepts  "American Express", "Visa", "Mastercard", "Discover", "JCB", "Diners Club"
-        $cc_types = [];
+        $cc_types = array();
         if (CC_ENABLED_VISA == 1) {
             $cc_types[] = ['id' => 'Visa', 'text' => 'Visa'];
         }
@@ -339,7 +339,7 @@ class payeezyjszc extends base
 // $payment_amount = 520200;
 
         // prepare data for submission
-        $payload = [];
+        $payload = array();
 
         $payload['merchant_ref']     = substr(bin2hex(openssl_random_pseudo_bytes(64)), 0, 20);
         $payload['transaction_type'] = MODULE_PAYMENT_PAYEEZYJSZC_TRANSACTION_TYPE;
@@ -414,7 +414,7 @@ class payeezyjszc extends base
             if (count($order->products) < 100) {
                 $product_code = $commodity_code = ''; // not submitted
 
-                $payload['level3']['line_items'] = [];
+                $payload['level3']['line_items'] = array();
                 foreach ($order->products as $p) {
                     $payload['level3']['line_items'][] = (object)[
                         'description'     => $p['name'],
