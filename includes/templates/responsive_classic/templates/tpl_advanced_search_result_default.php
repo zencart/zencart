@@ -18,7 +18,7 @@
 
 <?php
   if ($do_filter_list || PRODUCT_LIST_ALPHA_SORTER == 'true') {
-    $form = zen_draw_form('filter', zen_href_link(FILENAME_ADVANCED_SEARCH_RESULT), 'get');
+    $form = zen_draw_form('filter', zen_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', 'SSL'), 'get');
     //$form .= '<label class="inputLabel">' .TEXT_SHOW . '</label>';
 ?>
 <?php echo $form; ?>
@@ -41,6 +41,6 @@
  require($template->get_template_dir('tpl_modules_product_listing.php', DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . 'tpl_modules_product_listing.php');
 ?>
 
-<div class="buttonRow back"><?php echo '<a href="' . zen_href_link(FILENAME_ADVANCED_SEARCH, zen_get_all_get_params(array('sort', 'page', 'x', 'y')), 'NONSSL', true, false) . '">' . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>'; ?></div>
+<div class="buttonRow back"><?php echo '<a href="' . zen_href_link(FILENAME_ADVANCED_SEARCH, zen_get_all_get_params(array('sort', 'page', 'x', 'y')), 'SSL', true, false) . '">' . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>'; ?></div>
 
 </div>
