@@ -88,7 +88,7 @@ if (method_exists($this, '_doRefund')) {
     $outputRefund .= '<td><table class="noprint">' . "\n";
     $outputRefund .= '<tr style="background-color : #dddddd; border-style : dotted;">' . "\n";
     $outputRefund .= '<td class="main">' . MODULE_PAYMENT_SQUARE_ENTRY_REFUND_TITLE . '<br />' . "\n";
-    $outputRefund .= zen_draw_form('squarerefund', FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=doRefund', 'post', '', true) . zen_hide_session_id();;
+    $outputRefund .= zen_draw_form('squarerefund', FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=doRefund', 'post', '', true) . zen_hide_session_id();;
     $outputRefund .= MODULE_PAYMENT_SQUARE_ENTRY_REFUND . '<br />';
     $outputRefund .= MODULE_PAYMENT_SQUARE_ENTRY_REFUND_AMOUNT_TEXT . ' ' . zen_draw_input_field('refamt', '', 'length="10" placeholder="amount"') . '<br />';
     $outputRefund .= MODULE_PAYMENT_SQUARE_TEXT_REFUND_CONFIRM_CHECK . zen_draw_checkbox_field('refconfirm', '', false) . '<br />';
@@ -103,7 +103,7 @@ if (method_exists($this, '_doCapt')) {
     $outputCapt .= '<td valign="top"><table class="noprint">' . "\n";
     $outputCapt .= '<tr style="background-color : #dddddd; border-style : dotted;">' . "\n";
     $outputCapt .= '<td class="main">' . MODULE_PAYMENT_SQUARE_ENTRY_CAPTURE_TITLE . '<br />' . "\n";
-    $outputCapt .= zen_draw_form('squarecapture', FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=doCapture', 'post', '', true) . zen_hide_session_id();
+    $outputCapt .= zen_draw_form('squarecapture', FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=doCapture', 'post', '', true) . zen_hide_session_id();
     $outputCapt .= MODULE_PAYMENT_SQUARE_ENTRY_CAPTURE . '<br />';
     $outputCapt .= MODULE_PAYMENT_SQUARE_TEXT_CAPTURE_CONFIRM_CHECK . zen_draw_checkbox_field('captconfirm', '', false) . '<br />';
     $outputCapt .= '<br />' . MODULE_PAYMENT_SQUARE_ENTRY_CAPTURE_TEXT_COMMENTS . '<br />' . zen_draw_textarea_field('captnote', 'soft', '50', '2', MODULE_PAYMENT_SQUARE_ENTRY_CAPTURE_DEFAULT_MESSAGE);
@@ -117,7 +117,7 @@ if (method_exists($this, '_doVoid')) {
     $outputVoid .= '<td valign="top"><table class="noprint">' . "\n";
     $outputVoid .= '<tr style="background-color : #dddddd; border-style : dotted;">' . "\n";
     $outputVoid .= '<td class="main">' . MODULE_PAYMENT_SQUARE_ENTRY_VOID_TITLE . '<br />' . "\n";
-    $outputVoid .= zen_draw_form('squarevoid', FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=doVoid', 'post', '', true) . zen_hide_session_id();
+    $outputVoid .= zen_draw_form('squarevoid', FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=doVoid', 'post', '', true) . zen_hide_session_id();
     $outputVoid .= MODULE_PAYMENT_SQUARE_ENTRY_VOID;
     $outputVoid .= '<br />' . MODULE_PAYMENT_SQUARE_TEXT_VOID_CONFIRM_CHECK . zen_draw_checkbox_field('voidconfirm', '', false);
     $outputVoid .= '<br /><br />' . MODULE_PAYMENT_SQUARE_ENTRY_VOID_TEXT_COMMENTS . '<br />' . zen_draw_textarea_field('voidnote', 'soft', '50', '3', MODULE_PAYMENT_SQUARE_ENTRY_VOID_DEFAULT_MESSAGE);

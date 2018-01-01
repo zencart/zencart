@@ -132,6 +132,6 @@ class VersionServer
 
     protected function formatCurlError($errorno, $error)
     {
-        return json_encode(['error' => $error . '[' . $errorno . ']']);
+        return json_encode(array('error' => $error . '[' . $errorno . ']'));
     }
 }

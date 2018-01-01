@@ -8,6 +8,9 @@
  * @copyright Portions Copyright Nixak
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: zcwilt  Wed Jan 6 17:26:51 2016 +0000 New in v1.5.5 $
+ *
+ * NOTE: NOT compatible with PHP 7.2 due to mcrypt dependency.
+ *
  */
 require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/sagepay_zc/SagepayBasket.php');
 require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/sagepay_zc/SagepayCustomer.php');
