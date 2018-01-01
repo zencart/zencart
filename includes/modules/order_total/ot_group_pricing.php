@@ -16,7 +16,9 @@ class ot_group_pricing {
     $this->code = 'ot_group_pricing';
     $this->title = MODULE_ORDER_TOTAL_GROUP_PRICING_TITLE;
     $this->description = MODULE_ORDER_TOTAL_GROUP_PRICING_DESCRIPTION;
-    $this->sort_order = MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER;
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER') ? MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->include_shipping = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING;
     $this->include_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX;
     $this->calculate_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX;
@@ -31,9 +33,8 @@ class ot_group_pricing {
     $od_amount = $this->calculate_deductions($order_total['total']);
     $this->deduction = $od_amount['total'];
     if ($od_amount['total'] > 0) {
-      reset($order->info['tax_groups']);
       $tax = 0;
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach($order->info['tax_groups'] as $key => $value) {
         if ($od_amount['tax_groups'][$key]) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $tax += $od_amount['tax_groups'][$key];
@@ -99,7 +100,6 @@ class ot_group_pricing {
       switch ($this->calculate_tax) {
         case 'None':
           if ($this->include_tax) {
-            reset($order->info['tax_groups']);
             foreach ($order->info['tax_groups'] as $key=>$value) {
               $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio;
             }
@@ -112,7 +112,6 @@ class ot_group_pricing {
           $adjustedTax = $orderTotalTax * $ratio;
           if ($order->info['tax'] == 0) return $od_amount;
           $ratioTax = ($orderTotalTax != 0 ) ? $adjustedTax/$orderTotalTax : 0;
-          reset($order->info['tax_groups']);
           $tax_deduct = 0;
           foreach ($taxGroups as $key=>$value) {
             $od_amount['tax_groups'][$key] = $value * $ratioTax;

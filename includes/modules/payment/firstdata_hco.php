@@ -21,7 +21,7 @@ class firstdata_hco extends base {
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '1.03';
+  var $moduleVersion = '1.04';
 
   /**
    * $title is the displayed name for this payment method
@@ -76,13 +76,6 @@ class firstdata_hco extends base {
     if (IS_ADMIN_FLAG === true) {
       $this->description = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TEXT_DESCRIPTION;
       $this->title = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TEXT_ADMIN_TITLE; // Payment module title in Admin
-      if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True' && (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_LOGIN == 'testing' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TXNKEY == 'Test' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_RESPONSEKEY == '*Enter the Response Key here*')) {
-        $this->title .=  '<span class="alert"> (Not Configured)</span>';
-      } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Test') {
-        $this->title .= '<span class="alert"> (in Testing mode)</span>';
-      } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') {
-        $this->title .= '<span class="alert"> (in Sandbox Developer mode)</span>';
-      }
 
       if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS')) {
         $new_version_details = plugin_version_check_for_updates(2051, $this->moduleVersion);
@@ -92,24 +85,36 @@ class firstdata_hco extends base {
       }
     }
 
-    $this->enabled = (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True');
-    $this->sort_order = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_SORT_ORDER;
+    $this->enabled = (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS') && MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True');
+    $this->sort_order = defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_SORT_ORDER') ? MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_SORT_ORDER : null;
 
-    if ((int)MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID > 0) {
+    if (null === $this->sort_order) return false;
+
+    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True' && (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_PAGEID == 'testing' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TXNKEY == 'Test' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_RESPONSEKEY == '*Enter the Response Key here*')) {
+      $this->title .=  '<span class="alert"> (Not Configured)</span>';
+    } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Test') {
+      $this->title .= '<span class="alert"> (in Testing mode)</span>';
+    } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') {
+      $this->title .= '<span class="alert"> (in Sandbox Developer mode)</span>';
+    }
+
+    $this->form_action_url = 'https://checkout.globalgatewaye4.firstdata.com/payment';
+    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') $this->form_action_url = 'https://demo.globalgatewaye4.firstdata.com/payment';
+
+    // set the currency for the gateway (others will be converted to this one before submission)
+    $this->gateway_currency = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY;
+
+
+    if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID > 0) {
       $this->order_status = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID;
     }
+
     // Reset order status to pending if capture pending:
     if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_AUTHORIZATION_TYPE == 'Authorize') $this->order_status = 1;
 
     if (is_object($order)) $this->update_status();
 
-    $this->form_action_url = 'https://checkout.globalgatewaye4.firstdata.com/payment';
-    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') $this->form_action_url = 'https://demo.globalgatewaye4.firstdata.com/payment';
-
     $this->_logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
-
-    // set the currency for the gateway (others will be converted to this one before submission)
-    $this->gateway_currency = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY;
   }
 
   /**
@@ -272,7 +277,7 @@ class firstdata_hco extends base {
     if (sizeof($order->products) < 100) {
       $delim = '<|>';
       $product_code = $commodity_code = ''; // not submitted
-      for ($i=0; $i<sizeof($order->products); $i++) {
+      for ($i=0, $n=count($order->products); $i<$n; $i++) {
         $p = $order->products[$i];
         // Item ID<|>Item Title<|>Item Description<|>Quantity<|>Unit Price<|>Taxable (Y or N)<|>Product Code<|>Commodity Code<|>Unit of Measure<|>Tax Rate<|>Tax Type<|>Tax Amount<|>Discount Indicator<|>Discount Amount<|>Line Item Total
         $line = $p['model'] . $delim . $p['name'] . $delim . $p['name'] . $delim . $p['qty'] . $delim . round($p['final_price'] * $exchange_factor,2) . $delim;
@@ -467,8 +472,8 @@ class firstdata_hco extends base {
 
   protected function hmacAuthorizationToken($amount, $currency)
   {
-    $nonce = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
-    $timestamp = strval(time()); //time stamp as a string
+    $nonce = (string)hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong)));
+    $timestamp = (string)time(); //time stamp as a string
     $data = html_entity_decode(MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_PAGEID) . "^" . $nonce . "^" . $timestamp . "^" . $amount . "^" . $currency;
     $hashAlgorithm = "md5"; // According to First Data they recommend MD5 here
     $hmac = hash_hmac($hashAlgorithm, $data, MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TXNKEY, false); // HMAC Hash in hex

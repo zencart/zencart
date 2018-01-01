@@ -476,16 +476,7 @@ class order extends base {
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
       if ($products[$i]['attributes']) {
         $subindex = 0;
-        reset($products[$i]['attributes']);
-        while (list($option, $value) = each($products[$i]['attributes'])) {
-          /*
-          //clr 030714 Determine if attribute is a text attribute and change products array if it is.
-          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID){
-          $attr_value = $products[$i]['attributes_values'][$option];
-          } else {
-          $attr_value = $attributes->fields['products_options_values_name'];
-          }
-          */
+        foreach ($products[$i]['attributes'] as $option => $value) {
 
           $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
                                           pa.options_values_price, pa.price_prefix
@@ -891,7 +882,7 @@ class order extends base {
                                     'orders_products_filename' => $attributes_values->fields['products_attributes_filename'],
                                     'download_maxdays' => $attributes_values->fields['products_attributes_maxdays'],
                                     'download_count' => $attributes_values->fields['products_attributes_maxcount'],
-                                    'products_prid' => $this->products[$i]['id']
+                                    'products_prid' => $this->products[$i]['id'],
                                     );
 
             zen_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);

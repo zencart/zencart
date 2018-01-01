@@ -17,7 +17,9 @@
       $this->code = 'ot_shipping';
       $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
       $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
-      $this->sort_order = MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER;
+      $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') ? MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
       unset($_SESSION['shipping_tax_description']);
       $this->output = array();
       if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') {

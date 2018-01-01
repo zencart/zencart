@@ -220,7 +220,7 @@
 
 /**
  * Update banner click statistics
- * @param unknown $banner_id
+ * @param int $banner_id
  */
   function zen_update_banner_click_count($banner_id) {
     global $db;
@@ -236,6 +236,7 @@
     global $db;
     $selected_banners = explode(':', $selected_banners);
     $size = sizeof($selected_banners);
+    $new_banner_search = '';
     if ($size == 1) {
       $new_banner_search = " banners_group = '" . $db->prepare_input($selected_banners[0]) . "'";
     } else {

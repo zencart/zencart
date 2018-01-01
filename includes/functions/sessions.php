@@ -135,7 +135,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
   function zen_session_write_close() {
-    return session_write_close();
+    session_write_close();
   }
 
   function zen_session_destroy() {
@@ -159,7 +159,6 @@ if (!defined('IS_ADMIN_FLAG')) {
       $newSessID = session_id();
       session_id($oldSessID);
       session_id($newSessID);
-      session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
       $_SESSION = $saveSession;
       if (IS_ADMIN_FLAG !== true) {
         whos_online_session_recreate($oldSessID, $newSessID);

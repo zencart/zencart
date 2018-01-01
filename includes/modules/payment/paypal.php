@@ -55,20 +55,24 @@ class paypal extends base {
     global $order, $messageStack;
     $this->code = 'paypal';
     $this->codeVersion = '1.5.5';
+    $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_SORT_ORDER : null;
+    $this->enabled = (defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS == 'True');
     if (IS_ADMIN_FLAG === true) {
       // Payment Module title in Admin
       $this->title = STORE_COUNTRY != '223' ? MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE_NONUSA : MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE;
       if (IS_ADMIN_FLAG === true && defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && MODULE_PAYMENT_PAYPAL_IPN_DEBUG != 'Off') $this->title .= '<span class="alert"> (debug mode active)</span>';
-      if (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPAL_TESTING == 'Test') $this->title .= '<span class="alert"> (dev/test mode active)</span>';
+      if (IS_ADMIN_FLAG === true && defined('MODULE_PAYMENT_PAYPAL_TESTING') && MODULE_PAYMENT_PAYPAL_TESTING == 'Test') $this->title .= '<span class="alert"> (dev/test mode active)</span>';
     } else {
       $this->title = MODULE_PAYMENT_PAYPAL_TEXT_CATALOG_TITLE; // Payment Module title in Catalog
     }
+
+    if (null === $this->sort_order) return false;
+
     $this->description = MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_PAYMENT_PAYPAL_SORT_ORDER;
-    $this->enabled = ((MODULE_PAYMENT_PAYPAL_STATUS == 'True') ? true : false);
-    if ((int)MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID > 0) {
+    if (defined('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID > 0) {
       $this->order_status = MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID;
     }
+
     if (is_object($order)) $this->update_status();
 
     /**
@@ -487,7 +491,7 @@ class paypal extends base {
       $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_STATUS'");
       $this->_check = $check_query->RecordCount();
     }
-    if (!in_array(MODULE_PAYMENT_PAYPAL_HANDLER, array('live', 'sandbox'))) {
+    if (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && !in_array(MODULE_PAYMENT_PAYPAL_HANDLER, array('live', 'sandbox'))) {
       $val = (stristr(MODULE_PAYMENT_PAYPAL_HANDLER, 'sand')) ? 'sandbox' : 'live';
       $sql = "UPDATE " . TABLE_CONFIGURATION . " SET configuration_title = 'Live or Sandbox', configuration_value = '" . $val . "', configuration_description= '<strong>Live: </strong> Used to process Live transactions<br><strong>Sandbox: </strong>For developers and testing', set_function='zen_cfg_select_option(array(\'live\', \'sandbox\'), ' WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_HANDLER'";
       $db->Execute($sql);

@@ -146,7 +146,7 @@ define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not
 define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php does not exist (isn't readable) or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p>
-<p>This version of Zen Cart&reg; is compatible with PHP versions 5.2.9 to 7.1.x.<br>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.2.9 to 7.2.<br>
 Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
 define('TEXT_ERROR_PHP_VERSION_RECOMMENDED', 'For maximum security and compatibility you should be using PHP %s or newer. This installer can proceed, but this is just letting you know that your site will not be PCI Compliant when running out-of-date software.');

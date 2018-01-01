@@ -836,7 +836,7 @@ If a special exist * 10+9
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_exists = 'true';
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
@@ -930,7 +930,7 @@ If a special exist * 10
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
           $sale_maker_discount_type = $salemaker_sales->fields['sale_deduction_type'];
@@ -1013,7 +1013,7 @@ If a special exist * 10
 ////
 // return attributes_price_factor
   function zen_get_attributes_price_factor($price, $special, $factor, $offset) {
-    if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
+    if (defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL') && ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
       // calculate from specials_new_products_price
       $calculated_price = $special * ($factor - $offset);
     } else {
@@ -1301,8 +1301,9 @@ If a special exist * 10
     }
   }
 
-////
-// set the products_price_sorter
+/**
+ * recalculate and set the products_price_sorter field for the specified $product_id
+ */
   function zen_update_products_price_sorter($product_id) {
     global $db;
 
@@ -1329,12 +1330,13 @@ If a special exist * 10
     return $tmp_array;
   }
 
-////
-// update salemaker product prices per category per product
+/**
+ * update salemaker product prices per category per product for the specified $salemaker_id
+ */
   function zen_update_salemaker_product_prices($salemaker_id) {
     global $db;
     $zv_categories = $db->Execute("select sale_categories_selected from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . (int)$salemaker_id . "'");
-
+    if ($zv_categories->EOF) return FALSE;
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
     $n = sizeof($za_salemaker_categories);
     for ($i=0; $i<$n; $i++) {

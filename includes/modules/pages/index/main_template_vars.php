@@ -147,7 +147,6 @@ if ($category_depth == 'nested')
   'PRODUCT_LIST_BUY_NOW' => PRODUCT_LIST_BUY_NOW);
   */
   asort($define_list);
-  reset($define_list);
   $column_list = array();
   foreach ($define_list as $key => $value)
   {

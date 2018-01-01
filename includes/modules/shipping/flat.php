@@ -17,14 +17,16 @@
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_FLAT_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_FLAT_SORT_ORDER') ? MODULE_SHIPPING_FLAT_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_FLAT_TAX_CLASS;
       $this->tax_basis = MODULE_SHIPPING_FLAT_TAX_BASIS;
 
       // disable only when entire cart is free shipping
       if (zen_get_shipping_enabled($this->code)) {
-        $this->enabled = ((MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false);
+        $this->enabled = (MODULE_SHIPPING_FLAT_STATUS == 'True');
       }
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) ) {

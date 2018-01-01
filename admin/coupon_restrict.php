@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: coupon_restrict.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: coupon_restrict.php  Ajeh  Modified in v1.5.5 $
  */
   //define('MAX_DISPLAY_RESTRICT_ENTRIES', 10);
   require('includes/application_top.php');
   $restrict_array = array();
-  $restrict_array[] = array('id'=>'Deny', text=>'Deny');
-  $restrict_array[] = array('id'=>'Allow', text=>'Allow');
+  $restrict_array[] = array('id'=>'Deny', 'text'=>'Deny');
+  $restrict_array[] = array('id'=>'Allow', 'text'=>'Allow');
 
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
   if (isset($_GET['info'])) $_GET['info'] = (int)$_GET['info'];

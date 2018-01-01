@@ -540,8 +540,7 @@ $customer = $db->Execute("select customers_firstname, customers_lastname
                 <td>
 <?php
 /* Re-Post all POST'ed variables */
-    reset($_POST);
-    while (list($key, $value) = each($_POST)) {
+    foreach($_POST as $key => $value) {
       if (!is_array($_POST[$key])) {
         echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
       }
@@ -821,7 +820,7 @@ $customer = $db->Execute("select customers_firstname, customers_lastname
 
   case 'new':
 // set some defaults
-    if ($_GET['action'] != 'voucheredit' and $_POST['coupon_uses_user'] == '') $_POST['coupon_uses_user'] = 1;
+    if ($_GET['action'] != 'voucheredit' and empty($_POST['coupon_uses_user'])) $_POST['coupon_uses_user'] = 1;
 ?>
       <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>

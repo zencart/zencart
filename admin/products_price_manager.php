@@ -217,15 +217,15 @@
         $i=1;
         $new_id = 0;
         $discount_cnt = 0;
-        for ($i=1, $n=sizeof($_POST['discount_qty']); $i<=$n; $i++) {
+        if (!empty($_POST['discount_qty'])) {
+          for ($i=1, $n=count($_POST['discount_qty']); $i<=$n; $i++) {
           if ($_POST['discount_qty'][$i] > 0) {
             $new_id++;
             $db->Execute("insert into " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
                           (discount_id, products_id, discount_qty, discount_price)
                           values ('" . $new_id . "', '" . $products_filter . "', '" . zen_db_input($_POST['discount_qty'][$i]) . "', '" . zen_db_input($_POST['discount_price'][$i]) . "')");
             $discount_cnt++;
-          } else {
-            loop;
+            }
           }
         }
 

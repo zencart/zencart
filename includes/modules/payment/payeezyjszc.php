@@ -81,7 +81,6 @@ class payeezyjszc extends base
 
         $this->code  = 'payeezyjszc';
         $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CATALOG_TITLE; // Payment module title in Catalog
-        $this->mode  = MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE;
         if (IS_ADMIN_FLAG === true) {
             $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ADMIN_TITLE;
             if (defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS')) {
@@ -99,8 +98,12 @@ class payeezyjszc extends base
         }
 
         $this->description = 'PayeezyJS ' . $this->moduleVersion . '<br>' . MODULE_PAYMENT_PAYEEZYJSZC_TEXT_DESCRIPTION;
-        $this->enabled     = ((MODULE_PAYMENT_PAYEEZYJSZC_STATUS == 'True') ? true : false);
-        $this->sort_order  = MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER;
+        $this->enabled     = (defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS') && MODULE_PAYMENT_PAYEEZYJSZC_STATUS == 'True');
+        $this->sort_order  = defined('MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER') ? MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER : null;
+
+        if (null === $this->sort_order) return false;
+
+        $this->mode  = MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE;
 
         // determine order-status for transactions
         if ((int)MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID > 0) {

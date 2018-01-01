@@ -17,7 +17,7 @@
   define('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TEXT_CATALOG_TITLE', 'Credit Card');  // Payment option title as displayed to the customer
 
   if (IS_ADMIN_FLAG === true) {
-    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True') {
+    if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS') && MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True') {
       define('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TEXT_DESCRIPTION', '<a target="_blank" href="https://' . (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox' ? 'demo.' : '') . 'globalgatewaye4.firstdata.com">First Data GGe4 Merchant Login</a>' .
         (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE != 'Production' ? '<br /><br />For TEST CARDS refer to <a href="https://support.payeezy.com/hc/en-us/articles/204504235-Using-test-credit-card-numbers" target="_blank">Using Test Credit Cards</a>' : '') .
         '<br /><br /><strong>SETTINGS</strong><br />Your "Receipt Link URL" setting in your First Data Payment Page configuration needs to point to <u>' . zen_catalog_href_link('checkout_process', '', 'SSL') . '</u><br>' .

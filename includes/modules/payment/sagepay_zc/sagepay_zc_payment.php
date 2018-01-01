@@ -62,7 +62,7 @@ class sagepay_zc_payment extends AbstractSagepayAPI
                 }
             }
         }
-        $this->enabled = (($this->getModuleDefineValue('_STATUS') == 'True') ? true : false);
+        $this->enabled = ($this->getModuleDefineValue('_STATUS') === 'True');
         $this->sort_order = $this->getModuleDefineValue('_SORT_ORDER');
         if ((int)$this->getModuleDefineValue('_ORDER_STATUS_ID') > 0) {
             $this->order_status = $this->getModuleDefineValue('_ORDER_STATUS_ID');

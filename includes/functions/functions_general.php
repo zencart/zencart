@@ -139,13 +139,15 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @param mixed either a single or array of parameter names to be excluded from output
 */
-  function zen_get_all_get_params($exclude_array = array(), $search_engine_safe = true) {
+  function zen_get_all_get_params($exclude_array = array()) {
     if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'main_page', 'error', 'x', 'y'));
+    $exclude_array = array_merge($exclude_array, array('main_page', 'error', 'x', 'y'));
+    if (function_exists('zen_session_name')) {
+      $exclude_array[] = zen_session_name();
+    }
     $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+    if (is_array($_GET) && (count($_GET) > 0)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -176,9 +178,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     if (!is_array($exclude_array)) $exclude_array = array();
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
     $fields = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+    if (is_array($_GET) && (count($_GET) > 0)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -207,9 +208,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // Returns the clients browser
   function zen_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 
@@ -234,7 +233,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Output a raw date string in the selected locale date format
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
   function zen_date_long($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if ($raw_date <= '0001-01-01 00:00:00' || $raw_date == '') return false;
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -243,7 +242,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    return strftime(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
+    $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+    if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
+    return $retVal;
   }
 
 
@@ -252,7 +253,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
 // NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
   function zen_date_short($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || empty($raw_date) ) return false;
+    if ($raw_date <= '0001-01-01 00:00:00' || empty($raw_date)) return false;
 
     $year = substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -306,7 +307,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       if ( (substr($pieces[$k], -1) != '"') && (substr($pieces[$k], 0, 1) != '"') ) {
         $objects[] = trim($pieces[$k]);
 
-        for ($j=0; $j<count($post_objects); $j++) {
+        for ($j=0, $n=count($post_objects); $j<$n; $j++) {
           $objects[] = $post_objects[$j];
         }
       } else {
@@ -325,7 +326,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
           $objects[] = trim($pieces[$k]);
 
-          for ($j=0; $j<count($post_objects); $j++) {
+          for ($j=0, $n=count($post_objects); $j<$n; $j++) {
             $objects[] = $post_objects[$j];
           }
 
@@ -371,7 +372,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Push the $tmpstring onto the array of stuff to search for
             $objects[] = trim($tmpstring);
 
-            for ($j=0; $j<count($post_objects); $j++) {
+            for ($j=0, $n=count($post_objects); $j<$n; $j++) {
               $objects[] = $post_objects[$j];
             }
 
@@ -556,22 +557,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 ////
 // Return a product ID with attributes
-/*
-  function zen_get_uprid_OLD($prid, $params) {
-    $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-      while (list($option, $value) = each($params)) {
-        $uprid = $uprid . '{' . $option . '}' . $value;
-      }
-    }
-
-    return $uprid;
-  }
-*/
-
-
-////
-// Return a product ID with attributes
 function zen_get_uprid($prid, $params) 
 {
     $uprid = $prid;
@@ -646,8 +631,8 @@ function zen_get_uprid($prid, $params)
     if (!is_array($array)) $array = array();
 
     $get_string = '';
-    if (sizeof($array) > 0) {
-      while (list($key, $value) = each($array)) {
+    if (count($array) > 0) {
+      foreach($array as $key => $value) {
         if ( (!in_array($key, $exclude)) && ($key != 'x') && ($key != 'y') ) {
           $get_string .= $key . $equals . $value . $separator;
         }
@@ -739,8 +724,6 @@ function zen_get_uprid($prid, $params)
       $url = parse_url($url);
       $url = $url['host'];
     }
-//echo $url;
-
     $domain_array = explode('.', $url);
     $domain_size = sizeof($domain_array);
     if ($domain_size > 1) {
@@ -922,28 +905,23 @@ function zen_get_uprid($prid, $params)
     if (is_string($string)) {
       return trim(zen_sanitize_string(stripslashes($string)));
     } elseif (is_array($string)) {
-      reset($string);
-      while (list($key, $value) = each($string)) {
+      foreach($string as $key => $value) {
         $string[$key] = zen_db_prepare_input($value);
       }
-      return $string;
-    } else {
-      return $string;
     }
+    return $string;
   }
 
 ////
-  function zen_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
+  function zen_db_perform($table, $data, $action = 'insert', $parameters = '') {
     global $db;
-    reset($data);
     if (strtolower($action) == 'insert') {
       $query = 'INSERT INTO ' . $table . ' (';
-      while (list($columns, ) = each($data)) {
+      foreach($data as $columns => $value) {
         $query .= $columns . ', ';
       }
       $query = substr($query, 0, -2) . ') VALUES (';
-      reset($data);
-      while (list(, $value) = each($data)) {
+      foreach($data as $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= 'now(), ';
@@ -959,7 +937,7 @@ function zen_get_uprid($prid, $params)
       $query = substr($query, 0, -2) . ')';
     } elseif (strtolower($action) == 'update') {
       $query = 'UPDATE ' . $table . ' SET ';
-      while (list($columns, $value) = each($data)) {
+      foreach($data as $columns => $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= $columns . ' = now(), ';

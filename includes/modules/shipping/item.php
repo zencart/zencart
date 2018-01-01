@@ -18,7 +18,9 @@
       $this->code = 'item';
       $this->title = MODULE_SHIPPING_ITEM_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_ITEM_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_ITEM_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_ITEM_SORT_ORDER') ? MODULE_SHIPPING_ITEM_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_ITEM_TAX_CLASS;
       $this->tax_basis = MODULE_SHIPPING_ITEM_TAX_BASIS;
@@ -98,4 +100,3 @@
       return array('MODULE_SHIPPING_ITEM_STATUS', 'MODULE_SHIPPING_ITEM_COST', 'MODULE_SHIPPING_ITEM_HANDLING', 'MODULE_SHIPPING_ITEM_TAX_CLASS', 'MODULE_SHIPPING_ITEM_TAX_BASIS', 'MODULE_SHIPPING_ITEM_ZONE', 'MODULE_SHIPPING_ITEM_SORT_ORDER');
     }
   }
-?>

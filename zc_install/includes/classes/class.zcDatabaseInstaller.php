@@ -2,10 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: DrByte  Thu Mar 21 16:18:21 2016 -0500 New in v1.5.5 $
- *
  */
 /**
  *
@@ -16,7 +15,12 @@ class zcDatabaseInstaller
 {
   public function __construct($options)
   {
-    $this->func = create_function('$matches', 'return strtoupper($matches[1]);');
+    if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+      $this->func = create_function('$matches', 'return strtoupper($matches[1]);');
+    } else {
+      $this->func = function($matches) {return strtoupper($matches[1]);};
+    }
+
     $dbtypes = array();
     $path = DIR_FS_ROOT . 'includes/classes/db/';
     $dir = dir($path);
