@@ -36,7 +36,9 @@ class ot_coupon {
     $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
     $this->description = MODULE_ORDER_TOTAL_COUPON_DESCRIPTION;
     $this->user_prompt = '';
-    $this->sort_order = MODULE_ORDER_TOTAL_COUPON_SORT_ORDER;
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER') ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->include_shipping = MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
     $this->include_tax = MODULE_ORDER_TOTAL_COUPON_INC_TAX;
     $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
@@ -60,9 +62,8 @@ class ot_coupon {
     $od_amount = $this->calculate_deductions();
     $this->deduction = $od_amount['total'];
     if ($od_amount['total'] > 0) {
-      reset($order->info['tax_groups']);
       $tax = 0;
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach($order->info['tax_groups'] as $key => $value) {
         if ($od_amount['tax_groups'][$key]) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $order->info['tax_groups'][$key] = zen_round($order->info['tax_groups'][$key], $currencies->get_decimal_places($_SESSION['currency']));
@@ -147,6 +148,7 @@ class ot_coupon {
   function collect_posts() {
     global $db, $currencies, $messageStack, $order;
     global $discount_coupon;
+    $_POST['dc_redeem_code'] = trim($_POST['dc_redeem_code']);
     // remove discount coupon by request
     if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == 'REMOVE') {
       unset($_POST['dc_redeem_code']);

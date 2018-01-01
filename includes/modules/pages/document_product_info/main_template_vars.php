@@ -15,8 +15,6 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_DOCUMENT_PRODUCT_INFO');
 
-  $module_show_categories = DOCUMENT_PRODUCT_INFO_CATEGORIES;
-
   $sql = "select count(*) as total
           from " . TABLE_PRODUCTS . " p, " .
                    TABLE_PRODUCTS_DESCRIPTION . " pd

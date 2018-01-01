@@ -21,6 +21,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
   } else {
+    $cPath_array = array();
     $current_category_id = 0;
   }
 

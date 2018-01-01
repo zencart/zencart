@@ -21,8 +21,9 @@
       $this->code = 'ot_cod_fee';
       $this->title = MODULE_ORDER_TOTAL_COD_TITLE;
       $this->description = MODULE_ORDER_TOTAL_COD_DESCRIPTION;
-      $this->enabled = ((MODULE_ORDER_TOTAL_COD_STATUS == 'true') ? true : false);
-      $this->sort_order = MODULE_ORDER_TOTAL_COD_SORT_ORDER;
+      $this->enabled = (defined('MODULE_ORDER_TOTAL_COD_STATUS') && MODULE_ORDER_TOTAL_COD_STATUS == 'true');
+      $this->sort_order = defined('MODULE_ORDER_TOTAL_COD_SORT_ORDER') ? MODULE_ORDER_TOTAL_COD_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
 
       $this->output = array();
     }

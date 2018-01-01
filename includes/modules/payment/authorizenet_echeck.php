@@ -72,7 +72,7 @@ class authorizenet_echeck extends base {
   function __construct() {
     global $order, $messageStack;
     $this->code = 'authorizenet_echeck';
-    $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_ECHECK_STATUS == 'True') ? true : false); // Whether the module is installed or not
+    $this->enabled = ((defined('MODULE_PAYMENT_AUTHORIZENET_ECHECK_STATUS') && MODULE_PAYMENT_AUTHORIZENET_ECHECK_STATUS == 'True') ? true : false); // Whether the module is installed or not
     if (IS_ADMIN_FLAG === true) {
       // Payment module title in Admin
       $this->title = MODULE_PAYMENT_AUTHORIZENET_ECHECK_TEXT_ADMIN_TITLE;
@@ -89,7 +89,10 @@ class authorizenet_echeck extends base {
       $this->title = MODULE_PAYMENT_AUTHORIZENET_ECHECK_TEXT_CATALOG_TITLE; // Payment module title in Catalog
     }
     $this->description = MODULE_PAYMENT_AUTHORIZENET_ECHECK_TEXT_DESCRIPTION; // Descriptive Info about module in Admin
-    $this->sort_order = MODULE_PAYMENT_AUTHORIZENET_ECHECK_SORT_ORDER; // Sort Order of this payment option on the customer payment page
+    $this->sort_order = define('MODULE_PAYMENT_AUTHORIZENET_ECHECK_SORT_ORDER') ? MODULE_PAYMENT_AUTHORIZENET_ECHECK_SORT_ORDER : null; // Sort Order of this payment option on the customer payment page
+    
+    if (null === $this->sort_order) return false;
+    
     $this->form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false); // Page to go to upon submitting page info
     $this->order_status = (int)DEFAULT_ORDERS_STATUS_ID;
     if ((int)MODULE_PAYMENT_AUTHORIZENET_ECHECK_ORDER_STATUS_ID > 0) {
@@ -543,7 +546,7 @@ class authorizenet_echeck extends base {
 
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
-    while(list($key, $value) = each($submit_data)) {
+    foreach($submit_data as $key => $value) {
       if ($key != 'x_delim_char' && $key != 'x_encap_char') {
         $value = str_replace(array($this->delimiter, $this->encapChar,'"',"'",'&amp;','&', '='), '', $value);
       }

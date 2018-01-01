@@ -17,7 +17,7 @@ if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
     $GET_array = array();
     $PHP_SELF = $_SERVER['SCRIPT_NAME'];
     $vars = explode('/', substr($_SERVER['REQUEST_URI'], 1));
-    for ($i=0, $n=sizeof($vars); $i<$n; $i++) {
+    for ($i=0, $n=count($vars); $i<$n; $i++) {
       if (strpos($vars[$i], '[]')) {
         $GET_array[substr($vars[$i], 0, -2)][] = $vars[$i+1];
       } else {
@@ -25,11 +25,10 @@ if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
       }
       $i++;
     }
-    if (sizeof($GET_array) > 0) {
-      while (list($key, $value) = each($GET_array)) {
+    if (count($GET_array) > 0) {
+      foreach($GET_array as $key => $value) {
         $_GET[$key] = $value;
       }
     }
   }
 }
-?>

@@ -32,6 +32,9 @@ class sagepay_zc_form extends sagepay_zc_payment
     {
         $this->code = 'sagepay_zc_form';
         parent::__construct();
+
+        if (! $this->enabled) return false;
+
         $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
         if (MODULE_PAYMENT_SAGEPAY_ZC_FORM_TEST_STATUS == 'test') {
             $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';

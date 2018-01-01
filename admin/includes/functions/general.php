@@ -79,7 +79,7 @@
         $cPath_new = implode('_', $cPath_array);
       }
     } else {
-      if (sizeof($cPath_array) == 0) {
+      if (empty($cPath_array)) {
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
@@ -117,8 +117,7 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
 //             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
@@ -151,8 +150,7 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
     $fields = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -998,9 +996,9 @@ function zen_get_prid($uprid)
     }
   }
 
-  function zen_cfg_pull_down_htmleditors($html_editor, $key = '') {
+  function zen_cfg_pull_down_htmleditors($html_editor, $index = null) {
     global $editors_list;
-    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $name = $index ? 'configuration[' . $index . ']' : 'configuration_value';
 
     $editors_pulldown = array();
     foreach($editors_list as $key=>$value) {
@@ -1095,8 +1093,8 @@ function zen_get_prid($uprid)
 ////
 // Alias function for module configuration keys
   function zen_mod_select_option($select_array, $key_name, $key_value) {
-    reset($select_array);
-    while (list($key, $value) = each($select_array)) {
+    $string = '';
+    foreach($select_array as $key => $value) {
       if (is_int($key)) $key = $value;
       $string .= '<br><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
       if ($key_value == $key) $string .= ' CHECKED';
@@ -3147,7 +3145,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * adapted from USPS-related contributions by Brad Waite and Fritz Clapp
  */
   function zen_cfg_select_multioption($select_array, $key_value, $key = '') {
-    for ($i=0; $i<sizeof($select_array); $i++) {
+    $string = '';
+    for ($i=0, $n=count($select_array); $i<$n; $i++) {
       $name = (($key) ? 'configuration[' . $key . '][]' : 'configuration_value');
       $string .= '<br><input type="checkbox" name="' . $name . '" value="' . $select_array[$i] . '"';
       $key_values = explode( ", ", $key_value);

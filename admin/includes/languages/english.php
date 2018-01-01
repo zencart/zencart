@@ -221,6 +221,7 @@ define('IMAGE_RELEASE', 'Redeem ' . TEXT_GV_NAME);
 
 // javascript messages
 define('JS_ERROR', 'Errors have occurred during the processing of your form!\nPlease make the following corrections:\n\n');
+define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press OK and wait for this process to be completed.');
 
 define('JS_OPTIONS_VALUE_PRICE', '* The new product attribute needs a price value\n');
 define('JS_OPTIONS_VALUE_PRICE_PREFIX', '* The new product attribute needs a price prefix\n');

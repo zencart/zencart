@@ -6,106 +6,117 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Merge: 880314d 5ee9f99 Author: bislewl <bislewl@gmail.com> Modified in v1.5.5 $
  */
-
 require('includes/application_top.php');
-if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) require_once(DIR_FS_CATALOG . 'includes/classes/dbencdata.php');
+if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) {
+  require_once(DIR_FS_CATALOG . 'includes/classes/dbencdata.php');
+}
 
 $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set'] : ''));
 
 $is_ssl_protected = (substr(HTTP_SERVER, 0, 5) == 'https') ? TRUE : FALSE;
 
 if (zen_not_null($set)) {
-    switch ($set) {
-        case 'shipping':
-            $module_type = 'shipping';
-            $module_directory = DIR_FS_CATALOG_MODULES . 'shipping/';
-            $module_key = 'MODULE_SHIPPING_INSTALLED';
-            define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
-            $shipping_errors = '';
-            if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == 'NONE' or zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == '') {
-                $shipping_errors .= '<br />' . ERROR_SHIPPING_ORIGIN_ZIP;
-            }
-            if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') == '1' and !defined('MODULE_SHIPPING_FREESHIPPER_STATUS')) {
-                $shipping_errors .= '<br />' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
-            }
-            if (defined('MODULE_SHIPPING_USPS_STATUS') and (MODULE_SHIPPING_USPS_USERID == 'NONE' or MODULE_SHIPPING_USPS_SERVER == 'test')) {
-                $shipping_errors .= '<br />' . ERROR_USPS_STATUS;
-            }
-            if ($shipping_errors != '') {
-                $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
-            }
-            break;
-        case 'ordertotal':
-            $module_type = 'order_total';
-            $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
-            $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
-            define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
-            break;
-        case 'payment':
-        default:
-            $module_type = 'payment';
-            $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
-            $module_key = 'MODULE_PAYMENT_INSTALLED';
-            define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
-            break;
-    }
+  switch ($set) {
+    case 'shipping':
+      $module_type = 'shipping';
+      $module_directory = DIR_FS_CATALOG_MODULES . 'shipping/';
+      $module_key = 'MODULE_SHIPPING_INSTALLED';
+      define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
+      $shipping_errors = '';
+      if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == 'NONE' or zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == '') {
+        $shipping_errors .= '<br />' . ERROR_SHIPPING_ORIGIN_ZIP;
+      }
+      if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') == '1' and ! defined('MODULE_SHIPPING_FREESHIPPER_STATUS')) {
+        $shipping_errors .= '<br />' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
+      }
+      if (defined('MODULE_SHIPPING_USPS_STATUS') and ( MODULE_SHIPPING_USPS_USERID == 'NONE' or MODULE_SHIPPING_USPS_SERVER == 'test')) {
+        $shipping_errors .= '<br />' . ERROR_USPS_STATUS;
+      }
+      if ($shipping_errors != '') {
+        $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
+      }
+      break;
+    case 'ordertotal':
+      $module_type = 'order_total';
+      $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
+      $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
+      define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
+      break;
+    case 'payment':
+    default:
+      $module_type = 'payment';
+      $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
+      $module_key = 'MODULE_PAYMENT_INSTALLED';
+      define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
+      break;
+  }
 }
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
 if (zen_not_null($action)) {
-    $admname = '{' . preg_replace('/[^\d\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
-    switch ($action) {
-      case 'save':
-        if (!$is_ssl_protected && in_array($class, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
-        while (list($key, $value) = each($_POST['configuration'])) {
-          if (is_array( $value ) ) {
-            $value = implode( ", ", $value);
-            $value = preg_replace ("/, --none--/", "", $value);
-          }
-          if (function_exists('dbenc_encrypt') && function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
-            $value = dbenc_encrypt($value);
-          }
+  $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
+  switch ($action) {
+    case 'save':
+      if (!$is_ssl_protected && in_array($class, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) {
+        break;
+      }
+      foreach($_POST['configuration'] as $key => $value) {
+        if (is_array($value)) {
+          $value = implode(", ", $value);
+          $value = preg_replace("/, --none--/", "", $value);
+        }
+        if (function_exists('dbenc_encrypt') && function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
+          $value = dbenc_encrypt($value);
+        }
 
-                $db->Execute("update " . TABLE_CONFIGURATION . "
+        $db->Execute("update " . TABLE_CONFIGURATION . "
                         set configuration_value = '" . zen_db_input($value) . "'
                         where configuration_key = '" . zen_db_input($key) . "'");
-        }
-        $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED, preg_replace('/[^\d\w]/', '*', $_GET['module']), $admname);
-        zen_record_admin_activity($msg, 'warning');
-        zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL'));
+      }
+      $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED, preg_replace('/[^\w]/', '*', $_GET['module']), $admname);
+      zen_record_admin_activity($msg, 'warning');
+      zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $msg), 'admin_settings_changed');
+      zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL'));
+      break;
+    case 'install':
+      $result = 'failed';
+      $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+      $class = basename($_POST['module']);
+      if (!$is_ssl_protected && in_array($class, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck')))
         break;
-      case 'install':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-        $class = basename($_POST['module']);
-        if (!$is_ssl_protected && in_array($class, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
-        if (file_exists($module_directory . $class . $file_extension)) {
-          include($module_directory . $class . $file_extension);
-          $module = new $class;
-          $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
-          zen_record_admin_activity($msg, 'warning');
-          zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
-          $result = $module->install();
-        }
-        if ($result != 'failed') {
-          zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL'));
-        }
-       break;
-      case 'removeconfirm':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-        $class = basename($_POST['module']);
-        if (file_exists($module_directory . $class . $file_extension)) {
-          include($module_directory . $class . $file_extension);
-          $module = new $class;
-          $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\d\w]/', '*', $_POST['module']), $admname);
-          zen_record_admin_activity($msg, 'warning');
-          zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
-          $result = $module->remove();
-        }
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'));
-       break;
-    }
+      if (file_exists($module_directory . $class . $file_extension)) {
+          if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
+            include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
+            include $module_directory . $class . $file_extension;
+            $module = new $class;
+            $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
+            zen_record_admin_activity($msg, 'warning');
+            zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $msg), 'admin_settings_changed');
+            $result = $module->install();
+          }
+      }
+      if ($result != 'failed') {
+        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL'));
+      }
+      break;
+    case 'removeconfirm':
+      $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+      $class = basename($_POST['module']);
+      if (file_exists($module_directory . $class . $file_extension)) {
+          if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
+              include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
+              include $module_directory . $class . $file_extension;
+              $module = new $class;
+              $msg    = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
+              zen_record_admin_activity($msg, 'warning');
+              zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML'=>$msg), 'admin_settings_changed');
+              $result = $module->remove();
+          }
+      }
+      zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'));
+      break;
+  }
 }
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -300,8 +311,7 @@ if (zen_not_null($action)) {
     case 'edit':
       if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) break;
       $keys = '';
-      reset($mInfo->keys);
-      while (list($key, $value) = each($mInfo->keys)) {
+              foreach($mInfo->keys as $key => $value) {
         $keys .= '<b>' . $value['title'] . '</b><br>' . $value['description'] . '<br>';
         if ($value['set_function']) {
           eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
@@ -324,8 +334,7 @@ if (zen_not_null($action)) {
 
                     if ($mInfo->status == '1') {
                         $keys = '';
-                        reset($mInfo->keys);
-                        while (list(, $value) = each($mInfo->keys)) {
+                foreach($mInfo->keys as $value) {
                             $keys .= '<b>' . $value['title'] . '</b><br>';
                             if ($value['use_function']) {
                                 $use_function = $value['use_function'];

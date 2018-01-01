@@ -15,8 +15,6 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_DOCUMENT_GENERAL_INFO');
 
-  $module_show_categories = DOCUMENT_GENERAL_INFO_CATEGORIES;
-
   $sql = "select count(*) as total
           from " . TABLE_PRODUCTS . " p, " .
                    TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -71,7 +69,7 @@
     }
 
 // set flag for attributes module usage:
-    $flag_show_weight_attrib_for_this_prod_type = SHOW_DOCUMENT_GENERAL_INFO_WEIGHT_ATTRIBUTES;
+    $flag_show_weight_attrib_for_this_prod_type = 0;
 // get attributes
     require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_ATTRIBUTES));
 
