@@ -11,11 +11,18 @@
  *
  * For configuration instructions see: https://github.com/zencart/payeezyjs/blob/master/README.md
  *
+ * REQUIRES PHP 5.4 or newer
+ *
  * @package payeezy
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: Ian Wilson <ian@zen-cart.com> New in v1.5.5 $
  */
+
+// required to prevent PHP 5.3 from throwing errors:
+if (!defined('JSON_UNESCAPED_SLASHES')) define('JSON_UNESCAPED_SLASHES', 64);
+if (!defined('JSON_UNESCAPED_UNICODE')) define('JSON_UNESCAPED_UNICODE', 256);
+
 
 /**
  * Payeezy Payment module class
@@ -159,70 +166,70 @@ class payeezyjszc extends base
         // Payeezy currently only accepts  "American Express", "Visa", "Mastercard", "Discover", "JCB", "Diners Club"
         $cc_types = array();
         if (CC_ENABLED_VISA == 1) {
-            $cc_types[] = ['id' => 'Visa', 'text' => 'Visa'];
+            $cc_types[] = array('id' => 'Visa', 'text' => 'Visa');
         }
         if (CC_ENABLED_MC == 1) {
-            $cc_types[] = ['id' => 'Mastercard', 'text' => 'Mastercard'];
+            $cc_types[] = array('id' => 'Mastercard', 'text' => 'Mastercard');
         }
         if (CC_ENABLED_DISCOVER == 1) {
-            $cc_types[] = ['id' => 'Discover', 'text' => 'Discover'];
+            $cc_types[] = array('id' => 'Discover', 'text' => 'Discover');
         }
         if (CC_ENABLED_AMEX == 1) {
-            $cc_types[] = ['id' => 'American Express', 'text' => 'American Express'];
+            $cc_types[] = array('id' => 'American Express', 'text' => 'American Express');
         }
         if (CC_ENABLED_JCB == 1) {
-            $cc_types[] = ['id' => 'JCB', 'text' => 'JCB'];
+            $cc_types[] = array('id' => 'JCB', 'text' => 'JCB');
         }
         if (CC_ENABLED_DINERS_CLUB == 1) {
-            $cc_types[] = ['id' => 'Diners Club', 'text' => 'Diners Club'];
+            $cc_types[] = array('id' => 'Diners Club', 'text' => 'Diners Club');
         }
 
         // Prepare selection of expiry dates
         for ($i = 1; $i < 13; $i++) {
-            $expires_month[] = ['id' => sprintf('%02d', $i), 'text' => strftime('%B - (%m)', mktime(0, 0, 0, $i, 1, 2000))];
+            $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B - (%m)', mktime(0, 0, 0, $i, 1, 2000)));
         }
         $today = getdate();
         for ($i = $today['year']; $i < $today['year'] + 15; $i++) {
-            $expires_year[] = ['id' => strftime('%y', mktime(0, 0, 0, 1, 1, $i)), 'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))];
+            $expires_year[] = array('id' => strftime('%y', mktime(0, 0, 0, 1, 1, $i)), 'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)));
         }
 
         // helper for auto-selecting the radio-button next to this module so the user doesn't have to make that choice
         $onFocus = ' onfocus="methodSelect(\'pmt-' . $this->code . '\')"';
 
-        $selection = [
+        $selection = array(
             'id'     => $this->code,
             'module' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CATALOG_TITLE,
-            'fields' => [
-                [
+            'fields' => array(
+                array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_TYPE,
                     'field' => zen_draw_pull_down_menu($this->code . '_cc_type', $cc_types, '',
                         'payeezy-data="card_type" id="' . $this->code . '_cc-type"' . $onFocus . ' autocomplete="off"'),
                     'tag'   => $this->code . '_cc-type',
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_OWNER,
                     'field' => zen_draw_input_field($this->code . '_cc_owner',
                         $order->billing['firstname'] . ' ' . $order->billing['lastname'],
                         'payeezy-data="cardholder_name" id="' . $this->code . '_cc-owner"' . $onFocus . ' autocomplete="off"'),
                     'tag'   => $this->code . '_cc-owner',
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_NUMBER,
                     'field' => '<input type="text" payeezy-data="cc_number" id="' . $this->code . '_cc-number"' . $onFocus . ' autocomplete="off">',
                     'tag'   => $this->code . '_cc-number',
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_EXPIRES,
                     'field' => zen_draw_pull_down_menu($this->code . '_cc_expires_month', $expires_month, strftime('%m'), 'payeezy-data="exp_month" id="' . $this->code . '_cc-expires-month"' . $onFocus) . '&nbsp;' .
                         zen_draw_pull_down_menu($this->code . '_cc_expires_year', $expires_year, '', 'payeezy-data="exp_year" id="' . $this->code . '_cc-expires-year"' . $onFocus),
                     'tag'   => $this->code . '_cc-expires-month',
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CVV,
                     'field' => '<input type="number" size="4" maxlength="4" payeezy-data="cvv_code" id="' . $this->code . '_cc-cvv"' . $onFocus . ' autocomplete="off">',
                     'tag'   => $this->code . '_cc-cvv',
-                ],
-                [
+                ),
+                array(
                     'title' => '',
                     'field' => zen_draw_hidden_field($this->code . '_fdtoken', '', 'id="' . $this->code . '_fdtoken"') . '<div id="payeezy-payment-errors"></div>' .
                         zen_draw_hidden_field($this->code . '_currency', $order->info['currency'], 'payeezy-data="currency"') .
@@ -234,9 +241,9 @@ class payeezyjszc extends base
                         zen_draw_hidden_field($this->code . '_billing_email', $order->customer['email_address'], 'payeezy-data="billing.email"') .
                         zen_draw_hidden_field($this->code . '_billing_phone', $order->customer['telephone'], 'payeezy-data="billing.phone"'),
                     'tag'   => '',
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
 
         return $selection;
     }
@@ -252,26 +259,26 @@ class payeezyjszc extends base
 
     function confirmation()
     {
-        $confirmation = [
-            'fields' => [
-                [
+        $confirmation =array(
+            'fields' =>array(
+               array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_TYPE,
                     'field' => zen_output_string_protected($_POST[$this->code . '_cc_type']),
-                ],
-                [
+                ),
+               array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_OWNER,
                     'field' => zen_output_string_protected($_POST[$this->code . '_cc_owner']),
-                ],
-                [
+                ),
+               array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_NUMBER,
                     'field' => zen_output_string_protected($_POST[$this->code . '_cc_number']),
-                ],
-                [
+                ),
+               array(
                     'title' => MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CREDIT_CARD_EXPIRES,
                     'field' => strftime('%B, %Y', mktime(0, 0, 0, $_POST[$this->code . '_cc_expires_month'], 1, '20' . $_POST[$this->code . '_cc_expires_year'])),
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
 
         return $confirmation;
     }
@@ -313,7 +320,7 @@ class payeezyjszc extends base
                 if ($order_totals[$i]['code'] == '') {
                     continue;
                 }
-                if (in_array($order_totals[$i]['code'], ['ot_total', 'ot_subtotal', 'ot_tax', 'ot_shipping', 'insurance'])) {
+                if (in_array($order_totals[$i]['code'],array('ot_total', 'ot_subtotal', 'ot_tax', 'ot_shipping', 'insurance'))) {
                     if ($order_totals[$i]['code'] == 'ot_shipping') {
                         $args['x_freight'] = round($order_totals[$i]['value'], 2);
                     }
@@ -346,7 +353,7 @@ class payeezyjszc extends base
         $payload['method']           = 'token';
         $payload['amount']           = (int)$this->format_amount_for_payeezy($order->info['total']);
         $payload['currency_code']    = strtoupper($order->info['currency']);
-        $payload['token']            = ['token_type' => 'FDToken'];
+        $payload['token']            = array('token_type' => 'FDToken');
 
         $payload['token']['token_data']['value']           = preg_replace('/[^0-9a-z\-]/i', '', $_POST[$this->code . '_fdtoken']);
         $payload['token']['token_data']['cardholder_name'] = htmlentities($order->info['cc_owner']);
@@ -355,7 +362,7 @@ class payeezyjszc extends base
         $payload['token']['token_data']['type']            = preg_replace('/[^a-z ]/i', '', $_POST['cc_type']);
 
         if (MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS == 'Yes') {
-            $payload['soft_descriptors'] = [
+            $payload['soft_descriptors'] = array(
                 'dba_name'              => STORE_NAME, // recommended max 22 chars
                 // 'street' => '',
                 'city'                  => preg_replace('~https?://~', '', HTTP_SERVER), // for ecommerce sites they suggest using the site URL here
@@ -365,10 +372,10 @@ class payeezyjszc extends base
                 'postal_code'           => SHIPPING_ORIGIN_ZIP,
                 // 'country_code' => '',
                 'merchant_contact_info' => STORE_TELEPHONE_CUSTSERVICE,
-            ];
+            );
         }
 
-        $payload['billing_address'] = [
+        $payload['billing_address'] = array(
             'name'            => $order->billing['firstname'] . ' ' . $order->billing['lastname'],
             'street'          => $order->billing['street_address'],
             'city'            => $order->billing['city'],
@@ -376,28 +383,28 @@ class payeezyjszc extends base
             'zip_postal_code' => $order->billing['postcode'],
             'country'         => $order->billing['country']['title'],
             'email'           => $order->customer['email_address'],
-            'phone'           => ['type' => 'D', 'number' => $order->customer['telephone']],
-        ];
+            'phone'           => array('type' => 'D', 'number' => $order->customer['telephone']),
+        );
 
         if (MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL2 == 'Yes') {
-            $payload['level2'] = [
+            $payload['level2'] = array(
                 'tax1_amount'  => $this->format_amount_for_payeezy($args['x_tax']),
                 // 'tax1_number'=> '',  // number of the tax type, per the API chart
                 // 'tax2_amount'=> $this->format_amount_for_payeezy($args['x_tax2']),
                 // 'tax2_number'=> '',  // number of the tax type, per the API chart
                 'customer_ref' => $_SESSION['customer_id'],  // customer number, or PO number, or invoice number, or order number
-            ];
+            );
         }
 
         if (MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL3 == 'Yes') {
-            $payload['level3'] = [
+            $payload['level3'] = array(
                 'alt_tax_amount'  => 0,
                 'alt_tax_id'      => 0,
                 'discount_amount' => $this->format_amount_for_payeezy($args['discount_amount']),
                 // 'duty_amount'=> 0,
                 'freight_amount'  => $this->format_amount_for_payeezy($args['x_freight']),
                 'ship_from_zip'   => SHIPPING_ORIGIN_ZIP,
-                'ship_to_address' => [
+                'ship_to_address' => array(
                     'customer_number' => $_SESSION['customer_id'],
                     'address_1'       => $order->delivery['street_address'],
                     'city'            => $order->delivery['city'],
@@ -407,8 +414,8 @@ class payeezyjszc extends base
                     'email'           => $order->customer['email_address'],
                     'name'            => $order->delivery['firstname'] . ' ' . $order->delivery['lastname'],
                     'phone'           => $order->customer['telephone'],
-                ],
-            ];
+                ),
+            );
 
             // Add line-item data to transaction payload
             if (count($order->products) < 100) {
@@ -416,7 +423,7 @@ class payeezyjszc extends base
 
                 $payload['level3']['line_items'] = array();
                 foreach ($order->products as $p) {
-                    $payload['level3']['line_items'][] = (object)[
+                    $payload['level3']['line_items'][] = (object)array(
                         'description'     => $p['name'],
                         'quantity'        => $p['qty'],
                         // 'commodity_code'=> $commodity_code,
@@ -430,7 +437,7 @@ class payeezyjszc extends base
                         // 'tax_type'=> '',
                         'unit_cost'       => $this->format_amount_for_payeezy(round($p['final_price'] * $exchange_factor, 2)),
                         // 'unit_of_measure'=> '',
-                    ];
+                    );
                 }
             }
         }
@@ -510,7 +517,7 @@ class payeezyjszc extends base
         }
 
         // error at Payeezy. Call tech support
-        if (in_array($response['http_code'], [500, 502, 503, 504])) {
+        if (in_array($response['http_code'], array(500, 502, 503, 504))) {
             $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYEEZYJSZC_TEXT_MISCONFIGURATION . 'PAYEEZY-500-CALL_TECH_SUPPORT', 'error');
             zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
@@ -520,7 +527,7 @@ class payeezyjszc extends base
 
 
         // successful submission; now need to ensure it was not declined
-        if (in_array($response['http_code'], [200, 201, 202])) {
+        if (in_array($response['http_code'], array(200, 201, 202))) {
             // success example:
             // {"correlation_id":"228.1100035528625",
             // "transaction_status":"approved",
@@ -582,7 +589,7 @@ class payeezyjszc extends base
                     $payload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                     $response = $this->postTransaction($payload, $this->hmacAuthorizationToken($payload));
                     $this->logTransactionData($response, $payload_logged);
-                    if (in_array($response['http_code'], [200, 201, 202]) && $response['transaction_status'] == 'approved') {
+                    if (in_array($response['http_code'], array(200, 201, 202)) && $response['transaction_status'] == 'approved') {
                         $this->auth_code            = $response['transaction_tag'];
                         $this->transaction_id       = $response['transaction_id'] . ' Auth/Tag: ' . $response['transaction_tag'] . ' Amount: ' . number_format($response['amount'] / 100, 2, '.', '');
                         $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
@@ -605,7 +612,7 @@ class payeezyjszc extends base
                     $payload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                     $response = $this->postTransaction($payload, $this->hmacAuthorizationToken($payload));
                     $this->logTransactionData($response, $payload_logged);
-                    if (in_array($response['http_code'], [200, 201, 202]) && $response['transaction_status'] == 'approved') {
+                    if (in_array($response['http_code'], array(200, 201, 202)) && $response['transaction_status'] == 'approved') {
                         $this->auth_code            = $response['transaction_tag'];
                         $this->transaction_id       = $response['transaction_id'] . ' Auth/Tag: ' . $response['transaction_tag'] . ' Amount: ' . number_format($response['amount'] / 100, 2, '.', '');
                         $this->transaction_messages = $response['bank_resp_code'] . ' ' . $response['bank_message'] . ' ' . $response['gateway_resp_code'] . ' ' . $response['gateway_message'];
@@ -622,7 +629,7 @@ class payeezyjszc extends base
 
 
                 // check if card is flagged for fraud
-                if (in_array($response['bank_resp_code'], [500, 501, 502, 503, 596, 534, 524, 519])) {
+                if (in_array($response['bank_resp_code'], array(500, 501, 502, 503, 596, 534, 524, 519))) {
                     global $zco_notifier;
                     $_SESSION['payment_attempt'] = 500;
                     $zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_LOCKOUT', $response);
@@ -763,7 +770,7 @@ class payeezyjszc extends base
 
     function keys()
     {
-        return [
+        return array(
             'MODULE_PAYMENT_PAYEEZYJSZC_STATUS',
             'MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER',
             'MODULE_PAYMENT_PAYEEZYJSZC_ZONE',
@@ -783,7 +790,7 @@ class payeezyjszc extends base
             'MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN_SANDBOX',
             'MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX',
             'MODULE_PAYMENT_PAYEEZYJSZC_LOGGING',
-        ];
+        );
     }
 
     private function format_amount_for_payeezy($amount)
@@ -811,17 +818,17 @@ class payeezyjszc extends base
         $hmac          = hash_hmac($hashAlgorithm, $data, (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_SECRET' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))), false);    // HMAC Hash in hex
         $authorization = base64_encode($hmac);
 
-        return [
+        return array(
             'authorization' => $authorization,
             'nonce'         => $nonce,
             'timestamp'     => $timestamp,
-        ];
+        );
     }
 
     private function postTransaction($payload, $headers)
     {
         $endpoint    = $this->mode == 'Sandbox' ? 'api-cert.payeezy.com' : 'api.payeezy.com';
-        $curlHeaders = [
+        $curlHeaders = array(
             'Content-Type: application/json',
             'apikey:' . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_API_KEY' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
             'token:' . (string)(constant('MODULE_PAYMENT_PAYEEZYJSZC_MERCHANT_TOKEN' . ($this->mode == 'Sandbox' ? '_SANDBOX' : ''))),
@@ -829,7 +836,7 @@ class payeezyjszc extends base
             'nonce:' . $headers['nonce'],
             'timestamp:' . (string)($headers['timestamp']),
             'ext_tppid:' . $this->etppid,
-        ];
+        );
         $request     = curl_init();
         curl_setopt($request, CURLOPT_URL, "https://" . $endpoint . "/v1/transactions");
         curl_setopt($request, CURLOPT_POST, true);
@@ -858,7 +865,7 @@ class payeezyjszc extends base
         $this->commInfo = curl_getinfo($request);
         curl_close($request);
 
-        if (!in_array($httpcode, [200, 201, 202])) {
+        if (!in_array($httpcode, array(200, 201, 202))) {
             error_log($response);
         }
 
@@ -901,7 +908,7 @@ class payeezyjszc extends base
         }
         if (($response['transaction_status'] != 'approved' && stristr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Email on Failures')) || strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Email Always')) {
             zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Payeezy Alert ' . $response['transaction_status'] . ' ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS,
-                ['EMAIL_MESSAGE_HTML' => nl2br($logMessage)], 'debug');
+                array('EMAIL_MESSAGE_HTML' => nl2br($logMessage)), 'debug');
         }
     }
 
