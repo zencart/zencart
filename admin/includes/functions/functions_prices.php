@@ -958,8 +958,11 @@ If a special exist * 10+9
 ////
 // return attributes_qty_prices or attributes_qty_prices_onetime based on qty
   function zen_get_attributes_qty_prices_onetime($string, $qty) {
-      $attribute_qty = preg_split("/[:,]/" , str_replace(' ', '', $string));
-      $size = sizeof($attribute_qty);
+    $attribute_qty = preg_split("/[:,]/" , str_replace(' ', '', $string));
+    $new_price = 0;
+    $size = sizeof($attribute_qty);
+// if an empty string is passed then $attributes_qty will consist of a 1 element array
+    if ($size > 1) {
       for ($i=0, $n=$size; $i<$n; $i+=2) {
         $new_price = $attribute_qty[$i+1];
         if ($qty <= $attribute_qty[$i]) {
@@ -967,7 +970,8 @@ If a special exist * 10+9
           break;
         }
       }
-      return $new_price;
+    }
+    return $new_price;
 }
 
 
