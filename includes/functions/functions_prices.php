@@ -177,7 +177,7 @@
         // customer must be logged in to browse
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
-      case ((int)$_SESSION['customers_authorization'] == 2):
+      case (isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] == 2):
         // customer is logged in and was changed to must be approved to see prices
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
