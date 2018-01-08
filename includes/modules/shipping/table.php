@@ -1,10 +1,10 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 22:52:38 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
  * Enter description here...
@@ -14,31 +14,31 @@ class table extends base {
   /**
    * Enter description here...
    *
-   * @var unknown_type
+   * @var string
    */
   var $code;
   /**
    * Enter description here...
    *
-   * @var unknown_type
+   * @var string
    */
   var $title;
   /**
    * Enter description here...
    *
-   * @var unknown_type
+   * @var string
    */
   var $description;
   /**
    * Enter description here...
    *
-   * @var unknown_type
+   * @var string
    */
   var $icon;
   /**
    * Enter description here...
    *
-   * @var unknown_type
+   * @var boolean
    */
   var $enabled;
   /**
@@ -52,13 +52,15 @@ class table extends base {
     $this->code = 'table';
     $this->title = MODULE_SHIPPING_TABLE_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_SHIPPING_TABLE_SORT_ORDER;
+    $this->sort_order = defined('MODULE_SHIPPING_TABLE_SORT_ORDER') ? MODULE_SHIPPING_TABLE_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->icon = '';
     $this->tax_class = MODULE_SHIPPING_TABLE_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_TABLE_TAX_BASIS;
     // disable only when entire cart is free shipping
     if (zen_get_shipping_enabled($this->code)) {
-      $this->enabled = ((MODULE_SHIPPING_TABLE_STATUS == 'True') ? true : false);
+      $this->enabled = (MODULE_SHIPPING_TABLE_STATUS == 'True');
     }
 
     if ($this->enabled) {
@@ -210,4 +212,3 @@ class table extends base {
     return array('MODULE_SHIPPING_TABLE_STATUS', 'MODULE_SHIPPING_TABLE_COST', 'MODULE_SHIPPING_TABLE_MODE', 'MODULE_SHIPPING_TABLE_HANDLING', 'MODULE_SHIPPING_TABLE_HANDLING_METHOD', 'MODULE_SHIPPING_TABLE_TAX_CLASS', 'MODULE_SHIPPING_TABLE_TAX_BASIS', 'MODULE_SHIPPING_TABLE_ZONE', 'MODULE_SHIPPING_TABLE_SORT_ORDER');
   }
 }
-?>
