@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: salemaker_popup.php 5498 2007-01-01 04:10:07Z ajeh $
+ * @version $Id: salemaker_popup.php  Modified in v1.5.6 $
  */
 //
   require("includes/application_top.php");
@@ -44,7 +44,7 @@
   $salemaker_sales = $db->Execute($salemaker_sales_query_raw);
   while (!$salemaker_sales->EOF) {
     $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-	while (list($key,$value) = each($categories)) {
+    foreach($categories as $key => $value) {
 	  if ($value == $_GET['cid']) {
 ?>
               <tr>

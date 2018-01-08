@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: mc12345678  Sun Jan 3 13:54:17 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: products_price_manager.php  Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -217,15 +217,15 @@
         $i=1;
         $new_id = 0;
         $discount_cnt = 0;
-        for ($i=1, $n=sizeof($_POST['discount_qty']); $i<=$n; $i++) {
-          if ($_POST['discount_qty'][$i] > 0) {
-            $new_id++;
-            $db->Execute("insert into " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
+        if (!empty($_POST['discount_qty'])) {
+          for ($i=1, $n=sizeof($_POST['discount_qty']); $i<=$n; $i++) {
+            if ($_POST['discount_qty'][$i] > 0) {
+              $new_id++;
+              $db->Execute("insert into " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
                           (discount_id, products_id, discount_qty, discount_price)
                           values ('" . $new_id . "', '" . $products_filter . "', '" . zen_db_input($_POST['discount_qty'][$i]) . "', '" . zen_db_input($_POST['discount_price'][$i]) . "')");
-            $discount_cnt++;
-          } else {
-            loop;
+              $discount_cnt++;
+            }
           }
         }
 

@@ -3,7 +3,7 @@
  * ot_gv order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: Ajeh  Modified in v1.5.6 $
@@ -36,8 +36,10 @@ class ot_gv {
     $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
     $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
     $this->description = MODULE_ORDER_TOTAL_GV_DESCRIPTION;
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_GV_SORT_ORDER') ? MODULE_ORDER_TOTAL_GV_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->user_prompt = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
-    $this->sort_order = MODULE_ORDER_TOTAL_GV_SORT_ORDER;
     $this->include_shipping = MODULE_ORDER_TOTAL_GV_INC_SHIPPING;
     $this->include_tax = MODULE_ORDER_TOTAL_GV_INC_TAX;
     $this->calculate_tax = MODULE_ORDER_TOTAL_GV_CALC_TAX;
@@ -66,9 +68,8 @@ class ot_gv {
       $od_amount = $this->calculate_deductions($this->get_order_total());
       $this->deduction = $od_amount['total'];
       if ($od_amount['total'] > 0) {
-        reset($order->info['tax_groups']);
         $tax = 0;
-        while (list($key, $value) = each($order->info['tax_groups'])) {
+        foreach($order->info['tax_groups'] as $key => $value) {
           if ($od_amount['tax_groups'][$key]) {
             $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
             $tax += $od_amount['tax_groups'][$key];
@@ -316,7 +317,6 @@ class ot_gv {
         $tax_deduct = 0;
 /*
         if ($this->include_tax) {
-          reset($order->info['tax_groups']);
           foreach ($order->info['tax_groups'] as $key=>$value) {
             $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio_tax;
             $tax_deduct += $od_amount['tax_groups'][$key];
@@ -331,7 +331,6 @@ class ot_gv {
       } else {
         $ratio = ($od_amount['total'] / ($order_total - $order->info['tax']));
       }
-      reset($order->info['tax_groups']);
       $tax_deduct = 0;
       foreach ($order->info['tax_groups'] as $key=>$value) {
         $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio;

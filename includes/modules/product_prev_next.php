@@ -3,10 +3,10 @@
  *  product_prev_next.php
  *
  * @package productTypes
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: product_prev_next.php 6912 2007-09-02 02:23:45Z drbyte $
+ * @version $Id: product_prev_next.php  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -84,7 +84,6 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
 
   // if invalid product id skip
   if (is_array($id_array)) {
-    reset ($id_array);
     $counter = 0;
     foreach ($id_array as $key => $value) {
       if ($value == (int)$_GET['products_id']) {
@@ -140,4 +139,3 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
   }
 }
 // eof: previous next
-?>

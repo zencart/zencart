@@ -3,7 +3,7 @@
  * functions_prices
  *
  * @package functions
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte Modified in v1.5.6 $
@@ -16,7 +16,6 @@
     $product = $db->Execute("select products_price, products_model, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
 
     if ($product->RecordCount() > 0) {
-//  	  $product_price = $product->fields['products_price'];
       $product_price = zen_get_products_base_price($product_id);
     } else {
       return false;
@@ -24,7 +23,6 @@
 
     $specials = $db->Execute("select specials_new_products_price from " . TABLE_SPECIALS . " where products_id = '" . (int)$product_id . "' and status='1'");
     if ($specials->RecordCount() > 0) {
-//      if ($product->fields['products_priced_by_attribute'] == 1) {
         $special_price = $specials->fields['specials_new_products_price'];
     } else {
       $special_price = false;
@@ -52,7 +50,7 @@
 //      $product_to_categories = $db->Execute("select categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "'");
 //      $category = $product_to_categories->fields['categories_id'];
 
-      $product_to_categories = $db->Execute("select master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
+      $product_to_categories = $db->Execute("select master_categories_id from " . TABLE_PRODUCTS . " where products_id = " . (int)$product_id);
       $category = $product_to_categories->fields['master_categories_id'];
 
       $sale = $db->Execute("select sale_specials_condition, sale_deduction_value, sale_deduction_type from " . TABLE_SALEMAKER_SALES . " where sale_categories_all like '%," . $category . ",%' and sale_status = '1' and (sale_date_start <= now() or sale_date_start = '0001-01-01') and (sale_date_end >= now() or sale_date_end = '0001-01-01') and (sale_pricerange_from <= '" . $product_price . "' or sale_pricerange_from = '0') and (sale_pricerange_to >= '" . $product_price . "' or sale_pricerange_to = '0')");
@@ -909,7 +907,7 @@ possible return values in numerical order:
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_exists = 'true';
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
@@ -948,9 +946,11 @@ possible return values in numerical order:
     }
   }
 
-////
-// look up discount in sale makers - attributes only can have discounts if set as percentages
-// this gets the discount amount this does not determin when to apply the discount
+/**
+ * look up discount in sale makers - attributes only can have discounts if set as percentages
+ * this gets the discount amount this does not determine when to apply the discount
+ * @deprecated since v1.5.5 use zen_get_discount_calc()
+ */
   function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
     global $currencies;
     global $db;
@@ -1003,7 +1003,7 @@ If a special exist * 10
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
           $sale_maker_discount_type = $salemaker_sales->fields['sale_deduction_type'];
@@ -1375,20 +1375,21 @@ If a special exist * 10
     }
   }
 
-////
-// set the products_price_sorter
+/**
+ * recalculate and set the products_price_sorter field for the specified $product_id
+ */
   function zen_update_products_price_sorter($product_id) {
     global $db;
 
     $products_price_sorter = zen_get_products_actual_price($product_id);
-
     $db->Execute("update " . TABLE_PRODUCTS . " set
                   products_price_sorter='" . zen_db_prepare_input($products_price_sorter) . "'
                   where products_id='" . (int)$product_id . "'");
   }
 
-////
-// salemaker categories array
+/**
+ * salemaker categories array
+ */
   function zen_parse_salemaker_categories($clist) {
     $clist_array = explode(',', $clist);
 
@@ -1403,12 +1404,13 @@ If a special exist * 10
     return $tmp_array;
   }
 
-////
-// update salemaker product prices per category per product
+/**
+ * update salemaker product prices per category per product for the specified $salemaker_id
+ */
   function zen_update_salemaker_product_prices($salemaker_id) {
     global $db;
     $zv_categories = $db->Execute("select sale_categories_selected from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . (int)$salemaker_id . "'");
-
+    if ($zv_categories->EOF) return FALSE;
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
     $n = sizeof($za_salemaker_categories);
     for ($i=0; $i<$n; $i++) {

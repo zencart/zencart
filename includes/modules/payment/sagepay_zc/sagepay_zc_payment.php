@@ -3,11 +3,11 @@
  * sagepay form
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright Nixak
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Feb 27 11:58:17 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: zcwilt  Modified in v1.5.6 $
  */
 require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/sagepay_zc/AbstractSagepayAPI.php');
 
@@ -62,7 +62,7 @@ class sagepay_zc_payment extends AbstractSagepayAPI
                 }
             }
         }
-        $this->enabled = (($this->getModuleDefineValue('_STATUS') == 'True') ? true : false);
+        $this->enabled = ($this->getModuleDefineValue('_STATUS') === 'True');
         $this->sort_order = $this->getModuleDefineValue('_SORT_ORDER');
         if ((int)$this->getModuleDefineValue('_ORDER_STATUS_ID') > 0) {
             $this->order_status = $this->getModuleDefineValue('_ORDER_STATUS_ID');

@@ -3,7 +3,7 @@
  * plugin_support.php
  *
  * @package functions
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: plugin_support.php  Modified in v1.5.6 $
  */
@@ -41,6 +41,8 @@ function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_t
         trigger_error('CURL error checking plugin versions: ' . $data['error']);
         return false;
     }
+
+    if (!is_array($data)) $data = json_decode($data, true);
 
     if (strcmp($data[0]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
     // check whether present ZC version is compatible with the latest available plugin version

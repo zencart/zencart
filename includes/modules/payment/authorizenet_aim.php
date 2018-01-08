@@ -3,10 +3,10 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  July 2017  Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -93,7 +93,7 @@ class authorizenet_aim extends base {
   function __construct() {
     global $order, $messageStack;
     $this->code = 'authorizenet_aim';
-    $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS == 'True') ? true : false); // Whether the module is installed or not
+    $this->enabled = (defined('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS') && MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS == 'True'); // Whether the module is installed or not
     if (IS_ADMIN_FLAG === true) {
       // Payment module title in Admin
       $this->title = MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_ADMIN_TITLE;
@@ -112,7 +112,10 @@ class authorizenet_aim extends base {
       $this->title = MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CATALOG_TITLE; // Payment module title in Catalog
     }
     $this->description = MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_DESCRIPTION; // Descriptive Info about module in Admin
-    $this->sort_order = MODULE_PAYMENT_AUTHORIZENET_AIM_SORT_ORDER; // Sort Order of this payment option on the customer payment page
+    $this->sort_order = defined('MODULE_PAYMENT_AUTHORIZENET_AIM_SORT_ORDER') ? MODULE_PAYMENT_AUTHORIZENET_AIM_SORT_ORDER : null; // Sort Order of this payment option on the customer payment page
+
+    if (null === $this->sort_order) return false;
+
     $this->form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false); // Page to go to upon submitting page info
     $this->order_status = (int)DEFAULT_ORDERS_STATUS_ID;
     if ((int)MODULE_PAYMENT_AUTHORIZENET_AIM_ORDER_STATUS_ID > 0) {
@@ -623,7 +626,7 @@ class authorizenet_aim extends base {
         $url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
         break;
       case (MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo'):
-      case (AUTHORIZENET_DEVELOPER_MODE == 'echo'):
+      case (defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo'):
       case 'dump':
         $url = 'https://developer.authorize.net/param_dump.asp';
         break;
@@ -639,7 +642,7 @@ class authorizenet_aim extends base {
 
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
-    while(list($key, $value) = each($submit_data)) {
+    foreach($submit_data as $key => $value) {
       if ($key != 'x_delim_char' && $key != 'x_encap_char') {
         $value = str_replace(array($this->delimiter, $this->encapChar,'"',"'",'&amp;','&', '='), '', $value);
       }

@@ -3,10 +3,10 @@
  * Header code file for the Advanced Search Results page
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Feb 8 15:28:43 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
 // This should be first line of the script:
@@ -145,8 +145,7 @@ $define_list = array('PRODUCT_LIST_MODEL' => PRODUCT_LIST_MODEL,
 asort($define_list);
 
 $column_list = array();
-reset($define_list);
-while (list($column, $value) = each($define_list)) {
+foreach($define_list as $column => $value) {
   if ($value) $column_list[] = $column;
 }
 

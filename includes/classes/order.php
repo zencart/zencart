@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  July 2017 -0500 Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
  * order class
@@ -485,11 +485,11 @@ class order extends base {
                                       );
 
 
-      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE) 
+      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
       {
         $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
         $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
-      } else 
+      } else
       {
           $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
           $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
@@ -498,16 +498,7 @@ class order extends base {
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
       if ($products[$i]['attributes']) {
         $subindex = 0;
-        reset($products[$i]['attributes']);
-        while (list($option, $value) = each($products[$i]['attributes'])) {
-          /*
-          //clr 030714 Determine if attribute is a text attribute and change products array if it is.
-          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID){
-          $attr_value = $products[$i]['attributes_values'][$option];
-          } else {
-          $attr_value = $attributes->fields['products_options_values_name'];
-          }
-          */
+        foreach ($products[$i]['attributes'] as $option => $value) {
 
           $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
                                           pa.options_values_price, pa.price_prefix

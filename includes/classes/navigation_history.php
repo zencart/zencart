@@ -3,10 +3,10 @@
  * Navigation_history Class.
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Oct 19 00:50:19 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -37,8 +37,7 @@ class navigationHistory extends base {
     $get_vars = array();
 
     if (is_array($_GET)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach ($_GET as $key => $value) {
         if ($key != 'main_page') {
           $get_vars[$key] = $value;
         }
@@ -110,8 +109,7 @@ class navigationHistory extends base {
                               'get' => $page['get'],
                               'post' => $page['post']);
     } else {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach ($_GET as $key => $value) {
         if ($key != 'main_page') {
           $get_vars[$key] = $value;
         }
@@ -143,12 +141,12 @@ class navigationHistory extends base {
   function debug() {
     for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
       echo $this->path[$i]['page'] . '?';
-      while (list($key, $value) = each($this->path[$i]['get'])) {
+      foreach($this->path[$i]['get'] as $key => $value) {
         echo $key . '=' . $value . '&';
       }
       if (sizeof($this->path[$i]['post']) > 0) {
         echo '<br />';
-        while (list($key, $value) = each($this->path[$i]['post'])) {
+        foreach($this->path[$i]['post'] as $key => $value) {
           echo '&nbsp;&nbsp;<strong>' . $key . '=' . $value . '</strong><br />';
         }
       }
@@ -163,7 +161,7 @@ class navigationHistory extends base {
   }
 
   function unserialize($broken) {
-    for(reset($broken);$kv=each($broken);) {
+    foreach($broken as $kv) {
       $key=$kv['key'];
       if (gettype($this->$key)!="user function")
       $this->$key=$kv['value'];

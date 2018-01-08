@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 02:12:50 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 // get an array of template info
@@ -163,7 +163,7 @@ if (zen_not_null($action)) {
 
                 $contents = array('form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-                while (list ($key, $value) = each($template_info)) {
+                foreach($template_info as $key => $value) {
                   $template_array[] = array(
                     'id' => $key,
                     'text' => $value['name']);
@@ -184,8 +184,7 @@ if (zen_not_null($action)) {
 
                 $contents = array('form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                reset($template_info);
-                while (list ($key, $value) = each($template_info)) {
+                foreach($template_info as $key => $value) {
                   $template_array[] = array('id' => $key, 'text' => $value['name']);
                 }
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control"'));
@@ -211,7 +210,7 @@ if (zen_not_null($action)) {
                   $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_VERSION . $template_info[$tInfo->template_dir]['version']);
                   $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_DESCRIPTION . '<br />' . $template_info[$tInfo->template_dir]['description']);
                   $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_INSTALLED . '<br />');
-                  while (list ($key, $value) = each($template_info)) {
+                  foreach($template_info as $key => $value) {
                     $contents[] = array('text' => '<a href="' . DIR_WS_CATALOG_TEMPLATE . $key . '/images/' . $value['screenshot'] . '" target = "_blank" class="btn btn-info" role="button">' . IMAGE_PREVIEW . '</a>&nbsp;&nbsp;' . $value['name']);
                   }
                 }

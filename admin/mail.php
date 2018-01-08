@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 02:03:48 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -252,8 +252,7 @@ if ($action == 'preview') {
           <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=send_email_to_user' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>
           <?php
           /* Re-Post all POST'ed variables */
-          reset($_POST);
-          while (list($key, $value) = each($_POST)) {
+          foreach($_POST as $key => $value) {
             if (!is_array($_POST[$key])) {
               echo zen_draw_hidden_field($key, stripslashes($value));
             }

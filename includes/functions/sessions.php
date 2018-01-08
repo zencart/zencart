@@ -4,10 +4,10 @@
  * Session functions
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: ksteslicki  Sun Jan 25 17:45:51 2015 -0800 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -119,9 +119,8 @@ if (!defined('IS_ADMIN_FLAG')) {
         $sessid = md5(uniqid(rand(), true));
       }
       return session_id($sessid);
-    } else {
-      return session_id();
     }
+    return session_id();
   }
 
   function zen_session_name($name = '') {
@@ -129,13 +128,12 @@ if (!defined('IS_ADMIN_FLAG')) {
       $tempName = $name;
       if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempName) == '') return session_name($name);
       return FALSE;
-    } else {
-      return session_name();
     }
+    return session_name();
   }
 
   function zen_session_write_close() {
-    return session_write_close();
+    session_write_close();
   }
 
   function zen_session_destroy() {
@@ -145,9 +143,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   function zen_session_save_path($path = '') {
     if (!empty($path)) {
       return session_save_path($path);
-    } else {
-      return session_save_path();
     }
+    return session_save_path();
   }
 
   function zen_session_recreate() {
@@ -159,7 +156,6 @@ if (!defined('IS_ADMIN_FLAG')) {
       $newSessID = session_id();
       session_id($oldSessID);
       session_id($newSessID);
-      session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
       $_SESSION = $saveSession;
       if (IS_ADMIN_FLAG !== true) {
         whos_online_session_recreate($oldSessID, $newSessID);

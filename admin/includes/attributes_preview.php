@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 1 12:23:19 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -211,8 +211,7 @@ if (!defined('IS_ADMIN_FLAG')) {
               // if an error, set to customer setting
               if ($_POST['id'] !='') {
                 $selected_attribute= false;
-                reset($_POST['id']);
-                while(list($key,$value) = each($_POST['id'])) {
+                foreach($_POST['id'] as $key => $value) {
                   if (($key == $products_options_names->fields['products_options_id'] and $value == $products_options->fields['products_options_values_id'])) {
                   // zen_get_products_name($_POST['products_id']) .
                     $selected_attribute = true;
@@ -309,10 +308,9 @@ if (!defined('IS_ADMIN_FLAG')) {
               // if an error, set to customer setting
               if ($_POST['id'] !='') {
                 $selected_attribute= false;
-                reset($_POST['id']);
-                while(list($key,$value) = each($_POST['id'])) {
+                foreach($_POST['id'] as $key => $value) {
                   if (is_array($value)) {
-                    while(list($kkey,$vvalue) = each($value)) {
+                    foreach($value as $kkey => $vvalue) {
                       if (($key == $products_options_names->fields['products_options_id'] and $vvalue == $products_options->fields['products_options_values_id'])) {
                         $selected_attribute = true;
                         break;
@@ -413,8 +411,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 //            $products_attribs_query = zen_db_query("select distinct patrib.options_values_price, patrib.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = '" . $products_options_name['products_options_id'] . "'");
 //            $products_attribs_array = zen_db_fetch_array($products_attribs_query);
             if ($_POST['id']) {
-                reset($_POST['id']);
-                while(list($key,$value) = each($_POST['id'])) {
+                foreach($_POST['id'] as $key => $value) {
                   if ((preg_replace('/txt_/', '', $key) == $products_options_names->fields['products_options_id'])) {
                     $tmp_html = '<input type="text" name ="id[' . TEXT_PREFIX . $products_options_names->fields['products_options_id'] . ']" size="' . $products_options_names->fields['products_options_size'] .'" maxlength="' . $products_options_names->fields['products_options_length'] . '" value="' . stripslashes($value) .'" />  ';
                     $tmp_html .= $products_options_details;

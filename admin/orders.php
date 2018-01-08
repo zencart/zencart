@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -1092,11 +1092,11 @@ if (zen_not_null($action) && $order_exists == true) {
                     $contents[] = array('text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3'));
                     $order = new order($oInfo->orders_id);
                     $contents[] = array('text' => TABLE_HEADING_PRODUCTS . ': ' . sizeof($order->products));
-                    for ($i = 0; $i < sizeof($order->products); $i++) {
+                    for ($i = 0, $n=sizeof($order->products); $i <$n; $i++) {
                       $contents[] = array('text' => $order->products[$i]['qty'] . '&nbsp;x&nbsp;' . $order->products[$i]['name']);
 
-                      if (sizeof($order->products[$i]['attributes']) > 0) {
-                        for ($j = 0; $j < sizeof($order->products[$i]['attributes']); $j++) {
+                      if (!empty($order->products[$i]['attributes'])) {
+                        for ($j = 0, $nn=sizeof($order->products[$i]['attributes']); $j < $nn; $j++) {
                           $contents[] = array('text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i></nobr>');
                         }
                       }
