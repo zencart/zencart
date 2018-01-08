@@ -77,5 +77,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2017, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2018, Zen Cart&reg;. All rights reserved.*
 

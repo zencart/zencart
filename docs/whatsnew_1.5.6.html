@@ -2,9 +2,9 @@
 <!--
 /**
  * @package documentation
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  August 2017 New in v1.5.6 $
+ * @version $Id: Author: DrByte  New in v1.5.6 $
  */
 //-->
 <html>
@@ -86,7 +86,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 <fieldset>
 <h1>About PHP versions</h1>
 <p>Zen Cart&reg; v1.5.6 is designed for PHP 5.6 to 7.2, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.2) and Apache 2.2/2.4</p>
-<p class="small">It is compatible with PHP 5.2.10 through PHP 7.2, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this release, PHP 5.6 is considered obsolete.</a> You should be using PHP 7.1 or greater by now.)</em></p>
+<p class="small">It is compatible with PHP 5.4.9 through PHP 7.2, for backward-compatibility while upgrading your site, but you should be using a newer version whenever possible. <em>(Note: <a href="http://php.net/supported-versions.php" target="_blank">At the time of this writing, PHP 5.6 is considered obsolete.</a> You should be using PHP 7.1 or greater by now.)</em></p>
 
 <h1>Upgrade Instructions</h1>
 <p>This document only mentions the actual changes specific to v1.5.6 since v1.5.5.</p>
@@ -152,9 +152,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <li>Template - Compatibility updates to accommodate OnePageCheckout plugin integration </li>
   <li>Enhancement - Updated database to store more order-related data for easier order-reconstruction. This can help allow plugins to do more with completed order details.</li>
   <li>Enhancement - Uploading now gives more detailed feedback about failures related to invalid file types.</li>
-  <li>Fixed in v155f - if an invalid or non-existent tax rate was encountered, would get: PHP Warning: A non-numeric value encountered in /includes/functions/functions_taxes.php on line 172</li>
   <li>Fixed - date display on Admin warning about log data is now formatted with store's default date format</li>
-  <li>Security: CVE-2017-11675 - Low-Risk vulnerability (required your Admin login to be hijacked first). Now prevents exporting to invalid filenames. Fixed in v155f</li>
   <li>Mobile - Updated embedded MobileDetect to latest version</li>
   <li>Email - Updated embedded PHPMailer to latest version</li>
   <li>Utility - CurlTester has more links to external diagnostic tools, including TLS Testing verification</li>
@@ -162,7 +160,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
   <li>DB: Remove unused basket 'final_price' field from database</li>
   <li>Core: Added language-change notifier hooks</li>
 
-  <li>Core - Updated dozens of files for compatibility with PHP 7.2 deprecations</li>
+  <li>Core - Updated dozens of files for compatibility with PHP 7.2 </li>
 
   <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>
 </ul>
@@ -170,7 +168,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
 
 </fieldset>
 <br><br>
-<p class="center"><em>Copyright 2003 - 2017 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<p class="center"><em>Copyright 2003 - 2018 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
 <br><br>
 </body>
 </html>
