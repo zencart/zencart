@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Dec 28 16:50:10 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -356,6 +356,7 @@
           // build filenames to search
           switch ($zv_files_group) {
             case (0): // none
+              $check_directory = array();
               $filename_listing = '';
               break;
             case (1): // all english.php files
@@ -423,6 +424,7 @@
           switch ($zv_files_group) {
             case (0): // none
               $filename_listing = '';
+              $check_directory = array();
               break;
             case (1): // all admin/catalog function files
               $check_directory = array();
@@ -462,6 +464,7 @@
           switch ($zv_files_group) {
             case (0): // none
               $filename_listing = '';
+              $check_directory = array();
               break;
             case (1): // all admin/catalog classes files
               $check_directory = array();
@@ -506,6 +509,7 @@
           // build filenames to search
           switch ($zv_files_group) {
             case (0): // none
+              $check_directory = array();
               $filename_listing = '';
               break;
             case (1): // all template files
@@ -577,6 +581,7 @@
 //echo 'Who am I template ' . $template_dir . ' sess lang ' . $_SESSION['language'];
       switch ($zv_files_group) {
         case (0): // none
+          $check_directory = array();
           $filename_listing = '';
           break;
         case (1): // all

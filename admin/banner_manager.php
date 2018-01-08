@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.6.0 $
+ * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.5.6 $
  */
 
 require('includes/application_top.php');
@@ -380,7 +380,7 @@ if (zen_not_null($action)) {
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_BANNERS_GROUP, 'banners_group', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9">
-                <?php echo zen_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group, 'class="form-control"') . '<br><p>' . TEXT_BANNERS_NEW_GROUP . '</p>' . zen_draw_input_field('new_banners_group', '', 'class="form-control"', ((sizeof($groups_array) > 0) ? false : true)); ?>
+                <?php echo zen_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group, 'class="form-control"') . '<br><p>' . TEXT_BANNERS_NEW_GROUP . '</p>' . zen_draw_input_field('new_banners_group', '', 'class="form-control"', ((count($groups_array) > 0) ? false : true)); ?>
             </div>
           </div>
           <div class="form-group">

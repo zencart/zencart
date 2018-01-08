@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Aug 1 18:01:55 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -21,7 +21,7 @@ if ($dir = @dir($boxes_directory)) {
       }
     }
   }
-  if (sizeof($directory_array)) {
+    if (sizeof($directory_array)) {
     sort($directory_array);
   }
   $dir->close();
@@ -46,7 +46,7 @@ sort($directory_array);
 
 $warning_new_box = '';
 $installed_boxes = array();
-for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
+  for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
   $file = $directory_array[$i];
 
 // Verify Definitions
@@ -192,11 +192,11 @@ if ($_GET['action']) {
                 }
                 ?>
               <td class="dataTableContent"><?php echo (file_exists($boxes_directory_template . $column_controller->fields['layout_box_name']) ? '<span class="alert">' . str_replace(DIR_FS_CATALOG_MODULES, '', $boxes_directory_template) . '</span>' . $column_controller->fields['layout_box_name'] : str_replace(DIR_FS_CATALOG_MODULES, '', $boxes_directory) . $column_controller->fields['layout_box_name']); ?></td>
-              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? dataTableContent : messageStackError ); ?>" align="center"><?php echo ($column_controller->fields['layout_box_status'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
-              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? dataTableContent : messageStackError ); ?>" align="center"><?php echo ($column_controller->fields['layout_box_location'] == '0' ? TEXT_LEFT : TEXT_RIGHT); ?></td>
-              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? dataTableContent : messageStackError ); ?>" align="center"><?php echo $column_controller->fields['layout_box_sort_order']; ?></td>
-              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? dataTableContent : messageStackError ); ?>" align="center"><?php echo $column_controller->fields['layout_box_sort_order_single']; ?></td>
-              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? dataTableContent : messageStackError ); ?>" align="center"><?php echo ($column_controller->fields['layout_box_status_single'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
+              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? 'dataTableContent' : 'messageStackError' ); ?>" align="center"><?php echo ($column_controller->fields['layout_box_status'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
+              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? 'dataTableContent' : 'messageStackError' ); ?>" align="center"><?php echo ($column_controller->fields['layout_box_location'] == '0' ? TEXT_LEFT : TEXT_RIGHT); ?></td>
+              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? 'dataTableContent' : 'messageStackError' ); ?>" align="center"><?php echo $column_controller->fields['layout_box_sort_order']; ?></td>
+              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? 'dataTableContent' : 'messageStackError' ); ?>" align="center"><?php echo $column_controller->fields['layout_box_sort_order_single']; ?></td>
+              <td class="<?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? 'dataTableContent' : 'messageStackError' ); ?>" align="center"><?php echo ($column_controller->fields['layout_box_status_single'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
 
               <td class="dataTableContent text-right"><?php echo ( (file_exists($boxes_directory . $column_controller->fields['layout_box_name']) || file_exists($boxes_directory_template . $column_controller->fields['layout_box_name'])) ? TEXT_GOOD_BOX : TEXT_BAD_BOX); ?><?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, 'page=' . $_GET['page'] . '&cID=' . $column_controller->fields['layout_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT) . '</a>'; ?></td>
 

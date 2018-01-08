@@ -1,16 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 20:53:59 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
 function zen_display_files() {
   global $check_directory, $found, $configuration_key_lookup;
-  for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
+    for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
 //echo 'I SEE ' . $check_directory[$i] . '<br>';
 
     $dir_check = $check_directory[$i];
@@ -23,7 +23,7 @@ function zen_display_files() {
           }
         }
       }
-      if (sizeof($directory_array)) {
+        if (sizeof($directory_array)) {
         sort($directory_array);
       }
       $dir->close();
@@ -47,7 +47,7 @@ if ($action == 'new_page') {
   $directory_files = zen_display_files();
 
   $za_lookup = array();
-  for ($i = 0, $n = sizeof($directory_files); $i < $n; $i++) {
+    for ($i = 0, $n = sizeof($directory_files); $i < $n; $i++) {
     $za_lookup[] = array('id' => $i, 'text' => $directory_files[$i]);
   }
 
@@ -91,7 +91,7 @@ if (!$_SESSION['language']) {
 $languages_array = array();
 $languages = zen_get_languages();
 $lng_exists = false;
-for ($i = 0; $i < sizeof($languages); $i++) {
+for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
   if ($languages[$i]['directory'] == $_SESSION['language'])
     $lng_exists = true;
 
