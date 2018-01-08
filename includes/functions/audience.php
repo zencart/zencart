@@ -4,10 +4,10 @@
  * Builds output queries for customer segments
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Apr 17 14:57:10 2014 -0400 Modified in v1.5.3 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
 //
@@ -33,7 +33,6 @@
     $audience_list[] = array('id' => '', 'text' => TEXT_SELECT_AN_OPTION); //provide a "not-selected" value
   }
 
-  reset($queries_list);
   while (!$queries_list->EOF) {
     // if requested, show recordcounts at end of descriptions of each entry
     // This could slow things down considerably, so use sparingly !!!!
@@ -103,8 +102,7 @@ function parsed_query_string($read_string) {
   // this will also in the future be used to reconstruct queries from query_keys_list field in query_builder table.
 
   $allwords = explode( " ", $read_string );
-  reset( $allwords );
-  while( list( $key, $val ) = each( $allwords ) ) {
+  foreach( $allwords as $key => $val) {
     // find "{TABLE_" and extract that tablename
     if( substr( $val, 0, 7) == "{TABLE_"  && substr( $val, -1) == "}" ) { //check for leading and trailing {} braces
       $val = substr( $val, 2, strlen($val)-2);  // strip off braces.  Could also use str_replace(array('{','}'),'',$val);
