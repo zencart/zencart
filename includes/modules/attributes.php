@@ -6,10 +6,10 @@
  * Prepares HTML for input fields with required uniqueness so template can display them as needed and keep collected data in proper fields
  *
  * @package modules
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 2 12:53:21 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -215,7 +215,6 @@ $sql = "select count(*) as total
                       // if an error, set to customer setting
                       if ($_POST['id'] !='') {
                         $selected_attribute= false;
-                        reset($_POST['id']);
                         foreach ($_POST['id'] as $key => $value) {
                           if (($key == $products_options_names->fields['products_options_id'] and $value == $products_options->fields['products_options_values_id'])) {
                             // zen_get_products_name($_POST['products_id']) .
@@ -304,7 +303,6 @@ $sql = "select count(*) as total
                       // if an error, set to customer setting
                       if ($_POST['id'] !='') {
                         $selected_attribute= false;
-                        reset($_POST['id']);
                         foreach ($_POST['id'] as $key => $value) {
                           if (is_array($value)) {
                             foreach ($value as $kkey => $vvalue) {
@@ -397,7 +395,6 @@ $sql = "select count(*) as total
                     //            $products_attribs_query = zen_db_query("select distinct patrib.options_values_price, patrib.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = '" . $products_options_name['products_options_id'] . "'");
                     //            $products_attribs_array = zen_db_fetch_array($products_attribs_query);
                     if ($_POST['id']) {
-                      reset($_POST['id']);
                       foreach ($_POST['id'] as $key => $value) {
                         //echo preg_replace('/txt_/', '', $key) . '#';
                         //print_r($_POST['id']);
@@ -591,7 +588,6 @@ $sql = "select count(*) as total
                   } else {
                     // use customer-selected values
                     if ($_POST['id'] !='') {
-                      reset($_POST['id']);
                       foreach ($_POST['id'] as $key => $value) {
                         if ($key == $products_options_names->fields['products_options_id']) {
                           $selected_attribute = $value;

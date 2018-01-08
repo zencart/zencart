@@ -3,10 +3,10 @@
  *  document_general_info main_template_vars.php
  *
  * @package productTypes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Thu Jul 26 13:12:36 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /*
  * Extracts and constructs the data to be used in the product-type template tpl_TYPEHANDLER_info_display.php
@@ -14,8 +14,6 @@
 
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_DOCUMENT_GENERAL_INFO');
-
-  $module_show_categories = DOCUMENT_GENERAL_INFO_CATEGORIES;
 
   $sql = "select count(*) as total
           from " . TABLE_PRODUCTS . " p, " .
@@ -71,7 +69,7 @@
     }
 
 // set flag for attributes module usage:
-    $flag_show_weight_attrib_for_this_prod_type = SHOW_DOCUMENT_GENERAL_INFO_WEIGHT_ATTRIBUTES;
+    $flag_show_weight_attrib_for_this_prod_type = 0;
 // get attributes
     require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_ATTRIBUTES));
 

@@ -3,10 +3,10 @@
  * index main_template_vars.php
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Jan 7 22:43:33 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
 // This should be first line of the script:
@@ -147,7 +147,6 @@ if ($category_depth == 'nested')
   'PRODUCT_LIST_BUY_NOW' => PRODUCT_LIST_BUY_NOW);
   */
   asort($define_list);
-  reset($define_list);
   $column_list = array();
   foreach ($define_list as $key => $value)
   {

@@ -6,7 +6,7 @@
  * Displays shopping-cart contents
  *
  * @package templateSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: DrByte  Modified in v1.5.6 $
@@ -89,9 +89,8 @@
 <?php
   echo $product['attributeHiddenField'];
   if (isset($product['attributes']) && is_array($product['attributes'])) {
-  echo '<div class="cartAttribsList">';
-  echo '<ul>';
-    reset($product['attributes']);
+    echo '<div class="cartAttribsList">';
+    echo '<ul>';
     foreach ($product['attributes'] as $option => $value) {
 ?>
 
