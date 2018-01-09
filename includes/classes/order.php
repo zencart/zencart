@@ -449,6 +449,13 @@ class order extends base {
                            'country_id' => $billing_address->fields['entry_country_id'],
                            'format_id' => (int)$billing_address->fields['address_format_id']);
 
+    // -----
+    // Issue a notification, allowing an observer to potentially make changes to any of the
+    // order-related addresses and/or the country/zone information used to determine the
+    // order's products' tax rate.
+    //
+    $this->notify('NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET', '', $taxCountryId, $taxZoneId);
+    
     $index = 0;
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
