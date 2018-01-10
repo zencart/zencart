@@ -61,7 +61,7 @@ class order extends base {
 
     $order = $db->Execute($order_query);
 
-    $totals_query = "select title, text, class
+    $totals_query = "select title, text, class, value
                          from " . TABLE_ORDERS_TOTAL . "
                          where orders_id = '" . (int)$order_id . "'
                          order by sort_order";
@@ -80,7 +80,9 @@ class order extends base {
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
                               'text' => $totals->fields['text'],
-                              'class' => $totals->fields['class']);
+                              'class' => $totals->fields['class'],
+                              'value' => $totals->fields['value'],
+			     );
       $totals->MoveNext();
     }
 
