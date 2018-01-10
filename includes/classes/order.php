@@ -81,7 +81,8 @@ class order extends base {
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
                               'text' => $totals->fields['text'],
                               'class' => $totals->fields['class'],
-			                  'value' => $totals->fields['value']);
+                              'value' => $totals->fields['value'],
+			     );
       $totals->MoveNext();
     }
 
