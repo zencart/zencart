@@ -244,7 +244,16 @@ class order extends base {
       $index++;
       $orders_products->MoveNext();
     }
+
     $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $order_id);
+
+    /**
+     * @deprecated since v1.5.6; use NOTIFY_ORDER_AFTER_QUERY instead
+     */
+    if (IS_ADMIN_FLAG === true) {
+        $this->notify('ORDER_QUERY_ADMIN_COMPLETE', array('orders_id' => $order_id));
+    }
+
   }
 
   function cart() {
