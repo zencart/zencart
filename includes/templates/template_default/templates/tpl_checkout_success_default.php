@@ -6,10 +6,10 @@
  * Displays confirmation details after order has been successfully processed.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Mar 23 13:48:06 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 ?>
 <div class="centerColumn" id="checkoutSuccess">
@@ -49,7 +49,7 @@ if (isset($additional_payment_messages) && $additional_payment_messages != '') {
 }
 ?>
 <!-- eof payment-method-alerts -->
-<!--bof logoff-->
+
 <div id="checkoutSuccessLogoff">
 <?php
   if (isset($_SESSION['customer_guest_id'])) {
@@ -58,13 +58,19 @@ if (isset($additional_payment_messages) && $additional_payment_messages != '') {
     echo TEXT_CHECKOUT_LOGOFF_CUSTOMER;
   }
 ?>
-<div class="buttonRow forward"><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_LOG_OFF_ALT); ?></a></div>
 </div>
-<!--eof logoff-->
+<div class="buttonRow forward">
+    <a href="<?php echo zen_href_link(FILENAME_CONTACT_US, '', 'SSL'); ?>" name="linkContactUs"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_CONTACT_US_TEXT); ?></a>
+    <a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>" name="linkMyAccount"><?php echo zen_image_button(BUTTON_IMAGE_MY_ORDERS , BUTTON_MY_ORDERS_TEXT); ?></a>
+    <a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>" name="linkLogoff"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_LOG_OFF_ALT); ?></a>
+</div>
 
-<div id="checkoutSuccessOrderLink"><?php echo TEXT_SEE_ORDERS;?></div>
+
+<div id="checkoutSuccessOrderLink"><?php //echo TEXT_SEE_ORDERS;?></div>
 
 <div id="checkoutSuccessContactLink"><?php echo TEXT_CONTACT_STORE_OWNER;?></div>
+
+<br class="clearBoth" />
 
 <!-- bof order details -->
 <?php
