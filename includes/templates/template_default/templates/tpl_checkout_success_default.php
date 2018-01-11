@@ -65,9 +65,6 @@ if (isset($additional_payment_messages) && $additional_payment_messages != '') {
     <a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>" name="linkLogoff"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_LOG_OFF_ALT); ?></a>
 </div>
 
-
-<div id="checkoutSuccessOrderLink"><?php //echo TEXT_SEE_ORDERS;?></div>
-
 <div id="checkoutSuccessContactLink"><?php echo TEXT_CONTACT_STORE_OWNER;?></div>
 
 <br class="clearBoth" />
