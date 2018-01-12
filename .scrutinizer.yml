@@ -1,43 +1,48 @@
-before_commands:
-    - "composer install --prefer-source"
+checks:
+    php: true
 
-tools:
-    php_sim: true
-    php_pdepend: true
-    php_analyzer: true
-    php_code_sniffer:
-        enabled: false
-        config:
-          standard: PSR2
-    php_cs_fixer:
-        enabled: false
-        config:
-            level: psr2
-    php_loc: true
-    php_mess_detector:
-        enabled: true
-        config:
-            rulesets:
-                - codesize
-                - unusedcode
-                - naming
-                - design
-    sensiolabs_security_checker: true
+build:
+    environment:
+        php: 7.2
+#        mysql: 5.7
+        postgresql: false 
+        redis: false 
+#    dependencies:
+#            before:
+#                 - mysql -uroot -e 'CREATE DATABASE zencart'
+    nodes:
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run
+                    -
+                        command: phpcs-run
+                        use_website_config: true
+#                    -
+#                        command: vendor/bin/phpunit --verbose -c testFramework/unittests/phpunit.xml
+#                    -
+#                        command: vendor/bin/phpunit --verbose -c testFramework/webtests/phpunit.xml --debug
+#                    -
+#                        command: vendor/bin/behat
 
 filter:
     paths:
         - 'includes/*'
         - 'ipn_main_handler.php'
+        - 'square_handler.php'
         - 'ajax.php'
         - 'index.php'
         - 'page_not_found.php'
     excluded_paths:
-        - 'includes/classes/support/*'
+        - 'includes/modules/debug_blocks/'
         - 'includes/classes/class.phpmailer.php'
         - 'includes/classes/http_client.php'
-        - 'includes/library/aura/*'
-        - 'includes/library/container-interop/*'
-        - 'includes/library/ircmaxell/*'
-        - 'includes/library/PHPMailer/*'
-        - 'includes/library/vlucas/*'
-        - 'includes/modules/debug_blocks/*'
+        - 'includes/library/aura/'
+        - 'includes/library/container-interop/'
+        - 'includes/library/doctrine/'
+        - 'includes/library/illuminate/'
+        - 'includes/library/ircmaxell/'
+        - 'includes/library/nesbot/'
+        - 'includes/library/paragonie/'
+        - 'includes/library/PHPMailer/'
+        - 'includes/library/vlucas/'

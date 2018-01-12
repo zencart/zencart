@@ -9,7 +9,7 @@
             "homepage": "https://github.com/zencart/zencart/graphs/contributors"
         }
     ],
-    "__comment": "compatible with PHP 5.5-7.1",
+    "__comment": "compatible with PHP 5.5-7.2",
     "require": {
         "php": ">=5.5"
     },
@@ -21,7 +21,8 @@
         "behat/mink-goutte-driver": "^1.2",
         "behat/mink-selenium2-driver": "^1.3",
         "behat/mink-extension": "^2.2",
-        "phpunit/phpunit": "~5.7 || ~4.8"
+        "phpunit/phpunit": "~5.7 || ~4.8",
+        "phpunit/phpunit-selenium": "^3"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"],
