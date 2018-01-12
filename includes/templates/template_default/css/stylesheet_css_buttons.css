@@ -2,7 +2,7 @@
 .buttonRow a {
   text-decoration: none;
 }
-.button, input.button {
+.button, input.button, input.cssButtonHover {
   -moz-border-radius:6px;
   -webkit-border-radius:6px;
   border-radius:6px;
@@ -24,7 +24,7 @@ input.submit_button {
   padding: 3px 8px;
   color: #404040;  /* Text color for submit buttons */
 }
-input.submit_button:hover {
+input.submit_button:hover, input.cssButtonHover {
   background-color:#ffdc9c;  /* Hover color for the submit buttons */
   border: 1px solid #638263;  /* Submit button border color */
   cursor: pointer;

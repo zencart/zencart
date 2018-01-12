@@ -9,18 +9,30 @@
  * - The expiry date is not reached
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_modules_downloads.php  Modified in v1.6.0 $
+ * @version $Id: tpl_modules_downloads.php  Modified in v1.5.6 $
  */
 /**
  * require the downloads module
  */
   require(DIR_WS_MODULES . zen_get_module_directory('downloads.php'));
 
-// check whether download is available
-  if ($numberOfDownloads > 0) {
+// if download is not available yet
+if ($downloadsNotAvailableYet) {
+?>
+ <fieldset><?php echo DOWNLOADS_CONTROLLER_ON_HOLD_MSG ?></fieldset>
+<?php
+  return;
+}
+
+if ($numberOfDownloads < 1) {
+  return;
+}
+
+
+// download is available
 ?>
 
 <h4 id="headingDownloads"><?php echo HEADING_DOWNLOAD; ?></h4>
@@ -42,17 +54,17 @@
 <?php
   if ($file['is_downloadable']) {
 ?>
-      <td class=""><?php echo '<a href="' . $file['link_url'] . '" download="' . $file['filename'] . '">' . $file['products_name'] . '</a>'; ?></td>
+      <td class="downloadProductNameLink"><?php echo '<a href="' . $file['link_url'] . '" download="' . $file['filename'] . '">' . $file['products_name'] . '</a>'; ?></td>
 <?php } else { ?>
-      <td class=""><?php echo $file['products_name']; ?></td>
+      <td class="downloadProductName"><?php echo $file['products_name']; ?></td>
 <?php
   }
 ?>
-      <td class=""><?php echo $file['filesize'] . $file['filesize_units']; ?></td>
-      <td class=""><?php echo $file['filename']; ?></td>
-      <td class=""><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED : zen_date_short($file['expiry'])); ?></td>
-      <td class="centeredContent"><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED_COUNT : $file['download_count']); ?></td>
-      <td class="centeredContent"><?php echo ($file['is_downloadable']) ? '<a href="' . $file['link_url'] . '" download="' . $file['filename'] . '">' . zen_image_button(BUTTON_IMAGE_DOWNLOAD, BUTTON_DOWNLOAD_ALT) . '</a>' : '&nbsp;'; ?></td>
+      <td class="downloadFilesize"><?php echo $file['filesize'] . $file['filesize_units']; ?></td>
+      <td class="downloadFilename"><?php echo $file['filename']; ?></td>
+      <td class="downloadExpiry"><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED : zen_date_short($file['expiry'])); ?></td>
+      <td class="downloadCounts centeredContent"><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED_COUNT : $file['download_count']); ?></td>
+      <td class="downloadButton centeredContent"><?php echo ($file['is_downloadable']) ? '<a href="' . $file['link_url'] . '" download="' . $file['filename'] . '">' . zen_image_button(BUTTON_IMAGE_DOWNLOAD, BUTTON_DOWNLOAD_ALT) . '</a>' : '&nbsp;'; ?></td>
     </tr>
 <?php
     } // end foreach
@@ -67,15 +79,3 @@
   }
 ?>
 
-<?php
-} // $numberOfDownloads > 0
-?>
-
-<?php
-// download is not available yet
-if ($downloadsNotAvailableYet) {
-?>
- <fieldset><?php echo DOWNLOADS_CONTROLLER_ON_HOLD_MSG ?></fieldset>
-<?php
-}
-?>

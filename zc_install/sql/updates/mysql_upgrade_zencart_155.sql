@@ -3,10 +3,10 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2016 Zen Cart Development Team
+# * @copyright Copyright 2003-2017 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Author: DrByte  Tue Jan 12 12:52:48 2016 -0500 New in v1.5.5 $
+# * @version $Id: Author: DrByte  Mar 2 2017 -0500 New in v1.5.5 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -129,6 +129,35 @@ INSERT INTO admin_pages_to_profiles (profile_id, page_key) VALUES
 
 #############
 
+INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES
+('responsive_classic', 'banner_box.php', 1, 0, 300, 1, 127),
+('responsive_classic', 'banner_box2.php', 1, 1, 15, 1, 15),
+('responsive_classic', 'banner_box_all.php', 1, 1, 5, 0, 0),
+('responsive_classic', 'best_sellers.php', 1, 1, 30, 70, 1),
+('responsive_classic', 'categories.php', 1, 0, 10, 10, 1),
+('responsive_classic', 'currencies.php', 0, 1, 80, 60, 0),
+('responsive_classic', 'document_categories.php', 1, 0, 0, 0, 0),
+('responsive_classic', 'ezpages.php', 1, 1, -1, 2, 1),
+('responsive_classic', 'featured.php', 1, 0, 45, 0, 0),
+('responsive_classic', 'information.php', 1, 0, 50, 40, 1),
+('responsive_classic', 'languages.php', 0, 1, 70, 50, 0),
+('responsive_classic', 'manufacturers.php', 1, 0, 30, 20, 1),
+('responsive_classic', 'manufacturer_info.php', 1, 1, 35, 95, 1),
+('responsive_classic', 'more_information.php', 1, 0, 200, 200, 1),
+('responsive_classic', 'music_genres.php', 1, 1, 0, 0, 0),
+('responsive_classic', 'order_history.php', 1, 1, 0, 0, 0),
+('responsive_classic', 'product_notifications.php', 1, 1, 55, 85, 1),
+('responsive_classic', 'record_companies.php', 1, 1, 0, 0, 0),
+('responsive_classic', 'reviews.php', 1, 0, 40, 0, 0),
+('responsive_classic', 'search.php', 1, 1, 10, 0, 0),
+('responsive_classic', 'search_header.php', 0, 0, 0, 0, 1),
+('responsive_classic', 'shopping_cart.php', 1, 1, 20, 30, 1),
+('responsive_classic', 'specials.php', 1, 1, 45, 0, 0),
+('responsive_classic', 'whats_new.php', 1, 0, 20, 0, 0),
+('responsive_classic', 'whos_online.php', 1, 1, 200, 200, 1);
+
+#############
+
 #### VERSION UPDATE STATEMENTS
 ## THE FOLLOWING 2 SECTIONS SHOULD BE THE "LAST" ITEMS IN THE FILE, so that if the upgrade fails prematurely, the version info is not updated.
 ##The following updates the version HISTORY to store the prior version info (Essentially "moves" the prior version info from the "project_version" to "project_version_history" table
@@ -138,8 +167,8 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='1', project_version_minor='5.5a', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
-UPDATE project_version SET project_version_major='1', project_version_minor='5.5', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.5f', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5f', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.5', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.4->1.5.5f', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 #####  END OF UPGRADE SCRIPT
 

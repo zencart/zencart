@@ -53,14 +53,19 @@
     }
     ?>
     <!-- eof payment-method-alerts -->
-    <!--bof logoff-->
     <div id="checkoutSuccessLogoff">
         <?php echo $logoff_text; ?>
-        <?php if ($flag_show_logoff_button) { ?>
-            <div class="buttonRow forward"><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_LOG_OFF_ALT); ?></a></div>
-        <?php } ?>
     </div>
-    <!--eof logoff-->
+    <div class="buttonRow forward">
+        <a href="<?php echo zen_href_link(FILENAME_CONTACT_US, '', 'SSL'); ?>" name="linkContactUs"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_CONTACT_US_TEXT); ?></a>
+        <a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>" name="linkMyAccount"><?php echo zen_image_button(BUTTON_IMAGE_MY_ORDERS , BUTTON_MY_ORDERS_TEXT); ?></a>
+    <?php if ($flag_show_logoff_button) { ?>
+        <a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>" name="linkLogoff"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_LOG_OFF_ALT); ?></a>
+    <?php } ?>
+    </div>
+    <br class="clearBoth" />
+
+
     <!-- bof order details -->
     <?php
     if (SHOW_CART_ORDER_CHECKOUT_SUCCESS == 'true') {
