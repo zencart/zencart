@@ -6,12 +6,12 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte  Modified in v1.5.6 $
+ * @version $Id: DrByte  Modified in v1.6.0 $
  */
   $content = "";
 
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent"><ul class="list-links">';
-  for ($i=0, $n=sizeof($box_categories_array);$i<$n;$i++) {
+  for ($i=0, $j=sizeof($box_categories_array); $i<$j; $i++) {
 /*
     if ($box_categories_array[$i]['has_sub_cat'] or $box_categories_array[$i]['parent'] == 'true') {
       $new_style = 'category-parent';
