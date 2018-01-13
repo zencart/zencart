@@ -1399,7 +1399,7 @@ function zen_has_product_attributes_downloads($products_id, $check_valid=false) 
       // do nothing upcoming shows in new
     } else {
       // do not include upcoming in new
-      $new_range .= " and ( ' . TABLE_PRODUCTS . '.products_date_available <=" . $upcoming_mask . " or ' . TABLE_PRODUCTS . '.products_date_available IS NULL)";
+      $new_range .= " and ( " . TABLE_PRODUCTS . ".products_date_available <=" . $upcoming_mask . " or " . TABLE_PRODUCTS . ".products_date_available IS NULL)";
     }
     return $new_range;
   }
