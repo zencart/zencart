@@ -5,7 +5,8 @@ Feature: Installer
   Scenario: Load the default page with a clean configure.php
     Then I should reset install
     Given I am on "/"
-    Then I should see "Hello. Thank you for loading Zen Cart"
+#    Then I should see "Hello. Thank you for loading Zen Cart"
+    Then I should see "Zen Cart"
 
   @javascript
   Scenario: Attempt Basic Install, Load Admin and do the Admin Setup Wizard
@@ -31,7 +32,7 @@ Feature: Installer
     And I fill in "admin_email2" with <param>"store_owner_email"
     And I press button "btnsubmit"
 
-    Then I should see "Installation completed"
+    Then I should see "Installation is now complete"
     Then I set a configuration value "SEND_EMAILS", "false"
 
     Given I do a first admin login with <param>"admin_user_main", <param>"admin_password_install", <param>"admin_password_main"
@@ -54,7 +55,7 @@ Feature: Installer
   Scenario: After Install, Check some Catalog Pages
     Given I am on "/"
     And I set a configuration value "SHOW_NEW_PRODUCTS_LIMIT", 1
-    Then I should see "Sales Message Goes Here"
+    Then I should see "Congratulations"
 
     Given I am on "index.php?main_page=index&cPath=1"
     Then I should see "CDROM Drives"
