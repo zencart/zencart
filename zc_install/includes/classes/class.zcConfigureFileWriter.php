@@ -2,9 +2,9 @@
 /**
  * file contains zcConfigureFileWriter class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Feb 16 15:03:47 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
  *
@@ -34,7 +34,7 @@ class zcConfigureFileWriter
     $replaceVars['DB_PREFIX'] = trim($inputs['db_prefix']);
 
     $replaceVars['DB_CHARSET'] = trim($inputs['db_charset']);
-    if ($replaceVars['DB_CHARSET'] == '') $replaceVars['DB_CHARSET'] = 'utf8';
+    if ($replaceVars['DB_CHARSET'] == '') $replaceVars['DB_CHARSET'] = 'utf8mb4';
 
     $replaceVars['DB_SERVER'] = trim($inputs['db_host']);
     $replaceVars['DB_SERVER_USERNAME'] = trim($inputs['db_user']);

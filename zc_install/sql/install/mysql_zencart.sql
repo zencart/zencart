@@ -2,7 +2,7 @@
 # * Main Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2017 Zen Cart Development Team
+# * @copyright Copyright 2003-2018 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version $Id: Author: DrByte  Modified in v1.5.6 $
@@ -140,7 +140,7 @@ CREATE TABLE admin_activity_log (
 
 DROP TABLE IF EXISTS admin_menus;
 CREATE TABLE admin_menus (
-  menu_key VARCHAR(255) NOT NULL DEFAULT '',
+  menu_key VARCHAR(191) NOT NULL DEFAULT '',
   language_key VARCHAR(255) NOT NULL DEFAULT '',
   sort_order INT(11) NOT NULL DEFAULT 0,
   UNIQUE KEY menu_key (menu_key)
@@ -154,11 +154,11 @@ CREATE TABLE admin_menus (
 
 DROP TABLE IF EXISTS admin_pages;
 CREATE TABLE admin_pages (
-  page_key VARCHAR(255) NOT NULL DEFAULT '',
+  page_key VARCHAR(191) NOT NULL DEFAULT '',
   language_key VARCHAR(255) NOT NULL DEFAULT '',
   main_page varchar(255) NOT NULL default '',
   page_params varchar(255) NOT NULL default '',
-  menu_key varchar(255) NOT NULL default '',
+  menu_key varchar(191) NOT NULL default '',
   display_on_menu char(1) NOT NULL default 'N',
   sort_order int(11) NOT NULL default 0,
   UNIQUE KEY page_key (page_key)
@@ -186,7 +186,7 @@ CREATE TABLE admin_profiles (
 DROP TABLE IF EXISTS admin_pages_to_profiles;
 CREATE TABLE admin_pages_to_profiles (
   profile_id int(11) NOT NULL default '0',
-  page_key varchar(255) NOT NULL default '',
+  page_key varchar(191) NOT NULL default '',
   UNIQUE KEY profile_page (profile_id, page_key),
   UNIQUE KEY page_profile (page_key, profile_id)
 ) ENGINE=MyISAM;
@@ -306,7 +306,7 @@ DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration (
   configuration_id int(11) NOT NULL auto_increment,
   configuration_title text NOT NULL,
-  configuration_key varchar(255) NOT NULL default '',
+  configuration_key varchar(180) NOT NULL default '',
   configuration_value text NOT NULL,
   configuration_description text NOT NULL,
   configuration_group_id int(11) NOT NULL default '0',
@@ -763,7 +763,7 @@ CREATE TABLE geo_zones (
 #
 DROP TABLE IF EXISTS get_terms_to_filter;
 CREATE TABLE get_terms_to_filter (
-  get_term_name varchar(255) NOT NULL default '',
+  get_term_name varchar(191) NOT NULL default '',
   get_term_table varchar(64) NOT NULL,
   get_term_name_field varchar(64) NOT NULL,
   PRIMARY KEY  (get_term_name)
@@ -890,7 +890,7 @@ CREATE TABLE media_manager (
   last_modified datetime NOT NULL default '0001-01-01 00:00:00',
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (media_id),
-  KEY idx_media_name_zen (media_name)
+  KEY idx_media_name_zen (media_name(191))
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -1405,7 +1405,7 @@ DROP TABLE IF EXISTS product_type_layout;
 CREATE TABLE product_type_layout (
   configuration_id int(11) NOT NULL auto_increment,
   configuration_title text NOT NULL,
-  configuration_key varchar(255) NOT NULL default '',
+  configuration_key varchar(180) NOT NULL default '',
   configuration_value text NOT NULL,
   configuration_description text NOT NULL,
   product_type_id int(11) NOT NULL default '0',
@@ -1890,15 +1890,17 @@ CREATE TABLE salemaker_sales (
 
 #
 # Table structure for table 'sessions'
+# requires minimum MySQL 5.0.3 for varchar(256)
+# NOTE: When using charset utf8mb4, we use InnoDB because the MyISAM engine may only support 250 chars, but PHP "could" be using 256. Alternate is to specify utf8 charset instead.
 #
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
-  sesskey varchar(255) NOT NULL default '',
+  sesskey varchar(256) default NULL,
   expiry int(11) unsigned NOT NULL default '0',
   value mediumblob NOT NULL,
   PRIMARY KEY  (sesskey)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 # --------------------------------------------------------
 
@@ -1981,13 +1983,14 @@ CREATE TABLE template_select (
 
 #
 # Table structure for table 'whos_online'
+# NOTE: if session_id needs to be same length as defined in 'sessions' table.
 #
 
 DROP TABLE IF EXISTS whos_online;
 CREATE TABLE whos_online (
   customer_id int(11) default NULL,
   full_name varchar(64) NOT NULL default '',
-  session_id varchar(255) NOT NULL default '',
+  session_id varchar(256) default NULL,
   ip_address varchar(45) NOT NULL default '',
   time_entry varchar(14) NOT NULL default '',
   time_last_click varchar(14) NOT NULL default '',
@@ -1999,7 +2002,7 @@ CREATE TABLE whos_online (
   KEY idx_customer_id_zen (customer_id),
   KEY idx_time_entry_zen (time_entry),
   KEY idx_time_last_click_zen (time_last_click),
-  KEY idx_last_page_url_zen (last_page_url)
+  KEY idx_last_page_url_zen (last_page_url(191))
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------

@@ -2,9 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 21 16:18:21 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  *
  */
 /**
@@ -32,7 +32,7 @@ class zcDatabaseInstaller
     $this->dbPassword = $options['db_password'];
     $this->dbName = $options['db_name'];
     $this->dbPrefix = $options['db_prefix'];
-    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8' : $options['db_charset'];
+    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8mb4' : $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
     $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
