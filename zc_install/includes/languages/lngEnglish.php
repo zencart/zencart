@@ -2,9 +2,9 @@
 /**
  * Main English language file for installer
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Feb 16 15:03:47 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
  * defining language components for the page
@@ -137,6 +137,10 @@ define('TEXT_NAVBAR_DATABASE_SETUP', 'Database Setup');
 define('TEXT_NAVBAR_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_NAVBAR_COMPLETION', 'Finished');
 define('TEXT_NAVBAR_PAYMENT_PROVIDERS', 'Payment Providers');
+
+define('TEXT_INDEX_ALERTS', 'Alerts');
+define('TEXT_FOUND_LOCAL_STORE_CONFIGURE', 'NOTE: /includes/LOCAL/configure.php found, and will be used');
+define('TEXT_FOUND_LOCAL_ADMIN_CONFIGURE', 'NOTE: /admin/includes/LOCAL/configure.php found, and will be used');
 
 define('TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES', 'There were problems preparing and storing the configure.php files. YOUR INSTALL DID NOT COMPLETE PROPERLY.<br>Additional technical details may be found in your /logs/ folder.');
 define('TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE', 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.');

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Sat Dec 5 18:49:20 2015 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
 $otherConfigErrors = FALSE;
@@ -25,8 +25,16 @@ if (isset($_POST['updateConfigure'])) {
     require_once (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php');
     require_once (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
     if ($_POST['btnsubmit'] != TEXT_REFRESH) {
-        $storeConfigureFileReader = new zcConfigureFileReader(DIR_FS_ROOT .'includes/configure.php');
-        $adminConfigureFileReader = new zcConfigureFileReader(DIR_FS_ROOT . $selectedAdminDir . '/includes/configure.php');
+        $configFile = DIR_FS_ROOT . 'includes/configure.php';
+        $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
+        if (file_exists($configFileLocal)) $configFile = $configFileLocal;
+        $storeConfigureFileReader = new zcConfigureFileReader($configFile);
+
+        $admConfigFile = DIR_FS_ROOT . $selectedAdminDir . '/includes/configure.php';
+        $admConfigFileLocal = DIR_FS_ROOT . $selectedAdminDir . '/includes/local/configure.php';
+        if (file_exists($admConfigFileLocal)) $admConfigFile = $admConfigFileLocal;
+        $adminConfigureFileReader = new zcConfigureFileReader($admConfigFile);
+
         $configureInputs = $storeConfigureFileReader->getStoreInputsFromLegacy();
         $configureInputs['enable_ssl_admin'] = trim($adminConfigureFileReader->getRawDefine('ENABLE_SSL_ADMIN'), "'");
         $configureInputs['http_server_admin'] = trim($adminConfigureFileReader->getRawDefine( ($configureInputs['enable_ssl_admin'] == 'true' ? 'HTTPS_SERVER' : 'HTTP_SERVER') ), "'");
@@ -51,6 +59,7 @@ if ($hasSaneConfigFile && $hasUpdatedConfigFile)
 $errorList = $systemChecker->runTests();
 list($hasFatalErrors, $listFatalErrors) = $systemChecker->getErrorList();
 list($hasWarnErrors, $listWarnErrors) = $systemChecker->getErrorList('WARN');
+list($hasLocalAlerts, $listLocalAlerts) = $systemChecker->getErrorList('ALERT');
 if (isset($listFatalErrors[0]['methods']))
 {
   $res = key($listFatalErrors[0]['methods']);
