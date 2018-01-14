@@ -1,10 +1,10 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Oct 9 15:32:07 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
 @ini_set("arg_separator.output", "&");
@@ -53,7 +53,11 @@ if (VERBOSE_SYSTEMCHECKER == 'screen' && $controller == 'cli') echo 'Verbose mod
  * read some file locations from the "store / catalog" configure.php
  */
 require (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php');
-$configReader = new zcConfigureFileReader(DIR_FS_ROOT . 'includes/configure.php');
+$configFile = DIR_FS_ROOT . 'includes/configure.php';
+$configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
+if (file_exists($configFileLocal)) $configFile = $configFileLocal;
+$configReader = new zcConfigureFileReader($configFile);
+
 if (!defined('DIR_FS_LOGS')) {
   // Use the systemChecker to see if one is defined in the store configure.php
   $logDir = $configReader->getDefine('DIR_FS_LOGS');
