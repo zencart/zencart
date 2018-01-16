@@ -366,8 +366,8 @@ if (isset($_GET['dto']) && zen_not_null($_GET['dto']) && ($_GET['dto'] != DOB_FO
 
 $rate = $currencies->get_value($_SESSION['currency']);
 if ($rate) {
-  $pfrom = $_GET['pfrom'] / $rate;
-  $pto = $_GET['pto'] / $rate;
+  $pfrom = (float)$_GET['pfrom'] / $rate;
+  $pto = (float)$_GET['pto'] / $rate;
 }
 
 if (DISPLAY_PRICE_WITH_TAX == 'true') {
