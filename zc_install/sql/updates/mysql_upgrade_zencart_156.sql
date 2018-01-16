@@ -57,27 +57,27 @@ ALTER TABLE manufacturers MODIFY manufacturers_image varchar(255) default NULL;
 ALTER TABLE record_artists MODIFY artists_image varchar(255) default NULL;
 ALTER TABLE record_company MODIFY record_company_image varchar(255) default NULL;
 
-ALTER TABLE coupons ADD coupon_calc_base TINYINT(1) NOT NULL DEFAULT '0';
-ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT '0';
+ALTER TABLE coupons ADD coupon_calc_base TINYINT(1) NOT NULL DEFAULT 0;
+ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT 0;
 ALTER TABLE coupons ADD coupon_is_valid_for_sales TINYINT(1) NOT NULL DEFAULT 1;
-ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0';
+ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT 0;
 ALTER TABLE coupons_description MODIFY coupon_name VARCHAR(64) NOT NULL DEFAULT '';
 
 # Add fields for easier order reconstruction/edit
-ALTER TABLE orders ADD order_weight FLOAT NOT NULL DEFAULT '0';
-ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE orders ADD order_weight FLOAT default NULL;
+ALTER TABLE orders MODIFY shipping_method VARCHAR(255) DEFAULT NULL;
 ALTER TABLE orders MODIFY order_total decimal(15,4) default NULL;
 ALTER TABLE orders MODIFY order_tax decimal(15,4) default NULL;
 
-ALTER TABLE orders_products ADD products_weight float NOT NULL default '0';
-ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) NOT NULL default '0';
-ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) NOT NULL default '0';
-ALTER TABLE orders_products ADD products_quantity_order_min float NOT NULL default '1';
-ALTER TABLE orders_products ADD products_quantity_order_units float NOT NULL default '1';
-ALTER TABLE orders_products ADD products_quantity_order_max float NOT NULL default '0';
-ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) NOT NULL default '0';
-ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) NOT NULL default '1';
-ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NULL default '0';
+ALTER TABLE orders_products ADD products_weight float default NULL;
+ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) default NULL;
+ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) default NULL;
+ALTER TABLE orders_products ADD products_quantity_order_min float default NULL;
+ALTER TABLE orders_products ADD products_quantity_order_units float default NULL;
+ALTER TABLE orders_products ADD products_quantity_order_max float default NULL;
+ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) default NULL;
+ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) default NULL;
+ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) default NULL;
 
 # Clean up expired prids from baskets
 DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) NOT IN (
