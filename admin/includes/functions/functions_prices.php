@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 21:28:51 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 ////
 //get specials price or sale price
@@ -454,8 +454,12 @@ if (false) {
     }
 
     $new_products_price = zen_get_products_base_price($product_id);
-    $new_special_price = zen_get_products_special_price($product_id, true);
+    $new_special_price = false;
     $new_sale_price = zen_get_products_special_price($product_id, false);
+
+    if ($new_sale_price !== false) {
+      $new_special_price = zen_get_products_special_price($product_id, true);
+    }
 
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
@@ -464,6 +468,12 @@ if (false) {
     } else {
       $special_price_discount = '';
     }
+
+    $sale_price_discount = '';
+    if ($new_products_price != 0) {
+      $sale_price_discount = ($new_sale_price != 0 ? ($new_sale_price/$new_products_price) : 1);
+    }
+
     $sale_maker_discount = zen_get_products_sale_discount_type($product_id, '', 'amount');
 
     // percentage adjustment of discount
@@ -501,8 +511,8 @@ if (false) {
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            if ($special_price_discount != 0) {
-              $calc = ($attributes_amount * $special_price_discount);
+            if ($sale_price_discount != 0) {
+              $calc = ($attributes_amount * $sale_price_discount);
             } else {
               $calc = $attributes_amount;
             }
@@ -522,7 +532,7 @@ if (false) {
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            $calc = ($attributes_amount * $special_price_discount);
+            $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
           } else {
             $sale_maker_discount = $sale_maker_discount;
@@ -801,7 +811,7 @@ If a special exist * 10+9
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_exists = 'true';
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
@@ -862,7 +872,7 @@ If a special exist * 10+9
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
           $sale_maker_discount_type = $salemaker_sales->fields['sale_deduction_type'];
@@ -943,7 +953,7 @@ If a special exist * 10+9
 ////
 // return attributes_price_factor
   function zen_get_attributes_price_factor($price, $special, $factor, $offset) {
-    if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
+    if (defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL') && ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
       // calculate from specials_new_products_price
       $calculated_price = $special * ($factor - $offset);
     } else {
@@ -958,8 +968,11 @@ If a special exist * 10+9
 ////
 // return attributes_qty_prices or attributes_qty_prices_onetime based on qty
   function zen_get_attributes_qty_prices_onetime($string, $qty) {
-      $attribute_qty = preg_split("/[:,]/" , str_replace(' ', '', $string));
-      $size = sizeof($attribute_qty);
+    $attribute_qty = preg_split("/[:,]/" , str_replace(' ', '', $string));
+    $new_price = 0;
+    $size = sizeof($attribute_qty);
+// if an empty string is passed then $attributes_qty will consist of a 1 element array
+    if ($size > 1) {
       for ($i=0, $n=$size; $i<$n; $i+=2) {
         $new_price = $attribute_qty[$i+1];
         if ($qty <= $attribute_qty[$i]) {
@@ -967,7 +980,8 @@ If a special exist * 10+9
           break;
         }
       }
-      return $new_price;
+    }
+    return $new_price;
 }
 
 
@@ -994,6 +1008,8 @@ If a special exist * 10+9
   function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false') {
     global $db;
 
+    $attributes_price_final = 0;
+
     if ($pre_selected == '' or $attribute != $pre_selected->fields["products_attributes_id"]) {
       $pre_selected = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
     } else {
@@ -1002,9 +1018,11 @@ If a special exist * 10+9
 
     // normal attributes price
     if ($pre_selected->fields["price_prefix"] == '-') {
-      $attributes_price_final -= $pre_selected->fields["options_values_price"];
+//      $attributes_price_final -= $pre_selected->fields["options_values_price"];
+      $attributes_price_final -= zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], (zen_get_products_price_is_priced_by_attributes($pre_selected->fields["products_id"]) ? zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0) + (zen_get_products_price_is_priced_by_attributes($pre_selected->fields["products_id"]) ? -1 : 1) * $pre_selected->fields["options_values_price"]);
     } else {
-      $attributes_price_final += $pre_selected->fields["options_values_price"];
+//      $attributes_price_final += $pre_selected->fields["options_values_price"];
+      $attributes_price_final += zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], $pre_selected->fields["options_values_price"] + (zen_get_products_price_is_priced_by_attributes($pre_selected->fields["products_id"]) ? zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0));
     }
     // qty discounts
     $attributes_price_final += zen_get_attributes_qty_prices_onetime($pre_selected->fields["attributes_qty_prices"], $qty);

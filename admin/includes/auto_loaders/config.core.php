@@ -71,6 +71,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=> 'VersionServer.php',
+                               'classPath'=>DIR_WS_CLASSES);
 
 /**
  * Breakpoint 10.

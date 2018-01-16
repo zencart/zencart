@@ -3,10 +3,10 @@
  * shipping class
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 01:50:12 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -32,8 +32,7 @@ class shipping extends base {
       if ( (zen_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
         $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
       } else {
-        reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           $include_modules[] = array('class' => $class, 'file' => $value);
         }
@@ -88,7 +87,7 @@ class shipping extends base {
   function calculate_boxes_weight_and_tare() {
     global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
-    $this->abort_legacy_calculations = FALSE;
+    $this->abort_legacy_calculations = false;
     $this->notify('NOTIFY_SHIPPING_MODULE_PRE_CALCULATE_BOXES_AND_TARE', array(), $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
     if ($this->abort_legacy_calculations) return;
 
@@ -151,8 +150,7 @@ class shipping extends base {
     if (is_array($this->modules)) {
       $include_quotes = array();
 
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if (zen_not_null($module)) {
           if ( ($module == $class) && (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) ) {
@@ -181,14 +179,12 @@ class shipping extends base {
     if (is_array($this->modules)) {
       $rates = array();
 
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $quotes = $GLOBALS[$class]->quotes;
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {
-            //              if ($quotes['methods'][$i]['cost']) {
             if (isset($quotes['methods'][$i]['cost'])){
               $rates[] = array('id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
                                'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: mc12345678  Sun Jan 3 13:54:17 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: products_price_manager.php  Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -217,15 +217,15 @@
         $i=1;
         $new_id = 0;
         $discount_cnt = 0;
-        for ($i=1, $n=sizeof($_POST['discount_qty']); $i<=$n; $i++) {
-          if ($_POST['discount_qty'][$i] > 0) {
-            $new_id++;
-            $db->Execute("insert into " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
+        if (!empty($_POST['discount_qty'])) {
+          for ($i=1, $n=sizeof($_POST['discount_qty']); $i<=$n; $i++) {
+            if ($_POST['discount_qty'][$i] > 0) {
+              $new_id++;
+              $db->Execute("insert into " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
                           (discount_id, products_id, discount_qty, discount_price)
                           values ('" . $new_id . "', '" . $products_filter . "', '" . zen_db_input($_POST['discount_qty'][$i]) . "', '" . zen_db_input($_POST['discount_price'][$i]) . "')");
-            $discount_cnt++;
-          } else {
-            loop;
+              $discount_cnt++;
+            }
           }
         }
 
@@ -864,8 +864,8 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
           <tr>
             <td class="main" width="200"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></td>
 <?php
-// Specials cannot be added to Gift Vouchers
-      if(substr($pInfo->products_model, 0, 4) != 'GIFT') {
+// Specials cannot be added to Gift Vouchers when false
+      if((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true')) ) {
 ?>
             <td class="main" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . '&sID=' . $sInfo->specials_id . '&go_back=ON' . '&current_category_id=' . $current_category_id) . '">' .  zen_image_button('button_install.gif', IMAGE_INSTALL_SPECIAL) . '</a>'; ?></td>
 <?php  } else { ?>

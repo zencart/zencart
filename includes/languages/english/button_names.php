@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 8 01:41:14 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
 
@@ -22,6 +22,7 @@ define('BUTTON_IMAGE_CHANGE_ADDRESS', 'button_change_address.gif');
 define('BUTTON_IMAGE_CHECKOUT', 'button_checkout.gif');
 define('BUTTON_IMAGE_CONFIRM_SEND', 'button_confirm_send.gif');
 define('BUTTON_IMAGE_CONFIRM_ORDER', 'button_confirm_order.gif');
+define('BUTTON_IMAGE_CONTACT_US', 'button_contact_us.gif');
 define('BUTTON_IMAGE_CONTINUE', 'button_continue.gif');
 define('BUTTON_IMAGE_CONTINUE_SHOPPING', 'button_continue_shopping.gif');
 define('BUTTON_IMAGE_DELETE', 'button_delete.gif');
@@ -30,6 +31,8 @@ define('BUTTON_IMAGE_DOWNLOAD', 'button_download.gif');
 define('BUTTON_IMAGE_EDIT_SMALL', 'small_edit.gif');
 define('BUTTON_IMAGE_IN_CART', 'button_in_cart.gif');
 define('BUTTON_IMAGE_LOGIN', 'button_login.gif');
+define('BUTTON_IMAGE_MY_ACCOUNT', 'button_my_account.gif');
+define('BUTTON_IMAGE_MY_ORDERS', 'button_my_orders.gif');
 define('BUTTON_IMAGE_NEXT', 'button_next.gif');
 define('BUTTON_IMAGE_PREVIOUS', 'button_prev.gif');
 define('BUTTON_IMAGE_REDEEM', 'button_redeem.gif');
@@ -74,6 +77,7 @@ define('BUTTON_CHANGE_ADDRESS_ALT', 'Change Address');
 define('BUTTON_CHECKOUT_ALT', 'Checkout');
 define('BUTTON_CONFIRM_SEND_ALT', 'Send Gift Certificate');
 define('BUTTON_CONFIRM_ORDER_ALT', 'Confirm Order');
+define('BUTTON_CONTACT_US_TEXT', 'Contact Us');
 define('BUTTON_CONTINUE_ALT', 'Continue');
 define('BUTTON_CONTINUE_SHOPPING_ALT', 'Continue Shopping');
 define('BUTTON_DELETE_ALT', 'Delete');
@@ -83,6 +87,8 @@ define('BUTTON_EDIT_SMALL_ALT', 'Edit');
 define('BUTTON_IN_CART_ALT', 'Add to Cart');
 define('BUTTON_LOGIN_ALT', 'Sign In');
 define('BUTTON_LOOKUP_ALT', 'Lookup');
+define('BUTTON_MY_ACCOUNT_TEXT', 'My Account');
+define('BUTTON_MY_ORDERS_TEXT', 'My Orders');
 define('BUTTON_NEXT_ALT', 'Next');
 define('BUTTON_PREVIOUS_ALT', 'Previous');
 define('BUTTON_REDEEM_ALT', 'Redeem');

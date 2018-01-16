@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 17 22:56:16 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
  */
   require('includes/application_top.php');
 
@@ -15,7 +15,7 @@
   $_GET['end_date'] = (!isset($_GET['end_date']) ? date("m-d-Y",(time())) : $_GET['end_date']);
   $_GET['referral_code'] = (!isset($_GET['referral_code']) ? '0' : $_GET['referral_code']);
 
-  include(DIR_WS_CLASSES . 'order.php');
+  include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>

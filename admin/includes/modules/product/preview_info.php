@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 7 15:42:16 2012 +0100 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: zcwilt  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -138,8 +138,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         <td align="right" class="smallText">
 <?php
 /* Re-Post all POST'ed variables */
-      reset($_POST);
-      while (list($key, $value) = each($_POST)) {
+      foreach($_POST as $key => $value) {
         if (!is_array($_POST[$key])) {
           echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
         }
@@ -167,4 +166,3 @@ if (!defined('IS_ADMIN_FLAG')) {
     </table></form>
 <?php
     }
-?>

@@ -48,6 +48,15 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 # Updates
 ALTER TABLE products_options MODIFY products_options_comment varchar(256) default NULL;
 
+# allow longer image paths
+ALTER TABLE products MODIFY products_image varchar(255) default NULL;
+ALTER TABLE products_attributes MODIFY attributes_image varchar(255) default NULL;
+ALTER TABLE banners MODIFY banners_image varchar(255) NOT NULL default '';
+ALTER TABLE categories MODIFY categories_image varchar(255) default NULL;
+ALTER TABLE manufacturers MODIFY manufacturers_image varchar(255) default NULL;
+ALTER TABLE record_artists MODIFY artists_image varchar(255) default NULL;
+ALTER TABLE record_company MODIFY record_company_image varchar(255) default NULL;
+
 ALTER TABLE coupons ADD coupon_calc_base TINYINT(1) NOT NULL DEFAULT '0';
 ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT '0';
 ALTER TABLE coupons ADD coupon_is_valid_for_sales TINYINT(1) NOT NULL DEFAULT 1;
@@ -72,49 +81,49 @@ ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) NOT NU
 
 # Clean up expired prids from baskets
 DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products WHERE products_status > 0);
 DELETE FROM customers_basket_attributes WHERE CAST(products_id AS unsigned) NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products WHERE products_status > 0);
 
 # Clean up missing relations for deleted products
 DELETE FROM specials WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM products_to_categories WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM products_description WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM meta_tags_products_description WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM products_attributes WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM reviews WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM reviews_description WHERE reviews_id NOT IN (
-SELECT reviews_id 
+SELECT reviews_id
 FROM reviews);
 DELETE FROM featured WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM products_discount_quantity WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM coupon_restrict WHERE product_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM products_notifications WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products);
 DELETE FROM products_attributes_download WHERE products_attributes_id IN (
 SELECT products_attributes_id FROM products_attributes WHERE products_id NOT IN (
-SELECT products_id 
+SELECT products_id
 FROM products));
 
 

@@ -3,10 +3,10 @@
  * checkout_success header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Sat Jan 2 18:06:28 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Modified in v1.5.6 $
  */
 
 // This should be first line of the script:
@@ -160,8 +160,7 @@ submit_form();
 </script>' . "\n" . '</head>';
   echo '<body style="text-align: center; min-width: 600px;">' . "\n" . '<div style="text-align: center;  width: 600px;  margin-left: auto;  margin-right: auto; margin-top:20%;"><p>This page will automatically redirect you back to ' . STORE_NAME . ' for your order confirmation details.<br />If you are not redirected within 5 seconds, please click the button below to continue.</p>';
   echo "\n" . '<form action="' . zen_href_link(FILENAME_CHECKOUT_SUCCESS, zen_get_all_get_params(array('action')), 'SSL', false) . '" method="post" name="formpost" />' . "\n";
-  reset($_POST);
-  while (list($key, $value) = each($_POST)) {
+  foreach($_POST as $key => $value) {
     if (!is_array($_POST[$key])) {
       echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE)) . "\n";
     }

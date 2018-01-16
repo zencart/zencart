@@ -7,7 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.6 $
  */
-if (!defined(MODULE_PAYMENT_SQUARE_STATUS) || MODULE_PAYMENT_SQUARE_STATUS != 'True' || (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID') || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '')) {
+if (!defined('MODULE_PAYMENT_SQUARE_STATUS') || MODULE_PAYMENT_SQUARE_STATUS != 'True' || (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID') || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '')) {
     return false;
 }
 if ($payment_modules->in_special_checkout()) {
@@ -21,7 +21,6 @@ if ($payment_modules->in_special_checkout()) {
     var cardNonce;
     var paymentForm = new SqPaymentForm({
         applicationId: '<?php echo MODULE_PAYMENT_SQUARE_APPLICATION_ID; ?>',
-        locationId: '<?php echo MODULE_PAYMENT_SQUARE_LOCATION; ?>',
         inputClass: 'paymentInput',
         inputStyles: [
             {
@@ -45,9 +44,6 @@ if ($payment_modules->in_special_checkout()) {
         postalCode: {
             elementId: 'square_cc-postcode',
             placeholder: '11111'
-        },
-        applePay: {
-          elementId: 'sq-apple-pay'
         },
         callbacks: {
             cardNonceResponseReceived: function (errors, nonce, cardData) {
@@ -86,41 +82,6 @@ if ($payment_modules->in_special_checkout()) {
                         document.getElementById('sq-card-brand').innerHTML = inputEvent.cardBrand;
                         break;
                 }
-            },
-            methodsSupported: function (methods) {
-             if (methods.applePay === true) {
-              var element = document.getElementById('sq-apple-pay');
-              element.style.display = 'inline-block';
-             }
-            },
-            createPaymentRequest: function () {
-                return {
-                    requestShippingAddress: true,
-                    currencyCode: "USD",
-                    countryCode: "US",
-                    total: {
-                        label: "{{ MERCHANT NAME }}",
-                        amount: "{{TOTAL AMOUNT}}",
-                        pending: false,
-                    },
-                    lineItems: [
-                        {
-                            label: "Subtotal",
-                            amount: "{{SUBTOTAL AMOUNT}}",
-                            pending: false,
-                        },
-                        {
-                            label: "Shipping",
-                            amount: "{{SHIPPING AMOUNT}}",
-                            pending: true,
-                        },
-                        {
-                            label: "Tax",
-                            amount: "{{TAX AMOUNT}}",
-                            pending: false,
-                        }
-                    ]
-                };
             },
             paymentFormLoaded: function () {
                 paymentForm.setPostalCode('<?php echo $order->billing['postcode']; ?>');

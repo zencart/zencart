@@ -4,14 +4,11 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Aug 2017 Modified in v1.5.6 $
+ * @version $Id: Author: zcwilt  Modified in v1.5.6 $
  */
-if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
-}
 /**
  * Stop from parsing any further PHP code
 */
@@ -72,7 +69,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     if ($protected == true) {
       return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
     } else {
-      if ($translate == false) {
+      if ($translate === false) {
         return zen_parse_input_field_data($string, array('"' => '&quot;'));
       } else {
         return zen_parse_input_field_data($string, $translate);
@@ -83,7 +80,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Returns a string with conversions for security.
  *
- * Simply calls the zen_ouput_string function
+ * Simply calls the zen_output_string function
  * with parameters that run htmlspecialchars over the string
  * and converts quotes to html entities
  *
@@ -139,13 +136,15 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @param mixed either a single or array of parameter names to be excluded from output
 */
-  function zen_get_all_get_params($exclude_array = array(), $search_engine_safe = true) {
+  function zen_get_all_get_params($exclude_array = array()) {
     if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'main_page', 'error', 'x', 'y'));
+    $exclude_array = array_merge($exclude_array, array('main_page', 'error', 'x', 'y'));
+    if (function_exists('zen_session_name')) {
+      $exclude_array[] = zen_session_name();
+    }
     $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+    if (is_array($_GET) && (count($_GET) > 0)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -177,8 +176,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
     $fields = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -207,9 +205,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ////
 // Returns the clients browser
   function zen_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 
@@ -234,7 +230,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Output a raw date string in the selected locale date format
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
   function zen_date_long($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if ($raw_date <= '0001-01-01 00:00:00' || $raw_date == '') return false;
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -243,7 +239,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    return strftime(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
+    $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+    if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
+    return $retVal;
   }
 
 
@@ -252,7 +250,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
 // NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
   function zen_date_short($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || empty($raw_date) ) return false;
+    if ($raw_date <= '0001-01-01 00:00:00' || empty($raw_date)) return false;
 
     $year = substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -306,7 +304,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       if ( (substr($pieces[$k], -1) != '"') && (substr($pieces[$k], 0, 1) != '"') ) {
         $objects[] = trim($pieces[$k]);
 
-        for ($j=0; $j<count($post_objects); $j++) {
+        for ($j=0, $n=count($post_objects); $j<$n; $j++) {
           $objects[] = $post_objects[$j];
         }
       } else {
@@ -325,7 +323,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
           $objects[] = trim($pieces[$k]);
 
-          for ($j=0; $j<count($post_objects); $j++) {
+          for ($j=0, $n=count($post_objects); $j<$n; $j++) {
             $objects[] = $post_objects[$j];
           }
 
@@ -371,7 +369,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Push the $tmpstring onto the array of stuff to search for
             $objects[] = trim($tmpstring);
 
-            for ($j=0; $j<count($post_objects); $j++) {
+            for ($j=0, $n=count($post_objects); $j<$n; $j++) {
               $objects[] = $post_objects[$j];
             }
 
@@ -554,50 +552,41 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
 
 
-////
-// Return a product ID with attributes
-/*
-  function zen_get_uprid_OLD($prid, $params) {
+
+/**
+ * Return a product ID with attributes hash
+ * @param string|int $prid
+ * @param array|string $params
+ * @return string
+ */
+  function zen_get_uprid($prid, $params) {
     $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-      while (list($option, $value) = each($params)) {
-        $uprid = $uprid . '{' . $option . '}' . $value;
+    if ( !is_array($params) || strstr($prid, ':')) return $prid;
+
+    foreach($params as $option => $value) {
+      if (is_array($value)) {
+        foreach($value as $opt => $val) {
+          $uprid = $uprid . '{' . $option . '}' . trim($opt);
+        }
+      } else {
+        $uprid = $uprid . '{' . $option . '}' . trim($value);
       }
     }
 
-    return $uprid;
+    $md_uprid = md5($uprid);
+    return $prid . ':' . $md_uprid;
   }
-*/
 
-
-////
-// Return a product ID with attributes
-function zen_get_uprid($prid, $params) 
-{
-    $uprid = $prid;
-    if (is_array($params) && strpos($prid, ':') === false) {
-        foreach ($params as $option => $value) {
-            if (is_array($value)) {
-                foreach ($value as $opt => $val) {
-                    $uprid .= ('{' . $option . '}' . trim($opt));
-                }
-            } else {
-                $uprid .= ('{' . $option . '}' . trim($value));
-            }
-        }
-        $uprid = $prid . ':' . md5($uprid);
-    }
-    return $uprid;
-}
-
-////
-// Return a product ID from a product ID with attributes
+/**
+ * Return a product ID from a product ID with attributes
+ * Alternate: simply (int) the product id
+ * @param string $uprid   ie: '11:abcdef12345'
+ * @return mixed
+ */
   function zen_get_prid($uprid) {
     $pieces = explode(':', $uprid);
-
-    return $pieces[0];
+    return (int)$pieces[0];
   }
-
 
 
 ////
@@ -626,7 +615,6 @@ function zen_get_uprid($prid, $params)
         }
       }
     }
-
     return $count;
   }
 
@@ -647,7 +635,7 @@ function zen_get_uprid($prid, $params)
 
     $get_string = '';
     if (sizeof($array) > 0) {
-      while (list($key, $value) = each($array)) {
+      foreach($array as $key => $value) {
         if ( (!in_array($key, $exclude)) && ($key != 'x') && ($key != 'y') ) {
           $get_string .= $key . $equals . $value . $separator;
         }
@@ -739,8 +727,6 @@ function zen_get_uprid($prid, $params)
       $url = parse_url($url);
       $url = $url['host'];
     }
-//echo $url;
-
     $domain_array = explode('.', $url);
     $domain_size = sizeof($domain_array);
     if ($domain_size > 1) {
@@ -824,13 +810,13 @@ function zen_get_uprid($prid, $params)
   function is_product_valid($product_id, $coupon_id) {
     global $db;
     $coupons_query = "SELECT * FROM " . TABLE_COUPON_RESTRICT . "
-                      WHERE coupon_id = '" . (int)$coupon_id . "'
+                      WHERE coupon_id = " . (int)$coupon_id . "
                       ORDER BY coupon_restrict ASC";
 
     $coupons = $db->Execute($coupons_query);
 
     $product_query = "SELECT products_model FROM " . TABLE_PRODUCTS . "
-                      WHERE products_id = '" . (int)$product_id . "'";
+                      WHERE products_id = " . (int)$product_id;
 
     $product = $db->Execute($product_query);
 
@@ -874,7 +860,6 @@ function zen_get_uprid($prid, $params)
   }
   function validate_for_category($product_id, $coupon_id) {
     global $db;
-    $retVal = 'none';
     $productCatPath = zen_get_product_path($product_id);
     $catPathArray = array_reverse(explode('_', $productCatPath));
     $sql = "SELECT count(*) AS total
@@ -926,28 +911,23 @@ function zen_get_uprid($prid, $params)
     if (is_string($string)) {
       return trim(zen_sanitize_string(stripslashes($string)));
     } elseif (is_array($string)) {
-      reset($string);
-      while (list($key, $value) = each($string)) {
+      foreach($string as $key => $value) {
         $string[$key] = zen_db_prepare_input($value);
       }
-      return $string;
-    } else {
-      return $string;
     }
+    return $string;
   }
 
 ////
-  function zen_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
+  function zen_db_perform($table, $data, $action = 'insert', $parameters = '') {
     global $db;
-    reset($data);
     if (strtolower($action) == 'insert') {
       $query = 'INSERT INTO ' . $table . ' (';
-      while (list($columns, ) = each($data)) {
+      foreach($data as $columns => $value) {
         $query .= $columns . ', ';
       }
       $query = substr($query, 0, -2) . ') VALUES (';
-      reset($data);
-      while (list(, $value) = each($data)) {
+      foreach($data as $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= 'now(), ';
@@ -963,7 +943,7 @@ function zen_get_uprid($prid, $params)
       $query = substr($query, 0, -2) . ')';
     } elseif (strtolower($action) == 'update') {
       $query = 'UPDATE ' . $table . ' SET ';
-      while (list($columns, $value) = each($data)) {
+      foreach($data as $columns => $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= $columns . ' = now(), ';
@@ -987,6 +967,32 @@ function zen_get_uprid($prid, $params)
     return htmlspecialchars($string);
   }
 
+/**
+ * Get a shortened filename to fit within the db field constraints
+ *
+ * @param string $filename (could also be a URL)
+ * @param string $table_name
+ * @param string $field_name
+ * @param string $extension String to denote the extension. The right-most "." is used as a fallback.
+ * @return string
+ */
+  function zen_limit_image_filename($filename, $table_name, $field_name, $extension = '.') {
+      if ($filename === 'none') return $filename;
+
+      $max_length = zen_field_length($table_name, $field_name);
+      $filename_length = function_exists('mb_strlen') ? mb_strlen($filename) : strlen($filename);
+
+      if ($filename_length <= $max_length) return $filename;
+      $divider_position = function_exists('mb_strrpos') ? mb_strrpos($filename, $extension) : strrpos($filename, $extension);
+      $base = substr($filename, 0, $divider_position);
+      $original_suffix = substr($filename, $divider_position);
+      $suffix_length = function_exists('mb_strlen') ? mb_strlen($original_suffix) : strlen($original_suffix);
+      $chop_length = $filename_length - $max_length;
+      $shorter_length = $filename_length - $suffix_length - $chop_length;
+      $shorter_base = substr($base, 0, $shorter_length);
+
+      return $shorter_base . $original_suffix;
+  }
 
 // function to return field type
 // uses $tbl = table name, $fld = field name
@@ -1348,18 +1354,22 @@ function zen_get_uprid($prid, $params)
     }
   }
 
-// check to see if database stored GET terms are in the URL as $_GET parameters
+/**
+ * check to see if database stored GET terms are in the URL as $_GET parameters
+ * This is used to determine which filters should be applied
+ * @return bool
+ */
   function zen_check_url_get_terms() {
     global $db;
-    $zp_sql = "select * from " . TABLE_GET_TERMS_TO_FILTER;
-    $zp_filter_terms = $db->Execute($zp_sql);
-    $zp_result = false;
-    while (!$zp_filter_terms->EOF) {
-      if (isset($_GET[$zp_filter_terms->fields['get_term_name']]) && zen_not_null($_GET[$zp_filter_terms->fields['get_term_name']])) $zp_result = true;
-      $zp_filter_terms->MoveNext();
+    $sql = "select * from " . TABLE_GET_TERMS_TO_FILTER;
+    $query_result = $db->Execute($sql);
+    $retVal = false;
+    foreach ($query_result as $row) {
+      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) $retVal = true;
     }
-    return $zp_result;
+    return $retVal;
   }
+
 
   // replacement for fmod to manage values < 1
   function fmod_round($x, $y) {
@@ -1393,21 +1403,22 @@ function zen_get_uprid($prid, $params)
   }
 
 
-
 /**
- * return an array with zones defined for the specified country
+ * returns a pulldown array with zones defined for the specified country
+ * used by zen_prepare_country_zones_pull_down()
+ *
+ * @param int $country_id
+ * @return array for pulldown
  */
   function zen_get_country_zones($country_id) {
     global $db;
     $zones_array = array();
     $zones = $db->Execute("select zone_id, zone_name
                            from " . TABLE_ZONES . "
-                           where zone_country_id = '" . (int)$country_id . "'
+                           where zone_country_id = " . (int)$country_id . "
                            order by zone_name");
-    while (!$zones->EOF) {
-      $zones_array[] = array('id' => $zones->fields['zone_id'],
-                             'text' => $zones->fields['zone_name']);
-      $zones->MoveNext();
+    foreach ($zones as $zone) {
+      $zones_array[] = array('id' => $zone['zone_id'], 'text' => $zone['zone_name']);
     }
 
     return $zones_array;
@@ -1697,7 +1708,7 @@ function zen_get_uprid($prid, $params)
  * @return string
  */
   function charsetClean($string) {
-    if (CHARSET == 'UTF-8') return $string;
+    if (preg_replace('/[^a-z0-9]/', '', strtolower(CHARSET)) == 'utf8') return $string;
     if (function_exists('iconv')) $string = iconv("Windows-1252", CHARSET . "//IGNORE", $string);
     $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
     $string = html_entity_decode($string, ENT_QUOTES, CHARSET);

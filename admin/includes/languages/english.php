@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: english.php Modified in v1.5.6 $
+ * @version $Id: english.php   Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -252,6 +252,8 @@ define('JS_ZONE', '* The \'State\' entry must be selected from the list for this
 define('JS_COUNTRY', '* The \'Country\' value must be chosen.\n');
 define('JS_TELEPHONE', '* The \'Telephone Number\' entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
 
+define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press OK and wait for this process to be completed.');
+
 define('JS_ORDER_DOES_NOT_EXIST', 'Order Number %s does not exist!');
 define('TEXT_NO_ORDER_HISTORY', 'No Order History Available');
 
@@ -431,9 +433,17 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (o
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax rates)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> zones)');
 
-define('PREVNEXT_BUTTON_PREV', '&lt;&lt;');
-define('PREVNEXT_BUTTON_NEXT', '&gt;&gt;');
-
+define('PREVNEXT_TITLE_FIRST_PAGE', 'First Page');
+define('PREVNEXT_TITLE_PREVIOUS_PAGE', 'Previous Page');
+define('PREVNEXT_TITLE_NEXT_PAGE', 'Next Page');
+define('PREVNEXT_TITLE_LAST_PAGE', 'Last Page');
+define('PREVNEXT_TITLE_PAGE_NO', 'Page %d');
+define('PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE', 'Previous Set of %d Pages');
+define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next Set of %d Pages');
+define('PREVNEXT_BUTTON_FIRST', '&laquo;FIRST');
+define('PREVNEXT_BUTTON_PREV', '[&laquo;&nbsp;Prev]');
+define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&raquo;]');
+define('PREVNEXT_BUTTON_LAST', 'LAST&raquo;');
 
 define('TEXT_DEFAULT', 'default');
 define('TEXT_SET_DEFAULT', 'Set as default');
@@ -572,6 +582,7 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('TEXT_VERSION_CHECK_PATCH','patch');
   define('TEXT_VERSION_CHECK_DOWNLOAD','Download Here');
   define('TEXT_VERSION_CHECK_CURRENT','Your version of Zen Cart&reg; appears to be current.');
+  define('ERROR_CONTACTING_PROJECT_VERSION_SERVER','Error: Could not contact Project Version Server');
 
 // downloads manager
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_DOWNLOADS_MANAGER', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> downloads)');
@@ -757,5 +768,4 @@ define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate serv
 // include additional files:
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_EMAIL_EXTRAS);
   include(zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/', FILENAME_OTHER_IMAGES_NAMES, 'false'));
-
 

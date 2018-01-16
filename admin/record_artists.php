@@ -46,12 +46,13 @@
         $artists_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
         $artists_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ( $artists_image->parse() &&  $artists_image->save()) {
-          // remove image from database if none
           if ($artists_image->filename != 'none') {
+            $db_filename = zen_limit_image_filename($artists_image->filename, TABLE_RECORD_ARTISTS, 'artists_image');
             $db->Execute("update " . TABLE_RECORD_ARTISTS . "
-                          set artists_image = '" .  zen_db_input($_POST['img_dir'] . $artists_image->filename) . "'
+                          set artists_image = '" .  zen_db_input($_POST['img_dir'] . $db_filename) . "'
                           where artists_id = '" . (int)$artists_id . "'");
           } else {
+            // remove image from database if 'none'
             $db->Execute("update " . TABLE_RECORD_ARTISTS . "
                           set artists_image = ''
                           where artists_id = '" . (int)$artists_id . "'");

@@ -5,10 +5,10 @@
  * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 12 17:13:56 2016 -0500 Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
 $zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
@@ -54,9 +54,8 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 if (!isset($lng) || (isset($lng) && !is_object($lng))) {
   $lng = new language;
 }
-reset($lng->catalog_languages);
-if (sizeof($lng->catalog_languages) > 1) {
-  while (list($key, $value) = each($lng->catalog_languages)) {
+if (count($lng->catalog_languages) > 1) {
+  foreach($lng->catalog_languages as $key => $value) {
     echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
   }
 }
@@ -68,7 +67,7 @@ if (sizeof($lng->catalog_languages) > 1) {
  * load all template-specific stylesheets, named like "style*.css", alphabetically
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^style/', '.css');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
   }
 /**
@@ -88,7 +87,7 @@ if (sizeof($lng->catalog_languages) > 1) {
                         '/p_' . $tmp_products_id,
                         '/' . $_SESSION['language'] . '_p_' . $tmp_products_id
                         );
-  while(list ($key, $value) = each($sheets_array)) {
+  foreach($sheets_array as $key => $value) {
     //echo "<!--looking for: $value-->\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
@@ -113,14 +112,14 @@ if (sizeof($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<link rel="stylesheet" type="text/css" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
   }
 
 /** CDN for jQuery core **/
 ?>
 
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
 <script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
@@ -128,7 +127,7 @@ if (sizeof($lng->catalog_languages) > 1) {
  * load all site-wide jscript_*.js files from includes/templates/YOURTEMPLATE/jscript, alphabetically
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.js');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
 
@@ -136,7 +135,7 @@ if (sizeof($lng->catalog_languages) > 1) {
  * load all page-specific jscript_*.js files from includes/modules/pages/PAGENAME, alphabetically
  */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/', '.js');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<script type="text/javascript" src="' . $page_directory . '/' . $value . '"></script>' . "\n";
   }
 
@@ -144,7 +143,7 @@ if (sizeof($lng->catalog_languages) > 1) {
  * load all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.php');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
 /**
  * include content from all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically.
  * These .PHP files can be manipulated by PHP when they're called, and are copied in-full to the browser page
@@ -155,7 +154,7 @@ if (sizeof($lng->catalog_languages) > 1) {
  * include content from all page-specific jscript_*.php files from includes/modules/pages/PAGENAME, alphabetically.
  */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
 /**
  * include content from all page-specific jscript_*.php files from includes/modules/pages/PAGENAME, alphabetically.
  * These .PHP files can be manipulated by PHP when they're called, and are copied in-full to the browser page

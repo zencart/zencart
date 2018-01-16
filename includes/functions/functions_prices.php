@@ -3,7 +3,7 @@
  * functions_prices
  *
  * @package functions
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: DrByte Modified in v1.5.6 $
@@ -16,7 +16,6 @@
     $product = $db->Execute("select products_price, products_model, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
 
     if ($product->RecordCount() > 0) {
-//  	  $product_price = $product->fields['products_price'];
       $product_price = zen_get_products_base_price($product_id);
     } else {
       return false;
@@ -24,7 +23,6 @@
 
     $specials = $db->Execute("select specials_new_products_price from " . TABLE_SPECIALS . " where products_id = '" . (int)$product_id . "' and status='1'");
     if ($specials->RecordCount() > 0) {
-//      if ($product->fields['products_priced_by_attribute'] == 1) {
         $special_price = $specials->fields['specials_new_products_price'];
     } else {
       $special_price = false;
@@ -52,7 +50,7 @@
 //      $product_to_categories = $db->Execute("select categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "'");
 //      $category = $product_to_categories->fields['categories_id'];
 
-      $product_to_categories = $db->Execute("select master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
+      $product_to_categories = $db->Execute("select master_categories_id from " . TABLE_PRODUCTS . " where products_id = " . (int)$product_id);
       $category = $product_to_categories->fields['master_categories_id'];
 
       $sale = $db->Execute("select sale_specials_condition, sale_deduction_value, sale_deduction_type from " . TABLE_SALEMAKER_SALES . " where sale_categories_all like '%," . $category . ",%' and sale_status = '1' and (sale_date_start <= now() or sale_date_start = '0001-01-01') and (sale_date_end >= now() or sale_date_end = '0001-01-01') and (sale_pricerange_from <= '" . $product_price . "' or sale_pricerange_from = '0') and (sale_pricerange_to >= '" . $product_price . "' or sale_pricerange_to = '0')");
@@ -65,6 +63,12 @@
       } else {
         $tmp_special_price = $special_price;
       }
+      // if there is a special price, then tmp_special_price = special_price otherwise its the product_price
+      // DEDUCTION_TYPE_DROPDOWN_0 - Deduct amount
+      // DEDUCTION_TYPE_DROPDOWN_1 - Percent
+      // DEDUCTION_TYPE_DROPDOWN_2 - New Price
+      // Regardless sale_deduction_value must be set relative to the product_price.
+      //
       switch ($sale->fields['sale_deduction_type']) {
         case 0:
           $sale_product_price = $product_price - $sale->fields['sale_deduction_value'];
@@ -89,6 +93,10 @@
       if ($sale_special_price < 0) {
         $sale_special_price = 0;
       }
+
+// SPECIALS_CONDITION_DROPDOWN_0: Ignore Specials Price - Apply to Product Price and Replace Special
+// SPECIALS_CONDITION_DROPDOWN_1: Ignore SaleCondition - No Sale Applied When Special Exists
+// SPECIALS_CONDITION_DROPDOWN_2: Apply SaleDeduction to Specials Price - Otherwise Apply to Price
 
       if (!$special_price) {
         return number_format($sale_product_price, 4, '.', '');
@@ -177,7 +185,7 @@
         // customer must be logged in to browse
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
-      case ((int)$_SESSION['customers_authorization'] == 2):
+      case (isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] == 2):
         // customer is logged in and was changed to must be approved to see prices
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
@@ -201,10 +209,13 @@
       return '';
     }
 
-    $show_display_price = '';
+    $display_special_price = false;
     $display_normal_price = zen_get_products_base_price($products_id);
-    $display_special_price = zen_get_products_special_price($products_id, true);
     $display_sale_price = zen_get_products_special_price($products_id, false);
+
+    if ($display_sale_price !== false) {
+      $display_special_price = zen_get_products_special_price($products_id, true);
+    }
 
     $show_sale_discount = '';
     if (SHOW_SALE_DISCOUNT_STATUS == '1' and ($display_special_price != 0 or $display_sale_price != 0)) {
@@ -493,8 +504,12 @@
     }
 
     $new_products_price = zen_get_products_base_price($product_id);
-    $new_special_price = zen_get_products_special_price($product_id, true);
+    $new_special_price = false;
     $new_sale_price = zen_get_products_special_price($product_id, false);
+
+    if ($new_sale_price !== false) {
+      $new_special_price = zen_get_products_special_price($product_id, true);
+    }
 
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
@@ -502,6 +517,10 @@
       $special_price_discount = ($new_special_price != 0 ? ($new_special_price/$new_products_price) : 1);
     } else {
       $special_price_discount = '';
+    }
+    $sale_price_discount = '';
+    if ($new_products_price != 0) {
+      $sale_price_discount = ($new_sale_price != 0 ? ($new_sale_price/$new_products_price) : 1);
     }
     $sale_maker_discount = zen_get_products_sale_discount_type($product_id, '', 'amount');
 
@@ -516,7 +535,7 @@
 // BOF: percentage discounts apply to price
     switch (true) {
       case (zen_get_discount_qty($product_id, $qty) and !$attributes_id):
-        // discount quanties exist and this is not an attribute
+        // discount quantities exist and this is not an attribute
         // $this->contents[$products_id]['qty']
         $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
 //echo 'How much 1 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
@@ -524,7 +543,7 @@
         break;
 
       case (zen_get_discount_qty($product_id, $qty) and zen_get_products_price_is_priced_by_attributes($product_id)):
-        // discount quanties exist and this is not an attribute
+        // discount quantities exist and this is priced by attribute
         // $this->contents[$products_id]['qty']
         $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
 //echo 'How much 2 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
@@ -534,14 +553,23 @@
 
       case ($discount_type_id == 5):
         // No Sale and No Special
-//        $sale_maker_discount = 1;
+//        $sale_maker_discount_type = 0;
+/*
+          Possible reasons to be in this discount_type_id:
+
+          No Sale nor special,
+          a sale without a special and sale price is to apply against the price,
+          a sale without a special and percentage is to apply against the price,
+          a sale without a special and sale's new price is to apply against the price
+*/
+
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            if ($special_price_discount != 0) {
-              $calc = ($attributes_amount * $special_price_discount);
+            if ($sale_price_discount != 0) {
+              $calc = ($attributes_amount * $sale_price_discount);
             } else {
               $calc = $attributes_amount;
             }
@@ -554,14 +582,22 @@
 //echo 'How much 3 - ' . $qty . ' : ' . $product_id . ' : ' . $qty . ' x ' .  $attributes_amount . ' vs ' . $check_discount_qty_price . ' - ' . $sale_maker_discount . '<br />';
         break;
       case ($discount_type_id == 59):
-        // No Sale and Special
-//        $sale_maker_discount = $special_price_discount;
+        // No Sale and has a Special OR there is Sale and a special but the price is the special
+//        $sale_maker_discount = $sale_price_discount;
+/*
+          Possible reasons to be in this discount_type_id:
+
+          No Sale but a special,
+          a sale with a special and sale price is to apply against the price,
+          a sale with a special and percentage is to apply against the price,
+          a sale with a special and sale's new price is to apply against the price
+*/
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
         } else {
-          // compute attribute amount
+          // compute attribute amount sale_price_discount will have either the sale price or if no sale the special price
           if ($attributes_amount != 0) {
-            $calc = ($attributes_amount * $special_price_discount);
+            $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
           } else {
             $sale_maker_discount = $sale_maker_discount;
@@ -614,7 +650,7 @@
             $sale_maker_discount = $calc;
           } else {
 //            $sale_maker_discount = $sale_maker_discount;
-            if ($attributes_amount != 0) {
+            if ($attributes_amount != 0) { // This code is never run.
 //            $calc = ($attributes_amount * $special_price_discount);
 //            $calc2 = $calc - ($calc * $sale_maker_discount);
 //            $sale_maker_discount = $calc - $calc2;
@@ -645,21 +681,21 @@
 // EOF: percentage discounts skip specials
 
 // BOF: flat amount discounts
-      case ($discount_type_id == 20):
+      case ($discount_type_id == 20): // This option should not do anything to basic attributes without further consideration of the overall effect on the price and the starting price.
         // flat amount discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            $calc = ($attributes_amount - $sale_maker_discount);
+            $calc = ($attributes_amount /*- $sale_maker_discount*/);
             $sale_maker_discount = $calc;
           } else {
             $sale_maker_discount = $sale_maker_discount;
           }
         }
         break;
-      case ($discount_type_id == 209):
+      case ($discount_type_id == 209): // This option for attributes should not do anything unless the price of the product is solely dependent on a single attribute, all attributes can be reduced a constant amount (non-zero).
         // flat amount discount on Sale and Special with a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -667,6 +703,7 @@
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
+            // Should be that if product is not priced by attributes then no change in attribute price.
             $calc2 = ($calc - $sale_maker_discount);
             $sale_maker_discount = $calc2;
           } else {
@@ -677,7 +714,7 @@
 // EOF: flat amount discounts
 
 // BOF: flat amount discounts Skip Special
-      case ($discount_type_id == 10):
+      case ($discount_type_id == 10): // This option for attributes should not do anything unless the price of the product is solely dependent on a single attribute, all attributes can be reduced a constant amount (non-zero).
         // flat amount discount Sale and Special without a special
         if (!$attributes_id) {
           $sale_maker_discount = $sale_maker_discount;
@@ -715,7 +752,7 @@
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            $calc = ($attributes_amount * $special_price_discount);
+            $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
           } else {
@@ -749,7 +786,7 @@
         } else {
           // compute attribute amount
           if ($attributes_amount != 0) {
-            $calc = ($attributes_amount * $special_price_discount);
+            $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
 //echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
           } else {
@@ -775,6 +812,7 @@
         break;
 // EOF: New Price amount discounts - Skip Special
 
+      // Neither of these values are possible nor occur
       case ($discount_type_id == 0 or $discount_type_id == 9):
       // flat discount
         return $sale_maker_discount;
@@ -795,31 +833,60 @@
     global $db;
 
 /*
-
+$salemaker_discount_type comes from 'sale_deduction_type' field which is an optional database value
 0 = flat amount off base price with a special
 1 = Percentage off base price with a special
 2 = New Price with a special
 
-5 = No Sale or Skip Products with Special
+5 = No Sale or Skip Products with Special or skip product if there is a sale and sale condition is to ignore a special and apply to Price: Result of function
 
+$sale_maker_special_condition comes from 'sale_specials_condition' field which is an optional database value
+if a sale exists then is used in the following equation
 special options + option * 10
-0 = Ignore special and apply to Price
-1 = Skip Products with Specials switch to 5
+which is like:
+special options * 100 + option * 10 or specifically:
+$salemaker_discount_type * 100 + $salemaker_discount_type * 10 though does not apply if the $sale_maker_special_condition is 0
+0 = Ignore special and apply to Price switch to 5
+1 = Skip Products with Specials
 2 = Apply to Special Price
 
 If a special exist * 10+9
+Where special exist = special options * option * 10 and then multiplies by 10 and adds 9 to it
 
-0*100 + 0*10 = flat apply to price = 0 or 9
-0*100 + 1*10 = flat skip Specials = 5 or 59
-0*100 + 2*10 = flat apply to special = 20 or 209
+No Sale No special: 5
+No Sale but a special: 59
 
-1*100 + 0*10 = Percentage apply to price = 100 or 1009
-1*100 + 1*10 = Percentage skip Specials = 110 or 1109 / 5 or 59
-1*100 + 2*10 = Percentage apply to special = 120 or 1209
+Grouping of parentheses at the beginning of each line reflects the value
+assigned to the following variables:
+($sale_maker_discount_type, $sale_maker_special_condition)
+Results shown on right are first No special with a sale OR special with a sale second
+(0, 0) 5 or 5 * 10 + 9 = flat apply to price         = 5 or 59
+(0, 1) 0*100 + 1*10    = flat skip Specials          = 10 or 109 (First use sale price, second use special)
+(0, 2) 0*100 + 2*10    = flat apply to special       = 20 or 209
 
-2*100 + 0*10 = New Price apply to price = 200 or 2009
-2*100 + 1*10 = New Price skip Specials = 210 or 2109 / 5 or 59
-2*100 + 2*10 = New Price apply to Special = 220 or 2209
+(1, 0) 5 or 5 * 10 + 9 = Percentage apply to price   = 5 or 59
+(1, 1) 1*100 + 1*10    = Percentage skip Specials    = 110 or 1109 (First use sale price, second use special)
+(1, 2) 1*100 + 2*10    = Percentage apply to special = 120 or 1209
+
+(2, 0) 5 or 5 * 10 + 9 = New Price apply to price    = 5 or 59
+(2, 1) 2*100 + 1*10    = New Price skip Specials     = 210 or 2109 (First use sale price, second use special)
+(2, 2) 2*100 + 2*10    = New Price apply to Special  = 220 or 2209
+
+In result:
+5 if:
+   No Sale nor special,
+   a sale without a special and sale price is to apply against the price,
+   a sale without a special and percentage is to apply against the price,
+   a sale without a special and sale's new price is to apply against the price
+
+59 if:
+   No Sale but a special,
+   a sale with a special and sale price is to apply against the price,
+   a sale with a special and percentage is to apply against the price,
+   a sale with a special and sale's new price is to apply against the price
+
+possible return values in numerical order:
+5, 59, 110, 120, 210, 220, 1109, 1209, 2109, 2209
 
 */
 
@@ -840,7 +907,7 @@ If a special exist * 10+9
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_exists = 'true';
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
@@ -879,9 +946,11 @@ If a special exist * 10+9
     }
   }
 
-////
-// look up discount in sale makers - attributes only can have discounts if set as percentages
-// this gets the discount amount this does not determin when to apply the discount
+/**
+ * look up discount in sale makers - attributes only can have discounts if set as percentages
+ * this gets the discount amount this does not determine when to apply the discount
+ * @deprecated since v1.5.5 use zen_get_discount_calc()
+ */
   function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
     global $currencies;
     global $db;
@@ -934,7 +1003,7 @@ If a special exist * 10
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
           $sale_maker_discount_type = $salemaker_sales->fields['sale_deduction_type'];
@@ -989,35 +1058,34 @@ If a special exist * 10
 // Actual Price Retail
 // Specials and Tax Included
   function zen_get_products_actual_price($products_id) {
-    global $db, $currencies;
+    global $db;
     $product_check = $db->Execute("select products_tax_class_id, products_price, products_priced_by_attribute, product_is_free, product_is_call from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'" . " limit 1");
 
-    $show_display_price = '';
-    $display_normal_price = zen_get_products_base_price($products_id);
-    $display_special_price = zen_get_products_special_price($products_id, true);
+    // If Free, Show it
+    if ((int)$product_check->fields['product_is_free'] === 1) {
+      return 0;
+    }
+
     $display_sale_price = zen_get_products_special_price($products_id, false);
 
-    $products_actual_price = $display_normal_price;
-
-    if ($display_special_price) {
-      $products_actual_price = $display_special_price;
-    }
-    if ($display_sale_price) {
-      $products_actual_price = $display_sale_price;
+    if ($display_sale_price !== false) {
+      return $display_sale_price;
     }
 
-    // If Free, Show it
-    if ($product_check->fields['product_is_free'] == '1') {
-      $products_actual_price = 0;
+    $display_special_price = zen_get_products_special_price($products_id, true);
+
+    if ($display_special_price !== false) {
+      return $display_special_price;
     }
 
-    return $products_actual_price;
+    $display_normal_price = zen_get_products_base_price($products_id);
+    return $display_normal_price;
   }
 
 ////
 // return attributes_price_factor
   function zen_get_attributes_price_factor($price, $special, $factor, $offset) {
-    if (ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
+    if (defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL') && ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL =='1' and $special) {
       // calculate from specials_new_products_price
       $calculated_price = $special * ($factor - $offset);
     } else {
@@ -1069,7 +1137,7 @@ If a special exist * 10
 
 ////
 // attributes final price
-  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false') {
+  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false', $prod_priced_by_attr = false) {
     global $db;
 
     $attributes_price_final = 0;
@@ -1080,11 +1148,13 @@ If a special exist * 10
       // use existing select
     }
 
-    // normal attributes price
+    // normal attributes price discounted by sales/specials or not discounted if neither a sale nor a special
     if ($pre_selected->fields["price_prefix"] == '-') {
-      $attributes_price_final -= $pre_selected->fields["options_values_price"];
+//      $attributes_price_final -= $pre_selected->fields["options_values_price"];
+      $attributes_price_final -= zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], ($prod_priced_by_attr ? zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0) + ($prod_priced_by_attr ? -1 : 1) * $pre_selected->fields["options_values_price"]);
     } else {
-      $attributes_price_final += $pre_selected->fields["options_values_price"];
+//      $attributes_price_final += $pre_selected->fields["options_values_price"];
+      $attributes_price_final += zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], $pre_selected->fields["options_values_price"] + ($prod_priced_by_attr ? zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0));
     }
     // qty discounts
     $attributes_price_final += zen_get_attributes_qty_prices_onetime($pre_selected->fields["attributes_qty_prices"], $qty);
@@ -1123,7 +1193,7 @@ If a special exist * 10
 
 // one time charges
     // onetime charge
-      $attributes_price_final_onetime += $pre_selected_onetime->fields["attributes_price_onetime"];
+      $attributes_price_final_onetime = $pre_selected_onetime->fields["attributes_price_onetime"];
 
     // price factor
     $display_normal_price = zen_get_products_actual_price($pre_selected_onetime->fields["products_id"]);
@@ -1305,20 +1375,21 @@ If a special exist * 10
     }
   }
 
-////
-// set the products_price_sorter
+/**
+ * recalculate and set the products_price_sorter field for the specified $product_id
+ */
   function zen_update_products_price_sorter($product_id) {
     global $db;
 
     $products_price_sorter = zen_get_products_actual_price($product_id);
-
     $db->Execute("update " . TABLE_PRODUCTS . " set
                   products_price_sorter='" . zen_db_prepare_input($products_price_sorter) . "'
                   where products_id='" . (int)$product_id . "'");
   }
 
-////
-// salemaker categories array
+/**
+ * salemaker categories array
+ */
   function zen_parse_salemaker_categories($clist) {
     $clist_array = explode(',', $clist);
 
@@ -1333,12 +1404,13 @@ If a special exist * 10
     return $tmp_array;
   }
 
-////
-// update salemaker product prices per category per product
+/**
+ * update salemaker product prices per category per product for the specified $salemaker_id
+ */
   function zen_update_salemaker_product_prices($salemaker_id) {
     global $db;
     $zv_categories = $db->Execute("select sale_categories_selected from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . (int)$salemaker_id . "'");
-
+    if ($zv_categories->EOF) return FALSE;
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
     $n = sizeof($za_salemaker_categories);
     for ($i=0; $i<$n; $i++) {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 22:52:38 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /*
 
@@ -100,7 +100,9 @@
       $this->code = 'zones';
       $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_ZONES_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_ZONES_SORT_ORDER') ? MODULE_SHIPPING_ZONES_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_ZONES_TAX_CLASS;
       $this->tax_basis = MODULE_SHIPPING_ZONES_TAX_BASIS;
@@ -335,4 +337,3 @@
       return $keys;
     }
   }
-?>

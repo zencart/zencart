@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 20:52:53 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
   require('includes/application_top.php');
 
@@ -227,8 +227,9 @@
           }
           if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != 1) {
             // save filename when not set to none and not blank
-            $db->Execute("update " . TABLE_CATEGORIES . "
-                          set categories_image = '" . $categories_image_name . "'
+              $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
+              $db->Execute("update " . TABLE_CATEGORIES . "
+                          set categories_image = '" . $db_filename . "'
                           where categories_id = '" . (int)$categories_id . "'");
           } else {
             // remove filename when set to none and not blank
@@ -312,8 +313,7 @@
           }
         }
 
-        reset($products);
-        while (list($key, $value) = each($products)) {
+        foreach($products as $key => $value) {
           $category_ids = '';
 
           for ($i=0, $n=sizeof($value['categories']); $i<$n; $i++) {
@@ -336,8 +336,7 @@
           zen_remove_category($categories[$i]['id']);
         }
 
-        reset($products_delete);
-        while (list($key) = each($products_delete)) {
+        foreach($products_delete as $key => $value) {
           zen_remove_product($key);
         }
       }

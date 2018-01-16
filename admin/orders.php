@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -26,7 +26,7 @@ if (isset($_GET['download_reset_off'])) {
   $_GET['download_reset_off'] = (int)$_GET['download_reset_off'];
 }
 
-include(DIR_WS_CLASSES . 'order.php');
+include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 
 // prepare order-status pulldown list
 $orders_statuses = array();
@@ -373,7 +373,7 @@ if (zen_not_null($action) && $order_exists == true) {
     <link rel="stylesheet" type="text/css" media="print" href="includes/stylesheet_print.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
-    <script src ="includes/general.js"></script> 
+    <script src ="includes/general.js"></script>
     <script>
       function init() {
           cssjsmenu('navbar');
@@ -1010,6 +1010,30 @@ if (zen_not_null($action) && $order_exists == true) {
               ?>
               </tbody>
             </table>
+            <table class="table">
+              <tr>
+                  <td><?php echo $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ORDERS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
+                  <td class="text-right"><?php echo $orders_split->display_links($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ORDERS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],
+                          zen_get_all_get_params(['page', 'oID', 'action'])); ?></td>
+              </tr>
+              <?php
+              if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+              ?>
+                  <tr>
+                      <td class="text-right" colspan="2">
+                      <?php
+                          echo '<a href="' . zen_href_link(FILENAME_ORDERS, '', 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>';
+                          if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+                              $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+                              echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
+                          }
+                      ?>
+                      </td>
+                  </tr>
+              <?php
+              }
+              ?>
+            </table>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
               <?php
@@ -1068,11 +1092,11 @@ if (zen_not_null($action) && $order_exists == true) {
                     $contents[] = array('text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3'));
                     $order = new order($oInfo->orders_id);
                     $contents[] = array('text' => TABLE_HEADING_PRODUCTS . ': ' . sizeof($order->products));
-                    for ($i = 0; $i < sizeof($order->products); $i++) {
+                    for ($i = 0, $n=sizeof($order->products); $i <$n; $i++) {
                       $contents[] = array('text' => $order->products[$i]['qty'] . '&nbsp;x&nbsp;' . $order->products[$i]['name']);
 
-                      if (sizeof($order->products[$i]['attributes']) > 0) {
-                        for ($j = 0; $j < sizeof($order->products[$i]['attributes']); $j++) {
+                      if (!empty($order->products[$i]['attributes'])) {
+                        for ($j = 0, $nn=sizeof($order->products[$i]['attributes']); $j < $nn; $j++) {
                           $contents[] = array('text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i></nobr>');
                         }
                       }
@@ -1100,31 +1124,6 @@ if (zen_not_null($action) && $order_exists == true) {
         <?php
       }
       ?>
-      <div class="row">
-        <table class="table">
-          <tr>
-            <td><?php echo $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ORDERS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
-            <td class="text-right"><?php echo $orders_split->display_links($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ORDERS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'oID', 'action'))); ?></td>
-          </tr>
-          <?php
-          if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-            ?>
-            <tr>
-              <td class="text-right" colspan="2">
-                  <?php
-                  echo '<a href="' . zen_href_link(FILENAME_ORDERS, '', 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>';
-                  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                    $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                    echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
-                  }
-                  ?>
-              </td>
-            </tr>
-            <?php
-          }
-          ?>
-        </table>
-      </div>
       <!-- body_text_eof //-->
 
     </div>

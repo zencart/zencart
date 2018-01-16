@@ -3,11 +3,14 @@
  * sagepay form
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright Nixak
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Jan 6 17:26:51 2016 +0000 New in v1.5.5 $
+ * @version $Id: Author: zcwilt  Modified in v1.5.6 $
+ *
+ * NOTE: NOT compatible with PHP 7.2 due to mcrypt dependency.
+ *
  */
 require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/sagepay_zc/SagepayBasket.php');
 require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/sagepay_zc/SagepayCustomer.php');
@@ -32,6 +35,9 @@ class sagepay_zc_form extends sagepay_zc_payment
     {
         $this->code = 'sagepay_zc_form';
         parent::__construct();
+
+        if (! $this->enabled) return false;
+
         $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
         if (MODULE_PAYMENT_SAGEPAY_ZC_FORM_TEST_STATUS == 'test') {
             $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';

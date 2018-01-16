@@ -37,6 +37,7 @@ $adminSanitizerTypes = array(
     'PRODUCT_NAME_DEEP_REGEX' => array('type' => 'builtin'),
     'NULL_ACTION' => array('type' => 'builtin'),
     'MULTI_DIMENSIONAL' => array('type' => 'builtin'),
+    'SIMPLE_ARRAY' => array('type' => 'builtin'),
 );
 
 $sanitizer->addSanitizerTypes($adminSanitizerTypes);

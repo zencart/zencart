@@ -2,10 +2,10 @@
 # * Main Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2016 Zen Cart Development Team
+# * @copyright Copyright 2003-2017 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Author: DrByte  Mar 2 2017 +0000 New in v1.5.5 $
+# * @version $Id: Author: DrByte  Modified in v1.5.6 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -223,7 +223,7 @@ CREATE TABLE banners (
   banners_id int(11) NOT NULL auto_increment,
   banners_title varchar(64) NOT NULL default '',
   banners_url varchar(255) NOT NULL default '',
-  banners_image varchar(64) NOT NULL default '',
+  banners_image varchar(255) NOT NULL default '',
   banners_group varchar(15) NOT NULL default '',
   banners_html_text text,
   expires_impressions int(7) default '0',
@@ -268,7 +268,7 @@ CREATE TABLE banners_history (
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   categories_id int(11) NOT NULL auto_increment,
-  categories_image varchar(64) default NULL,
+  categories_image varchar(255) default NULL,
   parent_id int(11) NOT NULL default '0',
   sort_order int(3) default NULL,
   date_added datetime default NULL,
@@ -835,7 +835,7 @@ DROP TABLE IF EXISTS manufacturers;
 CREATE TABLE manufacturers (
   manufacturers_id int(11) NOT NULL auto_increment,
   manufacturers_name varchar(32) NOT NULL default '',
-  manufacturers_image varchar(64) default NULL,
+  manufacturers_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
   PRIMARY KEY  (manufacturers_id),
@@ -1467,7 +1467,7 @@ CREATE TABLE products (
   products_type int(11) NOT NULL default '1',
   products_quantity float NOT NULL default '0',
   products_model varchar(32) default NULL,
-  products_image varchar(64) default NULL,
+  products_image varchar(255) default NULL,
   products_price decimal(15,4) NOT NULL default '0.0000',
   products_virtual tinyint(1) NOT NULL default '0',
   products_date_added datetime NOT NULL default '0001-01-01 00:00:00',
@@ -1530,7 +1530,7 @@ CREATE TABLE products_attributes (
   attributes_display_only tinyint(1) NOT NULL default '0',
   attributes_default tinyint(1) NOT NULL default '0',
   attributes_discounted tinyint(1) NOT NULL default '1',
-  attributes_image varchar(64) default NULL,
+  attributes_image varchar(255) default NULL,
   attributes_price_base_included tinyint(1) NOT NULL default '1',
   attributes_price_onetime decimal(15,4) NOT NULL default '0.0000',
   attributes_price_factor decimal(15,4) NOT NULL default '0.0000',
@@ -1763,7 +1763,7 @@ DROP TABLE IF EXISTS record_artists;
 CREATE TABLE record_artists (
   artists_id int(11) NOT NULL auto_increment,
   artists_name varchar(32) NOT NULL default '',
-  artists_image varchar(64) default NULL,
+  artists_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
   PRIMARY KEY  (artists_id),
@@ -1796,7 +1796,7 @@ DROP TABLE IF EXISTS record_company;
 CREATE TABLE record_company (
   record_company_id int(11) NOT NULL auto_increment,
   record_company_name varchar(32) NOT NULL default '',
-  record_company_image varchar(64) default NULL,
+  record_company_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
   PRIMARY KEY  (record_company_id),
@@ -2053,9 +2053,9 @@ CREATE TABLE zones_to_geo_zones (
 
 # default data
 
-INSERT INTO template_select VALUES (1, 'responsive_classic', '0');
+INSERT INTO template_select (template_id, template_dir, template_language) VALUES (1, 'responsive_classic', '0');
 
-# 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany, 6 - UK/GB
+# 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany, 6 - UK/GB, 7 - Australia
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','$city / $country');
 INSERT INTO address_format VALUES (2, '$firstname $lastname$cr$streets$cr$city, $state    $postcode$cr$country','$city, $state / $country');
 INSERT INTO address_format VALUES (3, '$firstname $lastname$cr$streets$cr$city$cr$postcode - $statecomma$country','$state / $country');
@@ -2276,6 +2276,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Best Sellers', 'MIN_DISPLAY_BESTSELLERS', '1', 'Minimum number of best sellers to display', '2', '15', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Also Purchased Products', 'MIN_DISPLAY_ALSO_PURCHASED', '1', 'Minimum number of products to display in the \'This Customer Also Purchased\' box', '2', '16', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Nick Name', 'ENTRY_NICK_MIN_LENGTH', '3', 'Minimum length of Nick Name', '2', '1', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Admin Usernames', 'ADMIN_NAME_MINIMUM_LENGTH', '4', '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":4}}}', 'Minimum length of admin usernames (must be 4 or more)', '2', '18', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Address Book Entries', 'MAX_ADDRESS_BOOK_ENTRIES', '5', 'Maximum address book entries a customer is allowed to have', '3', '1', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Admin Search Results Per Page', 'MAX_DISPLAY_SEARCH_RESULTS', '20', 'Number of products to list on an Admin search result page', '3', '2', now());

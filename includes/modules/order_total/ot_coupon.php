@@ -3,7 +3,7 @@
  * ot_coupon order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Ajeh Modified in v1.5.6 $
@@ -16,13 +16,13 @@ class ot_coupon {
   /**
    * coupon title
    *
-   * @var unknown_type
+   * @var string
    */
   var $title;
   /**
    * Output used on checkout pages
    *
-   * @var unknown_type
+   * @var string
    */
   var $output;
   /**
@@ -36,7 +36,9 @@ class ot_coupon {
     $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
     $this->description = MODULE_ORDER_TOTAL_COUPON_DESCRIPTION;
     $this->user_prompt = '';
-    $this->sort_order = MODULE_ORDER_TOTAL_COUPON_SORT_ORDER;
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER') ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->include_shipping = MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
     $this->include_tax = MODULE_ORDER_TOTAL_COUPON_INC_TAX;
     $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
@@ -63,9 +65,8 @@ class ot_coupon {
     }
     $this->deduction = $od_amount['total'];
     if ($od_amount['total'] > 0) {
-      reset($order->info['tax_groups']);
       $tax = 0;
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach($order->info['tax_groups'] as $key => $value) {
         if ($od_amount['tax_groups'][$key]) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $order->info['tax_groups'][$key] = zen_round($order->info['tax_groups'][$key], $currencies->get_decimal_places($_SESSION['currency']));
@@ -209,11 +210,11 @@ class ot_coupon {
 //echo 'Product: ' . $orderTotalDetails['orderTotal'] . ' Order: ' . $orderTotalDetails['totalFull'] . ' $coupon_total: ' . $coupon_total . '<br>';
 //die('DONE!');
 // left for total order amount vs qualified order amount just switch the commented lines
-//        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order']) 
-//        if (strval($order_total['orderTotal']) > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) 
+//        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order'])
+//        if (strval($order_total['orderTotal']) > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order'])
 //        if ($coupon_result->fields['coupon_minimum_order'] > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
-//        if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order']) 
-        if (strval($coupon_total) > 0 && strval($coupon_total_minimum) < $coupon_result->fields['coupon_minimum_order']) 
+//        if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order'])
+        if (strval($coupon_total) > 0 && strval($coupon_total_minimum) < $coupon_result->fields['coupon_minimum_order'])
         {
           // $order_total['orderTotal'] . ' vs ' . $order_total['totalFull']
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_REDEEM_COUPON_MINIMUM, $currencies->format($coupon_result->fields['coupon_minimum_order'])) . ($dc_link_count == 0 ? $dc_link : ''), 'caution');
@@ -241,8 +242,7 @@ class ot_coupon {
         if ($foundvalid == true) {
           // check if products on special or sale are valid
           $foundvalid = false;
-          reset($products);
-          for ($i=0; $i<sizeof($products); $i++) {
+          for ($i=0, $n=sizeof($products); $i<$n; $i++) {
             if (is_coupon_valid_for_sales($products[$i]['id'], $coupon_result->fields['coupon_id'])) {
               $foundvalid = true;
               continue;
@@ -489,7 +489,7 @@ class ot_coupon {
           if ($coupon->fields['coupon_product_count'] && ($coupon->fields['coupon_type'] == 'F' || $coupon->fields['coupon_type'] == 'O')) {
             $products = $_SESSION['cart']->get_products();
             $coupon_product_count = 0;
-            for ($i=0; $i<sizeof($products); $i++) {
+            for ($i=0, $n=sizeof($products); $i<$n; $i++) {
               if (is_product_valid($products[$i]['id'], $coupon->fields['coupon_id'])) {
                 $coupon_product_count += $_SESSION['cart']->get_quantity($products[$i]['id']);
               }
@@ -590,7 +590,7 @@ class ot_coupon {
     $orderTotalTax = $order->info['tax'];
     $orderTotal = $order->info['total'];
     $products = $_SESSION['cart']->get_products();
-    for ($i=0; $i<sizeof($products); $i++) {
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       if (!is_product_valid($products[$i]['id'], $couponCode) || !is_coupon_valid_for_sales($products[$i]['id'], $couponCode)) {
         $products_tax = zen_get_tax_rate($products[$i]['tax_class_id']);
         $productsTaxAmount = (zen_calculate_tax($products[$i]['final_price'], $products_tax))   * $products[$i]['quantity'];
@@ -674,7 +674,7 @@ class ot_coupon {
     global $db;
     $keys = '';
     $keys_array = $this->keys();
-    for ($i=0; $i<sizeof($keys_array); $i++) {
+    for ($i=0, $n=sizeof($keys_array); $i<$n; $i++) {
       $keys .= "'" . $keys_array[$i] . "',";
     }
     $keys = substr($keys, 0, -1);

@@ -5,7 +5,7 @@
  * @package square
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.6 $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5f $
  */
 
 define('MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION', 'Accept credit cards in less than 5 minutes.<br>No monthly fees and no setup fees.<br>PCI Compliant. Customer never leaves your store!<br>Standard rates are 2.9% + $0.30 per transaction.<br>Funds are deposited in your bank account in 1-2 business days.<br><br>
@@ -31,8 +31,8 @@ define('MODULE_PAYMENT_SQUARE_ERROR_DECLINED', 'Sorry, your payment could not be
 if (IS_ADMIN_FLAG === true) {
     define('MODULE_PAYMENT_SQUARE_TEXT_NEED_ACCESS_TOKEN',
         '<span class="text-danger"><strong>ALERT: Access Token not set:</strong></span> <br>
-    1. Make sure the OAuth Redirect URL in your Square Account "app" is set to <u><nobr><pre>' . str_replace(['index.php?main_page=index', 'http://'], ['square_handler.php', 'https://'], zen_catalog_href_link(FILENAME_DEFAULT, '', 'SSL')) . '</pre></nobr></u><br>
-    2. And then <a href="%s" target="_blank"><button class="btn btn-xs btn-success">Click here to login and Authorize your account</button></a>');
+    1. Make sure the OAuth Redirect URL in your Square Account "app" is set to <u><nobr><pre>' . str_replace(array('index.php?main_page=index', 'http://'), array('square_handler.php', 'https://'), zen_catalog_href_link(FILENAME_DEFAULT, '', 'SSL')) . '</pre></nobr></u><br>
+    2. And then <a href="%s" target="_blank" class="onClickStartCheck"><button class="btn btn-xs btn-success">Click here to login and Authorize your account</button></a>');
 }
 
 

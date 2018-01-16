@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 23 01:09:54 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte   Modified in v1.5.6 $
  */
 
 $systemChecker = new systemChecker();
@@ -25,6 +25,7 @@ $versionArray[] = '1.5.2';
 $versionArray[] = '1.5.3';
 $versionArray[] = '1.5.4';
 $versionArray[] = '1.5.5';
+$versionArray[] = '1.5.6';
 
 //print_r($versionArray);
 $key = array_search($dbVersion, $versionArray);

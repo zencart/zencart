@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Fri Apr 22 12:16:32 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Modified in v1.5.6 $
  */
 
 ////
@@ -79,7 +79,7 @@
         $cPath_new = implode('_', $cPath_array);
       }
     } else {
-      if (sizeof($cPath_array) == 0) {
+      if (empty($cPath_array)) {
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
@@ -117,8 +117,7 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
 //             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
@@ -151,8 +150,7 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
     $fields = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -609,8 +607,8 @@
       return $default_zone;
     }
   }
-  
-function zen_get_uprid($prid, $params) 
+
+function zen_get_uprid($prid, $params)
 {
     $uprid = $prid;
     if (is_array($params) && strpos($prid, ':') === false) {
@@ -628,7 +626,7 @@ function zen_get_uprid($prid, $params)
     return $uprid;
 }
 
-function zen_get_prid($uprid) 
+function zen_get_prid($uprid)
 {
     $pieces = explode(':', $uprid);
     return $pieces[0];
@@ -998,9 +996,9 @@ function zen_get_prid($uprid)
     }
   }
 
-  function zen_cfg_pull_down_htmleditors($html_editor, $key = '') {
+  function zen_cfg_pull_down_htmleditors($html_editor, $index = null) {
     global $editors_list;
-    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $name = $index ? 'configuration[' . $index . ']' : 'configuration_value';
 
     $editors_pulldown = array();
     foreach($editors_list as $key=>$value) {
@@ -1095,8 +1093,8 @@ function zen_get_prid($uprid)
 ////
 // Alias function for module configuration keys
   function zen_mod_select_option($select_array, $key_name, $key_value) {
-    reset($select_array);
-    while (list($key, $value) = each($select_array)) {
+    $string = '';
+    foreach($select_array as $key => $value) {
       if (is_int($key)) $key = $value;
       $string .= '<br><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
       if ($key_value == $key) $string .= ' CHECKED';
@@ -1107,8 +1105,8 @@ function zen_get_prid($uprid)
   }
 
 ////
-// Retreive server information
-  function zen_get_system_information() {
+// Collect server information
+  function zen_get_system_information($privacy = false) {
     global $db;
 
     // determine database size stats
@@ -1147,7 +1145,6 @@ function zen_get_prid($uprid)
     $uptime = (DISPLAY_SERVER_UPTIME == 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
-    $php_disabled_functions = '';
     $exec_disabled = false;
     $php_disabled_functions = @ini_get("disable_functions");
     if ($php_disabled_functions != '') {
@@ -1167,7 +1164,10 @@ function zen_get_prid($uprid)
       }
     }
 
-    return array('date' => zen_datetime_short(date('Y-m-d H:i:s')),
+    $timezone = date_default_timezone_get();
+
+    $systemInfo = array('date' => zen_datetime_short(date('Y-m-d H:i:s')),
+                 'timezone' => $timezone,
                  'system' => $system,
                  'kernel' => $kernel,
                  'host' => $host,
@@ -1191,7 +1191,13 @@ function zen_get_prid($uprid)
                  'mysql_slow_query_log_status' => $mysql_slow_query_log_status,
                  'mysql_slow_query_log_file' => $mysql_slow_query_log_file,
                  );
-  }
+
+    if ($privacy) {
+        unset ($systemInfo['mysql_slow_query_log_file']);
+    }
+
+    return $systemInfo;
+}
 
   function zen_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
     global $db;
@@ -1704,7 +1710,7 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
-  function zen_banner_image_extension() {
+  function zen_supported_image_extension() {
     if (function_exists('imagetypes')) {
       if (imagetypes() & IMG_PNG) {
         return 'png';
@@ -2325,6 +2331,32 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   } // end of no attributes or other errors
 } // eof: zen_copy_products_attributes
 
+/**
+ * Get a shortened filename to fit within the db field constraints
+ *
+ * @param string $filename (could also be a URL)
+ * @param string $table_name
+ * @param string $field_name
+ * @param string $extension String to denote the extension. The right-most "." is used as a fallback.
+ * @return string
+ */
+function zen_limit_image_filename($filename, $table_name, $field_name, $extension = '.') {
+    if ($filename === 'none') return $filename;
+
+    $max_length = zen_field_length($table_name, $field_name);
+    $filename_length = function_exists('mb_strlen') ? mb_strlen($filename) : strlen($filename);
+
+    if ($filename_length <= $max_length) return $filename;
+    $divider_position = function_exists('mb_strrpos') ? mb_strrpos($filename, $extension) : strrpos($filename, $extension);
+    $base = substr($filename, 0, $divider_position);
+    $original_suffix = substr($filename, $divider_position);
+    $suffix_length = function_exists('mb_strlen') ? mb_strlen($original_suffix) : strlen($original_suffix);
+    $chop_length = $filename_length - $max_length;
+    $shorter_length = $filename_length - $suffix_length - $chop_length;
+    $shorter_base = substr($base, 0, $shorter_length);
+
+    return $shorter_base . $original_suffix;
+}
 
 /**
  * function to return field type
@@ -3150,7 +3182,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * adapted from USPS-related contributions by Brad Waite and Fritz Clapp
  */
   function zen_cfg_select_multioption($select_array, $key_value, $key = '') {
-    for ($i=0; $i<sizeof($select_array); $i++) {
+    $string = '';
+    for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
       $name = (($key) ? 'configuration[' . $key . '][]' : 'configuration_value');
       $string .= '<br><input type="checkbox" name="' . $name . '" value="' . $select_array[$i] . '"';
       $key_values = explode( ", ", $key_value);

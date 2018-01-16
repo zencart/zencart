@@ -3,10 +3,10 @@
  * ez_pages ("page") header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.4 $
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /*
 * This "page" page is the display component of the ez-pages module
@@ -71,14 +71,13 @@ $pages_ordering->MoveNext();
 }
 */
 // now let's determine prev/next
-reset ($vert_links);
 $counter = 0;
 $previous_v = -1;
 $last_v = 0;
 $previous_vssl = '0';
 $next_item_v = 0;
 $next_vssl = 0;
-while (list($key, $value) = each ($vert_links)) {
+foreach($vert_links as $key => $value) {
   if ($value == $ezpage_id) {
     $position_v = $counter;
     $previous_vssl = '0';
@@ -101,9 +100,8 @@ if ($previous_v == -1) $previous_v = $last_v;
 
 /**
 //prev/next for horiz now
-reset ($horiz_links);
 $counter = 0;
-while (list($key, $value) = each ($horiz_links)) {
+foreach($horiz_links as $key => $value) {
 if ($value == $ezpage_id) {
 $position_h = $counter;
 $previous_hssl = '0';

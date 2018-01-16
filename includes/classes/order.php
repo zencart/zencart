@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  July 2017 -0500 Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
  * order class
@@ -42,26 +42,16 @@ class order extends base {
     $order_id = zen_db_prepare_input($order_id);
     $this->queryReturnFlag = NULL;
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
-    if ($this->queryReturnFlag === TRUE) return;
+    if ($this->queryReturnFlag === TRUE) return false;
 
-    $order_query = "select customers_id, customers_name, customers_company,
-                         customers_street_address, customers_suburb, customers_city,
-                         customers_postcode, customers_state, customers_country,
-                         customers_telephone, customers_email_address, customers_address_format_id,
-                         delivery_name, delivery_company, delivery_street_address, delivery_suburb,
-                         delivery_city, delivery_postcode, delivery_state, delivery_country,
-                         delivery_address_format_id, billing_name, billing_company,
-                         billing_street_address, billing_suburb, billing_city, billing_postcode,
-                         billing_state, billing_country, billing_address_format_id,
-                         payment_method, payment_module_code, shipping_method, shipping_module_code,
-                         coupon_code, cc_type, cc_owner, cc_number, cc_expires, currency, currency_value,
-                         date_purchased, orders_status, last_modified, order_total, order_tax, ip_address
+    $order_query = "select *
                         from " . TABLE_ORDERS . "
                         where orders_id = '" . (int)$order_id . "'";
 
     $order = $db->Execute($order_query);
+    if ($order->EOF) return false;
 
-    $totals_query = "select title, text, class
+    $totals_query = "select title, text, class, value
                          from " . TABLE_ORDERS_TOTAL . "
                          where orders_id = '" . (int)$order_id . "'
                          order by sort_order";
@@ -76,11 +66,17 @@ class order extends base {
                 from " . TABLE_COUPONS . "
                 where coupon_code ='" . $order->fields['coupon_code'] . "'";
         $coupon_link = $db->Execute($coupon_link_query);
-        $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+        if (IS_ADMIN_FLAG === true) {
+                $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+        } else {
+          $zc_coupon_link = $coupon_link->fields['coupon_id'];
+        }
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
                               'text' => $totals->fields['text'],
-                              'class' => $totals->fields['class']);
+                              'class' => $totals->fields['class'],
+                              'value' => $totals->fields['value'],
+			     );
       $totals->MoveNext();
     }
 
@@ -118,13 +114,14 @@ class order extends base {
                         'cc_type' => $order->fields['cc_type'],
                         'cc_owner' => $order->fields['cc_owner'],
                         'cc_number' => $order->fields['cc_number'],
+                          'cc_cvv' => $order->fields['cc_cvv'],
                         'cc_expires' => $order->fields['cc_expires'],
                         'date_purchased' => $order->fields['date_purchased'],
-                        'orders_status' => $order_status->fields['orders_status_name'],
-                        'last_modified' => $order->fields['last_modified'],
+                        'orders_status' => $order->fields['orders_status'],
                         'total' => $order->fields['order_total'],
                         'tax' => $order->fields['order_tax'],
-                        'ip_address' => $order->fields['ip_address']
+                        'last_modified' => $order->fields['last_modified'],
+                        'ip_address' => $order->fields['ip_address'],
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -165,12 +162,7 @@ class order extends base {
                            'format_id' => $order->fields['billing_address_format_id']);
 
     $index = 0;
-    $orders_products_query = "select orders_products_id, products_id, products_name,
-                                 products_model, products_price, products_tax,
-                                 products_quantity, final_price,
-                                 onetime_charges,
-                                 products_priced_by_attribute, product_is_free, products_discount_type,
-                                 products_discount_type_from
+    $orders_products_query = "select *
                                   from " . TABLE_ORDERS_PRODUCTS . "
                                   where orders_id = '" . (int)$order_id . "'
                                   order by orders_products_id";
@@ -223,7 +215,8 @@ class order extends base {
 
       $subindex = 0;
       $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
-                              options_values_price, price_prefix from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                              options_values_price, price_prefix, product_attribute_is_free 
+                              from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                                where orders_id = '" . (int)$order_id . "'
                                and orders_products_id = '" . (int)$orders_products->fields['orders_products_id'] . "'";
 
@@ -246,10 +239,21 @@ class order extends base {
 
       $this->info['tax_groups']["{$this->products[$index]['tax']}"] = '1';
 
+      $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $product, $index);
+
       $index++;
       $orders_products->MoveNext();
     }
-    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array(), $order_id);
+
+    $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $order_id);
+
+    /**
+     * @deprecated since v1.5.6; use NOTIFY_ORDER_AFTER_QUERY instead
+     */
+    if (IS_ADMIN_FLAG === true) {
+        $this->notify('ORDER_QUERY_ADMIN_COMPLETE', array('orders_id' => $order_id));
+    }
+
   }
 
   function cart() {
@@ -449,6 +453,13 @@ class order extends base {
                            'country_id' => $billing_address->fields['entry_country_id'],
                            'format_id' => (int)$billing_address->fields['address_format_id']);
 
+    // -----
+    // Issue a notification, allowing an observer to potentially make changes to any of the
+    // order-related addresses and/or the country/zone information used to determine the
+    // order's products' tax rate.
+    //
+    $this->notify('NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET', '', $taxCountryId, $taxZoneId);
+    
     $index = 0;
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
@@ -485,11 +496,11 @@ class order extends base {
                                       );
 
 
-      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE) 
+      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
       {
         $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
         $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
-      } else 
+      } else
       {
           $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
           $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
@@ -498,16 +509,7 @@ class order extends base {
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
       if ($products[$i]['attributes']) {
         $subindex = 0;
-        reset($products[$i]['attributes']);
-        while (list($option, $value) = each($products[$i]['attributes'])) {
-          /*
-          //clr 030714 Determine if attribute is a text attribute and change products array if it is.
-          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID){
-          $attr_value = $products[$i]['attributes_values'][$option];
-          } else {
-          $attr_value = $attributes->fields['products_options_values_name'];
-          }
-          */
+        foreach ($products[$i]['attributes'] as $option => $value) {
 
           $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
                                           pa.options_values_price, pa.price_prefix

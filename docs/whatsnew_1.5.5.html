@@ -152,12 +152,11 @@ OSI Certified is a certification mark of the Open Source Initiative.
     <li>Checkout - Square Payments support is now built-in. Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup </li>
     <li>Checkout - FirstData soft-descriptors now optional via module settings</li>
     <li>Checkout - PayPal - Australia settings explained better in configuration screen</li>
-    <li>Checkout - PayPal IPN-handler now gracefully ignore unrecognized new notification types</li>
+    <li>Checkout - PayPal IPN-handler posts back over ipnpb URL and now gracefully ignores unrecognized new notification types</li>
     <li>Checkout - Payeezy module now accommodates 2-series MC BINs</li>
     <li>Checkout - Internal fix to payment modules to avoid thousands-rounding errors</li>
-    <li>Checkout - Authorize.net AIM module now allows more detailed display of AVS failures</li>
-    <li>Checkout - Authorizenet AIM - add option to display reason for CVV or date failure</li>
-    <li>Checkout - Authorizenet AIM - improvements to detect always-SSL site configuration</li>
+    <li>Checkout - Authorize.net AIM - add option to display reason for CVV or date failure</li>
+    <li>Checkout - Authorize.net AIM - improvements to detect always-SSL site configuration</li>
     <li>Checkout - Credit Card Slamming threshold now customizable via Observer code or plugin</li>
     <li>Fix upload-class bug related to filtering desired file-extensions</li>
     <li>Fix multi-language error (since v155a) in functions_email for PHPMailer</li>
@@ -166,6 +165,7 @@ OSI Certified is a certification mark of the Open Source Initiative.
     <li>Admin: Fix percent calculators on Products Price Manager</li>
     <li>Admin: Fix a few sanitizer fields to avoid over-cleaning</li>
     <li>Admin: Update currency-exchange calculators since BOC changed formats
+    <li>Template - The new/featured/all pages submit over SSL to avoid mixed-content alerts</li>
     <li>Template - Improvements for jQuery conflict prevention, and support older browsers</li>
     <li>Template - Compatibility updates to accommodate OnePageCheckout plugin integration </li>
     <li>Template - Support ISO-8601 style date-of-birth date</li>
@@ -174,12 +174,12 @@ OSI Certified is a certification mark of the Open Source Initiative.
     <li>Template - Fix incorrect use of logo image height </li>
     <li>Fixed - if an invalid or non-existent tax rate was encountered, would get: PHP Warning: A non-numeric value encountered in /includes/functions/functions_taxes.php on line 172</li>
     <li>Security: CVE-2017-11675 - Low-Risk vulnerability (required your Admin login to be hijacked first). Now prevents exporting to invalid filenames.</li>
+    <li>Optimization - Abort ajax requests from spiders</li>
     <li>Enhancement - Cache-bypass added for certain db queries, so retrieved data is always fresh</li>
     <li>Enhancement - Uploading now gives more detailed feedback about failures related to invalid file types.</li>
     <li>Utility - Plugin version-check utility optimized to allow specific version-comparisons, and adapt to timeouts more quickly.</li>
     <li>Internal - Upgrade PHPMailer from 5.2.22 to 5.2.26</li>
     <li>Internal - Upgraded MobileDetect from 2.8.17 to 2.8.30 </li>
-    <li>Optimization - Abort ajax requests from spiders</li>
     <li>CKEditor integration fixes </li>
 
     <li>No database updates necessary</li>

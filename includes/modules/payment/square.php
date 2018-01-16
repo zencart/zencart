@@ -5,6 +5,8 @@
  *
  * Integrated using SquareConnect PHP SDK v2.5.1
  *
+ * REQUIRES PHP 5.4 or newer
+ *
  * @package square
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -12,6 +14,9 @@
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
+
+// required to prevent PHP 5.3 from throwing errors:
+if (!defined('JSON_PRETTY_PRINT')) define('JSON_PRETTY_PRINT', 128);
 
 /**
  * Square Payments module class
@@ -27,7 +32,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.91';
+    public $moduleVersion = '0.92';
     /**
      * $title is the displayed name for this payment method
      *
@@ -71,8 +76,8 @@ class square extends base
 
         global $order;
         $this->code        = 'square';
-        $this->enabled     = ((MODULE_PAYMENT_SQUARE_STATUS == 'True') ? true : false);
-        $this->sort_order  = MODULE_PAYMENT_SQUARE_SORT_ORDER;
+        $this->enabled     = (defined('MODULE_PAYMENT_SQUARE_STATUS') && MODULE_PAYMENT_SQUARE_STATUS == 'True');
+        $this->sort_order  = defined('MODULE_PAYMENT_SQUARE_SORT_ORDER') ? MODULE_PAYMENT_SQUARE_SORT_ORDER : null;
         $this->title       = MODULE_PAYMENT_SQUARE_TEXT_CATALOG_TITLE; // Payment module title in Catalog
         $this->description = '<strong>Square Payments Module ' . $this->moduleVersion . '</strong><br><br>' . MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION;
         if (IS_ADMIN_FLAG === true) {
@@ -82,6 +87,19 @@ class square extends base
                 if (MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '') {
                     $this->title       .= '<span class="alert"> (Access Token needed)</span>';
                     $this->description .= "\n" . '<br><br>' . sprintf(MODULE_PAYMENT_SQUARE_TEXT_NEED_ACCESS_TOKEN, $this->getAuthorizeURL());
+                    $this->description .= '<script>
+                    function tokenCheckSqH(){
+                        $.ajax({
+                            url: "' . str_replace(array('index.php?main_page=index', 'http://'), array('square_handler.php?nocache=1', 'https://'), zen_catalog_href_link(FILENAME_DEFAULT, '', 'SSL')) . '",
+                            cache: false,
+                            success: function() {
+                              window.location.reload();
+                            }
+                          });
+                          return true;
+                    }
+                    $(".onClickStartCheck").click(function(){setInterval(function() {tokenCheckSqH()}, 4000)});
+                    </script>';
                 }
                 if (MODULE_PAYMENT_SQUARE_TESTING_MODE == 'Sandbox') $this->title .= '<span class="alert"> (Sandbox mode)</span>';
                 $new_version_details = plugin_version_check_for_updates(156, $this->moduleVersion);
@@ -92,18 +110,18 @@ class square extends base
         }
 
         // determine order-status for transactions
-        if ((int)MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID > 0) {
+        if (defined('MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID > 0) {
             $this->order_status = MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID;
         }
         // Reset order status to pending if capture pending:
-        if (MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE == 'authorize') {
+        if (defined('MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE') && MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE == 'authorize') {
             $this->order_status = 1;
         }
 
         $this->_logDir = DIR_FS_LOGS;
 
         // module can't work without a token; must be configured with OAUTH refreshable token
-        if ((MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '' || MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT == '') && MODULE_PAYMENT_SQUARE_TESTING_MODE == 'Live') {
+        if (!defined('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN') || ((MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '' || MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT == '') && MODULE_PAYMENT_SQUARE_TESTING_MODE == 'Live')) {
             $this->enabled = false;
         }
 
@@ -148,42 +166,38 @@ class square extends base
         // helper for auto-selecting the radio-button next to this module so the user doesn't have to make that choice
         $onFocus = ' onfocus="methodSelect(\'pmt-' . $this->code . '\')"';
 
-        $selection = [
+        $selection = array(
             'id'     => $this->code,
             'module' => $this->title,
-            'fields' => [
-                [
+            'fields' => array(
+                array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_NUMBER,
                     'field' => '<div id="' . $this->code . '_cc-number"></div><div id="sq-card-brand"></div>',
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CVV,
                     'field' => '<div id="' . $this->code . '_cc-cvv"></div>',
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_EXPIRES,
                     'field' => '<div id="' . $this->code . '_cc-expires"></div>',
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_POSTCODE,
                     'field' => '<div id="' . $this->code . '_cc-postcode"></div>',
-                ],
-                [
+                ),
+                array(
                     'field' => '<div id="card-errors" class="alert error"></div>',
-                ],
-                [
+                ),
+                array(
                     'title' => '',
                     'field' => '<input type="hidden" id="card-nonce" name="nonce">' .
                         '<input type="hidden" id="card-type" name="' . $this->code . '_cc_type">' .
                         '<input type="hidden" id="card-four" name="' . $this->code . '_cc_four">' .
                         '<input type="hidden" id="card-exp" name="' . $this->code . '_cc_exp">',
-                ],
-                [
-                    'title' => '',
-                    'field' => '<button id="sq-apple-pay" class="button-apple-pay"></button>',
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
 
         return $selection;
     }
@@ -199,22 +213,22 @@ class square extends base
 
     public function confirmation()
     {
-        $confirmation = [
-            'fields' => [
-                [
+        $confirmation = array(
+            'fields' => array(
+                array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_TYPE,
                     'field' => zen_output_string_protected($_POST[$this->code . '_cc_type']),
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_NUMBER,
                     'field' => zen_output_string_protected($_POST[$this->code . '_cc_four']),
-                ],
-                [
+                ),
+                array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_EXPIRES,
                     'field' => zen_output_string_protected($_POST[$this->code . '_cc_exp']),
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
 
         return $confirmation;
     }
@@ -264,7 +278,7 @@ class square extends base
             // @TODO - if Square adds support for transmission of tax and shipping amounts, these may need recalculation here too
         }
 
-        $billing_address = [
+        $billing_address = array(
             'address_line'                    => (string)$order->billing['street_address'],
             'address_line_2'                  => (string)$order->billing['suburb'],
             'locality'                        => (string)$order->billing['city'],
@@ -273,9 +287,9 @@ class square extends base
             'country'                         => (string)$order->billing['country']['iso_code_2'],
             'last_name'                       => (string)$order->billing['lastname'],
             'organization'                    => (string)$order->billing['company'],
-        ];
+        );
         if ($order->delivery !== false && isset($order->delivery['street_address'])) {
-            $shipping_address = [
+            $shipping_address = array(
                 'address_line'                    => (string)$order->delivery['street_address'],
                 'address_line_2'                  => (string)$order->delivery['suburb'],
                 'locality'                        => (string)$order->delivery['city'],
@@ -284,33 +298,29 @@ class square extends base
                 'country'                         => (string)$order->delivery['country']['iso_code_2'],
                 'last_name'                       => (string)$order->delivery['lastname'],
                 'organization'                    => (string)$order->delivery['company'],
-            ];
+            );
         }
 
-        $request_body = [
+        $request_body = array(
             'idempotency_key'     => uniqid(),
             'card_nonce'          => (string)$_POST[$this->code . '_nonce'],
-            'amount_money'        => [
+            'amount_money'        => array(
                 'amount'   => $this->convert_to_cents($payment_amount, $currency_code),
                 'currency' => (string)$currency_code,
-            ],
+            ),
             'delay_capture'       => (bool)(MODULE_PAYMENT_SQUARE_TRANSACTION_TYPE === 'authorize'),
             'reference_id'        => (string)(substr(zen_session_id(), 0, 40)), // 40 char max
             'note'                => (string)substr(htmlentities(trim($this->currency_comment . ' ' . STORE_NAME)), 0, 60), // 60 char max
             'customer_id'         => (string)$_SESSION['customer_id'],
             'buyer_email_address' => $order->customer['email_address'],
             'billing_address'     => $billing_address,
-        ];
+        );
         if (!empty($shipping_address)) {
             $request_body['shipping_address'] = $shipping_address;
         }
 
         $api_instance = new \SquareConnect\Api\TransactionsApi();
         $body         = new \SquareConnect\Model\ZenCartChargeRequest($request_body);
-// @TODO - customer creation  https://docs.connect.squareup.com/api/connect/v2#navsection-customers
-// @TODO - https://docs.connect.squareup.com/api/connect/v2#endpoint-createorder
-// @TODO - https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
-        $squareOrder  = new \SquareConnect\Model\Order($orderDetails);
 
         try {
             $result        = $api_instance->charge($location->id, $body);
@@ -320,7 +330,7 @@ class square extends base
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
             $error         = $this->parse_error_response($errors_object);
-            $this->logTransactionData([$e->getCode() => $e->getMessage()], $request_body, print_r($e->getResponseBody(), true));
+            $this->logTransactionData(array($e->getCode() => $e->getMessage()), $request_body, print_r($e->getResponseBody(), true));
 
             // location configuration error
             if ($error['category'] === 'INVALID_REQUEST_ERROR') {
@@ -374,13 +384,13 @@ class square extends base
         $sql = $db->bindVars($sql, ':orderStatus', $this->order_status, 'integer');
         $db->Execute($sql);
 
-        $sql_data_array = [
+        $sql_data_array = array(
             'order_id'       => $insert_id,
             'location_id'    => $this->getLocationDetails()->id,
             'transaction_id' => $this->transaction_id,
             'tender_id'      => $this->auth_code,
             'created_at'     => 'now()',
-        ];
+        );
         zen_db_perform(TABLE_SQUARE_PAYMENTS, $sql_data_array);
 
         return true;
@@ -483,11 +493,7 @@ class square extends base
         if ($difference == '') $difference = '+1 hour';
         $now = new DateTime($difference);
 
-        if ($expiry < $now) {
-            return true;
-        }
-
-        return false;
+        return $expiry < $now;
     }
 
     // called by module and by cron job
@@ -504,7 +510,6 @@ class square extends base
                 $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_NEED_ACCESS_TOKEN, $this->getAuthorizeURL()), 'error');
             }
             $this->disableDueToInvalidAccessToken();
-
             return 'failure';
         }
 
@@ -538,7 +543,7 @@ class square extends base
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_ACCESS_TOKEN'");
         $msg = "This is an alert from your Zen Cart store.\n\nYour Square Payment Module access-token has expired, or cannot be refreshed automatically. Please login to your store Admin, go to the Payment Module settings, click on the Square module, and click the button to Re/Authorize your account.\n\nSquare Payments are disabled until a new valid token can be established.";
         $msg .= "\n\n" . ' The token expired on ' . MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT;
-        zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, 'Square Payment Module Problem: Critical', $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $msg], 'payment_module_error');
+        zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, 'Square Payment Module Problem: Critical', $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $msg), 'payment_module_error');
         if (IS_ADMIN_FLAG !== true) trigger_error('Square Payment Module token expired' . (MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT != '' ? ' on ' . MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT : '') . '. Payment module has been disabled. Please login to Admin and re-authorize the module.',
             E_USER_ERROR);
     }
@@ -555,7 +560,7 @@ class square extends base
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Client ' . MODULE_PAYMENT_SQUARE_APPLICATION_SECRET]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Client ' . MODULE_PAYMENT_SQUARE_APPLICATION_SECRET));
         curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart token refresh [' . preg_replace('#https?://#', '', HTTP_SERVER) . '] ');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -589,12 +594,13 @@ class square extends base
     {
         $url    = 'https://connect.squareup.com/oauth2/authorize?';
         $params = http_build_query(
-            [
+            array(
                 'client_id' => MODULE_PAYMENT_SQUARE_APPLICATION_ID,
                 'scope'     => 'MERCHANT_PROFILE_READ PAYMENTS_WRITE PAYMENTS_READ ORDERS_WRITE ORDERS_READ CUSTOMERS_WRITE CUSTOMERS_READ ITEMS_WRITE ITEMS_READ',
                 'state'     => uniqid(),
                 'session'   => 'false',
-            ]);
+            )
+        );
 
         return $url . $params;
         // example: code=sq0abc-D1efG2HIJK345lmno6PqR78S9Tuv0WxY&response_type=code
@@ -604,11 +610,12 @@ class square extends base
     {
         $url  = 'https://connect.squareup.com/oauth2/token';
         $body = json_encode(
-            [
+            array(
                 'client_id'     => MODULE_PAYMENT_SQUARE_APPLICATION_ID,
                 'client_secret' => MODULE_PAYMENT_SQUARE_APPLICATION_SECRET,
                 'code'          => $token_redeem_code,
-            ]);
+            )
+        );
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -617,7 +624,7 @@ class square extends base
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart token request [' . preg_replace('#https?://#', '', HTTP_SERVER) . '] ');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -687,18 +694,18 @@ class square extends base
         } catch (Exception $e) {
             trigger_error('Exception when calling LocationsApi->listLocations: ' . $e->getMessage(), E_USER_NOTICE);
 
-            return [];
+            return array();
         }
     }
 
     public function getLocationsPulldownArray()
     {
         $locations = $this->getLocationsList();
-        if (empty($locations)) return [];
-        $locations_pulldown = [];
+        if (empty($locations)) return array();
+        $locations_pulldown = array();
         foreach ($locations as $key => $value) {
             // This causes us to store this as: LocationName:[LocationID]:CurrencyCode
-            $locations_pulldown[] = ['id' => $value->getName() . ':[' . $value->getId() . ']:' . (method_exists($value, 'getCurrencyCode') ? $value->getCurrencyCode() : 'USD'), 'text' => $value->getName()];
+            $locations_pulldown[] = array('id' => $value->getName() . ':[' . $value->getId() . ']:' . (method_exists($value, 'getCurrencyCode') ? $value->getCurrencyCode() : 'USD'), 'text' => $value->getName());
         }
 
         return $locations_pulldown;
@@ -743,7 +750,6 @@ class square extends base
 
         // modern way
         // return ((int)$amount / 10 ** $decimal_places);
-
     }
 
     public function check()
@@ -790,7 +796,7 @@ class square extends base
 
     public function keys()
     {
-        $keys = [
+        $keys = array(
             'MODULE_PAYMENT_SQUARE_STATUS',
             'MODULE_PAYMENT_SQUARE_APPLICATION_ID',
             'MODULE_PAYMENT_SQUARE_APPLICATION_SECRET',
@@ -801,16 +807,17 @@ class square extends base
             'MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID',
             'MODULE_PAYMENT_SQUARE_REFUNDED_ORDER_STATUS_ID',
             'MODULE_PAYMENT_SQUARE_LOGGING',
-        ];
+        );
 
         if (isset($_GET['sandbox'])) {
             // Developer use only
-            $keys = array_merge($keys, [
+            $keys = array_merge($keys, array(
                 'MODULE_PAYMENT_SQUARE_ACCESS_TOKEN',
                 'MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT',
                 'MODULE_PAYMENT_SQUARE_TESTING_MODE',
                 'MODULE_PAYMENT_SQUARE_SANDBOX_TOKEN',
-            ]);
+                )
+            );
         }
 
         return $keys;
@@ -865,7 +872,7 @@ class square extends base
         }
         if (($errors != '' && stristr(MODULE_PAYMENT_SQUARE_LOGGING, 'Email on Failures')) || strstr(MODULE_PAYMENT_SQUARE_LOGGING, 'Email Always')) {
             zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Square Alert (customer transaction error) ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS,
-                ['EMAIL_MESSAGE_HTML' => nl2br($logMessage)], 'debug');
+                array('EMAIL_MESSAGE_HTML' => nl2br($logMessage)), 'debug');
         }
     }
 
@@ -903,17 +910,17 @@ class square extends base
         $tender_id      = $payment->getId();
         $currency_code  = $payment->getAmountMoney()->getCurrency();
 
-        $refund_details = [
-            'amount_money'    => [
+        $refund_details = array(
+            'amount_money'    => array(
                 'amount'   => $this->convert_to_cents($amount, $currency_code),
                 'currency' => $currency_code,
-            ],
+            ),
             'tender_id'       => $tender_id,
             'reason'          => substr(htmlentities(trim($refundNote)), 0, 60),
             'idempotency_key' => uniqid(),
-        ];
+        );
         $request_body   = new \SquareConnect\Model\CreateRefundRequest($refund_details);
-        $this->logTransactionData([['comment' => 'Creating refund request']], $refund_details);
+        $this->logTransactionData(array('comment' => 'Creating refund request'), $refund_details);
 
         $this->getAccessToken();
         $location_id  = $this->getLocationDetails()->id;
@@ -925,7 +932,7 @@ class square extends base
             $this->logTransactionData($transaction, $refund_details, (string)$errors_object);
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
-            $this->logTransactionData([$e->getCode() => $e->getMessage()], $refund_details, print_r($e->getResponseBody(), true));
+            $this->logTransactionData(array($e->getCode() => $e->getMessage()), $refund_details, print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (REFUNDING). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
@@ -941,13 +948,13 @@ class square extends base
         $amount        = $currencies->format($transaction->getAmountMoney()->getAmount() / (pow(10, $currencies->get_decimal_places($currency_code))), false, $currency_code);
 
         // Success, so save the results
-        $sql_data_array = [
+        $sql_data_array = array(
             'orders_id'         => $oID,
             'orders_status_id'  => (int)$new_order_status,
             'date_added'        => 'now()',
             'comments'          => 'REFUNDED: ' . $amount . "\n" . $refundNote,
             'customer_notified' => 0,
-        ];
+        );
         zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         $db->Execute("update " . TABLE_ORDERS . "
                       set orders_status = " . (int)$new_order_status . "
@@ -986,10 +993,10 @@ class square extends base
         try {
             $result        = $api_instance->captureTransaction($location_id, $transaction_id);
             $errors_object = $result->getErrors();
-            $this->logTransactionData(['capture request' => 'transaction ' . $transaction_id], [], (string)$errors_object);
+            $this->logTransactionData(array('capture request' => 'transaction ' . $transaction_id), array(), (string)$errors_object);
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
-            $this->logTransactionData([$e->getCode() => $e->getMessage()], [], print_r($e->getResponseBody(), true));
+            $this->logTransactionData(array($e->getCode() => $e->getMessage()), array(), print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (CAPTURE attempt). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
@@ -1002,13 +1009,13 @@ class square extends base
         }
 
         // Success, so save the results
-        $sql_data_array = [
+        $sql_data_array = array(
             'orders_id'         => (int)$oID,
             'orders_status_id'  => (int)$new_order_status,
             'date_added'        => 'now()',
             'comments'          => 'FUNDS COLLECTED. Trans ID: ' . $transaction_id . "\n" . 'Time: ' . date('Y-m-D h:i:s') . "\n" . $captureNote,
             'customer_notified' => 0,
-        ];
+        );
         zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         $db->Execute("update " . TABLE_ORDERS . "
                       set orders_status = " . (int)$new_order_status . "
@@ -1048,10 +1055,10 @@ class square extends base
         try {
             $result        = $api_instance->voidTransaction($location_id, $transaction_id);
             $errors_object = $result->getErrors();
-            $this->logTransactionData(['void request' => 'transaction ' . $transaction_id], [], (string)$errors_object);
+            $this->logTransactionData(array('void request' => 'transaction ' . $transaction_id), array(), (string)$errors_object);
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
-            $this->logTransactionData([$e->getCode() => $e->getMessage()], [], print_r($e->getResponseBody(), true));
+            $this->logTransactionData(array($e->getCode() => $e->getMessage()), array(), print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (VOID attempt). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
@@ -1063,13 +1070,13 @@ class square extends base
             return false;
         }
         // Success, so save the results
-        $sql_data_array = [
+        $sql_data_array = array(
             'orders_id'         => (int)$oID,
             'orders_status_id'  => (int)$new_order_status,
             'date_added'        => 'now()',
             'comments'          => 'VOIDED. Trans ID: ' . $transaction_id . "\n" . $voidNote,
             'customer_notified' => 0,
-        ];
+        );
         zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         $db->Execute("update " . TABLE_ORDERS . "
                       set orders_status = '" . (int)$new_order_status . "'
@@ -1109,7 +1116,7 @@ class square extends base
 
         $this->transaction_messages = $msg;
 
-        return ['detail' => $msg, 'category' => $first_category, 'code' => $first_code];
+        return array('detail' => $msg, 'category' => $first_category, 'code' => $first_code);
     }
 
 }

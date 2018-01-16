@@ -19,12 +19,13 @@ if (zen_not_null($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
+      $db_filename = zen_limit_image_filename($_POST['products_attributes_filename'], TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
       $sql = "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                 SET products_attributes_filename=:filename:,
                     products_attributes_maxdays=:maxdays:,
                     products_attributes_maxcount=:maxcount:
                 WHERE products_attributes_id = " . (int)$_GET['padID'];
-      $sql = $db->bindVars($sql, ':filename:', $_POST['products_attributes_filename'], 'string');
+      $sql = $db->bindVars($sql, ':filename:', $db_filename, 'string');
       $sql = $db->bindVars($sql, ':maxdays:', $_POST['products_attributes_maxdays'], 'string');
       $sql = $db->bindVars($sql, ':maxcount:', $_POST['products_attributes_maxcount'], 'string');
       $db->Execute($sql);
