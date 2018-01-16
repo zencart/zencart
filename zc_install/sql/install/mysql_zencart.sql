@@ -315,6 +315,7 @@ CREATE TABLE configuration (
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   use_function text default NULL,
   set_function text default NULL,
+  val_function text default NULL,
   PRIMARY KEY  (configuration_id),
   UNIQUE KEY unq_config_key_zen (configuration_key),
   KEY idx_key_value_zen (configuration_key,configuration_value(10)),

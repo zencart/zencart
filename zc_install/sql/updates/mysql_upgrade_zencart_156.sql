@@ -47,6 +47,7 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 
 # Updates
 ALTER TABLE products_options MODIFY products_options_comment varchar(256) default NULL;
+ALTER TABLE configuration ADD val_function text default NULL AFTER set_function;
 
 # allow longer image paths
 ALTER TABLE products MODIFY products_image varchar(255) default NULL;

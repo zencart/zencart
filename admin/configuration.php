@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 00:25:51 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -20,7 +20,14 @@ if (zen_not_null($action)) {
         $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
         zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
       }
+
       $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
+        // See if there are any configuration checks
+        $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = '" . (int)$cID . "'");
+        if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
+           require_once('includes/functions/configuration_checks.php');
+           zen_validate_configuration_entry($configuration_value, $checks->fields['val_function']);
+        }
 
       $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                     SET configuration_value = '" . zen_db_input($configuration_value) . "',
