@@ -3,10 +3,10 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2017 Zen Cart Development Team
+# * @copyright Copyright 2003-2018 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Author: DrByte  August 2017 -0500 New in v1.5.6 $
+# * @version $Id: Author: DrByte  New in v1.5.6 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -131,6 +131,37 @@ FROM products));
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
 ALTER TABLE customers_basket DROP final_price;
+
+
+
+## support for utf8mb4 index limitations in MySQL 5.5-5.6
+ALTER TABLE admin_menus MODIFY menu_key VARCHAR(191) NOT NULL DEFAULT '';
+ALTER TABLE admin_pages MODIFY menu_key varchar(191) NOT NULL default '';
+ALTER TABLE admin_pages MODIFY page_key VARCHAR(191) NOT NULL DEFAULT '';
+ALTER TABLE admin_pages_to_profiles MODIFY page_key varchar(191) NOT NULL default '';
+ALTER TABLE get_terms_to_filter MODIFY get_term_name varchar(191) NOT NULL default '';
+ALTER TABLE configuration MODIFY configuration_key varchar(180) NOT NULL default '';
+ALTER TABLE product_type_layout MODIFY configuration_key varchar(180) NOT NULL default '';
+ALTER TABLE whos_online DROP KEY idx_last_page_url_zen;
+ALTER TABLE whos_online ADD KEY idx_last_page_url_zen (last_page_url(191));
+ALTER TABLE media_manager DROP KEY idx_media_name_zen;
+ALTER TABLE media_manager ADD KEY idx_media_name_zen (media_name(191));
+# truncate was done earlier in this file already, but if copy/pasting for some reason, do the truncate below, to cleanup the table
+#TRUNCATE TABLE whos_online;
+ALTER TABLE whos_online MODIFY session_id varchar(256) default NULL;
+# recreating sessions table since its storage engine is changing to InnoDB:
+DROP TABLE IF EXISTS sessions;
+CREATE TABLE sessions (
+  sesskey varchar(256) default NULL,
+  expiry int(11) unsigned NOT NULL default 0,
+  value mediumblob NOT NULL,
+  PRIMARY KEY  (sesskey)
+) ENGINE=InnoDB;
+
+
+
+
+
 
 #############
 
