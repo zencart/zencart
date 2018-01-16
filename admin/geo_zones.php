@@ -359,7 +359,7 @@ if (zen_not_null($action)) {
                   case 'new':
                     $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_SUB_ZONE . '</h4>');
 
-                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&' . (isset($_GET['sID']) ? 'sID=' . $_GET['sID'] . '&' : '') . 'saction=insert_sub', 'class="form-horizontal"'));
+                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&' . (isset($_GET['sID']) ? 'sID=' . $_GET['sID'] . '&' : '') . '&action=insert_sub', 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_NEW_SUB_ZONE_INTRO);
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries(TEXT_ALL_COUNTRIES), '', 'onChange="update_zone(this.form);"' . ' class="form-control"'));
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_ZONE, 'zone_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down(), '', 'class="form-control"'));
@@ -368,7 +368,7 @@ if (zen_not_null($action)) {
                   case 'edit':
                     $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_SUB_ZONE . '</h4>');
 
-                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=save_sub', 'class="form-horizontal"'));
+                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&action=save_sub', 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_EDIT_SUB_ZONE_INTRO);
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries(TEXT_ALL_COUNTRIES), $sInfo->zone_country_id, 'onChange="update_zone(this.form);" class="form-control"'));
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_ZONE, 'zone_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($sInfo->zone_country_id), $sInfo->zone_id, 'class="form-control"'));
@@ -399,7 +399,7 @@ if (zen_not_null($action)) {
                   case 'new_zone':
                     $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_ZONE . '</h4>');
 
-                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=insert_zone', 'class="form-horizontal"'));
+                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=insert_zone', 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_NEW_ZONE_INTRO);
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONE_NAME, 'geo_zone_name', 'class="control-label"') . zen_draw_input_field('geo_zone_name', '', zen_set_field_length(TABLE_GEO_ZONES, 'geo_zone_name') . ' class="form-control"'));
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONE_DESCRIPTION, 'geo_zone_description', 'class="control-label"') . zen_draw_input_field('geo_zone_description', '', zen_set_field_length(TABLE_GEO_ZONES, 'geo_zone_description') . ' class="form-control"'));
@@ -408,7 +408,7 @@ if (zen_not_null($action)) {
                   case 'edit_zone':
                     $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_ZONE . '</h4>');
 
-                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=save_zone', 'class="form-horizontal"'));
+                    $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=save_zone', 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_EDIT_ZONE_INTRO);
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONE_NAME, 'geo_zone_name', 'class="control-label"') . zen_draw_input_field('geo_zone_name', htmlspecialchars($zInfo->geo_zone_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_GEO_ZONES, 'geo_zone_name') . ' class="form-control"'));
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONE_DESCRIPTION, 'geo_zone_description', 'class="control-label"') . zen_draw_input_field('geo_zone_description', htmlspecialchars($zInfo->geo_zone_description, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_GEO_ZONES, 'geo_zone_description') . ' class="form-control"'));
