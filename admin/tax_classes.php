@@ -146,7 +146,7 @@ if (zen_not_null($action)) {
               case 'new':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_TAX_CLASS . '</h4>');
 
-                $contents = array('form' => zen_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=insert', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_title', 'class="control-label"') . zen_draw_input_field('tax_class_title', '', zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_title') . ' class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_DESCRIPTION, 'tax_class_description', 'class="control-label"') . zen_draw_input_field('tax_class_description', '', zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_description') . ' class="form-control"'));
@@ -155,7 +155,7 @@ if (zen_not_null($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_TAX_CLASS . '</h4>');
 
-                $contents = array('form' => zen_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=save', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_title', 'class="control-label"') . zen_draw_input_field('tax_class_title', htmlspecialchars($tcInfo->tax_class_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_title') . ' class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_DESCRIPTION, 'tax_class_description', 'class="control-label"') . zen_draw_input_field('tax_class_description', htmlspecialchars($tcInfo->tax_class_description, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_description') . ' class="form-control"'));
