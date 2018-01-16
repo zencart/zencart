@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Sun Dec 20 14:01:38 2015 +0000 New in v1.5.5 $
+ * @version $Id: Author: zcwilt   Modified in v1.5.6 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
@@ -49,6 +49,21 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
       <?php } ?>
       <?php } ?>
     </div>
+    <?php } ?>
+</div>
+<?php } ?>
+<?php if ($hasLocalAlerts) { ?>
+<div id="alerts" class="errorList">
+  <h2><?php echo TEXT_INDEX_ALERTS; ?></h2>
+    <?php foreach ($listLocalAlerts as $error) { ?>
+    <div class="alert-box warning">
+      <a href="" <?php echo (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText"' ?>><?php echo($error['mainErrorText']); ?></a>
+      <?php if (isset($error['extraErrors'])) { ?>
+      <?php foreach ($error['extraErrors'] as $detailError) { ?>
+      <br><?php echo $detailError ?>
+      <?php } ?>
+      <?php } ?>
+      </div>
     <?php } ?>
 </div>
 <?php } ?>

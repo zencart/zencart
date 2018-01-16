@@ -7,9 +7,7 @@
  * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
- *
  * zcConfigureFileWriter class
- *
  */
 class zcConfigureFileWriter
 {
@@ -55,11 +53,17 @@ class zcConfigureFileWriter
   {
     $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
     $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
+    $outputFileLocal = rtrim($this->inputs['physical_path'], '/') . '/includes/local/configure.php';
+    if (file_exists($outputFileLocal)) $outputFile = $outputFileLocal;
+
     $result1 = $this->transformConfigureTplFile($tplFile, $outputFile);
     if ((int)$result1 == 0) logDetails('catalogConfig size: ' . (int)$result1 . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
     $tplFile = DIR_FS_INSTALL . 'includes/admin-configure-template.php';
     $outputFile = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/configure.php';
+    $outputFileLocal = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/local/configure.php';
+    if (file_exists($outputFileLocal)) $outputFile = $outputFileLocal;
+
     $result2 = $this->transformConfigureTplFile($tplFile, $outputFile);
     if ((int)$result2 == 0) logDetails('adminConfig size: ' . (int)$result2 . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
 
