@@ -37,6 +37,7 @@ define('FILENAME_CACHE', 'cache');
 define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info');
 define('FILENAME_CATEGORIES', 'categories');
 define('FILENAME_CATEGORY_ICON_DISPLAY', 'category_icon_display');
+define('FILENAME_CATEGORY_PRODUCT_LISTING', 'category_product_listing');
 define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation');
 define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment');
 define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address');

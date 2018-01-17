@@ -142,6 +142,7 @@ define('BOX_CATALOG_SALEMAKER', 'SaleMaker');
 define('BOX_CATALOG_PRODUCTS_PRICE_MANAGER', 'Products Price Manager');
 define('BOX_CATALOG_PRODUCT', 'Product');
 define('BOX_CATALOG_PRODUCTS_TO_CATEGORIES', 'Products to Categories');
+define('BOX_CATALOG_CATEGORY', 'Category');
 
 // customers box text
 define('BOX_HEADING_CUSTOMERS', 'Customers');
