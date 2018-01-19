@@ -1674,7 +1674,9 @@ function zen_get_minutes_since($timestamp) {
       $num_state = 1;
       while (!$states->EOF) {
         if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
-        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states->fields['zone_name'] . '", "' . $states->fields['zone_id'] . '");' . "\n";
+        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states->fields['zone_name'] . '", "' . $states->fields['zone_id'] . '"';
+        if($states->fields['zone_id'] == $zone_id) $output_string .= ',1,1';
+        $output_string .= ');' . "\n";
         $num_state++;
         $states->MoveNext();
       }
