@@ -22,13 +22,11 @@ class LeadCountries extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_COUNTRIES,
-                'alias' => 'c',
                 'fkeyFieldLeft' => 'countries_id',
             ),
             'joinTables' => array(
                 'TABLE_COUNTRIES_NAME' => array(
                     'table' => TABLE_COUNTRIES_NAME,
-                    'alias' => 'cn',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'countries_id',
                     'addColumns' => true

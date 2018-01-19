@@ -3,10 +3,10 @@
  * functions_prices
  *
  * @package functions
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_prices.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: functions_prices.php $
  */
 
 ////
@@ -50,7 +50,7 @@
 //      $product_to_categories = $db->Execute("select categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "'");
 //      $category = $product_to_categories->fields['categories_id'];
 
-      $product_to_categories = $db->Execute("select master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . $product_id . "'");
+      $product_to_categories = $db->Execute("select master_categories_id from " . TABLE_PRODUCTS . " where products_id = " . (int)$product_id);
       $category = $product_to_categories->fields['master_categories_id'];
 
       $sale = $db->Execute("select sale_specials_condition, sale_deduction_value, sale_deduction_type from " . TABLE_SALEMAKER_SALES . " where sale_categories_all like '%," . $category . ",%' and sale_status = '1' and (sale_date_start <= now() or sale_date_start = '0001-01-01') and (sale_date_end >= now() or sale_date_end = '0001-01-01') and (sale_pricerange_from <= '" . $product_price . "' or sale_pricerange_from = '0') and (sale_pricerange_to >= '" . $product_price . "' or sale_pricerange_to = '0')");
@@ -199,8 +199,12 @@
 
     $show_display_price = $show_sale_discount = '';
     $priceinfo['normal']  = $display_normal_price  = zen_get_products_base_price($products_id);
-    $priceinfo['special'] = $display_special_price = zen_get_products_special_price($products_id, true);
     $priceinfo['sale']    = $display_sale_price    = zen_get_products_special_price($products_id, false);
+    if ($priceinfo['sale'] !== false) {
+      $priceinfo['special'] = $display_special_price = zen_get_products_special_price($products_id, true);
+    } else {
+      $priceinfo['special'] = $display_special_price = false;
+    }
 
     if (SHOW_SALE_DISCOUNT_STATUS == '1' and ($display_special_price != 0 or $display_sale_price != 0)) {
       if ($display_sale_price) {
@@ -508,8 +512,12 @@
     }
 
     $new_products_price = zen_get_products_base_price($product_id);
-    $new_special_price = zen_get_products_special_price($product_id, true);
     $new_sale_price = zen_get_products_special_price($product_id, false);
+    if ($new_sale_price !== false) {
+      $new_special_price = zen_get_products_special_price($product_id, true);
+    } else {
+      $new_special_price = false;
+    }
 
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
@@ -798,7 +806,7 @@ If a special exist * 10+9
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_exists = 'true';
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
@@ -840,7 +848,7 @@ If a special exist * 10+9
 /**
  * look up discount in sale makers - attributes only can have discounts if set as percentages
  * this gets the discount amount this does not determine when to apply the discount
- * 
+ *
  * NOTE: catalog-side you should use zen_get_discount_calc() instead of this!!!
  */
   function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
@@ -889,7 +897,7 @@ If a special exist * 10
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      while (list($key,$value) = each($categories)) {
+      foreach($categories as $key => $value) {
         if ($value == $check_category) {
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
           $sale_maker_discount_type = $salemaker_sales->fields['sale_deduction_type'];
@@ -904,7 +912,7 @@ If a special exist * 10
       case ($sale_maker_discount_type == 1):
         $sale_maker_discount = (1 - ($sale_maker_discount / 100));
         break;
-      case ($sale_maker_discount_type == 0): 
+      case ($sale_maker_discount_type == 0):
         break;
       case ($sale_maker_discount_type == 2 and $display_type == true):
         break;
@@ -942,8 +950,12 @@ If a special exist * 10
 
     $show_display_price = '';
     $display_normal_price = zen_get_products_base_price($products_id);
-    $display_special_price = zen_get_products_special_price($products_id, true);
     $display_sale_price = zen_get_products_special_price($products_id, false);
+    if ($display_sale_price !== false) {
+      $display_special_price = zen_get_products_special_price($products_id, true);
+    } else {
+      $display_special_price = false;
+    }
 
     $products_actual_price = $display_normal_price;
 

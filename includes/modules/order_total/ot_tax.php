@@ -42,7 +42,7 @@
         }
       }
       if (count($order->info['tax_groups']) > 1 && isset($order->info['tax_groups'][0])) unset($order->info['tax_groups'][0]);
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach($order->info['tax_groups'] as $key => $value) {
         if (SHOW_SPLIT_TAX_CHECKOUT == 'true')
         {
           if ($value > 0 or ($value == 0 && STORE_TAX_DISPLAY_STATUS == 1 )) {

@@ -27,9 +27,15 @@ class zcConfigureFileWriter
     $replaceVars['DIR_WS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_http_catalog'], ' /\\') . '/');
     $replaceVars['DIR_WS_HTTPS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_https_catalog'], ' /\\') . '/');
     $replaceVars['DIR_FS_CATALOG'] = rtrim($inputs['physical_path'], ' /\\') . '/';
+
     $replaceVars['DB_TYPE'] = trim($inputs['db_type']);
+    if ($replaceVars['DB_TYPE'] == '') $replaceVars['DB_TYPE'] = 'mysql';
+
     $replaceVars['DB_PREFIX'] = trim($inputs['db_prefix']);
+
     $replaceVars['DB_CHARSET'] = trim($inputs['db_charset']);
+    if ($replaceVars['DB_CHARSET'] == '') $replaceVars['DB_CHARSET'] = 'utf8';
+
     $replaceVars['DB_SERVER'] = trim($inputs['db_host']);
     $replaceVars['DB_SERVER_USERNAME'] = trim($inputs['db_user']);
     $replaceVars['DB_SERVER_PASSWORD'] = trim($inputs['db_password']);

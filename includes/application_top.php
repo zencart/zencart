@@ -88,10 +88,6 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
 } else {
   error_reporting(0);
 }
-/*
- * Get time zone info from PHP config
- */
-@date_default_timezone_set(date_default_timezone_get());
 /**
  * check for and include load application parameters
  */

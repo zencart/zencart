@@ -5,7 +5,7 @@
  * @version GIT: $Id: $
  */
 
-namespace ZenCart\Model;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
@@ -20,6 +20,6 @@ class GroupPricing extends Eloquent
 
     public function customers()
     {
-        return $this->hasMany('ZenCart\Model\Customers', 'customers_group_pricing', 'group_id');
+        return $this->hasMany('App\Model\Customers', 'customers_group_pricing', 'group_id');
     }
 }

@@ -66,6 +66,8 @@ class Lazy implements LazyInterface
                     $this->callable[$key] = $val();
                 }
             }
+        } elseif ($this->callable instanceof LazyInterface) {
+            $this->callable = $this->callable->__invoke();
         }
 
         // convert Lazy objects in the params

@@ -1,7 +1,7 @@
 <?php
 namespace ZenCart\AdminUser;
 
-use ZenCart\Model\ModelFactory;
+use App\Model\ModelFactory;
 
 class AdminUser extends \base
 {

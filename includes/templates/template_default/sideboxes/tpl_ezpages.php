@@ -16,4 +16,3 @@
   } // end FOR loop
   $content  .= '</ul>' . "\n";
   $content .= '</div>';
-?>

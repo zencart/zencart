@@ -22,7 +22,6 @@ class LeadTaxClasses extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_TAX_CLASS,
-                'alias' => 'tc',
                 'fkeyFieldLeft' => 'tax_class_id',
             ),
             'isPaginated' => true,

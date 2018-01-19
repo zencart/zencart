@@ -6,10 +6,10 @@
  * Displays information related to a single specific order
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  May 3 2016  Modified in v1.5.5a $
+ * @version $Id: Author: DrByte  Modified in v1.6.0 $
  */
 ?>
 <div class="centerColumn" id="accountHistInfo">
@@ -18,7 +18,7 @@
 <br class="clearBoth" />
 
 <?php if ($current_page != FILENAME_CHECKOUT_SUCCESS) { ?>
-<h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']); ?></h2>
+<h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $order->id); ?></h2>
 <?php } ?>
 
 <table id="orderHistoryHeading">
@@ -26,7 +26,7 @@
         <th scope="col" id="myAccountQuantity"><?php echo HEADING_QUANTITY; ?></th>
         <th scope="col" id="myAccountProducts"><?php echo HEADING_PRODUCTS; ?></th>
 <?php
-  if (sizeof($order->info['tax_groups']) > 1) {
+  if (count($order->info['tax_groups']) > 1) {
 ?>
         <th scope="col" id="myAccountTax"><?php echo HEADING_TAX; ?></th>
 <?php
@@ -35,15 +35,15 @@
         <th scope="col" id="myAccountTotal"><?php echo HEADING_TOTAL; ?></th>
     </tr>
 <?php
-  for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+  for ($i=0, $n=count($order->products); $i<$n; $i++) {
   ?>
     <tr>
         <td class="accountQuantityDisplay"><?php echo  $order->products[$i]['qty'] . QUANTITY_SUFFIX; ?></td>
         <td class="accountProductDisplay"><?php echo  $order->products[$i]['name'];
 
-    if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
+    if ( (isset($order->products[$i]['attributes'])) && (count($order->products[$i]['attributes']) > 0) ) {
       echo '<ul class="orderAttribsList">';
-      for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
+      for ($j=0, $n2=count($order->products[$i]['attributes']); $j<$n2; $j++) {
         echo '<li>' . $order->products[$i]['attributes'][$j]['option'] . TEXT_OPTION_DIVIDER . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</li>';
       }
         echo '</ul>';
@@ -51,7 +51,7 @@
 ?>
         </td>
 <?php
-    if (sizeof($order->info['tax_groups']) > 1) {
+    if (count($order->info['tax_groups']) > 1) {
 ?>
         <td class="accountTaxDisplay"><?php echo zen_display_tax_value($order->products[$i]['tax']) . '%' ?></td>
 <?php
@@ -73,7 +73,7 @@
 <hr />
 <div id="orderTotals">
 <?php
-  for ($i=0, $n=sizeof($order->totals); $i<$n; $i++) {
+  for ($i=0, $n=count($order->totals); $i<$n; $i++) {
 ?>
      <div class="amount larger forward"><?php echo $order->totals[$i]['text'] ?></div>
      <div class="lineTitle larger forward"><?php echo $order->totals[$i]['title'] ?></div>
@@ -96,7 +96,7 @@
 /**
  * Used to loop thru and display order status information
  */
-if (sizeof($statusArray)) {
+if (count($statusArray)) {
 ?>
 
 <h2 id="orderHistoryStatus"><?php echo HEADING_ORDER_HISTORY; ?></h2>

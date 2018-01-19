@@ -70,6 +70,7 @@ class shoppingCart extends base {
    */
   var $display_debug_messages = FALSE;
   var $flag_duplicate_msgs_set = FALSE;
+  var $flag_duplicate_quantity_msgs_set = FALSE;
   /**
    * constructor method
    *
@@ -101,8 +102,7 @@ class shoppingCart extends base {
     $this->notify('NOTIFIER_CART_RESTORE_CONTENTS_START');
     // insert current cart contents in database
     if (is_array($this->contents)) {
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach($this->contents as $products_id => $data) {
         //          $products_id = urldecode($products_id);
         $qty = $this->contents[$products_id]['qty'];
         $product_query = "select products_id
@@ -122,8 +122,7 @@ class shoppingCart extends base {
           $db->Execute($sql);
 
           if (isset($this->contents[$products_id]['attributes'])) {
-            reset($this->contents[$products_id]['attributes']);
-            while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+            foreach($this->contents[$products_id]['attributes'] as $option => $value) {
 
               //clr 031714 udate query to include attribute value. This is needed for text attributes.
               $attr_value = $this->contents[$products_id]['attributes_values'][$option];
@@ -285,8 +284,7 @@ class shoppingCart extends base {
       }
 
       if (is_array($attributes)) {
-        reset($attributes);
-        while (list($option, $value) = each($attributes)) {
+        foreach($attributes as $option => $value) {
           //CLR 020606 check if input was from text box.  If so, store additional attribute information
           //CLR 020708 check if text input is blank, if so do not add to attribute lists
           //CLR 030228 add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
@@ -299,7 +297,7 @@ class shoppingCart extends base {
               $option = substr($option, strlen(TEXT_PREFIX));
               $attr_value = stripslashes($value);
               $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
-              
+
               // -----
               // Check that the length of this TEXT attribute is less than or equal to its "Max Length" definition. While there
               // is some javascript on a product details' page that limits the number of characters entered, the customer
@@ -317,8 +315,7 @@ class shoppingCart extends base {
 
           if (!$blank_value) {
             if (is_array($value) ) {
-              reset($value);
-              while (list($opt, $val) = each($value)) {
+              foreach($value as $opt => $val) {
                 $this->contents[$products_id]['attributes'][$option.'_chk'.$val] = $val;
               }
             } else {
@@ -331,8 +328,7 @@ class shoppingCart extends base {
 
               //              if (zen_session_is_registered('customer_id')) zen_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text) values ('" . (int)$customer_id . "', '" . zen_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "', '" . zen_db_input($attr_value) . "')");
               if (is_array($value) ) {
-                reset($value);
-                while (list($opt, $val) = each($value)) {
+                foreach($value as $opt => $val) {
                   $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $opt);
                   $sql = "insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                                         (customers_id, products_id, products_options_id, products_options_value_id, products_options_sort_order)
@@ -376,7 +372,7 @@ class shoppingCart extends base {
    * @global object access to the db object
    */
   function update_quantity($products_id, $quantity = '', $attributes = '') {
-    global $db, $messageStack;
+    global $db, $messageStack, $mainPage;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' $products_id: ' . $products_id . ' $quantity: ' . $quantity, 'caution');
 
     if (!is_numeric($quantity) || $quantity < 0) {
@@ -393,7 +389,7 @@ class shoppingCart extends base {
     if (STOCK_ALLOW_CHECKOUT == 'false' && ($quantity > $chk_current_qty)) {
       $quantity = $chk_current_qty;
       if (!$this->flag_duplicate_msgs_set) {
-        $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$_GET[main_page]: ' . $_GET['main_page'] . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
+        $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$mainPage: ' . $mainPage . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
       }
     }
 // eof: adjust new quantity to be same as current in stock
@@ -410,8 +406,7 @@ class shoppingCart extends base {
     }
 
     if (is_array($attributes)) {
-      reset($attributes);
-      while (list($option, $value) = each($attributes)) {
+      foreach($attributes as $option => $value) {
         //CLR 020606 check if input was from text box.  If so, store additional attribute information
         //CLR 030108 check if text input is blank, if so do not update attribute lists
         //CLR 030228 add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
@@ -430,8 +425,7 @@ class shoppingCart extends base {
 
         if (!$blank_value) {
           if (is_array($value) ) {
-            reset($value);
-            while (list($opt, $val) = each($value)) {
+            foreach($value as $opt => $val) {
               $this->contents[$products_id]['attributes'][$option.'_chk'.$val] = $val;
             }
           } else {
@@ -446,8 +440,7 @@ class shoppingCart extends base {
             $attr_value = zen_db_input($attr_value);
           }
           if (is_array($value) ) {
-            reset($value);
-            while (list($opt, $val) = each($value)) {
+            foreach($value as $opt => $val) {
               $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $opt);
               $sql = "update " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                         set products_options_value_id = '" . (int)$val . "'
@@ -488,8 +481,7 @@ class shoppingCart extends base {
   function cleanup() {
     global $db;
     $this->notify('NOTIFIER_CART_CLEANUP_START');
-    reset($this->contents);
-    while (list($key,) = each($this->contents)) {
+    foreach($this->contents as $key => $data) {
       if (!isset($this->contents[$key]['qty']) || $this->contents[$key]['qty'] <= 0) {
         unset($this->contents[$key]);
         // remove from database
@@ -525,8 +517,7 @@ class shoppingCart extends base {
     $this->notify('NOTIFIER_CART_COUNT_CONTENTS_START');
     $total_items = 0;
     if (is_array($this->contents)) {
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach($this->contents as $products_id => $data) {
         $total_items += $this->get_quantity($products_id);
       }
     }
@@ -628,9 +619,8 @@ class shoppingCart extends base {
     if (!is_array($this->contents)) {
       return '';
     }
-    reset($this->contents);
     $product_id_list = array();
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $product_id_list[] = $products_id;
     }
     return implode(',', $product_id_list);
@@ -657,8 +647,7 @@ class shoppingCart extends base {
 // By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
 // Setting a define for ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL to 1 to calculate the Price Factor from Special rather than Price switches this to be based on Special, if it exists
     if (!defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL')) define('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
-    reset($this->contents);
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $total_before_discounts = 0;
       $freeShippingTotal = $productTotal = $totalOnetimeCharge = $totalOnetimeChargeNoDiscount = 0;
       $qty = $this->contents[$products_id]['qty'];
@@ -731,8 +720,7 @@ class shoppingCart extends base {
       $savedProductTotal = $productTotal;
       $attributesTotal = 0;
       if (isset($this->contents[$products_id]['attributes'])) {
-        reset($this->contents[$products_id]['attributes']);
-        while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+        foreach($this->contents[$products_id]['attributes'] as $option => $value) {
           $productTotal = 0;
           $adjust_downloads ++;
           /*
@@ -886,12 +874,10 @@ class shoppingCart extends base {
             // attributes_qty_prices_onetime
             $added_charge = 0;
             if ($attribute_price->fields['attributes_qty_prices_onetime'] != '') {
-              $chk_price = zen_get_products_base_price($products_id);
-              $chk_special = zen_get_products_special_price($products_id, false);
               $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], $qty);
               $totalOnetimeCharge += $added_charge;
         // calculate Product Price without Specials, Sales or Discounts
-              $added_charge = zen_get_attributes_qty_prices_onetime($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
+              $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], 1);
               $totalOnetimeChargeNoDiscount += $added_charge;
             }
             ////////////////////////////////////////////////
@@ -902,8 +888,7 @@ class shoppingCart extends base {
       $productTotal = $savedProductTotal + $attributesTotal;
       // attributes weight
       if (isset($this->contents[$products_id]['attributes'])) {
-        reset($this->contents[$products_id]['attributes']);
-        while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+        foreach($this->contents[$products_id]['attributes'] as $option => $value) {
           $attribute_weight_query = "select products_attributes_weight, products_attributes_weight_prefix
                                        from " . TABLE_PRODUCTS_ATTRIBUTES . "
                                        where products_id = '" . (int)$prid . "'
@@ -978,8 +963,7 @@ class shoppingCart extends base {
 
     if (isset($this->contents[$products_id]['attributes'])) {
 
-      reset($this->contents[$products_id]['attributes']);
-      while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+      foreach($this->contents[$products_id]['attributes'] as $option => $value) {
         $attributes_price = 0;
         $attribute_price_query = "select *
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
@@ -1079,9 +1063,7 @@ class shoppingCart extends base {
     $attributes_price_onetime = 0;
 
     if (isset($this->contents[$products_id]['attributes'])) {
-
-      reset($this->contents[$products_id]['attributes']);
-      while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+      foreach($this->contents[$products_id]['attributes'] as $option => $value) {
 
         $attribute_price_query = "select *
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
@@ -1149,8 +1131,7 @@ class shoppingCart extends base {
     $attribute_weight = 0;
 
     if (isset($this->contents[$products_id]['attributes'])) {
-      reset($this->contents[$products_id]['attributes']);
-      while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+      foreach($this->contents[$products_id]['attributes'] as $option => $value) {
         $attribute_weight_query = "select products_attributes_weight, products_attributes_weight_prefix
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
                                     where products_id = '" . (int)$products_id . "'
@@ -1195,8 +1176,7 @@ class shoppingCart extends base {
     if (!is_array($this->contents)) return false;
 
     $products_array = array();
-    reset($this->contents);
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $products_query = "select p.products_id, p.master_categories_id, p.products_status, pd.products_name, p.products_model, p.products_image,
                                   p.products_price, p.products_weight, p.products_tax_class_id,
                                   p.products_quantity_order_min, p.products_quantity_order_units, p.products_quantity_order_max,
@@ -1259,9 +1239,8 @@ class shoppingCart extends base {
             $this->remove($products_id);
           } else {
             if (isset($this->contents[$products_id]['attributes'])) {
-              reset($this->contents[$products_id]['attributes']);
               $chkcount = 0;
-              while (list(, $value) = each($this->contents[$products_id]['attributes'])) {
+              foreach($this->contents[$products_id]['attributes'] as $value) {
                 $chkcount ++;
                 $chk_attributes_exist_query = "select products_id
                                           from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -1299,27 +1278,30 @@ class shoppingCart extends base {
 
           // Check Quantity Max if not already an error on Minimum
           if ($fix_once == 0) {
-            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max']) {
+            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max'] && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['max']) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MAX_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
+              $this->flag_duplicate_quantity_msgs_set[(int)$prid]['max'] = true;
             }
           }
 
           if ($fix_once == 0) {
-            if ($check_quantity < $check_quantity_min) {
+            if ($check_quantity < $check_quantity_min && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['min']) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MIN_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
+              $this->flag_duplicate_quantity_msgs_set[(int)$prid]['min'] = true;
             }
           }
 
           // Check Quantity Units if not already an error on Quantity Minimum
           if ($fix_once == 0) {
             $check_units = $products->fields['products_quantity_order_units'];
-            if ( fmod_round($check_quantity,$check_units) != 0 ) {
+            if ( fmod_round($check_quantity,$check_units) != 0 && !$this->flag_duplicate_quantity_msgs_set[$products_id]['units'] ) {
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
+              $this->flag_duplicate_quantity_msgs_set[$products_id]['units'] = true;
             }
           }
 
@@ -1438,8 +1420,7 @@ class shoppingCart extends base {
     $gift_voucher = 0;
 
     if ( $this->count_contents() > 0 ) {
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach($this->contents as $products_id => $data) {
         $free_ship_check = $db->Execute("select products_virtual, products_model, products_price, product_is_always_free_shipping from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($products_id) . "'");
         $virtual_check = false;
         if (preg_match('/^GIFT/', addslashes($free_ship_check->fields['products_model']))) {
@@ -1456,8 +1437,7 @@ class shoppingCart extends base {
         // product_is_always_free_shipping = 2 is special requires shipping
         // Example: Product with download
         if (isset($this->contents[$products_id]['attributes']) and $free_ship_check->fields['product_is_always_free_shipping'] != 2) {
-          reset($this->contents[$products_id]['attributes']);
-          while (list(, $value) = each($this->contents[$products_id]['attributes'])) {
+          foreach($this->contents[$products_id]['attributes'] as $value) {
             $virtual_check_query = "select count(*) as total
                                       from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, "
                                       . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
@@ -1568,7 +1548,7 @@ class shoppingCart extends base {
    * @private
    */
   function unserialize($broken) {
-    for(reset($broken);$kv=each($broken);) {
+    foreach($broken as $kv) {
       $key=$kv['key'];
       if (gettype($this->$key)!="user function")
       $this->$key=$kv['value'];
@@ -1586,7 +1566,6 @@ class shoppingCart extends base {
     if (!is_array($this->contents)) return 0;
 
     // check if mixed is on
-    //      $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id='" . (int)$products_id . "' limit 1");
     $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id='" . zen_get_prid($products_id) . "' limit 1");
 
     // if mixed attributes is off return qty for current attribute selection
@@ -1603,8 +1582,7 @@ class shoppingCart extends base {
 
     // reset($this->contents); // breaks cart
     $check_contents = $this->contents;
-    reset($check_contents);
-    while (list($products_id, ) = each($check_contents)) {
+    foreach($check_contents as $products_id => $data) {
       $test_id = zen_get_prid($products_id);
 //$messageStack->add_session('header', 'Product: ' . $products_id . ' test_id: ' . $test_id . '<br>', 'error');
       if ($test_id == $chk_products_id) {
@@ -1642,8 +1620,7 @@ class shoppingCart extends base {
 
     // reset($this->contents); // breaks cart
     $check_contents = $this->contents;
-    reset($check_contents);
-    while (list($products_id, ) = each($check_contents)) {
+    foreach($check_contents as $products_id => $data) {
       $test_id = zen_get_prid($products_id);
       if ($test_id == $chk_products_id) {
         $in_cart_mixed_qty_discount_quantity += $check_contents[$products_id]['qty'];
@@ -1670,8 +1647,7 @@ class shoppingCart extends base {
     // compute total quantity for field
     $in_cart_check_qty=0;
 
-    reset($this->contents);
-    while (list($products_id, ) = each($this->contents)) {
+    foreach($this->contents as $products_id => $data) {
       $testing_id = zen_get_prid($products_id);
       // check if field it true
       $product_check = $db->Execute("select " . $check_what . " as check_it from " . TABLE_PRODUCTS . " where products_id='" . $testing_id . "' limit 1");
@@ -1741,6 +1717,8 @@ class shoppingCart extends base {
     global $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
+    $change_state = array();
+    $this->flag_duplicate_quantity_msgs_set = FALSE;
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
@@ -1750,18 +1728,39 @@ class shoppingCart extends base {
         // adjust quantity when not a value
         $chk_link = '<a href="' . zen_href_link(zen_get_info_page($_POST['products_id'][$i]), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($_POST['products_id'][$i]))) . '&products_id=' . $_POST['products_id'][$i]) . '">' . zen_get_products_name($_POST['products_id'][$i]) . '</a>';
         $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($_POST['cart_quantity'][$i]), 'caution');
-        $_POST['cart_quantity'][$i] = 0;
+//        $_POST['cart_quantity'][$i] = 0; // On an update, if an incorrect value was given, then with expectation that product is already in the cart, then the post quantity should equal what is in the cart, not 0...
+        $_POST['cart_quantity'][$i] = $this->get_quantity($_POST['products_id'][$i]);
         continue;
       }
       if ( in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array())) or $_POST['cart_quantity'][$i]==0) {
         $this->remove($_POST['products_id'][$i]);
       } else {
         $add_max = zen_get_products_quantity_order_max($_POST['products_id'][$i]); // maximum allowed
+        $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
+        // Adjust in cart quantities for product that have other cart
+        //   product dependencies and reduction of product to allow a larger increase
+        //   at each product's modification.
+        //   This will maximize the maximum product quantities available.
+        if ($chk_mixed == true && !array_key_exists(zen_get_prid($_POST['products_id'][$i]), $change_state)) {
+          $change_state[zen_get_prid($_POST['products_id'][$i])] = $this->in_cart_product_mixed_changed($_POST['products_id'][$i], 'decrease'); // Returns full data on products.
+          if (count($change_state[zen_get_prid($_POST['products_id'][$i])]['decrease']) > 0) {
+            // Verify minuses are good, and effect the items to be changed
+            //  This leaves only increases or netzero to be at play.
+            foreach ($change_state[zen_get_prid($_POST['products_id'][$i])]['decrease'] as /*$key => */$prod_id) {
+              $attributes = ($_POST['id'][$prod_id]) ? $_POST['id'][$prod_id] : '';
+              $this_curr_qty = $this->get_quantity($prod_id);
+              $this_new_qty = $this_curr_qty + $change_state[zen_get_prid($_POST['products_id'][$i])]['changed'][$prod_id];
+              $this->add_cart($prod_id, $this_new_qty, $attributes, false);
+              if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' prod_id: ' . $prod_id . ' this_new_qty: ' . $this_new_qty . ' this_curr_qty: ' . $this_curr_qty . ' change_state[zen_get_prid(_POST[products_id][i])][changed][prod_id]: ' . $change_state[zen_get_prid($_POST['products_id'][$i])]['changed'][$prod_id] . ' attributes: ' . print_r($attributes, true) . ' change_state: ' . print_r($change_state, true) . ' <br>', 'caution');
+            }
+            unset($prod_num, $prod_id, $attributes, $this_curr_qty, $this_new_qty);
+          }
+        }
         $cart_qty = $this->in_cart_mixed($_POST['products_id'][$i]); // total currently in cart
         if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'][$i] . ' cart_qty: ' . $cart_qty . ' <br>', 'caution');
         $new_qty = $_POST['cart_quantity'][$i]; // new quantity
         $current_qty = $this->get_quantity($_POST['products_id'][$i]); // how many currently in cart for attribute
-        $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
+//        $chk_mixed = zen_get_products_quantity_mixed($_POST['products_id'][$i]); // use mixed
 
         $new_qty = $this->adjust_quantity($new_qty, $_POST['products_id'][$i], 'shopping_cart');
 // bof: adjust new quantity to be same as current in stock
@@ -1777,14 +1776,6 @@ class shoppingCart extends base {
           $adjust_max= 'true';
         } else {
         if ($add_max != 0) {
-// bof: adjust new quantity to be same as current in stock
-            if (STOCK_ALLOW_CHECKOUT == 'false' && ($new_qty + $cart_qty > $chk_current_qty)) {
-                $adjust_new_qty = 'true';
-                $alter_qty = $chk_current_qty - $cart_qty;
-                $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
-                $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
-            }
-// eof: adjust new quantity to be same as current in stock
           // adjust quantity if needed
         switch (true) {
           case ($new_qty == $current_qty): // no change
@@ -1798,16 +1789,27 @@ class shoppingCart extends base {
           case (($add_max - $cart_qty + $new_qty >= $add_max) && $new_qty > $add_max && $chk_mixed == true):
             $adjust_max= 'true';
             $requested_qty = $new_qty;
-            $new_qty = $current_qty;
+//            $new_qty = $current_qty;
+            $alter_qty = $add_max - $cart_qty + $current_qty;
+            $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           case (($cart_qty + $new_qty - $current_qty > $add_max) && $chk_mixed == true):
             $adjust_max= 'true';
             $requested_qty = $new_qty;
-            $new_qty = $current_qty;
+//            $new_qty = $current_qty;
+            $alter_qty = $add_max - $cart_qty + $current_qty;
+            $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           default:
             $adjust_max= 'false';
           }
+
+// bof: notify about adjustment to new quantity to be same as current in stock or maximum to add
+          if ($adjust_max == 'true') {
+            $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id'][$i]), 'caution');
+          }
+// eof: notify about adjustment to new quantity to be same as current in stock or maximum to add
+
           $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
           $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
         } else {
@@ -2081,7 +2083,7 @@ class shoppingCart extends base {
     if (is_array($_POST['products_id']) && sizeof($_POST['products_id']) > 0) {
 //echo '<pre>'; echo var_dump($_POST['products_id']); echo '</pre>';
       $products_list = $_POST['products_id'];
-      while ( list( $key, $val ) = each($products_list) ) {
+      foreach($products_list as $key => $val) {
         $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
         if (is_numeric($val) && $val > 0) {
 
@@ -2165,7 +2167,7 @@ class shoppingCart extends base {
    * @param url parameters
    */
   function actionNotify($goto, $parameters) {
-    global $db;
+    global $db, $mainPage;
     if ($_SESSION['customer_id']) {
       if (isset($_GET['products_id'])) {
         $notify = $_GET['products_id'];
@@ -2174,7 +2176,7 @@ class shoppingCart extends base {
       } elseif (isset($_POST['notify'])) {
         $notify = $_POST['notify'];
       } else {
-        zen_redirect(zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action', 'notify', 'main_page'))));
+        zen_redirect(zen_href_link($mainPage, zen_get_all_get_params(array('action', 'notify', 'main_page'))));
       }
       if (!is_array($notify)) $notify = array($notify);
       for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
@@ -2190,7 +2192,7 @@ class shoppingCart extends base {
           $db->Execute($sql);
         }
       }
-     zen_redirect(zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action', 'notify', 'main_page'))));
+     zen_redirect(zen_href_link($mainPage, zen_get_all_get_params(array('action', 'notify', 'main_page'))));
 
     } else {
       $_SESSION['navigation']->set_snapshot();
@@ -2204,7 +2206,7 @@ class shoppingCart extends base {
    * @param url parameters
    */
   function actionNotifyRemove($goto, $parameters) {
-    global $db;
+    global $db, $mainPage;
     if ($_SESSION['customer_id'] && isset($_GET['products_id'])) {
       $check_query = "select count(*) as count
                         from " . TABLE_PRODUCTS_NOTIFICATIONS . "
@@ -2218,7 +2220,7 @@ class shoppingCart extends base {
                   and customers_id = '" . $_SESSION['customer_id'] . "'";
         $db->Execute($sql);
       }
-      zen_redirect(zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action', 'main_page'))));
+      zen_redirect(zen_href_link($mainPage, zen_get_all_get_params(array('action', 'main_page'))));
     } else {
       $_SESSION['navigation']->set_snapshot();
       zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -2537,6 +2539,104 @@ class shoppingCart extends base {
       $chk_cart_quantity = $this->in_cart_product_total_quantity_category($category_id);
     }
     return $chk_cart_quantity;
+  }
+
+
+/**
+ * calculate shopping cart stats for a products_id to obtain data about submitted (posted) items as compared to what is in the cart.
+ * USAGE:  $mix_increase = in_cart_product_mixed_changed($product_id, 'increase');
+ * USAGE:  $mix_decrease = in_cart_product_mixed_changed($product_id, 'decrease');
+ * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id);
+ * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id, 'all'); (Second value anything other than 'increase' or 'decrease')
+ *
+ * @param mixed $product_id
+ * return array
+ */
+  function in_cart_product_mixed_changed($product_id, $chk = false) {
+    global $db;
+
+    // check if mixed is on
+    $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id=" . zen_get_prid($product_id) . " limit 1");
+
+    // if mixed attributes is off identify that this product is the last of its kind (which is also the first of its kind).
+    if ($product->fields['products_quantity_mixed'] == '0') {
+      return true;
+    }
+
+    $product_changed = array();
+    $product_total_change = array();
+    $product_tracked_changed = array();
+    $product_last_changed = array();
+    $product_increase = array();
+    $product_decrease = array();
+
+    for ($i=0, $n=sizeof($_POST['products_id']/*$products*/); $i<$n; $i++) {
+      $products_id = $_POST['products_id'][$i];
+      $current_qty = $this->get_quantity($products_id); // $products[$i]['quantity']
+      if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
+        $_POST['cart_quantity'][$i] = $current_qty; // Default response behavior in cart.
+      }
+      if ($_POST['cart_quantity'][$i] != $current_qty) { // identify that quantity changed
+        $product_changed[$products_id] = $_POST['cart_quantity'][$i] - $current_qty;  // Identify that the specific product changed and by how much the customer increased it.
+        if (array_key_exists(zen_get_prid($products_id), $product_total_change)) {
+          $product_total_change[zen_get_prid($products_id)] = $product_total_change[zen_get_prid($products_id)] + $product_changed[$products_id];
+        } else {
+          $product_total_change[zen_get_prid($products_id)] = $product_changed[$products_id];
+        }
+
+        switch (true) {
+          case ($chk == 'increase'): // track only increases
+            if ($_POST['cart_quantity'][$i] > $current_qty) {
+              $product_tracked_changed[$products_id] = true;  // Identify that the specific product changed
+              $product_last_changed[zen_get_prid($products_id)] = $products_id; // Identify what the last changed product was.
+              $product_increase[] = $products_id;
+            }
+            break;
+          case ($chk == 'decrease'): // track only decreases
+            if ($_POST['cart_quantity'][$i] < $current_qty) {
+              $product_tracked_changed[$products_id] = true;  // Identify that the specific product changed
+              $product_last_changed[zen_get_prid($products_id)] = $products_id; // Identify what the last changed product was.
+              $product_decrease[] = $products_id;
+            }
+            break;
+          default: // track the last that had a difference in quantity.
+            $product_tracked_changed[$products_id] = true;  // Identify that the specific product changed
+            $product_last_changed[zen_get_prid($products_id)] = $products_id; // Identify what the last changed product was.
+            if ($_POST['cart_quantity'][$i] > $current_qty) {
+              $product_increase[] = $products_id;
+            }
+            if ($_POST['cart_quantity'][$i] < $current_qty) {
+              $product_decrease[] = $products_id;
+            }
+        }
+      }
+    }
+
+    $changed_array = array(
+                       'state'=>false,
+                       'changed' => $product_changed,
+                       'total_change' => $product_total_change[zen_get_prid($product_id)],
+                       'last_changed' => $product_last_changed[zen_get_prid($product_id)],
+                       'increase' => $product_increase,
+                       'decrease' => $product_decrease
+                     );
+
+    if (array_key_exists($product_id, $product_changed)) {
+      if ($product_total_change[zen_get_prid($product_id)] == '0') {
+        $changed_array['state'] = 'netzero';
+        return $changed_array;
+      }
+
+      if (array_key_exists($product_id, $product_tracked_changed)) {
+        if ($product_last_changed[zen_get_prid($product_id)] == $product_id) {
+          $changed_array['state'] = true;
+          return $changed_array;
+        }
+      }
+    }
+
+    return $changed_array;
+
   }
 
 }

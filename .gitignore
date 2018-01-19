@@ -22,3 +22,7 @@ dev-*.*
 .idea
 # dbv
 /data/meta/revision
+localconfig_*.php
+!localconfig_travis.php
+!localconfig_EXAMPLE.php
+!localconfig_vagrant.php

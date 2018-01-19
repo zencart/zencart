@@ -28,12 +28,12 @@
     <!-- Font Awesome Icons -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <?php /** CDN for jQuery core **/ ?>
-    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script>window.jQuery || document.write('<script src="includes/template/javascript/jquery-2.2.4.min.js"><\/script>');</script>
     <script src="includes/template/javascript/zcJSFramework.js"></script>
     <link rel="stylesheet" type="text/css" href="includes/template/css/jquery-ui.min.css" id="jQueryUIThemeCSS">
     <?php /** CDN for jQuery UI components **/ ?>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
     <script src="includes/template/javascript/jquery-ui-i18n.min.js"></script>
     <script src="includes/template/javascript/bootstrap.min.js"></script>
@@ -47,10 +47,10 @@
     <![endif]-->
     <link rel="stylesheet" type="text/css" href="includes/template/javascript/select2-master/select2.css" id="select2CSS">
     <link rel="stylesheet" type="text/css" href="includes/template/css/menu.css" id="menuCSS">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css">
     <script src="includes/template/javascript/select2-master/select2.js"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" href="includes/template/javascript/gridstack.js-master/dist/gridstack.css" />
     <link rel="stylesheet" href="includes/template/javascript/gridstack.js-master/dist/gridstack-extra.css" />
     <script type="text/javascript" src='includes/template/javascript/lodash.js'></script>

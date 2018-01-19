@@ -24,7 +24,6 @@ class LeadMediaManagerClips extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_MEDIA_CLIPS,
-                'alias' => 'mtp',
                 'fkeyFieldLeft' => 'clip_id',
             ),
             'whereClauses' => array(

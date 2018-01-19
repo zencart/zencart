@@ -241,6 +241,9 @@ class order extends base {
 
       $this->info['tax_groups']["{$this->products[$index]['tax']}"] = 1;
 
+      $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $product, $index);
+
+
       $index++;
     } // end loop $orders_products as $product
 
@@ -412,6 +415,7 @@ class order extends base {
           $taxCountryId = $tax_address->fields['entry_country_id'];
           $taxZoneId = $tax_address->fields['entry_zone_id'];
         }
+        $this->notify('NOTIFY_ORDER_CART_TAX_ADDRESS', $tax_address);
       }
     }
 
@@ -525,8 +529,7 @@ class order extends base {
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
       if ($products[$i]['attributes']) {
         $subindex = 0;
-        reset($products[$i]['attributes']);
-        while (list($option, $value) = each($products[$i]['attributes'])) {
+        foreach ($products[$i]['attributes'] as $option => $value) {
 
           $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
                                       pa.options_values_price, pa.price_prefix
@@ -688,6 +691,8 @@ class order extends base {
               $this->info['tax_groups'][$taxDescription] = $taxAdd;
           }
       }
+      
+      $this->notify('NOTIFY_ORDER_CART_TAX_CALCULATIONS_END', array('index' => $index, 'tax_add' => $tax_add, 'shown_price' => $shown_price, 'taxRates' => $taxRates));
   }
   /**
    * Creates a new order from the object's arrays built from the cart() method triggered by the constructor
@@ -772,7 +777,7 @@ class order extends base {
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
                             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . zen_get_ip_address(),
-                            'order_weight' => $this->info['order_weight'],
+                            'order_weight' => $this->info['order_weight'] ?: 0, // can't insert empty string into float field
                             'language_code' => $this->info['language_code'],
                             );
 
@@ -1269,6 +1274,9 @@ class order extends base {
     if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
       $extra_info = email_collect_extra_info('', '', $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], $this->customer['telephone']);
       $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
+
+      // Alternatively specify a different HTML email template for the admin-copy of the confirmation email (useful for specialized layouts)
+      // $html_msg['EMAIL_TEMPLATE_FILENAME'] = DIR_FS_EMAIL_TEMPLATES . "email_template_admin_orders"; // (".html" is auto-appended, so don't add it here)
 
       // include authcode and transaction id in admin-copy of email
       if ($GLOBALS[$payment_class]->auth_code || $GLOBALS[$payment_class]->transaction_id) {

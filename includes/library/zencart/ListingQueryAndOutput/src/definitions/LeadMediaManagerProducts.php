@@ -28,13 +28,11 @@ class LeadMediaManagerProducts extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_MEDIA_TO_PRODUCTS,
-                'alias' => 'mtp',
                 'fkeyFieldLeft' => 'association_id',
             ),
             'joinTables' => array(
                 'TABLE_MEDIA_MANAGER' => array(
                     'table' => TABLE_MEDIA_MANAGER,
-                    'alias' => 'mm',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'media_id',
                     'fkeyFieldRight' => 'media_id',

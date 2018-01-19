@@ -45,7 +45,7 @@ UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01'
 
 ALTER TABLE configuration ADD val_function text default NULL AFTER set_function;
 
-DELETE FROM configuration WHERE configuration_key = 'SESSION_WRITE_DIRECTORY';
+DELETE FROM configuration WHERE configuration_key in ('SESSION_WRITE_DIRECTORY', 'SESSION_CHECK_USER_AGENT', 'SESSION_CHECK_IP_ADDRESS', 'SESSION_CHECK_SSL_SESSION_ID');
 
 UPDATE configuration set configuration_title = 'Log Page Parse Time', configuration_description = 'Record (to a log file) the time it takes to parse a page' WHERE configuration_key = 'STORE_PAGE_PARSE_TIME';
 UPDATE configuration set configuration_title = 'Log Destination', configuration_description = 'Directory and filename of the page parse time log' WHERE configuration_key = 'STORE_PAGE_PARSE_TIME_LOG';
@@ -132,6 +132,8 @@ ALTER TABLE admin ADD mobile_phone VARCHAR(20) NOT NULL DEFAULT '' AFTER admin_e
 
 ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE orders ADD language_code VARCHAR(2) NOT NULL DEFAULT 'en';
+ALTER TABLE orders MODIFY order_total decimal(15,4) default NULL;
+ALTER TABLE orders MODIFY order_tax decimal(15,4) default NULL;
 
 ALTER TABLE coupons ADD coupon_product_count TINYINT(1) NOT NULL DEFAULT '0' AFTER coupon_is_valid_for_sales;
 

@@ -117,7 +117,7 @@ abstract class AbstractDefinition extends \base
     {
         $showFilterForm = false;
         if (isset($this->tplVars['filter'])) {
-            $showFilterForm = count($this->tplVars['filter'] > 0);
+            $showFilterForm = count($this->tplVars['filter']) > 0;
         }
         $this->tplVars ['showFilterForm'] = $showFilterForm;
         $this->tplVars ['title'] = issetorArray($this->outputLayout, 'boxTitle', '');
@@ -304,5 +304,13 @@ abstract class AbstractDefinition extends \base
     public function setListingQuery(array $listingQuery)
     {
         $this->listingQuery = $listingQuery;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMainModel()
+    {
+        return $this->mainModel;
     }
 }

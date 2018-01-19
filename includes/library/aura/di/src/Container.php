@@ -11,6 +11,8 @@ namespace Aura\Di;
 use Aura\Di\Injection\Factory;
 use Aura\Di\Injection\InjectionFactory;
 use Aura\Di\Injection\Lazy;
+use Aura\Di\Injection\LazyArray;
+use Aura\Di\Injection\LazyCallable;
 use Aura\Di\Injection\LazyGet;
 use Aura\Di\Injection\LazyInclude;
 use Aura\Di\Injection\LazyInterface;
@@ -346,6 +348,36 @@ class Container implements ContainerInterface
 
     /**
      *
+     * Returns a lazy object that wraps an array that may contain
+     * (potentially lazy) callables that get invoked at calltime.
+     *
+     * @param array $callables The (potentially lazy) array of callables to invoke.
+     *
+     * @return LazyArray
+     *
+     */
+    public function lazyArray(array $callables)
+    {
+        return $this->injectionFactory->newLazyArray($callables);
+    }
+
+    /**
+     *
+     * Returns a lazy object that invokes a (potentially lazy) callable with
+     * parameters supplied at calltime.
+     *
+     * @param callable $callable The (potentially lazy) callable.
+     *
+     * @return LazyCallable
+     *
+     */
+    public function lazyCallable($callable)
+    {
+        return $this->injectionFactory->newLazyCallable($callable);
+    }
+
+    /**
+     *
      * Returns a lazy object that gets a service.
      *
      * @param string $service The service name; it does not need to exist yet.
@@ -507,5 +539,16 @@ class Container implements ContainerInterface
             $mergeParams,
             $mergeSetters
         );
+    }
+
+    /**
+     *
+     * Returns a callable object to resolve a service or new instance of a class
+     *
+     * @return ResolutionHelper
+     */
+    public function newResolutionHelper()
+    {
+        return new ResolutionHelper($this);
     }
 }

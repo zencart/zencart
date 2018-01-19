@@ -173,7 +173,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini !='off' && ($v
 }
 
 // check GV release queue and alert store owner
-if (SHOW_GV_QUEUE==true && (zen_is_superuser() || check_page(FILENAME_ORDERS, array()))) {
+if (MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN == 'true' && (zen_is_superuser() || check_page(FILENAME_ORDERS, array()))) {
   $new_gv_queue= $db->Execute("select * from " . TABLE_COUPON_GV_QUEUE . " where release_flag='N'");
   $new_gv_queue_cnt = 0;
   if ($new_gv_queue->RecordCount() > 0) {

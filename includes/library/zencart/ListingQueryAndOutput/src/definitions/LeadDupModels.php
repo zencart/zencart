@@ -23,13 +23,11 @@ class LeadDupModels extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_PRODUCTS,
-                'alias' => 'p',
                 'fkeyFieldLeft' => 'products_id',
             ),
             'joinTables' => array(
                 'TABLE_PRODUCTS_NAME' => array(
                     'table' => TABLE_PRODUCTS_DESCRIPTION,
-                    'alias' => 'pd',
                     'type' => 'left',
                     'fkeyFieldLeft' => 'products_id',
                     'addColumns' => true

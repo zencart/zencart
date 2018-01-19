@@ -91,7 +91,6 @@
   if (isset($product['attributes']) && is_array($product['attributes'])) {
   echo '<div class="cartAttribsList">';
   echo '<ul>';
-    reset($product['attributes']);
     foreach ($product['attributes'] as $option => $value) {
 ?>
 

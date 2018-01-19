@@ -60,7 +60,7 @@ require (DIR_WS_MODULES . zen_get_module_directory ( 'require_languages.php' ));
 
 if (true)
 {
-  $modelFactory = new ZenCart\Model\ModelFactory($db, $capsule);
+  $modelFactory = new App\Model\ModelFactory($db, $capsule);
   $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
   $box = new ZenCart\ListingQueryAndOutput\definitions\ProductsPage($zcRequest, $modelFactory);
   $paginator = new ZenCart\Paginator\Paginator($zcRequest);

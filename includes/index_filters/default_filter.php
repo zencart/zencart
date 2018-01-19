@@ -113,7 +113,6 @@ if (!defined('IS_ADMIN_FLAG')) {
         } else {
 // sort by products_sort_order when PRODUCT_LISTING_DEFAULT_SORT_ORDER is left blank
 // for reverse, descending order use:
-//       $listing_sql .= " order by p.products_sort_order desc, pd.products_name";
           $listing_sql .= " order by p.products_sort_order, pd.products_name";
           break;
         }

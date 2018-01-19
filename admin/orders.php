@@ -115,6 +115,9 @@
         $order->doVoid();
         zen_redirect(zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit'));
         break;
+      default:
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_DEFAULT_ACTION', $oID, $order);
+        break;
     }
   }
 require('includes/admin_html_head.php');
@@ -524,7 +527,14 @@ function couponpopupWindow(url) {
         </table></td>
       </form></tr>
       <tr>
-        <td colspan="2" align="right" class="noprint"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $order->id) . '" target="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $order->id) . '" target="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action'))) . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'; ?></td>
+<?php
+        // -----
+        // Enable the addition of extra buttons when editing the order.
+        //
+        $extra_buttons = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EDIT_BUTTONS', $oID, $order, $extra_buttons);
+?>
+        <td colspan="2" align="right" class="noprint"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $order->id) . '" target="_blank">' . zen_image_button('button_invoice.gif', IMAGE_ORDERS_INVOICE) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $order->id) . '" target="_blank">' . zen_image_button('button_packingslip.gif', IMAGE_ORDERS_PACKINGSLIP) . '</a> <a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action'))) . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>' . $extra_buttons; ?></td>
       </tr>
 <?php
 // check if order has open gv
@@ -539,11 +549,13 @@ function couponpopupWindow(url) {
 ?>
 <?php
   } else {
+      $extra_legends = '';
+      $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_LEGEND', array (), $extra_legends);
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="smallText"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH; ?>
+            <td class="smallText"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH . $extra_legends; ?>
           </td>
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -601,6 +613,8 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and (int)$oID > 0) {
       if ((strtoupper($orders->fields['delivery_street_address']) != strtoupper($orders->fields['billing_street_address']) and trim($orders->fields['delivery_street_address']) != '')) {
         $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
       }
+      $extra_action_icons = '';
+      $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LISTING_ROW', array (), $orders->fields, $show_difference, $extra_action_icons);
       $show_payment_type = $orders->fields['payment_module_code'] . '<br />' . $orders->fields['shipping_module_code'];
 ?>
                 <td class="dataTableContent" align="right"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
@@ -611,7 +625,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and (int)$oID > 0) {
                 <td class="dataTableContent" align="right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <td class="dataTableContent" align="center"><?php echo (zen_get_orders_comments($orders->fields['orders_id']) == '' ? '' : zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16)); ?></td>
 
-                <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?><?php if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>' . $extra_action_icons; ?><?php if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $orders->MoveNext();

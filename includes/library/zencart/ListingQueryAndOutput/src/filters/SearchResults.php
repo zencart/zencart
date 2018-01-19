@@ -56,7 +56,6 @@ class SearchResults extends AbstractFilter implements FilterInterface
         }
         $this->listingQuery['joinTables'] ['TABLE_TAX_RATES'] = array(
             'table' => TABLE_TAX_RATES,
-            'alias' => 'tr',
             'type' => 'left',
             'fkeyFieldLeft' => 'products_tax_class_id',
             'fkeyFieldRight' => 'tax_class_id',
@@ -64,12 +63,11 @@ class SearchResults extends AbstractFilter implements FilterInterface
         );
         $this->listingQuery['joinTables'] ['TABLE_ZONES_TO_GEO_ZONES'] = array(
             'table' => TABLE_ZONES_TO_GEO_ZONES,
-            'alias' => 'gz',
             'type' => 'left',
             'fkeyFieldLeft' => 'tax_zone_id',
             'fkeyFieldRight' => 'geo_zone_id',
             'fkeyTable' => 'TABLE_TAX_RATES',
-            'customAnd' => 'AND (gz.zone_country_id IS null OR gz.zone_country_id = 0 OR gz.zone_country_id = :zoneCountryId:) AND (gz.zone_id IS null OR gz.zone_id = 0 OR gz.zone_id = :zoneId:)',
+            'customAnd' => 'AND (zone_country_id IS null OR zone_country_id = 0 OR zone_country_id = :zoneCountryId:) AND (zone_id IS null OR zone_id = 0 OR zone_id = :zoneId:)',
             'addColumns' => FALSE
         );
 
@@ -91,10 +89,10 @@ class SearchResults extends AbstractFilter implements FilterInterface
     protected function startWhereClauses()
     {
         $this->listingQuery['whereClauses'] [] = array(
-            'custom' => ' AND (p.products_status = 1 '
+            'custom' => ' AND (' . TABLE_PRODUCTS . '.products_status = 1 '
         );
         $this->listingQuery ['whereClauses'] [] = array(
-            'custom' => ' AND pd.language_id = :languageId: '
+            'custom' => ' AND ' . TABLE_PRODUCTS_DESCRIPTION . '.language_id = :languageId: '
         );
         $this->listingQuery['bindVars'] [] = array(
             ':languageId:',
@@ -207,7 +205,7 @@ class SearchResults extends AbstractFilter implements FilterInterface
             );
         } else {
             $this->listingQuery ['whereClauses'] [] = array(
-                'custom' => "(pd.products_name LIKE '%:keywords" . $ptr . ":%' OR p.products_model LIKE '%:keywords" . $ptr . ":%' OR m.manufacturers_name LIKE '%:keywords" . $ptr . ":%'"
+                'custom' => "(products_name LIKE '%:keywords" . $ptr . ":%' OR products_model LIKE '%:keywords" . $ptr . ":%' OR manufacturers_name LIKE '%:keywords" . $ptr . ":%'"
             );
             $this->listingQuery['bindVars'] [] = array(
                 ':keywords' . $ptr . ':',
@@ -215,14 +213,14 @@ class SearchResults extends AbstractFilter implements FilterInterface
                 'noquotestring'
             );
             $this->listingQuery['whereClauses'] [] = array(
-                'custom' => " OR (mtpd.metatags_keywords LIKE '%:keywords" . $ptr . ":%' AND mtpd.metatags_keywords !='')"
+                'custom' => " OR (metatags_keywords LIKE '%:keywords" . $ptr . ":%' AND metatags_keywords !='')"
             );
             $this->listingQuery ['whereClauses'] [] = array(
-                'custom' => " OR (mtpd.metatags_description LIKE '%:keywords" . $ptr . ":%' AND mtpd.metatags_description !='')"
+                'custom' => " OR (metatags_description LIKE '%:keywords" . $ptr . ":%' AND metatags_description !='')"
             );
             if ($searchDescription == '1') {
                 $this->listingQuery['whereClauses'] [] = array(
-                    'custom' => " OR pd.products_description LIKE '%:keywords" . $ptr . ":%'"
+                    'custom' => " OR products_description LIKE '%:keywords" . $ptr . ":%'"
                 );
             }
             $this->listingQuery['whereClauses'] [] = array(
@@ -300,13 +298,13 @@ class SearchResults extends AbstractFilter implements FilterInterface
 
         $map = [];
         $map[] = array(DISPLAY_PRICE_WITH_TAX == 'true', $priceFrom, ':priceFrom:',
-                     " AND (p.products_price_sorter * IF(gz.geo_zone_id IS null, 1, 1 + (tr.tax_rate / 100)) >= :priceFrom:)");
+                     " AND (products_price_sorter * IF(geo_zone_id IS null, 1, 1 + (tax_rate / 100)) >= :priceFrom:)");
         $map[] = array(DISPLAY_PRICE_WITH_TAX == 'true', $priceTo, ':priceTo:',
-                       " AND (p.products_price_sorter * IF(gz.geo_zone_id IS null, 1, 1 + (tr.tax_rate / 100)) >= :priceFrom:)");
+                       " AND (products_price_sorter * IF(geo_zone_id IS null, 1, 1 + (tax_rate / 100)) >= :priceFrom:)");
         $map[] = array(DISPLAY_PRICE_WITH_TAX == 'false', $priceFrom, ':priceFrom:',
-                       " AND (p.products_price_sorter >= :priceFrom:)");
+                       " AND (products_price_sorter >= :priceFrom:)");
         $map[] = array(DISPLAY_PRICE_WITH_TAX == 'false', $priceTo, ':priceTo:',
-                       "  AND (p.products_price_sorter <= :priceTo:)");
+                       "  AND (products_price_sorter <= :priceTo:)");
 
         $this->handleTaxWhereClausesMap($map);
 
@@ -315,7 +313,7 @@ class SearchResults extends AbstractFilter implements FilterInterface
         }
         if (((zen_not_null($priceFrom))) || (zen_not_null($priceTo))) {
             $this->listingQuery ['whereClauses'] [] = array(
-                'custom' => "   GROUP BY p.products_id, tr.tax_priority"
+                'custom' => "   GROUP BY products_id, tax_priority"
             );
         }
     }

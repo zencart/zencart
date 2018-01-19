@@ -42,10 +42,12 @@ class SalesGraphReport extends AbstractWidget
     }
 
     $days = array();
-    $result = $db->Execute("select o.date_purchased as date_purchased, date(o.date_purchased) as dateshort, count(date_purchased) as number_of_orders, sum(ot.value) as sum_of_orders
+    $result = $db->Execute("select date(o.date_purchased) as date_purchased,
+                            count(date_purchased) as number_of_orders, 
+                            sum(ot.value) as sum_of_orders
                             from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and class = 'ot_total') 
                             group by date(date_purchased)
-                            having o.date_purchased >= (CURDATE() - INTERVAL 3 DAY)
+                            having date_purchased >= (CURDATE() - INTERVAL 3 DAY)
                             order by date_purchased DESC");
     foreach($result as $row) {
         $days[] = array('count' => $row['number_of_orders'], 'sales' => $currencies->format($row['sum_of_orders']));

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: customers.php 6352 2007-05-20 21:05:01Z drbyte $
+ * @version $Id: customers.php $
  */
 
 define('HEADING_TITLE', 'Customers');
@@ -67,6 +67,8 @@ define('ADDRESS_BOOK_TITLE', 'Address Book Entries');
 define('PRIMARY_ADDRESS', '(primary address)');
 define('TEXT_MAXIMUM_ENTRIES', '<span class="coming"><strong>NOTE:</strong></span> A maximum of %s address book entries allowed.');
 define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | 1 of  ');
+
+define('ENTRY_EMAIL_NEVER_SEND_EMAILS', 'Never (Note: this will prevent ALL emails, including important order-confirmation messages!)');
 
 // Title of column in customer overview admin page
 define('TABLE_HEADING_ACCOUNT_TYPE', 'Account Type');

@@ -29,7 +29,7 @@ class AlphaFilter extends AbstractFilter implements FilterInterface
                 $elements = explode(':', $alphaSortListSearch [$j]);
                 $pattern = str_replace(',', '', $elements [1]);
                 $listingQuery ['whereClauses'] [] = array(
-                    'custom' => " AND pd.products_name REGEXP '^[" . $pattern . "]' "
+                    'custom' => " AND " . TABLE_PRODUCTS_DESCRIPTION . ".products_name REGEXP '^[" . $pattern . "]' "
                 );
                 break;
             }

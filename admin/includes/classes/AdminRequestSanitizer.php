@@ -192,28 +192,28 @@ class AdminRequestSanitizer extends base
     }
 
     /**
-     * @param $paramaterName
+     * @param $parameterName
      * @param $parameterDefinition
      */
-    private function runSpecificSanitizer($paramaterName, $parameterDefinition)
+    private function runSpecificSanitizer($parameterName, $parameterDefinition)
     {
         if ($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'builtin') {
-            $this->processBuiltIn($parameterDefinition['sanitizerType'], $paramaterName, $parameterDefinition);
+            $this->processBuiltIn($parameterDefinition['sanitizerType'], $parameterName, $parameterDefinition);
         }
         if ($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'custom') {
-            $this->processCustom($parameterDefinition['sanitizerType'], $paramaterName, $parameterDefinition);
+            $this->processCustom($parameterDefinition['sanitizerType'], $parameterName, $parameterDefinition);
         }
     }
 
     /**
-     * @param $parameterDefinitions
+     * @param array $parameterDefinitions
      * @return bool
      */
     private function findSanitizerFromContext($parameterDefinitions)
     {
         foreach ($parameterDefinitions as $parameterDefinition) {
             $result = false;
-            if (count($parameterDefinition['pages'])) {
+            if (!empty($parameterDefinition['pages'])) {
                 if (in_array($this->currentPage, $parameterDefinition['pages'])) {
                     $result = $parameterDefinition;
                     break;
@@ -232,7 +232,7 @@ class AdminRequestSanitizer extends base
     {
         foreach ($parameterDefinitions as $parameterDefinition) {
             $result = false;
-            if (count($parameterDefinition['pages'])) {
+            if (!empty($parameterDefinition['pages'])) {
                 continue;
             }
             if ($this->parameterExistsForMethod($parameterName, $parameterDefinition)) {

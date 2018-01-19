@@ -4,7 +4,7 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: zcwilt  Fri Apr 22 22:16:43 2015 +0000 Modified in v1.5.5 $
@@ -154,8 +154,7 @@
     }
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -186,8 +185,7 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'cmd', 'error', 'x', 'y'));
     $fields = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
@@ -649,11 +647,12 @@ function zen_get_minutes_since($timestamp) {
  * @return string
  */
   function zen_create_sort_heading($sortby, $colnum, $heading) {
+    global $mainPage;
     $sort_prefix = '';
     $sort_suffix = '';
 
     if ($sortby) {
-      $sort_prefix = '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . zen_output_string(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
+      $sort_prefix = '<a href="' . zen_href_link($mainPage, zen_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . zen_output_string(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
       $sort_suffix = (substr($sortby, 0, 1) == $colnum ? (substr($sortby, 1, 1) == 'a' ? PRODUCT_LIST_SORT_ORDER_ASCENDING : PRODUCT_LIST_SORT_ORDER_DESCENDING) : '') . '</a>';
     }
 
@@ -671,9 +670,9 @@ function zen_get_minutes_since($timestamp) {
     $uprid = $prid;
     if ( !is_array($params) || strstr($prid, ':')) return $prid;
 
-    while (list($option, $value) = each($params)) {
+    foreach($params as $option => $value) {
       if (is_array($value)) {
-        while (list($opt, $val) = each($value)) {
+        foreach($value as $opt => $val) {
           $uprid = $uprid . '{' . $option . '}' . trim($opt);
         }
       } else {
@@ -694,7 +693,7 @@ function zen_get_minutes_since($timestamp) {
  */
   function zen_get_prid($uprid) {
     $pieces = explode(':', $uprid);
-    return $pieces[0];
+    return (int)$pieces[0];
   }
 
 
@@ -767,7 +766,7 @@ function zen_get_minutes_since($timestamp) {
 
     $get_string = '';
     if (sizeof($array) > 0) {
-      while (list($key, $value) = each($array)) {
+      foreach($array as $key => $value) {
         if ( (!in_array($key, $exclude)) && ($key != 'x') && ($key != 'y') ) {
           $get_string .= $key . $equals . $value . $separator;
         }
@@ -867,19 +866,6 @@ function zen_get_minutes_since($timestamp) {
     } else {
       return false;
     }
-  }
-
-/**
- * Alias to setcookie() but with reasonable defaults
- * @param string $name cookie name
- * @param string $value
- * @param int $expire
- * @param string $path
- * @param string $domain
- * @param int $secure flag
- */
-  function zen_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = 0) {
-    setcookie($name, $value, $expire, $path, $domain, $secure);
   }
 
   /**
@@ -1058,7 +1044,7 @@ function zen_get_minutes_since($timestamp) {
 
     $result = $db->Execute($sql);
 
-    // check whether coupon has been flagged for not valid with sales
+    // check whether coupon has been flagged as valid for sales
     if ($result->fields['coupon_is_valid_for_sales']) {
       return true;
     }
@@ -1072,7 +1058,7 @@ function zen_get_minutes_since($timestamp) {
     if ($chk_product_on_sale) {
       return false;
     }
-    return true; // is on special or sale
+    return true; // is not on special or sale
   }
 
 /**
@@ -1100,8 +1086,7 @@ function zen_get_minutes_since($timestamp) {
         return trim(zen_sanitize_string(stripslashes($string)));
       }
     } elseif (is_array($string)) {
-      reset($string);
-      while (list($key, $value) = each($string)) {
+      foreach($string as $key => $value) {
         $string[$key] = zen_db_prepare_input($value);
       }
     }
@@ -1118,15 +1103,13 @@ function zen_get_minutes_since($timestamp) {
  */
   function zen_db_perform($table, $data, $action = 'insert', $parameters = '') {
     global $db;
-    reset($data);
     if (strtolower($action) == 'insert') {
       $query = 'INSERT INTO ' . $table . ' (';
-      while (list($columns, ) = each($data)) {
+      foreach($data as $columns => $value) {
         $query .= $columns . ', ';
       }
       $query = substr($query, 0, -2) . ') VALUES (';
-      reset($data);
-      while (list(, $value) = each($data)) {
+      foreach($data as $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= 'now(), ';
@@ -1142,7 +1125,7 @@ function zen_get_minutes_since($timestamp) {
       $query = substr($query, 0, -2) . ')';
     } elseif (strtolower($action) == 'update') {
       $query = 'UPDATE ' . $table . ' SET ';
-      while (list($columns, $value) = each($data)) {
+      foreach($data as $columns => $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= $columns . ' = now(), ';
@@ -1741,6 +1724,133 @@ function zen_get_minutes_since($timestamp) {
     $date2_set = mktime(0,0,0, $m2, $d2, $y2);
 
     return(round(($date2_set-$date1_set)/(60*60*24)));
+  }
+
+/**
+ * function to evaluate two date spans and identify if they overlap or not.
+ * Returns true (overlap) if:
+ *  A datespan is provided as an array and that array does not have the key 'start' nor 'end' (warning log entry also made by trigger_error).
+ *  When seeking overlaps in the future:
+ *  -  If the date spans both never end, OR
+ *  -  If one date span never ends then if the maximum of the two start dates is less than the known to be future end
+ *       date where the start date for a forever in the past date range was set to the earliest of the current date or associated end date. OR
+ *  -  If the end dates are specified, then if the end dates occur in the future and the maximum start date is less
+ *       than the minimum end date where the start date for a forever in the past date range was set to the earliest of the current date or associated end date.
+ *  When seeking overlaps in the past:
+ *  -  If the date spans both never end and they both started before today, OR
+ *  -  If they both started forever in the past
+ *  -  If the end dates are specified, then if the start dates occur in the past and the maximum start date is less
+ *       than the minimum end date.
+ *  Otherwise when seeking the presence of overlap at all (and the basis for the above logic), then basically
+ *    if the maximum start date (last date range) is before the earliest end date, then that indicates that the
+ *    two were active at the same time.
+ *
+ * Returns false (no overlap) otherwise:
+ *
+ * Usage: zen_datetime_overlap(array('start'=>$startdate, 'end'=>$enddate), array('start'=>$startdate, 'end'=>$enddate));
+ *        zen_datetime_overlap(array('start'=>$startdate, 'end'=>$enddate), array('start'=>$startdate, 'end'=>$enddate), null, null, {default:true, false, 'past'});
+ *        (if dates provided where null is in line above, they will be disregarded because of the array in positions 1 and 2.)
+ *        zen_datetime_overlap($startdate1, array('start'=>$startdate, 'end'=>$enddate), $enddate1, null, {default:true, false, 'past'});
+ *        zen_datetime_overlap(array('start'=>$startdate, 'end'=>$enddate), $startdate2, null, $enddate2, {default:true, false, 'past'});
+ *        zen_datetime_overlap($startdate1, $startdate2, $enddate1, $enddate2, {default:true, false, 'past'});
+ *        Providing $future_only of true (or as default not providing anything), the dates are inspected for overlap
+ *
+ * $start1 array() with keys 'start' and 'end' or as a raw_datetime or raw_date, or if null then this datetime is considered as in place forever in the past.
+ * $start2 array() with keys 'start' and 'end' or as a raw_datetime or raw_date, or if null then this datetime is considered as in place forever in the past.
+ * $end1 raw_datetime, raw_date or effectively blank (if $start1 is array, the value here is replaced, otherwise this datetime is considered eternally effective)
+ * $end2 raw_datetime, raw_date or effectively blank (if $start2 is array, the value here is replaced, otherwise this datetime is considered eternally effective)
+ * $future_only boolean or string of 'past': values should be true, false, or 'past'
+ * returns a boolean true/false.  In error case of array provided without proper keys true returned and warning log also generated
+ **/
+
+  function zen_datetime_overlap($start1, $start2, $end1 = NULL, $end2 = NULL, $future_only = true) {
+    $cur_datetime = date("Y-m-d h:i:s", time());
+
+    // BOF if variable is provided as an array, validate properly setup and if so, assign and replace the other applicable values.
+    if (is_array($start1)) {
+      if (!array_key_exists('start', $start1) || !array_key_exists('end', $start1)) {
+        trigger_error('Missing date/time array key(s) start and/or end.', E_USER_WARNING);
+        // array is not properly defined to support further operation, therefore to prevent potential downstream issues fail safe and identify that an overlap has occurred.
+        return true;
+      } else {
+        $end1 = $start1['start'];
+        $start1 = $start1['end'];
+      }
+    }
+    if (is_array($start2)) {
+      if (!array_key_exists('start', $start2) || !array_key_exists('end', $start2)) {
+        trigger_error('Missing date/time array key(s) start and/or end.', E_USER_WARNING);
+        // array is not properly defined to support further operation, therefore to prevent potential downstream issues fail safe and identify that an overlap has occurred.
+        return true;
+      } else {
+        $end2 = $start2['start'];
+        $start2 = $start2['end'];
+      }
+    }
+    // EOF if variable is provided as an array, validate properly setup and if so, assign and replace the other applicable values.
+
+    // BOF ensure all variables have a non-null value
+    if (!isset($start1)) {
+      $start1 = '0001-01-01 00:00:00';
+    }
+    if (!isset($start2)) {
+      $start2 = '0001-01-01 00:00:00';
+    }
+    if (!isset($end1)) {
+      $end1 = '0001-01-01 00:00:00';
+    }
+    if (!isset($end2)) {
+      $end2 = '0001-01-01 00:00:00';
+    }
+    // EOF ensure all variables have a non-null value
+
+    // BOF check for and correct condition where known dates are provided but swapped as in start date happens after the end date.
+    if ($start1 > '0001-01-01 00:00:00' && $end1 > '0001-01-01 00:00:00' && $end1 < $start1) {
+      $swap = $end1;
+      $end1 = $start1;
+      $start1 = $swap;
+    }
+    if ($start2 > '0001-01-01 00:00:00' && $end2 > '0001-01-01 00:00:00' && $end2 < $start2) {
+      $swap = $end2;
+      $end2 = $start2;
+      $start2 = $swap;
+    }
+    // EOF check for and correct condition where known dates are provided but swapped as in start date happens after the end date.
+
+    // Consider how to use forever start dates with regards to $future only....
+    // Area of concern is for example a date span was entered in the past with an end date only.
+    //  If later a date span is entered also with an end date only, both spans could be evaluated as overlapping
+    //  in the past because they were "always" applicable.  But in regards to e-commerce, they could not be made
+    //  effective until they were in the database.  ZC typically considers this ever available in the past condition
+    //  for even initial entry and does not "require" that the date be entered of when it was first added and in
+    //  some cases will prevent that date from being stored if it results in the event being effective in the past.
+    if ($future_only === true && $start1 <= '0001-01-01 00:00:00') {
+      $start1 = min($end1, $cur_datetime);
+    }
+    if ($future_only === true && $start2 <= '0001-01-01 00:00:00') {
+      $start2 = min($end2, $cur_datetime);
+    }
+
+    // if either date ends in the forever future, evaluate the condition.
+    if ($end1 <= '0001-01-01 00:00:00' || $end2 <= '0001-01-01 00:00:00') {
+      if (($future_only !== 'past' || $start1 < $cur_datetime && $start2 < $cur_datetime) && $end1 <= '0001-01-01 00:00:00' && $end2 <= '0001-01-01 00:00:00') {
+        return true; // both dates extend out to the future and therefore do or will at some point overlap.
+      }
+
+      $end = max($end1, $end2); //one date extends out to the future, but overlap only occurs up to the point of the known date.
+      if ($future_only === true && $end <= $cur_datetime || $future_only === 'past' && min($start1, $start2) > $cur_datetime) {
+        return false; //dates may overlap in the past, but because not in the present when considering future_only do not overlap.
+      }
+      $overlap = max($start1, $start2) < $end; // if the latest starting date occurs before the earliest known date, then they overlap, if not, then they are disjointed.
+    } else {
+      if ($future_only === true && max($end1, $end2) <= $cur_datetime || $future_only === 'past' && min($start1, $start2) > $cur_datetime) {
+        return false; // with both end dates known, and both on or before today, then when considering future overlaps only an overlap in the future does not exist.
+      } else {
+        $overlap = max($start1, $start2) < min($end1, $end2); // if the latest starting date occurs before the earliest known date, then they overlap, if not, then they are disjointed.
+      }
+    }
+
+    return $overlap;
   }
 
 

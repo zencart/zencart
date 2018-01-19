@@ -132,6 +132,10 @@ class queryFactory extends base {
     unset($this->link);
   }
 
+  function __destruct() {
+    $this->close();
+  }
+
   function set_error($zp_err_num, $zp_err_text, $dieOnErrors = true) {
     $this->error_number = $zp_err_num;
     $this->error_text = $zp_err_text;
@@ -197,7 +201,7 @@ class queryFactory extends base {
       $obj->result = $zp_result_array;
       if (sizeof($zp_result_array) > 0 ) {
         $obj->EOF = false;
-        while (list($key, $value) = each($zp_result_array[0])) {
+        foreach($zp_result_array[0] as $key => $value) {
           $obj->fields[$key] = $value;
         }
       }
@@ -221,7 +225,7 @@ class queryFactory extends base {
             $zp_result_array = mysqli_fetch_array($zp_db_resource);
             if ($zp_result_array) {
               $obj->result[$zp_ii] = array();
-              while (list($key, $value) = each($zp_result_array)) {
+              foreach($zp_result_array as $key => $value) {
                 if (!preg_match('/^[0-9]/', $key)) {
                   $obj->result[$zp_ii][$key] = $value;
                 }
@@ -232,7 +236,7 @@ class queryFactory extends base {
             }
             $zp_ii++;
           }
-          while (list($key, $value) = each($obj->result[$obj->cursor])) {
+          foreach($obj->result[$obj->cursor] as $key => $value) {
             if (!preg_match('/^[0-9]/', $key)) {
               $obj->fields[$key] = $value;
             }
@@ -269,7 +273,7 @@ class queryFactory extends base {
         if ($obj->RecordCount() > 0) {
           $zp_result_array = mysqli_fetch_array($zp_db_resource);
           if ($zp_result_array) {
-            while (list($key, $value) = each($zp_result_array)) {
+            foreach($zp_result_array as $key => $value) {
               if (!preg_match('/^[0-9]/', $key)) {
                 $obj->fields[$key] = $value;
               }
@@ -286,6 +290,14 @@ class queryFactory extends base {
     }
     return($obj);
   }
+    // -----
+    // Use this form of the Execute method to ensure that any SELECT result is pulled from the
+    // database, bypassing the cache.
+    //
+    function ExecuteNoCache ($zf_sql)
+    {
+        return $this->Execute ($zf_sql, false, false, 0, true);
+    }
 
   function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     $this->zf_sql = $zf_sql;
@@ -315,7 +327,7 @@ class queryFactory extends base {
           $zp_result_array = @mysqli_fetch_array($zp_db_resource);
           if ($zp_result_array) {
             $obj->result[$zp_ii] = array();
-            while (list($key, $value) = each($zp_result_array)) {
+            foreach($zp_result_array as $key => $value) {
               $obj->result[$zp_ii][$key] = $value;
             }
           } else {
@@ -345,6 +357,22 @@ class queryFactory extends base {
     $this->count_queries++;
     return($obj);
   }
+    // -----
+    // Use this form of the ExecuteRandomMulti method to ensure that any SELECT result is pulled from the
+    // database, bypassing the cache.
+    //
+    function ExecuteRandomMultiNoCache ($zf_sql)
+    {
+        return $this->ExecuteRandomMulti ($zf_sql, 0, false, 0, true);
+    }
+    
+    // -----
+    // This function returns the number of rows affected by the last INSERT, UPDATE, REPLACE or DELETE query.
+    //
+    public function affectedRows()
+    {
+        return ($this->link) ? $this->link->affected_rows : 0;
+    }
 
   function insert_ID() {
     return @mysqli_insert_id($this->link);
@@ -390,7 +418,6 @@ class queryFactory extends base {
         $insertString .= $value['fieldName'] . ", ";
       }
       $insertString = substr($insertString, 0, strlen($insertString)-2) . ') VALUES (';
-      reset($tableData);
       foreach ($tableData as $key => $value) {
         $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
         $insertString .= $bindVarValue . ", ";
@@ -599,7 +626,7 @@ class queryFactoryResult implements Countable, Iterator {
       if ($this->cursor >= sizeof($this->result)) {
         $this->EOF = true;
       } else {
-        while(list($key, $value) = each($this->result[$this->cursor])) {
+        foreach($this->result[$this->cursor] as $key => $value) {
           $this->fields[$key] = $value;
         }
       }
@@ -608,7 +635,7 @@ class queryFactoryResult implements Countable, Iterator {
       if (!$zp_result_array) {
         $this->EOF = true;
       } else {
-        while (list($key, $value) = each($zp_result_array)) {
+        foreach($zp_result_array as $key => $value) {
           if (!preg_match('/^[0-9]/', $key)) {
             $this->fields[$key] = $value;
           }
@@ -624,7 +651,7 @@ class queryFactoryResult implements Countable, Iterator {
     $this->cursor++;
     if ($this->cursor < $this->limit) {
       $zp_result_array = $this->result[$this->result_random[$this->cursor]];
-      while (list($key, $value) = each($zp_result_array)) {
+      foreach($zp_result_array as $key => $value) {
         if (!preg_match('/^[0-9]/', $key)) {
           $this->fields[$key] = $value;
         }
@@ -685,7 +712,7 @@ class queryFactoryResult implements Countable, Iterator {
         $this->cursor = sizeof($this->result);
         $this->EOF = true;
       } else {
-        while(list($key, $value) = each($this->result[$zp_row])) {
+        foreach($this->result[$zp_row] as $key => $value) {
           $this->fields[$key] = $value;
         }
         $this->cursor = $zp_row;
@@ -693,7 +720,7 @@ class queryFactoryResult implements Countable, Iterator {
       }
     } else if (@mysqli_data_seek($this->resource, $zp_row)) {
       $zp_result_array = @mysqli_fetch_array($this->resource);
-      while (list($key, $value) = each($zp_result_array)) {
+      foreach($zp_result_array as $key => $value) {
         $this->fields[$key] = $value;
       }
       $this->cursor = $zp_row;

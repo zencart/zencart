@@ -5,7 +5,7 @@
  * @version GIT: $Id: $
  */
 
-namespace ZenCart\Model;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 

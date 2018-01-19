@@ -621,6 +621,13 @@
           getDirList(DIR_FS_ADMIN, $zv_filestype_group);
           $sub_dir_files_admin= $sub_dir_files;
 
+// get app
+    $include_app = (isset($_POST['include_app']) && $_POST['include_app']);
+    if ($include_app) {
+          $sub_dir_files = array();
+          getDirList(DIR_FS_CATALOG . '/app/', $zv_filestype_group);
+          $sub_dir_files_catalog = $sub_dir_files;
+    }
           $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin);
           for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
             $check_directory[] = $check_dir[$i] . '/';
@@ -1045,6 +1052,7 @@ if ($action == 'search_config_keys') {
               <strong><?php echo TEXT_ALL_FILESTYPE_LOOKUPS;?></strong><br><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, 1);?>
               <label for="context_lines"><?php echo TEXT_CONTEXT_LINES; ?> </label><?php echo zen_draw_input_field('context_lines', strval((int)$default_context_lines), 'id="context_lines" size="1"');?>
               <label for="locate-cs"><?php echo TEXT_CASE_SENSITIVE; ?> </label><?php echo zen_draw_checkbox_field('case_sensitive', true, false, '', 'id="locate-cs"');?>
+              <label for="locate-app"><?php echo TEXT_INCLUDE_APP; ?> </label><?php echo zen_draw_checkbox_field('include_app', true, false, '', 'id="locate-app"');?>
             </td>
             <td class="main" align="right" valign="bottom">
               <input type="submit" value="<?php echo TEXT_BUTTON_SEARCH;?>" title="<?php echo TEXT_BUTTON_SEARCH_ALT;?>">

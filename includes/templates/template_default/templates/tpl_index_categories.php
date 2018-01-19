@@ -7,7 +7,7 @@
  * Uses tpl_index_category_row.php to render individual items
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -20,16 +20,6 @@
 <?php if (SHOW_CUSTOMER_GREETING == 1) { ?>
 <h2 class="greeting"><?php echo zen_customer_greeting(); ?></h2>
 <?php } ?>
-
-<!-- deprecated - to use - uncomment
-<?php if (TEXT_MAIN) { ?>
-<div id="" class="content"><?php echo TEXT_MAIN; ?></div>
-<?php } ?>-->
-
-<!-- deprecated - to use - uncomment
-<?php if (TEXT_INFORMATION) { ?>
-<div id="" class="content"><?php echo TEXT_INFORMATION; ?></div>
-<?php } ?>-->
 
 <?php if (DEFINE_MAIN_PAGE_STATUS >= 1 and DEFINE_MAIN_PAGE_STATUS <= 2) { ?>
 <div id="indexCategoriesMainContent" class="content"><?php

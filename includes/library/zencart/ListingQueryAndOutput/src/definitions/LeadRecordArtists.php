@@ -26,7 +26,6 @@ class LeadRecordArtists extends AbstractLeadDefinition
         $this->listingQuery = array(
             'mainTable' => array(
                 'table' => TABLE_RECORD_ARTISTS,
-                'alias' => 'ra',
                 'fkeyFieldLeft' => 'artists_id',
             ),
             'isPaginated' => true,

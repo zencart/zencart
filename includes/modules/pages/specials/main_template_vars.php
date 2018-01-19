@@ -11,7 +11,7 @@
 if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 )
 {
     $qb = new ZenCart\QueryBuilder\QueryBuilder($db);
-    $modelFactory = new ZenCart\Model\ModelFactory($db, $capsule);
+    $modelFactory = new App\Model\ModelFactory($db, $capsule);
     $box = new ZenCart\ListingQueryAndOutput\definitions\SpecialsProductsPage($zcRequest, $modelFactory);
     $paginator = new ZenCart\Paginator\Paginator($zcRequest);
     $builder = new ZenCart\QueryBuilder\PaginatorBuilder($zcRequest, $box->getListingQuery(), $paginator);

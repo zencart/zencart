@@ -1,6 +1,6 @@
 #
 # @package Installer
-# @copyright Copyright 2003-2016 Zen Cart Development Team
+# @copyright Copyright 2003-2018 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # @version $Id:  New in v1.6.0 $
 #
@@ -36,18 +36,18 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 7.1.0
+          version: 7.3.0
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.0.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.2.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '5.6') . PHP_EOL; ?>
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.1') . PHP_EOL; ?>
     methods:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 5.6.0
+          version: 7.1.0
           versionTest: ge
   checkIniSet:
     runLevel: always
@@ -256,6 +256,25 @@ systemChecks:
             fieldCheck: Type
             expectedResult: 'VARCHAR(64)'
 
+  checkDBVersion156:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.6'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.6') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: fieldSchema
+            tableName: product_options
+            fieldName: products_options_comment
+            fieldCheck: Type
+            expectedResult: 'VARCHAR(255)'
+          - checkType: fieldSchema
+            tableName: orders_products
+            fieldName: products_virtual
+            fieldCheck: Type
+            expectedResult: 'tinyint(1)'
+
   checkDBVersion155:
     runLevel: dbVersion
     errorLevel: WARN
@@ -376,11 +395,6 @@ systemChecks:
           - checkType: configValue
             fieldName: SHOW_SPLIT_TAX_CHECKOUT
             expectedResult: 'Show Split Tax Lines'
-          - checkType: fieldSchema
-            tableName: authorizenet
-            fieldName: transaction_id
-            fieldCheck: Type
-            expectedResult: 'BIGINT(20)'
 
   checkDBVersion138:
     runLevel: dbVersion

@@ -102,6 +102,7 @@
 
   $products_qty_box_status = $product_info->fields['products_qty_box_status'];
   $products_quantity_order_max = $product_info->fields['products_quantity_order_max'];
+  $products_get_buy_now_qty = zen_get_buy_now_qty($_GET['products_id']);
 
   $products_base_price = $currencies->display_price(zen_get_products_base_price((int)$_GET['products_id']),
                       zen_get_tax_rate($product_info->fields['products_tax_class_id']));

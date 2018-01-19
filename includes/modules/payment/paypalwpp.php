@@ -280,6 +280,16 @@ class paypalwpp extends base {
     $confirmation = array('title' => '', 'fields' => array());
     return $confirmation;
   }
+  
+  function process_form_params() {
+    if (   defined('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE') && MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE == 'InContext' 
+        && defined('MODULE_PAYMENT_PAYPALWPP_MERCHANTID')    && MODULE_PAYMENT_PAYPALWPP_MERCHANTID    != '' 
+        && defined('MODULE_PAYMENT_PAYPALWPP_STATUS')        && MODULE_PAYMENT_PAYPALWPP_STATUS        == 'True') {
+      return ' data-paypal-button="true" data-paypal-id="' . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . '"';
+    } else {
+      return false;
+    }
+  }
   /**
    * Prepare the hidden fields comprising the parameters for the Submit button on the checkout confirmation page
    */
@@ -296,17 +306,30 @@ class paypalwpp extends base {
     if ($this->use_incontext_checkout == false) return '';
 
     // send the PayPal-provided javascript to trigger the incontext checkout experience
-    return "      <script>
+    return "      <script type=\"text/javascript\">
         window.paypalCheckoutReady = function () {
         paypal.checkout.setup('" . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . "', {
           //locale: '" . $this->getLanguageCode('incontext') . "',"
           . (MODULE_PAYMENT_PAYPALWPP_SERVER == 'live' ? '' : "\n          environment: 'sandbox',") . "
           container: 'checkout_confirmation',
-          button: 'btn_submit'
+          button: 'btn_submit',
+          click: function() {
+            paypal.checkout.initXO();
+
+            var action = $.post('/set-express-checkout');
+
+            action.done(function (data) {
+              paypal.checkout.startFlow(data.token);
+            });
+
+            action.fail(function () {
+              paypal.checkout.closeFlow();
+            });
+          }
         });
       };
       </script>
-      <script src=\"//www.paypalobjects.com/api/checkout.js\" async></script>";
+      <div data-paypal-button=\"yes\" data-paypal-id=\"" . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . "\"></div>";
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured
@@ -686,6 +709,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('PayPal Merchant ID', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', '', 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on Profile and navigating to the My Business Info section; You will find your Merchant Account ID on that screen. A typical merchantID looks like FDEFDEFDEFDE11.', '6', '25', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Use InContext Checkout?', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'InContext', 'PayPal now offers a newer friendlier InContext (in-page) checkout mode (Requires that you enter your MerchantID in the Merchant ID Setting above). Or you can use the older checkout style which offers Pay Without Account by default but with a full-page-redirect.', '6', '25', 'zen_cfg_select_option(array(\'InContext\', \'Old\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('InContext Button Size?', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSIZE', 'small', 'When PayPal\'s newer friendlier InContext (in-page) checkout mode is enabled PayPal offers various PayPal button sizes. Select the size of the button to use.', '6', '25', 'zen_cfg_select_option(array(\'small\', \'tiny\', \'medium\'), ', now())"); 
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('InContext Button Shape?', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSHAPE', 'pill', 'When PayPal\'s newer friendlier InContext (in-page) checkout mode is enabled the PayPal button can take different shapes. Select the button shape to use.', '6', '25', 'zen_cfg_select_option(array(\'pill\', \'rect\'), ', now())"); 
 
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_INSTALLED');
   }
@@ -708,8 +733,15 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if (!defined('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE')) {
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Use InContext Checkout?', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'InContext', 'PayPal now offers a newer friendlier InContext (in-page) checkout mode (Requires that you enter your MerchantID in the Merchant ID Setting above). Or you can use the older checkout style which offers Pay Without Account by default but with a full-page-redirect.', '6', '25', 'zen_cfg_select_option(array(\'InContext\', \'Old\'), ', now())");
       }
+      if (!defined('MODULE_PAYMENT_PAYPALWPP_INCONTEXTSIZE')) {
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('InContext Button Size?', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSIZE', 'small', 'When PayPal\'s newer friendlier InContext (in-page) checkout mode is enabled PayPal offers various PayPal button sizes. Select the size of the button to use.', '6', '25', 'zen_cfg_select_option(array(\'small\', \'tiny\', \'medium\'), ', now())"); 
+      }
+      if (!defined('MODULE_PAYMENT_PAYPALWPP_INCONTEXTSHAPE')) {
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('InContext Button Shape?', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSHAPE', 'small', 'When PayPal\'s newer friendlier InContext (in-page) checkout mode is enabled PayPal the PayPal button can take different shapes. Select the button shape to use.', '6', '25', 'zen_cfg_select_option(array(\'pill\', \'rect\'), ', now())"); 
+      }
+
     }
-    $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
+    $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSIZE', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSHAPE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
     if (IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow'))) {
       $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'));
     }

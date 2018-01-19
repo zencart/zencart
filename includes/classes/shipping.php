@@ -33,8 +33,7 @@ class shipping extends base {
       if ( (zen_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
         $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
       } else {
-        reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           $include_modules[] = array('class' => $class, 'file' => $value);
         }
@@ -102,12 +101,12 @@ class shipping extends base {
       $shipping_weight = $total_weight;
 
       $za_tare_array = preg_split("/[:,]/" , str_replace(' ', '', SHIPPING_BOX_WEIGHT));
-      $zc_tare_percent= $za_tare_array[0];
-      $zc_tare_weight= $za_tare_array[1];
+      $zc_tare_percent= (float)$za_tare_array[0];
+      $zc_tare_weight= (float)$za_tare_array[1];
 
       $za_large_array = preg_split("/[:,]/" , str_replace(' ', '', SHIPPING_BOX_PADDING));
-      $zc_large_percent= $za_large_array[0];
-      $zc_large_weight= $za_large_array[1];
+      $zc_large_percent= (float)$za_large_array[0];
+      $zc_large_weight= (float)$za_large_array[1];
 
       // SHIPPING_BOX_WEIGHT = tare
       // SHIPPING_BOX_PADDING = Large Box % increase
@@ -155,8 +154,7 @@ class shipping extends base {
     if (is_array($this->modules)) {
       $include_quotes = array();
 
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if (zen_not_null($module)) {
           if ( ($module == $class) && (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) ) {
@@ -185,8 +183,7 @@ class shipping extends base {
     if (is_array($this->modules)) {
       $rates = array();
 
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $quotes = $GLOBALS[$class]->quotes;
@@ -254,8 +251,7 @@ class shipping extends base {
         // attributes weight
         if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
           $include_reduce_insurance = false;
-          reset($products[$i]['attributes']);
-          while (list($option, $value) = each($products[$i]['attributes'])) {
+          foreach($products[$i]['attributes'] as $option => $value) {
 //            echo ' $products[$i][id]: ' . $products[$i]['id'] . ' product_is_always_free_shipping: ' . $products[$i]['product_is_always_free_shipping'] . ' $option: ' . $option . ' $value: ' . $value . '<br>';
             $sql = "select products_attributes_weight, products_attributes_weight_prefix
                     from " . TABLE_PRODUCTS_ATTRIBUTES . "

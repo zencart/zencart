@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version  $Id: New in v1.6.0 $
@@ -273,7 +273,7 @@ class Shipping extends AbstractFlowStep
     protected function setShippingQuoteError($quote, $allowFreeShipping)
     {
         if ($this->request->readPost('shipping') == 'free_free' && ($this->order->content_type != 'virtual' && !$allowFreeShipping)) {
-            $quote['error'] = 'Invalid input. Please make another selection.';
+            $quote['error'] = ERROR_TEXT_INVALID_INPUT_MAKE_ANOTHER_SELECTION;
         }
         return $quote;
     }
@@ -341,8 +341,7 @@ class Shipping extends AbstractFlowStep
                 $checklist[] = $val['id'] . '_' . $method['id'];
             }
         }
-        $checkval = $this->session->get('shipping')['id'];
-        if (!in_array($checkval, $checklist) && $checkval != 'free_free') {
+        if (!in_array($this->session->get('shipping')['id'], $checklist)) {
             $this->view->getMessageStack()->add('checkout_shipping', ERROR_PLEASE_RESELECT_SHIPPING_METHOD, 'error');
         }
     }

@@ -80,6 +80,7 @@
   define('TEXT_ALL_FILES_LOOKUP_ALL_TYPES', 'Everything');
 
   define('TEXT_CASE_SENSITIVE', 'Case Sensitive?');
+  define('TEXT_INCLUDE_APP', 'Include /app Directory?');
   define('TEXT_CONTEXT_LINES', 'Context lines: ');
   define('TEXT_SEARCH_LOOKUP_PLACEHOLDER', 'Enter search phrase or pattern');
   define('TEXT_SEARCH_KEY_PLACEHOLDER', 'Enter key name or phrase to search for');

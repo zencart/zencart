@@ -313,8 +313,7 @@ function check_form(form_name) {
                 <td>
 <?php
 /* Re-Post all POST'ed variables */
-    reset($_POST);
-    while (list($key, $value) = each($_POST)) {
+    foreach($_POST as $key => $value) {
       if (!is_array($_POST[$key])) {
         echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
       }

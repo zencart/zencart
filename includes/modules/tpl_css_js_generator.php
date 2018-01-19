@@ -66,7 +66,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
           '/' . 'stylesheet-responsive',
           '/' . 'font',
   );
-  while(list ($key, $value) = each($sheets_array_primary)) {
+  foreach($sheets_array_primary as $key => $value) {
     $perpagefile = $template->get_template_dir(ltrim($value, '/') . '.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) {
       $stylesheets[] = $perpagefile;
@@ -81,7 +81,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
   $directory_array = $template->get_template_part($template->get_template_dir('^[^(inline|print)].*\.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^[^(inline|print)]/', '.css');
   sort($directory_array);
   $directory_array  = array_diff($directory_array, $deduplicate);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     $stylesheets[] = $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value;
   }
 
@@ -90,7 +90,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
    */
   $directory_array = $template->get_template_part($template->get_template_dir('^inline.*\.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^inline/', '.css');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     $inline_css[] = $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value;
   }
   $sheets_array = array('/inline_' . $_SESSION['language'] . '_stylesheet',
@@ -105,7 +105,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
   );
 
   $sheets_array = array_intersect($sheets_array_primary, $sheets_array);
-  while(list ($key, $value) = each($sheets_array)) {
+  foreach($sheets_array as $key => $value) {
     $perpagefile = $template->get_template_dir(ltrim($value, '/') . '.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) $inline_css[] = $perpagefile;
   }
@@ -116,7 +116,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
    */
   $directory_array = $template->get_template_part($template->get_template_dir('^print.*\.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     $printsheets[] = $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value;
   }
 
@@ -125,7 +125,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
    */
   $directory_array = $template->get_template_part($template->get_template_dir('^jscript_.*\.php',DIR_WS_TEMPLATE, $current_page_base, 'jscript'), '/^jscript_/', '.php');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     /**
      * include content from all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically.
      * These .php files can be manipulated by PHP when they're called, and are copied in-full to the browser page
@@ -142,7 +142,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
    */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     /**
      * include content from all page-specific jscript_*.php files from includes/modules/pages/PAGENAME, alphabetically.
      * These .PHP files can be manipulated by PHP when they're called, and are copied in-full to the browser page
@@ -159,7 +159,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
    */
   $directory_array = $template->get_template_part($template->get_template_dir('\.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/.*/', '.js');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     if (preg_match('~^.*_top.js$~', $value)) {
       $jsfilesTop[] = $template->get_template_dir('\.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value;
     } else {
@@ -172,7 +172,7 @@ if (!isset($use_default_handler) || (isset($use_default_handler) && $use_default
    */
   $directory_array = $template->get_template_part($page_directory, '/^.*/', '.js');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     if (preg_match('~^.*_top.js$~', $value)) {
       $jsfilesTop[] = $page_directory . '/' . $value;
     } else {

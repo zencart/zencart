@@ -1,19 +1,23 @@
 language: php
 
+dist: trusty
 sudo: false
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 php:
+  - 7.2
   - 7.1
   - 7.0
   - 5.6
   - 5.5
   - nightly
-  - hhvm
 
 matrix:
   fast_finish: true
   allow_failures:
-    - php: hhvm
     - php: nightly
 
 env:
@@ -23,19 +27,27 @@ env:
   - secure: RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8=
 
 addons:
-  #uncomment the following to trigger webtests
+  #uncomment the following to trigger sauce webtests
 #  sauce_connect: true
 
 services: memcached
 
 git:
   submodules: false
+  depth: 2
 
 before_install:
   - travis_retry composer self-update -q
   - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
 
 install:
+# remove xdebug for speed; caveat is it can't generate code-coverage (not concerned about that presently). The "|| true" prevents false failures if xdebug doesn't even exist.
+  - "phpenv config-rm xdebug.ini || true"
+# show version, just for quick reference when viewing output in the UI
+  - echo $TRAVIS_PHP_VERSION
+# downgrade phpunit for older PHP version
+  - if [ "${TRAVIS_PHP_VERSION}" == "5.5" ]; then rm composer.lock && cp testFramework/composer-php55.lock composer.lock ; fi
+# do composer install
   - travis_wait composer install --no-interaction
 
 branches:
@@ -44,21 +56,24 @@ branches:
 
 before_script:
   - touch includes/configure.php
-  - touch admin/includes/configure.php
   # php
 #  - echo 'date.timezone = "Europe/London"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # mysql
+  - mysql --version
+  - mysql -uroot <<<"GRANT ALL PRIVILEGES ON *.* TO 'travis';"
   - mysql --execute="create database IF NOT EXISTS zencart;" --user=travis
-  # set up apache server and vhost
-#  - bash testFramework/setup/do-apache.sh
-  # sauce setup
-#  - bash testFramework/setup/do-sauce.sh
+# logs, just in case
   - mkdir -p build/logs
+# start PHP webserver
+  - "php -S 127.0.0.1:8000 > /dev/null &"
+# Start PhantomJS
+  - "phantomjs --webdriver=8643 --ignore-ssl-errors=true > /dev/null &"
 
 script:
+# unittests
   - php vendor/bin/phpunit -c testFramework/unittests/phpunit.xml
-  #uncomment the following to trigger webtests
-#  - testFramework/webtests/vendor/bin/phpunit testFramework/webtests/allWebTests.php
+# webtests
+  - vendor/bin/behat
 
 after_script:
   #- vendor/bin/phpcs --standard=PSR2 includes/ testFramework/

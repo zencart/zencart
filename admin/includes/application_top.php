@@ -7,9 +7,6 @@
  * @version GIT: $Id:
  */
 
-if (!defined('IS_ADMIN_FLAG')) {
-    require('includes/application_bootstrap.php');
-}
 /**
  * Prepare init-system
  */

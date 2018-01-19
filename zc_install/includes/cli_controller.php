@@ -81,5 +81,5 @@ if ($isUpgrade == FALSE) {
   $dbInstaller = new zcDatabaseInstaller($options);
   $result = $dbInstaller->getConnection();
   $extendedOptions = array();
-  $dbInstaller->doCompletion($options);
+  $error = $dbInstaller->doCompletion($options);
 }

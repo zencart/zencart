@@ -43,7 +43,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
     if (!$check_customer->RecordCount()) {
       $error = true;
-      $messageStack->add('login', TEXT_LOGIN_ERROR);
+        if (PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED) {
+            $messageStack->add('login', TEXT_LOGIN_ERROR);
+        } else {
+            $messageStack->add('login', TEXT_LOGIN_ERROR_EMAIL);
+        }
     } elseif ($check_customer->fields['customers_authorization'] == '4') {
       // this account is banned
       $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
@@ -63,7 +67,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
       if (!$loginAuthorized) {
         $error = true;
-        $messageStack->add('login', TEXT_LOGIN_ERROR);
+          if (PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED) {
+              $messageStack->add('login', TEXT_LOGIN_ERROR);
+          } else {
+              $messageStack->add('login', TEXT_LOGIN_ERROR_PASSWORD);
+          }
       } else {
         if (SESSION_RECREATE == 'True') {
           zen_session_recreate();

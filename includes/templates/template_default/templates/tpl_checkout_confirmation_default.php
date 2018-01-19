@@ -6,7 +6,7 @@
  * Displays final checkout details, cart, payment and shipping info details.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Modified in V1.6.0 $
@@ -52,6 +52,7 @@
                 <?php
                 }
                 ?>
+                <?php if (isset($confirmation['fields']) && sizeof($confirmation['fields'] > 0)) { ?>
                 <div class="important">
                     <?php
                     for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
@@ -62,6 +63,7 @@
                     }
                     ?>
                 </div>
+                <?php } ?>
             <?php
             }
             ?>
@@ -175,7 +177,7 @@
         ?>
 
         <?php
-        echo zen_draw_form('checkout_confirmation', $formActionLink, 'post', 'id="checkout_confirmation" onsubmit="submitonce();"');
+        echo zen_draw_form('checkout_confirmation', $formActionLink, 'post', 'id="checkout_confirmation" onsubmit="submitonce();"' . (is_array($payment_modules->modules) ? $payment_modules->process_form_params() : ''));
 
         if (is_array($payment_modules->modules)) {
             echo $payment_modules->process_button();
@@ -262,7 +264,7 @@
         ?>
 
         <?php
-        echo zen_draw_form('checkout_confirmation', $formActionLink, 'post', 'id="checkout_confirmation" onsubmit="submitonce();"');
+        echo zen_draw_form('checkout_confirmation', $formActionLink, 'post', 'id="checkout_confirmation" onsubmit="submitonce();"' . (is_array($payment_modules->modules) ? $payment_modules->process_form_params() : ''));
     }
     ?>
     <hr />

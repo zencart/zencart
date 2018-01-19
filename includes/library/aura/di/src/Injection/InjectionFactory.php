@@ -120,6 +120,34 @@ class InjectionFactory
 
     /**
      *
+     * Returns a new LazyArray.
+     *
+     * @param array $callables The callables to invoke.
+     *
+     * @return LazyArray
+     *
+     */
+    public function newLazyArray(array $callables)
+    {
+        return new LazyArray($callables);
+    }
+
+    /**
+     *
+     * Returns a new LazyCallable.
+     *
+     * @param callable $callable The callable to invoke.
+     *
+     * @return LazyCallable
+     *
+     */
+    public function newLazyCallable($callable)
+    {
+        return new LazyCallable($callable);
+    }
+
+    /**
+     *
      * Returns a new LazyGet.
      *
      * @param ContainerInterface $container The service container.

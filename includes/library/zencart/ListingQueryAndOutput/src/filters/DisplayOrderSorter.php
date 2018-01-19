@@ -49,13 +49,13 @@ class DisplayOrderSorter extends AbstractFilter implements FilterInterface
     protected function buildMap()
     {
         $map = array();
-        $map[1] = " pd.products_name";
-        $map[2] = " pd.products_name DESC";
-        $map[3] = " p.products_price_sorter, pd.products_name";
-        $map[4] = " p.products_price_sorter DESC, pd.products_name";
-        $map[5] = " p.products_model";
-        $map[6] = " p.products_date_added DESC, pd.products_name";
-        $map[7] = " p.products_date_added, pd.products_name";
+        $map[1] = " " . TABLE_PRODUCTS_DESCRIPTION . ".products_name";
+        $map[2] = " " . TABLE_PRODUCTS_DESCRIPTION . ".products_name DESC";
+        $map[3] = " " . TABLE_PRODUCTS . ".products_price_sorter, " . TABLE_PRODUCTS_DESCRIPTION .".products_name";
+        $map[4] = " " . TABLE_PRODUCTS . ".products_price_sorter DESC, " . TABLE_PRODUCTS_DESCRIPTION . ".products_name";
+        $map[5] = " " . TABLE_PRODUCTS . ".products_model";
+        $map[6] = " " . TABLE_PRODUCTS . ".products_date_added DESC, " . TABLE_PRODUCTS_DESCRIPTION . ".products_name";
+        $map[7] = " " . TABLE_PRODUCTS . ".products_date_added, " . TABLE_PRODUCTS_DESCRIPTION . ".products_name";
         return $map;
     }
 } 

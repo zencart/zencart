@@ -62,7 +62,7 @@ class installerNoErrorsTest extends CommonTestResources
         $continue = $this->byId('btnsubmit');
         $continue->click();
 
-        $this->assertTextPresent('Installation completed');
+        $this->assertTextPresent('Installation is now complete');
 
         $this->url('https://' . DIR_WS_ADMIN);
 

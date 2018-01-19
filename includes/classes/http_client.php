@@ -85,8 +85,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  **/
     function setHeaders($headers) {
       if (is_array($headers)) {
-        reset($headers);
-        while (list($name, $value) = each($headers)) {
+        foreach($headers as $name => $value) {
           $this->requestHeaders[$name] = $value;
         }
       }
@@ -184,8 +183,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
       if (is_array($query_params)) {
         $postArray = array();
-        reset($query_params);
-        while (list($k, $v) = each($query_params)) {
+        foreach($query_params as $k => $v) {
           $postArray[] = urlencode($k) . '=' . urlencode($v);
         }
 
@@ -315,8 +313,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         $this->request = $command;
         $cmd = $command . "\r\n";
         if (is_array($this->requestHeaders)) {
-          reset($this->requestHeaders);
-          while (list($k, $v) = each($this->requestHeaders)) {
+          foreach($this->requestHeaders as $k => $v) {
             $cmd .= $k . ': ' . $v . "\r\n";
           }
         }

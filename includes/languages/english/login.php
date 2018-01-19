@@ -38,3 +38,6 @@ define('ERROR_SECURITY_ERROR', 'There was a security error when trying to login.
 
 
 define('TEXT_LOGIN_BANNED', 'Error: Access denied.');
+
+define('TEXT_LOGIN_ERROR_EMAIL', 'Sorry, we have no record of that email in our system.');
+define('TEXT_LOGIN_ERROR_PASSWORD', 'Sorry, that password looks incorrect.');

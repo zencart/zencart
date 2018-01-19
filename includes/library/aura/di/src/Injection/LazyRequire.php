@@ -21,7 +21,7 @@ class LazyRequire implements LazyInterface
      *
      * The file to require.
      *
-     * @var string
+     * @var string|LazyInterface
      *
      */
     protected $file;
@@ -30,7 +30,7 @@ class LazyRequire implements LazyInterface
      *
      * Constructor.
      *
-     * @param string $file The file to require.
+     * @param string|LazyInterface $file The file to require.
      *
      */
     public function __construct($file)
@@ -47,6 +47,10 @@ class LazyRequire implements LazyInterface
      */
     public function __invoke()
     {
-        return require $this->file;
+        $filename = $this->file;
+        if ($filename instanceof LazyInterface) {
+            $filename = $filename->__invoke();
+        }
+        return require $filename;
     }
 }

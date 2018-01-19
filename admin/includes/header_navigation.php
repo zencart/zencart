@@ -36,7 +36,7 @@ $menuTitles = zen_get_menu_titles();
           <?php } ?>
           <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_DEFAULT); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
           <li class="upperMenuItems"><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
-          <li class="upperMenuItems"><a href="https://www.zen-cart.com/" class="headerLink" target="_blank" class="headerLink"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
+          <li class="upperMenuItems"><a href="https://www.zen-cart.com/" class="headerLink" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
           <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_SERVER_INFO); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
           <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_ADMIN_ACCOUNT); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
           <li class="upperMenuItems"><a href="<?php echo zen_admin_href_link(FILENAME_LOGOFF); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>

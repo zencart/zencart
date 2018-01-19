@@ -17,7 +17,7 @@ var Payeezy = function() {
     function e(e) {
         var t = {
             visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
-            mastercard: /^5[1-5][0-9]{14}$/,
+            mastercard: /^(5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/,
             amex: /^3[47][0-9]{13}$/,
             diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
             discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
@@ -133,7 +133,7 @@ var Payeezy = function() {
 }();
 
 var responseHandler = function(status, response) {
-    var $form = $('form[name="checkout_payment"]');
+    var $form = jQuery('form[name="checkout_payment"]');
 
     // alert('Status = ' + status);
 
@@ -160,18 +160,18 @@ var responseHandler = function(status, response) {
         // alert('success');
         console.log(response);
         var result = response.token.value;
-        $('#payeezyjszc_fdtoken').val(result);
+        jQuery('#payeezyjszc_fdtoken').val(result);
 
-        // alert('FDToken:' + $('#payeezyjszc_fdtoken').val());
+        // alert('FDToken:' + jQuery('#payeezyjszc_fdtoken').val());
 
         $form.unbind();
         $form.off();
 
-        var cc_num = $('#payeezyjszc_cc-number').val();
+        var cc_num = jQuery('#payeezyjszc_cc-number').val();
         var lastFour = cc_num.substr(cc_num.length - 4)
         var firstFour = cc_num.substr(0, 4)
         var new_cc_num = firstFour + '-XXXX-XXXX-' + lastFour;
-        $('#payeezyjszc_cc-number').val(new_cc_num);
+        jQuery('#payeezyjszc_cc-number').val(new_cc_num);
 
         // delay for DOM update
         setTimeout($form.submit(), 800);

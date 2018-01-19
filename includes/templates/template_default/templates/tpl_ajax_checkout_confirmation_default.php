@@ -6,10 +6,10 @@
  * Displays final checkout details, cart, payment and shipping info details.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 8 00:33:36 2016 -0500 Modified in v1.5.5 $
+ * @version $Id:  Aug 2017 Modified in v1.5.6 $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -184,16 +184,16 @@
 <input type="hidden" name="<?php echo $newField; ?>" value="">
 <?php if (!is_array($oldField)) { ?>
 <script>
-$(document).ready(function () {
-    $(":input[name='<?php echo $newField; ?>']").val($(":input[name='<?php echo $oldField; ?>']").val());
+jQuery(document).ready(function () {
+    jQuery(":input[name='<?php echo $newField; ?>']").val(jQuery(":input[name='<?php echo $oldField; ?>']").val());
 });
 </script>
 <?php } else { ?>
 
 <script>
-    $(document).ready(function () {
+    jQuery(document).ready(function () {
      var oldField = window['<?php echo $oldField['name']; ?>'](<?php echo $oldField['args']; ?>);
-     $(":input[name='<?php echo $newField; ?>']").val(oldField);
+     jQuery(":input[name='<?php echo $newField; ?>']").val(oldField);
     });
 </script>
 <?php } ?>
@@ -210,7 +210,16 @@ $(document).ready(function () {
      }
    }
 ?>
-<div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONFIRM_ORDER, BUTTON_CONFIRM_ORDER_ALT, 'name="btn_submit" id="btn_submit"') ;?></div>
+<?php
+// Add shipping-module "extra" variables so they get transported to the checkout_process page.
+if (isset ($_SESSION['shipping']['extras']) && is_array ($_SESSION['shipping']['extras'])) {
+    list ($module, $method) = explode ('_', $_SESSION['shipping']['id']);
+    foreach ($_SESSION['shipping']['extras'] as $varname => $value) {
+        echo zen_draw_hidden_field ($module . '_' . $varname, $value) . PHP_EOL;
+    }
+}
+?>
+<div class="buttonRow forward confirm-order"><?php echo zen_image_submit(BUTTON_IMAGE_CONFIRM_ORDER, BUTTON_CONFIRM_ORDER_ALT, 'name="btn_submit" id="btn_submit"') ;?></div>
 </form>
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 

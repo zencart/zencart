@@ -26,6 +26,7 @@
   }
 
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
+  if (isset($_GET['reports_page'])) $_GET['reports_page'] = (int)$_GET['reports_page'];
   if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YNA]/','',$_GET['status']);
   if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
   if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
@@ -276,7 +277,7 @@
       // create duplicate coupon
         $sql_data_array = array('coupon_code' => zen_db_prepare_input($coupon_copy_to),
                                 'coupon_amount' => zen_db_prepare_input($check_new_coupon->fields['coupon_amount']),
-                                'coupon_product_count' => zen_db_prepare_input($check_new_coupon->fields['coupon_product_count']),
+                                'coupon_product_count' => (int)zen_db_prepare_input($check_new_coupon->fields['coupon_product_count']),
                                 'coupon_type' => zen_db_prepare_input($check_new_coupon->fields['coupon_type']),
                                 'uses_per_coupon' => zen_db_prepare_input((int)$check_new_coupon->fields['uses_per_coupon']),
                                 'uses_per_user' => zen_db_prepare_input((int)$check_new_coupon->fields['uses_per_user']),
@@ -288,10 +289,10 @@
                                 'date_created' => 'now()',
                                 'date_modified' => 'now()',
                                 'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction'],
-                                'coupon_total' => $check_new_coupon->fields['coupon_total'],
+                                'coupon_total' => (int)$check_new_coupon->fields['coupon_total'],
                                 'coupon_order_limit' => $check_new_coupon->fields['coupon_order_limit'],
-                                'coupon_is_valid_for_sales' => $check_new_coupon->fields['coupon_is_valid_for_sales'],
-                                'coupon_active' => 'Y'
+                                'coupon_is_valid_for_sales' => (int)$check_new_coupon->fields['coupon_is_valid_for_sales'],
+                                'coupon_active' => 'Y',
                                 );
 
           zen_db_perform(TABLE_COUPONS, $sql_data_array);
@@ -346,7 +347,7 @@
           $_POST['coupon_desc'][$language_id] = trim($_POST['coupon_desc'][$language_id]);
         }
       $_POST['coupon_amount'] = trim($_POST['coupon_amount']);
-      $_POST['coupon_amount'] = preg_replace('/[^0-9.%]/', '', $_POST['coupon_amount']);
+      $_POST['coupon_amount'] = (float)preg_replace('/[^0-9.%]/', '', $_POST['coupon_amount']);
       if (!$_POST['coupon_name']) {
         $update_errors = 1;
         $messageStack->add(ERROR_NO_COUPON_NAME, 'error');
@@ -415,7 +416,7 @@
                                 'coupon_total' => (int)$_POST['coupon_total'],
                                 'coupon_order_limit' => zen_db_prepare_input((int)$_POST['coupon_order_limit']),
                                 'coupon_is_valid_for_sales' => (int)$_POST['coupon_is_valid_for_sales'],
-                                'coupon_active' => 'Y'
+                                'coupon_active' => 'Y',
                                 );
 
         $languages = zen_get_languages();
@@ -782,8 +783,7 @@ function check_form(form_name) {
                 <td>
 <?php
 /* Re-Post all POST'ed variables */
-    reset($_POST);
-    while (list($key, $value) = each($_POST)) {
+    foreach($_POST as $key => $value) {
       if (!is_array($_POST[$key])) {
         echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
       }

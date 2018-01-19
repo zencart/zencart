@@ -132,7 +132,7 @@ class testFilterCase extends zcTestCase
         $listingQuery = array();
         $f = new \ZenCart\ListingQueryAndOutput\filters\CategoryFilter($request, $params);
         $pq = $f->filterItem($listingQuery);
-        $this->assertTrue(count($pq) === 3);
+        $this->assertTrue(count($pq) === 2);
     }
 
     public function testDisplaySorterNoRequestParams()
