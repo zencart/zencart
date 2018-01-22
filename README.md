@@ -6,7 +6,7 @@
 
 You are currently viewing code for our development branch, which will be our next larger release, initially dubbed as Zen Cart&reg; v1.6.0, which brings architectural improvements to allow for increased flexibility for customizing each storeowner's own preferences.
 
-The latest stable version is currently [v1.5.5e](https://github.com/zencart/zencart/releases).
+The latest stable version is currently [v1.5.5f](https://github.com/zencart/zencart/releases).
 
 [![Download Latest Official Zen Cart&reg; Release](https://a.fsdn.com/con/app/sf-download-button)<br>Download Latest Official Zen Cart&reg; Release](http://sourceforge.net/projects/zencart/files/latest/download)
 
@@ -25,8 +25,8 @@ Requirements
 Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP), based on the following specifications
 
 Requirements for v1.6.0:
-- Compatible with PHP 5.5.0 to 7.1.x
-- Compatible with MySQL 5.1 to 5.7 and MariaDB 10.1
+- Compatible with PHP 5.6 to 7.2
+- Compatible with MySQL 5.1 to 5.7 and MariaDB 10.1 to 10.2
 - CURL (via PHP) is used to communication with payment/shipping services
 - Compatible with with Apache 2.4 and 2.2
 - Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, rewrite (in addition to other common modules)
@@ -44,7 +44,7 @@ Installation is simple:
 
 1. [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files)
 2. Ensure you check that the md5/sha1 hash of the Zip matches those publicly posted.
-  * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](http://www.zen-cart.com/content.php?305).
+  * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](https://www.zen-cart.com/content.php?305).
 3. Unzip the downloaded zip file 
 4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your `public_html` or `www` or `html` folder (the folder will already exist on your webserver)
 5. In your browser, enter the address to your site, such as: `www.example.com` (or if you uploaded it into another subdirectory such as `foldername` use `www.example.com/foldername`)
@@ -52,17 +52,17 @@ Installation is simple:
 7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
-If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) PDF.
+If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/implementation-guide-v155.pdf) PDF.
 
 
 Guidance for Secure Installations
 ---------------------------------
-__The [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.
+__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v155.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.
 
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](http://www.zen-cart.com/docs/implementation-guide-v155.pdf).
+Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v155.pdf).
 
 
 Developer Documentation
@@ -80,7 +80,7 @@ For free support, visit our support site: [https://www.zen-cart.com/forum.php](h
 
 Follow Us
 ---------
-For news and updates about Zen Cart&reg;, follow us on [Twitter](http://twitter.com/zencart) and [Facebook](http://facebook.com/zencart)
+For news and updates about Zen Cart&reg;, follow us on [Twitter](https://twitter.com/zencart) and [Facebook](https://facebook.com/zencart)
 
 Sign up for our free [Newsletter](http://eepurl.com/bafnNj)
 
@@ -89,4 +89,4 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
   
-*&copy;Copyright 2003-2017, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2018, Zen Cart&reg;. All rights reserved.*
