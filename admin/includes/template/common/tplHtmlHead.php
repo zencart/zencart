@@ -26,14 +26,14 @@
         </script>
     <?php } ?>
     <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" id="fontAwesomeCSS">
     <?php /** CDN for jQuery core **/ ?>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script>window.jQuery || document.write('<script src="includes/template/javascript/jquery-2.2.4.min.js"><\/script>');</script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="includes/template/javascript/jquery-3.3.1.min.js"><\/script>');</script>
     <script src="includes/template/javascript/zcJSFramework.js"></script>
     <link rel="stylesheet" type="text/css" href="includes/template/css/jquery-ui.min.css" id="jQueryUIThemeCSS">
     <?php /** CDN for jQuery UI components **/ ?>
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
     <script src="includes/template/javascript/jquery-ui-i18n.min.js"></script>
     <script src="includes/template/javascript/bootstrap.min.js"></script>
@@ -55,3 +55,4 @@
     <link rel="stylesheet" href="includes/template/javascript/gridstack.js-master/dist/gridstack-extra.css" />
     <script type="text/javascript" src='includes/template/javascript/lodash.js'></script>
     <script type="text/javascript" src='includes/template/javascript/gridstack.js-master/dist/gridstack.js'></script>
+    <script type="text/javascript" src='includes/template/javascript/gridstack.js-master/dist/gridstack.jQueryUI.js'></script>
