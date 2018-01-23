@@ -123,7 +123,7 @@ if (!defined('IS_ADMIN_FLAG')) {
           $back_url_params = '';
         }
       } else {
-        $back_url = FILENAME_CATEGORIES;
+        $back_url = FILENAME_CATEGORY;
         $back_url_params = 'cPath=' . $cPath . '&pID=' . $pInfo->products_id;
       }
 ?>
@@ -159,7 +159,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       } else {
         echo zen_image_submit('button_insert.gif', IMAGE_INSERT);
       }
-     echo '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>';
+     echo '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_CATEGORY, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>';
 ?>
         </td>
       </tr>

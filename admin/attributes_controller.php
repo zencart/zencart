@@ -29,7 +29,7 @@ if ($chk_option_values->RecordCount() < 1) {
 $chk_products = $db->Execute("select * from " . TABLE_PRODUCTS . " limit 1");
 if ($chk_products->RecordCount() < 1) {
   $messageStack->add_session(ERROR_DEFINE_PRODUCTS, 'caution');
-  zen_redirect(zen_href_link(FILENAME_CATEGORIES));
+  zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
 }
 // check for damaged database, caused by users indiscriminately deleting table data
 $ary = array();
@@ -92,7 +92,7 @@ if ($products_filter == '' && $current_category_id != '') {
   $new_product_query = $db->Execute($sql);
   $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
   if ($products_filter != '') {
-    zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
+    zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
   if ($products_filter == '' && $current_category_id == '') {
@@ -771,7 +771,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
               <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER) ?>" target="_blank"><?php echo IMAGE_OPTION_VALUES; ?></a></li>
               <?php if ($products_filter != '' && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
                 <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
+                <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
                 <?php if ($zc_products->get_allow_add_to_cart($products_filter) == "Y") { ?>
                   <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo IMAGE_PRODUCTS_PRICE_MANAGER; ?></a></li>
                 <?php } ?>
@@ -795,10 +795,10 @@ function zen_js_option_values_list($selectedName, $fieldName) {
         </div>
         <div class="col-sm-4 text-right">
             <?php
-            echo zen_draw_form('search', FILENAME_CATEGORIES, '', 'get');
+            echo zen_draw_form('search', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get');
 // show reset search
             if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-              echo '<a href="' . zen_href_link(FILENAME_CATEGORIES) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
+              echo '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
             }
             echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search') . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
             if (isset($_GET['search']) && zen_not_null($_GET['search'])) {

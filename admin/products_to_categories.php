@@ -14,7 +14,7 @@ $chk_products = $db->Execute("SELECT *
                               LIMIT 1");
 if ($chk_products->RecordCount() < 1) {
   $messageStack->add_session(ERROR_DEFINE_PRODUCTS, 'caution');
-  zen_redirect(zen_href_link(FILENAME_CATEGORIES));
+  zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
 }
 
 // verify product has a master_categories_id
@@ -755,8 +755,8 @@ $products_list = $db->Execute("SELECT products_id, categories_id
                       $contents[] = array('align' => 'center', 'text' =>
                         '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_ATTRIBUTES . '</a>&nbsp;&nbsp;' .
                         '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_PRODUCTS_PRICE_MANAGER . '</a><br /><br />' .
-                        '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_DETAILS . '</a>&nbsp;&nbsp;' .
-                        '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
+                        '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_DETAILS . '</a>&nbsp;&nbsp;' .
+                        '<a href="' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
                       );
                       break;
                   }
