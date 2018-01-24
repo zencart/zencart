@@ -111,122 +111,11 @@ foreach ($tax_class as $item) {
 
 $languages = zen_get_languages();
 
-switch ($pInfo->products_status) {
-  case '0':
-    $in_status = false;
-    $out_status = true;
-    break;
-  case '1':
-    $in_status = true;
-    $out_status = false;
-    break;
-}
 // set to out of stock if categories_status is off and new product or existing products_status is off
-if (zen_get_categories_status($current_category_id) == '0' && $pInfo->products_status != '1') {
+if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_status != 1) {
   $pInfo->products_status = 0;
-  $in_status = false;
-  $out_status = true;
 }
-
-// Virtual Products
-switch ($pInfo->products_virtual) {
-  case '0':
-    $is_virtual = false;
-    $not_virtual = true;
-    break;
-  case '1':
-    $is_virtual = true;
-    $not_virtual = false;
-    break;
-}
-// Always Free Shipping
-switch ($pInfo->product_is_always_free_shipping) {
-  case '0':
-    $is_product_is_always_free_shipping = false;
-    $not_product_is_always_free_shipping = true;
-    $special_product_is_always_free_shipping = false;
-    break;
-  case '1':
-    $is_product_is_always_free_shipping = true;
-    $not_product_is_always_free_shipping = false;
-    $special_product_is_always_free_shipping = false;
-    break;
-  case '2':
-    $is_product_is_always_free_shipping = false;
-    $not_product_is_always_free_shipping = false;
-    $special_product_is_always_free_shipping = true;
-    break;
-}
-// products_qty_box_status shows
-switch ($pInfo->products_qty_box_status) {
-  case '0':
-    $is_products_qty_box_status = false;
-    $not_products_qty_box_status = true;
-    break;
-  case '1': $is_products_qty_box_status = true;
-    $not_products_qty_box_status = false;
-    break;
-}
-// Product is Priced by Attributes= '0';
-switch ($pInfo->products_priced_by_attribute) {
-   case '0':
-   $is_products_priced_by_attribute = false;
-    $not_products_priced_by_attribute = true;
-    break;
-  case '1':
-    $is_products_priced_by_attribute = true;
-    $not_products_priced_by_attribute = false;
-    break;
-}
-// Product is Free
-switch ($pInfo->product_is_free) {
-  case '0':
-    $in_product_is_free = false;
-    $out_product_is_free = true;
-    break;
-  case '1':
-    $in_product_is_free = true;
-    $out_product_is_free = false;
-    break;
-}
-// Product is Call for price
-switch ($pInfo->product_is_call) {
-  case '0':
-    $in_product_is_call = false;
-    $out_product_is_call = true;
-    break;
-  case '1':
-    $in_product_is_call = true;
-    $out_product_is_call = false;
-    break;
-}
-// Products can be purchased with mixed attributes retail
-switch ($pInfo->products_quantity_mixed) {
-  case '0':
-    $in_products_quantity_mixed = false;
-    $out_products_quantity_mixed = true;
-    break;
-  case '1':
-    $in_products_quantity_mixed = true;
-    $out_products_quantity_mixed = false;
-    break;
-}
-
-// set image overwrite
-$on_overwrite = true;
-$off_overwrite = false;
-// set image delete
-$on_image_delete = false;
-$off_image_delete = true;
 ?>
-<style>
-  .floatButton {
-      position: fixed;
-      bottom: 100px;
-      right: 10px;
-      z-index: 100;
-  }
-</style>
 <script>
   var tax_rates = new Array();
 <?php
@@ -294,8 +183,8 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_DOCUMENT_STATUS, 'products_status', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9">
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '1', $in_status) . TEXT_PRODUCT_AVAILABLE; ?></label>
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '0', $out_status) . TEXT_PRODUCT_NOT_AVAILABLE; ?></label>
+      <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '1', ($pInfo->products_status == 1 ? true : false)) . TEXT_PRODUCT_AVAILABLE; ?></label>
+      <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '0', ($pInfo->products_status == 0 ? true : false)) . TEXT_PRODUCT_NOT_AVAILABLE; ?></label>
     </div>
   </div>
   <div class="form-group">
@@ -365,8 +254,8 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
           </td>
           <td>
               <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="control-label"'); ?>
-            <label class="radion-inline"><?php echo zen_draw_radio_field('image_delete', '0', $off_image_delete) . TABLE_HEADING_NO; ?></label>
-            <label class="radion-inline"><?php echo zen_draw_radio_field('image_delete', '1', $on_image_delete) . TABLE_HEADING_YES; ?></label>
+            <label class="radion-inline"><?php echo zen_draw_radio_field('image_delete', '0', ($pInfo->image_delete == 0 ? true : false)) . TABLE_HEADING_NO; ?></label>
+            <label class="radion-inline"><?php echo zen_draw_radio_field('image_delete', '1', ($pInfo->image_delete == 1 ? true : false)) . TABLE_HEADING_YES; ?></label>
           </td>
         </tr>
 
@@ -374,8 +263,8 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
           <td>&nbsp;</td>
           <td>
               <?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', $off_overwrite) . TABLE_HEADING_NO; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', $on_overwrite) . TABLE_HEADING_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', ($pInfo->overwrite == 0 ? true : false)) . TABLE_HEADING_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', ($pInfo->overwrite == 1 ? true : false)) . TABLE_HEADING_YES; ?></label>
           </td>
         </tr>
         <tr>
@@ -390,8 +279,8 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
       <?php echo zen_draw_separator('pixel_black.gif', '100%', '3'); ?>
   </div>
   <div class="form-group">
-    <div class="col-sm-3">
-        <?php echo zen_draw_label(TEXT_DOCUMENT_URL , 'products_url', 'class="control-label"') . '<br /><small>' . TEXT_DOCUMENT_URL_WITHOUT_HTTP . '</small>'; ?>
+    <div class="col-sm-3 control-label">
+        <?php echo zen_draw_label(TEXT_DOCUMENT_URL , 'products_url'); ?><span class="help-block"><?php echo TEXT_DOCUMENT_URL_WITHOUT_HTTP; ?></span>
     </div>
     <div class="col-sm-9">
         <?php
@@ -412,7 +301,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9">
-        <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control"'); ?>
+      <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control"'); ?>
     </div>
     <?php
     echo zen_draw_hidden_field('products_date_added', (zen_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
