@@ -846,7 +846,12 @@ if (zen_not_null($action) && $order_exists == true) {
         <?php
       } else {
         ?>
-        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH; ?></div>
+<?php
+        // Additional notification, allowing admin-observers to include additional legend icons
+        $additional_legend_icons = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADD_LEGEND', '', $additional_legend_icons);
+?>
+        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH . $additional_legend_icons; ?></div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover">
@@ -986,6 +991,9 @@ if (zen_not_null($action) && $order_exists == true) {
                     if ((strtoupper($orders->fields['delivery_street_address']) != strtoupper($orders->fields['billing_street_address']) and trim($orders->fields['delivery_street_address']) != '')) {
                       $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
                     }
+                    //-Additional "difference" icons can be added on a per-order basis.
+                    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SHOW_ORDER_DIFFERENCE', $orders->fields, $show_difference);
+
                     $show_payment_type = $orders->fields['payment_module_code'] . '<br>' . $orders->fields['shipping_module_code'];
                     ?>
                 <td class="dataTableContent" align="right"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
