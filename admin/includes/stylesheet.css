@@ -655,6 +655,13 @@ img[src*="button_cancel"], img[src*="button_reset"]{
   text-align: center;
 }
 
+.floatButton {
+  position: fixed;
+  bottom: 100px;
+  right: 10px;
+  z-index: 100;
+}
+
 /* bof Footer */
 footer, #footer {
     text-align: center;
