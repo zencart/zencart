@@ -2185,7 +2185,7 @@ CREATE TABLE zones_to_geo_zones (
 
 # default data
 
-INSERT INTO template_select (template_id, template_dir, template_language) VALUES (1, 'responsive_classic', '0');
+INSERT INTO template_select (template_dir, template_language) VALUES ('classic', 0);
 
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany, 6 - UK/GB, 7 - Australia
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','$city / $country');
