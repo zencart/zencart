@@ -156,6 +156,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
       if (isset($_GET['pID'])) {
         echo zen_image_submit('button_update.gif', IMAGE_UPDATE);
+        echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="edit"') . '&nbsp;&nbsp;';
       } else {
         echo zen_image_submit('button_insert.gif', IMAGE_INSERT);
       }
