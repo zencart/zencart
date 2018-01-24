@@ -491,21 +491,34 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <div class="col-md-4">
 
           <div>
-              <?php
-              echo zen_draw_form('search', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get', 'class="form-horizontal"');
+
+            <?php
+            echo zen_draw_form('search', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get', 'class="form-horizontal"');
 // show reset search
-              if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                echo '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING) . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>&nbsp;&nbsp;';
+            ?>
+            <div class="col-sm-6 control-label">
+                <?php
+                if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+                  ?>
+                <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING); ?>" class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>&nbsp;&nbsp;
+                <?php
               }
-              echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="col-sm-6 control-label"');
-              echo '<div class="col-sm-6">' . zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '') . 'class="form-control"') . '</div>';
-              echo zen_hide_session_id();
-              if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_output_string_protected($_GET['search']);
-              }
-              echo '</form>';
+              echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search');
               ?>
+            </div>
+            <div class="col-sm-6"><?php echo zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '') . 'class="form-control"'); ?></div>
+            <div class="col"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '1'); ?></div>
+            <?php
+            echo zen_hide_session_id();
+            if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+              $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+              ?>
+            <div class="col-sm-6 control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></div>
+            <div class="col-sm-6"><?php echo zen_output_string_protected($_GET['search']); ?></div>
+              <?php
+            }
+            echo '</form>';
+            ?>
           </div>
           <div class="row">
               <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
