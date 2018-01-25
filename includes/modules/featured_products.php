@@ -13,23 +13,23 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // initialize vars
-$categories_products_id_list = '';
+$categories_products_id_list = array();
 $list_of_products = '';
 $featured_products_query = '';
 $display_limit = '';
 
-if ( (($manufacturers_id > 0 && $_GET['filter_id'] == 0) || $_GET['music_genre_id'] > 0 || $_GET['record_company_id'] > 0) || (!isset($new_products_category_id) || $new_products_category_id == '0') ) {
-  $featured_products_query = "select distinct p.products_id, p.products_image, pd.products_name, p.master_categories_id
-                           from (" . TABLE_PRODUCTS . " p
-                           left join " . TABLE_FEATURED . " f on p.products_id = f.products_id
-                           left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id )
-                           where p.products_id = f.products_id
-                           and p.products_id = pd.products_id
-                           and p.products_status = 1 and f.status = 1
-                           and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+if ( (($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['music_genre_id']) || !empty($_GET['record_company_id'])) || empty($new_products_category_id) ) {
+  $featured_products_query = "SELECT DISTINCT p.products_id, p.products_image, pd.products_name, p.master_categories_id
+                           FROM (" . TABLE_PRODUCTS . " p
+                           LEFT JOIN " . TABLE_FEATURED . " f ON p.products_id = f.products_id
+                           LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id )
+                           WHERE p.products_id = f.products_id
+                           AND p.products_id = pd.products_id
+                           AND p.products_status = 1 AND f.status = 1
+                           AND pd.language_id = " . (int)$_SESSION['languages_id'];
 } else {
   // get all products and cPaths in this subcat tree
-  $productsInCategory = zen_get_categories_products_list( (($manufacturers_id > 0 && $_GET['filter_id'] > 0) ? zen_get_generated_category_path_rev($_GET['filter_id']) : $cPath), false, true, 0, $display_limit);
+  $productsInCategory = zen_get_categories_products_list( (($manufacturers_id > 0 && !empty($_GET['filter_id'])) ? zen_get_generated_category_path_rev($_GET['filter_id']) : $cPath), false, true, 0, $display_limit);
 
   if (is_array($productsInCategory) && sizeof($productsInCategory) > 0) {
     // build products-list string to insert into SQL query
@@ -37,15 +37,15 @@ if ( (($manufacturers_id > 0 && $_GET['filter_id'] == 0) || $_GET['music_genre_i
       $list_of_products .= $key . ', ';
     }
     $list_of_products = substr($list_of_products, 0, -2); // remove trailing comma
-    $featured_products_query = "select distinct p.products_id, p.products_image, pd.products_name, p.master_categories_id
-                                from (" . TABLE_PRODUCTS . " p
-                                left join " . TABLE_FEATURED . " f on p.products_id = f.products_id
-                                left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id)
-                                where p.products_id = f.products_id
-                                and p.products_id = pd.products_id
-                                and p.products_status = 1 and f.status = 1
-                                and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                and p.products_id in (" . $list_of_products . ")";
+    $featured_products_query = "SELECT DISTINCT p.products_id, p.products_image, pd.products_name, p.master_categories_id
+                                FROM (" . TABLE_PRODUCTS . " p
+                                LEFT JOIN " . TABLE_FEATURED . " f ON p.products_id = f.products_id
+                                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id)
+                                WHERE p.products_id = f.products_id
+                                AND p.products_id = pd.products_id
+                                AND p.products_status = 1 AND f.status = 1
+                                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                AND p.products_id IN (" . $list_of_products . ")";
   }
 }
 if ($featured_products_query != '') $featured_products = $db->ExecuteRandomMulti($featured_products_query, MAX_DISPLAY_SEARCH_RESULTS_FEATURED);
@@ -89,4 +89,4 @@ if ($num_products_count > 0) {
     $zc_show_featured = true;
   }
 }
-?>
+
