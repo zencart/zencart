@@ -434,8 +434,8 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
           </td>
           <td>
               <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="control-label"'); ?>
-            <label class="radion-inline"><?php echo zen_draw_radio_field('image_delete', '0', ($pInfo->image_delete == 0 ? true : false)) . TABLE_HEADING_NO; ?></label>
-            <label class="radion-inline"><?php echo zen_draw_radio_field('image_delete', '1', ($pInfo->image_delete == 1 ? true : false)) . TABLE_HEADING_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
           </td>
         </tr>
 
@@ -443,8 +443,8 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
           <td>&nbsp;</td>
           <td>
               <?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', ($pInfo->overwrite == 0 ? true : false)) . TABLE_HEADING_NO; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', ($pInfo->overwrite == 1 ? true : false)) . TABLE_HEADING_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
           </td>
         </tr>
         <tr>

@@ -44,9 +44,9 @@ if (zen_not_null($action)) {
 
     case 'remove_type':
       if (isset($_POST['type_id'])) {
-        $sql = "delete from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                  where category_id = '" . (int)zen_db_prepare_input($_GET['cID']) . "'
-                 and product_type_id = '" . (int)zen_db_prepare_input($_POST['type_id']) . "'";
+        $sql = "DELETE FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                WHERE category_id = " . (int)zen_db_prepare_input($_GET['cID']) . "
+                AND product_type_id = " . (int)zen_db_prepare_input($_POST['type_id']);
 
         $db->Execute($sql);
         zen_remove_restrict_sub_categories($_GET['cID'], (int)$_POST['type_id']);
@@ -110,9 +110,9 @@ if (zen_not_null($action)) {
 
         $parent_cat = $db->Execute($sql);
         if ($parent_cat->fields['parent_id'] != '0') {
-          $sql = "select *
-                  from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                  where category_id = '" . $parent_cat->fields['parent_id'] . "'";
+          $sql = "SELECT *
+                  FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                  WHERE category_id = '" . $parent_cat->fields['parent_id'] . "'";
           $has_type = $db->Execute($sql);
           if ($has_type->RecordCount() > 0) {
             while (!$has_type->EOF) {
@@ -257,8 +257,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
   <head>
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <link rel="stylesheet" href="includes/stylesheet.css">
+    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
     <script>
@@ -296,162 +296,235 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     if (isset($_GET['cPath'])) {
       $cPath = $_GET['cPath'];
     }
-
+    switch ($action) {
+      case 'new_category':
+        $formAction = 'insert_category';
+        break;
+      case 'edit_category':
+        $formAction = 'update_category';
+        break;
+    }
     // echo 'I SEE ' . $_SESSION['html_editor_preference_status'];
-    // set image delete
-    $on_image_delete = false;
-    $off_image_delete = true;
     ?>
     <div class="container-fluid">
-      <h1><?php echo HEADING_TITLE; ?></h1>
-
-      <?php
-      echo zen_draw_form('categories', FILENAME_CATEGORIES, 'action=update_category&cPath=' . $cPath . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
-      echo zen_draw_hidden_field('categories_id', $cInfo->categories_id);
-      ?>
-      <div class="form-group"><?php echo TEXT_EDIT_INTRO; ?></div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_NAME, '', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9">
-            <?php
-            for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-              ?>
-            <div class="input-group">
-              <span class="input-group-addon">
-                  <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
-              </span>
-              <?php echo zen_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_name($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name') . 'class="form-control"'); ?>
-            </div>
-            <br>
-            <?php
-          }
-          ?>
-        </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_CATEGORIES_DESCRIPTION, 'categories_description', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9">
-            <?php
-            for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-              ?>
-            <div class="input-group">
-              <span class="input-group-addon">
-                  <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
-              </span>
-              <?php echo zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
-            </div>
-            <br>
-            <?php
-          }
-          ?>
-        </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_IMAGE, 'categories_image', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9">
-            <?php echo zen_draw_file_field('categories_image', '', 'class="form-control"'); ?>
-        </div>
-      </div>
-      <?php
-      $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
-      $default_directory = substr($cInfo->categories_image, 0, strpos($cInfo->categories_image, '/') + 1);
-      ?>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9">
-            <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?>
-        </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_MANUAL, 'categories_image_manual', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9">
-            <?php echo zen_draw_input_field('categories_image_manual', '', 'class="form-control"'); ?>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-3">
-        </div>
-        <div class="col-sm-9">
-            <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
-            <?php echo '<br />' . $cInfo->categories_image; ?>
-        </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9">
-          <div class="radio-inline">
-            <label>
-                <?php echo zen_draw_radio_field('image_delete', '0', $off_image_delete) . TABLE_HEADING_NO; ?>
-            </label>
-          </div>
-          <div class="radio-inline">
-            <label>
-                <?php echo zen_draw_radio_field('image_delete', '1', $on_image_delete) . TABLE_HEADING_YES; ?>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_EDIT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9">
-            <?php echo zen_draw_input_field('sort_order', $cInfo->sort_order, 'size="6" class="form-control"'); ?>
-        </div>
-      </div>
-      <div class="form-group text-right">
-        <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button> <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
-      </div>
-      <?php
-      if ($action == 'edit_category') {
-        ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_RESTRICT_PRODUCT_TYPE, 'restrict_type', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
-              <?php echo zen_draw_pull_down_menu('restrict_type', $type_array, '', 'class="form-control"'); ?>
-            <br>
-            <input type="submit" name="add_type_all" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_ON; ?>"> <input type="submit" name="add_type" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_OFF; ?>">
-          </div>
-        </div>
         <?php
-      }
-      ?>
-      <?php echo '</form>'; ?>
-      <?php
-      $restrict_types_query = "SELECT *
-                               FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                               WHERE category_id = " . (int)$cInfo->categories_id;
-
-      $restrict_types = $db->Execute($restrict_types_query);
-      if ($restrict_types->RecordCount() > 0) {
+        if ($action == 'new_category' || $action == 'edit_category') {
+          ?>
+        <h1><?php echo HEADING_TITLE; ?></h1>
+        <?php
+        echo zen_draw_form('categories', FILENAME_CATEGORIES, 'action=' . $formAction . '&cPath=' . $cPath . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
+        echo zen_draw_hidden_field('categories_id', $cInfo->categories_id);
         ?>
+        <?php if ($formAction == 'update_category') { ?>
+          <div class="form-group">
+            <div class="col-sm-12"><?php echo TEXT_EDIT_INTRO; ?></div>
+          </div>
+        <?php } ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CATEGORY_HAS_RESTRICTIONS, 'remove_type', 'class="col-sm-3 form-label"'); ?>
+            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_NAME, '', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9">
-            <?php
-            foreach ($restrict_types as $restrict_type) {
-              $type_query = "SELECT type_name
-                             FROM " . TABLE_PRODUCT_TYPES . "
-                             WHERE type_id = " . (int)$restrict_type['product_type_id'];
-              $type = $db->Execute($type_query);
-              ?>
-              <?php echo zen_draw_form('remove_type', FILENAME_CATEGORIES, 'action=remove_type' . (isset($cPath) ? '&cPath=' . $cPath : '') . '&cID=' . $cInfo->categories_id); ?>
-              <?php echo zen_draw_hidden_field('type_id', $restrict_types->fields['product_type_id']); ?>
-              <?php echo zen_image_submit('button_delete.gif', IMAGE_DELETE); ?>
-              <?php echo '</form>'; ?>
-              <?php echo $type->fields['type_name'] . '<br />'; ?>
+              <?php
+              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                ?>
+              <div class="input-group">
+                <span class="input-group-addon">
+                    <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
+                </span>
+                <?php echo zen_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_name($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name') . 'class="form-control"'); ?>
+              </div>
+              <br>
               <?php
             }
             ?>
           </div>
         </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_CATEGORIES_DESCRIPTION, 'categories_description', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php
+              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                ?>
+              <div class="input-group">
+                <span class="input-group-addon">
+                    <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
+                </span>
+                <?php echo zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
+              </div>
+              <br>
+              <?php
+            }
+            ?>
+          </div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_IMAGE, 'categories_image', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php echo zen_draw_file_field('categories_image', '', 'class="form-control"'); ?>
+          </div>
+        </div>
+        <?php
+        $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
+        $default_directory = substr($cInfo->categories_image, 0, strpos($cInfo->categories_image, '/') + 1);
+        ?>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_MANUAL, 'categories_image_manual', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php echo zen_draw_input_field('categories_image_manual', '', 'class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-3">
+          </div>
+          <div class="col-sm-9">
+              <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
+              <?php echo '<br />' . $cInfo->categories_image; ?>
+          </div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
+          </div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_EDIT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php echo zen_draw_input_field('sort_order', $cInfo->sort_order, 'size="6" class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="floatButton">
+          <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button> <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+        </div>
+        <?php
+        if ($action == 'edit_category') {
+          ?>
+          <div class="form-group">
+              <?php echo zen_draw_label(TEXT_RESTRICT_PRODUCT_TYPE, 'restrict_type', 'class="col-sm-3 control-label"'); ?>
+            <div class="col-sm-9">
+                <?php echo zen_draw_pull_down_menu('restrict_type', $type_array, '', 'class="form-control"'); ?>
+              <br>
+              <input type="submit" name="add_type_all" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_ON; ?>"> <input type="submit" name="add_type" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_OFF; ?>">
+            </div>
+          </div>
+          <?php
+        }
+        ?>
+        <?php echo '</form>'; ?>
+        <?php
+        $restrict_types_query = "SELECT *
+                                 FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                                 WHERE category_id = " . (int)$cInfo->categories_id;
+
+        $restrict_types = $db->Execute($restrict_types_query);
+        if ($restrict_types->RecordCount() > 0) {
+          ?>
+          <div class="form-group">
+              <?php echo zen_draw_label(TEXT_CATEGORY_HAS_RESTRICTIONS, 'remove_type', 'class="col-sm-3 form-label"'); ?>
+            <div class="col-sm-9">
+                <?php
+                foreach ($restrict_types as $restrict_type) {
+                  $type_query = "SELECT type_name
+                                 FROM " . TABLE_PRODUCT_TYPES . "
+                                 WHERE type_id = " . (int)$restrict_type['product_type_id'];
+                  $type = $db->Execute($type_query);
+                  ?>
+                <div class="form-group">
+                    <?php echo zen_draw_form('remove_type', FILENAME_CATEGORIES, 'action=remove_type' . (isset($cPath) ? '&cPath=' . $cPath : '') . '&cID=' . $cInfo->categories_id); ?>
+                    <?php echo zen_draw_hidden_field('type_id', $restrict_types->fields['product_type_id']); ?>
+                  <button type="submit" class="btn btn-warning"><?php echo IMAGE_DELETE; ?></button>
+                  <?php echo '</form>'; ?>
+                  <?php echo $type->fields['type_name']; ?>
+                </div>
+                <?php
+              }
+              ?>
+            </div>
+          </div>
+          <?php
+        }
+      } elseif ($action == 'edit_category_meta_tags') {
+        ?>
+        <h1><?php echo TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS; ?></h1>
+
+        <?php echo zen_draw_form('categories', FILENAME_CATEGORIES, 'action=update_category_meta_tags&cPath=' . $cPath, 'post', 'enctype="multipart/form-data" class="form-horizontal"'); ?>
+        <?php echo zen_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
+        <div class="form-group">
+          <?php echo TEXT_EDIT_CATEGORIES_META_TAGS_INTRO; ?> - <strong><?php echo $cInfo->categories_id ?> <?php echo $cInfo->categories_name; ?></strong>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_TITLE, 'metatags_title[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php
+              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                ?>
+              <div class="input-group">
+                <span class="input-group-addon">
+                    <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_title']); ?>
+                </span>
+                <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_metatags_title($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_METATAGS_CATEGORIES_DESCRIPTION, 'metatags_title') . 'class="form-control"');
+                ?>
+              </div>
+              <br>
+              <?php
+            }
+            ?>
+          </div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS, 'metatags_keywords[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php
+              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                ?>
+              <div class="input-group">
+                <span class="input-group-addon">
+                    <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_keywords']); ?>
+                </span>
+                <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_keywords($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="form-control noEditor"');
+                ?>
+              </div>
+              <br>
+              <?php
+            }
+            ?>
+          </div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION, 'metatags_description[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9">
+              <?php
+              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                ?>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
+                </span>
+                <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="form-control noEditor"');
+                ?>
+              </div>
+              <br>
+              <?php
+            }
+            ?>
+          </div>
+        </div>
+        <div class="form-group text-right">
+          <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button> <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+        </div>
+        <?php echo '</form>'; ?>
         <?php
       }
       ?>
-
     </div>
     <!-- body_text_eof //-->
-
     <!-- body_eof //-->
-
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->

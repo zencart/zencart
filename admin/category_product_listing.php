@@ -398,7 +398,18 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <td class="text-center"><?php echo zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF); ?></td>
                 <td class="text-center"><?php echo zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
                 <td class="text-center"><?php echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED); ?></td>
-                <td class="text-center"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?></td>
+                <td class="text-center">
+                  <div class="fa fa-stack">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
+                    <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #ffa500"></i>
+                  </div>
+                  &nbsp;
+                  <div class="fa fa-stack">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
+                    <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                  </div>
+                  <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -513,8 +524,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
               $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
               ?>
-            <div class="col-sm-6 control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></div>
-            <div class="col-sm-6"><?php echo zen_output_string_protected($_GET['search']); ?></div>
+              <div class="col-sm-6 control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></div>
+              <div class="col-sm-6"><?php echo zen_output_string_protected($_GET['search']); ?></div>
               <?php
             }
             echo '</form>';
@@ -569,7 +580,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <th class="text-right"><?php echo TABLE_HEADING_PRICE; ?></th>
                   <th class="text-right">&nbsp;</th>
                   <th class="text-right"><?php echo TABLE_HEADING_QUANTITY; ?></th>
-                  <th class="text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
+                  <th class="text-right"><?php echo TABLE_HEADING_STATUS; ?></th>
                   <?php
                   if ($action == '') {
                     ?>
@@ -638,7 +649,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="text-center">&nbsp;</td>
                   <td class="text-right"><?php echo zen_get_products_sale_discount('', $category['categories_id'], true); ?></td>
                   <td class="text-center">&nbsp;</td>
-                  <td class="text-right" valign="bottom">
+                  <td class="text-right">
                       <?php
                       if (SHOW_COUNTS_ADMIN == 'false') {
                         // don't show counts
@@ -650,15 +661,17 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       }
                       ?>
                   </td>
-                  <td>
+                  <td class="text-right">
+                      <?php
+                      if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') == 'true') {
+                        echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;';
+                      }
+                      ?>
                       <?php if ($category['categories_status'] == '1') { ?>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag_categories&flag=0&cID=' . $category['categories_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></a>
                     <?php } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag_categories&flag=1&cID=' . $category['categories_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF); ?></a>
                       <?php
-                    }
-                    if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') == 'true') {
-                      echo '&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"');
                     }
                     ?>
                   </td>
@@ -667,16 +680,46 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     ?>
                     <td class="text-right"><?php echo $category['sort_order']; ?></td>
                     <td class="text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category' . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?></a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=delete_category'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?></a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE); ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category' . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x" style="color: #008000"></i>
+                          <i class="fa fa-pencil fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                        </div>
+                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?>
+                      </a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=delete_category'); ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x" style="color: #f00"></i>
+                          <i class="fa fa-trash-o fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                        </div>
+                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?>
+                      </a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category'); ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x" style="color: #800080"></i>
+                          <i class="fa fa-stack-1x" aria-hidden="true" style="color: #fff"><strong>M</strong></i>
+                        </div>
+                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE); ?>
+                      </a>
                       <?php
 // bof: categories meta tags
                       if (zen_get_category_metatags_keywords($category['categories_id'], (int)$_SESSION['languages_id']) or zen_get_category_metatags_description($category['categories_id'], (int)$_SESSION['languages_id'])) {
                         ?>
-                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
+                            <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #ffa500"></i>
+                          </div>
+                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON); ?>
+                        </a>
                       <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
+                            <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                          </div>
+                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?>
+                        </a>
                         <?php
                       } // eof: categories meta tags
                       ?>
@@ -814,9 +857,12 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td><a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_preview&read=only' . '&product_type=' . $product['products_type'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<?php echo $product['products_name']; ?></td>
                   <td><?php echo $product['products_model']; ?></td>
                   <td colspan="2" class="text-right"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
-                  <td class="textright"><?php echo $product['products_quantity']; ?></td>
-                  <td>
+                  <td class="text-right"><?php echo $product['products_quantity']; ?></td>
+                  <td class="text-right">
                       <?php
+                      if (zen_get_product_is_linked($product['products_id']) == 'true') {
+                        echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"') . '&nbsp;&nbsp;';
+                      }
                       if ($product['products_status'] == '1') {
                         echo zen_draw_form('setflag_products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''));
                         ?>
@@ -832,9 +878,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <?php echo '</form>'; ?>
                       <?php
                     }
-                    if (zen_get_product_is_linked($product['products_id']) == 'true') {
-                      echo '&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"') . '<br>';
-                    }
                     ?>
                   </td>
                   <?php
@@ -842,13 +885,43 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     ?>
                     <td class="text-right"><?php echo $product['products_sort_order']; ?></td>
                     <td class="text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?></a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?></a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE); ?></a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=copy_product'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_copy_to.gif', ICON_COPY_TO); ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x" style="color: #008000"></i>
+                          <i class="fa fa-pencil fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                        </div>
+                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?>
+                      </a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product'); ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x" style="color: #f00"></i>
+                          <i class="fa fa-trash-o fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                        </div>
+                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?>
+                      </a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product'); ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x" style="color: #800080"></i>
+                          <i class="fa fa-stack-1x" aria-hidden="true" style="color: #fff"><strong>M</strong></i>
+                        </div>
+                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE); ?>
+                      </a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=copy_product'); ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x" style="color: #00f"></i>
+                          <i class="fa fa-stack-1x" aria-hidden="true" style="color: #fff"><strong>C</strong></i>
+                        </div>
+                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_copy_to.gif', ICON_COPY_TO); ?>
+                      </a>
 
                       <?php if (defined('FILENAME_IMAGE_HANDLER') && file_exists(DIR_FS_ADMIN . FILENAME_IMAGE_HANDLER . '.php')) { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_IMAGE_HANDLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_image_handler.gif', ICON_IMAGE_HANDLER); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_IMAGE_HANDLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #d3d3d3"></i>
+                            <i class="fa fa-stack-1x fa-image" aria-hidden="true" style="color: #000"></i>
+                          </div>
+                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_image_handler.gif', ICON_IMAGE_HANDLER); ?>
+                        </a>
                       <?php } ?>
 
                       <?php
@@ -858,11 +931,23 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <?php
                       if (zen_has_product_attributes($product['products_id'], 'false')) {
                         ?>
-                        <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=attribute_features' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>"><?php echo ((!empty($product['products_id']) && zen_has_product_attributes($product['products_id'], 'false')) ? zen_image(DIR_WS_IMAGES . 'icon_attributes_on.gif', ICON_ATTRIBUTES) : zen_image(DIR_WS_IMAGES . 'icon_attributes.gif', ICON_ATTRIBUTES)); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=attribute_features' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #87cefa"></i>
+                            <i class="fa fa-stack-1x" aria-hidden="true" style="color: #fff"><strong>A</strong></i>
+                          </div>
+                          <?php // echo ((!empty($product['products_id']) && zen_has_product_attributes($product['products_id'], 'false')) ? zen_image(DIR_WS_IMAGES . 'icon_attributes_on.gif', ICON_ATTRIBUTES) : zen_image(DIR_WS_IMAGES . 'icon_attributes.gif', ICON_ATTRIBUTES)); ?>
+                        </a>
                         <?php
                       } else {
                         ?>
-                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_attributes.gif', ICON_ATTRIBUTES); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
+                            <i class="fa fa-stack-1x" aria-hidden="true" style="color: #fff"><strong>A</strong></i>
+                          </div>
+                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_attributes.gif', ICON_ATTRIBUTES); ?>
+                        </a>
                         <?php
                       }
                       ?>
@@ -872,17 +957,35 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <?php
                       if ($zc_products->get_allow_add_to_cart($product['products_id']) == "Y") {
                         ?>
-                        <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_products_price_manager.gif', ICON_PRODUCTS_PRICE_MANAGER); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #32cd32"></i>
+                            <i class="fa fa-stack-1x fa-dollar" aria-hidden="true" style="color: #fff"></i>
+                          </div>
+                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_products_price_manager.gif', ICON_PRODUCTS_PRICE_MANAGER); ?>
+                        </a>
                         <?php
                       }
 // meta tags
                       if (zen_get_metatags_keywords($product['products_id'], (int)$_SESSION['languages_id']) or zen_get_metatags_description($product['products_id'], (int)$_SESSION['languages_id'])) {
                         ?>
-                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
+                            <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #ffa500"></i>
+                          </div>
+                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON); ?>
+                        </a>
                         <?php
                       } else {
                         ?>
-                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>" style="text-decoration: none">
+                          <div class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
+                            <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                          </div>
+                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?>
+                        </a>
                         <?php
                       }
                       ?>
@@ -943,40 +1046,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                */
               $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
               break;
-
-            // bof: categories meta tags
-            case 'edit_category_meta_tags':
-              $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS . '</strong>');
-
-              $contents = array('form' => zen_draw_form('categories', FILENAME_CATEGORIES, 'action=update_category_meta_tags&cPath=' . $cPath, 'post', 'enctype="multipart/form-data"') . zen_draw_hidden_field('categories_id', $cInfo->categories_id));
-              $contents[] = array('text' => TEXT_EDIT_CATEGORIES_META_TAGS_INTRO . ' - <strong>' . $cInfo->categories_id . ' ' . $cInfo->categories_name . '</strong>');
-
-              $languages = zen_get_languages();
-
-              $category_inputs_string_metatags_title = '';
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                $category_inputs_string_metatags_title .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_title']) . '&nbsp;' . zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_metatags_title($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_METATAGS_CATEGORIES_DESCRIPTION, 'metatags_title'));
-              }
-              $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_TITLE . $category_inputs_string_metatags_title);
-
-              $category_inputs_string_metatags_keywords = '';
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                $category_inputs_string_metatags_keywords .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_keywords']) . '&nbsp;';
-                $category_inputs_string_metatags_keywords .= zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_keywords($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"');
-              }
-              $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS . $category_inputs_string_metatags_keywords);
-
-              $category_inputs_string_metatags_description = '';
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                $category_inputs_string_metatags_description .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;';
-                $category_inputs_string_metatags_description .= zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"');
-              }
-              $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION . $category_inputs_string_metatags_description);
-
-              $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
-              break;
-            // eof: categories meta tags
-
             case 'move_category':
               $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_MOVE_CATEGORY . '</h4>');
 
