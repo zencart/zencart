@@ -224,6 +224,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
       <?php echo zen_draw_label(TEXT_PRODUCTS_DATE_AVAILABLE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9">
         <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control"', '', 'date'); ?>
+      <span class="help-block errorText">(YYYY-MM-DD)</span>
     </div>
   </div>
   <div class="form-group">

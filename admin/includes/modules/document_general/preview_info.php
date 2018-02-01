@@ -35,21 +35,22 @@ if (zen_not_null($_POST)) {
 }
 
 $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
+?>
+<div class="container-fluid">
+    <?php
+    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      if (isset($_GET['read']) && ($_GET['read'] == 'only')) {
+        $pInfo->products_name = zen_get_products_name($pInfo->products_id, $languages[$i]['id']);
+        $pInfo->products_description = zen_get_products_description($pInfo->products_id, $languages[$i]['id']);
+        $pInfo->products_url = zen_get_products_url($pInfo->products_id, $languages[$i]['id']);
+      } else {
+        $pInfo->products_name = zen_db_prepare_input($products_name[$languages[$i]['id']]);
+        $pInfo->products_description = zen_db_prepare_input($products_description[$languages[$i]['id']]);
+        $pInfo->products_url = zen_db_prepare_input($products_url[$languages[$i]['id']]);
+      }
 
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-  if (isset($_GET['read']) && ($_GET['read'] == 'only')) {
-    $pInfo->products_name = zen_get_products_name($pInfo->products_id, $languages[$i]['id']);
-    $pInfo->products_description = zen_get_products_description($pInfo->products_id, $languages[$i]['id']);
-    $pInfo->products_url = zen_get_products_url($pInfo->products_id, $languages[$i]['id']);
-  } else {
-    $pInfo->products_name = zen_db_prepare_input($products_name[$languages[$i]['id']]);
-    $pInfo->products_description = zen_db_prepare_input($products_description[$languages[$i]['id']]);
-    $pInfo->products_url = zen_db_prepare_input($products_url[$languages[$i]['id']]);
-  }
-
-  $specials_price = zen_get_products_special_price($pID);
-  ?>
-  <div class="container-fluid">
+      $specials_price = zen_get_products_special_price($pID);
+      ?>
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
     <div class="row">
         <?php
