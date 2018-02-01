@@ -38,7 +38,7 @@ if (isset($_GET['cmd'])) {
   }
 }
 if ($pagename == '') {
-  $pagename = preg_replace('/\.php$/', '', basename($PHP_SELF));
+  $pagename = basename($PHP_SELF, '.php');
 }
 $pagename = str_replace('_', ' ', $pagename);
 $pagename = ucwords($pagename);
