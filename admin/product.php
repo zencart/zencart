@@ -86,7 +86,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     }
     ?>
   </head>
-  <body onload="init()">
+  <body onload="init();">
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
