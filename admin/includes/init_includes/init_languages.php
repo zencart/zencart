@@ -31,7 +31,7 @@ $template_query = $db->Execute("select template_dir from " . TABLE_TEMPLATE_SELE
 $template_dir = $template_query->fields ['template_dir'];
 
 // include the language translations
-zen_load_language_file('locale.php'); 
+zen_load_language_file('locale.php');
 $ajax = FALSE;
 require (DIR_WS_LANGUAGES . $_SESSION ['language'] . '.php');
 if (! empty($_SERVER ['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER ['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
@@ -41,16 +41,16 @@ if (! empty($_SERVER ['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER ['HTTP_X_
     $current_page = isset($_GET ['act']) ? $_GET ['act'] : 'ajax_error_GET[act]_not_specified';
   }
   $ajax = TRUE;
-} elseif (isset($_GET ['cmd'])) {
-  $current_page = $_GET ['cmd'] . '.php';
+} elseif (! empty($_GET['cmd'])) {
+  $current_page = $_GET['cmd'] . '.php';
 } else {
   $current_page = basename($PHP_SELF);
 }
 
 if ($ajax == TRUE) {
-  zen_load_language_file(FILENAME_DEFAULT . '.php'); 
+  zen_load_language_file(FILENAME_DEFAULT . '.php');
 }
-if ($current_page != '') { 
+if ($current_page != '') {
   zen_load_language_file($current_page);
 }
 

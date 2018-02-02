@@ -10,7 +10,7 @@ use App\Controllers\ControllerFinder;
 
 require('includes/application_bootstrap.php');
 
-$cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'index';
+$cmd = ! empty($_GET['cmd']) ? $_GET['cmd'] : 'index';
 
 $controllerMap = $configLoader->get('controllermap');
 $controllerCommand = preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd);
