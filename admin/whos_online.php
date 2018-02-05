@@ -122,8 +122,8 @@
   $whos_online->rewind();
   $total_sess = $whos_online->RecordCount();
 
-  $optURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('t', 'na', 'ns'));
-  $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q', 't', 'na', 'ns'));
+  $optURL = 'index.php?cmd=' . FILENAME_WHOS_ONLINE . '&' . zen_get_all_get_params(array('t', 'na', 'ns'));
+  $listingURL = 'index.php?cmd=' . FILENAME_WHOS_ONLINE . '&' . zen_get_all_get_params(array('q', 't', 'na', 'ns'));
 require('includes/admin_html_head.php');
 ?>
 <script type="text/javascript">
