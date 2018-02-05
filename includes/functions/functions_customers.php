@@ -3,10 +3,10 @@
  * functions_customers
  *
  * @package functions
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 14 12:41:22 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Modified in v1.5.6 $
  */
 
 ////
@@ -213,3 +213,24 @@
     }
     return true;
   }
+
+/**
+ * This function identifies whether (true) or not (false) the current customer session is
+ * associated with a guest-checkout process.
+ */
+function zen_in_guest_checkout()
+{
+    $in_guest_checkout = false;
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_IN_GUEST_CHECKOUT', '', $in_guest_checkout);
+    return (bool)$in_guest_checkout;
+}
+
+/**
+ * This function identifies whether (true) or not (false) a customer is currently logged into the site.
+ */
+function zen_is_logged_in()
+{
+    $is_logged_in = (!empty($_SESSION['customer_id']));
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_IS_LOGGED_IN', '', $is_logged_in);
+    return (bool)$is_logged_in;
+}
