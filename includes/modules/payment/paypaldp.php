@@ -2586,7 +2586,7 @@ class CardinalXMLParser{
   // Initialize the XML parser.
   /////////////////////////////////////////////////////////////////////////////////////////////
 
-  function CardinalXMLParser() {
+  function __construct() {
     $this->xml_parser = xml_parser_create();
   }
 
