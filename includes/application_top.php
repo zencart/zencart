@@ -62,7 +62,6 @@ define('PAGE_PARSE_START_TIME', microtime());
 //  define('DISPLAY_PAGE_PARSE_TIME', 'true');
 @ini_set("arg_separator.output","&");
 @ini_set("html_errors","0");
-@ini_set("session.use_trans_sid","0");
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -84,9 +83,21 @@ define('DEBUG_AUTOLOAD', false);
  */
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
   @ini_set('display_errors', TRUE);
-  error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+  error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
 } else {
   error_reporting(0);
+}
+/*
+ * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
+ */
+if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
+if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
+/*
+ * Get time zone info from PHP config
+ */
+if (version_compare(PHP_VERSION, 5.3, '>='))
+{
+  @date_default_timezone_set(date_default_timezone_get());
 }
 /**
  * check for and include load application parameters
