@@ -186,7 +186,6 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
 </script>
 <div class="container-fluid">
     <?php
-//  echo $type_handler;
     echo zen_draw_form('new_product', $type_handler, 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . $_POST['search'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
     ?>
   <h3 class="col-sm-11"><?php echo sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)); ?></h3>
@@ -224,7 +223,9 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
     <?php } ?>
   </div>
   <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
       <?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?>
+    </div>
   </div>
   <?php
 // hidden fields not changeable on products page
@@ -243,8 +244,13 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_DATE_AVAILABLE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
-        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control"', '', 'date'); ?>
+    <div class="col-sm-3">
+      <div class="date input-group" id="datepicker">
+        <span class="input-group-addon">
+          <i class="fa fa-calendar fa-lg"></i>
+        </span>
+        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control"'); ?>
+      </div>
       <span class="help-block errorText">(YYYY-MM-DD)</span>
     </div>
   </div>
@@ -461,7 +467,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
     <div class="col-sm-3 control-label">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_URL, 'products_url'); ?><span class="help-block"><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></span>
+      <?php echo zen_draw_label(TEXT_PRODUCTS_URL, 'products_url'); ?><span class="help-block"><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></span>
     </div>
     <div class="col-sm-9">
         <?php

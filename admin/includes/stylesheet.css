@@ -14,6 +14,8 @@
 @import url("css/font-awesome.min.css");
 /* @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"); */
 
+@import url("css/daterangepicker.css");
+/* @import url("https://cdn.jsdelivr.net/npm/bootstrap-daterangepicker@2.1.30/daterangepicker.css"); */
 a {
     color: #0000ff;
     text-decoration: none;

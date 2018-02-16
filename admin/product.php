@@ -107,7 +107,40 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     ?>
     <!-- body_text_eof //-->
     <!-- body_eof //-->
-
+    <!-- script for datepicker -->
+    <script>
+      $('input[name="products_date_available"]').daterangepicker({
+          'singleDatePicker': true,
+          'showDropdowns': true,
+          'locale': {
+              'format': 'YYYY-MM-DD',
+              'daysOfWeek': [
+                  '<?php echo _SUNDAY_SHORT; ?>',
+                  '<?php echo _MONDAY_SHORT; ?>',
+                  '<?php echo _TUESDAY_SHORT; ?>',
+                  '<?php echo _WEDNESDAY_SHORT; ?>',
+                  '<?php echo _THURSDAY_SHORT; ?>',
+                  '<?php echo _FRIDAY_SHORT; ?>',
+                  '<?php echo _SATURDAY_SHORT; ?>'
+              ],
+              'monthNames': [
+                  '<?php echo _JANUARY; ?>',
+                  '<?php echo _FEBRUARY; ?>',
+                  '<?php echo _MARCH; ?>',
+                  '<?php echo _APRIL; ?>',
+                  '<?php echo _MAY; ?>',
+                  '<?php echo _JUNE; ?>',
+                  '<?php echo _JULY; ?>',
+                  '<?php echo _AUGUST; ?>',
+                  '<?php echo _SEPTEMBER; ?>',
+                  '<?php echo _OCTOBER; ?>',
+                  '<?php echo _NOVEMBER; ?>',
+                  '<?php echo _DECEMBER; ?>'
+              ]
+          }
+      }
+      );
+    </script>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
