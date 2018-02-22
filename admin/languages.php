@@ -39,10 +39,9 @@ if (zen_not_null($action)) {
         }
 
 // create additional categories_description records
-        $categories = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description
-                                    FROM " . TABLE_CATEGORIES . " c
-                                    LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
-                                    WHERE cd.language_id = " . (int)$_SESSION['languages_id']);
+        $categories = $db->Execute("SELECT categories_id, categories_name, categories_description
+                                    FROM " . TABLE_CATEGORIES_DESCRIPTION . "
+                                    WHERE language_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($categories as $category) {
           $db->Execute("INSERT INTO " . TABLE_CATEGORIES_DESCRIPTION . " (categories_id, language_id, categories_name, categories_description)
@@ -53,10 +52,9 @@ if (zen_not_null($action)) {
         }
 
 // create additional products_description records
-        $products = $db->Execute("SELECT p.products_id, pd.products_name, pd.products_description, pd.products_url
-                                  FROM " . TABLE_PRODUCTS . " p
-                                  LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
-                                  WHERE pd.language_id = " . (int)$_SESSION['languages_id']);
+        $products = $db->Execute("SELECT products_id, products_name, products_description, products_url
+                                  FROM " . TABLE_PRODUCTS_DESCRIPTION . "
+                                  WHERE language_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($products as $product) {
           $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url)
@@ -130,10 +128,9 @@ if (zen_not_null($action)) {
         }
 
 // create additional manufacturers_info records
-        $manufacturers = $db->Execute("SELECT m.manufacturers_id, mi.manufacturers_url
-                                       FROM " . TABLE_MANUFACTURERS . " m
-                                       LEFT JOIN " . TABLE_MANUFACTURERS_INFO . " mi ON m.manufacturers_id = mi.manufacturers_id
-                                       WHERE mi.languages_id = " . (int)$_SESSION['languages_id']);
+        $manufacturers = $db->Execute("SELECT manufacturers_id, manufacturers_url
+                                       FROM " . TABLE_MANUFACTURERS_INFO . "
+                                       WHERE languages_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($manufacturers as $manufacturer) {
           $db->Execute("INSERT INTO " . TABLE_MANUFACTURERS_INFO . " (manufacturers_id, languages_id, manufacturers_url)
@@ -155,10 +152,9 @@ if (zen_not_null($action)) {
         }
 
         // create additional coupons_description records
-        $coupons = $db->Execute("SELECT c.coupon_id, cd.coupon_name, cd.coupon_description
-                                 FROM " . TABLE_COUPONS . " c
-                                 LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON c.coupon_id = cd.coupon_id
-                                 WHERE cd.language_id = " . (int)$_SESSION['languages_id']);
+        $coupons = $db->Execute("SELECT coupon_id, coupon_name, coupon_description
+                                 FROM " . TABLE_COUPONS_DESCRIPTION . "
+                                 WHERE language_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($coupons as $coupon) {
           $db->Execute("INSERT INTO " . TABLE_COUPONS_DESCRIPTION . " (coupon_id, language_id, coupon_name, coupon_description)
