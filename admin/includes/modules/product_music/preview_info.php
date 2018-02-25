@@ -35,7 +35,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
 
-    echo zen_draw_form($form_action, $type_admin_handler, 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
+    if (!isset($_GET['read']) || ($_GET['read'] !== 'only')) {
+      echo zen_draw_form($form_action, $type_admin_handler, 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
+    }
 
     $languages = zen_get_languages();
     for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
@@ -79,6 +81,18 @@ if (!defined('IS_ADMIN_FLAG')) {
           ?>
         </td>
       </tr>
+<?php
+      if ($pInfo->products_url) {
+?>
+      <tr>
+        <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
+      <tr>
+        <td class="main"><?php echo sprintf(TEXT_PRODUCT_MORE_INFORMATION, $pInfo->products_url); ?></td>
+      </tr>
+<?php
+      }
+?>
       <tr>
         <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
