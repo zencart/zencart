@@ -3,10 +3,10 @@
  * upcoming_products module
  *
  * @package modules
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: upcoming_products.php 18923 2011-06-13 03:40:09Z wilt $
+ * @version $Id: upcoming_products.php  $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -54,7 +54,7 @@ if ( (($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['musi
 
 if ($expected_query != '') $expected = $db->Execute($expected_query);
 if ($expected_query != '' && $expected->RecordCount() > 0) {
-  foreach ($expected as $expect)
+  foreach ($expected as $expect) {
     if (!isset($productsInCategory[$expect['products_id']])) $productsInCategory[$expect['products_id']] = zen_get_generated_category_path_rev($expect['master_categories_id']);
     $expectedItems[] = $expect;
   }
