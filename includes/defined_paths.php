@@ -33,3 +33,4 @@ if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 if (!defined('DIR_CATALOG_LIBRARY')) {
     define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
 }
+if (!defined('SESSION_STORAGE')) define('DIR_WS_MEDIA', 'media/');
