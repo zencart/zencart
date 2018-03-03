@@ -160,7 +160,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
                             <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="confpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_CONFIRM_PASSWORD; ?>:</label>
                             <div class="col-xs-6 col-sm-7 col-md-6">
                             <?php echo zen_draw_password_field('confpwd-'.$_SESSION['securityToken'], '', false, 'class="form-control" id="admin_pass2" placeholder="' . TEXT_ADMIN_CONFIRM_PASSWORD . '"',false); ?>
-                            </div>-xs
+                            </div>
                           </div>
                         </div>
                     </div>
