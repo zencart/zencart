@@ -100,7 +100,7 @@ if ($expired && $message == '') $message = sprintf(ERROR_PASSWORD_EXPIRED . ' ' 
                             </div>
                           </div>
                           <div class="form-group">
-                            <label class="col-xs-4 col-xs-offsets-1 col-sm-4 col-md-6 control-label" for="admin_pass"><?php echo TEXT_ADMIN_PASS; ?>:</label>
+                            <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="admin_pass"><?php echo TEXT_ADMIN_PASS; ?>:</label>
                             <div class="col-xs-6 col-sm-7 col-md-6">
                             <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_PASS . '"', false); ?>
                             </div>
