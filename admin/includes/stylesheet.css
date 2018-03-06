@@ -16,6 +16,7 @@
 
 @import url("css/daterangepicker.css");
 /* @import url("https://cdn.jsdelivr.net/npm/bootstrap-daterangepicker@2.1.30/daterangepicker.css"); */
+@import url("https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css");
 a {
     color: #0000ff;
     text-decoration: none;

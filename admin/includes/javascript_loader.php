@@ -12,12 +12,22 @@
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"><\/script>');</script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery-1.12.4.min.js"><\/script>');</script>
 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
 <script src="includes/javascript/bootstrap.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
-<!-- <script src="includes/javascript/moment-with-locales.min.js"></script> -->
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-daterangepicker@2.1.30/daterangepicker.min.js"></script>
-<!-- <script src="includes/javascript/daterangepicker.min.js"></script> -->
+<script src="includes/javascript/jquery-ui-i18n.min.js"></script>
+<script>
+// init datepicker defaults with localization
+$(function(){
+  $.datepicker.setDefaults($.extend({}, $.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
+      dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+      changeMonth: true,
+      changeYear: true,
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      showButtonPanel: true
+  }) );
+});
+</script>
 <?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
