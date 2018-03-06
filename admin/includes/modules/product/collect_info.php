@@ -180,7 +180,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
       if (zen_get_product_is_linked($_GET['pID']) == 'true' && $_GET['pID'] > 0) {
         ?>
         <?php echo zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"'); ?>
-      <div class="col-sm-9">
+      <div class="col-sm-9 col-md-6">
         <div class="input-group">
           <span class="input-group-addon">
               <?php
@@ -198,12 +198,12 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
             <?php echo TEXT_MASTER_CATEGORIES_ID; ?>
         </strong>
       </div>
-      <div class="col-sm-9"><?php echo TEXT_INFO_ID . ($_GET['pID'] > 0 ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
+      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . ($_GET['pID'] > 0 ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
     <?php } ?>
   </div>
   <div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
-      <?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?>
+    <div class="col-sm-offset-3 col-sm-9 col-md-6">
+        <?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?>
     </div>
   </div>
   <?php
@@ -216,16 +216,16 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   <?php echo '<div class="col-sm-12 text-center">' . (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . ($out_status == true ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : '') . '</div>'; ?>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_STATUS, 'products_status', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '1', ($pInfo->products_status == 1 ? true : false)) . TEXT_PRODUCT_AVAILABLE; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '0', ($pInfo->products_status == 0 ? true : false)) . TEXT_PRODUCT_NOT_AVAILABLE; ?></label>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_DATE_AVAILABLE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-3">
+    <div class="col-sm-9 col-md-6">
       <div class="date input-group" id="datepicker">
-        <span class="input-group-addon">
+        <span class="input-group-addon datepicker_icon">
           <i class="fa fa-calendar fa-lg"></i>
         </span>
         <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control"'); ?>
@@ -235,13 +235,13 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_MANUFACTURER, 'manufacturers_id', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id, 'class="form-control"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_NAME, 'products_name', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           ?>
@@ -259,7 +259,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCT_IS_FREE, 'product_is_free', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('product_is_free', '1', ($pInfo->product_is_free == 1 ? true : false)) . TEXT_YES; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('product_is_free', '0', ($pInfo->product_is_free == 0 ? true : false)) . TEXT_NO; ?></label>
       <?php echo ($pInfo->product_is_free == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_IS_FREE_EDIT . '</span>' : ''); ?>
@@ -267,7 +267,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCT_IS_CALL, 'product_is_call', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('product_is_call', '1', ($pInfo->product_is_call == 1 ? true : false)) . TEXT_YES; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('product_is_call', '0', ($pInfo->product_is_call == 0 ? true : false)) . TEXT_NO; ?></label>
       <?php echo ($pInfo->product_is_call == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_IS_CALL_EDIT . '</span>' : ''); ?>
@@ -275,7 +275,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES, 'products_priced_by_attribute', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_priced_by_attribute', '1', ($pInfo->products_priced_by_attribute == 1 ? true : false)) . TEXT_PRODUCT_IS_PRICED_BY_ATTRIBUTE; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_priced_by_attribute', '0', ($pInfo->products_priced_by_attribute == 0 ? true : false)) . TEXT_PRODUCT_NOT_PRICED_BY_ATTRIBUTE; ?></label>
       <?php echo ($pInfo->products_priced_by_attribute == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_EDIT . '</span>' : ''); ?>
@@ -284,19 +284,19 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   <div class="well" style="background-color: #ebebff;padding: 10px 10px 0 0;">
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
-      <div class="col-sm-9">
+      <div class="col-sm-9 col-md-6">
           <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'onchange="updateGross()" class="form-control"'); ?>
       </div>
     </div>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_NET, 'products_price', 'class="col-sm-3 control-label"'); ?>
-      <div class="col-sm-9">
+      <div class="col-sm-9 col-md-6">
           <?php echo zen_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateGross()" class="form-control"'); ?>
       </div>
     </div>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 control-label"'); ?>
-      <div class="col-sm-9">
+      <div class="col-sm-9 col-md-6">
           <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control"'); ?>
       </div>
     </div>
@@ -306,7 +306,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </script>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_VIRTUAL, 'products_virtual', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_virtual', '1', ($pInfo->products_virtual == 1 ? true : false)) . TEXT_PRODUCT_IS_VIRTUAL; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_virtual', '0', ($pInfo->products_virtual == 0 ? true : false)) . TEXT_PRODUCT_NOT_VIRTUAL; ?></label>
       <?php echo ($pInfo->products_virtual == 1 ? '<span class="help-block errorText">' . TEXT_VIRTUAL_EDIT . '</span>' : ''); ?>
@@ -314,7 +314,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_IS_ALWAYS_FREE_SHIPPING, 'product_is_always_free_shipping', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('product_is_always_free_shipping', '1', ($pInfo->product_is_always_free_shipping == 1 ? true : false)) . TEXT_PRODUCT_IS_ALWAYS_FREE_SHIPPING; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('product_is_always_free_shipping', '0', ($pInfo->product_is_always_free_shipping == 0 ? true : false)) . TEXT_PRODUCT_NOT_ALWAYS_FREE_SHIPPING; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('product_is_always_free_shipping', '2', ($pInfo->product_is_always_free_shipping == 2 ? true : false)) . TEXT_PRODUCT_SPECIAL_ALWAYS_FREE_SHIPPING; ?></label>
@@ -323,7 +323,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QTY_BOX_STATUS, 'products_qty_box_status', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '1', ($pInfo->products_qty_box_status == 1 ? true : false)) . TEXT_PRODUCTS_QTY_BOX_STATUS_ON; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '0', ($pInfo->products_qty_box_status == 0 ? true : false)) . TEXT_PRODUCTS_QTY_BOX_STATUS_OFF; ?></label>
       <?php echo ($pInfo->products_qty_box_status == 0 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_QTY_BOX_STATUS_EDIT . '</span>' : ''); ?>
@@ -331,32 +331,32 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MIN_RETAIL, 'products_quantity_order_min', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'class="form-control"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MAX_RETAIL, 'products_quantity_order_max', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'class="form-control"'); ?>&nbsp;&nbsp;<?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_UNITS_RETAIL, 'products_quantity_order_units', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'class="form-control"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_MIXED, 'products_quantity_mixed', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_quantity_mixed', '1', ($pInfo->products_quantity_mixed == 1 ? true : false)) . TEXT_YES; ?></label>
       <label class="radio-inline"><?php echo zen_draw_radio_field('products_quantity_mixed', '0', ($pInfo->products_quantity_mixed == 0 ? true : false)) . TEXT_NO; ?></label>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_DESCRIPTION, 'products_description', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           ?>
@@ -374,13 +374,13 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY, 'products_quantity', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_input_field('products_quantity', $pInfo->products_quantity, 'class="form-control"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_MODEL, 'products_model', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_input_field('products_model', htmlspecialchars(stripslashes($pInfo->products_model), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control"'); ?>
     </div>
   </div>
@@ -394,39 +394,39 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE, 'products_image', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
-      <table>
-        <tr>
-          <td>
-            <?php echo zen_draw_file_field('products_image', '', 'class="form-control"'); ?></td>
-          <td valign="center" class="main"><?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"'); ?>&nbsp;<?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?></td>
-        </tr>
-        <tr>
-          <td>
-              <?php echo TEXT_IMAGE_CURRENT . '&nbsp;' . ($pInfo->products_image != '' ? $pInfo->products_image : NONE); ?>
-              <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image); ?>
-          </td>
-          <td>
-              <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
-          </td>
-        </tr>
-
-        <tr>
-          <td>&nbsp;</td>
-          <td>
-              <?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
-          </td>
-        </tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td>
-            <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="control-label"') . zen_draw_input_field('products_image_manual', '', 'class="form-control"'); ?></td>
-        </tr>
-      </table>
+    <div class="col-sm-9 col-md-9 col-lg-6">
+      <div class="col-md-6">
+        <div class="row">
+            <?php echo zen_draw_file_field('products_image', '', 'class="form-control"'); ?>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <?php echo zen_draw_label(TEXT_IMAGE_CURRENT, 'products_previous_image', 'class="conrol-label"') . '&nbsp;' . ($pInfo->products_image != '' ? $pInfo->products_image : NONE); ?>
+            <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image); ?>
+        </div>
+        <div class="row">&nbsp;</div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"'); ?>&nbsp;<?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="control-label"'); ?>
+          <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
+          <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite', 'class="control-label"'); ?>
+          <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
+          <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="control-label"') . zen_draw_input_field('products_image_manual', '', 'class="form-control"'); ?>
+        </div>
+      </div>
     </div>
   </div>
   <div class="form-group">
@@ -436,7 +436,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
     <div class="col-sm-3 control-label">
       <?php echo zen_draw_label(TEXT_PRODUCTS_URL, 'products_url'); ?><span class="help-block"><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           ?>
@@ -454,13 +454,13 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_WEIGHT, 'products_weight', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-md-6">
       <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control"'); ?>
     </div>
     <?php
