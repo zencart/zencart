@@ -3,7 +3,7 @@
  * @package Installer
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
+ * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 Modified in v1.5.6 $
  */
 
   require (DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
@@ -39,3 +39,28 @@
     $extendedOptions = array();
     $error = $dbInstaller->doCompletion($options);
   }
+
+  // Update Nginx Conf Template
+  $ngx_temp = trim($dir_ws_http_catalog, "/");
+  $ngx_store = ($ngx_temp=="") ? "" : "/" . $ngx_temp;
+  $ngx_slash = ($ngx_temp=="") ? "/" : $ngx_store;
+  $ngx_admin = $ngx_store . '/' . trim($adminDir,"/");
+  
+  $ngx_array = array(
+    "%%admin_folder%%" => $ngx_admin,
+    "%%store_folder%%" => $ngx_store,
+    "%%slash_folder%%" => $ngx_slash,
+  );
+  
+  $ngx_input_file = "includes/nginx_conf/ngx_server_template.txt";
+  $ngx_output_file = "includes/nginx_conf/zencart_ngx_server.conf";
+  $fh = fopen($ngx_input_file, "r");
+  $ngx_content = fread($fh, filesize($ngx_input_file));
+  fclose($fh);
+  foreach($ngx_array as $ngx_placeholder => $ngx_string) {
+  	$ngx_content = str_replace($ngx_placeholder, $ngx_string, $ngx_content);
+  }
+  $fh = fopen($ngx_output_file, "w");
+  fwrite($fh, $ngx_content);
+  fclose($fh);
+  

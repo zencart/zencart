@@ -47,10 +47,7 @@ $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VE
 $isCurrentDb = ($dbVersion == $currentDbVersion) ? TRUE : FALSE;
 $hasSaneConfigFile = $systemChecker->hasSaneConfigFile();
 $hasUpdatedConfigFile = $systemChecker->hasUpdatedConfigFile();
-// echo var_dump($dbVersion);
-// echo var_dump($isCurrentDb);
-// echo var_dump($hasSaneConfigFile);
-// echo var_dump($hasUpdatedConfigFile);
+
 
 if ($hasSaneConfigFile && $hasUpdatedConfigFile)
 {
