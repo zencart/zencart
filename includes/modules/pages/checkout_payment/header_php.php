@@ -34,7 +34,7 @@ if ($_SESSION['cart']->count_contents() <= 0) {
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!isset($_SESSION['shipping'])) {
+if (!isset($_SESSION['shipping']) || !$_SESSION['shipping']) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && $_SESSION['cart']->get_content_type() != 'virtual' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
