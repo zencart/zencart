@@ -39,43 +39,49 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 			ol,ul{padding:0}
 			ol li,ul li{margin-left:1.125rem}
 			img{border:0}
-			a{color:#0080ff}
 			a:visited{color:#006edb}
-			.errorDetails{color:red;}
+			a{
+				color:#0080ff;
+				font-weight:300;
+			}
+			.errorDetails{
+				color:red;
+				font-weight:300;
+			}
 			.copyright-string {
 				text-align: center;
 				font-size: small;
 			}
-			.content{
-				font-weight:300;
+			.oxygen{
+				font-weight:200;
 				margin:0 auto;
-				max-width:48rem;
+				max-width:50rem;
 				padding:0 2rem
 			}
-			.content h1{
-				font-size:3rem;
-				font-weight:200;
+			.oxygen h1{
+				font-size:2.5rem;
+				font-weight:100;
 				letter-spacing:1px;
 				margin:3rem 0 .5rem
 			}
-			.content h2{
+			.oxygen h2{
 				border-bottom:1px solid #e3e3e3;
-				font-weight:100;
+				font-weight:300;
 				margin:0 0 2.25rem;
 				padding:0 0 1.5rem
 			}
 			@media screen and (min-width:64rem){
-				.content{font-size:1.25rem}
-				.content h2{font-size:2.25rem}
-				.content h1{
-					font-size:3.5rem;
+				.oxygen{font-size:1.25rem}
+				.oxygen h2{font-size:2.25rem}
+				.oxygen h1{
+					font-size:4.0rem;
 					margin-top:5rem
 				}
 			}
 		</style>
 	</head>
 	<body>
-		<div class="content">
+		<div class="oxygen">
 			<p>
 				<h1>
 					<img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title=" Zen Cart&reg; " width="192" height="68" border="0" /> 
@@ -84,13 +90,13 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 				</h1>
 				<br />
 				<h2>
-					You are seeing this page for one or more reasons:
+					You see this page for one of the reasons below
 				</h2>
 				<ol>
 					<li>
-						This is <strong>*A NEW INSTALLATION*</strong> of Zen Cart<sup>&reg;</sup> and you have not yet completed the normal installation procedures. If this is the case, 
+						This is <strong>*A NEW INSTANCE*</strong> of Zen Cart<sup>&reg;</sup> and you have not yet completed the full installation procedures. If this is the case, please
 <?php if ($instPath) { ?>
-						<a href="<?php echo $instPath; ?>">PLEASE CLICK HERE</a> to begin installation.
+						<a href="<?php echo $instPath; ?>">CLICK HERE</a> to begin installation.
 <?php } else { ?>
 						you will need to upload the "zc_install" folder using your FTP program, and then run <a href="<?php echo $instPath; ?>">zc_install/index.php</a> via your browser (or reload this page to see a link to it).
 <?php } ?>
@@ -101,46 +107,35 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 						<br /><br />
 						<ul style='list-style-type:square'>
 							<li>
-								Your <tt><strong>/includes/configure.php</strong></tt> and/or <tt><strong>/admin/includes/configure.php</strong></tt> files contain invalid <em>path information</em> and/or invalid <em>database-connection information</em>.
+								Your configure.php files may be missing altogether and need to be recreated.
 							</li>
 							<li>
-								If you recently edited your configure.php files for any reason, or perhaps moved your site to a different folder or different server, then you will need to review and update all your settings to the correct values for your server.
+								Your web hosting provider may have changed the PHP configuration or upgraded the PHP version on the server and either of these may have broken things.
 							</li>
 							<li>
-								Additionally, if the permissions have been changed on your configure.php files, then perhaps they are too low for the files to be read.
+								Your configure.php files in the <tt><strong>/includes/</strong></tt> and/or <tt><strong>/admin/includes/</strong></tt> folders may contain invalid <em>path information</em> and/or invalid <em>database connection information</em>.
 							</li>
 							<li>
-								Or the configure.php files could be missing altogether.
+								You have edited your configure.php files, or perhaps moved your site to a different folder or different server. Please review and update all your settings to the reflect correct values.
 							</li>
 							<li>
-								Or your web hosting provider has recently changed the server's PHP configuration (or upgraded its version) then they may have broken things as well.
-							</li>
-							<li>
-								See the <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQ and Tutorials</a> area on the Zen Cart<sup>&reg;</sup> website for assistance.
+								Permissions have been changed on your configure.php files and these may not allow the files to be read.
 							</li>
 						</ul>
 					</li>
-<?php if (isset($problemString) && $problemString != '') { ?>
-					<br />
-					<li>
-						Additional <strong>*IMPORTANT*</strong> Details: <?php echo '<span class="errorDetails">' . $problemString . '</span>'; ?>
-					</li>
-<?php } ?>
 				</ol>
 			</p>
+<?php if (isset($problemString) && $problemString != '') { ?>
 			<br />
 			<p>
-				<h2>To begin installation:</h2>
-				<ol>
-<?php if ($docsPath) { ?>
-					<li>
-						The <a href="<?php echo $docsPath; ?>">Installation Documentation</a> can be read by clicking here: <a href="<?php echo $docsPath; ?>">Documentation</a>
-					</li>
-<?php } else { ?>
-					<li>
-						Installation documentation is normally found in the /docs folder of the Zen Cart&reg; distribution files/zip. You can also find documentation in the <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQs</a>.
-					</li>
+				Additional <strong>*IMPORTANT*</strong> Details:
+				<br /><?php echo '<strong>"</strong><span class="errorDetails">' . $problemString . '</span><strong>"</strong>'; ?>
+			</p>
 <?php } ?>
+			<br />
+			<p>
+				<h2>To begin installation</h2>
+				<ol>
 <?php if ($instPath) { ?>
 					<li>
 						Run <a href="<?php echo $instPath; ?>">zc_install/index.php</a> via your browser.
@@ -148,6 +143,15 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 <?php } else { ?>
 					<li>
 						You will need to upload the "zc_install" folder using your FTP program, and then run <a href="<?php echo $instPath; ?>">zc_install/index.php</a> via your browser (or reload this page to see a link to it).
+					</li>
+<?php } ?>
+<?php if ($docsPath) { ?>
+					<li>
+						<a href="<?php echo $docsPath; ?>">CLICK HERE</a> to read the installation documentation
+					</li>
+<?php } else { ?>
+					<li>
+						Installation documentation is normally found in the /docs folder of the Zen Cart&reg; distribution files/zip. You can also find documentation in the <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQs</a>.
 					</li>
 <?php } ?>
 					<li>
