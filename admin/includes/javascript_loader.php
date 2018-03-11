@@ -21,7 +21,7 @@
 // init datepicker defaults with localization
 $(function(){
   $.datepicker.setDefaults($.extend({}, $.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
-      dateFormat: '<?php echo DATE_FORMAT_DATEPICKER_ADMIN; ?>',
+      dateFormat: '<?php echo DATE_FORMAT_DATE_PICKER; ?>',
       changeMonth: true,
       changeYear: true,
       showOtherMonths: true,

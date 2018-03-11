@@ -322,7 +322,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <?php } ?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_NAME, '', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php
               for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                 ?>
@@ -340,7 +340,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_CATEGORIES_DESCRIPTION, 'categories_description', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php
               for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                 ?>
@@ -358,7 +358,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_IMAGE, 'categories_image', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_file_field('categories_image', '', 'class="form-control"'); ?>
           </div>
         </div>
@@ -368,34 +368,34 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         ?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?>
           </div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_MANUAL, 'categories_image_manual', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('categories_image_manual', '', 'class="form-control"'); ?>
           </div>
         </div>
         <div class="form-group">
           <div class="col-sm-3">
           </div>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
               <?php echo '<br />' . $cInfo->categories_image; ?>
           </div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
           </div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_EDIT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('sort_order', $cInfo->sort_order, 'size="6" class="form-control"'); ?>
           </div>
         </div>
@@ -407,7 +407,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_RESTRICT_PRODUCT_TYPE, 'restrict_type', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_pull_down_menu('restrict_type', $type_array, '', 'class="form-control"'); ?>
               <br>
               <input type="submit" name="add_type_all" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_ON; ?>"> <input type="submit" name="add_type" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_OFF; ?>">
@@ -427,7 +427,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_CATEGORY_HAS_RESTRICTIONS, 'remove_type', 'class="col-sm-3 form-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 foreach ($restrict_types as $restrict_type) {
                   $type_query = "SELECT type_name
@@ -460,7 +460,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_TITLE, 'metatags_title[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php
               for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                 ?>
@@ -479,7 +479,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS, 'metatags_keywords[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php
               for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                 ?>
@@ -498,7 +498,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION, 'metatags_description[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
+          <div class="col-sm-9 col-md-6">
               <?php
               for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                 ?>

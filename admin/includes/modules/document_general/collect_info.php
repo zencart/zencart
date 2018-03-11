@@ -212,7 +212,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
           </span>
           <?php echo zen_draw_input_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : zen_get_products_name($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name') . ' class="form-control"'); ?>
         </div>
-        <br/>
+        <br>
         <?php
       }
       ?>
@@ -230,7 +230,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
           </span>
           <?php echo zen_draw_textarea_field('products_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '30', htmlspecialchars((isset($products_description[$languages[$i]['id']])) ? stripslashes($products_description[$languages[$i]['id']]) : zen_get_products_description($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
         </div>
-        <br/>
+        <br>
         <?php
       }
       ?>
@@ -298,7 +298,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
           </span>
           <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . 'class="form-control"'); ?>
         </div>
-        <br/>
+        <br>
         <?php
       }
       ?>
