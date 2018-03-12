@@ -2,9 +2,7 @@
 
 /*! Hydrogen v1.x | Copyright 2018 Pim Brouwers | Licensed under MIT | https://github.com/pimbrouwers/hydrogen */
 
-/*!
-* Vanilla from Hydrogen CSS
-*/
+/*! Vanilla from Hydrogen CSS */
 
 * {
   box-sizing: border-box;
@@ -42,9 +40,8 @@ img {
   border: 0;
 }
 
-a {
-  color: #0080ff;
-  font-weight: 300;
+.h-margin-left-0 {
+  margin-left: 0;
 }
 
 .h-img {
@@ -81,33 +78,15 @@ a {
   width: 100%;
 }
 
-.h-text-center {
-  text-align: center;
+.h-text-right {
+  text-align: right;
 }
 
-.h-alert {
-  background: #efefef;
-  border: 1px solid #ccc;
-  color: #333;
-  margin: 0 0 1rem 0;
-  padding: .75rem;
-  position: relative;
-}
-
-.h-alert .h-alert-close {
-  font-weight: 600;
-  position: absolute;
-  top: .75rem;
-  right: .75rem;
-}
-
-/*!
-* Oxygen Overrides
-*/
+/*! Oxygen Overrides */
 
 body {
   background: #fff;
-  color: #333;
+  color: #777;
   font: 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 200;
   margin: 10px auto;
@@ -115,20 +94,20 @@ body {
   padding: 0 2rem;
 }
 
+a {
+  color: #0080ff;
+  font-weight: 300;
+  text-decoration: none;
+}
+
 a: visited {
   color: #0080ff;
 }
 
-.bold-string {
-  font-weight: bold;
-}
-
-.small-string {
-  font-size: small;
-}
-
-.prime-string {
-  font-size: 1.25rem;
+em {
+  color: #444;
+  font-weight: 500;
+  font-style: italic;
 }
 
 .errorDetails {
@@ -136,17 +115,12 @@ a: visited {
   font-weight: 300;
 }
 
-li.noteList {
-  margin-left: 0;
-  font-size: small;
-}
-
 ol.noteList {
   list-style-type: lower-alpha;
   font-size: small;
 }
 
-ul.noDot {
+ul.noStyle, ol.noStyle {
   list-style-type: none;
 }
 
@@ -161,6 +135,7 @@ ol {
 h1 {
   font-size: 2.5rem;
   font-weight: 100;
+  color: #000;
   letter-spacing: 1px;
   margin: 3rem 0 1.5rem;
 }
@@ -174,26 +149,33 @@ h2 {
 }
 
 h3 {
-  font-size: 1.75rem font-weight: 400;
-  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #606060;
+  margin: 1.75rem 0 0.25rem 0;
 }
 
 h4 {
-  font-size: 1.5rem font-weight: 300;
-  margin: 1.5rem 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 300;
+  margin: 1.25rem 0 0.25rem 0;
   color: maroon;
+  font-variant: small-caps;
 }
 
-.h-btn, .subtitle {
-  font-weight: 100;
-}
-
-.subtitle {
-  margin: 1.5rem 0 2rem;
+.h-alert {
+  background: #efefef;
+  border: 1px solid #ccc;
+  color: #333;
+  margin: 0 0 1rem 0;
+  padding: 3rem;
+  position: relative;
 }
 
 .h-btn {
   font: inherit;
+  font-weight: 200;
+  letter-spacing: 1px;
   display: inline-block;
   background: #0080ff;
   border: 0;
@@ -206,6 +188,39 @@ h4 {
   background: #006edb;
 }
 
+.prime-string {
+  font-size: 1.25rem;
+}
+
+.bold-string {
+  font-weight: bold;
+}
+
+.small-string, .back-to-top, .appInfo {
+  font-size: small;
+}
+
+.h-text-center, .back-to-top, .appInfo {
+  text-align: center;
+}
+
+.back-to-top {
+  margin: 2rem 0 2rem 0;
+}
+
+.back-to-top a {
+  text-decoration: none;
+}
+
+.appInfo {
+  margin: 4rem 0 2rem 0;
+  color: #888;
+}
+
+.zenData {
+  margin: 2rem 0 0 0;
+}
+
 @media only screen and (min-width: 30rem) {
   .h-u-sm-1-12 {
     width: 100%;
@@ -216,6 +231,9 @@ h4 {
   .h-u-md-5-12 {
     width: 41.667%;
   }
+  .h-u-md-6-12 {
+    width: 50%;
+  }
   .h-u-md-7-12 {
     width: 58.333%;
   }
@@ -225,15 +243,6 @@ h4 {
   .h-u-lg-6-12 {
     width: 50%;
   }
-}
-
-@media only screen and (max-width: 47.999rem) {
-  .h-u-sm-hidden {
-    display: none;
-  }
-}
-
-@media screen and (min-width: 64rem) {
   body {
     font-size: 1.25rem;
   }
@@ -248,12 +257,12 @@ h4 {
 
 @media screen and (max-width: 63.999rem) {
   body {
-    padding: 0 1rem;
+    padding: 0 3rem;
   }
-  .small-string a {
+  .small-string, .small-string a {
     font-size: 0.80rem;
   }
-  .prime-string a {
+  .prime-string, .prime-string a {
     font-size: 1.15rem;
     font-weight: 500;
   }
@@ -261,12 +270,19 @@ h4 {
 
 @media screen and (max-width: 47.999rem) {
   body {
-    padding: 0 0.50rem;
+    padding: 0 2rem;
+  }
+  .h-u-sm-hidden {
+    display: none;
+  }
+  .h-alert {
+    padding: 1rem;
+    margin: 1rem 1rem 1rem 1rem;
   }
 }
 
 @media screen and (max-width: 29.999rem) {
   body {
-    padding: 0 0.25rem;
+    padding: 0 1rem;
   }
 }
