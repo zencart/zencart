@@ -6,25 +6,26 @@
  *
  * @package templateSystem
  * @copyright Copyright 2003-2012 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Jul 15 20:50:58 2012 -0400 Modified in v1.5.1 $
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');
 $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists('../docs/index.html') ? '../docs/index.html' : '');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<!DOCTYPE html>
 <head>
 	<title>System Setup Required</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta http-equiv="Content-Type" content="text/html">
+	<meta http-equiv="imagetoolbar" content="no">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="keywords" content="" />
-	<meta name="description" content="" />
-	<meta http-equiv="imagetoolbar" content="no" />
-	<meta name="authors" content="The Zen Cart<sup>&reg;</sup> Team" />
-	<meta name="generator" content="shopping cart program by Zen Cart<sup>&reg;</sup>, http://www.zen-cart.com" />
-	<meta name="robots" content="noindex, nofollow" />
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<meta name="authors" content="The Zen Cart&reg; Team">
+	<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
+	<meta name="robots" content="noindex, nofollow">
 	<link rel="stylesheet" href="./docs/oxygen.css">
 </head>
 <body>
@@ -36,7 +37,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 		<h2>You see this page for one of the reasons below:</h2>
 		<ol>
 			<li>
-				This is <strong>*A NEW INSTANCE*</strong> of Zen Cart&reg; and you have not yet completed the full installation procedures. If this is the case, please
+				This is <em>*A NEW INSTANCE*</em> of Zen Cart&reg; and you have not yet completed the full installation procedures. If this is the case, please
 				<?php if ($instPath) { ?>
 				<a href="<?php echo $instPath; ?>">CLICK HERE</a> to begin installation.
 				<?php } else { ?> you will need to upload the "zc_install" folder using your FTP program, and then run <a href="<?php echo $instPath; ?>">zc_install/index.php</a> via your browser (or reload this page to see a link to it).
@@ -44,7 +45,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 			</li>
 			<br>
 			<li>
-				This is <strong>*AN EXISTING INSTALLATION*</strong> of Zen Cart&reg; and you have previously completed the normal installation procedures. If this is the case, then...
+				This is <em>*AN EXISTING INSTALLATION*</em> of Zen Cart&reg; and you have previously completed the normal installation procedures. If this is the case, then...
 				<br><br>
 				<ul style='list-style-type:square'>
 					<li>
@@ -54,7 +55,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 						Your web hosting provider may have changed the PHP configuration or upgraded the PHP version on the server and either of these may have broken things.
 					</li>
 					<li>
-						Your configure.php files in the <tt><strong>/includes/</strong></tt> and/or <tt><strong>/admin/includes/</strong></tt> folders may contain invalid <em>path information</em> and/or invalid <em>database connection information</em>.
+						Your configure.php files in the <em>/includes/</em> and/or <em>/admin/includes/</em> folders may contain invalid <em>path information</em> and/or invalid <em>database connection information</em>.
 					</li>
 					<li>
 						You have edited your configure.php files, or perhaps moved your site to a different folder or different server. Please review and update all your settings to the reflect correct values.
@@ -69,9 +70,9 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 	<?php if (isset($problemString) && $problemString != '') { ?>
 	<br>
 	<div>
-		Additional <strong>*IMPORTANT*</strong> Details:
+		Additional <em>*IMPORTANT*</em> Details:
 		<br>
-		<?php echo '<strong>"</strong><span class="errorDetails">' . $problemString . '</span><strong>"</strong>'; ?>
+		<?php echo '<em>"</em><span class="errorDetails">' . $problemString . '</span><em>"</em>'; ?>
 	</div>
 	<?php } ?>
 	<br>
@@ -101,15 +102,34 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 			</li>
 		</ol>
 	</div>
-	<br>
-	<div class="h-text-center small-string">
-		<em>
-			Copyright 2003 - 2018 Zen Ventures, LLC
-			<br /><br />
-			Zen Cart<sup>&reg;</sup> 
-			<br />
-			<a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
-		</em>
-	</div>
+	
+	<section id="footerBlock">
+		<div class="appInfo">
+			<p>
+				Zen Cart&reg; is derived from: Copyright 2003 osCommerce
+				<br><br>
+				This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+				<br>
+				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+				<br>
+				and is redistributable under the GNU General Public License.
+			<p>
+			<p>
+				<img src="osi-certified-120x100.png" alt="O S I Certified">
+				<br>
+				This software is OSI Certified Open Source Software.
+				<br>
+				OSI Certified is a certification mark of the Open Source Initiative.
+			<p>
+			<p class="zenData">
+				Copyright 2003 - 2018 Zen Ventures, LLC
+				<br><br>
+				Zen Cart&reg; 
+				<br>
+				<a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+			</p>
+		</div>
+	</section> <!-- End footerBlock //-->
+	
 </body>
 </html>
