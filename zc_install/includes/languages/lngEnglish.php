@@ -169,7 +169,7 @@ define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeab
 
 define('TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE', 'Your configure.php file is an old version and requires updating before we can continue.');
 
-define('TEXT_ERROR_HTACCESS_SUPPORT', 'Support for ".htaccess" files is not enabled.<br>[ <i><b>NOTE:</b> If you are using Nginx, a set of Nginx conf files is supplied at the <u>END</u> of zc_install (for new installs) to assist with resolving this issue.<i> ]');
+define('TEXT_ERROR_HTACCESS_SUPPORT', 'Support for ".htaccess" files is not enabled.<br>[ <i><b>NOTE:</b> If you are using Nginx, procced to the <u>END</u> of this Installation Wizard for information on resolving this issue.<i> ]');
 define('TEXT_ERROR_SESSION_SUPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
 define('TEXT_ERROR_SESSION_SUPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
