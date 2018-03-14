@@ -115,7 +115,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 				and is redistributable under the GNU General Public License.
 			<p>
 			<p>
-				<img src="osi-certified-120x100.png" alt="O S I Certified">
+				<img src="./docs/osi-certified-120x100.png" alt="O S I Certified">
 				<br>
 				This software is OSI Certified Open Source Software.
 				<br>
