@@ -127,7 +127,16 @@ SELECT products_attributes_id FROM products_attributes WHERE products_id NOT IN 
 SELECT products_id
 FROM products));
 
+## alter admin_pages for new product listing pages
+UPDATE admin_pages
+SET language_key = 'BOX_CATALOG_CATEGORY',
+    main_page = 'FILENAME_CATEGORY_PRODUCT_LISTING',
+    display_on_menu = 'N',
+    sort_order = 18
+WHERE page_key = 'categories';
 
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+VALUES ('categoriesProductListing', 'BOX_CATALOG_CATEGORIES_PRODUCTS', 'FILENAME_CATEGORY_PRODUCT_LISTING', '', 'catalog', 'Y', 1);
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
@@ -179,4 +188,3 @@ UPDATE project_version SET project_version_major='1', project_version_minor='5.6
 UPDATE project_version SET project_version_major='1', project_version_minor='5.6', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 #####  END OF UPGRADE SCRIPT
-
