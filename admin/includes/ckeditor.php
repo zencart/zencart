@@ -23,7 +23,7 @@ foreach ($var as $key)
 <script type="text/javascript">
 $(document).ready(function() {
   <?php echo $jsLanguageLookupArray ?>
-  $('textarea').each(function()	{
+  $('textarea').each(function() {
     if ($(this).hasClass('editorHook') || ($(this).attr('name') != 'message' && ! $(this).hasClass('noEditor')))
     {
       index = $(this).attr('name').match(/\d+/);
