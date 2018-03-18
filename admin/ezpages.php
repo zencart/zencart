@@ -257,12 +257,12 @@ if (zen_not_null($action)) {
           'footer_sort_order' => '',
           'toc_sort_order' => '',
           'toc_chapter' => '',
-          'status_header' => '',
-          'status_sidebox' => '',
-          'status_footer' => '',
-          'status_toc' => '',
-          'page_open_new_window' => '',
-          'page_is_ssl' => ''
+          'status_header' => '1',
+          'status_sidebox' => '1',
+          'status_footer' => '1',
+          'status_toc' => '1',
+          'page_open_new_window' => '1',
+          'page_is_ssl' => '1'
         );
 
         $ezInfo = new objectInfo($parameters);
@@ -281,93 +281,6 @@ if (zen_not_null($action)) {
           $ezInfo->updateObjectInfo($_POST);
         }
 
-// set all status settings and switches
-        if (!isset($ezInfo->status_header)) {
-          $ezInfo->status_header = '1';
-        }
-        switch ($ezInfo->status_header) {
-          case '0': $is_status_header = false;
-            $not_status_header = true;
-            break;
-          case '1': $is_status_header = true;
-            $not_status_header = false;
-            break;
-          default: $is_status_header = true;
-            $not_status_header = false;
-            break;
-        }
-        if (!isset($ezInfo->status_sidebox)) {
-          $ezInfo->status_sidebox = '1';
-        }
-        switch ($ezInfo->status_sidebox) {
-          case '0': $is_status_sidebox = false;
-            $not_status_sidebox = true;
-            break;
-          case '1': $is_status_sidebox = true;
-            $not_status_sidebox = false;
-            break;
-          default: $is_status_sidebox = true;
-            $not_status_sidebox = false;
-            break;
-        }
-        if (!isset($ezInfo->status_footer)) {
-          $ezInfo->status_footer = '1';
-        }
-        switch ($ezInfo->status_footer) {
-          case '0': $is_status_footer = false;
-            $not_status_footer = true;
-            break;
-          case '1': $is_status_footer = true;
-            $not_status_footer = false;
-            break;
-          default: $is_status_footer = true;
-            $not_status_footer = false;
-            break;
-        }
-        if (!isset($ezInfo->status_toc)) {
-          $ezInfo->status_toc = '1';
-        }
-        switch ($ezInfo->status_toc) {
-          case '0': $is_status_toc = false;
-            $not_status_toc = true;
-            break;
-          case '1': $is_status_toc = true;
-            $not_status_toc = false;
-            break;
-          default: $is_status_toc = true;
-            $not_status_toc = false;
-            break;
-        }
-        if (!isset($ezInfo->page_open_new_window)) {
-          $ezInfo->not_page_open_new_window = '1';
-        }
-        switch ($ezInfo->page_open_new_window) {
-          case '0': $is_page_open_new_window = false;
-            $not_page_open_new_window = true;
-            break;
-          case '1': $is_page_open_new_window = true;
-            $not_page_open_new_window = false;
-            break;
-          default: $is_page_open_new_window = false;
-            $not_page_open_new_window = true;
-            break;
-        }
-        if (!isset($ezInfo->page_is_ssl)) {
-          $ezInfo->page_is_ssl = '1';
-        }
-        switch ($ezInfo->page_is_ssl) {
-          case '0': $is_page_is_ssl = false;
-            $not_page_is_ssl = true;
-            break;
-          case '1': $is_page_is_ssl = true;
-            $not_page_is_ssl = false;
-            break;
-          default: $is_page_is_ssl = false;
-            $not_page_is_ssl = true;
-            break;
-        }
-        ?>
-        <?php
         echo zen_draw_form('new_page', FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . zen_db_prepare_input($_GET['page']) . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data" class="form-horizontal"');
         if ($form_action == 'update') {
           echo zen_draw_hidden_field('pages_id', $ezID);
@@ -384,23 +297,23 @@ if (zen_not_null($action)) {
         <div class="form-group">
             <?php echo zen_draw_label(TABLE_HEADING_PAGE_OPEN_NEW_WINDOW, 'page_open_new_window', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', $is_page_open_new_window) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', $not_page_open_new_window) . TEXT_NO; ?>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', ($ezInfo->page_open_new_window == 1 ? true : false)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', ($ezInfo->page_open_new_window == 0 ? true : false)) . TEXT_NO; ?>
           </div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_SSL, 'page_is_ssl', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', $is_page_is_ssl) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '0', $not_page_is_ssl) . TEXT_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', ($ezInfo->page_is_ssl == 1 ? true : false)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '0', ($ezInfo->page_is_ssl == 0 ? true : false)) . TEXT_NO; ?></label>
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?></div>
         <div class="form-group">
           <div class="col-sm-3">
               <?php echo zen_draw_label(TABLE_HEADING_STATUS_HEADER, 'status_header', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '1', $is_status_header) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '0', $not_status_header) . TEXT_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '1', ($ezInfo->status_header == 1 ? true : false)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '0', ($ezInfo->status_header == 0 ? true : false)) . TEXT_NO; ?></label>
             <br>
             <?php echo zen_draw_label(TEXT_HEADER_SORT_ORDER, 'header_sort_order', 'class="control-label"'); ?>
             <?php echo zen_draw_input_field('header_sort_order', $ezInfo->header_sort_order, zen_set_field_length(TABLE_EZPAGES, 'header_sort_order') . ' class="form-control"', false); ?>
@@ -408,8 +321,8 @@ if (zen_not_null($action)) {
           </div>
           <div class="col-sm-3">
               <?php echo zen_draw_label(TABLE_HEADING_STATUS_SIDEBOX, 'status_sidebox', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '1', $is_status_sidebox) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '0', $not_status_sidebox) . TEXT_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '1', ($ezInfo->status_sidebox == 1 ? true : false)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '0', ($ezInfo->status_sidebox == 0 ? true : false)) . TEXT_NO; ?></label>
             <br>
             <?php echo zen_draw_label(TEXT_SIDEBOX_SORT_ORDER, 'sidebox_sort_order', 'class="control-label"'); ?>
             <?php echo zen_draw_input_field('sidebox_sort_order', $ezInfo->sidebox_sort_order, zen_set_field_length(TABLE_EZPAGES, 'sidebox_sort_order') . ' class="form-control"', false); ?>
@@ -417,8 +330,8 @@ if (zen_not_null($action)) {
           </div>
           <div class="col-sm-3">
               <?php echo zen_draw_label(TABLE_HEADING_STATUS_FOOTER, 'status_footer', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '1', $is_status_footer) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '0', $not_status_footer) . TEXT_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '1', ($ezInfo->status_footer == 1 ? true : false)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '0', ($ezInfo->status_footer == 0 ? true : false)) . TEXT_NO; ?></label>
             <br>
             <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label"'); ?>
             <?php echo zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control"', false); ?>
@@ -429,8 +342,8 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_input_field('toc_chapter', $ezInfo->toc_chapter, zen_set_field_length(TABLE_EZPAGES, 'toc_chapter', '6') . ' class="form-control"', false); ?>
             <br>
             <?php echo zen_draw_label(TABLE_HEADING_STATUS_TOC, 'status_toc', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '1', $is_status_toc) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '0', $not_status_toc) . TEXT_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '1', ($ezInfo->status_toc == 1 ? true : false)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '0', ($ezInfo->status_toc == 0 ? true : false)) . TEXT_NO; ?></label>
             <br>
             <?php echo zen_draw_label(TEXT_TOC_SORT_ORDER, 'toc_sort_order', 'class="control-label"'); ?>
             <?php echo zen_draw_input_field('toc_sort_order', $ezInfo->toc_sort_order, zen_set_field_length(TABLE_EZPAGES, 'toc_sort_order') . ' class="form-control"', false); ?>
