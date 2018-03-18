@@ -120,7 +120,7 @@ if (zen_not_null($action)) {
       if ($alt_url_external != '') {
         $zv_link_method_cnt++;
       }
-      if ($pages_html_text != '' and strlen(trim($pages_html_text)) > 6) {
+      if ($pages_html_text != '' && strlen(trim($pages_html_text)) > 6) {
         $zv_link_method_cnt++;
       }
       if ($zv_link_method_cnt > 1) {
@@ -172,7 +172,8 @@ if (zen_not_null($action)) {
       break;
     case 'deleteconfirm':
       $pages_id = zen_db_prepare_input($_POST['ezID']);
-      $db->Execute("delete from " . TABLE_EZPAGES . " where pages_id = '" . (int)$pages_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_EZPAGES . "
+                    WHERE pages_id = " . (int)$pages_id);
       $messageStack->add(SUCCESS_PAGE_REMOVED, 'success');
       zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' deleted.', 'notice');
       zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page']));
@@ -403,29 +404,31 @@ if (zen_not_null($action)) {
 // set display order
                 switch (true) {
                   case ($_SESSION['ez_sort_order'] == 0):
-                    $ez_order_by = " order by toc_chapter, toc_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY toc_chapter, toc_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 1):
-                    $ez_order_by = " order by header_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY header_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 2):
-                    $ez_order_by = " order by sidebox_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY sidebox_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 3):
-                    $ez_order_by = " order by footer_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY footer_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 4):
-                    $ez_order_by = " order by pages_title";
+                    $ez_order_by = " ORDER BY pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 5):
-                    $ez_order_by = " order by  pages_id, pages_title";
+                    $ez_order_by = " ORDER BY pages_id, pages_title";
                     break;
                   default:
-                    $ez_order_by = " order by toc_chapter, toc_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY toc_chapter, toc_sort_order, pages_title";
                     break;
                 }
 
-                $pages_query_raw = "select * from " . TABLE_EZPAGES . $ez_order_by;
+                $pages_query_raw = "SELECT *
+                                    FROM " . TABLE_EZPAGES .
+                                    $ez_order_by;
 
 // Split Page
 // reset page when page is unknown
