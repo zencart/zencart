@@ -288,7 +288,7 @@ if (zen_not_null($action)) {
         ?>
 
         <div class="form-group">
-          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="sumit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="sumit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
+          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_PAGES_TITLE, 'pages_title', 'class="col-sm-3 control-label"'); ?>
@@ -376,6 +376,7 @@ if (zen_not_null($action)) {
         <div class="form-group">
           <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="sumit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="sumit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
         </div>
+        <?php echo '</form>'; ?>
         <?php
       } else {
         ?>
