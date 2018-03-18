@@ -249,8 +249,6 @@ if (zen_not_null($action)) {
 
         $parameters = array(
           'pages_title' => '',
-          'page_open_new_window' => '',
-          'page_is_ssl' => '',
           'pages_html_text' => '',
           'alt_url' => '',
           'alt_url_external' => '',
