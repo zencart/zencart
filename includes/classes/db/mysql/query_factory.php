@@ -201,9 +201,7 @@ class queryFactory extends base {
       $obj->result = $zp_result_array;
       if (sizeof($zp_result_array) > 0 ) {
         $obj->EOF = false;
-        foreach($zp_result_array[0] as $key => $value) {
-          $obj->fields[$key] = $value;
-        }
+        $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
       }
     } elseif ($zf_cache) {
       $zc_cache->sql_cache_expire_now($zf_sql);
@@ -222,28 +220,19 @@ class queryFactory extends base {
         if ($zp_rows > 0) {
           $zp_ii = 0;
           while ($zp_ii < $zp_rows) {
-            $zp_result_array = mysqli_fetch_array($zp_db_resource);
-            if ($zp_result_array) {
-              $obj->result[$zp_ii] = array();
-              foreach($zp_result_array as $key => $value) {
-                if (!preg_match('/^[0-9]/', $key)) {
-                  $obj->result[$zp_ii][$key] = $value;
-                }
-              }
-            } else {
+            $obj->result[$zp_ii] = array();
+            $obj->result[$zp_ii] = mysqli_fetch_assoc($zp_db_resource);
+            if (!($obj->result[$zp_ii])) {
+              unset($obj->result[$zp_ii]);
               $obj->limit = $zp_ii;
               break;
             }
             $zp_ii++;
           }
-          foreach($obj->result[$obj->cursor] as $key => $value) {
-            if (!preg_match('/^[0-9]/', $key)) {
-              $obj->fields[$key] = $value;
-            }
-          }
+          $obj->fields = array_replace($obj->fields, $obj->result[$obj->cursor]);
           $obj->EOF = false;
         }
-        unset($zp_ii, $zp_result_array, $key, $value);
+        unset($zp_ii);
       }
       $zc_cache->sql_cache_store($zf_sql, $obj->result);
       $obj->is_cached = true;
@@ -271,13 +260,9 @@ class queryFactory extends base {
       } else {
         $obj->resource = $zp_db_resource;
         if ($obj->RecordCount() > 0) {
-          $zp_result_array = mysqli_fetch_array($zp_db_resource);
+          $zp_result_array = mysqli_fetch_assoc($zp_db_resource);
           if ($zp_result_array) {
-            foreach($zp_result_array as $key => $value) {
-              if (!preg_match('/^[0-9]/', $key)) {
-                $obj->fields[$key] = $value;
-              }
-            }
+            $obj->fields = array_replace($obj->fields, mysqli_fetch_assoc($zp_db_resource));
             $obj->EOF = false;
           }
         }
@@ -324,23 +309,22 @@ class queryFactory extends base {
         mysqli_data_seek($zp_db_resource, $zp_start_row);
         $zp_ii = 0;
         while ($zp_ii < $zf_limit) {
-          $zp_result_array = @mysqli_fetch_array($zp_db_resource);
-          if ($zp_result_array) {
-            $obj->result[$zp_ii] = array();
-            foreach($zp_result_array as $key => $value) {
-              $add_key = ($int_key === true ? true : !preg_match('/^[0-9]/', $key)); // mc12345678 support controlling presence of the integer key result
-
-              if (!$add_key) continue;
-
-              $obj->result[$zp_ii][$key] = $value;
-            }
+          $obj->result[$zp_ii] = array();
+          if ($int_key === true) {
+            $obj->result[$zp_ii] = @mysqli_fetch_array($zp_db_resource);
+          } else if ($int_key === 'only') {
+            $obj->result[$zp_ii] = @mysqli_fetch_row($zp_db_resource);
           } else {
+            $obj->result[$zp_ii] = @mysqli_fetch_assoc($zp_db_resource);
+          }
+          if (!$obj->result[$zp_ii]) {
+            unset($obj->result[$zp_ii]);
             $obj->limit = $zp_ii;
             break;
           }
           $zp_ii++;
         }
-        unset($zp_ii, $zp_result_array, $key, $value);
+        unset($zp_ii);
         $obj->EOF = false;
 
         $obj->result_random = array_rand($obj->result, count($obj->result));
@@ -630,20 +614,14 @@ class queryFactoryResult implements Countable, Iterator {
       if ($this->cursor >= sizeof($this->result)) {
         $this->EOF = true;
       } else {
-        foreach($this->result[$this->cursor] as $key => $value) {
-          $this->fields[$key] = $value;
-        }
+        $this->fields = array_replace($this->fields, $this->result[$this->cursor]);
       }
     } else {
-      $zp_result_array = @mysqli_fetch_array($this->resource);
+      $zp_result_array = @mysqli_fetch_assoc($this->resource);
+      $this->fields = array_replace($this->fields, $zp_result_array);
       if (!$zp_result_array) {
         $this->EOF = true;
-      } else {
-        foreach($zp_result_array as $key => $value) {
-          if (!preg_match('/^[0-9]/', $key)) {
-            $this->fields[$key] = $value;
-          }
-        }
+        unset($this->fields);
       }
     }
   }
@@ -654,12 +632,7 @@ class queryFactoryResult implements Countable, Iterator {
   public function MoveNextRandom() {
     $this->cursor++;
     if ($this->cursor < $this->limit) {
-      $zp_result_array = $this->result[$this->result_random[$this->cursor]];
-      foreach($zp_result_array as $key => $value) {
-        if (!preg_match('/^[0-9]/', $key)) {
-          $this->fields[$key] = $value;
-        }
-      }
+      $this->fields = array_replace($this->fields, $this->result[$this->result_random[$this->cursor]]);
     } else {
       $this->EOF = true;
     }
@@ -716,20 +689,17 @@ class queryFactoryResult implements Countable, Iterator {
         $this->cursor = sizeof($this->result);
         $this->EOF = true;
       } else {
-        foreach($this->result[$zp_row] as $key => $value) {
-          $this->fields[$key] = $value;
-        }
+        $this->fields = array_replace($this->fields, $this->result[$zp_row]);
         $this->cursor = $zp_row;
         $this->EOF = false;
       }
     } else if (@mysqli_data_seek($this->resource, $zp_row)) {
-      $zp_result_array = @mysqli_fetch_array($this->resource);
-      foreach($zp_result_array as $key => $value) {
-        $add_key = ($int_key === true ? true : !preg_match('/^[0-9]/', $key)); // mc12345678 support controlling presence of the integer key result
-
-        if (!$add_key) continue;
-
-        $this->fields[$key] = $value;
+      if ($int_key === true) {
+        $this->fields = array_replace($this->fields, @mysqli_fetch_array($this->resource));
+      } else if ($int_key == 'only') {
+        $this->fields = array_replace($this->fields, @mysqli_fetch_row($this->resource));
+      } else {
+        $this->fields = array_replace($this->fields, @mysqli_fetch_assoc($this->resource));
       }
       $this->cursor = $zp_row;
       $this->EOF = false;
