@@ -299,7 +299,7 @@ if (zen_not_null($action)) {
             <?php echo zen_draw_label(TABLE_HEADING_PAGE_OPEN_NEW_WINDOW, 'page_open_new_window', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', ($ezInfo->page_open_new_window == 1 ? true : false)) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', ($ezInfo->page_open_new_window == 0 ? true : false)) . TEXT_NO; ?>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', ($ezInfo->page_open_new_window == 0 ? true : false)) . TEXT_NO; ?></label>
           </div>
         </div>
         <div class="form-group">
