@@ -339,13 +339,47 @@
           $parameters = str_replace($matches[1], '', $parameters);
         }
       }
-
-      $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . ' />';
+      
+      // -----
+      // Give an observer the chance to provide alternate formatting for the button (it's set to an empty
+      // string above).  If the value is still empty after the notification, create the standard-format
+      // of the button.
+      //
+      $GLOBALS['zco_notifier']->notify(
+            'NOTIFY_ZEN_CSS_BUTTON_SUBMIT', 
+            array(
+                'button_name' => $button_name,
+                'text' => $text,
+                'sec_class' => $sec_class,
+                'parameters' => $parameters,
+            ),
+            $css_button
+      );
+      if ($css_button == '') {
+        $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . ' />';
+      }
     }
 
     if ($type=='button'){
       // link button
-      $css_button = '<span class="' . $mouse_out_class . '" ' . $css_button_js . $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
+      // -----
+      // Give an observer the chance to provide alternate formatting for the button (it's set to an empty string
+      // above).  If the value is still empty after the notification, create the standard-format
+      // of the button.
+      //
+      $GLOBALS['zco_notifier']->notify(
+            'NOTIFY_ZEN_CSS_BUTTON_BUTTON', 
+            array(
+                'button_name' => $button_name,
+                'text' => $text,
+                'sec_class' => $sec_class,
+                'parameters' => $parameters,
+            ),
+            $css_button
+      );
+      if ($css_button == '') {
+        $css_button = '<span class="' . $mouse_out_class . '" ' . $css_button_js . $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
+      }
     }
     return $css_button;
   }
@@ -384,6 +418,25 @@
  *  Output a form input field
  */
   function zen_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
+    // -----
+    // Give an observer the opportunity to **totally** override this function's operation.
+    //
+    $field = false;
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_INPUT_FIELD_OVERRIDE',
+        array(
+            'name' => $name,
+            'value' => $value,
+            'parameters' => $parameters,
+            'type' => $type,
+            'reinsert_value' => $reinsert_value
+        ),
+        $field
+    );
+    if ($field !== false) {
+        return $field;
+    }
+    
     $field = '<input type="' . zen_output_string($type) . '" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
     if ( (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true) ) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
@@ -394,7 +447,21 @@
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
-
+    
+    // -----
+    // Give an observer the opportunity to modify the just-rendered field.
+    //
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_INPUT_FIELD',
+        array(
+            'name' => $name,
+            'value' => $value,
+            'parameters' => $parameters,
+            'type' => $type,
+            'reinsert_value' => $reinsert_value
+        ),
+        $field
+    );
     return $field;
   }
 
@@ -409,6 +476,25 @@
  *  Output a selection field - alias function for zen_draw_checkbox_field() and zen_draw_radio_field()
  */
   function zen_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
+    // -----
+    // Give an observer the opportunity to **totally** override this function's operation.
+    //
+    $selection = false;
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_SELECTION_FIELD_OVERRIDE',
+        array(
+            'name' => $name,
+            'value' => $value,
+            'parameters' => $parameters,
+            'type' => $type,
+            'checked' => $checked
+        ),
+        $selection
+    );
+    if ($selection !== false) {
+        return $selection;
+    }
+    
     $selection = '<input type="' . zen_output_string($type) . '" name="' . zen_output_string($name) . '"';
 
     if (zen_not_null($value)) $selection .= ' value="' . zen_output_string($value) . '"';
@@ -420,7 +506,21 @@
     if (zen_not_null($parameters)) $selection .= ' ' . $parameters;
 
     $selection .= ' />';
-
+    
+    // -----
+    // Give an observer the opportunity to modify the just-rendered field.
+    //
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_SELECTION_FIELD',
+        array(
+            'name' => $name,
+            'value' => $value,
+            'parameters' => $parameters,
+            'type' => $type,
+            'checked' => $checked
+        ),
+        $selection
+    );
     return $selection;
   }
 
@@ -442,6 +542,26 @@
  *  Output a form textarea field
  */
   function zen_draw_textarea_field($name, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
+    // -----
+    // Give an observer the opportunity to **totally** override this function's operation.
+    //
+    $field = false;
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_TEXTAREA_FIELD_OVERRIDE',
+        array(
+            'name' => $name,
+            'width' => $width,
+            'height' => $height,
+            'text' => $text,
+            'parameters' => $parameters,
+            'reinsert_value' => $reinsert_value,
+        ),
+        $field
+    );
+    if ($field !== false) {
+        return $field;
+    }
+    
     $field = '<textarea name="' . zen_output_string($name) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
 
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
@@ -455,7 +575,22 @@
     }
 
     $field .= '</textarea>';
-
+    
+    // -----
+    // Give an observer the opportunity to modify the just-rendered field.
+    //
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_TEXTAREA_FIELD',
+        array(
+            'name' => $name,
+            'width' => $width,
+            'height' => $height,
+            'text' => $text,
+            'parameters' => $parameters,
+            'reinsert_value' => $reinsert_value,
+        ),
+        $field
+    );
     return $field;
   }
 
@@ -505,6 +640,25 @@
  *  Pulls values from a passed array, with the indicated option pre-selected
  */
   function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
+    // -----
+    // Give an observer the opportunity to **totally** override this function's operation.
+    //
+    $field = false;
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_PULL_DOWN_MENU_OVERRIDE',
+        array(
+            'name' => $name,
+            'values' => $values,
+            'default' => $default,
+            'parameters' => $parameters,
+            'required' => $required,
+        ),
+        $field
+    );
+    if ($field !== false) {
+        return $field;
+    }
+    
     $field = '<select';
 
     if (!strstr($parameters, 'id=')) $field .= ' id="select-'.zen_output_string($name).'"';
@@ -528,7 +682,21 @@
     $field .= '</select>' . "\n";
 
     if ($required == true) $field .= TEXT_FIELD_REQUIRED;
-
+    
+    // -----
+    // Give an observer the chance to make modifications to the just-rendered field.
+    //
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_DRAW_PULL_DOWN_MENU',
+        array(
+            'name' => $name,
+            'values' => $values,
+            'default' => $default,
+            'parameters' => $parameters,
+            'required' => $required,
+        ),
+        $field
+    );
     return $field;
   }
 

@@ -157,10 +157,26 @@
 */
   function zen_get_products_stock($products_id) {
     global $db;
+    
+    // -----
+    // Give an observer the chance to modify this function's return value.
+    //
     $products_id = zen_get_prid($products_id);
+    $products_quantity = 0;
+    $quantity_handled = false;
+    $GLOBALS['zco_notifier']->notify(
+        'ZEN_GET_PRODUCTS_STOCK',
+        $products_id,
+        $products_quantity,
+        $quantity_handled
+    );
+    if ($quantity_handled) {
+        return $products_quantity;
+    }
+    
     $stock_query = "select products_quantity
                     from " . TABLE_PRODUCTS . "
-                    where products_id = '" . (int)$products_id . "'";
+                    where products_id = " . (int)$products_id . " LIMIT 1";
 
     $stock_values = $db->Execute($stock_query);
 
@@ -176,8 +192,24 @@
 */
   function zen_check_stock($products_id, $products_quantity) {
     $stock_left = zen_get_products_stock($products_id) - $products_quantity;
-
-    return ($stock_left < 0) ? '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>' : '';
+    
+    // -----
+    // Give an observer the opportunity to change the out-of-stock message.
+    //
+    $the_message = '';
+    if ($stock_left < 0) {
+        $out_of_stock_message = STOCK_MARK_PRODUCT_OUT_OF_STOCK;
+        $GLOBALS['zco_notifier']->notify(
+            'ZEN_CHECK_STOCK_MESSAGE', 
+            array(
+                $products_id, 
+                $products_quantity
+            ), 
+            $out_of_stock_message
+        );
+        $the_message = '<span class="markProductOutOfStock">' . $out_of_stock_message . '</span>';
+    }
+    return $the_message;
   }
 
 /*
