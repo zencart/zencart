@@ -1176,7 +1176,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               ?>
 
               <?php if ($zc_skip_products == false) { ?>
-                <?php echo zen_draw_form('newproduct', FILENAME_PRODUCT, '', 'post', 'class="form-horizontal"'); ?>
+                <?php echo zen_draw_form('newproduct', FILENAME_PRODUCT, 'action=new_product', 'post', 'class="form-horizontal"'); ?>
                 <?php echo (empty($_GET['search']) ? '<div class="col-sm-3"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
                 <?php
                 $sql = "SELECT ptc.product_type_id, pt.type_name
