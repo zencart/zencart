@@ -12,7 +12,7 @@ if (!defined('TEXT_TIMEOUT_STAY_LOGGED_IN')) define('TEXT_TIMEOUT_STAY_LOGGED_IN
 if (!defined('TEXT_TIMEOUT_LOGOUT_NOW')) define('TEXT_TIMEOUT_LOGOUT_NOW', 'Logout Now');
 if (!defined('TEXT_TIMEOUT_TIMED_OUT_TITLE')) define('TEXT_TIMEOUT_TIMED_OUT_TITLE', 'Logged Out.');
 if (!defined('TEXT_TIMEOUT_LOGIN_AGAIN')) define('TEXT_TIMEOUT_LOGIN_AGAIN', 'Login Again');
-if (!defined('TEXT_TIMEOUT_TIMED_OUT_MESSAGE')) define('TEXT_TIMEOUT_TIMED_OUT_MESSAGE', 'Your session has timed out. You were inactive, so we logged you out automatically. Please login to resume your session.');
+if (!defined('TEXT_TIMEOUT_TIMED_OUT_MESSAGE')) define('TEXT_TIMEOUT_TIMED_OUT_MESSAGE', 'Your session has timed out. You were inactive, so we logged you out automatically.');
 
 // Read default timeout value from the site's configuration:
 $timeoutAfter = ini_get('session.gc_maxlifetime');
