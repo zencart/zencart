@@ -157,7 +157,7 @@
               if ($hidden) {
                 $fields .= zen_draw_hidden_field($key, $value);
               } else {
-                $fields .= zen_draw_input_field($key, $value);
+                $fields .= zen_draw_input_field($key, $value, 'class="form-control"');
               }
             }
           } else {
@@ -165,7 +165,7 @@
               if ($hidden) {
                 $fields .= zen_draw_hidden_field($key . '[]', $arr);
               } else {
-                $fields .= zen_draw_input_field($key . '[]', $arr);
+                $fields .= zen_draw_input_field($key . '[]', $arr, 'class="form-control"');
               }
             }
           }
@@ -920,7 +920,7 @@ function zen_get_prid($uprid)
                               'text' => $coupons->fields['coupon_name']);
       $coupons->MoveNext();
     }
-    return zen_draw_pull_down_menu($name, $coupon_array, $coupon_id);
+    return zen_draw_pull_down_menu($name, $coupon_array, $coupon_id, 'class="form-control"');
   }
 
 
@@ -928,7 +928,7 @@ function zen_get_prid($uprid)
 // Alias function for Store configuration values in the Administration Tool
   function zen_cfg_pull_down_country_list($country_id, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, zen_get_countries(), $country_id);
+    return zen_draw_pull_down_menu($name, zen_get_countries(), $country_id, 'class="form-control"');
   }
 
 
@@ -936,14 +936,14 @@ function zen_get_prid($uprid)
   function zen_cfg_pull_down_country_list_none($country_id, $key = '') {
     $country_array = zen_get_countries('None');
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, $country_array, $country_id);
+    return zen_draw_pull_down_menu($name, $country_array, $country_id, 'class="form-control"');
   }
 
 
 ////
   function zen_cfg_pull_down_zone_list($zone_id, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, zen_get_country_zones(STORE_COUNTRY), $zone_id);
+    return zen_draw_pull_down_menu($name, zen_get_country_zones(STORE_COUNTRY), $zone_id, 'class="form-control"');
   }
 
 
@@ -963,7 +963,7 @@ function zen_get_prid($uprid)
       $tax_class->MoveNext();
     }
 
-    return zen_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
+    return zen_draw_pull_down_menu($name, $tax_class_array, $tax_class_id, 'class="form-control"');
   }
 
 
@@ -971,7 +971,7 @@ function zen_get_prid($uprid)
 // Function to read in text area in admin
  function zen_cfg_textarea($text, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_textarea_field($name, false, 60, 5, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE));
+    return zen_draw_textarea_field($name, false, 60, 5, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="form-control"');
   }
 
 
@@ -979,7 +979,7 @@ function zen_get_prid($uprid)
 // Function to read in text area in admin
  function zen_cfg_textarea_small($text, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_textarea_field($name, false, 35, 1, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor" autofocus');
+    return zen_draw_textarea_field($name, false, 35, 1, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor form-control" autofocus');
   }
 
 
@@ -1004,7 +1004,7 @@ function zen_get_prid($uprid)
     foreach($editors_list as $key=>$value) {
       $editors_pulldown[] = array('id' => $key, 'text' => $value['desc']);
     }
-    return zen_draw_pull_down_menu($name, $editors_pulldown, $html_editor);
+    return zen_draw_pull_down_menu($name, $editors_pulldown, $html_editor, 'class="form-control"');
   }
 
   function zen_cfg_pull_down_exchange_rate_sources($source, $key = '') {
@@ -1026,7 +1026,7 @@ function zen_get_prid($uprid)
     if (function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
       $value = dbenc_decrypt($value);
     }
-    return zen_draw_password_field('configuration[' . $key . ']', $value);
+    return zen_draw_password_field('configuration[' . $key . ']', $value, 'class="form-control"');
   }
 
   function zen_cfg_password_display($value) {
@@ -1072,11 +1072,7 @@ function zen_get_prid($uprid)
     for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
       $name = ((zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
 
-      $string .= '<br><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
-
-      if ($key_value == $select_array[$i]) $string .= ' CHECKED';
-
-      $string .= ' id="' . strtolower($select_array[$i] . '-' . $name) . '"> ' . '<label for="' . strtolower($select_array[$i] . '-' . $name) . '" class="inputSelect">' . $select_array[$i] . '</label>';
+      $string .= '<div class="radio"><label>' . zen_draw_radio_field($name, $select_array[$i], ($key_value == $select_array[$i] ? true : false), '', 'id="' . strtolower($select_array[$i] . '-' . $name) . '" class="inputSelect"') . $select_array[$i] . '</label></div>';
     }
 
     return $string;
@@ -1087,7 +1083,7 @@ function zen_get_prid($uprid)
     $string = '';
 
     $name = ((zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, $select_array, (int)$key_value);
+    return zen_draw_pull_down_menu($name, $select_array, (int)$key_value, 'class="form-control"');
   }
 
 ////
@@ -1096,9 +1092,7 @@ function zen_get_prid($uprid)
     $string = '';
     foreach($select_array as $key => $value) {
       if (is_int($key)) $key = $value;
-      $string .= '<br><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
-      if ($key_value == $key) $string .= ' CHECKED';
-      $string .= '> ' . $value;
+      $string .= '<div class="radio"><label>' . zen_draw_radio_field('configuration[' . $key_name . ']', $key, ($key_value == $key ? true : false)) . $value . '</label></div>';
     }
 
     return $string;
@@ -1844,7 +1838,7 @@ while (!$chk_sale_categories_all->EOF) {
       $zone_class->MoveNext();
     }
 
-    return zen_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
+    return zen_draw_pull_down_menu($name, $zone_class_array, $zone_class_id, 'class="form-control"');
   }
 
 
@@ -1865,7 +1859,7 @@ while (!$chk_sale_categories_all->EOF) {
       $statuses->MoveNext();
     }
 
-    return zen_draw_pull_down_menu($name, $statuses_array, $order_status_id);
+    return zen_draw_pull_down_menu($name, $statuses_array, $order_status_id, 'class="form-control"');
   }
 
   function zen_get_order_status_name($order_status_id, $language_id = '') {
@@ -3185,12 +3179,10 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
     $string = '';
     for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
       $name = (($key) ? 'configuration[' . $key . '][]' : 'configuration_value');
-      $string .= '<br><input type="checkbox" name="' . $name . '" value="' . $select_array[$i] . '"';
       $key_values = explode( ", ", $key_value);
-      if ( in_array($select_array[$i], $key_values) ) $string .= ' CHECKED';
-      $string .= ' id="' . strtolower($select_array[$i] . '-' . $name) . '"> ' . '<label for="' . strtolower($select_array[$i] . '-' . $name) . '" class="inputSelect">' . $select_array[$i] . '</label>' . "\n";
+      $string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field($name, $select_array[$i], (in_array($select_array[$i], $key_values) ? true : false), 'id="' . strtolower($select_array[$i] . '-' . $name) . '"') . $select_array[$i] . '</label></div>' . "\n";
     }
-    $string .= '<input type="hidden" name="' . $name . '" value="--none--">';
+    $string .= zen_draw_hidden_field($name, '--none--');
     return $string;
   }
 
