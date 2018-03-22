@@ -496,13 +496,6 @@ define('_OCTOBER', 'October');
 define('_NOVEMBER', 'November');
 define('_DECEMBER', 'December');
 
-define('_SUNDAY_SHORT', 'Su');
-define('_MONDAY_SHORT', 'Mo');
-define('_TUESDAY_SHORT', 'Tu');
-define('_WEDNESDAY_SHORT', 'We');
-define('_THURSDAY_SHORT', 'Th');
-define('_FRIDAY_SHORT', 'Fr');
-define('_SATURDAY_SHORT', 'Sa');
 define('TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> gift vouchers)');
 define('TEXT_DISPLAY_NUMBER_OF_COUPONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> coupons)');
 
