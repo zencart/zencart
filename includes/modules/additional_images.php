@@ -137,20 +137,25 @@ if ($num_images > 0) {
         // the $p2 value to boolean true if it has provided an alternate form of that link; otherwise, the base code will
         // create that value.
         //
-        // $p1 ... (r/o) ... An associative array, containing the 'flag_display_large', 'products_name', 'products_image_large' and 'thumb_slashes' values.
+        // $p1 ... (r/o) ... An associative array, containing the 'flag_display_large', 'products_name', 'products_image_large', 'thumb_slashes' and current 'index' values.
         // $p2 ... (r/w) ... A reference to the $script_link value, set here to boolean false; if an observer modifies that value, the
         //                     this module's processing is bypassed.
+        // $p3 ... (r/w) ... A reference to the $link_parameters value, which defines the parameters associated with the above
+        //                     link's display.  If the $script_link is updated, these parameters will be used for the display.
         //
         $script_link = false;
+        $link_parameters = 'class="additionalImages centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"';
         $zco_notifier->notify(
             'NOTIFY_MODULES_ADDITIONAL_IMAGES_SCRIPT_LINK',
             array(
                 'flag_display_large' => $flag_display_large,
                 'products_name' => $products_name,
                 'products_image_large' => $products_image_large,
-                'thumb_slashes' => $thumb_slashes
+                'thumb_slashes' => $thumb_slashes,
+                'index' => $i
             ),
-            $script_link
+            $script_link,
+            $link_parameters
         );
         if ($script_link === false) {
             $script_link = '<script type="text/javascript"><!--' . "\n" . 'document.write(\'' . ($flag_display_large ? '<a href="javascript:popupWindow(\\\'' . str_replace($products_image_large, urlencode(addslashes($products_image_large)), $large_link) . '\\\')">' . $thumb_slashes . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>' : $thumb_slashes) . '\');' . "\n" . '//--></script>';
@@ -165,7 +170,7 @@ if ($num_images > 0) {
 
         // List Box array generation:
         $list_box_contents[$row][$col] = array(
-            'params' => 'class="additionalImages centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
+            'params' => $link_parameters,
              'text' => "\n      " . $link
         );
         $col++;
