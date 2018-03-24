@@ -59,7 +59,7 @@ if (isset($_GET['pID']) && empty($_POST)) {
                                   p.products_discount_type, p.products_discount_type_from,
                                   p.products_price_sorter, p.master_categories_id
                            FROM " . TABLE_PRODUCTS . " p,
-                                " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                " . TABLE_PRODUCTS_DESCRIPTION . " pd,
                                 " . TABLE_PRODUCT_MUSIC_EXTRA . " pe
                            WHERE p.products_id = " . (int)$_GET['pID'] . "
                            AND p.products_id = pd.products_id
