@@ -51,7 +51,7 @@ if (isset($_GET['pID']) && empty($_POST)) {
                                   p.products_date_added, p.products_last_modified,
                                   date_format(p.products_date_available, '%Y-%m-%d') as
                                   products_date_available, p.products_status, p.products_tax_class_id,
-                                  p.manufacturers_id,
+                                  pe.artists_id, pe.record_company_id,pe.music_genre_id,
                                   p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
                                   p.product_is_free, p.product_is_call, p.products_quantity_mixed,
                                   p.product_is_always_free_shipping, p.products_qty_box_status, p.products_quantity_order_max,
@@ -60,8 +60,10 @@ if (isset($_GET['pID']) && empty($_POST)) {
                                   p.products_price_sorter, p.master_categories_id
                            FROM " . TABLE_PRODUCTS . " p,
                                 " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                " . TABLE_PRODUCT_MUSIC_EXTRA . " pe
                            WHERE p.products_id = " . (int)$_GET['pID'] . "
                            AND p.products_id = pd.products_id
+                           AND p.products_id = pe.products_id
                            AND pd.language_id = " . (int)$_SESSION['languages_id']);
 
   $pInfo->updateObjectInfo($product->fields);
