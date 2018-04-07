@@ -297,6 +297,7 @@ if (zen_not_null($action)) {
 
         $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
+        $zco_notifier->notify('ADMIN_CUSTOMER_UPDATE', (int)$customers_id, $default_address_id, $sql_data_array);
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id, 'NONSSL'));
       } else if ($error == true) {
         $cInfo = new objectInfo($_POST);
@@ -727,7 +728,7 @@ if (zen_not_null($action)) {
             //      ...
             // );
             //
-    $additional_fields = array();
+            $additional_fields = array();
             $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_EDIT', $cInfo, $additional_fields);
             if (is_array($additional_fields)) {
               foreach ($additional_fields as $current_field) {
@@ -1108,10 +1109,10 @@ if (zen_not_null($action)) {
                   // If a plugin has additional columns to add to the display, it attaches to both this "listing header" and (see below)
                   // the "listing data" notifications.
                   //
-              // For the header "insert", the observer sets the $additional_headings to include a simple array of arrays.  Each
+                  // For the header "insert", the observer sets the $additional_headings to include a simple array of arrays.  Each
                   // entry contains the information for one heading column in the format:
                   //
-              // $additional_headings = array(
+                  // $additional_headings = array(
                   //      array(
                   //          'content' => 'The content for the column',
                   //          'class' => 'Any additional class for the display',
@@ -1120,9 +1121,9 @@ if (zen_not_null($action)) {
                   //      ...
                   // );
                   //
-              // The 'content' element is required; the 'class' and 'parms' are optional.
+                  // The 'content' element is required; the 'class' and 'parms' are optional.
                   //
-            $additional_headings = array();
+                  $additional_headings = array();
                   $additional_heading_count = 0;
                   $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_HEADER', array(), $additional_headings);
                   if (is_array($additional_headings) && count($additional_headings) != 0) {
@@ -1284,10 +1285,10 @@ if (zen_not_null($action)) {
                 // If a plugin has additional columns to add to the display, it attaches to both this "listing element" and (see above)
                 // the "listing heading" notifications.
                 //
-              // For the element "insert", the observer sets the $additional_headings to include a simple array of arrays.  Each
+                // For the element "insert", the observer sets the $additional_headings to include a simple array of arrays.  Each
                 // entry contains the information for one element column in the format:
                 //
-              // $additional_columns = array(
+                // $additional_columns = array(
                 //      array(
                 //          'content' => 'The content for the column',
                 //          'class' => 'Any additional class for the display',
@@ -1296,9 +1297,9 @@ if (zen_not_null($action)) {
                 //      ...
                 // );
                 //
-              // The 'content' element is required; the 'class' and 'parms' are optional.
+                // The 'content' element is required; the 'class' and 'parms' are optional.
                 //
-            $additional_columns = array();
+                $additional_columns = array();
                 $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_ELEMENT', $customer, $additional_columns);
                 if (is_array($additional_columns) && count($additional_columns) != 0) {
                   if (count($additional_columns) != $additional_heading_count) {
