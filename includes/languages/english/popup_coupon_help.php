@@ -19,7 +19,6 @@ define('TEXT_COUPON_HELP_CATEGORIES', 'Category');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product');
 define('TEXT_ALLOW', 'Allow');
 define('TEXT_DENY', 'Deny');
-define('TEXT_NO_PROD_SALES', '<p>This coupon is not valid for products on sale.</p>');
 
 define('TEXT_ALLOWED', ' (Allowed)');
 define('TEXT_DENIED', ' (Denied)');
