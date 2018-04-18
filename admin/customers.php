@@ -219,6 +219,8 @@
         $entry_email_address_exists = true;
       }
 
+      $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_UPDATE_VALIDATE', array(), $error);
+      
       if ($error == false) {
         $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=> $customers_firstname, 'type'=>'stringIgnoreNull'),
                                 array('fieldName'=>'customers_lastname', 'value'=> $customers_lastname, 'type'=>'stringIgnoreNull'),
@@ -263,6 +265,8 @@
             $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=> $entry_state, 'type'=>'stringIgnoreNull');
           }
         }
+        
+        $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_B4_ADDRESS_UPDATE', array('customers_id' => $customers_id, 'address_book_id' => $default_address_id), $sql_data_array);
 
         $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = " . (int)$default_address_id);
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
@@ -279,6 +283,7 @@
           zen_redirect(zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
         break;
       case 'deleteconfirm':
+      $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_CUSTOMERS_DELETE_CONFIRM', array('customers_id' => $customers_id));
         zen_delete_customer($customers_id, $zcRequest->readPost('delete_reviews', 'on'));
 
         zen_redirect(zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action'))));
@@ -579,6 +584,33 @@ function check_form() {
     }
 ?></td>
           </tr>
+            <?php
+            // -----
+            // If a plugin has additional fields to add to the form, it supplies that information here.  The
+            // additional fields are specified as a simply array of arrays, with each array element identifying
+            // a new input element:
+            //
+            // $additional_fields = array(
+            //      array(
+            //          'label' => 'The text to include for the field label',
+            //          'input' => 'The form-related portion of the field',
+            //      ),
+            //      ...
+            // );
+            //
+            $additional_fields = array();
+            $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_EDIT', $cInfo, $additional_fields);
+            if (is_array($additional_fields)) {
+              foreach ($additional_fields as $current_field) {
+                ?>
+                <tr>
+                  <td class="main"><?php echo $current_field['label']; ?></td>
+                  <td class="main"><?php echo $current_field['input']; ?></td>
+                </tr>
+                <?php
+              }
+            }
+            ?>
         </table></td>
       </tr>
 <?php
@@ -931,6 +963,40 @@ if ($processed == true) {
                   <a href="<?php echo zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('list_order','page')) . 'list_order=company'); ?>"><?php echo ($list_order=='company' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
                   <a href="<?php echo zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('list_order','page')) . 'list_order=company-desc'); ?>"><?php echo ($list_order=='company-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
                 </td>
+                <?php
+                  // -----
+                  // If a plugin has additional columns to add to the display, it attaches to both this "listing header" and (see below)
+                  // the "listing data" notifications.
+                  //
+                  // For the header "insert", the observer sets the $additional_headings to include a simple array of arrays.  Each
+                  // entry contains the information for one heading column in the format:
+                  //
+                  // $additional_headings = array(
+                  //      array(
+                  //          'content' => 'The content for the column',
+                  //          'class' => 'Any additional class for the display',
+                  //          'parms' => 'Any additional parameters for the display',
+                  //      ),
+                  //      ...
+                  // );
+                  //
+                  // The 'content' element is required; the 'class' and 'parms' are optional.
+                  //
+                  $additional_headings = array();
+                  $additional_heading_count = 0;
+                  $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_HEADER', array(), $additional_headings);
+                  if (is_array($additional_headings) && count($additional_headings) != 0) {
+                    $additional_heading_count = count($additional_headings);
+                    foreach ($additional_headings as $heading_data) {
+                      $additional_class = (isset($heading_data['class'])) ? (' ' . $heading_data['class']) : '';
+                      $additional_parms = (isset($heading_data['parms'])) ? (' ' . $heading_data['parms']) : '';
+                      $heading_content = $heading_data['content'];
+                      ?>
+                      <td class="dataTableHeadingContent<?php echo $additional_class; ?>"<?php echo $additional_parms; ?>><?php echo $heading_content; ?></td>
+                      <?php
+                    }
+                  }
+                  ?>
                 <td class="dataTableHeadingContent" align="left" valign="top">
                   <?php echo (($list_order=='id-asc' or $list_order=='id-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_ACCOUNT_CREATED . '</span>' : TABLE_HEADING_ACCOUNT_CREATED); ?><br>
                   <a href="<?php echo zen_admin_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('list_order','page')) . 'list_order=id-asc'); ?>"><?php echo ($list_order=='id-asc' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
@@ -978,6 +1044,9 @@ if ($processed == true) {
       $search = $db->bindVars($search, ':keywords:', $keywords, 'regexp');
     }
     $new_fields=', c.customers_telephone, a.entry_company, a.entry_street_address, a.entry_city, a.entry_postcode, c.customers_authorization, c.customers_referral, c.is_guest_account';
+    
+    $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_NEW_FIELDS', array(), $new_fields, $disp_order);
+    
     $customers_query_raw = "select c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, c.customers_group_pricing, a.entry_country_id, a.entry_company, ci.customers_info_date_of_last_logon, ci.customers_info_date_account_created " . $new_fields . ",
     cgc.amount as gvbal
     from " . TABLE_CUSTOMERS . " c
@@ -1055,6 +1124,41 @@ if (($page == '' or $page == '1') and $customers_id != '') {
                 <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['entry_company']; ?></td>
+                <?php
+                // -----
+                // If a plugin has additional columns to add to the display, it attaches to both this "listing element" and (see above)
+                // the "listing heading" notifications.
+                //
+                // For the element "insert", the observer sets the $additional_headings to include a simple array of arrays.  Each
+                // entry contains the information for one element column in the format:
+                //
+                // $additional_columns = array(
+                //      array(
+                //          'content' => 'The content for the column',
+                //          'class' => 'Any additional class for the display',
+                //          'parms' => 'Any additional parameters for the display',
+                //      ),
+                //      ...
+                // );
+                //
+                // The 'content' element is required; the 'class' and 'parms' are optional.
+                //
+                $additional_columns = array();
+                $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_ELEMENT', $customer, $additional_columns);
+                if (is_array($additional_columns) && count($additional_columns) != 0) {
+                  if (count($additional_columns) != $additional_heading_count) {
+                    trigger_error("Mismatched additional column heading ($additional_heading_count) and column element (" . count($additional_columns) . ") counts detected for the Customers listing.", E_USER_WARNING);
+                  }
+                  foreach ($additional_columns as $column_data) {
+                    $additional_class = (isset($column_data['class'])) ? (' ' . $column_data['class']) : '';
+                    $additional_parms = (isset($column_data['parms'])) ? (' ' . $column_data['parms']) : '';
+                    $element_content = $column_data['content'];
+                    ?>
+                    <td class="dataTableContent<?php echo $additional_class; ?>"<?php echo $additional_parms; ?>><?php echo $element_content; ?></td>
+                    <?php
+                  }
+                }
+                ?>
                 <td class="dataTableContent"><?php echo zen_date_short($info->fields['date_account_created']); ?></td>
                 <td class="dataTableContent"><?php echo zen_date_short($customer['customers_info_date_of_last_logon']); ?></td>
                 <td class="dataTableContent"><?php echo $group_name_entry; ?></td>

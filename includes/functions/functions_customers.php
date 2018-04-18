@@ -314,6 +314,9 @@
             ORDER BY firstname, lastname";
 
     $sql = $db->bindVars($sql, ':customersID', $customers_id, 'integer');
+    
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_CUSTOMERS_LIST_ADDRESSES', $sql);
+    
     $addresses = $db->Execute($sql);
     $addressArray = array();
     foreach ($addresses as $address) {
