@@ -4,7 +4,7 @@
 
 ===============
 
-You are currently viewing code for our development branch, which will be our next larger release, initially dubbed as Zen Cart&reg; v1.6.0, which brings architectural improvements to allow for increased flexibility for customizing each storeowner's own preferences.
+You are currently viewing code for our development branch, which will be our next larger release, initially dubbed as Zen Cart&reg; v2, which brings architectural improvements to allow for increased flexibility for customizing each storeowner's own preferences.
 
 The latest stable version is currently [v1.5.5f](https://github.com/zencart/zencart/releases).
 
@@ -16,18 +16,18 @@ Zen Cart is free software, with free support available 24/7 on the Zen Cart&reg;
 --------------------
 
 
-Zen Cart&reg; v1.6.0 - Development Branch
+Zen Cart&reg; v2 - Development Branch
 --------------------
-[Download latest in-development version from github](https://github.com/zencart/zencart/archive/v160.zip)
+[Download latest in-development version from github](https://github.com/zencart/zencart/archive/develop.zip)
 
 Requirements
 ------------
 Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP), based on the following specifications
 
-Requirements for v1.6.0:
-- Compatible with PHP 5.6 to 7.2
-- Compatible with MySQL 5.1 to 5.7 and MariaDB 10.1 to 10.2
-- CURL (via PHP) is used to communication with payment/shipping services
+Requirements for v2:
+- Written for PHP 7.2 (backward compatible to PHP 5.6)
+- Written for MySQL 5.6 (compatible with 5.7 and MariaDB 10.1 to 10.2)
+- CURL (compiled into PHP) is used for communication with payment/shipping services
 - Compatible with with Apache 2.4 and 2.2
 - Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, rewrite (in addition to other common modules)
 
@@ -37,7 +37,7 @@ Zen Cart&reg; has been reported to run on IIS, but with some limitations, namely
 
 
 
-Installation
+Installation (for released stable version)
 ------------
 
 Installation is simple:
