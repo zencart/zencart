@@ -48,6 +48,10 @@
     }
   }
 
+if (!empty($oID) && !empty($action)) {
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDER_PREDISPLAY_HOOK', $oID, $action);
+}
+
   // disallow any action other than "edit" (view) if demo active
   if (zen_admin_demo() && $action != 'edit') {
     $_GET['action']= '';
@@ -360,7 +364,9 @@ function couponpopupWindow(url) {
 <?php
     }
 ?>
-        </table></td>
+        </table>
+	<?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PAYMENTDATA_COLUMN2', $oID, $order); ?>
+	</td>
       </tr>
 <?php
       if (is_object($module) && method_exists($module, 'admin_notification')) {
@@ -613,8 +619,9 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and (int)$oID > 0) {
       if ((strtoupper($orders->fields['delivery_street_address']) != strtoupper($orders->fields['billing_street_address']) and trim($orders->fields['delivery_street_address']) != '')) {
         $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
       }
+      //-Additional "difference" icons can be added on a per-order basis and/or additional icons to be added to the "action" column.
       $extra_action_icons = '';
-      $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LISTING_ROW', array (), $orders->fields, $show_difference, $extra_action_icons);
+      $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SHOW_ORDER_DIFFERENCE', array (), $orders->fields, $show_difference, $extra_action_icons);
       $show_payment_type = $orders->fields['payment_module_code'] . '<br />' . $orders->fields['shipping_module_code'];
 ?>
                 <td class="dataTableContent" align="right"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
@@ -624,6 +631,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and (int)$oID > 0) {
                 <td class="dataTableContent" align="center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <td class="dataTableContent" align="center"><?php echo (zen_get_orders_comments($orders->fields['orders_id']) == '' ? '' : zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16)); ?></td>
+                <?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', (isset($oInfo) ? $oInfo : array()), $orders->fields); ?>
 
                 <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>' . $extra_action_icons; ?><?php if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_admin_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
