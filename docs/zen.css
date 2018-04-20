@@ -1,4 +1,4 @@
-/*! Oxygen CSS for Zencart. Based on Hydrogen CSS */
+/*! Zen CSS for Zencart. Based on Hydrogen CSS */
 
 /*! Hydrogen v1.x | Copyright 2018 Pim Brouwers | Licensed under MIT | https://github.com/pimbrouwers/hydrogen */
 
@@ -82,7 +82,7 @@ img {
   text-align: right;
 }
 
-/*! Oxygen Overrides */
+/*! Zencart Overrides */
 
 body {
   background: #fff;
