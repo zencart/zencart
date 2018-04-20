@@ -6,7 +6,7 @@
  *
  * @package templateSystem
  * @copyright Copyright 2003-2012 Zen Cart Development Team
- * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
  * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
@@ -26,7 +26,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 	<meta name="authors" content="The Zen Cart&reg; Team">
 	<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
 	<meta name="robots" content="noindex, nofollow">
-	<link rel="stylesheet" href="./docs/zen.css">
+	<link rel="stylesheet" href="./docs/oxygen.css">
 </head>
 <body>
 	<div>
