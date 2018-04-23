@@ -65,7 +65,7 @@ if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
                     $current_image_match
                 );
  
-                if ($current_image_match || preg_match('/\Q' . $products_image_base . '\E/i', $file) == 1) {
+                if ($current_image_match || preg_match('/' . preg_quote($products_image_base, '/') . '/i', $file) == 1) {
                     if ($current_image_match || substr($file, 0, strrpos($file, '.')) != substr($products_image, 0, strrpos($products_image, '.'))) {
                         if ($products_image_base . str_replace($products_image_base, '', $file) == $file) {
                             //  echo 'I AM A MATCH ' . $file . '<br>';
