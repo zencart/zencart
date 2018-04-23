@@ -47,7 +47,7 @@ if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
             if (!is_dir($products_image_directory . $file)) {
                 // -----
                 // Some additional-image-display plugins (like Fual Slimbox) have some additional checks to see
-                // if the file is "valid"; this notifier "accomodates" that processing, providing these parameters:
+                // if the file is "valid"; this notifier "accommodates" that processing, providing these parameters:
                 //
                 // $p1 ... (r/o) ... An array containing the variables identifying the current image.
                 // $p2 ... (r/w) ... A boolean indicator, set to true by any observer to note that the image is "acceptable".
@@ -64,7 +64,7 @@ if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
                     $current_image_match
                 );
                 if ($current_image_match || substr($file, strrpos($file, '.')) == $file_extension) {
-                    if ($current_image_match || preg_match('/\Q' . $products_image_base . '\E/i', $file) == 1) {
+                    if ($current_image_match || preg_match('/' . preg_quote($products_image_base, '/') . '/i', $file) == 1) {
                         if ($current_image_match || $file != $products_image) {
                             if ($products_image_base . str_replace($products_image_base, '', $file) == $file) {
                                 //  echo 'I AM A MATCH ' . $file . '<br>';
