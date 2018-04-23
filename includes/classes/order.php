@@ -1105,6 +1105,14 @@ class order extends base {
     $html_msg['PAYMENT_METHOD_DETAIL'] = (is_object($GLOBALS[$_SESSION['payment']]) ? $GLOBALS[$payment_class]->title : PAYMENT_METHOD_GV );
     $html_msg['PAYMENT_METHOD_FOOTER'] = (is_object($GLOBALS[$_SESSION['payment']]) && $GLOBALS[$payment_class]->email_footer != '') ? nl2br($GLOBALS[$payment_class]->email_footer) : (isset($this->info['cc_type']) && $this->info['cc_type'] != '' ? $this->info['cc_type'] . ' ' . $cc_num_display . "\n\n" : '');
 
+    // Add in store specific order message
+    $this->email_order_message = defined('EMAIL_ORDER_MESSAGE') ? constant('EMAIL_ORDER_MESSAGE') : '';
+    $this->notify('NOTIFY_ORDER_SET_ORDER_MESSAGE'); 
+    if (!empty($this->email_order_message)) { 
+      $email_order .= "\n\n" . $this->email_order_message . "\n\n";
+    }
+    $html_msg['EMAIL_ORDER_MESSAGE'] = $this->email_order_message;
+
     // include disclaimer
     if (defined('EMAIL_DISCLAIMER') && EMAIL_DISCLAIMER != '') $email_order .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
     // include copyright
