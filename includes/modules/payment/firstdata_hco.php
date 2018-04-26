@@ -343,7 +343,7 @@ class firstdata_hco extends base {
   function before_process() {
     global $messageStack, $order;
     $this->authorize = $_POST;
-    $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], $this->authorize['x_amount']);
+    $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], number_format($this->authorize['x_amount'], 2, '.', ''));
     $this->authorize['HashMatchStatus'] = ($this->authorize['x_MD5_Hash'] == $this->authorize['HashValidationValue']) ? 'PASS' : 'FAIL';
 
     $this->notify('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_POSTSUBMIT_HOOK', $this->authorize);
