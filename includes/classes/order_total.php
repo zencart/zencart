@@ -118,7 +118,7 @@ class order_total extends base {
     if (is_array($this->modules)) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->credit_class ) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $selection = $GLOBALS[$class]->credit_selection();
           if (is_array($selection)) $selection_array[] = $selection;
         }
@@ -138,7 +138,7 @@ class order_total extends base {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class ) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $GLOBALS[$class]->update_credit_account($i);
         }
       }
@@ -156,7 +156,7 @@ class order_total extends base {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class ) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $post_var = 'c' . $GLOBALS[$class]->code;
           if ($_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
           $GLOBALS[$class]->collect_posts();
@@ -194,7 +194,7 @@ class order_total extends base {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $GLOBALS[$class]->apply_credit();
         }
       }
