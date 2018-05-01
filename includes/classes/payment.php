@@ -140,7 +140,7 @@ class payment extends base {
 
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
+        if (isset($GLOBALS[$class]->enabled) && $GLOBALS[$class]->enabled == true) {
           $js .= $GLOBALS[$class]->javascript_validation();
         }
       }
@@ -169,7 +169,7 @@ class payment extends base {
     if (is_array($this->modules)) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
+        if (isset($GLOBALS[$class]->enabled) && $GLOBALS[$class]->enabled == true) {
           $selection = $GLOBALS[$class]->selection();
           if (isset($GLOBALS[$class]->collectsCardDataOnsite) && $GLOBALS[$class]->collectsCardDataOnsite == true) {
             $selection['fields'][] = array('title' => '',
