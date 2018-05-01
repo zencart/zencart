@@ -239,7 +239,7 @@ class order extends base {
 
       $this->info['tax_groups']["{$this->products[$index]['tax']}"] = '1';
 
-      $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $this->products, $index);
+      $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $this->products[$index], $index);
 
       $index++;
       $orders_products->MoveNext();
