@@ -1214,7 +1214,7 @@ If a special exist * 10
 
 ////
 // attributes final price
-  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false', $prod_priced_by_attr = false) {
+  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false', $prod_priced_by_attr = false, $attributes_discounted = 0) {
     global $db;
 
     $attributes_price_final = 0;
@@ -1237,7 +1237,11 @@ If a special exist * 10
     $attributes_price_final += zen_get_attributes_qty_prices_onetime($pre_selected->fields["attributes_qty_prices"], $qty);
 
     // price factor
-    $display_normal_price = zen_get_products_actual_price($pre_selected->fields["products_id"]);
+    if ($attributes_discounted == 1) {
+      $display_normal_price = zen_get_products_actual_price($pre_selected->fields["products_id"]);
+    } else {
+      $display_normal_price = zen_get_products_base_price($pre_selected->fields["products_id"]);
+    }
     $display_special_price = zen_get_products_special_price($pre_selected->fields["products_id"]);
 
     $attributes_price_final += zen_get_attributes_price_factor($display_normal_price, $display_special_price, $pre_selected->fields["attributes_price_factor"], $pre_selected->fields["attributes_price_factor_offset"]);
